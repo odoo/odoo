@@ -27,26 +27,23 @@ export const BACK_ONLINE_RECONNECT_DELAY = 5000;
  *  @emits BUS:OUTDATED
  */
 export class BusPlugin extends Plugin {
-    multiTab = usePlugin(MultiTabPlugin);
-    params = usePlugin(BusParametersPlugin);
-    workerService = usePlugin(WorkerPlugin);
+    #multiTab = usePlugin(MultiTabPlugin);
+    #params = usePlugin(BusParametersPlugin);
+    #workerService = usePlugin(WorkerPlugin);
     env = useEnv();
 
     /** @type {?Promise<void>} */
-    workerInitPromise = null;
+    #workerInitPromise = null;
     /** @type {(value?: void) => void | null} */
-    resolveWorkerInit = null;
+    #resolveWorkerInit = null;
+    #backOnlineTimeout = null;
+    #bus = new EventBus();
+    #notificationBus = new EventBus();
+    #subscribeFnToWrapper = new Map();
+
     startedAt = null;
-    backOnlineTimeout = null;
     isActive = signal(false);
     workerState = signal(null);
-
-    /** @private */
-    bus = new EventBus();
-    /** @private */
-    notificationBus = new EventBus();
-    /** @private */
-    subscribeFnToWrapper = new Map();
 
     setup() {
         this.startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
@@ -55,16 +52,16 @@ export class BusPlugin extends Plugin {
             if (!persisted) {
                 // Page is gonna be unloaded, disconnect this client
                 // from the worker.
-                this.workerService.send("BUS:LEAVE");
+                this.#workerService.send("BUS:LEAVE");
             }
         });
         useListener(
             browser,
             "online",
             () => {
-                this.backOnlineTimeout = browser.setTimeout(() => {
+                this.#backOnlineTimeout = browser.setTimeout(() => {
                     if (this.isActive()) {
-                        this.workerService.send("BUS:START");
+                        this.#workerService.send("BUS:START");
                     }
                 }, BACK_ONLINE_RECONNECT_DELAY);
             },
@@ -74,8 +71,8 @@ export class BusPlugin extends Plugin {
             browser,
             "offline",
             () => {
-                clearTimeout(this.backOnlineTimeout);
-                this.workerService.send("BUS:STOP");
+                clearTimeout(this.#backOnlineTimeout);
+                this.#workerService.send("BUS:STOP");
             },
             {
                 capture: true,
@@ -110,12 +107,12 @@ export class BusPlugin extends Plugin {
             case "BUS:NOTIFICATION": {
                 const notifications = data.map(({ id, message }) => ({ id, ...message }));
                 for (const { id, type, payload } of notifications) {
-                    this.notificationBus.trigger(type, { id, payload });
+                    this.#notificationBus.trigger(type, { id, payload });
                 }
                 break;
             }
             case "BUS:INITIALIZED": {
-                this.resolveWorkerInit();
+                this.#resolveWorkerInit();
                 break;
             }
             case "BUS:WORKER_STATE_UPDATED":
@@ -123,40 +120,40 @@ export class BusPlugin extends Plugin {
                 break;
             case "BUS:OUTDATED": {
                 if (data.unregisterMultiTab) {
-                    this.multiTab.unregister();
+                    this.#multiTab.unregister();
                 }
                 break;
             }
         }
         if (!INTERNAL_EVENTS.has(type)) {
-            this.bus.trigger(type, data);
+            this.#bus.trigger(type, data);
         }
     }
 
     /**
      * Start the "bus_service" workerService.
      */
-    async ensureWorkerStarted() {
-        if (this.workerInitPromise) {
-            return this.workerInitPromise;
+    async #ensureWorkerStarted() {
+        if (this.#workerInitPromise) {
+            return this.#workerInitPromise;
         }
-        ({ promise: this.workerInitPromise, resolve: this.resolveWorkerInit } =
+        ({ promise: this.#workerInitPromise, resolve: this.#resolveWorkerInit } =
             Promise.withResolvers());
         let uid = Array.isArray(session.user_id) ? session.user_id[0] : user.userId;
         if (!uid && uid !== undefined) {
             uid = false;
         }
-        const started = await this.workerService.ensureWorkerStarted();
+        const started = await this.#workerService.ensureWorkerStarted();
         if (!started) {
             console.warn(
                 "BusService: Real-time notifications disabled (WorkerService failed to start)."
             );
-            this.resolveWorkerInit();
+            this.#resolveWorkerInit();
             return;
         }
-        await this.workerService.registerHandler((ev) => this.handleMessage(ev));
-        this.workerService.send("BUS:INITIALIZE_CONNECTION", {
-            websocketURL: `${this.params.serverURL().replace("http", "ws")}/websocket?version=${
+        await this.#workerService.registerHandler((ev) => this.handleMessage(ev));
+        this.#workerService.send("BUS:INITIALIZE_CONNECTION", {
+            websocketURL: `${this.#params.serverURL().replace("http", "ws")}/websocket?version=${
                 session.bus_info.worker_version
             }`,
             db: session.db,
@@ -164,53 +161,53 @@ export class BusPlugin extends Plugin {
             uid,
             startTs: this.startedAt.valueOf(),
         });
-        return this.workerInitPromise;
+        return this.#workerInitPromise;
     }
 
     addEventListener(type, listener) {
-        this.bus.addEventListener(type, listener);
+        this.#bus.addEventListener(type, listener);
     }
 
     removeEventListener(type, listener) {
-        this.bus.removeEventListener(type, listener);
+        this.#bus.removeEventListener(type, listener);
     }
 
     async addChannel(channel) {
-        await this.ensureWorkerStarted();
-        this.workerService.send("BUS:ADD_CHANNEL", channel);
-        this.workerService.send("BUS:START");
+        await this.#ensureWorkerStarted();
+        this.#workerService.send("BUS:ADD_CHANNEL", channel);
+        this.#workerService.send("BUS:START");
         this.isActive.set(true);
     }
 
     deleteChannel(channel) {
-        this.workerService.send("BUS:DELETE_CHANNEL", channel);
+        this.#workerService.send("BUS:DELETE_CHANNEL", channel);
     }
 
     setLoggingEnabled(isEnabled) {
-        return this.workerService.send("BUS:SET_LOGGING_ENABLED", isEnabled);
+        return this.#workerService.send("BUS:SET_LOGGING_ENABLED", isEnabled);
     }
 
     downloadLogs() {
-        return this.workerService.send("BUS:REQUEST_LOGS");
+        return this.#workerService.send("BUS:REQUEST_LOGS");
     }
 
     async forceUpdateChannels() {
-        await this.ensureWorkerStarted();
-        this.workerService.send("BUS:FORCE_UPDATE_CHANNELS");
+        await this.#ensureWorkerStarted();
+        this.#workerService.send("BUS:FORCE_UPDATE_CHANNELS");
     }
 
     send(eventName, data) {
-        return this.workerService.send("BUS:SEND", { event_name: eventName, data });
+        return this.#workerService.send("BUS:SEND", { event_name: eventName, data });
     }
 
     async start() {
-        await this.ensureWorkerStarted();
-        this.workerService.send("BUS:START");
+        await this.#ensureWorkerStarted();
+        this.#workerService.send("BUS:START");
         this.isActive.set(true);
     }
 
     stop() {
-        this.workerService.send("BUS:LEAVE");
+        this.#workerService.send("BUS:LEAVE");
         this.isActive.set(false);
     }
 
@@ -225,8 +222,8 @@ export class BusPlugin extends Plugin {
             const { id, payload } = detail;
             callback(JSON.parse(JSON.stringify(payload)), { id });
         };
-        this.subscribeFnToWrapper.set(callback, wrapper);
-        this.notificationBus.addEventListener(notificationType, wrapper);
+        this.#subscribeFnToWrapper.set(callback, wrapper);
+        this.#notificationBus.addEventListener(notificationType, wrapper);
 
         return () => this.unsubscribe(notificationType, callback);
     }
@@ -238,11 +235,11 @@ export class BusPlugin extends Plugin {
      * @param {function} callback
      */
     unsubscribe(notificationType, callback) {
-        this.notificationBus.removeEventListener(
+        this.#notificationBus.removeEventListener(
             notificationType,
-            this.subscribeFnToWrapper.get(callback)
+            this.#subscribeFnToWrapper.get(callback)
         );
-        this.subscribeFnToWrapper.delete(callback);
+        this.#subscribeFnToWrapper.delete(callback);
     }
 }
 

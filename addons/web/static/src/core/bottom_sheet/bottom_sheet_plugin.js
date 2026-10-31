@@ -14,15 +14,12 @@ const BottomSheetOptionSchema = t.object({
 });
 
 export class BottomSheetPlugin extends Plugin {
-    /** @private */
-    overlay = usePlugin(OverlayPlugin);
-
-    /** @private */
-    bottomSheetCount = signal(0);
+    #overlay = usePlugin(OverlayPlugin);
+    #bottomSheetCount = signal(0);
 
     setup() {
         useEffect(() => {
-            document.body.classList.toggle("bottom-sheet-open", this.bottomSheetCount() >= 1);
+            document.body.classList.toggle("bottom-sheet-open", this.#bottomSheetCount() >= 1);
         });
     }
 
@@ -35,7 +32,7 @@ export class BottomSheetPlugin extends Plugin {
      */
     add(target, component, props = {}, options = {}) {
         assertType(options, BottomSheetOptionSchema);
-        const remove = this.overlay.add(
+        const remove = this.#overlay.add(
             BottomSheet,
             {
                 close: () => remove(),
@@ -48,13 +45,13 @@ export class BottomSheetPlugin extends Plugin {
             {
                 scope: options.scope,
                 onRemove: (...args) => {
-                    this.bottomSheetCount.set(this.bottomSheetCount() - 1);
+                    this.#bottomSheetCount.set(this.#bottomSheetCount() - 1);
                     return options.onClose?.(...args);
                 },
                 rootId: target.getRootNode()?.host?.id,
             }
         );
-        this.bottomSheetCount.set(this.bottomSheetCount() + 1);
+        this.#bottomSheetCount.set(this.#bottomSheetCount() + 1);
 
         return remove;
     }

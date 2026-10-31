@@ -66,10 +66,8 @@ effectRegistry.add("rainbow_man", rainbowMan);
 // -----------------------------------------------------------------------------
 
 export class EffectPlugin extends Plugin {
-    /** @private */
-    overlay = usePlugin(OverlayPlugin);
-    /** @private */
-    scope = useScope();
+    #overlay = usePlugin(OverlayPlugin);
+    #scope = useScope();
 
     /**
      * @param {Object} [params] various params depending on the type of effect
@@ -78,9 +76,9 @@ export class EffectPlugin extends Plugin {
     add(params = {}) {
         const type = params.type || "rainbow_man";
         const effect = effectRegistry.get(type);
-        const { Component, props } = this.scope.run(() => effect(params)) || {};
+        const { Component, props } = this.#scope.run(() => effect(params)) || {};
         if (Component) {
-            const remove = this.overlay.add(Component, {
+            const remove = this.#overlay.add(Component, {
                 ...props,
                 close: () => remove(),
             });

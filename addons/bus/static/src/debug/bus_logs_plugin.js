@@ -7,10 +7,8 @@ import { BusPlugin } from "@bus/services/bus_plugin";
 import { WorkerPlugin } from "@bus/services/worker_plugin";
 
 export class BusLogsPlugin extends Plugin {
-    /** @private */
-    busService = usePlugin(BusPlugin);
-    /** @private */
-    workerService = usePlugin(WorkerPlugin);
+    #busService = usePlugin(BusPlugin);
+    #workerService = usePlugin(WorkerPlugin);
 
     enabled = signal(JSON.parse(localStorage.getItem("bus_log_menu.enabled")));
 
@@ -20,13 +18,13 @@ export class BusLogsPlugin extends Plugin {
                 this.enabled.set(JSON.parse(newValue));
             }
         });
-        this.workerService.workerInitPromise.then(() => {
-            this.busService.setLoggingEnabled(this.enabled());
+        this.#workerService.workerInitPromise.then(() => {
+            this.#busService.setLoggingEnabled(this.enabled());
         });
         odoo.busLogging = {
-            stop: () => this.disableLogging(),
-            start: () => this.enableLogging(),
-            download: () => this.busService.downloadLogs(),
+            stop: () => this.#disableLogging(),
+            start: () => this.#enableLogging(),
+            download: () => this.#busService.downloadLogs(),
         };
         if (this.enabled()) {
             console.log(
@@ -35,23 +33,23 @@ export class BusLogsPlugin extends Plugin {
         }
     }
 
-    enableLogging() {
+    #enableLogging() {
         this.enabled.set(true);
-        this.busService.setLoggingEnabled(true);
+        this.#busService.setLoggingEnabled(true);
         localStorage.setItem("bus_log_menu.enabled", true);
     }
 
-    disableLogging() {
+    #disableLogging() {
         this.enabled.set(false);
-        this.busService.setLoggingEnabled(false);
+        this.#busService.setLoggingEnabled(false);
         localStorage.setItem("bus_log_menu.enabled", false);
     }
 
     toggleLogging() {
         if (this.enabled()) {
-            this.disableLogging();
+            this.#disableLogging();
         } else {
-            this.enableLogging();
+            this.#enableLogging();
         }
     }
 }

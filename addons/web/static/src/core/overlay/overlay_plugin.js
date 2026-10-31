@@ -2,6 +2,7 @@ import {
     applyDefaults,
     assertType,
     Component,
+    computed,
     Plugin,
     Resource,
     t,
@@ -28,14 +29,12 @@ const OverlayItemSchema = t.object({
 });
 
 export class OverlayPlugin extends Plugin {
-    /**
-     * @private
-     */
-    nextId = 0;
-    overlays = new Resource({
+    #nextId = 0;
+    #overlays = new Resource({
         name: "overlays",
         validation: OverlayItemSchema,
     });
+    overlays = computed(() => this.#overlays.items());
 
     /**
      * @param {typeof Component} component
@@ -49,19 +48,19 @@ export class OverlayPlugin extends Plugin {
             options = applyDefaults(options, OverlayOptionsSchema);
 
             const overlay = {
-                id: ++this.nextId,
+                id: ++this.#nextId,
                 component,
                 scope: options.scope,
                 props,
                 rootId: options.rootId,
                 remove: async (removeParams) => {
-                    if (this.overlays.has(overlay)) {
+                    if (this.#overlays.has(overlay)) {
                         await options.onRemove?.(removeParams);
-                        this.overlays.delete(overlay);
+                        this.#overlays.delete(overlay);
                     }
                 },
             };
-            this.overlays.add(overlay, { sequence: options.sequence });
+            this.#overlays.add(overlay, { sequence: options.sequence });
             return overlay.remove;
         });
     }

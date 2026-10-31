@@ -17,9 +17,8 @@ export class SortablePlugin extends Plugin {
     /**
      * Map to avoid to setup/enable twice or more time the same element
      * @type {Map<Element, Object>}
-     * @private
      */
-    boundElements = new Map();
+    #boundElements = new Map();
 
     /**
      * @param {SortableServiceHookParams} hookParams
@@ -27,8 +26,8 @@ export class SortablePlugin extends Plugin {
     create(hookParams) {
         const element = hookParams.ref?.();
         const sortableId = hookParams.sortableId ?? DEFAULT_SORTABLE_ID;
-        if (this.boundElements.has(element)) {
-            const boundElement = this.boundElements.get(element);
+        if (this.#boundElements.has(element)) {
+            const boundElement = this.#boundElements.get(element);
             if (sortableId in boundElement) {
                 return {
                     enable() {
@@ -49,11 +48,11 @@ export class SortablePlugin extends Plugin {
         const cleanupFunctions = [];
 
         const cleanup = () => {
-            const boundElement = this.boundElements.get(element);
+            const boundElement = this.#boundElements.get(element);
             if (sortableId in boundElement) {
                 delete boundElement[sortableId];
                 if (boundElement.length === 0) {
-                    this.boundElements.delete(element);
+                    this.#boundElements.delete(element);
                 }
             }
             cleanupFunctions.forEach((fn) => fn());
@@ -73,11 +72,11 @@ export class SortablePlugin extends Plugin {
 
         useSortable({ setupHooks, ...hookParams });
 
-        const boundElement = this.boundElements.get(element);
+        const boundElement = this.#boundElements.get(element);
         if (boundElement) {
             boundElement[sortableId] = cleanup;
         } else {
-            this.boundElements.set(element, { [sortableId]: cleanup });
+            this.#boundElements.set(element, { [sortableId]: cleanup });
         }
 
         return {
