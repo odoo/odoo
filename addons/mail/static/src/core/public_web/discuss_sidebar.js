@@ -34,11 +34,29 @@ export class DiscussSidebar extends Component {
         return discussSidebarItemsRegistry.getAll();
     }
 
+    get panelWidth() {
+        const isCompact = this.store.discuss.isSidebarCompact;
+        if (
+            this.width !== undefined &&
+            this.width <= this.store.discuss.COMPACT_SIDEBAR_THRESHOLD === isCompact
+        ) {
+            return this.width;
+        }
+        return isCompact
+            ? this.store.discuss.COMPACT_SIDEBAR_WIDTH
+            : this.store.discuss.INSPECTOR_WIDTH;
+    }
+
     onResize(width) {
         if (!this.mounted) {
             return; // ignore resize from mount not triggered by user
         }
-        if (width <= 100) {
+        this.width = width;
+        const isCompact = width <= this.store.discuss.COMPACT_SIDEBAR_THRESHOLD;
+        if (isCompact === this.store.discuss.isSidebarCompact) {
+            return;
+        }
+        if (isCompact) {
             browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, true);
         } else {
             browser.localStorage.removeItem(DISCUSS_SIDEBAR_COMPACT_LS);

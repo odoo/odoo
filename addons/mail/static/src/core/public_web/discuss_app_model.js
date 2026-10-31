@@ -8,6 +8,7 @@ export const LAST_DISCUSS_ACTIVE_ID_LS = "mail.user_setting.discuss_last_active_
 export class DiscussApp extends Record {
     INSPECTOR_WIDTH = 300;
     COMPACT_SIDEBAR_WIDTH = 60;
+    COMPACT_SIDEBAR_THRESHOLD = 100;
     /** @type {'notification'|'channel'|'chat'|'livechat'|'inbox'} */
     activeTab = "notification";
     searchTerm = "";
