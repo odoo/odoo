@@ -241,6 +241,10 @@ class ResPartner(models.Model):
             if value.isalnum():
                 value = value.removeprefix(country_code)
 
+        # The UAE Peppol participant identifier is the TIN: the first 10 digits of the 15-digit TRN.
+        if country_code == 'AE' and field == 'vat' and value:
+            value = value[:10]
+
         return value
 
     @api.depends('peppol_eas')
@@ -302,6 +306,11 @@ class ResPartner(models.Model):
             return _("The Peppol endpoint is not valid. "
                      "It should contain exactly 10 digits (Company Registry number)."
                      "The expected format is: 1234567890")
+        if eas == '0235' and not re.match(r"^\d{10}$", endpoint):
+            return _("The Peppol endpoint is not valid. "
+                     "Please enter a valid 10-digit Tax Identification Number (TIN). "
+                     "If your business is VAT-registered, this is the first 10 digits of your 15-digit TRN. "
+                     "Expected format: 1001234567.")
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):
