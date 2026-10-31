@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_tutorial" model="web_tuto.tutorial">
+        <field name="name">crm_tutorial</field>
+        <field name="title">Manage your sales pipeline</field>
+        <field name="sequence">10</field>
+        <field name="rainbow_man_message">Congrats, best of luck catching such big fish! :&#41;</field>
+    </record>
+
+    <record id="crm_tutorial_crm_case_kanban_view_leads" model="web_tuto.chapter">
+        <field name="tutorial_id" ref="crm_tutorial"/>
+        <field name="sequence">10</field>
+        <field name="view_id" ref="crm_case_kanban_view_leads"/>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_new" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="sequence">20</field>
+        <field name="type">button</field>
+        <field name="name">new</field>
+        <field name="content">Got a new lead? Click here to create your first opportunity.</field>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_partner_id" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="sequence">30</field>
+        <field name="type">field</field>
+        <field name="name">partner_id</field>
+        <field name="content">Who is it for? Type a few letters to find your customer, or create a new one.</field>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_expected_revenue" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="sequence">40</field>
+        <field name="type">field</field>
+        <field name="name">expected_revenue</field>
+        <field name="content">How much could this deal bring in? Enter the expected revenue.</field>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_priority" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="sequence">50</field>
+        <field name="type">field</field>
+        <field name="name">priority</field>
+        <field name="content">Is it a promising one? Add stars to make it stand out in your pipeline.</field>
+    </record>
+    <record id="crm_tutorial_crm_case_kanban_view_leads_edit" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_case_kanban_view_leads"/>
+        <field name="sequence">60</field>
+        <field name="type">button</field>
+        <field name="name">edit</field>
+        <field name="content">Looking good! Now open the opportunity to see all its details.</field>
+    </record>
+
+    <record id="crm_tutorial_crm_lead_view_form" model="web_tuto.chapter">
+        <field name="tutorial_id" ref="crm_tutorial"/>
+        <field name="sequence">70</field>
+        <field name="view_id" ref="crm_lead_view_form"/>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_tag_ids" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="sequence">80</field>
+        <field name="type">field</field>
+        <field name="name">tag_ids</field>
+        <field name="content">Add tags to sort your opportunities at a glance (e.g. Product, Services).</field>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_description" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="sequence">90</field>
+        <field name="type">field</field>
+        <field name="name">description</field>
+        <field name="content">Note what your customer needs, so nothing gets forgotten.</field>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_send" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="sequence">100</field>
+        <field name="type">button</field>
+        <field name="name">send</field>
+        <field name="content">Send a message to your customer right from here: they receive it by email.</field>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_stage_id" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="sequence">110</field>
+        <field name="type">field</field>
+        <field name="name">stage_id</field>
+        <field name="content">Making progress? Move the opportunity to the next stage of your pipeline.</field>
+    </record>
+    <record id="crm_tutorial_crm_lead_view_form_delete" model="web_tuto.step">
+        <field name="chapter_id" ref="crm_tutorial_crm_lead_view_form"/>
+        <field name="sequence">120</field>
+        <field name="type">button</field>
+        <field name="name">delete</field>
+        <field name="content">Opportunity lost for good? You can delete it from here.</field>
+        <field name="hint" eval="True"/>
+    </record>
+</odoo>

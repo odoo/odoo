@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tutorial_form" model="ir.ui.view">
+        <field name="model">web_tuto.tutorial</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="action_restart" type="object" string="Start" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. crm_tutorial"/></h1>
+                    </div>
+                    <group>
+                        <field name="title"/>
+                        <field name="sequence"/>
+                    </group>
+                    <notebook>
+                        <page name="chapters" string="Chapters">
+                            <field name="chapter_ids">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="view_id"/>
+                                    <field name="step_ids" widget="many2many_tags"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="view_id"/>
+                                    </group>
+                                    <field name="step_ids">
+                                        <list editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="type"/>
+                                            <field name="name"/>
+                                            <field name="content"/>
+                                            <field name="hint"/>
+                                            <field name="tooltip_position"/>
+                                        </list>
+                                    </field>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                    <field name="rainbow_man_message" placeholder="Rainbow Man Message..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tutorial_list" model="ir.ui.view">
+        <field name="model">web_tuto.tutorial</field>
+        <field name="arch" type="xml">
+            <list create="0">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="title"/>
+                <button name="action_restart" type="object" string="Start" class="btn-link"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tutorial_search" model="ir.ui.view">
+        <field name="model">web_tuto.tutorial</field>
+        <field name="arch" type="xml">
+            <search string="Tutorials">
+                <field name="name"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="tutorial_action" model="ir.actions.act_window">
+        <field name="name">Tutorials</field>
+        <field name="res_model">web_tuto.tutorial</field>
+        <field name="view_id" ref="tutorial_list"/>
+        <field name="search_view_id" ref="tutorial_search"/>
+    </record>
+    <menuitem action="tutorial_action" id="menu_tutorial_action" parent="base.next_id_2" sequence="6"/>
+</odoo>

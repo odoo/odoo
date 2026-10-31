@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_tutorial" model="web_tuto.tutorial">
+        <field name="name">project_tutorial</field>
+        <field name="title">Organize your projects</field>
+        <field name="sequence">110</field>
+        <field name="rainbow_man_message">Congratulations, you are now a master of project management.</field>
+    </record>
+
+    <record id="project_tutorial_view_project_kanban" model="web_tuto.chapter">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="sequence">10</field>
+        <field name="view_id" ref="view_project_kanban"/>
+    </record>
+    <record id="project_tutorial_view_project_kanban_new" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_project_kanban"/>
+        <field name="sequence">20</field>
+        <field name="type">button</field>
+        <field name="name">new</field>
+        <field name="content">Start a new project to organize your work.</field>
+    </record>
+
+    <record id="project_tutorial_project_project_view_form_simplified" model="web_tuto.chapter">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="sequence">30</field>
+        <field name="view_id" ref="project_project_view_form_simplified"/>
+    </record>
+    <record id="project_tutorial_project_project_view_form_simplified_name" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_project_project_view_form_simplified"/>
+        <field name="sequence">40</field>
+        <field name="type">field</field>
+        <field name="name">name</field>
+        <field name="content">Give your project a name, e.g. Office move or Website redesign.</field>
+    </record>
+    <record id="project_tutorial_project_project_view_form_simplified_action_view_tasks" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_project_project_view_form_simplified"/>
+        <field name="sequence">50</field>
+        <field name="type">button</field>
+        <field name="name">action_view_tasks</field>
+        <field name="content">All set! Create your project and jump into its tasks.</field>
+    </record>
+
+    <record id="project_tutorial_view_task_kanban" model="web_tuto.chapter">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="sequence">60</field>
+        <field name="view_id" ref="view_task_kanban"/>
+    </record>
+    <record id="project_tutorial_view_task_kanban_add_stage" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="sequence">70</field>
+        <field name="type">button</field>
+        <field name="name">create</field>
+        <field name="content">Add the stages your tasks will go through, e.g. To Do.</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_add_stage_2" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="sequence">80</field>
+        <field name="type">button</field>
+        <field name="name">create</field>
+        <field name="content">Add another stage, e.g. In Progress or Done.</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_new" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="sequence">90</field>
+        <field name="type">button</field>
+        <field name="name">new</field>
+        <field name="content">Now, create your first task.</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_name" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="sequence">100</field>
+        <field name="type">field</field>
+        <field name="name">name</field>
+        <field name="content">What needs to be done? Describe the task in a few words.</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_user_ids" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="sequence">110</field>
+        <field name="type">field</field>
+        <field name="name">user_ids</field>
+        <field name="content">Who's on it? Assign the task to yourself or a teammate.</field>
+    </record>
+    <record id="project_tutorial_view_task_kanban_edit" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_kanban"/>
+        <field name="sequence">120</field>
+        <field name="type">button</field>
+        <field name="name">edit</field>
+        <field name="content">Open the task to add more details.</field>
+    </record>
+
+    <record id="project_tutorial_view_task_form2" model="web_tuto.chapter">
+        <field name="tutorial_id" ref="project_tutorial"/>
+        <field name="sequence">130</field>
+        <field name="view_id" ref="view_task_form2"/>
+    </record>
+    <record id="project_tutorial_view_task_form2_priority" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_form2"/>
+        <field name="sequence">140</field>
+        <field name="type">field</field>
+        <field name="name">priority</field>
+        <field name="content">Is it urgent? Star it so it stands out.</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_tag_ids" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_form2"/>
+        <field name="sequence">150</field>
+        <field name="type">field</field>
+        <field name="name">tag_ids</field>
+        <field name="content">Add tags to find similar tasks at a glance (e.g. Design, Bug).</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_date_deadline" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_form2"/>
+        <field name="sequence">160</field>
+        <field name="type">field</field>
+        <field name="name">date_deadline</field>
+        <field name="content">When should it be done? Set a deadline.</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_description" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_form2"/>
+        <field name="sequence">170</field>
+        <field name="type">field</field>
+        <field name="name">description</field>
+        <field name="content">Write down the details, so everyone knows what to do.</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_send" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_form2"/>
+        <field name="sequence">180</field>
+        <field name="type">button</field>
+        <field name="name">send</field>
+        <field name="content">Send a message to the followers of the task: they receive it by email.</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_log" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_form2"/>
+        <field name="sequence">190</field>
+        <field name="type">button</field>
+        <field name="name">log</field>
+        <field name="content">Log an internal note: only your colleagues will see it.</field>
+    </record>
+    <record id="project_tutorial_view_task_form2_stage_id" model="web_tuto.step">
+        <field name="chapter_id" ref="project_tutorial_view_task_form2"/>
+        <field name="sequence">200</field>
+        <field name="type">field</field>
+        <field name="name">stage_id</field>
+        <field name="content">Making progress? Move the task to the next stage.</field>
+    </record>
+</odoo>
