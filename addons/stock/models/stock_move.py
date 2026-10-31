@@ -1794,27 +1794,37 @@ Please change the quantity done or the rounding precision of your unit of measur
         The rationale for the creation of an extra move is the application of a potential push
         rule that will handle the extra quantities.
         """
-        extra_move = self
-        rounding = self.product_uom.rounding
-        # moves created after the picking is assigned do not have `product_uom_qty`, but we shouldn't create extra moves for them
-        if float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) > 0:
-            # create the extra moves
-            extra_move_quantity = float_round(
-                self.quantity_done - self.product_uom_qty,
-                precision_rounding=rounding,
-                rounding_method='HALF-UP')
-            extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
-            self = self.with_context(avoid_putaway_rules=True, extra_move_mode=True)
-            extra_move = self.copy(default=extra_move_vals)
+        unconfirmed_extra_move_ids = OrderedSet()
+        merge_into_self_move_ids = OrderedSet() 
+        for record in self:
+            unconfirmed_extra_moves = record 
+            rounding = record.product_uom.rounding
+            # moves created after the picking is assigned do not have `product_uom_qty`, but we shouldn't create extra moves for them
+            if float_compare(record.quantity_done, record.product_uom_qty, precision_rounding=rounding) > 0:
+                # create the extra moves
+                extra_move_quantity = float_round(
+                    record.quantity_done - record.product_uom_qty,
+                    precision_rounding=rounding,
+                    rounding_method='HALF-UP')
+                extra_move_vals = record._prepare_extra_move_vals(extra_move_quantity)
+                record = record.with_context(avoid_putaway_rules=True, extra_move_mode=True)
+                extra_move = record.copy(default=extra_move_vals)
 
-            merge_into_self = all(self[field] == extra_move[field] for field in self._prepare_merge_moves_distinct_fields())
+                merge_into_self = all(record[field] == extra_move[field] for field in record._prepare_merge_moves_distinct_fields())
 
-            if merge_into_self:
-                extra_move = extra_move._action_confirm(merge_into=self)
-                return extra_move
-            else:
-                extra_move = extra_move._action_confirm()
-        return extra_move | self
+                if merge_into_self:
+                    merge_into_self_move_ids.add(extra_move.id)
+                else:
+                    unconfirmed_extra_move_ids.add(extra_move.id)
+                
+        unconfirmed_extra_moves = self.env['stock.move'].browse(unconfirmed_extra_move_ids)            
+        merge_into_self_moves = self.env['stock.move'].browse(merge_into_self_move_ids)
+
+        extra_moves = self.env['stock.move']
+        extra_moves |= merge_into_self_moves._action_confirm(merge_into=self)
+        extra_moves |= unconfirmed_extra_moves._action_confirm()
+
+        return extra_moves | self
 
     def _action_done(self, cancel_backorder=False):
         moves = self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
@@ -1833,9 +1843,9 @@ Please change the quantity done or the rounding precision of your unit of measur
             if move.state == 'cancel' or (move.quantity_done <= 0 and not move.is_inventory):
                 continue
 
-            moves_ids_todo |= move._create_extra_move().ids
+            moves_ids_todo |= move.ids
 
-        moves_todo = self.browse(moves_ids_todo)
+        moves_todo = self.browse(moves_ids_todo)._create_extra_move()
         moves_todo._check_company()
         # Split moves where necessary and move quants
         backorder_moves_vals = []
