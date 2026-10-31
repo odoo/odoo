@@ -134,6 +134,7 @@ export class Subscribe extends Interaction {
         const toastType = result.toast_type;
         if (toastType === 'success') {
             this._updateSubscribeControlsStatus(true);
+<<<<<<< cb859ff9270f9884856f695d9819537bd1fc6684
             const modalEl = this.el.closest('.o_newsletter_modal');
             if (modalEl) {
                 this.addListener(modalEl, 'hidden.bs.modal', () => {
@@ -141,11 +142,19 @@ export class Subscribe extends Interaction {
                 }, { once: true });
                 this.bootstrap.getOrCreateInstance(window.Modal, modalEl).hide();
             }
+||||||| bd692d26d8018b323a1bda460ee953cbe4c42a45
+            const modalEl = this.el.closest('.o_newsletter_modal');
+            if (modalEl) {
+                window.Modal.getOrCreateInstance(modalEl).hide();
+            }
+=======
+        } else {
+            this.notification.add(result.toast_content, {
+                type: toastType,
+                sticky: true,
+            });
+>>>>>>> 18109439bef6666e84ad04aa24f7f6011a70340d
         }
-        this.notification.add(result.toast_content, {
-            type: toastType,
-            sticky: true,
-        });
     }
 }
 
