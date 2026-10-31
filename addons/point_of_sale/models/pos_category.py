@@ -14,6 +14,7 @@ class PosCategory(models.Model):
     _inherit = ['pos.load.mixin']
     _rec_name = 'complete_name'
     _order = "sequence, name"
+    _parent_store = True
 
     @api.constrains('parent_id')
     def _check_category_recursion(self):
@@ -29,6 +30,7 @@ class PosCategory(models.Model):
     name = fields.Char(string='Category Name', required=True, translate=True)
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', recursive=True, store=True)
     parent_id = fields.Many2one('pos.category', string='Parent Category', index=True)
+    parent_path = fields.Char(index=True)
     child_ids = fields.One2many('pos.category', 'parent_id', string='Children Categories')
     sequence = fields.Integer(help="Gives the sequence order when displaying a list of product categories.", default=_default_sequence)
     image_512 = fields.Image("Image", max_width=512, max_height=512)

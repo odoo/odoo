@@ -151,7 +151,15 @@ export class IrModel extends webModels.IrModel {
      * @param {string[]} modelNames
      */
     has_searchable_parent_relation(modelNames) {
-        return Object.fromEntries(modelNames.map((modelName) => [modelName, false]));
+        return Object.fromEntries(
+            modelNames.map((modelName) => {
+                const model = modelName in this.env && this.env[modelName];
+                return [
+                    modelName,
+                    Boolean(model && model._parent_store && model._parent_name in model._fields),
+                ];
+            })
+        );
     }
 
     get_available_models() {

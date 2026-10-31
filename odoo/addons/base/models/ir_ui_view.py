@@ -147,6 +147,7 @@ class IrUiView(models.Model):
     _name = 'ir.ui.view'
     _description = 'View'
     _order = "priority,name,id"
+    _parent_name = 'inherit_id'
     _allow_sudo_commands = False
     _clear_cache_name = 'templates'
 

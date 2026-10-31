@@ -1475,6 +1475,7 @@ const INHERITED_PRIMITIVE_KEYS = [
     ["_inherit", null],
     ["_order", null],
     ["_parent_name", null],
+    ["_parent_store", null],
     ["_rec_name", null],
     ["_related", (set) => new Set(set)],
 ];
@@ -1618,6 +1619,13 @@ export class Model extends Array {
         this.definition._parent_name = value;
     }
 
+    static get _parent_store() {
+        return this.definition._parent_store;
+    }
+    static set _parent_store(value) {
+        this.definition._parent_store = value;
+    }
+
     static get _rec_name() {
         return this.definition._rec_name;
     }
@@ -1679,6 +1687,7 @@ export class Model extends Array {
      *  | "_onChanges"
      *  | "_order"
      *  | "_parent_name"
+     *  | "_parent_store"
      *  | "_rec_name"
      *  | "_records"
      *  | "_related"
@@ -1699,6 +1708,7 @@ export class Model extends Array {
     /** @type {string} */
     _order = "id";
     _parent_name = "parent_id";
+    _parent_store = false;
     /** @type {keyof Model | null} */
     _rec_name = null;
     /** @type {Partial<ModelRecord>[]} */
@@ -1747,6 +1757,7 @@ export class Model extends Array {
             this._onChanges = modelInstance._onChanges;
             this._order = modelInstance._order;
             this._parent_name = modelInstance._parent_name;
+            this._parent_store = modelInstance._parent_store;
             this._rec_name = modelInstance._rec_name;
             this._related = modelInstance._related;
             this._views = modelInstance._views;

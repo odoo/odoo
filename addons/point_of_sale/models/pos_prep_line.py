@@ -5,6 +5,7 @@ from uuid import uuid4
 class PosPrepLine(models.Model):
     _name = 'pos.prep.line'
     _description = 'Pos Preparation Line'
+    _parent_name = 'combo_parent_id'
     _inherit = ['pos.load.mixin']
 
     prep_order_id = fields.Many2one('pos.prep.order', string='Preparation Order', ondelete='cascade', index='btree_not_null')
