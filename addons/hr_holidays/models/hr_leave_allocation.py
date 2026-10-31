@@ -176,6 +176,14 @@ class HrLeaveAllocation(models.Model):
         if any(allocation.accrual_plan_id and allocation.accrual_plan_id.work_entry_type_id != allocation.work_entry_type_id for allocation in self):
             raise UserError(_("Selected Time Type must be the same one set on accrual plan"))
 
+    @api.constrains('work_entry_type_id', 'employee_id')
+    def _check_contry_of_employee_and_type(self):
+        for record in self:
+            time_off_type_country = record.work_entry_type_id.country_id.code
+            employee_country = record.employee_id.company_country_id.code
+            if time_off_type_country and employee_country and time_off_type_country != employee_country:
+                raise ValidationError(_('The country of \'Time Type\' and \'Employee\' must be the same'))
+
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
     @api.depends_context('uid')
@@ -335,10 +343,12 @@ class HrLeaveAllocation(models.Model):
             domain = Domain.AND([allocation._domain_work_entry_type_id(), domain])
             allocation.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
-    @api.depends('accrual_plan_id')
+    @api.depends('accrual_plan_id', 'employee_company_id')
     def _compute_work_entry_type_id(self):
         default_work_entry_type_id = None
         for allocation in self:
+            if allocation.work_entry_type_id and allocation.work_entry_type_id.country_code != self.employee_company_id.country_code:
+                allocation.work_entry_type_id = None
             if not allocation.work_entry_type_id:
                 if not default_work_entry_type_id:  # fetch when we need it
                     default_work_entry_type_id = self._default_work_entry_type_id()

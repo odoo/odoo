@@ -38,6 +38,7 @@ class TestFrenchLeaves(TransactionCase):
             'request_unit': 'half_day',
             'unit_of_measure': 'day',
             'count_as': 'absence',
+            'country_id': country_fr.id,
         })
         cls.company.write({
             'l10n_fr_reference_work_entry_type': cls.time_off_type.id,
