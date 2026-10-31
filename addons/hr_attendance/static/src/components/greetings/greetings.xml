@@ -12,7 +12,7 @@
 
     <t t-name="hr_attendance.public_kiosk_greetings">
         <t t-if="this.attendance">
-            <div class="o_hr_kiosk_mode_main d-flex flex-grow-1 justify-content-center align-items-center">
+            <div class="o_hr_kiosk_mode_main d-flex flex-column flex-grow-1 justify-content-center align-items-center overflow-auto">
                 <div class="o_hr_attendance_kiosk_card card rounded-3">
                     <div class="card-body rounded-3">
                         <div class="o_hr_attendance_kiosk_card_wrapper d-flex flex-column align-items-center justify-content-center">
@@ -67,11 +67,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="o_hr_kiosk_mode_bottom my-4 mx-auto">
-                <button class="btn btn-primary btn-lg rounded-pill px-5" t-on-click="this.props.kioskReturn">
-                    OK
-                </button>
+                <div class="o_hr_kiosk_mode_bottom my-4 mx-auto">
+                    <button class="btn btn-primary btn-lg rounded-pill px-5" t-on-click="this.props.kioskReturn">
+                        OK
+                    </button>
+                </div>
             </div>
         </t>
         <t t-else="">
