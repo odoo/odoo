@@ -98,5 +98,4 @@ class MailPollOption(models.Model):
 
     def _store_poll_option_fields(self, res: Store.FieldList):
         res.extend(["number_of_votes", "poll_id", "option_emoji", "option_label", "vote_percentage"])
-        if res.is_for_current_user():
-            res.attr("selected_by_self")
+        res.for_current_user(["selected_by_self"])

@@ -477,12 +477,12 @@ class DiscussChannelMember(models.Model):
             partner_fields=lambda res: (
                 res.attr("name"),
                 res.from_method("_store_avatar_fields"),
-                res.from_method("_store_im_status_fields", internal=True),
+                res.for_internal_users("_store_im_status_fields"),
                 res.from_method("_store_mention_fields"),
             ),
             guest_fields=lambda res: (
                 res.from_method("_store_avatar_fields"),
-                res.from_method("_store_im_status_fields", internal=True),
+                res.for_internal_users("_store_im_status_fields"),
             ),
         )
 
@@ -502,7 +502,7 @@ class DiscussChannelMember(models.Model):
             ),
             guest_fields=lambda res: (
                 res.from_method("_store_avatar_fields"),
-                res.from_method("_store_im_status_fields", internal=True),
+                res.for_internal_users("_store_im_status_fields"),
             ),
         )
 
