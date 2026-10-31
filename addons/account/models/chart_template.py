@@ -133,14 +133,15 @@ class AccountChartTemplate(models.AbstractModel):
         # This function is called many times. Avoid doing a search every time by using the ORM's cache.
         # We assume that the field is always computed for all the modules at once (by this function)
         modules = self.env['ir.module.module'].sudo()
-        modules = (
-            modules.browse(modules._fields['account_templates']._get_cache(self.env))
-            or modules.search([('state', '!=', 'uninstallable')])
+        mappings = (
+            # Read the cached values as mapped() deep-copies the Json value of every module
+            modules._fields['account_templates']._get_cache(self.env).values()
+            or modules.search([('state', '!=', 'uninstallable')]).mapped('account_templates')
         )
 
         return {
             name: template
-            for mapping in modules.mapped('account_templates')
+            for mapping in mappings
             if mapping
             for name, template in mapping.items()
             if get_all or template['visible']
@@ -609,6 +610,14 @@ class AccountChartTemplate(models.AbstractModel):
                      of accounts. It is a mapping {model: {xml_id: values}}.
         :type data: dict[str, dict[(str, int), dict]]
         """
+        # Referenced records are not deleted while loading, so their existence is checked once
+        refs = {}
+
+        def ref(xmlid):
+            if xmlid not in refs:
+                refs[xmlid] = self.ref(xmlid)
+            return refs[xmlid]
+
         def deref_values(values, model):
             """Replace xml_id references by database ids in all provided values.
 
@@ -624,7 +633,7 @@ class AccountChartTemplate(models.AbstractModel):
                     or (field.type in ('integer', 'many2one_reference') and not value.isdigit())
                 ):
                     try:
-                        values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
+                        values[fname] = ref(value).id if value not in ('', 'False', 'None') else False
                     except ValueError:
                         if model._name == 'res.company':
                             # Try a fallback on the company when reloading/loading on a branch
@@ -644,12 +653,12 @@ class AccountChartTemplate(models.AbstractModel):
                         elif command == Command.SET:
                             for subvalue_idx, subvalue in enumerate(last_part):
                                 if isinstance(subvalue, str):
-                                    last_part[subvalue_idx] = self.ref(subvalue).id
+                                    last_part[subvalue_idx] = ref(subvalue).id
                         elif command == Command.LINK and isinstance(_id, str):
-                            value[i] = Command.link(self.ref(_id).id)
+                            value[i] = Command.link(ref(_id).id)
                 elif field.type in ('one2many', 'many2many') and isinstance(value, str):
                     values[fname] = [Command.set([
-                        self.ref(v).id
+                        ref(v).id
                         for v in value.split(',')
                         if v
                     ])]
@@ -735,8 +744,10 @@ class AccountChartTemplate(models.AbstractModel):
                     if '@' in key or key == '__translation_module__':
                         del record_vals[key]
 
-                # Manage ids given as database id or xml_id
-                if isinstance(xml_id, str) and (record := self.ref(xml_id, raise_if_not_found=False)):
+                # _load_records matches the company's xml_ids, only a branch may reuse its root's ones
+                if isinstance(xml_id, str) and self.env.company.parent_id and (
+                    record := self.ref(xml_id, raise_if_not_found=False)
+                ):
                     xml_id = record.id
 
                 if isinstance(xml_id, int):
