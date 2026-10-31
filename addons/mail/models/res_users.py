@@ -45,6 +45,7 @@ class ResUsers(models.Model):
              "- By email: Notifications are sent to your email address.\n"
              "- In Odoo: Notifications appear in your Odoo inbox.")
     presence_ids = fields.One2many("mail.presence", "user_id", groups="base.group_system")
+    status_message = fields.Char("Status Message", size=100, copy=False, user_writeable=True)
     # OOO management
     out_of_office_from = fields.Datetime(user_writeable=True)
     out_of_office_to = fields.Datetime(user_writeable=True)
@@ -484,11 +485,12 @@ class ResUsers(models.Model):
             ),
         )
         res.attr("is_admin", lambda u: u._is_admin())
-        res.extend(["notification_type", "share", "signature"])
+        res.extend(["notification_type", "share", "signature", "status_message"])
         res.from_method("_store_im_status_fields")
 
     def _store_main_user_fields(self, res: Store.FieldList):
         res.extend(["active", "partner_id", "share"])
+        res.attr("status_message", internal=True)
 
     def _store_im_status_fields(self, res: Store.FieldList):
         res.attr("im_status")
@@ -592,6 +594,7 @@ class ResUsers(models.Model):
         res.attr("share")
         res.one("partner_id", "_store_avatar_card_fields")
         res.attr("is_public", lambda u: u._is_public())
+        res.attr("status_message", internal=True)
         res.from_method("_store_im_status_fields", internal=True)
 
     # ------------------------------------------------------------

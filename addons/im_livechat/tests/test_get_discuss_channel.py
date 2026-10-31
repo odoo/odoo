@@ -174,6 +174,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.id,
                     "partner_id": self.partner_root.id,
                     "share": False,
+                    "status_message": False,
                 },
                 {
                     "all_employee_ids": [],
@@ -189,6 +190,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "res_users_settings_id": test_user.res_users_settings_id.id,
                     "signature": ["markup", str(test_user.signature)],
                     "share": False,
+                    "status_message": False,
                 },
                 {
                     "all_employee_ids": [],
@@ -319,6 +321,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.id,
                     "partner_id": self.partner_root.id,
                     "share": False,
+                    "status_message": False,
                 },
                 {
                     "all_employee_ids": [],
@@ -333,6 +336,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "res_users_settings_id": operator.res_users_settings_id.id,
                     "share": False,
                     "signature": ["markup", str(operator.signature)],
+                    "status_message": False,
                 },
             ),
         )

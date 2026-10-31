@@ -99,6 +99,7 @@
         <div class="d-flex align-items-baseline min-w-0">
             <div class="o-mail-ChatWindow-displayName text-truncate fw-bold border border-transparent my-0" t-att-title="this.props.chatWindow.channel.displayName" t-out="this.props.chatWindow.channel.displayName" t-att-class="this.displayNameFontSizeClass"/>
         </div>
+        <span t-if="this.hasNameSubline" class="o-mail-ChatWindow-statusSubtitle smaller text-truncate" t-att-class="this.channel.correspondent.partner_id.statusSubtitleClass()" t-att-title="this.channel.correspondent.partner_id.statusSubtitle()" t-out="this.channel.correspondent.partner_id.statusSubtitle()"/>
     </div>
 </t>
 

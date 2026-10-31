@@ -21,7 +21,9 @@ test("thread icon of a chat when correspondent is on leave & online", async () =
     await start();
     await openDiscuss();
     await contains(".o-mail-NotificationItem", {
-        contains: [".o-mail-ThreadIcon[data-icon='travel'][title='User is on leave and online']"],
+        contains: [
+            ".o-mail-ThreadIcon[data-icon='travel'][title^='User is on leave and online ·']",
+        ],
         text: "Demo",
     });
 });
@@ -41,7 +43,7 @@ test("thread icon of a chat when correspondent is on leave & away", async () => 
     await start();
     await openDiscuss();
     await contains(".o-mail-NotificationItem", {
-        contains: [".o-mail-ThreadIcon[data-icon='travel'][title='User is on leave and idle']"],
+        contains: [".o-mail-ThreadIcon[data-icon='travel'][title^='User is on leave and idle ·']"],
         text: "Demo",
     });
 });
@@ -61,7 +63,7 @@ test("thread icon of a chat when correspondent is on leave & offline", async () 
     await start();
     await openDiscuss();
     await contains(".o-mail-NotificationItem", {
-        contains: [".o-mail-ThreadIcon[data-icon='travel'][title='User is on leave']"],
+        contains: [".o-mail-ThreadIcon[data-icon='travel'][title^='User is on leave ·']"],
         text: "Demo",
     });
 });

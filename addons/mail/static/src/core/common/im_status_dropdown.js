@@ -28,6 +28,12 @@ export class ImStatusDropdown extends Component {
         rpc("/mail/set_manual_im_status", { status });
     }
 
+    setStatusMessage(message) {
+        message = message.trim();
+        this.store.self_user.status_message = message;
+        rpc("/mail/set_status_message", { message });
+    }
+
     get readableImStatus() {
         const imStatus = this.store.self_user.imStatusUI || "offline";
         return this.readableImStatusByCode[imStatus];

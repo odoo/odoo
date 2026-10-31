@@ -129,6 +129,25 @@ test("chat with member should be opened after clicking on channel member", async
     await waitFor(".o-mail-AutoresizeInput[title='Demo']:count(1)");
 });
 
+test("Avatar card shows status message", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, status_message: "Off on this Tuesday" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMember:has(:text('Demo')):count(1)").click();
+    await waitFor(".o-mail-avatar-card-name:text('Demo'):count(1)");
+    await waitFor(".o-mail-AvatarCard-statusMessage:text('Off on this Tuesday'):count(1)");
+});
+
 test("Avatar card shows local timezone", async () => {
     mockDate("2026-01-01 12:00:00");
     const pyEnv = await startServer();

@@ -1226,3 +1226,21 @@ test("decorate emojis in chat bubble message preview", async () => {
     await hover(".o-mail-ChatBubble[name='General']");
     await waitFor(`.o-mail-ChatBubble-preview .o-mail-emoji[title=":innocent: :halo:"]:count(1)`);
 });
+
+test("show correspondent status message in chat window header", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, status_message: "Off on Wednesdays" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await waitFor(
+        ".o-mail-ChatWindow-header .o-mail-ChatWindow-statusSubtitle:text('Off on Wednesdays'):count(1)"
+    );
+});
