@@ -26,6 +26,9 @@
             t-att-selector="this.cardParentHandlers"
             exclude=".s_carousel_cards_item, *:has(> .stretched-link) *"
             applyTo=":scope > .s_card"/>
+        <clickable_element_option
+            selector=".s_masonry_block .o_grid_item"
+            exclude=".o_grid_item_image"/>
     </xpath>
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <clickable_element_option
