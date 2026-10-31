@@ -6587,9 +6587,43 @@ test(`show display name of event in edit mode`, async () => {
             <calendar schedule="1" date_start="start" date_stop="stop" event_open_popup="1"/>
         `,
     });
-    expect(".o_event_to_schedule_draggable span").toHaveText("event 8");
+    expect(".o_event_to_schedule_draggable .o_card_record").toHaveText("event 8");
     await contains(".o_event_to_schedule_draggable").click();
     expect(".modal-content .modal-title").toHaveText("Open: event 8", {
         message: "The title of the edit modal should contain the display name of the event",
     });
+});
+
+test.tags("desktop");
+test(`button in schedulecard executes its action`, async () => {
+    Event._records.push({
+        id: 8,
+        name: "event 8",
+        start: false,
+        stop: false,
+    });
+    mockService("action", {
+        doActionButton({ name, resId }) {
+            expect.step(`${name} ${resId}`);
+        },
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar schedule="1" date_start="start" date_stop="stop">
+                <schedulecard>
+                    <templates>
+                        <t t-name="card">
+                            <field name="name"/>
+                            <button name="action_ping" type="object" string="Ping"/>
+                        </t>
+                    </templates>
+                </schedulecard>
+            </calendar>
+        `,
+    });
+    await contains(".o_event_to_schedule_draggable button:contains(Ping)").click();
+    expect.verifySteps(["action_ping 8"]);
 });

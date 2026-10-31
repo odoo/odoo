@@ -81,3 +81,47 @@ class TestCalendarView(ViewCase):
                 """,
                 "model": "res.partner",
             })
+
+    def test_schedulecard_card_id(self):
+        self.assertValid(
+            """
+                <calendar date_start="create_date">
+                    <schedulecard card_id="1"/>
+                </calendar>
+            """,
+        )
+
+    def test_schedulecard_inline_templates(self):
+        self.assertValid(
+            """
+                <calendar date_start="create_date">
+                    <schedulecard>
+                        <templates>
+                            <t t-name="card"><field name="name"/></t>
+                        </templates>
+                    </schedulecard>
+                </calendar>
+            """,
+        )
+
+    def test_schedulecard_empty_invalid(self):
+        self.assertInvalid(
+            """
+                <calendar date_start="create_date">
+                    <schedulecard/>
+                </calendar>
+            """,
+            "Schedulecard must have a card_id attribute or a templates tag",
+        )
+
+    def test_schedulecard_card_node_invalid(self):
+        self.assertInvalid(
+            """
+                <calendar date_start="create_date">
+                    <schedulecard>
+                        <card/>
+                    </schedulecard>
+                </calendar>
+            """,
+            "Schedulecard child can only be field or templates, got card",
+        )
