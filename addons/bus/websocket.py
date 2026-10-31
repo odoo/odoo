@@ -182,6 +182,11 @@ class CloseFrame(Frame):
 _websocket_instances = WeakSet()
 
 
+# Bound websocket termination to prevent thundering herd on mass disconnect.
+_maxconn = (config["db_maxconn_gevent"] if odoo.evented else 0) or config["db_maxconn"]
+_close_semaphore = threading.BoundedSemaphore(max(_maxconn // 8, 1))
+
+
 class Websocket:
     __event_callbacks = defaultdict(set)
     # Maximum size for a message in bytes, whether it is sent as one
@@ -533,7 +538,7 @@ class Websocket:
         self.__cmd_queue.close()
         dispatch.unsubscribe(self)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
-        with acquire_cursor(self._db) as cr:
+        with _close_semaphore, acquire_cursor(self._db) as cr:
             env = new_env(cr, self._session)
             env["ir.websocket"]._on_websocket_closed(self._cookies)
 
@@ -986,16 +991,9 @@ def _kick_all(code=CloseCode.GOING_AWAY):
     _stopping.set()  # refuse new connections
     try:
         _logger.info("Disconnecting %s websockets", len(_websocket_instances))
-        count = 0
-        wait_threshold = max(odoo.sql_db._Pool._maxconn // 8, 8) if odoo.sql_db._Pool else 32
         for websocket in _websocket_instances:
             if websocket.state is ConnectionState.OPEN:
                 websocket.close(code)
-                count += 1
-                if count % wait_threshold == 0:
-                    time.sleep(0.5)
-                    _logger.debug("signaling websockets to shutdown %s/%s ...", count, len(_websocket_instances))
-        _logger.debug("signaling websockets to shutdown %s/%s done", count, len(_websocket_instances))
 
         # Every websocket has been signaled to shut down, but the
         # closing handshake might not be complete yet, wait up to
