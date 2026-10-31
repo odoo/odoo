@@ -541,8 +541,8 @@ export class PosDataPlugin extends Plugin {
                     recordsWriteDate = await this.getCachedServerIdsFromIndexedDB();
                 }
 
+                // Include newly enabled models even when they are absent from the cache.
                 const testLocalData = {
-                    models: Object.keys(recordsWriteDate),
                     records: recordsWriteDate,
                     search_params: {},
                 };
