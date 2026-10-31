@@ -1,13 +1,29 @@
 /* global Stripe */
 
 import { ExpressCheckout } from '@payment/interactions/express_checkout';
-import { StripeOptions } from '@payment_stripe/interactions/stripe_options';
+import { STRIPE_SDK_URL, StripeOptions } from '@payment_stripe/interactions/stripe_options';
+import { loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { patch } from '@web/core/utils/patch';
 import { redirect } from '@web/core/utils/urls';
 
 patch(ExpressCheckout.prototype, {
+    /**
+     * Load the Stripe SDK if the express checkout form is handled by Stripe.
+     *
+     * @override method from payment.express_checkout
+     * @return {void}
+     */
+    async willStart() {
+        if (this.el.querySelector(
+            'div[name="o_express_checkout_container"][data-provider-code="stripe"]'
+        )) {
+            await this.waitFor(loadJS(STRIPE_SDK_URL));
+        }
+        await super.willStart(...arguments);
+    },
+
     /**
      * Get the order details to display on the payment form.
      *

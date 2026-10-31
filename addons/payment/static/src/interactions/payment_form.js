@@ -32,8 +32,15 @@ export class PaymentForm extends Interaction {
     }
 
     async willStart() {
+        // Request the SDK assets of all the providers listed in the form at once.
+        // They are awaited when the inline form of a payment option needing them is expanded.
+        this.assetsPromises = this._getAssetsPromises();
+        [...this.assetsPromises.values()].flat().forEach(
+            promise => promise.catch(() => {})  // Failures are reported in `_expandInlineForm`
+        );
+
         // Expand the payment form of the selected payment option if there is only one.
-        const checkedRadio = document.querySelector('input[name="o_payment_radio"]:checked');
+        const checkedRadio = this.el.querySelector('input[name="o_payment_radio"]:checked');
         if (checkedRadio) {
             await this.waitFor(this._expandInlineForm(checkedRadio));
             this._enableButton(false);
@@ -46,6 +53,21 @@ export class PaymentForm extends Interaction {
 
             this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it.
         }
+    }
+
+    /**
+     * Return the promises of the SDK assets to request, grouped by radio of the payment option
+     * needing them.
+     *
+     * Providers requiring an SDK must override this method to add their own promises, rather than
+     * awaiting them in a `willStart` override. The promises must only be added to the radios of the
+     * payment options that need them, so that the other payment options do not wait for them.
+     *
+     * @private
+     * @return {Map<HTMLInputElement, Promise[]>} The promises of the SDK assets, by radio.
+     */
+    _getAssetsPromises() {
+        return new Map();
     }
 
     // #=== EVENT HANDLERS ===#
@@ -258,6 +280,7 @@ export class PaymentForm extends Interaction {
         const paymentMethodCode = this._getPaymentMethodCode(radio);
         const flow = this._getPaymentFlow(radio);
         try {
+            await this.waitFor(Promise.all(this.assetsPromises.get(radio) ?? []));
             await this.waitFor(this._prepareInlineForm(
                 providerId, providerCode, paymentOptionId, paymentMethodCode, flow
             ));

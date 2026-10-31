@@ -182,6 +182,7 @@ export const assets = {
      *
      * @param {string} url the url of the stylesheet
      * @param {LoadAssetOptions & {
+     *  checksum?: string;
      *  retryCount?: number;
      *  type?: string;
      * }} [options]
@@ -198,6 +199,10 @@ export const assets = {
         linkEl.setAttribute("href", url);
         linkEl.type = options?.type || "text/css";
         linkEl.rel = "stylesheet";
+        if (options?.checksum) {
+            linkEl.integrity = options.checksum;
+            linkEl.crossOrigin = "anonymous";
+        }
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(linkEl, resolve, async (error) => {
                 cacheMap.delete(url);
@@ -229,6 +234,7 @@ export const assets = {
      *
      * @param {string} url the url of the script
      * @param {LoadAssetOptions & {
+     *  checksum?: string;
      *  type?: string;
      * }} [options]
      * @returns {Promise<LoadTarget>} resolved when the script has been loaded
@@ -242,6 +248,10 @@ export const assets = {
         const scriptEl = targetDoc.createElement("script");
         scriptEl.setAttribute("src", url);
         scriptEl.type = options?.type || "text/javascript";
+        if (options?.checksum) {
+            scriptEl.integrity = options.checksum;
+            scriptEl.crossOrigin = "anonymous";
+        }
         const promise = new Promise((resolve, reject) =>
             onLoadAndError(scriptEl, resolve, (error) => {
                 cacheMap.delete(url);
