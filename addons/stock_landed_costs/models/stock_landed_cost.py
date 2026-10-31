@@ -134,11 +134,7 @@ class StockLandedCost(models.Model):
                 # Products with manual inventory valuation are ignored because they do not need to create journal entries.
                 if product.valuation != "real_time":
                     continue
-                # `remaining_qty` is negative if the move is out and delivered proudcts that were not
-                # in stock.
-
-                remaining_qty = line.move_id.remaining_qty
-                move_vals['line_ids'] += line._create_accounting_entries(remaining_qty)
+                move_vals['line_ids'] += line._create_accounting_entries()
 
             # batch standard price computation avoid recompute quantity_svl at each iteration
 
@@ -378,7 +374,7 @@ class StockValuationAdjustmentLines(models.Model):
         for line in self:
             line.final_cost = line.former_cost + line.additional_landed_cost
 
-    def _create_accounting_entries(self, remaining_qty):
+    def _create_accounting_entries(self):
         # TDE CLEANME: product chosen for computation ?
         cost_product = self.cost_line_id.product_id
         if not cost_product:
@@ -391,7 +387,7 @@ class StockValuationAdjustmentLines(models.Model):
         if not credit_account_id:
             raise UserError(_('Please configure Stock Expense Account for product: %s.', cost_product.name))
 
-        return self._create_account_move_line(credit_account_id, debit_account_id, remaining_qty)
+        return self._create_account_move_line(credit_account_id, debit_account_id)
 
     def _prepare_account_move_line_values(self):
         return {
@@ -400,17 +396,15 @@ class StockValuationAdjustmentLines(models.Model):
             'quantity': 0,
         }
 
-    def _create_account_move_line(self, credit_account_id, debit_account_id, remaining_qty):
+    def _create_account_move_line(self, credit_account_id, debit_account_id):
         """ In real time the vendor bill for landed costs only balance the COGS account.
-        We should credit what remains in stock and debit the stock valuation account.
+        We should credit the full landed cost and debit the stock valuation account.
         """
         AccountMoveLine = []
-        if not remaining_qty:
-            return AccountMoveLine
         base_line = self._prepare_account_move_line_values()
         debit_line = dict(base_line, account_id=debit_account_id)
         credit_line = dict(base_line, account_id=credit_account_id)
-        diff = self.additional_landed_cost * (remaining_qty / self.quantity)
+        diff = self.additional_landed_cost
         if diff > 0:
             debit_line['debit'] = diff
             credit_line['credit'] = diff
