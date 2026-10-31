@@ -26,7 +26,10 @@ class SaleOrderLine(models.Model):
             )
 
     def unlink(self):
-        self.filtered('is_delivery').order_id.filtered('carrier_id').carrier_id = False
+        # Clear the delivery method of the orders that have no delivery line left.
+        self.filtered('is_delivery').order_id.filtered(
+            lambda order: order.carrier_id and not (order.order_line.filtered('is_delivery') - self)
+        ).carrier_id = False
         return super().unlink()
 
     def _is_delivery(self):
