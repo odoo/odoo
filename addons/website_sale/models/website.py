@@ -823,7 +823,7 @@ class Website(models.Model):
                 sale_order_sudo = SaleOrderSudo
 
             if sale_order_sudo and (
-                sale_order_sudo.state != "draft"
+                sale_order_sudo.state not in {"draft", "sent"}
                 or sale_order_sudo.get_portal_last_transaction().state
                 in {"pending", "authorized", "done"}
                 or sale_order_sudo.website_id != self
@@ -855,7 +855,7 @@ class Website(models.Model):
                 [
                     ("partner_id", "=", partner_sudo.id),
                     ("website_id", "=", self.id),
-                    ("state", "=", "draft"),
+                    ("state", "in", ["draft", "sent"]),
                 ],
                 limit=1,
             )

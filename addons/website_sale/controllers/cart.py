@@ -12,6 +12,7 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
 
 
 class Cart(PaymentPortal):
@@ -40,19 +41,21 @@ class Cart(PaymentPortal):
                 abandoned_order.access_token, access_token
             ):  # wrong token (or SO has been deleted)
                 raise NotFound
-            if abandoned_order.state not in ("draft", "sent"):  # abandoned cart already finished
+            if abandoned_order.state not in {"draft", "sent"}:  # abandoned cart already finished
                 values.update({"abandoned_proceed": True})
             elif revive_method == "squash" or (
-                revive_method == "merge" and not request.session.get("sale_order_id")
+                revive_method == "merge" and not request.session.get(CART_SESSION_CACHE_KEY)
             ):  # restore old cart or merge with unexistant
-                request.session["sale_order_id"] = abandoned_order.id
-                request.cart = abandoned_order
-                order_sudo = abandoned_order
+                request.session[CART_SESSION_CACHE_KEY] = abandoned_order.id
+                # access cart again to get abandoned cart as current cart
+                order_sudo = request.cart
             elif revive_method == "merge":
-                abandoned_order.order_line.write({"order_id": request.session["sale_order_id"]})
+                abandoned_order.order_line.write({
+                    "order_id": request.session[CART_SESSION_CACHE_KEY]
+                })
                 abandoned_order.action_cancel()
             elif abandoned_order.id != request.session.get(
-                "sale_order_id"
+                CART_SESSION_CACHE_KEY
             ):  # abandoned cart found, user have to choose what to do
                 values.update({
                     "id": abandoned_order.id,
