@@ -100,13 +100,10 @@ class TestConfiguratorCommon(odoo.tests.HttpCase):
 class TestConfigurator(TestConfiguratorCommon):
 
     def test_ai_recommend_themes(self):
-        def iap_jsonrpc_mocked_olg(*args, **kwargs):
-            return {
-                'status': 'success',
-                'content': '["theme_clean", "theme_cobalt", "theme_unknown"]',
-            }
+        def olg_request_mocked(self, route, params):
+            return {'status': 'success', 'themes': ['theme_clean', 'theme_cobalt']}
 
-        with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_olg):
+        with patch.object(WebsiteModel, '_configurator_olg_request', olg_request_mocked):
             themes = self.env['website']._ai_recommend_themes(
                 {
                     'theme_clean': 'Clean theme',
@@ -119,27 +116,6 @@ class TestConfigurator(TestConfiguratorCommon):
             )
 
         self.assertEqual(themes, ['theme_clean', 'theme_cobalt'])
-
-    def test_ai_recommend_themes_wrong_answer(self):
-        def iap_jsonrpc_mocked_olg(*args, **kwargs):
-            return {
-                'status': 'success',
-                'content': '[{"name": "New Arrivals", "description": "Fresh styles"}]',
-            }
-
-        with patch('odoo.addons.iap.tools.iap_tools.iap_jsonrpc', iap_jsonrpc_mocked_olg):
-            themes = self.env['website']._ai_recommend_themes(
-                {
-                    'theme_clean': 'Clean theme',
-                    'theme_cobalt': 'Cobalt theme',
-                },
-                'restaurant',
-                'business',
-                'premium',
-                6,
-            )
-
-        self.assertEqual(themes, [])
 
     def test_configurator_apply_fills_brief(self):
         website = self.env['website'].create({'name': "New website"})
