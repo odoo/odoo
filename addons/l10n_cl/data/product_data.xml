@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo noupdate="1">
 
-    <record id="product_product_ad_valorem" model="product.product">
+    <!-- forcecreate="0": these products are only created when the module is installed.
+         On an existing database, creating them while upgrading fails if a module loaded
+         after this one added a required field on product.template/product.product, as
+         such a field isn't part of the registry yet when this file is loaded. -->
+    <record id="product_product_ad_valorem" model="product.product" forcecreate="0">
         <field name="name">Ad-Valorem</field>
         <field name="type">service</field>
         <field name="categ_id" ref="product.product_category_services"/>
@@ -11,7 +15,7 @@
         <field name="uom_id" ref="uom.product_uom_unit"/>
     </record>
 
-    <record id="product_product_fees" model="product.product">
+    <record id="product_product_fees" model="product.product" forcecreate="0">
         <field name="name">Fees</field>
         <field name="type">service</field>
         <field name="categ_id" ref="product.product_category_services"/>
