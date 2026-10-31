@@ -181,7 +181,7 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
 
         base_lines, tax_lines = self._dispatch_move_lines(invoice)
 
-        tax_details = self._get_tax_details(extra_domain=[('move_id', '=', invoice.id)])
+        tax_details = self._get_tax_details(fallback=False, extra_domain=[('move_id', '=', invoice.id)])
         self.assertTaxDetailsValues(tax_details, [
             {
                 'base_line_id': base_lines[0].id,
@@ -332,6 +332,63 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
                     'tax_line_id': tax_lines[0].id,
                     'base_amount': -1000.0,
                     'tax_amount': -100.0,
+                },
+            ],
+        )
+        self.assertTotalAmounts(invoice, tax_details)
+
+    def test_affect_base_amount_group_sequence_change(self):
+        tax_10_affect = self.env['account.tax'].create({
+            'name': "tax_10_affect",
+            'amount_type': 'percent',
+            'amount': 10.0,
+            'include_base_amount': True,
+            'sequence': 1,
+        })
+        tax_20 = self.env['account.tax'].create({
+            'name': "tax_20",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'sequence': 2,
+        })
+        tax_group = self.env['account.tax'].create({
+            'name': "tax_group",
+            'amount_type': 'group',
+            'children_tax_ids': [Command.set((tax_10_affect + tax_20).ids)],
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_group.ids)],
+                }),
+            ],
+        })
+        base_lines, tax_lines = self._dispatch_move_lines(invoice)
+
+        tax_10_affect.sequence = 3
+
+        tax_details = self._get_tax_details(fallback=False, extra_domain=[('move_id', '=', invoice.id)])
+        self.assertTaxDetailsValues(
+            tax_details,
+            [
+                {
+                    'base_line_id': base_lines.id,
+                    'tax_line_id': tax_lines[0].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -10.0,
+                },
+                {
+                    'base_line_id': base_lines.id,
+                    'tax_line_id': tax_lines[1].id,
+                    'base_amount': -100.0,
+                    'tax_amount': -22.0,
                 },
             ],
         )
