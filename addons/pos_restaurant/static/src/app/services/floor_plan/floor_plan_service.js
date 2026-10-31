@@ -305,7 +305,7 @@ export class FloorPlanStore extends Reactive {
             ...shapeData,
             uuid: uuid(),
             id: null,
-            seats: DEFAULT_SEATS_NUMBER,
+            seats: shapeData.seats ?? DEFAULT_SEATS_NUMBER,
             table_number: tableNumber,
             shape: shape,
         };
