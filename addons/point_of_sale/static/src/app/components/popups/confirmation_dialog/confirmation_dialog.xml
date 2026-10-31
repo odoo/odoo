@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
   <t t-name="point_of_sale.ConfirmationDialog" t-inherit="web.ConfirmationDialog" t-inherit-mode="extension">
+    <xpath expr="//button[@t-on-click='_confirm']" position="attributes">
+      <attribute name="t-attf-class">{{ ui.isSmall ? 'col' : '' }}</attribute>
+    </xpath>
+    <xpath expr="//button[@t-on-click='_cancel']" position="attributes">
+      <attribute name="t-attf-class">{{ ui.isSmall ? 'col' : '' }}</attribute>
+    </xpath>
     <xpath expr="//t[@t-set-slot='footer']" position="inside">
       <button t-if="props.showReloadButton" class="btn btn-secondary" t-on-click="_reloadData">
         Reload Data
