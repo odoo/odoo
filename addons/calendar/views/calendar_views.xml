@@ -142,6 +142,7 @@
                     <field name="invalid_email_partner_ids" widget="many2many_tags"/>
                 </div>
                 <sheet>
+                    <div class="oe_button_box" name="button_box"/>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" class="o_calendar_archived_web_ribbon" invisible="active"/>
                     <widget name="web_ribbon" title="Draft" bg_color="text-bg-500" invisible="not active or not is_draft"/>
                     <field name="active" invisible="1"/> <!-- drives invisible of the Archived and Cancelled web_ribbon widgets -->
