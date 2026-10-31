@@ -1,0 +1,434 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+		 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+		 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
+		 xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+	<cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0
+	</cbc:CustomizationID>
+	<cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID>
+	<cbc:ID>INV/2017/00005</cbc:ID>
+	<cbc:IssueDate>2017-01-01</cbc:IssueDate>
+	<cbc:DueDate>2017-01-31</cbc:DueDate>
+	<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>
+	<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
+	<cbc:BuyerReference>REF-00005</cbc:BuyerReference>
+	<cac:AccountingSupplierParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0208">0202239951</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>company_1_data</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Chaussée de Namur 40</cbc:StreetName>
+				<cbc:CityName>Ramillies</cbc:CityName>
+				<cbc:PostalZone>1367</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>BE</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>BE0202239951</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+				<cbc:CompanyID>BE0202239951</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>company_1_data</cbc:Name>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingSupplierParty>
+	<cac:AccountingCustomerParty>
+		<cac:Party>
+			<cbc:EndpointID schemeID="0208">0477472701</cbc:EndpointID>
+			<cac:PartyName>
+				<cbc:Name>partner_a</cbc:Name>
+			</cac:PartyName>
+			<cac:PostalAddress>
+				<cbc:StreetName>Rue des Bourlottes 9</cbc:StreetName>
+				<cbc:CityName>Ramillies</cbc:CityName>
+				<cbc:PostalZone>1367</cbc:PostalZone>
+				<cac:Country>
+					<cbc:IdentificationCode>BE</cbc:IdentificationCode>
+				</cac:Country>
+			</cac:PostalAddress>
+			<cac:PartyTaxScheme>
+				<cbc:CompanyID>BE0477472701</cbc:CompanyID>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:PartyTaxScheme>
+			<cac:PartyLegalEntity>
+				<cbc:RegistrationName>partner_a</cbc:RegistrationName>
+				<cbc:CompanyID>BE0477472701</cbc:CompanyID>
+			</cac:PartyLegalEntity>
+			<cac:Contact>
+				<cbc:Name>partner_a</cbc:Name>
+			</cac:Contact>
+		</cac:Party>
+	</cac:AccountingCustomerParty>
+	<cac:PaymentMeans>
+		<cbc:PaymentMeansCode name="credit transfer">30</cbc:PaymentMeansCode>
+		<cbc:PaymentID>INV/2017/00005</cbc:PaymentID>
+		<cac:PayeeFinancialAccount>
+			<cbc:ID>BE15001559627230</cbc:ID>
+		</cac:PayeeFinancialAccount>
+	</cac:PaymentMeans>
+	<cac:PaymentTerms>
+		<cbc:Note>Payment due within 30 days</cbc:Note>
+	</cac:PaymentTerms>
+	<cac:TaxTotal>
+		<cbc:TaxAmount currencyID="EUR">2887.63</cbc:TaxAmount>
+		<cac:TaxSubtotal>
+			<cbc:TaxableAmount currencyID="EUR">13750.62</cbc:TaxableAmount>
+			<cbc:TaxAmount currencyID="EUR">2887.63</cbc:TaxAmount>
+			<cac:TaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:TaxCategory>
+		</cac:TaxSubtotal>
+	</cac:TaxTotal>
+	<cac:LegalMonetaryTotal>
+		<cbc:LineExtensionAmount currencyID="EUR">13750.62</cbc:LineExtensionAmount>
+		<cbc:TaxExclusiveAmount currencyID="EUR">13750.62</cbc:TaxExclusiveAmount>
+		<cbc:TaxInclusiveAmount currencyID="EUR">16638.25</cbc:TaxInclusiveAmount>
+		<cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
+		<cbc:PayableAmount currencyID="EUR">16638.25</cbc:PayableAmount>
+	</cac:LegalMonetaryTotal>
+	<cac:InvoiceLine>
+		<cbc:ID>1</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">10.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">214.29</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product A</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM01</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">150.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">7.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>2</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">47.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">542.31</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product B</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM02</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">150.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">13.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>3</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">68.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">242.86</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product C</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM03</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">25.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">7.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>4</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">34.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">37.78</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product D</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM04</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">10.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">9.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>5</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">6.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">54.55</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product E</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM05</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">100.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">11.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>6</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">46.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">522.73</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product F</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM06</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">125.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">11.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>7</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">34.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">141.67</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product G</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM07</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">25.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">6.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>8</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">71.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">3550.00</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product H</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM08</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">150.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">3.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>9</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">92.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">3066.67</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product I</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM09</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">100.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">3.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>10</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">22.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">84.62</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product J</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM10</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">50.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">13.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>11</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">93.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">178.85</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product K</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM11</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">25.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">13.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>12</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">52.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">722.22</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product L</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM12</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">125.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">9.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>13</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">52.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">1011.11</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product M</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM13</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">175.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">9.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>14</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">44.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">314.29</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product N</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM14</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">50.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">7.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+	<cac:InvoiceLine>
+		<cbc:ID>15</cbc:ID>
+		<cbc:InvoicedQuantity unitCode="C62">92.0</cbc:InvoicedQuantity>
+		<cbc:LineExtensionAmount currencyID="EUR">3066.67</cbc:LineExtensionAmount>
+		<cac:Item>
+			<cbc:Name>Product O</cbc:Name>
+			<cac:SellersItemIdentification>
+				<cbc:ID>E-COM15</cbc:ID>
+			</cac:SellersItemIdentification>
+			<cac:ClassifiedTaxCategory>
+				<cbc:ID>S</cbc:ID>
+				<cbc:Percent>21.0</cbc:Percent>
+				<cac:TaxScheme>
+					<cbc:ID>VAT</cbc:ID>
+				</cac:TaxScheme>
+			</cac:ClassifiedTaxCategory>
+		</cac:Item>
+		<cac:Price>
+			<cbc:PriceAmount currencyID="EUR">200.00</cbc:PriceAmount>
+			<cbc:BaseQuantity unitCode="C62">6.0</cbc:BaseQuantity>
+		</cac:Price>
+	</cac:InvoiceLine>
+</Invoice>
