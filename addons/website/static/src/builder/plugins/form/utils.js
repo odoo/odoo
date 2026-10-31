@@ -161,12 +161,18 @@ export function getMultipleInputs(fieldEl) {
     return fieldEl.querySelector(".s_website_form_multiple");
 }
 
+export function canSetFloatingLabel(type) {
+    return !["boolean", "one2many", "selection", "date", "datetime", "binary"].includes(type);
+}
+
 export function getLabelPosition(fieldEl) {
     const label = fieldEl.querySelector(".s_website_form_label");
     if (fieldEl.querySelector(".row:not(.s_website_form_multiple)")) {
         return label.classList.contains("text-end") ? "right" : "left";
     } else {
-        return label.classList.contains("d-none") ? "none" : "top";
+        return label.classList.contains("d-none") || label.closest(".form-floating")
+            ? "none"
+            : "top";
     }
 }
 
