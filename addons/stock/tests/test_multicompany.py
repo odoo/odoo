@@ -817,3 +817,56 @@ class TestMultiCompany(TransactionCase):
         domain = expression.AND([base_domain, self.env['stock.quant'].with_company(self.branch_company_a)._get_quants_action()['domain']])
         quants_branch = self.env['stock.quant'].with_company(self.branch_company_a).search(domain)
         self.assertTrue(quants_branch)
+
+    def test_intercompany_route_validate_with_single_company(self):
+        intercompany = self.env.ref("stock.stock_location_inter_company")
+        intercompany.active = True
+        intercompany_route = self.env["stock.route"].create({
+            "name": "A -> B",
+            "company_id": False,
+            "rule_ids": [
+                Command.create({
+                    "name": "A -> Transit",
+                    "company_id": self.company_a.id,
+                    "action": "pull",
+                    "location_src_id": self.stock_location_a.id,
+                    "location_dest_id": intercompany.id,
+                    "picking_type_id": self.warehouse_a.out_type_id.id,
+                    "location_dest_from_rule": True,
+                    "procure_method": "make_to_stock",
+                }),
+                Command.create({
+                    "name": "Transit -> B",
+                    "company_id": self.company_b.id,
+                    "action": "pull",
+                    "location_src_id": intercompany.id,
+                    "location_dest_id": self.stock_location_b.id,
+                    "picking_type_id": self.warehouse_b.in_type_id.id,
+                    "location_dest_from_rule": True,
+                    "procure_method": "make_to_order",
+                }),
+            ],
+        })
+        product = self.env["product.product"].create({
+            "name": "Intercompany Product",
+            "is_storable": True,
+            "route_ids": [Command.link(intercompany_route.id)],
+        })
+        self.env["stock.quant"]._update_available_quantity(product, self.stock_location_a, 10)
+        self.env["product.replenish"].with_user(self.user_b).create({
+            "company_id": self.company_b.id,
+            "product_id": product.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
+            "product_uom_id": product.uom_id.id,
+            "quantity": 10,
+            "route_id": intercompany_route.id,
+        }).launch_replenishment()
+
+        pickings = self.env["stock.picking"].search([("product_id", "=", product.id)])
+        delivery = pickings.filtered(lambda p: p.company_id == self.company_a)
+        receipt = pickings.filtered(lambda p: p.company_id == self.company_b)
+        delivery.move_ids.move_dest_ids.invalidate_recordset()
+        delivery.with_user(self.user_a).with_context(allowed_company_ids=self.company_a.ids).button_validate()
+        self.assertEqual(delivery.state, "done")
+        receipt.with_user(self.user_b).with_context(allowed_company_ids=self.company_b.ids).button_validate()
+        self.assertEqual(receipt.state, "done")
