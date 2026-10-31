@@ -61,6 +61,17 @@ class ResCompany(models.Model):
         help="If enabled, employees can record their total break duration after checking out.",
     )
     attendance_based = fields.Boolean(default=False, groups="hr.group_hr_user")
+    hr_attendance_display_overtime = fields.Boolean(
+        string="Display Extra Hours",
+        default=False,
+        groups="hr.group_hr_user",
+    )
+    hr_attendance_overtime_time_type_ids = fields.Many2many(
+        'hr.work.entry.type',
+        string="Extra Hours Time Types",
+        groups="hr.group_hr_user",
+        help="Time types considered when computing daily and total extra hours in kiosk mode.",
+    )
 
     _check_auto_check_out_specific_time_range = models.Constraint(
         "CHECK (NOT (auto_check_out = true AND auto_check_out_mode = 'specific_time') OR (auto_check_out_specific_time >= 0 AND auto_check_out_specific_time < 24))",

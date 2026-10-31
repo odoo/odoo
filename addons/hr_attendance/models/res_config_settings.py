@@ -28,6 +28,16 @@ class ResConfigSettings(models.TransientModel):
     attendance_capture_check_in = fields.Boolean(related="company_id.attendance_capture_check_in", readonly=False)
     attendance_break_management = fields.Boolean(related="company_id.attendance_break_management", readonly=False)
     attendance_based = fields.Boolean(string="Default Tracking", related='company_id.attendance_based', groups="hr.group_hr_user", readonly=False)
+    hr_attendance_display_overtime = fields.Boolean(
+        related='company_id.hr_attendance_display_overtime',
+        groups="hr.group_hr_user",
+        readonly=False,
+    )
+    hr_attendance_overtime_time_type_ids = fields.Many2many(
+        related='company_id.hr_attendance_overtime_time_type_ids',
+        groups="hr.group_hr_user",
+        readonly=False,
+    )
 
     def set_values(self):
         super().set_values()
