@@ -178,6 +178,7 @@
             'account/static/src/core/utils/product_and_label_autoresize.js',
             'account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.*',
             'account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.*',
+            'account/static/src/components/document_state/document_state_field.*',
 
             'mail/static/src/core/common/sound_effects_service.js',
             "web/static/src/core/browser/router.js",
