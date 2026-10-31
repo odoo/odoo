@@ -9,15 +9,20 @@
                         <group>
                             <field name="name" />
                             <field name="client_id" />
+                            <field name="client_secret" password="True" invisible="flow != 'pkce'"/>
+                            <field name="client_secret_method" invisible="flow != 'pkce' or not client_secret"/>
                             <field name="enabled" />
                             <field name="body" />
                             <field name="icon" groups="base.group_no_one" />
                             <field name="css_class" groups="base.group_no_one" />
                         </group>
                         <group>
+                            <field name="flow" />
                             <field name="auth_endpoint" />
+                            <field name="token_endpoint" invisible="flow != 'pkce'" required="flow == 'pkce'"/>
                             <field name="scope" />
                             <field name="validation_endpoint" />
+                            <field name="access_token_method" />
                             <field name="data_endpoint" />
                         </group>
                     </sheet>
