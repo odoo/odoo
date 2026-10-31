@@ -15,6 +15,7 @@
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
         'data/account_account_tag.xml',
         'data/account_tax_report_data.xml',
         'data/res_country_group.xml',
