@@ -96,6 +96,41 @@ export class FormCompiler extends ViewCompiler {
     }
 
     /**
+     * Adds a <label/> to the titles the arch doesn't label: on small screens, the
+     * field of a title is displayed inside a box whose label is drawn over its
+     * border (@see form_controller_m3.scss). That label defaults to the name of
+     * the field and is only displayed in that layout.
+     *
+     * @param {Element} arch a form arch node
+     */
+    addTitleLabels(arch) {
+        for (const title of arch.querySelectorAll(".oe_title")) {
+            const fieldNode = title.querySelector("field");
+            // a title the arch labels itself, with a <label/> or an "o_form_label"
+            // element, is left alone
+            if (
+                !fieldNode ||
+                title.querySelector("label, .o_form_label") ||
+                title.closest("group")
+            ) {
+                continue;
+            }
+            // the element holding the field is the one displayed as a box
+            const box = fieldNode.closest(".oe_title > *");
+            const label = createElement("label", {
+                for: fieldNode.getAttribute("id") || fieldNode.getAttribute("name"),
+                class: "o_label_implicit d-md-none",
+            });
+            const invisible = box.getAttribute("invisible");
+            if (invisible) {
+                label.setAttribute("invisible", invisible); // hidden along with its box
+            }
+            box.before(label);
+            box.classList.add("o_outlined");
+        }
+    }
+
+    /**
      * @param {string} fieldName
      * @returns {Element[]}
      */
@@ -213,6 +248,7 @@ export class FormCompiler extends ViewCompiler {
      * @returns {Element}
      */
     compileForm(el, params) {
+        this.addTitleLabels(el);
         let sheetNode = null;
         for (const sheet of el.querySelectorAll("sheet")) {
             if (sheet.closest("form") === el) {
