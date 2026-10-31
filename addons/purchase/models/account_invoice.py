@@ -498,7 +498,7 @@ class AccountMove(models.Model):
                     matched_inv_lines
                 ))
                 invoice.invoice_line_ids = [
-                    Command.update(po_line.id, {'quantity': inv_line.quantity, 'tax_ids': inv_line.tax_ids})
+                    Command.update(po_line.id, {'quantity': inv_line.quantity, 'discount': inv_line.discount, 'tax_ids': inv_line.tax_ids})
                     for po_line, inv_line in inv_and_po_lines
                 ]
                 invoice.invoice_line_ids = [Command.delete(inv_line.id) for dummy, inv_line in inv_and_po_lines]

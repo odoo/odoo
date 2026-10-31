@@ -948,6 +948,21 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
             self.assertTrue(line.purchase_line_id in po.order_line)
         self.assertEqual(invoice.amount_total, po.amount_total)
 
+    def test_subset_match_from_edi_discount(self):
+        """Test that the discount of an EDI invoice line is kept on the matched purchase order line
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.service_order])
+        invoice.invoice_line_ids[0].discount = 10.0
+        amount_total = invoice.amount_total
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, amount_total, from_ocr=False)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        self.assertEqual(invoice.invoice_line_ids.filtered('price_unit').purchase_line_id, po.order_line)
+        self.assertEqual(invoice.amount_total, amount_total)
+
     def test_subset_match_from_edi_partial_po(self):
         """A line of the invoice totally matches a 1-line purchase order
         """
