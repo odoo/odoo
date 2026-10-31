@@ -8,7 +8,8 @@ ir_rule_hr_expense_approver,Team Approver Expense,hr.expense,hr_expense.group_hr
                 ('employee_id.expense_manager_id', '=', user.id),
                 ('manager_id', '=', user.id)]"
 ir_rule_hr_expense_employee,Employee Expense,hr.expense,base.group_user,crud,"[
-                '|', '&', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['draft', 'submitted', 'approved', 'refused']),
+                '|', '&', '&', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['draft', 'submitted', 'approved', 'refused']),
+                               '|', ('account_move_id', '=', False), ('account_move_id.state', '!=', 'posted'),
                      '&', ('employee_id.user_id', '=', user.id), ('state', '=', 'draft')
             ]"
 ir_rule_hr_expense_employee_not_draft,Employees can't modify an expense that is not in draft state,hr.expense,base.group_user,r,"[

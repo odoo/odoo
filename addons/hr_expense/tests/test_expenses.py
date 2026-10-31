@@ -198,7 +198,7 @@ class TestExpenses(TestExpenseCommon):
         # Unlinking moves
         (payment_1 | payment_2).action_draft()
         (payment_1 | payment_2).move_id.line_ids.remove_move_reconcile()
-        self.assertEqual(first_expense_by_employee.state, 'posted')
+        self.assertEqual(first_expense_by_employee.state, 'approved')
         expenses_by_employee.account_move_id.button_draft()
         expenses_by_employee.account_move_id.unlink()
         self.assertFalse(expenses_by_employee.account_move_id)
@@ -710,7 +710,7 @@ class TestExpenses(TestExpenseCommon):
         expense.action_approve()
         self.post_expenses(expense)
 
-        self.assertEqual(expense.state, 'posted')
+        self.assertEqual(expense.state, 'approved')
         expense_data = self.env['hr.expense'].with_user(self.expense_user_employee).get_expense_dashboard()
         self.assertEqual(expense_data['approved']['amount'], 1000.00)
 
@@ -1127,43 +1127,23 @@ class TestExpenses(TestExpenseCommon):
             ]
         )
 
-    def test_expense_paid_by_company_with_linked_bill(self):
-        """ Test that linking a bill uses the payable account and reconciles automatically """
+    def test_expense_paid_by_company_with_bill_sent_separately(self):
+        """ Test that an expense whose bill is sent separately uses the vendor payable account, so it can be matched with the bill later """
         other_payable_account = self.company_data['default_account_payable'].copy()
         partner = self.env['res.partner'].create({
             'name': 'test partner',
             'property_account_payable_id': other_payable_account.id,
         })
-        bill = self.env['account.move'].create({
-            'move_type': 'in_invoice',
-            'partner_id': partner.id,
-            'invoice_date': '2026-01-01',
-            'invoice_line_ids': [
-                Command.create({
-                    'name': 'test bill line',
-                    'price_unit': 100.0,
-                })
-            ]
-        })
-        bill.action_post()
 
-        # 2. Create Expense with existing bill flag but let existing_bill_id empty
         expense = self.create_expenses({
-            'name': 'Expense matched to bill',
+            'name': 'Expense with a bill sent separately',
             'payment_mode': 'company_account',
             'total_amount_currency': 100.0,
             'has_existing_bill': True,
         })
         expense.action_submit()
-        # shouldn't be able to approve without existing_bill_id
-        with self.assertRaisesRegex(UserError, "The existing bill must be set."):
-            expense.action_approve()
-        self.assertEqual(expense.state, 'submitted')
-
-        # 3. Link bill to the expense
-        expense.action_reset()
-        expense.existing_bill_id = bill.id
-        self.assertEqual(expense.account_id, other_payable_account, "The expense account should be the bill's payable account")
+        expense.vendor_id = partner
+        self.assertEqual(expense.account_id, other_payable_account, "The expense account should be the vendor payable account")
 
         expense.action_approve()
 
@@ -1172,10 +1152,26 @@ class TestExpenses(TestExpenseCommon):
         self.assertEqual(
             set(payment_entry.line_ids.account_id.ids),
             {other_payable_account.id, outstanding_payment_account.id},
-            "The accounts on the payment entry should be the bill's payable account and the outstanding payment account"
+            "The accounts on the payment entry should be the vendor payable account and the outstanding payment account"
         )
+        payment_entry.action_post()
 
+        # The bill received afterwards can be matched with the payment
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': partner.id,
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test bill line',
+                    'price_unit': 100.0,
+                    'tax_ids': [],
+                })
+            ]
+        })
+        bill.action_post()
         payable_move_line = payment_entry.line_ids.filtered(lambda l: l.account_id == other_payable_account)
+        bill.js_assign_outstanding_line(payable_move_line.id)
         self.assertTrue(bill.payment_state in ('in_payment', 'paid'), "The bill should be marked as paid/in_payment")
         self.assertTrue(payable_move_line.reconciled, "The payment entry should be reconciled with the bill")
 
@@ -1195,9 +1191,9 @@ class TestExpenses(TestExpenseCommon):
 
     def test_expense_paid_by_employee_with_linked_bill(self):
         """
-        Test the flow of an expense paid by the employee with an existing bill
+        Test the flow of an expense paid by the employee with a bill sent separately
 
-        existing bill (BILL), already created:
+        bill sent separately (BILL):
         account | debit | credit | partner
         ----------------------------------
         product | 75    | 0      |
@@ -1224,8 +1220,8 @@ class TestExpenses(TestExpenseCommon):
         bank        | 0     | 100    |
 
         RECONCILED (02):
-        Reconciliation between the existing bill and the debt transfer entry. Mark the bill as paid
-        and transfer the debt from the vendor to the employee
+        Done by the user once the bill is received, between the bill and the debt transfer entry.
+        Mark the bill as paid and transfer the debt from the vendor to the employee
 
         RECONCILED (01):
         Reconciliation between the payment move and the debt transfer entry. Transfer the debt to the employee
@@ -1257,8 +1253,7 @@ class TestExpenses(TestExpenseCommon):
             'payment_mode': 'own_account',
             'total_amount_currency': 100.0,
             'has_existing_bill': True,
-            'existing_bill_id': bill.id,
-            'vendor_id': bill.partner_id.id,
+            'vendor_id': partner.id,
         })
 
         # post expense
@@ -1275,10 +1270,9 @@ class TestExpenses(TestExpenseCommon):
         )
         self.assertEqual(expense.state, self.env['account.move']._get_invoice_in_payment_state())
 
-        # check the bill is paid and reconciled with the payment move
+        # check the payment entry is reconciled with the debt transfer entry
         payable_move_line = payment_entry.line_ids.filtered(lambda l: l.account_id == other_payable_account)
-        self.assertEqual(bill.payment_state, 'paid', "The bill should be marked as paid")
-        self.assertTrue(payable_move_line.reconciled, "The payment entry should be reconciled with the bill")
+        self.assertTrue(payable_move_line.reconciled, "The payment entry should be reconciled with the debt transfer entry")
 
         # check amounts and partners on debt transfer move
         debt_transfer_move = payable_move_line.reconciled_lines_excluding_exchange_diff_ids.move_id
@@ -1287,6 +1281,12 @@ class TestExpenses(TestExpenseCommon):
             {'debit': 100.0, 'credit': 0.0, 'partner_id': partner.id, 'account_id': other_payable_account.id},
             {'debit': 0.0, 'credit': 100.0, 'partner_id': employee_partner.id, 'account_id': other_payable_account.id},
         ])
+
+        # the bill is matched with the vendor side of the debt transfer entry
+        self.assertEqual(bill.payment_state, 'not_paid')
+        vendor_line = debt_transfer_move.line_ids.filtered(lambda l: l.partner_id == partner)
+        bill.js_assign_outstanding_line(vendor_line.id)
+        self.assertEqual(bill.payment_state, 'paid', "The bill should be marked as paid")
 
         # create a bank statement line and reconcile it with the payment move -> expense should be marked as paid
         payment_entry.origin_payment_id.action_post()

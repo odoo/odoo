@@ -80,7 +80,7 @@ class HrExpense(models.Model):
     )
     manager_id = fields.Many2one(
         comodel_name='res.users',
-        string="Manager",
+        string="Approver",
         compute='_compute_from_employee_id', store=True,
         domain=lambda self: [('share', '=', False), '|', ('employee_id.expense_manager_id', 'in', self.env.user.id), ('all_group_ids', 'in', self.env.ref('hr_expense.group_hr_expense_team_approver').ids)],
         copy=False,
@@ -262,7 +262,7 @@ class HrExpense(models.Model):
                  - When no bill exists, the payment will be recorded directly on the expense account, as usual.
             """
     )
-
+    # Will be removed in master, no longer used
     existing_bill_id = fields.Many2one(
         string="Existing Bill",
         comodel_name='account.move',
@@ -284,12 +284,13 @@ class HrExpense(models.Model):
         copy=False,
         index='btree_not_null',
     )
+    account_move_state = fields.Selection(related='account_move_id.state', string="Journal Entry Status")
     payment_mode = fields.Selection(
         selection=[
-            ('own_account', "Employee (Through a Purchase Receipt)"),
-            ('company_account', "None (Paid by Company)")
+            ('own_account', "Employee"),
+            ('company_account', "Company Card")
         ],
-        string="Reimbursement",
+        string="Paid by",
         default='own_account',
         required=True,
         tracking=True,
@@ -361,13 +362,10 @@ class HrExpense(models.Model):
             if len(expense.account_move_id.origin_payment_id.expense_ids) > 1:
                 raise ValidationError(_("Only one expense can be linked to a particular payment"))
 
+    # Will be removed in master, no longer used
     @api.constrains('existing_bill_id')
     def _check_existing_bill_is_set(self):
-        # case where an expense has an existing bill, but it's not filled in. We cannot add this condition
-        # in can_approve as can_approve is used at submission (see action_submit)
-        for expense in self:
-            if not expense.existing_bill_id and expense.has_existing_bill and expense.state not in ['draft', 'submitted', 'refused']:
-                raise ValidationError(self.env._("The existing bill must be set."))
+        pass
 
     # --------------------------------------------
     # Compute methods
@@ -386,7 +384,7 @@ class HrExpense(models.Model):
             expense.is_own_expense = expense.employee_id.user_id == self.env.user
 
     @api.depends_context('uid')
-    @api.depends('employee_id', 'manager_id', 'state')
+    @api.depends('employee_id', 'manager_id', 'state', 'account_move_id.state')
     def _compute_is_editable(self):
         is_hr_admin = (
             self.env.user.has_group('hr_expense.group_hr_expense_manager')
@@ -409,13 +407,17 @@ class HrExpense(models.Model):
         for expense in self:
             if (
                 not expense.company_id
-                or (expense.state not in {'draft', 'submitted', 'approved'} and not self.env.su)
+                or (
+                    (expense.state not in {'draft', 'submitted', 'approved'} or expense.account_move_state == 'posted')
+                    and not self.env.su
+                )
             ):
                 # When emptying the required company_id field, onchanges are triggered.
                 # To avoid recomputing the interface without a company (which could
                 # temporarily make fields editable), we do not recompute anything and wait
                 # for a proper company to be set. The interface is also made not editable
-                # when the state is not draft/submitted/approved and the user is not a superuser.
+                # when the state is not draft/submitted/approved or the journal entry is posted,
+                # and the user is not a superuser.
                 expense.is_editable = False
                 continue
 
@@ -529,12 +531,13 @@ class HrExpense(models.Model):
         Compute the states of the expense as such (priority is given to the last matching state of the list):
             - draft: By default
             - submitted: When the approval_state is 'submitted'
-            - approved: When the approval_state is 'approved' or the linked move state is 'draft'
+            - approved: When the approval_state is 'approved', the linked move state is 'draft',
+                        or the move of an expense paid by the employee is 'posted' but not paid yet
             - refused: When the approval_state is 'refused'
             - paid: When it is a company paid expense or the move state is neither 'draft' nor 'posted'
             - in_payment (or paid): When the move state is 'posted' and it's 'payment_state' is 'in_payment' or 'paid'
                                     or ('partial' and there is a residual amount)
-            - posted: When the linked move state is 'posted' and it's 'payment_state' is 'not_paid'
+            - posted: When the linked move state is 'posted' and it's 'payment_state' is 'not_paid', for other payment modes
         """
         for expense in self:
             move = expense.account_move_id
@@ -547,10 +550,11 @@ class HrExpense(models.Model):
                     expense.state = 'paid'
                 elif move.state == 'draft':
                     expense.state = 'approved'
-                elif expense.existing_bill_id:
+                elif expense.has_existing_bill:
                     expense.state = 'paid' if move.origin_payment_id.state == 'reconciled' else self.env['account.move']._get_invoice_in_payment_state()
                 elif move.payment_state == 'not_paid':
-                    expense.state = 'posted'
+                    # For the employee, the posting of the entry changes nothing, the expense is still waiting to be reimbursed
+                    expense.state = 'approved' if expense.payment_mode == 'own_account' else 'posted'
                 elif (
                         move.payment_state == 'in_payment'
                         or (move.payment_state == 'partial' and not expense.company_currency_id.is_zero(expense.amount_residual))
@@ -686,7 +690,7 @@ class HrExpense(models.Model):
     def _compute_expense_job_position_limit_amount_currency(self):
         for expense in self:
             expense.expense_job_position_limit_amount_currency = (
-                expense.currency_id.round(expense.expense_job_position_limit_amount / expense.currency_rate)
+                (expense.currency_id or expense.company_currency_id).round(expense.expense_job_position_limit_amount / expense.currency_rate)
                 if expense.currency_rate
                 else 0
             )
@@ -829,29 +833,26 @@ class HrExpense(models.Model):
                     *self.env['account.journal']._check_company_domain(expense.company_id),
                     ('payment_type', '=', 'outbound'),
                     ('journal_id.active', '=', True),
+                    ('payment_method_id.code', 'in', ['manual', 'check_printing']),
                 ])
 
+    # Will be removed in master, no longer used
     @api.onchange('has_existing_bill')
     def _onchange_has_existing_bill(self):
-        if not self.has_existing_bill:
-            self.existing_bill_id = False
+        pass
 
+    # Will be removed in master, no longer used
     @api.onchange('existing_bill_id')
     def _onchange_existing_bill_id(self):
-        if self.existing_bill_id:
-            self.vendor_id = self.existing_bill_id.partner_id
+        pass
 
-    @api.depends('product_id', 'company_id', 'has_existing_bill', 'existing_bill_id', 'vendor_id')
+    @api.depends('product_id', 'company_id', 'has_existing_bill', 'vendor_id')
     def _compute_account_id(self):
         for _expense in self:
             expense = _expense.with_company(_expense.company_id)
             account = False
 
-            if expense.existing_bill_id:
-                payable_line = expense.existing_bill_id.line_ids.filtered(lambda l: l.account_type == 'liability_payable')
-                account = payable_line[:1].account_id
-
-            elif expense.has_existing_bill:
+            if expense.has_existing_bill:
                 account = expense.vendor_id.commercial_partner_id.property_account_payable_id or expense.company_id.payable_account_id
 
             elif expense.product_id:
@@ -966,13 +967,13 @@ class HrExpense(models.Model):
             )
 
     @api.depends_context('uid')
-    @api.depends('state')
+    @api.depends('state', 'account_move_id.state')
     def _compute_can_edit_account(self):
         if not self.env.user.has_group('account.group_account_invoice'):
             self.can_edit_account = False
         else:
             for expense in self:
-                expense.can_edit_account = expense.state == 'approved'
+                expense.can_edit_account = expense.state == 'approved' and expense.account_move_state != 'posted'
 
     @api.depends_context('uid')
     @api.depends('employee_id')
@@ -1409,11 +1410,7 @@ class HrExpense(models.Model):
     def _can_be_autovalidated(self):
         """ Check whether the given expenses can be auto-validated (no approver) """
         self.ensure_one()
-        has_rights = (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
-        # In case the expense is linked to an existing bill, the existing_bill_id must be set to be autovalidated
-        # If it's not linked to an existing bill, then the field is not required
-        existing_bill_is_set = self.existing_bill_id or not self.has_existing_bill
-        return has_rights and existing_bill_is_set
+        return (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
 
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
@@ -1596,7 +1593,7 @@ class HrExpense(models.Model):
 
     def action_split_wizard(self):
         self.ensure_one()
-        if self.filtered(lambda expense: expense.state in {'posted', 'paid', 'in_payment'}):
+        if self.filtered(lambda expense: expense.state in {'posted', 'paid', 'in_payment'} or expense.account_move_state == 'posted'):
             raise UserError(_("You cannot split an expense that is already posted."))
         if not self.is_editable:
             raise UserError(_("You do not have the rights to edit this expense."))
@@ -1718,9 +1715,6 @@ class HrExpense(models.Model):
 
     def _do_approve(self):
         expenses_to_approve = self.filtered(lambda s: s.state in {'submitted', 'draft'})
-        if any(expense.has_existing_bill and not expense.existing_bill_id for expense in expenses_to_approve):
-            raise UserError(self.env._("The existing bill must be set."))
-
         for expense in expenses_to_approve:
             expense.write({
                 'approval_state': 'approved',
@@ -1787,13 +1781,9 @@ class HrExpense(models.Model):
                     'journal_id': move.journal_id.id,
                 })
 
-                expense = move.expense_ids
-                if expense.existing_bill_id:
-                    expense._reconcile_expense_with_bill()
-
         if employee_expenses:
             # Creation of the account moves for the employee paid expenses.
-            existing_bill_expenses = employee_expenses.filtered('existing_bill_id')
+            existing_bill_expenses = employee_expenses.filtered('has_existing_bill')
             existing_bill_expenses._create_entry_for_expense_with_linked_bill()
 
             no_bill_expenses = employee_expenses - existing_bill_expenses
@@ -1877,16 +1867,9 @@ class HrExpense(models.Model):
         self.ensure_one()
         return self.product_has_cost
 
+    # Will be removed in master, no longer used
     def _reconcile_expense_with_bill(self):
-        self.ensure_one()
-        if not self.existing_bill_id:
-            return
-
-        bill_payable_lines = self.existing_bill_id.line_ids.filtered(lambda l: l.account_id.account_type == 'liability_payable')
-        expense_payable_lines = self.account_move_id.line_ids.filtered(lambda l: l.account_id.account_type == 'liability_payable')
-
-        if bill_payable_lines and expense_payable_lines:
-            (bill_payable_lines + expense_payable_lines).reconcile()
+        pass
 
     def _prepare_receipts_vals(self):
         return_vals = []
@@ -2052,8 +2035,7 @@ class HrExpense(models.Model):
     def _create_entry_for_expense_with_linked_bill(self):
         """
         Create different entries to:
-        - mark the existing bill as paid
-        - transfer the debt from the vendor to the employee
+        - transfer the debt from the vendor to the employee, the vendor side being matched later with the bill
         - prepare the payment to the employee
         """
         for expense in self:
@@ -2074,14 +2056,6 @@ class HrExpense(models.Model):
             )
             if payment_move_payable_lines and transfer_move_payable_lines:
                 (payment_move_payable_lines + transfer_move_payable_lines).reconcile()
-
-            # reconcile debt transfer entry with existing bill
-            transfer_move_payable_lines = debt_transfer_move_sudo.line_ids.filtered(
-                lambda l: l.account_type == 'liability_payable' and l.partner_id == expense.vendor_id
-            )
-            existing_bill_payable_lines = expense.existing_bill_id.line_ids.filtered(lambda l: l.account_type == 'liability_payable')
-            if transfer_move_payable_lines and existing_bill_payable_lines:
-                (transfer_move_payable_lines + existing_bill_payable_lines).reconcile()
 
     def _prepare_linked_bill_paid_by_employee_payment_vals(self):
         """
@@ -2138,6 +2112,10 @@ class HrExpense(models.Model):
             'currency_id': self.currency_id.id,
             'payment_method_line_id': self.payment_method_line_id.id,
             'company_id': self.company_id.id,
+            'attachment_ids': [
+                Command.create(attachment.copy_data({'res_model': 'account.payment', 'res_id': False, 'raw': attachment.raw})[0])
+                for attachment in self.attachment_ids
+            ],
         }
 
         # PAYMENT MOVE LINES
