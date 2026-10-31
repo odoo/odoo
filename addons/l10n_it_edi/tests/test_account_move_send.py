@@ -168,6 +168,34 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             self.assertEqual(res_invoice1.company_id.l10n_it_edi_proxy_user_id, self.proxy_user)
             self.assertEqual(res_invoice2.company_id.l10n_it_edi_proxy_user_id, second_proxy)
 
+    def test_cron_l10n_it_edi_download_and_update_multi_company(self):
+        second_company = self.company_data['company']
+        second_proxy = self.env['account_edi_proxy_client.user'].create({
+            'proxy_type': 'l10n_it_edi',
+            'id_client': 'l10n_it_edi_test_second_company',
+            'company_id': second_company.id,
+            'edi_identification': 'l10n_it_edi_test_second_company',
+            'private_key_id': self.private_key_id.id,
+            'edi_mode': 'test',
+        })
+
+        self.proxy_user.edi_mode = 'test'
+
+        l10n_it_move = 'odoo.addons.l10n_it_edi.models.account_move.AccountMove'
+        with (
+            patch(f'{l10n_it_move}._l10n_it_edi_check_send_state', autospec=True) as mock_check_send_state,
+            patch(f'{l10n_it_move}._l10n_it_edi_download_invoices', return_value=False, autospec=True) as mock_download,
+        ):
+            self.env['account.move'].cron_l10n_it_edi_download_and_update()
+
+            mock_check_send_state.assert_called_once()
+            called_companies = mock_check_send_state.call_args[0][1]
+            self.assertEqual(called_companies, self.company | second_company)
+
+            self.assertEqual(mock_download.call_count, 2)
+            called_proxies = {call.args[1] for call in mock_download.call_args_list}
+            self.assertEqual(called_proxies, {self.proxy_user, second_proxy})
+
     def test_l10n_it_edi_send_success(self):
         invoice = self._create_invoice_it()
         self.generate_l10n_it_edi_send_attachments(invoice)
@@ -223,7 +251,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
                 invoice.action_check_l10n_it_edi()
                 update_send_state.assert_called_once()
 
-                invoice.cron_l10n_it_edi_download_and_update()
+                invoice.cron_l10n_it_edi_download_and_update(companies=invoice.company_id)
                 self.assertEqual(update_send_state.call_count, 2)
 
     def test_l10n_it_edi_send_success_with_signed_data_update_attachment(self):
