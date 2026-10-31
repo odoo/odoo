@@ -30,7 +30,7 @@
         <field name="applies_on">future</field>
         <field name="trigger">auto</field>
         <field name="portal_visible">True</field>
-        <field name="portal_point_name">$</field>
+        <field name="portal_point_name" model="res.company" eval="obj().env.company.currency_id.symbol"/>
         <field name="mail_template_id" ref="loyalty.mail_template_gift_card"/>
     </record>
     <record id="gift_card_program_reward" model="loyalty.reward">
