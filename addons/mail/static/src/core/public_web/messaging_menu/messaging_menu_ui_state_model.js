@@ -5,6 +5,17 @@ export class MessagingMenuUIState extends Record {
     setup() {
         super.setup(...arguments);
         this.onChange(
+            function computeActiveTab() {
+                const activeTab = this.activeTab?.canBeShown
+                    ? this.activeTab
+                    : this.store.messagingMenu?.sortedVisibleTabs[0];
+                // The field too: another flow can write a tab this gives back unchanged.
+                return [activeTab, this.activeTab];
+            },
+            (activeTab) => (this.activeTab = activeTab),
+            { immediate: true }
+        );
+        this.onChange(
             () => [this.activeTab],
             function onChangeActiveTab(activeTab) {
                 // No tab to show while the menu is still being filled up.
@@ -27,14 +38,7 @@ export class MessagingMenuUIState extends Record {
 
     static id = "id";
 
-    activeTab = fields.One("MessagingMenuTab", {
-        compute() {
-            if (this.activeTab?.canBeShown) {
-                return this.activeTab;
-            }
-            return this.store.messagingMenu?.sortedVisibleTabs[0];
-        },
-    });
+    activeTab = fields.One("MessagingMenuTab");
     /**
      * The active chip filter (e.g. "Unread"), if any: rendered as a filter chip, sourced
      * from `tab.filters`.

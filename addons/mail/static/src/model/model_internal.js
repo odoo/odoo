@@ -1,5 +1,5 @@
 import { markRaw } from "@odoo/owl";
-import { ATTR_SYM, MANY_SYM, ONE_SYM } from "./misc";
+import { ATTR_SYM, MANY_SYM, ONE_SYM, untrackFunctions } from "./misc";
 
 export class ModelInternal {
     /** @type {Map<string, boolean>} */
@@ -14,10 +14,6 @@ export class ModelInternal {
     fieldsHtml = new Map();
     /** @type {Map<string, string>} */
     fieldsTargetModel = new Map();
-    /** @type {Map<string, () => Function[]>} */
-    fieldsCompute = new Map();
-    /** @type {Map<string, boolean>} */
-    fieldsEager = new Map();
     /**
      * Names declared with `computed()`. Each record holds the
      * declaration as its own property until its first read replaces it with an
@@ -36,12 +32,6 @@ export class ModelInternal {
      * @type {Set<string>}
      */
     fieldsAttrAsProxy = new Set();
-    /**
-     * Set of field names on the current model that are _inherits fields.
-     *
-     * @type {Set<string>}
-     */
-    inheritsFields = new Set();
     /**
      * Set of field names on the current model that are the inverse of _inherits fields.
      *
@@ -84,17 +74,6 @@ export class ModelInternal {
                     this.fieldsTargetModel.set(fieldName, value);
                     break;
                 }
-                case "compute": {
-                    this.fieldsCompute.set(fieldName, value);
-                    break;
-                }
-                case "eager": {
-                    if (!value) {
-                        break;
-                    }
-                    this.fieldsEager.set(fieldName, value);
-                    break;
-                }
                 case "inverse": {
                     this.fieldsInverse.set(fieldName, value);
                     break;
@@ -114,3 +93,5 @@ export class ModelInternal {
         }
     }
 }
+
+untrackFunctions(ModelInternal.prototype, ["prepareField"]);

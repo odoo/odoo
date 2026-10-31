@@ -3,29 +3,37 @@
 /** @typedef {import("./store").Store} Store */
 
 import { ManyFieldVersion, SingleFieldVersion, SKIP_REVISION } from "@mail/model/field_version";
-import { isCommandList, isMany, normalizeManyCommands, untrackFunctions } from "@mail/model/misc";
+import {
+    isCommandList,
+    isMany,
+    normalizeManyCommands,
+    technicalKeysOnRecords,
+    untrackFunctions,
+} from "@mail/model/misc";
 import { RecordInternal } from "@mail/model/record_internal";
-import { incrementFn } from "@mail/utils/common/signal";
 
-import { computed, htmlEscape, markup, signal } from "@odoo/owl";
+import { htmlEscape, markup, signal } from "@odoo/owl";
 
 import { deserializeDate, deserializeDateTime } from "@web/core/l10n/dates";
 
 const Markup = markup().constructor;
 
-/** @typedef {string} FieldName */
-
 export class StoreInternal extends RecordInternal {
-    /**
-     * See {@link Store#MAKE_UPDATE}.
-     * @type {Map<import("./record").Record, Map<string, true>>}
-     */
-    FC_QUEUE = new Map(); // field-computes
     /**
      * See {@link Store#MAKE_UPDATE}.
      * @type {Map<Record, true>}
      */
     RD_QUEUE = new Map(); // record-deletes
+    /**
+     * See {@link Store#MAKE_UPDATE}. One Set per running onChange, for what it
+     * queues: the top one runs first.
+     * @type {Set<() => void>[]}
+     */
+    OC_QUEUE = [new Set()]; // immediate onChanges
+    /** @type {Map<() => void, Set<() => void>>} */
+    OC_QUEUED = new Map();
+    /** See {@link Store#MAKE_UPDATE}. */
+    isRunningOnChanges = false;
     /** See {@link Store#MAKE_UPDATE}. */
     ERRORS = [];
     /** See {@link Store#MAKE_UPDATE}. */
@@ -38,14 +46,12 @@ export class StoreInternal extends RecordInternal {
      */
     app;
     /** See {@link Store#MAKE_UPDATE}. */
-    updateDepth = signal(0);
-    raiseUpdateDepth = incrementFn(this.updateDepth);
-    lowerUpdateDepth = incrementFn(this.updateDepth, -1);
+    updateDepth = 0;
     /**
-     * A computed of the depth, so a held field only recomputes when this
-     * flips, not on every nested raise. See {@link Store#MAKE_UPDATE}.
+     * Written only when the depth leaves or comes back to 0, so a held field
+     * is not notified on every nested raise. See {@link Store#MAKE_UPDATE}.
      */
-    isUpdateInProgress = computed(() => this.updateDepth() > 0);
+    isUpdateInProgress = signal(false);
     /** See {@link Store#MAKE_UPDATE}. */
     isDrainingQueues = signal(false);
     /**
@@ -61,13 +67,19 @@ export class StoreInternal extends RecordInternal {
      */
     currentInsertVersion = null;
 
-    constructor() {
-        super(...arguments);
-        untrackFunctions(this, ["lowerUpdateDepth", "raiseUpdateDepth"]);
+    raiseUpdateDepth() {
+        if (this.updateDepth++ === 0) {
+            this.isUpdateInProgress.set(true);
+        }
+    }
+    lowerUpdateDepth() {
+        if (--this.updateDepth === 0) {
+            this.isUpdateInProgress.set(false);
+        }
     }
 
     /**
-     * @param {"compute"|"delete"} type
+     * @param {"change"|"delete"} type
      * @param {...any} params
      */
     ADD_QUEUE(type, ...params) {
@@ -80,24 +92,36 @@ export class StoreInternal extends RecordInternal {
                 }
                 break;
             }
-            case "compute": {
-                /** @type {[import("./record").Record, string]} */
-                const [record, fieldName] = params;
-                let recMap = this.FC_QUEUE.get(record);
-                if (!recMap) {
-                    recMap = new Map();
-                    this.FC_QUEUE.set(record, recMap);
-                }
-                recMap.set(fieldName, true);
+            case "change": {
+                const [runOnChange] = params;
+                const queue = this.OC_QUEUE.at(-1);
+                this.OC_QUEUED.get(runOnChange)?.delete(runOnChange);
+                queue.add(runOnChange);
+                this.OC_QUEUED.set(runOnChange, queue);
                 break;
             }
         }
     }
+    /** @returns {(() => void)|undefined} the next queued onChange, with a new Set for what it queues */
+    nextOnChange() {
+        let queue = this.OC_QUEUE.at(-1);
+        while (queue.size === 0 && this.OC_QUEUE.length > 1) {
+            this.OC_QUEUE.pop();
+            queue = this.OC_QUEUE.at(-1);
+        }
+        const [runOnChange] = queue;
+        if (!runOnChange) {
+            return;
+        }
+        queue.delete(runOnChange);
+        this.OC_QUEUED.delete(runOnChange);
+        this.OC_QUEUE.push(new Set());
+        return runOnChange;
+    }
     /** @param {RecordList<Record>} recordList */
     sortRecordList(recordList, func) {
-        const recordProxies = recordList._.data().map((record) => record._proxy);
-        recordProxies.sort(func);
-        const records = recordProxies.map((recordProxy) => recordProxy._raw);
+        const records = recordList._.data().slice();
+        records.sort(func);
         const hasChanged = recordList._.data().some((record, i) => record !== records[i]);
         if (hasChanged) {
             recordList._.data.set(records);
@@ -113,7 +137,7 @@ export class StoreInternal extends RecordInternal {
         const parentFieldName = Model._.parentFields.get(fieldName);
         if (parentFieldName) {
             // Route the write to the parent record, which stores an _inherits field.
-            Reflect.set(record._proxy[parentFieldName], fieldName, value);
+            Reflect.set(record[parentFieldName], fieldName, value);
             return;
         }
         if (Model._.fieldsComputable.has(fieldName)) {
@@ -168,6 +192,22 @@ export class StoreInternal extends RecordInternal {
             Object.getOwnPropertySymbols(vals).map((sym) => [sym, vals[sym]])
         );
         for (const [fieldName, value] of fieldEntries) {
+            const Model = record.Model;
+            if (typeof fieldName === "string" && Model._.parentFields.get(fieldName)) {
+                record[fieldName] = value;
+                continue;
+            }
+            if (
+                typeof fieldName === "string" &&
+                !Model._.fields.get(fieldName) &&
+                !Model._.fieldsComputable.has(fieldName) &&
+                !technicalKeysOnRecords.has(fieldName)
+            ) {
+                console.warn(
+                    `Dropping unknown field "${fieldName}" inserted on "${Model.getName()}": records only hold declared fields.`
+                );
+                continue;
+            }
             let version = record._.fieldsVersion.get(fieldName);
             if (!version) {
                 version = isMany(record.Model, fieldName)
@@ -214,7 +254,7 @@ export class StoreInternal extends RecordInternal {
      */
     updateRelation(record, fieldName, value) {
         /** @type {RecordList<Record>} */
-        const recordList = record[fieldName];
+        const recordList = record._.fieldsList.get(fieldName);
         if (isMany(record.Model, fieldName)) {
             this.updateRelationMany(recordList, value);
         } else {

@@ -14,20 +14,11 @@ const discussChannelPatch = {
             function onChangeIsLocallyPinned() {
                 this.onPinStateUpdated();
             },
-            { immediate: true }
+            { immediate: true, initialRun: false }
         );
         this.lastSubChannelLoaded = fields.One("discuss.channel");
         this.loadSubChannelsDone = false;
-        this.messagingMenuTabs = fields.Many("MessagingMenuTab", {
-            inverse: "channels",
-            /** @this {import("models").DiscussChannel} */
-            compute() {
-                return [...this.store.MessagingMenuTab.records.values()].filter((tab) =>
-                    tab.includesChannel(this)
-                );
-            },
-            eager: true,
-        });
+        this.messagingMenuTabs = fields.Many("MessagingMenuTab", { inverse: "channels" });
         this.primaryMessagingMenuTab = this.computed(
             () =>
                 // A context specific tab only exists within its context: it wins over the
@@ -36,12 +27,24 @@ const discussChannelPatch = {
         );
         this.messagingMenuTabsWithCounter = fields.Many("MessagingMenuTab", {
             inverse: "channelsWithCounter",
-            /** @this {import("models").DiscussChannel} */
-            compute() {
+        });
+        this.onChange(
+            function computeMessagingMenuTabs() {
+                return [...this.store.MessagingMenuTab.records.values()].filter((tab) =>
+                    tab.includesChannel(this)
+                );
+            },
+            (...messagingMenuTabs) => (this.messagingMenuTabs = messagingMenuTabs),
+            { immediate: true }
+        );
+        this.onChange(
+            function computeMessagingMenuTabsWithCounter() {
                 return this._computeMessagingMenuTabsWithCounter();
             },
-            eager: true,
-        });
+            (...messagingMenuTabsWithCounter) =>
+                (this.messagingMenuTabsWithCounter = messagingMenuTabsWithCounter),
+            { immediate: true }
+        );
     },
     _computeMessagingMenuTabsWithCounter() {
         if (

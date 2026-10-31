@@ -16,6 +16,34 @@ export class Notification extends Record {
             },
             { immediate: true, initialRun: false }
         );
+        this.onChange(
+            function computeFailure() {
+                const thread = this.mail_message_id?.thread;
+                if (!this.mail_message_id?.isSelfAuthored) {
+                    return [false];
+                }
+                const failure = this.store.Failure.records
+                    .values()
+                    .find(
+                        (f) =>
+                            f.resModel === thread?.model &&
+                            f.type === this.notification_type &&
+                            (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id))
+                    );
+                return [true, this.isFailure, failure];
+            },
+            function onChangeFailure(isSelfAuthored, isFailure, failure) {
+                if (!isSelfAuthored) {
+                    this.failure = undefined;
+                    return;
+                }
+                this.failure = isFailure
+                    ? failure ??
+                      this.store.Failure.insert({ id: this.store.Failure.nextId.value++ })
+                    : false;
+            },
+            { immediate: true }
+        );
     }
 
     /** @type {number} */
@@ -26,30 +54,7 @@ export class Notification extends Record {
     /** @type {string} */
     notification_type;
     mail_email_address;
-    failure = fields.One("Failure", {
-        inverse: "notifications",
-        /** @this {import("models").Notification} */
-        compute() {
-            const thread = this.mail_message_id?.thread;
-            if (!this.mail_message_id?.isSelfAuthored) {
-                return;
-            }
-            const failure = this.store.Failure.records
-                .values()
-                .find(
-                    (f) =>
-                        f.resModel === thread?.model &&
-                        f.type === this.notification_type &&
-                        (f.resModel !== "discuss.channel" || f.resIds.has(thread?.id))
-                );
-            return this.isFailure
-                ? {
-                      id: failure ? failure.id : this.store.Failure.nextId.value++,
-                  }
-                : false;
-        },
-        eager: true,
-    });
+    failure = fields.One("Failure", { inverse: "notifications" });
     /** @type {string} */
     failure_type;
     get failureMessage() {
