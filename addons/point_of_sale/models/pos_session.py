@@ -231,11 +231,9 @@ class PosSession(models.Model):
             '|', ('date_end', '=', False), ('date_end', '>=', today)]
 
         pricelist_item = self.env['product.pricelist.item'].search(pricelist_item_domain)
-        pricelist = pricelist_item.pricelist_id
 
         return {
             'product.pricelist.item': pricelist_item.read(pricelist_item_fields, load=False),
-            'product.pricelist': pricelist._load_pos_data_read(pricelist, pos_config),
         }
 
     @api.depends('currency_id', 'company_id.currency_id')
