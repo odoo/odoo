@@ -107,6 +107,11 @@ export class CarouselSlider extends Interaction {
     }
 
     computeMaxHeight() {
+        if (this.el.querySelector(".carousel-item-next, .carousel-item-prev")) {
+            this.isMaxHeightOutdated = true;
+            return;
+        }
+        this.isMaxHeightOutdated = false;
         this.maxHeight = undefined;
         // "updateContent()" is necessary to reset the min-height before the
         // following check.
@@ -175,6 +180,9 @@ export class CarouselSlider extends Interaction {
     onSlidCarousel(ev) {
         if (this.options.scrollMode === "single") {
             this.onSlidSingleScroll(ev);
+        }
+        if (this.isMaxHeightOutdated) {
+            this.computeMaxHeight();
         }
         this.loadItemsToAppear(); // Preload future items after a slide
     }
