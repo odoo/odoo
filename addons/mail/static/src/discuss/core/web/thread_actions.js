@@ -31,7 +31,8 @@ registerThreadAction("expand-discuss", {
 });
 registerThreadAction("advanced-settings", {
     condition: ({ channel, owner }) =>
-        ["owner", "admin"].includes(channel?.self_member_id?.channel_role) &&
+        ["channel", "group"].includes(channel?.channel_type) &&
+        ["owner", "admin"].includes(channel.self_member_id?.channel_role) &&
         !owner.isDiscussContent,
     onSelected: ({ channel, store }) => {
         store.env.services.action.doAction({
