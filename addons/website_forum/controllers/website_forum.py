@@ -191,7 +191,9 @@ class WebsiteForum(WebsiteProfile):
 
         if forum or tag:
             values['main_object'] = tag or forum
-        if forum:
+        if forum and question_ids:
+            values['structured_data'] = question_ids._render_jsonld()
+        elif forum:
             values['structured_data'] = forum._render_jsonld(is_detail_page=True)
 
         return request.render("website_forum.forum_index", values)

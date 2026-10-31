@@ -544,13 +544,14 @@ class SlideSlide(models.Model):
         self.ensure_one()
         website = self.env['website'].get_current_website()
         base_url = website.get_base_url()
-        slide_url = self.website_absolute_url
+        slide_url = f"{base_url}{self.env['ir.http']._url_for(self.website_url)}"
+        course_url = f"{base_url}{self.env['ir.http']._url_for(self.channel_id.website_url)}"
         vals = {
             '@type': 'LearningResource',
             '@id': f'{slide_url}/#learningresource',
             'name': self.name,
             'url': slide_url,
-            'isPartOf': {'@id': f'{self.channel_id.website_absolute_url}/#course'},
+            'isPartOf': {'@id': f'{course_url}/#course'},
         }
         if learning_type := {
             'infographic': 'Image',
