@@ -27,12 +27,15 @@ export class OfflineSearchBar extends Component {
     setup() {
         this.ui = useService("ui");
         this.inputRef = this.autofocusRef;
+        this.visibilityState = proxy(this.props.toggler?.state || { showSearchBar: true });
         if (!(this.env.config.disableSearchBarAutofocus || !this.props.autofocus)) {
-            // only force the focus on touch devices on small screens
-            useAutofocus({ ref: this.autofocusRef, mobile: this.ui.isSmall });
+            // only force the focus on touch devices on small screens,
+            useAutofocus({
+                ref: this.inputRef,
+                mobile: this.ui.isSmall,
+            });
         }
         this.searchBarDropdownState = useDropdownState();
-        this.visibilityState = proxy(this.props.toggler?.state || { showSearchBar: true });
 
         useHotkey("backspace", () => this.onBackspace(), {
             area: () => this.inputRef(),
