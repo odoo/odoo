@@ -100,3 +100,20 @@ class TestPortalAdditionalIdentifiers(BaseCommon, HttpCase):
             FR_CN='295109912611193',  # an individual identifier
         ))
         self.assertIn('FR_CN', res['invalid_fields'])
+
+    def test_unchanged_identifier_is_preserved_for_non_main_contact(self):
+        """Test that preserve an unchanged identifier submitted for a non-main contact."""
+        company = self._create_partner(is_company=True)
+        self.partner.with_user(self.env.ref('base.user_admin')).write({
+            'parent_id': company.id,
+            'additional_identifiers': {'DUNS': '372441183'},
+        })
+        self._create_partner(parent_id=company.id)
+
+        self.assertFalse(self.partner._is_main_contact())
+
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        response = self._submit(self._base_values(DUNS='372441183'))
+
+        self.assertEqual(response, {'redirectUrl': '/my/addresses'})
+        self.assertEqual(self.partner.additional_identifiers, {'DUNS': '372441183'})
