@@ -871,6 +871,20 @@ class TestMailMessageAccess(MessageAccessCommon):
         self.assertEqual(found_por, messages_all.filtered(lambda m: m.res_id != records[2].id), 'Should filter like read')
         found_por.read(['subject'])
 
+    def test_search_pending_update(self):
+        """ The custom search runs its own query: pending updates on the fields
+        of the domain are flushed first, like for the superuser. """
+        message = self.record_internal.message_post(
+            body='Flush me',
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+        message.flush_recordset()
+        message.write({'subject': 'Pending subject'})  # not flushed yet
+        found = self.env['mail.message'].with_user(self.user_employee).search([
+            ('subject', '=', 'Pending subject'),
+        ])
+        self.assertEqual(found, message)
+
 
 @tagged('mail_message', 'security', 'post_install', '-at_install')
 class TestMessageSubModelAccess(MessageAccessCommon):
