@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from markupsafe import Markup
+
+from odoo import fields, models, _
 
 
 class EventBooth(models.Model):
@@ -16,6 +18,24 @@ class EventBooth(models.Model):
     sponsor_subtitle = fields.Char(string='Sponsor Slogan', related='sponsor_id.subtitle')
     sponsor_website_description = fields.Html(string='Sponsor Description', related='sponsor_id.website_description')
     sponsor_image_512 = fields.Image(string='Sponsor Logo', related='sponsor_id.image_512')
+
+    def write(self, vals):
+        released_sponsors = []
+        if vals.get('state') == 'available':
+            # '_get_release_values' drops the sponsor link, so it is read before
+            # the booths are freed to still be notified afterwards.
+            # sudo: event.booth - booths can be released by the event user, and they don't have access to sponsors.
+            released_sponsors = [
+                (booth.display_name, booth.sponsor_id)
+                for booth in self.sudo().filtered(
+                    lambda booth: booth.state == 'unavailable' and booth.sponsor_id)
+            ]
+        res = super().write(vals)
+        for booth_name, sponsor in released_sponsors:
+            sponsor.message_post(body=Markup('<p>%s</p>') % _(
+                'Booth %(booth_name)s has been released and is not linked to this sponsor anymore.',
+                booth_name=booth_name))
+        return res
 
     def action_view_sponsor(self):
         action = self.env['ir.actions.act_window']._for_xml_id('website_event_exhibitor.event_sponsor_action')
@@ -50,3 +70,6 @@ class EventBooth(models.Model):
             if booth.use_sponsor and booth.partner_id:
                 booth.sponsor_id = booth._get_or_create_sponsor(write_vals)
         super(EventBooth, self)._action_post_confirm(write_vals)
+
+    def _get_release_values(self):
+        return {**super()._get_release_values(), 'sponsor_id': False}
