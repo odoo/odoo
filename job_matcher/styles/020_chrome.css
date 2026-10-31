@@ -1,0 +1,114 @@
+/* The fixed furniture around the card, copied from Survey: the brand badge at
+   the bottom-left and the progress/navigation toolbar at the bottom-right.
+
+   Both are pinned to the viewport, which is why they live outside .jm_card:
+   the card clips its own content to keep its rounded corners. */
+#jm_app .jm_brand,
+#jm_app .jm_toolbar {
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 1rem;
+    background: var(--jm-body-bg);
+    border: 1px solid var(--jm-border);
+    border-radius: .375rem;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+}
+
+#jm_app .jm_brand {
+    left: 0;
+    margin-left: 1rem;
+    padding: .5rem 1rem;
+    font-size: .875rem;
+    color: var(--jm-muted);
+}
+
+/* The brand name carries the primary colour, as a link does in Odoo. */
+#jm_app .jm_brand a {
+    color: var(--jm-primary);
+    text-decoration: none;
+}
+
+#jm_app .jm_brand a:hover {
+    text-decoration: underline;
+}
+
+#jm_app .jm_toolbar {
+    right: 0;
+    display: flex;
+    align-items: center;
+    padding: .5rem 0;
+    margin-right: 1rem;
+}
+
+/* Survey separates the two halves with a rule rather than a gap. */
+#jm_app .jm_progress_wrapper {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: 0 1rem;
+    border-right: 1px solid var(--jm-border);
+    font-size: .875rem;
+    color: var(--jm-muted);
+}
+
+#jm_app .jm_progress {
+    width: 10rem;
+    height: .5rem;
+    border-radius: .25rem;
+    background: color-mix(in srgb, currentColor 15%, transparent);
+    overflow: hidden;
+}
+
+#jm_app .jm_progress_bar {
+    width: 0;
+    height: 100%;
+    background: var(--jm-primary);
+    transition: width .4s ease;
+}
+
+#jm_app .jm_nav {
+    display: flex;
+    align-items: center;
+    padding: 0 .5rem;
+}
+
+#jm_app .jm_nav_btn {
+    padding: 0 .5rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+#jm_app .jm_nav_btn:hover:not(:disabled) {
+    background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+#jm_app .jm_nav_btn:disabled {
+    opacity: .3;
+    cursor: default;
+}
+
+/* Mobile, as Survey handles it: the brand badge goes, the toolbar stays but
+   keeps only the readout, so the arrows never get squeezed off screen. */
+@media (max-width: 767px) {
+    #jm_app .jm_brand {
+        display: none;
+    }
+
+    #jm_app .jm_progress {
+        display: none;
+    }
+
+    #jm_app .jm_progress_wrapper {
+        padding: 0 .75rem;
+    }
+
+    #jm_app .jm_toolbar {
+        margin-right: .75rem;
+        margin-bottom: .75rem;
+    }
+}
