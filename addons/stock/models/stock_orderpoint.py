@@ -211,7 +211,10 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.model
     def action_open_orderpoints(self):
-        return self._get_orderpoint_action()
+        action = self._get_orderpoint_action()
+        orderpoints = self.env['stock.warehouse.orderpoint'].search([])
+        orderpoints._compute_qty_to_order()
+        return action
 
     def action_stock_replenishment_info(self):
         self.ensure_one()
