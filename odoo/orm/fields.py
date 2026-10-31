@@ -817,13 +817,15 @@ class Field[T, C]:
             value_is_null = any(val is False or val is None or val == falsy_value for val in value)
         else:
             value_is_null = value is False or value is None or value == falsy_value
+        # a negative operator on a non-null value is kept on the relation path;
+        # building it on the path (move_id IN (SELECT ... WHERE move_type != ...))
+        # lets PostgreSQL plan it as a nested loop on the primary key instead of
+        # the optimizer negating a positive condition into a slow
+        # "move_id NOT IN (SELECT ...)" anti-join over most of the comodel.
+        # See issue #299750.
         can_be_null = (  # (..., '=', False) or (..., 'not in', [truthy vals])
             (operator not in Domain.NEGATIVE_OPERATORS) == value_is_null
         )
-        if operator in Domain.NEGATIVE_OPERATORS and not value_is_null:
-            # we have a condition like 'not in' ['a']
-            # let's call back with a positive operator
-            return NotImplemented
 
         # parse the path
         field_seq = []

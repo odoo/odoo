@@ -571,6 +571,31 @@ class TestSearchRelated(TransactionCase):
         """]):
             model.search([('foo_name', '=', 'a')])
 
+    def test_negative_operator_on_related_field_keeps_the_path(self):
+        """Regression test for issue #299750.
+
+        Searching on a declared non-stored related field with a negative
+        operator must be built on the relation path. The "non-stored
+        Field.search rewrite" made ``Field._search_related`` return
+        ``NotImplemented`` for negative operators, so the domain optimizer
+        negated a positive condition into a slow ``NOT IN (SELECT ...)``
+        anti-join over the comodel. The search must stay correct: the
+        related-field negative search returns the same records as the
+        equivalent direct-path search.
+        """
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+        foo_name = model.fields_dict['foo_name']
+
+        # Before the fix, ``Field._search_related`` returned ``NotImplemented``
+        # for a negative operator with a non-null value, so the domain optimizer
+        # negated a positive condition into a slow "NOT IN (SELECT ...)"
+        # anti-join over the comodel. The negative operator is now handled on the
+        # relation path, so the related field's search builds a real Domain.
+        self.assertIsNot(foo_name._search_related(model, 'not in', ['a']), NotImplemented)
+        self.assertIsNot(foo_name._search_related(model, '!=', 'a'), NotImplemented)
+        # a positive operator keeps working too
+        self.assertIsNot(foo_name._search_related(model, '=', 'a'), NotImplemented)
+
     def test_related_many2one(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
 
