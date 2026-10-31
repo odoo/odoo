@@ -5,6 +5,7 @@ from datetime import UTC
 
 from odoo import api, fields, models
 from odoo.tools.date_utils import localized
+from odoo.tools.intervals import Intervals
 
 
 class ResourceMixin(models.AbstractModel):
@@ -250,3 +251,36 @@ class ResourceMixin(models.AbstractModel):
                     record_result[start.date()] += (stop - start).total_seconds() / 3600
                 result[record.id] = sorted(record_result.items())
         return result
+
+    # --------------------------------------------------
+    # New API
+    # --------------------------------------------------
+
+    def _attendance_intervals(self, dt_from, dt_to, domain=None, availability=False):
+        """ Return the attendance intervals of each record, see
+        ``resource.resource._attendance_intervals``.
+
+        :return: ``{record: Intervals}`` for every record of ``self``
+        :rtype: dict
+        """
+        intervals = self.resource_id._attendance_intervals(dt_from, dt_to, domain, availability)
+        return {record: intervals.get(record.resource_id, Intervals()) for record in self}
+
+    def _leave_intervals(self, dt_from, dt_to, domain=None):
+        """ Return the leave intervals of each record, see ``resource.resource._leave_intervals``.
+
+        :return: ``{record: Intervals}`` for every record of ``self``
+        :rtype: dict
+        """
+        intervals = self.resource_id._leave_intervals(dt_from, dt_to, domain)
+        return {record: intervals.get(record.resource_id, Intervals()) for record in self}
+
+    def _work_intervals(self, dt_from, dt_to, domain=None, attendance_domain=None, availability=False, compute_leaves=True):
+        """ Return the work intervals of each record, see ``resource.resource._work_intervals``.
+
+        :return: ``{record: Intervals}`` for every record of ``self``
+        :rtype: dict
+        """
+        intervals = self.resource_id._work_intervals(
+            dt_from, dt_to, domain, attendance_domain, availability, compute_leaves)
+        return {record: intervals.get(record.resource_id, Intervals()) for record in self}

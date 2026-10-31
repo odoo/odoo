@@ -174,7 +174,7 @@ class HrVersion(models.Model):
         """Return the expected working intervals of the calendar based versions of ``self``.
 
         Only versions with :meth:`has_static_work_entries` are computed, from their working
-        schedule (``_attendance_intervals_batch``). A fully flexible version gets a single interval
+        schedule (``resource.resource._attendance_intervals``). A fully flexible version gets a single interval
         covering the whole period with an empty attendance payload (hence 24h per day once
         split per day).
 
@@ -190,20 +190,15 @@ class HrVersion(models.Model):
         """
         assert start_dt.tzinfo and end_dt.tzinfo, "function expects localized date"
         # {resource: intervals}
-        versions_with_calendar_work_entry_source = self.filtered(lambda version: version.has_static_work_entries())
-        result = dict()
-        for calendar, versions in versions_with_calendar_work_entry_source.grouped('resource_calendar_id').items():
-            fully_flex_versions = versions.filtered(lambda version: version._is_fully_flexible())
-            for version in fully_flex_versions:
-                result.update({version.employee_id.resource_id.id: Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])})
-            remaining_versions = (versions - fully_flex_versions).with_prefetch()
-            resources_per_tz = remaining_versions._get_resources_per_tz()
-            if remaining_versions:
-                result.update(calendar._attendance_intervals_batch(
-                    start_dt,
-                    end_dt,
-                    resources_per_tz=resources_per_tz,
-                ))
+        static_versions = self.filtered(lambda version: version.has_static_work_entries())
+        fully_flex_versions = static_versions.filtered(lambda version: version._is_fully_flexible())
+        result = {
+            version.employee_id.resource_id.id: Intervals([(start_dt, end_dt, self.env['resource.calendar.attendance'])])
+            for version in fully_flex_versions
+        }
+        resources = (static_versions - fully_flex_versions).employee_id.resource_id
+        for resource, intervals in resources._attendance_intervals(start_dt, end_dt).items():
+            result[resource.id] = intervals
         return result
 
     def _get_interval_work_entry_type(self, interval):
@@ -375,16 +370,12 @@ class HrVersion(models.Model):
                 # this will mean the virtual schedule and for time off in hours the chosen hours
                 one_day_leaves = Intervals([l for l in leaves if l[0].astimezone(tz).date() == l[1].astimezone(tz).date()], keep_distinct=True)
                 multi_day_leaves = leaves - one_day_leaves
-                resources_per_tz = version._get_resources_per_tz()
-                static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
+                static_attendances = employee.resource_id._attendance_intervals(start_dt, end_dt)[employee.resource_id]
                 real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
             elif version.has_static_work_entries() or not leaves:
                 real_leaves = version._get_real_leaves_static(leaves, expected_attendances)
             else:
-                resources_per_tz = version._get_resources_per_tz()
-                static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
+                static_attendances = employee.resource_id._attendance_intervals(start_dt, end_dt)[employee.resource_id]
                 real_leaves = version._get_real_leaves_static_attendance(leaves, static_attendances)
 
             real_worked_leaves = version._get_real_worked_leaves(worked_leaves, real_leaves)
