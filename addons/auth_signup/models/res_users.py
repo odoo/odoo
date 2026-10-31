@@ -27,10 +27,15 @@ class ResUsers(models.Model):
     def _search_state(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        if len(value) > 1:
-            return Domain.TRUE
-        in_log = 'active' in value
-        return Domain('log_ids', '!=' if in_log else '=', False)
+        match 'active' in value, 'new' in value:
+            case True, True:
+                return Domain.TRUE
+            case True, False:
+                return Domain('log_ids', '!=', False)
+            case False, True:
+                return Domain('log_ids', '=', False)
+            case False, False:
+                return Domain.FALSE
 
     def _compute_state(self):
         for user in self:
