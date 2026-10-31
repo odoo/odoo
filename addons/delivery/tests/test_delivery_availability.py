@@ -9,11 +9,11 @@ from odoo.addons.delivery.tests.common import DeliveryCommon
 @tagged("post_install", "-at_install")
 class TestDeliveryAvailability(DeliveryCommon):
     _test_user_groups = (
-        'product.group_product_manager',
-        'sales_team.group_sale_manager',  # FIXME: use sales_team.group_sale_salesman
+        "product.group_product_manager",
+        "sales_team.group_sale_manager",  # FIXME: use sales_team.group_sale_salesman
     )
 
-    _test_user_name = 'Test Sales & Product Manager'
+    _test_user_name = "Test Sales & Product Manager"
 
     @classmethod
     def setUpClass(cls):
@@ -24,7 +24,7 @@ class TestDeliveryAvailability(DeliveryCommon):
             {"name": "Exclude"},
         ])
 
-        cls.non_restricted_carrier = cls._prepare_carrier(cls.carrier.product_id)
+        cls.non_restricted_carrier = cls._prepare_carrier()
 
         cls.product_line = cls.sale_order.order_line.filtered(
             lambda sol: sol.product_id == cls.product
@@ -235,7 +235,7 @@ class TestDeliveryAvailability(DeliveryCommon):
     def test_dont_set_default_carrier_when_partner_delivery_method_is_not_available(self):
         """The default carrier is not set as property_delivery_carrier_id is not in
         available_carriers."""
-        restricted_carrier = self._prepare_carrier(self.carrier.product_id, max_weight=0.1)
+        restricted_carrier = self._prepare_carrier(max_weight=0.1)
         self.product.weight = 1.0
         self.sale_order.partner_shipping_id.property_delivery_carrier_id = restricted_carrier
         delivery_wizard = self.sale_order.action_open_delivery_wizard()
@@ -258,9 +258,7 @@ class TestDeliveryAvailability(DeliveryCommon):
         )
 
     def test_reset_allow_cash_on_delivery_on_carrier_type_change(self):
-        delivery_method = self._prepare_carrier(
-            self._prepare_carrier_product(), delivery_type="fixed", allow_cash_on_delivery=True
-        )
+        delivery_method = self._prepare_carrier(delivery_type="fixed", allow_cash_on_delivery=True)
         delivery_method.delivery_type = "base_on_rule"
         self.assertFalse(delivery_method.allow_cash_on_delivery)
 
@@ -269,16 +267,60 @@ class TestDeliveryAvailability(DeliveryCommon):
 
         self.carrier.active = False
 
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'order_line': [
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [
                 Command.create({
-                    'product_id': self.product.id,
-                    'product_uom_qty': 10,
-                    'price_unit': 10.0,
-                }),
+                    "product_id": self.product.id,
+                    "product_uom_qty": 10,
+                    "price_unit": 10.0,
+                })
             ],
         })
 
         action = sale_order.action_open_delivery_wizard()
-        self.assertEqual(action['context']['default_carrier_id'], False)
+        self.assertEqual(action["context"]["default_carrier_id"], False)
+
+    def test_delivery_method_pricelist_availability(self):
+        pricelist_a, pricelist_b = self.env["product.pricelist"].create([
+            {"name": "Pricelist A", "currency_id": self.env.company.currency_id.id},
+            {"name": "Pricelist B", "currency_id": self.env.company.currency_id.id},
+        ])
+
+        self.carrier.pricelist_ids = [Command.set(pricelist_a.ids)]
+
+        # A carrier restricted to Pricelist A should be available for orders
+        # using Pricelist A, but not for orders using Pricelist B.
+        self.sale_order.pricelist_id = pricelist_a
+
+        delivery_wizard = Form(
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
+            })
+        )
+        choose_delivery_carrier = delivery_wizard.save()
+        self.assertIn(self.carrier, choose_delivery_carrier.available_carrier_ids)
+
+        self.sale_order.pricelist_id = pricelist_b
+
+        delivery_wizard = Form(
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
+            })
+        )
+        choose_delivery_carrier = delivery_wizard.save()
+        self.assertNotIn(self.carrier, choose_delivery_carrier.available_carrier_ids)
+
+        # A carrier without pricelist restrictions should remain available.
+        self.carrier.pricelist_ids = False
+
+        delivery_wizard = Form(
+            self.env["choose.delivery.carrier"].with_context({
+                "default_order_id": self.sale_order.id,
+                "default_carrier_id": self.non_restricted_carrier.id,
+            })
+        )
+        choose_delivery_carrier = delivery_wizard.save()
+        self.assertIn(self.carrier, choose_delivery_carrier.available_carrier_ids)

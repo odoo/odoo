@@ -161,7 +161,6 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
         self.env["delivery.carrier"].create({
             "name": "Local BE",
             "country_ids": self.country_be.ids,
-            "product_id": self.free_delivery.product_id.id,
         })
         self.cart.partner_shipping_id.country_id = self.country_us  # No DM can ship to the US
         self.cart.partner_shipping_id.state_id = self.country_us_state_id

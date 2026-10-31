@@ -30,11 +30,7 @@ class TestGoogleAnalytics(HttpCase):
             "type": "consu",
             "website_published": True,
         })
-        cls.env["delivery.carrier"].create({
-            "name": "Test Delivery",
-            "product_id": cls.env.ref("delivery.product_product_delivery").id,
-            "website_published": True,
-        })
+        cls.env["delivery.carrier"].create({"name": "Test Delivery", "website_published": True})
         cls.env.ref("base.default_website").write({"google_analytics_key": "G-XXXXXXXXXXX"})
         cls.env.ref("base.partner_admin").write({
             "street": "215 Vine St",

@@ -20,16 +20,6 @@ class TestDeliveryPickingBatch(TestStockBatchCommon):
             'amount': 50,
             'sequence': 4,
             'delivery_type': 'fixed',
-            'product_id': cls.env['product.product'].create({
-                'name': 'Local Delivery - Testing',
-                'default_code': 'Delivery_Testing',
-                'type': 'service',
-                'categ_id': cls.env.ref('delivery.product_category_deliveries').id,
-                'sale_ok': False,
-                'purchase_ok': False,
-                'list_price': 10.0,
-                'invoice_policy': 'order'
-            }).id
         })
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')

@@ -23,10 +23,7 @@ class TestDeliveryCarrier(GelatoCommon, DeliveryCommon):
             "country_id": cls.env.ref("base.be").id,
         })
 
-        cls.product_delivery_gelato = cls._prepare_carrier_product(name="Gelato Charges")
-        cls.gelato_delivery = cls._prepare_carrier(
-            cls.product_delivery_gelato, delivery_type="gelato"
-        )
+        cls.gelato_delivery = cls._prepare_carrier(delivery_type="gelato")
 
         cls.shipping_response = {
             "quotes": [

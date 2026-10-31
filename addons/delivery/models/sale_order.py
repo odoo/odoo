@@ -28,7 +28,9 @@ class SaleOrder(models.Model):
         for so in self:
             so.is_all_service = all(
                 line.product_id.type == "service"
-                for line in so.order_line.filtered(lambda x: not x.display_type)
+                for line in so.order_line.filtered(
+                    lambda x: not x.display_type and not x.is_delivery
+                )
             )
 
     def _compute_amount_total_without_delivery(self):
@@ -81,12 +83,7 @@ class SaleOrder(models.Model):
         to_delete = delivery_lines.filtered(lambda x: x.qty_invoiced == 0)
         if not to_delete:
             delivery_lines_text = "\n".join([
-                "- %s: %s x %s"
-                % (
-                    line.product_id.with_context(display_default_code=False).display_name,
-                    line.qty_invoiced,
-                    line.price_unit,
-                )
+                "- %s: %s x %s" % (line.name, line.qty_invoiced, line.price_unit)
                 for line in delivery_lines
             ])
             raise UserError(
@@ -162,24 +159,20 @@ class SaleOrder(models.Model):
             carrier = carrier.with_context(lang=self.partner_id.lang)
 
         # Apply fiscal position
-        taxes = carrier.product_id.taxes_id._filter_taxes_by_company(self.company_id)
+        taxes = carrier.tax_ids._filter_taxes_by_company(self.company_id)
         taxes_ids = taxes.ids
         if self.partner_id and self.fiscal_position_id:
             taxes_ids = self.fiscal_position_id.map_tax(taxes).ids
 
         # Create the sales order line
 
-        if carrier.product_id.description_sale:
-            so_description = "%s: %s" % (carrier.name, carrier.product_id.description_sale)
-        else:
-            so_description = carrier.name
+        so_description = carrier.name
         values = {
             "order_id": self.id,
             "name": so_description,
             "price_unit": price_unit,
             "product_uom_qty": 1,
-            "product_id": carrier.product_id.id,
-            "product_uom_id": carrier.product_id.uom_id.id,
+            "product_uom_id": self.env["product.template"]._default_uom_id().id,
             "tax_ids": [(6, 0, taxes_ids)],
             "is_delivery": True,
         }
