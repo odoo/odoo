@@ -71,7 +71,7 @@ class ResCurrency(models.Model):
         ]
         return SQL('(VALUES %s) AS account_currency_table(company_id, period_key, date_from, date_next, rate_type, rate)', SQL(',').join(unit_rates))
 
-    def _create_currency_table(self, companies, date_periods, use_cta_rates=False):
+    def _create_currency_table(self, companies, date_periods, use_cta_rates=False, table_name='account_currency_table'):
         """ Creates a temporary table containing the currency rates to be used in order to aggregate amounts belonging to companies
         with different main currencies in a reporting query.
         These rates are computed from the res.currrency.rate objects defined for self.env.company.
@@ -97,6 +97,7 @@ class ResCurrency(models.Model):
                              - date_to is the date the periods ends at
         :param use_cta_rates: Boolean parameter, enabling the computation of CTA rates. If True, 'current', 'average' and 'historical' rates will be
                         computed for all companies, for all periods. Else, only 'current' will be computed.
+        :param table_name: The name of the temporary table to (re)create.
         """
         main_company = self.env.company
         domestic_currency_companies = companies.filtered(lambda x: x.currency_id == main_company.currency_id)
@@ -123,19 +124,21 @@ class ResCurrency(models.Model):
         self.env.cr.execute(SQL(
             """
                 -- Tests may call this function multiple times within the same transaction; we then need to delete an regenerate the currency table
-                DROP TABLE IF EXISTS account_currency_table;
+                DROP TABLE IF EXISTS %(table)s;
 
                 -- Create a temporary table
                 CREATE TEMPORARY TABLE
-                account_currency_table (company_id, period_key, date_from, date_next, rate_type, rate)
+                %(table)s (company_id, period_key, date_from, date_next, rate_type, rate)
                 ON COMMIT DROP
                 AS (%(currency_table_build_query)s);
 
                 -- Create a supporting index to avoid seq.scans
-                CREATE INDEX account_currency_table_index ON account_currency_table (company_id, rate_type, date_from, date_next);
+                CREATE INDEX %(index)s ON %(table)s (company_id, rate_type, date_from, date_next);
                 -- Update statistics for correct planning
-                ANALYZE account_currency_table;
+                ANALYZE %(table)s;
             """,
+            table=SQL.identifier(table_name),
+            index=SQL.identifier(f'{table_name}_index'),
             currency_table_build_query=SQL(" UNION ALL ").join(SQL('(%s)', builder) for builder in table_builders),
         ))
 
