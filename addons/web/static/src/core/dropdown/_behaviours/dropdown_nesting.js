@@ -7,11 +7,12 @@ export const DROPDOWN_NESTING = Symbol("dropdownNesting");
 const BUS = new EventBus();
 
 class DropdownNestingState {
-    constructor({ parent, close }) {
+    constructor({ parent, close, shouldCloseParents }) {
         this._isOpen = false;
         this.parent = parent;
         this.children = new Set();
         this.close = close;
+        this.shouldCloseParents = shouldCloseParents;
 
         parent?.children.add(this);
     }
@@ -33,7 +34,7 @@ class DropdownNestingState {
 
     closeAllParents() {
         this.close();
-        if (this.parent) {
+        if (this.parent && this.shouldCloseParents()) {
             this.parent.closeAllParents();
         }
     }
@@ -71,13 +72,17 @@ class DropdownNestingState {
  * dropdown to separate dropdowns in different dialogs.
  *
  * @param {import("@web/core/dropdown/dropdown_hooks").DropdownState} state
+ * @param {Object} [options]
+ * @param {() => boolean} [options.shouldCloseParents] whether closing all parents from this
+ *  dropdown goes on with its parents
  * @returns
  */
-export function useDropdownNesting(state) {
+export function useDropdownNesting(state, { shouldCloseParents = () => true } = {}) {
     const env = useEnv();
     const current = new DropdownNestingState({
         parent: env[DROPDOWN_NESTING],
         close: () => state.close(),
+        shouldCloseParents,
     });
 
     // Set up UI active element related behavior ---------------------------
