@@ -103,8 +103,8 @@ class DeliveryCarrier(models.Model):
         packages = []
 
         total_cost = 0
-        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
-            total_cost += self._product_price_to_company_currency(line.product_qty, line.product_id, order.company_id)
+        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type and line.product_id.type == 'consu'):
+            total_cost += line.price_total
 
         total_weight = order._get_estimated_weight() + default_package_type.base_weight
         order_weight = self.env.context.get('order_weight', False)
@@ -158,11 +158,7 @@ class DeliveryCarrier(models.Model):
         for package in picking.move_line_ids.result_package_id:
             move_lines = picking.move_line_ids.filtered(lambda ml: ml.result_package_id == package)
             commodities = self._get_commodities_from_stock_move_lines(move_lines)
-            package_total_cost = 0.0
-            for quant in package.quant_ids:
-                package_total_cost += self._product_price_to_company_currency(
-                    quant.quantity, quant.product_id, picking.company_id
-                )
+            package_total_cost = sum(move_lines.mapped('sale_price'))
             packages.append(DeliveryPackage(
                 commodities,
                 package.shipping_weight or package.weight,
@@ -176,11 +172,7 @@ class DeliveryCarrier(models.Model):
         # Create one package: either everything is in pack or nothing is.
         if picking.weight_bulk:
             commodities = self._get_commodities_from_stock_move_lines(picking.move_line_ids)
-            package_total_cost = 0.0
-            for move_line in picking.move_line_ids:
-                package_total_cost += self._product_price_to_company_currency(
-                    move_line.quantity, move_line.product_id, picking.company_id
-                )
+            package_total_cost = sum(picking.move_line_ids.mapped('sale_price'))
             packages.append(DeliveryPackage(
                 commodities,
                 picking.weight_bulk,
