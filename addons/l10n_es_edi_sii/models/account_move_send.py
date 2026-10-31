@@ -36,7 +36,6 @@ class AccountMoveSend(models.AbstractModel):
 
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
-
         sii_move_ids = [
             invoice.id
             for invoice, invoice_data in invoices_data.items()
@@ -52,3 +51,16 @@ class AccountMoveSend(models.AbstractModel):
                         'error_title': self.env._("Error while sending the invoice to SII"),
                         'errors': [tools.html2plaintext(invoice.l10n_es_edi_sii_error)],
                     }
+
+
+class AccountMoveBatchSendWizard(models.TransientModel):
+    _inherit = 'account.move.send.batch.wizard'
+
+    @api.model
+    def _get_default_extra_edis(self, move):
+        extra_edis = super()._get_default_extra_edis(move)
+        extra_edis = [
+            edi for edi in extra_edis
+            if edi not in ('es_edi_sii', 'es_edi_sii_resend')
+        ]
+        return extra_edis
