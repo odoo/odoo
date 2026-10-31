@@ -199,6 +199,10 @@ class ResUsers(models.Model):
     def _store_init_global_fields(self, res: Store.FieldList):
         super()._store_init_global_fields(res)
         res.attr("has_access_livechat", self.has_access_livechat)
+        res.attr(
+            "can_download_transcript",
+            bool(self.env.ref("im_livechat.action_report_livechat_conversation", False)),
+        )
 
     def _store_init_fields(self, res: Store.FieldList):
         super()._store_init_fields(res)

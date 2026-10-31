@@ -151,6 +151,14 @@ export class ChatWindow extends Component {
         return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto;`;
     }
 
+    get composerHiddenContainerClass() {
+        return {};
+    }
+
+    get showNeedactionCounter() {
+        return this.channel.importantCounter > 0;
+    }
+
     onKeydown(ev) {
         if (ev.key === "Escape" && this.threadActions.panelAction) {
             this.threadActions.panelAction.closePanel();

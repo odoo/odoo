@@ -31,6 +31,7 @@ class TestLivechatCommon(MailCommon):
 
         self.livechat_channel = self.env['im_livechat.channel'].create({
             'name': 'The basic channel',
+            "review_link": "https://www.odoo.com",
             'user_ids': [(6, 0, [self.operator.id])]
         })
         self.env.ref("base.default_website").channel_id = self.livechat_channel.id

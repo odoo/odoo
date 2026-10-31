@@ -489,6 +489,7 @@ class DiscussChannel(models.Model):
     def _sync_field_names(self, res):
         super()._sync_field_names(res)
         res[None].attr("livechat_end_dt", predicate=is_livechat_channel)
+        res[None].attr("livechat_rating", predicate=is_livechat_channel)
         res[None].one("chatbot_current_step_id", [], predicate=is_livechat_channel)
         res["internal_users"].attr("description", predicate=is_livechat_channel)
         res["internal_users"].attr("livechat_note", predicate=is_livechat_channel)
@@ -503,7 +504,10 @@ class DiscussChannel(models.Model):
     def _store_channel_fields(self, res: Store.FieldList):
         super()._store_channel_fields(res)
         res.one("country_id", ["code", "name"], predicate=is_livechat_channel)
+        # sudo - visitor can access to the livechat channel name and review link of an accessible channel
+        res.one("livechat_channel_id", ["name", "review_link"], predicate=is_livechat_channel, sudo=True)
         res.attr("livechat_end_dt", predicate=is_livechat_channel)
+        res.attr("livechat_rating", predicate=is_livechat_channel)
         # sudo - visitor can access to the channel member history of an accessible channel
         res.many(
             "livechat_channel_member_history_ids",
@@ -512,7 +516,6 @@ class DiscussChannel(models.Model):
             sudo=True,
         )
         if res.is_for_internal_users():
-            res.one("livechat_channel_id", ["name"], predicate=is_livechat_channel, sudo=True)
             res.attr("description", predicate=is_livechat_channel)
             res.one("livechat_lang_id", ["name", "code"], predicate=is_livechat_channel)
             res.attr("livechat_note", predicate=is_livechat_channel)
