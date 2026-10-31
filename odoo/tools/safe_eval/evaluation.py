@@ -310,6 +310,20 @@ def compile_codeobj(expr: str, /, filename: str = '<unknown>', mode: typing.Lite
         raise ValueError('%r while compiling\n%r' % (e, expr))
 
 
+@functools.lru_cache(maxsize=4096)
+def _compile_validated(expr, filename, mode, policy):
+    """ Compile ``expr`` and validate its bytecode, memoized: the same source is
+    typically evaluated many times (rules, domains, server actions in loops).
+
+    The result only depends on the arguments: ``policy`` is part of the key as it
+    changes the generated code (see :func:`compile_codeobj`). Code objects are
+    immutable, and invalid code raises, so it is never cached.
+    """
+    code_obj = compile_codeobj(expr, filename=filename, mode=mode)
+    assert_valid_codeobj(_SAFE_OPCODES, code_obj, expr)
+    return code_obj
+
+
 def const_eval(expr):
     """const_eval(expression) -> value
 
@@ -424,8 +438,7 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
         __builtins__=dict(_BUILTINS),
     )
 
-    c = compile_codeobj(expr, filename=filename, mode=mode)
-    assert_valid_codeobj(_SAFE_OPCODES, c, expr)
+    c = _compile_validated(expr, filename, mode, unsafe_policy())
     try:
         # empty locals dict makes the eval behave like top-level code
         return unsafe_eval(c, globals_dict, None)
