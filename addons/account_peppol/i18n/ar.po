@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
-"PO-Revision-Date: 2026-10-28 03:33+0000\n"
+"POT-Creation-Date: 2026-10-30 17:39+0000\n"
+"PO-Revision-Date: 2026-10-31 09:21+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/ar/>\n"
@@ -113,8 +113,8 @@ msgid ""
 "A 0% tax cannot use Tax Category 'S' (Standard). Please update the Tax "
 "Category in the Advanced Options of the tax configuration."
 msgstr ""
-"لا يمكن لـ 0% tاستخدام فئة الضريبة 'S' (قياسية). يرجى تحديث فئة الضريبة في «"
-"الخيارات المتقدمة» لتكوين الضريبة."
+"لا يمكن لـ 0% tاستخدام فئة الضريبة 'S' (قياسية). يرجى تحديث فئة الضريبة في "
+"«الخيارات المتقدمة» لتكوين الضريبة."
 
 #. module: account_peppol
 #. odoo-python
@@ -548,8 +548,8 @@ msgid ""
 "the tax configuration."
 msgstr ""
 "بالنسبة للضرائب %(taxes)s: يجب استخدام فئة الضريبة «O» عندما يكون رمز سبب "
-"الإعفاء هو «VATEX-EU-O». يمكنك تغيير هذا في «الخيارات المتقدمة» الخاصة بتكوين "
-"الضريبة."
+"الإعفاء هو «VATEX-EU-O». يمكنك تغيير هذا في «الخيارات المتقدمة» الخاصة "
+"بتكوين الضريبة."
 
 #. module: account_peppol
 #. odoo-python
@@ -633,8 +633,8 @@ msgid ""
 "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %"
 "(network_name)s."
 msgstr ""
-"تتجاوز الفاتورة %(invoice_name)s الحد الأقصى للحجم البالغ 64 ميغابايت المطلوب "
-"لإرسالها عبر %(network_name)s."
+"تتجاوز الفاتورة %(invoice_name)s الحد الأقصى للحجم البالغ 64 ميغابايت "
+"المطلوب لإرسالها عبر %(network_name)s."
 
 #. module: account_peppol
 #. odoo-python
@@ -664,8 +664,8 @@ msgid ""
 "Invoice lines with Tax Category 'Reverse charge' must have a tax rate of 0. "
 "You can change this in the Advanced Options of the tax configuration."
 msgstr ""
-"يجب أن يكون معدل الضريبة 0 في بنود الفاتورة التي تحتوي على فئة الضريبة «"
-"تحميل عكسي». يمكنك تغيير ذلك في «الخيارات المتقدمة» الخاصة بتكوين الضريبة."
+"يجب أن يكون معدل الضريبة 0 في بنود الفاتورة التي تحتوي على فئة الضريبة "
+"«تحميل عكسي». يمكنك تغيير ذلك في «الخيارات المتقدمة» الخاصة بتكوين الضريبة."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -989,8 +989,8 @@ msgstr ""
 msgid ""
 "Peppol is the secure standard for e-invoices used in EU and across the world."
 msgstr ""
-"Peppol هو المعيار الآمن للفوترة الإلكترونية المستخدم في الاتحاد الأوروبي وجميع "
-"أنحاء العالم."
+"Peppol هو المعيار الآمن للفوترة الإلكترونية المستخدم في الاتحاد الأوروبي "
+"وجميع أنحاء العالم."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_journal_dashboard_kanban_view
@@ -1055,8 +1055,8 @@ msgstr "يُرجى تثبيت مكتبة أرقام الهواتف. "
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please make sure the Contact email is a valid email address."
 msgstr ""
-"يرجى التأكد من أن البريد الإلكتروني الخاص بجهات الاتصال هو عنوان بريد إلكتروني "
-"صالح."
+"يرجى التأكد من أن البريد الإلكتروني الخاص بجهات الاتصال هو عنوان بريد "
+"إلكتروني صالح."
 
 #. module: account_peppol
 #. odoo-python
@@ -1246,8 +1246,8 @@ msgid ""
 "The Peppol endpoint is missing in the XML file. Action Required: Update the "
 "account and account_edi_ubl_cii modules to resolve this."
 msgstr ""
-"نقطة نهاية Peppol مفقودة في ملف XML. الإجراء المطلوب: قم بتحديث الوحدتين «"
-"account» و«account_edi_ubl_cii» لحل هذه المشكلة."
+"نقطة نهاية Peppol مفقودة في ملف XML. الإجراء المطلوب: قم بتحديث الوحدتين "
+"«account» و«account_edi_ubl_cii» لحل هذه المشكلة."
 
 #. module: account_peppol
 #. odoo-python
@@ -1349,6 +1349,14 @@ msgid "The verification code is not correct"
 msgstr "كود التحقق غير صحيح. "
 
 #. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid ""
+"There was an error while importing the bill, you can find attached the "
+"incoming XML"
+msgstr "حدث خطأ أثناء استيراد الفاتورة، يمكنك العثور على ملف XML الوارد مرفقًا "
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "This branch company will use the active Peppol connection found on"
 msgstr "This branch company will use the active Peppol connection found on"
@@ -1404,8 +1412,8 @@ msgstr "لإنشاء فواتير إلكترونية كاملة، قم أيضا�
 msgid ""
 "To use the Approved Platform for French E-Invoicing install the module '%s'."
 msgstr ""
-"لاستخدام المنصة المعتمدة للفوترة الإلكترونية باللغة الفرنسية، قم بتثبيت الوحدة "
-"النمطية «%s »."
+"لاستخدام المنصة المعتمدة للفوترة الإلكترونية باللغة الفرنسية، قم بتثبيت "
+"الوحدة النمطية «%s »."
 
 #. module: account_peppol
 #. odoo-python
@@ -1415,8 +1423,8 @@ msgid ""
 "'%s'.\n"
 "The module was not found. Please update the app list first."
 msgstr ""
-"لاستخدام المنصة المعتمدة للفوترة الإلكترونية باللغة الفرنسية، قم بتثبيت الوحدة "
-"النمطية «%s ».\n"
+"لاستخدام المنصة المعتمدة للفوترة الإلكترونية باللغة الفرنسية، قم بتثبيت "
+"الوحدة النمطية «%s ».\n"
 "لم يتم العثور على الوحدة النمطية. يرجى تحديث قائمة التطبيقات أولاً."
 
 #. module: account_peppol
@@ -1555,13 +1563,6 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid ""
-"You are a legal representative authorized to register this company on the "
-"Peppol network."
-msgstr ""
-
-#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -1627,6 +1628,13 @@ msgstr ""
 "لا يمكنك تغيير نوع دفتر اليومية المستخدم لاستلام فواتير Peppol إلى نوع مختلف "
 "عن 'Purchase'.\n"
 "يرجى تغيير دفتر اليومية المستخدم لاستلام Peppol قبل تغيير نوع هذا الدفتر."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You confirm that you are authorized to register this company on the Peppol "
+"network as a legal representative."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
