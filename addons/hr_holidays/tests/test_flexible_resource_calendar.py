@@ -18,6 +18,8 @@ class TestFlexibleResourceCalendar(TransactionCase):
         }, {
             'name': 'Fully Flexible Calendar',
             'calendar_type': 'undefined',
+            'hours_per_week': 0,
+            'days_per_week': 7,
             'attendance_ids': [],
         }])
 

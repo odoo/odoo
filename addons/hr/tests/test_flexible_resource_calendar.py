@@ -14,13 +14,13 @@ class TestFlexibleResourceCalendar(TransactionCase):
             'calendar_type': 'undefined',
             'attendance_ids': [],
             'hours_per_week': 40.0,
-            'hours_per_day': 8.0,
+            'days_per_week': 5.0,
         }, {
             'name': 'Fully Flex Calendar',
             'calendar_type': 'undefined',
             'attendance_ids': [],
-            'hours_per_week': 0.0,
             'hours_per_day': 0.0,
+            'days_per_week': 7.0,
         }])
         cls.flex_resource, cls.fully_flex_resource = cls.env['resource.resource'].create([{
             'name': 'Flex',

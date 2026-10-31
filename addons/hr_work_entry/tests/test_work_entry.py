@@ -177,7 +177,7 @@ class TestWorkEntry(TestWorkEntryBase):
             {'name': 'emp flex std'},
             {'name': 'emp std flex'},
             {'name': 'emp fullyflex std'},
-            {'name': 'emp fullyflex std'},
+            {'name': 'emp std fullyflex'},
         ])
         calendar_flex, calendar_fully_flex = self.env['resource.calendar'].create([{
             'name': 'Flexible Calendar',
@@ -189,6 +189,8 @@ class TestWorkEntry(TestWorkEntryBase):
             'name': 'Fully Flexible Calendar',
             'calendar_type': 'undefined',
             'attendance_ids': [],
+            'hours_per_week': 0,
+            'days_per_week': 7,
         }])
         self.env['hr.version'].create([{
             'employee_id': emp_flex_std.id,
@@ -303,10 +305,10 @@ class TestWorkEntry(TestWorkEntryBase):
         self.assertTrue(all(entry['version_id'].name == 'Flex Contract' for entry in half2_entries))
 
         fullyflex_std_work_entries_vals = [vals for vals in all_work_entries_vals if vals['employee_id'] == emp_fullyflex_std]
-        self.assertEqual(len(fullyflex_std_work_entries_vals), 26)
+        self.assertEqual(len(fullyflex_std_work_entries_vals), 11)
         half1_entries = [vals for vals in fullyflex_std_work_entries_vals if vals['date'] >= half1_date_start and vals['date'] <= half1_date_end]
         half2_entries = [vals for vals in fullyflex_std_work_entries_vals if vals['date'] >= half2_date_start and vals['date'] <= half2_date_end]
-        self.assertEqual(len(half1_entries), 15)  # work entries cover the entire duration
+        self.assertEqual(len(half1_entries), 0)  # No work entries generated with fullyflex
         self.assertTrue(all(entry['duration'] == 24 for entry in half1_entries))
         self.assertTrue(all(entry['version_id'].name == 'FullyFlex Contract' for entry in half1_entries))
         self.assertEqual(len(half2_entries), 11)  # 1 work entries per day, no work entries for weekend
@@ -314,13 +316,13 @@ class TestWorkEntry(TestWorkEntryBase):
         self.assertTrue(all(entry['version_id'].name == 'Std Contract' for entry in half2_entries))
 
         std_fullyflex_work_entries = [vals for vals in all_work_entries_vals if vals['employee_id'] == emp_std_fullyflex]
-        self.assertEqual(len(std_fullyflex_work_entries), 26)
+        self.assertEqual(len(std_fullyflex_work_entries), 11)
         half1_entries = [vals for vals in std_fullyflex_work_entries if vals['date'] >= half1_date_start and vals['date'] <= half1_date_end]
         half2_entries = [vals for vals in std_fullyflex_work_entries if vals['date'] >= half2_date_start and vals['date'] <= half2_date_end]
         self.assertEqual(len(half1_entries), 11)  # 1 work entries per day, no work entries for weekend
         self.assertTrue(all(entry['duration'] == 8 for entry in half1_entries))
         self.assertTrue(all(entry['version_id'].name == 'Std Contract' for entry in half1_entries))
-        self.assertEqual(len(half2_entries), 15)  # work entries cover the entire duration
+        self.assertEqual(len(half2_entries), 0)  # No work entries generated with fullyflex
         self.assertTrue(all(entry['duration'] == 24 for entry in half2_entries))
         self.assertTrue(all(entry['version_id'].name == 'FullyFlex Contract' for entry in half2_entries))
 

@@ -28,6 +28,8 @@ class TestContractCalendars(TestHrCommon):
         cls.calendar_fully_flexible = cls.env['resource.calendar'].create({
             'name': 'Fully Flexible Calendar',
             'calendar_type': 'undefined',
+            'hours_per_week': 0,
+            'days_per_week': 7,
             'attendance_ids': [],
         })
 

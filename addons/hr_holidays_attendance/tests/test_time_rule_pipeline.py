@@ -24,9 +24,11 @@ class TestTimeRulePipeline(TransactionCase):
             ],
         })
         cls.env.company.resource_calendar_id = cls.calendar
-        cls.flex_calendar = cls.env['resource.calendar'].create({
-            'name': 'Flexible Calendar',
+        cls.fully_flex_calendar = cls.env['resource.calendar'].create({
+            'name': 'Fully Flexible Calendar',
             'calendar_type': 'undefined',
+            'hours_per_week': 0,
+            'days_per_week': 7,
             'attendance_ids': [],
         })
         cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
@@ -53,16 +55,16 @@ class TestTimeRulePipeline(TransactionCase):
         })
         cls.cal_version = cls.cal_emp.version_id
 
-        cls.flex_emp = cls.env['hr.employee'].create({
+        cls.fully_flex_emp = cls.env['hr.employee'].create({
             'name': 'Flex Employee',
             'tz': 'UTC',
             'attendance_based': True,
-            'resource_calendar_id': cls.flex_calendar.id,
+            'resource_calendar_id': cls.fully_flex_calendar.id,
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'wage': 3000,
         })
-        cls.flex_version = cls.flex_emp.version_id
+        cls.flex_version = cls.fully_flex_emp.version_id
 
     def _check_work_entries(self, entries, expected):
         entries = sorted(entries, key=lambda v: (v['date'], v['work_entry_type_id'].code))
@@ -148,7 +150,7 @@ class TestTimeRulePipeline(TransactionCase):
     def test_flex_basic(self):
 
         self.env['hr.attendance'].create({
-            'employee_id': self.flex_emp.id,
+            'employee_id': self.fully_flex_emp.id,
             'check_in': datetime(2022, 12, 12, 9),
             'check_out': datetime(2022, 12, 12, 13),
         })
@@ -160,8 +162,8 @@ class TestTimeRulePipeline(TransactionCase):
     def test_flex_multiple_attendances_same_day(self):
 
         self.env['hr.attendance'].create([
-            {'employee_id': self.flex_emp.id, 'check_in': datetime(2022, 12, 12, 8), 'check_out': datetime(2022, 12, 12, 12)},
-            {'employee_id': self.flex_emp.id, 'check_in': datetime(2022, 12, 12, 13), 'check_out': datetime(2022, 12, 12, 17)},
+            {'employee_id': self.fully_flex_emp.id, 'check_in': datetime(2022, 12, 12, 8), 'check_out': datetime(2022, 12, 12, 12)},
+            {'employee_id': self.fully_flex_emp.id, 'check_in': datetime(2022, 12, 12, 13), 'check_out': datetime(2022, 12, 12, 17)},
         ])
         vals = self.flex_version.generate_work_entries(date(2022, 12, 12), date(2022, 12, 12))
         self._check_work_entries(vals, [
@@ -428,11 +430,11 @@ class TestTimeRulePipeline(TransactionCase):
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTESTFLEX', 'count_as': 'absence',
         })
-        flex_brussels = self.env['hr.employee'].create({
+        fully_flex_brussels = self.env['hr.employee'].create({
             'name': 'Flex Brussels',
             'tz': 'Europe/Brussels',
             'attendance_based': True,
-            'resource_calendar_id': self.flex_calendar.id,
+            'resource_calendar_id': self.fully_flex_calendar.id,
             'date_version': '2018-01-01',
             'contract_date_start': '2018-01-01',
             'wage': 3000,
@@ -442,17 +444,17 @@ class TestTimeRulePipeline(TransactionCase):
         )
         self.env['hr.attendance'].create([
             {
-                'employee_id': flex_brussels.id,
+                'employee_id': fully_flex_brussels.id,
                 'check_in': datetime(2018, 1, 1, 9, 0, 0),
                 'check_out': datetime(2018, 1, 1, 11, 0, 0),
             },
             {
-                'employee_id': flex_brussels.id,
+                'employee_id': fully_flex_brussels.id,
                 'check_in': datetime(2018, 1, 1, 13, 0, 0),
                 'check_out': datetime(2018, 1, 1, 15, 0, 0),
             },
         ])
-        vals = flex_brussels.version_id.generate_work_entries(date(2018, 1, 1), date(2018, 1, 1))
+        vals = fully_flex_brussels.version_id.generate_work_entries(date(2018, 1, 1), date(2018, 1, 1))
         time_off_entries = [v for v in vals if v['work_entry_type_id'] == public_type]
         other_entries = [v for v in vals if v['work_entry_type_id'] != public_type]
         self.assertEqual(len(time_off_entries), 1)
@@ -464,30 +466,30 @@ class TestTimeRulePipeline(TransactionCase):
         leave_type = self.env['hr.work.entry.type'].create({
             'name': 'Sick', 'code': 'SICKFLEX', 'count_as': 'absence',
         })
-        flex_emp = self.env['hr.employee'].create({
+        fully_flex_emp = self.env['hr.employee'].create({
             'name': 'Flex Sick',
             'tz': 'Europe/Brussels',
             'attendance_based': True,
-            'resource_calendar_id': self.flex_calendar.id,
+            'resource_calendar_id': self.fully_flex_calendar.id,
             'date_version': '2024-09-01',
             'contract_date_start': '2024-09-01',
             'wage': 5000,
         })
         self.env['resource.calendar.leaves'].sudo().create({
-            'resource_id': flex_emp.resource_id.id,
+            'resource_id': fully_flex_emp.resource_id.id,
             'date_from': datetime(2024, 9, 2),
             'date_to': datetime(2024, 9, 3),
             'work_entry_type_id': leave_type.id,
         })
-        vals = flex_emp.version_id.generate_work_entries(date(2024, 9, 1), date(2024, 9, 30))
+        vals = fully_flex_emp.version_id.generate_work_entries(date(2024, 9, 1), date(2024, 9, 30))
         self.assertEqual(len(vals), 2)
 
         self.env['hr.attendance'].create({
-            'employee_id': flex_emp.id,
+            'employee_id': fully_flex_emp.id,
             'check_in': datetime(2024, 9, 14, 14, 0, 0),
             'check_out': datetime(2024, 9, 14, 17, 0, 0),
         })
-        vals = flex_emp.version_id.generate_work_entries(date(2024, 9, 1), date(2024, 9, 30))
+        vals = fully_flex_emp.version_id.generate_work_entries(date(2024, 9, 1), date(2024, 9, 30))
         self.assertEqual(len(vals), 3)
 
     def test_public_holiday_preshift_attendance(self):
@@ -582,7 +584,7 @@ class TestTimeRulePipeline(TransactionCase):
             'name': 'Tokyo Employee',
             'tz': 'Asia/Tokyo',
             'attendance_based': True,
-            'resource_calendar_id': self.flex_calendar.id,
+            'resource_calendar_id': self.fully_flex_calendar.id,
             'date_version': '2024-10-01',
             'contract_date_start': '2024-10-01',
             'wage': 3500,
@@ -602,7 +604,7 @@ class TestTimeRulePipeline(TransactionCase):
     def test_attendance_spanning_midnight(self):
         """Flex UTC: midnight-crossing attendance (Mon 22:00 - Tue 06:00) split into Mon 2h + Tue 6h."""
         self.env['hr.attendance'].create({
-            'employee_id': self.flex_emp.id,
+            'employee_id': self.fully_flex_emp.id,
             'check_in': datetime(2022, 12, 12, 22, 0),   # Monday
             'check_out': datetime(2022, 12, 13, 6, 0),    # Tuesday
         })
@@ -618,12 +620,12 @@ class TestTimeRulePipeline(TransactionCase):
         """Regression: consecutive midnight-crossing attendances sharing a boundary point must not crash."""
         self.env['hr.attendance'].create([
             {
-                'employee_id': self.flex_emp.id,
+                'employee_id': self.fully_flex_emp.id,
                 'check_in': datetime(2022, 12, 12, 22, 0),
                 'check_out': datetime(2022, 12, 13, 6, 0),
             },
             {
-                'employee_id': self.flex_emp.id,
+                'employee_id': self.fully_flex_emp.id,
                 'check_in': datetime(2022, 12, 13, 6, 0),
                 'check_out': datetime(2022, 12, 14, 6, 0),
             },
@@ -650,10 +652,10 @@ class TestTimeRulePipeline(TransactionCase):
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTESTOV', 'count_as': 'absence',
         })
-        flex_emp = self.env['hr.employee'].create({
+        fully_flex_emp = self.env['hr.employee'].create({
             'name': 'Flex Overlap',
             'attendance_based': True,
-            'resource_calendar_id': self.flex_calendar.id,
+            'resource_calendar_id': self.fully_flex_calendar.id,
             'date_version': '2025-06-01',
             'contract_date_start': '2025-06-01',
             'wage': 5000,
@@ -663,7 +665,7 @@ class TestTimeRulePipeline(TransactionCase):
                 'name': 'Sick Leave',
                 'date_from': datetime(2025, 6, 25),
                 'date_to': datetime(2025, 6, 29),
-                'resource_id': flex_emp.resource_id.id,
+                'resource_id': fully_flex_emp.resource_id.id,
                 'work_entry_type_id': sick_type.id,
             },
             {
@@ -674,7 +676,7 @@ class TestTimeRulePipeline(TransactionCase):
                 'work_entry_type_id': public_type.id,
             },
         ])
-        flex_emp.generate_work_entries(date(2025, 6, 25), date(2025, 6, 29))
+        fully_flex_emp.generate_work_entries(date(2025, 6, 25), date(2025, 6, 29))
 
     # Rule with no work_entry_type_id : detect excess but produce no output
     def test_no_output_when_rule_has_no_work_entry_type(self):
@@ -1380,12 +1382,12 @@ class TestTimeRulePipeline(TransactionCase):
         })
         # flex_emp has no own schedule; works 10h - 2h above the 8h reference baseline.
         self.env['hr.attendance'].create({
-            'employee_id': self.flex_emp.id,
+            'employee_id': self.fully_flex_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
             'check_out': datetime(2022, 12, 12, 18),  # 10h
         })
         output_atts = self.env['hr.attendance'].search([
-            ('employee_id', '=', self.flex_emp.id),
+            ('employee_id', '=', self.fully_flex_emp.id),
             ('work_entry_type_id', '=', ot_type.id),
         ])
         self.assertTrue(output_atts,
@@ -1789,12 +1791,12 @@ class TestTimeRulePipeline(TransactionCase):
         })
         # Mon 22:00 -> Tue 04:00 (6h total): Tue window [00:00-06:00] captures [00:00-04:00] = 4h
         self.env['hr.attendance'].create({
-            'employee_id': self.flex_emp.id,
+            'employee_id': self.fully_flex_emp.id,
             'check_in': datetime(2022, 12, 12, 22),
             'check_out': datetime(2022, 12, 13, 4),
         })
         output_atts = self.env['hr.attendance'].search([
-            ('employee_id', '=', self.flex_emp.id),
+            ('employee_id', '=', self.fully_flex_emp.id),
             ('time_rule_id', '!=', False),
         ])
         self.assertEqual(len(output_atts), 1)
@@ -2431,12 +2433,12 @@ class TestTimeRulePipeline(TransactionCase):
         # batch create: engine evaluates both attendances together (5h combined)
         self.env['hr.attendance'].create([
             {
-                'employee_id': self.flex_emp.id,
+                'employee_id': self.fully_flex_emp.id,
                 'check_in': datetime(2022, 12, 12, 8),
                 'check_out': datetime(2022, 12, 12, 11),  # 3h
             },
             {
-                'employee_id': self.flex_emp.id,
+                'employee_id': self.fully_flex_emp.id,
                 'check_in': datetime(2022, 12, 12, 12),
                 'check_out': datetime(2022, 12, 12, 14),  # 2h
             },
@@ -2444,7 +2446,7 @@ class TestTimeRulePipeline(TransactionCase):
 
         # sources may be type-changed in-place (time_rule_id set but no child link)
         all_outputs = self.env['hr.attendance'].search([
-            ('employee_id', '=', self.flex_emp.id),
+            ('employee_id', '=', self.fully_flex_emp.id),
             ('time_rule_id', '!=', False),
             ('check_in', '>=', datetime(2022, 12, 12, 0)),
             ('check_out', '<=', datetime(2022, 12, 13, 0)),
