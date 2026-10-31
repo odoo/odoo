@@ -123,11 +123,9 @@
                     <t t-foreach="this.state.pages" t-as="page" t-key="page.id">
                         <button t-att-data-id="page.id"
                             t-on-click="() => this.onTabListBtnClick(page.id)"
-                            t-on-keydown="this.onTabListBtnKeydown"
                             class="list-group-item list-group-item-action p-3"
                             t-att-class="{active: this.state.activePageId === page.id}"
                             role="tab"
-                            t-att-tabindex="this.state.activePageId === page.id ? 0 : -1"
                             t-att-aria-selected="this.state.activePageId === page.id ? 'true' : 'false'"
                             t-att-aria-controls="'pane_' + page.id"
                             t-ref="this.state.activePageId === page.id ? this.autofocusRef : this.inactiveTabRef"
