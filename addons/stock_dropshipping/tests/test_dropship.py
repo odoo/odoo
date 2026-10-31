@@ -509,6 +509,24 @@ class TestDropship(AccountTestInvoicingCommon):
             20.0, -20.0,    # Re-return
         ])
 
+    def test_modifying_partner_on_dropship_picking(self):
+        self.dropship_product.route_ids = [Command.set(self.dropshipping_route.ids)]
+        self.supplier.write({'child_ids': [Command.create({'name': 'Supplier employee'})]})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.dropship_product.id,
+                    'product_uom_qty': 2.0,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        sale_order._get_purchase_orders().button_confirm()
+        self.assertEqual(sale_order.picking_ids.move_ids.partner_id, self.customer)
+        sale_order.picking_ids.partner_id = self.supplier.child_ids
+        self.assertEqual(sale_order.picking_ids.move_ids.partner_id, self.customer)
+
 
 @tagged('post_install', '-at_install')
 class TestDropshipPostInstall(common.TransactionCase):
