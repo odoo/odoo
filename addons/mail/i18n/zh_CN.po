@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
 "PO-Revision-Date: 2026-10-11 06:33+0000\n"
 "Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -471,9 +471,9 @@ msgid ""
 msgstr ""
 "%(new_line)s%(new_line)s%(bold_start)s@username%(bold_end)s 提及某人%"
 "(new_line)s%(bold_start)s@role%(bold_end)s 通知多个人%(new_line)s%"
-"(bold_start)s/command%(bold_end)s 运行命令%(new_line)s%(bold_start)"
-"s::shortcut%(bold_end)s 插入预设回复%(new_line)s%(bold_start)s:emoji:%"
-"(bold_end)s 插入表情符号"
+"(bold_start)s/command%(bold_end)s 运行命令%(new_line)s%"
+"(bold_start)s::shortcut%(bold_end)s 插入预设回复%(new_line)s%"
+"(bold_start)s:emoji:%(bold_end)s 插入表情符号"
 
 #. module: mail
 #. odoo-javascript
@@ -561,8 +561,8 @@ msgid ""
 "%(user_name)s has invited you to the %(strong_start)s%(channel_name)s%"
 "(strong_end)s channel."
 msgstr ""
-"%(user_name)s 邀请您加入 %(strong_start)s%(channel_name)s%(strong_end)s 频道"
-"。"
+"%(user_name)s 邀请您加入 %(strong_start)s%(channel_name)s%(strong_end)s 频"
+"道。"
 
 #. module: mail
 #. odoo-python
@@ -870,8 +870,8 @@ msgid ""
 "<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" "
 "title=\"Role\" aria-label=\"Role\"/>"
 msgstr ""
-"<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" title=\"角"
-"色\" aria-label=\"角色\"/>"
+"<i class=\"oi oi-filled mb-2\" data-icon=\"group\" role=\"img\" title=\"角色"
+"\" aria-label=\"角色\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -893,7 +893,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"Due date\"/>"
-msgstr "<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"截止日期\"/>"
+msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"calendar_today\" title=\"截止日期\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -930,8 +931,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"hourglass_disabled\" role=\"img\" title=\"To "
 "Assign\" aria-label=\"To Assign\" style=\"font-size: 12px;\"/>"
 msgstr ""
-"<i class=\"oi\" data-icon=\"hourglass_disabled\" role=\"img\" title=\"待分"
-"配\" aria-label=\"待分配\" style=\"font-size: 12px;\"/>"
+"<i class=\"oi\" data-icon=\"hourglass_disabled\" role=\"img\" title=\"待分配"
+"\" aria-label=\"待分配\" style=\"font-size: 12px;\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -3133,8 +3134,8 @@ msgid ""
 "Cannot change the active state of the following channels: %(channels)s. You "
 "must be the owner or a system administrator to change it."
 msgstr ""
-"无法更改以下频道的有效状态：%(channels)s。您必须是所有者或系统管理员才能更改"
-"。"
+"无法更改以下频道的有效状态：%(channels)s。您必须是所有者或系统管理员才能更"
+"改。"
 
 #. module: mail
 #. odoo-python
@@ -3184,12 +3185,6 @@ msgstr "无法加入只读频道中的通话。"
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Cannot search, too many activities"
 msgstr "无法搜索，活动过多"
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/mail_message.py:0
-msgid "Cannot search, too many messages"
-msgstr "无法搜索，消息过多"
 
 #. module: mail
 #. odoo-python
@@ -3659,6 +3654,12 @@ msgstr "关闭面板"
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Close search"
 msgstr "关闭搜索"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Collaborate with coworkers and customers in video calls."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5024,8 +5025,8 @@ msgid ""
 "\n"
 "This action cannot be reverted."
 msgstr ""
-"您要将“%(member_name)s”设为所有者吗？这意味着该成员将完全掌控该频道及其设置"
-"。\n"
+"您要将“%(member_name)s”设为所有者吗？这意味着该成员将完全掌控该频道及其设"
+"置。\n"
 "\n"
 "此操作无法撤销。"
 
@@ -6994,7 +6995,8 @@ msgstr "如果您想为视频通话使用自己的 SFU 或 ICE 服务器。"
 msgid ""
 "If you were using a Tenor API key, please replace it with a Klipy API key in "
 "the General Settings."
-msgstr "如果您之前使用的是 Tenor API 密钥，请在一般设置中将其替换为 Klipy API 密钥。"
+msgstr ""
+"如果您之前使用的是 Tenor API 密钥，请在一般设置中将其替换为 Klipy API 密钥。"
 
 #. module: mail
 #. odoo-javascript
@@ -7774,6 +7776,11 @@ msgstr "投票选项的标签"
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "语言"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
@@ -9313,6 +9320,12 @@ msgstr "未选择对话。"
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "No documents found for the selected records."
 msgstr "所选记录未找到任何文件。"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "No install needed."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -12676,11 +12689,6 @@ msgid "Shortcut"
 msgstr "快捷"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr "作为翻译请求目标语言代码的简称。"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
@@ -14240,6 +14248,14 @@ msgid "Tomorrow:"
 msgstr "明天:"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_message.py:0
+msgid ""
+"Too many messages to be processed.\n"
+"Please apply additional filters to reduce the number of potential messages."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
 msgid "Topic"
 msgstr "主题"
@@ -14896,7 +14912,8 @@ msgstr "使用您自己的服务器进行通话，以应对高流量并确保 Tw
 msgid ""
 "Use your own servers for calls to manage heavy traffic and ensure "
 "reliability if Twilio is unavailable."
-msgstr "使用您自己的服务器进行通话，以应对高流量并确保 Twilio 不可用时的可靠性。"
+msgstr ""
+"使用您自己的服务器进行通话，以应对高流量并确保 Twilio 不可用时的可靠性。"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -16175,12 +16192,6 @@ msgid "created this channel."
 msgstr "创建了这个频道。"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "日，月，日，年 - 时：分：秒（格林尼治标准时间）"
@@ -16794,3 +16805,10 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 私密"
+
+#~ msgid "Cannot search, too many messages"
+#~ msgstr "无法搜索，消息过多"
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr "作为翻译请求目标语言代码的简称。"

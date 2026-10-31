@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
 "PO-Revision-Date: 2026-10-21 10:33+0000\n"
 "Last-Translator: daniel nguyen <dangu@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-20/mail/"
@@ -3143,12 +3143,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_message.py:0
-msgid "Cannot search, too many messages"
-msgstr ""
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "Cannot search, too many scheduled messages"
 msgstr ""
@@ -3618,6 +3612,12 @@ msgstr "Đóng bảng"
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Close search"
 msgstr "Đóng tìm kiếm"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Collaborate with coworkers and customers in video calls."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7804,6 +7804,11 @@ msgid "Language"
 msgstr "Ngôn ngữ"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_interest_dt
 msgid "Last Activity"
@@ -9359,6 +9364,12 @@ msgstr "Không có trò chuyện được chọn."
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "No documents found for the selected records."
 msgstr "Không tìm thấy tài liệu nào cho các bản ghi đã chọn."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "No install needed."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -12772,11 +12783,6 @@ msgid "Shortcut"
 msgstr "Phím tắt"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr "Mã ngôn ngữ viết tắt được sử dụng làm ngôn ngữ đích cho yêu cầu dịch."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
@@ -14379,6 +14385,14 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Tomorrow:"
 msgstr "Ngày mai:"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_message.py:0
+msgid ""
+"Too many messages to be processed.\n"
+"Please apply additional filters to reduce the number of potential messages."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
@@ -16366,12 +16380,6 @@ msgid "created this channel."
 msgstr "đã tạo kênh này."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "ngày, tháng dd, yyyy - hh:mm:ss (GMT)"
@@ -16990,3 +16998,8 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr ""
+#~ "Mã ngôn ngữ viết tắt được sử dụng làm ngôn ngữ đích cho yêu cầu dịch."

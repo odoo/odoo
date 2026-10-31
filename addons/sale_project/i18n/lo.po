@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_project
+# * sale_project
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 18:08+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
-"sale_project/lo/>\n"
+"PO-Revision-Date: 2026-10-25 07:37+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/sale_project/"
+"lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    ບໍ່ພົບຂີດໝາຍຄວາມຄືບໜ້າໃດໆ. ມາສ້າງໃໝ່ນຳກັນເລີຍ!\n"
+"                </p><p>\n"
+"                    ຕິດຕາມຈຸດຄວາມຄືບໜ້າຫຼັກທີ່ຕ້ອງບັນລຸ ເພື່ອໃຫ້ວຽກງານປະສົບຜົນສຳເລັດ.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #: model:ir.module.module,description:base.module_sale_project
@@ -40,12 +48,16 @@ msgid ""
 "=============================================\n"
 "This module allows to generate a project/task from sales orders.\n"
 msgstr ""
+"\n"
+"ອະນຸຍາດໃຫ້ສ້າງໜ້າວຽກຈາກໃບສັ່ງຂາຍຂອງທ່ານ\n"
+"=============================================\n"
+"ໂມດູນນີ້ຊ່ວຍໃຫ້ສາມາດສ້າງໂຄງການ/ໜ້າວຽກຈາກໃບສັ່ງຂາຍໄດ້.\n"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "%(name)s's Margins"
-msgstr ""
+msgstr "ກຳໄລສ່ວນຕ່າງຂອງ %(name)s"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -58,28 +70,34 @@ msgid ""
 "                            Make Billable\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                            <span class=\"o_stat_value\">0</span> ໃບສັ່ງຂາຍ\n"
+"                        </span>\n"
+"                        <span class=\"o_stat_text\">\n"
+"                            ເຮັດໃຫ້ເກັບເງິນໄດ້\n"
+"                        </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Projects</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> ໂຄງການ</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> ໜ້າວຽກ</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "<span class=\"o_stat_text\">Customer View</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ມຸມມອງລູກຄ້າ</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ໃບສັ່ງຂາຍ</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -90,6 +108,9 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"ໃບສັ່ງຂາຍທີ່ເຊື່ອມໂຍງ"
+"ກັບໂຄງການນີ້ຖືກຍົກເລີກແລ້ວ. ພວກເຮົາແນະນຳໃຫ້ອັບເດດລາຍການໃບສັ່ງຂາຍ ຫຼື ຍົກເລີກໂຄງການນີ້ໃຫ້ສອດຄ່ອງກັບ"
+"ການຍົກເລີກໃບສັ່ງຂາຍ.\" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -100,11 +121,14 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"oi text-warning\" data-icon=\"warning\" title=\"ໃບສັ່ງຂາຍທີ່ເຊື່ອມໂຍງ"
+"ກັບໜ້າວຽກນີ້ຖືກຍົກເລີກແລ້ວ. ພວກເຮົາແນະນຳໃຫ້ອັບເດດລາຍການໃບສັ່ງຂາຍ ຫຼື ຍົກເລີກໜ້າວຽກນີ້ໃຫ້ສອດຄ່ອງກັບກາ"
+"ນຍົກເລີກໃບສັ່ງຂາຍ.\" invisible=\"sale_order_state != 'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span>)</span>"
-msgstr ""
+msgstr "<span>)</span>"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -113,6 +137,8 @@ msgid ""
 "analytic distribution of this project will also serve as a reference for "
 "newly created sales order items."
 msgstr ""
+"ໜ້າວຽກຈະຖືກສ້າງຂຶ້ນສຳລັບໂຄງການເມື່ອມີການຢືນຢັນໃບສັ່ງຂາຍ. ການປັນສ່ວນວິເຄາະຂອງໂຄງການນີ້ຍັງຈະຖືກນຳໃຊ້"
+"ເປັນບ່ອນອີງສຳລັບລາຍການໃບສັ່ງຂາຍທີ່ສ້າງຂຶ້ນໃໝ່ອີກດ້ວຍ."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -126,56 +152,61 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"ອີງຕາມການຕັ້ງຄ່າສິນຄ້າ, ຈຳນວນທີ່ສົ່ງມອບແລ້ວສາມາດຄິດໄລ່ໂດຍອັດຕະໂນມັດຕາມກົນໄກ:\n"
+"  - ປ້ອນເອງ: ຈຳນວນແມ່ນຖືກກຳນົດເອງໃນແຖວລາຍການ\n"
+"  - ວິເຄາະຈາກລາຍຈ່າຍ: ຈຳນວນແມ່ນຜົນລວມຈຳນວນຈາກລາຍຈ່າຍທີ່ລົງບັນຊີແລ້ວ\n"
+"  - ຕາຕະລາງບັນທຶກເວລາ: ຈຳນວນແມ່ນຜົນລວມຊົ່ວໂມງທີ່ບັນທຶກໃນໜ້າວຽກທີ່ເຊື່ອມໂຍງກັບລາຍການນີ້\n"
+"  - ການເຄື່ອນຍ້າຍສາງ: ຈຳນວນແມ່ນມາຈາກການເບີກຈ່າຍສິນຄ້າທີ່ຢືນຢັນແລ້ວ\n"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "ລາຍການວິເຄາະ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Delivery (Manual)"
-msgstr ""
+msgstr "ອີງຕາມການສົ່ງມອບ (ປ້ອນເອງ)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Based on Milestones"
-msgstr ""
+msgstr "ອີງຕາມຂີດໝາຍ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_task__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__allow_billable
 msgid "Billable"
-msgstr ""
+msgstr "ເກັບເງິນໄດ້"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__billable_type
 msgid "Billable Type"
-msgstr ""
+msgstr "ປະເພດການເກັບເງິນ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_line_search
 msgid "Category"
-msgstr ""
+msgstr "ໝວດໝູ່"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__category_report
 msgid "Category Report"
-msgstr ""
+msgstr "ລາຍງານຕາມໝວດໝູ່"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_simple_form
 msgid "Confirm & Close"
-msgstr ""
+msgstr "ຢືນຢັນ ແລະ ປິດ"
 
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/views/project_form/project_project_form_controller.js:0
 msgid "Confirmation Required"
-msgstr ""
+msgstr "ຕ້ອງການການຢືນຢັນ"
 
 #. module: sale_project
 #. odoo-python
@@ -184,27 +215,28 @@ msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
 msgstr ""
+"ການປ່ຽນແມ່ແບບນີ້ໃຫ້ເປັນໂຄງການທົ່ວໄປ ຈະເປັນການຍົກເລີກການເຊື່ອມໂຍງກັບສິນຄ້າທີ່ກ່ຽວຂ້ອງ."
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__costs
 msgid "Costs"
-msgstr ""
+msgstr "ຕົ້ນທຶນ"
 
 #. module: sale_project
 #: model:ir.actions.server,name:sale_project.model_sale_order_action_create_project
 msgid "Create Project"
-msgstr ""
+msgstr "ສ້າງໂຄງການ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "Create a Project"
-msgstr ""
+msgstr "ສ້າງໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model,website_form_label:sale_project.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "ສ້າງໜ້າວຽກ"
 
 #. module: sale_project
 #. odoo-python
@@ -213,24 +245,25 @@ msgid ""
 "Create a project for the order with a task for each sales order line to "
 "track the time spent."
 msgstr ""
+"ສ້າງໂຄງການສຳລັບໃບສັ່ງຂາຍ ພ້ອມກັບໜ້າວຽກສຳລັບແຕ່ລະແຖວລາຍການຂາຍ ເພື່ອຕິດຕາມເວລາທີ່ໃຊ້ໄປ."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create a task in an existing project to track the time spent."
-msgstr ""
+msgstr "ສ້າງໜ້າວຽກໃນໂຄງການທີ່ມີຢູ່ແລ້ວ ເພື່ອຕິດຕາມເວລາທີ່ໃຊ້ໄປ."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Create an empty project for the order to track the time spent."
-msgstr ""
+msgstr "ສ້າງໂຄງການເປົ່າສຳລັບໃບສັ່ງຂາຍ ເພື່ອຕິດຕາມເວລາທີ່ໃຊ້ໄປ."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "ສ້າງຕາມໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #. odoo-python
@@ -239,6 +272,7 @@ msgid ""
 "Create projects or tasks later, and link them to order to track the time "
 "spent."
 msgstr ""
+"ສ້າງໂຄງການ ຫຼື ໜ້າວຽກພາຍຫຼັງ ແລະ ເຊື່ອມໂຍງໃສ່ໃບສັ່ງຂາຍ ເພື່ອຕິດຕາມເວລາທີ່ໃຊ້ໄປ."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__partner_id
@@ -246,17 +280,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
 msgid "Customer"
-msgstr ""
+msgstr "ລູກຄ້າ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Defined on quotation"
-msgstr ""
+msgstr "ກຳນົດໃນໃບສະເໜີລາຄາ"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
 msgid "Digital Marketing Campaign (project)"
-msgstr ""
+msgstr "ແຄມເປນການຕະຫຼາດດີຈີຕອນ (ໂຄງການ)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__display_name
@@ -275,22 +309,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__display_name
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "ສະແດງໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Empty project"
-msgstr ""
+msgstr "ໂຄງການເປົ່າ"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
 msgid "Flooring Services"
-msgstr ""
+msgstr "ບໍລິການປູພື້ນ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_account_analytic_line__id
@@ -309,35 +343,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_template_line__id
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "ອອກໃບຮຽກເກັບເງິນຕາມຂີດໝາຍ ເມື່ອບັນລຸຜົນສຳເລັດ."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "ອອກໃບຮຽກເກັບເງິນຄ່າເວລາ ແລະ ວັດສະດຸໃຫ້ແກ່ລູກຄ້າ"
 
 #. module: sale_project
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_invoices_dashboard
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoices"
-msgstr ""
+msgstr "ໃບຮຽກເກັບເງິນ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "ນະໂຍບາຍການອອກໃບຮຽກເກັບເງິນ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "ລາຍການບັນຊີປະຈຳວັນ"
 
 #. module: sale_project
 #. odoo-javascript
@@ -347,6 +381,8 @@ msgid ""
 "create tasks in it or use it as a template. Are you sure you want to "
 "continue?"
 msgstr ""
+"ການກຳນົດໃຫ້ໂຄງການນີ້ເກັບເງິນບໍ່ໄດ້ ຈະເປັນການຕັດການເຊື່ອມໂຍງກັບສິນຄ້າໃດໆ ທີ່ສ້າງໜ້າວຽກໃນໂຄງການນີ້ ຫຼື "
+"ໃຊ້ໂຄງການນີ້ເປັນແມ່ແບບ. ທ່ານແນ່ໃຈບໍ່ວ່າຕ້ອງການສືບຕໍ່?"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -359,24 +395,28 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
+"ກຳນົດຈຳນວນເອງໃນໃບສັ່ງຂາຍ: ອອກໃບຮຽກເກັບເງິນຕາມຈຳນວນທີ່ປ້ອນເອງ ໂດຍບໍ່ມີການສ້າງບັນຊີວິເຄາະ.\n"
+"ຕາຕະລາງບັນທຶກເວລາໃນສັນຍາ: ອອກໃບຮຽກເກັບເງິນຕາມຊົ່ວໂມງທີ່ຕິດຕາມໃນຕາຕະລາງບັນທຶກເວລາທີ່ກ່ຽວຂ້ອ"
+"ງ.\n"
+"ສ້າງໜ້າວຽກ ແລະ ຕິດຕາມຊົ່ວໂມງ: ສ້າງໜ້າວຽກເມື່ອຢືນຢັນໃບສັ່ງຂາຍ ແລະ ຕິດຕາມຊົ່ວໂມງເຮັດວຽກ."
 
 #. module: sale_project
 #: model:ir.actions.act_window,name:sale_project.action_analytic_reporting_inherit_sale_project
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_project_actual_margin
 #: model:ir.ui.menu,name:sale_project.analytic_margins_menu_project
 msgid "Margins"
-msgstr ""
+msgstr "ກຳໄລສ່ວນຕ່າງ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Materials"
-msgstr ""
+msgstr "ວັດສະດຸ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "ວິທີການອັບເດດຈຳນວນທີ່ສົ່ງມອບແລ້ວ"
 
 #. module: sale_project
 #. odoo-python
@@ -384,91 +424,91 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Milestones"
-msgstr ""
+msgstr "ຂີດໝາຍ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "New Sales Order Item"
-msgstr ""
+msgstr "ລາຍການໃບສັ່ງຂາຍໃໝ່"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
 msgid "New project"
-msgstr ""
+msgstr "ໂຄງການໃໝ່"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Non-billable"
-msgstr ""
+msgstr "ເກັບເງິນບໍ່ໄດ້"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "Not Billed"
-msgstr ""
+msgstr "ຍັງບໍ່ໄດ້ເກັບເງິນ"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_task_only_product_template
 msgid "Office Furniture Set (task)"
-msgstr ""
+msgstr "ຊຸດເຄື່ອງເຮືອນຫ້ອງການ (ໜ້າວຽກ)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Other Costs"
-msgstr ""
+msgstr "ຕົ້ນທຶນອື່ນໆ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Other Revenue"
-msgstr ""
+msgstr "ລາຍຮັບອື່ນໆ"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
 msgid "Painting"
-msgstr ""
+msgstr "ການທາສີ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "ຄູ່ຄ້າ"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
 msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once "
 "the milestone is reached."
-msgstr ""
+msgstr "ເປີເຊັນຂອງຈຳນວນທີ່ສັ່ງຊື້ ທີ່ຈະຖືກສົ່ງມອບໂດຍອັດຕະໂນມັດເມື່ອບັນລຸຂີດໝາຍ."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_plumbing_product_template
 msgid "Plumbing Services"
-msgstr ""
+msgstr "ບໍລິການລະບົບນ້ຳປະປາ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project_task.py:0
 msgid "Portal Sale Order"
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍຜ່ານພໍທັລ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "ຈ່າຍລ່ວງໜ້າ/ລາຄາຕາຍໂຕ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "ສິນຄ້າ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "ລຸ້ນຍ່ອຍສິນຄ້າ"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__reinvoiced_sale_order_id
@@ -477,6 +517,8 @@ msgid ""
 "generate analytic costs, will be re-invoiced in this sales order if they are "
 "set up for it."
 msgstr ""
+"ສິນຄ້າທີ່ເພີ່ມໃສ່ການເບີກຈ່າຍສາງ ເຊິ່ງປະເພດການເຄື່ອນໄຫວຖືກຕັ້ງຄ່າໃຫ້ສ້າງຕົ້ນທຶນວິເຄາະ ຈະຖືກອອກໃບຮຽກເກັບ"
+"ເງິນຄືນໃນໃບສັ່ງຂາຍນີ້ ຖ້າຫາກມີການຕັ້ງຄ່າໄວ້."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_project
@@ -487,116 +529,116 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_report_view_search
 msgid "Project"
-msgstr ""
+msgstr "ໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "ໂຄງການ ແລະ ໜ້າວຽກ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_account_id
 msgid "Project Account"
-msgstr ""
+msgstr "ບັນຊີໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "ຂີດໝາຍໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "ຂີດໝາຍໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_required
 msgid "Project Required"
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງມີໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 #: model_terms:ir.ui.view,arch_db:sale_project.sale_project_view_form_simplified_template
 msgid "Project Template"
-msgstr ""
+msgstr "ແມ່ແບບໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__sale_warning_text
 msgid "Project Template Warning"
-msgstr ""
+msgstr "ຄຳເຕືອນແມ່ແບບໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_template_create_wizard
 msgid "Project Template create Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍສ້າງແມ່ແບບໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_warning_text
 msgid "Project Warning"
-msgstr ""
+msgstr "ຄຳເຕືອນໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍຂອງໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "Quantity"
-msgstr ""
+msgstr "ຈຳນວນ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Quantity (%)"
-msgstr ""
+msgstr "ຈຳນວນ (%)"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr ""
+msgstr "ແຖວແມ່ແບບໃບສະເໜີລາຄາ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Real Costs"
-msgstr ""
+msgstr "ຕົ້ນທຶນຕົວຈິງ"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__account_analytic_line__category_report__revenues
 msgid "Revenue"
-msgstr ""
+msgstr "ລາຍຮັບ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_template_create_wizard__role_to_users_ids
 msgid "Role To Users"
-msgstr ""
+msgstr "ບົດບາດຕໍ່ຜູ້ໃຊ້"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales"
-msgstr ""
+msgstr "ການຂາຍ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "ການຂາຍ ແລະ ການອອກໃບຮຽກເກັບເງິນ"
 
 #. module: sale_project
 #: model:ir.module.module,shortdesc:base.module_sale_project
 msgid "Sales - Project"
-msgstr ""
+msgstr "ການຂາຍ - ໂຄງການ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "ລາຍງານການວິເຄາະການຂາຍ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales Items"
-msgstr ""
+msgstr "ລາຍການຂາຍ"
 
 #. module: sale_project
 #. odoo-python
@@ -608,7 +650,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #: model:project.project,name:sale_project.so_template_project
 msgid "Sales Order"
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #. odoo-python
@@ -621,12 +663,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order Item"
-msgstr ""
+msgstr "ລາຍການໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
-msgstr ""
+msgstr "ລາຍການໃບສັ່ງຂາຍທີ່ຈະຖືກອັບເດດເມື່ອບັນລຸຂີດໝາຍແລ້ວ."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -640,6 +682,11 @@ msgid ""
 "also change or remove the sales order item of each timesheet entry "
 "individually."
 msgstr ""
+"ລາຍການໃບສັ່ງຂາຍທີ່ເວລາໃຊ້ໄປກັບໜ້າວຽກນີ້ຈະຖືກບວກເຂົ້າ ເພື່ອອອກໃບຮຽກເກັບເງິນໃຫ້ລູກຄ້າຂອງທ່ານ.\n"
+"ໂດຍຄ່າເລີ່ມຕົ້ນ ລາຍການໃບສັ່ງຂາຍທີ່ຕັ້ງໄວ້ໃນໂຄງການຈະຖືກເລືອກ. ຖ້າບໍ່ມີ ລາຍການໃບສັ່ງຂາຍແບບຈ່າຍລ່ວງໜ້າລ່"
+"າສຸດທີ່ຍັງເຫຼືອເວລາຈະຖືກນຳໃຊ້.\n"
+"ລຶບລາຍການໃບສັ່ງຂາຍອອກ ເພື່ອເຮັດໃຫ້ໜ້າວຽກນີ້ບໍ່ສາມາດເກັບເງິນໄດ້. ທ່ານຍັງສາມາດປ່ຽນ ຫຼື ລຶບລາຍການໃບສັ່ງ"
+"ຂາຍຂອງແຕ່ລະລາຍການໃນຕາຕະລາງບັນທຶກເວລາແຍກຕ່າງຫາກໄດ້."
 
 #. module: sale_project
 #. odoo-python
@@ -647,18 +694,18 @@ msgstr ""
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_order_items_dashboard
 msgid "Sales Order Items"
-msgstr ""
+msgstr "ລາຍການໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "ແຖວໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_sales_orders_dashboard
 msgid "Sales Orders"
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
@@ -669,123 +716,126 @@ msgid ""
 "It can be modified on each task and timesheet entry individually if "
 "necessary."
 msgstr ""
+"ລາຍການໃບສັ່ງຂາຍທີ່ຈະຖືກເລືອກໂດຍຄ່າເລີ່ມຕົ້ນໃນໜ້າວຽກ ແລະ ຕາຕະລາງບັນທຶກເວລາຂອງໂຄງການນີ້, ຍົກເວັ້ນພ"
+"ະນັກງານທີ່ຖືກກຳນົດໃນຕາຕະລາງບັນທຶກເວລາໄດ້ເຊື່ອມໂຍງກັບລາຍການໃບສັ່ງຂາຍອື່ນໃນໂຄງການຢ່າງຈະແຈ້ງ.\n"
+"ສາມາດດັດແກ້ໃນແຕ່ລະໜ້າວຽກ ແລະ ແຕ່ລະລາຍການຕາຕະລາງບັນທຶກເວລາແຍກຕ່າງຫາກໄດ້ຖ້າຈຳເປັນ."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍທີ່ໜ້າວຽກນີ້ເຊື່ອມໂຍງຢູ່."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
 msgid "Screw Driver"
-msgstr ""
+msgstr "ໄຂຄວງ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Invoice"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນໃບຮຽກເກັບເງິນ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "ຄົ້ນຫາໃນລາຍການໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_inherit
 #: model_terms:ir.ui.view,arch_db:sale_project.project_project_view_form_simplified_template
 msgid "Select who to bill..."
-msgstr ""
+msgstr "ເລືອກຜູ້ທີ່ຈະຮຽກເກັບເງິນ..."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_policy
 msgid "Service Invoicing Policy"
-msgstr ""
+msgstr "ນະໂຍບາຍການຮຽກເກັບເງິນຄ່າບໍລິການ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Service Revenue (Fixed Price)"
-msgstr ""
+msgstr "ລາຍຮັບຄ່າບໍລິການ (ລາຄາຕາຍໂຕ)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Service Revenue (Manual)"
-msgstr ""
+msgstr "ລາຍຮັບຄ່າບໍລິການ (ປ້ອນເອງ)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Service Revenue (Milestones)"
-msgstr ""
+msgstr "ລາຍຮັບຄ່າບໍລິການ (ຕາມຂີດໝາຍ)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/account_analytic_line.py:0
 msgid "Service Revenue (Time & Materials)"
-msgstr ""
+msgstr "ລາຍຮັບຄ່າບໍລິການ (ເວລາ ແລະ ວັດສະດຸ)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_state
 msgid "Status"
-msgstr ""
+msgstr "ສະຖານະ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
 msgid "Task"
-msgstr ""
+msgstr "ໜ້າວຽກ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "Task Created (%(name)s): %(link)s"
-msgstr ""
+msgstr "ສ້າງໜ້າວຽກແລ້ວ (%(name)s): %(link)s"
 
 #. module: sale_project
 #: model:ir.module.module,summary:base.module_sale_project
 msgid "Task Generation from Sales Orders"
-msgstr ""
+msgstr "ການສ້າງໜ້າວຽກຈາກໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "ການເກີດຊ້ຳຂອງໜ້າວຽກ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "ຂັ້ນຕອນໜ້າວຽກ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__task_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__task_template_id
 msgid "Task Template"
-msgstr ""
+msgstr "ແມ່ແບບໜ້າວຽກ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_warning_text
 msgid "Task Warning"
-msgstr ""
+msgstr "ຄຳເຕືອນໜ້າວຽກ"
 
 #. module: sale_project
 #: model:project.project,label_tasks:sale_project.so_template_project
 msgid "Tasks"
-msgstr ""
+msgstr "ໜ້າວຽກ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "ການວິເຄາະໜ້າວຽກ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "The Sales Order must contain at least one service product."
-msgstr ""
+msgstr "ໃບສັ່ງຂາຍຕ້ອງມີສິນຄ້າປະເພດບໍລິການຢ່າງໜ້ອຍໜຶ່ງລາຍການ."
 
 #. module: sale_project
 #. odoo-python
@@ -793,7 +843,7 @@ msgstr ""
 msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
-msgstr ""
+msgstr "ສິນຄ້າ %s ບໍ່ຄວນມີໂຄງການລວມ ເນື່ອງຈາກມັນຈະສ້າງໂຄງການຂຶ້ນມາເອງ."
 
 #. module: sale_project
 #. odoo-python
@@ -801,7 +851,7 @@ msgstr ""
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
-msgstr ""
+msgstr "ສິນຄ້າ %s ບໍ່ຄວນມີໂຄງການ ຫຼື ແມ່ແບບໂຄງການ ເນື່ອງຈາກມັນຈະບໍ່ສ້າງໂຄງການ."
 
 #. module: sale_project
 #. odoo-python
@@ -809,7 +859,7 @@ msgstr ""
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr ""
+msgstr "ສິນຄ້າ %s ບໍ່ຄວນມີແມ່ແບບໂຄງການ ເນື່ອງຈາກມັນຈະສ້າງໜ້າວຽກໃນໂຄງການລວມ."
 
 #. module: sale_project
 #. odoo-python
@@ -817,24 +867,24 @@ msgstr ""
 msgid ""
 "The project couldn't be created because you don't have the right to create a "
 "project"
-msgstr ""
+msgstr "ບໍ່ສາມາດສ້າງໂຄງການໄດ້ ເນື່ອງຈາກທ່ານບໍ່ມີສິດໃນການສ້າງໂຄງການ"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "This task has been created from: %(order_link)s (%(product_name)s)"
-msgstr ""
+msgstr "ໜ້າວຽກນີ້ຖືກສ້າງຂຶ້ນມາຈາກ: %(order_link)s (%(product_name)s)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr ""
+msgstr "ລໍຖ້າອອກໃບຮຽກເກັບເງິນ"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_type
 msgid "Track Service"
-msgstr ""
+msgstr "ຕິດຕາມການບໍລິການ"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__display_name
@@ -851,6 +901,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"ໃຊ້ຄຳສັບຫຼັກເຫຼົ່ານີ້ໃນຫົວຂໍ້ເພື່ອຕັ້ງຄ່າໜ້າວຽກໃໝ່:\n"
+"\n"
+"        30h ຈັດສັນ 30 ຊົ່ວໂມງໃຫ້ໜ້າວຽກ\n"
+"        #tags ກຳນົດແທັກໃສ່ໜ້າວຽກ\n"
+"        @user ມອບໝາຍໜ້າວຽກໃຫ້ຜູ້ໃຊ້\n"
+"        ! ຕັ້ງບຸລິມະສິດໜ້າວຽກເປັນລະດັບປານກາງ\n"
+"        !! ຕັ້ງບຸລິມະສິດໜ້າວຽກເປັນລະດັບສູງ\n"
+"        !!! ຕັ້ງບຸລິມະສິດໜ້າວຽກເປັນລະດັບດ່ວນ\n"
+"\n"
+"        ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າໄດ້ໃຊ້ຮູບແບບ ແລະ ລຳດັບທີ່ຖືກຕ້ອງ ເຊັ່ນ: ປັບປຸງໜ້າຈໍການຕັ້ງຄ່າ 5h "
+"#feature #v16 @Mitchell !"
 
 #. module: sale_project
 #. odoo-python
@@ -860,29 +921,29 @@ msgstr ""
 #: model:ir.embedded.actions,name:sale_project.project_embedded_action_vendor_bills_dashboard
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Vendor Bills"
-msgstr ""
+msgstr "ໃບບິນຜູ້ສະໜອງ"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "ເບິ່ງໃບສັ່ງຂາຍ"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_warning_text
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_warning_text
 #: model:ir.model.fields,help:sale_project.field_project_template_create_wizard__sale_warning_text
 msgid "Warning for the partner as set by the user."
-msgstr ""
+msgstr "ຄຳເຕືອນສຳລັບຄູ່ຄ້າຕາມທີ່ຜູ້ໃຊ້ກຳນົດໄວ້."
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
-msgstr ""
+msgstr "ບໍລິການອອກແບບເວັບໄຊໃໝ່ (ໂຄງການ ແລະ ໜ້າວຽກ)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
 msgid "Wiring Services"
-msgstr ""
+msgstr "ບໍລິການຕິດຕັ້ງສາຍໄຟ"
 
 #. module: sale_project
 #. odoo-python
@@ -891,21 +952,23 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"ທ່ານບໍ່ສາມາດເຊື່ອມໂຍງລາຍການສັ່ງຂາຍ %(order_id)s - %(product_id)s ກັບໜ້າວຽກນີ້ໄດ້ ເນື່ອງຈາກມັ"
+"ນເປັນລາຍຈ່າຍທີ່ຮຽກເກັບເງິນຄືນ."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "[Project] %(task_name)s"
-msgstr ""
+msgstr "[ໂຄງການ] %(task_name)s"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product_template.py:0
 msgid "delivered_manual"
-msgstr ""
+msgstr "delivered_manual"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 msgid "sale_line_id"
-msgstr ""
+msgstr "sale_line_id"

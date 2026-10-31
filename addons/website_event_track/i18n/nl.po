@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-10-19 08:28+0000\n"
+"PO-Revision-Date: 2026-10-30 10:05+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "website_event_track/nl/>\n"
@@ -52,7 +52,7 @@ msgstr "%(name)s, %(function)s bij %(company)s"
 #. odoo-python
 #: code:addons/website_event_track/controllers/location_display.py:0
 msgid "%(start_time)s – %(end_time)s"
-msgstr ""
+msgstr "%(start_time)s – %(end_time)s"
 
 #. module: website_event_track
 #. odoo-python
@@ -76,7 +76,7 @@ msgstr "(tijdzone:"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid ", your favorites are only available from this device."
-msgstr ""
+msgstr ", zijn je favorieten alleen beschikbaar vanaf dit apparaat."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_17
@@ -180,6 +180,10 @@ msgid ""
 "                <span>Last updated at</span>\n"
 "                <time/>"
 msgstr ""
+"<i class=\"oi me-1 align-middle\" data-icon=\"link_off\" aria-"
+"hidden=\"true\"/>\n"
+"                <span>Laatst bijgewerkt op</span>\n"
+"                <time/>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
@@ -196,6 +200,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"star\" title=\"Favorite On\"/> <span "
 "class=\"d-none d-sm-inline\">Favorited</span>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"star\" title=\"Favorite On\"/> <span "
+"class=\"d-none d-sm-inline\">Toegevoegd aan favorieten</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
@@ -203,6 +209,8 @@ msgid ""
 "<i class=\"oi\" data-icon=\"star\" title=\"Set Favorite\"/> <span "
 "class=\"\">Add to favorite</span>"
 msgstr ""
+"<i class=\"oi\" data-icon=\"star\" title=\"Instellen als favoriet\"/> <span "
+"class=\"\">Toevoegen aan favorieten</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_list_item
@@ -212,7 +220,7 @@ msgstr "<span class=\"d-none d-md-block\">&amp;bull;</span>"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "<span class=\"o_stat_text\">Track Locations</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tracklocaties</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -256,6 +264,8 @@ msgid ""
 "<span class=\"o_wevent_location_display_live_badge d-inline-block align-"
 "middle me-2 bg-danger rounded-pill\"/>Live Now"
 msgstr ""
+"<span class=\"o_wevent_location_display_live_badge d-inline-block align-"
+"middle me-2 bg-danger rounded-pill\"/>Nu live"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
@@ -1181,7 +1191,7 @@ msgstr "Reminder voor presentatie: {{ object.name }}"
 #. module: website_event_track
 #: model:ir.module.module,shortdesc:base.module_website_event_track
 msgid "Advanced Events"
-msgstr ""
+msgstr "Geavanceerde evenementen"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -1273,7 +1283,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "As you are not"
-msgstr ""
+msgstr "Aangezien je niet"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
@@ -1430,7 +1440,7 @@ msgstr "Kleurindex"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__location_display_upcoming_track_count
 msgid "Coming Up Sessions"
-msgstr ""
+msgstr "Aankomende sessies"
 
 #. module: website_event_track
 #. odoo-python
@@ -1446,7 +1456,7 @@ msgstr "Binnenkort beschikbaar..."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
 msgid "Coming up"
-msgstr ""
+msgstr "Binnenkort"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
@@ -1667,6 +1677,7 @@ msgstr ""
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Do you want an invitation by email to add to your agenda?"
 msgstr ""
+"Wil je een uitnodiging per e-mail ontvangen om toe te voegen aan je agenda?"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1728,7 +1739,7 @@ msgstr "E-mail*"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "End of the day"
-msgstr ""
+msgstr "Einde van de dag"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
@@ -2349,12 +2360,12 @@ msgstr "Locatie"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__location_display_background
 msgid "Location Display Background"
-msgstr ""
+msgstr "Locatie: achtergrond weergeven"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__location_display_url
 msgid "Location Display Link"
-msgstr ""
+msgstr "Locatie: link weergeven"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_13
@@ -2517,7 +2528,7 @@ msgstr "Volgende activiteit type"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "No Invitation"
-msgstr ""
+msgstr "Geen uitnodiging"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
@@ -2528,12 +2539,12 @@ msgstr "Nog geen trackbezoekers!"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "No don't ask again"
-msgstr ""
+msgstr "Nee, vraag dit niet opnieuw"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "No talks today"
-msgstr ""
+msgstr "Geen presentaties vandaag"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
@@ -2560,12 +2571,12 @@ msgstr "Noteer dat kleurloze labels niet beschikbaar zijn op de website."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "Nothing is scheduled in this room today."
-msgstr ""
+msgstr "Er is vandaag niets gepland in deze ruimte."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
 msgid "Nothing planned right now"
-msgstr ""
+msgstr "Momenteel niets gepland"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
@@ -2645,6 +2656,57 @@ msgid ""
 "You can activate a blog for each event allowing you to communicate on "
 "specific events. Visitors can subscribe to news to get informed."
 msgstr ""
+"Evenementen, trainingen & webinars organiseren\n"
+"-------------------------------------\n"
+"\n"
+"### Plannen, promoten, verkopen, organiseren\n"
+"\n"
+"Krijg extra functies per evenement; meerdere pagina's, sponsors, meerdere "
+"presentaties, formulier voor voorstel van presentaties, agenda, "
+"evenementgerelateerd nieuws, documenten (dia's van presentaties), "
+"evenementspecifieke menu's.\n"
+"\n"
+"Je tracks organiseren\n"
+"--------------------\n"
+"\n"
+"### Van het voorstel voor een presentatie tot de publicatie\n"
+"\n"
+"Voeg een formulier voor voorstel van presentaties toe aan je evenementen "
+"zodat bezoekers presentaties en sprekers kunnen voorstellen. Organiseer het "
+"validatieproces van elke presentatie en plan eenvoudig.\n"
+"\n"
+"De unieke frontend- en backend-integratie van Odoo maakt organisatie en "
+"publicatie zo gemakkelijk. Ontwerp eenvoudig prachtige biografieën van "
+"sprekers en beschrijvingen van presentaties.\n"
+"\n"
+"Agenda en lijst van presentaties\n"
+"------------------------\n"
+"\n"
+"### Een sterke gebruikersinterface\n"
+"\n"
+"Krijg automatisch een prachtige agenda voor elk evenement gepubliceerd op je "
+"website. Laat je bezoekers eenvoudig zoeken en door presentaties bladeren, "
+"filteren op labels, locaties of sprekers.\n"
+"\n"
+"Sponsors beheren\n"
+"---------------\n"
+"\n"
+"### Sponsoring verkopen, je sponsors promoten\n"
+"\n"
+"Voeg sponsors toe aan je evenementen en publiceer sponsors per niveau (bv. "
+"brons, zilver, goud) onderaan elke pagina van het evenement.\n"
+"\n"
+"Verkoop sponsorpakketten online via de Odoo E-commerce voor een volledige "
+"integratie van de verkoopcyclus.\n"
+"\n"
+"Efficiënt communiceren\n"
+"-----------------------\n"
+"\n"
+"### Activeer een blog voor bepaalde evenementen\n"
+"\n"
+"Je kunt voor elk evenement een blog activeren waarmee je over specifieke "
+"evenementen kunt communiceren. Bezoekers kunnen zich abonneren op nieuws om "
+"op de hoogte te blijven."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_20
@@ -2868,7 +2930,7 @@ msgstr "Selecteer categorieën"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Send Invitation"
-msgstr ""
+msgstr "Uitnodiging versturen"
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
@@ -2942,7 +3004,7 @@ msgstr "Sprekers"
 #. module: website_event_track
 #: model:ir.module.module,summary:base.module_website_event_track
 msgid "Sponsors, Tracks, Agenda, Event News"
-msgstr ""
+msgstr "Sponsors, tracks, agenda, evenement-nieuws"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
@@ -2997,7 +3059,7 @@ msgstr "Voorstel indienen"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Successfully added to your favorites"
-msgstr ""
+msgstr "Succesvol toegevoegd aan je favorieten"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_tag_line
@@ -3070,12 +3132,12 @@ msgstr "Hartelijk dank voor je voorstel."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "Thanks for joining us."
-msgstr ""
+msgstr "Bedankt voor je deelname."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_empty_state
 msgid "That’s all for today"
-msgstr ""
+msgstr "Dat is alles voor vandaag"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_absolute_url
@@ -3105,7 +3167,7 @@ msgstr "De nieuwe manier om je creaties te promoten"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_location_display_content
 msgid "The next session will begin shortly."
-msgstr ""
+msgstr "De volgende sessie begint binnenkort."
 
 #. module: website_event_track
 #. odoo-python
@@ -3241,7 +3303,7 @@ msgstr "Activiteiten van vandaag"
 #. odoo-python
 #: code:addons/website_event_track/controllers/location_display.py:0
 msgid "Tomorrow · %(date_label)s"
-msgstr ""
+msgstr "Morgen · %(date_label)s"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_22
@@ -3385,7 +3447,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Track added to favorites"
-msgstr ""
+msgstr "Track toegevoegd aan favorieten"
 
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
@@ -3769,7 +3831,7 @@ msgstr "in %s"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "logged in"
-msgstr ""
+msgstr "ingelogd bent"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form

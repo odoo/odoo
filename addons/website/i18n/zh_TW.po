@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
 "PO-Revision-Date: 2026-09-25 11:26+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -253,12 +253,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
 msgid "$ 32M"
 msgstr "$3,200萬"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/ir_ui_view.py:0
-msgid "%(error)s (website: %(website_id)s)"
-msgstr "%(error)s（網站：%(website_id)s）"
 
 #. module: website
 #. odoo-python
@@ -8770,6 +8764,12 @@ msgstr "延伸檢視"
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
 msgid "External ID"
 msgstr "外部識別碼"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/ir_ui_view.py:0
+msgid "External ID can not be loaded: %(error)s (website: %(website_id)s)"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -18404,6 +18404,12 @@ msgid "Template fallback"
 msgstr "範本後備"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/ir_ui_view.py:0
+msgid "Template not found: '%(error)s' (website: %(website_id)s)"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form.edit.xml:0
 msgid "Terms & Conditions"
@@ -18673,12 +18679,6 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_website_form/form.xml:0
 msgid "The form has been sent successfully."
 msgstr ""
-
-#. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid "The form's specified model does not exist"
-msgstr "表單的指定模型不存在"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
@@ -19066,6 +19066,13 @@ msgstr "該字型已存在，只能加入為本地字體以取代伺服器版本
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.js:0
 msgid "This font is missing font weight"
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+msgid ""
+"This form cannot be submitted. Please contact the website administrator."
 msgstr ""
 
 #. module: website
@@ -23491,6 +23498,12 @@ msgstr "✽ 披薩/薄餅"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽ 我們提供的服務"
+
+#~ msgid "%(error)s (website: %(website_id)s)"
+#~ msgstr "%(error)s（網站：%(website_id)s）"
+
+#~ msgid "The form's specified model does not exist"
+#~ msgstr "表單的指定模型不存在"
 
 #~ msgid "Arrow Position"
 #~ msgstr "箭嘴位置"

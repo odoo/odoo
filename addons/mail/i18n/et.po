@@ -29,11 +29,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-12 12:39+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-26 15:05+0000\n"
 "Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
-"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-20/mail/"
-"et/>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-20/mail/et/"
+">\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3103,12 +3103,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_message.py:0
-msgid "Cannot search, too many messages"
-msgstr ""
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid "Cannot search, too many scheduled messages"
 msgstr ""
@@ -3478,7 +3472,7 @@ msgstr "Linn, Maakond, Riik"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_input.xml:0
 msgid "Clear"
-msgstr ""
+msgstr "Tühjenda"
 
 #. module: mail
 #. odoo-javascript
@@ -3576,6 +3570,12 @@ msgstr "Sulge paneel"
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Close search"
 msgstr "Sulge otsing"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Collaborate with coworkers and customers in video calls."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -7695,6 +7695,11 @@ msgid "Language"
 msgstr "Keel"
 
 #. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__last_interest_dt
 msgid "Last Activity"
@@ -9232,6 +9237,12 @@ msgstr "Vestlust ei ole valitud."
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "No documents found for the selected records."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "No install needed."
 msgstr ""
 
 #. module: mail
@@ -12593,11 +12604,6 @@ msgid "Shortcut"
 msgstr "Otsetee"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr "Keele lühikood mida kasutatakse tõlke nõudmisel."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
@@ -14169,6 +14175,14 @@ msgstr ""
 #: code:addons/mail/static/src/core/web/activity.xml:0
 msgid "Tomorrow:"
 msgstr "Homme:"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_message.py:0
+msgid ""
+"Too many messages to be processed.\n"
+"Please apply additional filters to reduce the number of potential messages."
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
@@ -16089,12 +16103,6 @@ msgid "created this channel."
 msgstr "lõi selle kanali."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "päev, kuu dd, yyyy - hh:mm:ss (GMT)"
@@ -16708,3 +16716,7 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr "Keele lühikood mida kasutatakse tõlke nõudmisel."

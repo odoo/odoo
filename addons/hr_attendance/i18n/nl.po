@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-10-20 12:34+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-26 11:08+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "hr_attendance/nl/>\n"
@@ -53,7 +53,7 @@ msgstr "\"Uitklok tijd\" kan niet eerder zijn dan de \"Inklok tijd”."
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_employee.py:0
 msgid "%(hours)g h in %(month)s"
-msgstr ""
+msgstr "%(hours)g u in %(month)s"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -95,6 +95,14 @@ msgid ""
 "                            this record may be outdated and should be "
 "reviewed."
 msgstr ""
+"<i class=\"oi me-1\" data-icon=\"warning\" role=\"img\" aria-"
+"label=\"Warning\" title=\"Warning\"/>\n"
+"                            <strong "
+"invisible=\"source_attendance_id\">Bronaanwezigheid verwijderd -</strong>\n"
+"                            <strong invisible=\"not "
+"source_attendance_id\">Bronaanwezigheid gewijzigd -</strong>\n"
+"                            dit record is mogelijk verouderd en moet worden "
+"gecontroleerd."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -102,6 +110,8 @@ msgid ""
 "<i class=\"oi me-1\" data-icon=\"warning\" role=\"img\" aria-"
 "label=\"Warning\" title=\"Warning\"/>Source changed"
 msgstr ""
+"<i class=\"oi me-1\" data-icon=\"warning\" role=\"img\" aria-"
+"label=\"Waarschuwing\" title=\"Waarschuwing\"/>Bron gewijzigd"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_hr_attendance_kanban
@@ -122,6 +132,12 @@ msgid ""
 "                                <span invisible=\"not "
 "source_attendance_id\">Source modified</span>"
 msgstr ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"warning\" role=\"img\" aria-"
+"label=\"Waarschuwing\" title=\"Waarschuwing\"/>\n"
+"                                <span "
+"invisible=\"source_attendance_id\">Bron verwijderd</span>\n"
+"                                <span invisible=\"not "
+"source_attendance_id\">Bron gewijzigd</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_calendar_view
@@ -130,6 +146,8 @@ msgid ""
 "<i class=\"oi oi-fw text-400\" data-icon=\"label\" aria-hidden=\"true\" "
 "title=\"Time Type\"/>"
 msgstr ""
+"<i class=\"oi oi-fw text-400\" data-icon=\"label\" aria-hidden=\"true\" "
+"title=\"Tijdtype\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_my_calendar_view
@@ -137,6 +155,8 @@ msgid ""
 "<i class=\"oi oi-fw text-400\" data-icon=\"pause_circle\" aria-"
 "hidden=\"true\" title=\"Break Duration\"/>"
 msgstr ""
+"<i class=\"oi oi-fw text-400\" data-icon=\"pause_circle\" aria-"
+"hidden=\"true\" title=\"Break Pauzeduur\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_employee_calendar_view
@@ -145,6 +165,8 @@ msgid ""
 "<i class=\"oi oi-fw text-400\" data-icon=\"schedule\" aria-hidden=\"true\" "
 "title=\"Worked Hours\"/>"
 msgstr ""
+"<i class=\"oi oi-fw text-400\" data-icon=\"schedule\" aria-hidden=\"true\" "
+"title=\"Gewerkte uren\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -154,7 +176,7 @@ msgstr "<span class=\"me-2\">Gebaseerd op</span>"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span class=\"me-2\">Tolerance</span>"
-msgstr ""
+msgstr "<span class=\"me-2\">Tolerantie</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -241,7 +263,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Add my break times"
-msgstr ""
+msgstr "Mijn pauzes toevoegen"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -273,6 +295,11 @@ msgid ""
 msgstr ""
 "Sta het verzamelen toe van GPS-locatie, IP-adres en browser-/"
 "apparaatgegevens om de toegang en aanwezigheid van werknemers te registreren"
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__allowed_work_entry_type_ids
+msgid "Allowed Work Entry Type"
+msgstr ""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
@@ -320,7 +347,7 @@ msgstr "Aanwezigheidsgoedkeurder"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_version__attendance_based
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_based
 msgid "Attendance Based"
-msgstr ""
+msgstr "Gebaseerd op aanwezigheid"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -372,25 +399,25 @@ msgstr "Aanwezigheidsstatus"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_work_entry_type_id
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_work_entry_type_id
 msgid "Attendance Time Type"
-msgstr ""
+msgstr "Tijdtype aanwezigheid"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_validation
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_validation
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendance Validation"
-msgstr ""
+msgstr "Validatie van aanwezigheid"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendance Work Entry Type"
-msgstr ""
+msgstr "Aanwezigheid werkboekingstype"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Attendance saved, but the display could not be refreshed."
-msgstr ""
+msgstr "Aanwezigheid opgeslagen, maar de weergave kon niet worden vernieuwd."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -411,12 +438,12 @@ msgstr "Aanwezigheid: Afwezigheden van werknemers opsporen"
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.hr_attendance_day_undertime_rules_cron_ir_actions_server
 msgid "Attendance: Process daily time rules"
-msgstr ""
+msgstr "Aanwezigheid: dagelijkse tijdregels verwerken"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.hr_attendance_week_time_rules_cron_ir_actions_server
 msgid "Attendance: Process weekly time rules"
-msgstr ""
+msgstr "Aanwezigheid: Wekelijkse tijdregels verwerken"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
@@ -474,7 +501,7 @@ msgstr "Automatisch uitchecken"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_time_rules
 msgid "Automatic Rules"
-msgstr ""
+msgstr "Automatische regels"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -566,39 +593,39 @@ msgstr "Gebaseerd op GPS-coördinaten (indien beschikbaar) of op IP-adres"
 #: code:addons/hr_attendance/static/src/components/attendance_inline_form/attendance_inline_form.xml:0
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Break"
-msgstr ""
+msgstr "Pauze"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.js:0
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__break_duration
 msgid "Break Duration"
-msgstr ""
+msgstr "Pauzeduur"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_break_management
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_break_management
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Break Management on Checkout"
-msgstr ""
+msgstr "Pauzebeheer bij uitchecken"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "Break duration cannot be negative."
-msgstr ""
+msgstr "De pauzeduur mag niet negatief zijn."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.xml:0
 msgid "Break duration in minutes"
-msgstr ""
+msgstr "Pauzeduur in minuten"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Break:"
-msgstr ""
+msgstr "Pauze:"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -606,7 +633,7 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.js:0
 msgid "Breaks cannot be longer than the attendance time"
-msgstr ""
+msgstr "Pauzes mogen niet langer duren dan de tijd van de aanwezigheid"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_browser
@@ -630,7 +657,7 @@ msgstr "Kan bewerken"
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.xml:0
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: hr_attendance
 #. odoo-python
@@ -688,7 +715,7 @@ msgstr "Inklokken"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check In/Out"
-msgstr ""
+msgstr "Inchecken/Uitchecken"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -813,19 +840,19 @@ msgstr "Verbinding verbroken. In-/uitchecken kon niet worden geregistreerd."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 msgid "Could not save break duration. Please identify again."
-msgstr ""
+msgstr "De pauzeduur kon niet worden opgeslagen. Geef opnieuw in."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Could not update this attendance."
-msgstr ""
+msgstr "Deze aanwezigheid kon niet worden bijgewerkt."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/calendar/attendance_calendar_controller.js:0
 msgid "Create"
-msgstr ""
+msgstr "Aanmaken"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -868,7 +895,7 @@ msgstr "Dag"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_based
 msgid "Default Tracking"
-msgstr ""
+msgstr "Standaard tracking"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -876,6 +903,8 @@ msgid ""
 "Default work entry type assigned to attendance records. Used by the time "
 "rule engine."
 msgstr ""
+"Standaard werkboekingstype dat wordt toegewezen aan aanwezigheidsrecords. "
+"Wordt gebruikt door de tijdregel-engine."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -892,7 +921,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_create_view_form
 msgid "Delete"
-msgstr ""
+msgstr "Verwijderen"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__department_id
@@ -912,7 +941,7 @@ msgstr "Apparaat & locatie tracken"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_inline_form/attendance_inline_form.xml:0
 msgid "Discard"
-msgstr ""
+msgstr "Annuleren"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__display_attendances
@@ -954,7 +983,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__state__draft
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Draft"
-msgstr ""
+msgstr "Concept"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1016,25 +1045,25 @@ msgstr "Werknemers"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.js:0
 msgid "Enter a valid break duration in whole minutes."
-msgstr ""
+msgstr "Voer een geldige pauzeduur in hele minuten in."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.js:0
 msgid "Enter the total break duration (in minutes) for %s."
-msgstr ""
+msgstr "Voer de totale pauzeduur (in minuten) in voor %s."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.js:0
 msgid "Enter the total break duration in minutes."
-msgstr ""
+msgstr "Voer de totale pauzeduur in minuten in."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/calendar/attendance_calendar_controller.js:0
 msgid "Error"
-msgstr ""
+msgstr "Fout"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1068,7 +1097,7 @@ msgstr "Extra uren"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__break_duration
 msgid "Extra unpaid break duration (hours)"
-msgstr ""
+msgstr "Extra onbetaalde pauzeduur (uren)"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1256,6 +1285,8 @@ msgid ""
 "If enabled, employees can record their total break duration after checking "
 "out."
 msgstr ""
+"Indien ingeschakeld, kunnen werknemers hun totale pauzeduur registreren "
+"nadat ze zich hebben uitgecheckt."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_time_rule__condition_work_entry_type_ids
@@ -1273,7 +1304,7 @@ msgstr "Op locatie"
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "In Progress"
-msgstr ""
+msgstr "In behandeling"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
@@ -1294,7 +1325,7 @@ msgstr "Installeren"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Installation Manual"
-msgstr ""
+msgstr "Installatiehandleiding"
 
 #. module: hr_attendance
 #. odoo-python
@@ -1343,7 +1374,7 @@ msgstr "Kioskmodus"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Mode Address"
-msgstr ""
+msgstr "Adres kioskmodus"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -1395,7 +1426,7 @@ msgstr "Breedtegraad (Out)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.js:0
 msgid "Load Sample Data"
-msgstr ""
+msgstr "Demodata laden"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.action_load_demo_data
@@ -1421,7 +1452,7 @@ msgstr "Locatie (Uit)"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Logs"
-msgstr ""
+msgstr "Logs"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_longitude
@@ -1481,7 +1512,7 @@ msgstr "Handmatig (optionele PIN)"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Mark as Reviewed"
-msgstr ""
+msgstr "Markeren als gecontroleerd"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -1545,7 +1576,7 @@ msgstr "Mijn team"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/calendar/attendance_calendar_controller.js:0
 msgid "New Attendance"
-msgstr ""
+msgstr "Nieuwe aanwzeigheid"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1557,12 +1588,12 @@ msgstr "Nieuwe instelling (werknemer/badge)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Next"
-msgstr ""
+msgstr "Volgende"
 
 #. module: hr_attendance
 #: model:res.groups.privilege,placeholder:hr_attendance.res_groups_privilege_attendances
 msgid "No"
-msgstr ""
+msgstr "Nee"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1582,7 +1613,7 @@ msgstr "Geen barcode ontvangen"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "No break"
-msgstr ""
+msgstr "Geen pauze"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1699,7 +1730,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Pending"
-msgstr ""
+msgstr "In behandeling"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1812,7 +1843,7 @@ msgstr "Rapportages"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Terugzetten naar concept"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_has_sms_error
@@ -1828,12 +1859,12 @@ msgstr "Zaterdag"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_inline_form/attendance_inline_form.xml:0
 msgid "Save"
-msgstr ""
+msgstr "Opslaan"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_create_view_form
 msgid "Save & Close"
-msgstr ""
+msgstr "Opslaan & sluiten"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1910,12 +1941,12 @@ msgstr "Aanwezigheidsregistratiesysteem met enkele check-in"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__source_attendance_id
 msgid "Source Attendance"
-msgstr ""
+msgstr "Bronaanwezigheid"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Source changed — click to mark as reviewed"
-msgstr ""
+msgstr "Bron gewijzigd — klik om als gecontroleerd te markeren"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__auto_check_out_mode__specific_time
@@ -1975,6 +2006,7 @@ msgstr "De aanwezigheidsrapportage van je werknemers wordt hier weergegeven."
 msgid ""
 "The color selected here will be used in every screen with the time type."
 msgstr ""
+"De hier geselecteerde kleur wordt gebruikt in elk scherm met het tijdtype."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__attendance_manager_id
@@ -2021,6 +2053,8 @@ msgid ""
 "This action will generate several fake records across multiple apps. Are you "
 "sure you want to proceed?"
 msgstr ""
+"Deze actie zal verschillende nepgegevens genereren in meerdere apps. Weet je "
+"zeker dat je door wilt gaan?"
 
 #. module: hr_attendance
 #. odoo-python
@@ -2057,6 +2091,8 @@ msgstr ""
 msgid ""
 "This code can be changed, it is only for a display purpose (3 letters max)"
 msgstr ""
+"Deze code kan worden gewijzigd en dient alleen voor weergavedoeleinden "
+"(maximaal 3 letters)"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2065,6 +2101,8 @@ msgid ""
 "This operation is not allowed as you are not linked to an employee in the "
 "current company."
 msgstr ""
+"Deze bewerking is niet toegestaan omdat je niet gekoppeld bent aan een "
+"werknemer in het huidige bedrijf."
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__3
@@ -2075,23 +2113,23 @@ msgstr "Donderdag"
 #: model:ir.model,name:hr_attendance.model_hr_time_rule
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__time_rule_id
 msgid "Time Rule"
-msgstr ""
+msgstr "Tijdregel"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__work_entry_type_id
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_time_rule__condition_work_entry_type_ids
 msgid "Time Type"
-msgstr ""
+msgstr "Tijdtype"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_work_entry_type
 msgid "Time Types"
-msgstr ""
+msgstr "Tijdtypes"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 msgid "To Validate"
-msgstr ""
+msgstr "Te valideren"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2201,14 +2239,14 @@ msgstr "Gebruiker: Lees zijn eigen aanwezigheden"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree_management
 msgid "Validate"
-msgstr ""
+msgstr "Valideren"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__state__validated
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Validated"
-msgstr ""
+msgstr "Gevalideerd"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -2220,7 +2258,7 @@ msgstr "Validatiefout"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_validation_tolerance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_validation_tolerance
 msgid "Validation Tolerance (Hours)"
-msgstr ""
+msgstr "Validatietolerantie (Uur)"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -2256,6 +2294,9 @@ msgid ""
 "When enabled, attendance records must be validated by an officer before they "
 "count toward work entries and time rules."
 msgstr ""
+"Wanneer deze optie is ingeschakeld, moeten aanwezigheidsrecords door een "
+"verantwoordelijke worden gevalideerd voordat ze meetellen voor werkboekingen "
+"en tijdregels."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee__attendance_based
@@ -2264,6 +2305,9 @@ msgid ""
 "When enabled, payslips are computed from badge records rather than the "
 "employee's work schedule. Time off is always accounted for."
 msgstr ""
+"Als deze optie is ingeschakeld, worden loonstroken berekend op basis van "
+"badgeregistraties in plaats van het werkrooster van de werknemer. Er wordt "
+"altijd rekening gehouden met verlof."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_res_company__attendance_work_entry_type_id
@@ -2271,12 +2315,14 @@ msgstr ""
 msgid ""
 "Work entry type assigned to attendances and read by the time rule engine."
 msgstr ""
+"Werkboekingstype dat wordt toegewezen aan aanwezigheden en wordt gelezen "
+"door de tijdregel-engine."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Worked"
-msgstr ""
+msgstr "Gewerkt"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
@@ -2294,17 +2340,18 @@ msgstr "Gewerkte tijd"
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_validation__no_validation
 msgid "Worked days are automatically approved"
-msgstr ""
+msgstr "Gewerkte dagen worden automatisch goedgekeurd"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_validation__tolerance_validation
 msgid "Worked days require approval if outside tolerance"
 msgstr ""
+"Gewerkte dagen moeten worden goedgekeurd als ze buiten de tolerantie vallen"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_validation__manual_validation
 msgid "Worked days require manual approval"
-msgstr ""
+msgstr "Gewerkte dagen moeten handmatig worden goedgekeurd"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employee_public_view_form
@@ -2335,12 +2382,15 @@ msgid ""
 "You are not linked to an employee in the current company, so you cannot view "
 "your own attendances."
 msgstr ""
+"Je bent niet gekoppeld aan een werknemer in het huidige bedrijf, dus je kunt "
+"je eigen aanwezigheid niet bekijken."
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 msgid "You can only set a break duration once the employee has checked out."
 msgstr ""
+"Je kunt de pauzeduur pas instellen nadat de werknemer zich heeft afgemeld."
 
 #. module: hr_attendance
 #. odoo-python
@@ -2402,7 +2452,7 @@ msgstr "-icoon uit (bijv. voor thuiswerk)"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/break_duration_dialog/break_duration_dialog.xml:0
 msgid "minutes"
-msgstr ""
+msgstr "minuten"
 
 #. module: hr_attendance
 #. odoo-javascript

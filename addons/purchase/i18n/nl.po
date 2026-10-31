@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-09-29 12:11+0000\n"
+"PO-Revision-Date: 2026-10-29 11:37+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/purchase/"
 "nl/>\n"
@@ -63,6 +63,8 @@ msgid ""
 "%(matched_lines_count)s bill lines matched, %(unmatched_lines_count)s "
 "unmatched remaining."
 msgstr ""
+"%(matched_lines_count)s leveranciersfactuurregels gematcht, %"
+"(unmatched_lines_count)s blijven ongekoppeld."
 
 #. module: purchase
 #. odoo-python
@@ -71,12 +73,14 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_billed)s Billed, %"
 "(quantity_received)s Received at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_billed)s gefactureerd, %"
+"(quantity_received)s ontvangen aan %(unit_price)s per stuk"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/wizard/accrued_orders.py:0
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; prijsverschil voor %(product)s"
 
 #. module: purchase
 #. odoo-python
@@ -120,7 +124,7 @@ msgstr "-&gt;"
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
 msgid "0 bill lines matched with this PO."
-msgstr ""
+msgstr "0 leveranciersfactuurregels gematcht met deze inkooporder."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -671,6 +675,9 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"Rekening waarop de opgebouwde waarde van de gefactureerde maar nog niet "
+"ontvangen goederen wordt bijgehouden. Bij permanente waardering vormt deze "
+"rekening bij afsluiting een tegenpost voor de voorraadwaarderingsrekening."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_product_category__property_account_bills_to_receive_id
@@ -679,11 +686,15 @@ msgid ""
 "With perpetual valuation, it counterbalances the stock valuation account at "
 "closing."
 msgstr ""
+"Rekening waarop de opgebouwde waarde van de ontvangen maar nog niet "
+"gefactureerde goederen wordt bijgehouden. Bij permanente waardering vormt "
+"deze rekening bij afsluiting een tegenpost voor de "
+"voorraadwaarderingsrekening."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__accrual_move_ids
 msgid "Accrual Entries"
-msgstr ""
+msgstr "Toegerekende boekingen"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__accrual_move_ids
@@ -691,6 +702,9 @@ msgid ""
 "Accrual entries generated for this line, so it isn't accrued again while one "
 "is still standing (posted, not yet reversed or cancelled)."
 msgstr ""
+"Toegerekende boekingen gegenereerd voor deze regel, zodat deze niet opnieuw "
+"wordt toegerekend zolang er nog een openstaat (geboekt, nog niet "
+"teruggedraaid of geannuleerd)."
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_accrued_expense_entry_purchase_order_line
@@ -706,7 +720,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/wizard/accrued_orders.py:0
 msgid "Accrued total"
-msgstr ""
+msgstr "Opgebouwd totaal"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1047,7 +1061,7 @@ msgstr "Factuurregels"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__bill_matched_ratio
 msgid "Bill Matched Ratio"
-msgstr ""
+msgstr "Percentage leveranciersfacturen gematcht"
 
 #. module: purchase
 #. odoo-python
@@ -1059,7 +1073,7 @@ msgstr "Facturen matchen"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Bill Qty"
-msgstr ""
+msgstr "Aantal leveranciersfacturen"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_bill_to_po_wizard
@@ -1069,7 +1083,7 @@ msgstr "Factuur naar inkooporder"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__bill_to_receive
 msgid "Bill to Receive"
-msgstr ""
+msgstr "Factuur te ontvangen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced_at_date
@@ -1087,12 +1101,12 @@ msgstr "Gefactureerd bedrag Onbelast"
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_billed_not_received_id
 msgid "Billed Not Received Account"
-msgstr ""
+msgstr "Rekening Gefactureerd, niet ontvangen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_billed_not_received_active
 msgid "Billed Not Received Account Active"
-msgstr ""
+msgstr "Rekening 'Gefactureerd, niet ontvangen' actief"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -1129,12 +1143,12 @@ msgstr "Ontvangen facturen"
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_id
 #: model:ir.model.fields,field_description:purchase.field_res_company__account_bills_to_receive_id
 msgid "Bills to Receive Account"
-msgstr ""
+msgstr "Rekening Leveranciersfacturen te ontvangen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_bills_to_receive_active
 msgid "Bills to Receive Account Active"
-msgstr ""
+msgstr "Rekening 'Leveranciersfacturen te ontvangen' actief"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
@@ -1251,7 +1265,7 @@ msgstr "Bevestig inkooporders in één stap"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Confirm the price."
-msgstr ""
+msgstr "Bevestig de prijs."
 
 #. module: purchase
 #. odoo-javascript
@@ -1490,7 +1504,7 @@ msgstr "Veld voor automatisch aanvullen weergeven"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__display_matching_tag
 msgid "Display Matching Tag"
-msgstr ""
+msgstr "Matchinglabel weergeven"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_accrued_orders_wizard__display_name
@@ -1587,7 +1601,7 @@ msgstr "Dubbele order"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Enter a Description..."
-msgstr ""
+msgstr "Voeg een beschrijving toe..."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1644,7 +1658,7 @@ msgstr "Verboden waarde op niet boekhoudkundige inkooporderregel"
 #: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
 msgid "Forecasted"
-msgstr ""
+msgstr "Voorspeld"
 
 #. module: purchase
 #. odoo-python
@@ -1893,7 +1907,7 @@ msgstr "Boekingsregel"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__label
 msgid "Label"
-msgstr ""
+msgstr "Label"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__write_uid
@@ -2039,25 +2053,25 @@ msgstr "Match"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Matched"
-msgstr ""
+msgstr "Gematcht"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__matched_invoice_count
 msgid "Matched Invoices Count"
-msgstr ""
+msgstr "Aantal gematchte facturen"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__matching_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "Matching"
-msgstr ""
+msgstr "Matching"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order_line.py:0
 msgid "Matching Invoices"
-msgstr ""
+msgstr "Facturen matchen"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
@@ -2230,7 +2244,7 @@ msgstr "Volgende activiteit type"
 #. module: purchase
 #: model:res.groups.privilege,placeholder:purchase.res_groups_privilege_purchase
 msgid "No"
-msgstr ""
+msgstr "Nee"
 
 #. module: purchase
 #. odoo-javascript
@@ -2427,6 +2441,74 @@ msgid ""
 "etc.\n"
 "\n"
 msgstr ""
+"Odoo Toeleveringsketen\n"
+"-----------------\n"
+"\n"
+"Automatiseer alles van offerte-aanvraag tot betaling en beheer facturatie "
+"met de <a href=\"https://www.odoo.com/app/purchase\">Open source "
+"toeleveringsketen</a> van Odoo.\n"
+"\n"
+"Automatiseer inkoopvoorstellen, verstuur offerteaanvragen, volg "
+"inkooporders, beheer informatie over leveranciers, controleer de ontvangst "
+"van producten en controleer facturen van leveranciers.\n"
+"\n"
+"Automatische inkoopvoorstellen\n"
+"----------------------------------\n"
+"\n"
+"Verlaag het voorraadniveau met inkoopregels. Krijg het juiste inkoopvoorstel "
+"op het juiste moment om je voorraadniveau te verlagen. Verbeter je inkoop- "
+"en voorraadprestaties met inkoopregels afhankelijk van voorraadniveaus, "
+"logistieke regels, verkooporders, voorspelde productieorders, enz.\n"
+"\n"
+"Verstuur offerteaanvragen of inkooporders met één klik naar je leverancier.\n"
+"Krijg toegang tot productontvangsten en facturen vanuit je inkooporder.\n"
+"\n"
+"Inkoopaanbestedingen\n"
+"----------------\n"
+"\n"
+"Verstuur aanbestedingen, integreer de antwoorden van leveranciers in het "
+"proces en vergelijk voorstellen. Kies het beste aanbod en verstuur eenvoudig "
+"inkooporders. Gebruik rapportage om achteraf de kwaliteit van je "
+"leveranciers te analyseren.\n"
+"\n"
+"\n"
+"E-mailintegraties\n"
+"------------------\n"
+"\n"
+"Integreer alle communicatie van de leverancier op de inkooporders (of "
+"inkoopoffertes) voor een sterke traceerbaarheid voor onderhandelingen en "
+"aftersalesproblemen. Gebruik de claimbeheermodule om problemen met "
+"leveranciers te volgen.\n"
+"\n"
+"Standaard kostprijs, gemiddelde kostprijs, FIFO\n"
+"-----------------------------------\n"
+"\n"
+"Gebruik de waarderingsmethode die bij je bedrijf past: standaard kostprijs, "
+"gemiddelde kostprijs, fifo of lifo. Ontvang je boekingen en de juiste "
+"voorraadwaardering in realtime; Odoo regelt alles voor je op transparante "
+"wijze.\n"
+"\n"
+"Prijslijsten van leveranciers importeren\n"
+"--------------------------\n"
+"\n"
+"Neem slimme inkoopbeslissingen met de beste prijzen. Importeer eenvoudig "
+"prijslijsten van leveranciers om slimmere inkoopbeslissingen te nemen op "
+"basis van promoties, prijzen afhankelijk van hoeveelheden en speciale "
+"contractvoorwaarden. Je kunt zelfs je verkoopprijs aanpassen afhankelijk van "
+"de prijzen van je leverancier.\n"
+"\n"
+"Producten en facturen beheren\n"
+"-----------------------------\n"
+"\n"
+"Je mist geen enkel product of geen enkele order. Met het voorraadbeheer "
+"beheer je backorders, terugbetalingen, productontvangst en "
+"kwaliteitscontrole. Kies de controlemethode die past bij jouw bedrijf.\n"
+"\n"
+"Beheer leveranciersfacturen zonder moeite. Kies de methode die bij je past: "
+"maak vooraf conceptfacturen op basis van inkooporders of ontvangen "
+"producten, of maak handmatig facturen en importeer regels vanuit "
+"inkooporders, enzovoort.\n"
+"\n"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__purchase
@@ -2554,12 +2636,12 @@ msgstr "Onze orders"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
 msgid "PO Matching"
-msgstr ""
+msgstr "Inkoopordermatching"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 msgid "PO Qty"
-msgstr ""
+msgstr "Aantal inkooporders"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__parent_id
@@ -2790,13 +2872,13 @@ msgstr "Inkoopregel Waarschuwingsbericht"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_bill_line_match
 msgid "Purchase Line and Vendor Bill line matching view"
-msgstr "Regels van inkooporders en leveranciersfacturen linken"
+msgstr "Weergave voor matchen van inkooporder- en leveranciersfactuurregels"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_matched_ratio
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_matched_ratio
 msgid "Purchase Matched Ratio"
-msgstr ""
+msgstr "Percentage gematchte inkopen"
 
 #. module: purchase
 #. odoo-python
@@ -2807,7 +2889,7 @@ msgstr "Inkoopmatching"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_matching_issue_msg
 msgid "Purchase Matching Issue Msg"
-msgstr ""
+msgstr "Bericht fout inkoopmatching"
 
 #. module: purchase
 #. odoo-python
@@ -3076,6 +3158,8 @@ msgid ""
 "Quantity on hand minus outgoing quantity from Sales Orders plus incoming "
 "quantity from Purchase Orders"
 msgstr ""
+"Aanwezige voorraad min uitgaande hoeveelheid uit verkooporders plus "
+"inkomende hoeveelheid uit inkooporders"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3127,7 +3211,7 @@ msgstr "Inkoopoffertes en inkooporders"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "Percentage"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
@@ -3314,7 +3398,7 @@ msgstr "SMS fout bij versturen"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Save the line."
-msgstr ""
+msgstr "Sla de regel op."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3358,7 +3442,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Select a Product"
-msgstr ""
+msgstr "Selecteer een product"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -3369,7 +3453,7 @@ msgstr "Selecteer een inkoopdocument"
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 msgid "Select price"
-msgstr ""
+msgstr "Selecteer prijs"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__selected_seller_id
@@ -3719,6 +3803,8 @@ msgstr "Het bestelde aantal is bijgewerkt."
 #: code:addons/purchase/models/res_partner.py:0
 msgid "The partner cannot be deleted because it is used as a dropship address"
 msgstr ""
+"De partner kan niet worden verwijderd omdat hij wordt gebruikt als adres "
+"voor dropshipping"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3853,7 +3939,7 @@ msgstr "Totaal gefactureerd"
 #: model_terms:ir.ui.view,arch_db:purchase.product_product_purchase_tree_view
 #: model_terms:ir.ui.view,arch_db:purchase.product_template_purchase_tree_view
 msgid "Total Forecasted"
-msgstr ""
+msgstr "Totaal voorspeld"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
@@ -3972,12 +4058,12 @@ msgstr "Ontgrendel"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_unmatch_lines
 msgid "Unmatch"
-msgstr ""
+msgstr "Match verbreken"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_search
 msgid "Unmatched"
-msgstr ""
+msgstr "Niet gematcht"
 
 #. module: purchase
 #. odoo-python

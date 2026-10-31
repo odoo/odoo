@@ -9,16 +9,18 @@
 # Kevilyn Rosa, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-09 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 19:48+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-29 18:57+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/sale_timesheet/pt_BR/>\n"
+"20/sale_timesheet/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,6 +91,14 @@ msgid ""
 "according to the order/contract you work on. This allows to\n"
 "have real delivered quantities in sales orders.\n"
 msgstr ""
+"\n"
+"Permite vender planilhas de horas em seu pedido de venda\n"
+"====================================================\n"
+"\n"
+"Este módulo define o produto correto em todas as linhas de planilha de "
+"horas\n"
+"de acordo com o pedido/contrato no qual você trabalha. Isso permite\n"
+"ter quantidades entregues reais nos pedidos de venda.\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -105,7 +115,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.actions.report,print_report_name:sale_timesheet.timesheet_report_account_move
 msgid "('%s Timesheets' % (object.name))"
-msgstr ""
+msgstr "('%s Planilhas de Horas' % (object.name))"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,job_details:sale_timesheet.job_engineer
@@ -236,11 +246,13 @@ msgid ""
 "<span class=\"text-muted\">Timesheets without a sales order item are "
 "reported as </span>"
 msgstr ""
+"<span class=\"text-muted\">Planilhas de Horas sem um item de pedido de venda "
+"são relatadas como </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.report_timesheet_sale_timesheet
 msgid "<span>Sales Order Item: </span>"
-msgstr ""
+msgstr "<span>Item de Pedido de Venda: </span>"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_rating:sale_timesheet.job_engineer
@@ -598,7 +610,7 @@ msgstr "Funcionário"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee_departure
 msgid "Employee Departure"
-msgstr ""
+msgstr "Desligamento de Funcionário"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__employee_rate
@@ -988,7 +1000,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Order"
-msgstr ""
+msgstr "Pedido"
 
 #. module: sale_timesheet
 #: model_terms:hr.job,website_description:sale_timesheet.job_engineer
@@ -1166,7 +1178,7 @@ msgstr "Pedidos de venda"
 #. module: sale_timesheet
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
-msgstr ""
+msgstr "Planilhas de Horas – Vendas"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1227,7 +1239,7 @@ msgstr "Buscar no item do pedido de venda"
 #. module: sale_timesheet
 #: model:ir.module.module,summary:base.module_sale_timesheet
 msgid "Sell based on timesheets"
-msgstr ""
+msgstr "Vender com base em planilhas de horas"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1265,7 +1277,7 @@ msgstr "Serviços"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_send
 msgid "Shared Send Invoice Wizard Functions"
-msgstr ""
+msgstr "Funções Compartilhadas do Assistente de Envio de Fatura"
 
 #. module: sale_timesheet
 #: model:hr.job,name:sale_timesheet.job_engineer
@@ -1454,19 +1466,19 @@ msgstr "Planilhas de horas"
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Fixed Price)"
-msgstr ""
+msgstr "Planilhas de Horas (Preço Fixo)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Manual)"
-msgstr ""
+msgstr "Planilhas de Horas (Manual)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Milestones)"
-msgstr ""
+msgstr "Planilhas de Horas (Marcos)"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1478,7 +1490,7 @@ msgstr "Planilhas de horas (não faturáveis)"
 #. odoo-python
 #: code:addons/sale_timesheet/models/account_analytic_line.py:0
 msgid "Timesheets (Time & Materials)"
-msgstr ""
+msgstr "Planilhas de Horas (Tempo e Materiais)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type

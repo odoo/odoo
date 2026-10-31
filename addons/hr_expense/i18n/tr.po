@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-14 13:34+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-29 13:33+0000\n"
 "Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "hr_expense/tr/>\n"
@@ -329,6 +329,10 @@ msgid ""
 "For company paid expenses with a matched bill, the account needs to be the "
 "payable account of the bill."
 msgstr ""
+"Çalışan tarafından ödenen masraflar ve eşleşen bir fatura bulunmayan şirket "
+"tarafından ödenen masraflar için bir masraf hesabı açılması beklenir.\n"
+"Eşleşen bir fatura bulunan şirket tarafından ödenen masraflar için, hesap, "
+"faturanın ödenecek hesabı olmalıdır."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -444,7 +448,7 @@ msgstr "Otomatik doğrulama"
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__bill_paid_by_employee
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__bill_paid_by_employee
 msgid "Bill Paid By Employee"
-msgstr ""
+msgstr "Çalışan Tarafından Ödenen Fatura"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
@@ -733,7 +737,7 @@ msgstr "Çalışan"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__own_account
 msgid "Employee (Through a Purchase Receipt)"
-msgstr ""
+msgstr "Çalışan (Satınalma Makbuzu ile)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1210,6 +1214,7 @@ msgstr "Ekler geçersiz!"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_account_invoice_filter_inherit_expense
 msgid "Invoices from an expense, approved but not posted yet"
 msgstr ""
+"Masraftan gelen, onaylanmış ancak henüz muhasebeleştirilmemiş faturalar"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
@@ -1582,7 +1587,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__payment_mode__company_account
 msgid "None (Paid by Company)"
-msgstr ""
+msgstr "Yok (Şirket tarafından ödenir)"
 
 #. module: hr_expense
 #. odoo-python
@@ -1763,7 +1768,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
 msgid "Payment"
-msgstr ""
+msgstr "Ödeme"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
@@ -2058,12 +2063,10 @@ msgstr ""
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Bu çalışanın “Giderlerini” onaylamaktan sorumlu kullanıcıyı seçin. \n"
-"Boşsa, onaylama işlemi bir Yönetici veya Onaylayıcı tarafından yapılır "
-"(ayarlar/kullanıcılar bölümünde belirlenir)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -2789,6 +2792,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "aynı makbuzla zaten mevcut."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Bu çalışanın “Giderlerini” onaylamaktan sorumlu kullanıcıyı seçin. \n"
+#~ "Boşsa, onaylama işlemi bir Yönetici veya Onaylayıcı tarafından yapılır "
+#~ "(ayarlar/kullanıcılar bölümünde belirlenir)."
 
 #~ msgid ""
 #~ "You cannot refuse:\n"

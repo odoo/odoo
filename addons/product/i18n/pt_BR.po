@@ -9,16 +9,18 @@
 # Kevilyn Rosa, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-25 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 17:04+0000\n"
+"POT-Creation-Date: 2026-10-30 17:40+0000\n"
+"PO-Revision-Date: 2026-10-30 16:18+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/product/pt_BR/>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-20/product/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +31,7 @@ msgstr ""
 
 #. module: product
 #: model:ir.module.module,description:base.module_product
+#, fuzzy
 msgid ""
 "\n"
 "This is the base module for managing products and pricelists in Odoo.\n"
@@ -50,6 +53,27 @@ msgid ""
 "\n"
 "Print product labels with barcode.\n"
 msgstr ""
+"\n"
+"Este é o módulo de base para o gerenciamento de produtos e listas de preços "
+"em Odoo.\n"
+"========================================================================\n"
+"\n"
+"Variantes de suporte de produtos, diferentes métodos de preços, informações "
+"de fornecedores, gerenciar estoque/pedido, diferentes unidades de medida, "
+"embalagem e propriedades.\n"
+"\n"
+"Suporte a listas de preços:\n"
+"-------------------\n"
+"    * Múltiplos níveis de desconto (por produto, categoria, quantidades)\n"
+"    * Calcular preços com base em diferentes critérios:\n"
+"        * Outra lista de preços\n"
+"        * Preço de custo\n"
+"        * Preço de lista\n"
+"        * Preço do fornecedor\n"
+"\n"
+"Preferências de lista de preços por produto e/ou usuário.\n"
+"\n"
+"Imprima etiquetas de produtos com código de barras.\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -117,8 +141,11 @@ msgstr "- %(amount)s de redução"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
+#, fuzzy
 msgid "- Barcode \"%(barcode)s\" already assigned to %(product_list)s"
 msgstr ""
+"- Código de barras \"%(barcode)s\" já atribuído ao(s) produto(s): %"
+"(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -244,8 +271,9 @@ msgstr "<span class=\"o_stat_text\"> Produtos</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Daily Rates</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Taxas Diárias</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_view_form
@@ -274,8 +302,9 @@ msgstr "<span class=\"text-muted\">Em mãos</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
+#, fuzzy
 msgid "<span class=\"text-nowrap\">% on</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">% on</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -380,7 +409,7 @@ msgstr "Produtos armazenáveis são aqueles cujo estoque é administrado."
 #. module: product
 #: model:ir.model,name:product.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Grupos de acesso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -619,12 +648,12 @@ msgstr "Aplicado em"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_calendar
 msgid "Applied on"
-msgstr ""
+msgstr "Aplicado em"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
@@ -752,7 +781,7 @@ msgstr "Atributos e variantes"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__available_packaging_ids
 msgid "Available Packaging"
-msgstr ""
+msgstr "Embalagem disponível"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__free_qty
@@ -800,7 +829,7 @@ msgstr "Código de barras"
 #: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__barcode_format__barcode
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__barcode_format__barcode
 msgid "Barcode 1D"
-msgstr ""
+msgstr "Código de Barras"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_product_barcodelookup
@@ -810,8 +839,9 @@ msgstr "Base de dados de código de barras"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
+#, fuzzy
 msgid "Barcode Lookup"
-msgstr ""
+msgstr "Barcode Lookup"
 
 #. module: product
 #. odoo-python
@@ -839,8 +869,9 @@ msgstr "Os códigos de barras podem ser configurados em"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_label_base
+#, fuzzy
 msgid "Base Label Report"
-msgstr ""
+msgstr "Relatório de etiqueta base"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__base_unit_name
@@ -947,14 +978,16 @@ msgstr "Canon"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__catalog_is_in_order
+#, fuzzy
 msgid "Catalog Is In Order"
-msgstr ""
+msgstr "Catálogo Está em Ordem"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_catalog_mixin.py:0
+#, fuzzy
 msgid "Catalog missing the child field to update."
-msgstr ""
+msgstr "O catálogo não possui o campo filho para atualizar."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
@@ -1008,13 +1041,13 @@ msgstr "Escolha o layout da folha para imprimir as etiquetas"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/product_catalog_search_panel.xml:0
 msgid "Clear All"
-msgstr ""
+msgstr "Limpar tudo"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/product_catalog_search_panel.xml:0
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_cocacola
@@ -1379,8 +1412,9 @@ msgstr "Ciano"
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_calendar
+#, fuzzy
 msgid "Daily Rates"
-msgstr ""
+msgstr "Taxas Diárias"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__db_datas
@@ -1716,7 +1750,7 @@ msgstr "Erro ao exportar o arquivo. Tente novamente."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Example:"
-msgstr ""
+msgstr "Exemplo:"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__excluded_value_ids
@@ -1784,7 +1818,7 @@ msgstr "Favoritos"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
 msgid "File"
-msgstr ""
+msgstr "Arquivo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__raw
@@ -1805,7 +1839,7 @@ msgstr "Armários de arquivos"
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/product_catalog_search_panel.xml:0
 msgid "Filters"
-msgstr ""
+msgstr "Filtros"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -2018,8 +2052,9 @@ msgstr "Altura"
 
 #. module: product
 #: model:res.groups.privilege,description:product.res_groups_privilege_product
+#, fuzzy
 msgid "Helps you manage your product catalog."
-msgstr ""
+msgstr "Ajuda você a gerenciar seu catálogo de produtos."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
@@ -2048,6 +2083,7 @@ msgstr "Estadia em hotel"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__compute_price
+#, fuzzy
 msgid ""
 "How the price is derived from the base price.\n"
 "Discount: a percentage taken off it.\n"
@@ -2055,6 +2091,11 @@ msgid ""
 "Fixed Price: a set amount, ignoring the base price entirely.\n"
 "Activate the discount settings to show the discount to the customer."
 msgstr ""
+"Como o preço é derivado do preço base.\n"
+"Desconto: uma porcentagem subtraída dele.\n"
+"Sobretaxa: uma porcentagem adicionada a ele.\n"
+"Preço Fixo: um valor definido, ignorando totalmente o preço base.\n"
+"Ative as configurações de desconto para mostrar o desconto ao cliente."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_ir_attachment__id
@@ -2346,18 +2387,21 @@ msgstr "LG"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_product_label_dymo
+#, fuzzy
 msgid "Label Dymo Report"
-msgstr ""
+msgstr "Relatório de etiqueta Dymo"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_product_label_pdf
+#, fuzzy
 msgid "Label PDF Report"
-msgstr ""
+msgstr "Relatório de etiqueta PDF"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_product_label_zpl
+#, fuzzy
 msgid "Label ZPL Report"
-msgstr ""
+msgstr "Relatório de etiqueta ZPL"
 
 #. module: product
 #. odoo-python
@@ -2491,7 +2535,7 @@ msgstr "Linhas"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Link"
-msgstr ""
+msgstr "Link"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -2565,7 +2609,7 @@ msgstr "Material"
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Ícone de símbolos de material, por exemplo, lista de verificação"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -2636,7 +2680,7 @@ msgstr "Mesa de madeira minimalista para uso executivo"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "Quantidade mínima"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
@@ -2944,8 +2988,9 @@ msgstr ""
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/product_catalog_search_panel.xml:0
+#, fuzzy
 msgid "Open filters"
-msgstr ""
+msgstr "Abrir filtros"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__product_id
@@ -3077,8 +3122,9 @@ msgstr "Rosa"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__is_plain_discount
+#, fuzzy
 msgid "Plain Discount"
-msgstr ""
+msgstr "Desconto simples"
 
 #. module: product
 #. odoo-javascript
@@ -3325,7 +3371,7 @@ msgstr "Atributos do produto"
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_line_mixin
 msgid "Product Catalog Line Mixin"
-msgstr ""
+msgstr "Mixin de linha do catálogo de produtos"
 
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_mixin
@@ -3377,13 +3423,15 @@ msgstr "Etiqueta do produto (ZPL)"
 
 #. module: product
 #: model:ir.actions.report,name:product.action_report_product_label_dymo
+#, fuzzy
 msgid "Product Labels (Dymo)"
-msgstr ""
+msgstr "Etiquetas de produto (Dymo)"
 
 #. module: product
 #: model:ir.actions.report,name:product.action_report_product_label_pdf
+#, fuzzy
 msgid "Product Labels (PDF)"
-msgstr ""
+msgstr "Etiquetas de produto (PDF)"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
@@ -3460,8 +3508,9 @@ msgstr "Unidade de medida do produto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_uom_ids
+#, fuzzy
 msgid "Product Uom"
-msgstr ""
+msgstr "UM do produto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
@@ -3504,7 +3553,7 @@ msgstr "Produtos"
 #. module: product
 #: model:ir.module.module,shortdesc:base.module_product
 msgid "Products & Pricelists"
-msgstr ""
+msgstr "Produtos e listas de preços"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
@@ -3535,8 +3584,9 @@ msgstr "Produtos: %(category)s"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_furniture_product_template
+#, fuzzy
 msgid "Professional furniture assembly service"
-msgstr ""
+msgstr "Serviço profissional de montagem de móveis"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
@@ -3577,7 +3627,7 @@ msgstr "Roxo"
 #: model:ir.model.fields.selection,name:product.selection__mrp_finished_product_label_layout__barcode_format__qr
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__barcode_format__qr
 msgid "QR Code"
-msgstr ""
+msgstr "Código QR"
 
 #. module: product
 #. odoo-javascript
@@ -3664,7 +3714,7 @@ msgstr "Seleção (círculo)"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__range
 msgid "Range"
-msgstr ""
+msgstr "Intervalo"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_rayban
@@ -3960,6 +4010,12 @@ msgid "Sony"
 msgstr "Sony"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/report/product_pricelist_report.py:0
+msgid "Sorry, you are not allowed to access this document."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
@@ -4072,7 +4128,7 @@ msgstr "Lista de preços do fornecedor"
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Surcharge"
-msgstr ""
+msgstr "Super energizado"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
@@ -4314,10 +4370,13 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_catalog_mixin.py:0
+#, fuzzy
 msgid ""
 "There are multiple lines with the same product, please update those one by "
 "one and not through the catalog."
 msgstr ""
+"Existem várias linhas com o mesmo produto, por favor, atualize-as uma a uma "
+"e não através do catálogo."
 
 #. module: product
 #. odoo-python
@@ -4685,8 +4744,9 @@ msgstr "Variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__variant_attribute_value_ids
+#, fuzzy
 msgid "Variant Attribute Value"
-msgstr ""
+msgstr "Valor do Atributo da Variante"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
@@ -4808,7 +4868,7 @@ msgstr "Fornecedores"
 #. module: product
 #: model:res.groups.privilege,placeholder:product.res_groups_privilege_product
 msgid "View"
-msgstr ""
+msgstr "Visualizar"
 
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
@@ -4899,8 +4959,9 @@ msgstr "O que esperar?"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__is_plain_discount
+#, fuzzy
 msgid "Whether the rule lowers the price by exactly its discount percentage."
-msgstr ""
+msgstr "Se a regra reduz o preço exatamente pela sua porcentagem de desconto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_tag__visible_to_customers
@@ -4931,8 +4992,9 @@ msgstr "Data de gravação"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_catalog_mixin.py:0
+#, fuzzy
 msgid "Wrong catalog child field!"
-msgstr ""
+msgstr "Campo filho do catálogo incorreto!"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_xl
@@ -4996,9 +5058,12 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_uom.py:0
+#, fuzzy
 msgid ""
 "You can only print labels for packaging barcodes using the same packaging."
 msgstr ""
+"Você só pode imprimir etiquetas para códigos de barras de embalagem usando a "
+"mesma embalagem."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
@@ -5018,8 +5083,9 @@ msgstr "Não é possível editar esse produto no catálogo."
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_catalog_mixin.py:0
+#, fuzzy
 msgid "You cannot add or remove products from this record."
-msgstr ""
+msgstr "Você não pode adicionar ou remover produtos deste registro."
 
 #. module: product
 #. odoo-python
@@ -5233,238 +5299,283 @@ msgstr "Zara"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+#, fuzzy
 msgid "^FO108,29,0^A0N,15,13^TBN,320,16^FH^FD"
-msgstr ""
+msgstr "^FO108,29,0^A0N,15,13^TBN,320,16^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+#, fuzzy
 msgid "^FO108,49,0^A0N,15,13^TBN,320,16^FH^FD"
-msgstr ""
+msgstr "^FO108,49,0^A0N,15,13^TBN,320,16^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+#, fuzzy
 msgid "^FO108,4^A0N,20^TBN,322,21^FH^FD"
-msgstr ""
+msgstr "^FO108,4^A0N,20^TBN,322,21^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+#, fuzzy
 msgid "^FO12,51^BY2^BCN,64,Y,N,N^FH^FD"
-msgstr ""
+msgstr "^FO12,51^BY2^BCN,64,Y,N,N^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
+#, fuzzy
 msgid "^FO132,50,0^A0N,16,13^TBN,116,17^FH^FD"
-msgstr ""
+msgstr "^FO132,50,0^A0N,16,13^TBN,116,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
+#, fuzzy
 msgid "^FO132,72,0^A0N,16,13^TBN,116,17^FH^FD"
-msgstr ""
+msgstr "^FO132,72,0^A0N,16,13^TBN,116,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+#, fuzzy
 msgid "^FO155,21^A0N,22^TBN,246,23^FH^FD"
-msgstr ""
+msgstr "^FO155,21^A0N,22^TBN,246,23^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+#, fuzzy
 msgid "^FO155,44,0^A0N,16,13^TBN,246,17^FH^FD"
-msgstr ""
+msgstr "^FO155,44,0^A0N,16,13^TBN,246,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+#, fuzzy
 msgid "^FO155,64,0^A0N,16,13^TBN,246,17^FH^FD"
-msgstr ""
+msgstr "^FO155,64,0^A0N,16,13^TBN,246,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+#, fuzzy
 msgid "^FO174,35^A0N,27^TBN,277,28^FH^FD"
-msgstr ""
+msgstr "^FO174,35^A0N,27^TBN,277,28^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+#, fuzzy
 msgid "^FO174,66,0^A0N,18,15^TBN,277,19^FH^FD"
-msgstr ""
+msgstr "^FO174,66,0^A0N,18,15^TBN,277,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+#, fuzzy
 msgid "^FO174,91,0^A0N,18,15^TBN,277,19^FH^FD"
-msgstr ""
+msgstr "^FO174,91,0^A0N,18,15^TBN,277,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+#, fuzzy
 msgid "^FO18,4^BXN,4,200,20,20^FH^FD"
-msgstr ""
+msgstr "^FO18,4^BXN,4,200,20,20^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+#, fuzzy
 msgid "^FO18,8^BY1^BCN,76,Y,N,N^FH^FD"
-msgstr ""
+msgstr "^FO18,8^BY1^BCN,76,Y,N,N^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+#, fuzzy
 msgid "^FO210,29,0^A0N,15,13^TBN,232,16^FH^FD"
-msgstr ""
+msgstr "^FO210,29,0^A0N,15,13^TBN,232,16^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+#, fuzzy
 msgid "^FO210,44,0^A0N,15,13^TBN,232,16^FH^FD"
-msgstr ""
+msgstr "^FO210,44,0^A0N,15,13^TBN,232,16^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+#, fuzzy
 msgid "^FO210,8,0^A0N,20^TBN,232,21^FH^FD"
-msgstr ""
+msgstr "^FO210,8,0^A0N,20^TBN,232,21^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
+#, fuzzy
 msgid "^FO248,145,1^A0N,25^TBN,108,26^FH^FD"
-msgstr ""
+msgstr "^FO248,145,1^A0N,25^TBN,108,26^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
+#, fuzzy
 msgid "^FO248,170,1^A0N,14^TBN,108,15^FH^FD"
-msgstr ""
+msgstr "^FO248,170,1^A0N,14^TBN,108,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+#, fuzzy
 msgid "^FO249,151,1^A0N,14^TBN,108,15^FH^FD"
-msgstr ""
+msgstr "^FO249,151,1^A0N,14^TBN,108,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+#, fuzzy
 msgid "^FO249,151,1^A0N,25^TBN,108,26^FH^FD"
-msgstr ""
+msgstr "^FO249,151,1^A0N,25^TBN,108,26^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+#, fuzzy
 msgid "^FO249,176,1^A0N,14^TBN,108,15^FH^FD"
-msgstr ""
+msgstr "^FO249,176,1^A0N,14^TBN,108,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
 msgid "^FO30,46^BY1^BCN,70,Y,N,N^FH^FD"
-msgstr ""
+msgstr "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
 msgid "^FO30,54^BY2^BCN,80,Y,N,N^FH^FD"
-msgstr ""
+msgstr "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+#, fuzzy
 msgid "^FO401,135,1^A0N,30^TBN,187,31^FH^FD"
-msgstr ""
+msgstr "^FO401,135,1^A0N,30^TBN,187,31^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+#, fuzzy
 msgid "^FO401,153,1^A0N,30^TBN,187,31^FH^FD"
-msgstr ""
+msgstr "^FO401,153,1^A0N,30^TBN,187,31^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+#, fuzzy
 msgid "^FO401,156,1^A0N,16^TBN,187,17^FH^FD"
-msgstr ""
+msgstr "^FO401,156,1^A0N,16^TBN,187,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+#, fuzzy
 msgid "^FO401,160,1^A0N,16^TBN,187,17^FH^FD"
-msgstr ""
+msgstr "^FO401,160,1^A0N,16^TBN,187,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+#, fuzzy
 msgid "^FO401,178,1^A0N,16^TBN,187,17^FH^FD"
-msgstr ""
+msgstr "^FO401,178,1^A0N,16^TBN,187,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+#, fuzzy
 msgid "^FO435,64,1^A0N,24^TBN,201,25^FH^FD"
-msgstr ""
+msgstr "^FO435,64,1^A0N,24^TBN,201,25^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+#, fuzzy
 msgid "^FO435,86,1^A0N,12^TBN,201,13^FH^FD"
-msgstr ""
+msgstr "^FO435,86,1^A0N,12^TBN,201,13^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+#, fuzzy
 msgid "^FO442,60,1^A0N,24^TBN,201,25^FH^FD"
-msgstr ""
+msgstr "^FO442,60,1^A0N,24^TBN,201,25^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
+#, fuzzy
 msgid "^FO442,84,1^A0N,12^TBN,201,13^FH^FD"
-msgstr ""
+msgstr "^FO442,84,1^A0N,12^TBN,201,13^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+#, fuzzy
 msgid "^FO451,160,1^A0N,38^TBN,165,40^FH^FD"
-msgstr ""
+msgstr "^FO451,160,1^A0N,38^TBN,165,40^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+#, fuzzy
 msgid "^FO451,195,1^A0N,18^TBN,165,19^FH^FD"
-msgstr ""
+msgstr "^FO451,195,1^A0N,18^TBN,165,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+#, fuzzy
 msgid "^FO452,188,1^A0N,18^TBN,165,19^FH^FD"
-msgstr ""
+msgstr "^FO452,188,1^A0N,18^TBN,165,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+#, fuzzy
 msgid "^FO452,188,1^A0N,38^TBN,165,40^FH^FD"
-msgstr ""
+msgstr "^FO452,188,1^A0N,38^TBN,165,40^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+#, fuzzy
 msgid "^FO452,223,1^A0N,18^TBN,165,19^FH^FD"
-msgstr ""
+msgstr "^FO452,223,1^A0N,18^TBN,165,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+#, fuzzy
 msgid "^FO5,151^A0N,14,12^TBN,102,15^FH^FD"
-msgstr ""
+msgstr "^FO5,151^A0N,14,12^TBN,102,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+#, fuzzy
 msgid "^FO5,156^A0N,16,13^TBN,172,17^FH^FD"
-msgstr ""
+msgstr "^FO5,156^A0N,16,13^TBN,172,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+#, fuzzy
 msgid "^FO5,166^A0N,14,12^TBN,102,15^FH^FD"
-msgstr ""
+msgstr "^FO5,166^A0N,14,12^TBN,102,15^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+#, fuzzy
 msgid "^FO5,173^A0N,16,13^TBN,172,17^FH^FD"
-msgstr ""
+msgstr "^FO5,173^A0N,16,13^TBN,172,17^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+#, fuzzy
 msgid "^FO5,188^A0N,18,15^TBN,195,19^FH^FD"
-msgstr ""
+msgstr "^FO5,188^A0N,18,15^TBN,195,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+#, fuzzy
 msgid "^FO5,208^A0N,18,15^TBN,195,19^FH^FD"
-msgstr ""
+msgstr "^FO5,208^A0N,18,15^TBN,195,19^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+#, fuzzy
 msgid "^FO5,21^BXN,7,200,20,20^FH^FD"
-msgstr ""
+msgstr "^FO5,21^BXN,7,200,20,20^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+#, fuzzy
 msgid "^FO6,35^BXN,8,200,20,20^FH^FD"
-msgstr ""
+msgstr "^FO6,35^BXN,8,200,20,20^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
+#, fuzzy
 msgid "^FO6,46^BXN,6,200,20,20^FH^FD"
-msgstr ""
+msgstr "^FO6,46^BXN,6,200,20,20^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
@@ -5480,85 +5591,122 @@ msgstr "^FS"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+#, fuzzy
 msgid ""
 "^FS\n"
 "^FO13,86^A0N,12^FB94,1,0,C^FH^FD"
 msgstr ""
+"^FS\n"
+"^FO13,86^A0N,12^FB94,1,0,C^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+#, fuzzy
 msgid ""
 "^FS\n"
 "^FO5,165^A0N,16^FB140,1,0,C^FH^FD"
 msgstr ""
+"^FS\n"
+"^FO5,165^A0N,16^FB140,1,0,C^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
+#, fuzzy
 msgid ""
 "^FS\n"
 "^FO6,173^A0N,14^FB120,1,0,C^FH^FD"
 msgstr ""
+"^FS\n"
+"^FO6,173^A0N,14^FB120,1,0,C^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+#, fuzzy
 msgid ""
 "^FS\n"
 "^FO6,200^A0N,20^FB160,1,0,C^FH^FD"
 msgstr ""
+"^FS\n"
+"^FO6,200^A0N,20^FB160,1,0,C^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_small_label
+#, fuzzy
 msgid ""
 "^PW254\n"
 "^LL203\n"
 "^FO5,13^A0N,25^FB244,1,0,C^FH^FD"
 msgstr ""
+"^PW254\n"
+"^LL203\n"
+"^FO5,13^A0N,25^FB244,1,0,C^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_small_label
+#, fuzzy
 msgid ""
 "^PW254\n"
 "^LL203\n"
 "^FO6,15^A0N,25,16^FB242,1,0,C^FH^FD"
 msgstr ""
+"^PW254\n"
+"^LL203\n"
+"^FO6,15^A0N,25,16^FB242,1,0,C^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_alternative_label
+#, fuzzy
 msgid ""
 "^PW406\n"
 "^LL203"
 msgstr ""
+"^PW406\n"
+"^LL203"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_alternative_label
+#, fuzzy
 msgid ""
 "^PW406\n"
 "^LL203\n"
 "^FO5,9^A0N,27^FB396,1,0,C^FH^FD"
 msgstr ""
+"^PW406\n"
+"^LL203\n"
+"^FO5,9^A0N,27^FB396,1,0,C^FH^FD"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_jewelry_label
 #: model_terms:ir.ui.view,arch_db:product.qr_jewelry_label
+#, fuzzy
 msgid ""
 "^PW447\n"
 "^LL102"
 msgstr ""
+"^PW447\n"
+"^LL102"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.qr_normal_label
+#, fuzzy
 msgid ""
 "^PW457\n"
 "^LL254"
 msgstr ""
+"^PW457\n"
+"^LL254"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.barcode_normal_label
+#, fuzzy
 msgid ""
 "^PW457\n"
 "^LL254\n"
 "^FO0,13^A0N,30^FB457,1,0,C^FH^FD"
 msgstr ""
+"^PW457\n"
+"^LL254\n"
+"^FO0,13^A0N,30^FB457,1,0,C^FH^FD"
 
 #. module: product
 #. odoo-python
@@ -5648,20 +5796,23 @@ msgstr "custo do produto"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
+#, fuzzy
 msgid "product: %(name)s"
-msgstr ""
+msgstr "produto: %(name)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
+#, fuzzy
 msgid "product: %(product_name)s"
-msgstr ""
+msgstr "produto: %(product_name)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
+#, fuzzy
 msgid "product: %(product_name)s with variant: %(variant_name)s"
-msgstr ""
+msgstr "produto: %(product_name)s com variante: %(variant_name)s"
 
 #. module: product
 #. odoo-python
@@ -5673,8 +5824,9 @@ msgstr "preço de venda"
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
+#, fuzzy
 msgid "surcharge"
-msgstr ""
+msgstr "sobretaxa"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view

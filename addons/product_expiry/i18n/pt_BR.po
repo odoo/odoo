@@ -8,15 +8,17 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 17:37+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-29 18:58+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/product_expiry/pt_BR/>\n"
+"20/product_expiry/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,6 +56,19 @@ msgid ""
 "Also implements the removal strategy First Expiry First Out (FEFO) widely "
 "used, for example, in food industries.\n"
 msgstr ""
+"\n"
+"Rastreie diferentes datas em produtos e lotes de produção.\n"
+"======================================================\n"
+"\n"
+"As seguintes datas podem ser rastreadas:\n"
+"-------------------------------\n"
+"    - fim da vida útil\n"
+"    - data de validade\n"
+"    - data de remoção\n"
+"    - data de alerta\n"
+"\n"
+"Também implementa a estratégia de remoção Primeiro a Vencer, Primeiro a Sair "
+"(PVPS), amplamente utilizada, por exemplo, na indústria alimentícia.\n"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
@@ -94,7 +109,7 @@ msgstr "<span>dias antes da data de expiração</span>"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Grupos de acesso"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
@@ -170,7 +185,7 @@ msgstr "Consumir antes da data"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
-msgstr ""
+msgstr "Escolha o layout de folha para imprimir etiquetas de lote"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
@@ -480,7 +495,7 @@ msgstr "Variante do produto"
 #. module: product_expiry
 #: model:ir.module.module,shortdesc:base.module_product_expiry
 msgid "Products Expiration Date"
-msgstr ""
+msgstr "Data de validade dos produtos"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
@@ -592,7 +607,7 @@ msgstr "A remover em"
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_traceability_report
 msgid "Traceability Report"
-msgstr ""
+msgstr "Relatório de rastreabilidade"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
@@ -650,42 +665,42 @@ msgstr ""
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry
 msgid "^A0N,16^TBN,246,23^FH^FD"
-msgstr ""
+msgstr "^A0N,16^TBN,246,23^FH^FD"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry
 msgid "^A0N,16^TBN,246,23^FH^FDB.b."
-msgstr ""
+msgstr "^A0N,16^TBN,246,23^FH^FDB.b."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_zpl_expiry
 msgid "^A0N,21,16^FB170,1,0,R^FH^FDExp."
-msgstr ""
+msgstr "^A0N,21,16^FB170,1,0,R^FH^FDVal."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry
 msgid "^FO155,"
-msgstr ""
+msgstr "^FO155,"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry
 msgid "^FO155,145^A0N,16^TBN,246,23^FH^FDExp."
-msgstr ""
+msgstr "^FO155,145^A0N,16^TBN,246,23^FH^FDVal."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_zpl_expiry
 msgid "^FO222,22"
-msgstr ""
+msgstr "^FO222,22"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_zpl_expiry
 msgid "^FO222,22^A0N,21,16^FB170,1,0,R^FH^FDB.b."
-msgstr ""
+msgstr "^FO222,22^A0N,21,16^FB170,1,0,R^FH^FDB.b."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_zpl_expiry
 msgid "^FO222,44"
-msgstr ""
+msgstr "^FO222,44"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.alternative_zpl_lot_label_qr_expiry

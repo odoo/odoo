@@ -10,14 +10,15 @@
 # Martin Trigaux, 2023
 # Kevilyn Rosa, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-09-30 18:33+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-30 16:18+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-20/hr_holidays/pt_BR/>\n"
@@ -213,8 +214,9 @@ msgstr "%(leave_name)s foi cancelado pelo seguinte motivo: %(reason)s"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/res_users.py:0
+#, fuzzy
 msgid "%(name)s !!✈ Back on %(date)s!!"
-msgstr ""
+msgstr "%(name)s !!✈ De volta em %(date)s!!"
 
 #. module: hr_holidays
 #. odoo-python
@@ -649,11 +651,22 @@ msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">Folga</span>"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid ""
+"<span class=\"o_stat_value text-danger-emphasis\">Not defined</span>\n"
+"                        <span class=\"o_stat_text text-danger-"
+"emphasis\">Time Off</span>"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard
+#, fuzzy
 msgid ""
 "<span class=\"text-danger\" invisible=\"not work_entry_type_support_document "
 "or supported_attachment_ids\">Required</span>"
 msgstr ""
+"<span class=\"text-danger\" invisible=\"not work_entry_type_support_document "
+"or supported_attachment_ids\">Obrigatório</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
@@ -1437,7 +1450,6 @@ msgstr "Tem certeza de que deseja excluir este registro?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_dashboard
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager_dashboard
 msgid "Ask for"
 msgstr "Solicitar"
 
@@ -1549,8 +1561,8 @@ msgstr "Saldo"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
-msgid "Balance at the"
-msgstr "Saldo em"
+msgid "Balance on the"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__both
@@ -1602,8 +1614,10 @@ msgstr "Pode validar"
 
 #. module: hr_holidays
 #: model:res.groups,comment:hr_holidays.group_hr_holidays_manager
+#, fuzzy
 msgid "Can manage and configure all holidays and leave requests."
 msgstr ""
+"Pode gerenciar e configurar todos os feriados e solicitações de ausência."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2278,6 +2292,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_duration
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__duration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Duration"
 msgstr "Duração"
@@ -2557,6 +2572,12 @@ msgstr "Genérico"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_search_inherit_hr_holidays
 msgid "Give Time"
 msgstr "Dê tempo"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/view_dialog/allocation_form_view_dialog.xml:0
+msgid "Grant"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_work_entry_type__group_days_leave
@@ -5933,7 +5954,7 @@ msgstr "datas"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "day"
-msgstr ""
+msgstr "dia"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -6198,6 +6219,9 @@ msgstr "ano(s)"
 #: code:addons/hr_holidays/models/hr_time_rule.py:0
 msgid "your HR manager"
 msgstr "seu gerente de RH"
+
+#~ msgid "Balance at the"
+#~ msgstr "Saldo em"
 
 #~ msgid ""
 #~ "Can manage and configure all holidays and leave requests.\n"

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-10-16 02:03+0000\n"
+"POT-Creation-Date: 2026-10-30 17:39+0000\n"
+"PO-Revision-Date: 2026-10-26 04:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-20/"
 "account_peppol/ja/>\n"
@@ -761,6 +761,14 @@ msgstr "%(network_name)s 経由で送信済みの仕訳は送信取消できま�
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Cannot initiate KYC for the selected scheme (unsupported, deprecated, or "
+"removed). Please select a different scheme."
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Cannot register a user with a %s application"
@@ -1028,6 +1036,12 @@ msgstr "エラー"
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "Error importing %(proxy_type)s document (UUID: %(uuid)s):"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr "EDIドキュメント作成中にエラーが発生しました (フォーマット: %s)"
@@ -1092,16 +1106,6 @@ msgstr "モジュールへ移動"
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
 msgid "Got it !"
 msgstr "了解しました!"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "I accept that Odoo may process my e-invoices,"
-msgstr "Odooが私の電子請求書を処理することを承諾します。"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "I reckon I'm allowed to register this company."
-msgstr "この会社を登録しても問題ないと思います。"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
@@ -2320,6 +2324,11 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"以下の%s件のドキュメントはPeppol / PDP経由で送信されたため、変更されずにその"
+"まま残されます。変更する必要がある場合は、クレジットノートまたはデビットノー"
+"トを発行する必要があります:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2683,6 +2692,20 @@ msgid "Yes, Proceed"
 msgstr "はい、続行します"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You accept that any fraudulent activity or spam will result in immediate and "
+"permanent exclusion from the Peppol network."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You are a legal representative authorized to register this company on the "
+"Peppol network."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -2703,6 +2726,13 @@ msgstr "連絡先メールアドレスを変更する権限がありません。
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending from"
 msgstr "送信元は"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You authorize Odoo to act as your Peppol Service Provider to send and "
+"receive e-invoices on your behalf."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2743,6 +2773,8 @@ msgid ""
 "You cannot delete invoices that were sent via Peppol / PDP. If you need to "
 "modify them, you must issue a credit or debit note."
 msgstr ""
+"Peppol / PDP経由で送信された請求書は削除できません。変更する必要がある場合"
+"は、クレジットノートまたはデビットノートを発行する必要があります。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2751,6 +2783,9 @@ msgid ""
 "You cannot reset to draft invoices that were sent via Peppol / PDP. If you "
 "need to modify them, you must issue a credit or debit note."
 msgstr ""
+"Peppol / PDP経由で送信された請求書を下書きに戻すことはできません。変更する必"
+"要がある場合は、クレジットノートまたはデビットノートを発行する必要がありま"
+"す。"
 
 #. module: account_peppol
 #. odoo-python
@@ -2785,6 +2820,13 @@ msgstr ""
 "登録は拒否されました。その理由はメールでお知らせしています。\n"
 "                            サポートが必要な場合は、当社サポートまでご連絡下"
 "さい。"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You remain fully responsible for the content, accuracy, and legal compliance "
+"of your invoices."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2940,6 +2982,12 @@ msgstr "請求書を送信するには、しかし、この請求書は"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "ユーザー"
+
+#~ msgid "I accept that Odoo may process my e-invoices,"
+#~ msgstr "Odooが私の電子請求書を処理することを承諾します。"
+
+#~ msgid "I reckon I'm allowed to register this company."
+#~ msgstr "この会社を登録しても問題ないと思います。"
 
 #~ msgid " (Customer not on Peppol)"
 #~ msgstr " (Peppol未対応の顧客)"

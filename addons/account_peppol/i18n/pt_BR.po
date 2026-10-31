@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-09-28 18:08+0000\n"
+"POT-Creation-Date: 2026-10-30 17:39+0000\n"
+"PO-Revision-Date: 2026-10-26 22:33+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-20/account_peppol/pt_BR/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Customer not on %(network_name)s)"
-msgstr ""
+msgstr " (Cliente não está em %(network_name)s)"
 
 #. module: account_peppol
 #. odoo-python
@@ -763,6 +763,15 @@ msgstr "Cancelar Peppol"
 #: code:addons/account_peppol/models/account_move.py:0
 msgid "Cannot cancel an entry that has already been sent via %(network_name)s"
 msgstr ""
+"Não é possível cancelar um lançamento que já foi enviado via %(network_name)s"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/tools/peppol_errors.py:0
+msgid ""
+"Cannot initiate KYC for the selected scheme (unsupported, deprecated, or "
+"removed). Please select a different scheme."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1035,6 +1044,12 @@ msgstr "Erro"
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "Error importing %(proxy_type)s document (UUID: %(uuid)s):"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr "Ocorreram erros ao criar o documento EDI (formato: %s):"
@@ -1102,16 +1117,6 @@ msgid "Got it !"
 msgstr "Entendi!"
 
 #. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "I accept that Odoo may process my e-invoices,"
-msgstr "Aceito que a Odoo processe minhas faturas eletrônicas,"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "I reckon I'm allowed to register this company."
-msgstr "Acho que posso registrar essa empresa."
-
-#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__id
@@ -1152,6 +1157,8 @@ msgid ""
 "If you want to be invoiced via %(network_name)s, your configuration must be "
 "valid."
 msgstr ""
+"Se você deseja ser faturado via %(network_name)s, sua configuração deve ser "
+"válida."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_peppol_response__response_code__ip
@@ -1170,6 +1177,8 @@ msgid ""
 "Invoice %(invoice_name)s exceeds the size limit of 64 MB to be sent via %"
 "(network_name)s."
 msgstr ""
+"A fatura %(invoice_name)s excede o limite de tamanho de 64 MB para ser "
+"enviada via %(network_name)s."
 
 #. module: account_peppol
 #. odoo-python
@@ -1444,7 +1453,7 @@ msgstr "O parceiro não pode receber o formato"
 #. odoo-python
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "Partner doesn't have a valid configuration for %(network_name)s."
-msgstr ""
+msgstr "O parceiro não tem uma configuração válida para %(network_name)s."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -1524,7 +1533,7 @@ msgstr "Documentos Peppol: Não é possível excluir fatura"
 #. odoo-python
 #: code:addons/account_peppol/models/res_company.py:0
 msgid "Peppol EAS and/or Endpoint identifier"
-msgstr ""
+msgstr "EAS Peppol e/ou identificador de endpoint"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_eas
@@ -1802,6 +1811,7 @@ msgstr "Instale a lista de números de telefone."
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "Please make sure the Contact email is a valid email address."
 msgstr ""
+"Certifique-se de que o e-mail de contato seja um endereço de e-mail válido."
 
 #. module: account_peppol
 #. odoo-python
@@ -2074,7 +2084,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid "That country is not available with %(network_name)s."
-msgstr ""
+msgstr "Esse país não está disponível com %(network_name)s."
 
 #. module: account_peppol
 #. odoo-python
@@ -2340,6 +2350,11 @@ msgid ""
 "\n"
 "• %s"
 msgstr ""
+"Os seguintes documentos %s foram enviados via Peppol / PDP e serão mantidos "
+"inalterados. Se precisar modificá-los, você deve emitir uma nota de crédito "
+"ou débito:\n"
+"\n"
+"• %s"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -2712,6 +2727,20 @@ msgid "Yes, Proceed"
 msgstr "Sim, continuar"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You accept that any fraudulent activity or spam will result in immediate and "
+"permanent exclusion from the Peppol network."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You are a legal representative authorized to register this company on the "
+"Peppol network."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -2733,6 +2762,13 @@ msgstr "Você não está autorizado a alterar o e-mail de contato."
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "You are sending from"
 msgstr "Você está enviando de"
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You authorize Odoo to act as your Peppol Service Provider to send and "
+"receive e-invoices on your behalf."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2773,6 +2809,8 @@ msgid ""
 "You cannot delete invoices that were sent via Peppol / PDP. If you need to "
 "modify them, you must issue a credit or debit note."
 msgstr ""
+"Você não pode excluir faturas que foram enviadas via Peppol / PDP. Se "
+"precisar modificá-las, você deve emitir uma nota de crédito ou débito."
 
 #. module: account_peppol
 #. odoo-python
@@ -2781,6 +2819,9 @@ msgid ""
 "You cannot reset to draft invoices that were sent via Peppol / PDP. If you "
 "need to modify them, you must issue a credit or debit note."
 msgstr ""
+"Você não pode redefinir para rascunho faturas que foram enviadas via "
+"Peppol / PDP. Se precisar modificá-las, você deve emitir uma nota de crédito "
+"ou débito."
 
 #. module: account_peppol
 #. odoo-python
@@ -2814,6 +2855,13 @@ msgid ""
 msgstr ""
 "Seu registro foi rejeitado e o motivo foi enviado por e-mail.\n"
 "Entre em contato com nosso suporte se precisar de mais assistência."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You remain fully responsible for the content, accuracy, and legal compliance "
+"of your invoices."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2930,7 +2978,7 @@ msgstr "por Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via"
-msgstr ""
+msgstr "não pôde ser enviado via"
 
 #. module: account_peppol
 #. odoo-python
@@ -2953,7 +3001,7 @@ msgstr "rejeitado"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via"
-msgstr ""
+msgstr "enviado via"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -2969,6 +3017,12 @@ msgstr "para enviar faturas, mas este"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "usa"
+
+#~ msgid "I accept that Odoo may process my e-invoices,"
+#~ msgstr "Aceito que a Odoo processe minhas faturas eletrônicas,"
+
+#~ msgid "I reckon I'm allowed to register this company."
+#~ msgstr "Acho que posso registrar essa empresa."
 
 #~ msgid " (Customer not on Peppol)"
 #~ msgstr " (Cliente não está no Peppol)"

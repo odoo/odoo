@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* auth_totp
+# * auth_totp
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.2a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 14:00+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/auth_totp/"
+"PO-Revision-Date: 2026-10-30 03:40+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/auth_totp/"
 "lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -35,23 +36,36 @@ msgid ""
 "where it is enabled. In order to be able to execute RPC scripts, the user\n"
 "can setup API keys to replace their main password.\n"
 msgstr ""
+"\n"
+"ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ (TOTP)\n"
+"================================\n"
+"ອະນຸຍາດໃຫ້ຜູ້ໃຊ້ສາມາດກຳນົດຄ່າການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນໃນບັນຊີຜູ້ໃຊ້ຂອງຕົນເອງ\n"
+"ເພື່ອຄວາມປອດໄພເພີ່ມເຕີມ, ໂດຍນຳໃຊ້ລະຫັດຜ່ານຄັ້ງດຽວແບບອີງຕາມເວລາ (TOTP).\n"
+"\n"
+"ເມື່ອເປີດໃຊ້ງານແລ້ວ, ຜູ້ໃຊ້ຈະຕ້ອງປ້ອນລະຫັດ 6 ຕົວເລກທີ່ໄດ້ຈາກ\n"
+"ແອັບຢືນຢັນຕົວຕົນຂອງຕົນ ກ່ອນທີ່ຈະໄດ້ຮັບອະນຸຍາດໃຫ້ເຂົ້າສູ່ລະບົບ.\n"
+"ຮອງຮັບທຸກໆແອັບຢືນຢັນຕົວຕົນຍອດນິຍົມ.\n"
+"\n"
+"ໝາຍເຫດ: ຕາມຫຼັກການແລ້ວ, ການຢືນຢັນແບບສອງຊັ້ນຈະປ້ອງກັນການເຂົ້າເຖິງ RPC ດ້ວຍລະຫັດຜ່ານສຳລັບຜູ້ໃຊ້\n"
+"ທີ່ເປີດໃຊ້ງານມັນໄວ້. ເພື່ອໃຫ້ສາມາດຮັນສະຄຣິບ RPC ໄດ້, ຜູ້ໃຊ້\n"
+"ສາມາດຕັ້ງຄ່າຄີ API ເພື່ອປ່ຽນແທນລະຫັດຜ່ານຫຼັກຂອງພວກເຂົາ.\n"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/controllers/home.py:0
 msgid "%(browser)s on %(platform)s"
-msgstr ""
+msgstr "%(browser)s ເທິງ %(platform)s"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr ""
+msgstr "ຕົວຊ່ວຍຕັ້ງຄ່າການຢືນຢັນແບບສອງຊັ້ນ"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 msgid "2-Factor authentication is now enabled."
-msgstr ""
+msgstr "ເປີດໃຊ້ງານການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນແລ້ວ."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -61,6 +75,10 @@ msgid ""
 "                            Disabled\n"
 "                        </span>"
 msgstr ""
+"<i class=\"oi text-danger\" data-icon=\"close\"/>\n"
+"                        <span class=\"fw-bold ms-1\">\n"
+"                            ປິດໃຊ້ງານແລ້ວ\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -71,6 +89,10 @@ msgid ""
 "                            Enabled\n"
 "                        </span>"
 msgstr ""
+"<i class=\"oi text-success\" data-icon=\"check\"/>\n"
+"                        <span class=\"fw-bold ms-1 me-2\">\n"
+"                            ເປີດໃຊ້ງານແລ້ວ\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -80,32 +102,35 @@ msgid ""
 "                            Recommended for extra security.\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-muted\">\n"
+"                            ແນະນຳເພື່ອຄວາມປອດໄພເພີ່ມເຕີມ.\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Add this key in your Authenticator app"
-msgstr ""
+msgstr "ເພີ່ມຄີນີ້ໃສ່ໃນແອັບຢືນຢັນຕົວຕົນຂອງທ່ານ"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_device
 msgid "Authentication Device"
-msgstr ""
+msgstr "ອຸປະກອນຢືນຢັນຕົວຕົນ"
 
 #. module: auth_totp
 #. odoo-javascript
 #: code:addons/auth_totp/static/src/services/check_identity/check_identity.xml:0
 msgid "Authentication code"
-msgstr ""
+msgstr "ລະຫັດຢືນຢັນຕົວຕົນ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Cancel"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
-msgstr ""
+msgstr "ບໍ່ສາມາດສະແກນໄດ້ບໍ່?"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -113,44 +138,46 @@ msgid ""
 "Check your Authenticator app for your code.\n"
 "                        <br/>"
 msgstr ""
+"ກວດເບິ່ງລະຫັດຂອງທ່ານໃນແອັບຢືນຢັນຕົວຕົນ.\n"
+"                        <br/>"
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__code_check
 msgid "Code Checking"
-msgstr ""
+msgstr "ການກວດສອບລະຫັດ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__create_uid
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__create_date
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__create_date
 msgid "Creation Date"
-msgstr ""
+msgstr "ວັນທີສ້າງ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__name
 msgid "Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable"
-msgstr ""
+msgstr "ປິດໃຊ້ງານ"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable two-factor authentication"
-msgstr ""
+msgstr "ປິດໃຊ້ງານການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
@@ -159,43 +186,43 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_totp.field_ir_http__display_name
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Don't ask again on this device"
-msgstr ""
+msgstr "ບໍ່ຕ້ອງຖາມອີກໃນອຸປະກອນນີ້"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Enable 2FA"
-msgstr ""
+msgstr "ເປີດໃຊ້ 2FA"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable Two-Factor Authentication"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Enter code"
-msgstr ""
+msgstr "ປ້ອນລະຫັດ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Enter verification code"
-msgstr ""
+msgstr "ປ້ອນລະຫັດຢືນຢັນ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__expiration_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "ວັນທີໝົດອາຍຸ"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "ການກຳນົດເສັ້ນທາງ HTTP"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__id
@@ -204,40 +231,40 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_totp.field_ir_http__id
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/controllers/home.py:0
 msgid "Invalid authentication code format."
-msgstr ""
+msgstr "ຮູບແບບລະຫັດຢືນຢັນຕົວຕົນບໍ່ຖືກຕ້ອງ."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__ip
 msgid "Ip"
-msgstr ""
+msgstr "IP"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__write_uid
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດໂດຍ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__write_date
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ປັບປຸງລ້າສຸດເມື່ອ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__limit_type
 msgid "Limit Type"
-msgstr ""
+msgstr "ປະເພດຂີດຈຳກັດ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Log in"
-msgstr ""
+msgstr "ເຂົ້າສູ່ລະບົບ"
 
 #. module: auth_totp
 #. odoo-javascript
@@ -246,118 +273,121 @@ msgid ""
 "Open your two-factor authenticator (TOTP) app or browser extension to view "
 "your authentication code."
 msgstr ""
+"ເປີດແອັບຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ (TOTP) ຫຼື ສ່ວນຂະຫຍາຍບຣາວເຊີຂອງທ່ານ ເພື່ອເບິ່ງລະຫັດຢືນຢັນຕົວຕົນຂອງທ່າ"
+"ນ."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
-msgstr ""
+msgstr "QR Code"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Scan this barcode in your Authenticator app"
-msgstr ""
+msgstr "ສະແກນບາໂຄດນີ້ໃນແອັບຢືນຢັນຕົວຕົນຂອງທ່ານ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
 msgid "Scope"
-msgstr ""
+msgstr "ຂອບເຂດ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
 msgid "Secret"
-msgstr ""
+msgstr "ລະຫັດລັບ"
 
 #. module: auth_totp
 #: model:ir.model.fields.selection,name:auth_totp.selection__auth_totp_rate_limit_log__limit_type__send_email
 msgid "Send Email"
-msgstr ""
+msgstr "ສົ່ງອີເມວ"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_rate_limit_log
 msgid "TOTP rate limit logs"
-msgstr ""
+msgstr "ບັນທຶກປະຫວັດຂີດຈຳກັດ TOTP"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 msgid "The verification code should only contain numbers"
-msgstr ""
+msgstr "ລະຫັດຢືນຢັນຕ້ອງປະກອບມີສະເພາະຕົວເລກເທົ່ານັ້ນ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_last_counter
 msgid "Totp Last Counter"
-msgstr ""
+msgstr "ຕົວນັບ TOTP ລ້າສຸດ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
-msgstr ""
+msgstr "ລະຫັດລັບ TOTP"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
 msgid "Trusted Devices"
-msgstr ""
+msgstr "ອຸປະກອນທີ່ເຊື່ອຖື"
 
 #. module: auth_totp
 #: model:ir.module.module,shortdesc:base.module_auth_totp
 msgid "Two-Factor Authentication (TOTP)"
-msgstr ""
+msgstr "ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ (TOTP)"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-Factor Authentication Activation"
-msgstr ""
+msgstr "ການເປີດໃຊ້ງານການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
-msgstr ""
+msgstr "ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Disabled"
-msgstr ""
+msgstr "ປິດໃຊ້ງານການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນແລ້ວ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນແລ້ວ"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication already enabled"
-msgstr ""
+msgstr "ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນໄດ້ຖືກເປີດໃຊ້ງານແລ້ວ"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication can only be enabled for yourself"
 msgstr ""
+"ການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນສາມາດເປີດໃຊ້ງານໄດ້ສະເພາະສຳລັບຕົວທ່ານເອງເທົ່ານັ້ນ"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Two-factor authentication disabled for the following user(s): %s"
-msgstr ""
+msgstr "ປິດໃຊ້ງານການຢືນຢັນຕົວຕົນແບບສອງຊັ້ນສຳລັບຜູ້ໃຊ້ດັ່ງຕໍ່ໄປນີ້: %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
 msgid "Url"
-msgstr ""
+msgstr "URL"
 
 #. module: auth_totp
 #. odoo-javascript
 #: code:addons/auth_totp/static/src/services/check_identity/check_identity.xml:0
 msgid "Use your authenticator app"
-msgstr ""
+msgstr "ນຳໃຊ້ແອັບຢືນຢັນຕົວຕົນຂອງທ່ານ"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_res_users
@@ -365,47 +395,47 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_rate_limit_log__user_id
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__user_id
 msgid "User"
-msgstr ""
+msgstr "ຜູ້ໃຊ້"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__code
 msgid "Verification Code"
-msgstr ""
+msgstr "ລະຫັດຢືນຢັນ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Verification code"
-msgstr ""
+msgstr "ລະຫັດຢືນຢັນ"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr ""
+msgstr "ການຢືນຢັນບໍ່ສຳເລັດ, ກະລຸນາກວດສອບລະຫັດ 6 ຕົວເລກຄືນໃໝ່ອີກຄັ້ງ"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 msgid "Verification failed, please use the latest 6-digit code"
-msgstr ""
+msgstr "ການຢືນຢັນບໍ່ສຳເລັດ, ກະລຸນານຳໃຊ້ລະຫັດ 6 ຕົວເລກລ້າສຸດ"
 
 #. module: auth_totp
 #. odoo-javascript
 #: code:addons/auth_totp/static/src/services/check_identity/check_identity.xml:0
 msgid "Verify"
-msgstr ""
+msgstr "ຢືນຢັນ"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Write the code given by your app"
-msgstr ""
+msgstr "ປ້ອນລະຫັດທີ່ໄດ້ຈາກແອັບຂອງທ່ານ"
 
 #. module: auth_totp
 #. odoo-javascript
 #: code:addons/auth_totp/static/src/services/check_identity/check_identity.xml:0
 msgid "XXXXXX"
-msgstr ""
+msgstr "XXXXXX"
 
 #. module: auth_totp
 #. odoo-python
@@ -414,6 +444,7 @@ msgid ""
 "You reached the limit of authentication mails sent for your account, please "
 "try again later."
 msgstr ""
+"ທ່ານຮອດຂີດຈຳກັດການສົ່ງອີເມວຢືນຢັນຕົວຕົນສຳລັບບັນຊີຂອງທ່ານແລ້ວ, ກະລຸນາລອງໃໝ່ພາຍຫຼັງ."
 
 #. module: auth_totp
 #. odoo-python
@@ -422,3 +453,4 @@ msgid ""
 "You reached the limit of code verifications for your account, please try "
 "again later."
 msgstr ""
+"ທ່ານຮອດຂີດຈຳກັດການກວດສອບລະຫັດສຳລັບບັນຊີຂອງທ່ານແລ້ວ, ກະລຸນາລອງໃໝ່ພາຍຫຼັງ."

@@ -24,14 +24,16 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# setenayp <seat@odoo.com>, 2026.
+# Burkay Yıldızhan <seyil@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-08-31 18:07+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-29 13:34+0000\n"
+"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/"
 "sale_management/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
@@ -75,12 +77,41 @@ msgid ""
 "* My Quotations\n"
 "* Monthly Turnover (Graph)\n"
 msgstr ""
+"\n"
+"Satış tekliflerini ve siparişlerini yönetin\n"
+"==================================\n"
+"\n"
+"Bu uygulama, tüm satış siparişlerini ve geçmişini takip ederek\n"
+"satış hedeflerinizi etkili ve verimli bir şekilde yönetmenizi sağlar.\n"
+"\n"
+"Uygulama, satış iş akışının tamamını yönetir:\n"
+"\n"
+"* **Teklif** -> **Satış Siparişi** -> **Fatura**\n"
+"\n"
+"Tercihler (yalnızca Depo Yönetimi kurulduğunda)\n"
+"------------------------------------------------------\n"
+"\n"
+"Depo Yönetimi modülünü de yüklediyseniz, aşağıdaki tercihleri "
+"ayarlayabilirsiniz:\n"
+"\n"
+"* Sevkiyat: Tek seferde teslimat veya kısmi teslimat seçeneği\n"
+"* Faturalama: Faturaların nasıl ödeneceğini seçin\n"
+"* Incoterms: Uluslararası Ticari Şartlar\n"
+"\n"
+"\n"
+"Bu modül ile satış siparişi ve fatura raporlarını\n"
+"kategoriler, ara toplamlar veya sayfa sonları ile kişiselleştirebilirsiniz.\n"
+"\n"
+"Satış Müdürü için Gösterge Paneli şunları içerecektir:\n"
+"------------------------------------------------\n"
+"* Tekliflerim\n"
+"* Aylık Ciro (Grafik)\n"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template_line.py:0
 msgid "%(attribute)s: %(values)s"
-msgstr ""
+msgstr "%(attribute)s: %(values)s"
 
 #. module: sale_management
 #. odoo-python
@@ -109,7 +140,7 @@ msgstr "Etkin"
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Add Section"
-msgstr ""
+msgstr "Bölüm Ekle"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -150,19 +181,19 @@ msgstr "Arşivlendi"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_template_attribute_value_ids
 msgid "Attribute Values"
-msgstr ""
+msgstr "Nitelik Değerleri"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to Template"
-msgstr ""
+msgstr "Şablona Dön"
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Brainstorm Whiteboard"
-msgstr ""
+msgstr "Beyin Fırtınası Beyaz Tahtası"
 
 #. module: sale_management
 #. odoo-python
@@ -171,26 +202,28 @@ msgid ""
 "Camera\n"
 "PTZ conference camera, auto-framing"
 msgstr ""
+"Kamera\n"
+"PTZ konferans kamerası, otomatik çerçeveleme"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__user_has_access
 msgid "Can User access"
-msgstr ""
+msgstr "Kullanıcı erişebilir mi"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Catalog"
-msgstr ""
+msgstr "Katalog"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_composition
 msgid "Collapse Composition"
-msgstr ""
+msgstr "Bileşenleri Gizle"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__collapse_prices
 msgid "Collapse Prices"
-msgstr ""
+msgstr "Fiyatları Gizle"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__company_id
@@ -203,7 +236,7 @@ msgstr "Firma"
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Conference Room"
-msgstr ""
+msgstr "Konferans Salonu"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_res_config_settings
@@ -213,7 +246,7 @@ msgstr "Yapılandırma Ayarları"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Confirmation"
-msgstr ""
+msgstr "Doğrulama"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__mail_template_id
@@ -224,7 +257,7 @@ msgstr "Onay Postası"
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
 msgid "Connectivity"
-msgstr ""
+msgstr "Bağlantı"
 
 #. module: sale_management
 #: model_terms:ir.actions.act_window,help:sale_management.sale_order_template_action
@@ -246,18 +279,18 @@ msgstr "Oluşturuldu"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Para birimi"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Özel Değerler"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Delete"
-msgstr ""
+msgstr "Sil"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__name
@@ -273,12 +306,12 @@ msgstr "Özet"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Disc %"
-msgstr ""
+msgstr "İnd%"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "İndirim (%)"
 
 #. module: sale_management
 #. odoo-python
@@ -441,7 +474,7 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required UoM on accountable sale quote line."
-msgstr ""
+msgstr "Stoklu satış teklif satırında zorunlu ÖB eksik."
 
 #. module: sale_management
 #. odoo-javascript

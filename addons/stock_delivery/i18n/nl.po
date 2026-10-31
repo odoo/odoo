@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:40+0000\n"
-"PO-Revision-Date: 2026-10-08 08:41+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-10-30 11:33+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "stock_delivery/nl/>\n"
 "Language: nl\n"
@@ -49,7 +49,7 @@ msgstr "%(name)s (geschatte kosten: %(cost)s)"
 #. odoo-python
 #: code:addons/stock_delivery/wizard/stock_package_label_layout.py:0
 msgid "%(weight_name)s: %(weight)s %(uom)s"
-msgstr ""
+msgstr "%(weight_name)s: %(weight)s %(uom)s"
 
 #. module: stock_delivery
 #: model:ir.actions.report,print_report_name:stock_delivery.action_report_shipping_docs
@@ -83,12 +83,16 @@ msgstr "2. Download en print het verzendlabel en plak het op je pakket."
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Carrier Labels"
 msgstr ""
+"<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Vervoerderslabels "
+"configureren"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid ""
 "<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Configure Export Documents"
 msgstr ""
+"<i class=\"oi pe-1\" data-icon=\"arrow_forward\"/>Exportdocumenten "
+"configureren"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -152,7 +156,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "A payment totaling"
-msgstr ""
+msgstr "Een betaling van in totaal"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_max_weight
@@ -161,6 +165,9 @@ msgid ""
 "weight if the transfer is added to it.\n"
 "Leave this value as '0' if no weight limit."
 msgstr ""
+"Een verplaatsing wordt niet automatisch toegevoegd aan batches die dit "
+"gewicht overschrijden als de verplaatsing eraan wordt toegevoegd.\n"
+"Laat deze waarde op '0' staan als er geen gewichtslimiet is."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
@@ -170,7 +177,7 @@ msgstr "Actie bij het bevestigen van leveringsorders."
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_type_form_delivery
 msgid "All"
-msgstr ""
+msgstr "Alle"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
@@ -180,7 +187,7 @@ msgstr "Toegestane vervoerder"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__amount_to_collect
 msgid "Amount To Collect"
-msgstr ""
+msgstr "Te innen bedrag"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
@@ -200,7 +207,7 @@ msgstr "Exportdocumenten automatisch afdrukken"
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__batch_group_by_carrier
 msgid "Automatically group batches by carriers"
-msgstr ""
+msgstr "Batches automatisch groeperen per vervoerder"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking_type__auto_print_carrier_labels
@@ -224,7 +231,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_batch
 msgid "Batch Transfer"
-msgstr ""
+msgstr "Batchtransfer"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
@@ -273,13 +280,13 @@ msgstr "Vervoerdersnaam"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "Kies de lay-out van het vel om de labels af te drukken"
 
 #. module: stock_delivery
 #. odoo-python
 #: code:addons/stock_delivery/models/stock_picking.py:0
 msgid "Collect Payment"
-msgstr ""
+msgstr "Betaling innen"
 
 #. module: stock_delivery
 #. odoo-python
@@ -300,7 +307,7 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Confirm Payment"
-msgstr ""
+msgstr "Betaling bevestigen"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_res_partner
@@ -321,22 +328,22 @@ msgstr "Klant aanmaken"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Aangemaakt door"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Aangemaakt op"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: stock_delivery
 #: model:ir.module.module,shortdesc:base.module_stock_delivery
 msgid "Delivery - Stock"
-msgstr ""
+msgstr "Levering - Voorraad"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_delivery_carrier
@@ -492,12 +499,12 @@ msgstr "Is een retour"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Laatst bijgewerkt door"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Laatst bijgewerkt op"
 
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.manage_printers_action
@@ -513,7 +520,7 @@ msgstr "Handmatige acties zijn mogelijk nodig."
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking_type__batch_max_weight
 msgid "Maximum weight"
-msgstr ""
+msgstr "Maximaal gewicht"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__stock_package_type__package_carrier_type__none
@@ -528,7 +535,7 @@ msgstr "OK"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_pay_on_delivery__order_ids
 msgid "Order"
-msgstr ""
+msgstr "Order"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_product_product__country_of_origin
@@ -551,7 +558,7 @@ msgstr "Pakket te zwaar!"
 #: model:ir.model,name:stock_delivery.model_pay_on_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.pay_on_delivery_form
 msgid "Pay on Delivery"
-msgstr ""
+msgstr "Betalen bij levering"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_picking_type
@@ -567,7 +574,7 @@ msgstr "Gegevens afhaallocatie"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_label_layout
 msgid "Prepare Package Labels"
-msgstr ""
+msgstr "Pakketlabels voorbereiden"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -810,6 +817,9 @@ msgid ""
 "still due are in different currencies. Validate the transfers one currency "
 "at a time to collect them."
 msgstr ""
+"Deze transfers zijn voor orders die bij levering worden betaald, en de nog "
+"openstaande bedragen zijn in verschillende valuta. Valideer de transfers per "
+"valuta om ze te innen."
 
 #. module: stock_delivery
 #. odoo-python
@@ -926,17 +936,17 @@ msgstr "Postcode prefix"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.package_zpl_label_delivery
 msgid "^FO310,200^A0N,44,33^FH^FD"
-msgstr ""
+msgstr "^FO310,200^A0N,44,33^FH^FD"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
 msgid "^FO35,180^A0N,15^FH^FDHS:"
-msgstr ""
+msgstr "^FO35,180^A0N,15^FH^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_normal_label
 msgid "^FO35,220^A0N,15^FH^FDHS:"
-msgstr ""
+msgstr "^FO35,220^A0N,15^FH^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.barcode_alternative_label
@@ -969,6 +979,8 @@ msgid ""
 "must be collected for\n"
 "                the delivery of the following orders:"
 msgstr ""
+"moet worden geïnd voor\n"
+"                de levering van de volgende orders:"
 
 #~ msgid "<span>Shipping Weight: </span>"
 #~ msgstr "<span>Gewicht verzending:</span>"

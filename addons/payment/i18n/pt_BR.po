@@ -7,15 +7,18 @@
 # Martin Trigaux, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-02 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 20:35+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/payment/pt_BR/>\n"
+"POT-Creation-Date: 2026-10-30 17:39+0000\n"
+"PO-Revision-Date: 2026-10-30 16:18+0000\n"
+"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
+"odoo-20/payment/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,8 +96,9 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.amount_input
+#, fuzzy
 msgid "<small>Amount</small>"
-msgstr ""
+msgstr "<small>Valor</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -135,12 +139,17 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#, fuzzy
 msgid ""
 "<span invisible=\"is_live\" class=\"badge rounded-pill text-bg-warning "
 "fs-6\">\n"
 "                            Test Mode\n"
 "                        </span>"
 msgstr ""
+"<span invisible=\"is_live\" class=\"badge rounded-pill text-bg-warning "
+"fs-6\">\n"
+"                            Modo de Teste\n"
+"                        </span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -192,11 +201,14 @@ msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+#, fuzzy
 msgid ""
 "<strong>Warning:</strong> Creating a payment provider from scratch is not\n"
 "                        supported; please use the <em>Duplicate</em> action "
 "instead."
 msgstr ""
+"<strong>Aviso:</strong> A criação de um provedor de pagamentos do zero não é "
+"suportada; utilize a ação <em>Duplicar</em> em vez disso."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -234,7 +246,7 @@ msgstr "Ativo"
 #. module: payment
 #: model:ir.actions.server,name:payment.action_add_payment_method
 msgid "Add a Payment Method"
-msgstr ""
+msgstr "Forma de pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -249,12 +261,12 @@ msgstr "Adyen"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Countries"
-msgstr ""
+msgstr "Todos os países"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "All Currencies"
-msgstr ""
+msgstr "Moedas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_express_checkout
@@ -268,8 +280,9 @@ msgstr "Permitir salvar formas de pagamento"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__allow_amount_selection
+#, fuzzy
 msgid "Allow splitting payments across several payment methods."
-msgstr ""
+msgstr "Permitir dividir pagamentos entre vários métodos de pagamento."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
@@ -298,7 +311,7 @@ msgstr "Valor"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__allow_amount_selection
 msgid "Amount Selection"
-msgstr ""
+msgstr "Seleção de conta"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
@@ -333,10 +346,13 @@ msgstr "Tem certeza de que deseja excluir esta forma de pagamento?"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#, fuzzy
 msgid ""
 "Are you sure you want to void the authorized transaction? "
 "This                                  action can't be undone."
 msgstr ""
+"Tem certeza de que deseja anular a transação autorizada? Esta ação não pode "
+"ser desfeita."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -427,16 +443,21 @@ msgstr "Capturar transação"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__capture_manually
 #: model:ir.model.fields,help:payment.field_payment_transaction__capture_manually
+#, fuzzy
 msgid ""
 "Capture the amount from Odoo, when the delivery is completed. Use this if "
 "you want to charge your customers cards only when you are sure you can ship "
 "the goods to them."
 msgstr ""
+"Capture o valor pelo Odoo quando a entrega for concluída. Use isso se você "
+"quiser cobrar os cartões dos clientes somente quando tiver certeza de que "
+"pode enviar as mercadorias para eles."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_count
+#, fuzzy
 msgid "Child Transaction Count"
-msgstr ""
+msgstr "Contagem de transações filhas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__child_transaction_ids
@@ -503,7 +524,7 @@ msgstr "Confirmado"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Connect"
-msgstr ""
+msgstr "Conectar"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -537,7 +558,7 @@ msgstr "País"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Create"
-msgstr ""
+msgstr "Criar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
@@ -553,7 +574,7 @@ msgstr "Criar um cliente"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 msgid "Created On"
-msgstr ""
+msgstr "Criado em"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -660,7 +681,7 @@ msgstr "Rascunho"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_ecpay
 msgid "ECPay"
-msgstr ""
+msgstr "ECPay"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_email
@@ -680,8 +701,9 @@ msgstr "Erro"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__error_traceback
+#, fuzzy
 msgid "Error Traceback"
-msgstr ""
+msgstr "Rastreamento de erro"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__support_express_checkout
@@ -708,18 +730,19 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "Express checkout not supported"
-msgstr ""
+msgstr "não há suporte para checkout expresso"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__errored
 msgid "Failed"
-msgstr ""
+msgstr "Erro"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Find a Payment Provider"
-msgstr ""
+msgstr "Provedor de Pagamento"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -806,10 +829,14 @@ msgstr "ID"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__is_live
+#, fuzzy
 msgid ""
 "If live mode is disabled, a fake payment is processed through a test payment "
 "interface. This mode is advised when setting up the provider."
 msgstr ""
+"Se o modo ativo estiver desativado, um pagamento falso será processado "
+"através de uma interface de pagamento de teste. Este modo é recomendado ao "
+"configurar o provedor."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image
@@ -819,20 +846,23 @@ msgstr "Imagem"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "Incompatible country"
-msgstr ""
+msgstr "país incompatível"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "Incompatible currency"
-msgstr ""
+msgstr "moeda incompatível"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "Incompatible website"
-msgstr ""
+msgstr "site incompatível"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
@@ -862,8 +892,9 @@ msgstr "Instalado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_config_settings__installed_provider_id
+#, fuzzy
 msgid "Installed Provider"
-msgstr ""
+msgstr "Provedor instalado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
@@ -942,12 +973,12 @@ msgstr "Última atualização em"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__is_live
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Live"
-msgstr ""
+msgstr "Ao vivo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__image_128
 msgid "Logo"
-msgstr ""
+msgstr "Logotipo"
 
 #. module: payment
 #: model:portal.entry,description:payment.payment_methods_portal_entry
@@ -967,19 +998,22 @@ msgstr "Suporta captura manual"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "Manual capture not supported"
-msgstr ""
+msgstr "sem suporte para captura manual"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "Manually confirmed by the user."
-msgstr ""
+msgstr "Confirmado manualmente pelo usuário."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.action_confirm_payment_transaction
+#, fuzzy
 msgid "Mark as Confirmed"
-msgstr ""
+msgstr "Marcar como confirmado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__maximum_amount
@@ -1013,7 +1047,7 @@ msgstr "Mensagens"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_list
 msgid "Method"
-msgstr ""
+msgstr "Método"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__minimum_amount
@@ -1023,8 +1057,9 @@ msgstr "Quantidade Mínima"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "Minimum or maximum amount exceeded"
-msgstr ""
+msgstr "quantidade mínima ou máxima excedida"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mollie
@@ -1125,12 +1160,12 @@ msgstr "Operação"
 #: code:addons/payment/models/payment_transaction.py:0
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Operations"
-msgstr ""
+msgstr "Operações "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Options"
-msgstr ""
+msgstr "Opções"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -1140,7 +1175,7 @@ msgstr "Outras formas de pagamento"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Others"
-msgstr ""
+msgstr "Outros"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__partial
@@ -1178,7 +1213,7 @@ msgstr "Rótulo “Pagar agora”"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_pay_on_invoice
 msgid "Pay on Invoice"
-msgstr ""
+msgstr "Pagamento por fatura"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_paypal
@@ -1188,12 +1223,12 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_payu
 msgid "PayU"
-msgstr ""
+msgstr "Pagar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_data__payload
 msgid "Payload"
-msgstr ""
+msgstr "Carga Útil"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1214,7 +1249,7 @@ msgstr "Confirmação de pagamento"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_data_count
 msgid "Payment Data Count"
-msgstr ""
+msgstr "Total de pagamentos"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1224,13 +1259,14 @@ msgstr "Informações de pagamento"
 #. module: payment
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Engine"
-msgstr ""
+msgstr "Mecanismo de pagamento"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
+#, fuzzy
 msgid "Payment History"
-msgstr ""
+msgstr "Histórico de pagamentos"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1338,14 +1374,16 @@ msgstr "Forma de pagamento"
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Payment method unavailable"
-msgstr ""
+msgstr "Método de pagamento indisponível"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "Payment method with duplicate code"
-msgstr ""
+msgstr "Método de pagamento com código duplicado"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.availability_report
@@ -1372,21 +1410,28 @@ msgstr "Prestadores de serviços de pagamento"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid ""
 "Payment transactions should not be updated directly. Either use _record() to "
 "queue payment data for processing, or pass payment_safe_write=True to the "
 "context after ensuring that the update can tolerate a rollback."
 msgstr ""
+"As transações de pagamento não devem ser atualizadas diretamente. Utilize "
+"_record() para colocar os dados de pagamento na fila de processamento ou "
+"passe payment_safe_write=True para o contexto depois de garantir que a "
+"atualização tolera um rollback."
 
 #. module: payment
 #: model:ir.actions.server,name:payment.post_processing_cron_ir_actions_server
+#, fuzzy
 msgid "Payment: Run Post-processing"
-msgstr ""
+msgstr "Pagamento: Executar pós-processamento"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.processing_cron_ir_actions_server
+#, fuzzy
 msgid "Payment: Run Processing"
-msgstr ""
+msgstr "Pagamento: Executar processamento"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
@@ -1415,13 +1460,15 @@ msgstr "Mensagem de pendência"
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_data_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#, fuzzy
 msgid "Pending Updates"
-msgstr ""
+msgstr "Atualizações pendentes"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_data
+#, fuzzy
 msgid "Pending payment data payload to process"
-msgstr ""
+msgstr "Payload de dados de pagamento pendente para processar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1431,13 +1478,15 @@ msgstr "Telefone"
 #. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/interactions/payment_form.js:0
+#, fuzzy
 msgid "Please choose another payment method."
-msgstr ""
+msgstr "Escolha outro método de pagamento."
 
 #. module: payment
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+#, fuzzy
 msgid "Please find the payment details below."
-msgstr ""
+msgstr "Encontre os detalhes do pagamento abaixo."
 
 #. module: payment
 #. odoo-python
@@ -1467,8 +1516,9 @@ msgstr "Pós-processamento"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#, fuzzy
 msgid "Post-processed"
-msgstr ""
+msgstr "Pós-processado"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__primary_payment_method_id
@@ -1478,13 +1528,15 @@ msgstr "Forma de pagamento primária"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__primary_payment_method_ids
+#, fuzzy
 msgid "Primary Payment Methods"
-msgstr ""
+msgstr "Métodos de pagamento primários"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__processed_amount
+#, fuzzy
 msgid "Processed Amount"
-msgstr ""
+msgstr "Montante processado"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1596,8 +1648,9 @@ msgstr "Modelo do documento relacionado"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+#, fuzzy
 msgid "Restrictions"
-msgstr ""
+msgstr "Restrições"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1687,7 +1740,7 @@ msgstr "Suportado por"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Test"
-msgstr ""
+msgstr "Teste"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1943,8 +1996,9 @@ msgstr ""
 
 #. module: payment
 #: model:ir.module.module,summary:base.module_payment
+#, fuzzy
 msgid "The payment engine used by payment provider modules."
-msgstr ""
+msgstr "O mecanismo de pagamento usado pelo módulo do provedor de pagamento."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__support_manual_capture
@@ -1976,14 +2030,16 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_method_provider_id_code_uniq
+#, fuzzy
 msgid "The provider already has a payment method with this code."
-msgstr ""
+msgstr "O provedor já possui um método de pagamento com este código."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "The provider must not be archived to make a request."
-msgstr ""
+msgstr "O provedor não deve estar arquivado para realizar uma solicitação."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
@@ -1997,8 +2053,9 @@ msgstr "A referência do provedor da transação"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_id
+#, fuzzy
 msgid "The provider supporting this payment method."
-msgstr ""
+msgstr "O provedor que suporta este método de pagamento."
 
 #. module: payment
 #. odoo-python
@@ -2106,19 +2163,29 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "This action will also archive %s tokens that are registered with this "
 "provider."
 msgstr ""
+"Essa ação também arquivará %s tokens que estão registrados com essa forma de "
+"pagamento. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_tokenization
+#, fuzzy
 msgid ""
 "This controls whether customers can save their payment methods as payment "
 "tokens. A payment token is an anonymous link to the payment method details "
 "saved in the provider's database, allowing the customer to reuse it for a "
 "next purchase."
 msgstr ""
+"Isso controla se os clientes podem salvar suas formas de pagamento como "
+"tokens de pagamento.\n"
+"Um token de pagamento é um link anônimo para as informações da forma de "
+"pagamento salva no\n"
+"banco de dados do provedor, permitindo que o cliente o reutilize em uma "
+"próxima compra."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__allow_express_checkout
@@ -2143,6 +2210,18 @@ msgstr ""
 "                     É recomendado definir um e-mail para este usuário."
 
 #. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/portal.py:0
+msgid "This payment method is not available."
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/controllers/portal.py:0
+msgid "This payment provider is not available."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "To add a provider to the current company:"
 msgstr "Para adicionar um provedor à empresa atual:"
@@ -2156,12 +2235,13 @@ msgstr "Alterne a empresa principal no alternador de empresas."
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 msgid "Token"
-msgstr ""
+msgstr "Token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_count
+#, fuzzy
 msgid "Token Count"
-msgstr ""
+msgstr "Contagem de tokens"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2187,19 +2267,21 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "Tokenization not supported"
-msgstr ""
+msgstr "sem suporte para tokenização"
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/const.py:0
+#, fuzzy
 msgid "Tokenization without payment no supported"
-msgstr ""
+msgstr "tokenização sem pagamento não suportada"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Tokens"
-msgstr ""
+msgstr "Token"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_toss_payments
@@ -2215,7 +2297,7 @@ msgstr "Transação"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "Total de transações"
 
 #. module: payment
 #. odoo-python
@@ -2230,7 +2312,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Transactions"
-msgstr ""
+msgstr "Transações"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.method_form
@@ -2334,10 +2416,13 @@ msgstr "Xendit"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_token.py:0
+#, fuzzy
 msgid ""
 "You can't unarchive tokens linked to inactive payment methods or archived "
 "providers."
 msgstr ""
+"Você não pode desarquivar tokens vinculados a métodos de pagamento inativos "
+"ou provedores arquivados."
 
 #. module: payment
 #. odoo-python
@@ -2358,9 +2443,12 @@ msgstr "Não é possível excluir a forma de pagamento padrão."
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_provider.py:0
+#, fuzzy
 msgid ""
 "You cannot delete the payment provider %s; archive or uninstall it instead."
 msgstr ""
+"Você não pode excluir o provedor de pagamento %s; arquive ou desinstale-o em "
+"vez disso."
 
 #. module: payment
 #. odoo-python
@@ -2379,8 +2467,9 @@ msgstr ""
 
 #. module: payment
 #: model_terms:payment.provider,done_msg:payment.payment_provider_pay_on_invoice
+#, fuzzy
 msgid "Your order is confirmed, you will receive your invoice shortly."
-msgstr ""
+msgstr "Seu pedido foi confirmado, você receberá sua fatura em breve."
 
 #. module: payment
 #. odoo-python
@@ -2512,8 +2601,9 @@ msgstr "O seu pagamento ainda não foi processado."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
+#, fuzzy
 msgid "Your payment is being processed."
-msgstr ""
+msgstr "O seu pagamento está sendo processado."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_status
@@ -2529,8 +2619,9 @@ msgstr "A forma de pagamento foi salva."
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "Your payment method has not been saved yet."
-msgstr ""
+msgstr "O seu método de pagamento ainda não foi salvo."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
@@ -2556,7 +2647,7 @@ msgstr "Sua operação de pagamento foi enviada com sucesso."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_zip
 msgid "Zip Code"
-msgstr ""
+msgstr "Código postal"
 
 #. module: payment
 #. odoo-python
@@ -2572,13 +2663,15 @@ msgstr "provedor"
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "source_transaction_id"
-msgstr ""
+msgstr "source_transaction_id"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
+#, fuzzy
 msgid "the website administrator."
-msgstr ""
+msgstr "o administrador do Site."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
@@ -2592,13 +2685,14 @@ msgstr ""
 #. module: payment
 #. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
+#, fuzzy
 msgid "transaction_id"
-msgstr ""
+msgstr "transaction_id"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "Tratamento de mensagens via websocket"
 
 #~ msgid "Zip"
 #~ msgstr "CEP"

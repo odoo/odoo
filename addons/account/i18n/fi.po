@@ -50,8 +50,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-10-20 10:33+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-29 09:35+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/account/"
 "fi/>\n"
@@ -551,6 +551,8 @@ msgid ""
 "<b>%(count)s</b> - Installment of <b>%(amount)s</b> due on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
+"<b>%(count)s</b> - Maksuerän <b>%(amount)s</b> eräpäivä on <b style='color: "
+"#704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3728,42 +3730,42 @@ msgstr ""
 #. module: account
 #: model:account.account.tag,name:account.account_tag_adj_depreciation_and_amortization
 msgid "Adjustment - Depreciation and amortization"
-msgstr ""
+msgstr "Oikaisu - Poistot ja kuoletukset"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_adj_fin_instr_sale
 msgid "Adjustment - Financial Instruments"
-msgstr ""
+msgstr "Oikaisu - Rahoitusvälineet"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_adj_intangible_asset
 msgid "Adjustment - Intangible Assets"
-msgstr ""
+msgstr "Oikaisu - Aineettomat hyödykkeet"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_adj_net_fin_result
 msgid "Adjustment - Net Financial Result"
-msgstr ""
+msgstr "Oikaisu - Nettorahoitustulos"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_adj_PPE_sale
 msgid "Adjustment - PPE Sale"
-msgstr ""
+msgstr "Oikaisu - Aineellisen käyttöomaisuuden (PPE) myynti"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_adj_provisions
 msgid "Adjustment - Provisions"
-msgstr ""
+msgstr "Oikaisu - Varaukset"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_adj_ROU_sale
 msgid "Adjustment - Right of Use Sale"
-msgstr ""
+msgstr "Oikaisu - Käyttöoikeuden myynti"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_adj_unrealized_forex
 msgid "Adjustment - Unrealized Forex"
-msgstr ""
+msgstr "Oikaisu - Realisoimaton valuuttakurssiero"
 
 #. module: account
 #: model:account.account,name:account.22_account_account_us_administration_fees
@@ -5165,6 +5167,8 @@ msgid "Banks"
 msgstr "Pankit"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
 msgid "Base"
 msgstr "Perusta"
@@ -7128,20 +7132,16 @@ msgid "Credit Move"
 msgstr "Luoton siirto"
 
 #. module: account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__credit_note
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Credit Note"
 msgstr "Hyvityslasku"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Credit Note :"
-msgstr "Hyvityslasku:"
 
 #. module: account
 #. odoo-python
@@ -8942,11 +8942,9 @@ msgstr "Sähköpostipohja"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
 msgid ""
-"Email addresses that will receive copy for sent and received invoices. "
-"Separate entries with ';'."
+"Email addresses that should receive invoices copy/return reminders. Separate "
+"entries with ';'."
 msgstr ""
-"Sähköpostiosoitteet, jotka saavat kopion lähetetyistä ja vastaanotetuista "
-"laskuista. Erota kirjaukset toisistaan ';'-merkillä."
 
 #. module: account
 #. odoo-javascript
@@ -9570,32 +9568,32 @@ msgstr "Rahoituspäiväkirja"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_fin_borrowings_lt
 msgid "Financing - Borrowings Long Term"
-msgstr ""
+msgstr "Rahoitus - Pitkäaikaiset lainat"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_fin_borrowings_st
 msgid "Financing - Borrowings Short Term"
-msgstr ""
+msgstr "Rahoitus - Lyhytaikaiset lainat"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_fin_dividends
 msgid "Financing - Dividends"
-msgstr ""
+msgstr "Rahoitus - Osingot"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_fin_lease
 msgid "Financing - Lease"
-msgstr ""
+msgstr "Rahoitus - Vuokraus"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_fin_recov_adv
 msgid "Financing - Recoverable Advances"
-msgstr ""
+msgstr "Rahoitus - Takaisinperittävät ennakot"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_fin_share_issuance
 msgid "Financing - Share Issuance"
-msgstr ""
+msgstr "Rahoitus - Osakeanti"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_financing
@@ -10747,11 +10745,6 @@ msgstr ""
 "laskujen alennus realisoidaan erillisille tileille."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
-msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Jos tyhjä, käytetään peruutettavan kirjanpitomerkinnän päiväkirjaa."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
 msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
@@ -11490,53 +11483,54 @@ msgstr "Sijoittaminen & erikoistoiminnot"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_inv_cash_advances
 msgid "Investment - Cash Advances"
-msgstr ""
+msgstr "Sijoitus - Käteisennakot"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_inv_fin_instr_purchase
 msgid "Investment - Financial Instruments Purchase"
-msgstr ""
+msgstr "Sijoitus - Rahoitusvälineiden osto"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_inv_fin_instr_sale
 msgid "Investment - Financial Instruments Sale"
-msgstr ""
+msgstr "Sijoitus - Rahoitusvälineiden myynti"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_inv_int_ass_purchase
 msgid "Investment - Intangible Assets Purchase"
-msgstr ""
+msgstr "Sijoitus - Aineettomien hyödykkeiden osto"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_inv_int_ass_sale
 msgid "Investment - Intangible Assets Sale"
-msgstr ""
+msgstr "Sijoitus - Aineettomien hyödykkeiden myynti"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_inv_interest_received
 msgid "Investment - Interest Received"
-msgstr ""
+msgstr "Sijoitus - Saadut korot"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_inv_ppe_purchase
 msgid "Investment - PPE Purchase"
-msgstr ""
+msgstr "Sijoitus - Aineellisten käyttöomaisuushyödykkeiden osto"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_inv_ppe_sale
 msgid "Investment - PPE Sale"
-msgstr ""
+msgstr "Sijoitus - Aineellisten käyttöomaisuushyödykkeiden myynti"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_inv_rou_sale
 msgid "Investment - Right of Use Sale"
-msgstr ""
+msgstr "Sijoitus - Käyttöoikeuden myynti"
 
 #. module: account
 #. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
@@ -11552,12 +11546,6 @@ msgstr "Lasku"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Invoice #"
 msgstr "Lasku #"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Invoice :"
-msgstr "Lasku:"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -11757,6 +11745,12 @@ msgid ""
 msgstr ""
 "Laskujen ja hyvityslaskujen jaon tulisi sisältää vähintään yksi verojen "
 "jakorivi."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Invoice generated but not sent."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13913,6 +13907,14 @@ msgid "No rounding applied"
 msgstr "Ei pyöristystä"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"No valid sending method could be applied, so this invoice was not sent "
+"automatically. Please configure a sending method and send it manually."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
 msgid "Non Deductible Amount"
 msgstr "Vähennyskelvoton summa"
@@ -14505,12 +14507,12 @@ msgstr "Alkusaldo"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_op_income_tax_paid_received
 msgid "Operating - Income Tax Paid Received"
-msgstr ""
+msgstr "Liiketoiminta - Maksettu/saatu tulovero"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_op_interest_paid
 msgid "Operating - Interest Paid"
-msgstr ""
+msgstr "Liiketoiminta - Maksetut korot"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_operating
@@ -15676,6 +15678,7 @@ msgstr "Postikulut ja toimitus"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
 msgstr "Kirjattu"
 
@@ -18529,6 +18532,8 @@ msgid "Target Line"
 msgstr "Kohderivi"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
 #: model:account.report.column,name:account.generic_tax_report_column_tax
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_tax
@@ -19922,11 +19927,9 @@ msgstr "Kirjausriviä ei ole linkitetty oikeaan tiliin"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
-"The journal of this statement (%(statement_name)) is hashed, the statement "
+"The journal of this statement (%(statement_name)s) is hashed, the statement "
 "cannot be reset to draft"
 msgstr ""
-"Tämän tiliotteen päiväkirja (%(statement_name)) on hajautettu, tiliotetta "
-"voi palauttaa luonnokseksi"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -22272,32 +22275,32 @@ msgstr "Työntekijöiden tapaturmavakuutus"
 #. module: account
 #: model:account.account.tag,name:account.account_tag_wcap_deferred_revenue
 msgid "Working Capital - Deferred Revenue"
-msgstr ""
+msgstr "Käyttöpääoma - Tuloennakko"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_wcap_inventory
 msgid "Working Capital - Inventory"
-msgstr ""
+msgstr "Käyttöpääoma - Vaihto-omaisuus"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_wcap_other_payable
 msgid "Working Capital - Other Payable"
-msgstr ""
+msgstr "Käyttöpääoma - Muut velat"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_wcap_other_receivable
 msgid "Working Capital - Other Receivable"
-msgstr ""
+msgstr "Käyttöpääoma - Muut saamiset"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_wcap_trade_payable
 msgid "Working Capital - Trade Payable"
-msgstr ""
+msgstr "Käyttöpääoma - Ostovelat"
 
 #. module: account
 #: model:account.account.tag,name:account.account_tag_wcap_trade_receivable
 msgid "Working Capital - Trade Receivable"
-msgstr ""
+msgstr "Käyttöpääoma - Myyntisaamiset"
 
 #. module: account
 #. odoo-javascript
@@ -23583,7 +23586,7 @@ msgstr ""
 #. module: account
 #: model:account.account.tag,name:account.account_tag_non_applicable
 msgid "not applicable"
-msgstr ""
+msgstr "ei sovelleta"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
@@ -23835,6 +23838,29 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Viite "
 "{{ object.name or 'n/a' }})"
+
+#~ msgid "Credit Note :"
+#~ msgstr "Hyvityslasku:"
+
+#~ msgid ""
+#~ "Email addresses that will receive copy for sent and received invoices. "
+#~ "Separate entries with ';'."
+#~ msgstr ""
+#~ "Sähköpostiosoitteet, jotka saavat kopion lähetetyistä ja vastaanotetuista "
+#~ "laskuista. Erota kirjaukset toisistaan ';'-merkillä."
+
+#~ msgid "If empty, uses the journal of the journal entry to be reversed."
+#~ msgstr "Jos tyhjä, käytetään peruutettavan kirjanpitomerkinnän päiväkirjaa."
+
+#~ msgid "Invoice :"
+#~ msgstr "Lasku:"
+
+#~ msgid ""
+#~ "The journal of this statement (%(statement_name)) is hashed, the "
+#~ "statement cannot be reset to draft"
+#~ msgstr ""
+#~ "Tämän tiliotteen päiväkirja (%(statement_name)) on hajautettu, tiliotetta "
+#~ "voi palauttaa luonnokseksi"
 
 #~ msgid ""
 #~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "

@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-09-09 13:58+0000\n"
+"PO-Revision-Date: 2026-10-30 09:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-master/"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,22 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"Modul für Lagerverwaltung und Buchhaltung\n"
+"================================\n"
+"Dieses Modul stellt die Verbindung zwischen dem ¢„Lager“- und dem „"
+"Buchhaltung“-Modul her und ermöglicht es Ihnen, Ihre Lagerbuchungen zu "
+"bewerten.\n"
+"\n"
+"Haupteigenschaften\n"
+"-----------------------\n"
+"* Bestandsbewertung (periodisch oder automatisch)\n"
+"* Rechnung von der Kommisionierung\n"
+"\n"
+"Zusätzlich verfügbar im Dashboard und als Bericht:\n"
+"----------------------------------------------------------------\n"
+"* Lagerbestandswerte zu einem bestimmten Datum (Datum in der Vergangenheit "
+"wird unterstützt)\n"
 
 #. module: stock_account
 #. odoo-python
@@ -58,6 +74,8 @@ msgid ""
 "%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
 msgstr ""
+"Kostenaktualisierung für %(lot)s von %(old_value)s auf %(new_value)s für %"
+"(quantity)s durch %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -66,6 +84,8 @@ msgid ""
 "%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
 "%(user)s"
 msgstr ""
+"Kostenaktualisierung für %(move)s von %(old_value)s auf %(new_value)s für %"
+"(quantity)s durch %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -76,7 +96,7 @@ msgstr "%(quantity)s%(uom)s zum Produktpreis"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
 msgid "<span class=\"o_stat_text\">Product Value</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Produktwert</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -111,17 +131,17 @@ msgstr "Wert der Durchschnittskosten"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Zugriffsgruppen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
 msgid "Account Move"
-msgstr ""
+msgstr "Buchung"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
 msgid "Account move lines using this move in order to compute their COGS"
-msgstr ""
+msgstr "Buchungszeilen, die diese Buchung zur Berechnung ihrer HKU verwenden"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -173,12 +193,12 @@ msgstr "Am %(date)s von %(user)s angepasst"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
 msgid "Adjustment"
-msgstr ""
+msgstr "Berichtigung"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Adjustments"
-msgstr ""
+msgstr "Berichtigungen"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -229,12 +249,12 @@ msgstr "Bacon"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__cogs_aml_ids
 msgid "COGS lines"
-msgstr ""
+msgstr "HKU-Zeilen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_move_ids
 msgid "COGS stock moves"
-msgstr ""
+msgstr "HKU-Lagerbuchungen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
@@ -305,6 +325,8 @@ msgstr "Produktionskosten"
 msgid ""
 "Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
 msgstr ""
+"Kostenaktualisierung von %(old_value)s auf %(new_value)s für %(quantity)s "
+"durch %(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -411,7 +433,7 @@ msgstr "Los- & Seriennummern auf Rechnungen anzeigen"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "Done By"
-msgstr ""
+msgstr "Erledigt von"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -486,6 +508,9 @@ msgid ""
 "If the move originates from a document from another company, contains that "
 "company's partner, otherwise the move's partner."
 msgstr ""
+"Falls die Buchung von einem Beleg eines anderen Unternehmens stammt, wird "
+"der Partner dieses Unternehmens verwendet, andernfalls der Partner der "
+"Buchung."
 
 #. module: stock_account
 #. odoo-python
@@ -514,12 +539,12 @@ msgstr "Bestandsschwund"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
 msgid "Inventory moves used to compute COGS values."
-msgstr ""
+msgstr "Lagerbuchungen, die zur Berechnung der HKU-Werte verwendet werden."
 
 #. module: stock_account
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr ""
+msgstr "Lager, Logistik, Bewertung, Buchhaltung"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
@@ -616,7 +641,7 @@ msgstr "Bewegung"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
 msgid "New Unit Cost"
-msgstr ""
+msgstr "Neue Einheitskosten"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
@@ -627,12 +652,12 @@ msgstr "Neuer Wert"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
 msgid "Old Unit Cost"
-msgstr ""
+msgstr "Alte Einheitskosten"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
 msgid "Old Value"
-msgstr ""
+msgstr "Alter Wert"
 
 #. module: stock_account
 #. odoo-python
@@ -647,16 +672,18 @@ msgid ""
 "Only set if the move is generated from a document belonging to another "
 "company"
 msgstr ""
+"Nur festlegen, wenn die Buchung aus einem Dokument stammt, das zu einem "
+"anderen Unternehmen gehört"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
 msgid "Order Partner"
-msgstr ""
+msgstr "Auftragspartner"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
 msgid "Origin Company"
-msgstr ""
+msgstr "Ursprungsunternehmen"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -721,6 +748,8 @@ msgid ""
 "Product should be passed as an argument in order to get the unit price for "
 "moves in a kit."
 msgstr ""
+"Das Produkt sollte als Argument übergeben werden, um den Einzelpreis für "
+"Buchungen in einem Bausatz zu erhalten."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
@@ -740,7 +769,7 @@ msgstr "Menge"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Menge"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -787,6 +816,11 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"Standardpreis: Die Produkte werden zu den auf dem Produkt angegebenen "
+"Standardkosten bewertet.\n"
+"        Durchschnittskosten (AVCO): Die Produkte werden zu den gewichteten "
+"Durchschnittskosten bewertet.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -825,6 +859,9 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"Technisches Feld, das die Nachverfolgungsmethode enthält. Der Wert „false“ "
+"bei einem lagerfähigen Produkt bedeutet, dass es nur nach Menge nachverfolgt "
+"wird."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -895,7 +932,7 @@ msgstr "Gesamtwert"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__product_tracking
 msgid "Tracking Method"
-msgstr ""
+msgstr "Nachverfolgungsmethode"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
@@ -949,7 +986,7 @@ msgstr "Bewertung"
 #: model:ir.actions.act_window,name:stock_account.product_value_list_action
 #: model:ir.ui.menu,name:stock_account.valuation_adjustments_menu
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "Bewertungskorrekturen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
@@ -994,7 +1031,7 @@ msgstr "Wert basiert auf ursprünglicher Bewegung %(reference)s"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value from previous move %(references)s"
-msgstr ""
+msgstr "Wert aus vorheriger Buchung %(references)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -1012,12 +1049,12 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "View Account Move"
-msgstr ""
+msgstr "Buchung anzeigen"
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "Lagerbuchführung"
 
 #. module: stock_account
 #. odoo-python

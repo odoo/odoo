@@ -18,15 +18,15 @@
 # Leaanika Randmets, 2022
 # JanaAvalah, 2022
 # Anna, 2023
-# Kristina Pešehodko <kristina@avalah.ee>, 2025.
+# Kristina Pešehodko <kristina@avalah.ee>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 18:03+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-27 09:44+0000\n"
+"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-20/"
 "purchase_requisition/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
@@ -49,6 +49,16 @@ msgid ""
 "are agreements you have with vendors to benefit from a predetermined "
 "pricing.\n"
 msgstr ""
+"\n"
+"See moodul võimaldab hallata ostulepinguid.\n"
+"===========================================\n"
+"\n"
+"Halda hankekonkursse ja raamtellimusi. Hankekonkursse kasutatakse\n"
+"konkureerivate pakkumiste saamiseks erinevatelt tarnijatelt ja parimate "
+"valimiseks.\n"
+"Raamtellimused on tarnijatega sõlmitud kokkulepped, mille abil saab "
+"kasutada\n"
+"eelnevalt kokku lepitud hinnakujundust.\n"
 
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
@@ -78,19 +88,19 @@ msgstr "<strong>Viide:</strong><br/>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "A note"
-msgstr ""
+msgstr "Märkus"
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "A product is required on purchase agreement lines."
-msgstr ""
+msgstr "Ostulepingu igal real peab olema toode."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 msgid "A section or note line cannot have a product."
-msgstr ""
+msgstr "Jaotise- või märkuserida ei saa sisaldada toodet."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction
@@ -115,7 +125,7 @@ msgstr "Tegevuse erandlik kohendus"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_plans_ids
 msgid "Activity Plans"
-msgstr ""
+msgstr "Tegevusplaanid"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
@@ -130,17 +140,17 @@ msgstr "Tegevustüübi ikoon"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a note"
-msgstr ""
+msgstr "Lisa märkus"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a product"
-msgstr ""
+msgstr "Lisa toode"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Add a section"
-msgstr ""
+msgstr "Lisa jaotis"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -171,7 +181,7 @@ msgstr "Lepingu kehtivus:"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Amount"
-msgstr ""
+msgstr "Summa"
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -314,7 +324,7 @@ msgstr "Kuva nimi"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "Kuvamise tüüp"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__distribution_analytic_account_ids
@@ -441,12 +451,12 @@ msgstr "Hilinenud tegevused"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__name
 msgid "Line Description"
-msgstr ""
+msgstr "Rea kirjeldus"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_type_icon
 msgid "Material Symbols icon e.g. checklist"
-msgstr ""
+msgstr "Material Symbols ikoon, nt checklist"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_has_error
@@ -523,7 +533,7 @@ msgstr "Järgmise tegevuse tüüp"
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Note"
-msgstr ""
+msgstr "Märkus"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -569,7 +579,7 @@ msgstr "Tellimused"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__parent_id
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Ülemjaotise rida"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__product_id
@@ -722,22 +732,22 @@ msgstr "Otsi ostulepingut"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_section
 msgid "Section"
-msgstr ""
+msgstr "Jaotis"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Section Name"
-msgstr ""
+msgstr "Jaotise nimi"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Section title"
-msgstr ""
+msgstr "Jaotise pealkiri"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Järjestus"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -778,17 +788,17 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_line__display_type__line_subsection
 msgid "Subsection"
-msgstr ""
+msgstr "Alamjaotis"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Subsection Name"
-msgstr ""
+msgstr "Alamjaotise nimi"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisition_document
 msgid "Subsection title"
-msgstr ""
+msgstr "Alamjaotise pealkiri"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__supplier_info_ids
@@ -803,7 +813,7 @@ msgstr "Tarnija hinnakiri"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__display_type
 msgid "Technical field for UX purpose."
-msgstr ""
+msgstr "Tehniline väli kasutajakogemuse (UX) jaoks."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -895,6 +905,8 @@ msgid ""
 "You cannot change the type of a purchase agreement line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
+"Ostulepingu rea tüüpi ei saa muuta. Kustuta praegune rida ja loo selle "
+"asemel õiget tüüpi uus rida."
 
 #. module: purchase_requisition
 #. odoo-python

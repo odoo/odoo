@@ -3,15 +3,16 @@
 # * pos_viva_com
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 17:54+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
-"pos_viva_com/lo/>\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-25 12:33+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/pos_viva_com/"
+"lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,33 +22,28 @@ msgstr ""
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_api_key
-#, fuzzy
 msgid "API Key"
 msgstr "ລະຫັດ API"
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
-#, fuzzy
 msgid "Can't create payment method. Please check the data and update it."
 msgstr "ບໍ່ສາມາດສ້າງວິທີການຊຳລະເງິນໄດ້. ກະລຸນາກວດສອບຂໍ້ມູນ ແລະ ອັບເດດຄືນໃໝ່."
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
-#, fuzzy
 msgid "Can't update payment method. Please check the data and update it."
 msgstr "ບໍ່ສາມາດອັບເດດວິທີການຊຳລະເງິນໄດ້. ກະລຸນາກວດສອບຂໍ້ມູນ ແລະ ອັບເດດຄືນໃໝ່."
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_client_id
-#, fuzzy
 msgid "Client ID"
 msgstr "Client ID"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_client_secret
-#, fuzzy
 msgid "Client secret"
 msgstr "Client secret"
 
@@ -55,12 +51,11 @@ msgstr "Client secret"
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Continue on Viva app"
-msgstr ""
+msgstr "ສືບຕໍ່ໃນແອັບ Viva"
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
-#, fuzzy
 msgid ""
 "Could not connect to the Odoo server, please check your internet connection "
 "and try again."
@@ -68,23 +63,29 @@ msgstr ""
 "ບໍ່ສາມາດເຊື່ອມຕໍ່ກັບເຊີບເວີ Odoo ໄດ້, ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດຂອງທ່ານ ແລະ ລອງໃໝ່ອີກຄັ້ງ."
 
 #. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
+msgid ""
+"Could not sync the order before starting the Viva.com payment. Please try "
+"again."
+msgstr ""
+
+#. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment__display_name
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__display_name
-#, fuzzy
 msgid "Display Name"
 msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment__id
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__id
-#, fuzzy
 msgid "ID"
 msgstr "ລະຫັດ"
 
 #. module: pos_viva_com
 #: model:ir.module.module,summary:base.module_pos_viva_com
 msgid "Integrate your PoS with a Viva.com payment terminal"
-msgstr ""
+msgstr "ເຊື່ອມໂຍງ PoS ຂອງທ່ານກັບເຄື່ອງຮູດບັດຊຳລະເງິນ Viva.com"
 
 #. module: pos_viva_com
 #. odoo-javascript
@@ -93,19 +94,21 @@ msgid ""
 "Is the vivawallet application installed on your device? If so, the payment "
 "will initialize directly from it."
 msgstr ""
+"ແອັບພລິເຄຊັນ vivawallet ໄດ້ຖືກຕິດຕັ້ງຢູ່ໃນອຸປະກອນຂອງທ່ານແລ້ວບໍ? ຖ້າມີ, "
+"ການຊຳລະເງິນຈະເລີ່ມຕົ້ນຜ່ານແອັບດັ່ງກ່າວໂດຍກົງ."
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "It is essential to provide API key for the use of Viva.com"
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງລະບຸລະຫັດ API ເພື່ອການນຳໃຊ້ Viva.com"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,help:pos_viva_com.field_pos_payment_method__viva_com_api_key
 #: model:ir.model.fields,help:pos_viva_com.field_pos_payment_method__viva_com_merchant_id
 msgid ""
 "Log into Viva.com then navigate to Settings > API Access > Access credentials"
-msgstr ""
+msgstr "ເຂົ້າສູ່ລະບົບ Viva.com ແລ້ວໄປທີ່ ການຕັ້ງຄ່າ > ການເຂົ້າເຖິງ API > ຂໍ້ມູນປະຈຳຕົວການເຂົ້າເຖິງ"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,help:pos_viva_com.field_pos_payment_method__viva_com_client_id
@@ -113,11 +116,10 @@ msgstr ""
 msgid ""
 "Log into Viva.com then navigate to Settings > API Access > POS APIs "
 "Credentials"
-msgstr ""
+msgstr "ເຂົ້າສູ່ລະບົບ Viva.com ແລ້ວໄປທີ່ ການຕັ້ງຄ່າ > ການເຂົ້າເຖິງ API > ຂໍ້ມູນປະຈຳຕົວ POS APIs"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_merchant_id
-#, fuzzy
 msgid "Merchant ID"
 msgstr "ລະຫັດຮ້ານຄ້າ (Merchant ID)"
 
@@ -125,12 +127,11 @@ msgstr "ລະຫັດຮ້ານຄ້າ (Merchant ID)"
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
 msgid "Message from Viva.com: %s"
-msgstr ""
+msgstr "ຂໍ້ຄວາມຈາກ Viva.com: %s"
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_screen.js:0
-#, fuzzy
 msgid "No"
 msgstr "ບໍ່"
 
@@ -138,19 +139,19 @@ msgstr "ບໍ່"
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
 msgid "No internet connection. Waiting for recovery to confirm the payment..."
-msgstr ""
+msgstr "ບໍ່ມີການເຊື່ອມຕໍ່ອິນເຕີເນັດ. ກຳລັງລໍຖ້າການເຊື່ອມຕໍ່ຄືນໃໝ່ເພື່ອຢືນຢັນການຊຳລະເງິນ..."
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/hooks/use_viva_app.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດ!"
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "Only 'group_pos_user' are allowed to cancel a Viva.com payment"
-msgstr ""
+msgstr "ສະເພາະ 'group_pos_user' ເທົ່ານັ້ນທີ່ໄດ້ຮັບອະນຸຍາດໃຫ້ຍົກເລີກການຊຳລະເງິນ Viva.com"
 
 #. module: pos_viva_com
 #. odoo-python
@@ -158,24 +159,25 @@ msgstr ""
 msgid ""
 "Only 'group_pos_user' are allowed to get the payment status from Viva.com"
 msgstr ""
+"ສະເພາະ 'group_pos_user' ເທົ່ານັ້ນທີ່ໄດ້ຮັບອະນຸຍາດໃຫ້ດຶງສະຖານະການຊຳລະເງິນຈາກ Viva.com"
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "Only 'group_pos_user' are allowed to send a Viva.com payment request"
-msgstr ""
+msgstr "ສະເພາະ 'group_pos_user' ເທົ່ານັ້ນທີ່ໄດ້ຮັບອະນຸຍາດໃຫ້ສົ່ງຄຳຮ້ອງຂໍຊຳລະເງິນ Viva.com"
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "Only 'group_pos_user' are allowed to send a Viva.com refund request"
-msgstr ""
+msgstr "ສະເພາະ 'group_pos_user' ເທົ່ານັ້ນທີ່ໄດ້ຮັບອະນຸຍາດໃຫ້ສົ່ງຄຳຮ້ອງຂໍເງິນຄືນ Viva.com"
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Pay with the Viva Wallet application"
-msgstr ""
+msgstr "ຊຳລະເງິນດ້ວຍແອັບພລິເຄຊັນ Viva Wallet"
 
 #. module: pos_viva_com
 #. odoo-javascript
@@ -184,6 +186,7 @@ msgid ""
 "Please note that your order has not been finalized, try again or choose "
 "another payment method."
 msgstr ""
+"ກະລຸນາຮັບຊາບວ່າ ລາຍການສັ່ງຊື້ຂອງທ່ານຍັງບໍ່ທັນສຳເລັດ, ກະລຸນາລອງໃໝ່ອີກຄັ້ງ ຫຼື ເລືອກວິທີການຊຳລະເງິນອື່ນ."
 
 #. module: pos_viva_com
 #. odoo-javascript
@@ -192,37 +195,38 @@ msgid ""
 "Please note that your order has not been finalized, try again or choose "
 "another payment method. (%s)"
 msgstr ""
+"ກະລຸນາຮັບຊາບວ່າ ລາຍການສັ່ງຊື້ຂອງທ່ານຍັງບໍ່ທັນສຳເລັດ, ກະລຸນາລອງໃໝ່ອີກຄັ້ງ ຫຼື ເລືອກວິທີການຊຳລະເງິນອື່ນ. "
+"(%s)"
 
 #. module: pos_viva_com
 #: model:ir.module.module,shortdesc:base.module_pos_viva_com
 msgid "PoS Viva.com"
-msgstr ""
+msgstr "PoS Viva.com"
 
 #. module: pos_viva_com
 #: model:ir.model,name:pos_viva_com.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "ການຊຳລະເງິນໜ້າຮ້ານ (Point of Sale)"
 
 #. module: pos_viva_com
 #: model:ir.model,name:pos_viva_com.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "ວິທີການຊຳລະເງິນໜ້າຮ້ານ (Point of Sale)"
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Reset Integration"
-msgstr ""
+msgstr "ຕັ້ງຄ່າການເຊື່ອມໂຍງໃໝ່"
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Reset Viva Integration"
-msgstr ""
+msgstr "ຕັ້ງຄ່າການເຊື່ອມໂຍງ Viva ໃໝ່"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,help:pos_viva_com.field_pos_payment_method__viva_com_test_mode
-#, fuzzy
 msgid "Run transactions in the test environment."
 msgstr "ດຳເນີນການທຸລະກຳໃນສະພາບແວດລ້ອມທົດລອງ."
 
@@ -231,17 +235,15 @@ msgstr "ດຳເນີນການທຸລະກຳໃນສະພາບແວ
 msgid ""
 "Session ID of the transaction, stored so that it can be used to refund the "
 "payment."
-msgstr ""
+msgstr "ລະຫັດເຊດຊັນ (Session ID) ຂອງທຸລະກຳ, ຖືກບັນທຶກໄວ້ເພື່ອໃຊ້ໃນການສົ່ງເງິນຄືນ."
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_terminal_id
-#, fuzzy
 msgid "Terminal ID"
 msgstr "ລະຫັດເຄື່ອງ Terminal"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_test_mode
-#, fuzzy
 msgid "Test mode"
 msgstr "ໂໝດທົດສອບ"
 
@@ -249,19 +251,19 @@ msgstr "ໂໝດທົດສອບ"
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "There are some issues between us and Viva.com, try again later."
-msgstr ""
+msgstr "ເກີດບັນຫາຂັດຂ້ອງລະຫວ່າງລະບົບກັບ Viva.com, ກະລຸນາລອງໃໝ່ພາຍຫຼັງ."
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "There are some issues between us and Viva.com, try again later. %s"
-msgstr ""
+msgstr "ເກີດບັນຫາຂັດຂ້ອງລະຫວ່າງລະບົບກັບ Viva.com, ກະລຸນາລອງໃໝ່ພາຍຫຼັງ. %s"
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "There are some issues between us and Viva.com, try again later.%s)"
-msgstr ""
+msgstr "ເກີດບັນຫາຂັດຂ້ອງລະຫວ່າງລະບົບກັບ Viva.com, ກະລຸນາລອງໃໝ່ພາຍຫຼັງ.%s)"
 
 #. module: pos_viva_com
 #. odoo-python
@@ -270,60 +272,94 @@ msgid ""
 "Unable to retrieve Viva.com Bearer Token: Please verify that the Client ID "
 "and Client Secret are correct"
 msgstr ""
+"ບໍ່ສາມາດດຶງ Viva.com Bearer Token ໄດ້: ກະລຸນາກວດສອບວ່າ Client ID ແລະ Client Secret "
+"ຖືກຕ້ອງແລ້ວບໍ່"
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_lines/payment_lines.js:0
 msgid "Use Viva app"
-msgstr ""
+msgstr "ໃຊ້ແອັບ Viva"
 
 #. module: pos_viva_com
 #: model_terms:ir.ui.view,arch_db:pos_viva_com.pos_payment_method_view_form_inherit_pos_viva_com
 msgid "Viva Com"
-msgstr ""
+msgstr "Viva Com"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_bearer_token
 msgid "Viva Com Bearer Token"
-msgstr ""
+msgstr "Viva Com Bearer Token"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment__viva_com_session_id
 msgid "Viva Com Session"
-msgstr ""
+msgstr "ເຊດຊັນ Viva Com"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_webhook_endpoint
 msgid "Viva Com Webhook Endpoint"
-msgstr ""
+msgstr "Viva Com Webhook Endpoint"
 
 #. module: pos_viva_com
 #: model:ir.model.fields,field_description:pos_viva_com.field_pos_payment_method__viva_com_webhook_verification_key
 msgid "Viva Com Webhook Verification Key"
-msgstr ""
+msgstr "ຄີຢືນຢັນ Viva Com Webhook"
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Viva Wallet Application"
-msgstr ""
+msgstr "ແອັບພລິເຄຊັນ Viva Wallet"
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/hooks/use_viva_app.js:0
 msgid "Viva Wallet Payment Error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດໃນການຊຳລະເງິນ Viva Wallet"
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
 msgid "Viva.com Error"
+msgstr "ຂໍ້ຜິດພາດ Viva.com"
+
+#. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/hooks/use_viva_app.js:0
+#: code:addons/pos_viva_com/static/src/app/payment_viva_com.js:0
+msgid "Viva.com Payment Error"
+msgstr ""
+
+#. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/utils/error_messages.js:0
+msgid ""
+"Viva.com charged %s, which does not match the total for this order (%s). The "
+"customer may have been charged; refund the transaction on the Viva terminal "
+"before retrying."
+msgstr ""
+
+#. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/utils/error_messages.js:0
+msgid ""
+"Viva.com charged in %s, which does not match the currency set for this order "
+"(%s). The customer may have been charged; refund the transaction on the Viva "
+"terminal before retrying."
+msgstr ""
+
+#. module: pos_viva_com
+#. odoo-javascript
+#: code:addons/pos_viva_com/static/src/app/utils/error_messages.js:0
+msgid ""
+"Viva.com payment could not be validated. The customer may have been charged; "
+"refund the transaction on the Viva terminal before retrying."
 msgstr ""
 
 #. module: pos_viva_com
 #. odoo-javascript
 #: code:addons/pos_viva_com/static/src/app/screens/payment_screen/payment_screen.js:0
-#, fuzzy
 msgid "Yes"
 msgstr "ແມ່ນ/ໂດຍ"
 
@@ -331,23 +367,21 @@ msgstr "ແມ່ນ/ໂດຍ"
 #. odoo-python
 #: code:addons/pos_viva_com/models/pos_payment_method.py:0
 msgid "Your transaction with Viva.com failed. Please try again later."
-msgstr ""
+msgstr "ການເຮັດທຸລະກຳຂອງທ່ານກັບ Viva.com ບໍ່ສຳເລັດ. ກະລຸນາລອງໃໝ່ພາຍຫຼັງ."
 
 #. module: pos_viva_com
 #: model:ir.model.fields,help:pos_viva_com.field_pos_payment_method__viva_com_terminal_id
 msgid "[ID of the Viva.com terminal], e.g. 16002169"
-msgstr ""
+msgstr "[ລະຫັດ Terminal ຂອງ Viva.com], ຕົວຢ່າງ: 16002169"
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/controllers/main.py:0
-#, fuzzy
 msgid "received a message for a pos payment provider not registered."
 msgstr "ໄດ້ຮັບຂໍ້ຄວາມສຳລັບຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ POS ທີ່ບໍ່ໄດ້ລົງທະບຽນ."
 
 #. module: pos_viva_com
 #. odoo-python
 #: code:addons/pos_viva_com/controllers/main.py:0
-#, fuzzy
 msgid "received a message for a terminal not registered in Odoo: %s"
 msgstr "ໄດ້ຮັບຂໍ້ຄວາມສຳລັບເຄື່ອງ Terminal ທີ່ບໍ່ໄດ້ລົງທະບຽນໃນ Odoo: %s"

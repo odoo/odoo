@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-10-19 08:28+0000\n"
+"PO-Revision-Date: 2026-10-27 08:34+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/repair/"
 "de/>\n"
@@ -39,6 +39,19 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"Ziel ist es, ein umfassendes Modul zur Verwaltung aller Produktreparaturen "
+"zu schaffen.\n"
+"==============================================================================\n"
+"\n"
+"Folgendes wird durch diese App abgedeckt:\n"
+"----------------------------------------------------------------------------------------------------------"
+"\n"
+"    * Hinzufügen/Löschen von Produkten in der Reparatur\n"
+"    * Auswirkungen auf Bestände\n"
+"    * Garantie-Konzept\n"
+"    * Kostenvoranschlag für Reparatur\n"
+"    * Hinweise für den Techniker und für den Endkunden\n"
 
 #. module: repair
 #. odoo-python
@@ -70,6 +83,13 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* Der Status „Neu“ wird verwendet, wenn ein Benutzer einen neuen, nicht "
+"bestätigten Reparaturauftrag erfasst.\n"
+"* Der Status „Bestätigt“ wird verwendet, wenn ein Benutzer den "
+"Reparaturauftrag bestätigt.\n"
+"* Der Status „Erledigt“ wird gesetzt, wenn die Reparatur abgeschlossen ist.\n"
+"* Der Status „Storniert“ wird verwendet, wenn ein Benutzer den "
+"Reparaturauftrag storniert."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -497,7 +517,7 @@ msgstr "Anzeigename"
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Done"
-msgstr ""
+msgstr "Erledigt"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -635,7 +655,7 @@ msgstr "Lagerbewegungen"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__invisible
 msgid "Invisible"
-msgstr ""
+msgstr "Unsichtbar"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_ids
@@ -938,7 +958,7 @@ msgstr "Bitte legen Sie die erste Seriennummer oder eine Standardsequenz fest"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__primary
 msgid "Primary"
-msgstr ""
+msgstr "Primär"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -1202,13 +1222,14 @@ msgstr "Reparatur-Stichwort"
 #. module: repair
 #: model:ir.module.module,summary:base.module_repair
 msgid "Repair damaged products"
-msgstr ""
+msgstr "Beschädigte Produkte reparieren"
 
 #. module: repair
 #. odoo-python
 #: code:addons/repair/models/repair.py:0
 msgid "Repair must be confirmed in order to end reparation."
 msgstr ""
+"Die Reparatur muss bestätigt werden, um den Reparaturvorgang abzuschließen."
 
 #. module: repair
 #. odoo-python
@@ -1335,7 +1356,7 @@ msgstr "Reparaturaufträge suchen"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__validate_button_style__secondary
 msgid "Secondary"
-msgstr ""
+msgstr "Sekundär"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_service_line__sequence
@@ -1433,6 +1454,9 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"Technisches Feld, das die Nachverfolgungsmethode enthält. Der Wert „false“ "
+"bei einem lagerfähigen Produkt bedeutet, dass es nur nach Menge nachverfolgt "
+"wird."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__reserve_visible
@@ -1619,7 +1643,7 @@ msgstr "Dringend"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__validate_button_style
 msgid "Validate Button Style"
-msgstr ""
+msgstr "Stil der Schaltfläche validieren"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warehouse

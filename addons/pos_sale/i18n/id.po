@@ -15,9 +15,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 19:11+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-26 09:02+0000\n"
+"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-20/"
 "pos_sale/id/>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,11 @@ msgid ""
 "This module adds a custom Sales Team for the Point of Sale. This enables you "
 "to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Modul ini menambahkan Tim Penjualan kustom untuk Point of Sale. Ini "
+"memungkinkan Anda untuk melihat dan mengelola penjualan point of sale Anda "
+"dengan lebih mudah.\n"
 
 #. module: pos_sale
 #. odoo-python
@@ -51,7 +56,7 @@ msgstr "%(old_name)s (Dibatalkan)"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "(tax incl.)"
-msgstr ""
+msgstr "(termasuk pajak)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_orderline_receipt_information
@@ -100,12 +105,12 @@ msgstr "Kurs Mata Uang"
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__default_product_id
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_default_product_id
 msgid "Default Product"
-msgstr ""
+msgstr "Produk Default"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Default Sale Product"
-msgstr ""
+msgstr "Produk Penjualan Default"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
@@ -115,7 +120,7 @@ msgstr "Kuantitas Pengiriman"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_name
 msgid "Description"
-msgstr ""
+msgstr "Deskripsi"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -172,7 +177,7 @@ msgstr "Saldo jatuh tempo: %s"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__has_default_product
 msgid "Has Default Product"
-msgstr ""
+msgstr "Memiliki Produk Default"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__id
@@ -205,12 +210,12 @@ msgstr "Entri Jurnal"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Item Jurnal"
 
 #. module: pos_sale
 #: model:ir.module.module,summary:base.module_pos_sale
 msgid "Link module between Point of Sale and Sales"
-msgstr ""
+msgstr "Modul link antara POS dan Sales"
 
 #. module: pos_sale
 #. odoo-python
@@ -248,7 +253,7 @@ msgstr "Baris order Ditransfer ke POS"
 #. module: pos_sale
 #: model:ir.module.module,shortdesc:base.module_pos_sale
 msgid "POS - Sales"
-msgstr ""
+msgstr "POS - Sales"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
@@ -278,7 +283,7 @@ msgstr "Baris Pesanan POS"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "Pembuat Struk Order POS"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_session
@@ -309,7 +314,7 @@ msgstr "Produk"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Penawaran / Order"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -388,7 +393,7 @@ msgstr "Nilai mata uang ke mata uang yang berlaku pada tanggal pesanan"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
 msgid "There is nothing left to settle on this sale order."
-msgstr ""
+msgstr "Tidak ada lagi yang perlu diselesaikan terkait order penjualan ini."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
@@ -401,6 +406,8 @@ msgstr "Sale POS ini akan dikaitkan ke Tim Sales ini."
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "This product will be applied on description only Sale order lines."
 msgstr ""
+"Produk ini hanya akan diterapkan pada baris order penjualan yang berisi "
+"deskripsi."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -411,7 +418,7 @@ msgstr "Produk ini akan diterapkan saat down payment dibuat"
 #: model:ir.model.fields,help:pos_sale.field_pos_config__default_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_default_product_id
 msgid "This product will be used as default product on productless SOLs."
-msgstr ""
+msgstr "Produk ini akan digunakan sebagai produk default pada SOL tanpa produk."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
@@ -425,6 +432,9 @@ msgid ""
 "To check whether the product is default product from pos.config or not. In "
 "case of description only SOLs we use default product from pos.config."
 msgstr ""
+"Untuk memeriksa apakah produk tersebut merupakan produk default dari "
+"POS.config atau tidak. Jika deskripsinya hanya berupa SOL, kami menggunakan "
+"produk default dari POS.config."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
@@ -432,6 +442,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Ditransfer<br/>\n"
+"                                dari Penjualan"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -439,6 +451,8 @@ msgid ""
 "Transferred<br/>\n"
 "                            to POS"
 msgstr ""
+"Ditransfer<br/>\n"
+"                            ke POS"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -463,7 +477,7 @@ msgstr "id"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "Down Payment (POS)"
 #~ msgstr "Uang Muka (POS)"

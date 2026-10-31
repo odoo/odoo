@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-19 08:28+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-28 12:34+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "hr_expense/de/>\n"
@@ -53,6 +53,28 @@ msgid ""
 "on timesheet module so that you are able to automatically re-invoice your "
 "customers' expenses if your work by project.\n"
 msgstr ""
+"\n"
+"Verwaltung von Mitarbeiterspesen\n"
+"================================\n"
+"\n"
+"Diese Anwendung erlaubt Ihnen die Verwaltung täglicher Aufwendungen Ihrer "
+"Mitarbeiter. Sie schafft Ihnen Zugang zu den Kostenbelegen der Mitarbeiter "
+"und die Berechtigung diese zu vervollständigen, freizugeben oder auch zu "
+"verweigern. Nach der Freigabe wird eine interne Rechnung für den Mitarbeiter "
+"erstellt.\n"
+"Mitarbeiter können Ihre eigenen Auslagen erfassen und über den Arbeitsablauf "
+"automatisch der Vorgesetztenfreigabe und der Buchhaltung zuführen.\n"
+"\n"
+"Der gesamte Prozess ist festgelegt als:\n"
+"----------------------------------------------\n"
+"* Spesenentwurf\n"
+"* Eingereicht durch Mitarbeiter an Manager\n"
+"* Vom Manager genehmigt\n"
+"* Validierung durch Buchhalter und Erstellung der Buchungen\n"
+"\n"
+"Dieses Modul kann auch Kostenrechnung verwenden und ist mit dem Rechnungs- "
+"und Zeiterfassungsmodul kompatibel, sodass Sie die Kosten automatisch an "
+"Ihre Kunden weiter verrechnen können, wenn Sie projektbezogen arbeiten.\n"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -1376,7 +1398,7 @@ msgstr "Gehen wir zurück zu Ihren Spesen."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__limit_amount
 msgid "Limit"
-msgstr ""
+msgstr "Limit"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2068,13 +2090,10 @@ msgstr ""
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Wählen Sie den Benutzer, der für die Genehmigung der „Spesen“ dieses "
-"Mitarbeiters zuständig ist.\n"
-"Wenn keiner ausgewählt wird, wird die Genehmigung von einem Administrator "
-"oder Genehmiger durchgeführt (festgelegt in Einstellungen/Benutzer)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -2105,7 +2124,7 @@ msgstr "Belege an OCR senden, um Spesen zu generieren"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sequenz"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2194,7 +2213,7 @@ msgstr "Ausgabe einreichen"
 #. module: hr_expense
 #: model:ir.module.module,summary:base.module_hr_expense
 msgid "Submit, validate and reinvoice employee expenses"
-msgstr ""
+msgstr "Einreichen, Überprüfen und Weiterberechnen von Mitarbeiterspesen"
 
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__approval_state__submitted
@@ -2530,7 +2549,7 @@ msgstr "Einzelpreis"
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "Unknown"
-msgstr ""
+msgstr "Unbekannt"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -2848,6 +2867,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "mit demselben Beleg besteht bereits."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Wählen Sie den Benutzer, der für die Genehmigung der „Spesen“ dieses "
+#~ "Mitarbeiters zuständig ist.\n"
+#~ "Wenn keiner ausgewählt wird, wird die Genehmigung von einem Administrator "
+#~ "oder Genehmiger durchgeführt (festgelegt in Einstellungen/Benutzer)."
 
 #~ msgid ""
 #~ "Enter a name then choose a product and configure the amount of your "

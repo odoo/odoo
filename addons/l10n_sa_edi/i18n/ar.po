@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-11 18:14+0000\n"
-"PO-Revision-Date: 2026-10-23 12:52+0000\n"
+"PO-Revision-Date: 2026-10-27 09:44+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/"
 "l10n_sa_edi/ar/>\n"
@@ -348,6 +348,7 @@ msgid ""
 "Date when the supply of goods or services is completed, mainly used for "
 "continuous supplies."
 msgstr ""
+"تاريخ اكتمال توريد السلع أو الخدمات، ويُستخدم بشكل أساسي للتوريدات المستمرة."
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_l10n_sa_edi_document__message
@@ -466,6 +467,7 @@ msgid ""
 "Export Transaction Type with the Simplified Invoice Type is not permitted as "
 "per ZATCA rules."
 msgstr ""
+"لا يُسمح بنوع معاملة التصدير مع نوع الفاتورة المبسطة وفقاً لقواعد ZATCA."
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
@@ -541,7 +543,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_move.py:0
 msgid "Invoice cannot be posted as the Supplier and Buyer are the same."
-msgstr ""
+msgstr "لا يمكن ترحيل الفاتورة لأن المورد والمشتري هما نفس الشخص."
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -580,6 +582,8 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/account_move.py:0
 msgid "Invoice lines need at least one tax. Please input it and try again."
 msgstr ""
+"يجب أن تحتوي بنود الفاتورة على ضريبة واحدة على الأقل. يرجى إدخالها ثم إعادة "
+"المحاولة."
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -755,6 +759,8 @@ msgid ""
 "No Private Key was generated for these companies. A Private Key is mandatory "
 "in order to generate Certificate Signing Requests (CSR)."
 msgstr ""
+"لم يتم إنشاء مفتاح خاص لهذه الشركات. يعد المفتاح الخاص إلزامياً لإنشاء طلبات "
+"توقيع الشهادات (CSR)."
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__l10n_sa_edi_transaction_type__code__nominal
@@ -876,7 +882,7 @@ msgstr "يرجى تغيير دولة (%s) إلى المملكة العربية �
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid "Please check the details below and onboard the journal again: %s"
-msgstr ""
+msgstr "يُرجى التحقق من التفاصيل أدناه لتهيئة دفتر اليومية مجدداً: %s"
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -902,6 +908,8 @@ msgid ""
 "Please make sure the 'Customer Reference' contains the sequential number of "
 "the original invoice(s) that the Credit/Debit Note is related to."
 msgstr ""
+"يرجى التأكد من أن 'رقم العميل المرجعي' يحتوي على الرقم التسلسلي للفاتورة "
+"(الفواتير) الأصلية التي يرتبط بها الإشعار الدائن/إشعار الخصم."
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -909,7 +917,7 @@ msgstr ""
 msgid ""
 "Please make sure the 'ZATCA Reason' for the issuance of the Credit/Debit "
 "Note is specified."
-msgstr ""
+msgstr "يرجى التأكد من تحديد 'سبب زاتكا' لإصدار الإشعار الدائن/إشعار الخصم."
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -1152,6 +1160,8 @@ msgstr ""
 msgid ""
 "Supply Date cannot be greater than the Supply End Date. Please adapt it."
 msgstr ""
+"تاريخ التوريد المحدد يتجاوز تاريخ انتهاء التوريد، وهو ما يتعارض مع قواعد "
+"النظام؛ يُرجى تعديل التواريخ لتتناسب زمنياً."
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_edi_supply_end_date
@@ -1197,7 +1207,7 @@ msgstr "دفتر اليومية صالح حتى (%s) ولا يمكن تجديد�
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_move.py:0
 msgid "The Journals are not onboarded yet. Please onboard them and try again."
-msgstr ""
+msgstr "لم يتم إعداد دفاتر اليومية بعد. يرجى إعدادها والمحاولة مرة أخرى."
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -1213,6 +1223,9 @@ msgid ""
 "last digits being '3' as per the BR-KSA-39 and BR-KSA-40 of ZATCA KSA "
 "business rule."
 msgstr ""
+"يجب أن يحتوي معرف ضريبة القيمة المضافة للشركة على 15 رقمًا، على أن يكون "
+"الرقمان الأول والأخير \"3\" وفقًا لقواعد الأعمال BR-KSA-39 و BR-KSA-40 لهيئة "
+"الزكاة والضريبة والجمارك (زاتكا) في المملكة العربية السعودية."
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_production_csid_validity
@@ -1264,6 +1277,8 @@ msgid ""
 "To issue the selected Invoice and Transaction Type, please fill in the "
 "'Supply End Date' by going to Other Info > Supply End Date."
 msgstr ""
+"لإصدار نوع الفاتورة والمعاملة المحدد، يرجى ملء 'تاريخ انتهاء التوريد' "
+"بالانتقال إلى معلومات أخرى > تاريخ انتهاء التوريد."
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form

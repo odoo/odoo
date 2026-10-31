@@ -34,11 +34,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-08-31 18:50+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-29 13:34+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-4/"
-"website/sv/>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/website/"
+"sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -280,12 +280,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
 msgid "$ 32M"
 msgstr "$32M"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/ir_ui_view.py:0
-msgid "%(error)s (website: %(website_id)s)"
-msgstr ""
 
 #. module: website
 #. odoo-python
@@ -2498,6 +2492,12 @@ msgid ""
 "&gt;= 2\">Install multiple languages to enable translation across your "
 "website.</span>"
 msgstr ""
+"<span invisible=\"website_language_count &lt; 2\">Hemsidesbesökare ser den "
+"version som matchar språket i deras webbläsare, eller standardversionen om "
+"deras egna språk inte är tillgängligt.</span>\n"
+"                                <span invisible=\"website_language_count "
+"&gt;= 2\">Installera flera språk för att tillåta översättning av hemsidan.</"
+"span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_big_number
@@ -2612,12 +2612,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
 msgid "<strong>15%</strong>"
-msgstr ""
+msgstr "<strong>15%</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
 msgid "<strong>45%</strong>"
-msgstr ""
+msgstr "<strong>45%</strong>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_inline
@@ -3186,6 +3186,7 @@ msgstr "Bild för dragspel"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Accounts created on this website are usable across all other websites"
 msgstr ""
+"Konton som skapas på den här hemsidan går att använda över alla egna hemsidor"
 
 #. module: website
 #. odoo-javascript
@@ -5008,7 +5009,7 @@ msgstr "Bygga förbindelser"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "Building your website."
-msgstr "Bygga din webbplats."
+msgstr "Vi bygger din hemsida..."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_contained
@@ -7632,7 +7633,7 @@ msgstr "Visa denna logotyp på webbplatsen."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website for this web address"
-msgstr ""
+msgstr "Visa hemsidan genom följande webbadressen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -7861,7 +7862,7 @@ msgstr "Duplicera block för att lägga till fler steg."
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/animated_number_option.xml:0
 msgid "Duration"
-msgstr "Tidsperiod"
+msgstr "Tid"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -8709,6 +8710,12 @@ msgstr "Förlängningsvy"
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
 msgid "External ID"
 msgstr "Externt ID"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/ir_ui_view.py:0
+msgid "External ID can not be loaded: %(error)s (website: %(website_id)s)"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9695,7 +9702,7 @@ msgstr "Google"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Google Address Validation"
-msgstr ""
+msgstr "Adressvalidering med Google"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_analytics_key
@@ -11206,7 +11213,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Install new languages"
-msgstr ""
+msgstr "Installera fler språk"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -17119,6 +17126,8 @@ msgid ""
 "Set your website's name and favicon, displayed in the browser tab next to "
 "the page title."
 msgstr ""
+"Ange ett namn och en favicon för din hemsida, dessa visas i fliken bredvid "
+"sidans rubrik."
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_configuration
@@ -17517,7 +17526,7 @@ msgstr "Storlek 5x"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Skip and start from scratch"
-msgstr "Hoppa över och börja om från början"
+msgstr "Hoppa över och skapa eget"
 
 #. module: website
 #. odoo-javascript
@@ -18411,6 +18420,12 @@ msgid "Template fallback"
 msgstr "Fallback för mall"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/ir_ui_view.py:0
+msgid "Template not found: '%(error)s' (website: %(website_id)s)"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form.edit.xml:0
 msgid "Terms & Conditions"
@@ -18602,7 +18617,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "The company this website is linked to"
-msgstr ""
+msgstr "Företaget som hemsidan är kopplad till"
 
 #. module: website
 #. odoo-python
@@ -18680,12 +18695,6 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_website_form/form.xml:0
 msgid "The form has been sent successfully."
 msgstr ""
-
-#. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid "The form's specified model does not exist"
-msgstr "Formulärets specificerade modell existerar inte"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
@@ -19086,6 +19095,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.js:0
 msgid "This font is missing font weight"
+msgstr ""
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+msgid ""
+"This form cannot be submitted. Please contact the website administrator."
 msgstr ""
 
 #. module: website
@@ -20058,7 +20074,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Use Google Places API to validate addresses"
-msgstr ""
+msgstr "Använd en API från Google Places för att validera adresser"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__use_main_menu_as_parent
@@ -21113,7 +21129,7 @@ msgstr "Webbplatsformulär"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Identification"
-msgstr ""
+msgstr "Identifiering av hemsidan"
 
 #. module: website
 #. odoo-python
@@ -23563,6 +23579,9 @@ msgstr "✽ Pizzor"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽ Vad vi erbjuder"
+
+#~ msgid "The form's specified model does not exist"
+#~ msgstr "Formulärets specificerade modell existerar inte"
 
 #~ msgid "Fit text"
 #~ msgstr "Passande text"

@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-23 16:22+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-29 13:33+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-20/"
 "hr_holidays/it/>\n"
@@ -598,6 +598,14 @@ msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">Congedo</span>"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+msgid ""
+"<span class=\"o_stat_value text-danger-emphasis\">Not defined</span>\n"
+"                        <span class=\"o_stat_text text-danger-"
+"emphasis\">Time Off</span>"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_dashboard
 msgid ""
 "<span class=\"text-danger\" invisible=\"not work_entry_type_support_document "
@@ -852,7 +860,7 @@ msgstr "Assenti oggi"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Gruppi di accesso"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1382,7 +1390,6 @@ msgstr "Eliminare veramente questo record?"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_dashboard
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager_dashboard
 msgid "Ask for"
 msgstr "Chiedi"
 
@@ -1492,8 +1499,8 @@ msgstr "Saldo"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
-msgid "Balance at the"
-msgstr "Saldo al"
+msgid "Balance on the"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__both
@@ -2211,6 +2218,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_duration
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__duration
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "Duration"
 msgstr "Durata"
@@ -2488,6 +2496,12 @@ msgstr "Generico"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_time_rule_view_search_inherit_hr_holidays
 msgid "Give Time"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/view_dialog/allocation_form_view_dialog.xml:0
+msgid "Grant"
 msgstr ""
 
 #. module: hr_holidays
@@ -6111,6 +6125,9 @@ msgstr "anno(i)"
 #: code:addons/hr_holidays/models/hr_time_rule.py:0
 msgid "your HR manager"
 msgstr ""
+
+#~ msgid "Balance at the"
+#~ msgstr "Saldo al"
 
 #~ msgid ""
 #~ "Can manage and configure all holidays and leave requests.\n"

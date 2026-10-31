@@ -18,7 +18,7 @@
 # Leaanika Randmets, 2022
 # Anna, 2023
 # JanaAvalah, 2023
-# Kristina Pešehodko <kristina@avalah.ee>, 2025.
+# Kristina Pešehodko <kristina@avalah.ee>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
@@ -26,9 +26,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 17:26+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-27 09:44+0000\n"
+"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
+"Language-Team: Estonian <https://translate.odoo.com/projects/odoo-20/"
 "purchase_stock/et/>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
@@ -40,7 +40,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "% On Time"
-msgstr ""
+msgstr "% Õigeaegselt"
 
 #. module: purchase_stock
 #. odoo-python
@@ -65,23 +65,23 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %d days"
-msgstr ""
+msgstr "+ %d päeva"
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %s days"
-msgstr ""
+msgstr "+ %s päeva"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<small class=\"text-muted ms-1\"> / month</small>"
-msgstr ""
+msgstr "<small class=\"text-muted ms-1\"> / kuu</small>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<small class=\"text-muted\">Demand: </small>"
-msgstr ""
+msgstr "<small class=\"text-muted\">Nõudlus: </small>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -156,13 +156,13 @@ msgstr "Tegevus"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "Add All"
-msgstr ""
+msgstr "Lisa kõik"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "After next month last year"
-msgstr ""
+msgstr "Pärast järgmist kuud eelmisel aastal"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -221,12 +221,12 @@ msgstr "Osta kaupa varude täiendamiseks"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Ettevõte"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__effective_date
 msgid "Completion date of the last receipt order."
-msgstr ""
+msgstr "Viimase vastuvõtu lõpukuupäev."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -270,6 +270,7 @@ msgid ""
 "Date promised by the vendor for at least 1 or more products to be delivered "
 "by."
 msgstr ""
+"Tarnija lubatud kuupäev, milleks vähemalt üks toode peab olema tarnitud."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
@@ -311,6 +312,16 @@ msgid ""
 "is the same week or week day\n"
 "         Always: Replenishment needs will always be grouped."
 msgstr ""
+"Määra, kas hinnapäringud tuleks rühmitada                            "
+"oodatava saabumise alusel, välja arvatud otsetarne (dropship) toimingute "
+"puhul.\n"
+"                           Tellimusel: täiendusvajadused rühmitatakse, välja "
+"arvatud tellimuspõhise tootmise (MTO) puhul.\n"
+"                           Päevas: täiendusvajadused rühmitatakse, kui "
+"oodatav saabumine on samal päeval.\n"
+"                           Nädalas: täiendusvajadused rühmitatakse, kui "
+"oodatav saabumine on samal nädalal või nädalapäeval.\n"
+"                           Alati: täiendusvajadused rühmitatakse alati."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
@@ -328,6 +339,8 @@ msgid ""
 "Delivery Date promised by the vendor. If the vendor delivers products after "
 "this date, their On-Time rate will be negatively impacted."
 msgstr ""
+"Tarnija lubatud tarnekuupäev. Kui tarnija toimetab tooted kohale pärast seda "
+"kuupäeva, langeb tema õigeaegsete tarnete osakaal."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_supplierinfo_replenishment_tree_view
@@ -438,7 +451,7 @@ msgstr "Prognoosi aruanne"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Forecasted"
-msgstr ""
+msgstr "Prognoositud"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
@@ -448,7 +461,7 @@ msgstr "Prognoositud probleem"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_location_id
 msgid "Forecasted Location"
-msgstr ""
+msgstr "Prognoositud asukoht"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__5
@@ -532,7 +545,7 @@ msgstr "Sisenevad saadetised"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "Lao marsruut"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__is_shipped
@@ -553,25 +566,25 @@ msgstr "Andmiku kanderida"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 12 months"
-msgstr ""
+msgstr "Viimased 12 kuud"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 3 months"
-msgstr ""
+msgstr "Viimased 3 kuud"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 30 days"
-msgstr ""
+msgstr "Viimased 30 päeva"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "Viimased 7 päeva"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
@@ -582,12 +595,12 @@ msgstr "Viimane ost"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Last year quarter"
-msgstr ""
+msgstr "Eelmise aasta samal kvartalil"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__forecasted_location_id
 msgid "Location used in the computation of the forecast."
-msgstr ""
+msgstr "Prognoosi arvutamisel kasutatav asukoht."
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -613,7 +626,7 @@ msgstr "Miinimumlao reegel"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock.py:0
 msgid "Missing products in receipt"
-msgstr ""
+msgstr "Vastuvõtust puuduvad tooted"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__1
@@ -629,7 +642,7 @@ msgstr "Igakuine nõudlus"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Next month last year"
-msgstr ""
+msgstr "Eelmise aasta järgmine kuu"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -701,7 +714,7 @@ msgstr "Õigeaegsuse määr"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 msgid "Only"
-msgstr ""
+msgstr "Ainult"
 
 #. module: purchase_stock
 #. odoo-python
@@ -768,7 +781,7 @@ msgstr "Toote variatsioon"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__date_promised
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__date_promised
 msgid "Promised Date"
-msgstr ""
+msgstr "Lubatud kuupäev"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__propagate_cancel
@@ -803,7 +816,7 @@ msgstr "Ostutellimused"
 #. module: purchase_stock
 #: model:ir.module.module,summary:base.module_purchase_stock
 msgid "Purchase Orders, Receipts, Vendor Bills for Stock"
-msgstr ""
+msgstr "Ostutellimused, vastuvõtud ja ostuarved lao jaoks"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
@@ -813,7 +826,7 @@ msgstr "Osuaruanne"
 #. module: purchase_stock
 #: model:ir.module.module,shortdesc:base.module_purchase_stock
 msgid "Purchase Stock"
-msgstr ""
+msgstr "Ost ja laovaru"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_lot__purchase_order_count
@@ -864,7 +877,7 @@ msgstr "Vastuvõetud koguste meetod"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 msgid "Received quantity is less than the expected quantity for transfer"
-msgstr ""
+msgstr "Vastu võetud kogus on väiksem kui ülekande oodatud kogus"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
@@ -896,7 +909,7 @@ msgstr "Paluge oma tarnijal tooted otse Teie klientidele toimetada"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
 msgid "Requests for quotation :"
-msgstr ""
+msgstr "Hinnapäringud :"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -907,7 +920,7 @@ msgstr "Reserveerimine"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.js:0
 msgid "Same month last year"
-msgstr ""
+msgstr "Eelmise aasta samal kuul"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__res_partner__group_on__6
@@ -943,7 +956,7 @@ msgstr "Kuva tarnija veerg"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_allocation_report
 msgid "Stock Allocation Report"
-msgstr ""
+msgstr "Laovaru jaotuse aruanne"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
@@ -969,7 +982,7 @@ msgstr "Laoreegel"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenishment_info
 msgid "Stock delivery time information"
-msgstr ""
+msgstr "Laovaru tarneaja info"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
@@ -1028,7 +1041,7 @@ msgstr "Pühapäev"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_replenish__partner_id
 msgid "Supplier"
-msgstr ""
+msgstr "Tarnija"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__supplier_id_placeholder
@@ -1092,6 +1105,9 @@ msgid ""
 "company receiving the purchased products. Please ensure the company is the "
 "same or that the Contact has no company restriction set."
 msgstr ""
+"Tarnija ettevõtte piirang ei ühti ostetud tooteid vastuvõtva ettevõttega. "
+"Palun veendu, et ettevõtted on samad või et kontaktil pole ettevõtte "
+"piirangut."
 
 #. module: purchase_stock
 #. odoo-python
@@ -1181,7 +1197,7 @@ msgstr "Tellida"
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "Total"
-msgstr ""
+msgstr "Kokku"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -1249,7 +1265,7 @@ msgstr "Tarnijad"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_product_tree_view_stock
 msgid "View Forecast"
-msgstr ""
+msgstr "Vaata prognoosi"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse
@@ -1300,12 +1316,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase_order_line.py:0
 msgid "You must set a Vendor Location for partner %(partner_name)s"
-msgstr ""
+msgstr "Partneri %(partner_name)s jaoks tuleb määrata tarnija asukoht"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 msgid "and no backorder is planned. Manual action may be needed."
-msgstr ""
+msgstr "ja järeltellimust pole planeeritud. Võib olla vaja manuaalne tegevus."
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -1327,7 +1343,7 @@ msgstr "tellitud selle asemel"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_picking
 msgid "received in contrast to the expected"
-msgstr ""
+msgstr "vastu võetud, erinevalt oodatust"
 
 #. module: purchase_stock
 #. odoo-python
@@ -1338,13 +1354,13 @@ msgstr "sellele tootele tehakse laovarude täiendamist käsitsi."
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "units"
-msgstr ""
+msgstr "ühikud"
 
 #. module: purchase_stock
 #. odoo-javascript
 #: code:addons/purchase_stock/static/src/product_catalog/search/search_panel.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "Goods Received Not Invoiced"
 #~ msgstr "Saadud kogused, mis ei ole arveldatud"

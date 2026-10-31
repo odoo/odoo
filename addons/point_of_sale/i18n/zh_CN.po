@@ -16,9 +16,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-10-11 13:33+0000\n"
-"Last-Translator: 张飞虎 <feihu.zhang@live.com>\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-28 09:34+0000\n"
+"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-20/point_of_sale/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -487,7 +487,7 @@ msgstr "<span name=\"ticket\">票据</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -610,13 +610,13 @@ msgstr "? 点击 \"验证\"  将验证支付."
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "A customer is required to use the payment method %s."
-msgstr ""
+msgstr "使用支付方式 %s需要指定一位客户。"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "A customer must be set on the order to pay with a customer account."
-msgstr ""
+msgstr "订单中必须设置客户才能使用客户账户进行支付。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__uuid
@@ -1626,7 +1626,7 @@ msgstr "银行对账单"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Transaction"
-msgstr ""
+msgstr "银行交易"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__bank_statement_line_ids
@@ -4707,12 +4707,6 @@ msgstr "索取发票"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__invoice_status
 msgid "Invoice Status"
 msgstr "发票状态"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
-msgid "Invoice required"
-msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
@@ -9552,6 +9546,12 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/loader/loader.js:0
+msgid "Still loading, thank you for your patience…"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Stock, product configurator, replenishment, discounts"
 msgstr "库存、产品配置器、补货、折扣"
@@ -10179,7 +10179,7 @@ msgstr "POS营业点的配置中不允许选择的支付方式."
 msgid ""
 "The payment method you choose will be linked to your device. You can change "
 "it later from the menu on top right."
-msgstr ""
+msgstr "您选择的付款方式将与您的设备关联。您稍后可以从右上角的菜单中进行更改。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -10621,14 +10621,6 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr "这个订单还没有同步到服务器。请确认它已被同步，然后再试。"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
-msgid ""
-"This order must be invoiced before validation because it mixes pay-later "
-"payment and cash-basis taxes."
-msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11211,7 +11203,7 @@ msgstr "增值税"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "VAT:"
-msgstr ""
+msgstr "增值税："
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11786,7 +11778,7 @@ msgstr "您的 {{ object.config_id.name }} 收据"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
@@ -11834,7 +11826,7 @@ msgstr "通过电子邮件"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "cash_machine"
-msgstr ""
+msgstr "cash_machine"
 
 #. module: point_of_sale
 #. odoo-python
@@ -12079,7 +12071,7 @@ msgstr "个未结订单计划稍后处理。"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "order"
-msgstr ""
+msgstr "订单"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12091,7 +12083,7 @@ msgstr "个未来几天的订单："
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "orders"
-msgstr ""
+msgstr "订单"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
@@ -12113,7 +12105,7 @@ msgstr "电话占位符"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "point_of_sale.use_lna"
-msgstr ""
+msgstr "point_of_sale.use_lna"
 
 #. module: point_of_sale
 #. odoo-python
@@ -12136,7 +12128,7 @@ msgstr "退货"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment_method.py:0
 msgid "terminal"
-msgstr ""
+msgstr "终端"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -12167,7 +12159,12 @@ msgstr "值为"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
-msgstr ""
+msgstr "x"
+
+#~ msgid ""
+#~ "This order must be invoiced before validation because it mixes pay-later "
+#~ "payment and cash-basis taxes."
+#~ msgstr "此订单在验证前必须开具发票，因为它混合了延期付款和收付实现制税款。"
 
 #~ msgid "Leave empty to use the receivable account of customer"
 #~ msgstr "留空以使用客户应收账款"

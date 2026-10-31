@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-10-23 11:39+0000\n"
+"PO-Revision-Date: 2026-10-27 07:18+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/ar/>\n"
@@ -502,6 +502,8 @@ msgid ""
 "If the move originates from a document from another company, contains that "
 "company's partner, otherwise the move's partner."
 msgstr ""
+"إذا كانت الحركة ناتجة عن مستند من شركة أخرى، فإنه يحتوي على شريك تلك الشركة، "
+"وإلا فشريك الحركة."
 
 #. module: stock_account
 #. odoo-python
@@ -661,7 +663,7 @@ msgstr "يتم دعم الإعداد Only (= True) فقط في البحث عن r
 msgid ""
 "Only set if the move is generated from a document belonging to another "
 "company"
-msgstr ""
+msgstr "يتم تعيينه فقط إذا تم إنشاء الحركة من مستند ينتمي إلى شركة أخرى"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
@@ -735,7 +737,7 @@ msgstr "متغير المنتج"
 msgid ""
 "Product should be passed as an argument in order to get the unit price for "
 "moves in a kit."
-msgstr ""
+msgstr "يجب تمرير المنتج كحجة للحصول على سعر الوحدة لعمليات النقل في مجموعة."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
@@ -802,6 +804,9 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"السعر القياسي: يتم تقييم المنتجات بتكلفتها القياسية المحددة في المنتج.\n"
+"        متوسط التكلفة (AVCO): يتم تقييم المنتجات بمتوسط التكلفة المرجح.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -840,6 +845,9 @@ msgid ""
 "Technical field holding the tracking method. False on a storable product "
 "means it's tracked by quantity only."
 msgstr ""
+"يُحدد هذا الحقل البرمجي طريقة تتبع المنتج داخل النظام؛ وعند اختيار القيمة "
+"(False) لمنتج قابل للتخزين، فهذا يعني أن تتبعه يتم اعتماداً على الكمية فقط "
+"(دون استخدام الأرقام التسلسلية أو أرقام المجموعات)."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id

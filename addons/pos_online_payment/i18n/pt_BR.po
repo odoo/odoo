@@ -4,13 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-04 17:45+0000\n"
-"PO-Revision-Date: 2026-10-22 16:37+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"PO-Revision-Date: 2026-10-29 18:58+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "20/pos_online_payment/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -26,16 +28,18 @@ msgid ""
 "<i class=\"oi me-2\" data-icon=\"lock\"/>Payment secured · Don't close this "
 "window"
 msgstr ""
+"<i class=\"oi me-2\" data-icon=\"lock\"/>Pagamento seguro · Não feche esta "
+"janela"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Order</span>"
-msgstr ""
+msgstr "<span class=\"text-500\">Pedido</span>"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "<span class=\"text-500\">Total</span>"
-msgstr ""
+msgstr "<span class=\"text-400\">5</span>0%"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay
@@ -179,14 +183,13 @@ msgstr "A fatura não pôde ser gerada"
 #. module: pos_online_payment
 #. odoo-python
 #: code:addons/pos_online_payment/controllers/payment_portal.py:0
-#, fuzzy
 msgid ""
 "It looks like a payment for this order is already being processed — maybe "
 "from this device, maybe from another. If you continue, you risk to pay the "
 "order twice. Only continue if you're sure the earlier attempt was abandoned."
 msgstr ""
 "Parece que um pagamento para este pedido já está sendo processado — talvez "
-"neste dispositivo, talvez em outro. Se você continuar, corre o risco de "
+"deste dispositivo, talvez de outro. Se continuar, você corre o risco de "
 "pagar o pedido duas vezes. Só continue se tiver certeza de que a tentativa "
 "anterior foi abandonada."
 
@@ -215,7 +218,7 @@ msgstr "Método de pagamento online"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Online Payment Transfer"
-msgstr ""
+msgstr "Transferência de pagamento online"
 
 #. module: pos_online_payment
 #: model:ir.model.fields,field_description:pos_online_payment.field_pos_payment__online_account_payment_id
@@ -270,7 +273,7 @@ msgstr "Pedido do PDV"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "POS Receivable Transfer"
-msgstr ""
+msgstr "Transferência de recebíveis de PDV"
 
 #. module: pos_online_payment
 #: model:ir.model,name:pos_online_payment.model_account_payment
@@ -324,7 +327,7 @@ msgstr "Método de pagamento no Ponto de Venda"
 #. module: pos_online_payment
 #: model:ir.module.module,shortdesc:base.module_pos_online_payment
 msgid "Point of Sale online payment"
-msgstr ""
+msgstr "Pagamento online de Ponto de Venda"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -551,7 +554,7 @@ msgstr "Referência da transação"
 #. odoo-python
 #: code:addons/pos_online_payment/models/pos_payment_method.py:0
 msgid "Transfer Online payment %(account_name)s => %(pos_receivable_name)s"
-msgstr ""
+msgstr "Transferir pagamento online %(account_name)s => %(pos_receivable_name)s"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pay_confirmation
@@ -572,7 +575,7 @@ msgstr "Pagamentos online atualizados"
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "We're confirming your payment."
-msgstr ""
+msgstr "Estamos confirmando seu pagamento."
 
 #. module: pos_online_payment
 #. odoo-javascript
@@ -592,11 +595,14 @@ msgid ""
 ">\n"
 "                        Don't hesitate to contact us if you don't receive it."
 msgstr ""
+"Você deve receber um e-mail confirmando seu pagamento em alguns minutos.<br/>"
+"\n"
+"                        Não hesite em nos contatar caso não o receba."
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_status
 msgid "Your payment is on its way!"
-msgstr ""
+msgstr "Seu pagamento está a caminho!"
 
 #. module: pos_online_payment
 #: model_terms:ir.ui.view,arch_db:pos_online_payment.pos_payment_method_view_form_inherit_pos_online_payment

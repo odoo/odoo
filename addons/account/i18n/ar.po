@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-10-23 12:52+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-27 11:33+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/account/"
 "ar/>\n"
@@ -5106,6 +5106,8 @@ msgid "Banks"
 msgstr "البنوك"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
 msgid "Base"
 msgstr "قاعدة"
@@ -7043,20 +7045,16 @@ msgid "Credit Move"
 msgstr "الحركة الدائنة"
 
 #. module: account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__credit_note
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Credit Note"
 msgstr "إشعار دائن"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Credit Note :"
-msgstr "إشعار دائن:"
 
 #. module: account
 #. odoo-python
@@ -8852,11 +8850,9 @@ msgstr "قالب بريد إلكتروني"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
 msgid ""
-"Email addresses that will receive copy for sent and received invoices. "
-"Separate entries with ';'."
+"Email addresses that should receive invoices copy/return reminders. Separate "
+"entries with ';'."
 msgstr ""
-"عناوين البريد الإلكتروني التي ستتلقى نسخة من الفواتير المرسلة والمستلمة. "
-"افصل بين العناوين بعلامة ';'."
 
 #. module: account
 #. odoo-javascript
@@ -10647,11 +10643,6 @@ msgstr ""
 "إعداده، سيتم اعتبار الخصم على الفواتير في حسابات منفصلة."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
-msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "إذا كان فارغًا، سيتم استخدام يومية قيد اليومية حتى يتم عكسه."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
 msgid ""
 "If set, taxes with a higher sequence than this one will be affected by it, "
@@ -10723,6 +10714,9 @@ msgid ""
 "will                                            depend upon the output of "
 "the verification by the European VIES Service."
 msgstr ""
+"إذا تم تحديد مربع الاختيار هذا، "
+"سيعتمد                                            الوضع المالي الافتراضي "
+"الذي سينطبق على مخرجات التحقق، من قِبَل خدمة VIES الأوروبية."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__is_journal_hash
@@ -10744,6 +10738,8 @@ msgid ""
 "If you are not subject to VAT, you will have no sale taxes and only non "
 "deductible taxes activated"
 msgstr ""
+"إذا لم تكن خاضعاً لضريبة القيمة المضافة، فلن تكون لديك ضرائب مبيعات وسيتم "
+"تفعيل الضرائب غير القابلة للخصم فقط"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11414,6 +11410,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
@@ -11429,12 +11426,6 @@ msgstr "الفاتورة"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Invoice #"
 msgstr "رقم فاتورة"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Invoice :"
-msgstr "الفاتورة :"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -11633,6 +11624,12 @@ msgid ""
 msgstr ""
 "يجب أن يكون لتوزيع الإشعارات الدائنة أو الفواتير بند توزيع ضريبي واحد على "
 "الأقل."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Invoice generated but not sent."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12011,6 +12008,8 @@ msgid ""
 "It exists closing entries after the selected date. Cancel them before "
 "generate an entry prior to them"
 msgstr ""
+"توجد قيود إقفال مسجلة بتاريخ أحدث من التاريخ المحدد. يجب إلغاء تلك القيود "
+"أولاً لتتمكن من توليد قيد قبلها"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -13782,6 +13781,14 @@ msgid "No rounding applied"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"No valid sending method could be applied, so this invoice was not sent "
+"automatically. Please configure a sending method and send it manually."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
 msgid "Non Deductible Amount"
 msgstr "المبلغ غير القابل للخصم"
@@ -14075,6 +14082,8 @@ msgid ""
 "Odoo allows you to reconcile a transaction directly with\n"
 "                the related sale or purchase invoices."
 msgstr ""
+"يتيح لك أودو مطابقة المعاملة مباشرة مع\n"
+"                فواتير البيع أو الشراء ذات الصلة."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
@@ -14262,6 +14271,7 @@ msgid ""
 "Only the value 'periodic' and 'real_time' are accepted to search on "
 "valuation field."
 msgstr ""
+"يتم قبول القيمتين \"periodic\" و \"real_time\" فقط للبحث في حقل التقييم."
 
 #. module: account
 #. odoo-python
@@ -15465,7 +15475,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 msgid ""
 "Please set the Valuation Account for Inventory Valuation in the settings."
-msgstr ""
+msgstr "يرجى ضبط حساب تقييم المخزون ضمن لوحة الإعدادات للمتابعة."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -15523,6 +15533,7 @@ msgstr "Postage and Delivery"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
 msgstr "مُرحّل"
 
@@ -17972,7 +17983,7 @@ msgstr ""
 msgid ""
 "Specify how the rounding difference is applied: add a rounding line or "
 "adjust the highest tax amount."
-msgstr ""
+msgstr "حدّد كيفية تطبيق فرق التقريب: إضافة سطر تقريب أو تعديل أعلى مبلغ ضريبة."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -18000,6 +18011,9 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"السعر القياسي: يتم تقييم المنتجات بتكلفتها القياسية المحددة في المنتج.\n"
+"        متوسط التكلفة (AVCO): يتم تقييم المنتجات بمتوسط التكلفة المرجح.\n"
+"        "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -18357,6 +18371,8 @@ msgid "Target Line"
 msgstr "البند المستهدف"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
 #: model:account.report.column,name:account.generic_tax_report_column_tax
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_tax
@@ -19185,6 +19201,8 @@ msgid ""
 "The account code can only contain alphanumeric characters, dots, and dashes. "
 "(account code: %s)"
 msgstr ""
+"يجب ألا يحتوي رمز الحساب إلا على أحرف أبجدية رقمية، ونقاط، وشرطات. (رمز "
+"الحساب: %s)"
 
 #. module: account
 #. odoo-python
@@ -19323,6 +19341,8 @@ msgid ""
 "The cash rounding method \"%(name)s\" has no Profit/Loss Accounts set, so no "
 "rounding line can be added."
 msgstr ""
+"لا تحتوي طريقة تقريب النقد \"%(name)s\" على حسابات أرباح/خسائر محددة، لذا لا "
+"يمكن إضافة سطر تقريب."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -19377,6 +19397,9 @@ msgstr "الشركة التي ينتمي إليها هذا التوزيع."
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
 msgid "The computation rule used to round values (e.g., UP, DOWN, or HALF-UP)."
 msgstr ""
+"تحدد هذه القاعدة الطريقة الحسابية المعتمدة لتقريب المبالغ والأرقام ضمن "
+"النظام، مثل التقريب لأعلى (UP)، أو لأسفل (DOWN)، أو للنصف التقريبي للأعلى "
+"(HALF-UP)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -19667,6 +19690,8 @@ msgid ""
 "The journal (%(journal_code)s) has some hashed statements so the type cannot "
 "be changed"
 msgstr ""
+"يتعذر تعديل نوع دفتر اليومية (%(journal_code)s) نظراً لاحتوائه على كشوفات "
+"حساب موثقة بتجزئة مشفرة غير قابلة للتعديل لضمان سلامة التدقيق المالي"
 
 #. module: account
 #. odoo-python
@@ -19713,7 +19738,7 @@ msgstr "عنصر اليومية غير مرتبط بالحساب المالي ا
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
-"The journal of this statement (%(statement_name)) is hashed, the statement "
+"The journal of this statement (%(statement_name)s) is hashed, the statement "
 "cannot be reset to draft"
 msgstr ""
 
@@ -20105,7 +20130,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
 msgid "The smallest value used to round the total amount (e.g., 0.05 or 100)."
-msgstr ""
+msgstr "أصغر قيمة مستخدمة لتقريب إجمالي المبلغ (مثلاً: 0.05 أو 100)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
@@ -20181,6 +20206,8 @@ msgid ""
 "entries from journal prefixes containing them will not be secured: %"
 "(prefix_info)s"
 msgstr ""
+"لا تزال هناك معاملات بنكية غير مسواة قبل التاريخ المحدد. لن يتم تأمين القيود "
+"من بادئات دفاتر اليومية التي تحتوي عليها: %(prefix_info)s"
 
 #. module: account
 #. odoo-python
@@ -20189,6 +20216,8 @@ msgid ""
 "There are still unreconciled bank transactions in the period you want to "
 "lock. You should either reconcile or delete them."
 msgstr ""
+"لا تزال هناك معاملات بنكية غير مسواة في الفترة التي ترغب في قفلها. يجب عليك "
+"إما تسويتها أو حذفها."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -20446,6 +20475,7 @@ msgstr "لقد تم عكس هذا القيد من %s"
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reviewed by accountants, only them can edit it now."
 msgstr ""
+"تمت مراجعة هذا القيد من قبل المحاسبين، ولا يمكن لأحد غيرهم تعديله الآن."
 
 #. module: account
 #. odoo-python
@@ -20626,7 +20656,7 @@ msgstr ""
 msgid ""
 "Those can be used to automatically match journal items with your "
 "transactions."
-msgstr ""
+msgstr "يمكن استخدامها لمطابقة بنود دفتر اليومية تلقائياً مع معاملاتك."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -21920,6 +21950,8 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"عند تمكين تقييم المخزون المؤتمت لمنتج ما، سيحتوي هذا الحساب على القيمة "
+"الحالية للمنتجات."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
@@ -21944,6 +21976,8 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"عند إجراء تقييم مؤتمت للمخزون، هذا هو دفتر اليومية المحاسبي الذي سيتم ترحيل "
+"القيود فيه عند معالجة حركات المخزون."
 
 #. module: account
 #. odoo-python
@@ -21971,6 +22005,8 @@ msgid ""
 "With perpetual valuation, this account will hold the price difference "
 "between the standard price and the bill price."
 msgstr ""
+"مع التقييم الدائم، سيحتفظ هذا الحساب بفرق السعر بين السعر القياسي وسعر "
+"الفاتورة."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -22181,6 +22217,8 @@ msgstr "لا يمكنك تغيير نوع المسودة إلا في المست�
 #: code:addons/account/models/product.py:0
 msgid "You can only use the '=' operator to search on valuation field."
 msgstr ""
+"يُسمح فقط باستخدام أداة المقارنة \"=\" عند إجراء البحث في حقل التقييم "
+"(Valuation Field)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -22240,6 +22278,7 @@ msgid ""
 "You can't create a new bank transaction without a suspense account set on "
 "the %s journal."
 msgstr ""
+"لا يمكنك إنشاء معاملة بنكية جديدة دون تعيين حساب معلق في دفتر يومية %s."
 
 #. module: account
 #. odoo-python
@@ -22600,6 +22639,8 @@ msgid ""
 "You cannot modify the following readonly fields on the posted move %(move)s: "
 "%(fields)s"
 msgstr ""
+"لا يمكنك تعديل الحقول للقراءة فقط التالية في القيد المرحّل %(move)s: %"
+"(fields)s"
 
 #. module: account
 #. odoo-python
@@ -23527,6 +23568,31 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.payment_receipt_title }} (مرجع "
+"{{ object.name or 'n/a' }})"
+
+#~ msgid "Credit Note :"
+#~ msgstr "إشعار دائن:"
+
+#~ msgid ""
+#~ "Email addresses that will receive copy for sent and received invoices. "
+#~ "Separate entries with ';'."
+#~ msgstr ""
+#~ "عناوين البريد الإلكتروني التي ستتلقى نسخة من الفواتير المرسلة والمستلمة. "
+#~ "افصل بين العناوين بعلامة ';'."
+
+#~ msgid "If empty, uses the journal of the journal entry to be reversed."
+#~ msgstr "إذا كان فارغًا، سيتم استخدام يومية قيد اليومية حتى يتم عكسه."
+
+#~ msgid "Invoice :"
+#~ msgstr "الفاتورة :"
+
+#~ msgid ""
+#~ "The journal of this statement (%(statement_name)) is hashed, the "
+#~ "statement cannot be reset to draft"
+#~ msgstr ""
+#~ "دفتر يومية كشف الحساب هذا (%(statement_name)) مشفر، ولا يمكن إعادة تعيين "
+#~ "كشف الحساب إلى مسودة"
 
 #~ msgid ""
 #~ "<b>%(count)s#</b> Installment of <b>%(amount)s</b> due on <b "

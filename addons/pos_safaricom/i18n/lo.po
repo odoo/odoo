@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_safaricom
+# * pos_safaricom
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.3a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 20:10+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-25 12:33+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
 "pos_safaricom/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -22,37 +23,37 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "'Search by name or phone or transaction id...'"
-msgstr ""
+msgstr "'ຊອກຫາຕາມຊື່, ເບີໂທ ຫຼື ລະຫັດທຸລະກຳ...'"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "'Select M-Pesa Transaction'"
-msgstr ""
+msgstr "'ເລືອກທຸລະກຳ M-Pesa'"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Accept"
-msgstr ""
+msgstr "ຍອມຮັບ"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__amount
 msgid "Amount"
-msgstr ""
+msgstr "ຈຳນວນເງິນ"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Arrived at"
-msgstr ""
+msgstr "ມາຮອດເວລາ"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__business_short_code
 msgid "Business Short Code"
-msgstr ""
+msgstr "ລະຫັດຫຍໍ້ທຸລະກິດ"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
@@ -62,40 +63,44 @@ msgid ""
 "                                This happens automatically on creation, but "
 "you can re-register if you deleted them from the business portal."
 msgstr ""
+"ຕ້ອງລົງທະບຽນ C2B callback URLs ກັບ Safaricom ເພື່ອໃຫ້ Lipa na M-PESA ສາມາດເຮັດວຽກໄ"
+"ດ້.\n"
+"                                ສິ່ງນີ້ຈະເກີດຂຶ້ນໂດຍອັດຕະໂນມັດເມື່ອສ້າງ, ແຕ່ທ່ານສາມາດລົງທະບຽ"
+"ນຄືນໃໝ່ໄດ້ ຖ້າທ່ານໄດ້ລຶບພວກມັນອອກຈາກ business portal."
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Cancel"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Cannot process transactions with float numbers. Round it please."
-msgstr ""
+msgstr "ບໍ່ສາມາດປະມວນຜົນທຸລະກຳທີ່ມີເລກເສດໄດ້. ກະລຸນາປັດໃຫ້ເປັນຈຳນວນຖ້ວນ."
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Cannot process transactions with negative amount."
-msgstr ""
+msgstr "ບໍ່ສາມາດປະມວນຜົນທຸລະກຳທີ່ມີຈຳນວນເງິນຕິດລົບໄດ້."
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_key
 msgid "Consumer Key"
-msgstr ""
+msgstr "Consumer Key"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Consumer Key and Consumer Secret are required for Safaricom M-Pesa"
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງມີ Consumer Key ແລະ Consumer Secret ສຳລັບ Safaricom M-Pesa"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_secret
 msgid "Consumer Secret"
-msgstr ""
+msgstr "Consumer Secret"
 
 #. module: pos_safaricom
 #. odoo-python
@@ -103,16 +108,17 @@ msgstr ""
 msgid ""
 "Could not find base url. Please set up web.base.url to a valid https address"
 msgstr ""
+"ບໍ່ພົບ base url. ກະລຸນາຕັ້ງຄ່າ web.base.url ໃຫ້ເປັນທີ່ຢູ່ https ທີ່ຖືກຕ້ອງ"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_order_receipt__display_name
@@ -120,31 +126,32 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Failed to generate QR code"
-msgstr ""
+msgstr "ສ້າງ QR code ບໍ່ສຳເລັດ"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to register URLs. Check your credentials and try again."
 msgstr ""
+"ລົງທະບຽນ URL ບໍ່ສຳເລັດ. ກວດສອບຂໍ້ມູນການເຂົ້າສູ່ລະບົບຂອງທ່ານ ແລ້ວລອງໃໝ່ອີກຄັ້ງ."
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to register URLs: %s"
-msgstr ""
+msgstr "ລົງທະບຽນ URL ບໍ່ສຳເລັດ: %s"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to retrieve access token from Safaricom"
-msgstr ""
+msgstr "ດຶງຂໍ້ມູນ access token ຈາກ Safaricom ບໍ່ສຳເລັດ"
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -154,214 +161,214 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_identifier_type
 msgid "Identifier Type"
-msgstr ""
+msgstr "ປະເພດລະຫັດລະບຸຕົວຕົນ"
 
 #. module: pos_safaricom
 #: model:ir.module.module,summary:base.module_pos_safaricom
 msgid "Integrate your POS with the Safaricom Payment Provider"
-msgstr ""
+msgstr "ເຊື່ອມໂຍງ POS ຂອງທ່ານເຂົ້າກັບຜູ້ໃຫ້ບໍລິການຊຳລະເງິນ Safaricom"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Invalid phone number format. Please use format: 2547XXXXXXXX"
-msgstr ""
+msgstr "ຮູບແບບເບີໂທລະສັບບໍ່ຖືກຕ້ອງ. ກະລຸນາໃຊ້ຮູບແບບ: 2547XXXXXXXX"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດໂດຍ"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
 
 #. module: pos_safaricom
 #: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__lipa_na_mpesa
 msgid "Lipa na M-PESA"
-msgstr ""
+msgstr "Lipa na M-PESA"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Lipa na M-PESA Configuration"
-msgstr ""
+msgstr "ການກຳນົດຄ່າ Lipa na M-PESA"
 
 #. module: pos_safaricom
 #: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__mpesa_express
 msgid "M-PESA Express"
-msgstr ""
+msgstr "M-PESA Express"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "M-Pesa Phone Number"
-msgstr ""
+msgstr "ເບີໂທລະສັບ M-Pesa"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "M-Pesa QR Code"
-msgstr ""
+msgstr "M-Pesa QR Code"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__name
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__number
 msgid "Number"
-msgstr ""
+msgstr "ໝາຍເລກ"
 
 #. module: pos_safaricom
 #: model:ir.module.module,shortdesc:base.module_pos_safaricom
 msgid "POS Safaricom"
-msgstr ""
+msgstr "POS Safaricom"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__passkey
 msgid "Passkey"
-msgstr ""
+msgstr "Passkey"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_paybill_number
 #: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_identifier_type__paybill
 msgid "Paybill number"
-msgstr ""
+msgstr "ໝາຍເລກ Paybill"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
 msgid "Payment Failed"
-msgstr ""
+msgstr "ການຊຳລະເງິນຫຼົ້ມເຫຼວ"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_payment_type
 msgid "Payment Type"
-msgstr ""
+msgstr "ປະເພດການຊຳລະເງິນ"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Payment line not found"
-msgstr ""
+msgstr "ບໍ່ພົບແຖວລາຍການຊຳລະເງິນ"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
 msgid "Payment was not completed"
-msgstr ""
+msgstr "ການຊຳລະເງິນບໍ່ສຳເລັດ"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Phone"
-msgstr ""
+msgstr "ເບີໂທລະສັບ"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Phone number is required for M-Pesa payment."
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງມີເບີໂທລະສັບສຳລັບການຊຳລະເງິນ M-Pesa."
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_pos_order_receipt
 msgid "Point of Sale Order Receipt Generator"
-msgstr ""
+msgstr "ເຄື່ອງສ້າງໃບຮັບເງິນການສັ່ງຊື້ໜ້າຮ້ານ (POS)"
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "ການຊຳລະເງິນໜ້າຮ້ານ (POS)"
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "ວິທີການຊຳລະເງິນໜ້າຮ້ານ (POS)"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__received_at
 msgid "Received At"
-msgstr ""
+msgstr "ໄດ້ຮັບເມື່ອ"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Refresh"
-msgstr ""
+msgstr "ໂຫຼດໃໝ່"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Register URLs"
-msgstr ""
+msgstr "ລົງທະບຽນ URL"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Register or re-register C2B callback URLs with Safaricom"
-msgstr ""
+msgstr "ລົງທະບຽນ ຫຼື ລົງທະບຽນຄືນໃໝ່ C2B callback URLs ກັບ Safaricom"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid "Safaricom"
-msgstr ""
+msgstr "Safaricom"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Safaricom M-Pesa Error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດ Safaricom M-Pesa"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment__safaricom_transaction_id
 msgid "Safaricom transaction id"
-msgstr ""
+msgstr "ລະຫັດທຸລະກຳ Safaricom"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "Scan to Pay with M-Pesa"
-msgstr ""
+msgstr "ສະແກນເພື່ອຈ່າຍດ້ວຍ M-Pesa"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Test Mode"
-msgstr ""
+msgstr "ໂໝດທົດສອບ"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey
 msgid "The passkey is used to generate the password for the STK Push"
-msgstr ""
+msgstr "Passkey ແມ່ນໃຊ້ເພື່ອສ້າງລະຫັດຜ່ານສຳລັບ STK Push"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_till_number
 #: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_identifier_type__till
 msgid "Till number"
-msgstr ""
+msgstr "ໝາຍເລກ Till"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__trans_id
 msgid "Transaction ID"
-msgstr ""
+msgstr "ລະຫັດທຸລະກຳ"
 
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_order_receipt
 msgid "Transaction ID:"
-msgstr ""
+msgstr "ລະຫັດທຸລະກຳ:"
 
 #. module: pos_safaricom
 #: model:ir.model,name:pos_safaricom.model_transaction_lipa_na_mpesa
 msgid "Transaction Lipa na M-PESA"
-msgstr ""
+msgstr "ທຸລະກຳ Lipa na M-PESA"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Use sandbox environment"
-msgstr ""
+msgstr "ໃຊ້ສະພາບແວດລ້ອມທົດສອບ (Sandbox)"

@@ -48,8 +48,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-06 17:49+0000\n"
-"PO-Revision-Date: 2026-10-20 12:33+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"PO-Revision-Date: 2026-10-30 13:33+0000\n"
+"Last-Translator: setenayp <seat@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/base/tr/>"
 "\n"
 "Language: tr\n"
@@ -68,6 +68,11 @@ msgid ""
 "        can't be used for endpoints requiring any other scope than 'A'.\n"
 "        "
 msgstr ""
+"\n"
+"        'A' kapsamına sahip bir belirteç, yalnızca 'A' kapsamında bir "
+"taşıyıcı belirteç gerektiren uç noktalar için kullanılabilir ve 'A' dışında "
+"herhangi bir kapsam gerektiren uç noktalar için kullanılamaz.\n"
+"        "
 
 #. module: base
 #. odoo-python
@@ -107,6 +112,9 @@ msgid ""
 "User: %(user)s\n"
 "Groups: %(allowed_groups_msg)s"
 msgstr ""
+"\n"
+"Kullanıcı: %(user)s\n"
+"Gruplar: %(allowed_groups_msg)s"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__time_format__%i:%m:%s_%p
@@ -132,7 +140,7 @@ msgstr "# Gruplar"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
 msgid "# Records"
-msgstr ""
+msgstr "Kayıt Sayısı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_users_count
@@ -321,7 +329,7 @@ msgstr "'yeni’, rezerve edilmiştir ve yol olarak kullanılamaz."
 #. odoo-python
 #: code:addons/fields.py:0
 msgid "(Record: %(record)s, User: %(user)s)"
-msgstr ""
+msgstr "(Kayıt: %(record)s, Kullanıcı: %(user)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -356,6 +364,8 @@ msgid ""
 "- Only a root company can be set on “%(record)s”. Currently set to “%"
 "(company)s”"
 msgstr ""
+"- Yalnızca bir kök şirket “%(record)s” üzerinde ayarlanabilir. Şu anda “%"
+"(company)s” olarak ayarlı"
 
 #. module: base
 #. odoo-python
@@ -364,6 +374,8 @@ msgid ""
 "- Record is company “%(company)s” while “%(field)s” (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Kayıt şirketi “%(company)s” iken, “%(field)s” (%(fname)s: %(values)s) "
+"başka bir şirkete aittir."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -425,17 +437,19 @@ msgid ""
 "- “%(record)s” belongs to company “%(company)s” while “%(field)s” (%"
 "(fname)s: %(values)s) belongs to another company."
 msgstr ""
+"- “%(record)s”, “%(company)s” şirketine aittir; oysa “%(field)s” (%(fname)s: "
+"%(values)s) başka bir şirkete aittir."
 
 #. module: base
 #: model:website,contact_us_link_url:base.default_website
 msgid "/contactus"
-msgstr ""
+msgstr "/bizimle iletişime geç"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "0123456789016 or 1234545678781 [13 digits]"
-msgstr ""
+msgstr "0123456789016 veya 1234545678781 [13 hane]"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__days_1
@@ -457,7 +471,7 @@ msgstr "1 Ay"
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "1-01-85004-3 veya 101850043"
 
 #. module: base
 #. odoo-python
@@ -465,25 +479,27 @@ msgstr ""
 #: code:addons/partner_identifiers.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
 msgstr ""
+"10XXXXXXXXY veya 20XXXXXXXXY veya 15XXXXXXXXY veya 16XXXXXXXXY veya "
+"17XXXXXXXXY"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (TCKN) veya 2222222222 (VKN)"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "123-45-67890 or 1234567890"
-msgstr ""
+msgstr "123-45-67890 veya 1234567890"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "1234567 or 1234567-8 or 12345-1234567-8"
-msgstr ""
+msgstr "1234567 veya 1234567-8 veya 12345-1234567-8"
 
 #. module: base
 #. odoo-python
@@ -492,45 +508,46 @@ msgstr ""
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
+"12345678 veya UA12345678 (EDRPOU), 1234567890 (RNOPP) veya 123456789012 (IPN)"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "123456782 or 123456782RT0001"
-msgstr ""
+msgstr "123456782 veya 123456782RT0001"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 msgid "123456789 (TIN) or 12345678901234 (PINFL)"
-msgstr ""
+msgstr "123456789 (TIN) veya 12345678901234 (PINFL)"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "1792060346001 or 1792060346"
-msgstr ""
+msgstr "1792060346001 veya 1792060346"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "3002707692 [Tax identification number]"
-msgstr ""
+msgstr "3002707692 [Vergi kimlik numarası]"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
-msgstr ""
+msgstr "310175397400003 [On beş hane, ilk ve son haneler \"3\" olmalı]"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "49-098-576 or 49098576"
-msgstr ""
+msgstr "49-098-576 veya 49098576"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_enable_profiling_wizard__duration__minutes_5
@@ -541,7 +558,7 @@ msgstr "5 Dakika"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "700 Number"
-msgstr ""
+msgstr "700 Numarası"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -685,6 +702,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi d-none d-md-block\" data-icon=\"luggage\" title=\"Position\"/>"
 msgstr ""
+"<i class=\"oi d-none d-md-block\" data-icon=\"luggage\" title=\"Konum\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -693,6 +711,8 @@ msgid ""
 "<i class=\"oi d-none d-md-inline-flex\" data-icon=\"business\" "
 "title=\"Company\"/>"
 msgstr ""
+"<i class=\"oi d-none d-md-inline-flex\" data-icon=\"business\" "
+"title=\"Şirket\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -701,6 +721,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"mail\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"mail\" title=\"E-"
+"posta\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -710,6 +732,10 @@ msgid ""
 "                                    <i class=\"oi d-none d-md-block\" data-"
 "icon=\"key\" title=\"Login\" invisible=\"login == email\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"mail\" "
+"title=\"Giriş / E-posta\" invisible=\"login != email\"/>\n"
+"                                    <i class=\"oi d-none d-md-block\" data-"
+"icon=\"key\" title=\"Giriş\" invisible=\"login == email\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -718,6 +744,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-block\" data-icon=\"phone\" "
+"title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -726,6 +754,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
+"title=\"E-posta\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -734,6 +764,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
+"title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -741,6 +773,8 @@ msgid ""
 "<i class=\"oi oi-filled me-1\" data-icon=\"mail\" role=\"img\" aria-"
 "label=\"Login\"/>"
 msgstr ""
+"<i class=\"oi oi-filled me-1\" data-icon=\"mail\" role=\"img\" aria-"
+"label=\"Giriş\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -748,6 +782,8 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"circle\" role=\"img\" aria-"
 "label=\"Invalid\" title=\"Invalid\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"circle\" role=\"img\" aria-"
+"label=\"Geçersiz\" title=\"Geçersiz\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -755,18 +791,20 @@ msgid ""
 "<i class=\"oi oi-filled\" data-icon=\"circle\" role=\"img\" aria-"
 "label=\"Ok\" title=\"Ok\"/>"
 msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"circle\" role=\"img\" aria-"
+"label=\"Tamam\" title=\"Tamam\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<i class=\"oi oi-fw me-1\" data-icon=\"location_on\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-fw me-1\" data-icon=\"location_on\" title=\"Konum\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "<i class=\"oi oi-fw me-1\" data-icon=\"luggage\" title=\"Position\"/>"
-msgstr ""
+msgstr "<i class=\"oi oi-fw me-1\" data-icon=\"luggage\" title=\"Konum\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
@@ -774,6 +812,8 @@ msgid ""
 "<i class=\"oi oi-fw o_button_icon\" data-icon=\"east\"/>\n"
 "                                Access rights documentation"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon\" data-icon=\"east\"/>\n"
+"                                 Erişim hakları belgelendirmesi"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -781,6 +821,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
+"title=\"E-posta\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -788,6 +830,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
+"title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -795,6 +839,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled me-1 text-muted\" data-icon=\"mail\" "
 "title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-1 text-muted\" data-icon=\"mail\" title=\"E-"
+"posta\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -802,6 +848,8 @@ msgid ""
 "<i class=\"oi oi-fw oi-filled me-1 text-muted\" data-icon=\"phone\" "
 "title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-1 text-muted\" data-icon=\"phone\" "
+"title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -809,6 +857,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw oi-filled me-1\" data-icon=\"mail\" title=\"Email\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-1\" data-icon=\"mail\" title=\"E-posta\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -816,11 +865,12 @@ msgstr ""
 msgid ""
 "<i class=\"oi oi-fw oi-filled me-1\" data-icon=\"phone\" title=\"Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-fw oi-filled me-1\" data-icon=\"phone\" title=\"Telefon\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Warning\"/>"
-msgstr ""
+msgstr "<i class=\"oi pe-2\" data-icon=\"warning\" title=\"Uyarı\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
@@ -830,7 +880,7 @@ msgstr "<span class=\"badge rounded-pill bg-light border\">etkin değil</span>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
 msgid "<span class=\"me-1\">For</span>"
-msgstr ""
+msgstr "<span class=\"me-1\">İçin</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_kanban_view
@@ -1003,6 +1053,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or value_field_to_show != "
 "'x2many'\">by</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or value_field_to_show != "
+"'x2many'\">tarafından</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -1012,6 +1064,10 @@ msgid ""
 "                                <span invisible=\"evaluation_type != "
 "'sequence'\">with</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or value_field_to_show == "
+"'x2many'\">ile</span>\n"
+"                                <span invisible=\"evaluation_type != "
+"'sequence'\">ile</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -1019,6 +1075,8 @@ msgid ""
 "<span invisible=\"impacted_application_count == 1\"> apps</span><span "
 "invisible=\"impacted_application_count &gt; 1\"> app</span>"
 msgstr ""
+"<span invisible=\"impacted_application_count == 1\"> uygulamalar</span><span "
+"invisible=\"impacted_application_count &gt; 1\"> uygulama</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -1026,6 +1084,8 @@ msgid ""
 "<span invisible=\"impacted_module_count == 1\"> modules</span><span "
 "invisible=\"impacted_module_count &gt; 1\"> module</span>"
 msgstr ""
+"<span invisible=\"impacted_module_count == 1\"> modüller</span><span "
+"invisible=\"impacted_module_count &gt; 1\"> modül</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_uninstall
@@ -1033,6 +1093,8 @@ msgid ""
 "<span invisible=\"model_count == 1\"> models</span><span "
 "invisible=\"model_count &gt; 1\"> model</span>"
 msgstr ""
+"<span invisible=\"model_count == 1\"> modeller</span><span "
+"invisible=\"model_count &gt; 1\"> model</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -1072,7 +1134,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "<span> days</span>"
-msgstr ""
+msgstr "<span> gün </span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -1288,6 +1350,9 @@ msgid ""
 "and is used by domestic money transfer protocols (from/to bank accounts in "
 "the same country)."
 msgstr ""
+"Takas numarası (veya yönlendirme numarası), bir bankayı, şubeyi veya konumu "
+"ifade eder ve yerel para transferi protokolleri tarafından (aynı ülkedeki "
+"banka hesaplarına/hesaplarından) kullanılır."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_3
@@ -1325,6 +1390,11 @@ msgid ""
 "group                                             that is constrained by "
 "their domain and the restrictions"
 msgstr ""
+"Bir kısıtlama (restriction), gruba bağlı olmayan, küresel olarak uygulanan "
+"ve atlatılamayan bir                                               erişim "
+"hakkıdır. Bir izin (permission) ise alan adı (domain) ve kısıtlamalarla "
+"sınırlandırılmış,                                               bir grubla "
+"ilişkili bir erişim hakkıdır."
 
 #. module: base
 #. odoo-python
@@ -1362,7 +1432,7 @@ msgstr "A0  5   841 x 1189 mm"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "A00012345"
-msgstr ""
+msgstr "A00012345"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__a1
@@ -1418,7 +1488,7 @@ msgstr "ABN"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "ACN"
-msgstr ""
+msgstr "ACN"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_ai
@@ -1497,7 +1567,7 @@ msgstr "Erişim Kontrolu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__access_count
 msgid "Access Count"
-msgstr ""
+msgstr "Erişim Sayısı"
 
 #. module: base
 #: model:ir.model,name:base.model_res_groups
@@ -1512,7 +1582,7 @@ msgstr "Erişim Menüsü"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_search_view
 msgid "Access Right"
-msgstr ""
+msgstr "Erişim Hakkı"
 
 #. module: base
 #. odoo-python
@@ -1543,7 +1613,7 @@ msgstr "Erişim Hakları Tutarsızlığı"
 #: code:addons/base/models/res_groups.py:0
 #: model:ir.model.fields,field_description:base.field_res_groups__access_ids
 msgid "Access Rules"
-msgstr ""
+msgstr "Erişim Kuralları"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
@@ -1553,7 +1623,7 @@ msgstr "Erişim Anahtarı"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
 msgid "Access name..."
-msgstr ""
+msgstr "Erişim adı..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_form_view
@@ -1563,16 +1633,19 @@ msgid ""
 "                            Access rights associated with a group grant "
 "permissions. These are constrained by their domain and the restrictions."
 msgstr ""
+"Grupsuz erişim hakları, aşılamayacak genel kısıtlamalar uygular.<br/>\n"
+"                             Bir gruba bağlı erişim hakları izinler tanır. "
+"Bunlar kendi etki alanları ve kısıtlamalar tarafından sınırlandırılır."
 
 #. module: base
 #: model:res.groups,comment:base.group_user
 msgid "Access to the home menu with limited access"
-msgstr ""
+msgstr "Sınırlı erişimle ana menüye erişim"
 
 #. module: base
 #: model:res.groups,comment:base.group_user_regular
 msgid "Access to the home menu with regular access"
-msgstr ""
+msgstr "Normal erişimle ana menüye erişim"
 
 #. module: base
 #: model:res.groups,comment:base.group_system
@@ -1590,6 +1663,8 @@ msgstr "Yetkisiz veya geçersiz şirketlere erişim."
 #: code:addons/base/models/ir_access.py:0
 msgid "Accesses with domain can not be applied on model Access itself."
 msgstr ""
+"Etki alanına sahip erişimler, doğrudan Erişim modelinin kendisine "
+"uygulanamaz."
 
 #. module: base
 #. odoo-python
@@ -1611,7 +1686,7 @@ msgstr "Hesap Numarası"
 #: model:ir.model.fields,help:base.field_res_partner_bank__holder_name
 msgid ""
 "Account holder name in case it is different than the name of the partner."
-msgstr ""
+msgstr "Ortak adından farklı olması durumunda hesap sahibi adı."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting
@@ -1627,6 +1702,9 @@ msgid ""
 "productive,\n"
 "                responsive and profitable."
 msgstr ""
+"Acme Corporation, müşterilerimizi daha verimli, duyarlı ve kârlı kılmak için "
+"İK ve Tedarik Zinciri süreçlerini tasarlar, geliştirir, entegre eder ve "
+"destekler."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_2
@@ -1636,6 +1714,9 @@ msgid ""
 "Chain processes in order to make our customers more productive, responsive "
 "and profitable."
 msgstr ""
+"Acme Corporation, müşterilerimizin daha üretken, hızlı tepki veren ve kârlı "
+"olmalarını sağlamak amacıyla İK ve Tedarik Zinciri süreçlerini tasarlar, "
+"geliştirir, entegre eder ve destekler."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -1645,6 +1726,10 @@ msgid ""
 "                with Open Sources software to manage their businesses. Our\n"
 "                consultants are experts in the following areas:"
 msgstr ""
+"Acme Corporation, KOBİ'lerin işlerini yönetmeleri için Açık Kaynaklı "
+"yazılımlarla destek sağlar ve Küresel Şirketler için ERP\n"
+"                  entegrasyonu yapar. \n"
+"                 Danışmanlarımız aşağıdaki alanlarda uzmandır:"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_actions
@@ -1856,7 +1941,7 @@ msgstr "Yön bilgisi ekleme (dijital için kullanılmaz)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Add to the 'Print' menu"
-msgstr ""
+msgstr "'Yazdır' menüsüne ekle"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__add
@@ -1866,7 +1951,7 @@ msgstr "Ekleme"
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
 msgid "Addison Olson is a mighty sales representative at Acme Corporation."
-msgstr ""
+msgstr "Addison Olson, Acme Corporation'da başarılı bir satış temsilcisidir."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_31
@@ -1885,7 +1970,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_res_partner__additional_identifiers
 #: model:ir.model.fields,field_description:base.field_res_users__additional_identifiers
 msgid "Additional Identifiers"
-msgstr ""
+msgstr "Ek Tanımlayıcılar"
 
 #. module: base
 #. odoo-python
@@ -1902,7 +1987,7 @@ msgstr "Adres"
 #: model:ir.model.fields,field_description:base.field_res_partner__address
 #: model:ir.model.fields,field_description:base.field_res_users__address
 msgid "Address (without name)"
-msgstr ""
+msgstr "Adres (isim hariç)"
 
 #. module: base
 #: model:ir.model,name:base.model_format_address_mixin
@@ -1930,7 +2015,7 @@ msgstr "Adres formatı..."
 #: model:ir.model.fields,field_description:base.field_res_partner__address_inline
 #: model:ir.model.fields,field_description:base.field_res_users__address_inline
 msgid "Address inline (without name)"
-msgstr ""
+msgstr "Satır içi adres (isim hariç)"
 
 #. module: base
 #. odoo-python
@@ -1948,7 +2033,7 @@ msgstr "Yönetim"
 #: model:ir.model.fields,help:base.field_res_country_state__name
 msgid ""
 "Administrative divisions of a country. E.g. Fed. State, Department, Canton"
-msgstr ""
+msgstr "Bir ülkenin idari bölümleri. Örn. Fed. Devlet, Departman, Kanton"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_N
@@ -2311,6 +2396,8 @@ msgstr ""
 msgid ""
 "All our contractual relations will be governed exclusively by Indonesia law."
 msgstr ""
+"Tüm sözleşmeye dayalı ilişkilerimiz münhasıran Endonezya yasalarına tabi "
+"olacaktır."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -2358,7 +2445,7 @@ msgstr "İzin Verilen Gruplar"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__allowed_index_types
 msgid "Allowed Index Types"
-msgstr ""
+msgstr "İzin Verilen Dizin Türleri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__allowed_states
@@ -3239,6 +3326,8 @@ msgid ""
 "An error occurred while evaluating the domain:\n"
 "%(error)s"
 msgstr ""
+"Etki alanı değerlendirilirken bir hata oluştu:\n"
+"%(error)s"
 
 #. module: base
 #. odoo-python
@@ -3275,6 +3364,11 @@ msgid ""
 "Thanks to the following constraint: %(field_display)s\n"
 "How about archiving the record instead?"
 msgstr ""
+"Silmeye çalıştığınız kayıt başka bir model tarafından kullanılıyor.\n"
+"\n"
+"Sorunlu olan: %(model_display)s\n"
+"Aşağıdaki kısıt nedeniyle: %(field_display)s\n"
+"Bunun yerine kaydı arşivlemeye ne dersiniz?"
 
 #. module: base
 #. odoo-python
@@ -3379,7 +3473,7 @@ msgstr "Yükseltme Programı Uygula"
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
 msgid "Apply Schedule Upgrades"
-msgstr ""
+msgstr "Planlanmış Yükseltmeleri Uygula"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_appointment
@@ -4064,7 +4158,7 @@ msgstr "Ek"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
 msgid "Attachment Name"
-msgstr ""
+msgstr "Ek Adı"
 
 #. module: base
 #. odoo-python
@@ -4170,7 +4264,7 @@ msgstr "Avustralya/Yancowinna"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Australian Company Number."
-msgstr ""
+msgstr "Avustralya Şirket Numarası."
 
 #. module: base
 #: model:res.country,name:base.at
@@ -4181,7 +4275,7 @@ msgstr "Avusturya"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Austrian company ID number (UID)."
-msgstr ""
+msgstr "Avusturya şirket kimlik numarası (UID)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__auth_method
@@ -4257,7 +4351,7 @@ msgstr "Otomasyon"
 #: model:ir.model.fields,field_description:base.field_res_partner__available_additional_identifiers_metadata
 #: model:ir.model.fields,field_description:base.field_res_users__available_additional_identifiers_metadata
 msgid "Available Additional Identifiers Metadata"
-msgstr ""
+msgstr "Kullanılabilir Ek Tanımlayıcıların Meta Verileri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__available_model_ids
@@ -4268,7 +4362,7 @@ msgstr "Mevcut Modeller"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__available_scopes_count
 msgid "Available Scopes Count"
-msgstr ""
+msgstr "Kullanılabilir Kapsam Sayısı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_1920
@@ -4404,7 +4498,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_bic
 msgid "BIC/SWIFT"
-msgstr ""
+msgstr "BIC/SWIFT"
 
 #. module: base
 #. odoo-python
@@ -4477,12 +4571,12 @@ msgstr "Banka"
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank
 msgid "Bank Account"
-msgstr ""
+msgstr "Banka Hesabı"
 
 #. module: base
 #: model:ir.model,name:base.model_clearing_label
 msgid "Bank Account Clearing Number Label"
-msgstr ""
+msgstr "Banka Hesabı Takas Numarası Etiketi"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_partner_bank_account_form
@@ -4500,7 +4594,7 @@ msgstr "Banka Adresi"
 #. odoo-python
 #: code:addons/base/models/res_partner_bank.py:0
 msgid "Bank Code length must be 3."
-msgstr ""
+msgstr "Banka Kodu uzunluğu 3 olmalıdır."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__bank_bic
@@ -4509,11 +4603,14 @@ msgid ""
 "letters) + Country Code (2 letters) + Location Code (2 letters/numbers) + "
 "Optional Branch Code (3 letters/numbers)."
 msgstr ""
+"Uluslararası havaleler için Banka Kimlik Kodu, Banka Kodu (4 harf) + Ülke "
+"Kodu (2 harf) + Konum Kodu (2 harf/rakam) + İsteğe Bağlı Şube Kodu (3 harf/"
+"rakam) biçimindedir."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
 msgid "Bank Information"
-msgstr ""
+msgstr "Banka Bilgileri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__bank_name
@@ -4526,7 +4623,7 @@ msgstr "Banka Adı"
 #. odoo-python
 #: code:addons/base/models/res_partner_bank.py:0
 msgid "Bank SARIE ID must consist of 4 upper case English letter."
-msgstr ""
+msgstr "Banka SARIE Kimliği, 4 büyük İngilizce harften oluşmalıdır."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
@@ -4590,7 +4687,7 @@ msgstr "Temel"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Base Currency"
-msgstr ""
+msgstr "Temel Para Birimi"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__base
@@ -4616,7 +4713,7 @@ msgstr "Temel görünüm"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Base/Unit"
-msgstr ""
+msgstr "Temel/Birim"
 
 #. module: base
 #: model:ir.actions.server,name:base.autovacuum_job_ir_actions_server
@@ -4673,7 +4770,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Belgian national identification number."
-msgstr ""
+msgstr "Belçika ulusal kimlik numarası."
 
 #. module: base
 #: model:res.country,name:base.be
@@ -4759,11 +4856,13 @@ msgid ""
 "Blame the following accesses:\n"
 "%s"
 msgstr ""
+"Aşağıdaki erişimler için suçlama:\n"
+"%s"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__bold
 msgid "Bold"
-msgstr ""
+msgstr "Kalın"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.VEF
@@ -4814,25 +4913,25 @@ msgstr "Bouvet Adası"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__boxed
 msgid "Boxed"
-msgstr ""
+msgstr "Kutulanmış"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Branch Code"
-msgstr ""
+msgstr "Şube Kodu"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Branch Number"
-msgstr ""
+msgstr "Şube Numarası"
 
 #. module: base
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Branch Number of your company, leave empty for headquarters."
-msgstr ""
+msgstr "Şirketinizin şube numarası, genel merkez için boş bırakın."
 
 #. module: base
 #. odoo-python
@@ -4862,7 +4961,7 @@ msgstr "Brezilya"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Brazilian company identification number. 14 digits."
-msgstr ""
+msgstr "Brezilya şirket kimlik numarası. 14 haneli."
 
 #. module: base
 #: model:res.country,name:base.io
@@ -4879,13 +4978,13 @@ msgstr "Tarayıcı"
 #: model:ir.model.fields,field_description:base.field_res_device__browser_language
 #: model:ir.model.fields,field_description:base.field_res_session__browser_language
 msgid "Browser Language"
-msgstr ""
+msgstr "Tarayıcı Dili"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__browser_version
 #: model:ir.model.fields,field_description:base.field_res_session__browser_version
 msgid "Browser Version"
-msgstr ""
+msgstr "Tarayıcı Sürümü"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -4927,7 +5026,7 @@ msgstr "Burundi"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Business ID"
-msgstr ""
+msgstr "İşletme Kimliği"
 
 #. module: base
 #. odoo-python
@@ -4939,7 +5038,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Business Registration Number."
-msgstr ""
+msgstr "İşletme Kayıt Numarası."
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.GMD
@@ -4977,7 +5076,7 @@ msgstr "C5E 24  163 x 229 mm"
 #: code:addons/base/models/res_partner.py:0
 #: code:addons/partner_identifiers.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
-msgstr ""
+msgstr "CHE-123.456.788 TVA veya CHE-123.456.788 MWST or CHE-123.456.788 IVA"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk_cis
@@ -4988,7 +5087,7 @@ msgstr "İnşaat Sektörü Vergi Sistemi"
 #. odoo-python
 #: code:addons/bank_account_number.py:0
 msgid "CLABE should be a string of 18 digits."
-msgstr ""
+msgstr "CLABE, 18 basamaklı bir dize olmalıdır."
 
 #. module: base
 #. odoo-python
@@ -5133,7 +5232,7 @@ msgstr "Yapılandırmasını çoğaltması yamazsınız!"
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Cannot grab a lock on records"
-msgstr ""
+msgstr "Kayıtlar üzerinde kilitlenemedi"
 
 #. module: base
 #. odoo-python
@@ -5151,13 +5250,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
 msgid "Cannot search, too many attachments"
-msgstr ""
+msgstr "Aranamıyor, çok fazla ek var"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
 msgid "Cannot update a record without specifying its id or xml_id"
-msgstr ""
+msgstr "Kimlik (id) veya xml_id belirtilmeden kayıt güncellenemez"
 
 #. module: base
 #. odoo-python
@@ -5173,7 +5272,7 @@ msgstr "Cape Verde"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__card
 msgid "Card"
-msgstr ""
+msgstr "Kart"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__cascade
@@ -5341,6 +5440,13 @@ msgid ""
 "and does not include any costs relating to the legislation of the country in "
 "which the client is located."
 msgstr ""
+"Bazı ülkeler, kendi iç mevzuatlarına uygun olarak fatura tutarı üzerinden "
+"kaynakta vergi kesintisi uygular. Kaynakta yapılan her türlü vergi "
+"kesintisi, müşteri tarafından vergi dairesine ödenecektir. ID Company, "
+"hiçbir koşulda bir ülkenin mevzuatıyla ilgili maliyetlere dahil olamaz. Bu "
+"nedenle fatura tutarının tamamı ID Company'ye ödenmesi gereken tutardır ve "
+"müşterinin bulunduğu ülkenin mevzuatıyla ilgili herhangi bir maliyeti "
+"içermez."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -5547,7 +5653,7 @@ msgstr "Christmas Adası"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Citizen Identification"
-msgstr ""
+msgstr "T.C. Kimlik Numarası"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__city
@@ -5567,7 +5673,7 @@ msgstr "Semt/İlçe"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_label_id
 msgid "Clearing Label"
-msgstr ""
+msgstr "Etiketi Temizle"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
@@ -5699,7 +5805,7 @@ msgstr "Renk"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__report_tables_id__column
 msgid "Column"
-msgstr ""
+msgstr "Sütun"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__column1
@@ -10651,6 +10757,13 @@ msgid ""
 "as a third party in the context of any claim for damages filed against the "
 "client by an end consumer."
 msgstr ""
+"ID Company, üzerinde anlaşmaya varılan süreklere uygun olarak, zamanında ve "
+"yüksek performanslı hizmetler sunmak için azami gayreti göstermeyi taahhüt "
+"eder. Bununla birlikte, yükümlülüklerinin hiçbirisi kesin bir sonuç elde "
+"etme taahhüdü (sonuç taahhüdü) olarak değerlendirilemez. ID Company, hiçbir "
+"koşulda, son tüketici tarafından müşteriye karşı açılan herhangi bir "
+"tazminat davası kapsamında müşteri tarafından üçüncü taraf olarak mahkemeye "
+"veya benzeri bir konuma çağrılmaya zorlanamaz."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__xml_id
@@ -10755,6 +10868,10 @@ msgid ""
 "payment date, ID Company reserves the right to call on the services of a "
 "debt recovery company. All legal expenses will be payable by the client."
 msgstr ""
+"Bir ödeme, vade tarihinden itibaren altmış (60) günden daha uzun bir süre "
+"boyunca hala ödenmemişse, ID Company bir borç tahsilat şirketinin "
+"hizmetlerine başvurma hakkını saklı tutar. Tüm yasal Masraflar müşteri "
+"tarafından ödenecektir."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -11084,6 +11201,10 @@ msgid ""
 "by means of a letter sent by recorded delivery to its registered office "
 "within 8 days of the delivery of the goods or the provision of the services."
 msgstr ""
+"Bir talebin kabul edilebilir olması için, ID Company'ye herhangi bir "
+"itirazın, mal teslimi veya hizmet sunumundan itibaren 8 gün içinde kayıtlı "
+"posta yoluyla kayıtlı merkezine gönderilen bir mektupla bildirilmesi "
+"zorunludur."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -11928,12 +12049,12 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Keep track of what this report action does and why it exists..."
-msgstr ""
+msgstr "Bu rapor eyleminin ne yaptığını ve neden var olduğunu takip edin..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_groups_privilege_form
 msgid "Keep track of what this scope does and why it exists..."
-msgstr ""
+msgstr "Bu kapsamın ne yaptığını ve neden var olduğunu takip edin..."
 
 #. module: base
 #: model:res.country,name:base.ke
@@ -11967,7 +12088,7 @@ msgstr "Kina"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_access__kind
 msgid "Kind"
-msgstr ""
+msgstr "Tür"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.LAK
@@ -12088,6 +12209,8 @@ msgstr "Laari"
 msgid ""
 "Label displayed when the user does not belong of any group of that scope."
 msgstr ""
+"Kullanıcı bu kapsamdaki herhangi bir gruba ait olmadığında görüntülenen "
+"etiket."
 
 #. module: base
 #. odoo-python
@@ -12169,7 +12292,7 @@ msgstr "Son Yürütme Tarihi"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate_date
 msgid "Last Rate Update"
-msgstr ""
+msgstr "Son Kur Güncellemesi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__write_uid
@@ -12365,7 +12488,7 @@ msgstr "Son Versiyon"
 #: model:ir.model.fields,field_description:base.field_res_partner__partner_latitude
 #: model:ir.model.fields,field_description:base.field_res_users__partner_latitude
 msgid "Latitude"
-msgstr ""
+msgstr "Enlem"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__lato
@@ -12386,7 +12509,7 @@ msgstr "Letonya"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Latvian unified registration number."
-msgstr ""
+msgstr "Letonya birleşik kayıt numarası."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
@@ -12439,7 +12562,7 @@ msgstr "Legal 3 8.5 x 14 inç, 215.9 x 355.6 mm"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Legal Entity Identifier"
-msgstr ""
+msgstr "Tüzel Kişi Tanımlayıcısı (LEI)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view
@@ -12450,7 +12573,7 @@ msgstr "Gösterge (Ön ve Son ekler için)"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Leitweg-ID"
-msgstr ""
+msgstr "Leitweg-ID"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ALL
@@ -12539,7 +12662,7 @@ msgstr "Limit"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 msgid "Limit of %s API keys is reached for programmatic creation"
-msgstr ""
+msgstr "Programatik oluşturma için %s API anahtarı limitine ulaşıldı"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__line
@@ -12571,7 +12694,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__linked_view_count
 msgid "Linked View Count"
-msgstr ""
+msgstr "Bağlı Görünüm Sayısı"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.HRK
@@ -12659,7 +12782,7 @@ msgstr "Yerelleştirme"
 #: model:ir.module.category,name:base.module_category_point_of_sale_localizations
 #: model:ir.module.category,name:base.module_category_website_sale_localizations
 msgid "Localizations"
-msgstr ""
+msgstr "Yerelleştirmeler"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
@@ -12743,7 +12866,7 @@ msgstr "Lüksemburg"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Luxembourg business registry number."
-msgstr ""
+msgstr "Lüksemburg ticari sicil numarası."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
@@ -12863,7 +12986,7 @@ msgstr "Malezya"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Malaysian company registration number."
-msgstr ""
+msgstr "Malezya şirket kayıt numarası."
 
 #. module: base
 #: model:res.country,name:base.mv
@@ -12883,7 +13006,7 @@ msgstr "Malta"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 msgid "Manage Scopes"
-msgstr ""
+msgstr "Kapsamları Yönet"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -13079,7 +13202,7 @@ msgstr "Elle İşaretleyerek Birleştir"
 #. odoo-python
 #: code:addons/partner_identifiers.py:0
 msgid "Mersis Number"
-msgstr ""
+msgstr "Mersis Numarası"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_logging__message
@@ -14630,6 +14753,12 @@ msgid ""
 "will be authorized to suspend any provision of services without prior "
 "warning in the event of late payment."
 msgstr ""
+"Faturalarımız, fatura veya siparişte başka bir ödeme süresi belirtilmediği "
+"sürece 21 iş günü içinde ödenebilir. Vadesinde ödeme yapılmaması durumunda "
+"ID Company, kalan tutarın %'si (yüzde 10) tutarında sabit bir gecikme faizi "
+"talep etme hakkını saklı tutar. Gecikmiş ödeme durumunda ID Company, "
+"herhangi bir ön uyarıda bulunmaksızın her türlü hizmet sunumunu askıya alma "
+"yetkisine sahip olacaktır."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -16471,6 +16600,11 @@ msgid ""
 "                            If a user belongs to several groups, the "
 "permissions are combined with a logical OR operator."
 msgstr ""
+"Kısıtlamalar mantıksal VE (AND) operatörü ile birleştirilir.<br/>\n"
+"                            İzinler mantıksal VEYA (OR) operatörü ile "
+"birleştirilir.<br/>\n"
+"                            Bir kullanıcı birden fazla gruba aitse, izinler "
+"mantıksal VEYA (OR) operatörü ile birleştirilir."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_server_action_history_wizard__revision
@@ -18553,12 +18687,14 @@ msgid ""
 "Where B = National bank code, S = Branch code, C = Account No, k = Check "
 "digit"
 msgstr ""
+"IBAN doğru görünmüyor. %s gibi bir şey girmiş olmalısınız. \n"
+"B = Ulusal banka kodu, S = Şube kodu, C = Hesap No, k = Kontrol hanesi"
 
 #. module: base
 #. odoo-python
 #: code:addons/bank_account_number.py:0
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "IBAN geçersizdir, ülke kodu ile başlamalıdır"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_clearing_label__country_code
@@ -18840,6 +18976,10 @@ msgid ""
 "with higher privileges previously modified it, and you are therefore not "
 "able to modify it yourself while preserving the content."
 msgstr ""
+"Kaydettiğiniz alan değeri (%(model)s %(field)s)(%(record)s) güvenlik "
+"nedenleriyle kısıtlanmış içerik barındırmaktadır. Daha önce daha yüksek "
+"yetkilere sahip biri tarafından değiştirilmiş olması mümkündür, bu nedenle "
+"içeriği koruyarak kendiniz değiştiremezsiniz."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -18906,6 +19046,10 @@ msgid ""
 "most values are empty; trigram indexes speed up text pattern searches. "
 "Leaving this empty does not remove an index that already exists."
 msgstr ""
+"Bu alan için istenen veritabanı dizini türü. B-tree dizinleri eşitlik ve "
+"aralık aramalarını destekler; boş değerleri hariç tutmak, değerlerin çoğu "
+"boş olduğunda dizini küçültür; trigram dizinleri metin deseni aramalarını "
+"hızlandırır. Bunu boş bırakmak, halihazırda mevcut olan bir dizini kaldırmaz."
 
 #. module: base
 #. odoo-python
@@ -19199,6 +19343,12 @@ msgid ""
 "For example, __import__, resulting in the external id __import__.%"
 "(record_id)s."
 msgstr ""
+"Kayıt %(xml_id)s modül öneki %(module_name)s içermektedir. Bu, harici "
+"kimlikteki '.' işaretinden önce gelen kısımdır. Önek mevcut bir modüle "
+"atıfta bulunduğundan, modül yükseltildiğinde kayıt silinecektir. Ya hiç önek "
+"ve nokta kullanmayın ya da mevcut bir modül olmayan bir önek kullanın. "
+"Örneğin, harici kimliği __import__.%(record_id)s ile sonuçlanan __import__ "
+"gibi."
 
 #. module: base
 #. odoo-python
@@ -19292,6 +19442,9 @@ msgid ""
 "rendering method. HTML means the report will be opened directly in your "
 "browser, PDF means the report will be generated and downloaded by the user."
 msgstr ""
+"Oluşturulacak raporun türü; her birinin kendi oluşturma yöntemi vardır. "
+"HTML, raporun doğrudan tarayıcınızda açılacağı anlamına gelir; PDF ise "
+"raporun kullanıcı tarafından oluşturulup indirileceğini belirtir."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_ids
@@ -19365,7 +19518,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/bank_account_number.py:0
 msgid "There is no IBAN code."
-msgstr ""
+msgstr "IBAN kodu yok."
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_third_party

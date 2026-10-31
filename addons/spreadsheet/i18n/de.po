@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:42+0000\n"
-"PO-Revision-Date: 2026-10-20 07:25+0000\n"
+"POT-Creation-Date: 2026-10-30 17:40+0000\n"
+"PO-Revision-Date: 2026-10-29 13:34+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/"
 "spreadsheet/de/>\n"
@@ -104,7 +104,7 @@ msgstr "%(count)s Übereinstimmungen im Bereich %(range)s von „%(sheetName)s�
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(header)s over time"
-msgstr ""
+msgstr "%(header)s im Zeitverlauf"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -163,26 +163,27 @@ msgstr "%(numHeader)s von %(cat1Header)s und %(cat2Header)s"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, fuzzy
 msgid "%(numHeader)s by %(catHeader)s over %(dateHeader)s"
-msgstr ""
+msgstr "%(numHeader)s nach %(catHeader)s über %(dateHeader)s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(numberHeader)s by %(categoryHeader)s"
-msgstr ""
+msgstr "%(numberHeader)s je %(categoryHeader)s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(numberHeader)s by %(labelHeader)s"
-msgstr ""
+msgstr "%(numberHeader)s je %(labelHeader)s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(percentageHeader)s by %(categoryHeader)s"
-msgstr ""
+msgstr "%(percentageHeader)s je %(categoryHeader)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -217,7 +218,7 @@ msgstr "%(seconds)s Sek."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%(seriesHeader)s over time"
-msgstr ""
+msgstr "%(seriesHeader)s im Zeitverlauf"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -450,6 +451,8 @@ msgid ""
 "1 = paired, 2 = two-sample equal variance, 3 = two-sample unequal variance "
 "(Welch)."
 msgstr ""
+"1 = gepaart, 2 = Zweistichproben mit gleicher Varianz, 3 = Zweistichproben "
+"mit ungleicher Varianz (Welch)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -461,13 +464,19 @@ msgstr "1 Spalte"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "1 for one-tailed, 2 for two-tailed."
+msgstr "1 für einseitig, 2 für zweiseitig."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "1 is hidden"
 msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "1 match in '%(sheetName)s'"
-msgstr ""
+msgstr "1 Treffer in „%(sheetName)s“"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -479,7 +488,7 @@ msgstr "1 Übereinstimmung in allen Blättern"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "1 match in range %(range)s of '%(sheetName)s'"
-msgstr ""
+msgstr "1 Treffer im Bereich %(range)s von „%(sheetName)s“"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -826,7 +835,7 @@ msgstr "DURCHSCHNITT"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Absolute count per category."
-msgstr ""
+msgstr "Absolute Anzahl pro Kategorie."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -934,7 +943,7 @@ msgstr "Einen Titel hinzufügen"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Add a baseline description"
-msgstr "Eine Beschreibung für Legende hinzufügen"
+msgstr "Eine Beschreibung für Basislinie hinzufügen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1107,7 +1116,7 @@ msgstr "Seit jeher"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Alpha must be between 0 and 1."
-msgstr ""
+msgstr "Alpha muss zwischen 0 und 1 liegen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1549,7 +1558,7 @@ msgstr "Automatisch"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Automatic evaluation is disabled. Press"
-msgstr ""
+msgstr "Die automatische Bewertung ist deaktiviert. Drücken Sie"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1575,6 +1584,8 @@ msgstr "Durchschnittliche Größe der Abweichung vom Mittelwert."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Average of a dataset after discarding a fraction of data from the ends."
 msgstr ""
+"Durchschnitt eines Datensatzes, nachdem ein Teil der Daten von den Enden "
+"entfernt wurde."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1667,12 +1678,13 @@ msgstr "Balken"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Bar for the first series, line for the second — good for mixed scales."
 msgstr ""
+"Balken für die erste Reihe, Linie für die zweite — gut für gemischte Skalen."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Bar for the primary metric, line for the others."
-msgstr ""
+msgstr "Balken für die primäre Kennzahl, Linie für die übrigen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1690,19 +1702,19 @@ msgstr "Basiselement:"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Baseline Style"
-msgstr "Stil der Grundlinie"
+msgstr "Stil der Basislinie"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Baseline colors"
-msgstr "Farben der Referenzlinie"
+msgstr "Farben der Basislinie"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Baseline configuration"
-msgstr "Konfiguration der Referenzlinie"
+msgstr "Konfiguration der Basislinie"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1849,7 +1861,7 @@ msgstr "Blasengrößen"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "By %(title)s"
-msgstr ""
+msgstr "Nach %(title)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2083,6 +2095,8 @@ msgstr ""
 msgid ""
 "Cannot perform this action on merged cells. Unmerge the cells and try again."
 msgstr ""
+"Diese Aktion kann nicht auf verbundenen Zellen ausgeführt werden. Heben Sie "
+"die Zellverbindung auf und versuchen Sie es erneut."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2357,7 +2371,7 @@ msgstr "Cividis"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Classic category-vs-value comparison."
-msgstr ""
+msgstr "Klassischer Vergleich von Kategorie und Wert."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2644,19 +2658,19 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Compares all percentage values side-by-side."
-msgstr ""
+msgstr "Vergleicht alle Prozentwerte nebeneinander."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Compares individual values side-by-side."
-msgstr ""
+msgstr "Vergleicht einzelne Werte nebeneinander."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Comparison of completion rates across categories."
-msgstr ""
+msgstr "Vergleich der Abschlussraten über Kategorien hinweg."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2672,7 +2686,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Composition per period over time."
-msgstr ""
+msgstr "Zusammensetzung pro Zeitraum im Zeitverlauf."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2771,7 +2785,7 @@ msgstr "Verkettung von zwei Werten."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Concise format (default)"
-msgstr ""
+msgstr "Kompaktes Format (Standard)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2806,7 +2820,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Contribution of inner categories per outer category."
-msgstr ""
+msgstr "Beitrag der inneren Kategorien pro äußerer Kategorie."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2933,6 +2947,7 @@ msgstr "Kopie von %s"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Correlation between the two numeric metrics across entities."
 msgstr ""
+"Korrelation zwischen den beiden numerischen Kennzahlen über Entitäten hinweg."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3241,7 +3256,7 @@ msgstr "Datenvalidierung"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Data analysis"
-msgstr ""
+msgstr "Datenanalyse"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3263,6 +3278,10 @@ msgid ""
 "referenced cell). Please verify the formula or retry later. Contact odoo.com/"
 "help if the problem persists."
 msgstr ""
+"Die Daten konnten aufgrund eines Serverfehlers oder eines Formelproblems "
+"(möglicherweise in einer referenzierten Zelle) nicht geladen werden. Bitte "
+"überprüfen Sie die Formel oder versuchen Sie es später erneut. Kontaktieren "
+"Sie odoo.com/help, falls das Problem weiterhin besteht."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3539,7 +3558,7 @@ msgstr "Abschluss"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Degrees of freedom must be >= 1."
-msgstr ""
+msgstr "Die Freiheitsgrade müssen >= 1 sein."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3636,7 +3655,7 @@ msgstr "Zeilen %s - %s löschen"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Delete selected items"
-msgstr ""
+msgstr "Ausgewählte Elemente löschen"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3925,7 +3944,7 @@ msgstr "Als laufende Gesamtsumme angezeigt, basierend auf „%s“"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Displays a key performance indicator."
-msgstr ""
+msgstr "Zeigt einen Leistungskennwert an."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4111,7 +4130,7 @@ msgstr "Beispiel: 1234567 -> %(value)s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Each range must contain at least 2 numeric values."
-msgstr ""
+msgstr "Jeder Bereich muss mindestens 2 numerische Werte enthalten."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4172,13 +4191,13 @@ msgstr "Sonst"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Emphasizes total accumulation over the range."
-msgstr ""
+msgstr "Hebt die Gesamtkumulation über den Bereich hervor."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Emphasizes total volume over time."
-msgstr ""
+msgstr "Hebt das Gesamtvolumen im Zeitverlauf hervor."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4307,7 +4326,7 @@ msgstr "Genaue Anzahl der Jahre zwischen zwei Daten."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Excess kurtosis of a dataset."
-msgstr ""
+msgstr "Exzess der Kurtosis eines Datensatzes."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4753,7 +4772,7 @@ msgstr "Formeln"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Fraction of data to trim from each end (0 to 0.5)."
-msgstr ""
+msgstr "Anteil der Daten, die an jedem Ende gekürzt werden sollen (0 bis 0,5)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4985,7 +5004,7 @@ msgstr "Optionen für geografisches Diagramm"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Geometric mean of a dataset."
-msgstr ""
+msgstr "Geometrischer Mittelwert eines Datensatzes."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5102,31 +5121,31 @@ msgstr "Zu %(label)s gehen"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_link/components/figure_component.js:0
 msgid "Go to Baseline record"
-msgstr ""
+msgstr "Zum Datensatz der Basislinie"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_link/components/figure_component.js:0
 msgid "Go to Baseline records"
-msgstr ""
+msgstr "Zu den Datensätzen der Basislinie"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_link/components/figure_component.js:0
 msgid "Go to Key record"
-msgstr ""
+msgstr "Zum Hauptdatensatz"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_link/components/figure_component.js:0
 msgid "Go to Key records"
-msgstr ""
+msgstr "Zu den Hauptdatensätzen"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_link/components/figure_component.js:0
 msgid "Go to link"
-msgstr ""
+msgstr "Zum Link"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9397,7 +9416,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Shows the last percentage value with its baseline."
-msgstr ""
+msgstr "Zeigt den letzten Prozentwert mit der zugehörigen Basislinie an."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9667,7 +9686,7 @@ msgstr "Das Teilen wird vorhandenen Inhalt überschreiben"
 #: model:ir.module.module,shortdesc:base.module_spreadsheet
 #: model:ir.module.module,summary:base.module_spreadsheet
 msgid "Spreadsheet"
-msgstr ""
+msgstr "Tabellenkalkulation"
 
 #. module: spreadsheet
 #: model:ir.model.fields,field_description:spreadsheet.field_spreadsheet_mixin__spreadsheet_data

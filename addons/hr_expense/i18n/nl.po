@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-22 07:33+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-28 12:34+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/hr_expense/"
 "nl/>\n"
@@ -52,6 +52,28 @@ msgid ""
 "on timesheet module so that you are able to automatically re-invoice your "
 "customers' expenses if your work by project.\n"
 msgstr ""
+"\n"
+"Beheer onkosten van werknemers\n"
+"============================\n"
+"\n"
+"Met deze applicatie kunnen werknemers hun dagelijkse uitgaven beheren. Je "
+"krijgt toegang tot de onkosten van je werknemers en krijgt het recht om ze "
+"aan te vullen, te bevestigen of te weigeren. Na bevestiging wordt een "
+"factuur aangemaakt voor de werknemer.\n"
+"De werknemer kan zijn eigen uitgaven coderen en de validatieflow boekt ze "
+"automatisch in de boekhouding na bevestiging door de managers.\n"
+"\n"
+"\n"
+"Zo verloopt de flow:\n"
+"---------------------------------\n"
+"* Concept-onkost\n"
+"* Ingediend door de werknemer naar zijn manager\n"
+"* Goedgekeurd door de manager\n"
+"* Bevestiging door de boekhouder en aanmaak boeking\n"
+"\n"
+"Deze module gebruikt ook de analytische boekhouding en is compatibel met de "
+"module 'factureren op urenstaten', zodat jij automatisch onkosten kunt "
+"doorfactureren aan klanten als je werkt in een project.\n"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -117,6 +139,8 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name or "
 "'').replace('/', ''))"
 msgstr ""
+"'Onkost - %s - %s' % (object.employee_id.name, (object.name or "
+"'').replace('/', ''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -160,7 +184,7 @@ msgstr "<span class=\"o_stat_text\">Boeking</span>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "<span class=\"o_stat_text\">Payment</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Betaling</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -188,6 +212,8 @@ msgid ""
 "<span>This bill was already paid by an employee and the bill has been sent "
 "to you. Don't pay the supplier</span>"
 msgstr ""
+"<span>Deze factuur is al betaald door een werknemer en de factuur is naar je "
+"verzonden. Betaal de leverancier niet</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -300,7 +326,7 @@ msgstr "Verschuldigd bedrag"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Amount reimbursed"
-msgstr ""
+msgstr "Terugbetaald bedrag"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -444,7 +470,7 @@ msgstr "Automatische validatie"
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__bill_paid_by_employee
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__bill_paid_by_employee
 msgid "Bill Paid By Employee"
-msgstr ""
+msgstr "Factuur betaald door werknemer"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__tax_ids
@@ -463,7 +489,7 @@ msgstr "Mag bevestigen"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__can_edit_account
 msgid "Can Edit Account"
-msgstr ""
+msgstr "Kan rekening bewerken"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__can_reset
@@ -489,13 +515,13 @@ msgstr "Checksum/SHA1"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Click here to create your employee profile."
-msgstr ""
+msgstr "Klik hier om je werknemersprofiel aan te maken."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Click on all expenses"
-msgstr ""
+msgstr "Klik op alle onkosten"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_communication_product_template
@@ -525,7 +551,7 @@ msgstr "Configuratie"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__company_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Kost valuta"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_kanban_view
@@ -541,7 +567,7 @@ msgstr "Een nieuwe onkost aanmaken"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Create and edit a new employee profile."
-msgstr ""
+msgstr "Maak en bewerk een nieuw werknemersprofiel."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -760,19 +786,19 @@ msgstr "Voer een beschrijving in om door te gaan."
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Enter the total amount of the expense."
-msgstr ""
+msgstr "Voer het totaalbedrag van de onkosten in."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Enter your name to create your employee profile."
-msgstr ""
+msgstr "Voer je naam in om je werknemersprofiel aan te maken."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Exceeds company limit"
-msgstr ""
+msgstr "Overschrijdt de bedrijfslimiet"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__existing_bill_id
@@ -784,7 +810,7 @@ msgstr "Bestaande leveranciersfactuur"
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__existing_expense_ids
 #: model:ir.model.fields,field_description:hr_expense.field_account_move__existing_expense_ids
 msgid "Existing Expense"
-msgstr ""
+msgstr "Bestaande onkost"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -830,7 +856,7 @@ msgstr "Goedkeurder onkosten"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.account_journal_dashboard_kanban_view_inherit_expense
 msgid "Expense Bills"
-msgstr ""
+msgstr "Onkostenfacturen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -855,7 +881,7 @@ msgstr "Onkostenbeheerder"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_product_job_position_limit
 msgid "Expense Product Limit by Job Position"
-msgstr ""
+msgstr "Onkosten productlimiet per functie"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -909,7 +935,7 @@ msgstr "Onkostennota gemaakt vanuit een opsplitsing."
 #. odoo-python
 #: code:addons/hr_expense/models/account_journal.py:0
 msgid "Expense linked moves"
-msgstr ""
+msgstr "Gekoppelde boekingen onkost"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
@@ -1008,7 +1034,7 @@ msgstr "Onkosten om te verwerken"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_account_invoice_filter_inherit_expense
 msgid "Expenses to post"
-msgstr ""
+msgstr "Te boeken onkosten"
 
 #. module: hr_expense
 #. odoo-python
@@ -1083,13 +1109,14 @@ msgstr "Ga naar Rekening"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Go to expense(s)"
-msgstr ""
+msgstr "Ga naar onkosten"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Go to the Settings tab to configure the expense approver."
 msgstr ""
+"Ga naar het tabblad 'Instellingen' om de onkostengoedkeurder te configureren."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1104,7 +1131,7 @@ msgstr "Heeft bestaande leveranciersfactuur"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_expense_job_position_limit
 msgid "Has Expense Job Position Limit"
-msgstr ""
+msgstr "Heeft functielimiet voor onkosten"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1124,7 +1151,7 @@ msgstr "Hotel, vliegticket, taxi, etc."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "HR onkosten"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
@@ -1208,7 +1235,7 @@ msgstr "Foutieve bijlagen!"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_account_invoice_filter_inherit_expense
 msgid "Invoices from an expense, approved but not posted yet"
-msgstr ""
+msgstr "Facturen van een onkostendeclaratie, goedgekeurd maar nog niet geboekt"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_editable
@@ -1218,7 +1245,7 @@ msgstr "Is wijzigbaar door huidige gebruiker"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_expense_exceeding_job_position_limit
 msgid "Is Expense Exceeding Job Position Limit"
-msgstr ""
+msgstr "Is Overschrijdt functielimiet voor onkosten"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_is_follower
@@ -1228,7 +1255,7 @@ msgstr "Is een volger"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_own_expense
 msgid "Is Own Expense"
-msgstr ""
+msgstr "Is Eigen onkost"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__is_multiple_currency
@@ -1249,22 +1276,22 @@ msgstr "Het begint allemaal hier - laten we gaan!"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__expense_job_position_limit_amount
 msgid "Job Position Limit"
-msgstr ""
+msgstr "Functielimiet"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__expense_job_position_limit_amount_currency
 msgid "Job Position Limit in Currency"
-msgstr ""
+msgstr "Functielimiet in valuta"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_product_product__expense_job_position_limit_ids
 msgid "Job Position Limits"
-msgstr ""
+msgstr "Functielimieten"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__job_ids
 msgid "Job Positions"
-msgstr ""
+msgstr "Functies"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
@@ -1353,7 +1380,7 @@ msgstr "Te late activiteiten"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_product_job_position_limit__job_ids
 msgid "Leave empty to define the limit for all job positions."
-msgstr ""
+msgstr "Laat leeg om de limiet voor alle functies te bepalen."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_use_mailgateway
@@ -1375,12 +1402,12 @@ msgstr "Laten we teruggaan naar je onkosten."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__limit_amount
 msgid "Limit"
-msgstr ""
+msgstr "Limiet"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Limits"
-msgstr ""
+msgstr "Limieten"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_stripe
@@ -1422,13 +1449,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Managers can inspect and select expenses from here."
-msgstr ""
+msgstr "Managers kunnen hier onkosten controleren en selecteren."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Managers can inspect expenses from here."
-msgstr ""
+msgstr "Managers kunnen hier onkosten controleren."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -1469,19 +1496,19 @@ msgstr "Mitchell Admin"
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "Multiple Managers"
-msgstr ""
+msgstr "Meerdere managers"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "Multiple employees"
-msgstr ""
+msgstr "Meerdere werknemers"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "Multiple payment modes"
-msgstr ""
+msgstr "Meerdere betaalmethodes"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -1540,7 +1567,7 @@ msgstr "Volgende activiteit type"
 #. module: hr_expense
 #: model:res.groups.privilege,placeholder:hr_expense.res_groups_privilege_expenses
 msgid "No"
-msgstr ""
+msgstr "Nee"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1563,7 +1590,7 @@ msgstr "Nog geen gegevens!"
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "No employee"
-msgstr ""
+msgstr "Geen werknemer"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -1585,7 +1612,7 @@ msgstr "Geen (betaald door bedrijf)"
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "None (automatic)"
-msgstr ""
+msgstr "Geen (automatisch)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_categories_tree_view
@@ -1704,24 +1731,27 @@ msgstr "Er kan maar één onkost aan een specifieke betaling worden gekoppeld."
 #: code:addons/hr_expense/models/hr_expense_product_job_position_limit.py:0
 msgid "Only one generic expense limit can be defined per product."
 msgstr ""
+"Er kan per product slechts één algemene onkostenlimiet worden gedefinieerd."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Only submitted expenses exceeding a job position limit can be capped."
 msgstr ""
+"Alleen ingediende onkosten die een limiet voor een functie overschrijden, "
+"kunnen worden gemaximeerd."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Open burger menu."
-msgstr ""
+msgstr "Open het burgermenu."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Open the actions menu."
-msgstr ""
+msgstr "Open het actiemenu."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__split_expense_origin_id
@@ -1828,7 +1858,7 @@ msgstr "Prijs:"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Print"
-msgstr ""
+msgstr "Afdrukken"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_product_template
@@ -2018,7 +2048,7 @@ msgstr "Zelfde onkost"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Save the employee profile."
-msgstr ""
+msgstr "Sla het werknemersprofiel op."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2049,25 +2079,22 @@ msgstr "Selecteer een product om door te gaan."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Select an employee to proceed."
-msgstr ""
+msgstr "Selecteer een werknemer om door te gaan."
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Select the expense approver."
-msgstr ""
+msgstr "Selecteer de onkostengoedkeurder."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Selecteer de gebruiker die verantwoordelijk is voor het goedkeuren van "
-"\"onkosten\" van deze werknemer.\n"
-"Indien leeg, wordt de goedkeuring gedaan door een Beheerder of Goedkeurder "
-"(bepaald in instellingen / gebruikers)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -2097,13 +2124,13 @@ msgstr "Verstuur rekeningen naar de OCR om een declaratie te genereren"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_product_job_position_limit__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Reeksnummer"
 
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Set an expense approver for this employee."
-msgstr ""
+msgstr "Stel een onkostengoedkeurder in voor deze werknemer."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -2207,7 +2234,7 @@ msgstr "Subtotaal in valuta"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Switch to the list view."
-msgstr ""
+msgstr "Schakel over naar de lijstweergave."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_tax
@@ -2311,7 +2338,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "The existing bill must be set."
-msgstr ""
+msgstr "De bestaande factuur moet ingesteld worden."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -2377,6 +2404,9 @@ msgid ""
 "payment method.\n"
 "Please set a vendor on the expenses."
 msgstr ""
+"De leverancier is vereist voor onkosten die SEPA-overschrijving als "
+"betaalmethode gebruiken.\n"
+"Stel een leverancier in op de onkosten."
 
 #. module: hr_expense
 #. odoo-python
@@ -2397,7 +2427,7 @@ msgstr "Ziezo, onkostenbeheer in een notendop!"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "This expense exceeds the limit of"
-msgstr ""
+msgstr "De onkost overschrijdt de limiet van"
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -2521,7 +2551,7 @@ msgstr "Prijs"
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
 msgid "Unknown"
-msgstr ""
+msgstr "Onbekend"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense
@@ -2644,6 +2674,8 @@ msgid ""
 "You can't create move for employee-paid expenses belonging to different "
 "companies at the same time"
 msgstr ""
+"Je kunt geen boeking aanmaken voor onkosten, die zijn betaald door "
+"werknemers, die bij verschillende bedrijven tegelijkertijd horen"
 
 #. module: hr_expense
 #. odoo-python
@@ -2668,7 +2700,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot cancel an expense linked to a journal entry"
-msgstr ""
+msgstr "Je kunt een onkost die gekoppeld is aan een boeking niet annuleren"
 
 #. module: hr_expense
 #. odoo-python
@@ -2706,12 +2738,16 @@ msgid ""
 "You cannot refuse:\n"
 "%(reasons)s"
 msgstr ""
+"Je kunt deze niet afwijzen:\n"
+"%(reasons)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot reset to draft an expense linked to a journal entry."
 msgstr ""
+"Je kunt een boeking die is gekoppeld aan een boeking niet terugzetten op "
+"concept."
 
 #. module: hr_expense
 #. odoo-python
@@ -2761,7 +2797,7 @@ msgstr "Je onkost is succesvol geregistreerd."
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Your job position has a limit of"
-msgstr ""
+msgstr "Je functie heeft een limiet van"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2771,7 +2807,7 @@ msgstr "alias"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "defined for this job position."
-msgstr ""
+msgstr "ingesteld voor deze functie."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -2801,7 +2837,7 @@ msgstr "onkost"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "for this expense. You may not be fully reimbursed!"
-msgstr ""
+msgstr "voor deze onkost. Je wordt mogelijk niet volledig vergoed!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
@@ -2832,6 +2868,16 @@ msgstr "met dezelfde categorie, datum, bedrag en werknemer bestaat al."
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "met hetzelfde bewijs bestaat al."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Selecteer de gebruiker die verantwoordelijk is voor het goedkeuren van "
+#~ "\"onkosten\" van deze werknemer.\n"
+#~ "Indien leeg, wordt de goedkeuring gedaan door een Beheerder of "
+#~ "Goedkeurder (bepaald in instellingen / gebruikers)."
 
 #~ msgid ""
 #~ "Enter a name then choose a product and configure the amount of your "

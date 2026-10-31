@@ -20,8 +20,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
-"PO-Revision-Date: 2026-10-23 06:33+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-30 13:56+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-20/website/"
 "de/>\n"
@@ -299,12 +299,6 @@ msgstr "Anzahl Bausteine"
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
 msgid "$ 32M"
 msgstr "23 Mio. €"
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/ir_ui_view.py:0
-msgid "%(error)s (website: %(website_id)s)"
-msgstr "%(error)s (Website: %(website_id)s)"
 
 #. module: website
 #. odoo-python
@@ -7560,7 +7554,7 @@ msgstr "Standardwechsel der Kontrollkästcheneingabe"
 #. odoo-python
 #: code:addons/website/models/website.py:0
 msgid "Default website changed to %(default_website_name)s."
-msgstr ""
+msgstr "Standardwebsite geändert auf %(default_website_name)s."
 
 #. module: website
 #. odoo-javascript
@@ -8358,7 +8352,7 @@ msgstr "Ringdiagramm"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/popup_option_plugin.js:0
 msgid "Drag blocks here"
-msgstr ""
+msgstr "Bausteine hier ablegen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_dropzone
@@ -9350,6 +9344,12 @@ msgstr "Erweiterungsübersicht"
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
 msgid "External ID"
 msgstr "Externe ID"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/ir_ui_view.py:0
+msgid "External ID can not be loaded: %(error)s (website: %(website_id)s)"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -19399,6 +19399,12 @@ msgid "Template fallback"
 msgstr "Vorlagen-Fallback"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/ir_ui_view.py:0
+msgid "Template not found: '%(error)s' (website: %(website_id)s)"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form.edit.xml:0
 msgid "Terms & Conditions"
@@ -19683,12 +19689,6 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_website_form/form.xml:0
 msgid "The form has been sent successfully."
 msgstr "Das Formular wurde erfolgreich übermittelt."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/controllers/form.py:0
-msgid "The form's specified model does not exist"
-msgstr "Das im Formular angegebene Modell ist nicht vorhanden"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
@@ -20106,6 +20106,13 @@ msgstr ""
 #: code:addons/website/static/src/builder/plugins/theme/theme_font_weight_option.js:0
 msgid "This font is missing font weight"
 msgstr "Diese Schriftart verfügt nicht über alle Schriftstärken"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/controllers/form.py:0
+msgid ""
+"This form cannot be submitted. Please contact the website administrator."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -23622,6 +23629,8 @@ msgid ""
 "content, pictures, photos, illustration, media, visual, articles, story, "
 "stories, combination, showcase, announcements, reveal"
 msgstr ""
+"Inhalt, Bilder, Fotos, Illustration, Medien, Visuals, Artikel, Geschichte, "
+"Geschichten, Kombination, Präsentation, Ankündigungen, Enthüllung"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23629,6 +23638,8 @@ msgid ""
 "content, pictures, photos, illustration, media, visual, articles, story, "
 "stories, combination, trendy, pattern, design"
 msgstr ""
+"Inhalt, Bilder, Fotos, Illustration, Medien, Visuals, Artikel, Geschichte, "
+"Geschichten, Kombination, trendig, Muster, Design"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23636,6 +23647,9 @@ msgid ""
 "content, pictures, photos, illustration, media, visual, articles, story, "
 "stories, combination, trendy, pattern, design, shape, geometric, patterned"
 msgstr ""
+"Inhalt, Bilder, Fotos, Illustration, Medien, Visuals, Artikel, Geschichte, "
+"Geschichten, Kombination, trendig, Muster, Design, Form, geometrisch, "
+"gemustert"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23675,6 +23689,9 @@ msgid ""
 "cta, whatsapp, social, e-commerce, selling-points, prompt, forms, chatbots, "
 "call-to-action, assistants, assistance, customers, 24, 7, support, talk"
 msgstr ""
+"CTA, WhatsApp, sozial, E-Commerce, Verkaufsargumente, Aufforderung, "
+"Formulare, Chatbots, Handlungsaufforderung, Assistenten, Unterstützung, "
+"Kunden, 24, 7, Support, Chat"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23682,6 +23699,8 @@ msgid ""
 "customers, clients, sponsors, partners, logos, brands, supporters, "
 "collaborators, associations, trusted, references, tiles"
 msgstr ""
+"Kunden, Klienten, Sponsoren, Partner, Logos, Marken, Unterstützer, "
+"Mitarbeiter, Verbände, vertrauenswürdig, Referenzen, Kacheln"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23712,6 +23731,7 @@ msgstr "Tage"
 msgid ""
 "descriptions, containers, layouts, structures, multi-columns, modules, boxes"
 msgstr ""
+"Beschreibungen, Container, Layouts, Strukturen, mehrspaltig, Module, Boxen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23720,6 +23740,9 @@ msgid ""
 "boxes, content, pictures, photos, illustration, media, visual, articles, "
 "story, stories, combination, showcase, announcements, reveal"
 msgstr ""
+"Beschreibungen, Container, Layouts, Strukturen, mehrspaltig, Module, Boxen, "
+"Inhalt, Bilder, Fotos, Illustration, Medien, Visuals, Artikel, Geschichte, "
+"Geschichten, Kombination, Präsentation, Ankündigungen, Enthüllung"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23729,6 +23752,11 @@ msgid ""
 "story, stories, combination, showcase, announcements, reveal, trendy, "
 "design, shape, geometric, engage, call to action, cta, buttons"
 msgstr ""
+"Beschreibungen, Container, Layouts, Strukturen, mehrspaltig, Module, Boxen, "
+"Inhalt, Bilder, Fotos, Illustration, Medien, Visuals, Artikel, Geschichte, "
+"Geschichten, Kombination, Präsentation, Ankündigungen, Enthüllung, trendig, "
+"Design, Form, geometrisch, Interaktion, Handlungsaufforderung, CTA, "
+"Schaltflächen"
 
 #. module: website
 #. odoo-javascript
@@ -23742,7 +23770,7 @@ msgstr "z. B. /Seite oder URL"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
 msgid "e.g. DEMO_MAP_ID"
-msgstr ""
+msgstr "z. B. DEMO_KARTE_ID"
 
 #. module: website
 #. odoo-javascript
@@ -23798,6 +23826,8 @@ msgid ""
 "features, benefits, highlights, cards, photo cards, image cards, grids, two "
 "columns, product features, services, quality"
 msgstr ""
+"Funktionen, Vorteile, Highlights, Karten, Fotokarten, Bildkarten, Raster, "
+"zwei Spalten, Produktmerkmale, Dienstleistungen, Qualität"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23805,6 +23835,9 @@ msgid ""
 "features, highlights, images, showcase, split layout, icon list, checklists, "
 "bullet points, product features, benefits, descriptions, photos, key features"
 msgstr ""
+"Funktionen, Highlights, Bilder, Präsentation, geteiltes Layout, Symbolliste, "
+"Checklisten, Aufzählungspunkte, Produktmerkmale, Vorteile, Beschreibungen, "
+"Fotos, Hauptfunktionen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23812,6 +23845,8 @@ msgid ""
 "features, icons, benefits, product features, split layout, images, icon "
 "list, advantages, highlights, product showcase, 4 features"
 msgstr ""
+"Funktionen, Symbole, Vorteile, Produktmerkmale, geteiltes Layout, Bilder, "
+"Symbolliste, Vorzüge, Highlights, Produktpräsentation, 4 Funktionen"
 
 #. module: website
 #. odoo-javascript
@@ -23839,6 +23874,11 @@ msgid ""
 "grid, mixed, collections, stacking, visual-grid, showcase, visuals, "
 "portfolios, thumbnails, engage, call to action, cta, showcase"
 msgstr ""
+"vier Abschnitte, Spalten, Raster, Unterteilungen, geteilt, Segmente, Bilder, "
+"Illustration, Medien, Fotos, Kacheln, Anordnung, Galerie, Galerien, Bilder-"
+"Raster, gemischt, Sammlungen, Stapelung, visuelles Raster, Präsentation, "
+"Visuals, Portfolios, Vorschaubilder, einbinden, Handlungsaufforderung, CTA, "
+"Präsentation"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
@@ -23849,7 +23889,7 @@ msgstr "kostenlose Website"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
 msgid "from your Google Cloud console."
-msgstr ""
+msgstr "aus Ihrer Google-Cloud-Konsole."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -23857,6 +23897,8 @@ msgid ""
 "frontend_lang (Odoo)<br/>\n"
 "                                            tz (Odoo)"
 msgstr ""
+"frontend_lang (Odoo)<br/>\n"
+"                                            tz (Odoo)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23864,13 +23906,18 @@ msgid ""
 "gallery, galleries, carousels, pictures, photos, albums, showcase, visuals, "
 "portfolios, thumbnails, slideshow"
 msgstr ""
+"Galerie, Galerien, Karussells, Bilder, Fotos, Alben, Präsentation, Visuals, "
+"Portfolios, Vorschaubilder, Diashow"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, fuzzy
 msgid ""
 "gallery, galleries, carousels, slider, slideshow, pictures, photos, image-"
 "slider, rotating, swipe, transition, media-carousel, movement"
 msgstr ""
+"Galerie, Galerien, Karussells, Slider, Diashow, Bilder, Fotos, Bild-Slider, "
+"rotierend, wischen, Übergang, Medien-Karussell, Bewegung"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23879,6 +23926,9 @@ msgid ""
 "slider, rotating, swipe, transition, media-carousel, movement, cta, "
 "engagement, call to action"
 msgstr ""
+"Galerie, Galerien, Karussells, Slider, Diashow, Bilder, Fotos, Bild-Regler, "
+"rotierend, wischen, Übergang, Medien-Karussell, Bewegung, CTA, Interaktion, "
+"Handlungsaufforderung"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23887,6 +23937,9 @@ msgid ""
 "backgrounds, pictures, photos, highlights, shop, call to action, shape, "
 "gradient"
 msgstr ""
+"Leuchten, Intro, Helden, Schlagzeile, Überschriften, Banner, Produkte, "
+"Promo, Hintergründe, Bilder, Fotos, Highlights, Shop, Handlungsaufforderung, "
+"Form, Verlauf"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -23899,6 +23952,9 @@ msgid ""
 "graphs, tables, diagrams, pie, plot, bars, metrics, figures, data-"
 "visualization, statistics, stats, analytics, infographic, skills, report"
 msgstr ""
+"Grafiken, Tabellen, Diagramme, Tortendiagramm, Diagramm, Balken, Metriken, "
+"Zahlen, Datenvisualisierung, Statistik, Statistiken, Analytik, Infografik, "
+"Fähigkeiten, Bericht"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23906,6 +23962,8 @@ msgid ""
 "grids, gallery, galleries, pictures, photos, albums, showcase, visuals, "
 "portfolios, mosaic, collages, arrangement, collections, visual-grid"
 msgstr ""
+"Raster, Galerie, Galerien, Bilder, Fotos, Alben, Präsentation, Visuals, "
+"Portfolios, Mosaik, Collagen, Anordnung, Sammlungen, visuelles Raster"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23914,6 +23972,9 @@ msgid ""
 "showcase, visuals, portfolios, mosaic, collages, arrangement, collections, "
 "visual-grid, split, alignment"
 msgstr ""
+"Raster, Galerie, Galerien, Bilder, Fotos, Medien, Text, Inhalt, Alben, "
+"Präsentation, Visuals, Portfolios, Mosaik, Collagen, Anordnung, Sammlungen, "
+"visuelles Raster, aufteilen, Ausrichtung"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23921,6 +23982,9 @@ msgid ""
 "headers, introduction, home, content, introduction, overview, spotlight, "
 "presentation, welcome, context, descriptions, primary, highlights, lead"
 msgstr ""
+"Kopfzeilen, Einführung, Startseite, Inhalt, Einleitung, Übersicht, "
+"Blickpunkt, Präsentation, Willkommen, Kontext, Beschreibungen, Primär, "
+"Highlights, Lead"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23928,6 +23992,8 @@ msgid ""
 "heading, h1, headline, headers, main, top, captions, introductory, "
 "principal, key"
 msgstr ""
+"Überschrift, H1, Schlagzeile, Kopfzeilen, Hauptseite, oben, "
+"Bildunterschriften, einleitend, wichtigste, Schlüssel"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23935,14 +24001,21 @@ msgid ""
 "heading, headline, headers, split, split text, split content, two columns, "
 "descriptions, intro, section header, typography, large text"
 msgstr ""
+"Überschrift, Schlagzeile, Kopfzeilen, geteilt, geteilter Text, geteilter "
+"Inhalt, zwei Spalten, Beschreibungen, Intro, Abschnittsüberschrift, "
+"Typografie, großer Text"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, fuzzy
 msgid ""
 "headline, headers, content, pictures, photos, illustration, media, visual, "
 "articles, combination, trendy, pattern, design, bold, impactful, vibrant, "
 "standout"
 msgstr ""
+"Schlagzeile, Kopfzeilen, Inhalt, Bilder, Fotos, Illustration, Medien, "
+"visuell, Artikel, Kombination, trendig, Muster, Design, fett, wirkungsvoll, "
+"lebendig, hervorstechend"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23950,6 +24023,8 @@ msgid ""
 "headline, headers, content, pictures, photos, illustration, media, visual, "
 "combination"
 msgstr ""
+"Schlagzeile, Kopfzeilen, Inhalt, Bilder, Fotos, Illustration, Medien, "
+"Visuals, Kombination"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -23963,6 +24038,8 @@ msgid ""
 "heroes, animation, animated, cards, float, stacked, promo, categories, "
 "ecommerce, shop"
 msgstr ""
+"Heroes, Animation, animiert, Karten, schwebend, gestapelt, Promo, "
+"Kategorien, E-Commerce, Shop"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23970,6 +24047,8 @@ msgid ""
 "heroes, banners, pictures, photos, covers, shape, background image, "
 "fullscreen, headline, intro, landing page, impactful"
 msgstr ""
+"Heroes, Banner, Bilder, Fotos, Deckblatt, Form, Hintergrundbild, Vollbild, "
+"Schlagzeile, Intro, Landingpage, wirkungsvoll"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23977,6 +24056,8 @@ msgid ""
 "heroes, categories, ecommerce, shop, illustration, buy, photos, shop, "
 "products, grids, pictures"
 msgstr ""
+"Heroes, Kategorien, E-Commerce, Shop, Illustration, Kaufen, Fotos, Shop, "
+"Produkte, Raster, Bilder"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23984,14 +24065,20 @@ msgid ""
 "heroes, headline, headers, centered, maintenance, under maintenance, coming "
 "soon, fullscreen, social media, status page, offline, temporary"
 msgstr ""
+"Heroes, Schlagzeile, Kopfzeilen, zentriert, Wartung, in Wartung, in Kürze "
+"verfügbar, Vollbild, soziale Medien, Statusseite, offline, vorübergehend"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, fuzzy
 msgid ""
 "heroes, headline, headers, intro, home, landing page, animated, movement, "
 "marquee, scrolling text, avatars, social proof, background image, immersive, "
 "covers"
 msgstr ""
+"Heroes, Schlagzeile, Kopfzeilen, Intro, Startseite, Landingpage, animiert, "
+"Bewegung, Laufschrift, scrollender Text, Avatare, Social Proof, "
+"Hintergrundbild, immersiv, Deckblatt"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -23999,6 +24086,9 @@ msgid ""
 "heroes, headline, headers, introduction, home, pictures, photos, about page, "
 "company, companies, story, stories, history, brands, mission, statement"
 msgstr ""
+"Heroes, Schlagzeile, Kopfzeilen, Einführung, Startseite, Bilder, Fotos, Über-"
+"uns-Seite, Unternehmen, Firmen, Geschichte, Geschichten, Historie, Marken, "
+"Mission, Leitbild"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -24820,6 +24910,12 @@ msgstr "✽  Pizza"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Was wir bieten"
+
+#~ msgid "%(error)s (website: %(website_id)s)"
+#~ msgstr "%(error)s (Website: %(website_id)s)"
+
+#~ msgid "The form's specified model does not exist"
+#~ msgstr "Das im Formular angegebene Modell ist nicht vorhanden"
 
 #~ msgid "Default website changed"
 #~ msgstr "Standardwebsite geändert"

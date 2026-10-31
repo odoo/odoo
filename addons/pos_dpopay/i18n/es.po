@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~19.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-08-31 17:36+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-30 13:33+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "pos_dpopay/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -37,6 +37,20 @@ msgid ""
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
 msgstr ""
+"\n"
+"Permite pagos DPO en el punto de venta\n"
+"==============================\n"
+"\n"
+"Admite todas las divisas compatibles con el terminal de pago, principalmente "
+"para su uso en la **región africana**.\n"
+"Permite a los clientes pagar sus pedidos con tarjetas de débito o crédito y "
+"Mobile Money a través de terminales DPO POS.\n"
+"Se necesita una cuenta de comerciante DPO para procesar las transacciones.\n"
+"\n"
+"Incluye las siguientes funcionalidades:\n"
+"* Pagos rápidos al deslizar, escanear o acercar la tarjeta de crédito o "
+"débito o Mobile Money (Airtel Money / M-Pesa) al terminal de pago.\n"
+"* Tarjetas compatibles: Visa, MasterCard, American Express, etc.\n"
 
 #. module: pos_dpopay
 #. odoo-python
@@ -45,6 +59,8 @@ msgid ""
 "%s. Please ensure the device is online and confirm that the Merchant ID "
 "(MID) and Terminal ID (TID) are correct."
 msgstr ""
+"%s. Asegúrate de que el dispositivo esté conectado a internet y confirma si "
+"el ID de comerciante (MID) y el ID de terminal (TID) son correctos."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,help:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
@@ -52,8 +68,8 @@ msgid ""
 "Bearer token used for authenticating requests. Automatically refreshed when "
 "expired."
 msgstr ""
-"Token de portador utilizado para autenticar solicitudes. Se actualiza "
-"automáticamente cuando caduca."
+"Token Bearer utilizado para autenticar solicitudes. Se actualiza "
+"automáticamente al caducar."
 
 #. module: pos_dpopay
 #: model:ir.model.fields.selection,name:pos_dpopay.selection__pos_payment_method__dpopay_payment_mode__card
@@ -136,7 +152,7 @@ msgstr "Error de DPO Pay"
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_bearer_token
 msgid "Dpopay Bearer Token"
-msgstr "Token de portador de DPO Pay"
+msgstr "Token Bearer de DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment_method__dpopay_payment_mode
@@ -203,7 +219,7 @@ msgstr "ID"
 #. module: pos_dpopay
 #: model:ir.module.module,summary:base.module_pos_dpopay
 msgid "Integrate your POS with DPO payment terminal."
-msgstr ""
+msgstr "Integra tu TPV con el terminal de pago de DPO."
 
 #. module: pos_dpopay
 #. odoo-python
@@ -242,12 +258,12 @@ msgstr "No ha sido posible efectuar el pago."
 #. module: pos_dpopay
 #: model:ir.module.module,shortdesc:base.module_pos_dpopay
 msgid "PoS DPO Pay"
-msgstr ""
+msgstr "PdV - DPO Pay"
 
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr "Pagos en el punto de venta"
+msgstr "Pago en el punto de venta"
 
 #. module: pos_dpopay
 #: model:ir.model,name:pos_dpopay.model_pos_payment_method
@@ -284,8 +300,8 @@ msgid ""
 "The Client Secret provided by DPO Pay for secure access. Keep it "
 "confidential."
 msgstr ""
-"El secreto de cliente proporcionado por DPO Pay para un acceso seguro. No lo "
-"compartas, es confidencial."
+"El secreto del cliente proporcionado por DPO Pay para un acceso seguro. No "
+"lo compartas con nadie."
 
 #. module: pos_dpopay
 #: model:ir.model.fields,field_description:pos_dpopay.field_pos_payment__dpopay_transaction_ref
@@ -316,7 +332,7 @@ msgstr "No se puede acceder al terminal de pago DPO Pay."
 msgid ""
 "Unable to retrieve DPO Pay bearer token: check Client ID and Client Secret."
 msgstr ""
-"No se puede obtener el token de portador de DPO Pay: comprueba el ID de "
+"No se ha podido obtener el token Bearer de DPO Pay: comprueba el ID de "
 "cliente y el secreto de cliente."
 
 #~ msgid ""

@@ -24,13 +24,14 @@
 # DeepL <noreply-mt-deepl@weblate.org>, 2025.
 # Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
 # Burkay Yıldızhan <seyil@odoo.com>, 2026.
+# setenayp <seat@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-11 17:42+0000\n"
-"PO-Revision-Date: 2026-10-14 13:34+0000\n"
-"Last-Translator: Burkay Yıldızhan <seyil@odoo.com>\n"
+"POT-Creation-Date: 2026-10-30 17:39+0000\n"
+"PO-Revision-Date: 2026-10-27 07:18+0000\n"
+"Last-Translator: setenayp <seat@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-20/analytic/"
 "tr/>\n"
 "Language: tr\n"
@@ -52,6 +53,14 @@ msgid ""
 "operations\n"
 "that have no counterpart in the general financial accounts.\n"
 msgstr ""
+"\n"
+"Analitik muhasebe nesnesini tanımlama modülü.\n"
+"===============================================\n"
+"\n"
+"Odoo’da analitik hesaplar genel hesaplarla bağlantılıdır ancak tamamen\n"
+"bağımsız olarak ele alınır. Böylece genel finansal hesaplarda karşılığı "
+"olmayan\n"
+"çeşitli analitik işlemler girebilirsiniz.\n"
 
 #. module: analytic
 #. odoo-python
@@ -82,7 +91,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_groups
 msgid "Access Groups"
-msgstr ""
+msgstr "Erişim Grupları"
 
 #. module: analytic
 #. odoo-javascript
@@ -98,7 +107,7 @@ msgstr "Hesaplar"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_agrolait
 msgid "Acme Corporation"
-msgstr ""
+msgstr "Acme Corporation"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction
@@ -828,7 +837,7 @@ msgstr "Proje Hesabı"
 #. module: analytic
 #: model:account.analytic.plan,name:analytic.analytic_plan_projects
 msgid "Project Plan"
-msgstr ""
+msgstr "Proje Planı"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__unit_amount
@@ -948,7 +957,7 @@ msgstr "Alt planlar"
 #. module: analytic
 #: model:ir.model,name:analytic.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Sistem Parametresi"
 
 #. module: analytic
 #. odoo-python
@@ -957,6 +966,7 @@ msgid ""
 "The value for %s must be the ID to a valid analytic plan that is not a "
 "subplan"
 msgstr ""
+" %s değeri, alt plan olmayan geçerli bir analitik plan kimliği (ID) olmalıdır"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -1007,6 +1017,12 @@ msgid ""
 msgstr ""
 "Durun bakalım! Bu değişikliği yaparsanız mevcut verileriniz silinecektir. "
 "Bunu önleyelim, olur mu?"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+msgid "Wrong analytic distribution format"
+msgstr ""
 
 #. module: analytic
 #. odoo-python

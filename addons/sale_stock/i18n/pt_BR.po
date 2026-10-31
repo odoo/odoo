@@ -8,15 +8,17 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 19:47+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-29 18:58+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/sale_stock/pt_BR/>\n"
+"20/sale_stock/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,23 +44,36 @@ msgid ""
 "* Incoterms: International Commercial terms\n"
 "\n"
 msgstr ""
+"\n"
+"Gerenciar cotações e pedidos de vendas\n"
+"==================================\n"
+"\n"
+"Este módulo cria o link entre os aplicativos de Vendas e de gerenciamento de "
+"armazéns.\n"
+"\n"
+"Preferências\n"
+"-----------\n"
+"* Envio: Escolha de entrega única ou entrega parcial\n"
+"* Faturamento: escolha como as faturas serão pagas\n"
+"* Incoterms: Termos comerciais internacionais\n"
+"\n"
 
 #. module: sale_stock
 #: model:ir.actions.report,print_report_name:sale_stock.action_report_return_label
 msgid "\"Return - %s\" % (object.name)"
-msgstr ""
+msgstr "\"Devolução - %s\" % (object.name)"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "%(quantity)s x %(product_name)s"
-msgstr ""
+msgstr "%(quantity)s x %(product_name)s"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "%s:"
-msgstr ""
+msgstr "%s:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -81,6 +96,8 @@ msgid ""
 "<br/>\n"
 "                                    Quantity:"
 msgstr ""
+"<br/>\n"
+"                                    Quantidade:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -88,16 +105,18 @@ msgid ""
 "<i class=\"oi me-1\" data-icon=\"calendar_today\"/>\n"
 "                            Expected delivery:"
 msgstr ""
+"<i class=\"oi me-1\" data-icon=\"calendar_today\"/>\n"
+"                            Entrega esperada:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_template
 msgid "<i class=\"oi me-1\" data-icon=\"reply\"/>Return"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"reply\"/>Retornar"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_template
 msgid "<i class=\"oi me-2\" data-icon=\"reply\"/>Return"
-msgstr ""
+msgstr "<i class=\"oi me-2\" data-icon=\"reply\"/>Devolução"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -112,7 +131,7 @@ msgstr "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Recebido"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Shipped"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"local_shipping\"/> Enviado"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -122,12 +141,12 @@ msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Aguardando chegada"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Preparation"
-msgstr ""
+msgstr "<i class=\"oi oi-fw\" data-icon=\"schedule\"/> Preparação"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "<span class=\"ms-2\">days after delivery</span>"
-msgstr ""
+msgstr "<span class=\"ms-2\">dias após a entrega</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -147,18 +166,18 @@ msgstr "<strong>Incoterm</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
 msgid "<strong>Return reason</strong>"
-msgstr ""
+msgstr "<strong>Motivo da devolução</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
 msgid "<strong>Returned products</strong>"
-msgstr ""
+msgstr "<strong>Produtos devolvidos</strong>"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "A return label has been downloaded for the following products:"
-msgstr ""
+msgstr "Uma etiqueta de devolução foi baixada para os seguintes produtos:"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -192,12 +211,12 @@ msgstr "Todas as operações planejadas inclusas"
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__allow_spontaneous_returns
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__allow_spontaneous_returns
 msgid "Allow Spontaneous Returns"
-msgstr ""
+msgstr "Permitir devoluções espontâneas"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Allow users to return products"
-msgstr ""
+msgstr "Permitir que usuários devolvam produtos"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -218,7 +237,7 @@ msgstr "Disponibilidade"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_replenishment_info__sale_delay
 msgid "Availability Time"
-msgstr ""
+msgstr "Tempo de disponibilidade"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -238,6 +257,8 @@ msgid ""
 "Choose the maximum number of days within which the product should be "
 "available for delivery to a customer or for use in other situations."
 msgstr ""
+"Escolha o número máximo de dias dentro dos quais o produto deve estar "
+"disponível para entrega a um cliente ou para uso em outras situações."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -263,17 +284,17 @@ msgstr "Configurações"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "Continuar"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Criado por"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Criado em"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -314,7 +335,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Delivery:"
-msgstr ""
+msgstr "Entrega"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
@@ -357,7 +378,7 @@ msgstr "Não esqueça de alterar o usuário nos seguintes pedidos de entrega: %s
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Download Return Label"
-msgstr ""
+msgstr "Baixar etiqueta de devolução"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -394,7 +415,7 @@ msgstr "Entrega prevista"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "Expected delivery"
-msgstr ""
+msgstr "Entrega esperada"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
@@ -450,7 +471,7 @@ msgstr "Transferências impactadas:"
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_incorrect_specs
 msgid "Incorrect specifications or compatibility issues"
-msgstr ""
+msgstr "Especificações incorretas ou problemas de compatibilidade"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -476,7 +497,7 @@ msgstr ""
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_damaged_product
 msgid "Item arrived damaged or defective"
-msgstr ""
+msgstr "O item chegou danificado ou com defeito"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
@@ -496,12 +517,12 @@ msgstr "Item do diário"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última atualização por"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última atualização em"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__late_availability
@@ -524,12 +545,12 @@ msgstr "Lote/série"
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
 msgid "Lot/Serial Number:"
-msgstr ""
+msgstr "Lote/Número de série:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Manage Return Reasons"
-msgstr ""
+msgstr "Gerenciar motivos de devolução"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -586,7 +607,7 @@ msgstr "Sem disponibilidade futura"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "No products are available to return."
-msgstr ""
+msgstr "Não há produtos disponíveis para devolução."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -610,7 +631,7 @@ msgstr "Em"
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_order_by_mistake
 msgid "Ordered by mistake"
-msgstr ""
+msgstr "Pedido por engano"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -619,12 +640,14 @@ msgid ""
 "Please download and print the label, attach it to your package, and send the "
 "package to the address below:"
 msgstr ""
+"Faça o download e imprima a etiqueta, anexe-a ao seu pacote e envie o pacote "
+"para o endereço abaixo:"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Print the return request label."
-msgstr ""
+msgstr "Imprimir a etiqueta de solicitação de devolução."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -639,7 +662,7 @@ msgstr "Movimentações do produto (linha da movimentação de estoque)"
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_not_meeting_expectations
 msgid "Product does not meet expectations"
-msgstr ""
+msgstr "O produto não atende às expectativas"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
@@ -649,7 +672,7 @@ msgstr "Qtd a ser entregue"
 #. module: sale_stock
 #: model:ir.module.module,summary:base.module_sale_stock
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "Cotação, Pedidos de venda, Entrega e Controle de faturamento"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -660,12 +683,12 @@ msgstr "Cotações"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__name
 msgid "Reason"
-msgstr ""
+msgstr "Razão"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_wrong_item
 msgid "Received the wrong item"
-msgstr ""
+msgstr "Recebeu o item errado"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
@@ -691,7 +714,6 @@ msgstr "Referências"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-#, fuzzy
 msgid "Remaining demand available at"
 msgstr "Demanda restante disponível em"
 
@@ -705,7 +727,7 @@ msgstr "Reposição por pedido (sob demanda)"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Request a return"
-msgstr ""
+msgstr "Solicitar devolução"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -716,36 +738,36 @@ msgstr "Reservado"
 #. module: sale_stock
 #: model:ir.actions.report,name:sale_stock.action_report_return_label
 msgid "Return Label"
-msgstr ""
+msgstr "Etiqueta de devolução"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_return_reason
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__return_reason_id
 msgid "Return Reason"
-msgstr ""
+msgstr "Motivo da devolução"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.action_open_return_reasons
 msgid "Return Reasons"
-msgstr ""
+msgstr "Motivos de devolução"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__return_validity_days
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__return_validity_days
 msgid "Return Validity Days"
-msgstr ""
+msgstr "Dias de validade de devolução"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Return reason"
-msgstr ""
+msgstr "Motivo da devolução"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "Return reason: %s"
-msgstr ""
+msgstr "Motivo da devolução: %s"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.action_stock_picking_return_report
@@ -787,7 +809,7 @@ msgstr "Relatório de análise de vendas"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_stock_replenishment_info_sale_stock_inherit
 msgid "Sales Availability Time"
-msgstr ""
+msgstr "Tempo de disponibilidade de vendas"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -819,7 +841,7 @@ msgstr "Dias de segurança de venda"
 #. module: sale_stock
 #: model:ir.module.module,shortdesc:base.module_sale_stock
 msgid "Sales and Warehouse Management"
-msgstr ""
+msgstr "Gerenciamento de armazém"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -840,13 +862,13 @@ msgstr "Margem de segurança de tempo para vendas"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Select a reason..."
-msgstr ""
+msgstr "Selecione um motivo..."
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Select at least one product and a return reason."
-msgstr ""
+msgstr "Selecione pelo menos um produto e um motivo de devolução."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
@@ -856,7 +878,7 @@ msgstr "Selecionável na linha do pedido de venda"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Seqüência"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -892,7 +914,7 @@ msgstr "Relatório de regras de estoque"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_replenishment_info
 msgid "Stock delivery time information"
-msgstr ""
+msgstr "Informações sobre o tempo de entrega do estoque"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -902,7 +924,6 @@ msgstr "Relatório de regra de estoque"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
-#, fuzzy
 msgid "The delivery"
 msgstr "A entrega"
 
@@ -957,7 +978,6 @@ msgstr "Usuário"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-#, fuzzy
 msgid "View Forecast"
 msgstr "Ver previsão"
 
@@ -1024,9 +1044,8 @@ msgstr "processados em vez de"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
-#, fuzzy
 msgid "will be late."
-msgstr "vai atrasar."
+msgstr "está atrasada."
 
 #~ msgid "Accrued Orders Wizard"
 #~ msgstr "Assistente de pedidos de provisão"

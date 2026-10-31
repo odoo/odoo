@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-10-21 16:08+0000\n"
+"PO-Revision-Date: 2026-10-30 10:05+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/"
 "stock_account/nl/>\n"
@@ -44,6 +44,20 @@ msgid ""
 "------------------------------------------------------\n"
 "* Stock Inventory Value at given date (support dates in the past)\n"
 msgstr ""
+"\n"
+"WMS boekhoudmodule\n"
+"======================\n"
+"Deze module is de brug tussen de modules 'Voorraad' en 'Boekhouding' en "
+"staat je toe om financiële boekingen te maken om je voorraad te waarderen\n"
+"\n"
+"Hoofdeigenschappen\n"
+"------------\n"
+"* Voorraadwaardering (periodiek of automatisch)\n"
+"* Factuur vanuit picking\n"
+"\n"
+"Dashboard / Rapporten voor voorraadbeheer bevatten:\n"
+"------------------------------------------------------\n"
+"Voorraadwaarde op een gegeven datum (ondersteunt datums in het verleden)\n"
 
 #. module: stock_account
 #. odoo-python
@@ -58,6 +72,8 @@ msgid ""
 "%(lot)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %"
 "(user)s"
 msgstr ""
+"%(lot)s kostenupdate van %(old_value)s naar %(new_value)s voor %(quantity)s "
+"door %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -66,6 +82,8 @@ msgid ""
 "%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by "
 "%(user)s"
 msgstr ""
+"%(move)s kostenupdate van %(old_value)s naar %(new_value)s voor %(quantity)s "
+"door %(user)s"
 
 #. module: stock_account
 #. odoo-python
@@ -76,7 +94,7 @@ msgstr "%(quantity)s %(uom)s tegen productkost"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form
 msgid "<span class=\"o_stat_text\">Product Value</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Productwaarde</span>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -116,12 +134,14 @@ msgstr "Toegangsgroepen"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__account_move_id
 msgid "Account Move"
-msgstr ""
+msgstr "Boeking"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__cogs_aml_ids
 msgid "Account move lines using this move in order to compute their COGS"
 msgstr ""
+"Boekingsregels die deze boeking gebruiken om hun kostprijs (cogs) te "
+"berekenen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_adjustment_name__accounting_date
@@ -173,12 +193,12 @@ msgstr "Aangepast op %(date)s door %(user)s"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__adjustment
 msgid "Adjustment"
-msgstr ""
+msgstr "Aanpassing"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_search_view
 msgid "Adjustments"
-msgstr ""
+msgstr "Aanpassingen"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -229,12 +249,12 @@ msgstr "Bacon"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__cogs_aml_ids
 msgid "COGS lines"
-msgstr ""
+msgstr "COGS-regels"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_move_ids
 msgid "COGS stock moves"
-msgstr ""
+msgstr "COGS voorraadboekingen"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__closing_datetime
@@ -305,6 +325,8 @@ msgstr "Productiekosten"
 msgid ""
 "Cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s"
 msgstr ""
+"Kostprijsupdate van %(old_value)s naar %(new_value)s voor %(quantity)s door %"
+"(user)s"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -410,7 +432,7 @@ msgstr "Toon serie & partijnummer op facturen"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "Done By"
-msgstr ""
+msgstr "Gedaan door"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -485,6 +507,8 @@ msgid ""
 "If the move originates from a document from another company, contains that "
 "company's partner, otherwise the move's partner."
 msgstr ""
+"Als de boeking voortkomt uit een document van een ander bedrijf, bevat deze "
+"de relatie van dat bedrijf, anders de partner van de boeking."
 
 #. module: stock_account
 #. odoo-python
@@ -513,12 +537,12 @@ msgstr "Voorraadverlies"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__cogs_move_ids
 msgid "Inventory moves used to compute COGS values."
-msgstr ""
+msgstr "Voorraadboekingen gebruikt om COGS-waarden te berekenen."
 
 #. module: stock_account
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
-msgstr ""
+msgstr "Voorraad, logistiek, voorraadwaardering, boekhouding"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__invoice_line_ids
@@ -615,7 +639,7 @@ msgstr "verplaatsing"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_cost
 msgid "New Unit Cost"
-msgstr ""
+msgstr "Nieuwe stukprijs"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__new_value
@@ -626,12 +650,12 @@ msgstr "Nieuwe waarde"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_cost
 msgid "Old Unit Cost"
-msgstr ""
+msgstr "Oude stukprijs"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__old_value
 msgid "Old Value"
-msgstr ""
+msgstr "Oude warde"
 
 #. module: stock_account
 #. odoo-python
@@ -647,16 +671,18 @@ msgid ""
 "Only set if the move is generated from a document belonging to another "
 "company"
 msgstr ""
+"Alleen ingesteld als de boeking wordt gegenereerd vanuit een document dat "
+"bij een ander bedrijf hoort"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__order_partner_id
 msgid "Order Partner"
-msgstr ""
+msgstr "Orderpartner"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__origin_company_id
 msgid "Origin Company"
-msgstr ""
+msgstr "Oorspronkelijk bedrijf"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking_type
@@ -721,6 +747,8 @@ msgid ""
 "Product should be passed as an argument in order to get the unit price for "
 "moves in a kit."
 msgstr ""
+"Het product moet als argument worden doorgegeven om de eenheidsprijs voor "
+"boekingen in een kit te verkrijgen."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_account_id
@@ -740,7 +768,7 @@ msgstr "Hoeveelheid"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Hoeveelheid"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
@@ -787,6 +815,11 @@ msgid ""
 "cost.\n"
 "        "
 msgstr ""
+"Standaard kostprijs: De producten worden gewaardeerd tegen de kostprijs "
+"zoals ingesteld op het product\n"
+"        Gemiddelde kostprijs (AVCO): De producten worden gewaardeerd tegen "
+"de gewogen gemiddelde waarde.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_avco_report
@@ -953,7 +986,7 @@ msgstr "Waarde"
 #: model:ir.actions.act_window,name:stock_account.product_value_list_action
 #: model:ir.ui.menu,name:stock_account.valuation_adjustments_menu
 msgid "Valuation Adjustments"
-msgstr ""
+msgstr "Aanpassingen voorraadwaardering"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
@@ -998,7 +1031,7 @@ msgstr "Waarde gebaseerd op oorspronkelijke verplaatsing %(reference)s"
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value from previous move %(references)s"
-msgstr ""
+msgstr "Waarde van vorige boeking %(references)s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
@@ -1016,12 +1049,12 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_value_list_view
 msgid "View Account Move"
-msgstr ""
+msgstr "Boeking bekijken"
 
 #. module: stock_account
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
-msgstr ""
+msgstr "WMS boekhouding"
 
 #. module: stock_account
 #. odoo-python

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-23 17:40+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
 "PO-Revision-Date: 2026-08-31 16:00+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-s19-4/account/"
@@ -5039,6 +5039,8 @@ msgid "Banks"
 msgstr "Banklar"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
 #, fuzzy
 msgid "Base"
@@ -7233,8 +7235,10 @@ msgid "Credit Move"
 msgstr "Kredit harakati"
 
 #. module: account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__credit_note
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -7242,12 +7246,6 @@ msgstr "Kredit harakati"
 #, fuzzy
 msgid "Credit Note"
 msgstr "Kredit ma'lumotnomasi"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Credit Note :"
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -9311,8 +9309,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
 msgid ""
-"Email addresses that will receive copy for sent and received invoices. "
-"Separate entries with ';'."
+"Email addresses that should receive invoices copy/return reminders. Separate "
+"entries with ';'."
 msgstr ""
 
 #. module: account
@@ -11367,13 +11365,6 @@ msgstr ""
 "alohida hisobvaraqlarda amalga oshiriladi."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
-#, fuzzy
-msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr ""
-"Agar bo‘sh bo‘lsa, qaytariladigan jurnal yozuvining jurnalidan foydalaniladi."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
 #, fuzzy
 msgid ""
@@ -12236,6 +12227,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.js:0
 #: code:addons/account/static/src/components/receipt_selector/receipt_selector.js:0
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_applicability__business_domain__invoice
 #: model:ir.model.fields.selection,name:account.selection__account_payment__reconciled_invoices_type__invoice
@@ -12253,12 +12245,6 @@ msgstr "Hisob-faktura"
 #, fuzzy
 msgid "Invoice #"
 msgstr "Hisob-faktura №"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
-msgid "Invoice :"
-msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
@@ -12491,6 +12477,12 @@ msgid ""
 msgstr ""
 "Hisob-faktura va kredit nota qayta taqsimoti kamida bitta soliq qayta "
 "taqsimot chizig‘iga ega bo‘lishi kerak"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Invoice generated but not sent."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14933,6 +14925,14 @@ msgid "No rounding applied"
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid ""
+"No valid sending method could be applied, so this invoice was not sent "
+"automatically. Please configure a sending method and send it manually."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__non_deductible_amount
 msgid "Non Deductible Amount"
 msgstr ""
@@ -16929,6 +16929,7 @@ msgstr "Pochta va yetkazib berish xizmati"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #, fuzzy
 msgid "Posted"
 msgstr "Jo‘natildi"
@@ -20187,6 +20188,8 @@ msgid "Target Line"
 msgstr "Maqsad chizig‘i"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2x_tax_tags/tax_tag_popover.xml:0
 #: model:account.report.column,name:account.generic_tax_report_account_tax_column_tax
 #: model:account.report.column,name:account.generic_tax_report_column_tax
 #: model:account.report.column,name:account.generic_tax_report_tax_account_column_tax
@@ -21716,7 +21719,7 @@ msgstr "Jurnal elementi to‘g‘ri moliyaviy hisob bilan bog‘lanmagan"
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 msgid ""
-"The journal of this statement (%(statement_name)) is hashed, the statement "
+"The journal of this statement (%(statement_name)s) is hashed, the statement "
 "cannot be reset to draft"
 msgstr ""
 
@@ -26046,6 +26049,12 @@ msgid ""
 "{{ object.company_id.name }} {{ object.payment_receipt_title }} (Ref "
 "{{ object.name or 'n/a' }})"
 msgstr ""
+
+#, fuzzy
+#~ msgid "If empty, uses the journal of the journal entry to be reversed."
+#~ msgstr ""
+#~ "Agar bo‘sh bo‘lsa, qaytariladigan jurnal yozuvining jurnalidan "
+#~ "foydalaniladi."
 
 #, fuzzy
 #~ msgid ""

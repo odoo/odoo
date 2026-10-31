@@ -13,9 +13,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 15:20+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-30 13:33+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-20/"
 "pos_discount/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -34,6 +34,11 @@ msgid ""
 "discount to a customer.\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Este módulo permite que el cajero aplique un descuento basado en porcentaje\n"
+"a un cliente con rapidez.\n"
+"\n"
 
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
@@ -43,7 +48,7 @@ msgstr "<strong>Importe de los descuentos globales</strong>:"
 #. module: pos_discount
 #: model_terms:ir.ui.view,arch_db:pos_discount.pos_session_sales_details
 msgid "<strong>Number of global discounts</strong>:"
-msgstr "<strong>Número de descuentos globales</strong>:"
+msgstr "<strong>Cantidad de descuentos globales</strong>:"
 
 #. module: pos_discount
 #. odoo-python
@@ -52,13 +57,14 @@ msgid ""
 "A discount product is needed to use the Global Discount feature. Go to Point "
 "of Sale > Configuration > Settings to set it."
 msgstr ""
-"Se requiere un producto de descuento para usar la función de descuento "
-"global. Se configura en Punto de venta > Configuración > Ajustes."
+"Se necesita un producto de descuento para usar la función de descuento "
+"global. Para configurarlo, dirígete a Punto de venta > Configuración > "
+"Ajustes."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
-msgstr "Permita al cajero ofrecer descuentos en todo el pedido."
+msgstr "Permite que el cajero aplique descuentos en todo el pedido."
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_res_config_settings
@@ -83,7 +89,7 @@ msgstr "Producto de descuento"
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 #: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount Value"
-msgstr ""
+msgstr "Valor del descuento"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_account_move_line__display_name
@@ -92,7 +98,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_discount.field_report_point_of_sale_report_saledetails__display_name
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Nombre para mostrar"
+msgstr "Nombre a mostrar"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_account_move_line__id
@@ -123,12 +129,12 @@ msgstr "¡Vaya!"
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
-msgstr "Descuentos de pedidos"
+msgstr "Descuento del pedido"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Configuración del TPV"
+msgstr "Configuración del punto de venta"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_report_point_of_sale_report_saledetails
@@ -138,12 +144,12 @@ msgstr "Detalles del punto de venta"
 #. module: pos_discount
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
-msgstr ""
+msgstr "Descuentos del punto de venta"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
 msgid "Pos Discount Product"
-msgstr "Producto de descuento de TPV"
+msgstr "Producto de descuento de PdV"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_product_template
@@ -153,13 +159,14 @@ msgstr "Producto"
 #. module: pos_discount
 #: model:ir.module.module,summary:base.module_pos_discount
 msgid "Simple Discounts in the Point of Sale "
-msgstr ""
+msgstr "Descuentos sencillos en el punto de venta "
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
 #: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
 msgid "The default discount value when clicking on the Discount button"
 msgstr ""
+"El valor de descuento predeterminado al hacer clic en el botón «Descuento»"
 
 #. module: pos_discount
 #. odoo-javascript
@@ -168,13 +175,13 @@ msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be "
 "Sold' and 'Available in Point of Sale'."
 msgstr ""
-"El producto de descuento parece estar mal configurado. Asegúrese de que está "
-"marcado como 'Se puede vender' y 'Disponible en el punto de venta'."
+"Parece que el producto de descuento está mal configurado. Asegúrate de que "
+"esté marcado como «Se puede vender» y «Disponible en el punto de venta»."
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
 msgid "The product used to apply the discount on the ticket."
-msgstr "El producto usado para aplicar el descuento en el recibo."
+msgstr "El producto que se utiliza para aplicar el descuento en el ticket."
 
 #. module: pos_discount
 #. odoo-javascript

@@ -12,13 +12,14 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-01 17:33+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-29 18:58+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-20/hr_expense/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -2091,13 +2092,10 @@ msgstr "Selecione o aprovador das despesas."
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Selecione o usuário responsável pela aprovação de “Despesas” deste "
-"funcionário.\n"
-"Se estiver vazio, a aprovação é feita por um Administrador ou Aprovador "
-"(determinado nas definições/usuários)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -2334,7 +2332,7 @@ msgstr "O diário de despesas dos funcionários deve ser um diário de compras."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "The existing bill must be set."
-msgstr ""
+msgstr "A fatura existente deve ser definida."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -2342,6 +2340,8 @@ msgid ""
 "The expense existing bill is not linked, please reference it before "
 "approving."
 msgstr ""
+"A fatura existente da despesa não está vinculada; por favor, referencie-a "
+"antes de aprovar."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2733,6 +2733,8 @@ msgid ""
 "You cannot refuse:\n"
 "%(reasons)s"
 msgstr ""
+"Você não pode recusar:\n"
+"%(reasons)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2862,6 +2864,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "com o mesmo recibo já existe."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Selecione o usuário responsável pela aprovação de “Despesas” deste "
+#~ "funcionário.\n"
+#~ "Se estiver vazio, a aprovação é feita por um Administrador ou Aprovador "
+#~ "(determinado nas definições/usuários)."
 
 #~ msgid ""
 #~ "Enter a name then choose a product and configure the amount of your "

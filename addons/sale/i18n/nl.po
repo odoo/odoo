@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:42+0000\n"
-"PO-Revision-Date: 2026-10-19 10:33+0000\n"
+"PO-Revision-Date: 2026-10-29 11:37+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-20/sale/nl/>\n"
 "Language: nl\n"
@@ -51,6 +51,8 @@ msgid ""
 "This module contains all the common features of Sales Management and "
 "eCommerce.\n"
 msgstr ""
+"\n"
+"Deze module bevat de algemene opties voor verkoop en E-commerce.\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
@@ -80,6 +82,8 @@ msgid ""
 "%(order)s - %(order_line)s: Goods Delivered not Invoiced (perpetual "
 "valuation)"
 msgstr ""
+"%(order)s - %(order_line)s: Goederen geleverd, niet gefactureerd (permanente "
+"waardering)"
 
 #. module: sale
 #. odoo-python
@@ -88,6 +92,8 @@ msgid ""
 "%(order)s - %(order_line)s: Goods Invoiced not Delivered (perpetual "
 "valuation)"
 msgstr ""
+"%(order)s - %(order_line)s: Goederen gefactureerd, niet geleverd (permanente "
+"waardering)"
 
 #. module: sale
 #. odoo-python
@@ -96,6 +102,8 @@ msgid ""
 "%(order)s - %(order_line)s; %(quantity_invoiced)s Invoiced, %"
 "(quantity_delivered)s Delivered at %(unit_price)s each"
 msgstr ""
+"%(order)s - %(order_line)s; %(quantity_invoiced)s Gefactureerd, %"
+"(quantity_delivered)s Geleverd voor %(unit_price)s elk"
 
 #. module: sale
 #. odoo-python
@@ -1328,7 +1336,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"oi me-1\" data-icon=\"redo\"/>Order Again"
-msgstr ""
+msgstr "<i class=\"oi me-1\" data-icon=\"redo\"/>Opnieuw bestellen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1345,6 +1353,8 @@ msgid ""
 "<i class=\"oi oi-fw me-1\" data-icon=\"edit_square\" aria-label=\"Revenues\" "
 "role=\"img\"/>"
 msgstr ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"edit_square\" aria-"
+"label=\"Inkomsten\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
@@ -1352,6 +1362,8 @@ msgid ""
 "<i class=\"oi oi-fw me-1\" data-icon=\"shopping_cart\" aria-"
 "label=\"Quotations\" role=\"img\"/>"
 msgstr ""
+"<i class=\"oi oi-fw me-1\" data-icon=\"shopping_cart\" aria-"
+"label=\"Offertes\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -1380,17 +1392,17 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span class=\"badge text-bg-info\">Billing</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-info\">Facturatie</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span class=\"badge text-bg-info\">Delivery &amp; Billing</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-info\">Levering &amp; Facturatie</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span class=\"badge text-bg-info\">Delivery</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-info\">Levering</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -1404,12 +1416,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_document_kanban
 msgid "<span class=\"flex-shrink-0\">Accessible</span>"
-msgstr ""
+msgstr "<span class=\"flex-shrink-0\">Toegankelijk</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
 msgid "<span class=\"o_stat_text\">Revenues</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Inkomsten</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -1443,7 +1455,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span class=\"text-muted fw-normal\">saved</span>"
-msgstr ""
+msgstr "<span class=\"text-muted fw-normal\">opgeslagen</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -1484,12 +1496,12 @@ msgstr "<span>Kort.%</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Discount</span>"
-msgstr ""
+msgstr "<span>Korting</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Tax:</span>"
-msgstr ""
+msgstr "<span>Belasting:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1510,23 +1522,24 @@ msgstr "<span>Waarschuwing: deze opdracht kan een duplicaat zijn van</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>·</span>"
-msgstr ""
+msgstr "<span>·</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>×</span>"
-msgstr ""
+msgstr "<span>×</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong class=\"smaller text-uppercase text-muted\">Invoices</strong>"
-msgstr ""
+msgstr "<strong class=\"smaller text-uppercase text-muted\">Facturen</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "<strong class=\"smaller text-uppercase text-muted\">Your advantage</strong>"
 msgstr ""
+"<strong class=\"smaller text-uppercase text-muted\">Je voordeel</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1535,6 +1548,9 @@ msgid ""
 "                        Invoicing Address\n"
 "                    </strong>"
 msgstr ""
+"<strong>\n"
+"                        Factuuradres\n"
+"                    </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1543,6 +1559,9 @@ msgid ""
 "                        Shipping Address\n"
 "                    </strong>"
 msgstr ""
+"<strong>\n"
+"                        Bezorgadres\n"
+"                    </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1551,6 +1570,9 @@ msgid ""
 "                    Invoicing and Shipping Address\n"
 "                </strong>"
 msgstr ""
+"<strong>\n"
+"                    Factuur- en bezorgadres\n"
+"                </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1681,7 +1703,7 @@ msgstr "Toegang waarschuwing"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_document__attached_on_sale
 msgid "Accessible"
-msgstr ""
+msgstr "Toegankelijk"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
@@ -1711,6 +1733,9 @@ msgid ""
 "yet. With perpetual valuation, it counterbalances the stock valuation "
 "account at closing."
 msgstr ""
+"Rekening met de toegerekende waarde van goederen die zijn geleverd maar nog "
+"niet gefactureerd. Bij permanente waardering compenseert deze de "
+"voorraadwaarderingsrekening bij het afsluiten."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_category__property_account_invoiced_not_delivered_id
@@ -1719,11 +1744,14 @@ msgid ""
 "yet. With perpetual valuation, it counterbalances the stock valuation "
 "account at closing."
 msgstr ""
+"Rekening met de toegerekende waarde van de goederen die zijn gefactureerd "
+"maar nog niet geleverd. Bij permanente waardering compenseert deze de "
+"voorraadwaarderingsrekening bij de afsluiting."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__accrual_move_ids
 msgid "Accrual Entries"
-msgstr ""
+msgstr "Toegerekende boekingen"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__accrual_move_ids
@@ -1731,11 +1759,14 @@ msgid ""
 "Accrual entries generated for this line, so it isn't accrued again while one "
 "is still standing (posted, not yet reversed or cancelled)."
 msgstr ""
+"Toegerekende boekingen gegenereerd voor deze regel, zodat deze niet opnieuw "
+"wordt toegerekend zolang er nog een openstaat (geboekt, nog niet "
+"teruggedraaid of geannuleerd)."
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr ""
+msgstr "Wizard overlopende orders"
 
 #. module: sale
 #: model:ir.actions.server,name:sale.action_accrued_revenue_entry_sale_order_line
@@ -1746,7 +1777,7 @@ msgstr "Toegerekende omzetboeking"
 #. odoo-python
 #: code:addons/sale/wizard/accrued_orders.py:0
 msgid "Accrued total"
-msgstr ""
+msgstr "Totaal overlopende boekingen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -1845,7 +1876,7 @@ msgstr "Volgers toevoegen/verwijderen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__allow_invoice_overages
 msgid "Allow Invoice Overages"
-msgstr ""
+msgstr "Overfacturering toestaan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
@@ -1877,6 +1908,17 @@ msgid ""
 "page.\n"
 "e.g. this option can be useful to share Product description files."
 msgstr ""
+"Hiermee kun je het document delen met je klanten binnen een verkoop.\n"
+"Vanaf offerte: het document wordt verzonden naar en is te allen tijde "
+"toegankelijk voor klanten.\n"
+"bv. deze optie kan nuttig zijn om productbeschrijvingsbestanden te delen.\n"
+"Bij orderbevestiging: het document wordt verzonden naar en is toegankelijk "
+"voor klanten.\n"
+"bv. deze optie kan nuttig zijn om een gebruikershandleiding of digitale "
+"inhoud gekocht via E-commerce te delen. \n"
+"Op productpagina: het document is toegankelijk voor klanten op de "
+"productpagina.\n"
+"bv. deze optie kan nuttig zijn om productbeschrijvingsbestanden te delen."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1905,12 +1947,13 @@ msgstr "Bedrag"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_unpaid
 msgid "Amount Remaining"
-msgstr ""
+msgstr "Resterend bedrag"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay to avoid double payment or double invoicing."
 msgstr ""
+"Nog te betalen bedrag om dubbele betaling of dubbele facturatie te vermijden."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
@@ -2002,7 +2045,7 @@ msgstr "Tegen verkoopprijs"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__cost
 msgid "At cost"
-msgstr "Voor kostprijs"
+msgstr "Tegen kostprijs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_attachment_count
@@ -2072,7 +2115,7 @@ msgstr "Overtref concurrenten met verbluffende offertes!"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_service_material
 msgid "Bill for the work you deliver"
-msgstr ""
+msgstr "Factureer je geleverde werk"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__delivery_status
@@ -2294,7 +2337,7 @@ msgstr "Prijzen samenvouwen"
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/combo_menu_widget.xml:0
 msgid "Combo"
-msgstr ""
+msgstr "Combo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__combo_item_id
@@ -2621,7 +2664,7 @@ msgstr "Klanten"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
 msgid "D%:"
-msgstr ""
+msgstr "D%:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_list
@@ -2685,7 +2728,7 @@ msgstr "Standaard product gebruikt voor kortingen"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__deferred_revenue
 msgid "Deferred Revenue"
-msgstr ""
+msgstr "Uitgestelde omzet"
 
 #. module: sale
 #. odoo-javascript
@@ -2709,7 +2752,7 @@ msgstr "Geleverd"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
 msgid "Delivered (%)"
-msgstr ""
+msgstr "Geleverd (%)"
 
 #. module: sale
 #. odoo-python
@@ -2945,7 +2988,7 @@ msgstr "Soort weergave"
 #: model:ir.model.fields,help:sale.field_sale_order__show_sol_numbers
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Display line numbers on Sales Orders."
-msgstr ""
+msgstr "Regelnummers op verkooporders weergeven."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
@@ -2956,7 +2999,7 @@ msgstr "Analytische verdeling"
 #: model:ir.model.fields,field_description:sale.field_sale_order__document_tax_mode
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__document_tax_mode
 msgid "Document Tax Mode"
-msgstr ""
+msgstr "Belastingmodus voor documenten"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3041,7 +3084,7 @@ msgstr "Aanbetaling van %s%%"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Down payment:"
-msgstr ""
+msgstr "Aanbetaling:"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -3112,7 +3155,7 @@ msgstr "Voer een vrije waarde in"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Enter a description..."
-msgstr ""
+msgstr "Voeg een beschrijving toe..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3221,7 +3264,7 @@ msgstr "Voorspelde voorraad"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__quotation
 msgid "From Quotation"
-msgstr ""
+msgstr "Van offerte"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -3342,7 +3385,7 @@ msgstr "Heeft bericht"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_overages
 msgid "Has Overages"
-msgstr ""
+msgstr "Heeft overschrijdingen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -3352,12 +3395,12 @@ msgstr "Heeft aanbetalingen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Hide Composition"
-msgstr ""
+msgstr "Samenstelling verbergen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Hide Prices"
-msgstr ""
+msgstr "Prijzen verbergen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_accrued_orders_wizard__id
@@ -3445,6 +3488,8 @@ msgid ""
 "If you change the pricelist, the prices of all order lines will be updated "
 "accordingly."
 msgstr ""
+"Als je de prijslijst wijzigt, worden de prijzen van alle orderregels "
+"dienovereenkomstig bijgewerkt."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3569,7 +3614,7 @@ msgstr "Factuurregels"
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__invoice_overages
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_overages
 msgid "Invoice Overages"
-msgstr ""
+msgstr "Overfacturering"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
@@ -3613,7 +3658,7 @@ msgstr "Factureer bestelde hoeveelheden zodra deze dienst is verkocht."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_to_be_issued
 msgid "Invoice to be Issued"
-msgstr ""
+msgstr "Factuur te versturen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_at_date
@@ -3630,12 +3675,12 @@ msgstr "Gefactureerd bedrag"
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_invoiced_not_delivered_id
 #: model:ir.model.fields,field_description:sale.field_res_company__account_invoiced_not_delivered_id
 msgid "Invoiced Not Delivered Account"
-msgstr ""
+msgstr "Rekening Gefactureerd, niet geleverd"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_invoiced_not_delivered_active
 msgid "Invoiced Not Delivered Account Active"
-msgstr ""
+msgstr "Rekening 'Gefactureerd, niet geleverd' actief"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
@@ -3676,12 +3721,12 @@ msgstr "Factuuranalyses"
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_invoices_to_issue_id
 #: model:ir.model.fields,field_description:sale.field_res_company__account_invoices_to_issue_id
 msgid "Invoices to be Issued Account"
-msgstr ""
+msgstr "Rekening Facturen te versturen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_category__property_account_invoices_to_issue_active
 msgid "Invoices to be Issued Account Active"
-msgstr ""
+msgstr "Rekening 'Facturen te versturen' actief"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3780,6 +3825,8 @@ msgid ""
 "It seems that there is already a payment in progress for your order; you "
 "can't modify it anymore."
 msgstr ""
+"Het lijkt erop dat er al een betaling bezig is voor je order. Je kunt deze "
+"betaling niet meer wijzigen."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
@@ -3799,31 +3846,31 @@ msgstr "Boekingsregel"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__label
 msgid "Label"
-msgstr ""
+msgstr "Label"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
 msgid "Last 30 days"
-msgstr ""
+msgstr "Laatste 30 dagen"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
 msgid "Last 365 days"
-msgstr ""
+msgstr "Laatste 365 dagen"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
 msgid "Last 7 days"
-msgstr ""
+msgstr "Laatste 7 dagen"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/date_filter_button/date_filter_button.js:0
 msgid "Last 90 days"
-msgstr ""
+msgstr "Laatste 90 dagen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__write_uid
@@ -3867,19 +3914,19 @@ msgstr "Laten we in een paar klikken een prachtige offerte maken."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Line"
-msgstr ""
+msgstr "Regel"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__line_number_offset
 msgid "Line Number Offset"
-msgstr ""
+msgstr "Offset regelnummer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__show_sol_numbers
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__show_sol_numbers
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_sol_numbers
 msgid "Line Numbers"
-msgstr ""
+msgstr "Regelnummers"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_id
@@ -3923,6 +3970,8 @@ msgid ""
 "Log your services deliveries, additional materials and expenses to invoice "
 "accurately."
 msgstr ""
+"Registreer je geleverde diensten, extra materialen en onkosten om accuraat "
+"te factureren."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3958,7 +4007,7 @@ msgstr "Handmatig"
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/discount_menu_widget.xml:0
 msgid "Manual Discount"
-msgstr ""
+msgstr "Handmatige korting"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
@@ -4104,7 +4153,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__hidden
 msgid "Never"
-msgstr ""
+msgstr "Nooit"
 
 #. module: sale
 #. odoo-python
@@ -4146,7 +4195,7 @@ msgstr "Nee"
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/combo_menu_widget.xml:0
 msgid "No Combo Product Available"
-msgstr ""
+msgstr "Geen Combo-product beschikbaar"
 
 #. module: sale
 #. odoo-python
@@ -4172,13 +4221,13 @@ msgstr "Nee, keer terug"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Not Available"
-msgstr ""
+msgstr "Niet beschikbaar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Not Cancelled"
-msgstr ""
+msgstr "Niet geannuleerd"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__delivery_status__pending
@@ -4252,7 +4301,7 @@ msgstr "Op alle orderregels"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_document__attached_on_sale__sale_order
 msgid "On Order Confirmation"
-msgstr ""
+msgstr "Bij orderbevestiging"
 
 #. module: sale
 #. odoo-python
@@ -4451,13 +4500,13 @@ msgstr "Orders"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Confirm"
-msgstr ""
+msgstr "Orders om te bevestigen"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 msgid "Orders to Deliver"
-msgstr ""
+msgstr "Orders om te leveren"
 
 #. module: sale
 #. odoo-javascript
@@ -4501,7 +4550,7 @@ msgstr "Verpakking"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Paid:"
-msgstr ""
+msgstr "Betaald:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
@@ -4616,7 +4665,7 @@ msgstr "Portaaltoegang URL"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
 msgid "Prepayment"
-msgstr ""
+msgstr "Vooruitbetaling"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__prepayment_amount
@@ -4793,7 +4842,7 @@ msgstr "Promoties, klantenkaarten en cadeaubonnen"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Provide feedback"
-msgstr ""
+msgstr "Feedback geven"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -4822,8 +4871,9 @@ msgstr "Aantal besteld"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_overage
+#, fuzzy
 msgid "Qty Overage"
-msgstr ""
+msgstr "Overfacturering hoeveelheid"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
@@ -4919,7 +4969,7 @@ msgstr "Offerte bevestigd"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quotation for"
-msgstr ""
+msgstr "Offerte voor"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
@@ -4984,13 +5034,13 @@ msgstr "Beoordelingen"
 #: model:ir.model.fields,field_description:sale.field_product_product__reinvoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__reinvoice_policy
 msgid "Re-Invoice Costs"
-msgstr "Opnieuw factureren"
+msgstr "Kosten doorfactureren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_reinvoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_reinvoice_policy
 msgid "Re-Invoice Policy visible"
-msgstr "Her-facturatiebeleid zichtbaar"
+msgstr "Beleid voor doorfactureren zichtbaar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_view_form
@@ -5000,7 +5050,7 @@ msgstr "Aanbevelen bij 'Toevoegen aan winkelmandje' of offerte"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Ref:"
-msgstr ""
+msgstr "Ref:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -5022,7 +5072,7 @@ msgstr "Standaard factuur"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject"
-msgstr ""
+msgstr "Afwijzen"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5032,7 +5082,7 @@ msgstr "Offerte afkeuren"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject this quotation"
-msgstr ""
+msgstr "Deze offerte afwijzen"
 
 #. module: sale
 #. odoo-javascript
@@ -5302,7 +5352,7 @@ msgstr "Verkooporderregels gerelateerd aan een verkooporder van mijzelf"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Sales Order for"
-msgstr ""
+msgstr "Verkooporder voor"
 
 #. module: sale
 #. odoo-python
@@ -5335,7 +5385,7 @@ msgstr "Verkooporders"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 msgid "Sales Revenue"
-msgstr ""
+msgstr "Omzet"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -5354,7 +5404,7 @@ msgstr "Verkoopteam"
 #. module: sale
 #: model:ir.module.module,summary:base.module_sale
 msgid "Sales internal machinery"
-msgstr ""
+msgstr "Verkoop interne machines"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
@@ -5411,7 +5461,7 @@ msgstr "Verkopers"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Save the line."
-msgstr ""
+msgstr "Sla de regel op."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5455,7 +5505,7 @@ msgstr "Veiligheidstoken"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Select New Quotation."
-msgstr ""
+msgstr "Selecteer 'Nieuwe offerte'."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
@@ -5565,7 +5615,7 @@ msgstr "Verzenden"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Shipping Status"
-msgstr ""
+msgstr "Verzendstatus"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
@@ -5766,13 +5816,13 @@ msgstr "Systeemparameter"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
 msgid "TE:"
-msgstr ""
+msgstr "TE:"
 
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/labeled_field_short_labels.js:0
 msgid "TI:"
-msgstr ""
+msgstr "TI:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
@@ -5815,7 +5865,7 @@ msgstr "Incl. btw"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Tax Included"
-msgstr ""
+msgstr "Inclusief btw"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -5851,7 +5901,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.menu,name:sale.sales_team_config
 msgid "Teams"
-msgstr ""
+msgstr "Teams"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__technical_price_unit
@@ -5951,6 +6001,7 @@ msgstr "Het bedrag is lager dan het voorschotbedrag."
 #: model:ir.model.fields,help:sale.field_sale_order__prepayment_amount
 msgid "The amount that must be paid by the customer to confirm the order."
 msgstr ""
+"Het bedrag dat door de klant betaald moet worden om de order te bevestigen."
 
 #. module: sale
 #. odoo-python
@@ -6258,7 +6309,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/dashboard/dashboard.js:0
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "To Confirm"
-msgstr ""
+msgstr "Te bevestigen"
 
 #. module: sale
 #. odoo-javascript
@@ -6266,7 +6317,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Deliver"
-msgstr ""
+msgstr "Te leveren"
 
 #. module: sale
 #. odoo-javascript
@@ -6324,7 +6375,6 @@ msgstr "Totaal"
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
-#, fuzzy
 msgid "Total Advantage"
 msgstr "Totaal voordeel"
 
@@ -6332,7 +6382,7 @@ msgstr "Totaal voordeel"
 #: model_terms:ir.ui.view,arch_db:sale.product_product_sale_tree_view
 #: model_terms:ir.ui.view,arch_db:sale.product_template_sale_tree_view
 msgid "Total Free To Use"
-msgstr ""
+msgstr "Totaal Beschikbaar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_tax
@@ -6423,7 +6473,7 @@ msgstr "Niet-gefactureerd Saldo"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_unfulfilled
 msgid "Unfulfilled Orders"
-msgstr ""
+msgstr "Niet-voltooide orders"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
@@ -6529,7 +6579,7 @@ msgstr "Geldig t/m"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Valid until"
-msgstr ""
+msgstr "Geldig tot"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
@@ -6553,6 +6603,8 @@ msgid ""
 "Validity of the quotation. After this date, you will no longer be able to "
 "sign and pay it."
 msgstr ""
+"Geldigheid van de offerte. Na deze datum kun je deze niet meer ondertekenen "
+"en betalen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -6724,6 +6776,9 @@ msgid ""
 "in sales orders. Changing it may affect how the related order lines are "
 "delivered."
 msgstr ""
+"Je moet het producttype niet wijzigen omdat dit product al wordt gebruikt in "
+"verkooporders. Het wijzigen ervan kan van invloed zijn op hoe de "
+"bijbehorende orderregels worden geleverd."
 
 #. module: sale
 #: model:portal.entry,name:sale.portal_your_orders
@@ -6767,7 +6822,7 @@ msgstr "Je order is niet in een fase om af te wijzen."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.payment_form_hide_tokens_heading
 msgid "Your payment methods"
-msgstr ""
+msgstr "Je betaalmethodes"
 
 #. module: sale
 #. odoo-python

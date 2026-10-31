@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 15.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 18:19+0000\n"
-"PO-Revision-Date: 2026-10-21 12:34+0000\n"
+"PO-Revision-Date: 2026-10-27 11:33+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-20/"
 "l10n_eg_edi_eta/ar/>\n"
@@ -751,6 +751,8 @@ msgid ""
 "Error: Invoice could not be signed.\n"
 "Cannot connect to the middleware"
 msgstr ""
+"خطأ: تعذر التوقيع على الفاتورة.\n"
+"لا يمكن الاتصال بالوسيط (middleware)"
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -759,6 +761,8 @@ msgid ""
 "Failed to authenticate with the ETA server. Please verify your ETA "
 "credentials!"
 msgstr ""
+"فشل الاتصال بخادم مصلحة الضرائب المصرية (ETA). يرجى التحقق من بيانات اعتماد "
+"ETA الخاصة بك!"
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -1252,6 +1256,9 @@ msgid ""
 "                        Please select invoices from a single company to sign "
 "and send to ETA."
 msgstr ""
+"يمكن توقيع فواتير شركة واحدة فقط في المرة الواحدة.\n"
+"                        يرجى تحديد فواتير من شركة واحدة لتوقيعها وإرسالها "
+"إلى مصلحة الضرائب المصرية (ETA)."
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_ONZ
@@ -1320,7 +1327,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Please configure Client ID and Secret Key for the company %s."
-msgstr ""
+msgstr "يرجى تهيئة معرف العميل والمفتاح السري للشركة %s."
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -1332,7 +1339,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Please fill in the address details for the following Journal Branches"
-msgstr ""
+msgstr "يرجى تعبئة تفاصيل العنوان لفروع اليومية التالية"
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -1344,7 +1351,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Please make sure that following invoice lines have a product in them."
-msgstr ""
+msgstr "يُرجى التأكد من أن بنود الفاتورة التالية تتضمن منتجاً."
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -1352,7 +1359,7 @@ msgstr ""
 msgid ""
 "Please make sure that following products have barcode or ETA Item code set "
 "on them."
-msgstr ""
+msgstr "يرجى التأكد من أن المنتجات التالية تحتوي على باركود أو رمز عنصر ETA."
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -1367,7 +1374,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Please make sure that there is tax in each invoice lines."
-msgstr ""
+msgstr "يرجى التأكد من وجود ضريبة في كل بند من بنود الفاتورة."
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -1379,7 +1386,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "Please set the invoice date to be either less than or equal to today."
-msgstr ""
+msgstr "يرجى تعيين تاريخ الفاتورة بحيث يكون قبل أو في نفس اليوم."
 
 #. module: l10n_eg_edi_eta
 #. odoo-python
@@ -1662,6 +1669,9 @@ msgstr ""
 #: code:addons/l10n_eg_edi_eta/models/account_move.py:0
 msgid "The selected invoices are not yet valid to be cancelled on ETA."
 msgstr ""
+"تعذر تنفيذ طلب الإلغاء؛ نظراً لأن الفواتير المحددة لم تستوفِ بعد الشروط أو "
+"الحالة القانونية اللازمة لإلغائها عبر منظومة الفاتورة الإلكترونية لمصلحة "
+"الضرائب المصرية (ETA)."
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_product_template__l10n_eg_eta_code
@@ -1685,7 +1695,7 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_account_journal__l10n_eg_activity_type_id
 msgid ""
 "This is the activity type of the branch according to Egyptian Tax Authority"
-msgstr ""
+msgstr "هذا هو نوع نشاط الفرع وفقاً لمصلحة الضرائب المصرية"
 
 #. module: l10n_eg_edi_eta
 #: model:ir.model.fields,help:l10n_eg_edi_eta.field_uom_uom__l10n_eg_unit_code_id
@@ -1697,6 +1707,8 @@ msgstr ""
 msgid ""
 "This number can be found on the taxpayer profile on the eInvoicing portal. "
 msgstr ""
+"للحصول على هذا الرقم، تفضل بزيارة بوابة الفوترة الإلكترونية حيث ستجده مسجلاً "
+"ضمن الملف التعريفي الخاص بالمكلف. "
 
 #. module: l10n_eg_edi_eta
 #: model:l10n_eg_edi.uom.code,name:l10n_eg_edi_eta.l10n_eg_edi_uom_code_T3

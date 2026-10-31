@@ -1,16 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* populate
+# * populate
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 16:01+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/populate/"
-"lo/>\n"
+"PO-Revision-Date: 2026-10-26 04:33+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/populate/lo/>"
+"\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,55 +23,55 @@ msgstr ""
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "%(count)s parallel job(s) failed"
-msgstr ""
+msgstr "%(count)s ວຽກງານຂະໜານລົ້ມເຫຼວ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "%(operation)s blocks cannot define 'arg'."
-msgstr ""
+msgstr "ບລັອກ %(operation)s ບໍ່ສາມາດກຳນົດ 'arg' ໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(comodel_name)s' isn't a valid model name."
-msgstr ""
+msgstr "'%(comodel_name)s' ບໍ່ແມ່ນຊື່ໂມເດວທີ່ຖືກຕ້ອງ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'%(groupby)s' isn't a valid field for model '%(comodel_name)s'."
-msgstr ""
+msgstr "'%(groupby)s' ບໍ່ແມ່ນຊ່ອງຂໍ້ມູນທີ່ຖືກຕ້ອງສຳລັບໂມເດວ '%(comodel_name)s'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "'%(import_ref)s' refers to '%(model)s', not a populate blueprint."
-msgstr ""
+msgstr "'%(import_ref)s' ອ້າງອີງເຖິງ '%(model)s', ບໍ່ແມ່ນແບບແຜນ populate."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "'comodel_name' needs to be provided for generated values."
-msgstr ""
+msgstr "ຈຳເປັນຕ້ອງລະບຸ 'comodel_name' ສຳລັບຄ່າທີ່ສ້າງຂຶ້ນ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "<import> may only contain inheritance specifications."
-msgstr ""
+msgstr "<import> ສາມາດບັນຈຸໄດ້ສະເພາະຂໍ້ກຳນົດການສືບທອດເທົ່ານັ້ນ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "<import> requires a fully qualified XML ID in 'ref'."
-msgstr ""
+msgstr "<import> ຕ້ອງການ XML ID ທີ່ຄົບຖ້ວນສົມບູນໃນ 'ref'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "A created session should have jobs associated from a blueprint."
-msgstr ""
+msgstr "ເຊດຊັນທີ່ສ້າງຂຶ້ນຄວນມີວຽກງານທີ່ກ່ຽວຂ້ອງມາຈາກແບບແຜນ."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_unique_ref_per_session
@@ -78,6 +79,8 @@ msgid ""
 "A job with this reference already exists in this session. References must be "
 "unique for create operations within a session."
 msgstr ""
+"ມີວຽກງານທີ່ມີການອ້າງອີງນີ້ຢູ່ແລ້ວໃນເຊດຊັນນີ້. ການອ້າງອີງຕ້ອງບໍ່ຊ້ຳກັນ ສຳລັບການດຳເນີນການສ້າງພາຍໃນເຊດຊັ"
+"ນ."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_record_count_invariant
@@ -86,30 +89,32 @@ msgid ""
 "function jobs are allowed to have no record_count, whose cardinality is "
 "unknown at creation time."
 msgstr ""
+"record_count ຂອງວຽກງານຕ້ອງເປັນຈຳນວນຖ້ວນບວກທີ່ບໍ່ແມ່ນສູນ. ອະນຸຍາດໃຫ້ສະເພາະວຽກງານ write ແລ"
+"ະ function ເທົ່ານັ້ນທີ່ບໍ່ມີ record_count, ເຊິ່ງຍັງບໍ່ຮູ້ຈຳນວນທີ່ແນ່ນອນໃນຕອນສ້າງ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Adapt the generator parameter to generate values within the constraint"
-msgstr ""
+msgstr "ປັບປ່ຽນພາລາມິເຕີຂອງຕົວສ້າງ ເພື່ອສ້າງຄ່າໃຫ້ຢູ່ໃນເງື່ອນໄຂບັງຄັບ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "An import namespace cannot be empty."
-msgstr ""
+msgstr "import namespace ບໍ່ສາມາດຫວ່າງເປົ່າໄດ້."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__batched
 msgid "Batched"
-msgstr ""
+msgstr "ເຮັດເປັນຊຸດ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__blueprint_id
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__blueprint_id
 #: model:ir.model.fields,field_description:populate.field_populate_session__blueprint_id
 msgid "Blueprint"
-msgstr ""
+msgstr "ແບບແຜນ"
 
 #. module: populate
 #. odoo-python
@@ -119,11 +124,14 @@ msgid ""
 "Definition that failed:\n"
 "%(definition)s"
 msgstr ""
+"ແບບແຜນ '%(blueprint)s': %(reason)s\n"
+"ຄຳນິຍາມທີ່ລົ້ມເຫຼວ:\n"
+"%(definition)s"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__name
 msgid "Blueprint Name"
-msgstr ""
+msgstr "ຊື່ແບບແຜນ"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_blueprint__inherit_id
@@ -131,17 +139,18 @@ msgid ""
 "Blueprint to inherit from. Use XPath expressions in definition_xml to modify "
 "the parent."
 msgstr ""
+"ແບບແຜນທີ່ຈະສືບທອດມາ. ໃຊ້ຄຳສັ່ງ XPath ໃນ definition_xml ເພື່ອດັດແກ້ຕົວແມ່."
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__parallel
 msgid "Can the job be executed in parallel?"
-msgstr ""
+msgstr "ວຽກງານນີ້ສາມາດດຳເນີນການແບບຂະໜານພ້ອມກັນໄດ້ບໍ່?"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Cannot grab the advisory lock on the session %s."
-msgstr ""
+msgstr "ບໍ່ສາມາດດຶງ advisory lock ໃນເຊດຊັນ %s ໄດ້."
 
 #. module: populate
 #. odoo-python
@@ -150,12 +159,14 @@ msgid ""
 "Cannot have both a distribution and weighted values. Please provide either "
 "'distribution' or 'values' with weights, but not both."
 msgstr ""
+"ບໍ່ສາມາດມີທັງການແຈກຢາຍ ແລະ ຄ່ານ້ຳໜັກພ້ອມກັນໄດ້. ກະລຸນາລະບຸ 'distribution' ຫຼື 'values' ພ້ອມກັ"
+"ບນ້ຳໜັກຢ່າງໃດຢ່າງໜຶ່ງ, ແຕ່ບໍ່ແມ່ນທັງສອງຢ່າງ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid "Cannot have repeated entries in `values`."
-msgstr ""
+msgstr "ບໍ່ສາມາດມີລາຍການທີ່ຊ້ຳກັນໃນ `values` ໄດ້."
 
 #. module: populate
 #. odoo-python
@@ -164,12 +175,14 @@ msgid ""
 "Cannot infer valid targets for a generated value. The 'valid_targets' "
 "parameter must be explicitly provided."
 msgstr ""
+"ບໍ່ສາມາດຄາດເດົາເປົ້າໝາຍທີ່ຖືກຕ້ອງສຳລັບຄ່າທີ່ສ້າງຂຶ້ນໄດ້. ຕ້ອງລະບຸພາລາມິເຕີ 'valid_targets' ຢ່າງຊັດເຈ"
+"ນ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Cannot run a parallel session during tests."
-msgstr ""
+msgstr "ບໍ່ສາມາດດຳເນີນການເຊດຊັນແບບຂະໜານໃນລະຫວ່າງການທົດສອບໄດ້."
 
 #. module: populate
 #. odoo-python
@@ -178,6 +191,8 @@ msgid ""
 "Cannot specify a null fraction for a required field. Field '%(field_name)s' "
 "is required and cannot have null values."
 msgstr ""
+"ບໍ່ສາມາດກຳນົດອັດຕາສ່ວນຄ່າວ່າງ (null fraction) ສຳລັບຊ່ອງຂໍ້ມູນທີ່ຈຳເປັນໄດ້. ຊ່ອງຂໍ້ມູນ '%"
+"(field_name)s' ແມ່ນຈຳເປັນ ແລະ ບໍ່ສາມາດມີຄ່າ null ໄດ້."
 
 #. module: populate
 #. odoo-python
@@ -186,11 +201,13 @@ msgid ""
 "Cannot specify a null fraction when using weighted values. The 'null_ratio' "
 "parameter is incompatible with custom weights."
 msgstr ""
+"ບໍ່ສາມາດກຳນົດອັດຕາສ່ວນຄ່າວ່າງ (null fraction) ເມື່ອໃຊ້ນ້ຳໜັກຄ່າໄດ້. ພາລາມິເຕີ 'null_ratio' ບໍ່ເ"
+"ຂົ້າກັນກັບການກຳນົດນ້ຳໜັກເອງ."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__child_ids
 msgid "Child"
-msgstr ""
+msgstr "ລາຍການລູກ"
 
 #. module: populate
 #. odoo-python
@@ -198,12 +215,12 @@ msgstr ""
 msgid ""
 "Consider using a generator (or combination of) that produces more varied "
 "values"
-msgstr ""
+msgstr "ພິຈາລະນາໃຊ້ຕົວສ້າງ (ຫຼື ລວມກັນ) ທີ່ສ້າງຄ່າທີ່ມີຄວາມຫຼາກຫຼາຍກວ່າ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__context
 msgid "Context"
-msgstr ""
+msgstr "ບໍລິບົດ"
 
 #. module: populate
 #. odoo-python
@@ -212,69 +229,71 @@ msgid ""
 "Could not generate a value because required dependencies are missing: %"
 "(missing_deps)s. Expected dependencies: %(expected_deps)s."
 msgstr ""
+"ບໍ່ສາມາດສ້າງຄ່າໄດ້ເນື່ອງຈາກຂາດສິ່ງທີ່ຈຳເປັນຕ້ອງໃຊ້: %(missing_deps)s. ສິ່ງທີ່ຈຳເປັນທີ່ຄາດໄວ້: %"
+"(expected_deps)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/generator.py:0
 msgid "Couldn't find a unique value for target %(target)s."
-msgstr ""
+msgstr "ບໍ່ພົບຄ່າທີ່ບໍ່ຊ້ຳກັນສຳລັບເປົ້າໝາຍ %(target)s."
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__create
 msgid "Create"
-msgstr ""
+msgstr "ສ້າງ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create blocks cannot define 'batched'."
-msgstr ""
+msgstr "ບລັອກ Create ບໍ່ສາມາດກຳນົດ 'batched' ໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create blocks use 'id', not 'ref'."
-msgstr ""
+msgstr "ບລັອກ Create ໃຊ້ 'id', ບໍ່ແມ່ນ 'ref'."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_job_create_job_without_domain
 msgid "Create jobs cannot define a domain."
-msgstr ""
+msgstr "ວຽກງານ Create ບໍ່ສາມາດກຳນົດ domain ໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Create reference '%(ref)s' is declared more than once."
-msgstr ""
+msgstr "ການອ້າງອີງການສ້າງ '%(ref)s' ຖືກປະກາດຫຼາຍກວ່າໜຶ່ງຄັ້ງ."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_uid
 #: model:ir.model.fields,field_description:populate.field_populate_job__create_uid
 #: model:ir.model.fields,field_description:populate.field_populate_session__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__create_date
 #: model:ir.model.fields,field_description:populate.field_populate_job__create_date
 #: model:ir.model.fields,field_description:populate.field_populate_session__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_blueprint
 msgid "Data Population Blueprint"
-msgstr ""
+msgstr "ແບບແຜນການສ້າງຂໍ້ມູນ (Data Population Blueprint)"
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_job
 msgid "Data Population Job"
-msgstr ""
+msgstr "ວຽກງານການສ້າງຂໍ້ມູນ (Data Population Job)"
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_session
 msgid "Data Population Session"
-msgstr ""
+msgstr "ເຊດຊັນການສ້າງຂໍ້ມູນ (Data Population Session)"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__display_name
@@ -282,22 +301,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__display_name
 #: model:ir.model.fields,field_description:populate.field_populate_session__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ທີ່ສະແດງ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__domain
 msgid "Domain"
-msgstr ""
+msgstr "ໂດເມນ"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__domain
 msgid "Domain selecting target records for jobs that update existing records."
 msgstr ""
+"ໂດເມນສຳລັບເລືອກລາຍການບັນທຶກເປົ້າໝາຍ ສຳລັບວຽກງານທີ່ອັບເດດລາຍການບັນທຶກທີ່ມີຢູ່."
 
 #. module: populate
 #: model:ir.model.constraint,message:populate.constraint_populate_blueprint_has_definition
 msgid "Either XML or JSON definition must be provided"
-msgstr ""
+msgstr "ຕ້ອງລະບຸຄຳນິຍາມເປັນ XML ຫຼື JSON ຢ່າງໃດຢ່າງໜຶ່ງ"
 
 #. module: populate
 #. odoo-python
@@ -306,6 +326,7 @@ msgid ""
 "Error applying blueprint inheritance from '%(parent)s' to '%(child)s': %"
 "(error)s"
 msgstr ""
+"ເກີດຂໍ້ຜິດພາດໃນການສືບທອດແບບແຜນຈາກ '%(parent)s' ໄປຫາ '%(child)s': %(error)s"
 
 #. module: populate
 #. odoo-python
@@ -314,6 +335,8 @@ msgid ""
 "Field path '%(path)s' from '%(ref)s' resulted in model '%(got)s', but "
 "expected '%(expected)s'"
 msgstr ""
+"ເສັ້ນທາງຊ່ອງຂໍ້ມູນ '%(path)s' ຈາກ '%(ref)s' ໄດ້ຜົນເປັນໂມເດວ '%(got)s', ແຕ່ຄາດຫວັງແມ່ນ '%"
+"(expected)s'"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__batched
@@ -321,34 +344,35 @@ msgid ""
 "For write/function jobs: generate one value set and perform one call per "
 "executable job."
 msgstr ""
+"ສຳລັບວຽກງານ write/function: ສ້າງຊຸດຄ່າໜຶ່ງຊຸດ ແລະ ເອີ້ນໃຊ້ໜຶ່ງຄັ້ງຕໍ່ວຽກງານທີ່ປະມວນຜົນໄດ້."
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__function
 msgid "Function"
-msgstr ""
+msgstr "ຟັງຊັນ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks require 'name'."
-msgstr ""
+msgstr "ບລັອກ Function ຕ້ອງການ 'name'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks use 'arg', not 'field'."
-msgstr ""
+msgstr "ບລັອກ Function ໃຊ້ 'arg', ບໍ່ແມ່ນ 'field'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Function blocks use 'ref', not 'id'."
-msgstr ""
+msgstr "ບລັອກ Function ໃຊ້ 'ref', ບໍ່ແມ່ນ 'id'."
 
 #. module: populate
 #: model:ir.module.module,summary:base.module_populate
 msgid "Generate synthetic data for an Odoo database"
-msgstr ""
+msgstr "ສ້າງຂໍ້ມູນຈຳລອງສຳລັບຖານຂໍ້ມູນ Odoo"
 
 #. module: populate
 #: model:ir.module.module,description:base.module_populate
@@ -356,12 +380,13 @@ msgid ""
 "Generate synthetic data for an Odoo database, following a predefined "
 "blueprint. Used for performance testing."
 msgstr ""
+"ສ້າງຂໍ້ມູນຈຳລອງສຳລັບຖານຂໍ້ມູນ Odoo ຕາມແບບແຜນທີ່ກຳນົດໄວ້. ໃຊ້ສຳລັບການທົດສອບປະສິດທິພາບ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Generator: '%s'"
-msgstr ""
+msgstr "ຕົວສ້າງ: '%s'"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__id
@@ -369,7 +394,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__id
 #: model:ir.model.fields,field_description:populate.field_populate_session__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: populate
 #. odoo-python
@@ -378,40 +403,42 @@ msgid ""
 "If `props` are provided, neither `count` or `allowed_types` or "
 "`possible_values` can be set."
 msgstr ""
+"ຫາກມີການລະບຸ `props`, ຈະບໍ່ສາມາດຕັ້ງຄ່າ `count` ຫຼື `allowed_types` ຫຼື "
+"`possible_values` ໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/binary.py:0
 msgid "Image dimensions must be positive integers, got %(width)sx%(height)s."
-msgstr ""
+msgstr "ຂະໜາດຮູບພາບຕ້ອງເປັນຈຳນວນຖ້ວນບວກ, ແຕ່ໄດ້ຮັບ %(width)sx%(height)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Imported blueprint '%(import_ref)s' must use XML."
-msgstr ""
+msgstr "ແບບແຜນທີ່ນຳເຂົ້າ '%(import_ref)s' ຕ້ອງໃຊ້ XML."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Imported blueprint '%(import_ref)s' was not found."
-msgstr ""
+msgstr "ບໍ່ພົບແບບແຜນທີ່ນຳເຂົ້າ '%(import_ref)s'."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__inherit_id
 msgid "Inherited Blueprint"
-msgstr ""
+msgstr "ແບບແຜນທີ່ສືບທອດ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__instructions
 msgid "Instructions"
-msgstr ""
+msgstr "ຄຳແນະນຳ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Invalid import namespace '%(namespace)s'."
-msgstr ""
+msgstr "import namespace '%(namespace)s' ບໍ່ຖືກຕ້ອງ."
 
 #. module: populate
 #. odoo-python
@@ -420,6 +447,8 @@ msgid ""
 "Invalid parameters: %(invalid_params)s. Only these parameters are allowed "
 "(besides method's arguments): %(allowed_params)s"
 msgstr ""
+"ພາລາມິເຕີບໍ່ຖືກຕ້ອງ: %(invalid_params)s. ອະນຸຍາດສະເພາະພາລາມິເຕີເຫຼົ່ານີ້ເທົ່ານັ້ນ (ນອກເໜືອຈາກ "
+"argument ຂອງ method): %(allowed_params)s"
 
 #. module: populate
 #. odoo-python
@@ -428,6 +457,7 @@ msgid ""
 "Invalid target dependencies: %(invalid_targets)s. These targets do not exist "
 "in the operation block."
 msgstr ""
+"ການຂຶ້ນຕໍ່ເປົ້າໝາຍບໍ່ຖືກຕ້ອງ: %(invalid_targets)s. ເປົ້າໝາຍເຫຼົ່ານີ້ບໍ່ມີຢູ່ໃນບລັອກການດຳເນີນການ."
 
 #. module: populate
 #. odoo-python
@@ -436,6 +466,7 @@ msgid ""
 "Invalid values %(invalid)s for selection field. Allowed values are: %"
 "(possible)s."
 msgstr ""
+"ຄ່າ %(invalid)s ບໍ່ຖືກຕ້ອງສຳລັບຊ່ອງຂໍ້ມູນ selection. ຄ່າທີ່ອະນຸຍາດແມ່ນ: %(possible)s."
 
 #. module: populate
 #. odoo-python
@@ -444,75 +475,77 @@ msgid ""
 "Invalid values %(invalid_values)s for %(target_type)s target. Allowed values "
 "are: %(possible_values)s."
 msgstr ""
+"ຄ່າ %(invalid_values)s ບໍ່ຖືກຕ້ອງສຳລັບເປົ້າໝາຍ %(target_type)s. ຄ່າທີ່ອະນຸຍາດແມ່ນ: %"
+"(possible_values)s."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__is_done
 msgid "Is Done"
-msgstr ""
+msgstr "ສຳເລັດແລ້ວ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition
 msgid "JSON Definition"
-msgstr ""
+msgstr "ຄຳນິຍາມ JSON"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__job_id
 #: model:ir.model.fields,field_description:populate.field_populate_session__job_ids
 msgid "Job"
-msgstr ""
+msgstr "ວຽກງານ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Job hierarchy cannot be recursive."
-msgstr ""
+msgstr "ລຳດັບຊັ້ນຂອງວຽກງານບໍ່ສາມາດວົນຊ້ຳຄືນໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Jobs in the same hierarchy should share the same session."
-msgstr ""
+msgstr "ວຽກງານໃນລຳດັບຊັ້ນດຽວກັນຄວນໃຊ້ເຊດຊັນດຽວກັນ."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__write_uid
 #: model:ir.model.fields,field_description:populate.field_populate_job__write_uid
 #: model:ir.model.fields,field_description:populate.field_populate_session__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດໂດຍ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__write_date
 #: model:ir.model.fields,field_description:populate.field_populate_job__write_date
 #: model:ir.model.fields,field_description:populate.field_populate_session__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດລ່າສຸດເມື່ອ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__method_name
 msgid "Method Name"
-msgstr ""
+msgstr "ຊື່ Method"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__method_name
 msgid "Method called by function jobs."
-msgstr ""
+msgstr "Method ທີ່ຖືກເອີ້ນໃຊ້ໂດຍວຽກງານ function."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Missing 'model'."
-msgstr ""
+msgstr "ຂາດ 'model'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Missing 'operation'."
-msgstr ""
+msgstr "ຂາດ 'operation'."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_model
 msgid "Model"
-msgstr ""
+msgstr "ໂມເດວ"
 
 #. module: populate
 #. odoo-python
@@ -521,17 +554,19 @@ msgid ""
 "Model '%(model_name)s' is not in the allowed models for reference field '%"
 "(field_name)s': %(model_names)s."
 msgstr ""
+"ໂມເດວ '%(model_name)s' ບໍ່ໄດ້ຢູ່ໃນໂມເດວທີ່ອະນຸຍາດສຳລັບຊ່ອງຂໍ້ມູນ reference '%(field_name)"
+"s': %(model_names)s."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__model_name
 msgid "Model Name"
-msgstr ""
+msgstr "ຊື່ໂມເດວ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Names used for multiple generated targets: %(names)s."
-msgstr ""
+msgstr "ຊື່ທີ່ໃຊ້ສຳລັບຫຼາຍເປົ້າໝາຍທີ່ສ້າງຂຶ້ນ: %(names)s."
 
 #. module: populate
 #. odoo-python
@@ -540,6 +575,8 @@ msgid ""
 "No generator specified for target '%(target)s' of type '%(type)s', and no "
 "default generator is registered for that target type."
 msgstr ""
+"ບໍ່ມີການລະບຸຕົວສ້າງສຳລັບເປົ້າໝາຍ '%(target)s' ປະເພດ '%(type)s', ແລະ ບໍ່ມີຕົວສ້າງເລີ່ມຕົ້ນທີ່ລົງທະບ"
+"ຽນໄວ້ສຳລັບປະເພດເປົ້າໝາຍດັ່ງກ່າວ."
 
 #. module: populate
 #. odoo-python
@@ -547,80 +584,81 @@ msgstr ""
 msgid ""
 "Null fraction must be strictly between 0 and 1, got %(null_ratio)s instead."
 msgstr ""
+"ອັດຕາສ່ວນຄ່າວ່າງ (null fraction) ຕ້ອງຢູ່ລະຫວ່າງ 0 ຫາ 1 ເທົ່ານັ້ນ, ແຕ່ໄດ້ຮັບ %(null_ratio)s."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_session__worker_count
 msgid "Number of parallel workers that will run jobs at the same time"
-msgstr ""
+msgstr "ຈຳນວນ worker ແບບຂະໜານທີ່ຈະປະມວນຜົນວຽກງານພ້ອມກັນ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__operation
 msgid "Operation"
-msgstr ""
+msgstr "ການດຳເນີນການ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parallel
 msgid "Parallel"
-msgstr ""
+msgstr "ຂະໜານ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parent_id
 msgid "Parent"
-msgstr ""
+msgstr "ລາຍການແມ່"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "ເສັ້ນທາງແມ່"
 
 #. module: populate
 #: model:ir.module.module,shortdesc:base.module_populate
 msgid "Populate"
-msgstr ""
+msgstr "Populate"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Positional arg names must be contiguous indexes from '0'."
-msgstr ""
+msgstr "ຊື່ positional arg ຕ້ອງເປັນດັດສະນີທີ່ຕໍ່ເນື່ອງກັນເລີ່ມຈາກ '0'."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition_json
 msgid "Raw JSON Definition"
-msgstr ""
+msgstr "ຄຳນິຍາມ JSON ດິບ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_blueprint__definition_xml
 msgid "Raw XML Definition"
-msgstr ""
+msgstr "ຄຳນິຍາມ XML ດິບ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__res_id
 msgid "Record"
-msgstr ""
+msgstr "ລາຍການບັນທຶກ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__record_count
 msgid "Record Count"
-msgstr ""
+msgstr "ຈຳນວນລາຍການບັນທຶກ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Recursive blueprint composition detected for '%(blueprint)s'."
-msgstr ""
+msgstr "ກວດພົບການປະກອບແບບແຜນແບບວົນຊ້ຳສຳລັບ '%(blueprint)s'."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__ref
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__ref
 msgid "Ref"
-msgstr ""
+msgstr "ອ້າງອີງ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Ref: '%s'"
-msgstr ""
+msgstr "ອ້າງອີງ: '%s'"
 
 #. module: populate
 #: model:ir.model.fields,help:populate.field_populate_job__ref
@@ -633,46 +671,51 @@ msgid ""
 "said reference.\n"
 "    "
 msgstr ""
+"ອ້າງອີງເຖິງຊຸດລາຍການບັນທຶກທີ່ໃຊ້ໂດຍວຽກງານ.\n"
+"    ຖ້າການດຳເນີນການຂອງວຽກແມ່ນ 'create' -> ຈະໝາຍລາຍການບັນທຶກໄວ້ສຳລັບການອ້າງອີງ.\n"
+"    ຖ້າການດຳເນີນການຂອງວຽກແມ່ນ 'write' ຫຼື 'function' -> ຈະອ້າງອີງເຖິງລາຍການບັນທຶກທີ່ມີການອ້"
+"າງອີງດັ່ງກ່າວ.\n"
+"    "
 
 #. module: populate
 #: model:ir.model,name:populate.model_populate_model_data
 msgid "Reference to Populated Records."
-msgstr ""
+msgstr "ການອ້າງອີງເຖິງລາຍການບັນທຶກທີ່ສ້າງຂຶ້ນ."
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_session__scaling_factor
 msgid "Scaling Factor"
-msgstr ""
+msgstr "ຕົວຄູນປັບຂະໜາດ"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__seed
 #: model:ir.model.fields,field_description:populate.field_populate_session__seed
 msgid "Seed"
-msgstr ""
+msgstr "Seed"
 
 #. module: populate
 #: model:ir.model.fields,field_description:populate.field_populate_job__session_id
 #: model:ir.model.fields,field_description:populate.field_populate_model_data__session_id
 msgid "Session"
-msgstr ""
+msgstr "ເຊດຊັນ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "Session %(session_id)s is already running."
-msgstr ""
+msgstr "ເຊດຊັນ %(session_id)s ກຳລັງເຮັດວຽກຢູ່ແລ້ວ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/binary.py:0
 msgid "Size must be a positive integer, got %(size)s."
-msgstr ""
+msgstr "ຂະໜາດຕ້ອງເປັນຈຳນວນຖ້ວນບວກ, ແຕ່ໄດ້ຮັບ %(size)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Some blueprint definition(s) are invalid."
-msgstr ""
+msgstr "ຄຳນິຍາມແບບແຜນບາງອັນບໍ່ຖືກຕ້ອງ."
 
 #. module: populate
 #. odoo-python
@@ -681,6 +724,7 @@ msgid ""
 "Step cannot be zero for the counter generator. Use `eval` with a static "
 "value instead."
 msgstr ""
+"Step ບໍ່ສາມາດເປັນສູນໄດ້ສຳລັບຕົວສ້າງ counter. ໃຫ້ໃຊ້ `eval` ທີ່ມີຄ່າຄົງທີ່ແທນ."
 
 #. module: populate
 #. odoo-python
@@ -689,12 +733,13 @@ msgid ""
 "Subjobs cannot have subjobs themselves. Only one level of hierarchy is "
 "allowed."
 msgstr ""
+"ວຽກງານຍ່ອຍບໍ່ສາມາດມີວຽກງານຍ່ອຍຊ້ອນອີກໄດ້. ອະນຸຍາດໃຫ້ມີລຳດັບຊັ້ນພຽງລະດັບດຽວເທົ່ານັ້ນ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/job.py:0
 msgid "Target: '%s'"
-msgstr ""
+msgstr "ເປົ້າໝາຍ: '%s'"
 
 #. module: populate
 #. odoo-python
@@ -702,7 +747,7 @@ msgstr ""
 msgid ""
 "The blueprint '%(parent)s' does not have an XML definition, but '%(child)s' "
 "inherits from it."
-msgstr ""
+msgstr "ແບບແຜນ '%(parent)s' ບໍ່ມີຄຳນິຍາມ XML, ແຕ່ '%(child)s' ສືບທອດມາຈາກມັນ."
 
 #. module: populate
 #. odoo-python
@@ -711,12 +756,14 @@ msgid ""
 "The eval generator takes an expression directly instead of a lambda. Use 'x "
 "+ y' instead of 'lambda x, y: x + y'."
 msgstr ""
+"ຕົວສ້າງ eval ຮັບຄ່ານິພົດໂດຍກົງແທນທີ່ຈະເປັນ lambda. ໃຫ້ໃຊ້ 'x + y' ແທນ 'lambda x, y: x + "
+"y'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "The field is implicitly required, consider adding `null_ratio=0`"
-msgstr ""
+msgstr "ຊ່ອງຂໍ້ມູນນີ້ຈຳເປັນຕ້ອງມີໂດຍປະລິຍາຍ, ພິຈາລະນາເພີ່ມ `null_ratio=0`"
 
 #. module: populate
 #. odoo-python
@@ -725,85 +772,86 @@ msgid ""
 "The multiprocessing feature of the populate module has been disabled at the "
 "platform level."
 msgstr ""
+"ຄຸນສົມບັດ multiprocessing ຂອງໂມດູນ populate ຖືກປິດໃຊ້ງານຢູ່ໃນລະດັບແພລັດຟອມ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "The session %(session_id)s is already done. Create a new session."
-msgstr ""
+msgstr "ເຊດຊັນ %(session_id)s ສຳເລັດແລ້ວ. ກະລຸນາສ້າງເຊດຊັນໃໝ່."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid "This Eval returns the same value, so it cannot be unique."
-msgstr ""
+msgstr "Eval ນີ້ສົ່ງຄ່າເກົ່າກັບຄືນມາ, ດັ່ງນັ້ນຈຶ່ງບໍ່ສາມາດບໍ່ຊ້ຳກັນໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/relation.py:0
 msgid "Unique cannot be used with the '%s' generator."
-msgstr ""
+msgstr "ບໍ່ສາມາດໃຊ້ Unique ກັບຕົວສ້າງ '%s' ໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/scalar.py:0
 msgid "Unique cannot be used with the boolean generator."
-msgstr ""
+msgstr "ບໍ່ສາມາດໃຊ້ Unique ກັບຕົວສ້າງ boolean ໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/choice.py:0
 msgid "Unique cannot be used with the selection generator."
-msgstr ""
+msgstr "ບໍ່ສາມາດໃຊ້ Unique ກັບຕົວສ້າງ selection ໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown <import> attribute(s): %(attributes)s."
-msgstr ""
+msgstr "ຄຸນລັກສະນະ <import> ທີ່ບໍ່ຮູ້ຈັກ: %(attributes)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown field(s) on '%(model)s': %(fields)s."
-msgstr ""
+msgstr "ຊ່ອງຂໍ້ມູນທີ່ບໍ່ຮູ້ຈັກໃນ '%(model)s': %(fields)s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown model '%(model)s'."
-msgstr ""
+msgstr "ໂມເດວທີ່ບໍ່ຮູ້ຈັກ '%(model)s'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Unknown operation '%(operation)s'."
-msgstr ""
+msgstr "ການດຳເນີນການທີ່ບໍ່ຮູ້ຈັກ '%(operation)s'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 #: code:addons/populate/models/job.py:0
 msgid "Unknown or non-callable method '%(method)s' on '%(model)s'."
-msgstr ""
+msgstr "Method '%(method)s' ໃນ '%(model)s' ບໍ່ຮູ້ຈັກ ຫຼື ບໍ່ສາມາດເອີ້ນໃຊ້ໄດ້."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/choice.py:0
 msgid "Values cannot be empty for the %s generator."
-msgstr ""
+msgstr "ຄ່າບໍ່ສາມາດຫວ່າງເປົ່າໄດ້ສຳລັບຕົວສ້າງ %s."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid "Values cannot be empty for the cycle generator."
-msgstr ""
+msgstr "ຄ່າບໍ່ສາມາດຫວ່າງເປົ່າໄດ້ສຳລັບຕົວສ້າງ cycle."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/generators/misc.py:0
 msgid "Weights cannot be provided for the cycle generator."
-msgstr ""
+msgstr "ບໍ່ສາມາດລະບຸນ້ຳໜັກສຳລັບຕົວສ້າງ cycle ໄດ້."
 
 #. module: populate
 #. odoo-python
@@ -811,6 +859,7 @@ msgstr ""
 msgid ""
 "When step is negative, end (%(end)s) must be less than start (%(start)s)."
 msgstr ""
+"ເມື່ອ step ເປັນຄ່າລົບ, ຈຸດສິ້ນສຸດ (%(end)s) ຕ້ອງນ້ອຍກວ່າຈຸດເລີ່ມຕົ້ນ (%(start)s)."
 
 #. module: populate
 #. odoo-python
@@ -818,23 +867,24 @@ msgstr ""
 msgid ""
 "When step is positive, end (%(end)s) must be greater than start (%(start)s)."
 msgstr ""
+"ເມື່ອ step ເປັນຄ່າບວກ, ຈຸດສິ້ນສຸດ (%(end)s) ຕ້ອງໃຫຍ່ກວ່າຈຸດເລີ່ມຕົ້ນ (%(start)s)."
 
 #. module: populate
 #: model:ir.model.fields.selection,name:populate.selection__populate_job__operation__write
 msgid "Write"
-msgstr ""
+msgstr "ຂຽນ"
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "Write blocks use 'ref', not 'id'."
-msgstr ""
+msgstr "ບລັອກ Write ໃຊ້ 'ref', ບໍ່ແມ່ນ 'id'."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/blueprint.py:0
 msgid "You cannot create recursive inherited blueprints."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດສ້າງແບບແຜນສືບທອດແບບວົນຊ້ຳໄດ້."
 
 #. module: populate
 #. odoo-python
@@ -843,6 +893,8 @@ msgid ""
 "`possible_values` must be provided for prop_type '%(prop_type)s' in "
 "generator %(generator_name)s of field %(field_name)s"
 msgstr ""
+"ຕ້ອງລະບຸ `possible_values` ສຳລັບ prop_type '%(prop_type)s' ໃນຕົວສ້າງ %"
+"(generator_name)s ຂອງຊ່ອງຂໍ້ມູນ %(field_name)s"
 
 #. module: populate
 #. odoo-python
@@ -851,6 +903,7 @@ msgid ""
 "`possible_values` must be provided when `allowed_types` includes 'selection' "
 "or 'tags'. "
 msgstr ""
+"ຕ້ອງລະບຸ `possible_values` ເມື່ອ `allowed_types` ລວມມີ 'selection' ຫຼື 'tags'. "
 
 #. module: populate
 #. odoo-python
@@ -859,9 +912,11 @@ msgid ""
 "`prop_type` expected to be in fields.Properties.ALLOWED_TYPES '%(allowed)s'. "
 "Got %(actual)s instead."
 msgstr ""
+"`prop_type` ຄວນຢູ່ໃນ fields.Properties.ALLOWED_TYPES '%(allowed)s'. ແຕ່ໄດ້ຮັບ %"
+"(actual)s ແທນ."
 
 #. module: populate
 #. odoo-python
 #: code:addons/populate/models/session.py:0
 msgid "in Job %s"
-msgstr ""
+msgstr "ໃນວຽກງານ %s"

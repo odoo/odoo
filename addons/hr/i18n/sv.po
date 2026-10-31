@@ -32,7 +32,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:41+0000\n"
-"PO-Revision-Date: 2026-10-23 14:33+0000\n"
+"PO-Revision-Date: 2026-10-28 14:33+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/hr/sv/>\n"
 "Language: sv\n"
@@ -217,6 +217,7 @@ msgstr ""
 msgid ""
 "<i class=\"oi d-none d-md-inline-flex\" data-icon=\"sell\" title=\"Tags\"/>"
 msgstr ""
+"<i class=\"oi d-none d-md-inline-flex\" data-icon=\"sell\" title=\"Taggar\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -260,6 +261,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
 "title=\"Work Email\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"mail\" "
+"title=\"E-postadress\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -267,6 +270,8 @@ msgid ""
 "<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
 "title=\"Work Phone\"/>"
 msgstr ""
+"<i class=\"oi oi-filled d-none d-md-inline-flex\" data-icon=\"phone\" "
+"title=\"Telefonnummer\"/>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -405,12 +410,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span invisible=\"not contract_date_start\">to</span>"
-msgstr ""
+msgstr "<span invisible=\"not contract_date_start\">till</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Contract Overview</span>"
-msgstr ""
+msgstr "<span>Avtalsöversikt</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -420,7 +425,7 @@ msgstr "<span>Dagar</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<span>Reporting</span>"
-msgstr "<span>Rapportering</span>"
+msgstr "<span>Rapporter</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -712,7 +717,7 @@ msgstr "Aktivitet"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivitet undantaget dekoration"
+msgstr "Stilmarkeringar för undantagsaktiviteter"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_activity_plan
@@ -731,7 +736,7 @@ msgstr "Aktivitetsplaner"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_state
 msgid "Activity State"
-msgstr "Aktivitetstillstånd"
+msgstr "Aktivitetsstatus"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_type_icon
@@ -936,7 +941,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Archive"
-msgstr "Arkiv"
+msgstr "Arkivera"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_action_date
@@ -961,7 +966,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Archived"
-msgstr "Arkiverad"
+msgstr "Arkiverade"
 
 #. module: hr
 #. odoo-javascript
@@ -1242,7 +1247,7 @@ msgstr ""
 #. module: hr
 #: model:hr.employee.type,name:hr.contract_type_company_executive
 msgid "Business Leader"
-msgstr ""
+msgstr "Företagsledare"
 
 #. module: hr
 #. odoo-javascript
@@ -1344,7 +1349,7 @@ msgstr "Underavdelning"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Child departments"
-msgstr "Avdelningar för barn"
+msgstr "Underordnade avdelningar"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_create_version_wizard_view_form
@@ -1400,7 +1405,7 @@ msgstr "Färgindex"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_company
@@ -1414,7 +1419,7 @@ msgstr "Bolag"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
@@ -1470,7 +1475,7 @@ msgstr "Inställningar"
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Configuration"
-msgstr "Konfiguration"
+msgstr "Inställningar"
 
 #. module: hr
 #. odoo-javascript
@@ -2085,7 +2090,7 @@ msgstr "Leda underordnade"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_employee
 msgid "Directory"
-msgstr "Katalog"
+msgstr "Register"
 
 #. module: hr
 #. odoo-javascript
@@ -2430,7 +2435,7 @@ msgstr "Typ av anställd"
 #: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_type_view_tree
 msgid "Employee Types"
-msgstr ""
+msgstr "Anställningstyper"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
@@ -2456,7 +2461,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee will be excluded from Pay Runs"
-msgstr ""
+msgstr "Den anställda utesluts från löneomgångar"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
@@ -2474,7 +2479,7 @@ msgstr "Medarbetarens namn"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Employee's Name (e.g. John Doe, ...)"
-msgstr ""
+msgstr "Namn (t.ex. John Doe, ...)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_resource_calendar_id
@@ -3007,7 +3012,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "History"
-msgstr "Historia"
+msgstr "Historik"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__home
@@ -3157,7 +3162,9 @@ msgstr "Identifikations Nr"
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_version__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
+msgstr ""
+"Om rutan är markerad, så finns det nya meddelanden som kräver din "
+"uppmärksamhet."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
@@ -3169,7 +3176,7 @@ msgstr "Om markerad så finns det meddelanden som kräver din uppmärksamhet."
 #: model:ir.model.fields,help:hr.field_hr_version__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_version__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad, en del meddelanden har leveransfel."
+msgstr "Om rutan är markerad, så har vissa meddelanden leveransfel."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -3278,7 +3285,7 @@ msgstr ""
 #: code:addons/hr/static/src/components/employee_user_status/employee_user_status.js:0
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Invite"
-msgstr ""
+msgstr "Bjud in"
 
 #. module: hr
 #. odoo-javascript
@@ -3578,7 +3585,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
 msgid "Load Contract Template"
-msgstr ""
+msgstr "Ladda avtalsmall"
 
 #. module: hr
 #. odoo-javascript
@@ -3667,7 +3674,7 @@ msgstr ""
 #: model:hr.department,name:hr.dep_management
 #: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
 msgid "Management"
-msgstr "Hantering"
+msgstr "Ledning"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__manager_id
@@ -3838,7 +3845,7 @@ msgstr "Måste ha"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "My Activities"
-msgstr "Mina aktivieteter"
+msgstr "Mina aktiviteter"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__my_activity_date_deadline
@@ -3916,14 +3923,14 @@ msgstr "Nästa Kalenderhändelse för aktivitet"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Nästa slutdatum för aktivitet"
+msgstr "Tidsgräns för nästa aktivitet"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_summary
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_summary
 msgid "Next Activity Summary"
-msgstr "Nästa aktivitetssammanställning"
+msgstr "Sammanfattning av nästa aktivitet"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_type_id
@@ -3993,13 +4000,13 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Not Employed"
-msgstr ""
+msgstr "Ej anställd"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/employee_user_status/employee_user_status.js:0
 msgid "Not Invited"
-msgstr ""
+msgstr "Ej inbjuden"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__0
@@ -4089,7 +4096,7 @@ msgstr "Antal nya personer som väntas anställas."
 #. module: hr
 #: model:hr.employee.type,name:hr.contract_type_seasonal
 msgid "Occasional / Seasonal"
-msgstr ""
+msgstr "Tillfälligt anställd / Säsongsarbetare"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__10
@@ -4385,7 +4392,7 @@ msgstr "Passnummer"
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Pay Category"
-msgstr ""
+msgstr "Lönekategori"
 
 #. module: hr
 #. odoo-javascript
@@ -4874,7 +4881,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.hr_menu_hr_reports
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapporter"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__requirements
@@ -5025,7 +5032,7 @@ msgstr "Spara"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_departure_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
-msgstr "Schemalägg"
+msgstr "Arbetsschema"
 
 #. module: hr
 #. odoo-javascript
@@ -5050,7 +5057,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Select employee type"
-msgstr ""
+msgstr "Välj anställningstyp"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__coach_id
@@ -5242,10 +5249,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Status baserad på aktiviteter\n"
-"Försenade: Leveranstidpunkten har passerat\n"
-"Idag: Aktivitetsdatum är idag\n"
-"Kommande: Framtida aktiviteter."
+"Status baserat på aktivitetsdatum:\n"
+"Försenade: Aktivitetsdatum har redan passerat.\n"
+"Idag: Aktivitetsdatum är dagens datum.\n"
+"Planerade: Kommande aktiviteter."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -5895,7 +5902,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_state
 msgid "User Status"
-msgstr ""
+msgstr "Användarstatus"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -6568,7 +6575,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "e.g. Founder, Motorized, Building B, ..."
-msgstr ""
+msgstr "T.ex. Grundare, Motoriserat, Byggnad B, ..."
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences

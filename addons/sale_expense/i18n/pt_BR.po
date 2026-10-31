@@ -7,15 +7,18 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2026.
+# Weblate Translation Memory <noreply-mt-weblate-translation-memory@weblate.org>, 2026.
+# OpenAI <noreply-mt-openai@weblate.org>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-18 17:39+0000\n"
-"PO-Revision-Date: 2026-08-31 20:11+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-10-29 18:59+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-4/sale_expense/pt_BR/>\n"
+"20/sale_expense/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +38,13 @@ msgid ""
 "This module allow to reinvoice employee expense, by setting the SO directly "
 "on the expense.\n"
 msgstr ""
+"\n"
+"Refaturar despesa de funcionário\n"
+"==========================\n"
+"\n"
+"Crie alguns produtos para os quais você pode refaturar os custos.\n"
+"Este módulo permite refaturar despesas de funcionário, definindo o Pedido de "
+"venda diretamente na despesa.\n"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
@@ -44,7 +54,7 @@ msgstr "Nº de despesas"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__attach_receipts_to_invoice
 msgid "Attach receipts to future customer invoices"
-msgstr ""
+msgstr "Anexar recibos a futuras faturas de clientes"
 
 #. module: sale_expense
 #: model:ir.model.fields,help:sale_expense.field_hr_expense__attach_receipts_to_invoice
@@ -52,19 +62,21 @@ msgid ""
 "Attach the expense receipts to customer invoices generated later from the "
 "related sales order"
 msgstr ""
+"Anexar os recibos de despesas a faturas de clientes geradas posteriormente a "
+"partir do pedido de venda relacionado"
 
 #. module: sale_expense
 #. odoo-javascript
 #: code:addons/sale_expense/static/src/views/attachment_selector.js:0
 #: model:ir.model,name:sale_expense.model_expense_attachment_selection_wizard
 msgid "Attachment Selection"
-msgstr ""
+msgstr "Seleção de anexo"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "Attachments Selection"
-msgstr ""
+msgstr "Seleção de anexos"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
@@ -75,12 +87,12 @@ msgstr "Pode ser refaturado"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Criado por"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Criado em"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_account_move__display_name
@@ -168,12 +180,12 @@ msgstr ""
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.expense_attachment_selection_wizard_view
 msgid "Import Attachments"
-msgstr ""
+msgstr "Importar anexos"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
 msgid "Import Expense Attachments"
-msgstr ""
+msgstr "Importar anexos de despesas"
 
 #. module: sale_expense
 #: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
@@ -183,7 +195,7 @@ msgstr "Faturamento"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_sale_order__is_linked_to_expense_with_attachment
 msgid "Is Linked To Expense With Attachment"
-msgstr ""
+msgstr "Está vinculado a uma despesa com anexo"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_account_move
@@ -198,24 +210,24 @@ msgstr "Item do diário"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última atualização por"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última atualização em"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/models/sale_order.py:0
 msgid "No attachment found to import from linked expense(s)"
-msgstr ""
+msgstr "Nenhum anexo encontrado para importar das despesas vinculadas"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "Please select at least one attachment to import."
-msgstr ""
+msgstr "Selecione pelo menos um anexo para importar."
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_product_template
@@ -225,7 +237,7 @@ msgstr "Produto"
 #. module: sale_expense
 #: model:ir.module.module,summary:base.module_sale_expense
 msgid "Quotation, Sales Orders, Delivery & Invoicing Control"
-msgstr ""
+msgstr "Cotação, Pedidos de venda, Entrega e Controle de faturamento"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
@@ -236,7 +248,7 @@ msgstr "Reemitir fatura para"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__sale_order_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Pedido de venda"
 
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_line_id
@@ -246,7 +258,7 @@ msgstr "Linha do pedido de venda"
 #. module: sale_expense
 #: model:ir.module.module,shortdesc:base.module_sale_expense
 msgid "Sales Expense"
-msgstr ""
+msgstr "Despesa de vendas"
 
 #. module: sale_expense
 #: model:ir.model,name:sale_expense.model_sale_order
@@ -262,10 +274,12 @@ msgstr "Linha do pedido de venda"
 #. module: sale_expense
 #: model:ir.model.fields,field_description:sale_expense.field_expense_attachment_selection_wizard__selected_attachments
 msgid "Selected Attachments"
-msgstr ""
+msgstr "Anexos selecionados"
 
 #. module: sale_expense
 #. odoo-python
 #: code:addons/sale_expense/wizard/expense_attachment_selection_wizard.py:0
 msgid "The following expense receipts were attached from reinvoiced expenses."
 msgstr ""
+"Os seguintes recibos de despesas foram anexados a partir de despesas "
+"refaturadas."

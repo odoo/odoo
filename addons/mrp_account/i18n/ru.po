@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-16 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 15:16+0000\n"
+"PO-Revision-Date: 2026-10-28 14:33+0000\n"
 "Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
-"Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-4/"
+"Language-Team: Russian <https://translate.odoo.com/projects/odoo-20/"
 "mrp_account/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -41,6 +41,18 @@ msgid ""
 "entries will be created.\n"
 "\n"
 msgstr ""
+"\n"
+"Аналитический учет в MRP\n"
+"==========================\n"
+"\n"
+"* Отчет о структуре затрат\n"
+"\n"
+"Также позволяет рассчитывать стоимость продукта на основе его спецификации "
+"(BoM), используя затраты на компоненты и операции рабочего центра.\n"
+"Добавляет кнопку на самом продукте, а также действие в списке продуктов.\n"
+"Если включена автоматическая оценка запасов, будут созданы необходимые "
+"бухгалтерские записи.\n"
+"\n"
 
 #. module: mrp_account
 #. odoo-python
@@ -117,7 +129,7 @@ msgstr "Проводка бухгалтерии"
 #. module: mrp_account
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 msgid "Accounting - MRP"
-msgstr ""
+msgstr "Бухгалтерия – MRP"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
@@ -147,17 +159,17 @@ msgstr "Аналитическая точность"
 #. module: mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account
 msgid "Analytic accounting in Manufacturing"
-msgstr ""
+msgstr "Аналитический учет в производстве"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "Отчет об обзоре спецификаций"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Спецификация"
 
 #. module: mrp_account
 #. odoo-python
@@ -184,7 +196,7 @@ msgstr "Категория"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "Компания"
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -207,7 +219,7 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_currency_id
 msgid "Consolidation Currency"
-msgstr ""
+msgstr "Валюта консолидации"
 
 #. module: mrp_account
 #. odoo-javascript
@@ -298,7 +310,7 @@ msgstr "Счет расходов"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mo_overview_components
 msgid "Extra BoM Cost"
-msgstr ""
+msgstr "Дополнительные расходы на спецификацию"
 
 #. module: mrp_account
 #. odoo-javascript
@@ -307,7 +319,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__extra_cost
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_account_inherits_mrp_bom_form_view
 msgid "Extra Cost"
-msgstr ""
+msgstr "Дополнительные расходы"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
@@ -357,6 +369,8 @@ msgstr "Элемент журнала"
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Journal item to be created when posting WIP journal entry"
 msgstr ""
+"Запись журнала, которая будет создана при проводке записи журнала "
+"незавершенного производства"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__label
@@ -473,7 +487,7 @@ msgstr "Производственный счет"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__consolidation_rate
 msgid "Rate"
-msgstr ""
+msgstr "Курс"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
@@ -508,6 +522,8 @@ msgstr "Сторно: %s"
 msgid ""
 "Set an additional cost per manufactured unit (e.g. labour, energy, packaging)"
 msgstr ""
+"Установите дополнительные затраты на единицу произведенной продукции (напр., "
+"трудозатраты, энергия, упаковка)"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
@@ -631,6 +647,7 @@ msgstr "Перемещение НЗП"
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting
 msgid "Wizard to post Manufacturing WIP journal entry"
 msgstr ""
+"Мастер проводки записи журнала незавершенного производства (WIP) производства"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
@@ -670,6 +687,8 @@ msgid ""
 "You cannot change the end date of a manufacturing order with associated "
 "journal entries."
 msgstr ""
+"Невозможно изменить дату окончания производственного заказа, с которым "
+"связаны бухгалтерские проводки."
 
 #. module: mrp_account
 #. odoo-python

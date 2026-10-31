@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-23 00:33+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-28 22:54+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-20/hr_expense/es_419/>\n"
@@ -133,8 +133,8 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name or "
 "'').replace('/', ''))"
 msgstr ""
-"'Gasto - %s - %s' % (object.employee_id.name, (object.name or '').replace('/"
-"', ''))"
+"'Gasto - %s - %s' % (object.employee_id.name, (object.name or "
+"'').replace('/', ''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -206,6 +206,8 @@ msgid ""
 "<span>This bill was already paid by an employee and the bill has been sent "
 "to you. Don't pay the supplier</span>"
 msgstr ""
+"<span>Un empleado ya pagó esta factura y te la ha enviado. No le pagues al "
+"proveedor.</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
@@ -1919,6 +1921,9 @@ msgid ""
 "don't <em>need to save</em> - Odoo will save everything for you when you "
 "navigate."
 msgstr ""
+"¿Todo listo? Puedes guardar los cambios de forma manual o descartarlos desde "
+"aquí. No <em>necesitas guardarlos</em>: Odoo lo hará por ti cuando navegues "
+"por la aplicación."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard__reason
@@ -2080,13 +2085,10 @@ msgstr "Selecciona a la persona responsable de aprobar los gastos."
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Seleccione al usuario responsable de aprobar los \"gastos\" de este "
-"empleado.\n"
-"Si se encuentra vacío, la aprobación la realiza el administrador o el "
-"aprobador (se determina en los ajustes/usuarios)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -2122,7 +2124,8 @@ msgstr "Secuencia"
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 msgid "Set an expense approver for this employee."
-msgstr "Define a la persona responsable de aprobar los gastos de este empleado."
+msgstr ""
+"Define a la persona responsable de aprobar los gastos de este empleado."
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -2849,6 +2852,16 @@ msgstr "ya existe con la misma categoría, fecha, importe y empleado."
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "con el mismo recibo."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Seleccione al usuario responsable de aprobar los \"gastos\" de este "
+#~ "empleado.\n"
+#~ "Si se encuentra vacío, la aprobación la realiza el administrador o el "
+#~ "aprobador (se determina en los ajustes/usuarios)."
 
 #~ msgid ""
 #~ "Enter a name then choose a product and configure the amount of your "

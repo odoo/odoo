@@ -20,11 +20,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 17:39+0000\n"
-"PO-Revision-Date: 2026-10-19 08:28+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
+"PO-Revision-Date: 2026-10-30 12:09+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
-"Language-Team: German <https://translate.odoo.com/projects/odoo-20/mail/de/>"
-"\n"
+"Language-Team: German <https://translate.odoo.com/projects/odoo-20/mail/de/"
+">\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -936,7 +936,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<i class=\"oi oi-filled\" data-icon=\"phone\" title=\"Phone number\"/>"
-msgstr "<i class=\"oi oi-filled\" data-icon=\"phone\" title=\"Telefonnummer\"/>"
+msgstr ""
+"<i class=\"oi oi-filled\" data-icon=\"phone\" title=\"Telefonnummer\"/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_kanban
@@ -3318,12 +3319,6 @@ msgstr "Suche nicht möglich, zu viele Aktivitäten"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/mail_message.py:0
-msgid "Cannot search, too many messages"
-msgstr "Suche nicht möglich, zu viele Nachrichten"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_scheduled_message.py:0
 #, fuzzy
 msgid "Cannot search, too many scheduled messages"
@@ -3798,6 +3793,12 @@ msgstr "Panel schließen"
 #: code:addons/mail/static/src/core/common/search_message_input.xml:0
 msgid "Close search"
 msgstr "Suche schließen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "Collaborate with coworkers and customers in video calls."
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -5994,6 +5995,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "Failed to post the message (%s). Click to retry"
 msgstr ""
+"Fehler beim Senden der Nachricht (%s). Klicken, um es erneut zu versuchen"
 
 #. module: mail
 #. odoo-javascript
@@ -7348,7 +7350,7 @@ msgstr "In diesem Anruf"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_ui_view_view_search_mail
 msgid "Inactive"
-msgstr ""
+msgstr "Inaktiv"
 
 #. module: mail
 #. odoo-python
@@ -7419,7 +7421,7 @@ msgstr "Information"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_ui_view_view_search_mail
 msgid "Inherit"
-msgstr ""
+msgstr "Vererben"
 
 #. module: mail
 #. odoo-javascript
@@ -8054,6 +8056,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_template__lang
 msgid "Language"
 msgstr "Sprache"
+
+#. module: mail
+#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
+msgid "Language code used as the target for the translation request."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__last_interest_dt
@@ -9615,6 +9622,12 @@ msgstr "Keine Unterhaltung ausgewählt."
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "No documents found for the selected records."
 msgstr "Für die ausgewählten Datensätze wurden keine Dokumente gefunden."
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/messaging_menu_model_patch.js:0
+msgid "No install needed."
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -13082,13 +13095,6 @@ msgid "Shortcut"
 msgstr "Abkürzung"
 
 #. module: mail
-#: model:ir.model.fields,help:mail.field_mail_message_translation__target_lang
-msgid "Shortened language code used as the target for the translation request."
-msgstr ""
-"Verkürzter Sprachcode, der als Ziel für die Übersetzungsanfrage verwendet "
-"wird."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
@@ -14731,6 +14737,14 @@ msgid "Tomorrow:"
 msgstr "Morgen:"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_message.py:0
+msgid ""
+"Too many messages to be processed.\n"
+"Please apply additional filters to reduce the number of potential messages."
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_search
 msgid "Topic"
 msgstr "Thema"
@@ -15253,7 +15267,7 @@ msgstr "Lädt hoch"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_ui_view_view_search_mail
 msgid "Usage"
-msgstr ""
+msgstr "Verwendung"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_user_type
@@ -15731,7 +15745,7 @@ msgstr "%s ansehen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_ui_view_view_search_mail
 msgid "View Architecture"
-msgstr ""
+msgstr "Ansichtsarchitektur"
 
 #. module: mail
 #. odoo-javascript
@@ -15809,7 +15823,7 @@ msgstr "Den Kanal %(channel_name)s anzeigen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.ir_ui_view_view_search_mail
 msgid "Views"
-msgstr ""
+msgstr "Ansichten"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_my_conversations_view_search
@@ -16758,12 +16772,6 @@ msgid "created this channel."
 msgstr "hat diesen Kanal erstellt."
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
-msgid "d"
-msgstr "T"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr "Tag, Monat tt, jjjj - hh:mm:ss (GMT)"
@@ -17386,6 +17394,18 @@ msgstr ""
 #: code:addons/mail/models/mail_canned_response.py:0
 msgid "🔒 Private"
 msgstr "🔒 Privat"
+
+#~ msgid "Cannot search, too many messages"
+#~ msgstr "Suche nicht möglich, zu viele Nachrichten"
+
+#~ msgid ""
+#~ "Shortened language code used as the target for the translation request."
+#~ msgstr ""
+#~ "Verkürzter Sprachcode, der als Ziel für die Übersetzungsanfrage verwendet "
+#~ "wird."
+
+#~ msgid "d"
+#~ msgstr "T"
 
 #~ msgid "Search"
 #~ msgstr "Suchen"

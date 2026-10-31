@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* l10n_eu_account_vies
+# * l10n_eu_account_vies
 #
+# Saara Hakanen <sahak@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.5a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 18:19+0000\n"
-"PO-Revision-Date: 2026-08-28 18:19+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-10-30 07:33+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-20/"
+"l10n_eu_account_vies/fi/>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Language: fi\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: l10n_eu_account_vies
 #: model:ir.module.module,description:base.module_l10n_eu_account_vies
@@ -40,6 +44,33 @@ msgid ""
 "such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,\n"
 "only the country code will be validated.\n"
 msgstr ""
+"\n"
+"Vahvistus kumppaneiden ALV-numeroille.\n"
+"=========================================\n"
+"\n"
+"Kun tämä moduuli on asennettu, kumppaneiden ALV-kenttään syötetyt arvot\n"
+"vahvistetaan VIES-järjestelmällä kaikissa tuetuissa maissa. Maa päätellään "
+"ALV-numeron\n"
+"etuliitteenä olevasta 2-kirjaimisesta maakoodista, esim. ``BE0477472701``\n"
+"vahvistetaan Belgian sääntöjen mukaisesti.\n"
+"\n"
+"    * Kun \"ALV VIES-tarkistus\" on käytössä (käyttäjän yrityksen\n"
+"      asetuksissa), ALV-numerot lähetetään EU:n online VIES-tietokantaan,\n"
+"      joka vahvistaa numeron voimassaolon sekä sen kuulumisn EU:n sisäiselle "
+"yritykselle.\n"
+"      Tämä on hieman hitaampaa kuin yksinkertainen offline-tarkistus, vaatii "
+"Internet-yhteyden,\n"
+"      eikä ole välttämättä aina saatavilla. Jos palvelu ei ole käytettävissä "
+"tai se ei tue\n"
+"      pyydettyä maata (esim. EU:n ulkopuoliset maat), suoritetaan sen "
+"sijaan\n"
+"      yksinkertainen tarkistus.\n"
+"\n"
+"Tuettuihin maihin kuuluvat tällä hetkellä EU-maat sekä muutamia EU:n "
+"ulkopuolisia maita,\n"
+"kuten Chile, Kolumbia, Meksiko, Norja tai Venäjä. Tukemattomien maiden "
+"kohdalla\n"
+"vain maakoodi tarkistetaan.\n"
 
 #. module: l10n_eu_account_vies
 #: model:ir.model,name:l10n_eu_account_vies.model_res_partner

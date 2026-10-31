@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-25 17:37+0000\n"
-"PO-Revision-Date: 2026-09-29 14:33+0000\n"
+"PO-Revision-Date: 2026-10-28 09:33+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-20/"
 "account_edi_ubl_cii/sv/>\n"
@@ -44,6 +44,24 @@ msgid ""
 "present in the `EAS list\n"
 "<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 msgstr ""
+"\n"
+"Modul för digital fakturering\n"
+"===========================\n"
+"\n"
+"Gör det möjligt att exportera och importera följande format: E-FFF, UBL Bis "
+"3, EHF3, NLCIUS, Factur-X (CII), XRechnung (UBL).\n"
+"När man skapar en PDF för en faktura, så kommer PDF-filen att bäddas in "
+"inuti XML-filen för alla UBL-format. Detta gör det möjligt för\n"
+"mottagaren att hämta PDF-filen direkt genom XML-filen. OBS: **EHF3 är helt "
+"implementerad av UBL Bis 3** (`referens\n"
+"<https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/"
+"#_implementation>`_).\n"
+"\n"
+"OBS: E-FFF, NLCIUS och XRechnung (UBL) är endast tillgängliga för respektive "
+"belgiska, nederländska och tyska företag.\n"
+" UBL Bis 3 är endast tillgängligt för företag vars land är närvarande i `EAS-"
+"listan\n"
+"<https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/>`_.\n"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -141,7 +159,7 @@ msgstr "Moms Andorra"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "At least one Invoice Line is required [IBR-016]."
-msgstr ""
+msgstr "Minst en fakturarad krävs [IBR-016]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -196,7 +214,7 @@ msgstr "BIS3 DE (XRechnung)"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_cii
 msgid "Base helpers for CII"
-msgstr ""
+msgstr "Grundfunktioner för CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl
@@ -232,25 +250,25 @@ msgstr "Nätverk för företagsregister"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Country Code is missing [IBR-011]."
-msgstr ""
+msgstr "Köparens landskod saknas [IBR-011]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address / Endpoint ID is missing [IBR-080]."
-msgstr ""
+msgstr "Köparens digitala adress / destinations-ID saknas [IBR-080]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Electronic Address Scheme Identifier is missing [IBR-063]."
-msgstr ""
+msgstr "Digital adressidentifierare saknas för köparen [IBR-063]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Buyer Name is missing [IBR-007]."
-msgstr ""
+msgstr "Köparens namn saknas [IBR-007]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -268,7 +286,7 @@ msgstr "Kunde inte hitta urpsrungsfilen, vänligen försök importera den igen"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Charge"
-msgstr ""
+msgstr "Avgift"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -391,7 +409,7 @@ msgstr "Moms Kroatien"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Currency Code is missing [IBR-005]."
-msgstr ""
+msgstr "Valutakoden saknas [IBR-005]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9928
@@ -466,7 +484,7 @@ msgstr "Visningsnamn"
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Allowance %(charge)s of line %(line)s: Amount is missing [IBR-031]."
-msgstr ""
+msgstr "Dokumentrabatt %(charge)s på rad %(line)s: Belopp saknas [IBR-031]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -475,13 +493,15 @@ msgid ""
 "Document Allowance %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-033]."
 msgstr ""
+"Dokumentrabatt %(charge)s på rad %(line)s: Anledning eller anledningskod är "
+"obligatoriskt [IBR-033]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid ""
 "Document Charge %(charge)s of line %(line)s: Amount is missing [IBR-036]."
-msgstr ""
+msgstr "Dokumentrabatt %(charge)s på rad %(line)s: Belopp saknas [IBR-036]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -490,6 +510,8 @@ msgid ""
 "Document Charge %(charge)s of line %(line)s: Reason or Reason Code is "
 "required [IBR-038]."
 msgstr ""
+"Dokumentavgift %(charge)s på rad %(line)s: Anledning eller anledningskod är "
+"obligatoriskt [IBR-038]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -580,7 +602,7 @@ msgstr "Exporter utanför EU"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/ZUGFeRD CII 2.2.0"
-msgstr ""
+msgstr "Factur-x/ZUGFeRD CII 2.2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__au
@@ -700,7 +722,7 @@ msgstr "Allmän merförsäljning"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Generated by Odoo"
-msgstr ""
+msgstr "Skapad av Odoo"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0246
@@ -742,7 +764,7 @@ msgstr "Grupperade rader efter skatt"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Has Grouped Lines"
-msgstr ""
+msgstr "Har grupperade rader"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9910
@@ -790,7 +812,7 @@ msgstr "Kennitala - Island"
 #. module: account_edi_ubl_cii
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii
 msgid "Import/Export electronic invoices with UBL/CII"
-msgstr ""
+msgstr "Importera/exportera digitala fakturor med UBL/CII"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0202
@@ -819,7 +841,7 @@ msgstr "Leverans inom området"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Invoice Issue Date is missing [IBR-003]."
-msgstr ""
+msgstr "Fakturans utfärdandedatum saknas [IBR-003]."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -857,7 +879,7 @@ msgstr "UNECE-kod stöds"
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_bank_statement_line__has_grouped_lines
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_account_move__has_grouped_lines
 msgid "Is move lines Grouped"
-msgstr ""
+msgstr "Grupperade verifikationsrader"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0097
@@ -925,43 +947,43 @@ msgstr "Moms Liechtenstein"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoice line net amount is missing [IBR-024]."
-msgstr ""
+msgstr "Rad %s: Nettobeloppet för fakturaraden saknas [IBR-024]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity is missing [IBR-022]."
-msgstr ""
+msgstr "Rad %s: Fakturerad mängd saknas [IBR-022]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Invoiced quantity unit of measure code is missing [IBR-023]."
-msgstr ""
+msgstr "Rad %s: Enhetskod saknas för fakturerad mängd [IBR-023]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item name is missing [IBR-025]."
-msgstr ""
+msgstr "Rad %s: Artikelns namn saknas [IBR-025]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price MUST NOT be negative [IBR-027]."
-msgstr ""
+msgstr "Rad %s: Artikelns nettopris FÅR INTE vara negativt [IBR-027]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item net price is missing [IBR-026]."
-msgstr ""
+msgstr "Rad %s: Artikelns nettopris saknas [IBR-026]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Line %s: Item tax category code is missing [IBR-SR-58]."
-msgstr ""
+msgstr "Rad %s: Artikelns skattekategorikod saknas [IBR-SR-58]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0200
@@ -1120,6 +1142,11 @@ msgid ""
 "met, the customer will be liable for the payment of the tax, interest, and "
 "penalties due in relation to this condition."
 msgstr ""
+"Omvänd betalningsskyldighet: I avsaknad av skriftliga invändningar inom en "
+"månad efter att fakturan tagits emot, så anses kunden ha godkänt att de är "
+"en skatteskyldig person som är skyldig att deklarera. Om gällande villkor "
+"inte möts, så bär kunden ansvaret för betalning av alla relaterade skatter, "
+"räntor och avgifter."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9947
@@ -1199,25 +1226,25 @@ msgstr "Moms San Marino"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Country Code is missing [IBR-009]."
-msgstr ""
+msgstr "Säljarens landskod saknas [IBR-009]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address / Endpoint ID is missing [IBR-081]."
-msgstr ""
+msgstr "Säljarens digitala adress / destinations-ID saknas [IBR-081]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Electronic Address Scheme Identifier is missing [IBR-062]."
-msgstr ""
+msgstr "Digital adressidentifierare saknas för säljaren [IBR-062]."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "Seller Name is missing [IBR-006]."
-msgstr ""
+msgstr "Säljarens namn saknas [IBR-006]."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send_wizard
@@ -2288,7 +2315,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-f
 msgid "VATEX-FR-F - Second-hand sales"
-msgstr ""
+msgstr "VATEX-FR-F - Andrahandsförsäljning"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-franchise
@@ -2298,12 +2325,12 @@ msgstr "VATEX-FR-FRANCHISE - Inhemsk moms för s.k. 'franchises en base'"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-i
 msgid "VATEX-FR-I - Sales of works of art"
-msgstr ""
+msgstr "VATEX-FR-I - Försäljning av konstverk"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-fr-j
 msgid "VATEX-FR-J - Sales of antiques"
-msgstr ""
+msgstr "VATEX-FR-J - Försäljning av antikviteter"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__9953
@@ -2348,7 +2375,7 @@ msgstr "Det är endast möjligt att gruppera rader i en faktura"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move.py:0
 msgid "You need at least two lines to group them."
-msgstr ""
+msgstr "Du behöver minst två rader för att gruppera dem."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

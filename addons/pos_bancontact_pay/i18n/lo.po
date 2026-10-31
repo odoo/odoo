@@ -1,15 +1,16 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_bancontact_pay
+# * pos_bancontact_pay
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-28 17:42+0000\n"
-"PO-Revision-Date: 2026-08-31 15:23+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
-"Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-4/"
+"PO-Revision-Date: 2026-10-26 04:33+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-20/"
 "pos_bancontact_pay/lo/>\n"
 "Language: lo\n"
 "MIME-Version: 1.0\n"
@@ -27,67 +28,72 @@ msgid ""
 "This currency is not supported.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
+"ວິທີການຊຳລະເງິນ Bancontact Pay ຖືກເຊື່ອມໂຍງກັບບັນຊີປະຈຳວັນທີ່ນຳໃຊ້ສະກຸນເງິນເລີ່ມຕົ້ນຂອງບໍລິສັດ.\n"
+"ສະກຸນເງິນນີ້ບໍ່ຮອງຮັບ.\n"
+"ສະກຸນເງິນທີ່ຮອງຮັບ: %(currencies)s."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s has expired."
-msgstr ""
+msgstr "ການຊຳລະເງິນສຳລັບລາຍການສັ່ງຊື້ %s ໝົດອາຍຸແລ້ວ."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s has failed."
-msgstr ""
+msgstr "ການຊຳລະເງິນສຳລັບລາຍການສັ່ງຊື້ %s ບໍ່ສຳເລັດ."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "A payment for order %s was cancelled."
-msgstr ""
+msgstr "ການຊຳລະເງິນສຳລັບລາຍການສັ່ງຊື້ %s ຖືກຍົກເລີກແລ້ວ."
 
 #. module: pos_bancontact_pay
 #: model:ir.module.module,summary:base.module_pos_bancontact_pay
 msgid "Accept Bancontact Pay and Wero QR code payments in POS (Payconiq)."
 msgstr ""
+"ຮອງຮັບການຊຳລະເງິນຜ່ານ Bancontact Pay ແລະ Wero QR code ໃນ POS (Payconiq)."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Access denied. Please check your Bancontact permissions."
-msgstr ""
+msgstr "ຖືກປະຕິເສດການເຂົ້າເຖິງ. ກະລຸນາກວດສອບສິດການນຳໃຊ້ Bancontact ຂອງທ່ານ."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Authentication with Bancontact failed. Please verify your API key."
 msgstr ""
+"ການຢືນຢັນຕົວຕົນກັບ Bancontact ບໍ່ສຳເລັດ. ກະລຸນາກວດສອບລະຫັດ API key ຂອງທ່ານ."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_api_key
 msgid "Bancontact API Key"
-msgstr ""
+msgstr "Bancontact API Key"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment__bancontact_id
 msgid "Bancontact ID"
-msgstr ""
+msgstr "Bancontact ID"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
 msgid "Bancontact PPID"
-msgstr ""
+msgstr "Bancontact PPID"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
 msgid "Bancontact PPID must be set to generate the sticker URL."
-msgstr ""
+msgstr "ຕ້ອງກຳນົດ Bancontact PPID ເພື່ອສ້າງ URL ຂອງສະຕິກເກີ."
 
 #. module: pos_bancontact_pay
 #: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
 msgid "Bancontact Pay"
-msgstr ""
+msgstr "Bancontact Pay"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -96,6 +102,8 @@ msgid ""
 "Bancontact Pay only supports these currencies: %(currencies)s.\n"
 "The linked journal uses a different currency."
 msgstr ""
+"Bancontact Pay ຮອງຮັບສະເພາະສະກຸນເງິນເຫຼົ່ານີ້: %(currencies)s.\n"
+"ບັນຊີປະຈຳວັນທີ່ເຊື່ອມໂຍງນຳໃຊ້ສະກຸນເງິນອື່ນ."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_api_key
@@ -103,6 +111,8 @@ msgid ""
 "Bancontact Pro Portal > Admin Centre > Shops and products > Select a product "
 "> Manage API keys > View API key"
 msgstr ""
+"Bancontact Pro Portal > Admin Centre > ຮ້ານຄ້າ ແລະ ສິນຄ້າ > ເລືອກສິນຄ້າ > ຈັດການ API "
+"keys > ເບິ່ງ API key"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
@@ -110,12 +120,14 @@ msgid ""
 "Bancontact Pro Portal > Admin Centre > Shops and products > Select a shop > "
 "Read the product ID from the card"
 msgstr ""
+"Bancontact Pro Portal > Admin Centre > ຮ້ານຄ້າ ແລະ ສິນຄ້າ > ເລືອກຮ້ານຄ້າ > ອ່ານລະຫັດສິນ"
+"ຄ້າ (product ID) ຈາກບັດ"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Bancontact is currently unavailable. Please try again later."
-msgstr ""
+msgstr "Bancontact ບໍ່ພ້ອມໃຫ້ບໍລິການໃນເວລານີ້. ກະລຸນາລອງໃໝ່ອີກຄັ້ງພາຍຫຼັງ."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -124,6 +136,8 @@ msgid ""
 "Bancontact payments can only be cancelled for payment methods using "
 "Bancontact Pay as provider."
 msgstr ""
+"ການຊຳລະເງິນ Bancontact ສາມາດຍົກເລີກໄດ້ສະເພາະວິທີການຊຳລະເງິນທີ່ໃຊ້ Bancontact Pay ເປັນຜູ້ໃຫ້"
+"ບໍລິການເທົ່ານັ້ນ."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -132,6 +146,8 @@ msgid ""
 "Bancontact payments can only be created for payment methods using Bancontact "
 "Pay as provider."
 msgstr ""
+"ການຊຳລະເງິນ Bancontact ສາມາດສ້າງຂຶ້ນໄດ້ສະເພາະວິທີການຊຳລະເງິນທີ່ໃຊ້ Bancontact Pay ເປັນຜູ້ໃຫ້"
+"ບໍລິການເທົ່ານັ້ນ."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -140,6 +156,8 @@ msgid ""
 "Bancontact sticker URL can only be generated for payment methods configured "
 "with 'Static Sticker' usage."
 msgstr ""
+"URL ຂອງສະຕິກເກີ Bancontact ສາມາດສ້າງໄດ້ສະເພາະວິທີການຊຳລະເງິນທີ່ຕັ້ງຄ່າການນຳໃຊ້ເປັນ 'Static "
+"Sticker' ເທົ່ານັ້ນ."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -148,17 +166,19 @@ msgid ""
 "Bancontact sticker URL can only be generated for payment methods using "
 "Bancontact Pay as provider."
 msgstr ""
+"URL ຂອງສະຕິກເກີ Bancontact ສາມາດສ້າງໄດ້ສະເພາະວິທີການຊຳລະເງິນທີ່ໃຊ້ Bancontact Pay ເປັນຜູ້ໃ"
+"ຫ້ບໍລິການເທົ່ານັ້ນ."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Close"
-msgstr ""
+msgstr "ປິດ"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_res_company
 msgid "Company"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
@@ -169,6 +189,9 @@ msgid ""
 "- Static Sticker: A fixed QR sticker placed near the counter is used for "
 "scanning with every order."
 msgstr ""
+"ກຳນົດຮູບແບບການສະແດງ QR Code ໃຫ້ແກ່ລູກຄ້າ:\n"
+"- ສະແດງເທິງໜ້າຈໍ: QR code ໃໝ່ຈະສະແດງຂຶ້ນເທິງໜ້າຈໍໃນແຕ່ລະລາຍການສັ່ງຊື້.\n"
+"- ສະຕິກເກີຕິດແໜ້ນ: ສະຕິກເກີ QR ທີ່ຕິດໄວ້ໃກ້ກັບເຄົາເຕີ ແມ່ນໃຊ້ສຳລັບສະແກນໃນທຸກໆລາຍການສັ່ງຊື້."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_account_journal__display_name
@@ -177,18 +200,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__display_name
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_res_company__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງ"
 
 #. module: pos_bancontact_pay
 #: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
 msgid "Download Sticker"
-msgstr ""
+msgstr "ດາວໂຫຼດສະຕິກເກີ"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Force Cancel"
-msgstr ""
+msgstr "ບັງຄັບຍົກເລີກ"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_account_journal__id
@@ -197,12 +220,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_res_company__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_account_journal
 msgid "Journal"
-msgstr ""
+msgstr "ບັນຊີປະຈຳວັນ"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -211,17 +234,18 @@ msgid ""
 "Merchant profile not found on Bancontact. Please check your Payment Profile "
 "ID (ppid)."
 msgstr ""
+"ບໍ່ພົບໂປຣໄຟລ໌ຮ້ານຄ້າໃນ Bancontact. ກະລຸນາກວດສອບ Payment Profile ID (ppid) ຂອງທ່ານ."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Oh snap !"
-msgstr ""
+msgstr "ໂອ້ ຂໍອະໄພ!"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__display
 msgid "On-Screen Display"
-msgstr ""
+msgstr "ສະແດງເທິງໜ້າຈໍ"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -230,11 +254,13 @@ msgid ""
 "One Bancontact Pay sticker payment method can only be linked to one POS "
 "configuration."
 msgstr ""
+"ວິທີການຊຳລະເງິນດ້ວຍສະຕິກເກີ Bancontact Pay ໜຶ່ງອັນ ສາມາດເຊື່ອມໂຍງໄດ້ກັບການຕັ້ງຄ່າ POS ດຽວເທົ່ານັ້"
+"ນ."
 
 #. module: pos_bancontact_pay
 #: model:ir.module.module,shortdesc:base.module_pos_bancontact_pay
 msgid "POS Bancontact Pay & Wero"
-msgstr ""
+msgstr "POS Bancontact Pay & Wero"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -243,78 +269,80 @@ msgid ""
 "Payment at %s\n"
 "POS %s"
 msgstr ""
+"ການຊຳລະເງິນທີ່ %s\n"
+"POS %s"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment cancelled"
-msgstr ""
+msgstr "ການຊຳລະເງິນຖືກຍົກເລີກແລ້ວ"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment expired"
-msgstr ""
+msgstr "ການຊຳລະເງິນໝົດອາຍຸແລ້ວ"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment failed"
-msgstr ""
+msgstr "ການຊຳລະເງິນບໍ່ສຳເລັດ"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment received"
-msgstr ""
+msgstr "ໄດ້ຮັບການຊຳລະເງິນແລ້ວ"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າຈຸດຂາຍ (POS)"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "ການຊຳລະເງິນຈຸດຂາຍ (POS)"
 
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_pos_payment_method
 msgid "Point of Sale Payment Method"
-msgstr ""
+msgstr "ວິທີການຊຳລະເງິນຈຸດຂາຍ (POS)"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Preprod"
-msgstr ""
+msgstr "Preprod"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/qr_code_popup/qr_code_popup.xml:0
 #: code:addons/pos_bancontact_pay/static/src/customer_display/customer_display.xml:0
 msgid "QR Code"
-msgstr ""
+msgstr "ລະຫັດ QR"
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
 msgid "QR Usage"
-msgstr ""
+msgstr "ການນຳໃຊ້ QR"
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Rate limit reached with Bancontact. Please wait and try again."
-msgstr ""
+msgstr "ຮອດຂີດຈຳກັດການຮ້ອງຂໍກັບ Bancontact ແລ້ວ. ກະລຸນາລໍຖ້າ ແລະ ລອງໃໝ່ອີກຄັ້ງ."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
 msgid "Run transactions in Bancontact's preprod environment."
-msgstr ""
+msgstr "ດຳເນີນທຸລະກຳໃນສະພາບແວດລ້ອມ preprod ຂອງ Bancontact."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__sticker
 msgid "Static Sticker"
-msgstr ""
+msgstr "ສະຕິກເກີຕິດແໜ້ນ"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -324,18 +352,22 @@ msgid ""
 "to another POS configuration (%(config_names)s).\n"
 "A sticker can only be linked to one POS configuration at a time."
 msgstr ""
+"ວິທີການຊຳລະເງິນດ້ວຍສະຕິກເກີ Bancontact '%(method_name)s' ໄດ້ຖືກກຳນົດໃຫ້ກັບການຕັ້ງຄ່າ POS ອື່ນ"
+"ແລ້ວ (%(config_names)s).\n"
+"ສະຕິກເກີໜຶ່ງອັນ ສາມາດເຊື່ອມໂຍງໄດ້ກັບການຕັ້ງຄ່າ POS ດຽວເທົ່ານັ້ນໃນເວລາດຽວກັນ."
 
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "The action could not be completed. Please try again or contact support."
 msgstr ""
+"ບໍ່ສາມາດດຳເນີນການໃຫ້ສຳເລັດໄດ້. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ ຫຼື ຕິດຕໍ່ພະແນກຊ່ວຍເຫຼືອ."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
 msgid "The amount must be positive to use this payment method."
-msgstr ""
+msgstr "ຈຳນວນເງິນຕ້ອງເປັນຄ່າບວກ ຈຶ່ງຈະສາມາດນຳໃຊrunningວິທີການຊຳລະເງິນນີ້ໄດ້."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -343,7 +375,7 @@ msgstr ""
 msgid ""
 "The cancellation could not be completed. Do you want to force the "
 "cancellation?"
-msgstr ""
+msgstr "ບໍ່ສາມາດດຳເນີນການຍົກເລີກໄດ້. ທ່ານຕ້ອງການບັງຄັບຍົກເລີກຫຼືບໍ່?"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -354,6 +386,8 @@ msgid ""
 "If you need to cancel it, please ask the customer to do so on their device "
 "or force the cancellation."
 msgstr ""
+"ລູກຄ້າກຳລັງດຳເນີນການຊຳລະເງິນຢູ່, ສະນັ້ນ ຈຶ່ງບໍ່ສາມາດຍົກເລີກໄດ້ໃນເວລານີ້.\n"
+"ຖ້າຫາກທ່ານຕ້ອງການຍົກເລີກ, ກະລຸນາບອກໃຫ້ລູກຄ້າຍົກເລີກໃນອຸປະກອນຂອງເຂົາເຈົ້າເອງ ຫຼື ເລືອກບັງຄັບຍົກເລີກ."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -363,12 +397,15 @@ msgid ""
 "This payment method does not support the journal's currency.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
+"ບັນຊີປະຈຳວັນ '%(journal)s' ຖືກນຳໃຊ້ໂດຍວິທີການຊຳລະເງິນ Bancontact Pay.\n"
+"ວິທີການຊຳລະເງິນນີ້ບໍ່ຮອງຮັບສະກຸນເງິນຂອງບັນຊີປະຈຳວັນດັ່ງກ່າວ.\n"
+"ສະກຸນເງິນທີ່ຮອງຮັບ: %(currencies)s."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
 msgid "This sticker is already processing another payment."
-msgstr ""
+msgstr "ສະຕິກເກີນີ້ກຳລັງດຳເນີນການຊຳລະເງິນອື່ນຢູ່ແລ້ວ."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -376,6 +413,7 @@ msgstr ""
 msgid ""
 "Unable to cancel payment. The payment may not be in a cancellable state."
 msgstr ""
+"ບໍ່ສາມາດຍົກເລີກການຊຳລະເງິນໄດ້. ການຊຳລະເງິນອາດຈະບໍ່ຢູ່ໃນສະຖານະທີ່ສາມາດຍົກເລີກໄດ້."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -384,3 +422,4 @@ msgid ""
 "Unable to process the request. Please verify your configuration or try again "
 "later."
 msgstr ""
+"ບໍ່ສາມາດດຳເນີນການຕາມຄຳຮ້ອງຂໍໄດ້. ກະລຸນາກວດສອບການຕັ້ງຄ່າຂອງທ່ານ ຫຼື ລອງໃໝ່ອີກຄັ້ງພາຍຫຼັງ."
