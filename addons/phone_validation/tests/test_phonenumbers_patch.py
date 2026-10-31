@@ -171,6 +171,9 @@ class TestPhonenumbersPatch(BaseCase):
             self.PhoneInputOutputLine("0711 123 456", region="KE", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
             self.PhoneInputOutputLine("0711-123-456", region="KE", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
             self.PhoneInputOutputLine("0711/123/456", region="KE", gt_national_number=gt_KE_number, gt_country_code=gt_KE_code),
+
+            self.PhoneInputOutputLine("+254 119 000 000", region="KE", gt_national_number=119_000_000, gt_country_code=gt_KE_code),
+            self.PhoneInputOutputLine("+254119123456", region="KE", gt_national_number=119_123_456, gt_country_code=gt_KE_code),
         )
         self._assert_parsing_phonenumbers(parse_test_lines_KE)
 
@@ -189,3 +192,35 @@ class TestPhonenumbersPatch(BaseCase):
             self.PhoneInputOutputLine("+22176 707 0065"),
         )
         self._assert_parsing_phonenumbers(parse_test_lines_SN)
+
+    def test_region_LB_monkey_patch(self):
+        """Makes sure that patch for Lebanese phone numbers work"""
+        parse_test_lines_LB = (
+            self.PhoneInputOutputLine("+961 78 700 000", region="LB", gt_national_number=78_700_000, gt_country_code=961),
+            self.PhoneInputOutputLine("+96178712345", region="LB", gt_national_number=78_712_345, gt_country_code=961),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_LB)
+
+    def test_region_ZM_monkey_patch(self):
+        """Makes sure that patch for Zambian phone numbers work"""
+        parse_test_lines_ZM = (
+            self.PhoneInputOutputLine("+260 570 000 000", region="ZM", gt_national_number=570_000_000, gt_country_code=260),
+            self.PhoneInputOutputLine("+260571234567", region="ZM", gt_national_number=571_234_567, gt_country_code=260),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_ZM)
+
+    def test_region_UG_monkey_patch(self):
+        """Makes sure that patch for Ugandan phone numbers work"""
+        parse_test_lines_UG = (
+            self.PhoneInputOutputLine("+256 732 000 000", region="UG", gt_national_number=732_000_000, gt_country_code=256),
+            self.PhoneInputOutputLine("+256732123456", region="UG", gt_national_number=732_123_456, gt_country_code=256),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_UG)
+
+    def test_region_SA_monkey_patch(self):
+        """Makes sure that patch for Lebanese phone numbers work"""
+        parse_test_lines_SA = (
+            self.PhoneInputOutputLine("+966 579 200 000", region="SA", gt_national_number=579_200_000, gt_country_code=966),
+            self.PhoneInputOutputLine("+966579212345", region="SA", gt_national_number=579_212_345, gt_country_code=966),
+        )
+        self._assert_parsing_phonenumbers(parse_test_lines_SA)

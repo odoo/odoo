@@ -63,9 +63,17 @@ else:
         # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.12.57/python/phonenumbers/data/region_SN.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('SN', _local_load_region)
 
-    if parse_version(phonenumbers.__version__) < parse_version('8.13.31'):
-        # https://github.com/daviddrysdale/python-phonenumbers/blob/v8.13.40/python/phonenumbers/data/region_KE.py
+    if parse_version(phonenumbers.__version__) < parse_version('9.0.41'):
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/9.0.41/python/phonenumbers/data/region_KE.py
         phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('KE', _local_load_region)
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v9.0.41/python/phonenumbers/data/region_LB.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('LB', _local_load_region)
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v9.0.41/python/phonenumbers/data/region_ZM.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('ZM', _local_load_region)
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v9.0.41/python/phonenumbers/data/region_UG.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('UG', _local_load_region)
+        # https://github.com/daviddrysdale/python-phonenumbers/blob/v9.0.41/python/phonenumbers/data/region_SA.py
+        phonenumbers.phonemetadata.PhoneMetadata.register_region_loader('SA', _local_load_region)
 
     # MONKEY PATCHING phonemetadata to fix Brazilian phonenumbers following 2016 changes
     def _hook_load_region_br(code):
