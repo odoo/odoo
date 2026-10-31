@@ -1,0 +1,38 @@
+<odoo>
+    <record id="view_partner_property_form" model="ir.ui.view">
+        <field name="name">res.partner.property.form.inherit.l10n_tr_edi</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account_edi_ubl_cii.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_edi_format']" position="after">
+                <label for="l10n_tr_edi_customer_status" invisible="invoice_edi_format != 'ubl_tr'"/>
+                <div class="row" name="l10n_tr_edi_customer_status_div" invisible="invoice_edi_format != 'ubl_tr'">
+                    <div class="col-4">
+                        <field name="l10n_tr_edi_customer_status"/>
+                    </div>
+                    <div class="col-8 pt-0">
+                        <button name="action_l10n_tr_edi_verify_customer_status"
+                                class="btn btn-secondary"
+                                type="object"
+                                string="Verify"
+                                context="{'retry_existing': True}"
+                                help="Verify the partner's GİB status"/>
+                    </div>
+                </div>
+                <field name="l10n_tr_edi_einvoice_alias_id" invisible="invoice_edi_format != 'ubl_tr' or l10n_tr_edi_customer_status != 'einvoice'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_l10n_tr_edi_verify_customer_status" model="ir.actions.server">
+        <field name="name">Verify GİB Status</field>
+        <field name="group_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.action_l10n_tr_edi_verify_customer_status()
+        </field>
+    </record>
+</odoo>
