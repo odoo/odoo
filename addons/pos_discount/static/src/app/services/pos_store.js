@@ -42,6 +42,7 @@ patch(PosStore.prototype, {
             }
         });
     },
+<<<<<<< 61e073c690762d1aeb1eda0f160a53ac66377540
     selectOrderLine(order, line) {
         super.selectOrderLine(order, line);
         // Ensure the numpadMode should be `price` when the discount line is selected
@@ -56,6 +57,16 @@ patch(PosStore.prototype, {
         }
         return res;
     },
+||||||| 82c5f4ef192b92598bffcc5c0f464cbc49949564
+    selectOrderLine(order, line) {
+        super.selectOrderLine(order, line);
+        // Ensure the numpadMode should be `price` when the discount line is selected
+        if (line?.isDiscountLine) {
+            this.numpadMode = "price";
+        }
+    },
+=======
+>>>>>>> 483ae680ccdf714e760d5c487e6ea922dfd6df01
     async applyDiscount(value, type = "percent", order = this.getOrder()) {
         const taxKey = (taxIds) =>
             taxIds
@@ -147,5 +158,11 @@ patch(PosStore.prototype, {
             order.selectOrderline(lastDiscountLine);
             this.numpadMode = "price";
         }
+    },
+    showDiscountLineEditError() {
+        return this.dialog.add(AlertDialog, {
+            title: _t("Oh snap !"),
+            body: _t("You cannot edit a discount line."),
+        });
     },
 });
