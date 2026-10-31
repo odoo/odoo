@@ -581,17 +581,69 @@ class TestCrmPls(CrmPlsCommon):
         self.assertEqual(tools.float_compare(leads[0].probability, 0.01, 2), 0)
 
     def test_pls_no_share_stage(self):
-        """ We test here the situation where all stages are team specific, as there is
-            a current limitation (can be seen in _pls_get_won_lost_total_count) regarding
-            the first stage (used to know how many lost and won there is) that requires
-            to have no team assigned to it."""
+        """ We test here the situation where all stages are team specific.
+        The team of a given stage should have no impact on the scoring. Thus,
+        the first stage should always be the same."""
         Lead = self.env['crm.lead']
-        team_id = self.env['crm.team'].create([{'name': 'Team Test'}]).id
-        self.env['crm.stage'].search([('team_ids', '=', False)]).write({'team_ids': [team_id]})
-        lead = Lead.create({'name': 'team', 'team_id': team_id, 'probability': 41.23})
+        self.env['crm.lead'].with_context(active_test=False).search([]).unlink()
+        self.env['crm.lead.scoring.frequency'].search([]).unlink()
+        self.env['crm.stage'].with_context(active_test=False).search([]).unlink()
+
+        team_1, team_2, team_3 = self.env['crm.team'].create([
+            {'name': 'Test CRM Team 1'},
+            {'name': 'Test CRM Team 2'},
+            {'name': 'Test CRM Team 3'},
+        ])
+        stage_1, _, _, _ = self.env['crm.stage'].create([
+            {'name': 'Stage 1', 'sequence': 1, 'team_ids': [team_1.id, team_3.id]},
+            {'name': 'Stage 2', 'sequence': 2, 'team_ids': [team_2.id]},
+            {'name': 'Stage 3', 'sequence': 3, 'team_ids': [team_2.id]},
+            {'name': 'Won', 'sequence': 4, 'team_ids': [team_1.id, team_2.id, team_3.id], 'is_won': True},
+        ])
+
+        # Empty check prior to any leads won/loss
+        lead_0 = self.env['crm.lead'].create({'name': 'Lead 0', 'team_id': False, 'probability': 41.23})
         Lead._cron_update_automated_probabilities()
-        self.assertEqual(tools.float_compare(lead.probability, 41.23, 2), 0)
-        self.assertEqual(tools.float_compare(lead.automated_probability, 0, 2), 0)
+        self.assertEqual(tools.float_compare(lead_0.probability, 41.23, 2), 0)
+        self.assertEqual(tools.float_compare(lead_0.automated_probability, 0, 2), 0)
+
+        lead_1, lead_2, lead_3, lead_4 = self.env['crm.lead'].create([
+            {'name': 'Lead 1', 'team_id': False, 'stage_id': stage_1.id},
+            {'name': 'Lead 2', 'team_id': team_1.id},
+            {'name': 'Lead 3', 'team_id': team_2.id},
+            {'name': 'Lead 4', 'team_id': team_2.id},
+        ])
+        (lead_1 + lead_2 + lead_3).action_set_won()
+        lead_4.action_set_lost()
+
+        lead_5, lead_6, lead_7 = self.env['crm.lead'].create([
+            {'name': 'Lead 5', 'team_id': False, 'stage_id': stage_1.id},
+            {'name': 'Lead 6', 'team_id': team_3.id},
+            {'name': 'Lead 7', 'team_id': team_1.id},
+        ])
+
+        # Expected Probability Calculation:
+
+        # Lead 5 has no team; thus, it uses the sum of each team's frequency
+        # This includes leads that also had no team (Team 1 + Team 2 + No Team)
+        # Remember, 0.1 is added to each team's won/loss count to prevent zeros
+        # Won Total = 1.1 + 1.1 + 1.1 = 3.3
+        # Loss Total = 0.1 + 1.1 + 0.1 = 1.3
+        # Probability = Total Won / (Total Won + Lost) = 3.3 / (3.3 + 1.3)
+        # Probability = (3.3 / 4.6) * 100 ~= 71.74
+        self.assertEqual(lead_5.probability, 71.74)
+
+        # Lead 6 with Team 3 should only be affected by Team 3 leads
+        # In the case where the team has no frequency rows, (due to no prior
+        # leads won or lost) it will use the sum. (Same as Lead 5)
+        self.assertEqual(lead_6.probability, 71.74)
+
+        # Lead 7 with Team 1 should only be affected by Team 1 leads
+        # Team 1 only has one prior lead (lead 2), which was won.
+        # Won Total = 1.1
+        # Loss Total = 0.1
+        # Probability: (1.1 / 1.2) * 100 ~= 91.67
+        self.assertEqual(lead_7.probability, 91.67)
 
     def test_pls_tooltip_data(self):
         """ Assert that the method preparing tooltip data correctly returns (field, couple)

@@ -2284,12 +2284,12 @@ class CrmLead(models.Model):
             result[-1][field]['lost_total'] += frequency['lost_count']
 
         # Get all won, lost and total count for all records in frequencies per team_id
-        first_teamless_stage = self.env['crm.stage'].search([('team_ids', '=', False)], order='sequence, id', limit=1)
+        first_overall_stage = self.env['crm.stage'].search([], order='sequence, id', limit=1)
         for team_id in result:
             result[team_id]['team_won'], \
             result[team_id]['team_lost'], \
             result[team_id]['team_total'] = self.with_context(
-                crm_pls_first_teamless_stage_id=first_teamless_stage.id,
+                crm_pls_first_overall_stage_id=first_overall_stage.id,
             )._pls_get_won_lost_total_count(result[team_id])
 
         save_team_id = None
@@ -2642,17 +2642,16 @@ class CrmLead(models.Model):
         """ Get all won and all lost + total :
                first stage can be used to know how many lost and won there is
                as won count are equals for all stage
-               and first stage is always incremented in lost_count
+               and first stage is always incremented in lost_count regardless of teams
         :param team_results:
         :return: won count, lost count and total count for all records in frequencies
         """
-        # TODO : check if we need to handle specific team_id stages [for lost count] (if first stage in sequence is team_specific)
-        first_teamless_stage_id = self.env.context.get('crm_pls_first_teamless_stage_id')
-        if first_teamless_stage_id is None:
-            first_teamless_stage_id = self.env['crm.stage'].search([('team_ids', '=', False)], order='sequence, id', limit=1).id
-        if str(first_teamless_stage_id) not in team_results.get('stage_id', []):
+        first_overall_stage_id = self.env.context.get('crm_pls_first_overall_stage_id')
+        if first_overall_stage_id is None:
+            first_overall_stage_id = self.env['crm.stage'].search([], order='sequence, id', limit=1).id
+        if str(first_overall_stage_id) not in team_results.get('stage_id', []):
             return 0, 0, 0
-        stage_result = team_results['stage_id'][str(first_teamless_stage_id)]
+        stage_result = team_results['stage_id'][str(first_overall_stage_id)]
         return stage_result['won'], stage_result['lost'], stage_result['won'] + stage_result['lost']
 
     # PLS: Rebuild Frequency Table Tools
