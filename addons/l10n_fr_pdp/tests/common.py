@@ -20,7 +20,6 @@ FAKE_UUID = [
     'zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz',
     'aaaaaaaa-bbbb-cccc-dddd-dddddddddddd',
 ]
-FILE_PATH = 'l10n_fr_pdp/tests/test_files/assets'
 
 
 class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
@@ -34,6 +33,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.peppol_invoice_document_path = 'l10n_fr_pdp/tests/test_files/assets'
         cls.fakenow = datetime.datetime(2024, 12, 5)
         cls.startClassPatcher(freeze_time(cls.fakenow))
 
@@ -58,7 +58,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
         edi_identification = cls.env['account_edi_proxy_client.user']._get_proxy_identification(cls.env.company, 'pdp')
         cls.private_key = cls.env['certificate.key'].create({
             'name': 'Test key PDP',
-            'content': b64encode(file_open(f'{FILE_PATH}/private_key.pem', 'rb').read()),
+            'content': b64encode(file_open(f'{cls.peppol_invoice_document_path}/private_key.pem', 'rb').read()),
         })
         cls.proxy_user = cls.env['account_edi_proxy_client.user'].create({
             'id_client': ID_CLIENT,
