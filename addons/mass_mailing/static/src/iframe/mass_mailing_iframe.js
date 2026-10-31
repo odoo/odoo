@@ -221,8 +221,8 @@ export class MassMailingIframe extends Component {
     async setupIframe() {
         let loadingError;
         try {
-            this.bundleControls = await loadIframe(this.iframeRef(), (iframe) => {
-                iframe.contentDocument?.head.appendChild(this.renderHeadContent());
+            await loadIframe(this.iframeRef(), (iframe) => {
+                iframe.contentDocument.head.appendChild(this.renderHeadContent());
                 return this.loadIframeAssets();
             });
         } catch (error) {
@@ -330,13 +330,15 @@ export class MassMailingIframe extends Component {
             snippetsName: "mass_mailing.email_designer_snippets",
             config: {
                 ...this.props.config,
-                onEditorReady: () =>
-                    onEditorReady().then(() => {
+                onEditorReady: () => {
+                    const updateEditorReady = () => {
                         if (this.editor?.editable) {
                             this.state.editorReady = true;
                             this.state.emptyBody = !isVisible(this.editor.editable);
                         }
-                    }),
+                    };
+                    return onEditorReady().then(updateEditorReady, updateEditorReady);
+                },
             },
             isMobile: this.state.isMobile,
             toggleMobile: () => {

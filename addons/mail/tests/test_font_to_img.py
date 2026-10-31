@@ -41,9 +41,9 @@ class TestMaterialSymbolsToImg(HttpCase):
     TEST_ICONS = ('home', 'blind', 'stethoscope',
                   'horizontal_align_left', 'phone_cancel')
 
-    def _render_icon(self, icon, fill=0):
+    def _render_icon(self, icon, fill=0, width=64, height=64, font_size=64):
         response = self.url_open(
-            f'/mail/font_to_img/{icon}/oi/{fill}/000000ff/00000000/64x64fs64',
+            f'/mail/font_to_img/{icon}/oi/{fill}/000000ff/00000000/{width}x{height}fs{font_size}',
         )
         self.assertEqual(response.status_code, 200)
         return binary_to_image(response.content)
@@ -72,6 +72,10 @@ class TestMaterialSymbolsToImg(HttpCase):
                     f"{icon!r} filled form should{'' if ICONS[icon]['has_fill'] else ' not'} "
                     "differ from its outlined one",
                 )
+
+    def test_maximum_output_dimension(self):
+        image = self._render_icon('home', 0, 1024, 512, 512)
+        self.assertEqual(image.size, (512, 256))
 
 
 class TestOdooUiIconsToImg(HttpCase):
