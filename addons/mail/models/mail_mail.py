@@ -263,6 +263,11 @@ class MailMail(models.Model):
                 ('notification_status', 'not in', ('sent', 'canceled'))
             ])
             if notifications:
+                if not failure_type:
+                    void_notifs = notifications.filtered(lambda notif: not notif.res_partner_id and not notif.mail_email_address)
+                    if void_notifs:
+                        void_notifs.sudo().unlink()
+                        notifications -= void_notifs
                 # find all notification linked to a failure
                 failed = self.env['mail.notification']
                 if failure_type:
@@ -793,14 +798,18 @@ class MailMail(models.Model):
                     continue
                 no_recipients = (not (mail.email_to or '').strip() and not mail.recipient_ids and not (mail.email_cc or '').strip())
 
+                if no_recipients:
+                    failure_type = 'mail_email_missing'
+                    failure_reason = IrMailServer.NO_VALID_RECIPIENT
+
                 message_id = mail.message_id
                 # Writing on the mail object may fail (e.g. lock on user) which
                 # would trigger a rollback *after* actually sending the email.
                 # To avoid sending twice the same email, provoke the failure earlier
                 mail.write({
                     'state': 'exception',
-                    'failure_reason': IrMailServer.NO_VALID_RECIPIENT if no_recipients else _('Error without exception. Probably due to sending an email without computed recipients.'),
-                    'failure_type': 'mail_email_missing' if no_recipients else 'unknown',
+                    'failure_reason': failure_reason or _('Error without exception. Probably due to sending an email without computed recipients.'),
+                    'failure_type': failure_type or 'unknown',
                 })
                 # Update notification in a transient exception state to avoid concurrent
                 # update in case an email bounces while sending all emails related to current
