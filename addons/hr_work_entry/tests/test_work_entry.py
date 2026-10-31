@@ -39,6 +39,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'name': 'dodo',
             'resource_calendar_id': cls.resource_calendar_id.id,
             'wage': 1000,
+            'tz': 'Europe/Brussels',
         })
 
     def test_work_entries_values_from_dates(self):

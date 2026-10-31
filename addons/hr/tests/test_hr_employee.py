@@ -91,7 +91,7 @@ class TestHrEmployee(TestHrCommon):
         employee_form.name = 'Raoul Grosbedon'
         employee_form.work_email = 'raoul@example.com'
         employee = employee_form.save()
-        self.assertEqual(employee.tz, 'Europe/Brussels')
+        self.assertEqual(employee.tz, 'Pacific/Apia')
 
     def test_compute_user_company_employee(self):
         test_user = new_test_user(self.env, login='test_user', groups='base.group_user', name='testuser', email='test@user.com')
