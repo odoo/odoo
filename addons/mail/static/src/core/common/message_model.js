@@ -258,7 +258,7 @@ export class Message extends Record {
     }
 
     get editable() {
-        if (this.isEmpty || !this.allowsEdition || this.poll) {
+        if (this.isEmpty || !this.allowsEdition || this.poll || this.isPending) {
             return false;
         }
         return this.message_type === "comment";
@@ -352,8 +352,29 @@ export class Message extends Record {
 
     isPending = false;
 
+    /**
+     * Upload progress (between 0 and 1) of the attachments of this pending
+     * message, or undefined when none of them is uploading.
+     */
+    uploadProgress = this.computed(() => {
+        if (!this.isPending || !this.attachment_ids.some(({ uploading }) => uploading)) {
+            return undefined;
+        }
+        const progressOf = ({ uploading, uploadProgress }) => (uploading ? uploadProgress ?? 0 : 1);
+        const weights = this.attachment_ids.map(({ file_size }) => file_size);
+        if (weights.some((weight) => !weight)) {
+            const progresses = this.attachment_ids.map(progressOf);
+            return progresses.reduce((sum, progress) => sum + progress, 0) / progresses.length;
+        }
+        const uploaded = this.attachment_ids.reduce(
+            (sum, attachment, index) => sum + progressOf(attachment) * weights[index],
+            0
+        );
+        return uploaded / weights.reduce((sum, weight) => sum + weight, 0);
+    });
+
     get hasActions() {
-        return !this.is_transient;
+        return !this.is_transient && !this.isPending;
     }
 
     /** Email or template-generated body, isolated from the webclient's styles. */

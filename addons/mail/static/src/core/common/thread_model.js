@@ -212,6 +212,14 @@ export class Thread extends Record {
      * when fetching newer messages.
      */
     pendingNewMessages = fields.Many("mail.message");
+    /**
+     * Set while a message posted in this thread waits for its attachments to
+     * be uploaded: resolved once that message (and the ones queued behind it
+     * to keep their order) has been sent to the server.
+     *
+     * @type {Promise<void>|undefined}
+     */
+    postQueuePromise;
     /** @type {'0'|'1'|'2'|'3'} */
     priority;
     /** @type {Array<[string,string]>} */
@@ -816,12 +824,16 @@ export class Thread extends Record {
 
     /**
      *  @param {ReturnType<import("@odoo/owl").markup>} body
+     *  @param {Object} postData
+     *  @param {Promise<import("models").Attachment[]>} [postData.uploadedAttachmentsPromise]
+     *      the result of `waitForUploads` for the attachments still uploading, in
+     *      a channel. It must be called when sending, before any override can await.
      *  @param {Object} extraData
      */
     async post(body, postData = {}, extraData = {}) {
         let tmpMsg;
         postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
-        const { attachments, parentId } = postData;
+        const { attachments, parentId, uploadedAttachmentsPromise } = postData;
         const params = await this.store.getMessagePostParams({ body, postData, thread: this });
         Object.assign(params, extraData);
         const tmpId = this.store.getNextTemporaryId();
@@ -836,7 +848,8 @@ export class Thread extends Record {
             const tmpData = {
                 id: tmpId,
                 message_type: params.post_data.message_type,
-                attachment_ids: attachments,
+                // without the uploads completed in the meantime, posted anyway
+                attachment_ids: attachments.filter((attachment) => attachment.exists()),
             };
             if (this.store.self_user) {
                 tmpData.author_id = this.store.self_user.partner_id;
@@ -855,7 +868,54 @@ export class Thread extends Record {
             this.messages.push(tmpMsg);
             this.onNewSelfMessage(tmpMsg);
         }
-        const data = await this.store.doMessagePost(params, tmpMsg);
+        const previousPostPromise = this.postQueuePromise;
+        let dataPromise;
+        if (tmpMsg && (previousPostPromise || uploadedAttachmentsPromise)) {
+            const { promise: postPromise, resolve: resolvePost } = Promise.withResolvers();
+            this.postQueuePromise = postPromise;
+            try {
+                await previousPostPromise;
+                if (uploadedAttachmentsPromise) {
+                    const uploadedAttachments = await uploadedAttachmentsPromise;
+                    if (!tmpMsg.exists()) {
+                        // Discarded meanwhile, e.g. when leaving the page.
+                        return;
+                    }
+                    if (!uploadedAttachments.length && tmpMsg.isEmpty) {
+                        // All uploads were cancelled or failed: nothing left to post.
+                        tmpMsg.delete();
+                        return;
+                    }
+                    Object.assign(params.post_data, {
+                        attachment_ids: uploadedAttachments.map(({ id }) => id),
+                        attachment_tokens: uploadedAttachments.map(
+                            ({ ownership_token }) => ownership_token
+                        ),
+                    });
+                }
+                // Messages received meanwhile are before it on the server: show
+                // them before it, and before the messages queued behind it.
+                const index = this.messages.indexOf(tmpMsg);
+                if (index !== -1) {
+                    const nextMessages = this.messages.slice(index);
+                    this.messages.splice(
+                        index,
+                        nextMessages.length,
+                        ...nextMessages.filter(({ isPending }) => !isPending),
+                        ...nextMessages.filter(({ isPending }) => isPending)
+                    );
+                }
+                dataPromise = this.store.doMessagePost(params, tmpMsg);
+            } finally {
+                if (this.postQueuePromise === postPromise) {
+                    this.postQueuePromise = undefined;
+                }
+                resolvePost();
+            }
+        } else {
+            dataPromise = this.store.doMessagePost(params, tmpMsg);
+        }
+        const data = await dataPromise;
         if (!data) {
             return;
         }

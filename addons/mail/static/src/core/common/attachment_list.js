@@ -113,7 +113,8 @@ export class AttachmentList extends Component {
     }
 
     hasUnlinkConfirmation(attachment) {
-        return true;
+        // removing an uploading attachment only cancels its upload
+        return !attachment.uploading;
     }
 
     /**
@@ -255,7 +256,12 @@ export class AttachmentList extends Component {
         }
         // in messages users are expected to delete the message instead of just the attachment
         const message = this.ancestors.inMessage?.message;
-        return !message || message.hasTextContent || this.props.attachmentGroups.length > 1;
+        return (
+            !message ||
+            message.isPending ||
+            message.hasTextContent ||
+            this.props.attachmentGroups.length > 1
+        );
     }
 
     get showInConversationTooltip() {
