@@ -2983,6 +2983,39 @@ class TestPointOfSaleFlow(CommonPosTest):
         data = session.load_data([])
         self.assertTrue(set(ptavs.ids) <= {v['id'] for v in data['product.template.attribute.value']})
 
+    def test_incremental_load_tax_group_of_old_tax(self):
+        """A tax group modified after the last sync must be loaded even if its
+        taxes were not modified since (they are not part of the delta)."""
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        now = fields.Datetime.now()
+
+        tax_group = self.env['account.tax.group'].create({
+            'name': 'Department Group',
+            'pos_receipt_label': 'Old label',
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'Department Tax',
+            'amount': 22,
+            'tax_group_id': tax_group.id,
+        })
+        # The tax and its group predate the last sync: backdate their write_date.
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE account_tax SET write_date = %s WHERE id = %s",
+            (now - timedelta(days=30), tax.id),
+        )
+        self.env.invalidate_all()
+        last_server_date = fields.Datetime.to_string(now - timedelta(days=10))
+
+        tax_group.pos_receipt_label = 'New label'
+
+        data = session.with_context(pos_last_server_date=last_server_date).load_data([])
+        self.assertNotIn(tax.id, {t['id'] for t in data['account.tax']})
+        loaded_groups = {g['id']: g for g in data['account.tax.group']}
+        self.assertIn(tax_group.id, loaded_groups)
+        self.assertEqual(loaded_groups[tax_group.id]['pos_receipt_label'], 'New label')
+
     def test_sequence_dynamic_prefix_suffix(self):
         """Test that sequence_number is correctly extracted when sequence has dynamic prefix/suffix."""
         self.pos_config_usd.open_ui()
