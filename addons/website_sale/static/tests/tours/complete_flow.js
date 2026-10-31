@@ -1,7 +1,7 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
-import { post } from "@web/core/network/http_service";
+import { post } from "@web/core/network/http";
 import * as tourUtils from "@website_sale/js/tours/tour_utils";
 
 registry.category("web_tour.tours").add('website_sale.complete_flow_1', {

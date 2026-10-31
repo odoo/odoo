@@ -97,12 +97,9 @@ import { WebClient } from "@web/webclient/webclient";
 
 const { IrAttachment } = webModels;
 
-async function createFileInput({ mockPost, mockAdd, props }) {
+async function createFileInput({ mockAdd, props }) {
     mockService("notification", {
         add: mockAdd || (() => {}),
-    });
-    mockService("http", {
-        post: mockPost || (() => {}),
     });
     await mountWithCleanup(FileInput, { props });
 }
@@ -5508,15 +5505,11 @@ test("open file explorer if no cover image", async () => {
     });
 
     const uploadedPromise = Promise.withResolvers();
-    await createFileInput({
-        mockPost: async (route) => {
-            if (route === "/web/binary/upload_attachment") {
-                await uploadedPromise?.promise;
-            }
-            return "[]";
-        },
-        props: {},
+    onRpc("/web/binary/upload_attachment", async () => {
+        await uploadedPromise.promise;
+        return "[]";
     });
+    await createFileInput({ props: {} });
 
     await mountView({
         type: "kanban",

@@ -2,6 +2,7 @@ import { proxy } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { post } from "@web/core/network/http";
 
 export function useKEProxy({onAllSent}) {
     onAllSent = onAllSent || (() => {});
@@ -11,7 +12,6 @@ export function useKEProxy({onAllSent}) {
         message: "",
     });
     const orm = useService("orm");
-    const http = useService("http");
 
     /**
      * Send each of the invoices provided to the proxy connected to the fiscal device. The proxy should return
@@ -38,7 +38,7 @@ export function useKEProxy({onAllSent}) {
             state.message = _t("Posting invoice: %s", name);
             try {
                 progress = 'postToDevice';
-                let deviceResponse = await http.post(
+                let deviceResponse = await post(
                     proxy_address + '/hw_proxy/l10n_ke_cu_send', {
                         messages: messages,
                         company_vat: company_vat,

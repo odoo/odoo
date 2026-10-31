@@ -19,6 +19,7 @@ import { SIZES, utils as uiUtils } from "@web/core/ui/ui_utils";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { renderToElement } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
+import { get, post } from "@web/core/network/http";
 import { useSubEnv } from "@web/owl2/utils";
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 import {
@@ -523,7 +524,6 @@ export class AddPageDialog extends Component {
         this.switchLabel = _t("Add to menu");
         this.website = useService("website");
         this.dialogs = useService("dialog");
-        this.http = useService("http");
         this.action = useService("action");
 
         this.cssLinkEls = undefined;
@@ -559,7 +559,7 @@ export class AddPageDialog extends Component {
     async createPage(sectionsArch, name = "", addMenu = false, pageTitle = "") {
         // Remove any leading slash.
         const pageName = name.replace(/^\/*/, "") || _t("New Page");
-        const data = await this.http.post(`/website/add/${encodeURIComponent(pageName)}`, {
+        const data = await post(`/website/add/${encodeURIComponent(pageName)}`, {
             // Needed to be passed as a (falsy) string because false would be
             // converted to 'false' with a POST.
             sections_arch: sectionsArch || "",
@@ -600,8 +600,7 @@ export class AddPageDialog extends Component {
                     resolve(iframe.contentDocument.head.querySelectorAll("link[type='text/css']"));
                 } else {
                     // If there is no website preview or it was not ready yet, fetch page.
-                    this.http
-                        .get(`/website/force/${this.props.websiteId}?path=/`, "text")
+                    get(`/website/force/${this.props.websiteId}?path=/`, "text")
                         .then((html) => {
                             const doc = new DOMParser().parseFromString(html, "text/html");
                             resolve(doc.head.querySelectorAll("link[type='text/css']"));

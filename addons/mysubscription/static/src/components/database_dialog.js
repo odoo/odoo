@@ -2,6 +2,7 @@ import { Component, computed, signal, useProps, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { post } from "@web/core/network/http";
 
 const { DateTime } = luxon;
 
@@ -17,7 +18,6 @@ export class DatabaseDialog extends Component {
     setup() {
         this.notification = useService("notification");
         this.dialog = useService("dialog");
-        this.http = useService("http");
 
         const timestamp = DateTime.now().toFormat("yyyy-MM-dd_HH-mm-ss");
 
@@ -91,14 +91,14 @@ export class DatabaseDialog extends Component {
         const route = `/web/database/${action}`;
 
         if (action === "backup") {
-            const response = await this.http.post(route, params, "response");
+            const response = await post(route, params, "response");
             if (!response.ok) {
                 this.notification.add(_t("Action failed. Invalid or missing master password."), { type: "danger" });
                 return;
             }
             await this._onSubmitBackup(await response.blob());
         } else {
-            const finalUrl = await this.http.post(route, params, "url");
+            const finalUrl = await post(route, params, "url");
             if (!finalUrl.endsWith("/web/database/manager")) {
                 this.notification.add(_t("Action failed. Invalid or missing master password."), { type: "danger" });
                 return;

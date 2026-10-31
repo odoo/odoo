@@ -6,7 +6,7 @@ import {
     isMacOS,
     isBrowserSafari,
 } from "@web/core/browser/feature_detection";
-import { get } from "@web/core/network/http_service";
+import { get } from "@web/core/network/http";
 import { registry } from "@web/core/registry";
 import { InstallPrompt } from "./install_prompt";
 

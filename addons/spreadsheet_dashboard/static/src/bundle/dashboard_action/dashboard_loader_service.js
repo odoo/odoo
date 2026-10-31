@@ -7,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { cookie } from "@web/core/browser/cookie";
 import { DashboardSearchModel } from "./dashboard_search_model";
 import { rpcBus } from "@web/core/network/rpc";
+import { get } from "@web/core/network/http";
 
 /**
  * @type {{
@@ -230,9 +231,7 @@ export class DashboardLoader {
         const dashboard = this._getDashboard(dashboardId);
         dashboard.status = Status.Loading;
         try {
-            const result = await this.env.services.http.get(
-                `/spreadsheet/dashboard/data/${dashboardId}`
-            );
+            const result = await get(`/spreadsheet/dashboard/data/${dashboardId}`);
             const { snapshot, revisions, is_sample, translation_namespace } = result;
             dashboard.translationNamespace = translation_namespace;
             const config = this.getModelConfig(result);

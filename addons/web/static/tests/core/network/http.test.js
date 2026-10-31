@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { mockFetch } from "@odoo/hoot-mock";
 
-import { get, post } from "@web/core/network/http_service";
+import { get, post } from "@web/core/network/http";
 
 describe.current.tags("headless");
 
