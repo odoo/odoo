@@ -315,10 +315,20 @@ class MailingList(models.Model):
         })
 
     def _mailing_list_get_contact_condition(self):
-        """Return a tuple of lists of models to flush and SQL condition."""
+        """Return the models to flush (none) and the SQL condition applied to the merge.
+
+        The condition is intentionally always ``True``: merging lists must move every
+        source contact that is not an exact duplicate of a destination contact to the
+        destination list, whatever its blacklist status or email validity. A previous
+        blacklist filter was dropped because ``email_normalized NOT IN (...)`` evaluated
+        to NULL for contacts without a valid email (``email_normalized`` being ``NOT
+        NULL`` and ``tools.email_normalize`` returning ``None`` on invalid emails) once
+        the blacklist was non-empty. Those contacts were then skipped from the merge and
+        deleted as unused source contacts, instead of being moved to the destination.
+        """
         return (
-            [self.env['mail.blacklist']],
-            SQL("src_contact.email_normalized NOT IN (select email from mail_blacklist where active = TRUE)")
+            [],
+            SQL("TRUE"),
         )
 
     def _mailing_list_get_select_fields(self):
