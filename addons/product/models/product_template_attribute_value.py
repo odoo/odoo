@@ -127,8 +127,9 @@ class ProductTemplateAttributeValue(models.Model):
         (on a variant that can't be deleted, on a sales order line, ...).
         """
         # Directly remove the values from the variants for lines that had single
-        # value (counting also the values that are archived).
-        single_values = self.filtered(lambda ptav: len(ptav.attribute_line_id.product_template_value_ids) == 1)
+        # value (ignoring the archived values that are on no variant, even
+        # archived, as otherwise the last variant and its template get deleted).
+        single_values = self.filtered(lambda ptav: ptav._is_last_used_value_of_line())
         for ptav in single_values:
             ptav.ptav_product_variant_ids.write({
                 'product_template_attribute_value_ids': [Command.unlink(ptav.id)],
@@ -187,6 +188,17 @@ class ProductTemplateAttributeValue(models.Model):
         """
         only_active = all(ptav.ptav_active for ptav in self)
         return self.filtered(lambda ptav: not ptav._is_from_single_value_line(only_active))
+
+    def _is_last_used_value_of_line(self):
+        """Return whether the other values of the line of `self` are all
+        archived and on no variant, including the archived variants.
+        """
+        self.ensure_one()
+        other_values = self.attribute_line_id.product_template_value_ids - self
+        return not (
+            other_values._only_active()
+            or other_values.with_context(active_test=False).ptav_product_variant_ids
+        )
 
     def _is_from_single_value_line(self, only_active=True):
         """Return whether `self` is from a single value line, counting also
