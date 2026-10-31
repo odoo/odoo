@@ -50,6 +50,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'deferred_expense_account_id': 'prepayments',
                 'account_stock_valuation_id': 'stock_valuation',
                 'account_production_wip_account_id': 'wip',
+                'valuation_account_id': 'cost_of_production',
                 'account_production_wip_overhead_account_id': 'cost_of_production',
                 'account_bills_to_receive_id': 'accrued_expenses',
                 'account_billed_not_received_id': 'prepayments',
