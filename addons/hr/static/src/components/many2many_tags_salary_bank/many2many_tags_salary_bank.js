@@ -22,16 +22,30 @@ export class FieldMany2ManyTagsSalaryBank extends Many2ManyTagsField {
         };
     }
 
-    onFocusIn() {
-        super.onFocusIn();
-
+    async onFocusIn() {
         if (!this.props.record.resId) {
+            let saved;
             if (this.props.record.model.root instanceof Record) {
-                this.props.record.model.root.save();
+                saved = await this.props.record.model.root.save();
             } else {
-                this.props.record.save();
+                saved = await this.props.record.save();
+            }
+            if (!saved) {
+                this.autoCompleteRef()?.querySelector("input")?.blur();
+                return;
             }
         }
+
+        super.onFocusIn();
+    }
+
+    get showM2OSelectionField() {
+        if (!super.showM2OSelectionField) {
+            return false;
+        }
+        // see onFocusIn
+        // in case the save fails, blur alone doesn't close the dropdown, so we do:
+        return Boolean(this.props.record.resId) || this.props.record.model.root.isValid;
     }
 
     getTagProps(record) {
