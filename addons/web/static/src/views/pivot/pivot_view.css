@@ -1,6 +1,82 @@
 /* ------- Pivot renderer ------- */
+.o_pivot_renderer {
+    --PivotView-gutter: 1rem;
+    --PivotView-background-color: var(--background-color, var(--o-webclient-background-color));
+
+    .o_pivot,
+    .o_pivot_buttons {
+        margin-inline: var(--PivotView-gutter);
+    }
+
+    @media screen and (min-width: 768px) {
+        width: max-content;
+        min-width: 100%;
+
+        .o_pivot_buttons_wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            background-color: var(--PivotView-background-color);
+        }
+
+        .o_pivot_buttons {
+            position: sticky;
+            left: var(--PivotView-gutter);
+        }
+    }
+}
+
 .o_pivot table {
     width: var(--PivotView-width, auto);
+    /* Collapsed borders stay in place instead of following the sticky headers */
+    border-collapse: separate;
+    border-spacing: 0;
+
+    > * > tr > * {
+        border-right-width: var(--o-bs-border-width);
+    }
+
+    .o_pivot_header_cell_empty {
+        background-color: var(--PivotView-background-color);
+    }
+
+    @media screen and (min-width: 768px) {
+        > thead {
+            position: sticky;
+            top: var(--PivotView-buttons-height);
+            z-index: 2;
+        }
+
+        > thead > tr:first-child > th:first-child,
+        > tbody > tr > th {
+            position: sticky;
+            left: var(--PivotView-gutter);
+            z-index: 1;
+
+            /* Hide the cells scrolling in the left margin */
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: calc(-1 * var(--o-bs-border-width));
+                right: 100%;
+                width: var(--PivotView-gutter);
+                background-color: var(--PivotView-background-color);
+            }
+        }
+
+        > tbody > tr > th::before {
+            margin-right: var(--o-bs-border-width);
+        }
+
+        > thead .o_pivot_header_cell_content {
+            position: sticky;
+            left: calc(
+                var(--PivotView-gutter) + var(--PivotView-row-headers-width) +
+                    var(--o-bs-table-cell-padding-x-sm)
+            );
+        }
+    }
 
     /* Inform the user that he may click on a cell to be redirected to a list view of the */
     /* items corresponding to the clicked cell */

@@ -813,6 +813,40 @@ test("more folding/unfolding", async () => {
     expect("tbody tr").toHaveCount(7);
 });
 
+test.tags("desktop");
+test("sticky offsets are kept in sync with the buttons and row headers", async () => {
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot>
+				<field name="product_id" type="row"/>
+				<field name="foo" type="measure"/>
+			</pivot>`,
+    });
+
+    const table = queryOne(".o_pivot table");
+    const rowHeadersWidth = () => table.style.getPropertyValue("--PivotView-row-headers-width");
+    expect(table.style.getPropertyValue("--PivotView-buttons-height")).toBe(
+        `${queryOne(".o_pivot_buttons_wrapper").offsetHeight}px`
+    );
+    expect(rowHeadersWidth()).toBe(`${queryFirst("thead th").offsetWidth}px`);
+    const initialWidth = rowHeadersWidth();
+
+    await contains("tbody .o_pivot_header_cell_closed:contains(xphone)").click();
+    await contains(".o-dropdown--menu .o-dropdown-item:contains(Customer)").click();
+    expect("tbody tr").toHaveCount(4);
+    expect(rowHeadersWidth()).toBe(`${queryFirst("thead th").offsetWidth}px`);
+    expect(rowHeadersWidth()).not.toBe(initialWidth);
+
+    // layout changes without re-rendering (e.g. zoom, fonts loading)
+    const expandedWidth = rowHeadersWidth();
+    queryOne(".o_pivot").style.fontSize = "2em";
+    await animationFrame();
+    expect(rowHeadersWidth()).toBe(`${queryFirst("thead th").offsetWidth}px`);
+    expect(rowHeadersWidth()).not.toBe(expandedWidth);
+});
+
 test("fold and unfold header group", async () => {
     await mountView({
         type: "pivot",
@@ -3617,7 +3651,7 @@ test("group by properties in pivot view", async () => {
     expect(".o_value").toHaveCount(1);
     expect(".o_value").toHaveText("4");
 
-    await contains(".border-top-0 span").click();
+    await contains("thead .o_pivot_header_cell_closed span").click();
     expect.verifySteps([]);
 
     expect(".o_accordion_toggle").toHaveText("Properties");
