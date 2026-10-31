@@ -247,14 +247,16 @@ class ImDispatch(threading.Thread):
             while not stop_event.is_set():
                 if sel.select(TIMEOUT):
                     conn.poll()
-                    channels = []
-                    while conn.notifies:
-                        channels.extend(orjson.loads(conn.notifies.pop().payload))
                     # relay notifications to websockets that have
                     # subscribed to the corresponding channels.
                     websockets = set()
-                    for channel in channels:
-                        websockets.update(self._channels_to_ws.get(hashable(channel), []))
+                    while conn.notifies:
+                        payload = conn.notifies.pop().payload
+                        try:
+                            for channel in orjson.loads(payload):
+                                websockets.update(self._channels_to_ws.get(hashable(channel), []))
+                        except (ValueError, TypeError):
+                            _logger.warning("Bus.loop ignored malformed imbus payload: %r", payload)
                     for websocket in websockets:
                         websocket.trigger_notification_dispatching()
 
