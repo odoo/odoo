@@ -512,4 +512,22 @@ describe("field HTML", () => {
         expect(htmlField.state.activeTheme).toBe("default");
         expect(".o_mass_mailing-builder_sidebar").toHaveCount(0);
     });
+    test("re-rendering the field does not fetch the templates again", async () => {
+        onRpc("action_fetch_templates", () => {
+            expect.step("action_fetch_templates");
+        });
+        await mountView({
+            type: "form",
+            resModel: "mailing.mailing",
+            resId: 1,
+            arch: mailViewArch,
+        });
+        await waitForThemeSelector();
+        await expect.waitForSteps(["action_fetch_templates"]);
+        htmlField.state.key++;
+        await animationFrame();
+        await waitForThemeSelector();
+        await animationFrame();
+        expect.verifySteps([]);
+    });
 });
