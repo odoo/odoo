@@ -1,9 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import odoo.tests
+from copy import deepcopy
 from datetime import timedelta
+from uuid import uuid4
+
+import odoo.tests
 from odoo import Command
+from odoo.tests import JsonRpcException
+from odoo.tools import mute_logger
+
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 
@@ -154,7 +160,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
                 'amount_paid': 0,
                 'amount_tax': 0,
                 'amount_return': 0,
-                'lines': [[0, 0, {'product_id': self.cola.id, 'qty': 1,
+                'lines': [[0, 0, {'uuid': str(uuid4()), 'product_id': self.cola.id, 'qty': 1,
                                   'price_unit': self.cola.lst_price,
                                   'price_subtotal': self.cola.lst_price,
                                   'tax_ids': [(6, 0, self.cola.taxes_id.ids)],
@@ -304,6 +310,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
             'amount_tax': 0,
             'amount_return': 0,
             'lines': [[0, 0, {
+                    'uuid': str(uuid4()),
                     'product_id': self.cola.id, 'qty': 1,
                     'price_unit': self.cola.lst_price,
                     'price_subtotal': self.cola.lst_price,
@@ -346,3 +353,200 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertFalse(data['lines'])
         self.assertEqual(victim_line.qty, 1)
         self.assertEqual(victim_line.order_id, victim_order)
+
+    def _setup_relation_orders(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'kiosk',
+            'use_presets': False,
+            'available_preset_ids': [Command.clear()],
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+        self.other_config = self.pos_config.copy({
+            'name': 'Other shop',
+            'payment_method_ids': [Command.set(self.bank_payment_method.ids)],
+        })
+        self.combo = self.env['product.combo'].create({
+            'name': 'Self-order combo',
+            'combo_item_ids': [Command.create({'product_id': self.cola.id})],
+        })
+        self.combo_product = self.env['product.product'].create({
+            'name': 'Self-order combo product',
+            'type': 'combo',
+            'available_in_pos': True,
+            'list_price': 10,
+            'combo_ids': [Command.set(self.combo.ids)],
+            'taxes_id': False,
+        })
+        self.victim_order, _ = self.create_backend_pos_order({
+            'line_data': [{'product_id': self.cola.id, 'qty': 1}],
+        })
+        self.victim_order._ensure_access_token()
+        self.payment = self.env['pos.payment'].create({
+            'pos_order_id': self.victim_order.id,
+            'payment_method_id': self.bank_payment_method.id,
+            'amount': 7,
+        })
+        self.order_payload = {
+            'uuid': str(uuid4()),
+            'state': 'draft',
+            'preset_id': False,
+            'session_id': self.pos_config.current_session_id.id,
+            'amount_total': 0,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'lines': [[Command.CREATE, 0, {
+                'uuid': str(uuid4()), 'product_id': self.cola.id, 'qty': 1, 'price_unit': 0,
+            }]],
+        }
+
+    def _post(self, order, error=None):
+        params = {
+            'access_token': self.pos_config.access_token,
+            'table_identifier': None,
+            'order': order,
+        }
+        route = '/pos-self-order/process-order/kiosk/'
+        records_to_check = [
+            (self.victim_order, ['uuid', 'state', 'session_id', 'access_token', 'lines', 'payment_ids', 'amount_total']),
+            (self.victim_order.lines, ['uuid', 'order_id', 'qty', 'combo_parent_id', 'combo_line_ids']),
+            (self.payment, ['uuid', 'pos_order_id', 'amount', 'payment_method_id']),
+            (self.pos_config | self.other_config, [
+                'name', 'access_token', 'payment_method_ids', 'self_ordering_mode', 'trusted_config_ids',
+            ]),
+        ]
+        before = [records.read(fields) for records, fields in records_to_check]
+        res = None
+        if error is None:
+            res = self.make_jsonrpc_request(route, params)
+            self.assertEqual({record['uuid'] for record in res['pos.order']}, {order['uuid']})
+            self.assertFalse(res.get('pos.payment'))
+            self.assertFalse(set(self.victim_order.lines.ids) & {record['id'] for record in res['pos.order.line']})
+        else:
+            # Rejected public requests must raise instead of returning order/payment data.
+            with self.assertRaises(JsonRpcException) as rejected:
+                self.make_jsonrpc_request(route, params)
+            self.assertEqual(str(rejected.exception), error)
+        self.env.invalidate_all()
+        self.assertEqual([records.read(fields) for records, fields in records_to_check], before)
+        if error and order['uuid'] != self.victim_order.uuid:
+            self.assertFalse(self.env['pos.order'].search([('uuid', '=', order['uuid'])]))
+        return res
+
+    def test_public_relation_mapping_unsupported_models(self):
+        self._setup_relation_orders()
+        # Unsupported models are discarded; the legitimate order still syncs.
+        for model_name in ('pos.payment', 'pos.config', 'pos.order'):
+            with self.subTest(ignored_model=model_name):
+                payload = deepcopy(self.order_payload)
+                payload['uuid'] = str(uuid4())
+                payload['lines'][0][2]['uuid'] = str(uuid4())
+                ignored_mappings = {
+                    'pos.payment': {self.payment.uuid: {'pos_order_id': payload['uuid']}},
+                    'pos.config': {self.other_config.uuid: {'trusted_config_ids': [self.pos_config.uuid]}},
+                    'pos.order': {payload['uuid']: {'payment_ids': [self.payment.uuid]}},
+                }
+                payload['relations_uuid_mapping'] = {model_name: ignored_mappings[model_name]}
+                self._post(payload, error='werkzeug.exceptions.BadRequest')
+
+    @mute_logger('odoo.http')
+    def test_public_relation_mapping_validation(self):
+        self._setup_relation_orders()
+        self.assertEqual(self.other_config.payment_method_ids, self.bank_payment_method)
+        for foreign_shop in (False, True):
+            if foreign_shop:
+                self.other_config.with_user(self.pos_user).open_ui()
+                self.victim_order, _ = self.create_backend_pos_order({
+                    'pos_config': self.other_config,
+                    'line_data': [{'product_id': self.cola.id, 'qty': 1}],
+                })
+                self.payment = self.env['pos.payment'].create({
+                    'pos_order_id': self.victim_order.id,
+                    'payment_method_id': self.bank_payment_method.id,
+                    'amount': 7,
+                })
+
+            # Reject foreign UUIDs, forbidden fields, and malformed UUID mappings.``
+            order = deepcopy(self.order_payload)
+            order['lines'][0][2]['product_id'] = self.combo_product.id
+            local_line_uuid = order['lines'][0][2]['uuid']
+            mappings = [
+                {'pos.order.line': {self.victim_order.lines.uuid: {'order_id': order['uuid']}}},  # Forbidden ownership field.
+                {'pos.order.line': {self.victim_order.lines.uuid: {'combo_parent_id': local_line_uuid}}},  # Foreign child owner.
+                {'pos.order.line': {local_line_uuid: {'combo_parent_id': self.victim_order.lines.uuid}}},  # Foreign parent target.
+                {'pos.order.line': {self.victim_order.lines.uuid: {'combo_line_ids': [local_line_uuid]}}},  # Foreign parent owner.
+                {'pos.order.line': {local_line_uuid: {'combo_line_ids': [self.victim_order.lines.uuid]}}},  # Foreign child target.
+                None, [], False, 0, 'uuid', {'pos.order.line': []},  # Invalid mapping structure/type.
+                {'pos.order.line': {local_line_uuid: []}},  # Relation fields must be a dictionary.
+                {'pos.order.line': {local_line_uuid: {'combo_parent_id': 123}}},  # Target must be a UUID string.
+                {'pos.order.line': {local_line_uuid: {'combo_line_ids': 'uuid'}}},  # Targets must be a list.
+                {'pos.order.line': {local_line_uuid: {'combo_line_ids': [False]}}},  # List entries must be UUID strings.
+                {'pos.order.line': {local_line_uuid: {'course_id': str(uuid4())}}},  # Field is not allow-listed.
+            ]
+            for mapping in mappings:
+                with self.subTest(foreign_shop=foreign_shop, mapping=mapping):
+                    order['relations_uuid_mapping'] = mapping
+                    self._post(order, error='werkzeug.exceptions.BadRequest')
+
+            # Reject foreign IDs and malformed direct combo values.
+            order['relations_uuid_mapping'] = {}
+            for values in (
+                {'combo_parent_id': self.victim_order.lines.id},
+                {'combo_line_ids': self.victim_order.lines.ids},
+                {'combo_parent_id': True},
+                {'combo_line_ids': [[Command.LINK, self.victim_order.lines.id]]},
+            ):
+                with self.subTest(foreign_shop=foreign_shop, direct_relation=values):
+                    payload = deepcopy(order)
+                    payload['lines'][0][2].update(values)
+                    self._post(payload, error='werkzeug.exceptions.BadRequest')
+
+            # CREATE cannot claim a foreign UUID.
+            claimed_line = deepcopy(self.order_payload['lines'][0])
+            claimed_line[2]['uuid'] = self.victim_order.lines.uuid
+            payload = deepcopy(order)
+            payload['lines'].append(claimed_line)
+            payload['relations_uuid_mapping'] = {'pos.order.line': {claimed_line[2]['uuid']: {'combo_parent_id': local_line_uuid}}}
+            self._post(payload, error='werkzeug.exceptions.BadRequest')
+
+            # UUIDs from updates dropped by the sanitizer are not valid endpoints either.
+            dropped_update_uuid = str(uuid4())
+            payload = deepcopy(order)
+            payload['lines'].append([
+                Command.UPDATE,
+                self.victim_order.lines.id,
+                {**deepcopy(self.order_payload['lines'][0][2]), 'uuid': dropped_update_uuid},
+            ])
+            payload['relations_uuid_mapping'] = {'pos.order.line': {dropped_update_uuid: {'combo_parent_id': local_line_uuid}}}
+            self._post(payload, error='werkzeug.exceptions.BadRequest')
+
+    @mute_logger('odoo.http')
+    def test_existing_order_authorization(self):
+        self._setup_relation_orders()
+        payload = deepcopy(self.order_payload)
+        payload.update(uuid=self.victim_order.uuid, lines=[])
+        self._post({**payload, 'id': self.victim_order.id, 'access_token': 'wrong-token'}, error='werkzeug.exceptions.Unauthorized')
+
+        # A newer table order must not authorize syncing a different order's UUID.
+        table_order, _ = self.create_backend_pos_order({'order_data': {'table_id': self.pos_table_1.id}})
+        table_order._ensure_access_token()
+        self._post({**payload, 'table_id': self.pos_table_1.id, 'access_token': table_order.access_token}, error='werkzeug.exceptions.Unauthorized')
+
+        # Different config's session.
+        payload.update(id=self.victim_order.id, access_token=self.victim_order.access_token)
+        self.other_config.with_user(self.pos_user).open_ui()
+        other_session = self.other_config.current_session_id
+        original_session = self.victim_order.session_id
+        self.victim_order.session_id = other_session
+        self._post(payload, error='werkzeug.exceptions.Unauthorized')
+
+        # Same config, but a different session.
+        other_session.write({'config_id': self.pos_config.id, 'state': 'closed'})
+        self.assertNotEqual(self.victim_order.session_id, self.pos_config.current_session_id)
+        self._post(payload, error='werkzeug.exceptions.Unauthorized')
+
+        self.victim_order.session_id = original_session
+        for state in ('cancel', 'paid', 'done'):
+            self.victim_order.state = state
+            self._post(payload, error='werkzeug.exceptions.Unauthorized')
