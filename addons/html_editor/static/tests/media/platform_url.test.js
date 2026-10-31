@@ -40,3 +40,24 @@ for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
         }
     });
 }
+
+test("vimeo: autoplaying videos disable autopause", async () => {
+    mockFetch(() => '{"data": "mockFetch api result data"}');
+    const Vimeo = PLATFORMS.vimeo;
+    const urlMatch = Vimeo.isValidVideoUrl(Vimeo.exampleUrls.base);
+    expect(Vimeo.getVideoUrlData(urlMatch).embedUrl).not.toInclude("autopause");
+    // Disabling autopause allows several autoplaying Vimeo videos on a page
+    // (e.g. background videos) to play simultaneously.
+    const { embedUrl } = Vimeo.getVideoUrlData(urlMatch, { autoplay: true });
+    expect(embedUrl).toInclude("autoplay=1");
+    expect(embedUrl).toInclude("autopause=0");
+    expect(embedUrl).toInclude("muted=1");
+});
+
+test("vimeo: do not track is always enabled", async () => {
+    mockFetch(() => '{"data": "mockFetch api result data"}');
+    const Vimeo = PLATFORMS.vimeo;
+    const urlMatch = Vimeo.isValidVideoUrl(Vimeo.exampleUrls.base);
+    expect(Vimeo.getVideoUrlData(urlMatch).embedUrl).toInclude("dnt=1");
+    expect(Vimeo.getVideoUrlData(urlMatch, { autoplay: true }).embedUrl).toInclude("dnt=1");
+});
