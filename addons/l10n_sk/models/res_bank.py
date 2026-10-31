@@ -74,7 +74,7 @@ class ResPartnerBank(models.Model):
                 '',                                                             # OriginatorsReferenceInformation, mutually exclusive with the symbols above
                 communication[:L10N_SK_QR_MAX_PAYMENT_NOTE],                    # PaymentNote
                 '1',                                                            # BankAccounts: a single one
-                self.sanitized_account_number,                                  # IBAN
+                self.account_number,                                            # IBAN
                 self.bank_bic or '',                                            # BIC
                 '0',                                                            # StandingOrderExt: not a standing order
                 '0',                                                            # DirectDebitExt: not a direct debit
