@@ -182,21 +182,35 @@ export class GeneratePrinterData {
     }
 
     generateLineData() {
+        const showUnitPrice = this.getUnitPriceCountryCodes().includes(
+            this.company.country_id.code
+        );
         return this.order.getOrderlines().map((line) => {
             const productData = { ...line.product_id.raw };
-            productData.display_name = line.getFullProductName();
+            productData.display_name = line.isDiscountLine
+                ? line.getFullProductName()
+                : line.product_id.name;
             return {
                 ...line.raw,
                 product_data: productData,
+                attribute_value_ids: line.constructAttributeString().replaceAll(", ", " - "),
+                child_combo_lines: line.combo_line_ids
+                    .map((childLine) => `${childLine.qty} ${childLine.full_product_name}`)
+                    .join(" - "),
                 product_uom_name: line.product_id.uom_id?.name || "",
                 unit_price: line.currencyDisplayPriceUnit,
                 product_unit_price: line.product_id.displayPriceUnit,
                 price_subtotal_incl: line.currencyDisplayPrice,
                 is_service_fee_line: line.isServiceFeeLine(),
                 service_fee_display_info: line.getServiceFeeDisplayInfo(),
+                show_unit_price: line.qty > 1 || showUnitPrice,
                 no_discount_price: formatCurrency(line.displayPriceNoDiscount, line.currency.id),
             };
         });
+    }
+
+    getUnitPriceCountryCodes() {
+        return ["SA", "PE", "VN", "TW", "BR", "PL"];
     }
 
     generatePaymentData() {

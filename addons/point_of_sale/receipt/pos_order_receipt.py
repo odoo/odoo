@@ -161,6 +161,9 @@ class PosOrderReceipt(models.AbstractModel):
         preset_id = self.preset_id
         service_fee_product = preset_id.service_fee_product_id if preset_id else None
 
+        country_code = self.config_id.company_id.country_id.code
+        show_unit_price = country_code in self.get_unit_price_country_codes()
+
         lines = []
         for line in self._get_receipt_lines():
             data = line.read(lines_fields, load=False)[0]
@@ -168,11 +171,22 @@ class PosOrderReceipt(models.AbstractModel):
 
             data['qty'] = int(line.qty) if float(line.qty).is_integer() else line.qty
             data['product_data'] = {**product_by_id[data['product_id']]}
-            data['product_data']['display_name'] = line.full_product_name or data['product_data']['display_name']
+            data['product_data']['display_name'] = (
+                line.full_product_name
+                if line.extra_tax_data and line.extra_tax_data.get('discount_value')
+                else line.product_id.name
+            )
             data['product_uom_name'] = line.product_id.uom_id.name
             display_price = data['price_subtotal_incl'] if display_price_incl else data['price_subtotal']
             data['price_subtotal_incl'] = self._order_receipt_format_currency(display_price)
             data['no_discount_price'] = self._order_receipt_format_currency(line._get_price_no_discount(self.config_id))
+            data['child_combo_lines'] = " - ".join(
+                f"{child.qty:g} {child.full_product_name}"
+                for child in line.combo_line_ids
+            )
+            data['attribute_value_ids'] = " - ".join(
+                line.attribute_value_ids.mapped('name')
+            )
 
             # Compute line unit price
             taxes = line._compute_amount_line_all(1)
@@ -198,10 +212,14 @@ class PosOrderReceipt(models.AbstractModel):
                 }
             else:
                 data['is_service_fee_line'] = False
-
+            country_code = self.config_id.company_id.country_id.code
+            data['show_unit_price'] = line.qty > 1 or show_unit_price
             lines.append(data)
 
         return lines
+
+    def get_unit_price_country_codes(self):
+        return ('SA', 'PE', 'VN', 'TW', 'BR', 'PL')
 
     def _order_receipt_generate_qr_code(self, qrcode_url):
         qr = qrcode.QRCode(
