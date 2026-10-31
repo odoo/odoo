@@ -1668,9 +1668,16 @@ class TranslationImporter:
                             for term_en, translations in record_dictionary.items():
                                 translation_dictionary[term_en].update(translations)
                         else:
-                            # keep existing translations
+                            # Keep existing translations, but let catalogs replace unchanged fuzzy fallbacks.
+                            carried = cr.cache.get('fuzzy_translations', {}).get((model_name, field_name, id_), {})
                             for term_en, translations in record_dictionary.items():
-                                translations.update({k: v for k, v in translation_dictionary[term_en].items() if v != term_en})
+                                translations.update({
+                                    k: v for k, v in translation_dictionary[term_en].items()
+                                    if v != term_en and (
+                                        noupdate or k not in translations
+                                        or v != carried.get(term_en, {}).get(k)
+                                    )
+                                })
                                 translation_dictionary[term_en] = translations
 
                         changed_values = {}

@@ -1094,6 +1094,132 @@ class TestXMLTranslation(TransactionCase):
         self.env.cr.execute(query, (Json(val), view.id))
         return view
 
+    def _import_view_terms(self, view, terms, lang='fr_FR', **other_terms):
+        xmlid = view.export_data(['id'])['datas'][0][0]
+        module = xmlid.split('.')[0]
+        importer = TranslationImporter(self.env.cr)
+        for language, translations in {lang: terms, **other_terms}.items():
+            entries = [
+                f'#. module: {module}\n'
+                f'#: model_terms:ir.ui.view,arch_db:{xmlid}\n'
+                f'msgid {quote(source)}\nmsgstr {quote(translation)}\n'
+                for source, translation in translations.items()
+            ]
+            with io.BytesIO('\n'.join(entries).encode()) as source:
+                source.name = 'dummy'
+                importer.load(source, 'po', language)
+        importer.save()
+
+    def test_module_update_fuzzy_translation_import(self):
+        """The catalog replaces carried terms, but preserves unchanged translations."""
+        arch = '<form><div>%s</div><div>%s</div></form>'
+        wrappers = [
+            ('%s', '%s'),
+            ('<span invisible="1">%s</span>', '<span invisible="0">%s</span>'),
+        ]
+        for old_wrapper, new_wrapper in wrappers:
+            with self.subTest(wrapper=new_wrapper):
+                old_term = old_wrapper % 'We ship within 5 working days.'
+                new_term = new_wrapper % 'We ship within 3 working days.'
+                old_fr = old_wrapper % 'Livraison sous 5 jours ouvrables.'
+                new_fr = new_wrapper % 'Livraison sous 3 jours ouvrables.'
+                old_nl = old_wrapper % 'Wij leveren binnen 5 werkdagen.'
+                new_nl = new_wrapper % 'Wij leveren binnen 3 werkdagen.'
+                view = self.create_view(
+                    arch, (old_term, 'Unchanged note'),
+                    fr_FR=(old_fr, 'Note personnalisée'),
+                    nl_NL=(old_nl, 'Aangepaste notitie'),
+                )
+                view.with_context(install_mode=True, lang='en_US').arch_db = (
+                    arch % (new_term, 'Unchanged note')
+                )
+                self._import_view_terms(view, {
+                    new_term: new_fr, 'Unchanged note': 'Note standard',
+                })
+                self._import_view_terms(view, {
+                    new_term: new_nl, 'Unchanged note': 'Standaardnotitie',
+                }, 'nl_NL')
+                self.assertEqual(view.with_context(lang='fr_FR').arch_db,
+                                 arch % (new_fr, 'Note personnalisée'))
+                self.assertEqual(view.with_context(lang='nl_NL').arch_db,
+                                 arch % (new_nl, 'Aangepaste notitie'))
+
+    def test_module_update_fuzzy_translation_missing_catalog(self):
+        arch = '<form><div>%s</div><div>%s</div></form>'
+        view = self.create_view(
+            arch, ('We ship within 5 working days.', 'Unchanged note'),
+            fr_FR=('Livraison sous 5 jours ouvrables.', 'Note personnalisée'),
+            nl_NL=('Wij leveren binnen 5 werkdagen.', 'Aangepaste notitie'),
+        )
+        view.with_context(install_mode=True, lang='en_US').arch_db = (
+            arch % ('We ship within 3 working days.', 'Unchanged note')
+        )
+        self._import_view_terms(view, {
+            'We ship within 3 working days.': 'Livraison sous 3 jours ouvrables.',
+        }, nl_NL={'Unchanged note': 'Standaardnotitie'})
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db,
+                         arch % ('Livraison sous 3 jours ouvrables.', 'Note personnalisée'))
+        self.assertEqual(view.with_context(lang='nl_NL').arch_db,
+                         arch % ('Wij leveren binnen 5 werkdagen.', 'Aangepaste notitie'))
+
+    def test_fuzzy_translation_user_edit(self):
+        arch = '<form><div>%s</div></form>'
+        view = self.create_view(arch, ('We ship within 5 working days.',),
+                                fr_FR=('Livraison sous 5 jours ouvrables.',))
+        view.with_context(lang='en_US').arch_db = arch % 'We ship within 3 working days.'
+        self._import_view_terms(view, {
+            'We ship within 3 working days.': 'Livraison sous 3 jours ouvrables.',
+        })
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db,
+                         arch % 'Livraison sous 5 jours ouvrables.')
+
+    def test_module_update_fuzzy_translation_user_override(self):
+        arch = '<form><div>%s</div></form>'
+        view = self.create_view(arch, ('We ship within 5 working days.',),
+                                fr_FR=('Livraison sous 5 jours ouvrables.',))
+        view.with_context(install_mode=True, lang='en_US').arch_db = (
+            arch % 'We ship within 3 working days.'
+        )
+        view.with_context(lang='fr_FR').arch_db = arch % 'Livraison personnalisée.'
+        self._import_view_terms(view, {
+            'We ship within 3 working days.': 'Livraison sous 3 jours ouvrables.',
+        })
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db,
+                         arch % 'Livraison personnalisée.')
+
+    def test_module_update_fuzzy_translation_noupdate(self):
+        arch = '<form><div>%s</div></form>'
+        view = self.create_view(arch, ('We ship within 5 working days.',),
+                                fr_FR=('Livraison sous 5 jours ouvrables.',))
+        module, name = view.export_data(['id'])['datas'][0][0].split('.', 1)
+        self.env['ir.model.data'].search([
+            ('module', '=', module), ('name', '=', name),
+        ]).noupdate = True
+        view.with_context(install_mode=True, lang='en_US').arch_db = (
+            arch % 'We ship within 3 working days.'
+        )
+        self._import_view_terms(view, {
+            'We ship within 3 working days.': 'Livraison sous 3 jours ouvrables.',
+        })
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db,
+                         arch % 'Livraison sous 5 jours ouvrables.')
+
+    def test_module_update_fuzzy_translation_rollback(self):
+        arch = '<form><div>%s</div></form>'
+        view = self.create_view(arch, ('We ship within 5 working days.',),
+                                fr_FR=('Livraison sous 5 jours ouvrables.',))
+        with self.assertRaises(UserError), self.cr.savepoint():
+            view.with_context(install_mode=True, lang='en_US').arch_db = (
+                arch % 'We ship within 3 working days.'
+            )
+            raise UserError('Abort module update')
+        view.with_context(lang='en_US').arch_db = arch % 'We ship within 3 working days.'
+        self._import_view_terms(view, {
+            'We ship within 3 working days.': 'Livraison sous 3 jours ouvrables.',
+        })
+        self.assertEqual(view.with_context(lang='fr_FR').arch_db,
+                         arch % 'Livraison sous 5 jours ouvrables.')
+
     def test_copy(self):
         """ Create a simple view, fill in translations, and copy it. """
         archf = '<form string="%s"><div>%s</div><div>%s</div></form>'
