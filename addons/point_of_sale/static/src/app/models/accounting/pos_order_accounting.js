@@ -377,7 +377,7 @@ export class PosOrderAccounting extends Base {
      */
     _computeAllPrices(opts = {}) {
         const currency = this.currency;
-        const lines = opts.lines || this.lines;
+        const lines = (opts.lines || this.lines).filter((line) => line.product_id);
         const documentSign = this.isRefund ? -1 : 1;
         const company = this.company;
         const baseLines = lines.map((l) =>
