@@ -71,7 +71,7 @@ def memory_info(process):
     # psutil < 2.0 does not have memory_info, >= 3.0 does not have get_memory_info
     pmem = (getattr(process, 'memory_info', None) or process.get_memory_info)()
     # MacOSX allocates very large vms to all processes so we only monitor the rss usage.
-    if platform.system() == 'Darwin':
+    if platform.system() in ['Darwin', 'Linux']:
         return pmem.rss
     return pmem.vms
 
