@@ -701,7 +701,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
-                                        <field name="subformula">editable;rounding=0</field>
+                                        <field name="subformula">editable;rounding=0;closing_account_id=receivable</field>
                                     </record>
                                 </field>
                             </record>
@@ -849,6 +849,11 @@
                                         <field name="engine">aggregation</field>
                                         <field name="formula">l10n_dz_tr_vat_to_be_reported.balance - l10n_dz_tr_vat_to_pay_deduction.balance</field>
                                         <field name="subformula">if_above(DZD(0))</field>
+                                    </record>
+                                    <record id="l10n_dz_tax_report_vat_to_pay_total_closing_amount" model="account.report.expression">
+                                        <field name="label">_closing_amount</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">l10n_dz_tr_vat_to_be_reported.balance - l10n_dz_tr_vat_to_pay_deduction.balance</field>
                                     </record>
                                 </field>
                             </record>

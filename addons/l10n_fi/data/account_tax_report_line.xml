@@ -182,6 +182,13 @@
                 <!-- "sale_25_5_and_24" refers to both 24% and 25.5% taxes. Will only be 25.5 on 01/01/2025.-->
                 <!-- "sale_14_and_13_5" refers to both 14% and 13.5% taxes. Will only be 13.5 on 01/01/2026.-->
                 <field name="aggregation_formula">sale_25_5_and_24.balance + sale_14_and_13_5.balance + sale_10.balance + goods_eu.balance + service_eu.balance + goods_no_eu.balance + construct.balance - deductible.balance</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tax_payable_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">payable_refundable_tax.balance</field>
+                    </record>
+                </field>
             </record>
             <record id="tax_report_base_turnover_0_vat" model="account.report.line">
                 <field name="name">0-Turnover subject to zero tax rate</field>

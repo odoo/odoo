@@ -1798,6 +1798,7 @@
                                 <field name="label">_applied_carryover_tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
+                                <field name="subformula">closing_account_id=receivable</field>
                                 <field name="date_scope">previous_return_period</field>
                             </record>
                             <record id="tax_report_line_170_initial_carryover" model="account.report.expression">
@@ -1914,6 +1915,11 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">l10n_ma_vat_130.tax - l10n_ma_vat_190.tax</field>
                                 <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                            <record id="tax_report_line_200_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">l10n_ma_vat_130.tax - l10n_ma_vat_190.tax</field>
                             </record>
                         </field>
                     </record>

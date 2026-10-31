@@ -206,7 +206,7 @@
                                         <field name="label">balance</field>
                                         <field name="engine">external</field>
                                         <field name="formula">sum</field>
-                                        <field name="subformula">editable;rounding=0</field>
+                                        <field name="subformula">editable;rounding=0;closing_account_id=receivable</field>
                                     </record>
                                 </field>
                             </record>
@@ -258,6 +258,13 @@
                         <field name="name">Field 20 - Total payable</field>
                         <field name="code">MZ_TR_F_20</field>
                         <field name="aggregation_formula">MZ_TR_F_18.balance + MZ_TR_F_19.balance</field>
+                        <field name="expression_ids">
+                            <record id="l10n_mz_tax_report_field_20_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">MZ_TR_F_13.balance - MZ_TR_F_12.balance - MZ_TR_F_16.balance - MZ_TR_F_17.balance + MZ_TR_F_19.balance</field>
+                            </record>
+                        </field>
                     </record>
                 </field>
             </record>

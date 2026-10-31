@@ -264,7 +264,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=0</field>
+                                <field name="subformula">editable;rounding=0;closing_account_id=receivable</field>
                             </record>
                         </field>
                     </record>
@@ -498,7 +498,7 @@
                                 <field name="label">balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">sum</field>
-                                <field name="subformula">editable;rounding=0</field>
+                                <field name="subformula">editable;rounding=0;closing_account_id=receivable</field>
                             </record>
                         </field>
                     </record>
@@ -568,6 +568,17 @@
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
                         <field name="formula">ACC_F3_1_11.balance + ACC_F3_1_22.balance - ACC_F3_1_8.balance - ACC_F3_1_12.balance - ACC_F3_1_19.balance - ACC_F3_1_23.balance</field>
+                    </record>
+                    <record id="l10n_jp_form_accumulation_acc_f3_1_26_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ACC_F3_1_26.balance</field>
+                    </record>
+                    <record id="l10n_jp_form_accumulation_acc_f3_1_26_closing_account_balance" model="account.report.expression">
+                        <field name="label">_closing_account_balance</field>
+                        <field name="engine">domain</field>
+                        <field name="formula">[('tax_repartition_line_id.use_in_tax_closing', '=', True)]</field>
+                        <field name="subformula">-sum</field>
                     </record>
                 </field>
             </record>

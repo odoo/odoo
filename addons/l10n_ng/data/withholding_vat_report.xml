@@ -33,6 +33,11 @@
                         <field name="engine">tax_tags</field>
                         <field name="formula">-10</field>
                     </record>
+                    <record id="l10n_ng_wh_vat_20_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">L10N_NG_WHVAT_20.balance</field>
+                    </record>
                 </field>
             </record>
         </field>
