@@ -45,9 +45,17 @@
             selector=".s_dynamic_category_item, .all_products"
             title="Category"
             editableOnly="false"/>
+        <product_attribute_thumbnail_option
+            template="website_sale.ProductAttributeThumbnailOption"
+            selector="#product_detail [data-attribute-can-show-thumbnails] .o_wsale_product_attribute"
+            editableOnly="false"
+            reloadTarget="true"
+            groups='["website.group_website_designer"]'
+        />
         <product_attribute_option
             template="website_sale.ProductAttributeOption"
             selector="#product_detail .o_wsale_product_attribute"
+            exclude="[data-attribute-display-type='multi'] .o_wsale_product_attribute"
             editableOnly="false"
             reloadTarget="true"
             groups='["website.group_website_designer"]'/>

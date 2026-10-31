@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<t t-name="website_sale.ProductAttributeThumbnailOption">
+    <BuilderRow
+        label.translate="Thumbnails"
+        tooltip.translate="Use product variant images instead of the attribute values"
+    >
+        <BuilderCheckbox id="'attribute_thumbnail_opt'" action="'productAttributeThumbnail'"/>
+    </BuilderRow>
+</t>
+
 <t t-name="website_sale.ProductAttributeOption">
-    <BuilderRow label.translate="Display Type">
+    <BuilderRow t-if="!this.isActiveItem('attribute_thumbnail_opt')" label.translate="Display Type">
         <BuilderSelect action="'productAttributeDisplay'">
             <BuilderSelectItem actionValue="'radio'">Radio</BuilderSelectItem>
             <BuilderSelectItem actionValue="'pills'">Pills</BuilderSelectItem>
