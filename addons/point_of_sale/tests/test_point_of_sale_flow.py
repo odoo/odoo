@@ -2329,6 +2329,67 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             {'amount_total': 500},
         ])
 
+    def test_split_cash_change_reconciliation(self):
+        """Test that split cash payment with change in an invoiced order reconciles properly upon session closing."""
+        cash_pm = self.pos_config.payment_method_ids.filtered('is_cash_count')
+        cash_pm.write({'split_transactions': True})
+        self.pos_config.open_ui()
+        pos_session = self.pos_config.current_session_id
+        cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
+
+        product_order = {
+            'amount_paid': 150,
+            'amount_return': 50,
+            'amount_tax': 0,
+            'amount_total': 100,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'lines': [Command.create({
+                'discount': 0,
+                'pack_lot_ids': [],
+                'price_unit': 100.0,
+                'product_id': self.product3.id,
+                'price_subtotal': 100.0,
+                'price_subtotal_incl': 100.0,
+                'tax_ids': [[6, False, []]],
+                'qty': 1,
+            })],
+            'name': 'Order Split Cash Change',
+            'partner_id': self.partner1.id,
+            'session_id': pos_session.id,
+            'sequence_number': 2,
+            'payment_ids': [Command.create({
+                'amount': 150,
+                'name': fields.Datetime.now(),
+                'payment_method_id': cash_payment_method.id,
+            })],
+            'uuid': '12347-123-1234',
+            'user_id': self.env.uid,
+            'to_invoice': True,
+        }
+        pos_order_id = self.PosOrder.sync_from_ui([product_order])['pos.order'][0]['id']
+        pos_order = self.PosOrder.browse(pos_order_id)
+        self.assertTrue(pos_order.is_invoiced)
+
+        # Before closing, intermediate payment move exists
+        payment_move = pos_order.payment_ids.account_move_id
+        self.assertEqual(len(payment_move), 1)
+
+        # Close session
+        pos_session.post_closing_cash_details(100)
+        pos_session.close_session_from_ui()
+
+        # Check reconciliation: both intermediate payment line and closing session lines on pos receivable account must be reconciled
+        pos_receivable_account = pos_session.company_id.account_default_pos_receivable_account_id
+        intermediate_receivable_line = payment_move.line_ids.filtered(lambda l: l.account_id == pos_receivable_account)
+        closing_receivable_lines = pos_session.move_id.line_ids.filtered(lambda l: l.account_id == pos_receivable_account)
+        self.assertRecordValues(intermediate_receivable_line, [{'debit': 100.0, 'credit': 0.0, 'reconciled': True}])
+        self.assertRecordValues(closing_receivable_lines.sorted('balance'), [
+            {'debit': 0.0, 'credit': 150.0, 'reconciled': True},
+            {'debit': 50.0, 'credit': 0.0, 'reconciled': True},
+        ])
+
     def test_refund_qty_refund_cancel(self):
         """
         Test the refunded qty of an order, when the refund order has been cancelled
