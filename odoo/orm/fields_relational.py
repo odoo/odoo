@@ -1508,7 +1508,7 @@ class Many2many(_RelationalMulti):
         # check comodel access of added records
         # we check the su flag of the environment of records, because su may be
         # disabled on the comodel
-        if not model.env.su:
+        if not model.env.su and not self.bypass_search_access:
             try:
                 comodel.browse(
                     co_id
