@@ -2627,17 +2627,24 @@ class AccountMove(models.Model):
             if self.auto_post == 'at_date':
                 alerts['account_auto_post_at_date'] = {
                     'level': 'info',
-                    'message': _("This move is configured to be posted automatically at the accounting date: %s.", self.date),
+                    'message': _("This move is configured to be posted automatically at the accounting date: %s.", format_date(self.env, self.date)),
                 }
             if self.auto_post in ('yearly', 'quarterly', 'monthly'):
+                auto_post_choices = dict(self._fields['auto_post']._description_selection(self.env))
+                translated_frequency = auto_post_choices.get(self.auto_post, self.auto_post)
+
                 message = _(
-                    "%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s.",
-                    auto_post_name=self.auto_post,
-                    move_date=self.date,
+                    "Auto-posting enabled: %(auto_post_name)s. Next accounting date: %(move_date)s.",
+                    auto_post_name=translated_frequency,
+                    move_date=format_date(self.env, self.date),
                 )
+
                 if self.auto_post_until:
                     message += " "
-                    message += _("The recurrence will end on %s (included).", self.auto_post_until)
+                    message += _(
+                        "The recurrence will end on %(date)s (included).",
+                        date=format_date(self.env, self.auto_post_until)
+                    )
                 alerts['account_auto_post_on_period'] = {
                     'level': 'info',
                     'message': message,
