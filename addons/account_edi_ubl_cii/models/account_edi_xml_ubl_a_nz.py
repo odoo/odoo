@@ -27,13 +27,13 @@ class AccountEdiXmlUbl_A_Nz(models.AbstractModel):
         if process_type == 'billing':
             return 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:aunz:3.0'
 
-    def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
-        # EXTENDS account.edi.xml.ubl_bis3
-        discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
-        discount_node['cbc:AllowanceChargeReason'] = None
-        discount_node['cbc:MultiplierFactorNumeric'] = None
-        discount_node['cbc:BaseAmount'] = None
-        return discount_node
+    # def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
+    #     # EXTENDS account.edi.xml.ubl_bis3
+    #     discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
+    #     discount_node['cbc:AllowanceChargeReason'] = None
+    #     discount_node['cbc:MultiplierFactorNumeric'] = None
+    #     discount_node['cbc:BaseAmount'] = None
+    #     return discount_node
 
     def _ubl_add_tax_currency_code_node(self, vals):
         # OVERRIDE

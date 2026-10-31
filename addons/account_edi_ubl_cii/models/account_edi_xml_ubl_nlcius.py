@@ -67,13 +67,13 @@ class AccountEdiXmlUbl_Nl(models.AbstractModel):
 
         return tax_total_keys
 
-    def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
-        # EXTENDS account.edi.xml.ubl_bis3
-        discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
-        discount_node['cbc:AllowanceChargeReasonCode'] = None
-        discount_node['cbc:MultiplierFactorNumeric'] = None
-        discount_node['cbc:BaseAmount'] = None
-        return discount_node
+    # def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
+    #     # EXTENDS account.edi.xml.ubl_bis3
+    #     discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
+    #     discount_node['cbc:AllowanceChargeReasonCode'] = None
+    #     discount_node['cbc:MultiplierFactorNumeric'] = None
+    #     discount_node['cbc:BaseAmount'] = None
+    #     return discount_node
 
     def _ubl_add_accounting_supplier_party_identification_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3

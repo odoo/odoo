@@ -3,8 +3,17 @@
   <rsm:SupplyChainTradeTransaction>
     <ram:IncludedSupplyChainTradeLineItem>
       <ram:SpecifiedLineTradeAgreement>
+        <ram:GrossPriceProductTradePrice>
+          <ram:ChargeAmount>200.00</ram:ChargeAmount>
+          <ram:AppliedTradeAllowanceCharge>
+            <ram:ChargeIndicator>
+              <udt:Indicator>false</udt:Indicator>
+            </ram:ChargeIndicator>
+            <ram:ActualAmount>20.00</ram:ActualAmount>
+          </ram:AppliedTradeAllowanceCharge>
+        </ram:GrossPriceProductTradePrice>
         <ram:NetPriceProductTradePrice>
-            <ram:ChargeAmount>200.00</ram:ChargeAmount>
+          <ram:ChargeAmount>180.00</ram:ChargeAmount>
         </ram:NetPriceProductTradePrice>
       </ram:SpecifiedLineTradeAgreement>
       <ram:SpecifiedLineTradeSettlement>
@@ -13,12 +22,7 @@
                 <udt:Indicator>true</udt:Indicator>
             </ram:ChargeIndicator>
             <ram:ActualAmount>50.00</ram:ActualAmount>
-        </ram:SpecifiedTradeAllowanceCharge>
-         <ram:SpecifiedTradeAllowanceCharge>
-            <ram:ChargeIndicator>
-                <udt:Indicator>false</udt:Indicator>
-            </ram:ChargeIndicator>
-            <ram:ActualAmount>100.00</ram:ActualAmount>
+            <ram:ReasonCode>AA</ram:ReasonCode>
         </ram:SpecifiedTradeAllowanceCharge>
         <ram:SpecifiedTradeSettlementLineMonetarySummation>
             <ram:LineTotalAmount>950.00</ram:LineTotalAmount>

@@ -102,9 +102,8 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
     def test_partial_import_invoice_line_line_extension_amount_zero_quantity_zero_price_amount(self):
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_line_extension_amount_zero_quantity_zero_price_amount')
         self.assertRecordValues(invoice.invoice_line_ids, [{
-            'price_unit': 1050.00,
+            'price_unit': 950.00,
             'quantity': 1.0,
-            'discount': 9.52380952380953,
         }])
 
     def test_partial_import_invoice_line_price_amount_base_quantity(self):
@@ -137,23 +136,54 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertFalse(invoice.invoice_line_ids)
 
     def test_partial_import_invoice_line_zero_line_extension_amount_with_quantity_allowance_charge(self):
-        def assert_invoice(invoice):
-            self.assertRecordValues(invoice, [{'amount_total': 0.0}])
-            self.assertRecordValues(invoice.invoice_line_ids, [{
-                'price_unit': 0.25,
-                'quantity': 2.0,
-                'discount': 100.0,
-                'tax_ids': [],
-                'price_subtotal': 0.0,
-            }])
-
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_zero_line_extension_amount_with_quantity_allowance_charge')
-        assert_invoice(invoice)
+        self.assertRecordValues(invoice, [{'amount_total': 0.0}])
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 10.0,
+            'quantity': 2.0,
+            'discount': 100.0,
+            'tax_ids': [],
+            'price_subtotal': 0.0,
+        }])
 
-        # Same test but the fixed tax will be retrieved.
-        self.fixed_tax(0.25, type_tax_use='purchase')
-        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_zero_line_extension_amount_with_quantity_allowance_charge')
-        assert_invoice(invoice)
+    def test_partial_import_invoice_line_zero_price_amount_with_quantity_charge(self):
+        # qty = 2
+        # net_price = 0
+        # charge = 0.50
+        # line_extension_amount = 0.50 (including charge)
+        # price_unit = net_price + charge / qty = 0.25
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_zero_price_amount_with_quantity_charge')
+        self.assertRecordValues(invoice, [{'amount_total': 0.5}])
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 0.25,
+            'quantity': 2.0,
+            'discount': 0.0,
+            'tax_ids': [],
+            'price_subtotal': 0.5,
+        }])
+
+        # Same test but the charge is retrieved as an allowance/charge tax and extracted from price_unit:
+        # price_unit = 0.25 - charge / qty = 0.0 --> nothing left to discount, no ZeroDivisionError
+        # charge tax amount = 0.25 * qty = 0.50
+        charge_tax = self._create_allowance_charge_tax(
+            name='AEO Charge',
+            amount_type='fixed',
+            amount=0.25,
+            reason_code='AEO',
+            reason='',
+            is_charge=True,
+            is_emptying=False,
+            type_tax_use='purchase',
+        )
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_zero_price_amount_with_quantity_charge')
+        self.assertRecordValues(invoice, [{'amount_total': 0.5}])
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 0.0,
+            'quantity': 2.0,
+            'discount': 0.0,
+            'tax_ids': charge_tax.ids,
+            'price_subtotal': 0.0,
+        }])
 
     def test_partial_import_invoice_line_zero_line_extension_amount_zero_quantity_with_price_amount(self):
         """
@@ -174,8 +204,8 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(imported_invoice.invoice_line_ids, [{
             'label': self.product_a.name,
             'price_subtotal': 1.5,
-            'price_unit': 2.0,
-            'discount': 25.0,
+            'price_unit': 1.5,
+            'discount': 0.0,
         }])
 
     def test_import_invoice_line_quantity_decimals(self):

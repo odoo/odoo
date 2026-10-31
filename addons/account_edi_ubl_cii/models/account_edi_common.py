@@ -211,6 +211,61 @@ class AccountEdiCommon(models.AbstractModel):
         # Allows other documents to easily override in case there is a flat max precision number
         return currency_id.decimal_places
 
+    def _get_allowance_charge_sign(self, vals):
+        return 1 if vals['charge_indicator'] == 'true' else -1
+
+    def _get_allowance_charge_sum(self, allowance_charge_vals):
+        return sum(
+            x['amount'] * self._get_allowance_charge_sign(x)
+            for x in allowance_charge_vals
+        )
+
+    def _is_allowance_charge_tax(self, tax_data):
+        """ Indicate if the 'tax_data' passed as parameter is an allowance/charge tax.
+
+        :param tax_data:    One of the tax data in base_line['tax_details']['taxes_data'].
+        :return:            True if tax_data['tax'] is an allowance/charge tax, False otherwise.
+        """
+        if not tax_data:
+            return False
+
+        tax = tax_data['tax']
+        return tax and tax._ubl_cii_is_allowance_charge_tax()
+
+    def _get_allowance_charge_line_sign(self, qty, price_unit):
+        # if quantity is negative or net_price_unit is negative,
+        # the tax amount would be negative for charges and positive for allowances
+        # see - `test_invoice_with_fixed_tax_on_negative_line` for reference
+        rounding = self.env['decimal.precision'].precision_get('Product Unit')
+        is_qty_negative = float_compare(qty, 0.0, precision_digits=rounding) < 0
+        is_price_unit_negative = float_compare(price_unit, 0.0, precision_digits=self._get_currency_decimal_places(self.env.company.currency_id)) < 0
+        return ((is_qty_negative ^ is_price_unit_negative) == 0 and 1) or -1
+
+    def _prepare_invoice_line_allowance_charge_tax_values(self, collected_values, allowance_charge_vals, format_specific_keys=None):
+        qty = collected_values['to_write']['quantity']
+        price_unit = collected_values['to_write']['price_unit']
+        line_sign = self._get_allowance_charge_line_sign(qty, price_unit)
+        keys = format_specific_keys or {}
+        allowance_charge_taxes_vals = []
+        for allowance_charge in allowance_charge_vals:
+            charge_sign = self._get_allowance_charge_sign(allowance_charge)
+            is_charge = charge_sign > 0
+            amount = (
+                allowance_charge.get(keys.get('percent'))
+                if allowance_charge.get(keys.get('percent'))
+                else (allowance_charge['amount'] / abs(qty))
+            )
+            allowance_charge['attempt_tax_values'] = tax_values = {
+                'ubl_cii_type': 'charge' if is_charge else 'allowance',
+                'reason_code': allowance_charge.get('reason_code'),
+                'reason': allowance_charge.get('reason'),
+                'amount_type': 'percent' if allowance_charge.get(keys.get('percent')) else 'fixed',
+                'type_tax_use': collected_values['odoo_document_type'],
+                'amount': amount * line_sign * charge_sign,
+            }
+            allowance_charge_taxes_vals.append(tax_values)
+        return allowance_charge_taxes_vals
+
     def _find_value(self, xpaths, tree, nsmap=False):
         """ Iteratively queries the tree using the xpaths and returns a result as soon as one is found """
         if not isinstance(xpaths, (tuple, list)):
@@ -844,7 +899,8 @@ class AccountEdiCommon(models.AbstractModel):
         lines_values = []
         vehicle = self._import_vehicle(tree, 'move', document_type, record.company_id)
         for line_tree in tree.iterfind(xpath):
-            line_values = self.with_company(record.company_id)._retrieve_invoice_line_vals(record, line_tree, document_type, qty_factor)
+            line_values, line_logs = self.with_company(record.company_id)._retrieve_invoice_line_vals(record, line_tree, document_type, qty_factor)
+            logs += line_logs
             if line_values is None:
                 continue
 
@@ -855,7 +911,7 @@ class AccountEdiCommon(models.AbstractModel):
             if self._need_vehicle_id(document_type):
                 line_values['vehicle_id'] = vehicle or self._import_vehicle(line_tree, 'line', document_type, record.company_id)
             lines_values.append(line_values)
-            lines_values += self._retrieve_line_charges(record, line_values, line_values['tax_ids'])
+            self._retrieve_line_allowance_charges(record, line_values)
             if isinstance(record, self.env.registry['account.move']) and hasattr(self.env['account.move.line'], '_get_predicted_values'):
                 for fname, value in self.env['account.move.line']._get_predicted_values(
                     self._get_line_label(line_values),
@@ -903,6 +959,7 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _retrieve_invoice_line_vals(self, record, tree, document_type=False, qty_factor=1):
         # Start and End date (enterprise fields)
+        logs = []
         xpath_dict = self._get_invoice_line_xpaths(document_type, qty_factor)
         deferred_values = {}
         start_date = end_date = None
@@ -916,17 +973,19 @@ class AccountEdiCommon(models.AbstractModel):
                     'deferred_start_date': start_date,
                     'deferred_end_date': end_date,
                 }
-        line_vals = self._retrieve_line_vals(record, tree, document_type, qty_factor)
+
+        line_vals, line_logs = self._retrieve_line_vals(record, tree, document_type, qty_factor)
+        logs += line_logs
         if not line_vals.get('price_subtotal'):
-            return None
+            return None, logs
 
         return {
             **line_vals,
             **deferred_values,
-        }
+        }, logs
 
     @api.model
-    def _retrieve_rebate_val(self, tree, xpath_dict, quantity):
+    def _retrieve_rebate_val(self, company_id, tree, xpath_dict, quantity, net_price_unit):
         # Discount. /!\ as no percent discount can be set on a line, need to infer the percentage
         # from the amount of the actual amount of the discount (the allowance charge)
         rebate = 0
@@ -940,24 +999,60 @@ class AccountEdiCommon(models.AbstractModel):
         return rebate
 
     @api.model
-    def _retrieve_charge_allowance_vals(self, tree, xpath_dict, quantity):
-        charges = []
+    def _is_allowance_charge_node_valid(self, charge_indicator, reason_code, reason, amount):
+        """
+        Check mandatory structural requirements for an AllowanceCharge node.
+        If any of these are failing, the node is considered erroneous and
+        will be ignored.
+
+        References:
+            - PEPPOL-EN16931-R043 for charge_indicator
+            - BR-41, BR-43 for reason/reason_code
+            - BR-42, BR-44 for amount
+        """
+        has_valid_charge_indicator = charge_indicator in ('true', 'false')
+        has_reason = bool(reason_code or reason)
+        has_amount = bool(amount)
+
+        return has_reason and has_valid_charge_indicator and has_amount
+
+    @api.model
+    def _retrieve_allowance_charge_vals(self, company_id, tree, xpath_dict, quantity, net_price_unit):
+        """Retrieves AllowanceCharge nodes of an invoice line and build dictionaries
+        with the relevant details for each allowance/charge.
+        """
+
+        def node_get(allowance_charge_node, name, default=None):
+            return allowance_charge_node.findtext(xpath_dict[name], default=default)
+
+        logs = []
+        allowance_charge_vals = []
         discount_amount = 0
+        has_invalid_nodes = False
         for allowance_charge_node in tree.iterfind(xpath_dict['allowance_charge']):
-            charge_indicator = allowance_charge_node.findtext(xpath_dict['allowance_charge_indicator']) or 'false'
-            amount = float(allowance_charge_node.findtext(xpath_dict['allowance_charge_amount'], default='0'))
-            reason_code = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason_code'], default='')
-            reason = allowance_charge_node.findtext(xpath_dict['allowance_charge_reason'], default='')
-            if charge_indicator.lower() == 'true':
-                charges.append({
-                    'amount': amount,
+            charge_indicator = node_get(allowance_charge_node, 'allowance_charge_indicator', default='').lower()
+            amount = node_get(allowance_charge_node, 'allowance_charge_amount')
+            percent = node_get(allowance_charge_node, 'allowance_charge_percent')
+            reason_code = node_get(allowance_charge_node, 'allowance_charge_reason_code', default='')
+            reason = node_get(allowance_charge_node, 'allowance_charge_reason', default='')
+
+            if self._is_allowance_charge_node_valid(charge_indicator, reason_code, reason, amount):
+                # Handle Allowance/Charge Taxes: when exporting from Odoo, we use the allowance_charge node
+                allowance_charge_vals.append({
+                    'charge_indicator': charge_indicator,
+                    'amount': float(amount),
                     'line_quantity': quantity,
-                    'reason': reason,
+                    'net_price_unit': net_price_unit or 0,
                     'reason_code': reason_code,
+                    'reason': reason,
+                    'percent': float(percent) if percent else None
                 })
             else:
-                discount_amount += amount
-        return discount_amount, charges
+                has_invalid_nodes = True
+
+        if has_invalid_nodes:
+            logs.append(self.env._("Some line-level allowance/charge nodes were invalid and were skipped during import."))
+        return discount_amount, allowance_charge_vals, logs
 
     def _get_basis_qty(self, tree, xpath_dict):
         """ Return the base quantity used to derive the unit price from PriceAmount.
@@ -1046,14 +1141,14 @@ class AccountEdiCommon(models.AbstractModel):
         quantity = delivered_qty * qty_factor
 
         # rebate (optional)
-        rebate = self._retrieve_rebate_val(tree, xpath_dict, quantity)
+        rebate = self._retrieve_rebate_val(record.company_id, tree, xpath_dict, quantity, net_price_unit)
 
         # Charges are collected (they are used to create new lines), Allowances are transformed into discounts
-        discount_amount, charges = self._retrieve_charge_allowance_vals(tree, xpath_dict, quantity)
+        discount_amount, allowance_charge_vals, logs = self._retrieve_allowance_charge_vals(record.company_id, tree, xpath_dict, quantity, net_price_unit)
 
         # price_unit
-        charge_amount = sum(d['amount'] for d in charges)
-        allow_charge_amount = discount_amount - charge_amount
+        allowance_charge_sum = self._get_allowance_charge_sum(allowance_charge_vals)
+        allow_charge_amount = discount_amount - allowance_charge_sum
         if gross_price_unit is not None:
             price_unit = gross_price_unit / basis_qty
         elif net_price_unit is not None:
@@ -1067,7 +1162,7 @@ class AccountEdiCommon(models.AbstractModel):
         discount = 0
         currency = self.env.company.currency_id
         if not float_is_zero(delivered_qty * price_unit, currency.decimal_places) and price_subtotal is not None:
-            inferred_discount = 100 * (1 - (price_subtotal - charge_amount) / currency.round(delivered_qty * price_unit))
+            inferred_discount = 100 * (1 - (price_subtotal - allowance_charge_sum) / currency.round(delivered_qty * price_unit))
             discount = inferred_discount if not float_is_zero(inferred_discount, currency.decimal_places) else 0.0
 
         # Sometimes, the xml received is very bad; e.g.:
@@ -1097,16 +1192,16 @@ class AccountEdiCommon(models.AbstractModel):
             'quantity': quantity,
             'discount': discount,
             'tax_nodes': self._get_tax_nodes(tree),  # see `_retrieve_taxes`
-            'charges': charges,  # see `_retrieve_line_charges`
+            'allowance_charge_vals': allowance_charge_vals,  # see `_retrieve_line_allowance_charges`
             'price_subtotal': price_subtotal,
-        }
+        }, logs
 
         name = self._find_value(xpath_dict['name'], tree) or ''
         if product:
             name = re.sub(rf"^{re.escape(product.name)}($|\n)", "", name)
 
         if name:
-            line_vals['name'] = name
+            line_vals[0]['name'] = name
 
         return line_vals
 
@@ -1212,26 +1307,47 @@ class AccountEdiCommon(models.AbstractModel):
     def _need_vehicle_id(self, document_type):
         return document_type == 'in_invoice' and 'fleet.vehicle' in self.env
 
-    def _retrieve_fixed_tax(self, company_id, fixed_tax_vals):
-        """ Retrieve the fixed tax at import, iteratively search for a tax:
-        1. not price_include matching the name and the amount
-        2. not price_include matching the amount
-        3. price_include matching the name and the amount
-        4. price_include matching the amount
+    def _retrieve_allowance_charge_tax(self, company_id, allowance_charge_tax_vals):
+        """Retrieve the Allowance/Charge tax at import using following approach:
+
+        Matching Algorithm:
+        1. Start by attempting a match using both `reason_code` and `reason` when `reason_code` is available.
+        2. If no match is found, retry using only `reason_code`.
+        3. If `reason_code` is not available, perform a strict match using `reason`.
+        4. For each of the above attempts:
+           a. First, try with `price_include=False`.
+           b. If unsuccessful, retry with `price_include=True`.
         """
-        base_domain = [
+
+        # Normalize fixed tax amount by line quantity.
+        # Example: fixed tax = 1, qty = 2 → AllowanceCharge amount = 2 → per-unit = 1
+        qty = allowance_charge_tax_vals.get('line_quantity') or 1
+        price_unit = allowance_charge_tax_vals.get('net_price_unit', 0)
+        # using abs(qty) here as we handle the sign later with charge_indicator, quantity and net_price_unit.
+        amount = (
+            allowance_charge_tax_vals['percent']
+            if allowance_charge_tax_vals.get('percent')
+            else (allowance_charge_tax_vals['amount'] / abs(qty))
+        )
+
+        line_sign = self._get_allowance_charge_line_sign(qty, price_unit)
+        charge_sign = self._get_allowance_charge_sign(allowance_charge_tax_vals)
+
+        is_charge = charge_sign > 0
+        ubl_cii_type = 'charge' if is_charge else 'allowance'
+        base_domain = Domain([
             *self.env['account.journal']._check_company_domain(company_id),
-            ('amount_type', '=', 'fixed'),
-            ('amount', '=', fixed_tax_vals['amount']),
-        ]
+            ('ubl_cii_type', 'in', ('allowance', 'charge')),
+            ('amount', '=', amount * line_sign * charge_sign),
+            ('amount_type', '=', 'percent' if allowance_charge_tax_vals.get('percent') else 'fixed'),
+            # Taxes corresponding to allowance/charge nodes would always have `include_base_amount` True
+        ])
+        domain = self.env['account.tax']._ubl_cii_allowance_charge_tax_domain(allowance_charge_tax_vals, ubl_cii_type, base_domain)
         for price_include in (False, True):
-            for name in (fixed_tax_vals['reason'], False):
-                domain = base_domain + [('price_include', '=', price_include)]
-                if name:
-                    domain.append(('name', '=', name))
-                tax = self.env['account.tax'].search(domain, limit=1)
-                if tax:
-                    return tax
+            tax_domain = domain + Domain([('price_include', '=', price_include)])
+            tax = self.env['account.tax'].search(tax_domain, limit=1)
+            if tax:
+                return tax
         return self.env['account.tax']
 
     def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=None):
@@ -1256,6 +1372,7 @@ class AccountEdiCommon(models.AbstractModel):
                 ('amount_type', '=', 'percent'),
                 ('type_tax_use', '=', tax_type),
                 ('amount', '=', amount),
+                ('ubl_cii_type', '=', 'tax'),  # to avoid matching allowance/charge taxes when looking for line taxes
             ]
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
@@ -1296,35 +1413,34 @@ class AccountEdiCommon(models.AbstractModel):
                     line_values['price_unit'] *= (1 + tax.amount / 100)
         return taxes, logs
 
-    def _retrieve_line_charges(self, record, line_values, taxes):
+    def _retrieve_line_allowance_charges(self, record, line_values):
         """
-        Handle the charges on the document line at import.
+        Handle the allowance/charges on the invoice line at import.
 
-        For each charge on the line, it creates a new aml.
-        Special case: if the ReasonCode == 'AEO', there is a high chance the xml was produced by Odoo and the
-        corresponding line had a fixed tax, so it first tries to find a matching fixed tax to apply to the current aml.
+        If an allowance/charge matches a configured tax, the tax is applied to the line.
+        Otherwise, price_subtotal is adjusted to represent the allowance/charge.
         """
-        charges_vals = []
-        for charge in line_values.pop('charges'):
-            if not charge['line_quantity']:
-                continue
+        tax_map = [
+            (val, self._retrieve_allowance_charge_tax(record.company_id, val))
+            for val in line_values.pop('allowance_charge_vals')
+        ]
 
-            if charge['reason_code'] == 'AEO':
-                # a 1 eur fixed tax on a line with quantity=2 will yield an AllowanceCharge with amount = 2
-                charge_copy = charge.copy()
-                charge_copy['amount'] /= charge_copy['line_quantity']
-                if tax := self._retrieve_fixed_tax(record.company_id, charge_copy):
-                    taxes.append(tax.id)
-                    if tax.price_include:
-                        line_values['price_unit'] += tax.amount
-                    continue
-
-            price_subtotal_before = line_values['price_unit'] * charge['line_quantity'] * (1.0 - line_values['discount'] / 100.0)
-            price_subtotal_after = price_subtotal_before + charge['amount']
-            line_values['price_unit'] += charge['amount'] / charge['line_quantity']
-            new_price_subtotal_before_discount = line_values['price_unit'] * charge['line_quantity']
-            line_values['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
-        return record._get_line_vals_list(charges_vals)
+        # Apply taxes only if all are found.
+        # Otherwise adjust price_subtotal to avoid wrong tax base interactions.
+        if tax_map and all(tax for _, tax in tax_map):
+            for val, tax in tax_map:
+                line_values['tax_ids'].append(tax.id)
+                if tax.price_include:
+                    line_values['price_unit'] += tax.amount
+        else:
+            for val, _ in tax_map:
+                qty = val.get('line_quantity', 1)
+                charge_sign = self._get_allowance_charge_sign(val)
+                price_subtotal_before = line_values['price_unit'] * qty * (1.0 - line_values['discount'] / 100.0)
+                price_subtotal_after = price_subtotal_before + (val['amount'] * charge_sign)
+                line_values['price_unit'] += ((val['amount'] / qty) * charge_sign)
+                new_price_subtotal_before_discount = line_values['price_unit'] * qty
+                line_values['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
 
     def _get_document_allowance_charge_xpaths(self):
         # OVERRIDE
@@ -1541,6 +1657,8 @@ class AccountEdiCommon(models.AbstractModel):
             collected_values['to_write']['partner_bank_id'] = partner_banks.sorted(lambda bank: not bank.allow_out_payment)[:1].id
 
     def _import_invoice_predict_values(self, collected_values):
+        company = collected_values['company']
+        get_domain_from_tax_vals = self.env['account.tax']._get_domain_from_tax_vals
         if (
             self.module_installed('account_accountant')
             and (partner := collected_values.get('customer_values', {}).get('customer'))
@@ -1548,18 +1666,8 @@ class AccountEdiCommon(models.AbstractModel):
             for line_collected_values in collected_values['lines_collected_values']:
                 taxes_values = line_collected_values['taxes_values']
                 line_domain = []
-                if len(taxes_values) == 1:
-                    tax_domain = [
-                        ('amount_type', '=', taxes_values[0]['amount_type']),
-                        ('type_tax_use', '=', taxes_values[0]['type_tax_use']),
-                    ]
-                    if taxes_values[0]['amount'] or taxes_values[0].get('ubl_cii_tax_category_code') != 'AE':
-                        tax_domain.append(('amount', '=', taxes_values[0]['amount']))
-                    else:
-                        # Reverse charge taxes can be reported as 0% in the document even though
-                        # the tax itself isn't, so ignore the amount and rely on the category code.
-                        tax_domain.append(('ubl_cii_tax_category_code', '=', 'AE'))
-                    line_domain = [('tax_ids', 'any', tax_domain)]
+                for tax_values in taxes_values:
+                    line_domain.extend([('tax_ids', 'any', get_domain_from_tax_vals(company, tax_values))])
 
                 line_collected_values['predicted_vals'] = self.env['account.move.line']._get_predicted_values(
                     name=line_collected_values['name'],
@@ -1570,6 +1678,12 @@ class AccountEdiCommon(models.AbstractModel):
                     }),
                     line_domain=line_domain,
                 )
+
+                # Set the tax field in the tax_values dict to the predicted tax record, if any.
+                if tax_ids := line_collected_values['predicted_vals'].get('tax_ids', []):
+                    for tax_values in taxes_values:
+                        if tax := tax_ids.filtered_domain(get_domain_from_tax_vals(company, tax_values)):
+                            tax_values['tax'] = tax
 
     def _import_retrieve_products_search_plan(self, collected_values):
         ProductProduct = self.env['product.product']
@@ -1666,18 +1780,7 @@ class AccountEdiCommon(models.AbstractModel):
         lines_collected_values = collected_values['lines_collected_values']
         tax_values_list = list(collected_values.setdefault('taxes_values', {}))
         for line_collected_values in lines_collected_values:
-            if account := line_collected_values['account_values'].get('account'):
-                for tax_values in line_collected_values['taxes_values']:
-                    tax_values['account'] = account
-            line_tax_values_list = line_collected_values['taxes_values']
-            if predicted_tax_ids := line_collected_values.get('predicted_vals', {}).get('tax_ids'):
-                for line_tax_values in line_tax_values_list:
-                    line_tax_values['predicted_tax_ids'] = predicted_tax_ids
-            tax_values_list.extend(line_tax_values_list)
-
-        for allowance_charge_value in collected_values['allowances'] + collected_values['charges']:
-            if tax_values := allowance_charge_value.get('taxes_values'):
-                tax_values_list.append(tax_values)
+            tax_values_list.extend(line_collected_values['taxes_values'])
 
         for tax_values in tax_values_list:
             tax_values['extra_domain'] = [('price_include_override', 'in', [False, 'tax_excluded'])]
@@ -1717,7 +1820,7 @@ class AccountEdiCommon(models.AbstractModel):
                     ))
                 else:
                     logs.append(self.env._(
-                        "Could not retrieve the tax: %s for the document level allowance/charge.",
+                        "Could not retrieve the tax: %s for the document line level allowance/charge.",
                         tax_values['amount'],
                     ))
 
@@ -1854,29 +1957,41 @@ class AccountEdiCommon(models.AbstractModel):
         for line_collected_values in lines_collected_values:
             to_write = line_collected_values['to_write']
 
-            # Extract charges matched with a fixed tax.
-            for charge in line_collected_values['charges']:
-                attempt_tax_values = charge.get('attempt_tax_values')
-                if not attempt_tax_values or not attempt_tax_values.get('tax'):
-                    continue
-
-                # Suppose price_unit = 19, quantity = 10, discount = 10%
-                # for a total of 190 (before discount) and 171 (after discount).
-                # A charge of 25 is already accounted in 190 and we retrieve a fixed tax of 50 / 10 = 5.
-                # We need now to extract 25 from 190 as:
-                # price_subtotal_before = 171
-                # price_subtotal_after = 171 - 50 = 121
-                # price_unit = 19 - 5 = 14
-                # new_price_subtotal_before_discount = 140
-                # discount = (1 - (121 / 140)) * 100 = 13.5714286%
-                # That way, 14 * 10 * (1 - 0.135714286) = 121.
-                # The fix tax is giving an amount of 50.
-                # 121 + 50 = the original 171 we had at the beginning!
-                price_subtotal_before = to_write['price_unit'] * to_write['quantity'] * (1.0 - to_write['discount'] / 100.0)
-                price_subtotal_after = price_subtotal_before - charge['amount']
-                to_write['price_unit'] -= charge['amount'] / to_write['quantity']
-                new_price_subtotal_before_discount = to_write['price_unit'] * to_write['quantity']
-                to_write['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
+            # Extract allowance/charges matched with a tax.
+            # We have already added allowance/charge to price_unit beforehand.
+            # We will remove them from price_unit only if we find all allowance_charge tax.
+            # This is because we can get wrong effect if we find partial taxes due to include_base_amount.
+            allowance_charge_vals = line_collected_values['allowance_charge_vals']
+            attempt_tax_values = [allowance_charge.get('attempt_tax_values') for allowance_charge in allowance_charge_vals]
+            if all(val.get('tax') for val in attempt_tax_values):
+                currency = line_collected_values['currency_values']['currency']
+                for allowance_charge in allowance_charge_vals:
+                    # Suppose price_unit = 19, quantity = 10, discount = 10%
+                    # for a total of 190 (before discount) and 171 (after discount).
+                    # A charge of 25 is already accounted in 190 and we retrieve a fixed tax of 50 / 10 = 5.
+                    # We need now to extract 25 from 190 as:
+                    # price_subtotal_before = 171
+                    # price_subtotal_after = 171 - 50 = 121
+                    # price_unit = 19 - 5 = 14
+                    # new_price_subtotal_before_discount = 140
+                    # discount = (1 - (121 / 140)) * 100 = 13.5714286%
+                    # That way, 14 * 10 * (1 - 0.135714286) = 121.
+                    # The fix tax is giving an amount of 50.
+                    # 121 + 50 = the original 171 we had at the beginning!
+                    charge_sign = self._get_allowance_charge_sign(allowance_charge)
+                    price_subtotal_before = to_write['price_unit'] * to_write['quantity'] * (1.0 - to_write['discount'] / 100.0)
+                    price_subtotal_after = price_subtotal_before - (allowance_charge['amount'] * charge_sign)
+                    to_write['price_unit'] -= ((allowance_charge['amount'] / to_write['quantity']) * charge_sign)
+                    new_price_subtotal_before_discount = to_write['price_unit'] * to_write['quantity']
+                    # The whole line amount may come from the allowance/charge (e.g. a charge on a line with a zero net price).
+                    # In that case, there is nothing left to discount.
+                    if currency.is_zero(new_price_subtotal_before_discount):
+                        to_write['discount'] = 0.0
+                    else:
+                        to_write['discount'] = (1 - (price_subtotal_after / new_price_subtotal_before_discount)) * 100.0
+            else:
+                for val in attempt_tax_values:
+                    val.pop('tax', None)
 
             # Product line.
             base_line_kwargs = self._import_invoice_line_get_product_base_line_kwargs(line_collected_values)
