@@ -3,21 +3,10 @@ from datetime import UTC
 from zoneinfo import ZoneInfo
 
 from odoo import fields, models
-from odoo.fields import Domain
 
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
-
-    def _get_calendar_attendance_domain(self):
-        """Exclude the schedule attendances whose work entry type counts as an absence."""
-        return Domain.AND([
-            super()._get_calendar_attendance_domain(),
-            Domain.OR([
-                Domain("work_entry_type_id", "=", False),
-                Domain("work_entry_type_id.count_as", "!=", "absence")
-            ]),
-        ])
 
     def _compute_hours_last_month(self):
         """Recompute ``hours_last_month_overtime`` from the time rule outputs overlapping the
