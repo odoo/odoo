@@ -136,6 +136,7 @@ export class TicketScreen extends Component {
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;
+        this.state.page = 1;
         this.pos.screenState.ticketSCreen.totalCount = 0;
         this.pos.screenState.ticketSCreen.offsetByDomain = {};
 
