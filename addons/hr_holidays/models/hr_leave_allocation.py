@@ -1100,7 +1100,7 @@ class HrLeaveAllocation(models.Model):
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
             allocation_notif_subtype_id = self.holiday_status_id.allocation_notif_subtype_id
-            return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
+            return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False)
         return super()._track_subtype(init_values)
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
