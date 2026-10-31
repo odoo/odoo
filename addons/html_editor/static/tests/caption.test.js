@@ -1754,3 +1754,20 @@ test("should ignore figure with multiple images", async () => {
         ),
     });
 });
+
+test.tags("focus required");
+test("loading an image with a caption within a figure nested within a figure embeds it", async () => {
+    const { editor } = await setupEditorWithEmbeddedCaption(`
+        <figure>
+            <figure>
+                <img class="img-fluid test-image" src="${base64Img}">
+                <figcaption>Hello</figcaption>
+            </figure>
+        </figure>
+    `);
+    const image = queryOne("img");
+    expect(image.getAttribute("data-caption")).toBe("Hello");
+    const span = queryOne("figure > figcaption > span.o_caption_editable");
+    expect(span.textContent).toBe("Hello");
+    expect(editor.document.activeElement).toBe(span);
+});

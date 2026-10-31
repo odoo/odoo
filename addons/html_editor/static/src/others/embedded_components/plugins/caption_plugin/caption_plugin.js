@@ -82,8 +82,7 @@ export class CaptionPlugin extends Plugin {
             if (root.matches(CAPTION_SPAN_SELECTOR)) {
                 figures = [closestElement(root, "figure")];
             } else {
-                figures = [...root.querySelectorAll("figure")]
-                    .filter(figure => figure.querySelectorAll("img").length === 1);
+                figures = this.getFiguresWithImages(root);
             }
             figures.forEach((figure) => {
                 const captionSpan = figure.querySelector(CAPTION_SPAN_SELECTOR);
@@ -118,8 +117,7 @@ export class CaptionPlugin extends Plugin {
     };
 
     setup() {
-        const figures = [...this.editable.querySelectorAll("figure")]
-            .filter(figure => figure.querySelectorAll("img").length === 1);
+        const figures = this.getFiguresWithImages(this.editable);
         for (const figure of figures) {
             const image = figure.querySelector("img");
             figure.before(image);
@@ -141,6 +139,12 @@ export class CaptionPlugin extends Plugin {
 
     getCaptionId() {
         return "" + Math.floor(Math.random() * Date.now());
+    }
+
+    getFiguresWithImages( root ) {
+    return [...root.querySelectorAll("figure")]
+                    .filter(figure => figure.querySelectorAll("img").length === 1
+                                        && figure.querySelectorAll("figure:has(img)").length == 0);
     }
 
     hasImageCaption(image) {
@@ -249,8 +253,7 @@ export class CaptionPlugin extends Plugin {
     }
 
     cleanForSave({ root }) {
-        const figures = [...root.querySelectorAll("figure")]
-            .filter(figure => figure.querySelectorAll("img").length === 1);
+        const figures = this.getFiguresWithImages(root);
         for (const figure of figures) {
             figure.removeAttribute("contenteditable");
             const image = figure.querySelector("img");
