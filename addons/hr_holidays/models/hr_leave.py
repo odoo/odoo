@@ -1158,9 +1158,10 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
 
         self._notify_manager()
-        validated_holidays = self.filtered(lambda hol: hol.state == 'validate1')
-        validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
-        (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
+        # as when approving, the refusal of the second approval is done by the second approver
+        second_approval_holidays = self.filtered(lambda hol: hol.state == 'validate1' or (hol.state == 'validate' and hol.validation_type == 'both'))
+        second_approval_holidays.write({'state': 'refuse', 'second_approver_id': current_employee.id})
+        (self - second_approval_holidays).write({'state': 'refuse', 'first_approver_id': current_employee.id})
         # Delete the meeting
         self.mapped('meeting_id').write({'active': False})
         # Post a second message, more verbose than the tracking message
