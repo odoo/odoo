@@ -150,6 +150,19 @@ class TestClassproperty(BaseCase):
         self.assertEqual(Foo().count, 2)
         self.assertEqual(Foo.value, 2)
 
+    def test_lazy_classproperty_lambdas(self):
+        class Foo:
+            first = lazy_classproperty(lambda cls: 'first')
+            second = lazy_classproperty(lambda cls: 'second')
+
+        self.assertEqual(Foo.first, 'first')
+        self.assertEqual(Foo.second, 'second')
+        self.assertEqual(Foo().second, 'second')
+
+        reset_lazy_classproperties(Foo)
+        self.assertEqual(Foo.second, 'second')
+        self.assertEqual(Foo.first, 'first')
+
     def test_lazy_classproperty_inheritance(self):
         count = 0
 
