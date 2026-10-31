@@ -22,12 +22,8 @@ class PaypalOnboardingTest(PaypalCommon, PaymentHttpCommon):
 
     def test_onboarding_status_enables_tokenization_when_vaulting_is_active(self):
         self.paypal.allow_tokenization = False
-        with patch.object(
-            self.env.registry["payment.provider"],
-            "_send_api_request",
-            return_value={
-                "capabilities": [{"name": const.VAULTING_CAPABILITY, "status": "ACTIVE"}]
-            },
+        with self._mock_send_api_request(
+            return_value={"capabilities": [{"name": const.VAULTING_CAPABILITY, "status": "ACTIVE"}]}
         ):
             self.paypal._paypal_update_onboarding_status()
         self.assertTrue(self.paypal.allow_tokenization)
@@ -47,11 +43,7 @@ class PaypalOnboardingTest(PaypalCommon, PaymentHttpCommon):
     def test_merchant_webhook_with_unverified_origin_does_not_confirm_seller_email(self):
         self.paypal.paypal_account_id = self.merchant_notification["resource"]["merchant_id"]
         url = self._build_url(const.WEBHOOK_ROUTE)
-        with patch.object(
-            self.env.registry["payment.provider"],
-            "_send_api_request",
-            return_value={"verification_status": "FAILURE"},
-        ):
+        with self._mock_send_api_request(return_value={"verification_status": "FAILURE"}):
             self._make_json_request(url, data=self.merchant_notification)
         self.assertFalse(self.paypal.paypal_email_confirmed)
 
@@ -65,15 +57,13 @@ class PaypalOnboardingTest(PaypalCommon, PaymentHttpCommon):
         # A single mocked response serves the token, credentials, status and webhook requests.
         with (
             MockRequest(self.env),
-            patch.object(
-                self.env.registry["payment.provider"],
-                "_send_api_request",
+            self._mock_send_api_request(
                 return_value={
                     "access_token": "onboarding_token",
                     "client_id": "merchant_client_id",
                     "client_secret": "merchant_client_secret",
                     "payer_id": "MERCHANT123",
-                },
+                }
             ),
         ):
             PaypalOnboardingController().finalize_onboarding(
