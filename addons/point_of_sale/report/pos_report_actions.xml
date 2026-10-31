@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_pos_sales_detail" model="ir.actions.client">
+        <field name="name">Sales Details</field>
+        <field name="tag">pos_report</field>
+        <field name="path">sale-detail</field>
+        <field name="context" eval="{'report_id': ref('point_of_sale.pos_sales_detail_report')}"/>
+    </record>
+
+    <record id="action_pos_session_sales_detail" model="ir.actions.server">
+        <field name="name">Sales Details</field>
+        <field name="model_id" ref="point_of_sale.model_pos_session"/>
+        <field name="binding_model_id" ref="point_of_sale.model_pos_session"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.pos_sales_detail_report_action()</field>
+    </record>
+
+    <menuitem
+        id="menu_pos_sales_detail"
+        name="Sales Details"
+        parent="point_of_sale.menu_point_rep"
+        action="action_pos_sales_detail"
+        sequence="4"
+    />
+</odoo>

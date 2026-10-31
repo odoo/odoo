@@ -26,9 +26,7 @@
         'data/point_of_sale_tour.xml',
         'data/mail_template_data.xml',
         'data/ir_config_parameter_data.xml',
-        'wizard/pos_details.xml',
         'wizard/pos_payment.xml',
-        'wizard/pos_daily_sales_reports.xml',
         'wizard/pos_confirmation_wizard.xml',
         'wizard/pos_make_invoice.xml',
         'wizard/pos_price_inclusion_wizard.xml',
@@ -53,7 +51,6 @@
         'views/digest_views.xml',
         'views/res_partner_view.xml',
         'views/report_userlabel.xml',
-        'views/report_saledetails.xml',
         'views/pos_preset_view.xml',
         'views/point_of_sale_dashboard.xml',
         'views/report_invoice.xml',
@@ -62,7 +59,6 @@
         'views/res_config_settings_views.xml',
         'views/customer_display_index.xml',
         'views/account_move_views.xml',
-        'views/pos_session_sales_details.xml',
         'views/product_tag_views.xml',
         'receipt/pos_receipt_common.xml',  # needed in the backend and frontend
         'receipt/pos_order_receipt.xml',  # needed in the backend and frontend
@@ -72,6 +68,10 @@
         'receipt/pos_cash_move_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_sale_details_receipt.xml',  # needed in the backend and frontend
         'data/ir_cron_data.xml',
+        'report/pos_report_data.xml',
+        'report/pos_report_actions.xml',
+        'report/pos_report_pdf_templates.xml',
+        'report/pos_sales_detail_report.xml',
         'security/ir.access.csv',
     ],
     'demo': [
@@ -119,6 +119,12 @@
             'point_of_sale/static/src/backend/print_receipt/*',
             'point_of_sale/static/src/app/utils/printer/base_printer.js',
             'point_of_sale/static/src/app/utils/printer/epson_printer.js',
+            'point_of_sale/static/src/pos_reports/**/*',
+            ('remove', 'point_of_sale/static/src/pos_reports/scss/pos_report_pdf_export.scss'),
+        ],
+        'point_of_sale.assets_pdf_export': [
+            ('include', 'web.report_assets_common'),
+            'point_of_sale/static/src/pos_reports/scss/pos_report_pdf_export.scss',
         ],
         'web.assets_backend_lazy': [
             'point_of_sale/static/src/backend/views/pivot/*',

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="pos_report_pdf_header_employee" inherit_id="point_of_sale.pos_report_pdf_header" primary="True">
+            <xpath expr="//h2[@id='title']" position="attributes">
+                <attribute name="t-out">'Employee Sales Report' if report_context.get('employee_name') else report_context.get('report_name')</attribute>
+            </xpath>
+
+            <xpath expr="//div[@id='meta']" position="inside">
+                <t t-if="report_context.get('employee_name')">
+                    <h5>
+                        Employee: <span t-out="report_context['employee_name']"/>
+                    </h5>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="pos_report_pdf_layout" name="POS Report PDF Layout">
+            <html t-att-lang="lang and lang.replace('_', '-')"
+                  t-att-data-report-margin-top="8"
+                  t-att-data-report-margin-bottom="8"
+                  t-att-data-report-header-spacing="data_report_header_spacing"
+                  t-att-data-report-dpi="data_report_dpi"
+                  t-att-data-report-landscape="data_report_landscape"
+                  t-att-web-base-url="web_base_url">
+                <head>
+                    <base t-att-href="web_base_url"/>
+                    <meta charset="utf-8"/>
+                    <meta name="viewport" content="initial-scale=1"/>
+                    <title>
+                        <t t-out="report_name or 'Odoo Report'"/>
+                    </title>
+
+                    <t t-call-assets="point_of_sale.assets_pdf_export" t-autoprefix="true"/>
+
+                    <script type="text/javascript">
+                        document.addEventListener('DOMContentLoaded', () => {
+                            if (window.self !== window.top) {
+                                document.body.classList.add("o_in_iframe", "container-fluid");
+                                document.body.classList.remove("container");
+                            }
+                        });
+                    </script>
+                </head>
+                <body t-attf-class="o_body_html {{'container' if not full_width else 'container-fluid'}} overflow-x-hidden" t-att-dir="env['res.lang']._get_data(code=lang or env.user.lang).direction or 'ltr'">
+                    <div id="wrapwrap">
+                        <main>
+                            <t t-out="0"/>
+                        </main>
+                    </div>
+                </body>
+            </html>
+        </template>
+
+        <template id="pos_report_pdf_main">
+            <t t-call="point_of_sale.pos_report_pdf_layout">
+                <t t-foreach="report_contexts" t-as="report_context">
+                    <div class="o_pos_report" t-att-style="'' if report_context_first else 'page-break-before: always;'">
+                        <t t-set="report_name" t-value="report_context.get('report_name')"/>
+                        <t t-set="generation_date" t-value="report_context.get('generation_date')"/>
+                        <t t-set="sections" t-value="report_context.get('sections', [])"/>
+                        <t t-set="pdf_templates" t-value="report_context.get('pdf_templates') or {}"/>
+
+                        <t t-call="{{pdf_templates.get('header', 'point_of_sale.pos_report_pdf_header')}}"/>
+
+                        <div class="row">
+                            <div class="col-12 text-end mt-2">
+                                <span class="badge bg-light text-dark border border-dark p-2">
+                                    <strong>
+                                        As of <t t-out="generation_date"/>
+                                    </strong>
+                                </span>
+                            </div>
+                        </div>
+
+                        <t t-foreach="sections" t-as="section">
+                            <t t-set="section_columns" t-value="section.get('columns', [])"/>
+
+                            <table class="table table-borderless mb-5">
+                                <thead>
+                                    <tr>
+                                        <th class="o_pdf_col_0"/>
+                                        <t t-foreach="section_columns" t-as="col">
+                                            <th t-att-class="'o_pdf_col_' + str(col_index + 1) + ' o_pdf_align_' + (col.get('align') or 'right')">
+                                                <span t-out="col.get('label', '')"/>
+                                            </th>
+                                        </t>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <t t-set="row" t-value="section"/>
+                                    <t t-set="row_level" t-value="0"/>
+                                    <t t-call="{{pdf_templates.get('data_row', 'point_of_sale.pos_report_pdf_data_row')}}"/>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+        <template id="pos_report_pdf_header">
+            <header class="bg-300 p-3" id="header">
+                <div class="row">
+                    <div class="col-3 d-flex flex-column justify-content-center">
+                        <br/>
+                        <br/>
+                        <div class="text-start" style="font-size:0.85rem;">
+                            <span t-out="env.company.name"/>
+                            <address class="mb-0 text-muted" t-field="env.company.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+                        </div>
+                    </div>
+
+                    <div class="col-6 text-center">
+                        <h2 id="title" t-out="report_name"/>
+
+                        <div id="meta">
+                            <t t-if="report_context.get('date_start') and report_context.get('date_stop')">
+                                <div style="white-space: nowrap;">
+                                    <span t-out="report_context['date_start']"/>
+                                    -
+                                    <span t-out="report_context['date_stop']"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </template>
+
+        <template id="pos_report_pdf_data_row">
+            <t t-set="row_style" t-value="row.get('style', 'normal')"/>
+            <t t-set="tr_classes" t-value="'o_pdf_level_' + str(row_level) + (' o_pdf_total_row' if row_level == 0 else '') + (' o_pdf_bold_row' if row_style == 'bold' else '')"/>
+
+            <tr t-att-class="tr_classes">
+                <td t-att-class="'o_pdf_col_0 o_pdf_level_' + str(row_level)">
+                    <span t-out="row.get('name', '')"/>
+                </td>
+
+                <t t-foreach="section_columns" t-as="col">
+                    <t t-set="val" t-value="row.get('values', {}).get(col.get('id', ''), '')"/>
+                    <td t-att-class="'o_pdf_col_' + str(col_index + 1) + ' o_pdf_align_' + (col.get('align') or 'right')">
+                        <t t-if="val != '' and val is not None">
+                            <span t-out="val"/>
+                        </t>
+                        <t t-else="">&#160;</t>
+                    </td>
+                </t>
+            </tr>
+
+            <t t-if="row.get('lines')">
+                <t t-set="parent_level" t-value="row_level"/>
+                <t t-foreach="row['lines']" t-as="child">
+                    <t t-set="row" t-value="child"/>
+                    <t t-set="row_level" t-value="parent_level + 1"/>
+                    <t t-call="{{(pdf_templates or {}).get('data_row', 'point_of_sale.pos_report_pdf_data_row')}}"/>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

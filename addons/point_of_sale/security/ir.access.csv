@@ -39,11 +39,9 @@ access_pos_payment_method_manager,pos.payment.method manager,pos.payment.method,
 rule_pos_payment_method_multi_company,PoS Payment Method,pos.payment.method,,crud,"[('company_id', 'in', company_ids)]"
 access_product_combo_pos_user,product.combo user,product.combo,point_of_sale.group_pos_user,r,
 access_product_combo_item_pos_user,product.combo.item user,product.combo.item,point_of_sale.group_pos_user,r,
-access_pos_details_wizard,access.pos.details.wizard,pos.details.wizard,point_of_sale.group_pos_manager,cru,
-access_pos_make_payment,access.pos.make.payment,pos.make.payment,point_of_sale.group_pos_user,cru,
+access_pos_make_payment,access.pos.make.payment,pos.make.payment,point_of_sale.group_pos_manager,cru,
 access_account_cash_rounding_pos_user,account.cash.rounding pos_user,account.cash.rounding,point_of_sale.group_pos_user,r,
 access_pos_bill,pos.bill pos_user,pos.bill,point_of_sale.group_pos_user,crud,
-access_pos_daily_sales_reports_wizard,access.pos.daily.sales.reports.wizard,pos.daily.sales.reports.wizard,point_of_sale.group_pos_manager,cru,
 rule_invoice_pos_user,Invoice POS User,account.move,point_of_sale.group_pos_user,r,"[('pos_order_ids', '!=', False)]"
 access_pos_note,pos.note.user,pos.note,point_of_sale.group_pos_user,r,
 access_pos_note_manager,pos.note.manager,pos.note,point_of_sale.group_pos_manager,crud,
@@ -61,3 +59,5 @@ access_preparation_order,pos.prep.order,pos.prep.order,point_of_sale.group_pos_u
 access_pos_price_inclusion_wizard,pos.price.inclusion.wizard.user,pos.price.inclusion.wizard,point_of_sale.group_pos_user,crud
 access_account_bank_statement,account.bank.statement,account.bank.statement,point_of_sale.group_pos_user,cru
 access_account_bank_statement_manager,account.bank.statement,account.bank.statement,point_of_sale.group_pos_manager,crud
+access_pos_report_user,pos.report.user,pos.report,point_of_sale.group_pos_user,r
+access_pos_report_manager,pos.report.manager,pos.report,point_of_sale.group_pos_manager,cru

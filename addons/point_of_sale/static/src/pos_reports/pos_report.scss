@@ -1,0 +1,161 @@
+.pos_report {
+    .o_report_grid {
+        background-color: $o-view-background-color;
+        font-size: 0.8rem;
+        margin: 24px auto;
+        padding: 24px;
+        width: fit-content;
+        min-width: 800px;
+        max-width: calc(100% - 48px);
+        border: 1px solid $o-gray-300;
+    }
+
+    .o_report_section_block {
+        grid-template-columns: minmax(260px, 1.5fr) repeat(var(--num-data-cols, 1), minmax(110px, auto));
+        margin: 0;
+        margin-top: 20px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
+    .o_report_section_title {
+        grid-column: 1 / -1;
+        padding: 10px 12px 6px;
+        text-transform: uppercase;
+        border-bottom: 1px solid $o-gray-300;
+    }
+
+    .o_report_header_row {
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+
+        @supports not (grid-template-columns: subgrid) {
+            grid-template-columns: minmax(260px, 1.5fr) repeat(var(--num-data-cols, 1), minmax(110px, auto));
+        }
+    }
+
+    .o_report_column_header {
+        padding: 2px 12px 4px;
+        color: $o-gray-600;
+    }
+
+    .o_report_row {
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        transition: background-color 0.1s ease;
+
+        @supports not (grid-template-columns: subgrid) {
+            grid-template-columns: minmax(260px, 1.5fr) repeat(var(--num-data-cols, 1), minmax(110px, auto));
+        }
+
+        &:hover {
+            --row-action-color: #{ #02c7b5 };
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        &.line_level_0 {
+            color: $o-gray-700;
+            background-color: $o-gray-300;
+
+            .o_report_name_cell,
+            .o_report_cell {
+                background-color: $o-gray-300;
+                border-bottom: 0;
+                font-weight: bold;
+            }
+
+            &:hover {
+                background-color: darken($o-gray-300, 2%);
+                .o_report_name_cell,
+                .o_report_cell {
+                    background-color: darken($o-gray-300, 2%);
+                }
+            }
+        }
+
+        &.line_level_1, &.line_level_2, &.line_level_3, &.line_level_4, &.line_level_5 {
+            color: $o-gray-700;
+        }
+
+        &.o_report_unfolded {
+            > .o_report_name_cell {
+                font-weight: bold;
+            }
+        }
+    }
+
+    .o_report_name_cell {
+        padding: 4px 12px;
+        min-height: 28px;
+        border-bottom: 1px solid var(--border-color);
+
+        &.o_report_foldable {
+            cursor: pointer;
+
+            &:hover .o_report_toggle {
+                color: #02c7b5;
+            }
+        }
+    }
+
+    .o_report_cell {
+        padding: 4px 12px;
+        min-height: 28px;
+        border-bottom: 1px solid var(--border-color);
+
+        &:empty::after {
+            content: "\00a0"; // Prevents collapse of empty cells
+        }
+    }
+
+    .o_report_toggle {
+        width: 24px;
+        border: none;
+        background: transparent;
+        color: $o-gray-400;
+        font-size: 0.8rem;
+        transition: color 0.15s ease;
+
+        &:hover {
+            color: #02c7b5;
+        }
+
+        &.o_report_toggle_empty {
+            color: transparent;
+            pointer-events: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .o_report_grid {
+            margin: 12px;
+            padding: 12px;
+            min-width: auto;
+            max-width: 100%;
+        }
+
+        .o_report_section_block {
+            grid-template-columns: minmax(150px, 1.2fr) repeat(var(--num-data-cols, 1), minmax(70px, auto));
+        }
+    }
+
+    @media print {
+        .o_report_grid {
+            border: 0;
+            padding: 0;
+            margin: 0;
+            max-width: 100%;
+        }
+
+        .o_report_section_block {
+            border-bottom: 1px solid #ccc;
+            page-break-inside: avoid;
+        }
+
+        .o_report_toggle {
+            display: none;
+        }
+    }
+}

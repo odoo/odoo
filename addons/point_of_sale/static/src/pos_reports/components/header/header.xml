@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="pos_reports.Header">
+        <div class="o_report_section_title fw-semibold">
+            <span t-out="this.props.sectionName"/>
+        </div>
+
+        <div class="o_report_header_row d-grid p-0">
+            <div class="o_report_header_spacer"/>
+            <t t-foreach="this.props.columns" t-as="col" t-key="col.id">
+                <div class="o_report_column_header fw-medium" t-att-class="'text-' + (col.align === 'right' ? 'end' : 'start')">
+                    <span t-out="col.label"/>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

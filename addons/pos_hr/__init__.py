@@ -2,7 +2,6 @@
 
 from . import models
 from . import report
-from . import wizard
 
 
 def uninstall_hook(env):
