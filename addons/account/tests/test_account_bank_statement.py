@@ -1309,6 +1309,28 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             'amount_currency': 0.0,
         }])
 
+    def test_statement_line_amount_rounded_at_creation(self):
+        """ Test amount of a statement line must be stored rounded with the journal's currency """
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'line_ids': [
+                Command.create({
+                    'date': '2026-01-01',
+                    'payment_ref': 'line_1',
+                    'journal_id': self.bank_journal_1.id,
+                    'amount': -37.49999999999999,
+                }),
+            ],
+        })
+        self.assertRecordValues(statement.line_ids, [
+            {'currency_id': self.currency_1.id},
+        ])
+
+        self.assertEqual(
+            self.env['account.bank.statement.line'].search([('journal_id', '=', self.bank_journal_1.id), ('amount', '=', -37.5)]),
+            statement.line_ids,
+        )
+
     def test_statement_balance_warnings(self):
         ''' Ensure that new statements have the correct opening/closing balances or warnings '''
         lines = [
