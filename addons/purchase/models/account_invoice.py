@@ -231,7 +231,7 @@ class AccountMove(models.Model):
                 'partner_id': self.partner_id.id,
             },
             'domain': [
-                ('partner_id', 'in', (self.partner_id | self.partner_id.commercial_partner_id).ids),
+                ('partner_id.commercial_partner_id', '=', self.partner_id.commercial_partner_id.id),
                 ('company_id', 'in', self.env.companies.ids),
                 ('company_id', 'child_of', self.company_id.ids),
                 '|', '|', '|',
