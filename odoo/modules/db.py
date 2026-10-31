@@ -385,6 +385,35 @@ def _create_empty_database(db_name: str) -> None:
         _logger.warning("Unable to make public schema public-accessible: %s", e)
 
 
+def log_missing_extension_hint(db_name, extension_name):
+    template = config['db_template']
+
+    def super_psql(db, sql):
+        return f"\tsudo -u postgres psql -d {db} -c '{sql}'"
+
+    create_ext = f'CREATE EXTENSION IF NOT EXISTS {extension_name} WITH SCHEMA public;'
+    add_extension_cmds = [super_psql(db_name, create_ext)]
+
+    if template == 'template0':
+        # template0 disallows connections by default: open it, add the extension
+        # so future databases inherit it, then close it again. Other templates
+        # (template1, custom) keep connections enabled, so restoring
+        # ALLOW_CONNECTIONS false would wrongly lock them out.
+        add_extension_cmds += [
+            super_psql('postgres', f'ALTER DATABASE {template} ALLOW_CONNECTIONS true;'),
+            super_psql(template, create_ext),
+            super_psql('postgres', f'ALTER DATABASE {template} ALLOW_CONNECTIONS false;'),
+        ]
+    else:
+        add_extension_cmds.append(super_psql(template, create_ext))
+
+    _logger.warning(
+            "PostgreSQL extension %r is required but not installed, and creating it "
+            "needs a superuser. Enable it as a database administrator:\n%s",
+            extension_name, '\n'.join(add_extension_cmds),
+    )
+
+
 def _initialize_db(
     db_name: str,
     *,
