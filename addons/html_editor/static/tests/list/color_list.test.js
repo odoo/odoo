@@ -259,6 +259,39 @@ test("should remove color from partially selected list item", async () => {
     });
 });
 
+test("should remove color from partially selected text of a block inside a list item", async () => {
+    await testEditor({
+        contentBefore: '<ol><li style="color: rgb(255, 0, 0);"><h1>ab[cd]ef</h1></li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ol><li style="color: rgb(255, 0, 0);"><h1>ab<font class="o_default_color">[cd]</font>ef</h1></li></ol>',
+    });
+});
+
+test("should remove color at cursor position inside a colored list item", async () => {
+    await testEditor({
+        contentBefore: '<ol><li style="color: rgb(255, 0, 0);">ab[]cd</li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit:
+            '<ol><li style="color: rgb(255, 0, 0);">ab' +
+            '<font class="o_default_color" data-oe-zws-empty-inline="">\u200B[]</font>' +
+            "cd</li></ol>",
+        contentAfter: '<ol><li style="color: rgb(255, 0, 0);">ab[]cd</li></ol>',
+    });
+});
+
+test("should remove color at cursor position inside a block of a colored list item", async () => {
+    await testEditor({
+        contentBefore: '<ol><li style="color: rgb(255, 0, 0);"><p>ab[]cd</p></li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfterEdit:
+            '<ol><li style="color: rgb(255, 0, 0);"><p>ab' +
+            '<font class="o_default_color" data-oe-zws-empty-inline="">\u200B[]</font>' +
+            "cd</p></li></ol>",
+        contentAfter: '<ol><li style="color: rgb(255, 0, 0);"><p>ab[]cd</p></li></ol>',
+    });
+});
+
 test("should remove color from fully selected list item with nested list", async () => {
     await testEditor({
         contentBefore: unformat(`
@@ -352,6 +385,18 @@ test("should change color of subpart of a list item (2)", async () => {
         stepFunction: setColor("rgb(0, 0, 255)", "color"),
         contentAfter:
             '<ol><li style="color: rgb(255, 0, 0);">a<font style="color: rgb(0, 0, 255);">[bc</font></li><li style="color: rgb(255, 0, 0);"><font style="color: rgb(0, 0, 255);">gh]</font>i</li></ol>',
+    });
+});
+
+test("should apply color on a subpart of a default colored text in a list item", async () => {
+    await testEditor({
+        contentBefore:
+            '<ol><li style="color: rgb(255, 0, 0);">ab<font class="o_default_color">c[de]f</font>gh</li></ol>',
+        stepFunction: setColor("rgb(0, 0, 255)", "color"),
+        contentAfter:
+            '<ol><li style="color: rgb(255, 0, 0);">ab<font class="o_default_color">c</font>' +
+            '<font style="color: rgb(0, 0, 255);">[de]</font>' +
+            '<font class="o_default_color">f</font>gh</li></ol>',
     });
 });
 
