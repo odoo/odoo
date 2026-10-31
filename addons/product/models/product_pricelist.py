@@ -135,7 +135,8 @@ class ProductPricelist(models.Model):
         :rtype: tuple(float, int)
         """
         self and self.ensure_one()  # self is at most one record
-        return self._compute_price_rule(product, *args, **kwargs)[product.id]
+        price, rule_ids = self._compute_price_rule(product, *args, **kwargs)[product.id]
+        return (price, next(iter(rule_ids), False))
 
     def _get_product_rule(self, product, *args, **kwargs):
         """Compute the pricelist price & rule for the specified product, qty & uom.
@@ -154,7 +155,8 @@ class ProductPricelist(models.Model):
         :rtype: int or False
         """
         self and self.ensure_one()  # self is at most one record
-        return self._compute_price_rule(product, *args, compute_price=False, **kwargs)[product.id][1]
+        rule_ids = self._compute_price_rule(product, *args, compute_price=False, **kwargs)[product.id][1]
+        return next(iter(rule_ids), False)
 
     def _compute_price_rule(
         self, products, quantity, *, currency=None, uom=None, date=False, compute_price=True,
@@ -176,7 +178,7 @@ class ProductPricelist(models.Model):
         :type date: date or datetime
         :param bool compute_price: whether the price should be computed (default: True)
 
-        :returns: product_id: (price, pricelist_rule)
+        :returns: product_id: (price, rule_ids)
         :rtype: dict
         """
         self and self.ensure_one()  # self is at most one record
@@ -251,32 +253,24 @@ class ProductPricelist(models.Model):
             if compute_price:
                 products_by_rule[suitable_rule].append(product.id)
 
-            results[product.id] = (price, suitable_rule.id)
+            results[product.id] = (price, suitable_rule.ids)
 
         for rule, product_ids in products_by_rule.items():
             products_for_rule = products.browse(product_ids).with_prefetch(
                 products._prefetch_ids
             )
 
-            base_prices = None
-            if rule.base == 'pricelist' and rule.base_pricelist_id:
-                base_prices = rule.base_pricelist_id._get_products_price(
-                    products_for_rule, quantity, uom=uom, date=date, depth=depth + 1, **kwargs
-                )
-
-            for product in products_for_rule:
-                price = rule._compute_price(
-                    product,
+            results.update(
+                rule._compute_prices(
+                    products_for_rule,
                     quantity,
                     uom,
                     date=date,
                     currency=currency,
-                    base_prices=base_prices,
                     depth=depth,
                     **kwargs,
                 )
-
-                results[product.id] = (price, rule.id)
+            )
 
         return results
 
@@ -369,7 +363,7 @@ class ProductPricelist(models.Model):
             subres = pricelist._compute_price_rule(products, quantity, uom=uom, date=date, **kwargs)
             for product_id, price in subres.items():
                 results.setdefault(product_id, {})
-                results[product_id][pricelist.id] = price
+                results[product_id][pricelist.id] = (price[0], next(iter(price[1]), False))
         return results
 
     def _get_country_pricelist_multi(self, country_ids):
