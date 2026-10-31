@@ -1,9 +1,12 @@
+import { today } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { unique } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { combineModifiers } from "@web/model/relational_model/utils";
+
+const { DateTime } = luxon;
 
 export const TOUCH_SELECTION_THRESHOLD = 400;
 
@@ -131,6 +134,20 @@ export const computeReportMeasures = (
 
     return Object.fromEntries(sortedMeasures);
 };
+
+/**
+ * @param {import("luxon").DateTime | false} value
+ * @param {"date" | "datetime"} type
+ * @param {"none" | "future" | "past"} [warning]
+ * @returns {boolean}
+ */
+export function hasDateWarning(value, type, warning) {
+    if (!value || !warning || warning === "none") {
+        return false;
+    }
+    const referenceDate = type === "datetime" ? DateTime.local() : today();
+    return warning === "future" ? value > referenceDate : value < referenceDate;
+}
 
 /**
  * @param {Record} record

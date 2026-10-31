@@ -120,6 +120,12 @@ export class CardCompiler extends ViewCompiler {
             compiled = createElement("span", {
                 "t-out": params.formattedValueExpr || `__comp__.getFormattedValue("${fieldId}")`,
             });
+            if (!params.formattedValueExpr) {
+                compiled.setAttribute(
+                    "t-att-class",
+                    `__comp__.getFormattedValueClass("${fieldId}")`
+                );
+            }
             this.copyFieldAttributes(compiled, el);
         } else {
             compiled = super.compileField(el, params);

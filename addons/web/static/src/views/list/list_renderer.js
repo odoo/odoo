@@ -22,6 +22,7 @@ import {
     computeAggregatedValue,
     getClassNameFromDecoration,
     getFormattedValue,
+    hasDateWarning,
 } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
@@ -1267,6 +1268,10 @@ export class ListRenderer extends Component {
             if (evaluateBooleanExpr(decorations[decoName], record.evalContextWithVirtualIds)) {
                 classNames.push(getClassNameFromDecoration(decoName));
             }
+        }
+        const { name, options } = column;
+        if (hasDateWarning(record.data[name], record.fields[name].type, options.warning)) {
+            classNames.push("text-danger");
         }
         return classNames;
     }
