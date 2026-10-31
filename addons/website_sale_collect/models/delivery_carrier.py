@@ -76,6 +76,10 @@ class DeliveryCarrier(models.Model):
         """Override of `website_sale` to support estimates on in-store delivery methods."""
         return [*super()._get_delivery_estimate_supported_types(), "in_store"]
 
+    def _is_rate_product_dependent(self):
+        """Override of `delivery` to exclude in-store delivery methods, which have a fixed rate."""
+        return self.delivery_type != "in_store" and super()._is_rate_product_dependent()
+
     @staticmethod
     def _get_in_store_default_vals():
         return {
