@@ -5,11 +5,13 @@
             <Dropdown t-if="compact" state="floating" position="'right-start'" manual="true" menuClass="'o-mail-DiscussSidebar-floatingMenu ' + store.discussDropdownMenuClass(this)">
                 <t t-call="mail.DiscussSidebarCallParticipants.main"/>
                 <t t-set-slot="content">
-                    <div class="p-2" t-ref="floating">
-                        <t t-call="mail.DiscussSidebarCallParticipants.list">
-                            <t t-set="isCompact" t-value="false"/>
-                        </t>
-                    </div>
+                    <UseHoverOverlay hover="hover">
+                        <div class="p-2">
+                            <t t-call="mail.DiscussSidebarCallParticipants.list">
+                                <t t-set="isCompact" t-value="false"/>
+                            </t>
+                        </div>
+                    </UseHoverOverlay>
                 </t>
             </Dropdown>
             <t t-else="" t-call="mail.DiscussSidebarCallParticipants.main"/>
