@@ -54,7 +54,7 @@ hr_leave_allocation_rule_responsible_update,Allocations: Responsible: create/wri
                     ('state', '!=', 'validate'),
                 ('employee_id.leave_manager_id', '=', user.id),
         ]"
-hr_leav_allocation_rule_employee_unlink,Allocations base.group_user unlink,hr.leave.allocation,hr_holidays.group_hr_holidays_employee,d,"[('employee_id.user_id', '=', user.id), ('state', '=', 'draft')]"
+hr_leav_allocation_rule_employee_unlink,Allocations base.group_user unlink,hr.leave.allocation,hr_holidays.group_hr_holidays_employee,d,"[('employee_id.user_id', '=', user.id), ('state', '=', 'confirm')]"
 hr_leave_allocation_rule_multicompany,Time Off: multi company global rule,hr.leave.allocation,,crud,"[
             '|',
                 ('employee_id', '=', False),
