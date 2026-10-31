@@ -527,6 +527,20 @@ export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
     }
 }
 
+/**
+ * Returns the code saved in an Embed Code snippet's `<template>`.
+ *
+ * @param {HTMLTemplateElement} templateEl
+ * @returns {String}
+ */
+export function getEmbedCode(templateEl) {
+    // Legacy snippets stored the code as markup instead of escaped text.
+    const isText = [...templateEl.content.childNodes].every(
+        (node) => node.nodeType === Node.TEXT_NODE
+    );
+    return isText ? templateEl.content.textContent : templateEl.innerHTML;
+}
+
 export default {
     loadAnchors: loadAnchors,
     mountAutocompleteComponent: mountAutocompleteComponent,
@@ -544,4 +558,5 @@ export default {
     getParsedDataFor: getParsedDataFor,
     cloneContentEls: cloneContentEls,
     checkAndNotifySEO: checkAndNotifySEO,
+    getEmbedCode: getEmbedCode,
 };
