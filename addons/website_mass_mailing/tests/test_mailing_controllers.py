@@ -24,7 +24,7 @@ class TestMassMailingSubscribeController(HttpCase):
     def test_private_list_requires_internal_user(self):
         private_list = self.env['mailing.list'].create({'name': 'Private', 'is_public': False})
 
-        self._subscribe(private_list)
+        self.assertEqual(self._subscribe(private_list)['toast_type'], 'danger')
         self.assertFalse(private_list.contact_ids)
 
         self.authenticate('admin', 'admin')
@@ -34,3 +34,15 @@ class TestMassMailingSubscribeController(HttpCase):
     def test_public_list_accepts_public_user(self):
         public_list = self.env['mailing.list'].create({'name': 'Public', 'is_public': True})
         self.assertEqual(self._subscribe(public_list)['toast_type'], 'success')
+
+
+@tagged('-at_install', 'post_install')
+class TestMassMailingWebsiteForm(HttpCase):
+
+    def test_malformed_list_ids(self):
+        response = self.url_open('/website/form/mailing.contact', data={
+            'email': 'joe@example.com',
+            'list_ids': 'abc',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {'error': 'Mailing List(s) not found!'})
