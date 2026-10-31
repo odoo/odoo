@@ -8,10 +8,12 @@ class EventType(models.Model):
     _inherit = 'event.type'
 
     website_track = fields.Boolean(
-        string='Tracks on Website', compute='_compute_website_track_menu_data',
+        string='Tracks Agenda', compute='_compute_website_track_menu_data',
+        help='Display the "Talks" and the "Agenda" tabs on website, redirecting to the list and the agenda of the talks.',
         readonly=False, store=True)
     website_track_proposal = fields.Boolean(
-        string='Tracks Proposals on Website', compute='_compute_website_track_menu_data',
+        string='Tracks Proposals', compute='_compute_website_track_menu_data',
+        help='Display the "Propose a talk" tab on website, redirecting to the track proposal form.',
         readonly=False, store=True)
 
     @api.depends('website_menu')

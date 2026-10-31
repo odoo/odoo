@@ -1,7 +1,7 @@
     import { checkPriceCart } from "@website_event_sale/../tests/tours/helpers/WebsiteEventSaleTourMethods";
     import * as wsTourUtils from "@website_sale/js/tours/tour_utils";
 
-    function checkPriceBooth(eventName, price, priceSelected) {
+    function checkPriceBooth(eventName, price) {
         return [
             {
                 content: "Go to page Event",
@@ -22,33 +22,26 @@
                 expectUnloadPage: true,
             },
             {
-                content: 'Select the booth',
-                trigger: ".o_wbooth_booths input[name=event_booth_ids]:not(:visible)",
-                run: function () {
-                    document.querySelector('.o_wbooth_booths input[name="event_booth_ids"]:nth-child(1)').click();
-                },
+                content: "Check that the first booth is selected by default",
+                trigger: ".o_wbooth_booths .form-check:first-child input[name=event_booth_ids]:not(:visible):checked",
             },
             {
                 content: "Verify Price displayed",
                 trigger: `.oe_currency_value:contains(${price})`,
             },
-            {
-                content: "Verify Price of selected booth",
-                trigger: `div.o_wbooth_booth_total_price span.oe_currency_value:contains(${priceSelected})`,
-            },
         ]
     }
-    function checkPriceDiscountBooth(eventName, price, priceSelected, discount) {
+    function checkPriceDiscountBooth(eventName, price, discount) {
         return [
-            ...checkPriceBooth(eventName, price, priceSelected),
+            ...checkPriceBooth(eventName, price),
             {
                 content: "Verify Price before discount",
                 trigger: `del:contains(${discount})`,
             },
         ]
     }
-    export const getPriceListChecksSteps = function ({pricelistName, eventName, price, priceSelected, priceCart, priceBeforeDiscount=false}) {
-        const checkPriceSteps = priceBeforeDiscount ? checkPriceDiscountBooth(eventName, price, priceSelected, priceBeforeDiscount) : checkPriceBooth(eventName, price, priceSelected);
+    export const getPriceListChecksSteps = function ({pricelistName, eventName, price, priceCart, priceBeforeDiscount=false}) {
+        const checkPriceSteps = priceBeforeDiscount ? checkPriceDiscountBooth(eventName, price, priceBeforeDiscount) : checkPriceBooth(eventName, price);
         return [
            ...wsTourUtils.selectPriceList(pricelistName),
            ...checkPriceSteps,
