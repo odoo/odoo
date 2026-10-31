@@ -190,6 +190,7 @@ export class SwitchCompanyMenu extends Component {
     static components = { Dropdown, DropdownItem, DropdownGroup, SwitchCompanyItem, CheckBox };
     static CompanySelector = CompanySelector;
 
+    togglerRef = signal.ref();
     searchInputRef = signal.ref();
 
     setup() {
@@ -210,7 +211,12 @@ export class SwitchCompanyMenu extends Component {
             isAvailable: () => this.companySelector.hasSelectionChanged,
         });
 
-        useCommand(_t("Switch Company"), () => this.dropdown.open(), { hotkey: "alt+shift+u" });
+        useCommand(_t("Switch Company"), () => this.dropdown.open(), {
+            hotkey: "alt+shift+u",
+            hotkeyOptions: {
+                withOverlay: () => this.togglerRef(),
+            },
+        });
         useBus(userBus, "ACTIVE_COMPANIES_CHANGED", () => {
             this.companySelector.reset();
         });
