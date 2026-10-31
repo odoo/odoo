@@ -598,32 +598,6 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(self.employee.resource_calendar_id, old_calendar)
         self.assertEqual(self.employee.resource_id.calendar_id, old_calendar)
 
-    def test_job_title(self):
-        first_job = self.env['hr.job'].create({'name': "first job"})
-        second_job = self.env['hr.job'].create({'name': "second job"})
-
-        with Form(self.employee_without_image) as employee_form:
-            # Assign first job to employee, job title should be job name
-            employee_form.job_id = first_job
-            self.assertEqual(employee_form.job_title, first_job.name)
-
-            # Change job title, job name should not change
-            employee_form.job_title = "custom job title"
-            self.assertEqual(first_job.name, "first job")
-
-            # Change the name of the first job, job title should not be updated
-            first_job.name = "first job modified"
-            self.assertEqual(employee_form.job_title, "custom job title")
-            employee_form.save()
-
-            # Assign second job to employee, job title should be second job name
-            employee_form.job_id = second_job
-            self.assertEqual(employee_form.job_title, second_job.name)
-
-            # Switch back to first job, job title should be first job name
-            employee_form.job_id = first_job
-            self.assertEqual(employee_form.job_title, first_job.name)
-
     def test_flexible_working_hours(self):
         """
         Test to verify that get_unusual_days() return false for flexible work schedule
@@ -936,14 +910,12 @@ class TestHrEmployee(TestHrCommon):
         employee = self.env['hr.employee'].create({
             'name': 'Public Employee',
             'job_id': job.id,
-            'job_title': 'Public Job Title',
             'department_id': department.id,
             'private_email': 'private@example.com',
         })
         internal_user = new_test_user(self.env, login='internal_user', groups='base.group_user')
         self.env.invalidate_all()
         employee_as_user = self.env['hr.employee'].with_user(internal_user).search([('id', '=', employee.id)])
-        self.assertEqual(employee_as_user.job_title, 'Public Job Title')
         self.assertEqual(employee_as_user.job_id, job)
         self.assertEqual(employee_as_user.department_id, department)
         with self.assertRaises(AccessError):

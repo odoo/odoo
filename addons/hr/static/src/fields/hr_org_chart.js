@@ -59,29 +59,29 @@ export class HrOrgChart extends Component {
         });
         this.max_level = null;
         this.lastEmployeeId = null;
-        this.lastJobTitle = null;
+        this.lastJobId = null;
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
         this.fetchId = 0;
 
         useRecordObserver(async (record) => {
             const newParentId = record.data.parent_id?.id || false;
             const newEmployeeId = record.resId || false;
-            const newJobTitle = record.data.job_title || false;
+            const newJobId = record.data.job_id?.id || false;
             if (
                 this.lastParent !== newParentId ||
                 this.state.employee_id !== newEmployeeId ||
-                this.lastJobTitle !== newJobTitle
+                this.lastJobId !== newJobId
             ) {
                 this.lastParent = newParentId;
                 this.max_level = null; // Reset max_level to default
-                this.lastJobTitle = newJobTitle;
-                await this.fetchEmployeeData(newEmployeeId, newParentId, newJobTitle, true);
+                this.lastJobId = newJobId;
+                await this.fetchEmployeeData(newEmployeeId, newParentId, newJobId, true);
             }
             this.state.employee_id = newEmployeeId;
         });
     }
 
-    async fetchEmployeeData(employeeId, newParentId = null, newJobTitle = null, force = false) {
+    async fetchEmployeeData(employeeId, newParentId = null, newJobId = null, force = false) {
         this.fetchId++;
         const currentFetchId = this.fetchId;
         const updateData = (data) => {
@@ -101,7 +101,7 @@ export class HrOrgChart extends Component {
                 {
                     employee_id: employeeId,
                     new_parent_id: newParentId,
-                    new_job_title: newJobTitle,
+                    new_job_id: newJobId,
                     context: {
                         ...user.context,
                         max_level: this.max_level,
@@ -147,7 +147,7 @@ export class HrOrgChart extends Component {
 
     async _onEmployeeMoreManager(managerId) {
         this.max_level = 100; // Set a high level to fetch all managers
-        await this.fetchEmployeeData(this.state.employee_id, null, true);
+        await this.fetchEmployeeData(this.state.employee_id, null, this.lastJobId, true);
     }
 }
 

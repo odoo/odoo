@@ -1650,7 +1650,7 @@ class HrEmployee(models.Model):
         """Read the non-stored fields inherited from ``hr.version`` from ``hr.employee.public``
         for users without read access.
 
-        Those fields (e.g. ``job_title``, ``department_id``) are computed from
+        Those fields (e.g. ``department_id``) are computed from
         ``version_id``, that such users cannot read: like in :meth:`fetch`, their
         public values are copied into the cache (an ``AccessError`` is raised for
         the fields not available on ``hr.employee.public``).
@@ -2610,20 +2610,20 @@ class HrEmployee(models.Model):
             next_version = employee_versions[i + 1]
             current_date_start = max(current_version.date_version, current_version.contract_date_start or date.min)
             current_date_end = min(next_version.date_version + relativedelta(days=-1), current_version.contract_date_end or date.max)
-            if not current_version.job_title:
+            if not current_version.job_id:
                 if interval_date_start:
                     previous_version = employee_versions[i - 1]
                     res.append({
                         'id': previous_version.id,
-                        'job_title': previous_version.job_title,
+                        'job_title': previous_version.job_id.name,
                         'date_start': interval_date_start,
                         'date_end': current_date_start + relativedelta(days=-1),
                     })
                     interval_date_start = False
-            elif current_version.job_title != next_version.job_title or current_date_end + relativedelta(days=1) != next_version.date_version:
+            elif current_version.job_id != next_version.job_id or current_date_end + relativedelta(days=1) != next_version.date_version:
                 res.append({
                     'id': current_version.id,
-                    'job_title': current_version.job_title,
+                    'job_title': current_version.job_id.name,
                     'date_start': interval_date_start or current_date_start,
                     'date_end': current_date_end,
                 })
@@ -2632,11 +2632,11 @@ class HrEmployee(models.Model):
                 interval_date_start = interval_date_start or current_date_start
 
         last_version = employee_versions[-1]
-        if last_version.job_title:
+        if last_version.job_id:
             current_date_start = max(last_version.date_version, last_version.contract_date_start or date.min)
             res.append({
                 'id': last_version.id,
-                'job_title': last_version.job_title,
+                'job_title': last_version.job_id.name,
                 'date_start': interval_date_start or current_date_start,
                 'date_end': last_version.contract_date_end or False,
             })
@@ -2644,7 +2644,7 @@ class HrEmployee(models.Model):
             previous_version = employee_versions[-2]
             res.append({
                 'id': previous_version.id,
-                'job_title': previous_version.job_title,
+                'job_title': previous_version.job_id.name,
                 'date_start': interval_date_start,
                 'date_end': current_date_start + relativedelta(days=-1),
             })
@@ -3220,6 +3220,7 @@ class HrEmployee(models.Model):
         }
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
+        res.one("job_id", ["name"])
         res.attr("resource_id", "_store_avatar_card_fields")
         res.one("user_id", "_store_avatar_card_fields")
         res.many("employee_skill_ids", ["color", "display_name"])
@@ -3227,7 +3228,6 @@ class HrEmployee(models.Model):
             "active",
             "company_id",
             "hr_icon_display",
-            "job_title",
             "name",
             "show_hr_icon_display",
         ])

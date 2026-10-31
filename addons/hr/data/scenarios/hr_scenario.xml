@@ -123,7 +123,6 @@
             <field name="work_email">williams@mycompany.example.com</field>
             <field name="department_id" eval="ref('hr.dep_administration', raise_if_not_found=False)"/>
             <field name="job_id" ref="job_ceo"/>
-            <field name="job_title">Chief Executive Officer</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_demo')])]"/>
             <field name="image_1920" type="bytes" file="hr/static/img/employee_admin-image.webp"/>
             <field name="work_phone">(555)-768-6230</field>
@@ -144,7 +143,6 @@
             <field name="private_phone">+1 555-555-5757</field>
             <field name="work_email">granger@mycompany.example.com</field>
             <field name="job_id" ref="job_consultant"/>
-            <field name="job_title">Consultant</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_5'), ref('employee_category_demo')])]"/>
             <field name="image_1920" type="bytes" file="hr/static/img/employee_awa-image.webp"/>
             <field name="work_phone">(555)-768-6230</field>
@@ -166,7 +164,6 @@
             <field name="private_phone">+1 555-555-5757</field>
             <field name="work_email">jones@mycompany.example.com</field>
             <field name="job_id" ref="job_developer"/>
-            <field name="job_title">Experienced Developer</field>
             <field name="category_ids" eval="[Command.set([ref('employee_category_4'), ref('employee_category_demo')])]"/>
             <field name="image_1920" type="bytes" file="hr/static/img/employee_qdp-image.webp"/>
             <field name="work_phone">(555)-768-6230</field>
