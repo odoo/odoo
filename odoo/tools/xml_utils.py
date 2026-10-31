@@ -21,6 +21,18 @@ __all__ = [
 _logger = logging.getLogger(__name__)
 
 
+_invalid_xml_characters_re = re.compile(
+    r'[^'
+    r'\u0009'
+    r'\u000A'
+    r'\u000D'
+    r'\u0020-\uD7FF'
+    r'\uE000-\uFFFD'
+    r'\U00010000-\U0010FFFF'
+    r']',
+)
+
+
 def remove_control_characters(byte_node):
     """
     The characters to be escaped are the control characters #x0 to #x1F and #x7F (most of which cannot appear in XML)
@@ -28,18 +40,13 @@ def remove_control_characters(byte_node):
     `Char	   :: =   	#x9 | #xA | #xD | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]`
     source:https://www.w3.org/TR/xml/
     """
-    return re.sub(
-        '[^'
-        '\u0009'
-        '\u000A'
-        '\u000D'
-        '\u0020-\uD7FF'
-        '\uE000-\uFFFD'
-        '\U00010000-\U0010FFFF'
-        ']'.encode(),
-        b'',
-        byte_node,
-    )
+    try:
+        node = byte_node.decode()
+    except UnicodeDecodeError:
+        # Keep supporting XML documents using an ASCII-compatible non-UTF-8 encoding.
+        # The forbidden single-byte control characters are the same in those encodings.
+        return re.sub(rb'[\x00-\x08\x0b\x0c\x0e-\x1f]', b'', byte_node)
+    return _invalid_xml_characters_re.sub('', node).encode()
 
 
 class odoo_resolver(etree.Resolver):
