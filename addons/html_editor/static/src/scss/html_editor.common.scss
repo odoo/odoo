@@ -706,8 +706,12 @@ pre {
 }
 
 /* Buttons with custom colors */
-.btn-custom:hover, .btn-fill-custom:hover {
-    filter: invert(0.2);
+.btn-custom.btn-custom:hover, .btn-fill-custom.btn-fill-custom:hover {
+    background-color: var(--btn-custom-hover-bg) !important;
+}
+.btn-outline-custom.btn-outline-custom:hover {
+    color: contrast-color(var(--btn-custom-color)) !important;
+    background-color: var(--btn-custom-color) !important;
 }
 .btn-outline-custom:not(:hover) {
     /* Custom buttons have their fill color or gradient specified in their

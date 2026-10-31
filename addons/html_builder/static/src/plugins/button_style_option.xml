@@ -32,12 +32,19 @@
     </BuilderRow>
 
     <t t-if="this.state.currentButtonType === 'custom'">
-        <BuilderRow label.translate="Text" level="1">
-            <BuilderColorPicker styleAction="'color'" enabledTabs="['solid', 'custom']" />
-        </BuilderRow>
-        <BuilderRow label.translate="Fill" level="1">
-            <BuilderColorPicker action="'buttonFillColorAction'" actionParam="{ mainParam: 'background-color', allowImportant: false }" enabledTabs="['solid', 'custom', 'gradient']" />
-        </BuilderRow>
+        <t t-if="this.state.isOutline">
+            <BuilderRow label.translate="Color" level="1">
+                <BuilderColorPicker action="'buttonColorAction'" actionParam="{ mainParam: 'color' }" enabledTabs="['solid', 'custom']" />
+            </BuilderRow>
+        </t>
+        <t t-else="">
+            <BuilderRow label.translate="Text" level="1">
+                <BuilderColorPicker action="'buttonColorAction'" actionParam="{ mainParam: 'color' }" enabledTabs="['solid', 'custom']" />
+            </BuilderRow>
+            <BuilderRow label.translate="Fill" level="1">
+                <BuilderColorPicker action="'buttonFillColorAction'" actionParam="{ mainParam: 'background-color', allowImportant: false }" enabledTabs="['solid', 'custom', 'gradient']" />
+            </BuilderRow>
+        </t>
         <BorderConfigurator label.translate="Border" withRoundCorner="false" withBSClass="false" level="1"/>
     </t>
 
