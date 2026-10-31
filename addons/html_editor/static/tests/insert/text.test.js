@@ -29,7 +29,8 @@ describe("collapsed selection", () => {
 
     test("should insert a char into a data-oe-zws-empty-inline span removing the zws and data-oe-zws-empty-inline", async () => {
         await testEditor({
-            contentBefore: '<p>ab<span data-oe-zws-empty-inline="">[]\u200B</span>cd</p>',
+            contentBefore: '<p>ab<span data-oe-zws-empty-inline="">[]</span>cd</p>',
+            contentBeforeEdit: '<p>ab<span data-oe-zws-empty-inline="">[]\u200B</span>cd</p>',
             stepFunction: async (editor) => {
                 await insertText(editor, "x");
             },
@@ -39,7 +40,8 @@ describe("collapsed selection", () => {
 
     test("should insert a char into a data-oe-zws-empty-inline span surrounded by space without removing the zws and data-oe-zws-empty-inline", async () => {
         await testEditor({
-            contentBefore: '<p>ab<span data-oe-zws-empty-inline="">[]\u200B</span>cd</p>',
+            contentBefore: '<p>ab<span data-oe-zws-empty-inline="">[]</span>cd</p>',
+            contentBeforeEdit: '<p>ab<span data-oe-zws-empty-inline="">[]\u200B</span>cd</p>',
             stepFunction: async (editor) => {
                 await insertText(editor, "x");
             },
