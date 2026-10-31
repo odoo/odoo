@@ -1545,19 +1545,78 @@ class ProductTemplate(models.Model):
         website_domain = self.env.website.website_domain()
 
         for product, data in zip(self, results_data):
-            combination_info = product._get_combination_info(only_template=True)
-            values = product.attribute_line_ids.value_ids
+            combination = self.env["product.template.attribute.value"]
+            if search_term:
+                search_term_values = product._get_attribute_values_from_search_term(search_term)
+                if search_term_values:
+                    combination = product._get_combination_from_attribute_values(
+                        search_term_values.ids
+                    )
+            combination_info = product._get_combination_info(
+                combination=combination, only_template=not combination
+            )
+            values = (
+                combination.product_attribute_value_id
+                if combination
+                else product.attribute_line_ids.value_ids
+            )
             tags = product.product_tag_ids.filtered("visible_to_customers").read(["name"])
             categories = product.public_categ_ids.filtered_domain(website_domain).read(["name"])
             data["badges"] = tags + categories + values.read(["name"])
             price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
-            data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
+            if variant_id := combination_info["product_id"]:
+                data["image_url"] = "/web/image/product.product/%s/image_128" % variant_id
+            else:
+                data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
 
             if search_term:
                 data["website_url"] = product._get_product_url(query_params={"search": search_term})
         return results_data
+
+    def _get_matched_attribute_values(self, attribute_value_ids):
+        """Return, for each attribute line, the first active value among `attribute_value_ids`
+        that belongs to it, if any.
+
+        The attribute lines without a matching value are simply absent from the result: it may
+        therefore not cover every attribute line of the template.
+
+        :param typing.Iterable[int] attribute_value_ids: The ids of the `product.attribute.value`
+            records to select.
+        :return: The matched values, at most one per attribute line.
+        :rtype: product.template.attribute.value
+        """
+        self.ensure_one()
+        return self.attribute_line_ids.mapped(
+            lambda ptal: ptal.product_template_value_ids.filtered(
+                lambda ptav: (
+                    ptav.ptav_active
+                    and ptav.product_attribute_value_id.id in attribute_value_ids
+                )
+            )[:1]
+        )
+
+    def _get_combination_from_attribute_values(self, attribute_value_ids):
+        """Return a possible combination using the given attribute values.
+
+        Attribute lines without a matching value fall back to their first active value, except
+        for `multi` attributes, for which no value is selected. If the matching values can't
+        all be combined (e.g. because two of them exclude each other), none of them are used
+        and the template's default combination is returned instead, rather than returning an
+        impossible one.
+
+        :param typing.Iterable[int] attribute_value_ids: The ids of the `product.attribute.value`
+            records to select.
+        :return: A possible combination.
+        :rtype: product.template.attribute.value
+        """
+        self.ensure_one()
+        matched_values = self._get_matched_attribute_values(attribute_value_ids)
+        return (
+            next(self._get_possible_combinations(matched_values), None)
+            or next(self._get_possible_combinations(), self.env['product.template.attribute.value'])
+        )
 
     def _get_attribute_values_from_search_term(self, search_term):
         """Return attribute values to preselect the matching product variant.

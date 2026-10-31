@@ -150,6 +150,45 @@ class TestFuzzy(ProductVariantsCommon):
         )
         self.assertIn(self.product_template_sofa, results[0]["results"])
 
+    def _render_sofa_result(self, search_term):
+        website = self.env.ref("base.default_website")
+        options = {"display_currency": website.currency_id, "allowFuzzy": False}
+        _, results, _ = website.with_context(website_id=website.id)._search_with_fuzzy(
+            "product_template", search_term, 0, 5, "name asc", options
+        )
+        with MockRequest(self.env, website=website):
+            results = website._search_render_results(results, 5)
+        return next(
+            data
+            for data in results[0]["results_data"]
+            if data["id"] == self.product_template_sofa.id
+        )
+
+    def test_search_attribute_value_shows_variant_price(self):
+        self.product_template_sofa.list_price = 100.0
+        self.product_sofa_blue.product_template_attribute_value_ids.price_extra = 50.0
+        sofa_data = self._render_sofa_result("blue")
+        self.assertIn("150.00", sofa_data["price"], "Should show the blue variant's price")
+
+    def test_search_attribute_value_shows_variant_image(self):
+        sofa_data = self._render_sofa_result("blue")
+        self.assertEqual(
+            sofa_data["image_url"],
+            f"/web/image/product.product/{self.product_sofa_blue.id}/image_128",
+            "Should show the blue variant's image",
+        )
+
+    def test_search_term_without_attribute_match_shows_template(self):
+        self.product_template_sofa.list_price = 100.0
+        self.product_sofa_blue.product_template_attribute_value_ids.price_extra = 50.0
+        sofa_data = self._render_sofa_result("Sofa")
+        self.assertIn("100.00", sofa_data["price"], "Should show the template's price")
+        self.assertEqual(
+            sofa_data["image_url"],
+            f"/web/image/product.template/{self.product_template_sofa.id}/image_128",
+            "Should show the template's image",
+        )
+
     def test_search_product_tags(self):
         """ Tests that when searching a product by its tags, we only fetch the tags visible to customers"""
         website = self.env.ref("base.default_website")
