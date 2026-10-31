@@ -1,22 +1,29 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models
-import re
+
+from .l10n_se_sru_mapping import SRU_TYPE_BY_TEMPLATE, SRU_TYPES
 
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
-    org_number = fields.Char(compute='_compute_org_number')
+    l10n_se_sru_type = fields.Selection(
+        SRU_TYPES,
+        string='SRU Form',
+        compute='_compute_l10n_se_sru_type',
+        store=True,
+        readonly=False,
+        help="Income tax return form used for the SRU file. Defaults from the chart of "
+             "accounts; INK3 (non-profit associations, foundations) must be chosen manually.",
+    )
 
-    @api.depends('vat')
-    def _compute_org_number(self):
+    l10n_se_f_tax_approved = fields.Boolean(
+        string='Approved for F-tax',
+        help="The company is approved for F-tax. Customer invoices then state it, so the buyer "
+             "does not have to withhold preliminary tax.",
+    )
+
+    @api.depends('chart_template')
+    def _compute_l10n_se_sru_type(self):
         for company in self:
-            if company.account_fiscal_country_id.code == "SE" and company.vat:
-                org_number = re.sub(r'\D', '', company.vat)[:-2]
-                org_number = org_number[:6] + '-' + org_number[6:]
-
-                company.org_number = org_number
-            else:
-                company.org_number = ''
+            company.l10n_se_sru_type = SRU_TYPE_BY_TEMPLATE.get(company.chart_template) or company.l10n_se_sru_type or False

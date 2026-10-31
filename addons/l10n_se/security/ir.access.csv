@@ -1,0 +1,9 @@
+id,name,model_id,group_id/id,operation,domain
+access_l10n_se_sni_user,l10n_se.sni user,l10n_se.sni,base.group_user,r,
+access_l10n_se_sni_manager,l10n_se.sni manager,l10n_se.sni,account.group_account_manager,crud,
+access_l10n_se_partner_sni_user,l10n_se.partner.sni user,l10n_se.partner.sni,base.group_user,r,
+access_l10n_se_partner_sni_partner_manager,l10n_se.partner.sni partner manager,l10n_se.partner.sni,base.group_partner_manager,crud,
+access_l10n_se_partner_sni_account_manager,l10n_se.partner.sni account manager,l10n_se.partner.sni,account.group_account_manager,crud,
+access_l10n_se_sru_mapping_readonly,l10n_se.sru.mapping readonly,l10n_se.sru.mapping,account.group_account_readonly,r,
+access_l10n_se_sru_mapping_manager,l10n_se.sru.mapping manager,l10n_se.sru.mapping,account.group_account_manager,crud,
+l10n_se_sru_mapping_company_rule,SRU mapping: multi-company,l10n_se.sru.mapping,,crud,"[('company_id', 'in', company_ids)]"
