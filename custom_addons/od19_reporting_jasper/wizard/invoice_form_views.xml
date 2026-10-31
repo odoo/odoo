@@ -12,6 +12,7 @@
     <record id="view_invoice_form" model="ir.ui.view">
         <field name="name">invoice.form</field>
         <field name="model">invoice.form</field>
+        <field name="mode">primary</field>
         <field name="inherit_id" ref="view_jasper_report_wizard"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='parameters']" position="replace">
@@ -25,7 +26,7 @@
     </record>
 
     <record id="action_invoice_form" model="ir.actions.act_window">
-        <field name="name">Customer Invoice Form</field>
+        <field name="name">(J-Report OD15) Customer Invoice Form</field>
         <field name="res_model">invoice.form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_invoice_form"/>
@@ -36,7 +37,7 @@
     </record>
 
     <record id="action_invoice_form_copy" model="ir.actions.act_window">
-        <field name="name">Customer Invoice Form (Copy)</field>
+        <field name="name">(J-Report OD15) Customer Invoice Form (Copy)</field>
         <field name="res_model">invoice.form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_invoice_form"/>

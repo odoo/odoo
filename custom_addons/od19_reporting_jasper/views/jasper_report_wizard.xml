@@ -26,6 +26,9 @@
                 <field name="email_to" invisible="1"/>
                 <field name="email_subject" invisible="1"/>
                 <field name="email_document_number" invisible="1"/>
+                <group name="iso_document" invisible="state != 'input'">
+                    <field name="iso_document_id"/>
+                </group>
                 <group name="parameters" invisible="state != 'input'"/>
                 <group name="result" invisible="state != 'output'">
                     <field name="output_pdf" filename="name_pdf" readonly="1"/>

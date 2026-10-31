@@ -12,6 +12,7 @@
     <record id="view_ar_ap_aging_report" model="ir.ui.view">
         <field name="name">ar.ap.aging.report</field>
         <field name="model">ar.ap.aging.report</field>
+        <field name="mode">primary</field>
         <field name="inherit_id" ref="view_jasper_report_wizard"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='parameters']" position="replace">
@@ -50,7 +51,7 @@
         name="AR/AP Aging"
         parent="account.menu_finance_reports"
         action="action_ar_ap_aging_report"
-        groups="account.group_account_user"
+        groups="account.group_account_user,account.group_account_manager"
         sequence="91"
     />
 

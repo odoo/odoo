@@ -1,7 +1,7 @@
 {
     "name": "OD19 Reporting - Jasper Reports Foundation",
     "author": "OD19",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.3.0",
     "category": "Reporting",
     "summary": "Foundation for Jasper and QWeb report templates",
     "depends": [
@@ -9,6 +9,7 @@
         "hr",
         "mail",
         "od19_accounting_dncn",
+        "od19_iso_document_control",
         "purchase_stock",
     ],
     "data": [

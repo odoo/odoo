@@ -11,6 +11,7 @@
     <record id="view_profit_loss_report" model="ir.ui.view">
         <field name="name">profit.loss.report</field>
         <field name="model">profit.loss.report</field>
+        <field name="mode">primary</field>
         <field name="inherit_id" ref="view_jasper_report_wizard"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='parameters']" position="replace">
@@ -42,6 +43,7 @@
     <record id="view_balance_sheet_report" model="ir.ui.view">
         <field name="name">balance.sheet.report</field>
         <field name="model">balance.sheet.report</field>
+        <field name="mode">primary</field>
         <field name="inherit_id" ref="view_jasper_report_wizard"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='parameters']" position="replace">
@@ -90,7 +92,7 @@
         name="Profit and Loss"
         parent="account.menu_finance_reports"
         action="action_profit_loss_report"
-        groups="account.group_account_user"
+        groups="account.group_account_user,account.group_account_manager"
         sequence="92"
     />
     <menuitem
@@ -98,7 +100,7 @@
         name="Balance Sheet"
         parent="account.menu_finance_reports"
         action="action_balance_sheet_report"
-        groups="account.group_account_user"
+        groups="account.group_account_user,account.group_account_manager"
         sequence="93"
     />
 
