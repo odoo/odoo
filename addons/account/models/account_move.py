@@ -8113,31 +8113,36 @@ class AccountMove(models.Model):
                 if invoice == self:
                     attachment_records |= self._from_files_data(extra_files_data)
                     new_message.attachment_ids = [Command.set(attachment_records.ids)]
-                    res = super(AccountMove, self.with_context(no_document=True))._message_post_after_hook(new_message)
+                    res = super()._message_post_after_hook(new_message)
                 else:
                     sub_new_message = new_message.copy({
                         'res_id': invoice.id,
                         'attachment_ids': [Command.set(attachment_records.ids)],
                     })
-                    super(AccountMove, invoice.with_context(no_document=True))._message_post_after_hook(sub_new_message)
-                invoice._fix_attachments_on_record_from_files_data(file_data_group, extra_files_data)
+                    super(AccountMove, invoice)._message_post_after_hook(sub_new_message)
+                invoice._link_attachments_to_record(file_data_group)
 
             for invoice, file_data_group in zip(invoices, file_data_groups):
                 if file_data_group:
                     invoice._extend_with_attachments(file_data_group, new=True)
 
-            return res
-
         else:
             # This is an existing invoice on which a message was posted either by e-mail or via the webclient.
             attachment_records = self._from_files_data(files_data)
-            self._fix_attachments_on_record_from_files_data(valid_files_data, extra_files_data)
+            self._link_attachments_to_record(valid_files_data)
             # Only trigger decoding if the message was sent by an active internal user (note OdooBot is always inactive).
             if self.env.user.active and self.env.user._is_internal():
                 self._extend_with_attachments(files_data)
 
             new_message.attachment_ids = [Command.set(attachment_records.ids)]
-            return super()._message_post_after_hook(new_message)
+            res = super()._message_post_after_hook(new_message)
+
+        # Detach extra files, but keep the main attachment (set by mail or OCR)
+        self._detach_attachments_from_record([
+            file_data for file_data in extra_files_data
+            if file_data.get('attachment') != self.message_main_attachment_id
+        ])
+        return res
 
     def _creation_subtype(self):
         # EXTENDS mail mail.thread
