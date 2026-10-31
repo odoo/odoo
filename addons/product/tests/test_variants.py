@@ -1559,6 +1559,34 @@ class TestVariantWrite(TransactionCase):
             self.assertEqual(product.name, 'Bar')
             self.assertEqual(product.sequence, 2)
 
+    def test_variant_value_ids_consistency(self):
+        """ `product_template_variant_value_ids` shares its relation table with
+        `product_template_attribute_value_ids`: both agree right after a variant
+        is created or its combination is written. """
+        attribute, dynamic_attribute = self.env['product.attribute'].create([{
+            'name': name,
+            'create_variant': create_variant,
+            'value_ids': [Command.create({'name': 'Light'}), Command.create({'name': 'Dark'})],
+        } for name, create_variant in (('Shade', 'always'), ('Finish', 'dynamic'))])
+        template, dynamic_template = self.env['product.template'].create([{
+            'name': 'Foo',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attr.id,
+                'value_ids': [Command.set(attr.value_ids.ids)],
+            })],
+        } for attr in (attribute, dynamic_attribute)])
+
+        self.assertEqual(len(template.product_variant_ids), 2)
+        for variant in template.product_variant_ids:
+            self.assertTrue(variant.product_template_attribute_value_ids)
+            self.assertEqual(variant.product_template_variant_value_ids, variant.product_template_attribute_value_ids)
+
+        light, dark = dynamic_template.attribute_line_ids.product_template_value_ids
+        variant = dynamic_template._create_product_variant(light)
+        self.assertEqual(variant.product_template_variant_value_ids, light)
+        variant.product_template_attribute_value_ids = dark
+        self.assertEqual(variant.product_template_variant_value_ids, dark)
+
 
 @tagged('post_install', '-at_install')
 class TestVariantsExclusion(ProductVariantsCommon):
