@@ -68,16 +68,14 @@ class WebsiteSaleVariantController(Controller):
                     "product": product_template,
                     "product_variant": product,
                     "website": self.env.website,
+                    "combination_info": combination_info,
                 },
             )
 
         if self.env.website.is_view_active("website_sale.documents"):
             combination_info["documents"] = self.env.website._render_template(
                 "website_sale.documents",
-                values={
-                    "product": product_template,
-                    "product_variant": product,
-                },
+                values={"product": product_template, "product_variant": product},
             )
 
         if self.env.website.is_view_active("website_sale.product_tags"):

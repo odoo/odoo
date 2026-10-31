@@ -40,6 +40,9 @@
                     'inStoreData': combination_info.get('in_store_data', {}),
                     'deliveryData': combination_info.get('delivery_data', {}),
                     'isInStoreSelected': is_in_store_selected,
+                    'active': combination_info.get('is_combination_possible', True),
+                    'hasOutOfStockMessage': combination_info.get('has_out_of_stock_message', False),
+                    'outOfStockMessage': combination_info.get('out_of_stock_message') or '',
                 })"
                 t-attf-class="d-flex o_not_editable w-100 mb-4"
             />
