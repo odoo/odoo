@@ -1275,6 +1275,12 @@ class SaleOrder(models.Model):
 
         return True
 
+    def _action_confirm_demo(self):
+        for order in self:
+            if order.state not in ('draft', 'sent'):
+                order.with_context(tracking_disable=True).write({'state': 'draft'})
+        return self.action_confirm()
+
     def _should_be_locked(self):
         self.ensure_one()
         # Public user can confirm SO, so we check the group on any record creator.
