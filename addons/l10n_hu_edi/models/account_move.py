@@ -109,6 +109,16 @@ class AccountMove(models.Model):
         string='Invoice XML filename',
         compute='_compute_l10n_hu_edi_attachment_filename',
     )
+    l10n_hu_edi_edit_mode = fields.Boolean(
+        string='Editing details',
+        help="The journal items of this invoice can be edited although it was sent to NAV, "
+             "as long as the data sent to NAV does not change.",
+        copy=False,
+    )
+    l10n_hu_edi_edit_baseline = fields.Text(
+        string='Invoice XML when editing started',
+        copy=False,
+    )
     l10n_hu_edi_message_html = fields.Html(
         string='Transaction messages',
         compute='_compute_message_html',
@@ -172,6 +182,25 @@ class AccountMove(models.Model):
 
     # === Overrides === #
 
+    def write(self, vals):
+        # EXTEND account
+        line_fields = {'line_ids', 'invoice_line_ids'}
+        if not (line_fields & vals.keys()) or not self or not all(self.mapped('l10n_hu_edi_edit_mode')):
+            res = super().write(vals)
+            self.filtered('l10n_hu_edi_edit_mode')._l10n_hu_edi_check_edit_unchanged()
+            return res
+
+        # In edit mode, only the journal items of the posted invoice are unlocked: the other
+        # fields keep the readonly check of a posted move.
+        other_vals = {fname: value for fname, value in vals.items() if fname not in line_fields}
+        if other_vals:
+            super().write(other_vals)
+        res = super(AccountMove, self.with_context(skip_readonly_check=True)).write(
+            {fname: value for fname, value in vals.items() if fname in line_fields}
+        )
+        self._l10n_hu_edi_check_edit_unchanged()
+        return res
+
     def _need_cancel_request(self):
         # EXTEND account
         # Technical annulment should be available only in debug mode
@@ -193,6 +222,44 @@ class AccountMove(models.Model):
         return super().button_request_cancel()
 
     # === Actions === #
+
+    def l10n_hu_edi_action_edit_details(self):
+        """ Allow editing the journal items of invoices already sent to NAV (e.g. the accounts or the
+        analytic distribution), as long as the data sent to NAV stays the same. """
+        if not self.env.user.has_group('account.group_account_manager'):
+            raise UserError(_("Only accounting administrators can edit the details of an invoice sent to NAV."))
+        for move in self:
+            if move.state != 'posted' or move.l10n_hu_edi_state in (False, 'rejected', 'cancelled'):
+                raise UserError(_("%s: only posted invoices sent to NAV can be edited this way.", move.display_name))
+            if not move.l10n_hu_edi_attachment:
+                raise UserError(_("%s: the XML sent to NAV is not available, so the invoice cannot be edited.", move.display_name))
+            # The XML is generated from the current company and partner data, which may have changed since
+            # the invoice was sent: compare the edits with the XML of now, and only report the difference.
+            baseline = move._l10n_hu_edi_generate_xml().decode()
+            if etree.canonicalize(baseline) != etree.canonicalize(move.l10n_hu_edi_attachment.content.decode()):
+                move.message_post(body=_(
+                    "The data of this invoice already differs from the XML sent to NAV, "
+                    "e.g. because the company or the partner data changed since then."
+                ))
+            move.write({'l10n_hu_edi_edit_mode': True, 'l10n_hu_edi_edit_baseline': baseline})
+            move.message_post(body=_("Editing of the journal items enabled. The data sent to NAV cannot be changed."))
+
+    def l10n_hu_edi_action_done_editing(self):
+        self._l10n_hu_edi_check_edit_unchanged()
+        self.write({'l10n_hu_edi_edit_mode': False, 'l10n_hu_edi_edit_baseline': False})
+        for move in self:
+            move.message_post(body=_("Editing of the journal items finished."))
+
+    def _l10n_hu_edi_check_edit_unchanged(self):
+        """ Raise if the invoice XML generated from the current data differs from the one generated when
+        the editing started, i.e. if the changes made while editing touch data sent to NAV. """
+        for move in self.filtered(lambda m: m.l10n_hu_edi_edit_mode and m.l10n_hu_edi_edit_baseline):
+            if etree.canonicalize(move._l10n_hu_edi_generate_xml().decode()) != etree.canonicalize(move.l10n_hu_edi_edit_baseline):
+                raise UserError(_(
+                    "%s: this change modifies data that was sent to NAV. "
+                    "Issue a credit note instead, or a technical annulment if the data sent to NAV was technically wrong.",
+                    move.display_name,
+                ))
 
     def l10n_hu_edi_button_update_status(self, from_cron=False):
         """ Attempt to update the status of the invoices in `self` """
