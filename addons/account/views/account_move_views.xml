@@ -728,8 +728,9 @@
                     <templates>
                         <t t-name="card">
                             <div class="d-flex align-items-baseline mb-2">
-                                <field name="partner_id" class="fw-bolder fs-5 me-2" invisible="not partner_id" readonly="state != 'draft'"/>
-                                <field name="journal_id" class="fw-bolder fs-5 me-2" invisible="partner_id"/>
+                                <field name="name" class="fw-bolder fs-5 me-2" invisible="state == 'draft'"/>
+                                <field name="partner_id" class="fw-bolder fs-5 me-2" invisible="state != 'draft' or not partner_id"/>
+                                <field name="journal_id" class="fw-bolder fs-5 me-2" invisible="state != 'draft' or partner_id"/>
                                 <div invisible="review_state not in ('todo', 'anomaly') or state != 'posted'" groups="account.group_account_user">
                                     <span class="badge rounded-pill text-bg-info">
                                         To Review
@@ -739,22 +740,38 @@
                             </div>
                             <footer class="align-items-end">
                                 <div class="d-flex flex-wrap gap-1 text-muted text-nowrap">
-                                    <field name="name"/>
+                                    <field name="partner_id" invisible="state == 'draft' or not partner_id" readonly="state != 'draft'"/>
+                                    <field name="journal_id" invisible="state == 'draft' or partner_id"/>
                                     <field name="date"/>
                                     <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
-                                <field name="status_in_payment"
-                                    widget="badge" class="ms-auto"
-                                    decoration-info="status_in_payment == 'draft'"
-                                    decoration-danger="status_in_payment in ('blocked', 'cancel')"
-                                    decoration-muted="status_in_payment in ('posted', 'sent', 'partial')"
-                                    decoration-success="status_in_payment in ('in_payment', 'paid', 'reversed')"
-                                    invisible="payment_state == 'invoicing_legacy' or move_type == 'entry'"
-                                />
+                                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
                             </footer>
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_kanban" model="ir.ui.view">
+            <field name="name">account.invoice.kanban</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_move_kanban"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <field name="date" position="replace">
+                    <field name="invoice_date"/>
+                </field>
+                <field name="state" position="replace">
+                    <field name="status_in_payment"
+                        widget="badge" class="ms-auto"
+                        decoration-info="status_in_payment == 'draft'"
+                        decoration-danger="status_in_payment in ('blocked', 'cancel')"
+                        decoration-muted="status_in_payment in ('posted', 'sent', 'partial')"
+                        decoration-success="status_in_payment in ('in_payment', 'paid', 'reversed')"
+                        invisible="payment_state == 'invoicing_legacy' or move_type == 'entry'"
+                    />
+                </field>
             </field>
         </record>
 
@@ -2059,6 +2076,20 @@
             </field>
         </record>
 
+        <record id="action_move_list_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="view_move_tree"/>
+            <field name="act_window_id" ref="action_move_journal_line"/>
+        </record>
+
+        <record id="action_move_kanban_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_account_move_kanban"/>
+            <field name="act_window_id" ref="action_move_journal_line"/>
+        </record>
+
         <record id="action_account_moves_email_preview" model="ir.actions.act_window">
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
@@ -2111,6 +2142,20 @@
                 Create invoices, register payments and keep track of the discussions with your customers.
               </p>
             </field>
+        </record>
+
+        <record id="action_move_out_invoice_list_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="view_out_invoice_tree"/>
+            <field name="act_window_id" ref="action_move_out_invoice"/>
+        </record>
+
+        <record id="action_move_out_invoice_kanban_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_account_invoice_kanban"/>
+            <field name="act_window_id" ref="action_move_out_invoice"/>
         </record>
 
         <record id="action_move_out_refund_type_non_legacy" model="ir.actions.act_window">
@@ -2169,6 +2214,20 @@
                     Capture invoices, register payments and keep track of the discussions with your vendors.
                 </p>
             </field>
+        </record>
+
+        <record id="action_move_in_invoice_list_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">list</field>
+            <field name="view_id" ref="view_in_invoice_bill_tree"/>
+            <field name="act_window_id" ref="action_move_in_invoice"/>
+        </record>
+
+        <record id="action_move_in_invoice_kanban_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_account_invoice_kanban"/>
+            <field name="act_window_id" ref="action_move_in_invoice"/>
         </record>
 
         <record id="action_move_in_refund_type" model="ir.actions.act_window">
