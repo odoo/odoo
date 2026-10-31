@@ -285,7 +285,8 @@
                             invisible="move_raw_ids or validate_button_style != 'secondary'"
                             confirm="There are no components to consume. Are you still sure you want to continue?"/>
                     <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight" data-hotkey="q"/>
-                    <button name="button_plan" type="object" string="Plan" class="oe_highlight" invisible="state in ('cancel', 'done') or is_planned or not workorder_ids" groups="mrp.group_mrp_routings" data-hotkey="z"/>
+                    <button name="button_plan" type="object" string="Plan" class="oe_highlight" invisible="state in ('draft', 'cancel', 'done') or is_planned or not workorder_ids" groups="mrp.group_mrp_routings" data-hotkey="z"/>
+                    <button name="button_plan" type="object" string="Plan" invisible="state != 'draft' or is_planned or not workorder_ids" groups="mrp.group_mrp_routings" data-hotkey="z"/>
                     <button name="button_unplan" type="object" string="Unplan" invisible="not is_planned or state in ['cancel', 'done']" groups="mrp.group_mrp_routings" data-hotkey="z"/>
                     <button name="action_start"  type="object" string="Start" invisible="state != 'confirmed'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done" invisible="workorder_ids"/>
