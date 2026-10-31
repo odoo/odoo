@@ -704,7 +704,7 @@ class AccountMove(models.Model):
                 # Ensure the RE flow exists for the move period. This must happen before clearing
                 # l10n_fr_pdp_sent_in_flow_ids: a move that left the Flow 10 scope gets its RE scope
                 # from the last flow it was sent in.
-                self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
+                self.env['l10n.fr.pdp.reports.flow'].sudo()._get_open_flow_and_create_if_needed(move)
                 # A move out of the Flow 10 scope won't be part of the RE, even if posted again.
                 # Keep it in the sent moves of the previous flow, so the RE differs from it and
                 # its removal is transmitted.
