@@ -14,7 +14,7 @@
     <div t-ref="this.slidingPanelRef"
         class="o_hb_sliding_panel mb-1 h-100 d-none"
         t-on-click="this.onBackdropClick"
-        t-att-class="{'o_hb_sliding_panel_dark': this.props.darkBackground}"
+        t-att-class="(this.props.darkBackground ? 'o_hb_sliding_panel_dark ' : '') + this.state.displayClass"
     >
         <div class="o_hb_sliding_panel_content d-flex flex-column" t-att-class="this.props.fullHeight ? 'h-100' : 'pb-3'">
             <div class="o_hb_sliding_panel_header">
