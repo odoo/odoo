@@ -27,6 +27,7 @@ import {
 import { MockConsole } from "./console";
 import { mockCrypto } from "./crypto";
 import { MockDate, MockIntl } from "./date";
+import { cleanupIndexedDB, MockIDBFactory } from "./indexed_db";
 import { MockClipboardItem, mockNavigator } from "./navigator";
 import {
     MockBlob,
@@ -47,6 +48,7 @@ import {
     mockedFetch,
 } from "./network";
 import { MockNotification } from "./notification";
+import { cleanupResources, getDisposableDescriptors } from "./resources";
 import { MockStorage } from "./storage";
 
 //-----------------------------------------------------------------------------
@@ -54,8 +56,11 @@ import { MockStorage } from "./storage";
 //-----------------------------------------------------------------------------
 
 const {
+    AbortController,
+    AbortSignal,
     EventTarget,
     HTMLAnchorElement,
+    HTMLMediaElement,
     MutationObserver,
     Number: { isNaN: $isNaN, parseFloat: $parseFloat },
     Object: {
@@ -274,18 +279,42 @@ function matchesQueryPart(mediaQueryString) {
     return mediaQueryString.startsWith("not") ? !match : match;
 }
 
-/** @type {addEventListener} */
-function mockedAddEventListener(...args) {
+/**
+ * Returns the signal of the current job (test, or suite outside of tests), which
+ * is aborted after it to remove all listeners bound to it in a single native call.
+ */
+function getJobSignal() {
+    const runner = getRunner();
+    const { suite, test } = runner.getCurrent();
+    const job = test || suite;
+    if (!jobControllers.has(job)) {
+        const controller = new AbortController();
+        jobControllers.set(job, controller);
+        runner.after(() => {
+            jobControllers.delete(job);
+            controller.abort();
+        });
+    }
+    return jobControllers.get(job).signal;
+}
+
+/** @type {typeof addEventListener} */
+function mockedAddEventListener(type, listener, options) {
     const runner = getRunner();
     if (runner.dry || !runner.suiteStack.length) {
         // Ignore listeners during dry run or outside of a test suite
         return;
     }
-    if (!R_OWL_SYNTHETIC_LISTENER.test(String(args[1]))) {
+    if (R_OWL_SYNTHETIC_LISTENER.test(String(listener))) {
         // Ignore cleanup for Owl synthetic listeners
-        runner.after(removeEventListener.bind(this, ...args));
+        return addEventListener.call(this, type, listener, options);
     }
-    return addEventListener.call(this, ...args);
+    const jobSignal = getJobSignal();
+    const nextOptions = typeof options === "object" ? { ...options } : { capture: !!options };
+    nextOptions.signal = nextOptions.signal
+        ? AbortSignal.any([nextOptions.signal, jobSignal])
+        : jobSignal;
+    return addEventListener.call(this, type, listener, nextOptions);
 }
 
 /** @type {Document["elementFromPoint"]} */
@@ -347,6 +376,20 @@ function mockedRemoveEventListener(...args) {
         return;
     }
     return removeEventListener.call(this, ...args);
+}
+
+/**
+ * Media elements playing a live source (e.g. a `MediaStream`) are kept alive by
+ * the browser, along with everything they reference, until their source is removed,
+ * even once detached from the DOM: they are tracked to remove it after the job.
+ *
+ * @param {MediaProvider | null} value
+ */
+function mockedSetSrcObject(value) {
+    if (value && getRunner()?.getCurrent().suite) {
+        mediaElements.add(this);
+    }
+    srcObjectDescriptor.set.call(this, value);
 }
 
 /**
@@ -433,18 +476,6 @@ class MockMediaQueryList extends MockEventTarget {
     }
 }
 
-class MockMutationObserver extends MutationObserver {
-    disconnect() {
-        activeMutationObservers.delete(this);
-        return super.disconnect(...arguments);
-    }
-
-    observe() {
-        activeMutationObservers.add(this);
-        return super.observe(...arguments);
-    }
-}
-
 const DEFAULT_MEDIA_VALUES = {
     "display-mode": "browser",
     pointer: "fine",
@@ -459,29 +490,28 @@ const R_COMMA = /\s*,\s*/;
 const R_MEDIA_QUERY_PROPERTY = /\(\s*([\w-]+)\s*:\s*(.+)\s*\)/;
 const R_OWL_SYNTHETIC_LISTENER = /\bnativeToSyntheticEvent\b/;
 
+/** @type {WeakMap<import("../core/job").Job, AbortController>} */
+const jobControllers = new WeakMap();
 /** @type {WeakMap<unknown, Record<string, PropertyDescriptor>>} */
 const originalDescriptors = new WeakMap();
 const originalTouchFunctions = getTouchTargets(globalThis).map(getTouchDescriptors);
 
-/** @type {Set<MockMutationObserver>} */
-const activeMutationObservers = new Set();
+const hrefDescriptor = $getOwnPropertyDescriptor(HTMLAnchorElement.prototype, "href");
+/** @type {Set<HTMLMediaElement>} */
+const mediaElements = new Set();
 /** @type {Set<MockMediaQueryList>} */
 const mediaQueryLists = new Set();
 const mockConsole = new MockConsole();
+const mockIndexedDB = new MockIDBFactory();
 const mockLocalStorage = new MockStorage();
 const mockMediaValues = { ...DEFAULT_MEDIA_VALUES };
 const mockSessionStorage = new MockStorage();
 /** @type {WeakSet<Event>} */
 const preventedEvents = new WeakSet();
+const srcObjectDescriptor = $getOwnPropertyDescriptor(HTMLMediaElement.prototype, "srcObject");
 let mockTitle = "";
 
 // Mock descriptors
-const ANCHOR_MOCK_DESCRIPTORS = {
-    href: {
-        ...$getOwnPropertyDescriptor(HTMLAnchorElement.prototype, "href"),
-        get: mockedHref,
-    },
-};
 const DOCUMENT_MOCK_DESCRIPTORS = {
     cookie: {
         get: () => mockCookie.get(),
@@ -494,14 +524,28 @@ const DOCUMENT_MOCK_DESCRIPTORS = {
         set: (value) => (mockTitle = value),
     },
 };
-const ELEMENT_MOCK_DESCRIPTORS = {
-    animate: { value: mockedAnimate },
-    scroll: { value: mockedScroll },
-    scrollBy: { value: mockedScrollBy },
-    scrollIntoView: { value: mockedScrollIntoView },
-    scrollTo: { value: mockedScrollTo },
+/**
+ * Descriptors applied on the prototypes of the native classes they are mapped to.
+ *
+ * @type {Record<string, Record<string, PropertyDescriptor>>}
+ */
+const PROTOTYPE_MOCK_DESCRIPTORS = {
+    Element: {
+        animate: { value: mockedAnimate },
+        scroll: { value: mockedScroll },
+        scrollBy: { value: mockedScrollBy },
+        scrollIntoView: { value: mockedScrollIntoView },
+        scrollTo: { value: mockedScrollTo },
+    },
+    HTMLAnchorElement: {
+        href: { ...hrefDescriptor, get: mockedHref },
+    },
+    HTMLMediaElement: {
+        srcObject: { ...srcObjectDescriptor, set: mockedSetSrcObject },
+    },
 };
 const WINDOW_MOCK_DESCRIPTORS = {
+    ...getDisposableDescriptors(globalThis),
     Animation: { value: MockAnimation },
     Blob: { value: MockBlob },
     BroadcastChannel: { value: MockBroadcastChannel },
@@ -514,6 +558,7 @@ const WINDOW_MOCK_DESCRIPTORS = {
     Date: { value: MockDate, writable: false },
     fetch: { value: interactor("server", mockedFetch).as("fetch"), writable: false },
     history: { value: mockHistory },
+    indexedDB: { value: mockIndexedDB },
     innerHeight: { get: () => _getCurrentDimensions().height },
     innerWidth: { get: () => _getCurrentDimensions().width },
     isSecureContext: { value: true, writable: false },
@@ -522,7 +567,6 @@ const WINDOW_MOCK_DESCRIPTORS = {
     matchMedia: { value: mockedMatchMedia },
     MessageChannel: { value: MockMessageChannel },
     MessagePort: { value: MockMessagePort },
-    MutationObserver: { value: MockMutationObserver },
     navigator: { value: mockNavigator },
     Notification: { value: MockNotification },
     outerHeight: { get: () => _getCurrentDimensions().height },
@@ -555,7 +599,14 @@ export function cleanupWindow() {
     mockLocalStorage.clear();
     mockSessionStorage.clear();
 
+    // IndexedDB
+    cleanupIndexedDB();
+
     // Media
+    for (const element of mediaElements) {
+        srcObjectDescriptor.set.call(element, null);
+    }
+    mediaElements.clear();
     mediaQueryLists.clear();
     $assign(mockMediaValues, DEFAULT_MEDIA_VALUES);
 
@@ -578,10 +629,8 @@ export function cleanupWindow() {
     // Touch
     restoreTouch(view);
 
-    // Mutation observers
-    for (const observer of activeMutationObservers) {
-        observer.disconnect();
-    }
+    // Disposable resources (e.g. observers)
+    cleanupResources();
 }
 
 export function getTitle() {
@@ -679,9 +728,10 @@ export function patchWindow(view = _getWindow()) {
         // Document
         applyPropertyDescriptors(view.document, DOCUMENT_MOCK_DESCRIPTORS);
 
-        // Element prototypes
-        applyPropertyDescriptors(view.Element.prototype, ELEMENT_MOCK_DESCRIPTORS);
-        applyPropertyDescriptors(view.HTMLAnchorElement.prototype, ANCHOR_MOCK_DESCRIPTORS);
+        // Prototypes
+        for (const [name, descriptors] of $entries(PROTOTYPE_MOCK_DESCRIPTORS)) {
+            applyPropertyDescriptors(view[name].prototype, descriptors);
+        }
     });
 }
 

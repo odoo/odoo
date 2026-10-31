@@ -1,9 +1,22 @@
 /** @odoo-module */
 
-import { after, describe, expect, test, watchListeners } from "@odoo/hoot";
+import { after, describe, expect, microTick, test, watchListeners } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
 import { EventBus } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
+
+/**
+ * @param {string} name
+ * @returns {Promise<IDBDatabase>}
+ */
+function openDatabase(name) {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(name);
+        request.onupgradeneeded = () => expect.step(`upgrade:${name}`);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+    });
+}
 
 describe(parseUrl(import.meta.url), () => {
     class TestBus extends EventBus {
@@ -17,6 +30,7 @@ describe(parseUrl(import.meta.url), () => {
         }
     }
 
+    let observedNode;
     let testBus;
 
     test("elementFromPoint and elementsFromPoint should be mocked", async () => {
@@ -65,5 +79,68 @@ describe(parseUrl(import.meta.url), () => {
         testBus.trigger("some-event");
 
         expect.verifySteps([]);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests event listeners cleanup.
+    test("event listeners with options are properly removed: setup", async () => {
+        after(watchListeners());
+
+        const controller = new AbortController();
+        window.addEventListener("hoot-event", () => expect.step("capture"), true);
+        window.addEventListener("hoot-event", () => expect.step("signal"), {
+            signal: controller.signal,
+        });
+        window.dispatchEvent(new Event("hoot-event"));
+
+        expect.verifySteps(["capture", "signal"]);
+
+        controller.abort();
+        window.dispatchEvent(new Event("hoot-event"));
+
+        expect.verifySteps(["capture"]);
+    });
+    test("event listeners with options are properly removed: check", async () => {
+        window.dispatchEvent(new Event("hoot-event"));
+
+        expect.verifySteps([]);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests observers cleanup.
+    test("observers are disconnected between tests: setup", async () => {
+        expect(MutationObserver.name).toBe("MutationObserver");
+
+        observedNode = document.createElement("div");
+        const observer = new MutationObserver(() => expect.step("mutation"));
+        observer.observe(observedNode, { attributes: true });
+        observedNode.setAttribute("data-value", "1");
+        await microTick();
+
+        expect.verifySteps(["mutation"]);
+    });
+    test("observers are disconnected between tests: check", async () => {
+        observedNode.setAttribute("data-value", "2");
+        await microTick();
+
+        expect.verifySteps([]);
+    });
+
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests IndexedDB cleanup.
+    test("IndexedDB databases are deleted between tests: setup", async () => {
+        await openDatabase("hoot_test_db");
+        await openDatabase("hoot_test_db");
+
+        expect.verifySteps(["upgrade:hoot_test_db"]);
+
+        // Left opening at the end of the test
+        indexedDB.open("hoot_test_pending_db");
+    });
+    test("IndexedDB databases are deleted between tests: check", async () => {
+        await openDatabase("hoot_test_db");
+        await openDatabase("hoot_test_pending_db");
+
+        expect.verifySteps(["upgrade:hoot_test_db", "upgrade:hoot_test_pending_db"]);
     });
 });
