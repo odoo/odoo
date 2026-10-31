@@ -334,11 +334,10 @@ test("translation span wrapper for <option>", async () => {
     await setupSidebarBuilderForTranslation({
         websiteContent: `
             <select class="form-select s_website_form_input" id="orcye1cjptbg">
-                <option id="orcye1cjptbg1" value="Option 1" selected="selected"
-                    data-oe-translation-span-wrapper="&lt;span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;567&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;translated&quot; data-oe-translation-source-sha=&quot;fae2db093e1dd31042e8ab9427e8673a70c43f4bc519235d9a232efad60769aa&quot;&gt;Première option&lt;/span&gt;">
-                    Option 1</option>
-                <option id="orcye1cjptbg2" value="Option 2">
-                    Option 2</option>
+                <option id="orcye1cjptbg1" value="Option 1" selected="selected">
+                    <span data-oe-model="ir.ui.view" data-oe-id="567" data-oe-field="arch_db" data-oe-translation-state="translated" data-oe-translation-source-sha="fae2db093e1dd31042e8ab9427e8673a70c43f4bc519235d9a232efad60769aa">Première option</span>
+                </option>
+                <option id="orcye1cjptbg2" value="Option 2">Option 2</option>
             </select>`,
     });
     await contains(".modal .btn:contains(Ok, never show me this again)").click();

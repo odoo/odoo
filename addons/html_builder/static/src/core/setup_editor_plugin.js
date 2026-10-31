@@ -30,6 +30,12 @@ export class SetupEditorPlugin extends Plugin {
             }
         },
         on_removed_handlers: this.cleanupEmptyStructures.bind(this),
+        normalize_processors: (root) => {
+            for (const el of selectElements(root, "[data-oe-type]:not([data-oe-type=html])")) {
+                el.classList.add("o_plaintext");
+            }
+            return root;
+        },
     };
 
     setup() {
@@ -80,6 +86,9 @@ export class SetupEditorPlugin extends Plugin {
         }
         for (const savableEl of selectElements(root, ".o_savable")) {
             savableEl.classList.remove("o_savable");
+        }
+        for (const el of selectElements(root, "[data-oe-type]:not([data-oe-type=html])")) {
+            el.classList.remove("o_plaintext");
         }
         return root;
     }

@@ -56,6 +56,29 @@ test("Media should not be replaceable if not inside a savable zone", async () =>
     expect(".modal-content:contains(Select a media)").toHaveCount(0);
 });
 
+test("non-html fields (except translations) should be limited to plain text", async () => {
+    await setupHTMLBuilder("", {
+        headerContent: `
+        <div class="test-no-html-allowed">
+            <p data-oe-model="foo" data-oe-type="text">abcd</p>
+            <p data-oe-model="blog.post" data-oe-type="char">abcd</p>
+            <p data-oe-model="website.logo" data-oe-type="image">abcd</p>
+        </div>
+        <div class="test-html-allowed">
+            <p data-oe-model="blog.post" data-oe-type="html">abcd</p>
+
+            <!-- arch and translation's branding has no data-oe-type -->
+            <p data-oe-model="ir.ui.view" data-oe-field="arch">abcd</p>
+            <p data-oe-model="ir.ui.view" data-oe-field="arch_db" data-oe-translation-source-sha="0ea54">abcd</p>
+            <p data-oe-model="blog.post" data-oe-translation-source-sha="0ea54">abcd</p>
+        </div>
+        `,
+    });
+
+    expect(":iframe .test-no-html-allowed p").toHaveClass("o_plaintext");
+    expect(":iframe .test-html-allowed p").not.toHaveClass("o_plaintext");
+});
+
 test("clone of editable media inside not editable area should be editable", async () => {
     onRpc("/html_editor/get_image_info", () => ({}));
     addBuilderOption({

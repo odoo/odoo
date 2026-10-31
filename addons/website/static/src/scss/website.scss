@@ -2894,6 +2894,11 @@ input[value*="data-oe-translation-source-sha"] {
     @extend .o_text_content_invisible;
 }
 
+.o_translation_select {
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
 .o_translation_select + select {
     // Hide translatable `<select/>`s since we use `.o_translation_select`
     // elements to handle translations.

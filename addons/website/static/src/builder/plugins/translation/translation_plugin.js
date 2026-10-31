@@ -4,8 +4,6 @@ import { registry } from "@web/core/registry";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
-import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {Map<HTMLElement, ElementTranslationInfo} ElToTranslationInfoMap
@@ -118,11 +116,6 @@ export class TranslationPlugin extends Plugin {
             }
             return container;
         }),
-        toolbar_namespace_providers: [
-            (targetedNodes, editableSelection) =>
-                closestElement(editableSelection.anchorNode, ".o_translation_select") &&
-                DISABLED_NAMESPACE,
-        ],
     };
 
     setup() {
@@ -301,22 +294,14 @@ export class TranslationPlugin extends Plugin {
      */
     handleSelectTranslation(containerEl) {
         const selectEls = containerEl.querySelectorAll(
-            "select:has(> option[data-oe-translation-span-wrapper])"
+            "select:has(> option > [data-oe-translation-source-sha])"
         );
         for (const selectEl of selectEls) {
             const selectTranslationEl = document.createElement("div");
-            selectTranslationEl.className = "o_translation_select form-control";
+            selectTranslationEl.className = "o_translation_select form-control o_plaintext";
             for (const optionEl of selectEl.options) {
-                if (!optionEl.dataset.oeTranslationSpanWrapper) {
-                    continue;
-                }
                 const optionTranslationEl = document.createElement("div");
-                const translationSpanEl = this.parseTranslationEl(
-                    optionEl.dataset.oeTranslationSpanWrapper
-                );
-                translationSpanEl.classList.add("o_savable");
-                translationSpanEl.setAttribute("contenteditable", "true");
-                optionTranslationEl.appendChild(translationSpanEl);
+                optionTranslationEl.replaceChildren(...optionEl.childNodes);
                 selectTranslationEl.appendChild(optionTranslationEl);
             }
             selectEl.before(selectTranslationEl);
