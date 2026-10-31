@@ -124,15 +124,13 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
 
             // Dialog showing the error
+            Dialog.bodyIs("The order was not validated"),
             Dialog.confirm(),
 
-            FeedbackScreen.clickNextOrder(),
-            ProductScreen.isShown(),
-            ProductScreen.selectFloatingOrder(0),
             PaymentScreen.isShown(),
+            PaymentScreen.selectedPaymentlineHas("Bank", "10.0"),
             PaymentScreen.clickBack(),
             ProductScreen.isShown(),
             {
