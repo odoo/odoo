@@ -2060,6 +2060,108 @@ Please change the quantity done or the rounding precision in your settings.""",
         # pop key if the quantity available amount to 0
         return dict((k, v) for k, v in available_move_lines.items() if float_compare(v, 0, precision_rounding=rounding) > 0)
 
+    def _should_reserve_from_origins(self):
+        """ Whether `self` takes its move lines from the done move lines of its origins. """
+        self.ensure_one()
+        return True
+
+    def _prepare_origin_pools(self):
+        """ Compute, once for the chained moves of `self`, what they can reserve.
+
+        A chained move can take from the done move lines of the origins of all the moves sharing
+        an origin with it (itself included), minus what was already taken from them. Instead of
+        recomputing this pool and what the siblings took for every move, the remaining quantities
+        are kept per origin: every consumption, existing or new, is charged to the origins it can
+        come from, and an origin is dropped once it is empty.
+        """
+        direct_origins = self.move_orig_ids
+        siblings = direct_origins.move_dest_ids
+        origins = siblings.move_orig_ids
+
+        # The origins sharing a destination with an origin (itself included), computed once per
+        # set of destinations.
+        co_origin_ids = {}
+        co_origin_ids_by_dest_ids = {}
+        for origin in direct_origins:
+            dest_ids = frozenset(origin.move_dest_ids.ids)
+            if dest_ids not in co_origin_ids_by_dest_ids:
+                co_origin_ids_by_dest_ids[dest_ids] = frozenset(origin.move_dest_ids.move_orig_ids.ids)
+            co_origin_ids[origin.id] = co_origin_ids_by_dest_ids[dest_ids]
+
+        # The origins each move can take from, computed once per set of origins. It is exact for
+        # the moves of `self`; for the other siblings, an origin outside of the batch only brings
+        # itself.
+        eligible_ids = {}
+        eligible_ids_by_orig_ids = {}
+        for move in siblings:
+            orig_ids = frozenset(move.move_orig_ids.ids)
+            if orig_ids not in eligible_ids_by_orig_ids:
+                eligible_ids_by_orig_ids[orig_ids] = orig_ids.union(
+                    *(co_origin_ids[orig_id] for orig_id in orig_ids if orig_id in co_origin_ids))
+            eligible_ids[move.id] = eligible_ids_by_orig_ids[orig_ids]
+
+        # What each done origin brought, per (location, lot, package, owner).
+        remaining = {}
+        for origin in origins:
+            if origin.state != 'done':
+                continue
+            quantity_by_key = {}
+            for ml in origin.move_line_ids:
+                if ml.product_uom_id.is_zero(ml.quantity):
+                    continue
+                key = (ml.location_dest_id, ml.lot_id, ml.result_package_id, ml.owner_id)
+                quantity_by_key[key] = quantity_by_key.get(key, 0) + ml.product_uom_id._compute_quantity(ml.quantity, ml.product_id.uom_id)
+            if quantity_by_key:
+                remaining[origin.id] = quantity_by_key
+
+        pools = {'remaining': remaining, 'eligible_ids': eligible_ids}
+        if not remaining:
+            return pools
+
+        # Charge what was already taken from the origins (including the reservations of `self`,
+        # which removes what they already reserved).
+        for move in siblings.filtered(lambda move: move.state != 'cancel'):
+            origin_ids = eligible_ids[move.id]
+            for ml in move.move_line_ids:
+                key = (ml.location_id, ml.lot_id, ml.package_id, ml.owner_id)
+                move._charge_origin_pool(pools, origin_ids, key, ml.quantity_product_uom)
+        return pools
+
+    def _get_origin_pool(self, pools):
+        """ Return the origins `self` takes from that are not empty yet, and what they can still
+        provide per (location, lot, package, owner), in the product UoM. """
+        self.ensure_one()
+        if not self._should_reserve_from_origins():
+            return [], {}
+        remaining = pools['remaining']
+        origin_ids = [origin_id for origin_id in pools['eligible_ids'].get(self.id, ()) if origin_id in remaining]
+        available_quantities = {}
+        for origin_id in origin_ids:
+            for key, quantity in pools['remaining'][origin_id].items():
+                available_quantities[key] = available_quantities.get(key, 0) + quantity
+        return origin_ids, available_quantities
+
+    def _charge_origin_pool(self, pools, origin_ids, key, quantity):
+        """ Take `quantity` (in the product UoM) of `key` from the origins `origin_ids`. An origin
+        is dropped from the pools once it has nothing left. """
+        self.ensure_one()
+        remaining = pools['remaining']
+        uom = self.product_id.uom_id
+        for origin_id in origin_ids:
+            if uom.compare(quantity, 0) <= 0:
+                break
+            quantity_by_key = remaining.get(origin_id)
+            if not quantity_by_key or key not in quantity_by_key:
+                continue
+            taken_quantity = min(quantity_by_key[key], quantity)
+            quantity -= taken_quantity
+            if uom.compare(quantity_by_key[key], taken_quantity) <= 0:
+                del quantity_by_key[key]
+                if not quantity_by_key:
+                    del remaining[origin_id]
+            else:
+                quantity_by_key[key] -= taken_quantity
+
     def _action_assign(self, force_qty=False):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `reserved_qty` for all its move lines is
@@ -2085,6 +2187,8 @@ Please change the quantity done or the rounding precision in your settings.""",
             )
         moves_mto = moves_to_assign.filtered(lambda m: m.move_orig_ids and not m._should_bypass_reservation())
         quants_cache = self.env['stock.quant']._get_quants_by_products_locations(moves_mto.product_id, moves_mto.location_id)
+        # What the chained moves can reserve, tracked per origin for the whole batch.
+        origin_pools = moves_to_assign.filtered('move_orig_ids')._prepare_origin_pools()
         for move in moves_to_assign:
             move = move.with_company(move.company_id)
             rounding = roundings[move]
@@ -2099,8 +2203,9 @@ Please change the quantity done or the rounding precision in your settings.""",
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
                 if move.move_orig_ids:
-                    available_move_lines = move._get_available_move_lines(assigned_moves_ids, partially_available_moves_ids)
-                    for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
+                    origin_ids, available_quantities = move._get_origin_pool(origin_pools)
+                    for key, quantity in available_quantities.items():
+                        location_id, lot_id, package_id, owner_id = key
                         qty_added = min(missing_reserved_quantity, quantity)
                         move_line_vals = move._prepare_move_line_vals(qty_added)
                         move_line_vals.update({
@@ -2111,6 +2216,10 @@ Please change the quantity done or the rounding precision in your settings.""",
                             'package_id': package_id.id,
                         })
                         move_line_vals_list.append(move_line_vals)
+                        # [PERF]: this method will handle the removal of the `key`
+                        # from the origins passed if they are fully consumed. This will prevent
+                        # iterating over them again in future iterations.
+                        move._charge_origin_pool(origin_pools, origin_ids, key, qty_added)
                         missing_reserved_quantity -= qty_added
                         if move.product_id.uom_id.is_zero(missing_reserved_quantity):
                             break
@@ -2156,23 +2265,22 @@ Please change the quantity done or the rounding precision in your settings.""",
                     else:
                         partially_available_moves_ids.add(move.id)
                 else:
-                    # Check what our parents brought and what our siblings took in order to
-                    # determine what we can distribute.
-                    # `quantity` is in `ml.product_uom_id` and, as we will later increase
-                    # the reserved quantity on the quants, convert it here in
-                    # `product_id.uom_id` (the UOM of the quants is the UOM of the product).
-                    available_move_lines = move._get_available_move_lines(assigned_moves_ids, partially_available_moves_ids)
-                    if not available_move_lines:
+                    # Reserve from what our origins (and our siblings' origins)
+                    # brought and that was not already taken.
+                    origin_ids, available_quantities = move._get_origin_pool(origin_pools)
+                    if not available_quantities:
                         continue
                     taken_quantities = {}
                     all_move_line_vals = []
-                    for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
+                    for key, quantity in available_quantities.items():
+                        location_id, lot_id, package_id, owner_id = key
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
                         effective_need = move._get_quantity_to_assign() - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
                         move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, effective_need), location_id, lot_id, package_id, owner_id, strict=True)
                         all_move_line_vals += move_line_vals
                         if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
                             taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
+                        move._charge_origin_pool(origin_pools, origin_ids, key, taken_quantity)
                     if all_move_line_vals:
                         self.env['stock.move.line'].create(all_move_line_vals)
 
