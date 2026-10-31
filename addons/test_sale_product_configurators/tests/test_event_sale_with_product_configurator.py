@@ -94,14 +94,15 @@ class TestEventProductConfiguratorUi(AccountTestInvoicingCommon, HttpCase):
             'date_tz': 'Europe/Brussels',
         })
 
+        ticket_vals = []
         for variant in cls.event_product_template.attribute_line_ids[0].product_template_value_ids:
-            cls.env['event.event.ticket'].create({
+            ticket_vals.append({
                 'name': variant.name,
                 'event_id': cls.event.id,
                 'product_id': variant.ptav_product_variant_ids[0].id,
             })
             if variant.name != 'VIP':
-                cls.env['event.event.ticket'].create({
+                ticket_vals.append({
                     'name': variant.name + ' + meal',
                     'event_id': cls.event.id,
                     'product_id': variant.ptav_product_variant_ids[0].id,
@@ -115,6 +116,7 @@ class TestEventProductConfiguratorUi(AccountTestInvoicingCommon, HttpCase):
             })
 
             cls.event_product_template.optional_product_ids = [cls.product_product_memorabilia.id,]
+        cls.env['event.event.ticket'].create(ticket_vals)
 
     def test_event_using_product_configurator(self):
         self.start_tour("/odoo", 'event_sale_with_product_configurator_tour', login='salesman')
