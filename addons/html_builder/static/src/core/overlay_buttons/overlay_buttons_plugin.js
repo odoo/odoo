@@ -52,6 +52,26 @@ export class OverlayButtonsPlugin extends Plugin {
                             position.top = newTop;
                             overlayEl.style.top = `${newTop}px`;
                         }
+                        const linkPopoverEl = document.querySelector(".o-we-linkpopover");
+                        if (linkPopoverEl && this.target) {
+                            const linkPopoverRect = linkPopoverEl.getBoundingClientRect();
+                            const overlayRect = overlayEl.getBoundingClientRect();
+                            const isVerticallyOverlapping = !(
+                                overlayRect.bottom <= linkPopoverRect.top ||
+                                overlayRect.top >= linkPopoverRect.bottom
+                            );
+                            if (isVerticallyOverlapping) {
+                                const targetRect = this.target.getBoundingClientRect();
+                                const isBelow = overlayRect.top >= targetRect.top;
+                                const newTop =
+                                    isBelow ||
+                                    linkPopoverRect.top - overlayRect.height < iframeRect.top
+                                        ? linkPopoverRect.bottom
+                                        : linkPopoverRect.top - overlayRect.height;
+                                position.top = newTop;
+                                overlayEl.style.top = `${newTop}px`;
+                            }
+                        }
                         return;
                     },
                     margin: 15,
