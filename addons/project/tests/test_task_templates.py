@@ -1,7 +1,7 @@
 from odoo import Command
 from odoo.addons.mail.tests.common import MailCase
 from odoo.addons.project.tests.test_project_base import TestProjectCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
@@ -217,3 +217,106 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
             2,
             "Template parent tasks should count template subtasks in subtask_count.",
         )
+
+    def test_template_ui_creation_with_nested_subtasks(self):
+        """
+        Creating a task via the UI context should correctly copy all task's fields and nested subtasks.
+        """
+        self.env["project.task"].create({
+            "name": "Grandchild Task",
+            "parent_id": self.child_task.id,
+        })
+        context = {
+            'default_task_template_id': self.template_task.id,
+        }
+        # PRE-SAVE: Verify the onchange method instantly populates the form.
+        task_form = Form(self.env["project.task"].with_context(context))
+        self.assertEqual(len(task_form.child_ids), 1)
+        # POST-SAVE: Verify the create override correctly saves all nested data to the database.
+        task = task_form.save()
+        self.assertFalse(task.is_template)
+        self.assertFalse(task.partner_id)
+        self.assertEqual(task.name, "Template")
+        self.assertEqual(len(task.child_ids), 1)
+        self.assertFalse(task.child_ids.is_template)
+        self.assertEqual(task.child_ids.name, "Child Task")
+        # Verify nested grandchild tasks are copied correctly.
+        self.assertEqual(len(task.child_ids.child_ids), 1)
+        self.assertFalse(task.child_ids.child_ids.is_template)
+        self.assertEqual(task.child_ids.child_ids.name, "Grandchild Task")
+        self.project_with_templates.partner_id = self.partner_3
+        task_form_with_partner = Form(self.env["project.task"].with_context(context))
+        self.assertEqual(task_form_with_partner.partner_id, self.partner_3)
+        task_with_partner = task_form_with_partner.save()
+        self.assertEqual(task_with_partner.partner_id, self.partner_3)
+        self.assertEqual(task_with_partner.child_ids.partner_id, self.partner_3)
+
+    def test_template_ui_mail_notification(self):
+        """
+        Creating a task via the UI context should trigger a creation email notification with the correct task name.
+        """
+        self.template_task.project_id.message_subscribe(
+            partner_ids=self.user_projectuser.partner_id.ids,
+            subtype_ids=(self.env.ref('mail.mt_comment') + self.env.ref('project.mt_task_new')).ids,
+        )
+        context = {
+            'default_task_template_id': self.template_task.id,
+        }
+        with self.mock_mail_gateway():
+            task_form = Form(self.env["project.task"].with_user(self.user_projectmanager).with_context(context))
+            task_form.name = "Custom Name Before Save"
+            task = task_form.save()
+        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'))
+        self.assertEqual(task.message_ids[0].notified_partner_ids, self.user_projectuser.partner_id)
+        self.assertEqual(task.message_ids[0].record_name, "Custom Name Before Save")
+
+    def test_template_ui_project_feature_inheritance(self):
+        """
+        Creating a task via the UI context should correctly apply or strip template features based on project settings.
+        """
+        self.template_task_without_project.write({
+            "recurring_task": True,
+            "repeat_type": "forever",
+            "repeat_unit": "month",
+            "repeat_interval": 3,
+            "depend_on_ids": [Command.set(self.template_task.ids)],
+        })
+        context = {
+            'default_project_id': self.project_with_templates.id,
+            'default_task_template_id': self.template_task_without_project.id,
+        }
+        self.project_with_templates.write({
+            "allow_recurring_tasks": False,
+            "allow_task_dependencies": False,
+        })
+        task_form_1 = Form(self.env["project.task"].with_context(context))
+        task_1 = task_form_1.save()
+        self.assertEqual(task_1.project_id, self.project_with_templates)
+        self.assertFalse(task_1.recurring_task)
+        self.assertFalse(task_1.depend_on_ids)
+        self.project_with_templates.write({
+            "allow_recurring_tasks": True,
+            "allow_task_dependencies": True,
+        })
+        task_form_2 = Form(self.env["project.task"].with_context(context))
+        task_2 = task_form_2.save()
+        self.assertTrue(task_2.recurring_task)
+        self.assertEqual(task_2.repeat_interval, 3)
+        self.assertEqual(task_2.depend_on_ids, self.template_task)
+
+    def test_template_ui_manual_edits_before_save(self):
+        """
+        Manual edits made to the form and its subtasks before saving should be preserved in the database.
+        """
+        context = {
+            'default_task_template_id': self.template_task.id,
+        }
+        # PRE-SAVE: Verify the UI form can be modified before saving.
+        task_form = Form(self.env["project.task"].with_context(context))
+        task_form.name = "User Modified Name"
+        with task_form.child_ids.edit(0) as child_form:
+            child_form.name = "Modified Child Name"
+        # POST-SAVE: Verify the manual edits are successfully stored in the database.
+        task = task_form.save()
+        self.assertEqual(task.name, "User Modified Name")
+        self.assertEqual(task.child_ids[0].name, "Modified Child Name")
