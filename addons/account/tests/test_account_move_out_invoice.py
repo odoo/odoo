@@ -150,6 +150,17 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         with self.assertRaisesRegex(UserError, 'lock date'):
             inv.line_ids.tax_tag_ids = tax_tag.ids
 
+    def test_taxes_legal_notes_translated(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        tax = self.tax_sale_a
+        tax.invoice_legal_notes = '<p>English note</p>'
+        tax.update_field_translations('invoice_legal_notes', {'fr_FR': {'English note': 'Note en français'}})
+        invoices = self.init_invoice('out_invoice', products=self.product_a) + self.init_invoice('out_invoice', products=self.product_a)
+
+        # Both invoices are computed at once in French, as when a batch of invoices is rendered
+        self.assertEqual(invoices.with_context(lang='fr_FR').mapped('taxes_legal_notes'), ['<p>Note en français</p>'] * 2)
+        self.assertEqual(invoices[1].with_context(lang='en_US').taxes_legal_notes, '<p>English note</p>')
+
     def test_invoice_default_sale_person(self):
         """ Test public user won't be assigned as invoice salesman
         """
