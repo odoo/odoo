@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+    <t t-name="web.HubTabs">
+        <t t-set="hubAction" t-value="this.props.hub.action" />
+        <div class="px-3">
+            <t t-foreach="hubAction.item_ids" t-as="hubItem" t-key="hubItem.id">
+                <button class="btn btn-secondary me-2"
+                    t-att-class="{ 'active': this.props.hub.itemKey === hubItem.key}"
+                    t-on-click="() => this.onTabClicked(hubItem.key)">
+                    <t t-out="hubItem.display_name"/>
+                </button>
+            </t>
+        </div>
+    </t>
+    -->
+
+    <t t-name="web.HubTabs">
+        <t t-set="pinnedIems" t-value="this.getPinnedItems()"/>
+        <div t-if="pinnedIems.length > 0" class="o_hub_tabs px-3 pt-2">
+            <ul class="nav nav-tabs border-bottom-0">
+                <t t-foreach="pinnedIems" t-as="hubItem" t-key="hubItem.id">  
+                    <li class="nav-item me-1">
+                        <a href="#" class="nav-link"
+                            t-att-class="{ 'active': this.props.hub.activeItemId === hubItem.id }"
+                            t-on-click.prevent="() => this.openHubItem(hubItem)">
+                            <t t-out="hubItem.display_name"/>
+                        </a>
+                    </li>
+                </t>
+                <!-- <li class="nav-item">
+                    <Dropdown position="'right-start'">
+                        <button class="btn btn-link">
+                            <i class="oi" data-icon="more_horiz"/>
+                        </button>
+                        <t t-set-slot="content">
+                            <t t-foreach="this.items" t-as="hubItem" t-key="hubItem.id">  
+                                <DropdownItem onSelected="() => this.openHubItem(hubItem.key)">
+                                    <div>
+                                        <span t-out="hubItem.display_name"/>
+                                    </div>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </li> -->
+            </ul>
+            
+        </div>
+    </t>
+
+</templates>

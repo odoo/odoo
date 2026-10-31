@@ -9,6 +9,15 @@
         <field name="groups_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
     </record>
 
+    <!-- Also replaces EA project_embedded_action_from_wh_dashboard -->
+    <!-- EA groups dropped: stock.group_stock_user -->
+    <record id="hub_item_from_wh" model="ir.actions.hub.item">
+        <field name="hub_id" ref="project.hub_project"/>
+        <field name="sequence">80</field>
+        <field name="name">From WH</field>
+        <field name="python_method">action_open_deliveries</field>
+    </record>
+
     <record id="project_embedded_action_from_wh_dashboard" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">80</field>
@@ -27,6 +36,15 @@
         <field name="groups_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
     </record>
 
+    <!-- Also replaces EA project_embedded_action_to_wh_dashboard -->
+    <!-- EA groups dropped: stock.group_stock_user -->
+    <record id="hub_item_to_wh" model="ir.actions.hub.item">
+        <field name="hub_id" ref="project.hub_project"/>
+        <field name="sequence">90</field>
+        <field name="name">To WH</field>
+        <field name="python_method">action_open_receipts</field>
+    </record>
+
     <record id="project_embedded_action_to_wh_dashboard" model="ir.embedded.actions">
         <field name="parent_res_model">project.project</field>
         <field name="sequence">90</field>
@@ -43,6 +61,15 @@
         <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
         <field name="python_method">action_open_all_pickings</field>
         <field name="groups_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+    </record>
+
+    <!-- Also replaces EA project_embedded_action_all_pickings_dashboard -->
+    <!-- EA groups dropped: stock.group_stock_user -->
+    <record id="hub_item_all_pickings" model="ir.actions.hub.item">
+        <field name="hub_id" ref="project.hub_project"/>
+        <field name="sequence">92</field>
+        <field name="name">Stock Moves</field>
+        <field name="python_method">action_open_all_pickings</field>
     </record>
 
     <record id="project_embedded_action_all_pickings_dashboard" model="ir.embedded.actions">

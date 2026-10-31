@@ -5,6 +5,10 @@
         <t t-if="this.env.inDialog" t-custom-portal="'#' + this.env.dialogId + ' .modal-footer'">
             <t t-call-slot="control-panel-buttons"/>
         </t>
+        <t t-if="this.env.config.hub and !this.env.inDialog and this.props.display.controlPanel" 
+           t-component="this.components.HubTabs" 
+           t-props="{hub: this.env.config.hub}"
+        />
         <t t-component="this.components.ControlPanel" slots="this.controlPanelSlots" t-if="this.props.display.controlPanel" display="this.props.display.controlPanel"/>
         <main t-ref="this.contentRef" class="o_content" t-attf-class="{{this.props.className}}" t-att-class="{ 'o_component_with_search_panel': this.props.display.searchPanel }">
             <t t-component="this.components.SearchPanel" t-if="this.props.display.searchPanel"/>

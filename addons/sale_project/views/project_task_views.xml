@@ -179,6 +179,16 @@
         <field name="context">{"from_embedded_action": true}</field>
     </record>
 
+    <!-- EA context dropped: {"from_embedded_action": true} -->
+    <!-- EA groups dropped: project.group_project_manager -->
+    <record id="hub_item_margins" model="ir.actions.hub.item">
+        <field name="hub_id" ref="project.hub_project"/>
+        <field name="sequence">132</field>
+        <field name="name">Margins</field>
+        <field name="python_method">action_real_margin</field>
+        <field name="context">{'search_default_month':0}</field>
+    </record>
+
     <record id="view_sale_project_quick_create_task_form" model="ir.ui.view">
         <field name="name">project.task.view.inherit</field>
         <field name="model">project.task</field>

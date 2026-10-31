@@ -9,6 +9,7 @@ import werkzeug
 import werkzeug.exceptions
 from werkzeug.urls import iri_to_uri
 
+from odoo.fields import Domain
 from odoo.http import request, router
 from odoo.http.session import get_default_session, session_store
 from odoo.tools.misc import file_open
@@ -62,6 +63,35 @@ def clean_action(action, env):
             action_name, ', '.join(map(repr, custom_properties)))
 
     return cleaned_action
+
+
+def add_hub_info(action, env, res_id, action_id=None, model=None, method=None):
+    """ If ``action`` is opened through a hub item, add its hub to it, for the
+    record ``res_id`` of the hub's model.
+
+    The item is the one calling ``method`` on ``model`` if any: a method
+    augmenting an action record takes precedence over that record. Otherwise,
+    it is the one opening ``action_id``.
+    """
+    conditions = []
+    if method:
+        conditions.append(Domain('python_method', '=', method))
+    if action_id:
+        conditions.append(Domain('action_id', '=', action_id))
+    if not conditions:
+        return
+    domain = Domain.OR(conditions)
+    if model:
+        domain &= Domain('hub_id.res_model', '=', model)
+    items = env['ir.actions.hub.item'].search(domain, limit=2)
+    hub_item = items.filtered('python_method')[:1] or items[:1]
+    if not hub_item:
+        return
+    hub = hub_item.hub_id.sudo().with_context(active_id=res_id)
+    action['hub_action'] = hub._get_action_dict()
+    pinned_items = env['res.users.settings.hub']._get_pinned_items(hub, res_id)
+    action['hub_action']['pinned_item_ids'] = pinned_items.ids
+    action['hub_action']['active_item_id'] = hub_item.id
 
 
 def ensure_db(redirect='/web/database/selector', db=None):

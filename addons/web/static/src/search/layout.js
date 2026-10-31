@@ -1,6 +1,7 @@
 import { Component, signal, t, useProps } from "@odoo/owl";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
+import { HubTabs } from '@web/search/hub_tabs/hub_tabs';
 
 /**
  * @param {Object} params
@@ -10,6 +11,7 @@ export function extractLayoutComponents(params) {
     const layoutComponents = {
         ControlPanel: params.ControlPanel || ControlPanel,
         SearchPanel: params.SearchPanel || SearchPanel,
+        HubTabs,
     };
     return layoutComponents;
 }

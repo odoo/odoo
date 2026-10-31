@@ -4,7 +4,8 @@ import logging
 from odoo import _
 from odoo.exceptions import UserError, MissingError, AccessError
 from odoo.http import Controller, request, route
-from .utils import clean_action
+from odoo.service.model import call_kw
+from .utils import add_hub_info, clean_action
 from werkzeug.exceptions import BadRequest
 
 
@@ -42,8 +43,17 @@ class Action(Controller):
         if not base_action:
             raise MissingActionError(_("The action “%s” does not exist", action_id))
         action_type = base_action[0]['type']
-        if action_type == 'ir.actions.act_window':
+        if action_type in ('ir.actions.act_window', 'ir.actions.hub'):
+
+            # enrich with hub data
             result = request.env[action_type].sudo().browse([action_id])._get_action_dict()
+            active_id = request.env.context.get('active_id')
+            if action_type == 'ir.actions.hub':
+                hub = request.env['ir.actions.hub'].browse(action_id)
+                result['pinned_item_ids'] = request.env['res.users.settings.hub']._get_pinned_items(hub, active_id).ids
+            else:
+                add_hub_info(result, request.env, active_id, action_id=action_id)
+
             return clean_action(result, env=request.env) if result else False
         result = request.env[action_type].sudo().browse([action_id]).read()
         return clean_action(result[0], env=request.env) if result else False
