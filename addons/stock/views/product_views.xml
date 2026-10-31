@@ -310,8 +310,6 @@
                 <data>
                     <div name="button_box" position="inside">
                         <t groups="stock.group_stock_user">
-                            <field name="store_by" invisible="1"/> <!-- drives invisible on the "Lot/Serial Numbers" stat button below -->
-                            <field name="show_on_hand_qty_status_button" invisible="1"/> <!-- computed alongside show_forecasted_qty_status_button by the same method; kept in sync in the view -->
                             <button type="object"
                                 name="action_product_forecast_report"
                                 invisible="not show_forecasted_qty_status_button"
@@ -399,12 +397,16 @@
                                         <span class="o_stat_text">Putaway Rules</span>
                                     </div>
                              </button>
-                            <button type="object" string="Storage Capacities"
+                            <button type="object"
                                 name="action_view_storage_category_capacity"
                                 groups="stock.group_stock_multi_locations"
-                                invisible="type == 'service'"
+                                invisible="store_by == 'untracked'"
                                 class="oe_stat_button"
-                                icon="inventory_2"/>
+                                icon="inventory_2">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Storage Capacities</span>
+                                </div>
+                            </button>
                         </t>
                     </div>
                     <xpath expr="//button[@name='%(action_open_routes)d']" position="attributes">
@@ -426,8 +428,6 @@
                 <data>
                     <button name="action_open_documents" position="before">
                         <t groups="stock.group_stock_user">
-                            <field name="store_by" invisible="1"/> <!-- drives invisible on the "Lot/Serial Numbers" stat button below -->
-                            <field name="show_on_hand_qty_status_button" invisible="1"/> <!-- computed alongside show_forecasted_qty_status_button by the same method; kept in sync in the view -->
                             <button type="object"
                                 name="action_product_tmpl_forecast_report"
                                 invisible="not show_forecasted_qty_status_button"
@@ -524,7 +524,7 @@
                              <button type="object"
                                 name="action_view_storage_category_capacity"
                                 groups="stock.group_stock_multi_locations"
-                                invisible="type == 'service'"
+                                invisible="store_by == 'untracked'"
                                 class="oe_stat_button"
                                 icon="inventory_2">
                                 <div class="o_stat_info">
