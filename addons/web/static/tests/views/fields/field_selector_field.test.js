@@ -1,7 +1,18 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryAllTexts } from "@odoo/hoot-dom";
-import { followRelation } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
-import { contains, defineModels, fields, models, mountView, onRpc } from "../../web_test_helpers";
+import {
+    followRelation,
+    getModelFieldSelectorValues,
+} from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    mountView,
+    onRpc,
+    serverState,
+} from "../../web_test_helpers";
 
 class Contact extends models.Model {
     email = fields.Char();
@@ -165,11 +176,11 @@ test("follow_relations option", async () => {
 });
 
 test("allow_properties option", async () => {
-    Contact._fields.contact_properties_definition = fields.PropertiesDefinition()
+    Contact._fields.contact_properties_definition = fields.PropertiesDefinition();
     Lead._fields.lead_properties = fields.Properties({
         definition_record: "contact_id",
         definition_record_field: "contact_properties_definition",
-    })
+    });
 
     await mountView({
         type: "form",
@@ -190,4 +201,28 @@ test("allow_properties option", async () => {
         ["Contact", "Created on", "Display name", "Id", "Last Modified on", "Note", "Salesperson"],
         { message: "should display fields of the specified model, except the properties field" }
     );
+});
+
+test("invalid path typed in debug input is discarded", async () => {
+    serverState.debug = "1";
+    UpdateRecordAction._records = [{ id: 1, update_path: "note" }];
+    await mountView({
+        type: "form",
+        resModel: "update.record.action",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="update_path" widget="field_selector" options="{'model': 'lead'}"/>
+            </form>
+        `,
+    });
+    expect(getModelFieldSelectorValues()).toEqual(["Note"]);
+
+    await contains(".o_field_widget[name='update_path'] .o_input").click();
+    await contains(".o_model_field_selector_debug").edit("not_a_field");
+    expect(getModelFieldSelectorValues()).toEqual(["not_a_field"]);
+    await contains(".o_model_field_selector_popover_close").click();
+    expect(getModelFieldSelectorValues()).toEqual(["Note"]);
+    expect(".o_model_field_selector_warning").toHaveCount(0);
+    expect(".o_form_status_indicator_buttons").toHaveClass("invisible");
 });
