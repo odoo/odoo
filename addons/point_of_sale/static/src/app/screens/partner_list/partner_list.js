@@ -20,6 +20,7 @@ export class PartnerList extends Component {
         },
         getPayload: { type: Function },
         close: { type: Function },
+        order: { type: Object, optional: true },
     };
 
     setup() {
