@@ -3,6 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { EditorDynamicPlaceholderPopover } from "./editor_dynamic_placeholder_popover";
+import { selectElements } from "@html_editor/utils/dom_traversal";
+import { isEmpty } from "@html_editor/utils/dom_info";
 
 /**
  * @typedef {Object} DynamicPlaceholderShared
@@ -34,10 +36,13 @@ export class DynamicPlaceholderPlugin extends Plugin {
             commandId: "openDynamicPlaceholder",
         },
         power_buttons: { commandId: "openDynamicPlaceholder" },
+        system_attributes: "data-dynamic-field-model",
+        normalize_handlers: this.normalize.bind(this),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
     };
+
     setup() {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;
-
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
         this.overlay = this.dependencies.overlay.createOverlay(EditorDynamicPlaceholderPopover, {
             hasAutofocus: true,
@@ -45,11 +50,33 @@ export class DynamicPlaceholderPlugin extends Plugin {
         });
     }
 
+    normalize(root) {
+        for (const el of selectElements(root, "t[t-out^='object.']")) {
+            let fieldModel = el.dataset.dynamicFieldModel;
+            if (!fieldModel) {
+                fieldModel = this.defaultResModel;
+                el.dataset.dynamicFieldModel = fieldModel;
+            }
+            if (fieldModel !== this.defaultResModel) {
+                this.removePlaceHolder(el);
+            }
+        }
+    }
+
+    cleanForSave({ root }) {
+        for (const el of selectElements(root, "[data-dynamic-field-model]")) {
+            delete el.dataset.dynamicFieldModel;
+        }
+    }
+
     /**
      * @param {string} resModel
      */
     updateDphDefaultModel(resModel) {
-        this.defaultResModel = resModel;
+        if (this.defaultResModel !== resModel) {
+            this.defaultResModel = resModel;
+            this.removeAllFieldBlock();
+        }
     }
 
     /**
@@ -88,6 +115,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
 
         const t = document.createElement("T");
         t.setAttribute("t-out", dynamicPlaceholder);
+        t.dataset.dynamicFieldModel = this.defaultResModel;
         if (defaultValue?.length) {
             t.innerText = defaultValue;
         }
@@ -118,5 +146,21 @@ export class DynamicPlaceholderPlugin extends Plugin {
     onClose() {
         this.overlay.close();
         this.dependencies.selection.focusEditable();
+    }
+
+    removeAllFieldBlock() {
+        const fieldBlock = this.editable.querySelectorAll("t[t-out^='object.']");
+        fieldBlock.forEach((el) => {
+            this.removePlaceHolder(el);
+        });
+        this.dependencies.history.addStep();
+    }
+
+    removePlaceHolder(element) {
+        const parent = element.parentElement;
+        element.remove();
+        if (parent && !parent.firstElementChild && isEmpty(parent)) {
+            parent?.appendChild(this.document.createElement("br"));
+        }
     }
 }
