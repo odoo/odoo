@@ -349,7 +349,7 @@ export class MailSuggestionPlugin extends Plugin {
                             label: (
                                 thread?.getPersonaName(suggestion) ||
                                 suggestion.displayName ||
-                                suggestion.email ||
+                                suggestion.displayEmail ||
                                 ""
                             ).trim(),
                             partner: suggestion,

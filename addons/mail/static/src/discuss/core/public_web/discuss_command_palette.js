@@ -91,7 +91,7 @@ export class DiscussCommand extends Component {
     }
 
     get email() {
-        return this.props.persona?.email;
+        return this.props.persona?.displayEmail;
     }
 }
 
@@ -145,7 +145,7 @@ export class DiscussCommandPalette {
                 (partner) =>
                     partner.main_user_id?.share === false &&
                     (normalize(partner.displayName || "").includes(this.cleanedTerm) ||
-                        normalize(partner.email || "").includes(this.cleanedTerm)) &&
+                        normalize(partner.displayEmail || "").includes(this.cleanedTerm)) &&
                     (!filtered || !filtered.has(partner))
             );
             partners = this.suggestion

@@ -30,6 +30,21 @@ class ResPartner(models.Model):
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(tracking=True)
 
+    @api.depends('email_normalized')
+    def _compute_display_name(self):
+        """ Show the normalized email, as the raw one may repeat the name. """
+        super()._compute_display_name()
+        if not self.env.context.get('show_email'):
+            return
+        for partner in self:
+            if not partner.email_normalized or partner.email_normalized == partner.email:
+                continue
+            if self.env.context.get('formatted_display_name'):
+                raw, normalized = f"--{partner.email}--", f"--{partner.email_normalized}--"
+            else:
+                raw, normalized = f"<{partner.email}>", f"<{partner.email_normalized}>"
+            partner.display_name = partner.display_name.replace(raw, normalized)
+
     # pseudo computes
 
     def _get_needaction_count(self):
@@ -245,7 +260,9 @@ class ResPartner(models.Model):
         # sudo: can access avatar card fields of user of accessible partner
         res.one("main_user_id", "_store_avatar_card_fields", sudo=True)
         if res.is_for_internal_users():
-            res.extend(["email", "phone", "tz"])
+            res.extend(["email_normalized", "phone", "tz"])
+            # raw email only as a fallback when it has no normalized form
+            res.attr("email", predicate=lambda p: not p.email_normalized)
 
     def _store_partner_fields(self, res: Store.FieldList):
         res.extend(["active", "is_company", "name", "partner_share"])
@@ -253,7 +270,9 @@ class ResPartner(models.Model):
         res.from_method("_store_im_status_fields", internal=True)
         # sudo: to access portal user of another company in chatter
         res.one("main_user_id", "_store_main_user_fields", sudo=True)
-        res.extend(["email", "tz"], internal=True)
+        res.extend(["email_normalized", "tz"], internal=True)
+        # raw email only as a fallback when it has no normalized form
+        res.attr("email", predicate=lambda p: not p.email_normalized, internal=True)
 
     @api.readonly
     @api.model
