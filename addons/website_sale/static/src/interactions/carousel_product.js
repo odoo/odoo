@@ -35,7 +35,15 @@ export class CarouselProduct extends Interaction {
 
     start() {
         for (const iframeEl of this.el.querySelectorAll(".carousel-item:not(.active) iframe")) {
-            iframeEl.dataset.src = iframeEl.getAttribute("src");
+            // This interaction can start more than once on the same DOM without ever being
+            // torn down in between (e.g. once for the live page, once more when entering the
+            // website editor): only save "src" the first time, otherwise a slide that was
+            // already hidden loses its real URL (already moved to "data-src") and gets the
+            // literal string "null" instead, which then resolves as a broken same-page URL
+            // once the slide is restored.
+            if (!iframeEl.dataset.src) {
+                iframeEl.dataset.src = iframeEl.getAttribute("src");
+            }
             iframeEl.removeAttribute("src");
         }
         this.updateCarouselPosition();
