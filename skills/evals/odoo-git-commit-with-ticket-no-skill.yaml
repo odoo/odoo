@@ -1,0 +1,27 @@
+# Baseline for odoo-git-commit-with-ticket.yaml: the same agents and task, with no
+# skill attached. The difference between the two jobs is what the skill changes.
+#   cd skills/evals && harbor run -c odoo-git-commit-with-ticket-no-skill.yaml
+# The process judge's skill_consulted criterion cannot pass here, so compare the
+# structure and message dimensions, or the process score with that criterion
+# discounted.
+job_name: odoo-git-commit-with-ticket-no-skill
+jobs_dir: jobs
+n_attempts: 3
+n_concurrent_trials: 3
+
+agents:
+  - name: claude-code
+    model_name: anthropic/claude-haiku-4-5-20251001
+  - name: claude-code
+    model_name: anthropic/claude-sonnet-5
+  - name: claude-code
+    model_name: anthropic/claude-opus-5
+  - name: codex
+    model_name: openai/gpt-6-luna
+  - name: codex
+    model_name: openai/gpt-6-sol
+  - name: codex
+    model_name: openai/gpt-6-astra
+
+tasks:
+  - path: ./odoo-git-commit-fix-snailmail

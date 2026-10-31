@@ -1,0 +1,7 @@
+# structure: deterministic checks on the commit and the message shape
+# message:   LLM judge on the content of the message
+# process:   LLM judge on the trajectory (skill consulted, nothing else touched, honest reply)
+[[reward]]
+name = "reward"
+aggregation = "weighted-mean"
+weights = { structure = 1.0, message = 2.0, process = 1.0 }
