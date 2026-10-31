@@ -11,6 +11,20 @@ export class LoyaltyCard extends models.ServerModel {
         return ["partner_id", "code", "points", "program_id", "expiration_date", "write_date"];
     }
 
+    /**
+     * Mirror of *models/loyalty_card.py* LoyaltyCard.get_card_status: the POS asks the
+     * server for a card it does not have in memory when a code is typed or scanned.
+     */
+    get_card_status(code) {
+        const cardIds = this.search([["code", "=", code]]);
+        const [card] = this.read(cardIds, ["source_pos_order_id"], false);
+        return {
+            status: true,
+            "loyalty.card": this.read(cardIds, this._load_pos_data_fields(), false),
+            has_source_order: Boolean(card?.source_pos_order_id),
+        };
+    }
+
     _records = [
         {
             id: 1,
