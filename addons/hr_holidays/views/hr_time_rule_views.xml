@@ -47,7 +47,7 @@
                     <field name="leave_compensation_rate" widget="percentage" nolabel="1" style="width:6ch"/>
                     <span class="text-muted" invisible="not leave_compensation_rate or threshold_operator == 'less_than'">to</span>
                     <span class="text-muted" invisible="not leave_compensation_rate or threshold_operator != 'less_than'">from</span>
-                    <field name="allocation_type_id" nolabel="1"
+                    <field name="allocation_type_id" widget="many2one_work_entry_type" nolabel="1"
                         invisible="not leave_compensation_rate"
                         placeholder="Choose a Time Off Type"
                         help="Must require allocation and be selectable in time off requests."/>
