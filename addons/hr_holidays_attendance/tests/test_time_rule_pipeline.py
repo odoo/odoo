@@ -2,6 +2,7 @@
 
 import unittest
 from datetime import date, datetime, timedelta
+from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
@@ -932,14 +933,14 @@ class TestTimeRulePipeline(TransactionCase):
             'check_in': datetime(2022, 12, 12, 6),
             'check_out': datetime(2022, 12, 12, 20),
         })
-        excess, deficit, active_iv = self.time_rule._evaluate_rules(
+        excess, deficit, source_intervals_by_employee = self.time_rule._evaluate_rules(
             att, datetime(2022, 12, 12), datetime(2022, 12, 12, 23, 59, 59))
-        result = self.time_rule._apply_attendance_output(excess, deficit, active_iv=active_iv)
+        result = self.time_rule._apply_attendance_output(excess, deficit, source_intervals_by_employee=source_intervals_by_employee)
         self.assertIsNotNone(result)
-        new_records, source_ids, excess_alloc, _deficit_alloc = result
+        new_records, source_ids, excess_allocation_credits, _deficit_alloc = result
         self.assertEqual(set(source_ids), {att.id})
         self.assertEqual(new_records.work_entry_type_id, self.overtime_type)
-        self.assertEqual(len(excess_alloc), 1)
+        self.assertEqual(len(excess_allocation_credits), 1)
 
     def test_refuse_attendance_refuses_outputs_and_reverses_credits(self):
         """Refusing a source attendance refuses its outputs and reverses their credits."""
@@ -1158,7 +1159,7 @@ class TestTimeRulePipeline(TransactionCase):
         R2: output WET=OT, no threshold, condition=[att_type] -> reclassifies R1's intervals.
 
         Before fix: R2 overwrote cls_rule=R1 -> R1 allocation silently lost.
-        After fix:  orphaned credit for R1 is preserved and included in excess_alloc.
+        After fix:  orphaned credit for R1 is preserved and included in excess_allocation_credits.
 
         Expected: ALLOC_R1 and ALLOC_R2 each created for 6h (0.375d at 50%).
         """
@@ -1393,6 +1394,165 @@ class TestTimeRulePipeline(TransactionCase):
         total_ot = sum((a.check_out - a.check_in).total_seconds() / 3600 for a in output_atts)
         self.assertAlmostEqual(total_ot, 2.0, places=4,
                                msg="2h excess above 8h reference baseline expected")
+
+    def test_reference_calendar_without_company_uses_employee_company_calendar(self):
+        """A reference rule without calendar nor company compares each employee with the
+        calendar of their own company, not with the one of the current company."""
+        half_time_calendar = self.env['resource.calendar'].create({
+            'name': '20h/week',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': weekday, 'hour_from': 8, 'hour_to': 12})
+                for weekday in ['0', '1', '2', '3', '4']
+            ],
+        })
+        other_company = self.env['res.company'].create({
+            'name': 'Half Time Company',
+            'resource_calendar_id': half_time_calendar.id,
+        })
+        other_company_employee = self.env['hr.employee'].create({
+            'name': 'Other Company Employee',
+            'tz': 'UTC',
+            'company_id': other_company.id,
+            'resource_calendar_id': self.calendar.id,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+        })
+        self.time_rule.active = False
+        self.env['hr.time.rule'].create({
+            'name': 'Reference Rule without company',
+            'calendar_source': 'reference',
+            'quantity_period': 'day',
+            'work_entry_type_id': self.overtime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        # current company: 8h/day, employee's company: 4h/day -> 6h worked is 2h of overtime
+        self.assertNotEqual(self.env.company, other_company)
+        self.env['hr.attendance'].create({
+            'employee_id': other_company_employee.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 14),
+        })
+        overtime_attendances = self.env['hr.attendance'].search([
+            ('employee_id', '=', other_company_employee.id),
+            ('work_entry_type_id', '=', self.overtime_type.id),
+        ])
+        overtime_hours = sum((attendance.check_out - attendance.check_in).total_seconds() / 3600 for attendance in overtime_attendances)
+        self.assertAlmostEqual(overtime_hours, 2.0, places=4)
+
+    def test_deficit_occupied_time_fetched_once_per_employee(self):
+        """The time already occupied by an employee is fetched once for all their deficits."""
+        undertime_type = self.env['hr.work.entry.type'].create({'name': 'Undertime', 'code': 'UNDOCC'})
+        self.time_rule.active = False
+        self.env['hr.time.rule'].create({
+            'name': 'Undertime Rule',
+            'threshold_operator': 'less_than',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': undertime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        Attendance = self.env['hr.attendance']
+        AttendanceModel = self.registry['hr.attendance']
+        with patch.object(
+            AttendanceModel, '_get_time_rule_deficit_occupied', autospec=True,
+            side_effect=AttendanceModel._get_time_rule_deficit_occupied,
+        ) as deficit_occupied_mock:
+            # 6h worked on 3 days of 8h -> 3 deficits of 2h
+            Attendance.create([{
+                'employee_id': self.cal_emp.id,
+                'check_in': datetime(2022, 12, day, 8),
+                'check_out': datetime(2022, 12, day, 14),
+            } for day in (12, 13, 14)])
+        self.assertEqual(deficit_occupied_mock.call_count, 1)
+        undertime_attendances = Attendance.search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', undertime_type.id),
+        ])
+        self.assertEqual(len(undertime_attendances), 3)
+        for undertime_attendance in undertime_attendances:
+            self.assertAlmostEqual((undertime_attendance.check_out - undertime_attendance.check_in).total_seconds() / 3600, 2.0, places=4)
+
+    def test_rule_of_a_company_only_applies_to_its_employees(self):
+        other_company = self.env['res.company'].create({'name': 'Other Rule Company'})
+        other_company_employee = self.env['hr.employee'].create({
+            'name': 'Other Company Employee',
+            'tz': 'UTC',
+            'company_id': other_company.id,
+            'resource_calendar_id': self.calendar.id,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+        })
+        self.time_rule.company_id = other_company
+        # 10h worked by an employee of each company, the rules of both companies being evaluated
+        self.env['hr.attendance'].with_context(allowed_company_ids=[self.env.company.id, other_company.id]).create([{
+            'employee_id': employee.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 18),
+        } for employee in (self.cal_emp, other_company_employee)])
+        overtime_attendances = self.env['hr.attendance'].search([
+            ('employee_id', 'in', (self.cal_emp | other_company_employee).ids),
+            ('work_entry_type_id', '=', self.overtime_type.id),
+        ])
+        self.assertEqual(overtime_attendances.employee_id, other_company_employee)
+
+    def test_invalid_employee_domain_raises_when_evaluated(self):
+        """A domain that can be parsed but not evaluated on the employees raises when the rule runs."""
+        self.time_rule.employee_domain = "[('unknown_field', '=', 1)]"
+        with self.assertRaises(ValidationError):
+            self.env['hr.attendance'].create({
+                'employee_id': self.cal_emp.id,
+                'check_in': datetime(2022, 12, 12, 8),
+                'check_out': datetime(2022, 12, 12, 18),
+            })
+
+    def _create_undertime_rule(self):
+        self.time_rule.active = False
+        undertime_type = self.env['hr.work.entry.type'].create({'name': 'Undertime', 'code': 'UNDTST'})
+        self.env['hr.time.rule'].create({
+            'name': 'Undertime Rule',
+            'threshold_operator': 'less_than',
+            'calendar_source': 'employee',
+            'quantity_period': 'day',
+            'work_entry_type_id': undertime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        return undertime_type
+
+    def test_deficit_due_to_break_placed_at_the_end_of_the_day(self):
+        undertime_type = self._create_undertime_rule()
+        # the whole 8h schedule is covered, but the 2h break leaves 7h worked: the missing hour
+        # is due to the break, so it is placed at the very end of the day
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 17),
+            'break_duration': 2,
+        })
+        undertime_attendance = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', undertime_type.id),
+        ])
+        self.assertEqual(len(undertime_attendance), 1)
+        self.assertAlmostEqual((undertime_attendance.check_out - undertime_attendance.check_in).total_seconds() / 3600, 1.0, places=3)
+        self.assertGreaterEqual(undertime_attendance.check_in, datetime(2022, 12, 12, 22, 59))
+
+    def test_deficit_already_placed_by_a_previous_run_is_not_placed_twice(self):
+        undertime_type = self._create_undertime_rule()
+        # 6h worked on a day of 8h -> 2h of undertime
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 14),
+        })
+        self.env['hr.attendance']._process_time_rules_for([(self.cal_emp, date(2022, 12, 12), date(2022, 12, 12))])
+        undertime_attendances = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('work_entry_type_id', '=', undertime_type.id),
+        ])
+        self.assertEqual(len(undertime_attendances), 1)
+        self.assertAlmostEqual(sum((attendance.check_out - attendance.check_in).total_seconds() / 3600 for attendance in undertime_attendances), 2.0, places=4)
 
     def test_sequential_rules_second_rule_finds_no_excess(self):
         """Sequential pipeline: R2 with the same threshold sees 0h excess after R1 already claimed it."""
@@ -3005,6 +3165,46 @@ class TestTimeRulePipelineLeaves(TransactionCase):
         finally:
             rule.write({'active': False})
 
+    def test_consecutive_slices_of_the_same_rule_make_one_time_off(self):
+        """A first rule without output type tags 8:00-10:00, a second one classifies the whole
+        8:00-12:00: its two slices touch at 10:00 and make a single time off."""
+        self.env['hr.time.rule'].create({
+            'name': 'Tag the morning',
+            'sequence': 1,
+            'working_hours_mode': 'day',
+            'expected_hours': 0,
+            'timing_start': 8,
+            'timing_stop': 10,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        classifying_rule = self.env['hr.time.rule'].create({
+            'name': 'Classify everything',
+            'sequence': 2,
+            'working_hours_mode': 'day',
+            'expected_hours': 0,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 12))
+        self.assertEqual(leave.work_entry_type_id, self.out_type)
+        self.assertEqual(leave.time_rule_id, classifying_rule)
+        self.assertEqual(leave.date_to, datetime(2022, 12, 12, 12))
+        self.assertFalse(self._outputs(leave), "The source itself is the only time off")
+
+    def test_output_time_off_shows_its_time_range(self):
+        self.env['hr.time.rule'].create({
+            'name': 'Exceed 4h/day',
+            'working_hours_mode': 'day',
+            'expected_hours': 4,
+            'work_entry_type_id': self.out_type.id,
+            'condition_work_entry_type_ids': [self.src_type.id],
+        })
+        leave = self._make_leave(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+        output_leaves = self._outputs(leave)
+        self.assertTrue(output_leaves)
+        for output_leave in output_leaves:
+            self.assertEqual(output_leave.time_rule_time_range, f"{output_leave.date_from:%H:%M} → {output_leave.date_to:%H:%M}")
+
     def test_past_leave_less_than_creates_output(self):
 
         rule = self.env['hr.time.rule'].create({
@@ -3897,8 +4097,8 @@ class TestTimeRulePipelineLeaves(TransactionCase):
           rule2 fires: alloc_acc | {rule1} → (wet, src, rule2, {rule1})
 
         In _apply_output excess processing:
-          - rule1 credited via alloc_acc loop  → excess_alloc gets (emp, rule1, 6h)
-          - rule2 credited via pp-only branch  → excess_alloc gets (emp, rule2, 6h)
+          - rule1 credited via alloc_acc loop  → excess_allocation_credits gets (emp, rule1, 6h)
+          - rule2 credited via pp-only branch  → excess_allocation_credits gets (emp, rule2, 6h)
 
         Both rules target the same allocation type, so the days are accumulated into a
         single allocation record (2x credit) rather than two separate records.
@@ -3934,7 +4134,7 @@ class TestTimeRulePipelineLeaves(TransactionCase):
 
             # each rule must earn allocation credit for the full 6h interval:
             # rule1 via alloc_acc credit loop, rule2 via pp-only excess branch -> 2 credits total.
-            # both excess_alloc entries target the same allocation type so the days are
+            # both excess_allocation_credits entries target the same allocation type so the days are
             # accumulated into one allocation record with 2x the per-rule credit.
             allocations = self.env['hr.leave.allocation'].sudo().search([
                 ('employee_id', '=', leave.employee_id.id),

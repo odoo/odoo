@@ -496,3 +496,152 @@ class TestTimeRuleAllocationLog(TransactionCase):
             ('allocation_id', '=', alloc.id),
         ])
         self.assertFalse(logs, "Log entry must be removed after reversal")
+
+    def test_find_time_rule_allocations_in_batch(self):
+        """All the employees are searched at once; per employee, only the last validated
+        open-ended allocation of the type is returned, and employees without one are left out."""
+        other_employee = self.env['hr.employee'].create({
+            'name': 'Other Log Employee',
+            'tz': 'UTC',
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3000,
+            'resource_calendar_id': self.calendar.id,
+        })
+        other_comp_type = self.comp_type.copy({'name': 'Other Compensatory Rest', 'code': 'COMPLOG2'})
+        allocations = self.env['hr.leave.allocation'].sudo().create([{
+            'employee_id': self.emp.id,
+            'work_entry_type_id': self.comp_type.id,
+            'number_of_days': 1,
+            'date_to': False,
+        }, {
+            # created in the same transaction: the highest id is the last created
+            'employee_id': self.emp.id,
+            'work_entry_type_id': self.comp_type.id,
+            'number_of_days': 2,
+            'date_to': False,
+        }, {
+            # not open-ended: not a time rule allocation
+            'employee_id': other_employee.id,
+            'work_entry_type_id': self.comp_type.id,
+            'number_of_days': 3,
+            'date_from': '2022-01-01',
+            'date_to': '2022-12-31',
+        }, {
+            'employee_id': other_employee.id,
+            'work_entry_type_id': other_comp_type.id,
+            'number_of_days': 4,
+            'date_to': False,
+        }])
+        _previous_allocation, last_allocation, _not_open_ended_allocation, other_type_allocation = allocations
+        employees = self.emp | other_employee
+        TimeRule = self.env['hr.time.rule']
+        self.env.invalidate_all()
+        # one query to search, one to read the employee of the allocations found
+        with self.assertQueryCount(2):
+            allocation_by_employee = TimeRule._find_time_rule_allocations(self.comp_type, employees)
+        self.assertEqual(allocation_by_employee, {self.emp: last_allocation})
+        self.assertEqual(TimeRule._find_time_rule_allocations(other_comp_type, employees), {other_employee: other_type_allocation})
+
+    def test_pending_allocation_credited_instead_of_creating_a_new_one(self):
+        """An allocation created by a run but still waiting for approval is credited by the next
+        runs, instead of a new pending allocation being created each time."""
+        type_to_approve = self.comp_type.copy({
+            'name': 'Compensatory Rest To Approve',
+            'code': 'COMPAPP',
+            'allocation_validation_type': 'hr',
+        })
+        pending_allocation = self.env['hr.leave.allocation'].sudo().with_context(allocation_skip_auto_approve=True).create({
+            'employee_id': self.emp.id,
+            'work_entry_type_id': type_to_approve.id,
+            'number_of_days': 1,
+            'date_to': False,
+        })
+        self.assertEqual(pending_allocation.state, 'confirm')
+        self._make_rule(allocation_type_id=type_to_approve.id)
+
+        # Saturday: no schedule -> the 4h are excess -> 4h * 100% / 8h = 0.5 day
+        self._make_att(datetime(2022, 12, 10, 8), datetime(2022, 12, 10, 12))
+
+        allocations = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', '=', self.emp.id),
+            ('work_entry_type_id', '=', type_to_approve.id),
+        ])
+        self.assertEqual(allocations, pending_allocation, "No new allocation must be created")
+        self.assertAlmostEqual(pending_allocation.number_of_days, 1.5, places=5)
+
+    def test_validated_allocation_preferred_to_pending_one(self):
+        type_to_approve = self.comp_type.copy({
+            'name': 'Compensatory Rest To Approve',
+            'code': 'COMPAPP',
+            'allocation_validation_type': 'hr',
+        })
+        validated_allocation, pending_allocation = self.env['hr.leave.allocation'].sudo().with_context(
+            allocation_skip_auto_approve=True,
+        ).create([{
+            'employee_id': self.emp.id,
+            'work_entry_type_id': type_to_approve.id,
+            'number_of_days': 1,
+            'date_to': False,
+        }] * 2)
+        validated_allocation.state = 'validate'
+        self.assertEqual(pending_allocation.state, 'confirm', "The pending allocation is the last created")
+        TimeRule = self.env['hr.time.rule']
+        self.assertEqual(
+            TimeRule._find_time_rule_allocations(type_to_approve, self.emp, include_pending=True),
+            {self.emp: validated_allocation},
+        )
+
+        validated_allocation.state = 'refuse'
+        self.assertEqual(
+            TimeRule._find_time_rule_allocations(type_to_approve, self.emp, include_pending=True),
+            {self.emp: pending_allocation},
+        )
+        self.assertEqual(TimeRule._find_time_rule_allocations(type_to_approve, self.emp), {}, "Only validated allocations by default")
+
+    def test_only_the_deficits_of_the_overdrawn_allocation_are_dropped(self):
+        """Monday's deficit is deducted from an allocation having enough days, Tuesday's from an
+        allocation type without balance: only Tuesday's deficit is dropped."""
+        undertime_type = self.env['hr.work.entry.type'].create({
+            'name': 'Undertime', 'code': 'ULMPART',
+            'requires_allocation': False,
+        })
+        empty_type = self.comp_type.copy({'name': 'Empty Compensatory Rest', 'code': 'COMPEMPTY'})
+        no_weekday = {f'apply_{weekday}': False for weekday in ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')}
+        self._make_deficit_rule(undertime_type, **{**no_weekday, 'apply_monday': True})
+        self._make_deficit_rule(undertime_type, **{**no_weekday, 'apply_tuesday': True}, allocation_type_id=empty_type.id)
+        self._make_deficit_allocation(days=2.0)
+
+        # 6h worked on Monday and Tuesday, both evaluated in the same run -> 2h of deficit each
+        monday_attendance, tuesday_attendance = self.env['hr.attendance'].create([{
+            'employee_id': self.emp.id,
+            'check_in': datetime(2022, 12, day, 8),
+            'check_out': datetime(2022, 12, day, 14),
+        } for day in (12, 13)])
+        (monday_attendance | tuesday_attendance).invalidate_recordset()
+        self.assertTrue(monday_attendance.overtime_attendance_ids)
+        self.assertFalse(tuesday_attendance.overtime_attendance_ids)
+
+    def test_reversal_blocked_by_another_saved_record_names_it(self):
+        """Saving a record runs the rules again on the day of an already credited attendance: the
+        error tells which saved record requires the reversal."""
+        self._make_rule()
+        # most recent saturday: no schedule -> all 8h are excess -> engine credits 1.0d (8h)
+        today = datetime.now().date()
+        last_sat = today - timedelta(days=(today.weekday() + 2) % 7)
+        self._make_att(datetime.combine(last_sat, datetime.min.time().replace(hour=8)),
+                       datetime.combine(last_sat, datetime.min.time().replace(hour=16)))
+        self._alloc().date_from = '2020-01-01'
+        last_friday = last_sat - timedelta(days=1)
+        self.env['hr.leave'].sudo().with_context(leave_fast_create=True, leave_skip_state_check=True).create({
+            'employee_id': self.emp.id,
+            'work_entry_type_id': self.comp_type.id,
+            'request_date_from': last_friday,
+            'request_date_to': last_friday,
+            'state': 'validate',
+        })
+
+        # the new attendance runs the rules of the day again, which first reverses the 1.0d already taken
+        with self.assertRaisesRegex(ValidationError, 'Saving'):
+            self._make_att(datetime.combine(last_sat, datetime.min.time().replace(hour=17)),
+                           datetime.combine(last_sat, datetime.min.time().replace(hour=18)))

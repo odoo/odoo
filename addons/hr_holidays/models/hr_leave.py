@@ -1851,12 +1851,12 @@ class HrLeave(models.Model):
         self.sudo()._post_leave_cancel()
         self.env['hr.leave.allocation'].invalidate_model(['leaves_taken', 'max_leaves'])  # missing dependency on compute
 
-    def _apply_record_output(self, rules, excess, deficit, active_iv=None):
+    def _apply_record_output(self, rules, excess, deficit, source_intervals_by_employee=None):
         """Apply the result of the time rules on the requests.
 
         See :meth:`~odoo.addons.hr_holidays.models.hr_time_rule.HrTimeRule._apply_leave_output`.
         """
-        rules._apply_leave_output(excess, deficit, active_iv=active_iv)
+        rules._apply_leave_output(excess, deficit, source_intervals_by_employee=source_intervals_by_employee)
 
     def _get_pipeline_intervals_local(self, schedule):
         """Return the parts of the request that the time rules consider.
@@ -1934,33 +1934,33 @@ class HrLeave(models.Model):
         ])
         return Intervals([(l.date_from, l.date_to, dummy) for l in existing], keep_distinct=True)
 
-    def _get_time_rule_output_vals(self, rule, df, dt, pp):
+    def _get_time_rule_output_vals(self, rule, start_utc, stop_utc, premium_pay_category_ids):
         """Return the creation values of an output time off.
 
         See :meth:`~odoo.addons.hr_holidays.models.hr_time_rule.HrTimeRule._get_output_leave_vals`.
 
         :rtype: dict
         """
-        return rule._get_output_leave_vals(self.employee_id, rule, df, dt, self, accumulated_pp=pp)
+        return rule._get_output_leave_vals(self.employee_id, rule, start_utc, stop_utc, self, premium_pay_category_ids=premium_pay_category_ids)
 
-    def _get_time_rule_remainder_vals(self, df, dt):
+    def _get_time_rule_remainder_vals(self, start_utc, stop_utc):
         """Return the creation values of a remainder: a validated time off linked to the source.
 
-        :param datetime df: start, naive UTC
-        :param datetime dt: end, naive UTC
+        :param datetime start_utc: start, naive UTC
+        :param datetime stop_utc: end, naive UTC
         :rtype: dict
         """
-        tz = ZoneInfo(self.employee_id._get_tz())
-        df_local = df.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-        dt_local = dt.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        timezone = ZoneInfo(self.employee_id._get_tz())
+        local_start = start_utc.replace(tzinfo=UTC).astimezone(timezone).replace(tzinfo=None)
+        local_stop = stop_utc.replace(tzinfo=UTC).astimezone(timezone).replace(tzinfo=None)
         return {
             'employee_id': self.employee_id.id,
-            'date_from': df,
-            'date_to': dt,
-            'request_date_from': df_local.date(),
-            'request_date_to': dt_local.date(),
-            'request_hour_from': df_local.hour + df_local.minute / 60,
-            'request_hour_to': dt_local.hour + dt_local.minute / 60,
+            'date_from': start_utc,
+            'date_to': stop_utc,
+            'request_date_from': local_start.date(),
+            'request_date_to': local_stop.date(),
+            'request_hour_from': local_start.hour + local_start.minute / 60,
+            'request_hour_to': local_stop.hour + local_stop.minute / 60,
             'source_leave_id': self.id,
             'resource_calendar_id': self.resource_calendar_id.id,
             'state': 'validate',

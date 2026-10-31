@@ -6,7 +6,7 @@ from odoo import models
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
-    def _apply_attendance_output(self, excess, deficit, active_iv=None):
+    def _apply_attendance_output(self, excess, deficit, source_intervals_by_employee=None):
         """Apply the results on attendances, then credit or deduct the allocations
         (``hr.time.rule._apply_allocation_credits``).
 
@@ -17,7 +17,7 @@ class HrTimeRule(models.Model):
         :rtype: tuple
         """
         deficit = self._filter_deficit_exceeding_allocation(deficit)
-        result = super()._apply_attendance_output(excess, deficit, active_iv=active_iv)
-        _new_records, _all_source_ids, excess_alloc, deficit_alloc = result
-        self._apply_allocation_credits(excess_alloc, deficit_alloc)
+        result = super()._apply_attendance_output(excess, deficit, source_intervals_by_employee=source_intervals_by_employee)
+        _new_records, _all_source_ids, excess_allocation_credits, deficit_allocation_credits = result
+        self._apply_allocation_credits(excess_allocation_credits, deficit_allocation_credits)
         return result
