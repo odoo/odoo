@@ -124,6 +124,26 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
         guest = self.env['mail.guest'].search([('channel_ids', 'in', self.channel.id)], limit=1, order='id desc')
         self.start_tour(self.group.invitation_url, self.tour, cookies={guest._cookie_name: guest._format_auth_cookie()})
 
+    def test_mail_group_public_page_inviter(self):
+        inviter = mail_new_test_user(
+            self.env,
+            name='Inviter Peach',
+            login='inviter_peach',
+            email='inviter_peach@example.com',
+            groups='base.group_user',
+        )
+        internal_user = self.env['res.users'].search([('login', '=', 'internal_luigi')])
+        # The creator joins last, so they are not among the first members naming the group.
+        attendees = self.env.ref('base.user_admin') + internal_user + self.user_portal
+        group = self.env['discuss.channel'].with_user(inviter)._create_group(users_to=attendees)
+        self.start_tour(group.invitation_url, "discuss_channel_welcome_page_inviter_tour.js")
+
+    def test_mail_group_public_page_no_inviter(self):
+        public_user = self.env.ref('base.public_user')
+        internal_user = self.env['res.users'].search([('login', '=', 'internal_luigi')])
+        group = self.env['discuss.channel'].with_user(public_user).sudo()._create_group(users_to=internal_user)
+        self.start_tour(group.invitation_url, "discuss_channel_welcome_page_no_inviter_tour.js")
+
     def test_discuss_channel_public_page_as_internal(self):
         self._open_channel_page_as_user("internal_luigi")
 
