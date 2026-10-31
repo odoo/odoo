@@ -229,16 +229,22 @@ class TestMailingControllers(TestMailingControllersCommon):
                 msg_bl2, msg_unbl, msg_fb, msg_bl, msg_create = bl_record.message_ids
                 self.assertMessageFields(
                     msg_bl2, {
-                        'body': f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                        'body': f'<p>Blocklist request from portal of mailing '
+                                f'<a href="/mail/view?model={test_mailing._name}&amp;res_id={test_mailing.id}" '
+                                f'data-oe-model="{test_mailing._name}" '
+                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document '
+                                f'<a href="/mail/view?model={test_partner._name}&amp;res_id={test_partner.id}" '
                                 f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>',
                         'tracking_values': [('active', 'boolean', False, True)],
                     }
                 )
                 self.assertMessageFields(
                     msg_unbl, {
-                        'body': f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                        'body': f'<p>Blocklist removal request from portal of mailing '
+                                f'<a href="/mail/view?model={test_mailing._name}&amp;res_id={test_mailing.id}" '
+                                f'data-oe-model="{test_mailing._name}" '
+                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document '
+                                f'<a href="/mail/view?model={test_partner._name}&amp;res_id={test_partner.id}" '
                                 f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>',
                         'tracking_values': [('active', 'boolean', True, False)],
                     }
@@ -251,8 +257,11 @@ class TestMailingControllers(TestMailingControllersCommon):
                 )
                 self.assertMessageFields(
                     msg_bl, {
-                        'body': f'<p>Blocklist request from unsubscribe link of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                        'body': f'<p>Blocklist request from unsubscribe link of mailing '
+                                f'<a href="/mail/view?model={test_mailing._name}&amp;res_id={test_mailing.id}" '
+                                f'data-oe-model="{test_mailing._name}" '
+                                f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document '
+                                f'<a href="/mail/view?model={test_partner._name}&amp;res_id={test_partner.id}" '
                                 f'data-oe-model="{test_partner._name}" data-oe-id="{test_partner.id}">Contact</a>)</p>',
                         'tracking_values': [],
                     }
@@ -364,8 +373,11 @@ class TestMailingControllers(TestMailingControllersCommon):
         msg_bl, msg_create = bl_record.message_ids
         self.assertEqual(
             msg_bl.body,
-            f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-            f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+            f'<p>Blocklist request from portal of mailing '
+            f'<a href="/mail/view?model={test_mailing._name}&amp;res_id={test_mailing.id}" '
+            f'data-oe-model="{test_mailing._name}" '
+            f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document '
+            f'<a href="/mail/view?model={contact_l1._name}&amp;res_id={contact_l1.id}" '
             f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>'
         )
         self.assertEqual(msg_create.body, '<p>Mail Blacklist created</p>')
@@ -468,24 +480,33 @@ class TestMailingControllers(TestMailingControllersCommon):
         )
         self.assertMessageFields(
             msg_bl2, {
-                'body': f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                'body': f'<p>Blocklist request from portal of mailing '
+                        f'<a href="/mail/view?model={test_mailing._name}&amp;res_id={test_mailing.id}" '
+                        f'data-oe-model="{test_mailing._name}" '
+                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document '
+                        f'<a href="/mail/view?model={contact_l1._name}&amp;res_id={contact_l1.id}" '
                         f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>',
                 'tracking_values': [('active', 'boolean', False, True)],
             }
         )
         self.assertMessageFields(
             msg_unbl, {
-                'body': f'<p>Blocklist removal request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                'body': f'<p>Blocklist removal request from portal of mailing '
+                        f'<a href="/mail/view?model={test_mailing._name}&amp;res_id={test_mailing.id}" '
+                        f'data-oe-model="{test_mailing._name}" '
+                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document '
+                        f'<a href="/mail/view?model={contact_l1._name}&amp;res_id={contact_l1.id}" '
                         f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>',
                 'tracking_values': [('active', 'boolean', True, False)],
             }
         )
         self.assertMessageFields(
             msg_bl, {
-                'body': f'<p>Blocklist request from portal of mailing <a href="#" data-oe-model="{test_mailing._name}" '
-                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document <a href="#" '
+                'body': f'<p>Blocklist request from portal of mailing '
+                        f'<a href="/mail/view?model={test_mailing._name}&amp;res_id={test_mailing.id}" '
+                        f'data-oe-model="{test_mailing._name}" '
+                        f'data-oe-id="{test_mailing.id}">{test_mailing.subject}</a> (document '
+                        f'<a href="/mail/view?model={contact_l1._name}&amp;res_id={contact_l1.id}" '
                         f'data-oe-model="{contact_l1._name}" data-oe-id="{contact_l1.id}">Mailing Contact</a>)</p>',
                 'tracking_values': [],
             }

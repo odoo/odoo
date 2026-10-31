@@ -120,7 +120,15 @@ class StockPicking(models.Model):
         line_1 = _("Exception occurred with respect to carrier on the transfer")
         line_2 = _("Manual actions might be needed.")
         line_3 = _("Exception:")
-        return Markup('<div> {line_1} <a href="#" data-oe-model="stock.picking" data-oe-id="{picking_id}"> {picking_name}</a>. {line_2}<div class="mt16"><p>{line_3} {exception}</p></div></div>').format(line_1=line_1, line_2=line_2, line_3=line_3, picking_id=self.id, picking_name=self.name, exception=exception)
+        return Markup(
+            '<div> {line_1} {picking_link}. {line_2}<div class="mt16"><p>{line_3} {exception}</p></div></div>',
+        ).format(
+            line_1=line_1,
+            line_2=line_2,
+            line_3=line_3,
+            picking_link=self._get_html_link(title=self.name),
+            exception=exception,
+        )
 
     def _send_confirmation_email(self):
         # The carrier's API processes validity checks and parcels generation one picking at a time.

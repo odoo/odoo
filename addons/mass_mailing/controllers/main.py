@@ -5,7 +5,7 @@ import base64
 import urllib.parse
 
 from datetime import timedelta
-from markupsafe import Markup, escape
+from markupsafe import Markup
 from lxml import etree
 from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
@@ -548,11 +548,13 @@ class MassMailController(http.Controller):
 
     def _format_bl_request(self, mailing, document_id):
         mailing_model_name = request.env['ir.model']._get(mailing.mailing_model_real).display_name
+        record_link = ''
+        if document_id:
+            document = request.env[mailing.mailing_model_real].browse(int(document_id))
+            record_link = document._get_html_link(title=mailing_model_name)
         return {
-            'mailing_link': Markup(f'<a href="#" data-oe-model="mailing.mailing" data-oe-id="{mailing.id}">{escape(mailing.subject)}</a>'),
-            'record_link': Markup(
-                f'<a href="#" data-oe-model="{escape(mailing.mailing_model_real)}" data-oe-id="{int(document_id)}">{escape(mailing_model_name)}</a>'
-            ) if document_id else '',
+            'mailing_link': mailing._get_html_link(title=mailing.subject),
+            'record_link': record_link,
         }
 
     # ------------------------------------------------------------
