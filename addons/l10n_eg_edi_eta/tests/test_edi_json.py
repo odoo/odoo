@@ -168,6 +168,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalSalesAmount': 300.0,
                         'netAmount': 300.0,
                         'totalAmount': 300.0,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -263,6 +264,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalSalesAmount': 1120.98,
                         'netAmount': 1120.98,
                         'totalAmount': 1277.92,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -496,7 +498,8 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalDiscountAmount': 122.05445,
                         'totalSalesAmount': 1220.54445,
                         'netAmount': 1098.49,
-                        'totalAmount': 1262.27
+                        'totalAmount': 1262.27,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -554,7 +557,7 @@ class TestEdiJson(TestEGEdiCommon):
                             'type': 'F',
                             'id': 'ESF35999705',
                         },
-                        'documentType': 'i',
+                        'documentType': 'ei',
                         'invoiceLines': [
                             {
                                 'description': 'product_a',
@@ -572,6 +575,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 120.98889,
                                 'netTotal': 108.89,
                                 'total': 108.89,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.1,
                             },
                             {
                                 'description': 'product_b',
@@ -589,6 +594,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 4997.74713,
                                 'netTotal': 4348.04,
                                 'total': 4348.04,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.5,
                             },
                         ],
                         'taxTotals': [{'taxType': 'T1', 'amount': 0.0}],
@@ -596,6 +603,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalSalesAmount': 5118.73602,
                         'netAmount': 4456.93,
                         'totalAmount': 4456.93,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -660,6 +668,7 @@ class TestEdiJson(TestEGEdiCommon):
                             'type': 'F',
                             'id': 'ESF35999705',
                         },
+                        'documentType': 'ei',
                         'invoiceLines': [
                             {
                                 'description': 'product_a',
@@ -682,6 +691,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 610.68889,
                                 'netTotal': 549.62,
                                 'total': 549.62,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.1,
                             },
                             {
                                 'description': 'product_b',
@@ -704,6 +715,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 25226.22989,
                                 'netTotal': 21946.82,
                                 'total': 21946.82,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.5,
                             },
                         ],
                         'taxTotals': [{'taxType': 'T1', 'amount': 0.0}],
@@ -711,6 +724,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalSalesAmount': 25836.91878,
                         'netAmount': 22496.44,
                         'totalAmount': 22496.44,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -770,6 +784,7 @@ class TestEdiJson(TestEGEdiCommon):
                             'type': 'F',
                             'id': 'ESF35999705',
                         },
+                        'documentType': 'ei',
                         'invoiceLines': [
                             {
                                 'description': 'product_a',
@@ -792,6 +807,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 504.75556,
                                 'netTotal': 454.28,
                                 'total': 454.28,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.1,
                             },
                             {
                                 'description': 'product_b',
@@ -814,6 +831,8 @@ class TestEdiJson(TestEGEdiCommon):
                                 'salesTotal': 2532.57471,
                                 'netTotal': 2203.34,
                                 'total': 2203.34,
+                                'weightUnitType': 'KGM',
+                                'weightQuantity': 0.5,
                             },
                         ],
                         'taxTotals': [{'taxType': 'T1', 'amount': 0.0}],
@@ -821,6 +840,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalSalesAmount': 3037.33027,
                         'netAmount': 2657.62,
                         'totalAmount': 2657.62,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
@@ -864,7 +884,7 @@ class TestEdiJson(TestEGEdiCommon):
             self.assertTrue(generated_files)
             json_file = json.loads(generated_files[0])
             serialized_string = self.env['l10n_eg_edi.thumb.drive']._serialize_for_signing(json_file['request'])
-            self.assertEqual(serialized_string, '"ISSUER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""10""POSTALCODE""""BRANCHID""0""NAME""branch partner""TYPE""B""ID""456789123""RECEIVER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""12""POSTALCODE""""NAME""عميل 1""TYPE""B""ID""123456789""DOCUMENTTYPE""i""DOCUMENTTYPEVERSION""1.0""DATETIMEISSUED""2022-03-15T00:00:00Z""TAXPAYERACTIVITYCODE""8121""INTERNALID""INV/2022/00001""INVOICELINES""INVOICELINES""DESCRIPTION""product_a""ITEMTYPE""GS1""ITEMCODE""1KGS1TEST""UNITTYPE""C62""QUANTITY""1.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""504.75556""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.0""DISCOUNT""RATE""10.0""AMOUNT""50.47556""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""504.75556""NETTOTAL""454.28""TOTAL""454.28""INVOICELINES""DESCRIPTION""product_b""ITEMTYPE""EGS""ITEMCODE""EG-EGS-TEST""UNITTYPE""CMT""QUANTITY""5.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""506.51494""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.35""DISCOUNT""RATE""13.0""AMOUNT""329.23471""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""2532.57471""NETTOTAL""2203.34""TOTAL""2203.34""TAXTOTALS""TAXTOTALS""TAXTYPE""T1""AMOUNT""0.0""TOTALDISCOUNTAMOUNT""379.71027""TOTALSALESAMOUNT""3037.33027""NETAMOUNT""2657.62""TOTALAMOUNT""2657.62""EXTRADISCOUNTAMOUNT""0.0""TOTALITEMSDISCOUNTAMOUNT""0.0""SIGNATURES""SIGNATURES""1""1"')
+            self.assertEqual(serialized_string, '"ISSUER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""10""POSTALCODE""""BRANCHID""0""NAME""branch partner""TYPE""B""ID""456789123""RECEIVER""ADDRESS""COUNTRY""EG""GOVERNATE""Cairo""REGIONCITY""Iswan""STREET""12th dec. street""BUILDINGNUMBER""12""POSTALCODE""""NAME""عميل 1""TYPE""B""ID""123456789""DOCUMENTTYPE""i""DOCUMENTTYPEVERSION""1.0""DATETIMEISSUED""2022-03-15T00:00:00Z""TAXPAYERACTIVITYCODE""8121""INTERNALID""INV/2022/00001""INVOICELINES""INVOICELINES""DESCRIPTION""product_a""ITEMTYPE""GS1""ITEMCODE""1KGS1TEST""UNITTYPE""C62""QUANTITY""1.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""504.75556""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.0""DISCOUNT""RATE""10.0""AMOUNT""50.47556""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""504.75556""NETTOTAL""454.28""TOTAL""454.28""INVOICELINES""DESCRIPTION""product_b""ITEMTYPE""EGS""ITEMCODE""EG-EGS-TEST""UNITTYPE""CMT""QUANTITY""5.0""INTERNALCODE""""VALUEDIFFERENCE""0.0""TOTALTAXABLEFEES""0.0""ITEMSDISCOUNT""0.0""UNITVALUE""CURRENCYSOLD""AED""AMOUNTEGP""506.51494""CURRENCYEXCHANGERATE""5.04756""AMOUNTSOLD""100.35""DISCOUNT""RATE""13.0""AMOUNT""329.23471""TAXABLEITEMS""TAXABLEITEMS""TAXTYPE""T1""AMOUNT""0.0""SUBTYPE""V003""RATE""0.0""SALESTOTAL""2532.57471""NETTOTAL""2203.34""TOTAL""2203.34""TAXTOTALS""TAXTOTALS""TAXTYPE""T1""AMOUNT""0.0""TOTALDISCOUNTAMOUNT""379.71027""TOTALSALESAMOUNT""3037.33027""NETAMOUNT""2657.62""TOTALAMOUNT""2657.62""EXTRADISCOUNTAMOUNT""0.0""TOTALITEMSDISCOUNTAMOUNT""0.0""SERVICEDELIVERYDATE""2022-03-15""SIGNATURES""SIGNATURES""1""1"')
 
     def test_9_test_withholding_tax(self):
         with freeze_time(self.frozen_today), patch(
@@ -935,6 +955,7 @@ class TestEdiJson(TestEGEdiCommon):
                         'totalSalesAmount': 100.0,
                         'netAmount': 100.0,
                         'totalAmount': 111.0,
+                        'serviceDeliveryDate': '2022-03-15',
                     },
                     'response': ETA_TEST_RESPONSE,
                 },
