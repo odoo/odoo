@@ -96,7 +96,7 @@ export const saleProductMixin = () => ({
         return _t("Edit Configuration");
     },
 
-    async _getProductConfiguratorData(edit = false) {
+    async _getProductConfiguratorData(edit = false, searchTerm = "") {
         const saleOrder = this.props.record.model.root.data;
         const saleOrderLine = this.props.record.data;
         const ptavIds = [...this._getVariantPtavIds(saleOrderLine)];
@@ -117,13 +117,16 @@ export const saleProductMixin = () => ({
                 pricelist_id: saleOrder.pricelist_id?.id,
                 ptav_ids: ptavIds,
                 only_main_product: edit,
+                search_term: searchTerm,
                 ...this._getAdditionalRpcParams(),
             });
     },
 
     async _onProductTemplateUpdate() {
         super._onProductTemplateUpdate();
-        const data = await this._getProductConfiguratorData();
+        const searchTerm = this.lastProductSearch || "";
+        this.lastProductSearch = "";
+        const data = await this._getProductConfiguratorData(false, searchTerm);
         if (data && data.product_id) {
             if (this.props.record.data.product_id != data.product_id.id) {
                 if (data.is_combo) {
@@ -132,7 +135,11 @@ export const saleProductMixin = () => ({
                     });
                     this._openComboConfigurator({edit: false, data: data});
                 } else if (data.has_optional_products) {
-                    this._openProductConfigurator({ data: data });
+                    if (data.mode === 'matrix' && this._useGridConfigurator()) {
+                        this._openGridConfigurator();
+                    } else {
+                        this._openProductConfigurator({ data: data });
+                    }
                 } else {
                     await this.props.record.update({
                         product_id: { id: data.product_id, display_name: data.product_name },
