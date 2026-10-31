@@ -28,6 +28,7 @@ class TestCasInvoiceReport(TestPhCommon):
             invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, tax_ids=self.tax_vatable)],
         )
         html = self._render(invoice, report='l10n_ph.report_commercial_invoice')
+        self.assertNotIn('Sold To:', html)
         self.assertNotIn('Total Amount Due', html)
         self.assertNotIn('VATable Sales', html)
 
@@ -51,6 +52,7 @@ class TestCasInvoiceReport(TestPhCommon):
             invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, tax_ids=self.tax_vatable)],
         )
         html = self._render(invoice)
+        self.assertIn('Sold To:', html)
         self.assertIn('VAT REG TIN', html)
         self.assertNotIn('NON VAT REG TIN', html)
 

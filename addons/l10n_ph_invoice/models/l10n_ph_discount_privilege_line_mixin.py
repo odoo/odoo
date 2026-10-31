@@ -83,9 +83,9 @@ class L10nPhDiscountPrivilegeLineMixin(models.AbstractModel):
         Compute l10n_ph_special_discount_amount and
         l10n_ph_regular_discount_amount for sale lines (SLSP/BOA reporting).
 
-        Special (privileged lines): SC/PWD privileges are computed on the
-        tax-excluded base (gross subtotal discount), while "special" discounts
-        are computed on the tax-included base (gross total discount).
+        Special (privileged lines): every privilege type is computed on the
+        tax-excluded base (gross subtotal discount), as the EIS expects the
+        special discount amount to be reported exclusive of VAT.
 
         Regular (non-privileged): explicit discount % back-computed from
         price_subtotal. Never reported as a privilege discount.
@@ -96,14 +96,11 @@ class L10nPhDiscountPrivilegeLineMixin(models.AbstractModel):
                 line.l10n_ph_special_discount_amount = 0.0
                 continue
 
-            _, subtotal_price_discount, _, total_price_discount = line._l10n_ph_get_discount_price_details()
+            _, subtotal_price_discount, _, _ = line._l10n_ph_get_discount_price_details()
             privilege = line.l10n_ph_discount_privilege_id
             if privilege:
                 line.l10n_ph_regular_discount_amount = 0.0
-                if privilege.discount_type == "special":
-                    line.l10n_ph_special_discount_amount = total_price_discount
-                else:
-                    line.l10n_ph_special_discount_amount = subtotal_price_discount
+                line.l10n_ph_special_discount_amount = subtotal_price_discount
             else:
                 line.l10n_ph_regular_discount_amount = subtotal_price_discount
                 line.l10n_ph_special_discount_amount = 0.0
@@ -162,7 +159,5 @@ class L10nPhDiscountPrivilegeLineMixin(models.AbstractModel):
         self.ensure_one()
         if not privilege:
             return 0.0
-        gross_price_subtotal, _, gross_price_total, _ = self._l10n_ph_get_discount_price_details()
-        if privilege.discount_type == "special":
-            return gross_price_total * privilege.discount_amount
+        gross_price_subtotal, _, _, _ = self._l10n_ph_get_discount_price_details()
         return gross_price_subtotal * privilege.discount_amount

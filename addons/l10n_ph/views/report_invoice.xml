@@ -29,6 +29,18 @@
                 <attribute name="class">fs-5 fw-normal d-block mt-3</attribute>
             </xpath>
 
+            <!-- Buyer's Information -->
+            <!-- The buyer's details must be clearly labelled as such, the label floating beside the name. -->
+            <xpath expr="//t[@name='address_not_same_as_shipping']/address" position="before">
+                <strong class="float-start me-1">Sold To:</strong>
+            </xpath>
+            <xpath expr="//t[@name='address_same_as_shipping']/address" position="before">
+                <strong class="float-start me-1">Sold To:</strong>
+            </xpath>
+            <xpath expr="//t[@name='no_shipping']/address" position="before">
+                <strong class="float-start me-1">Sold To:</strong>
+            </xpath>
+
             <!-- A non-VAT-registered seller has no output VAT to show against its lines. -->
             <xpath expr="//t[@t-set='display_taxes']" position="after">
                 <t t-set="display_taxes" t-value="display_taxes and cas_vals['category'] != 'non_vat'"/>
