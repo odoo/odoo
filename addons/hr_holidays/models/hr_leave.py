@@ -2097,11 +2097,13 @@ class HrLeave(models.Model):
 
     def _prepare_holidays_meeting_values(self):
         result = defaultdict(list)
+        home_working_code = self.env['ir.config_parameter'].sudo().get_str('hr_holidays.hr_homeworking_code') or '002.08'
         for holiday in self:
             user = holiday.user_id
             meeting_name = _(
-                "%(employee)s on Time Off : %(duration)s",
+                "%(employee)s on %(work_type)s : %(duration)s",
                 employee=holiday.employee_id.name,
+                work_type="Home Working" if holiday.work_entry_type_id.code == home_working_code else "Time Off",
                 duration=holiday.duration_display)
             allday_value = (holiday.work_entry_type_request_unit != 'half_day' or holiday.request_date_from_period == 'am' and holiday.request_date_to_period == 'pm')
             if holiday.work_entry_type_request_unit == 'hour':
@@ -2127,6 +2129,7 @@ class HrLeave(models.Model):
                 'event_tz': user.tz,
                 'meeting_activity_ids': [(5, 0, 0)],
                 'res_id': holiday.id,
+                'show_as': 'free' if holiday.count_as == 'working_time' else 'busy',
             }
             # Add the partner_id (if exist) as an attendee
             partner_id = (user and user.partner_id) or (holiday.employee_id and holiday.employee_id.work_contact_id)
