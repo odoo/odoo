@@ -176,7 +176,7 @@ class Department(models.Model):
         return action
 
     def action_employee_from_department(self):
-        if self.env['hr.employee'].has_access('read'):
+        if self.env['hr.employee'].has_access('read') and self.env.user.has_group('hr.group_hr_user'):
             res_model = "hr.employee"
             search_view_id = self.env.ref('hr.view_employee_filter').id
         else:
