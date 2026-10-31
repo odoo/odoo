@@ -48,14 +48,28 @@ test("faq_horizontal updates titles position with a o_header_standard", async ()
     });
     expect(core.interactions).toHaveLength(2);
     const wrapwrap = queryOne("#wrapwrap");
+    const header = queryOne("header");
     const title = queryFirst(".s_faq_horizontal_entry_title");
+    const getHeaderRect = header.getBoundingClientRect.bind(header);
+    header.getBoundingClientRect = () => {
+        const rect = getHeaderRect();
+        if (
+            header.classList.contains("o_header_affixed") &&
+            header.classList.contains("o_top_fixed_element")
+        ) {
+            return { ...rect, top: 0, bottom: HEADER_SIZE, height: HEADER_SIZE };
+        }
+        return rect;
+    };
     await setupTest(core, wrapwrap);
     for (const target of SCROLLS) {
         await simpleScroll(wrapwrap, target);
         const calculatedTop = Math.round(parseFloat(title.style.top));
         const isHeaderVisible = target < HEADER_SIZE || target > 300;
-        // We compensate the scroll since the header does not move in Hoot.
-        const correctedTop = isHeaderVisible ? calculatedTop + target : calculatedTop;
+        // We compensate the scroll while the header is still in the document flow in Hoot.
+        const headerFollowsDocumentFlow =
+            isHeaderVisible && !header.classList.contains("o_header_affixed");
+        const correctedTop = headerFollowsDocumentFlow ? calculatedTop + target : calculatedTop;
         expect(correctedTop).toBe(isHeaderVisible ? HEADER_SIZE + DEFAULT_OFFSET : DEFAULT_OFFSET);
     }
 });
