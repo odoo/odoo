@@ -1,0 +1,12 @@
+<odoo>
+    <record id="l10n_jp_total_average_cost_wizard_view_form_mrp" model="ir.ui.view">
+        <field name="name">l10n_jp_stock.total.average.cost.wizard.form.mrp</field>
+        <field name="model">l10n_jp_stock.total.average.cost.wizard</field>
+        <field name="inherit_id" ref="l10n_jp_stock.l10n_jp_total_average_cost_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <field name="date_to" position="after">
+                <field name="include_components"/>
+            </field>
+        </field>
+    </record>
+</odoo>
