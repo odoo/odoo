@@ -12,7 +12,7 @@ import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer"
 
 import { defineHrHolidaysModels } from "@hr_holidays/../tests/hr_holidays_test_helpers";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
-import { press } from "@odoo/hoot-dom";
+import { press, waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 describe.current.tags("desktop");
@@ -120,7 +120,7 @@ test("CTRL+K command shows out of office indication", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Discuss[data-active]");
+    await waitFor(".o-mail-Discuss[data-active]:count(1)");
     await press(["ctrl", "k"]);
     await contains(".o-mail-DiscussCommand .text-warning", {
         text: "Back on Apr 11",
