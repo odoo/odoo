@@ -125,6 +125,33 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         po_action2 = self.env[action2['res_model']].browse(action2['res_id'])
         self.assertEqual(po_action2, po)
 
+    def test_subcontracted_component_resupply_smart_link(self):
+        """ Two-level subcontracting, both subcontractors on the shared subcontracting location:
+        finished (subcontractor_partner1)
+            comp2 (vendor), resupplied
+                comp2comp, resupplied
+        Receiving the finished product before any resupply should not remove the resupply of the
+        comp2 PO, and receiving comp2 should still produce it.
+        """
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        (self.comp2 + self.comp2comp).route_ids = [Command.link(resupply_sub_on_order_route.id)]
+        self.comp2_bom.write({'type': 'subcontract', 'subcontractor_ids': [Command.link(self.vendor.id)]})
+        po_comp2, po_finished = self.env['purchase.order'].create([{
+            'partner_id': partner.id,
+            'order_line': [Command.create({'product_id': product.id, 'product_qty': 1})],
+        } for partner, product in [(self.vendor, self.comp2), (self.subcontractor_partner1, self.finished)]])
+        (po_comp2 | po_finished).button_confirm()
+        comp2_mo = self.env['mrp.production'].search([('bom_id', '=', self.comp2_bom.id)])
+        self.assertEqual(po_comp2.subcontracting_resupply_picking_count, 1)
+
+        po_finished.picking_ids.button_validate()
+        self.assertEqual(po_finished.picking_ids.state, 'done')
+        self.assertEqual(po_comp2.subcontracting_resupply_picking_count, 1)
+
+        po_comp2.picking_ids.button_validate()
+        self.assertEqual(po_comp2.picking_ids.state, 'done')
+        self.assertEqual(comp2_mo.state, 'done')
+
     def test_decrease_qty(self):
         """ Tests when a PO for a subcontracted product has its qty decreased after confirmation
         """

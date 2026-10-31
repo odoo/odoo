@@ -829,7 +829,9 @@ class StockMoveLine(models.Model):
                 if cand.picking_id or cand.move_id else 0,
                 -cand.id)
 
-        outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).sorted(current_picking_first)
+        outdated_candidates = self.env['stock.move.line'].search(outdated_move_lines_domain).filtered(
+            lambda ml: not ml.move_id._should_bypass_reservation(ml.location_id)
+        ).sorted(current_picking_first)
 
         # As the move's state is not computed over the move lines, we'll have to manually
         # recompute the moves which we adapted their lines.
