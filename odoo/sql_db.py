@@ -288,9 +288,13 @@ class Cursor(_CursorProtocol):
             self.__caller = None
         self._closed = False   # real initialization value
 
-        if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name']:
-            self._obj.execute("SET SESSION search_path = public, pg_catalog;")
-            self._cnx.commit()  # ensure that the search_path remains after a rollback
+        cnx.autocommit = True
+        try:
+            self._obj.execute("SET SESSION timezone TO utc")
+            if os.getenv('ODOO_FAKETIME_TEST_MODE') and self.dbname in tools.config['db_name']:
+                self._obj.execute("SET SESSION search_path = public, pg_catalog;")
+        finally:
+            cnx.autocommit = False
 
     def flush(self) -> None:
         """ Flush the current transaction, and run precommit hooks. """
