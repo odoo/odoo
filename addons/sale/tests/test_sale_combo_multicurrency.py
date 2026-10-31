@@ -94,3 +94,52 @@ class TestSaleComboMultiCurrency(SaleCommon):
         })
 
         self.assertAlmostEqual(child_line._get_combo_item_display_price(), 200.0 + 1700.0, places=2)
+
+    def test_recompute_prices_after_combo_choice_removed(self):
+        """Removing a combo choice from a combo product must not break price recomputation
+        for the combo item lines that were configured on the removed choice."""
+        burger = self._create_product(name="Burger", list_price=5.0)
+        drink = self._create_product(name="Drink", list_price=2.0)
+        main_combo = self.env["product.combo"].create({
+            "name": "Main",
+            "combo_item_ids": [Command.create({"product_id": burger.id, "extra_price": 0.0})],
+        })
+        beverage_combo = self.env["product.combo"].create({
+            "name": "Beverage",
+            "combo_item_ids": [Command.create({"product_id": drink.id, "extra_price": 0.0})],
+        })
+        meal_menu = self._create_product(
+            name="Meal Menu",
+            list_price=10.0,
+            type="combo",
+            combo_ids=[Command.link(main_combo.id), Command.link(beverage_combo.id)],
+        )
+        order = self.env["sale.order"].create({"partner_id": self.partner.id})
+        parent_line = self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_id": meal_menu.id,
+            "product_uom_qty": 1,
+        })
+        burger_item = main_combo.combo_item_ids[0]
+        drink_item = beverage_combo.combo_item_ids[0]
+        burger_line = self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_id": burger.id,
+            "combo_item_id": burger_item.id,
+            "linked_line_id": parent_line.id,
+            "product_uom_qty": 1,
+        })
+        drink_line = self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_id": drink.id,
+            "combo_item_id": drink_item.id,
+            "linked_line_id": parent_line.id,
+            "product_uom_qty": 1,
+        })
+        # Remove the Beverage combo choice from the combo product, orphaning the Drink item.
+        meal_menu.write({"combo_ids": [(3, beverage_combo.id)]})
+        # Recomputing prices must not raise a KeyError on the orphaned Drink combo item and must
+        # price it as a regular item, while the remaining combo still prorates its own price.
+        order._recompute_prices()
+        self.assertAlmostEqual(drink_line.price_unit, 2.0, places=2)
+        self.assertAlmostEqual(burger_line.price_unit, 10.0, places=2)

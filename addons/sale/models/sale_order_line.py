@@ -961,6 +961,12 @@ class SaleOrderLine(models.Model):
 
         # Compute the combo product's price.
         combo_line = self._get_linked_line()
+        combo_ids = combo_line.product_template_id.sudo().combo_ids
+        if self.combo_item_id.combo_id not in combo_ids:
+            # The combo choice referenced by this item was removed from the combo product, so this
+            # combo item is orphaned. Price it as a regular item so that price recomputation
+            # succeeds and the line can be reconfigured, deleted or fixed by the user.
+            return self._get_display_price_ignore_combo()
         combo_product_price = combo_line._get_display_price_ignore_combo()
         # Compute the combos' base prices.
         combo_base_prices = {
@@ -970,7 +976,7 @@ class SaleOrderLine(models.Model):
                 company=self.company_id,
                 date=self.order_id.date_order,
             )
-            for combo_id in combo_line.product_template_id.sudo().combo_ids
+            for combo_id in combo_ids
         }
         total_combo_base_price = sum(combo_base_prices.values())
         # Compute the prorated combo prices. When all combos have a zero base price, prorating by
