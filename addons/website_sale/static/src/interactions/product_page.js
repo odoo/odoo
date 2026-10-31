@@ -792,7 +792,11 @@ export class ProductPage extends Interaction {
                 .toggle('d-none', !combination.has_discounted_price);
         }
         if (comparePrice) {
-            comparePrice.classList.toggle('d-none', combination.has_discounted_price);
+            comparePrice.classList.toggle(
+                'd-none',
+                combination.has_discounted_price
+                    || !(combination.compare_list_price > combination.price),
+            );
         }
 
         Object.entries(attributeValueImages || {}).forEach(([valueId, imageUrl]) => {

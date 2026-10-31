@@ -1,0 +1,4 @@
+/* Keep the editable price hidden until the public one is hidden */
+body:not(.editor_enable) .product_price [name="product_list_price_container"] {
+    display: none !important;
+}
