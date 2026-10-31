@@ -889,6 +889,26 @@ describe("Related Model", () => {
         expect(records.length).toBe(0);
     });
 
+    test("Store: single value index when values are swapped", async () => {
+        await makeMockServer();
+        const models = getRelatedModelsInstance(false);
+        models.loadConnectedData({
+            "product.product": [
+                { id: 191, barcode: "5901234123457" },
+                { id: 192, barcode: "4006381333931" },
+            ],
+        });
+        models.loadConnectedData({
+            "product.product": [
+                { id: 191, barcode: "4006381333931" },
+                { id: 192, barcode: "5901234123457" },
+            ],
+        });
+        const products = models["product.product"];
+        expect(products.getBy("barcode", "4006381333931")).toBe(products.get(191));
+        expect(products.getBy("barcode", "5901234123457")).toBe(products.get(192));
+    });
+
     test("Store: multi value index update", async () => {
         await makeMockServer();
         const models = getRelatedModelsInstance(false);
