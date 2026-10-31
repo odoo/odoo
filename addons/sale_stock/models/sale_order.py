@@ -5,6 +5,7 @@ import json
 import logging
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools import float_compare
 
 _logger = logging.getLogger(__name__)
@@ -136,6 +137,14 @@ class SaleOrder(models.Model):
                     documents = {k: v for k, v in documents.items() if k[0].state != 'cancel'}
                     order._log_decrease_ordered_quantity(documents)
         return res
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_draft_or_cancel(self):
+        super()._unlink_except_draft_or_cancel()
+        if self.picking_ids.filtered(lambda picking: picking.state != 'cancel'):
+            raise UserError(_(
+                "You cannot delete a sales order linked to deliveries."
+                " You must cancel or delete those transfers first."))
 
     def _compute_json_popover(self):
         for order in self:
