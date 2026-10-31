@@ -282,6 +282,9 @@ class TestCase(_TestCase):
     def get_canonical_tag(self, log=None):
         return self._make_canonical_tag(**self._get_canonical_tags_params(log))
 
+    def get_stats_entries(self, stat):
+        return {self.id(): stat}
+
     def get_log_metadata(self, _log):
         return {
             'canonical_tag': self.get_canonical_tag(_log),
