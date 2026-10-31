@@ -13,7 +13,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.http.stream import content_disposition
-from odoo.tools import SQL, clean_context, float_round, lazy, str2bool
+from odoo.tools import SQL, clean_context, float_round, lazy, split_every, str2bool
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -529,22 +529,43 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         on_sale_ids = set()
         sold_out_ids = set()
+        show_on_sale_filter = False
+        show_in_stock_filter = False
         if "sale" in ribbon_assign_values:
-            sales_prices = search_product._get_sales_prices(
-                request.pricelist.with_context(self.env.context),
-                request.fiscal_position.with_context(self.env.context),
-                website.with_context(self.env.context),
-            )
-            on_sale_ids = {pid for pid, prices in sales_prices.items() if "base_price" in prices}
+            # Without the active filter, only the existence of a product on sale matters:
+            # on big catalogs, check the first page, then the rest by batches
+            batch_size = 1000
+            if on_sale_active or len(search_product) <= batch_size:
+                products_batches = [search_product]
+            else:
+                products_batches = itertools.chain(
+                    [search_product[:ppg]],
+                    split_every(batch_size, search_product[ppg:].ids, search_product.browse),
+                )
+            for products_batch in products_batches:
+                sales_prices = products_batch.with_prefetch()._get_sales_prices(
+                    request.pricelist.with_context(self.env.context),
+                    request.fiscal_position.with_context(self.env.context),
+                    website.with_context(self.env.context),
+                )
+                on_sale_ids.update(
+                    pid for pid, prices in sales_prices.items() if "base_price" in prices
+                )
+                if on_sale_ids and not on_sale_active:
+                    break
+            show_on_sale_filter = on_sale_active or bool(on_sale_ids)
         if "out_of_stock" in ribbon_assign_values:
-            sold_out_ids = {p.id for p in search_product if p._is_sold_out()}
-
-        show_on_sale_filter = bool(on_sale_ids) or (
-            on_sale_active and "sale" in ribbon_assign_values
-        )
-        show_in_stock_filter = bool(sold_out_ids) or (
-            in_stock_active and "out_of_stock" in ribbon_assign_values
-        )
+            # Only storable products that can't be sold out of stock may be sold out
+            stock_candidates = search_product.search(
+                Domain("id", "in", search_product.ids)
+                & Domain("is_storable", "=", True)
+                & Domain("allow_out_of_stock_order", "=", False)
+            )
+            if in_stock_active:
+                sold_out_ids = {p.id for p in stock_candidates if p._is_sold_out()}
+                show_in_stock_filter = True
+            else:
+                show_in_stock_filter = any(p._is_sold_out() for p in stock_candidates)
 
         if on_sale_active and "sale" in ribbon_assign_values:
             search_product = search_product.filtered(lambda p: p.id in on_sale_ids)
