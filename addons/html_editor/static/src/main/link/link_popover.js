@@ -39,6 +39,7 @@ export const linkPopoverProps = {
     containerElement: t.customValidator(t.object(), (el) => el.nodeType === Node.ELEMENT_NODE),
     document: t.customValidator(t.object(), (p) => p.nodeType === Node.DOCUMENT_NODE),
     getAttachmentMetadata: t.function(),
+    getAutoLinkRel: t.function().optional(),
     getExternalMetaData: t.function(),
     getInternalMetaData: t.function(),
     includeStyling: t.boolean().optional(true),
@@ -337,6 +338,7 @@ export class LinkPopover extends Component {
      * @private
      */
     async updateDocumentState() {
+        this.syncForcedRelTokens();
         const url = this.state.url;
         const urlObject = URL.parse(url, document.URL);
         if (
@@ -352,6 +354,24 @@ export class LinkPopover extends Component {
         } else {
             this.state.isDocument = false;
             this.state.directDownload = true;
+        }
+    }
+    /**
+     * Tick and lock the `rel` options the plugin forces for the current url
+     * (e.g. rel="nofollow"). Called on every popover update, so an option is
+     * unlocked as soon as the url stops matching, it stays ticked until the
+     * user unticks it.
+     */
+    syncForcedRelTokens() {
+        const autoRelTokens = this.props.getAutoLinkRel?.(this.state.url) || [];
+        for (const option of Object.values(this.state.advancedAttributeOptions)) {
+            if (option.attribute !== "rel") {
+                continue;
+            }
+            option.isForced = autoRelTokens.includes(option.value);
+            if (option.isForced) {
+                option.isChecked = true;
+            }
         }
     }
     /**
