@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests.common import tagged
@@ -122,3 +123,59 @@ class TestResourceCalendar(TestHolidayContract):
         })
 
         self.assertEqual(leave.number_of_days, 5)
+
+    def test_sequential_half_day_unpaid_leave_duration(self):
+        """A second single-period half-day leave must still count as 0.5 days."""
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Duration based half-day calendar',
+            'duration_based': True,
+            'attendance_ids': [
+                Command.create({
+                    'name': 'Thursday Morning',
+                    'dayofweek': '3',
+                    'duration_hours': 3.36,
+                    'day_period': 'morning',
+                }),
+                Command.create({
+                    'name': 'Thursday Afternoon',
+                    'dayofweek': '3',
+                    'duration_hours': 3.36,
+                    'day_period': 'afternoon',
+                }),
+            ],
+        })
+
+        self.jules_emp.version_id.resource_calendar_id = calendar
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Unpaid Half Day',
+            'requires_allocation': False,
+            'leave_validation_type': 'hr',
+            'request_unit': 'half_day',
+        })
+
+        first_leave = self.env['hr.leave'].create({
+            'name': 'First half day leave',
+            'employee_id': self.jules_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2026, 2, 26),
+            'request_date_to': date(2026, 2, 26),
+            'request_date_from_period': 'am',
+            'request_date_to_period': 'am',
+        })
+        self.assertEqual(first_leave.number_of_days, 0.5)
+        first_leave.action_approve()
+
+        mock_data = {self.jules_emp.id: {'days': 0.05, 'hours': 0.4}}
+        with patch.object(self.env.registry['hr.employee'], '_get_work_days_data_batch', return_value=mock_data):
+            second_leave = self.env['hr.leave'].create({
+                'name': 'Second half day leave',
+                'employee_id': self.jules_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': date(2026, 3, 5),
+                'request_date_to': date(2026, 3, 5),
+                'request_date_from_period': 'am',
+                'request_date_to_period': 'am',
+            })
+
+        self.assertEqual(second_leave.number_of_days, 0.5)
