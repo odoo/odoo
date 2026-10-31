@@ -12,7 +12,13 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 export class EmbeddedFilePlugin extends FilePlugin {
     static id = "embeddedFile";
-    static dependencies = [...super.dependencies, "embeddedComponents", "selection"];
+    static dependencies = [
+        ...super.dependencies,
+        "delete",
+        "embeddedComponents",
+        "overlay",
+        "selection",
+    ];
 
     // Extends the base class resources
     /** @type {import("plugins").EditorResources} */
@@ -59,6 +65,18 @@ export class EmbeddedFilePlugin extends FilePlugin {
                         return;
                     }
                 },
+                remove: (host) => {
+                    const cursor = this.dependencies.selection.preserveSelection();
+                    const index = [...host.parentElement.childNodes].indexOf(host);
+                    this.dependencies.selection.setSelection({
+                        anchorNode: host.parentElement,
+                        anchorOffset: index + 1,
+                    });
+                    this.dependencies.delete.delete("backward", "character");
+                    cursor.restore();
+                },
+                createOverlay: this.dependencies.overlay.createOverlay,
+                focusEditable: this.dependencies.selection.focusEditable,
             });
         }
     }
