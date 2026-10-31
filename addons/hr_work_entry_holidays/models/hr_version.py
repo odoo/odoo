@@ -36,6 +36,8 @@ class HrVersion(models.Model):
             work_entry_types = interval[2].work_entry_type_id
             if work_entry_types and work_entry_types[:1].code in bypassing_codes:
                 return work_entry_types[:1]
+            if interval[2]._name == 'resource.calendar.attendance' and interval[2] and not any(a._is_work_period() for a in interval[2]):
+                return work_entry_types[:1]
 
         interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
         interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
