@@ -518,6 +518,86 @@ class TestAccruedStockSaleOrders(TestSaleCommon):
             {'account_id': self.account_expense.id, 'debit': 0, 'credit': 30},
         ])
 
+    def test_accrued_order_perpetual_ignores_future_invoice_and_delivery(self):
+        """ Test that the COGS accrual only accounts for invoices and deliveries
+        dated on or before the accrual date: a later invoice must not zero the cost
+        and a later delivery must not inflate it.
+        """
+        product_category = self.env['product.category'].create({
+            'name': 'Test AVCO Category',
+            'property_account_income_categ_id': self.account_revenue.id,
+            'property_account_expense_categ_id': self.account_expense.id,
+            'property_valuation': 'real_time',
+            'property_cost_method': 'average',
+        })
+        account_variation = product_category.property_stock_valuation_account_id.account_stock_variation_id
+        with freeze_time(fields.Datetime.now() - timedelta(seconds=10)):
+            avco_product = self.env['product.product'].create({
+                'name': "AVCO Product",
+                'categ_id': product_category.id,
+                'invoice_policy': 'delivery',
+                'is_storable': True,
+                'standard_price': 0,
+                'uom_id': self.uom_unit.id,
+            })
+        # Receive 10 @ 10 so the average cost becomes 10.
+        self._make_in_move(avco_product, 10, 10)
+
+        # sale_order_2: post-dated invoice; sale_order_3: future delivery.
+        sale_order_2, sale_order_3 = self.env['sale.order'].with_context(tracking_disable=True).create([{
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': avco_product.id,
+                'product_uom_qty': 3,
+                'price_unit': 15,
+                'tax_ids': False,
+            })],
+        } for _ in range(2)])
+        (sale_order_2 + sale_order_3).action_confirm()
+
+        # sale_order_2: deliver 2 on 2020-08-05, then post an invoice dated 2020-08-08.
+        pick_2 = sale_order_2.picking_ids
+        pick_2.move_ids.write({'quantity': 2, 'picked': True})
+        Form.from_action(self.env, pick_2.button_validate()).save().process()
+        pick_2.move_ids.write({'date': fields.Date.to_date('2020-08-05')})
+        invoice = sale_order_2._create_invoices()
+        invoice.invoice_date = fields.Date.to_date('2020-08-08')
+        invoice.action_post()
+
+        # sale_order_3: deliver 2 on 2020-08-05, then the last unit on 2020-08-07.
+        pick_3 = sale_order_3.picking_ids
+        pick_3.move_ids.write({'quantity': 2, 'picked': True})
+        Form.from_action(self.env, pick_3.button_validate()).save().process()
+        pick_3.move_ids.write({'date': fields.Date.to_date('2020-08-05')})
+        backorder_3 = sale_order_3.picking_ids.filtered(lambda pick: pick.state == 'assigned')
+        backorder_3.move_ids.write({'quantity': 1, 'picked': True})
+        backorder_3.button_validate()
+        backorder_3.move_ids.write({'date': fields.Date.to_date('2020-08-07')})
+
+        # Accrue each on 2020-08-06: only the 2 units delivered on 08-05 count,
+        # valued at the 10.00 average cost (revenue 30, COGS 20).
+        for order in (sale_order_2, sale_order_3):
+            wizard = self.env['account.accrued.orders.wizard'].with_context({
+                'active_model': 'sale.order',
+                'active_ids': order.ids,
+            }).create({
+                'account_id': self.account_expense.id,
+                'date': fields.Date.to_date('2020-08-06'),
+            })
+            account_move = self.env['account.move'].search(wizard.create_entries()['domain'])
+            self.assertRecordValues(account_move.line_ids.sorted('id'), [
+                # Accrued revenues entries.
+                {'account_id': self.account_revenue.id, 'debit': 0, 'credit': 30},
+                {'account_id': self.account_expense.id, 'debit': 30, 'credit': 0},
+                {'account_id': account_variation.id, 'debit': 0, 'credit': 20},
+                {'account_id': self.account_expense.id, 'debit': 20, 'credit': 0},
+                # Reversal of accrued revenues entries.
+                {'account_id': self.account_revenue.id, 'debit': 30, 'credit': 0},
+                {'account_id': self.account_expense.id, 'debit': 0, 'credit': 30},
+                {'account_id': account_variation.id, 'debit': 20, 'credit': 0},
+                {'account_id': self.account_expense.id, 'debit': 0, 'credit': 20},
+            ])
+
     def test_accrued_order_in_anglo_saxon_fifo_perpetual(self):
         """ Ensure the COGS accrual lines are correctly computed for FIFO costing method product."""
         # Create a product using anglox-saxon valuation.
