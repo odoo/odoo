@@ -14,7 +14,7 @@ class WebsiteSaleCollect(WebsiteSale):
         """Override of `website_sale` to configure the Click & Collect Availability widget."""
         res = super()._prepare_product_values(product, **kwargs)
         if not res.get("combination_info", {}).get("show_click_and_collect_availability", False):
-            # Click & Collect disabled, product doesn't require delivery or a redirection is needed.
+            # Click & Collect disabled or product doesn't require delivery.
             return res
 
         in_store_dm_sudo = self.env.website.sudo().in_store_dm_id
