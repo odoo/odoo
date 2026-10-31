@@ -318,23 +318,68 @@ export class PosOrder extends Base {
     get hasChange() {
         return this.lines.some((l) => l.uiState.hasChange);
     }
+
+    selectChangeLines(orderChange) {
+        if (Object.keys(orderChange).length === 0) {
+            return this.lines.map((line) => ({
+                line: line,
+                change: false,
+            }));
+        }
+
+        const changes = [
+            ...orderChange.new,
+            ...orderChange.cancelled.map((line) => ({ ...line, quantity: -line.quantity })),
+            ...orderChange.noteUpdated.map((line) => ({ ...line, quantity: 0 })),
+        ];
+
+        const changesByUuid = new Map();
+        for (const change of changes) {
+            const previousChange = changesByUuid.get(change.uuid);
+            changesByUuid.set(
+                change.uuid,
+                previousChange
+                    ? {
+                          ...previousChange,
+                          ...change,
+                          quantity: previousChange.quantity + change.quantity,
+                      }
+                    : change
+            );
+        }
+
+        const lines = this.lines.filter((line) => changesByUuid.has(line.uuid));
+        return lines.map((line) => ({
+            line: line,
+            change: changesByUuid.get(line.uuid) || false,
+        }));
+    }
     /**
      * This function is called after the order has been successfully sent to the preparation tool(s).
      * In the future, this status should be separated between the different preparation tools,
      * so that if one of them returns an error, it is possible to send the information back to it
      * without impacting the other tools.
      */
-    updateLastOrderChange() {
+    updateLastOrderChange(orderChange = {}) {
+        const changedLines = this.selectChangeLines(orderChange);
+
         const orderlineIdx = [];
-        this.lines.forEach((line) => {
+        changedLines.forEach((changedLine) => {
+            const line = changedLine.line;
+            const change = changedLine.change;
+
             if (!line.skip_change) {
                 orderlineIdx.push(line.preparationKey);
 
+                const note = change ? change.note : line.getNote();
                 if (this.last_order_preparation_change.lines[line.preparationKey]) {
                     this.last_order_preparation_change.lines[line.preparationKey]["quantity"] =
-                        line.get_quantity();
-                    this.last_order_preparation_change.lines[line.preparationKey]["note"] =
-                        line.getNote();
+                        change
+                            ? this.last_order_preparation_change.lines[line.preparationKey][
+                                  "quantity"
+                              ] + change.quantity
+                            : line.get_quantity();
+                    this.last_order_preparation_change.lines[line.preparationKey]["note"] = note;
                 } else {
                     this.last_order_preparation_change.lines[line.preparationKey] = {
                         attribute_value_ids: line.attribute_value_ids.map((a) => ({
@@ -347,8 +392,8 @@ export class PosOrder extends Base {
                         name: line.get_full_product_name(),
                         basic_name: line.get_product().name,
                         display_name: line.get_product().display_name,
-                        note: line.getNote(),
-                        quantity: line.get_quantity(),
+                        note: note,
+                        quantity: change ? change.quantity : line.get_quantity(),
                     };
                 }
                 line.setHasChange(false);
@@ -366,8 +411,16 @@ export class PosOrder extends Base {
                 delete this.last_order_preparation_change.lines[key];
             }
         }
-        this.last_order_preparation_change.sittingMode = this.takeaway ? "takeaway" : "dine in";
-        this.last_order_preparation_change.generalNote = this.general_note;
+
+        const changesProvided = Object.keys(orderChange).length > 0;
+        if (!changesProvided || orderChange.modeUpdate) {
+            this.last_order_preparation_change.sittingMode = this.takeaway ? "takeaway" : "dine in";
+        }
+        if (!changesProvided) {
+            this.last_order_preparation_change.generalNote = this.general_note;
+        } else if (orderChange.generalNote) {
+            this.last_order_preparation_change.generalNote = orderChange.generalNote;
+        }
         this.last_order_preparation_change.metadata = {
             serverDate: serializeDateTime(DateTime.now()),
         };
