@@ -116,17 +116,17 @@
             <td t-if="data['show_replenishments']" class="text-center" t-out="line.get('formatted_state', '')"/>
             <td t-attf-class="text-end {{ data['get_color'](line.get('quantity_decorator')) }}">
                 <t t-if="line.get('model') == 'mrp.workorder'" t-out="line['quantity']" t-options="{'widget': 'float_time', 'unit': 'minutes', 'show_seconds': True}"/>
-                <t t-else="" t-out="line['quantity']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                <t t-else="" t-out="line['quantity']" t-options="{'widget': 'float', 'precision': line['uom_precision'], 'min_precision': 0}"/>
             </td>
             <td t-if="data['show_uom']" class="text-start" t-out="line['uom_name']"/>
             <td name="td_mrp_mo_free_to_use" t-if="data['show_availabilities']" class="text-end">
                 <t t-if="line.get('quantity_on_hand', False) is not False">
-                    <t t-out="line['quantity_free']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/> /
-                    <t t-out="line['quantity_on_hand']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                    <t t-out="line['quantity_free']" t-options="{'widget': 'float', 'precision': line['uom_precision'], 'min_precision': 0}"/> /
+                    <t t-out="line['quantity_on_hand']" t-options="{'widget': 'float', 'precision': line['uom_precision'], 'min_precision': 0}"/>
                 </t>
             </td>
             <td t-if="data['show_availabilities']" t-attf-class="text-end {{ data['get_color'](line.get('qty_consumed_decorator')) }}">
-                <t t-if="line.get('quantity_consumed', False) is not False" t-out="line['quantity_consumed']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
+                <t t-if="line.get('quantity_consumed', False) is not False" t-out="line['quantity_consumed']" t-options="{'widget': 'float', 'precision': line['uom_precision'], 'min_precision': 0}"/>
             </td>
             <td t-if="data['show_receipts']" class="text-end">
                 <span t-if="line.get('receipt')" t-att-class="data['get_color'](line['receipt'].get('decorator'))" t-out="line['receipt']['display']"/>
