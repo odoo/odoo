@@ -34,7 +34,7 @@ class GoogleEventSync(models.AbstractModel):
     def write(self, vals):
         google_service = GoogleCalendarService(self.env['google.service'])
         synced_fields = self._get_google_synced_fields()
-        if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
+        if 'need_sync' not in vals and vals.keys() & synced_fields:
             vals['need_sync'] = True
 
         if 'calendar_id' in vals or 'user_id' in vals:
@@ -108,13 +108,6 @@ class GoogleEventSync(models.AbstractModel):
 
     @api.model_create_multi
     def create(self, vals_list):
-        user_ids = {v['user_id'] for v in vals_list if v.get('user_id')}
-        users_with_sync = self.env['res.users'].browse(user_ids).filtered(lambda u: not u.sudo().google_synchronization_stopped)
-        users_with_sync_set = set(users_with_sync.ids)
-
-        for vals in vals_list:
-            if vals.get('user_id', False) and vals['user_id'] not in users_with_sync_set:
-                vals.update({'need_sync': False})
         records = super().create(vals_list)
         self._handle_allday_recurrences_edge_case(records, vals_list)
 

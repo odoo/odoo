@@ -38,7 +38,7 @@ class MicrosoftCalendarController(CalendarController):
                 }
 
             # Checking that user have already accepted Odoo to access his calendar !
-            if not MicrosoftCal.is_authorized(request.env.user):
+            if not bool(request.env.user.sudo().microsoft_calendar_token):
                 url = MicrosoftCal._microsoft_authentication_url(from_url=kw.get('fromurl'))
                 return {
                     "status": "need_auth",

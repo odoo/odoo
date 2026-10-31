@@ -117,12 +117,12 @@ test(`component is destroyed while sync microsoft calendar`, async () => {
     expect.verifySteps([]);
 
     await switchView("calendar");
-    expect.verifySteps(["sync_data"]);
+    expect.verifySteps(["sync_data", "search_read"]);
 
     await switchView("calendar");
-    expect.verifySteps(["sync_data"]);
+    expect.verifySteps(["sync_data", "search_read"]);
 
-    deferred.resolve();
+    deferred.resolve({ status: "need_refresh" });
     await animationFrame();
     await expect.waitForSteps(["search_read"]);
 });
