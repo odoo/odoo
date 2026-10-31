@@ -543,6 +543,439 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     await expect.waitForSteps(["web_save"]);
 });
 
+test.tags("desktop");
+test(`[Offline] new record: onchange skipped offline is rerun when the connection is back`, async () => {
+    const setOffline = mockOffline();
+    Partner._onChanges = {
+        parent_id(record) {
+            record.int_field = 5;
+        },
+    };
+    onRpc("onchange", ({ args }) => {
+        if (args[2].length) {
+            expect.step(`onchange ${args[2]}`);
+        }
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step(`web_save foo=${args[1].foo} int_field=${args[1].int_field}`);
+    });
+    Partner._views = {
+        form: `
+            <form>
+                <field name="parent_id" on_change="1"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    // fill the offline search cache, then close the dropdown
+    await contains(".o_field_many2one input").click();
+    await contains(".o_form_renderer").click();
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    expect.verifySteps([]);
+
+    await setOffline(false);
+    await animationFrame();
+    expect.verifySteps(["onchange parent_id"]);
+    expect(".o_field_widget[name=int_field] input").toHaveValue("5");
+
+    await clickSave();
+    expect.verifySteps(["web_save foo=My little Foo Value int_field=5"]);
+});
+
+test.tags("desktop");
+test(`[Offline] existing record: onchange skipped offline is rerun when the connection is back`, async () => {
+    const setOffline = mockOffline();
+    Partner._onChanges = {
+        parent_id(record) {
+            record.int_field = 5;
+        },
+    };
+    onRpc("onchange", ({ args }) => {
+        if (args[2].length) {
+            expect.step(`onchange ${args[2]}`);
+        }
+    });
+    Partner._views = {
+        form: `
+            <form>
+                <field name="parent_id" on_change="1"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    // fill the offline search cache, then close the dropdown
+    await contains(".o_field_many2one input").click();
+    await contains(".o_form_renderer").click();
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    await setOffline(false);
+    await animationFrame();
+    expect.verifySteps(["onchange parent_id"]);
+    expect(".o_field_widget[name=int_field] input").toHaveValue("5");
+});
+
+test.tags("desktop");
+test(`[Offline] onchange skipped offline is not rerun when the record is discarded`, async () => {
+    const setOffline = mockOffline();
+    onRpc("onchange", ({ args }) => {
+        if (args[2].length) {
+            expect.step(`onchange ${args[2]}`);
+        }
+    });
+    Partner._views = {
+        form: `
+            <form>
+                <field name="parent_id" on_change="1"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        res_id: 1,
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    // fill the offline search cache, then close the dropdown
+    await contains(".o_field_many2one input").click();
+    await contains(".o_form_renderer").click();
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    await contains(".o_form_button_cancel").click();
+    await setOffline(false);
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test(`[Offline] the values set by the user are kept when the skipped onchange is rerun`, async () => {
+    const setOffline = mockOffline();
+    Partner._onChanges = {
+        parent_id(record) {
+            record.foo = "from onchange";
+            record.int_field = 5;
+        },
+    };
+    onRpc("onchange", ({ args }) => {
+        if (args[2].length) {
+            expect.step(`onchange ${args[2]}`);
+        }
+    });
+    Partner._views = {
+        form: `
+            <form>
+                <field name="parent_id" on_change="1"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    // fill the offline search cache, then close the dropdown
+    await contains(".o_field_many2one input").click();
+    await contains(".o_form_renderer").click();
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    await contains(".o_field_widget[name=foo] input").edit("mine");
+    await setOffline(false);
+    await animationFrame();
+    expect.verifySteps(["onchange parent_id"]);
+    expect(".o_field_widget[name=foo] input").toHaveValue("mine");
+    expect(".o_field_widget[name=int_field] input").toHaveValue("5");
+});
+
+test.tags("desktop");
+test(`[Offline] new record saved offline: skipped onchange is made before replaying the save`, async () => {
+    const setOffline = mockOffline();
+    Partner._onChanges = {
+        parent_id(record) {
+            record.int_field = 5;
+        },
+    };
+    onRpc("onchange", ({ args }) => {
+        if (args[2].length) {
+            expect.step(`onchange ${args[2]}`);
+        }
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step(`web_save foo=${args[1].foo} int_field=${args[1].int_field}`);
+    });
+    Partner._views = {
+        form: `
+            <form>
+                <field name="parent_id" on_change="1"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    // fill the offline search cache, then close the dropdown
+    await contains(".o_field_many2one input").click();
+    await contains(".o_form_renderer").click();
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    await clickSave();
+    expect.verifySteps([]);
+
+    await setOffline(false);
+    await expect.waitForSteps([
+        "onchange parent_id",
+        "web_save foo=My little Foo Value int_field=5",
+    ]);
+});
+
+test.tags("desktop");
+test(`[Offline] new record saved offline: the values set by the user are kept when replaying the save`, async () => {
+    const setOffline = mockOffline();
+    Partner._onChanges = {
+        parent_id(record) {
+            record.foo = "from onchange";
+            record.int_field = 5;
+        },
+    };
+    onRpc("onchange", ({ args }) => {
+        if (args[2].length) {
+            expect.step(`onchange ${args[2]}`);
+        }
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step(`web_save foo=${args[1].foo} int_field=${args[1].int_field}`);
+    });
+    Partner._views = {
+        form: `
+            <form>
+                <field name="parent_id" on_change="1"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    // fill the offline search cache, then close the dropdown
+    await contains(".o_field_many2one input").click();
+    await contains(".o_form_renderer").click();
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    await contains(".o_field_widget[name=foo] input").edit("mine");
+    await clickSave();
+
+    await setOffline(false);
+    await expect.waitForSteps(["onchange parent_id", "web_save foo=mine int_field=5"]);
+});
+
+test.tags("desktop");
+test(`[Offline] new record saved offline: relational values of the skipped onchange are replayed`, async () => {
+    const setOffline = mockOffline();
+    onRpc("onchange", ({ args }) => {
+        if (args[2].length) {
+            expect.step(`onchange ${args[2]}`);
+            return {
+                value: {
+                    product_id: { id: 37 },
+                    reference: { id: { id: 2, model: "partner" }, display_name: "second record" },
+                    child_ids: [
+                        [0, "virtual_1", { name: "kid", parent_id: { id: 2, display_name: "x" } }],
+                        [4, 2, { name: "second record" }],
+                    ],
+                },
+            };
+        }
+    });
+    onRpc("web_save", ({ args }) => {
+        const { product_id, reference, child_ids } = args[1];
+        expect.step(`web_save ${product_id} ${reference} ${JSON.stringify(child_ids)}`);
+    });
+    Partner._views = {
+        form: `
+            <form>
+                <field name="parent_id" on_change="1"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+                <field name="product_id"/>
+                <field name="reference"/>
+                <field name="child_ids"><list><field name="name"/><field name="parent_id"/></list></field>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    // fill the offline search cache, then close the dropdown
+    await contains(".o_field_many2one input").click();
+    await contains(".o_form_renderer").click();
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    await clickSave();
+
+    await setOffline(false);
+    await expect.waitForSteps([
+        "onchange parent_id",
+        'web_save 37 partner,2 [[0,"virtual_1",{"name":"kid","parent_id":2}],[4,2]]',
+    ]);
+});
+
+test.tags("desktop");
+test(`[Offline] record saved offline twice: the skipped onchange is made once when replaying`, async () => {
+    const setOffline = mockOffline();
+    Partner._onChanges = {
+        parent_id(record) {
+            record.int_field = 5;
+        },
+    };
+    onRpc("onchange", ({ args }) => {
+        if (args[2].length) {
+            expect.step(`onchange ${args[2]}`);
+        }
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step(`web_save foo=${args[1].foo} int_field=${args[1].int_field}`);
+    });
+    Partner._views = {
+        form: `
+            <form>
+                <field name="parent_id" on_change="1"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    // fill the offline search cache, then close the dropdown
+    await contains(".o_field_many2one input").click();
+    await contains(".o_form_renderer").click();
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    await clickSave();
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(first record)`).click();
+    await clickSave();
+    expect.verifySteps([]);
+
+    await setOffline(false);
+    await expect.waitForSteps([
+        "onchange parent_id",
+        "web_save foo=My little Foo Value int_field=5",
+    ]);
+});
+
+test.tags("desktop");
+test(`[Offline] nothing is saved if the skipped onchange fails when the connection is back`, async () => {
+    const setOffline = mockOffline();
+    let failOnchange = false;
+    onRpc("onchange", () => {
+        if (failOnchange) {
+            throw makeServerError({ message: "onchange failed" });
+        }
+    });
+    onRpc("web_save", () => expect.step("web_save"));
+    Partner._views = {
+        form: `
+            <form>
+                <field name="parent_id" on_change="1"/>
+                <field name="foo"/>
+                <field name="bar"/>
+                <field name="int_field"/>
+            </form>`,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        name: "Partner",
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    // fill the offline search cache, then close the dropdown
+    await contains(".o_field_many2one input").click();
+    await contains(".o_form_renderer").click();
+
+    await setOffline(true);
+    await contains(".o_field_many2one input").click();
+    await contains(`.dropdown .dropdown-item:contains(second record)`).click();
+    failOnchange = true;
+    expect.errors(2); // when the connection is back, and when saving
+    await setOffline(false);
+    await animationFrame();
+    await clickSave();
+    await animationFrame(); // wait for the error service
+    expect.verifyErrors(["RPC_ERROR", "RPC_ERROR"]);
+    expect.verifySteps([]);
+});
+
 test(`form rendering with class and style attributes`, async () => {
     await mountView({
         resModel: "partner",

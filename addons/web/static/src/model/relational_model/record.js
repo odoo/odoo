@@ -15,7 +15,7 @@ import {
     parseServerValue,
 } from "./utils";
 import { RPCError, ConnectionLostError } from "@web/core/network/rpc";
-import { pick } from "@web/core/utils/objects";
+import { omit, pick } from "@web/core/utils/objects";
 
 /**
  * Redefine default 'Record' type
@@ -109,6 +109,7 @@ export class Record extends DataPoint {
         }
         if (!keepChanges) {
             this._changes = markRaw({});
+            this._pendingOnchanges = markRaw([]);
         }
         this.dirty = false;
         this.data = { ...this._values, ...this._changes };
@@ -364,7 +365,14 @@ export class Record extends DataPoint {
                 this._parseOfflineValues(scheduledORM.value.extras.changes)
             );
             this._offlineTimeStamp = scheduledORM.value.extras.timeStamp;
+            this._offlinePendingOnchanges = scheduledORM.value.extras.onchange?.fieldNames;
             return this.update(this._offlineChanges);
+        }
+    }
+
+    runPendingOnchanges() {
+        if (this._pendingOnchanges.length) {
+            return this.model.mutex.exec(() => this._runPendingOnchanges());
         }
     }
 
@@ -695,6 +703,7 @@ export class Record extends DataPoint {
                 this._changes[fieldName]._discard();
             }
         }
+        this._pendingOnchanges = markRaw([]);
         if (this._savePoint) {
             this.dirty = this._savePoint.dirty;
             this._changes = markRaw({ ...this._savePoint.changes });
@@ -1205,6 +1214,9 @@ export class Record extends DataPoint {
             }
             reload = true;
         }
+        if (this._pendingOnchanges.length && !this.model._urgentSave) {
+            await this._runPendingOnchanges();
+        }
         // before saving, abandon new invalid, untouched records in x2manys
         for (const fieldName in this.activeFields) {
             const field = this.fields[fieldName];
@@ -1369,6 +1381,9 @@ export class Record extends DataPoint {
         this._offlineChanges = markRaw({ ...(this._offlineChanges || {}), ...this._changes });
         const offlineChanges = this._getChanges(this._offlineChanges);
         delete offlineChanges.id; // id never changes, and should not be written
+        this._offlinePendingOnchanges = markRaw([
+            ...new Set([...(this._offlinePendingOnchanges || []), ...this._pendingOnchanges]),
+        ]);
 
         this._offlineTimeStamp = this._offlineTimeStamp || Date.now();
         this._offlineId = this.model.offline.scheduleORM(
@@ -1386,10 +1401,24 @@ export class Record extends DataPoint {
                         { changes: false }
                     ),
                     timeStamp: this._offlineTimeStamp,
+                    onchange: this._offlinePendingOnchanges.length
+                        ? {
+                              fieldNames: this._offlinePendingOnchanges,
+                              fields: this.fields,
+                              activeFields: this.activeFields,
+                              specification: getFieldsSpec(
+                                  this.activeFields,
+                                  this.fields,
+                                  getBasicEvalContext(this.config),
+                                  { withInvisible: true }
+                              ),
+                          }
+                        : undefined,
                 },
             }
         );
 
+        this._pendingOnchanges = markRaw([]);
         this._commitSave();
         return true;
     }
@@ -1491,6 +1520,33 @@ export class Record extends DataPoint {
         }
     }
 
+    async _runPendingOnchanges() {
+        if (!this._pendingOnchanges.length) {
+            return;
+        }
+        const fieldNames = [...this._pendingOnchanges];
+        try {
+            const values = await this._getOnchangeValues(pick(this._changes, ...fieldNames));
+            if (values) {
+                this._applyChanges({}, omit(values, ...Object.keys(this._changes)));
+                await this._onUpdate({});
+                await this.model.hooks.onRecordChanged(this, this._getChanges());
+            }
+        } catch (e) {
+            this._pendingOnchanges.push(...fieldNames);
+            throw e;
+        }
+    }
+
+    _removePendingOnchanges(fieldNames) {
+        for (const fieldName of fieldNames) {
+            const index = this._pendingOnchanges.indexOf(fieldName);
+            if (index !== -1) {
+                this._pendingOnchanges.splice(index, 1);
+            }
+        }
+    }
+
     async _getOnchangeValues(changes) {
         for (const fieldName in changes) {
             if (changes[fieldName] instanceof Operation) {
@@ -1518,12 +1574,14 @@ export class Record extends DataPoint {
                 localChanges[this.config.relationField].id = this._parentRecord.resId;
             }
         }
+        this._removePendingOnchanges(onChangeFields);
         return this.model._onchange(this.config, {
             changes: localChanges,
             fieldNames: onChangeFields,
             evalContext: toRaw(this.evalContext),
             onError: (e) => {
                 if (e instanceof ConnectionLostError) {
+                    this._pendingOnchanges.push(...onChangeFields);
                     return false;
                 }
                 // We apply changes and revert them after to force a render of the Field components
