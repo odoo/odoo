@@ -495,10 +495,10 @@ class Many2one(_Relational['IdType']):
         # Decide whether to use a LEFT JOIN or JOIN
         use_join = bypass_access and isinstance(value, Domain)
         if use_join and not positive:
-            # For 'not any!', we get a better query with a NOT IN when we have a
-            # lot of positive conditions which have a better chance to use
-            # indexes.
-            #   `field NOT IN (SELECT ... WHERE z = y)` better than
+            # For 'not any!', we get a better query with a NOT EXISTS when we
+            # have a lot of positive conditions which have a better chance to
+            # use indexes.
+            #   `NOT EXISTS (SELECT ... WHERE z = y AND id = field)` better than
             #   `LEFT JOIN ... ON field = id WHERE z <> y`
             # There are some exceptions: we filter on 'id'.
             use_join = sum(
@@ -541,14 +541,32 @@ class Many2one(_Relational['IdType']):
             subselect = SQL("(%s)", value)
         else:
             raise TypeError(f"condition_to_sql() 'any' operator accepts Domain, SQL or Query, got {value}")
-        sql = SQL(
-            "%s%s%s",
-            sql_field,
-            SQL(" IN ") if positive else SQL(" NOT IN "),
-            subselect,
-        )
-        if can_be_null and not positive:
-            sql = SQL("(%s IS NULL OR %s)", sql_field, sql)
+        if not positive and isinstance(value, Query) and value._ids is None:
+            # PERF: `NOT IN (SELECT ...)` cannot be planned as an anti-join
+            # (NULLs in the subquery would change its result) and, when the
+            # subquery does not fit in work_mem, it is rescanned for every row
+            # of the main table. Since the ids are never NULL, `NOT EXISTS`
+            # is equivalent and PostgreSQL can plan it as an anti join.
+            # A NULL field never matches, so `NOT EXISTS` is already true for
+            # it: do not add `field IS NULL OR`, which would prevent the anti
+            # join (it is only planned for a top-level condition, not in a OR).
+            coalias = table._make_alias(f"{self.name}__exists")
+            sql = SQL(
+                "NOT EXISTS (SELECT 1 FROM %s AS %s WHERE %s = %s)",
+                subselect,
+                coalias,
+                coalias.id,
+                sql_field,
+            )
+        else:
+            sql = SQL(
+                "%s%s%s",
+                sql_field,
+                SQL(" IN ") if positive else SQL(" NOT IN "),
+                subselect,
+            )
+            if can_be_null and not positive:
+                sql = SQL("(%s IS NULL OR %s)", sql_field, sql)
         if self.company_dependent:
             sql = self._condition_to_sql_company(table, sql, field_expr, operator, value)
         return sql
