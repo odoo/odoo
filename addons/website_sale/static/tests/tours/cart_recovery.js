@@ -13,7 +13,7 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
         tourUtils.goToCart(),
         {
             content: "check product is in cart, get cart id, logout, go to login",
-            trigger: 'div:has(a>h6:contains("Acoustic Bloc Screens"))',
+            trigger: 'div:has(a>h6:text("Acoustic Bloc Screens"))',
             run: async function () {
                 const orderId = document.querySelector(".my_cart_quantity").dataset["orderId"];
                 browser.localStorage.setItem(orderIdKey, orderId);
@@ -115,7 +115,7 @@ registry.category("web_tour.tours").add("website_sale.cart_recovery", {
         },
         {
             content: "check product is in restored cart",
-            trigger: 'div>a>h6:contains("Acoustic Bloc Screens")',
+            trigger: 'h6:contains("Acoustic Bloc Screens")',
         },
     ],
 });
