@@ -57,6 +57,38 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             mail = self.env['mail.message'].search([('message_type', '=', 'email_outgoing'), ('model', '=', 'res.users'), ('res_id', '=', new_user.id)], limit=1)
             self.assertTrue(mail, "The new user must be informed of his registration")
 
+    def test_free_signup_does_not_clear_caches(self):
+        """
+        Check that signing up (and first login) does not clear the registry caches
+        """
+        self.env['ir.config_parameter'].sudo().set_param('auth_signup.invitation_scope', 'b2c')
+
+        self.authenticate(None, None)
+        self.opener.cookies['tz'] = 'Europe/Brussels'
+        payload = {
+            'login': 'cache@example.com',
+            'name': 'cache',
+            'password': 'mypassword',
+            'confirm_password': 'mypassword',
+            'csrf_token': http.Request.csrf_token(self),
+        }
+
+        cleared_caches = []
+        clear_cache = self.env.registry.clear_cache
+
+        def patched_clear_cache(*cache_names):
+            cleared_caches.append(cache_names)
+            return clear_cache(*cache_names)
+
+        with patch.object(self.env.registry, 'clear_cache', patched_clear_cache):
+            self.url_open(self._get_free_signup_url(), data=payload)
+
+        new_user = self.env['res.users'].search([('login', '=', 'cache@example.com')])
+        self.assertTrue(new_user)
+        self.assertEqual(new_user.tz, 'Europe/Brussels')
+        self.assertTrue(new_user.login_date)
+        self.assertEqual(cleared_caches, [])
+
     def test_compute_signup_url(self):
         user = self.user_demo
         user.groups_id -= self.env.ref('base.group_partner_manager')

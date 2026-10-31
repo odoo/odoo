@@ -74,6 +74,8 @@ class ResUsers(models.Model):
                 values.pop('country_id', None)
             if partner.lang:
                 values.pop('lang', None)
+            if partner.tz:
+                values.pop('tz', None)
 
             if partner_user:
                 # user exists, modify it according to values
