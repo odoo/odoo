@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from lxml import etree
 from odoo import fields, Command
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -35,14 +36,21 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
         })
         cls.purchase_order.button_confirm()
 
-    def _create_bill_from_xml(self, xml_file_path):
+    def _create_bill_from_xml(self, xml_file_path, modifying_xpath=None):
         file_path = f"{self.test_module}/tests/test_files/{xml_file_path}"
         with file_open(file_path, 'rb') as file:
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': 'test_bill.xml',
-                'raw': file.read(),
-            })
+            xml_content = file.read()
+
+        if modifying_xpath:
+            xml_tree = etree.fromstring(xml_content)
+            xml_tree = self.with_applied_xpath(xml_tree, modifying_xpath)
+            xml_content = etree.tostring(xml_tree)
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': 'test_bill.xml',
+            'raw': xml_content,
+        })
         return self._import_attachment(xml_attachment)
 
     def _import_attachment(self, attachment, journal=None):
@@ -92,3 +100,53 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
             'invoice_origin': po_child.name,
             'partner_id': child.id,
         }])
+
+    def test_po_matching_invoice_line_without_name(self):
+        """Purchase order matching should handle invoice lines without a name."""
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_open_wood.id,
+            'date_order': fields.Date.today(),
+            'partner_ref': 'my_match_reference',
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'name': self.product.name,
+                    'product_qty': 1.0,
+                    'price_unit': 33.06,
+                    'taxes_id': [Command.link(self.tax_21.id)],
+                }),
+                Command.create({
+                    'name': 'Transfer',
+                    'product_qty': 1.0,
+                    'price_unit': 10.00,
+                    'taxes_id': [Command.link(self.tax_21.id)],
+                }),
+            ],
+        })
+        purchase_order.button_confirm()
+
+        modifying_xpath = """
+            <xpath expr="/*[local-name()='Invoice']/*[local-name()='InvoiceLine'][1]"
+                position="before">
+                <cac:AllowanceCharge
+                    xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                    xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                    <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+                    <cbc:AllowanceChargeReasonCode>FC</cbc:AllowanceChargeReasonCode>
+                    <cbc:Amount currencyID="EUR">10.00</cbc:Amount>
+                    <cac:TaxCategory>
+                        <cbc:ID>S</cbc:ID>
+                        <cbc:Percent>21.00</cbc:Percent>
+                        <cac:TaxScheme>
+                            <cbc:ID>VAT</cbc:ID>
+                        </cac:TaxScheme>
+                    </cac:TaxCategory>
+                </cac:AllowanceCharge>
+            </xpath>
+        """
+        bill = self._create_bill_from_xml('ubl_bis3_po_partner.xml', modifying_xpath)
+
+        bill._find_and_set_purchase_orders(
+            ['my_match_reference'], bill.partner_id.id, bill.amount_total)
+
+        self.assertIn(bill, purchase_order.invoice_ids)
