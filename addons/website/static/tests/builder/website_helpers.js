@@ -36,7 +36,7 @@ import { getStructureSnippet, patchDOMParser } from "../snippet_helpers";
 import { revertPreview } from "@html_builder/core/utils";
 import { WebsiteBuilder } from "@website/builder/website_builder";
 import { session } from "@web/session";
-import { getTranslatedElements } from "./translated_elements_getter.hoot";
+import { getTranslatedAttributes, getTranslatedElements } from "./translated_elements_getter.hoot";
 import { BackgroundShapeOptionPlugin } from "@html_builder/plugins/background_option/background_shape_option_plugin";
 import { _t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -166,6 +166,7 @@ export async function setupWebsiteBuilder(
     patchDOMParser();
 
     onRpc("/website/get_translated_elements", () => getTranslatedElements());
+    onRpc("/website/get_translated_attributes", () => getTranslatedAttributes());
 
     patch(WebsiteBuilderClientAction.prototype, {
         setIframeLoaded() {
