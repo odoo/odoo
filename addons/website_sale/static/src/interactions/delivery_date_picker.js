@@ -1,5 +1,5 @@
 import { registry } from '@web/core/registry';
-import { formatDate } from '@web/core/l10n/dates';
+import { serializeDate } from '@web/core/l10n/dates';
 import { rpc } from '@web/core/network/rpc';
 import { Interaction } from '@web/public/interaction';
 
@@ -35,9 +35,7 @@ export class DeliveryDatePicker extends Interaction {
                         if (this._isDateValid(deliveryDate)) {
                             await this.waitFor(
                                 rpc("/website_sale/set_delivery_date", {
-                                    delivery_date: formatDate(deliveryDate, {
-                                        format: "yyyy-MM-dd",
-                                    }),
+                                    delivery_date: serializeDate(deliveryDate),
                                 }),
                             );
                         }
