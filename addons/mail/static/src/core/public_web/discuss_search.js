@@ -19,7 +19,7 @@ export class DiscussSearch extends Component {
         this.store = useService("mail.store");
         this.command = useService("command");
         this.ui = useService("ui");
-        this.searchHover = useHover(["search-btn", "search-floating"], {
+        this.searchHover = useHover(["search-btn"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.searchFloating.isOpen = true;
@@ -69,6 +69,7 @@ export class DiscussSearch extends Component {
     }
 
     onClickSearchConversations() {
+        this.searchFloating.close();
         this.command.openMainPalette({ searchValue: "@" });
     }
 }

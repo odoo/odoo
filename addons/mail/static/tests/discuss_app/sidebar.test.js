@@ -1388,6 +1388,46 @@ test("Sidebar compact is locally persistent (saved in local storage)", async () 
     expect(browser.localStorage.getItem(DISCUSS_SIDEBAR_COMPACT_LS)).toBe("true");
 });
 
+test("Compact sidebar search panel opens on hover and closes when the mouse leaves it", async () => {
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, true);
+    await start();
+    await openDiscuss();
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await hover(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await advanceTime(500);
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await hover(".o-mail-DiscussContent");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
+});
+
+test("Compact sidebar search panel closes when clicking search", async () => {
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, true);
+    await start();
+    await openDiscuss();
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await click(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o_command_palette");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
+    await hover(".o_command_palette");
+    await press("Escape");
+    await contains(".o_command_palette", { count: 0 });
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+});
+
+test("Compact sidebar search panel closes when the mouse goes to the command palette", async () => {
+    browser.localStorage.setItem(DISCUSS_SIDEBAR_COMPACT_LS, true);
+    await start();
+    await openDiscuss();
+    await hover(".o-mail-DiscussSearch-inputContainer");
+    await contains(".o-mail-DiscussSidebar-floatingMenu span:text('Search conversations')");
+    await press(["control", "k"]);
+    await hover(".o_command_palette");
+    await contains(".o-mail-DiscussSidebar-floatingMenu", { count: 0 });
+});
+
 test("Sidebar compact is crosstab synced", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
