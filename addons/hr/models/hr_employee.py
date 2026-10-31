@@ -2354,6 +2354,9 @@ class HrEmployee(models.Model):
         if skill_commands := self._pop_employee_skill_commands(vals):
             previous_skills_summary = self._get_current_skills_summary()
             vals['employee_skill_ids'] = self.env['hr.employee.skill']._get_transformed_commands(skill_commands, self)
+        if company_id := vals.get('company_id'):
+            for employee in self:
+                employee.employee_skill_ids._validation_company_id_change(company_id)
         if 'work_contact_id' in vals:
             self.message_unsubscribe(self.work_contact_id.ids)
         if 'user_id' in vals:

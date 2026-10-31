@@ -17,6 +17,16 @@ class HrIndividualSkillMixin(models.AbstractModel):
     def _linked_field_name(self):
         raise NotImplementedError()
 
+    def _get_company_id_change_error_message(self):
+        raise NotImplementedError()
+
+    def _validation_company_id_change(self, company_id):
+        blocking_skills = self.filtered(lambda skill: skill.skill_type_id.company_id and skill.skill_type_id.company_id.id != company_id)
+        if blocking_skills:
+            error_msg = self._get_company_id_change_error_message()
+            raise ValidationError(error_msg)
+        return True
+
     def _get_passive_fields(self):
         """
         Return additional passive fields to be included during (versioned)skill creation.
@@ -40,16 +50,24 @@ class HrIndividualSkillMixin(models.AbstractModel):
         return True
 
     def _default_skill_type_id(self):
+        field_name = self._linked_field_name()
+        default_id = self.env.context.get('default_' + field_name)
+        company_id = self.env[self[field_name]._name].browse(default_id).company_id.id
         if self.env.context.get('certificate_skill', False):
-            return self.env['hr.skill.type'].search([('is_certification', '=', True)], limit=1)
-        return self.env['hr.skill.type'].search([], limit=1)
+            if not company_id:
+                return self.env['hr.skill.type'].search([('is_certification', '=', True), ('company_id', '=', False)], limit=1)
+            return self.env['hr.skill.type'].search([('is_certification', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)], limit=1)
+        if not company_id:
+            return self.env['hr.skill.type'].search([('company_id', '=', False)], limit=1)
+        return self.env['hr.skill.type'].search(['|', ('company_id', '=', False), ('company_id', '=', company_id)], limit=1)
 
     skill_id = fields.Many2one('hr.skill', compute='_compute_skill_id', store=True,
-        domain="[('skill_type_id', '=', skill_type_id)]", readonly=False, required=True, ondelete='cascade')
+        domain="[('skill_type_id', '=', skill_type_id), '|', ('skill_type_id.company_id', '=', False), ('skill_type_id.company_id', '=', company_id)]", readonly=False, required=True, ondelete='cascade')
     skill_level_id = fields.Many2one('hr.skill.level', compute='_compute_skill_level_id',
-        domain="[('skill_type_id', '=', skill_type_id)]", store=True, readonly=False, required=True, index=True, ondelete='cascade')
+        domain="[('skill_type_id', '=', skill_type_id), '|', ('skill_type_id.company_id', '=', False), ('skill_type_id.company_id', '=', company_id)]", store=True, readonly=False, required=True, index=True, ondelete='cascade')
     skill_type_id = fields.Many2one('hr.skill.type',
                                     default=_default_skill_type_id,
+                                    domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
                                     required=True, index=True, ondelete='cascade')
     level_progress = fields.Integer(related='skill_level_id.level_progress')
     color = fields.Integer(related="skill_type_id.color")

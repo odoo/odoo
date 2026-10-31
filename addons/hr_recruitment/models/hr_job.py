@@ -441,6 +441,9 @@ class HrJob(models.Model):
             for job in self:
                 alias_default_vals = job._alias_get_creation_values().get('alias_defaults', '{}')
                 job.alias_defaults = alias_default_vals
+        if company_id := vals.get('company_id'):
+            for job in self:
+                job.application_ids.applicant_skill_ids._validation_company_id_change(company_id)
         return res
 
     def _creation_subtype(self):
