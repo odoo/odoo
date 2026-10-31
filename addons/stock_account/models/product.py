@@ -697,7 +697,11 @@ will update the cost of every lot/serial number in stock."),
         # empty out the stock for the impacted products
         empty_stock_svl_list = []
         lots_by_product = defaultdict(lambda: self.env['stock.lot'])
-        res = self.env["stock.valuation.layer"]._read_group(
+        # sudo: the svl related fields used below (e.g. quantity_svl) are all
+        # compute_sudo, so a user without stock.valuation.layer access must
+        # still be able to reach this point (e.g. a salesperson recategorizing
+        # a product without stock). Account move creation is guarded separately.
+        res = self.env["stock.valuation.layer"].sudo()._read_group(
             [("product_id", "in", impacted_products.ids), ("remaining_qty", "!=", 0)],
             ["product_id"],
             ["lot_id:recordset"],
