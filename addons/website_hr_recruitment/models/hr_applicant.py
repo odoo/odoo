@@ -7,6 +7,11 @@ from odoo.exceptions import UserError
 class HrApplicant(models.Model):
     _inherit = 'hr.applicant'
 
+    def get_base_url(self):
+        if self.job_id:
+            return self.job_id.get_base_url()
+        return super().get_base_url()
+
     def website_form_input_filter(self, request, values):
         if 'partner_id' in values:
             values.pop('email_from', None)
