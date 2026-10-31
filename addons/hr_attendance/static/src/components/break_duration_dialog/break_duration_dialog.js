@@ -1,4 +1,4 @@
-import { Component, props, proxy, t } from "@odoo/owl";
+import { Component, proxy, t, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -7,7 +7,7 @@ import { sprintf } from "@web/core/utils/strings";
 export class BreakDurationDialog extends Component {
     static template = "hr_attendance.BreakDurationDialog";
     static components = { Dialog };
-    props = props({
+    props = useProps({
         employeeName: t.string().optional(),
         maxMinutes: t.number().optional(),
         // Returning false keeps the dialog open, for a duration the employee can correct.

@@ -6,6 +6,7 @@ import {
     onWillUnmount,
     Plugin,
     proxy,
+    STATUS,
     t,
     useListener,
     usePlugin,
@@ -1015,7 +1016,7 @@ export function useActionManager(router = _router) {
                     Promise.reject(error);
                     return;
                 }
-                if (!controller.isMounted && this.scope.status === 1) {
+                if (!controller.isMounted && this.scope.status === STATUS.MOUNTED) {
                     // The error occurred during an onMounted hook of one of the components.
                     bus.trigger("ACTION_MANAGER:UPDATE", {
                         id: ++id,

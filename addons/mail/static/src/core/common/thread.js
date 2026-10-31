@@ -22,6 +22,7 @@ import {
     proxy,
     shallowEqual,
     signal,
+    STATUS,
     t,
     useOnChange,
     usePlugin,
@@ -733,7 +734,7 @@ export class Thread extends Component {
 
     /** Already loaded threads (e.g. prefetched) show their messages from the first render. */
     get showLoadedContent() {
-        if (this.scope.status === 0 /* new */) {
+        if (this.scope.status === STATUS.NEW) {
             return this.props.thread.isLoaded;
         }
         return this.state.mountedAndLoaded;
