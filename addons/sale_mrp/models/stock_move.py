@@ -23,10 +23,15 @@ class StockMove(models.Model):
         return 0
 
     def _get_price_unit(self):
-        kit_unit_price = self._get_kit_value_per_unit()
-        if kit_unit_price:
-            return kit_unit_price
+        if self.env.context.get('sale_mrp_kit_price_unit'):
+            kit_unit_price = self._get_kit_value_per_unit()
+            if kit_unit_price:
+                return kit_unit_price
         return super()._get_price_unit()
+
+    def _get_price_unit_delivery(self):
+        # only the sale margin values kit component moves per kit
+        return super(StockMove, self.with_context(sale_mrp_kit_price_unit=True))._get_price_unit_delivery()
 
     def _get_price_unit_dropshipped(self):
         """ Overridden to handle Kit dropship products correctly. """
