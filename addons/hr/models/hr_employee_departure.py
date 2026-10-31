@@ -249,3 +249,15 @@ class HrEmployeeDeparture(models.Model):
         :rtype: hr.employee.departure
         """
         return self
+
+    def _is_departure_month(self):
+        """
+        Check if this month corresponds to the departure one.
+        """
+        self.ensure_one()
+        today = fields.Date.context_today(self)
+        if self.departure_date:
+            first_day_of_departure_month = self.departure_date.replace(day=1)
+            return today >= first_day_of_departure_month
+
+        return False
