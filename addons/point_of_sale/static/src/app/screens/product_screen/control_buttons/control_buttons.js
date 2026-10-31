@@ -33,9 +33,17 @@ export class ControlButtons extends Component {
         this.notification = useService("notification");
         this.clickPrintBill = useAsyncLockedMethod(this.clickPrintBill);
     }
-    async clickPrintBill() {
-        this.pos.addPendingOrder([this.currentOrder.id]);
+    //Push local changes, or read from server if there are none
+    async syncOrderBeforeBill(order) {
+        const isDirty = order.isDirty();
+        this.pos.addPendingOrder([order.id]);
         await this.pos.syncAllOrders();
+        if (!isDirty) {
+            await this.pos.deviceSync.readDataFromServer();
+        }
+    }
+    async clickPrintBill() {
+        await this.syncOrderBeforeBill(this.currentOrder);
         // Need to await to have the result in case of automatic skip screen.
         await this.pos.ticketPrinter.printOrderReceipt({
             order: this.pos.getOrder(),
