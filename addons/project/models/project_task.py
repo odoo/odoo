@@ -67,7 +67,6 @@ PROJECT_TASK_READABLE_FIELDS = {
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'description',
-    'partner_id',
     'date_deadline',
     'date_last_stage_update',
     'tag_ids',
@@ -79,6 +78,7 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'priority',
     'state',
     'is_closed',
+    'partner_id',
 }
 
 CLOSED_STATES = {
