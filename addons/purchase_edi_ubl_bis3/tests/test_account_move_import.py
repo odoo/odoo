@@ -110,8 +110,28 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
             })]
         })
         bill_2._link_bill_origin_to_purchase_orders()
+        self.assertEqual(bill_2.invoice_origin, 'TESTPO99932 TESTPO09876')
+        bill_2.with_context(invoice_origin_from_description=True)._link_bill_origin_to_purchase_orders()
         self.assertFalse(bill_2.invoice_origin)
         self.assertTrue(all(not line.purchase_order_id for line in bill_2.line_ids))
+
+    def test_import_unmatched_purchase_order_reference_from_provided_field(self):
+        """
+        The order reference provided in the xml is kept even if no purchase order matches it
+        """
+        self.purchase_order.button_cancel()
+        bill = self._create_bill_from_xml("ubl_bis3_PO.xml")
+        self.assertEqual(bill.invoice_origin, self.purchase_order.name)
+        self.assertFalse(bill.line_ids.purchase_order_id)
+
+    def test_import_unmatched_purchase_order_reference_from_lines_description(self):
+        """
+        The reference found in the lines descriptions is cleaned if no purchase order matches it
+        """
+        self.purchase_order.button_cancel()
+        bill = self._create_bill_from_xml("ubl_bis3_PO_description.xml")
+        self.assertFalse(bill.invoice_origin)
+        self.assertFalse(bill.line_ids.purchase_order_id)
 
     def test_po_matching_no_partner_override(self):
         """
