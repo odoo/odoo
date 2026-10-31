@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import Command, fields
 from odoo.tests import Form, tagged
 from odoo.tools.float_utils import float_round, float_compare
@@ -77,6 +79,29 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon, TestStockValua
         scrap.do_scrap()
 
         self.assertEqual(self.finished.total_value, 0)
+
+    def test_subcontracting_backdated_receipt_past_valuation(self):
+        """
+        Ensure that backdated a subcontracting receipt also updates the
+        stock inventory valuation for these corresponding products
+
+        Backdating of 2 days the receipt, should imply a non-zero value
+        if we check stock inventory valuation for yesterday
+        """
+        (self.comp1 | self.comp2 | self.finished).categ_id = self.category_avco_auto
+        receipt = self._make_in_move(
+            self.finished, 1, unit_cost=100,
+            create_picking=True,
+            partner_id=self.subcontractor_partner1.id,
+        ).picking_id
+        production = receipt._get_subcontract_production()
+        backdate = fields.Datetime.now() - timedelta(days=2)
+        receipt.with_user(self.inventory_user).write({'date_done': backdate})
+
+        production_moves = production.move_raw_ids | production.move_finished_ids
+        self.assertRecordValues(production, [{'date_start': backdate - timedelta(seconds=1), 'date_finished': backdate - timedelta(seconds=1)}])
+        self.assertEqual(production_moves.mapped('date'), [backdate - timedelta(seconds=1)] * 3)
+        self.assertEqual(self.finished.with_context(to_date=backdate + timedelta(days=1)).total_value, 130)
 
     def test_subcontracting_account_backorder(self):
         """ This test uses tracked (serial and lot) component and tracked (serial) finished product
