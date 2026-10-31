@@ -41,16 +41,29 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
     async updateReferenceUnit(props = this.props) {
         if (props.productModel && props.productId) {
             const context = { "active_test" : false };
-            const product = await this.orm.searchRead(props.productModel, [["id", "=", props.productId]], ["uom_id"], { context });
-            this.referenceUnit = (await this.orm.searchRead("uom.uom", [["id", "=", product[0].uom_id[0]]], ["name", "factor", "parent_path", "rounding"]))[0];
+            const product = await this.orm.searchRead(
+                props.productModel,
+                [["id", "=", props.productId]],
+                ["uom_id"],
+                { context }
+            );
+            this.referenceUnit = (
+                await this.orm.searchRead(
+                    "uom.uom",
+                    [["id", "=", product[0].uom_id[0]]],
+                    ["name", "factor", "parent_path", "rounding", "relative_uom_id"]
+                )
+            )[0];
         }
     }
 
     async search(name) {
+        // Updates reference unit everytime search is triggered incase there was a change.
+        await this.updateReferenceUnit();
         let records = await this.orm.searchRead(
             this.props.resModel,
             [...this.props.getDomain(), ["name", "ilike", name]],
-            ["id", "display_name", "relative_factor", "factor", "relative_uom_id", "parent_path"],
+            ["id", "display_name", "relative_factor", "factor", "relative_uom_id", "parent_path"]
         );
         const hasCommonReference = (uom1, uom2) => {
             const uom1Path = uom1.parent_path.split("/");
@@ -58,14 +71,32 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
             return uom1Path[0] === uom2Path[0];
         };
         records = records.map((record) => {
-            let relativeInfo = this.referenceUnit && this.referenceUnit.id !== record.id ? `${roundPrecision((this.props.productQuantity || 1) * record.factor / this.referenceUnit.factor, this.referenceUnit.rounding)} ${this.referenceUnit.name}` : "";
+            let relativeInfo =
+                this.referenceUnit && this.referenceUnit.id !== record.id
+                    ? `${roundPrecision(
+                          ((this.props.productQuantity || 1) * record.factor) /
+                              this.referenceUnit.factor,
+                          this.referenceUnit.rounding
+                      )} ${this.referenceUnit.name}`
+                    : "";
             if (
                 this.referenceUnit &&
                 record.id !== this.referenceUnit.id &&
                 hasCommonReference(record, this.referenceUnit) &&
                 record.relative_uom_id
             ) {
-                relativeInfo = `${roundPrecision((this.props.productQuantity || 1) * record.relative_factor, this.referenceUnit.rounding)} ${record.relative_uom_id[1]}`;
+                if (record.relative_uom_id[0] === this.referenceUnit.relative_uom_id[0]) {
+                    relativeInfo = `${roundPrecision(
+                        (this.props.productQuantity || 1) *
+                            (record.factor / this.referenceUnit.factor),
+                        this.referenceUnit.rounding
+                    )} ${this.referenceUnit.name}`;
+                } else {
+                    relativeInfo = `${roundPrecision(
+                        (this.props.productQuantity || 1) * record.relative_factor,
+                        this.referenceUnit.rounding
+                    )} ${record.relative_uom_id[1]}`;
+                }
             }
             return {
                 ...record,
@@ -73,7 +104,13 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
             };
         });
         if (this.referenceUnit) {
-            records.sort((a, b) => hasCommonReference(a, this.referenceUnit) ? -1 : hasCommonReference(b, this.referenceUnit) ? 1 : 0);
+            records.sort((a, b) =>
+                hasCommonReference(a, this.referenceUnit)
+                    ? -1
+                    : hasCommonReference(b, this.referenceUnit)
+                    ? 1
+                    : 0
+            );
         }
         return records;
     }
