@@ -64,6 +64,31 @@
         </field>
     </record>
 
+    <record id="benchmark_invoice_ready_orders" model="populate.blueprint">
+        <field name="name">Benchmark: Invoice-ready Sale Orders</field>
+        <field name="inherit_id" ref="benchmark_wide_orders"/>
+        <field name="definition_xml" type="xml">
+            <xpath expr="//create[@id='bench_wide_partners']" position="before">
+                <import ref="account.benchmark_invoice_setup" as="account"/>
+                <import ref="product.benchmark_service_product" as="product">
+                    <xpath expr="//create" position="inside">
+                        <field name="invoice_policy" eval="'order'"/>
+                        <field name="property_account_income_id" ref="account/income_account"/>
+                    </xpath>
+                </import>
+            </xpath>
+            <xpath expr="//create[@id='bench_wide_partners']" position="inside">
+                <field name="property_account_receivable_id" ref="account/receivable_account"/>
+            </xpath>
+            <xpath expr="//create[@id='bench_wide_orders']" position="inside">
+                <field name="journal_id" ref="account/sales_journal"/>
+            </xpath>
+            <xpath expr="//create[@id='bench_wide_lines']/field[@name='product_id']" position="replace">
+                <field name="product_id" ref="product/service_product"/>
+            </xpath>
+        </field>
+    </record>
+
     <!--
         ==========================================================
         BENCHMARK 3: Bulk Creation — pure record throughput

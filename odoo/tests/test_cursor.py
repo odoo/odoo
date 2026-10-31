@@ -44,6 +44,7 @@ class TestCursor(Cursor):
         super().__init__(MockedPsycoConnection(cursor, readonly), cursor.dbname)
         self._closed = True  # consider closed until acquired
         self._cnx._obj = self._obj
+        self.query_hooks = cursor.query_hooks
         # we use a lock to serialize concurrent requests
         self._lock = lock
         current_test = odoo.modules.module.current_test

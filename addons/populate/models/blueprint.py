@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import json
 import re
+import shlex
+from unittest import SkipTest
 
 from lxml import etree
 
-from odoo import api, fields, models
+from odoo import api, fields, models, modules
 from odoo.exceptions import ValidationError
 
 from ..utils import loading, xml
@@ -305,6 +307,62 @@ class Blueprint(models.Model):
 
         definition = resolve(self, frozenset())
         return etree.tostring(definition, encoding='unicode') if definition is not None else None
+
+    def _get_populated(self, ref):
+        """Return existing records for a create block across all completed sessions.
+
+        ref must be a create block ID in the current resolved blueprint, not a
+        business-record XML ID. Imported blocks use namespaced references such
+        as catalog/products. Relational traversal is unsupported.
+
+        Unfinished sessions are ignored.
+
+        Raise ValueError for an unknown ID or if no session is finished. During
+        tests, a missing finished session raises SkipTest with a populate command.
+
+        Usage:
+        .. code-block:: python3
+
+            blueprint = env.ref('product.benchmark_pricelists')
+            products = blueprint._get_populated('price_products')
+        """
+        self.ensure_one()
+        block = next((
+            block
+            for block in self.definition
+            if block['operation'] == 'create' and block.get('id') == ref
+        ), None)
+        if block is None:
+            raise ValueError(self.env._(
+                "Unknown create reference %(ref)s in blueprint %(blueprint)s",
+                ref=ref, blueprint=self.name,
+            ))
+
+        sessions = self.env['populate.session'].search([('blueprint_id', '=', self.id)])
+        finished = sessions.filtered(lambda session: session.is_done)
+        if not finished:
+            message = self.env._(
+                "Blueprint %(blueprint)s has no finished session.",
+                blueprint=self.name,
+            )
+            if not modules.module.current_test:
+                raise ValueError(message)
+
+            dbname = shlex.quote(self.env.cr.dbname)
+            if sessions:
+                command = f'odoo-bin populate -d {dbname} --resume {sessions[-1].id}'
+            else:
+                xmlid = self.get_external_id()[self.id] or self.name
+                command = f'odoo-bin populate -d {dbname} -b {shlex.quote(xmlid)}'
+
+            raise SkipTest(message + self.env._(" Run: %(command)s", command=command))
+
+        model_name = block['model']
+        entries = self.env['populate.model.data'].search([
+            ('session_id', 'in', finished.ids), ('ref', '=', ref), ('res_model', '=', model_name),
+        ])
+        record_ids = sorted(set(entries.mapped('res_id')))
+        return self.env[model_name].browse(record_ids).exists()
 
     def _register_hook(self):
         """Load populate data if the `populate` module was installed or upgraded."""
