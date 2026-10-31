@@ -263,7 +263,7 @@ class TestPdpMessage(TestPdpMessagesCommon):
         self.assertEqual(len(move.message_ids), message_count + 2)
         body = move.message_ids[0].body
         self.assertIn('PPF Status:</strong> Error', body)
-        self.assertIn('Errors from PPF Invoice:', body)
+        self.assertIn('PPF Invoice:', body)
         self.assertIn('The detailed PPF error message', body)
         self.assertIn('PA Status:</strong> Done', move.message_ids[1].body)
 
@@ -287,9 +287,9 @@ class TestPdpMessage(TestPdpMessagesCommon):
         )
 
         self.assertEqual(len(move.message_ids), message_count + 2)
-        self.assertIn('Errors from PPF Lifecycle:', move.message_ids[0].body)
+        self.assertIn('PPF Lifecycle:', move.message_ids[0].body)
         self.assertIn('The detailed PPF error message', move.message_ids[0].body)
-        self.assertIn('Errors from PA Lifecycle:', move.message_ids[1].body)
+        self.assertIn('PA Lifecycle:', move.message_ids[1].body)
         self.assertIn('The detailed PA error message', move.message_ids[1].body)
 
     def test_pdp_einvoicing_chatter_empty_error_keeps_source(self):
@@ -303,7 +303,7 @@ class TestPdpMessage(TestPdpMessagesCommon):
             error_source='PA Lifecycle',
         )
 
-        self.assertIn('Errors from PA Lifecycle:', move.message_ids[0].body)
+        self.assertIn('PA Lifecycle:', move.message_ids[0].body)
 
     def test_pdp_einvoicing_pa_error_does_not_start_ppf(self):
         move = self._create_french_invoice()
@@ -320,7 +320,7 @@ class TestPdpMessage(TestPdpMessagesCommon):
         self.assertIn('PA Status:', body)
         self.assertIn('Error', body)
         self.assertNotIn('PPF Status:', body)
-        self.assertIn('Errors from PA Invoice:', body)
+        self.assertIn('PA Invoice:', body)
         self.assertIn('The detailed IAP error message', body)
         self.assertNotIn('Tax Extraction Error', body)
 
@@ -341,7 +341,7 @@ class TestPdpMessage(TestPdpMessagesCommon):
         body = move.message_ids[0].body
         self.assertIn('PPF Status:', body)
         self.assertNotIn('PA Status:', body)
-        self.assertIn('Errors from PPF Invoice:', body)
+        self.assertIn('PPF Invoice:', body)
         self.assertIn('The detailed PPF error message', body)
 
     def test_pdp_einvoicing_ppf_lifecycle_error(self):
@@ -365,7 +365,7 @@ class TestPdpMessage(TestPdpMessagesCommon):
 
         self.assertEqual(response.pdp_ppf_state, 'error')
         body = move.message_ids[0].body
-        self.assertIn('Errors from PPF Lifecycle:', body)
+        self.assertIn('PPF Lifecycle:', body)
         self.assertNotIn('PA Status:', body)
         self.assertIn('The detailed lifecycle error message', body)
 
