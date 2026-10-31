@@ -7,7 +7,7 @@ import { rpc, ConnectionLostError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { formatFloatTime, formatDateTime } from "@web/views/fields/formatters";
 import { getPropertyFieldInfo } from "@web/views/fields/field";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { Record } from "@web/model/record";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -15,6 +15,7 @@ import { useSubEnv } from "@web/owl2/utils";
 import { AttendanceInlineForm } from "@hr_attendance/components/attendance_inline_form/attendance_inline_form";
 import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
 import { LazySessionPlugin } from "@web/webclient/lazy_session_plugin";
+import { GlobalBusPlugin } from "@web/core/global_bus_plugin";
 
 const { DateTime } = luxon;
 
@@ -34,6 +35,7 @@ export class ActivityMenu extends Component {
 
     setup() {
         this.ui = useService("ui");
+        this.action = useService("action");
         this.lazySession = usePlugin(LazySessionPlugin);
         this.notification = useService("notification");
         this.dialogService = useService("dialog");
@@ -67,6 +69,8 @@ export class ActivityMenu extends Component {
         this.cameraCapture = null;
         this.attendanceRecord = null;
         this.dropdown = useDropdownState();
+        // opened by the Attendances app of the users who do not manage attendances
+        useBus(this.env.bus, "HR_ATTENDANCE:OPEN_SYSTRAY", () => this.dropdown.open());
 
         onWillStart(() => {
             this.lazySession.getValue("attendance_check_in_ability", (hasAbility) => {
@@ -171,6 +175,11 @@ export class ActivityMenu extends Component {
             }),
             sessions,
         };
+    }
+
+    async openMyAttendances() {
+        this.dropdown.close();
+        await this.action.doAction("hr_attendance.hr_attendance_my_action", { clearBreadcrumbs: true });
     }
 
     get todayDateLabel() {
@@ -443,6 +452,21 @@ export class ActivityMenu extends Component {
         }
     }
 }
+
+/**
+ * Home of the Attendances app for the users who do not manage attendances: opens the check
+ * in/out panel of the systray over the current screen (a bottom sheet on touch devices).
+ */
+function openAttendanceSystray() {
+    const action = useService("action");
+    usePlugin(GlobalBusPlugin).bus.trigger("HR_ATTENDANCE:OPEN_SYSTRAY");
+    if (!action.currentController) {
+        // nothing on screen yet (the app was opened at loading): show the attendances below the panel
+        return "hr_attendance.hr_attendance_my_action";
+    }
+}
+
+registry.category("actions").add("hr_attendance_my_attendance", openAttendanceSystray);
 
 export const systrayAttendance = {
     Component: ActivityMenu,

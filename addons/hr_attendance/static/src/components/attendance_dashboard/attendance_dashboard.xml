@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.AttendanceDashboard">
+        <div class="o_attendance_dashboard d-flex gap-2 px-3 py-2 overflow-x-auto position-sticky start-0">
+            <t t-foreach="this.cards" t-as="card" t-key="card.key">
+                <button type="button" t-att-name="card.key"
+                        class="o_attendance_kpi"
+                        t-att-class="{ 'active': this.isActive(card) }"
+                        t-att-aria-pressed="this.isActive(card) ? 'true' : 'false'"
+                        t-on-click="() => this.onCardClick(card)">
+                    <span class="o_attendance_kpi_value" t-out="this.state.counts[card.key] or 0"/>
+                    <span class="o_attendance_kpi_label" t-out="card.label"/>
+                </button>
+            </t>
+        </div>
+    </t>
+</templates>

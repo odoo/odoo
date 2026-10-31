@@ -49,7 +49,7 @@ class HrAttendance(http.Controller):
         """
         response = {}
         if employee:
-            attendance_fields = ['check_in', 'check_out', 'worked_hours', 'work_entry_type_id', 'wet_color', 'wet_display_code']
+            attendance_fields = ['check_in', 'check_out', 'worked_hours', 'work_entry_type_id', 'wet_display_code']
             if include_attendance_details:
                 attendance_fields += [
                     'break_duration',
@@ -62,7 +62,10 @@ class HrAttendance(http.Controller):
                 'name': employee.name,
                 'hours_today': float_round(employee.hours_today, precision_digits=3),
                 'hours_previously_today': float_round(employee.hours_previously_today, precision_digits=2),
-                'today_attendance_ids': employee.today_attendance_ids.read(attendance_fields),
+                'today_attendance_ids': [
+                    dict(values, wet_color=attendance.work_entry_type_id.color)
+                    for attendance, values in zip(employee.today_attendance_ids, employee.today_attendance_ids.read(attendance_fields))
+                ],
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
@@ -134,14 +137,15 @@ class HrAttendance(http.Controller):
         :param str mode: ``in_mode``/``out_mode`` value (``'kiosk'``, ``'systray'``)
         :param latitude: GPS latitude sent by the browser, else the GeoIP one
         :param longitude: GPS longitude sent by the browser, else the GeoIP one
-        :param bool device_tracking_enabled: when ``False``, only the mode is returned
+        :param bool device_tracking_enabled: when ``False``, the GPS position sent by the browser
+            is ignored: the location, IP address and browser only come from the request (GeoIP)
         :return: ``{'mode', 'location', 'latitude', 'longitude', 'ip_address', 'browser'}``
         :rtype: dict
         """
         response = {'mode': mode}
 
         if not device_tracking_enabled:
-            return response
+            latitude = longitude = False
         try:
             location = request.env['base.geocoder']._get_localisation(latitude, longitude)
         except (UserError, RequestException):
@@ -400,7 +404,7 @@ class HrAttendance(http.Controller):
         """Kiosk: set the break duration of the employee's last attendance, after check-out.
 
         The employee is identified by badge or by id (and PIN). Only for companies with
-        ``attendance_break_management``, on a closed, non validated last attendance.
+        ``attendance_break_management``, on a closed, non refused last attendance.
 
         :return: :meth:`_get_attendance_action_response`, or ``{}`` if refused
         """
@@ -429,7 +433,7 @@ class HrAttendance(http.Controller):
             or attendance.employee_id != employee
             or attendance != employee.last_attendance_id
             or not attendance.check_out
-            or attendance.state == 'validated'
+            or attendance.state == 'refused'
         ):
             return {}
         attendance.write({'break_duration': break_duration})

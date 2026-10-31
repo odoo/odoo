@@ -108,4 +108,4 @@ class TestHrAttendance(TransactionCase):
             'check_in': time.strftime('%Y-%m-28 08:00'),
             'check_out': time.strftime('%Y-%m-28 09:00'),
         })
-        self.assertEqual(attendance_id.display_name, "A - 1h")
+        self.assertEqual(attendance_id.display_name, "A 1h")

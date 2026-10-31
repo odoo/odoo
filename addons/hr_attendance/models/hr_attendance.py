@@ -7,6 +7,7 @@ from random import randint
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 
 from odoo import _, api, exceptions, fields, models
 from odoo.exceptions import AccessError, ValidationError
@@ -17,6 +18,10 @@ from odoo.tools.intervals import Intervals
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
+
+
+# color index of each review state, shared by the calendar and gantt views
+_STATE_COLORS = {'draft': 2, 'validated': 10, 'refused': 1}
 
 
 class HrAttendance(models.Model):
@@ -60,6 +65,7 @@ class HrAttendance(models.Model):
                                           ('manual', "Manual"),
                                           ('technical', 'Technical')],
                                readonly=True,
+                               tracking=True,
                                default='manual')
     in_image = fields.Binary(string="Check-In Image")
     out_latitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
@@ -73,6 +79,7 @@ class HrAttendance(models.Model):
                                            ('technical', 'Technical'),
                                            ('auto_check_out', 'Automatic Check-Out')],
                                 readonly=True,
+                                tracking=True,
                                 default='manual')
     device_tracking_enabled = fields.Boolean(related="employee_id.company_id.attendance_device_tracking")
     day_of_date = fields.Selection(
@@ -89,14 +96,19 @@ class HrAttendance(models.Model):
         default=lambda self: self.env.company.sudo().attendance_work_entry_type_id,
     )
     wet_display_code = fields.Char(related='work_entry_type_id.display_code', export_string_translation=False)
-    # color index of the linked work entry type, used by calendar/gantt views
-    wet_color = fields.Integer(string="Work Entry Color", related='work_entry_type_id.color', export_string_translation=False)
 
     state = fields.Selection([
-        ('draft', 'Draft'),
-        ('validated', 'Validated'),
+        ('draft', 'To Review'),
+        ('validated', 'Reviewed'),
         ('refused', 'Refused'),
     ], string='Status', required=True, default='draft', index=True, tracking=True, readonly=True, copy=False)
+    # review exceptions of the employee's day, see _compute_review_exceptions
+    is_late_check_in = fields.Boolean(string="Late Check-In", compute='_compute_review_exceptions', store=True)
+    is_early_check_out = fields.Boolean(string="Early Check-Out", compute='_compute_review_exceptions', store=True)
+    is_overtime = fields.Boolean(string="Overtime", compute='_compute_review_exceptions', store=True)
+    has_issue = fields.Boolean(
+        compute='_compute_has_issue', export_string_translation=False,
+        help="Late check-in, early check-out, overtime or another issue, flagged on the gantt view.")
 
     # time rule engine output fields
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
@@ -122,17 +134,17 @@ class HrAttendance(models.Model):
             tz = ZoneInfo(attendance.employee_id._get_tz())
             attendance.date = attendance.check_in.replace(tzinfo=UTC).astimezone(tz).date()
 
+    @api.depends('state')
     def _compute_color(self):
+        """Color index of the review state: orange to review, green reviewed, red refused."""
         for attendance in self:
-            if attendance.check_out:
-                attendance.color = 1 if attendance.worked_hours > 16 or attendance.out_mode == 'technical' else 0
-            else:
-                attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
+            attendance.color = _STATE_COLORS[attendance.state]
 
     @api.depends('employee_id', 'check_in', 'check_out', 'work_entry_type_id', 'source_stale')
     def _compute_display_name(self):
         for attendance in self:
-            wet = attendance.work_entry_type_id
+            # employees without HR rights cannot read time types, but see them in the names of their attendances
+            wet = attendance.work_entry_type_id.sudo()
             wet_name = wet.display_code or wet.name or ''
             if not attendance.check_out:
                 name = wet_name or _("In Progress")
@@ -140,7 +152,7 @@ class HrAttendance(models.Model):
                 total_mins = round(attendance.worked_hours * 60)
                 h, m = divmod(total_mins, 60)
                 dur = f"{h}h {m}m" if m else f"{h}h"
-                name = f"{wet_name} - {dur}" if wet_name else dur
+                name = f"{wet_name} {dur}" if wet_name else dur
             attendance.display_name = f"⚠ {name}" if attendance.source_stale else name
 
     @api.depends_context('uid')
@@ -172,6 +184,184 @@ class HrAttendance(models.Model):
                 ) - attendance.break_duration
             else:
                 attendance.worked_hours = False
+
+    @api.depends('employee_id', 'check_in', 'check_out', 'break_duration', 'time_rule_id', 'in_mode')
+    def _compute_review_exceptions(self):
+        """Flag the late check-in, the early check-out and the overtime of the employee's day.
+
+        See :meth:`_get_review_exceptions`. Only saved attendances that count as worked
+        time are flagged: not the time rule outputs, the technical and the refused attendances.
+        Only refusing an attendance or bringing it back changes the exceptions of its day, so
+        :meth:`write` recomputes them then, not on every review.
+        """
+        days = {
+            attendance: (attendance.employee_id.id, attendance.date)
+            for attendance in self
+            if attendance.id and attendance._is_review_exception_source()
+        }
+        day_exceptions = self._get_review_exceptions(set(days.values()))
+        no_exception = (self.browse(),) * 3
+        for attendance in self:
+            late, early, overtime = day_exceptions.get(days.get(attendance), no_exception)
+            attendance.is_late_check_in = attendance == late
+            attendance.is_early_check_out = attendance == early
+            attendance.is_overtime = attendance == overtime
+
+    def _is_review_exception_source(self):
+        """Return whether the attendance counts in the review exceptions of its day.
+
+        :rtype: bool
+        """
+        self.ensure_one()
+        return bool(
+            self.employee_id and self.check_in
+            and self.state != 'refused' and not self.time_rule_id and self.in_mode != 'technical'
+        )
+
+    @api.model
+    def _get_review_exceptions(self, employee_days):
+        """Return the attendances of employees' days that are late, early or overtime.
+
+        The attendances of each day are compared with the expected hours of the employee's
+        schedule, with the company's ``attendance_validation_tolerance`` (minutes): the first
+        attendance is late when it starts after the first expected hour, the last one is early
+        when the day is closed before the last expected hour, and it is overtime when the hours
+        worked that day exceed the expected ones (any hour worked on a day without expected
+        hours). Flexible schedules have no exception.
+
+        :param set employee_days: ``{(employee id, local day of the employee)}``
+        :return: ``{(employee id, day): (late, early, overtime)}``, each an ``hr.attendance``
+            record or empty; the days without attendance or schedule are left out
+        :rtype: dict
+        """
+        if not employee_days:
+            return {}
+        attendances_by_day = self.sudo().search([
+            ('employee_id', 'in', list({employee_id for employee_id, _day in employee_days})),
+            ('date', 'in', list({day for _employee_id, day in employee_days})),
+        ]).filtered(
+            lambda a: (a.employee_id.id, a.date) in employee_days and a._is_review_exception_source()
+        ).grouped(lambda a: (a.employee_id.id, a.date))
+        days_by_employee = defaultdict(list)
+        for employee_id, day in attendances_by_day:
+            days_by_employee[employee_id].append(day)
+
+        no_attendance = self.browse()
+        exceptions = {}
+        for employee in self.env['hr.employee'].sudo().browse(days_by_employee):
+            tolerance = timedelta(minutes=employee.company_id.attendance_validation_tolerance)
+            expected_by_day = self._get_expected_attendances_by_day(employee, days_by_employee[employee.id])
+            for day, expected in expected_by_day.items():
+                attendances = attendances_by_day[employee.id, day]
+                expected_starts = [start for start, _stop, _att in expected]
+                expected_stops = [stop for _start, stop, _att in expected]
+
+                late = no_attendance
+                first = min(attendances, key=lambda a: a.check_in)
+                if expected_starts and first.check_in.replace(tzinfo=UTC) > min(expected_starts) + tolerance:
+                    late = first
+
+                early = overtime = no_attendance
+                closed = attendances.filtered('check_out')
+                if closed:
+                    last = max(closed, key=lambda a: a.check_out)
+                    if (
+                        closed == attendances and expected_stops
+                        and last.check_out.replace(tzinfo=UTC) < max(expected_stops) - tolerance
+                    ):
+                        early = last
+                    worked = timedelta(hours=sum(closed.mapped('worked_hours')))
+                    if worked > timedelta(hours=sum_intervals(expected)) + tolerance:
+                        overtime = last
+                exceptions[employee.id, day] = (late, early, overtime)
+        return exceptions
+
+    @api.model
+    def _get_expected_attendances_by_day(self, employee, days):
+        """Return the expected attendances of an employee on each day with a schedule that is
+        not flexible, see ``hr.employee._get_expected_attendances``.
+
+        One computation covers the days of a same timezone, as long as the result is the one of
+        each day apart: the days in contract, or out of contract when the period has no contract
+        (the current schedule applies then).
+
+        :param employee: ``hr.employee`` record, in sudo
+        :param list days: local days of the employee
+        :return: ``{day: [(start, stop, resource.calendar.attendance)]}``, the intervals cut at
+            the bounds of the day
+        :rtype: dict
+        """
+        days_by_tz_and_contract = defaultdict(list)
+        for day in days:
+            version = employee._get_version(day)
+            if not version.resource_calendar_id or version._is_flexible():
+                continue
+            in_contract = bool(employee._get_versions_with_contract_overlap_with_period(day, day))
+            days_by_tz_and_contract[employee._get_tz(day), in_contract].append(day)
+
+        expected_by_day = {day: [] for tz_days in days_by_tz_and_contract.values() for day in tz_days}
+        for (tz_name, in_contract), tz_days in days_by_tz_and_contract.items():
+            tz = ZoneInfo(tz_name)
+            first, last = min(tz_days), max(tz_days)
+            if in_contract or not employee._get_versions_with_contract_overlap_with_period(first, last):
+                periods = [(first, last)]
+            else:
+                periods = [(day, day) for day in tz_days]
+            for first, last in periods:
+                expected = employee._get_expected_attendances(
+                    datetime.combine(first, time.min, tz),
+                    datetime.combine(last, time.max, tz),
+                )
+                for start, stop, calendar_attendance in expected:
+                    while start < stop:
+                        day = start.astimezone(tz).date()
+                        if day in expected_by_day:
+                            expected_by_day[day].append(
+                                (start, min(stop, datetime.combine(day, time.max, tz)), calendar_attendance))
+                        start = datetime.combine(day + timedelta(days=1), time.min, tz)
+        return expected_by_day
+
+    def _get_review_exception_siblings(self):
+        """Return the other attendances of the employees' days of ``self``.
+
+        :rtype: hr.attendance
+        """
+        days = {(attendance.employee_id.id, attendance.date) for attendance in self if attendance.date}
+        if not days:
+            return self.browse()
+        return self.sudo().search([
+            ('employee_id', 'in', list({employee_id for employee_id, _day in days})),
+            ('date', 'in', list({day for _employee_id, day in days})),
+        ]).filtered(lambda a: (a.employee_id.id, a.date) in days) - self
+
+    def _recompute_review_exceptions(self):
+        """Mark the review exceptions of ``self`` to recompute, after a change of their day."""
+        for fname in ('is_late_check_in', 'is_early_check_out', 'is_overtime'):
+            self.env.add_to_compute(self._fields[fname], self)
+
+    @api.depends('is_late_check_in', 'is_early_check_out', 'is_overtime')
+    def _compute_has_issue(self):
+        for attendance in self:
+            attendance.has_issue = attendance._has_issue()
+
+    def _has_issue(self):
+        """Return whether the attendance has an issue: late check-in, early check-out or
+        overtime. Override to add issues.
+
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.is_late_check_in or self.is_early_check_out or self.is_overtime
+
+    def _has_review_exception(self):
+        """Return whether the closed attendance needs a review when its company reviews the
+        exceptions only: encoded manually (not from a kiosk or the systray), or with an issue
+        (:meth:`_has_issue`).
+
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.in_mode == 'manual' or self.out_mode == 'manual' or self._has_issue()
 
     @api.constrains('break_duration', 'check_in', 'check_out')
     def _check_break_duration(self):
@@ -254,23 +444,47 @@ class HrAttendance(models.Model):
 
     # fields whose change on a source attendance should warn surviving outputs
     _STALE_TRIGGER_FIELDS = frozenset({'check_in', 'check_out', 'break_duration', 'employee_id', 'work_entry_type_id'})
+    # fields whose change moves the review exceptions of the attendance's day
+    _REVIEW_EXCEPTION_FIELDS = frozenset({'check_in', 'check_out', 'break_duration', 'employee_id'})
 
     def write(self, vals):
-        """Write ``vals``, then flag the time rule outputs and validate within tolerance.
+        """Write ``vals``, then flag the time rule outputs and update the review state.
 
         Moving an attendance to another employee requires being that employee, an attendance
-        administrator or the employee's attendance approver. When a field of
-        ``_STALE_TRIGGER_FIELDS`` changes, the outputs that existed before the write (and that
-        survive it) get ``source_stale = True``. A new ``check_out`` (without ``state``)
-        re-applies the tolerance policy (:meth:`_update_tolerance_state`).
+        administrator or the employee's attendance approver; writing ``state`` requires managing
+        the attendances. When a field of ``_STALE_TRIGGER_FIELDS`` changes, the outputs that
+        existed before the write (and that survive it) get ``source_stale = True``.
 
-        :raise AccessError: if the user cannot assign the attendance to ``employee_id``
+        When a user who does not manage the attendance changes its check-in, check-out or
+        break by hand (without a kiosk or systray mode), it goes back to To Review and the
+        changed check-in/check-out mode becomes ``manual``. Otherwise a change of the times
+        (without ``state``) re-applies the review policy (:meth:`_update_review_state`).
+
+        :raise AccessError: if the user cannot assign the attendance to ``employee_id`` or
+            cannot review it
         """
         if vals.get('employee_id') and \
             vals['employee_id'] not in self.env.user.employee_ids.ids and \
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
             self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
+        if 'state' in vals and not self.env.su and not all(self.mapped('is_manager')):
+            raise AccessError(_("Only the attendance managers of the employees can review their attendances."))
+        manual_vals = {}
+        if 'check_in' in vals and 'in_mode' not in vals:
+            manual_vals['in_mode'] = 'manual'
+        if 'check_out' in vals and 'out_mode' not in vals:
+            manual_vals['out_mode'] = 'manual'
+        manually_edited = self.browse()
+        if (manual_vals or 'break_duration' in vals) and 'state' not in vals and not self.env.su:
+            manually_edited = self.filtered(lambda a: not a.is_manager)
+        refusal_changed = self.browse()
+        if 'state' in vals:
+            refusal_changed = self.filtered(lambda a: (a.state == 'refused') != (vals['state'] == 'refused'))
+        moves_exceptions = bool(self._REVIEW_EXCEPTION_FIELDS & vals.keys() or refusal_changed)
+        exception_siblings = self.browse()
+        if moves_exceptions:
+            exception_siblings = self._get_review_exception_siblings()
         # snapshot existing output ids before the pipeline runs so that newly
         # created outputs (fresh, accurate) are not incorrectly marked stale
         stale_targets = self.env['hr.attendance']
@@ -279,8 +493,20 @@ class HrAttendance(models.Model):
         result = super().write(vals)
         if stale_targets:
             stale_targets.exists().with_context(skip_time_rules=True).write({'source_stale': True})
-        if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
-            self._update_tolerance_state()
+        if moves_exceptions:
+            (exception_siblings | refusal_changed | self._get_review_exception_siblings())._recompute_review_exceptions()
+        if vals.get('check_out') and vals.get('out_mode') in ('kiosk', 'systray'):
+            self._message_log_batch({
+                attendance.id: attendance._get_check_in_out_log('out') for attendance in self
+            })
+        if manually_edited:
+            # the user may edit their own reviewed attendance, it is then reviewed again
+            manually_edited.sudo().write({**manual_vals, 'state': 'draft'})
+        if (
+            self._STALE_TRIGGER_FIELDS & vals.keys() and 'state' not in vals
+            and not self.env.context.get('skip_time_rules')
+        ):
+            (self - manually_edited)._update_review_state()
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -290,12 +516,45 @@ class HrAttendance(models.Model):
         if outputs:
             outputs.with_context(skip_time_rules=True).write({'source_stale': True})
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_recompute_review_exceptions(self):
+        """Recompute the review exceptions of the days of the deleted attendances, once deleted."""
+        sources = self.filtered(lambda a: a._is_review_exception_source())
+        if exception_siblings := sources._get_review_exception_siblings():
+            return lambda: exception_siblings.exists()._recompute_review_exceptions()
+        return None
+
     def action_mark_reviewed(self):
         """Clear the ``source_stale`` flag, without re-running the time rules."""
         self.with_context(skip_time_rules=True).write({'source_stale': False})
 
     def copy(self, default=None):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))
+
+    def _creation_message(self):
+        return self._get_check_in_out_log('in')
+
+    def _get_check_in_out_log(self, direction):
+        """Return the chatter message of the check-in or check-out of the attendance: its mode
+        and its location, linked to Google Maps when the GPS coordinates are known.
+
+        :param str direction: ``'in'`` or ``'out'``
+        :rtype: str | Markup
+        """
+        self.ensure_one()
+        mode = dict(self._fields[f'{direction}_mode']._description_selection(self.env)).get(self[f'{direction}_mode'])
+        latitude, longitude = self[f'{direction}_latitude'], self[f'{direction}_longitude']
+        location = self[f'{direction}_location']
+        if latitude or longitude:
+            location = Markup('<a href="%s" target="_blank">%s</a>') % (
+                get_google_maps_url(latitude, longitude), location or f"{latitude}, {longitude}")
+        if direction == 'in':
+            if location:
+                return self.env._("Check in from %(location)s (%(mode)s)", location=location, mode=mode)
+            return self.env._("Check in (%(mode)s)", mode=mode)
+        if location:
+            return self.env._("Check out from %(location)s (%(mode)s)", location=location, mode=mode)
+        return self.env._("Check out (%(mode)s)", mode=mode)
 
     def action_in_attendance_maps(self):
         self.ensure_one()
@@ -350,17 +609,16 @@ class HrAttendance(models.Model):
             'contract_date_start': (now - relativedelta(months=2)).date(),
         })
         date_range = now.day + monthrange(previous_month_datetime.year, previous_month_datetime.month)[1]
-        city_coordinates = (50.27, 5.31)
-        city_coordinates_exception = (51.01, 2.82)
+        # precise GPS positions, as sent by a browser allowed to share its location
         city_dict = {
-                    'latitude': city_coordinates_exception[0],
-                    'longitude': city_coordinates_exception[1],
-                    'city': 'Rellemstraat'
-                }
+            'latitude': 50.6326412,
+            'longitude': 4.8670315,
+            'city': 'Ramillies',
+        }
         city_exception_dict = {
-            'latitude': city_coordinates[0],
-            'longitude': city_coordinates[1],
-            'city': 'Waillet'
+            'latitude': 50.8465573,
+            'longitude': 4.3517210,
+            'city': 'Brussels',
         }
         attendance_values = []
         for i in range(1, date_range):
@@ -455,7 +713,25 @@ class HrAttendance(models.Model):
                 'out_mode': "manual"
             }]
             attendance_values.extend(eg_data + mw_data + sj_data)
-        self.env['hr.attendance'].create(attendance_values)
+        # forgotten check-out yesterday evening, and at work today
+        yesterday_check_in = now.replace(hour=17, minute=randint(30, 59)) - timedelta(days=1)
+        attendance_values.extend([{
+            'employee_id': employee_sj.id,
+            'check_in': yesterday_check_in,
+            'in_mode': "kiosk",
+        }, {
+            'employee_id': employee_mw.id,
+            'check_in': now - timedelta(hours=1, minutes=randint(0, 30)),
+            'in_mode': "systray",
+            'in_latitude': city_dict['latitude'],
+            'in_longitude': city_dict['longitude'],
+            'in_location': city_dict['city'],
+            'in_ip_address': "127.0.0.1",
+            'in_browser': 'chrome',
+        }])
+        attendances = self.env['hr.attendance'].create(attendance_values)
+        # one refused attendance among the manual ones
+        attendances.filtered(lambda a: a.employee_id == employee_sj and a.check_out)[:1].action_refuse()
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
@@ -477,6 +753,11 @@ class HrAttendance(models.Model):
             'url': self.env.company.attendance_kiosk_url + '?from_trial_mode=True'
         }
 
+    def _cron_check_attendances(self):
+        """Cron: check out the forgotten open attendances, then detect yesterday's absences."""
+        self._cron_auto_check_out()
+        self._cron_absence_detection()
+
     def _cron_auto_check_out(self):
         """Cron: check out the forgotten open attendances, for the companies with
         ``auto_check_out``, in ``tolerance`` and in ``specific_time`` mode."""
@@ -484,14 +765,15 @@ class HrAttendance(models.Model):
         self._cron_auto_check_out_specific_time()
 
     def _cron_auto_check_out_tolerance(self):
-        """Check out the open attendances exceeding the expected hours of their day plus the
-        company's ``auto_check_out_tolerance``.
+        """Check out the open attendances once the hours of their day's schedule and the
+        company's ``auto_check_out_tolerance`` have passed.
 
         Applies to the companies in ``tolerance`` mode, to employees with a non flexible schedule.
-        The expected hours are those of the schedule on the local day of the check-in
-        (``hr.employee._get_expected_attendances``); the hours already worked that day are
-        deducted. The check-out is set to the moment the limit was reached (at least one second
-        after the check-in), with ``out_mode = 'auto_check_out'``, and a message is posted.
+        The check-out is set at check-in + the expected hours of the schedule on the local day of
+        the check-in (``hr.employee._get_expected_attendances``) not already worked that day (at
+        least one second after the check-in): the first check-in of the day + the schedule's hours
+        + the breaks between the attendances. The tolerance only delays the check-out, it adds no
+        worked time. ``out_mode`` is set to ``'auto_check_out'`` and a message is posted.
         """
         def check_in_tz(attendance):
             """Returns check-in time in calendar's timezone."""
@@ -518,39 +800,27 @@ class HrAttendance(models.Model):
         for previous in previous_attendances:
             mapped_previous_duration[previous.employee_id][check_in_tz(previous).date()] += previous.worked_hours
 
-        all_companies = to_verify.employee_id.company_id
-
-        for company in all_companies:
-            max_tol = company.auto_check_out_tolerance
-            to_verify_company = to_verify.filtered(lambda a: a.employee_id.company_id.id == company.id)
-
-            for att in to_verify_company:
-
-                employee_timezone = ZoneInfo(att.employee_id._get_tz(att.date))
-                check_in_datetime = check_in_tz(att)
-                now_datetime = fields.Datetime.now().astimezone(employee_timezone)
-                current_attendance_duration = (now_datetime - check_in_datetime).total_seconds() / 3600
-                previous_attendances_duration = mapped_previous_duration[att.employee_id][check_in_datetime.date()]
-
-                check_in_day_start = check_in_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-                expected_worked_hours = sum_intervals(
-                    att.employee_id._get_expected_attendances(
-                        check_in_day_start,
-                        check_in_day_start + timedelta(days=1),
-                    )
+        now = fields.Datetime.now()
+        for att in to_verify:
+            check_in_datetime = check_in_tz(att)
+            check_in_day_start = check_in_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+            expected_worked_hours = sum_intervals(
+                att.employee_id._get_expected_attendances(
+                    check_in_day_start,
+                    check_in_day_start + timedelta(days=1),
                 )
-
-                # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
-                if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.with_context(skip_time_rules=True).check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(UTC).replace(tzinfo=None)
-                    excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
-                    att.write({
-                        "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
-                        "out_mode": "auto_check_out"
-                    })
-                    att.message_post(
-                        body=_('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
-                    )
+            )
+            remaining_hours = max(expected_worked_hours - mapped_previous_duration[att.employee_id][check_in_datetime.date()], 0)
+            check_out = att.check_in + timedelta(hours=remaining_hours)
+            if now <= check_out + timedelta(hours=att.employee_id.company_id.auto_check_out_tolerance):
+                continue
+            att.write({
+                'check_out': max(check_out, att.check_in + relativedelta(seconds=1)),
+                'out_mode': 'auto_check_out',
+            })
+            att.message_post(
+                body=_('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
+            )
 
     def _cron_absence_detection(self):
         """Cron: create a validated 1-second technical attendance for each employee without
@@ -760,54 +1030,48 @@ class HrAttendance(models.Model):
         """
         return {'work_entry_type_id', 'state', 'break_duration'}
 
-    def _update_tolerance_state(self):
-        """Validate the closed draft attendances within the tolerance of their company.
-
-        Only for the companies with ``attendance_validation = 'tolerance_validation'``, on the
-        attendances not produced by a time rule: an attendance is validated when its duration
-        (break included) differs from the expected hours of its local day by at most
-        ``attendance_validation_tolerance``, or when no hours are expected that day. As for
+    def _update_review_state(self):
+        """Review the closed attendances To Review without exception (:meth:`_has_review_exception`),
+        for the companies reviewing the exceptions only (``attendance_validation =
+        'tolerance_validation'``). Time rule outputs are left aside. As for
         :meth:`action_validate`, writing the state runs the time rules on them.
         """
-        to_validate = self.browse()
-        candidates = self.filtered(lambda a: a.state == 'draft' and a.check_out and not a.time_rule_id)
-        for att in candidates:
-            company = att.employee_id.company_id or self.env.company
-            if company.attendance_validation != 'tolerance_validation':
-                continue
-            tz = ZoneInfo(att.employee_id._get_tz())
-            day = att.check_in.replace(tzinfo=UTC).astimezone(tz).date()
-            expected = sum_intervals(att.employee_id._get_expected_attendances(
-                datetime.combine(day, time.min, tz),
-                datetime.combine(day, time.max, tz),
-            ))
-            worked = (att.check_out - att.check_in).total_seconds() / 3600
-            if not expected or abs(worked - expected) <= company.attendance_validation_tolerance:
-                to_validate |= att
+        to_validate = self.filtered(lambda a: (
+            a.state == 'draft' and a.check_out and not a.time_rule_id
+            and (a.employee_id.company_id or self.env.company).attendance_validation == 'tolerance_validation'
+            and not a._has_review_exception()
+        ))
         if to_validate:
-            to_validate.with_context(tracking_disable=True).write({'state': 'validated'})
+            # the policy reviews them, whoever checked out
+            to_validate.sudo().with_context(tracking_disable=True).write({'state': 'validated'})
 
     @api.model_create_multi
     def create(self, vals_list):
-        """Create attendances, with an initial ``state`` derived from the validation policy.
+        """Create attendances, with an initial ``state`` derived from the review policy.
 
         Without ``state`` in the values, time rule outputs (``time_rule_id`` or
-        ``source_attendance_id`` set) are ``validated``; other attendances are ``validated``
-        if the employee's company has ``attendance_validation = 'no_validation'``, else
-        ``draft``. :meth:`_update_tolerance_state` then applies the tolerance policy.
+        ``source_attendance_id`` set) and the attendances encoded by hand by a user managing the
+        employee's attendances are ``validated``; the others are ``draft`` (To Review), and
+        :meth:`_update_review_state` then applies the review policy of their company.
         """
+        user = self.env.user
+        is_administrator = self.env.su or user.has_group('hr_attendance.group_hr_attendance_user')
+        is_officer = user.has_group('hr_attendance.group_hr_attendance_officer')
         for vals in vals_list:
             if 'state' not in vals:
                 if vals.get('time_rule_id') or vals.get('source_attendance_id'):
                     # system-generated outputs always auto-validate
                     vals['state'] = 'validated'
+                elif vals.get('in_mode', 'manual') == 'manual' and (is_administrator or is_officer and (
+                    self.env['hr.employee'].sudo().browse(vals.get('employee_id')) or user.employee_id
+                ).attendance_manager_id == user):
+                    vals['state'] = 'validated'
                 else:
-                    company = self.env.company
-                    if vals.get('employee_id'):
-                        company = self.env['hr.employee'].browse(vals['employee_id']).company_id or company
-                    vals['state'] = 'validated' if company.attendance_validation == 'no_validation' else 'draft'
+                    vals['state'] = 'draft'
         res = super().create(vals_list)
-        res._update_tolerance_state()
+        sources = res.filtered(lambda a: a._is_review_exception_source())
+        sources._get_review_exception_siblings()._recompute_review_exceptions()
+        res._update_review_state()
         return res
 
     def action_validate(self):
@@ -823,27 +1087,56 @@ class HrAttendance(models.Model):
         """Set the attendances back to draft."""
         self.write({'state': 'draft'})
 
-    def get_record_default_action(self, access_uid=None):
-        """This method redirects to the suitable employee view in action menuitem according to the user access rights"""
-        res = {}
-        if self.env.user.has_group('hr.group_hr_user'):
-            res.update({
-                'name': self.env._('Employees'),
-                'type': 'ir.actions.act_window',
-                'res_model': 'hr.employee',
-                'view_mode': 'kanban, form',
-                'views': [[False, 'kanban'], [False, 'form']],
-            })
+    @api.model
+    def get_attendance_dashboard_data(self):
+        """Return the counters shown above the attendance lists, among the attendances the user
+        can read. The domains match the filters of the search views.
 
-        else:
-            res.update({
-                'name': self.env._('Employees'),
-                'type': 'ir.actions.act_window',
-                'res_model': 'hr.employee.public',
-                'view_mode': 'kanban,form',
-                'views': [[False, 'kanban'], [False, 'form']],
-            })
-        return res
+        :return: ``{counter: number of attendances}``
+        :rtype: dict
+        """
+        domains = {
+            'to_review': [('state', '=', 'draft'), ('check_out', '!=', False)],
+            'late_check_in': [('is_late_check_in', '=', True)],
+            'early_check_out': [('is_early_check_out', '=', True)],
+            'overtime': [('is_overtime', '=', True)],
+            'at_work': [('check_out', '=', False)],
+        }
+        return {counter: self.search_count(domain) for counter, domain in domains.items()}
+
+    @api.model
+    def _get_to_review_action(self):
+        """Return the dashboard action showing the attendances to review (To Review menu).
+
+        :rtype: dict
+        """
+        action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_attendance_action')
+        # without its own path, the action keeps the one of the To Review menu in the URL
+        del action['path']
+        name = self.env._("To Review")
+        action.update({
+            'name': name,
+            'display_name': name,
+            'context': {'search_default_state_draft': 1},
+            # the counters and the review buttons are on the list
+            'views': sorted(action['views'], key=lambda view: view[1] != 'list'),
+        })
+        return action
+
+    @api.model
+    def _get_home_action(self):
+        """Return the action of the Attendances app: the dashboard for the users who manage
+        attendances, the check in/out panel of the systray for the others when they may check
+        in from Odoo, else their attendances.
+
+        :rtype: dict
+        """
+        if self.env.user.has_group('hr_attendance.group_hr_attendance_officer'):
+            return self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_attendance_action')
+        employee = self.env.user.employee_id
+        if employee and employee._has_attendance_check_in_ability():
+            return self.env['ir.actions.actions']._for_xml_id('hr_attendance.hr_attendance_action_my_attendance')
+        return self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_attendance_my_action')
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):

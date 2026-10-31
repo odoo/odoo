@@ -9,12 +9,12 @@
             <xpath expr="//form" position="inside">
                 <app data-string="Attendances" string="Attendances" name="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
                     <block title="Attendance Rules &amp; Enforcement" name="attendance_settings">
-                        <setting string="Attendance Validation" company_dependent="1" help="When enabled, attendance records must be validated by an officer before they count toward work entries and time rules.">
+                        <setting string="Attendance Validation" company_dependent="1" help="Exceptions include attendances modified manually (not from the kiosk or the systray), late check-in or out, overtime, and conflicts with Time Off.">
                             <field name="attendance_validation" widget="radio"/>
                             <div invisible="attendance_validation != 'tolerance_validation'" class="mt-2">
                                 <span class="me-2">Tolerance</span>
                                 <field name="attendance_validation_tolerance" class="text-center w-25"/>
-                                <span class="ms-2">Hours</span>
+                                <span class="ms-2">Minutes</span>
                             </div>
                         </setting>
                         <setting string="Automatic Check-Out" company_dependent="1" help="Automatically check out employees based on their working schedule with an additional tolerance, or at a specific time each day. Does not apply to employees with a flexible working schedule.">
@@ -48,7 +48,7 @@
                         <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
                             <field name="attendance_from_systray" required="1"/>
                         </setting>
-                        <setting string="Device &amp; Location Tracking" company_dependent="1" help="Allow the collection of GPS location, IP address, and browser/device details used to track employee access and attendance">
+                        <setting string="Location Tracking" company_dependent="1" help="The IP address, browser and approximate location are always recorded. If enabled, the device is also asked for its precise position.">
                             <field name="attendance_device_tracking"/>
                         </setting>
                         <setting string="Take Pictures on Check-In" company_dependent="1" help="Capture a photo at the time of check-in using the device camera (if available). Images are automatically optimized for performance and storage.">
