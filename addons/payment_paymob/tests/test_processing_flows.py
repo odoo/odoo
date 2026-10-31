@@ -14,7 +14,7 @@ from odoo.addons.payment_paymob.tests.common import PaymobCommon
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(PaymobCommon, PaymentHttpCommon):
     @mute_logger("odoo.addons.payment_paymob.controllers.main")
-    def test_redirect_notification_triggers_processing(self):
+    def test_returning_from_payment_triggers_processing(self):
         self._create_transaction("redirect", provider_reference=self.order_id)
         url = self._build_url(PaymobController._return_url)
         with (
@@ -46,7 +46,7 @@ class TestProcessingFlows(PaymobCommon, PaymentHttpCommon):
             self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_paymob.controllers.main")
-    def test_redirect_notification_triggers_signature_check(self):
+    def test_returning_from_payment_triggers_signature_check(self):
         self._create_transaction("redirect", provider_reference=self.order_id)
         url = self._build_url(PaymobController._return_url)
         with (
