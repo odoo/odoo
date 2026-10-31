@@ -1182,6 +1182,21 @@ class TestPartnerAddressCompany(TransactionCase):
         record = self.env['res.partner'].with_user(user).search([('id', '=', partner.id)])
         self.assertEqual(record.id, partner.id)
 
+    def test_commercial_field_sync_move_contact(self):
+        company_a, company_b = self.env['res.partner'].create([
+            {'name': 'Company A', 'is_company': True, 'vat': 'BECOMPANYA'},
+            {'name': 'Company B', 'is_company': True},
+        ])
+        contact_b = self.env['res.partner'].create({'name': 'B Employee', 'parent_id': company_b.id})
+        contact = self.env['res.partner'].create({'name': 'Contact', 'parent_id': company_a.id})
+        self.assertEqual(contact.vat, 'BECOMPANYA')
+
+        contact.parent_id = company_b
+        self.assertEqual(company_a.vat, 'BECOMPANYA')
+        self.assertFalse(company_b.vat, 'Moving a contact should not push the VAT of its previous company')
+        self.assertFalse(contact_b.vat)
+        self.assertFalse(contact.vat)
+
 
 @tagged('res_partner', 'post_install', '-at_install')
 class TestPartnerForm(TransactionCase):
