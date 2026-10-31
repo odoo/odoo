@@ -107,7 +107,8 @@
                         <group>
                             <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}"/>
                             <field name="user_ids" string="Assignees" widget="many2many_avatar_user"/>
-                            <field name="schedule_date" string="Planned Date" widget="daterange" options="{'end_date_field': 'schedule_end', 'always_range': True}"/>
+                            <field name="schedule_date" string="Planned Date" widget="daterange" options="{'end_date_field': 'schedule_end', 'always_range': True}"
+                                decoration-danger="is_overdue"/>
                             <label for="recurring_maintenance" invisible="maintenance_type == 'corrective'"/>
                             <div class="d-inline-flex" invisible="maintenance_type == 'corrective'">
                                 <field name="recurring_maintenance" nolabel="1" class="ms-0" style="width: fit-content;"/>
@@ -152,7 +153,10 @@
                             <field name="name" class="fw-bold fs-5"/>
                             <span name="owner_user_id" t-if="record.owner_user_id.raw_value">Requested by: <field name="owner_user_id"/></span>
                             <span t-if="record.equipment_id.raw_value"><field name="equipment_id"/><span t-if="record.category_id.raw_value"> (<field name="category_id"/>)</span></span>
-                            <field name="schedule_date"/>
+                            <span name="schedule_date" t-att-class="record.is_overdue.raw_value ? 'text-danger' : ''">
+                                <field name="is_overdue" invisible="1"/>
+                                <field name="schedule_date" />
+                            </span>
                             <footer>
                                 <div class="d-flex">
                                     <field name="priority" widget="priority"/>
