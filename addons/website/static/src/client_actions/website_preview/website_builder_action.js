@@ -78,7 +78,10 @@ export class WebsiteBuilderClientAction extends Component {
 
         this.websiteContent = useRef("iframe");
         this.builderSidebarRef = useRef("builder_sidebar");
-        this.cleanups = [];
+        this.cleanups = [this.storeLastPageUrl.bind(this)];
+
+        this.isRestored = this.props.action.jsId === this.websiteService.actionJsId;
+        this.websiteService.actionJsId = this.props.action.jsId;
 
         this.snippetsTemplate = "website.snippets";
         // Track iframe navigation state
@@ -431,6 +434,10 @@ export class WebsiteBuilderClientAction extends Component {
         }
     }
 
+    storeLastPageUrl() {
+        this.websiteService.lastPageURL = this.lastPageURL;
+    }
+
     blockIframe() {
         this.websiteContent.el.setAttribute("inert", "");
     }
@@ -492,7 +499,9 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     get path() {
-        let path = this.props.path || router.current.path;
+        let path = this.isRestored
+            ? this.websiteService.lastPageURL
+            : this.props.path || router.current.path;
         if (path) {
             const url = new URL(path, window.location.origin);
             if (isTopWindowURL(url)) {
@@ -565,8 +574,8 @@ export class WebsiteBuilderClientAction extends Component {
             const pathSegments = urlObj.pathname.split("/").map(encodeURIComponent);
             const encodedPath = pathSegments.join("/");
             const newUrl = new URL(encodedPath, baseUrl);
-            if(newUrl.origin !== baseUrl.origin) {
-                console.error("Tried to change the iframe's origin. Reloading instead")
+            if (newUrl.origin !== baseUrl.origin) {
+                console.error("Tried to change the iframe's origin. Reloading instead");
                 this.websiteContent.el.contentWindow.location.reload();
             } else {
                 if (history.state?.skipRouteChange) {
