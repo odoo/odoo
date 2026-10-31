@@ -19,7 +19,7 @@ class L10nInEwaybill(models.Model):
     type_description = fields.Char(string="Description")
 
     # Stock picking details
-    picking_id = fields.Many2one('stock.picking', "Stock Transfer", copy=False)
+    picking_id = fields.Many2one('stock.picking', "Stock Transfer", copy=False, ondelete='restrict')
     move_ids = fields.One2many(related='picking_id.move_ids')
     fiscal_position_id = fields.Many2one(
         comodel_name='account.fiscal.position',
