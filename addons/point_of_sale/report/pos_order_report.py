@@ -110,9 +110,6 @@ class ReportPosOrder(models.Model):
                 LEFT JOIN first_pos_category fpc ON (pt.id = fpc.product_template_id)
         """
 
-    def _group_by(self):
-        return ""
-
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""
