@@ -37,7 +37,6 @@ class TestServerActionsBase(TransactionCaseWithUserDemo):
             'name': 'TestingCountry',
             'code': 'TY',
             'address_format': 'SuperFormat',
-            'name_position': 'before',
         })
         self.test_partner = self.env['res.partner'].create({
             'city': 'OrigCity',
@@ -64,7 +63,7 @@ class TestServerActionsBase(TransactionCaseWithUserDemo):
         self.res_country_model = Model.search([('model', '=', 'res.country')])
         self.res_country_name_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'name')])
         self.res_country_code_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'code')])
-        self.res_country_name_position_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'name_position')])
+        self.res_country_zip_applicability_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'zip_applicability')])
         self.res_partner_category_model = Model.search([('model', '=', 'res.partner.category')])
         self.res_partner_category_name_field = Fields.search([('model', '=', 'res.partner.category'), ('name', '=', 'name')])
 
@@ -300,14 +299,14 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
     def test_35_crud_write_selection(self):
         # Don't want to use res.partner because no 'normal selection field' exists there
         # we'll use a speficic action for this test instead of the one from the test setup
-        # Do: update country name_position field
-        selection_value = self.res_country_name_position_field.selection_ids.filtered(lambda s: s.value == 'after')
+        # Do: update country zip_applicability field
+        selection_value = self.res_country_zip_applicability_field.selection_ids.filtered(lambda s: s.value == 'not_applicable')
         action = self.env['ir.actions.server'].create({
             'name': 'TestAction',
             'model_id': self.res_country_model.id,
             'model_name': 'res.country',
             'state': 'object_write',
-            'update_path': 'name_position',
+            'update_path': 'zip_applicability',
             'selection_value': selection_value.id,
         })
         action._set_selection_value()  # manual onchange
@@ -319,7 +318,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         run_res = action.with_context(context).run()
         self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
         # Test: country updated
-        self.assertEqual(self.test_country.name_position, 'after')
+        self.assertEqual(self.test_country.zip_applicability, 'not_applicable')
 
     def test_36_crud_write_m2m_ops(self):
         """ Test that m2m operations work as expected """
