@@ -33,7 +33,9 @@ class TestPoSEventSale(TestUi):
 
     def test_settle_event_quotation(self):
         """ A quotation has no attendee yet, so the PoS registers them on settlement and they are
-        confirmed by the payment, as when the tickets are sold from the PoS. """
+        confirmed by the payment, as when the tickets are sold from the PoS.
+        Also, if quotation have event registrations (for example, registered from the website),
+        we do not ask for details. """
         self.pos_user.write({
             'group_ids': [
                 (4, self.env.ref('event.group_event_user').id),
@@ -41,6 +43,20 @@ class TestPoSEventSale(TestUi):
         })
         sale_order = self._create_event_sale_order()
         self.assertFalse(sale_order.order_line.registration_ids)
+        event = self.test_event_registration_not_mandatory
+        sale_order_2 = self._create_event_sale_order()
+
+        # Registration done outside the POS (e.g. website)
+        self.env['event.registration'].create([{
+            'event_id': event.id,
+            'event_ticket_id': event.event_ticket_ids[0].id,
+            'partner_id': self.partner_a.id,
+            'sale_order_id': sale_order_2.id,
+            'sale_order_line_id': sale_order_2.order_line[0].id,
+        } for _ in range(2)])
+
+        self.assertEqual(len(sale_order_2.order_line.registration_ids), 2)
+        self.assertEqual(sale_order_2.state, 'draft')
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SettleEventQuotation')
