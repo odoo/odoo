@@ -201,17 +201,17 @@
                             <group>
                                 <group name="event_track_cta_group">
                                     <field name="website_cta"/>
-                                    <field name="website_cta_title" placeholder="e.g. Get Yours Now!"
+                                    <field name="website_cta_title" placeholder="e.g. Get 20% off!"
                                         invisible="not website_cta"
                                         required="website_cta"/>
-                                    <field name="website_cta_url" placeholder="e.g. http://www.example.com"
+                                    <field name="website_cta_url" placeholder="e.g. https://www.example.com/offer"
                                         invisible="not website_cta"
                                         required="website_cta"/>
                                     <label for="website_cta_delay"
                                         invisible="not website_cta"/>
                                     <div invisible="not website_cta">
-                                        <field name="website_cta_delay" class="oe_inline"
-                                            required="website_cta"/> minutes after Track start
+                                        <field name="website_cta_delay" class="oe_inline o_input_5ch"
+                                            required="website_cta"/> minutes after Track starts
                                     </div>
                                 </group>
                             </group>
