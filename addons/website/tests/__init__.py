@@ -29,6 +29,7 @@ from . import test_page_manager
 from . import test_performance
 from . import test_qweb
 from . import test_redirect
+from . import test_res_config_settings
 from . import test_res_users
 from . import test_save_xml
 from . import test_sitemap
