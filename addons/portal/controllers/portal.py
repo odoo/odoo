@@ -791,16 +791,17 @@ class CustomerPortal(Controller):
                     else:
                         address_values.pop(commercial_field_name, None)
 
-                for additional_identifier, value in address_values.get("additional_identifiers", {}).items():
+                for additional_identifier, value in list(address_values.get("additional_identifiers", {}).items()):
                     partner_sudo_value = partner_sudo._get_additional_identifier(additional_identifier)
                     # Allow to update additional identifiers on individual addresses, if not set.
                     if is_main_contact and not bool(partner_sudo_value):
                         continue
                     if partner_sudo_value != value and (bool(partner_sudo_value) or bool(value)):
+                        # An identifier already set on the (child) partner cannot be changed
+                        # from an individual address; flag it as invalid. Unchanged identifiers
+                        # are left untouched so they are preserved when the address is written.
                         invalid_fields.add(additional_identifier)
                         error_messages.append(get_commercial_field_error_msg(additional_identifier))
-                    else:
-                        address_values["additional_identifiers"].pop(additional_identifier, None)
 
                 # Company name shouldn't be updated anywhere but the main and company address, even
                 # if it's not in the fields returned by _commercial_fields.
