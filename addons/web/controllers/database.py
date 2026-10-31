@@ -52,9 +52,9 @@ def list_db_incompatible(databases: Iterable[str]) -> list[str]:
                         incompatible_databases.append(database_name)
             else:
                 incompatible_databases.append(database_name)
-    for database_name in incompatible_databases:
-        # don't fill the pool with connections to incompatible databases
-        odoo.sql_db.close_db(database_name)
+            # don't put the connection back in the pool as we may check many
+            # different databases
+            cr._cnx.close()
     return incompatible_databases
 
 
