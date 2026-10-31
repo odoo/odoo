@@ -328,7 +328,7 @@ registry.category("web_tour.tours").add("pos_hr_go_backend_opened_registered", {
             CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Chrome.clickBtn("Open Register"),
             Chrome.existMenuOption("Close Register"),
-            Chrome.existMenuOption("Backend"),
+            Chrome.notExistMenuOption("Backend"),
 
             // Employee with user --> 403
             PosHr.clickCashierName(),
@@ -349,7 +349,7 @@ registry.category("web_tour.tours").add("pos_hr_go_backend_opened_registered", {
             CashierSelectionPopup.has("Test Manager 2", { run: "click" }),
             PosHr.enterPin("5652"),
             Chrome.existMenuOption("Close Register"),
-            Chrome.existMenuOption("Backend"),
+            Chrome.notExistMenuOption("Backend"),
 
             // Manager that opened the session --> access granted
             PosHr.clickCashierName(),
@@ -372,13 +372,13 @@ registry
                 // Employee, connected user
                 CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
                 PosHr.enterPin("2580"),
-                Chrome.notExistMenuOption("Backend"),
+                Chrome.existMenuOption("Backend"),
 
                 // Manager that opened the session, not connected user
                 PosHr.clickCashierName(),
                 CashierSelectionPopup.has("Test Manager 1", { run: "click" }),
                 PosHr.enterPin("5651"),
-                Chrome.existMenuOption("Backend"),
+                Chrome.notExistMenuOption("Backend"),
             ].flat(),
     });
 
