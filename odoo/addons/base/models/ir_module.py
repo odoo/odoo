@@ -82,6 +82,8 @@ class IrModuleCategory(models.Model):
     _description = "Application"
     _order = 'sequence, name, id'
     _allow_sudo_commands = False
+    _clear_cache_name = 'groups'
+    _clear_cache_on_fields = {'name', 'sequence'}
 
     name = fields.Char(string='Name', required=True, translate=True)
     parent_id = fields.Many2one('ir.module.category', string='Parent Application', index=True)
@@ -89,7 +91,7 @@ class IrModuleCategory(models.Model):
     module_ids = fields.One2many('ir.module.module', 'category_id', string='Modules')
     privilege_ids = fields.One2many('res.groups.privilege', 'category_id', string='Privileges')
     description = fields.Text(string='Description', translate=True)
-    sequence = fields.Integer(string='Sequence')
+    sequence = fields.Integer(string='Sequence', default=100)
     visible = fields.Boolean(string='Visible', default=True)
     exclusive = fields.Boolean(string='Exclusive')
     xml_id = fields.Char(string='External ID', compute='_compute_xml_id')
