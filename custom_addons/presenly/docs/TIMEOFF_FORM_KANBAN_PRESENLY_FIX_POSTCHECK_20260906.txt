@@ -1,0 +1,83 @@
+PRESENLY TIME OFF APPROVAL FORM & KANBAN FIX — ROLLOUT POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.13.5.0
+
+PURPOSE
+- Fix `/odoo/time-off-approval/<id>` so it no longer reverts to native Odoo
+  approval UI.
+- Add Presenly Approve Current Level / Reject controls in the kanban card
+  detail (modal) for Time Off.
+
+ROOT CAUSE
+- `/odoo/time-off-approval/<id>` uses the manager action
+  `hr_leave_action_action_approve_department`, whose form view is
+  `hr_leave_view_form_manager` and kanban view is `hr_leave_view_kanban`.
+- The Presenly inherited form targeted `hr_leave_view_form`, which mostly
+  carried over, but the native `state` statusbars still rendered twice in the
+  manager form, making the header look inconsistent.
+- The time-off calendar popup already received Presenly actions in a previous
+  rollout, but the kanban card detail still showed native Approve/Refuse.
+
+CHANGES
+1. `views/presenly_leave_views.xml`
+   - Hide all native `state` statusbar instances in the form header.
+   - Hide native Approve/Refuse/Back to Approval headers (already done
+     previously; now both `state` fields are hidden).
+   - Add Presenly kanban card controls:
+     - Desktop area `o_hr_holidays_button`: Approve Current Level + Reject.
+     - Mobile `bottom`: Approve Current Level + Reject.
+   - Add `presenly_can_approve`/`presenly_can_reject` fields to the kanban
+     context so `record.presenly_can_*.raw_value` works.
+   - Keep native Approve/Refuse buttons invisible.
+
+2. Version bump to 19.0.13.5.0.
+
+VERIFICATION
+Composed manager form (`hr_leave_view_form_manager`):
+- Native Approve: invisible 1
+- Native Refuse: invisible 1
+- Native Back to Approval: invisible 1
+- Native state statusbars: both invisible 1
+- Presenly buttons: Submit, Approve Current Level, Reject
+- Presenly statusbar: not_started,pending,approved,rejected,cancelled
+
+Composed kanban:
+- Native Approve/Refuse remain hidden by Presenly `can_*` overrides.
+- Presenly Approve Current Level + Reject appear in both desktop and mobile
+  card detail areas.
+
+TESTING
+- Isolated clone: odoo_presenly_kanban_action_test_20260906_155000.
+- Final result: 42 test cases / 54 test stats.
+- Failures: 0.
+- Errors: 0.
+- Clone database and filestore were removed.
+
+STATIC VALIDATION
+- XML parsing: 19 files passed.
+- git diff --check: passed.
+
+DATA PRESERVATION
+Business fingerprint before and after rollout is identical:
+- Attendance: 4; ID sum 12.
+- Evidence: 10; ID sum 55.
+- Referenced selfie attachments: 7; ID sum 1210.
+- Permission requests: 0.
+- Time Off requests: 3; ID sum 48.
+- Approval routes: 2; ID sum 4.
+- Approval journeys: 1; ID sum 1.
+
+BACKUP
+- backups/presenly-migration/odoo-before-kanban-action-20260906-155000.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.13.4.0.
+- After: presenly 19.0.13.5.0.
+- Main server PID: 31183.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, or traceback.
+
+NO COMMIT
+- No Git commit was created.
