@@ -59,7 +59,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Global Time Off',
             'date_from': date(2022, 3, 8),
             'date_to': date(2022, 3, 8),
-            'calendar_id': cls.calendar_1.id,
+            'calendar_ids': [cls.calendar_1.id],
         })
 
     def test_leave_on_global_leave(self):
@@ -68,7 +68,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 7),
                 'date_to': date(2022, 3, 7),
-                'calendar_id': self.calendar_1.id,
+                'calendar_ids': [self.calendar_1.id],
             })
 
         with self.assertRaises(ValidationError):
@@ -83,7 +83,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'name': 'Correct Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
-                'calendar_id': self.calendar_2.id,
+                'calendar_ids': [self.calendar_2.id],
             })
 
         with self.assertRaises(ValidationError):
@@ -98,7 +98,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
-                'calendar_id': self.calendar_1.id,
+                'calendar_ids': [self.calendar_1.id],
             })
 
     def test_global_leave_working_schedule_without_company(self):
@@ -116,7 +116,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Public Holiday',
             'date_from': datetime(2024, 1, 3, 0, 0),
             'date_to': datetime(2024, 1, 3, 23, 59),
-            'calendar_id': calendar_no_company.id,
+            'calendar_ids': [calendar_no_company.id],
             'company_id': self.employee_emp.company_id.id,
         })
         work_entry_type = self.env['hr.work.entry.type'].create({
@@ -144,7 +144,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Global Time Off',
             'date_from': datetime(2024, 1, 3, 6, 0, 0),
             'date_to': datetime(2024, 1, 3, 19, 0, 0),
-            'calendar_id': self.calendar_1.id,
+            'calendar_ids': [self.calendar_1.id],
         })
         work_entry_type = self.env['hr.work.entry.type'].create({
             'name': 'Paid Time Off',
@@ -330,7 +330,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Public holiday',
             'date_from': "2024-12-04 06:00:00",
             'date_to': "2024-12-04 23:00:00",
-            'calendar_id': self.calendar_1.id,
+            'calendar_ids': [self.calendar_1.id],
         })
 
         # retrieve resource leaves linked to the employee's leave
@@ -389,7 +389,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Public holiday day 1',
             'date_from': datetime(2025, 5, 13),
             'date_to': datetime(2025, 5, 13, 23, 59),
-            'calendar_id': employee_david.resource_calendar_id.id,
+            'calendar_ids': [employee_david.resource_calendar_id.id],
         })
 
         self.assertEqual(employee_leave.number_of_days, 4, 'Leave duration should be reduced because of public holiday day 1')
@@ -399,7 +399,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Public holiday day 2',
             'date_from': datetime(2025, 5, 14),
             'date_to': datetime(2025, 5, 14, 23, 59),
-            'calendar_id': employee_david.resource_calendar_id.id,
+            'calendar_ids': [employee_david.resource_calendar_id.id],
         })
         self.assertEqual(employee_leave.number_of_days, 3, 'Leave duration should be reduced because of public holiday day 2')
 
@@ -408,7 +408,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Public holiday day 3',
             'date_from': datetime(2025, 5, 15),
             'date_to': datetime(2025, 5, 15, 23, 59),
-            'calendar_id': employee_david.resource_calendar_id.id,
+            'calendar_ids': [employee_david.resource_calendar_id.id],
         })
         self.assertEqual(employee_leave.number_of_days, 2, 'Leave duration should be reduced because of public holiday day 3')
 
@@ -479,7 +479,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
 
         # tuesday to thursday
         self.env['resource.calendar.leaves'].create({
-            'name': '3 day holiday', 'calendar_id': False,
+            'name': '3 day holiday', 'calendar_ids': False,
             'date_from': datetime(2024, 3, 5), 'date_to': datetime(2024, 3, 7, 23, 59, 59)
         })
 

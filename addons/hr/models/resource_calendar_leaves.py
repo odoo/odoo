@@ -10,7 +10,7 @@ class ResourceCalendarLeaves(models.Model):
     _inherit = 'resource.calendar.leaves'
 
     @api.depends('date_from')
-    def _compute_calendar_id(self):
+    def _compute_calendar_ids(self):
         """Set the calendar of resource leaves from the employee's current version.
 
         A leave of an employee's resource gets the calendar of the employee's
@@ -36,6 +36,6 @@ class ResourceCalendarLeaves(models.Model):
             # only modify leaves that fall under the active contract
             leaves.filtered(
                 lambda leave: leave.date_from and start_dt <= leave.date_from < end_dt
-            ).calendar_id = contract.resource_calendar_id
+            ).calendar_ids = [contract.resource_calendar_id]
 
-        super(ResourceCalendarLeaves, remaining)._compute_calendar_id()
+        super(ResourceCalendarLeaves, remaining)._compute_calendar_ids()

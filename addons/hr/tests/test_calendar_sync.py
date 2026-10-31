@@ -62,7 +62,7 @@ class TestContractCalendars(TestHrCommon):
                 'date_from': start,
                 'date_to': end,
                 'resource_id': resource.id if resource else None,
-                'calendar_id': self.employee.resource_calendar_id.id,
+                'calendar_ids': [self.employee.resource_calendar_id.id],
                 'count_as': 'absence',
             })
 
@@ -81,14 +81,14 @@ class TestContractCalendars(TestHrCommon):
 
         self.calendar_richard.transfer_leaves_to(self.calendar_35h, resources=self.employee.resource_id, from_date=Date.to_date('2015-11-21'))
 
-        self.assertEqual(leave1.calendar_id, self.calendar_richard, "It should stay in Richard's calendar")
-        self.assertEqual(leave3.calendar_id, self.calendar_richard, "Global leave should stay in original calendar")
-        self.assertEqual(leave2.calendar_id, self.calendar_35h, "It should be transferred to the other calendar")
+        self.assertEqual(leave1.calendar_ids, [self.calendar_richard], "It should stay in Richard's calendar")
+        self.assertEqual(leave3.calendar_ids, [self.calendar_richard], "Global leave should stay in original calendar")
+        self.assertEqual(leave2.calendar_ids, [self.calendar_35h], "It should be transferred to the other calendar")
 
         # Transfer global leaves
         self.calendar_richard.transfer_leaves_to(self.calendar_35h, resources=None, from_date=Date.to_date('2015-11-21'))
 
-        self.assertEqual(leave3.calendar_id, self.calendar_35h, "Global leave should be transfered")
+        self.assertEqual(leave3.calendar_ids, [self.calendar_35h], "Global leave should be transfered")
 
     def test_calendar_no_desync(self):
         """ resource_calendar_id cannot be desync between employee and version last version """
@@ -135,7 +135,7 @@ class TestContractCalendars(TestHrCommon):
         leave_form.date_from = False
 
         leave_form.resource_id = self.employee.resource_id
-        self.assertFalse(leave_form.calendar_id)
+        self.assertFalse(leave_form.calendar_ids)
 
         leave_form.date_from = Datetime.to_datetime('2018-01-01 07:00:00')
-        self.assertEqual(leave_form.calendar_id, self.employee.version_id.resource_calendar_id)
+        self.assertEqual(leave_form.calendar_ids, [self.employee.version_id.resource_calendar_id])

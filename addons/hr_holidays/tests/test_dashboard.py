@@ -19,7 +19,7 @@ class TestDashboard(TestHrHolidaysCommon):
                 'company_id': employee.company_id.id,
                 'start_date': datetime(2021, 6, 12),
                 'end_date': datetime(2021, 6, 12),
-                'resource_calendar_id': employee.resource_calendar_id.id,
+                'resource_calendar_ids': [employee.resource_calendar_id.id],
             },
             {
                 'name': 'Super Event (no schedule)',
@@ -32,7 +32,7 @@ class TestDashboard(TestHrHolidaysCommon):
                 'company_id': employee.company_id.id,
                 'start_date': datetime(2021, 6, 12),
                 'end_date': datetime(2021, 6, 12),
-                'resource_calendar_id': other_calendar.id,
+                'resource_calendar_ids': [other_calendar.id],
             }
         ]
         self.env['hr.leave.mandatory.day'].create(mandatory_day_vals)

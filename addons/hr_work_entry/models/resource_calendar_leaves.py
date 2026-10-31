@@ -15,14 +15,14 @@ class ResourceCalendarLeaves(models.Model):
     allowed_work_entry_type_ids = fields.Many2many(
         'hr.work.entry.type', compute='_compute_allowed_work_entry_type_ids')
 
-    @api.depends('calendar_id.company_id', 'company_id')
+    @api.depends('calendar_ids.company_id', 'company_id')
     def _compute_work_entry_type_id(self):
         """Default the type of global leaves to the public holiday type (``006.00``).
 
         The type of the leave's country is used, else the generic public holiday type. Leaves
         of a resource keep their type (set from the time off by ``hr_holidays``).
         """
-        country_ids = [(leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id).id for leave in self]
+        country_ids = [(leave.calendar_ids.company_id.country_id or leave.company_id.country_id or self.env.company.country_id).id for leave in self]
         public_holiday_types = self.env['hr.work.entry.type'].search([
             ('code', '=', '006.00'),
             ('country_id', 'in', country_ids),
@@ -30,17 +30,17 @@ class ResourceCalendarLeaves(models.Model):
         for leave in self:
             if leave.resource_id:
                 continue
-            country = leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id
+            country = leave.calendar_ids.company_id.country_id or leave.company_id.country_id or self.env.company.country_id
             leave.work_entry_type_id = public_holiday_types.get(country, self.env.ref('hr_work_entry.generic_work_entry_type_public_holiday', raise_if_not_found=False))
 
-    @api.depends('calendar_id.company_id', 'company_id')
+    @api.depends('calendar_ids.company_id', 'company_id')
     def _compute_allowed_work_entry_type_ids(self):
         for leave in self:
-            country = leave.calendar_id.company_id.country_id or leave.company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
+            countries = leave.calendar_ids.company_id.country_id or leave.company_id.country_id or self.env.company.country_id
+            if not countries or not self.env['hr.work.entry.type'].search_count([('country_id', '=', countries.ids)], limit=1):
                 domain = [('country_id', '=', False)]
             else:
-                domain = [('country_id', '=', country.id)]
+                domain = [('country_id', '=', countries.ids)]
             leave.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     def _copy_leave_vals(self):

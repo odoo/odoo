@@ -242,7 +242,7 @@ class HrEmployee(models.Model):
                         ('date_from', '<=', now),
                         ('date_to', '>=', now),
                     ],
-                    ['company_id', 'calendar_id'],
+                    ['company_id', 'calendar_ids'],
                     ['date_to:max'],
                 )
             }
@@ -533,8 +533,8 @@ class HrEmployee(models.Model):
             ('date_from', '<=', date_end),
             ('date_to', '>=', date_start),
             '|',
-            ('calendar_id', '=', False),
-            ('calendar_id', '=', self.resource_calendar_id.id),
+            ('calendar_ids', '=', False),
+            ('calendar_ids', '=', self.resource_calendar_id.id),
         ]
 
         return self.env['resource.calendar.leaves'].search(domain)
@@ -585,8 +585,8 @@ class HrEmployee(models.Model):
             ('end_date', '>=', start_date),
             ('company_id', '=', self.company_id.id or self.env.company.id),
             '|',
-            ('resource_calendar_id', '=', False),
-            ('resource_calendar_id', 'in', self.resource_calendar_id.ids),
+            ('resource_calendar_ids', '=', False),
+            ('resource_calendar_ids', 'in', self.resource_calendar_id.ids),
         ]
 
         if self.job_id:

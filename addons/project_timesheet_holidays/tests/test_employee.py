@@ -16,7 +16,7 @@ class TestEmployee(TransactionCase):
             'name': 'Test Global Leave',
             'date_from': '2020-01-01 00:00:00',
             'date_to': '2020-01-01 23:59:59',
-            'calendar_id': cls.company.resource_calendar_id.id,
+            'calendar_ids': [cls.company.resource_calendar_id.id],
             'company_id': cls.company.id,
         })
 

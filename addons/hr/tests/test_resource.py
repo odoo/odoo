@@ -209,7 +209,7 @@ class TestResource(TestHrCommon):
         date_to = datetime(2021, 10, 9, tzinfo=UTC)
         self.env['resource.calendar.leaves'].create({
             'name': 'Company training',
-            'calendar_id': self.calendar_35h.id,
+            'calendar_ids': [self.calendar_35h.id],
             'date_from': datetime(2021, 10, 6, 6),
             'date_to': datetime(2021, 10, 6, 18),
             'count_as': 'working_time',
@@ -219,7 +219,7 @@ class TestResource(TestHrCommon):
 
         self.env['resource.calendar.leaves'].create({
             'name': 'Public holiday',
-            'calendar_id': self.calendar_35h.id,
+            'calendar_ids': [self.calendar_35h.id],
             'date_from': datetime(2021, 10, 7, 6),
             'date_to': datetime(2021, 10, 7, 18),
         })
@@ -337,7 +337,7 @@ class TestResource(TestHrCommon):
             'date_from': datetime(2026, 12, 31, 8, 0),
             'date_to': datetime(2026, 12, 31, 17, 0),
         })
-        self.assertEqual(leave.calendar_id, self.calendar_35h)
+        self.assertEqual(leave.calendar_ids, [self.calendar_35h])
 
     def test_availability_skills_infos_resource(self):
         """ Ensure that all the infos related to skill needed to display the avatar

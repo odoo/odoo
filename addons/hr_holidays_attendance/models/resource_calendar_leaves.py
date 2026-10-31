@@ -20,14 +20,14 @@ class ResourceCalendarLeaves(models.Model):
         if not ph_leaves:
             return []
 
-        calendar_leaves, global_leaves = ph_leaves.partitioned('calendar_id')
+        calendar_leaves, global_leaves = ph_leaves.partitioned('calendar_ids')
 
         domains = []
         if global_leaves:
             company_ids = global_leaves.company_id.ids
             domains.append(Domain('company_id', 'in', company_ids) if company_ids else Domain.TRUE)
         if calendar_leaves:
-            domains.append(Domain('resource_calendar_id', 'in', calendar_leaves.calendar_id.ids))
+            domains.append(Domain('resource_calendar_id', 'in', calendar_leaves.calendar_ids.ids))
         if not domains:
             return []
 
@@ -39,8 +39,8 @@ class ResourceCalendarLeaves(models.Model):
         for leave in ph_leaves:
             df = leave.date_from.replace(tzinfo=UTC)
             dt = leave.date_to.replace(tzinfo=UTC)
-            if leave.calendar_id:
-                emps = all_employees.filtered(lambda e, c=leave.calendar_id: e.resource_calendar_id == c)
+            if leave.calendar_ids:
+                emps = all_employees.filtered(lambda e, c=leave.calendar_ids: e.resource_calendar_id == c)
             elif leave.company_id:
                 emps = all_employees.filtered(lambda e, cid=leave.company_id.id: e.company_id.id == cid)
             else:
@@ -62,7 +62,7 @@ class ResourceCalendarLeaves(models.Model):
         return res
 
     def write(self, vals):
-        affects_time_rules = bool({'date_from', 'date_to', 'resource_id', 'calendar_id'} & set(vals.keys()))
+        affects_time_rules = bool({'date_from', 'date_to', 'resource_id', 'calendar_ids'} & set(vals.keys()))
         old_affected = self._get_time_rule_affected() if affects_time_rules else []
         res = super().write(vals)
         if affects_time_rules:

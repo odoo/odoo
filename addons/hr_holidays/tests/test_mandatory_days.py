@@ -66,7 +66,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 2),
             'end_date': datetime(2021, 11, 2),
             'color': 1,
-            'resource_calendar_id': cls.default_calendar.id,
+            'resource_calendar_ids': [cls.default_calendar.id],
         })
         cls.mandatory_week = cls.env['hr.leave.mandatory.day'].create({
             'name': 'Super Event End Of Week',
@@ -74,7 +74,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 8),
             'end_date': datetime(2021, 11, 12),
             'color': 2,
-            'resource_calendar_id': cls.default_calendar.id,
+            'resource_calendar_ids': [cls.default_calendar.id],
         })
 
     @freeze_time('2021-10-15')
@@ -170,7 +170,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 3),
             'end_date': datetime(2021, 11, 3),
             'color': 1,
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
             'department_ids': [production_department.id],
         })
         self.env['hr.leave.mandatory.day'].create({
@@ -179,7 +179,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 4),
             'end_date': datetime(2021, 11, 4),
             'color': 1,
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
             'department_ids': [post_production_department.id],
         })
         self.env['hr.leave.mandatory.day'].create({
@@ -188,7 +188,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 5),
             'end_date': datetime(2021, 11, 5),
             'color': 1,
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
             'department_ids': [deployment_department.id],
         })
 
@@ -262,7 +262,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 3),
             'end_date': datetime(2021, 11, 3),
             'color': 1,
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
             'department_ids': [production_department.id],
             'job_ids': [production_manager.id],
         },{
@@ -271,7 +271,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 4),
             'end_date': datetime(2021, 11, 4),
             'color': 2,
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
             'department_ids': [production_department.id],
         }, {
             'name': 'Team General Meeting',
@@ -279,7 +279,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 6),
             'end_date': datetime(2021, 11, 6),
             'color': 3,
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
             'job_ids': [production_manager.id]
         }, {
             'name': 'Department General Meeting',
@@ -287,7 +287,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 5),
             'end_date': datetime(2021, 11, 5),
             'color': 3,
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
             'department_ids': [production_department.id],
             'job_ids': [post_production_manager.id]
         }])
@@ -362,7 +362,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 4),
             'end_date': datetime(2021, 11, 4),
             'color': 3,
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
             'department_ids': [post_production_department.id],
         }, {
             'name': 'Last Rush Before Launch (deployment)',
@@ -370,7 +370,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'start_date': datetime(2021, 11, 5),
             'end_date': datetime(2021, 11, 5),
             'color': 4,
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
             'department_ids': [deployment_department.id],
         }])
 
@@ -431,7 +431,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'company_id': self.company.id,
             'start_date': datetime(2025, 5, 13),
             'end_date': datetime(2025, 5, 13),
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
         })
         self.env['hr.holidays.cancel.leave'].with_user(self.employee_user).create({
             'leave_id': employee_leave.id,
@@ -465,7 +465,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'company_id': self.company.id,
             'start_date': datetime(2025, 5, 22),
             'end_date': datetime(2025, 5, 22),
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
         })
         employee_leave.with_user(self.user_emp_leave_manager).action_refuse()
         self.assertEqual(employee_leave.state, 'refuse', 'employee leave state should be in refuse state')
@@ -495,7 +495,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             'company_id': self.company.id,
             'start_date': datetime(2025, 5, 13),
             'end_date': datetime(2025, 5, 13),
-            'resource_calendar_id': self.default_calendar.id,
+            'resource_calendar_ids': [self.default_calendar.id],
         })
         self.assertEqual(employee_leave.state, 'validate', 'employee leave state should be in validate state')
         employee_leave.with_user(self.hr_user).action_back_to_approval()
