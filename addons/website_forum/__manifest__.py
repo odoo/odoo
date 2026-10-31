@@ -73,6 +73,10 @@ Ask questions, get answers, no distractions
             'website_forum/static/src/xml/public_templates.xml',
             'website_forum/static/src/xml/website_forum_tags_wrapper.xml',
             'website_forum/static/src/components/**/*',
+            ('remove', 'website_forum/static/src/components/website_forum_wysiwyg/**/*'),
+        ],
+        'website_profile.assets_html_editor': [
+            'website_forum/static/src/components/website_forum_wysiwyg/**/*',
             'website_forum/static/src/plugins/**/*',
         ],
         'web.assets_unit_tests': [
