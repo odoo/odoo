@@ -1258,6 +1258,11 @@ class PosSession(models.Model):
         """
         self.ensure_one()
         orders.account_move.ensure_one()
+        if not orders.partner_id:
+            # A POS order with no customer cannot be invoiced, so its reversal
+            # cannot resolve a partner. Fail with a clear message instead of
+            # crashing with an "Expected singleton" error.
+            raise UserError(_("A customer is required to generate an invoice."))
         orders.partner_id.ensure_one()
 
         if any(not order.is_globally_invoiced for order in orders):
