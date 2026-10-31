@@ -38,7 +38,7 @@ var EventRegistrationForm = publicWidget.Widget.extend({
         var self = this;
         const post = this._getPost();
         const noTicketsOrdered = Object.values(post).map((value) => parseInt(value)).every(value => value === 0);
-        var res = this._super.apply(this.arguments).then(function () {
+        var res = this._super.apply(this, arguments).then(function () {
             $('#registration_form .a-submit')
                 .off('click')
                 .click(function (ev) {
