@@ -4399,7 +4399,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         move_date = self.date or self.invoice_date or fields.Date.context_today(self)
         year_part = "%04d" % move_date.year
-        fiscalyear_dates = self.env.company.compute_fiscalyear_dates(self.date)
+        fiscalyear_dates = (self.company_id or self.env.company).compute_fiscalyear_dates(move_date)
         date_from = fiscalyear_dates['date_from']
         date_to = fiscalyear_dates['date_to']
         is_staggered_year = date_from.year != date_to.year
@@ -4442,7 +4442,7 @@ class AccountMove(models.Model):
         if reset not in ('year_range', 'year_range_month'):
             return super()._get_sequence_date_range(reset)
 
-        fiscalyear_dates = self.env.company.compute_fiscalyear_dates(self.date)
+        fiscalyear_dates = (self.company_id or self.env.company).compute_fiscalyear_dates(self.date)
         date_start = fiscalyear_dates['date_from']
         date_end = fiscalyear_dates['date_to']
         fiscalyear_last_day = date_end.day
