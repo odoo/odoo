@@ -3356,7 +3356,20 @@ class AccountMoveLine(models.Model):
             return
 
         journal = self._get_exchange_journal(company)
-        accounting_exchange_date = journal.with_context(move_date=exchange_date).accounting_date if journal else date.min
+        if journal:
+            # The exchange difference entry is a pure reclassification that must be
+            # dated at the realization date (``exchange_date``), i.e. the date the gain
+            # or loss is actually realised. The previous lookup of the journal's
+            # accounting_date routed through account.move._get_accounting_date, whose
+            # same-month branch returned "today" when the realization date fell in the
+            # current month, pushing the entry to the payment-registration day instead.
+            today = fields.Date.context_today(self)
+            if exchange_date and (exchange_date.year, exchange_date.month) == (today.year, today.month):
+                accounting_exchange_date = exchange_date
+            else:
+                accounting_exchange_date = journal.with_context(move_date=exchange_date or today).accounting_date
+        else:
+            accounting_exchange_date = exchange_date or date.min
 
         move_vals = {
             'move_type': 'entry',
