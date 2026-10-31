@@ -7,14 +7,15 @@
             <field name="inherit_id" ref="base.module_view_kanban"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='application']" position="after">
+                    <field name="from_appstore"/>
                     <field name="module_type"/>
                 </xpath>
                 <xpath expr="//button[@name='button_immediate_install']" position="after">
-                    <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install_app" invisible="state != 'uninstalled' or module_type in ('official', False)" groups="base.group_system" context="{'module_name':name}">Activate</button>
-                    <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install_app" invisible="state == 'uninstalled' or module_type in ('official', False)" groups="base.group_system" context="{'module_name':name}">Upgrade</button>
+                    <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install_app" invisible="state != 'uninstalled' or not from_appstore" groups="base.group_system" context="{'module_name':name}">Activate</button>
+                    <button type="object" class="btn btn-primary btn-sm" name="button_immediate_install_app" invisible="state == 'uninstalled' or not from_appstore" groups="base.group_system" context="{'module_name':name}">Upgrade</button>
                 </xpath>
                 <xpath expr="//button[@name='button_immediate_install']" position="attributes">
-                    <attribute name="invisible">state != 'uninstalled' or (module_type and module_type != 'official')</attribute>
+                    <attribute name="invisible">state != 'uninstalled' or from_appstore</attribute>
                 </xpath>
                 <xpath expr="//a[@name='button_immediate_upgrade']" position="attributes">
                     <attribute name="invisible">state != 'installed' or imported</attribute>
@@ -37,7 +38,7 @@
             <field name="inherit_id" ref="base.module_tree"/>
             <field name="arch" type="xml">
                 <field name="installed_version" position="after">
-                    <field name="module_type" column_invisible="1"/> <!-- Needed in js_class below -->
+                    <field name="from_appstore" column_invisible="1"/> <!-- Needed in js_class below -->
                     <field name="name" column_invisible="1"/> <!-- Needed in js_class below -->
                 </field>
                 <list position="attributes">
@@ -51,20 +52,20 @@
             <field name="inherit_id" ref="base.module_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='technical_data']" position="attributes">
-                    <attribute name="invisible">module_type != 'official'</attribute>
+                    <attribute name="invisible">from_appstore</attribute>
                 </xpath>
                 <xpath expr="//button[@name='button_immediate_install']" position="after">
-                    <button type="object" class="btn btn-primary me-1" name="button_immediate_install_app" invisible="state != 'uninstalled' or module_type in ('official', False)" groups="base.group_system">Activate</button>
-                    <button type="object" class="btn btn-primary me-1" name="button_immediate_install_app" invisible="state == 'uninstalled' or module_type in ('official', False)" groups="base.group_system">Upgrade</button>
+                    <button type="object" class="btn btn-primary me-1" name="button_immediate_install_app" invisible="state != 'uninstalled' or not from_appstore" groups="base.group_system">Activate</button>
+                    <button type="object" class="btn btn-primary me-1" name="button_immediate_install_app" invisible="state == 'uninstalled' or not from_appstore" groups="base.group_system">Upgrade</button>
                 </xpath>
                 <xpath expr="//button[@name='button_immediate_install']" position="attributes">
-                    <attribute name="invisible">to_buy or state != 'uninstalled' or (module_type and module_type != 'official')</attribute>
+                    <attribute name="invisible">to_buy or state != 'uninstalled' or from_appstore</attribute>
                 </xpath>
                 <xpath expr="//button[@name='button_immediate_upgrade']" position="attributes">
                     <attribute name="invisible">state != 'installed' or imported</attribute>
                 </xpath>
                 <field name="installed_version" position="after">
-                    <field name="total_lines_of_code" invisible="module_type != 'industries'"/>
+                    <field name="total_lines_of_code" invisible="not from_appstore"/>
                 </field>
             </field>
         </record>
