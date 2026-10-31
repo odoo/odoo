@@ -21,6 +21,9 @@ class ProductDocument(models.Model):
         index=True,
         ondelete='cascade')
 
+    # make compute_sudo to allow compute_sql to be effective for one2many fields
+    res_id = fields.Many2oneReference(related='ir_attachment_id.res_id', inherited=True, compute_sudo=True)
+
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     variant_attribute_value_ids = fields.Many2many(
