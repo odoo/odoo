@@ -20,8 +20,13 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+<<<<<<< 79f44968b38e4c1474af58c9eaec54380069ce71
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
 import { MailMessage } from "@mail/../tests/mock_server/mock_models/mail_message";
+||||||| d85607c1578bf5f723fb376d14ed64a253f3c97d
+=======
+import { Gif } from "@mail/core/common/gif";
+>>>>>>> af3bef00dea0b4c2109a7f01cfa08da2360cf786
 import { Message } from "@mail/core/common/message";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
@@ -39,6 +44,7 @@ import {
     contains as webContains,
     Command,
     mockService,
+    mountWithCleanup,
     patchWithCleanup,
     serverState,
     withUser,
@@ -2608,6 +2614,19 @@ test("Pause GIF attachment when thread is not focused", async () => {
     await contains(".o-mail-AttachmentImage[data-paused]");
     await focus(".o-mail-Thread");
     await contains(".o-mail-AttachmentImage:not([data-paused])");
+});
+
+test("GIF snapshot loads same-origin URLs in CORS mode", async () => {
+    patchWithCleanup(CanvasRenderingContext2D.prototype, {
+        drawImage(image) {
+            expect.step(`crossOrigin: ${image.crossOrigin}`);
+            return super.drawImage(...arguments);
+        },
+    });
+    await mountWithCleanup(Gif, {
+        props: { src: `${window.location.origin}/web/static/img/sep-a.gif`, paused: true },
+    });
+    await expect.waitForSteps(["crossOrigin: anonymous"]);
 });
 
 test("Prettify message links", async () => {
