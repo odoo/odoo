@@ -3,6 +3,7 @@
 
 import odoo.tests
 
+from odoo import Command
 from odoo.tests import Form
 
 from odoo.addons.product_matrix.tests.common import TestMatrixCommon
@@ -64,6 +65,28 @@ class TestPurchaseMatrixUi(TestMatrixCommon):
             with po_form.order_line.new() as line:
                 line.product_no_variant_attribute_value_ids = attribute_never.template_value_ids[0]
                 line.product_id = product_template.product_variant_id
+<<<<<<< a55df600b515da84d13822d91c9ca98f19b14411
         self.assertEqual(
             purchase_order.order_line.label, "matrixFR\nPA4FR: PAV41FR"
         )
+||||||| dec7edfc7699f424823aa4e736561578a605eb31
+        self.assertEqual(purchase_order.order_line.name, 'matrixFR\nPA4FR: PAV41FR')
+=======
+        self.assertEqual(purchase_order.order_line.name, 'matrixFR\nPA4FR: PAV41FR')
+
+    def test_purchase_matrix_edit_line_description(self):
+        """ Check that editing the description of a pol does not add an empty line
+        between the product name and the description.
+        """
+        vendor = self.env['res.partner'].create({'name': 'Vendor'})
+        product = self.env['product.product'].create({'name': 'Test Product'})
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': vendor.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'name': 'Test Product\nFirst line',
+            })],
+        })
+        self.start_tour(f"/odoo/purchase/{purchase_order.id}", 'purchase_matrix_edit_line_description', login="admin")
+        self.assertEqual(purchase_order.order_line.name, 'Test Product\nFirst line, edited')
+>>>>>>> 40fa691eed12a3a63c4a3946749aced23beafa75

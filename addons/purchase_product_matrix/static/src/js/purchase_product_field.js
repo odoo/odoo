@@ -38,6 +38,26 @@ export class PurchaseOrderLineProductField extends AccountProductField {
         return this.props.record.data.is_configurable_product;
     }
 
+<<<<<<< a55df600b515da84d13822d91c9ca98f19b14411
+||||||| dec7edfc7699f424823aa4e736561578a605eb31
+    get label() {
+        let label = this.props.record.data.name;
+        if (label.includes(this.productName)) {
+            label = label.replace(this.productName, "");
+        }
+        return label;
+    }
+
+=======
+    get label() {
+        let label = this.props.record.data.name;
+        if (label.includes(this.productName)) {
+            label = label.replace(this.productName, "");
+        }
+        return label.trim();
+    }
+
+>>>>>>> 40fa691eed12a3a63c4a3946749aced23beafa75
     async _onProductTemplateUpdate() {
         const result = await this.orm.call("product.template", "get_single_product_variant", [
             this.props.record.data.product_template_id.id,
