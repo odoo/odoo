@@ -6,6 +6,9 @@
     'depends': [
         "l10n_in",
     ],
+    'external_dependencies': [
+        {'pypi': 'pyjwt', 'modules': ['jwt'], 'optional': True, 'apt': 'python3-jwt'},
+    ],
     'description': """
 Indian - E-invoicing
 ====================

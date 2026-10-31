@@ -12,6 +12,9 @@
         'account',
         'l10n_account_withholding_tax',
     ],
+    'external_dependencies': [
+        {'pypi': 'openpyxl', 'optional': True, 'test': True, 'apt': 'python3-openpyxl'}
+    ],
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',

@@ -10,6 +10,9 @@ This addon provides an extensible, maintainable editor.
     'author': 'Odoo S.A.',
     'category': 'Hidden',
     'depends': ['base', 'bus', 'web'],
+    'external_dependencies': [
+        {'pypi': 'beautifulsoup4', 'modules': ['bs4'], 'optional': True, 'apt': 'python3-bs4'},
+    ],
     'data': [
         'security/ir.access.csv',
     ],

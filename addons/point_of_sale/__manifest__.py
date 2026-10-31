@@ -18,6 +18,9 @@
         'base_report_wkhtmltox',
         'iot_webserial',
     ],
+    'external_dependencies': [
+        {'pypi': 'qrcode', 'apt': 'python3-qrcode'},
+    ],
     'data': [
         'security/point_of_sale_security.xml',
         'data/default_barcode_patterns.xml',
