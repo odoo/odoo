@@ -250,6 +250,13 @@ class PurchaseOrder(models.Model):
             return self.picking_type_id.default_location_dest_id
         wh_stock_loc = self.picking_type_id.warehouse_id.lot_stock_id
         default_dest_loc = self.picking_type_id.default_location_dest_id
+        warehouse = self.picking_type_id.warehouse_id
+        if (
+            warehouse.reception_steps == 'two_steps'
+            and default_dest_loc == warehouse.wh_input_stock_loc_id
+            and default_dest_loc._child_of(wh_stock_loc)
+        ):
+            return wh_stock_loc
         if default_dest_loc and (not wh_stock_loc or default_dest_loc._child_of(wh_stock_loc)):
             return default_dest_loc
         return wh_stock_loc
