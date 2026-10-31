@@ -23,6 +23,7 @@ class TestImLivechatFeedback(ChatbotCase, TestGetOperatorCommon):
             {"channel_id": chat.id, "rate": 5, "reason": "Great support!"},
         )
         self.assertEqual(chat.livechat_rating, "5")
+        self.assertEqual(chat.livechat_rating_feedback, "Great support!")
 
     @mute_logger("odoo.http")
     def test_rating_not_allowed_for_agent(self):
@@ -43,6 +44,7 @@ class TestImLivechatFeedback(ChatbotCase, TestGetOperatorCommon):
                 {"channel_id": chat.id, "rate": 5, "reason": "Excellent!"},
             )
         self.assertFalse(chat.livechat_rating)
+        self.assertFalse(chat.livechat_rating_feedback)
 
     def test_rating_for_chat_bot(self):
         self.authenticate(None, None)
