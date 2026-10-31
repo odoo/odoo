@@ -71,7 +71,7 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self._make_out_move(self.dining_table, 1)
         self.assertEqual(self.dining_table.total_value, (2 * PRICE + 10 + 20) / 2)
 
-    def _assert_incoming_component_value_update_revalues_finished_product(self, category):
+    def _assert_incoming_component_value_update_revalues_finished_product(self, category, consume_finished=False):
         self.glass.sudo().categ_id = category  # setup master-data
         self.dining_table.sudo().categ_id = category  # setup master-data
 
@@ -85,14 +85,31 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.assertEqual(component_move.value, -10)
         self.assertEqual(finished_move.value, PRICE + 10)
 
+        if consume_finished:
+            self._make_out_move(self.dining_table, 1)
+
         incoming_move.value_manual = 100
 
         self.assertEqual(component_move.value, -100)
         self.assertEqual(finished_move.value, PRICE + 100)
-        self.assertEqual(self.dining_table.total_value, PRICE + 100)
+        self.assertEqual(self.dining_table.total_value, PRICE + 100 if not consume_finished else 0)
 
     def test_avco_incoming_component_value_update_revalues_finished_product(self):
         self._assert_incoming_component_value_update_revalues_finished_product(self.category_avco)
+
+    def test_avco_auto_incoming_component_value_update_revalues_finished_product(self):
+        self._assert_incoming_component_value_update_revalues_finished_product(self.category_avco_auto, consume_finished=True)
+        mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_1.id), ('state', '=', 'done')], limit=1)
+        component_move = mo.move_raw_ids.filtered(lambda move: move.product_id == self.glass)
+        self.assertRecordValues(component_move.account_move_id.line_ids, [
+            {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id, 'debit': 0.0, 'credit': 100.0},
+            {'account_id': self.account_production.id, 'debit': 100.0, 'credit': 0.0},
+        ])
+        finished_move = mo.move_finished_ids.filtered(lambda move: move.product_id == self.dining_table)
+        self.assertRecordValues(finished_move.account_move_id.line_ids, [
+            {'account_id': self.account_production.id, 'debit': 0.0, 'credit': PRICE + 100},
+            {'account_id': self.category_avco_auto.property_stock_valuation_account_id.id, 'debit': PRICE + 100, 'credit': 0.0},
+        ])
 
     def test_fifo_incoming_component_value_update_revalues_finished_product(self):
         self._assert_incoming_component_value_update_revalues_finished_product(self.category_fifo)

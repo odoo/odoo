@@ -19,7 +19,9 @@ class StockMove(models.Model):
         productions = changed_components.raw_material_production_id.filtered(lambda production: production.state == 'done')
         finished_moves = productions.move_finished_ids.filtered(lambda move: move.state == 'done' and move.product_id.cost_method in ('fifo', 'average'))
         if finished_moves:
+            previous_values = {move.id: move.value for move in finished_moves}
             finished_moves._set_value(recompute_date=min(finished_moves.mapped('date')))
+            finished_moves._recompute_aml_balances(previous_values)
         return changed_moves
 
     def _get_value_from_production(self, quantity):
