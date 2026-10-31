@@ -110,9 +110,6 @@ export function makeStore(env, { localRegistry } = {}) {
                 }
                 OtherModel._.fieldsTargetModel.set(inverse, Model.getName());
                 OtherModel._.fieldsInverse.set(inverse, name);
-                // // FIXME: lazy fields are not working properly with inverse.
-                Model._.fieldsEager.set(name, true);
-                OtherModel._.fieldsEager.set(inverse, true);
             }
         }
     }
@@ -135,7 +132,6 @@ export function makeStore(env, { localRegistry } = {}) {
                         `Missing inverse field of "${parentFieldName}" for _inherits in "${Model.getName()}"`
                     );
                 }
-                Model._.inheritsFields.add(parentFieldName);
                 const ParentModel = Models[parentModelName];
                 ParentModel._.inheritsInverseFields.add(inverseField);
                 // fields and computeds

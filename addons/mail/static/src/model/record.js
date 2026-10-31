@@ -5,6 +5,7 @@ import {
     markRaw,
     markup,
     shallowEqual,
+    signal,
     untrack,
 } from "@odoo/owl";
 import {
@@ -211,13 +212,6 @@ export class Record {
             Model.records.set(record.localId, recordProxy);
             if (record.Model.getName() === "Store") {
                 record.env = Model._rawStore.env;
-            }
-            // compute inherits fields in priority, as other fields might depend on them
-            for (const fieldName of Model._.inheritsFields) {
-                record._.compute?.(fieldName);
-            }
-            for (const fieldName of record.Model._.fields.keys()) {
-                record._.requestCompute?.(fieldName);
             }
             record._.isConstructing.set(false);
             return recordProxy;
@@ -485,50 +479,69 @@ export class Record {
                     return;
                 }
                 const effectFn = immediate ? immediateEffect : effect;
-                const { isDrainingQueues, isUpdateInProgress } = record._rawStore._;
+                const store = record._rawStore;
+                const { isDrainingQueues, isUpdateInProgress } = store._;
+                let isDisposed = false;
+                let isRunFromQueue = false;
+                const queueRun = signal(0);
+                function run(values) {
+                    if (firstRun) {
+                        firstRun = false;
+                        // A write of the insert counts as a change, the default does not.
+                        if (!initialRun && (!firstValues || shallowEqual(values, firstValues))) {
+                            return;
+                        }
+                    }
+                    untrack(() => {
+                        try {
+                            cleanup?.();
+                            const result = boundCallback(...values);
+                            cleanup = typeof result === "function" ? result : undefined;
+                        } catch (error) {
+                            // Leave the error to the update, as a throw here stops the other
+                            // observers. A batched run comes after the update and throws.
+                            if (!immediate) {
+                                throw error;
+                            }
+                            store.handleError(error);
+                        }
+                        // Read again, as owl stops notifying through a computed
+                        // left stale by a write of the callback.
+                        void deps();
+                    });
+                }
+                function runQueued() {
+                    if (isDisposed || store._.RD_QUEUE.has(record._raw)) {
+                        return;
+                    }
+                    isRunFromQueue = true;
+                    try {
+                        queueRun.set(untrack(queueRun) + 1);
+                    } catch (error) {
+                        store.handleError(error);
+                    } finally {
+                        isRunFromQueue = false;
+                    }
+                }
                 const disposeFn = untrack(() =>
                     effectFn(function runOnChange() {
                         const values = deps() ?? [];
                         if (
                             immediate &&
+                            !isRunFromQueue &&
                             (untrack(isUpdateInProgress) || untrack(isDrainingQueues))
                         ) {
-                            // Wait for the applied write, subscribed only meanwhile.
-                            void isUpdateInProgress();
-                            void isDrainingQueues();
+                            // Wait in the queue of the update: waking each waiter by a flag is N * N.
+                            void queueRun();
                             firstValues ??= values;
+                            store._.ADD_QUEUE("change", runQueued);
                             return;
                         }
-                        if (firstRun) {
-                            firstRun = false;
-                            // A write of the insert counts as a change, the default does not.
-                            if (
-                                !initialRun &&
-                                (!firstValues || shallowEqual(values, firstValues))
-                            ) {
-                                return;
-                            }
-                        }
-                        untrack(() => {
-                            try {
-                                cleanup?.();
-                                const result = boundCallback(...values);
-                                cleanup = typeof result === "function" ? result : undefined;
-                            } catch (error) {
-                                // Leave the error to the update, as a throw here stops the other
-                                // observers. A batched run comes after the update and throws.
-                                if (!immediate) {
-                                    throw error;
-                                }
-                                record._rawStore.handleError(error);
-                            }
-                            // Read again, as owl stops notifying through a computed
-                            // left stale by a write of the callback.
-                            void deps();
-                        });
+                        run(values);
                     })
                 );
                 scope.onDestroy(() => {
+                    isDisposed = true;
                     disposeFn();
                     untrack(() => cleanup?.());
                     cleanup = undefined;
@@ -639,9 +652,6 @@ export class Record {
         const Model = record.Model;
         const data = {};
         for (const name of Model._.fields.keys()) {
-            if (Model._.fieldsCompute.has(name)) {
-                continue;
-            }
             const fullFieldName = prefix ? `${prefix}.${name}` : name;
             if (isMany(Model, name)) {
                 data[name] = record._proxy[name].map((recordProxy) => {

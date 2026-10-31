@@ -12,41 +12,8 @@ import {
 } from "./misc";
 import { computedUntilStale } from "@mail/utils/common/signal";
 import { RecordList } from "./record_list";
-import { Scope, computed, immediateEffect, markRaw, proxy, signal, untrack } from "@odoo/owl";
+import { Scope, computed, markRaw, proxy, signal, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
-
-/**
- * Observe one field of a record, without running the callback on the initial
- * read. Only the lazy compute flags need this: they watch a single
- * field name resolved at runtime, while `Record.onChange` takes the reads to
- * observe as a function.
- *
- * @param {Record} recordProxy
- * @param {string} fieldName
- * @param {Function} callback
- * @returns {Function} dispose function
- */
-function observeField(recordProxy, fieldName, callback) {
-    let running = false;
-    const disposeFn = untrack(() =>
-        immediateEffect(() => {
-            // read once: a reactive get() per read would be observed as many times
-            const val = recordProxy[fieldName];
-            if (typeof val === "object" && val !== null) {
-                void Object.keys(val);
-            }
-            if (Array.isArray(val)) {
-                void val.length;
-                void val.forEach((i) => i);
-            }
-            if (running) {
-                untrack(() => callback());
-            }
-        })
-    );
-    running = true;
-    return disposeFn;
-}
 
 /**
  * The owl scope of one record, owner of its computeds and of its effects.
@@ -98,33 +65,6 @@ export class RecordInternal {
      */
     scope;
     // Note: state of fields in Maps rather than object is intentional for improved performance.
-    /**
-     * For computed field, determines whether the field is computing its value.
-     *
-     * @type {Map<string, boolean>}
-     */
-    fieldsComputing = new Map();
-    /**
-     * On lazy computed-fields, determines whether this field is needed (i.e. accessed).
-     *
-     * @type {Map<string, boolean>}
-     */
-    fieldsComputeInNeed = new Map();
-    /**
-     * on lazy-computed field, determines whether the field should be (re-)computed
-     * when it's needed (i.e. accessed). Eager computed fields are immediately re-computed at end of update cycle,
-     * whereas lazy computed fields wait extra for them being needed.
-     *
-     * @type {Map<string, boolean>}
-     */
-    fieldsComputeOnNeed = new Map();
-    /**
-     * Fields that have an `compute` defined. Key is fieldName, Value is function of ongoing `immediateEffect` that let it stop.
-     * Useful to prevent any ongoing `immediateEffect` and restart if need be.
-     *
-     * @type {Map<string, Function>}
-     */
-    fieldsComputeStop = new Map();
     /**
      * Values declared with `computed()`. Key is the name, Value is the
      * getter of the owl computed made on the first read, which caches until
@@ -206,13 +146,14 @@ export class RecordInternal {
         // the last computed value, answered while a write is being applied
         // (except for the writes of the queues drain, see `MAKE_UPDATE`)
         let heldValue;
+        let hasValue = false;
         const { isUpdateInProgress } = record._rawStore._;
         const { isDeleted } = this;
         function computeValue() {
             if (isDeleted()) {
                 return heldValue;
             }
-            if (untrack(isUpdateInProgress)) {
+            if (hasValue && untrack(isUpdateInProgress)) {
                 // Hold while a write is being applied: the relations this
                 // reads are written one by one. An immediate onChange runs
                 // between writes, at depth 0, so it reads fresh values.
@@ -221,6 +162,7 @@ export class RecordInternal {
                 return heldValue;
             }
             heldValue = compute.call(record._proxy);
+            hasValue = true;
             return heldValue;
         }
         return this.ensureScope().run(() =>
@@ -280,25 +222,6 @@ export class RecordInternal {
             const value = isFieldDefinition(definition) ? definition.default : definition;
             this.ensureFieldSignal(fieldName, value);
         }
-        if (Model._.fieldsCompute.get(fieldName)) {
-            if (!Model._.fieldsEager.get(fieldName)) {
-                this.ensureScope().onDestroy(
-                    observeField(record._proxy, fieldName, () => {
-                        if (this.fieldsComputing.get(fieldName)) {
-                            /**
-                             * Use a reactive to reset the computeInNeed flag when there is
-                             * a change. This assumes when other reactive are still
-                             * observing the value, its own callback will reset the flag to
-                             * true through the proxy getters.
-                             */
-                            this.fieldsComputeInNeed.delete(fieldName);
-                        }
-                    })
-                );
-                // reset flags triggered by registering onChange
-                this.fieldsComputeInNeed.delete(fieldName);
-            }
-        }
     }
 
     /** @param {string} name */
@@ -344,12 +267,6 @@ export class RecordInternal {
             return Reflect.get(parentRecordProxy, name);
         }
         if (modelInternal.fields.get(name)) {
-            if (modelInternal.fieldsCompute.get(name) && !modelInternal.fieldsEager.get(name)) {
-                record._.fieldsComputeInNeed.set(name, true);
-                if (record._.fieldsComputeOnNeed.get(name)) {
-                    record._.compute(name, { fromInNeed: true });
-                }
-            }
             const sig = record._.fieldsAttrSignal.get(name);
             if (sig) {
                 const val = sig();
@@ -457,74 +374,6 @@ export class RecordInternal {
             store._.updateFields(record, { [name]: val });
             return true;
         });
-    }
-
-    requestCompute(fieldName, { force = false } = {}) {
-        if (untrack(this.isDeleted)) {
-            return;
-        }
-        const record = this.record;
-        const Model = record.Model;
-        if (!Model._.fieldsCompute.get(fieldName)) {
-            return;
-        }
-        const store = record._rawStore;
-        if (store._.UPDATE !== 0 && !force) {
-            store._.ADD_QUEUE("compute", record, fieldName);
-        } else {
-            if (Model._.fieldsEager.get(fieldName) || this.fieldsComputeInNeed.get(fieldName)) {
-                this.compute(fieldName);
-            } else {
-                this.fieldsComputeOnNeed.set(fieldName, true);
-            }
-        }
-    }
-    /**
-     * @param {string} fieldName
-     * @param {Object} [param1={}]
-     * @param {boolean} [param1.fromInNeed] whether the compute is triggered from an "in-need" observer.
-     *  Useful to force keeping the "in-need" flag, as the "in-need" is automatically reset whenever a computing value has changed.
-     *  The "in-need" flag is expected to be set again by observed on the next read, but if the compute is immediately triggered
-     *  by the "in-need" then that's the case the `fromInNeed: true` and it should preserve for this ongoing compute.
-     */
-    compute(fieldName, { fromInNeed } = {}) {
-        const record = this.record;
-        const Model = record.Model;
-        if (!Model._.fieldsCompute.get(fieldName)) {
-            return;
-        }
-        this.fieldsComputeStop.get(fieldName)?.();
-        let triggered = false;
-        const stopFn = untrack(() =>
-            immediateEffect(() => {
-                if (triggered) {
-                    return untrack(() => this.requestCompute(fieldName));
-                }
-                const store = record._rawStore;
-                this.fieldsComputing.set(fieldName, true);
-                this.fieldsComputeOnNeed.delete(fieldName);
-                let computedValue;
-                try {
-                    computedValue = Model._.fieldsCompute.get(fieldName).call(record._proxy);
-                } catch (err) {
-                    store.handleError(err);
-                }
-                untrack(() =>
-                    store._.updateFields(record, {
-                        [fieldName]: computedValue,
-                    })
-                );
-                this.fieldsComputing.delete(fieldName);
-            })
-        );
-        if (!this.fieldsComputeStop.has(fieldName)) {
-            this.ensureScope().onDestroy(() => this.fieldsComputeStop.get(fieldName)?.());
-        }
-        this.fieldsComputeStop.set(fieldName, stopFn);
-        if (fromInNeed) {
-            this.fieldsComputeInNeed.set(fieldName, true);
-        }
-        triggered = true;
     }
 }
 

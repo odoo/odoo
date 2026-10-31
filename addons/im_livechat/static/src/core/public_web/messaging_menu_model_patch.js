@@ -13,53 +13,59 @@ MENU_TABS.LIVECHAT = "livechat";
 const messagingMenuModelPatch = {
     setup() {
         super.setup(...arguments);
-        this.livechatTab = fields.One("MessagingMenuTab", {
-            compute() {
-                return {
-                    id: MENU_TABS.LIVECHAT,
-                    icon: "mode_comment",
-                    activeIcon: "mode_comment",
-                    label: _t("Live Chats"),
-                    sequence: 90,
-                    emptyState: {
-                        title: _t("No Livechat Session!"),
-                        subtitle: _t("Engage with visitors to convert leads or offer services."),
-                        action: this.store.env.services.action
-                            ? {
-                                  text: _t("Connect"),
-                                  onClick: () =>
-                                      this.store.env.services.action.doAction(
-                                          "im_livechat.im_livechat_channel_action"
-                                      ),
-                              }
-                            : undefined,
-                    },
-                    filters: [
-                        {
-                            id: "livechat_unread",
-                            text: _t("Unread"),
-                            includesChannel: (c) => c.isUnread,
+        this.livechatTab = fields.One("MessagingMenuTab");
+        this.onChange(
+            function computeLivechatTab() {
+                return [
+                    this.store.MessagingMenuTab.insert({
+                        id: MENU_TABS.LIVECHAT,
+                        icon: "mode_comment",
+                        activeIcon: "mode_comment",
+                        label: _t("Live Chats"),
+                        sequence: 90,
+                        emptyState: {
+                            title: _t("No Livechat Session!"),
+                            subtitle: _t(
+                                "Engage with visitors to convert leads or offer services."
+                            ),
+                            action: this.store.env.services.action
+                                ? {
+                                      text: _t("Connect"),
+                                      onClick: () =>
+                                          this.store.env.services.action.doAction(
+                                              "im_livechat.im_livechat_channel_action"
+                                          ),
+                                  }
+                                : undefined,
                         },
-                        ...(this.store.has_access_livechat
-                            ? [
-                                  {
-                                      id: "livechat_need_help",
-                                      text: _t("Help needed"),
-                                      includesChannel: (c) => c.livechat_status === "need_help",
-                                  },
-                              ]
-                            : []),
-                    ],
-                    includesChannel: (c) =>
-                        c.channel_type === "livechat" &&
-                        (c.self_member_id?.is_pinned ||
-                            c.isLocallyPinned ||
-                            c.livechat_status === "need_help"),
-                    recordType: "discuss.channel",
-                };
+                        filters: [
+                            {
+                                id: "livechat_unread",
+                                text: _t("Unread"),
+                                includesChannel: (c) => c.isUnread,
+                            },
+                            ...(this.store.has_access_livechat
+                                ? [
+                                      {
+                                          id: "livechat_need_help",
+                                          text: _t("Help needed"),
+                                          includesChannel: (c) => c.livechat_status === "need_help",
+                                      },
+                                  ]
+                                : []),
+                        ],
+                        includesChannel: (c) =>
+                            c.channel_type === "livechat" &&
+                            (c.self_member_id?.is_pinned ||
+                                c.isLocallyPinned ||
+                                c.livechat_status === "need_help"),
+                        recordType: "discuss.channel",
+                    }),
+                ];
             },
-            eager: true,
-        });
+            (livechatTab) => (this.livechatTab = livechatTab),
+            { immediate: true }
+        );
     },
 };
 patch(MessagingMenu.prototype, messagingMenuModelPatch);

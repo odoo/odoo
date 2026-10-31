@@ -45,6 +45,33 @@ export class Message extends Record {
             () => [this.composer],
             (composer) => () => composer.delete()
         );
+        this.onChange(
+            function computeChannelAsThreadCreationNotification() {
+                if (this.notificationType !== "thread_creation") {
+                    return [];
+                }
+                const channelId = this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeId;
+                return [channelId ? Number(channelId) : undefined];
+            },
+            (channelAsThreadCreationNotification) =>
+                (this.channelAsThreadCreationNotification = channelAsThreadCreationNotification),
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.needaction ? this.thread : undefined],
+            (threadAsNeedaction) => (this.threadAsNeedaction = threadAsNeedaction),
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.composer ? this.thread : undefined],
+            (threadAsInEdition) => (this.threadAsInEdition = threadAsInEdition),
+            { immediate: true }
+        );
+        this.onChange(
+            () => [this.pinned_at ? this.thread : undefined],
+            (threadAsPinned) => (this.threadAsPinned = threadAsPinned),
+            { immediate: true }
+        );
     }
 
     attachment_ids = fields.Many("ir.attachment", { inverse: "message_ids" });
@@ -148,27 +175,10 @@ export class Message extends Record {
     reply_to;
     subtype_id = fields.One("mail.message.subtype");
     thread = fields.One("mail.thread");
-    threadAsNeedaction = fields.One("mail.thread", {
-        compute() {
-            if (this.needaction) {
-                return this.thread;
-            }
-        },
-    });
+    threadAsNeedaction = fields.One("mail.thread");
     threadAsNewest = fields.One("mail.thread");
-    threadAsInEdition = fields.One("mail.thread", {
-        compute() {
-            if (this.composer) {
-                return this.thread;
-            }
-        },
-    });
-    threadAsPinned = fields.One("mail.thread", {
-        compute() {
-            return this.pinned_at ? this.thread : undefined;
-        },
-        inverse: "pinnedMessages",
-    });
+    threadAsInEdition = fields.One("mail.thread");
+    threadAsPinned = fields.One("mail.thread", { inverse: "pinnedMessages" });
     scheduledDatetime = fields.Datetime();
     onlyEmojis = this.computed(() => {
         const bodyWithoutTags = this.bodyEl?.textContent ?? "";
@@ -200,14 +210,6 @@ export class Message extends Record {
         return this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeType;
     });
     channelAsThreadCreationNotification = fields.One("discuss.channel", {
-        /** @this {import("models").Message} */
-        compute() {
-            if (this.notificationType !== "thread_creation") {
-                return;
-            }
-            const channelId = this.bodyEl?.querySelector(".o_mail_notification")?.dataset.oeId;
-            return channelId ? Number(channelId) : undefined;
-        },
         inverse: "threadCreationMessages",
     });
     /** @type {number|undefined} */

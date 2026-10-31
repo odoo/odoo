@@ -8,35 +8,89 @@ export const MENU_TABS = { BOOKMARK: "bookmark", NOTIFICATION: "notification" };
 export class MessagingMenu extends Record {
     static singleton = true;
 
+    setup() {
+        super.setup(...arguments);
+        this.onChange(
+            function computeBookmarkTab() {
+                if (this.store.self_user?.share !== false) {
+                    return [];
+                }
+                return [
+                    this.store.MessagingMenuTab.insert({
+                        id: MENU_TABS.BOOKMARK,
+                        important: false,
+                        recordType: "mail.message",
+                        includesMessage: (msg) => msg.is_bookmarked,
+                        icon: "bookmark",
+                        activeIcon: "bookmark",
+                        sequence: 120,
+                        label: _t("Bookmarks"),
+                        hideWhenZeroCounter: true,
+                        actions: [
+                            {
+                                id: "remove-all-bookmarks",
+                                text: _t("Remove all"),
+                                isDisabled: () => !this.bookmarkTab.counter,
+                                onClick: () => this.store.removeAllBookmarks(),
+                                preventDropdownClose: true,
+                            },
+                        ],
+                    }),
+                ];
+            },
+            (bookmarkTab) => (this.bookmarkTab = bookmarkTab),
+            { immediate: true }
+        );
+        this.onChange(
+            function computeNotificationTab() {
+                if (this.store.self_user?.notification_type !== "inbox") {
+                    return [];
+                }
+                return [
+                    this.store.MessagingMenuTab.insert({
+                        id: MENU_TABS.NOTIFICATION,
+                        recordType: "mail.message",
+                        includesMessage: (msg) =>
+                            (msg.needaction || msg.needaction_done) &&
+                            this.notificationMatchesExtra(msg),
+                        icon: "notifications",
+                        activeIcon: "notifications",
+                        sequence: 60,
+                        label: _t("Notifications"),
+                        emptyState: {
+                            title: _t("You're all caught up!"),
+                            subtitle: _t(
+                                "Notifications of the documents you follow will appear here."
+                            ),
+                        },
+                        filters: [
+                            {
+                                id: "notification_unread",
+                                text: _t("Unread"),
+                                includesMessage: (msg) =>
+                                    msg.needaction && this.notificationMatchesExtra(msg),
+                                isDefault: true,
+                            },
+                        ],
+                        actions: [
+                            {
+                                id: "mark-all-read",
+                                text: _t("Mark all read"),
+                                isDisabled: () => !this.notificationTab.counter,
+                                onClick: () => this.store.markNeedactionMessagesAsRead(),
+                                preventDropdownClose: true,
+                            },
+                        ],
+                    }),
+                ];
+            },
+            (notificationTab) => (this.notificationTab = notificationTab),
+            { immediate: true }
+        );
+    }
+
     allTabs = this.computedShallowEqual(() => [...this.store.MessagingMenuTab.records.values()]);
-    bookmarkTab = fields.One("MessagingMenuTab", {
-        compute() {
-            if (this.store.self_user?.share !== false) {
-                return;
-            }
-            return {
-                id: MENU_TABS.BOOKMARK,
-                important: false,
-                recordType: "mail.message",
-                includesMessage: (msg) => msg.is_bookmarked,
-                icon: "bookmark",
-                activeIcon: "bookmark",
-                sequence: 120,
-                label: _t("Bookmarks"),
-                hideWhenZeroCounter: true,
-                actions: [
-                    {
-                        id: "remove-all-bookmarks",
-                        text: _t("Remove all"),
-                        isDisabled: () => !this.bookmarkTab.counter,
-                        onClick: () => this.store.removeAllBookmarks(),
-                        preventDropdownClose: true,
-                    },
-                ],
-            };
-        },
-        eager: true,
-    });
+    bookmarkTab = fields.One("MessagingMenuTab");
     globalCounter = this.computed(() => this._computeGlobalCounter());
     initializeCountersFetcher = this.computed(() =>
         this.store.makeCachedFetchData("/mail/messaging_menu/initialize_counters", () => {
@@ -53,46 +107,7 @@ export class MessagingMenu extends Record {
         })
     );
 
-    notificationTab = fields.One("MessagingMenuTab", {
-        compute() {
-            if (this.store.self_user?.notification_type !== "inbox") {
-                return;
-            }
-            return {
-                id: MENU_TABS.NOTIFICATION,
-                recordType: "mail.message",
-                includesMessage: (msg) =>
-                    (msg.needaction || msg.needaction_done) && this.notificationMatchesExtra(msg),
-                icon: "notifications",
-                activeIcon: "notifications",
-                sequence: 60,
-                label: _t("Notifications"),
-                emptyState: {
-                    title: _t("You're all caught up!"),
-                    subtitle: _t("Notifications of the documents you follow will appear here."),
-                },
-                filters: [
-                    {
-                        id: "notification_unread",
-                        text: _t("Unread"),
-                        includesMessage: (msg) =>
-                            msg.needaction && this.notificationMatchesExtra(msg),
-                        isDefault: true,
-                    },
-                ],
-                actions: [
-                    {
-                        id: "mark-all-read",
-                        text: _t("Mark all read"),
-                        isDisabled: () => !this.notificationTab.counter,
-                        onClick: () => this.store.markNeedactionMessagesAsRead(),
-                        preventDropdownClose: true,
-                    },
-                ],
-            };
-        },
-        eager: true,
-    });
+    notificationTab = fields.One("MessagingMenuTab");
     sortedVisibleTabs = this.computedShallowEqual(() =>
         [...this.visibleTabs].sort(
             (t1, t2) => t1.sequence - t2.sequence || t1.id.localeCompare(t2.id)
