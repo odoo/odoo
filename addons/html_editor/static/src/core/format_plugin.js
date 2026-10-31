@@ -197,12 +197,16 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     isSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        const isEmptyInline = (node) =>
+            !isBlock(node) &&
+            node.childElementCount === 1 &&
+            node.firstElementChild.nodeName === "BR";
         const isFormatted = formatsSpecs[format].isFormatted;
         const isNonFormattedWhiteSpaces = (node) =>
             /^(\s|\n)+$/.test(node.nodeValue) && !isFormatted(node, { editable: this.editable });
         const targetedTextNodes = targetedNodes.filter(
             (node) =>
-                isTextNode(node) &&
+                (isEmptyInline(node) || isTextNode(node)) &&
                 !isZwnbsp(node) &&
                 !isEmptyTextNode(node) &&
                 !isNonFormattedWhiteSpaces(node) &&
