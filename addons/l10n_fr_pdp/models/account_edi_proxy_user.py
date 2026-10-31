@@ -129,6 +129,13 @@ class AccountEdiProxyClientUser(models.Model):
         }
         return urls
 
+    def _get_peppol_proxy_endpoint(self, endpoint, **kwargs):
+        proxy_type = kwargs.get('proxy_type') or (self and self.proxy_type)
+
+        if proxy_type == 'pdp' and endpoint == '1/cancel_peppol_registration':
+            endpoint = '1/disconnect_pdp_participant'
+        return super()._get_peppol_proxy_endpoint(endpoint, proxy_type)
+
     @handle_demo
     def _call_peppol_proxy(self, endpoint, params=None):
         if (
