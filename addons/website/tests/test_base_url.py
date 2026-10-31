@@ -85,7 +85,10 @@ class TestBaseUrl(TestUrlCommon):
         self._assertCanonical('/?debug=1', self.website.get_base_url() + '/')
         self._assertCanonical('/a-page', self.website.get_base_url() + '/a-page')
         self._assertCanonical('/en_US', self.website.get_base_url() + '/')
-        self._assertCanonical('/fr_FR', self.website.get_base_url() + '/fr')
+        # The prefix may be 'fr' or 'fr_FR' depending on whether another version
+        # of French has already been installed.
+        fr_prefix = '/' + self.env.ref('base.lang_fr').url_code
+        self._assertCanonical('/fr_FR', self.website.get_base_url() + fr_prefix)
 
 
 @odoo.tests.tagged('-at_install', 'post_install')

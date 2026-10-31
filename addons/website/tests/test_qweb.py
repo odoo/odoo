@@ -305,8 +305,8 @@ class TestQwebProcessAtt(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.website = cls.env.ref('base.default_website')
-        cls.env['res.lang']._activate_lang('fr_FR')
-        cls.website.language_ids = cls.env.ref('base.lang_en') + cls.env.ref('base.lang_fr')
+        cls.lang_fr = cls.env['res.lang']._activate_lang('fr_FR')
+        cls.website.language_ids = cls.env.ref('base.lang_en') + cls.lang_fr
         cls.website.default_lang_id = cls.env.ref('base.lang_en')
         cls.website.cdn_activated = True
         cls.website.cdn_url = "http://test.cdn"
@@ -351,11 +351,14 @@ class TestQwebProcessAtt(TransactionCase):
             self._test_att(request.env, '/fr', {'href': '/fr'})
 
     def test_process_att_with_request_lang(self):
+        # The prefix may be 'fr' or 'fr_FR' depending on whether another version
+        # of French has already been installed.
+        fr_prefix = '/' + self.lang_fr.url_code
         with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}) as request:
-            self._test_att(request.env, '/', {'href': '/fr'})
+            self._test_att(request.env, '/', {'href': fr_prefix})
             self._test_att(request.env, '/en/', {'href': '/'})
-            self._test_att(request.env, '/fr/', {'href': '/fr/'})
-            self._test_att(request.env, '/fr', {'href': '/fr'})
+            self._test_att(request.env, fr_prefix + '/', {'href': fr_prefix + '/'})
+            self._test_att(request.env, fr_prefix, {'href': fr_prefix})
 
     def test_process_att_matching_cdn_and_lang(self):
         with MockRequest(self.env, website=self.website) as request:
@@ -371,7 +374,7 @@ class TestQwebProcessAtt(TransactionCase):
         with MockRequest(self.env, website=self.website, context={'lang': 'fr_FR'}, routing=False) as request:
             # default on multilang=True if route is not /{module}/static/
             self._test_att(request.env, '/web/static/hi', {'href': '/web/static/hi'})
-            self._test_att(request.env, '/my-page', {'href': '/fr/my-page'})
+            self._test_att(request.env, '/my-page', {'href': '/' + self.lang_fr.url_code + '/my-page'})
 
     def test_process_att_url_crap(self):
         with MockRequest(self.env, website=self.website) as request:
