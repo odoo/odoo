@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 import { ReferenceField, referenceField } from "@web/views/fields/reference/reference_field";
 
@@ -25,8 +26,21 @@ export class EventMailTemplateReferenceField extends ReferenceField {
         if (props.readonly) {
             props.canOpen = false;
         }
+        if (props.context.filter_template_on_event) {
+            props.domain = extendDomain(props.domain, [
+                ["model", "=", "event.registration"],
+            ]);
+        }
         return props;
     }
+}
+
+export function extendDomain(domain, extraDomain) {
+    return () =>
+        Domain.and([
+            new Domain(typeof domain === "function" ? domain() : domain || []),
+            new Domain(extraDomain),
+        ]).toList();
 }
 
 export const eventMailTemplateReferenceField = {
