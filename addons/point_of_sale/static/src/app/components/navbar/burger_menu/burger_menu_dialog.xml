@@ -16,7 +16,7 @@
                 </button>
                 <button class="btn btn-lg btn-close ms-auto" aria-label="Close" title="Close" t-on-click="() => this.props.close()"/>
             </div>
-            <div class="o_pos_burger_menu_buttons d-grid gap-2">
+            <div class="o_pos_burger_menu_buttons d-grid gap-2" t-ref="this.gridRef">
                 <t t-call="point_of_sale.BurgerDialogMenuButton"
                    t-if="this.pos.accessRight.canAccessCustomerDisplay"
                    t-name="customer_display"
