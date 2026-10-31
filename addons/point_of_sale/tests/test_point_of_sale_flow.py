@@ -6,7 +6,7 @@ from odoo import fields
 from odoo.fields import Command
 from datetime import datetime, timedelta
 from odoo.addons.point_of_sale.tests.common import CommonPosTest
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form
 
 
@@ -1646,3 +1646,26 @@ class TestPointOfSaleFlow(CommonPosTest):
         # Collect {notification name: message} of every notifications
         messages = {call.args[0]: call.args[1] for call in mock_notify.call_args_list}
         self.assertEqual(messages['SYNCHRONISATION'].get('deleted_record_ids'), {'pos.snooze': [snooze.id]})
+
+    def test_tip_after_payment(self):
+        tip_product = self.env.ref('point_of_sale.product_product_tip')
+        self.pos_config_usd.write({'iface_tipproduct': True, 'tip_product_id': tip_product.id, 'set_tip_after_payment': True})
+        order_data = {
+            'line_data': [{'product_id': self.ten_dollars_no_tax.product_variant_id.id}],
+            'payment_data': [{'payment_method_id': self.bank_payment_method.id, 'amount': 10}],
+        }
+        tip_line_vals = {'product_id': tip_product.id, 'qty': 1, 'price_unit': 2, 'price_subtotal': 0, 'price_subtotal_incl': 0}
+        order, _ = self.create_backend_pos_order(order_data)
+        order.add_tip_after_payment(tip_line_vals)
+        self.assertEqual(order.lines.filtered(lambda l: l.product_id == tip_product).price_subtotal_incl, 2)
+        self.assertEqual(order.payment_ids.amount, 12)
+        self.assertEqual(order.amount_total, 12)
+        self.assertEqual(order.amount_paid, 12)
+
+        invoiced_order, _ = self.create_backend_pos_order({**order_data, 'order_data': {'to_invoice': True, 'partner_id': self.partner_adgu.id}})
+        with self.assertRaisesRegex(UserError, "invoiced order"):
+            invoiced_order.add_tip_after_payment(tip_line_vals)
+
+        session = order.session_id
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')

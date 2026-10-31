@@ -968,6 +968,21 @@ class PosOrder(models.Model):
         self.env['pos.payment'].create(data)
         self.amount_paid = self._compute_amount_paid()
 
+    def add_tip_after_payment(self, tip_line_vals, payment_id=False):
+        """Add a tip line to a paid order, the tip is charged on the given (adjusted) payment
+        so that the order stays balanced."""
+        self.ensure_one()
+        if self.account_move:
+            raise UserError(_("You cannot add a tip to an invoiced order."))
+        tip_line = self.env['pos.order.line'].create({**tip_line_vals, 'order_id': self.id})
+        tip_line.write(tip_line._compute_amount_line_all())
+        payments = self.payment_ids.filtered(lambda p: not p.is_change)
+        payment = payments.filtered(lambda p: p.id == payment_id) or payments.filtered(lambda p: p.payment_method_id.type != 'cash')[:1] or payments[:1]
+        payment.amount += tip_line.price_subtotal_incl
+        self.write({'is_tipped': True, 'tip_amount': tip_line.price_subtotal_incl})
+        self._compute_prices()
+        return self.read_pos_data([], self.config_id)
+
     def _prepare_refund_values(self, current_session):
         self.ensure_one()
         pos_reference, tracking_number = current_session.config_id._get_next_order_refs()
