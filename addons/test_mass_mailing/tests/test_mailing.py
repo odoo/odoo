@@ -41,12 +41,10 @@ class TestMassMailing(TestMassMailCommon):
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_mailing_gateway_reply(self):
-        customers = self.env['res.partner']
-        for x in range(0, 3):
-            customers |= self.env['res.partner'].create({
-                'name': 'Customer_%02d' % x,
-                'email': '"Customer_%02d" <customer_%02d@test.example.com' % (x, x),
-            })
+        customers = self.env['res.partner'].create([{
+            'name': 'Customer_%02d' % x,
+            'email': '"Customer_%02d" <customer_%02d@test.example.com' % (x, x),
+        } for x in range(0, 3)])
 
         mailing = self.env['mailing.mailing'].create({
             'subject': 'TestSubject',
