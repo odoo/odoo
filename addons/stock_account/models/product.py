@@ -428,19 +428,22 @@ class ProductProduct(models.Model):
         if oldest_manual_value and self.env['product.product'].concat(*last_manual_value_by_product.keys()) == self:
             moves_domain &= Domain([('date', '>=', oldest_manual_value)])
 
-        product_ids_by_manual_value_date = defaultdict(list)
-        if not lot:
-            for manual_value in last_manual_value_by_product.values():
-                product_ids_by_manual_value_date[manual_value.date].append(manual_value.product_id.id)
+        # Fetch the opening quantity in one batch, at the oldest manual value date. For
+        # products whose own manual value is more recent, this quantity is wrong; it gets
+        # corrected below by replaying the moves up to that product's own value date.
+        if lot:
+            quantity_at_oldest_date = oldest_manual_value and lot.with_context(to_date=oldest_manual_value, skip_in_progress=True, allowed_company_ids=self.env.company.ids).product_qty
+        else:
+            products_with_manual_value = self.env['product.product'].concat(*last_manual_value_by_product.keys())
+            # scope the opening qty to the current company, like the replayed moves
+            qty_by_product_id = {
+                product.id: product.qty_available
+                for product in products_with_manual_value.with_context(to_date=oldest_manual_value, allowed_company_ids=self.env.company.ids)
+            }
 
         for manual_value in last_manual_value_by_product.values():
             product = manual_value.product_id
-            # scope the opening qty to the current company, like the replayed moves
-            if lot:
-                quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True, allowed_company_ids=self.env.company.ids).product_qty
-            else:
-                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).qty_available
-
+            quantity = quantity_at_oldest_date if lot else qty_by_product_id.get(product.id, 0.0)
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
             value_by_product_id[product.id] = manual_value.value * quantity
@@ -458,33 +461,29 @@ class ProductProduct(models.Model):
         move_fields = ['date', 'is_in', 'is_out', 'location_dest_id', 'location_id', 'move_line_ids', 'picked', 'value', 'product_id']
         move_line_fields = ['company_id', 'location_id', 'location_dest_id', 'lot_id', 'owner_id', 'picked', 'quantity_product_uom']
 
-        product, valuation_from_date = False, False
-        batch_size = 50000
+        batch_size = 5000
 
-        product_move_ids = []
         # Limit the memory usage since it's possible to have millions of stock.move
         for moves_batch in split_every(batch_size, moves.ids):
-            moves_batch = self.env['stock.move'].browse(moves_batch)
-            moves_batch.fetch(['product_id', 'date'])
-
-            for move in moves_batch:
-                if move.product_id != product:
-                    product = move.product_id
-                    valuation_from_date = date_by_product_id.get(product.id)
-                if valuation_from_date and move.date <= valuation_from_date:
-                    continue
-                product_move_ids.append(move.id)
-
-            self.env['stock.move'].invalidate_model()
-
-        for moves_batch in split_every(batch_size, product_move_ids):
             moves_batch = self.env['stock.move'].browse(moves_batch)
             moves_batch.fetch(move_fields)
             moves_batch.move_line_ids.fetch(move_line_fields)
             for move in moves_batch:
-                quantity = quantity_by_product_id.get(move.product_id.id, 0.0)
-                average_cost = std_price_by_product_id.get(move.product_id.id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
-                value = value_by_product_id.get(move.product_id.id, 0.0)
+                product_id = move.product_id.id
+                valuation_from_date = date_by_product_id.get(product_id)
+                quantity = quantity_by_product_id.get(product_id, 0.0)
+                if valuation_from_date and move.date <= valuation_from_date:
+                    if move.date > oldest_manual_value:
+                        if move.is_in:
+                            quantity += move._get_valued_qty(lot)
+                        if move.is_out:
+                            quantity -= move._get_valued_qty(lot)
+                        quantity_by_product_id[product_id] = quantity
+                        value_by_product_id[product_id] = std_price_by_product_id.get(product_id, 0.0) * quantity
+                    continue
+
+                average_cost = std_price_by_product_id.get(product_id, move.value / move._get_valued_qty() if move._get_valued_qty() else 0)
+                value = value_by_product_id.get(product_id, 0.0)
                 if move.is_in:
                     in_qty = move._get_valued_qty()
                     in_value = move.value
@@ -512,9 +511,9 @@ class ProductProduct(models.Model):
                     value -= out_value
                     quantity -= out_qty
 
-                quantity_by_product_id[move.product_id.id] = quantity
-                std_price_by_product_id[move.product_id.id] = average_cost
-                value_by_product_id[move.product_id.id] = value
+                quantity_by_product_id[product_id] = quantity
+                std_price_by_product_id[product_id] = average_cost
+                value_by_product_id[product_id] = value
 
             self.env['stock.move'].invalidate_model()  # Avoid keeping too many records in cache
             self.env['stock.move.line'].invalidate_model()
