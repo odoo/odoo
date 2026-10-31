@@ -1,5 +1,6 @@
 import { test, expect, describe } from "@odoo/hoot";
-import { patchWithCleanup, MockServer } from "@web/../tests/web_test_helpers";
+import { MockServer } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { getTemplate } from "@web/core/templates";
@@ -93,7 +94,7 @@ describe("data_service", () => {
         const data = store.data;
 
         const capturedRequests = [];
-        patchWithCleanup(data, {
+        patch(data, {
             async callRelated(model, method, args, kwargs, needSync, waitForResult) {
                 if (method === "load_data") {
                     capturedRequests.push(args[1]);
@@ -115,5 +116,33 @@ describe("data_service", () => {
         expect(capturedRequests.length).toBeGreaterThan(0);
         const allRequestedModels = capturedRequests.flatMap((req) => req.models);
         expect(allRequestedModels).toInclude("product.product");
+    });
+
+    test("websocket reconnections don't duplicate the notification listeners", async () => {
+        const store = await setupPosEnv();
+        const bus = store.data.bus;
+        let addedListeners = 0;
+        patch(bus, {
+            addChannel(channel) {
+                if (channel === odoo.access_token) {
+                    expect.step("addChannel");
+                }
+                return super.addChannel(...arguments);
+            },
+            subscribe() {
+                addedListeners++;
+                return super.subscribe(...arguments);
+            },
+            unsubscribe() {
+                addedListeners--;
+                return super.unsubscribe(...arguments);
+            },
+        });
+
+        // Going offline then online again triggers a "BUS:CONNECT" event on each reconnection
+        bus.trigger("BUS:CONNECT");
+        bus.trigger("BUS:CONNECT");
+        expect.verifySteps(["addChannel", "addChannel"]);
+        expect(addedListeners).toBe(0);
     });
 });
