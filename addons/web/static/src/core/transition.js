@@ -2,9 +2,9 @@ import {
     Component,
     onMounted,
     onPatched,
-    onWillUpdateProps,
     signal,
     t,
+    useOnChange,
     useProps,
     useScope,
     xml,
@@ -149,8 +149,12 @@ export class Transition extends Component {
             name,
             onLeave,
         });
-        onWillUpdateProps(({ visible = true }) => {
-            this.transition.shouldMount = visible;
-        });
+        useOnChange(
+            () => [this.props.visible ?? true],
+            (visible) => {
+                this.transition.shouldMount = visible;
+            },
+            { initialRun: false }
+        );
     }
 }
