@@ -1,6 +1,7 @@
 import { onMounted, proxy, signal, t, useEffect, useListener, useProps } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useActiveElement } from "@web/core/ui/ui_plugin";
 import { useDebounced } from "@web/core/utils/timing";
 
 const ZOOM_STEP = 0.1;
@@ -17,6 +18,7 @@ export class ProductImageViewer extends Dialog {
     });
 
     imageContainerRef = signal.ref();
+    modalRef = signal.ref();
     /**
      * This is intentionally NOT reactive: this is to not render the whole component
      * just to update the style of {@link imageContainerRef}. It should be only
@@ -45,6 +47,7 @@ export class ProductImageViewer extends Dialog {
             this.state.imageScale = 1;
             this.updateImageTranslate({ x: 0, y: 0 });
         });
+        useActiveElement(this.modalRef);
 
         // Debounce update in line with `ease-out` animation.
         this.updateCarousel = useDebounced(this._updateCarousel.bind(this), 250, {
