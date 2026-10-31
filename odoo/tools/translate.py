@@ -210,6 +210,7 @@ def translate_xml_node(node, callback, parse, serialize):
             # `_compile_directive_groups` which reads `t-groups` and `groups`)
             and not any(key.startswith("t-") or key == 'groups' or key.endswith(".translate") for key in node.attrib)
             and all(translatable(child, force_inline) for child in node)
+            and not (len(node) == 0 and node.text == '$0')
         )
 
     def hastext(node, pos=0, force_inline=False):
@@ -220,7 +221,7 @@ def translate_xml_node(node, callback, parse, serialize):
         force_inline = force_inline or is_force_inline(node)
         return (
             # there is some text before node[pos]
-            nonspace(node[pos-1].tail if pos else node.text)
+            (nonspace(node[pos - 1].tail if pos else node.text) if len(node) > 0 else (nonspace(node.text) and node.text != '$0'))
             or (
                 pos < len(node)
                 and translatable(node[pos], force_inline)
