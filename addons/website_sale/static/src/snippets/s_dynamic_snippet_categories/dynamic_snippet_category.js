@@ -38,7 +38,7 @@ export class DynamicSnippetCategory extends DynamicSnippet {
         const nodeData = this.el.dataset;
         return Object.assign(super.getQWebRenderOptions(...arguments), {
             colsCount: parseInt(nodeData.columns),
-            rowSize: SIZE_CONFIG[nodeData.size].row,
+            rowSize: SIZE_CONFIG[nodeData.size]?.row,
             gap: nodeData.gap,
             rounded: nodeData.rounded,
         });
