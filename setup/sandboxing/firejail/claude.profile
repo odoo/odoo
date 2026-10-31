@@ -67,6 +67,7 @@ include disable-programs.inc
 private-tmp
 private-dev
 private-etc @network,@tls-ca
+# private-etc alternatives,ca-certificates,crypto-policies,ld.so.cache,ld.so.preload,pki,resolv.conf,ssldisable-mnt,hostname,hosts,protocols,resolv.conf
 
 disable-mnt
 
