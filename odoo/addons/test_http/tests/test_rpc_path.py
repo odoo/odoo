@@ -3,6 +3,7 @@ import logging
 from odoo.tests import Like, get_db_name, tagged
 from odoo.tools import mute_logger
 
+from ..utils import wait_for_http_server_log  # ruff: ignore[relative-imports]
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
@@ -25,6 +26,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
                 'args': [self.user_demo.id],
                 'kwargs': {'fields': ['login']}
             })
+            wait_for_http_server_log(capture)
         self.assertEqual(capture.output, [
             Like('...POST /web/dataset/call_button#res.users.read HTTP/...'),
         ])
@@ -37,6 +39,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
                 'args': [self.user_demo.id],
                 'kwargs': {'fields': ['login']}
             })
+            wait_for_http_server_log(capture)
         self.assertEqual(capture.output, [
             Like('...POST /web/dataset/call_kw#res.users.read HTTP/...'),
         ])
@@ -49,6 +52,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
                 'args': [self.user_demo.id],
                 'kwargs': {'fields': ['login']}
             })
+            wait_for_http_server_log(capture)
         self.assertEqual(capture.output, [
             Like('...POST /web/dataset/call_kw/res.users.read HTTP/...'),
         ])
@@ -64,6 +68,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
                    'res.users', 'read', [self.user_demo.id, ['login']]
                 ]
             })
+            wait_for_http_server_log(capture)
         self.assertEqual(capture.output, [
             Like('...POST /jsonrpc#res.users.read HTTP/...'),
         ])
@@ -75,6 +80,7 @@ class TestRpcPath(HttpCaseWithUserDemo):
                 get_db_name(), self.user_demo.id, 'demo',
                'res.users', 'read', [self.user_demo.id, ['login']]
             )
+            wait_for_http_server_log(capture)
         self.assertEqual(capture.output, [
             Like('...POST /xmlrpc/2/object#res.users.read HTTP/...'),
         ])
