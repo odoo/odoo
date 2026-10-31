@@ -901,14 +901,13 @@ export class SelfOrder extends Reactive {
             return;
         }
 
-        const pendingDeltas = this._computePendingDeltas();
-
         try {
             const data = await rpc(`/pos-self-order/get-user-data/`, {
                 access_token: this.access_token,
                 order_access_tokens: accessTokens,
                 table_identifier: tableIdentifier,
             });
+            const pendingDeltas = this._computePendingDeltas();
             const result = this.models.connectNewData(data);
 
             let openOrder = null;
