@@ -95,6 +95,29 @@ class TestSalesControllers(HttpCase, SaleCommon):
         self.assertEqual(req.status_code, 200)
         self.assertEqual(req.headers['content-disposition'], f"attachment; filename*=UTF-8''Quotation_{portal_so.name}.pdf")
 
+    def test_quotation_viewed_note_is_not_duplicated_across_sessions(self):
+        portal_so = self.sale_order.copy()
+        portal_so.partner_id = self.user_portal.partner_id.id
+        token = portal_so._portal_ensure_token()
+        mt_order_viewed = self.env.ref('sale.mt_order_viewed')
+
+        def viewed_note_count():
+            return len(portal_so.message_ids.filtered(lambda m: m.subtype_id == mt_order_viewed))
+
+        self.authenticate(None, None)
+        self.url_open(f'/my/orders/{portal_so.id}?access_token={token}')
+        self.assertEqual(viewed_note_count(), 1)
+
+        self.url_open(f'/my/orders/{portal_so.id}?access_token={token}')
+        self.assertEqual(viewed_note_count(), 1, "same session must not duplicate the note")
+
+        # A new session on the same day (e.g. another device, or a mail
+        # security scanner fetching the link without the previous cookie)
+        # must not duplicate the note either.
+        self.authenticate(None, None)
+        self.url_open(f'/my/orders/{portal_so.id}?access_token={token}')
+        self.assertEqual(viewed_note_count(), 1)
+
 
 @tagged('post_install', '-at_install', 'mail_flow')
 class TestSaleSignature(HttpCaseWithUserPortal):
