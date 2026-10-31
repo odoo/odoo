@@ -209,8 +209,9 @@ export class FormFieldOption extends BaseOptionComponent {
         const el = this.env.getEditingElement();
         const fieldEl = el.closest(".s_website_form_field");
         return (
-            fieldEl.classList.contains("s_website_form_custom") ||
-            ["one2many", "many2many"].includes(fieldEl.dataset.type)
+            fieldEl.dataset.type !== "signature" &&
+            (fieldEl.classList.contains("s_website_form_custom") ||
+                ["one2many", "many2many"].includes(fieldEl.dataset.type))
         );
     }
 }
