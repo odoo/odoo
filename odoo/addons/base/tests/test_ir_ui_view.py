@@ -4989,7 +4989,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'delivery',
             'delivery_dhl',
             'delivery_easypost',
-            'delivery_fedex',
             'delivery_iot',
             'delivery_sendcloud',
             'delivery_shiprocket',
