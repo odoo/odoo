@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_fr_octroi_de_mer_account_move_form" model="ir.ui.view">
+            <field name="name">l10n_fr_octroi_de_mer.account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-warning w-100 d-flex align-items-center gap-1"
+                         invisible="l10n_fr_is_valid_sea_grant"
+                         role="alert"
+                    >
+                        <span>Warning: Sea grant will only be valid if you have a product with a border reference on each invoice lines</span>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
