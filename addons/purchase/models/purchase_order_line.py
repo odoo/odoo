@@ -384,7 +384,7 @@ class PurchaseOrderLine(models.Model):
     @api.onchange('product_id')
     def onchange_product_id(self):
         # TODO: Remove when onchanges are replaced with computes
-        if not self.product_id:
+        if not self.product_id or self.env.context.get("no_quantity_update"):
             return
         if self.env.context.get('origin_po_id') and self.product_qty:
             self._compute_tax_id()

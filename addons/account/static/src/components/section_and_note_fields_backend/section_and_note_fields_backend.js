@@ -260,6 +260,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             targetIndex: sectionIndex,
             copyFields: this.copyFields,
             noCopyFields: this.noCopyFields,
+            context: { no_quantity_update: true },  
         });
     }
 
