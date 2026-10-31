@@ -1,6 +1,7 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
@@ -296,6 +297,44 @@ registry.category("web_tour.tours").add("bancontact_pay_success_payment", {
             PaymentScreen.hasActionState("waiting_scan"),
             PaymentScreen.clickForceDoneButton(),
             FeedbackScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("bancontact_pay_success_synced_issues", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            initOrder(),
+
+            // Order 1001 - Display 10€ [A] - Synced
+            PaymentScreen.clickPaymentMethod("Bancontact - Display"), // bancontact_success_synced_0
+            PaymentScreen.clickSendButton(),
+            PaymentScreen.selectedPaymentlineHas("Bancontact - Display", "10.00"),
+            PaymentScreen.closeQrPopup(),
+            PaymentScreen.hasActionState("waiting_scan"),
+            Chrome.flushCurrentOrderSync(),
+            Chrome.waitForOrdersSync(),
+
+            // Order 1002 fully paid while being on another order - notified
+            Chrome.createFloatingOrder(),
+            Bancontact.mockCallbackBancontactPay("bancontact_success_synced_0", "SUCCEEDED"),
+            Bancontact.notifiedOrderFullyPaid("1001"),
+
+            // Load order 1001 without fetching server data
+            Chrome.clickFloatingOrder("1001"),
+            PaymentScreen.hasActionState("paid"),
+
+            // Load order 1001 and fetch server data
+            Chrome.clickOrders(),
+            TicketScreen.selectOrder("1001"),
+            TicketScreen.loadSelectedOrder(),
+            PaymentScreen.hasActionState("paid"),
+
+            // Finalize order 1001
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.clickNextOrder(),
         ].flat(),
 });
 
