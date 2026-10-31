@@ -187,7 +187,10 @@ class PurchaseBillLineMatch(models.Model):
         if not self.pol_id:  # we need POL(s) to either match or create bill
             raise UserError(_("You must select at least one Purchase Order line to match or create bill."))
         if not self.aml_id:  # select POL(s) without AML -> create a draft bill with the POL(s)
-            return self._action_create_bill_from_po_lines(self.partner_id, self.pol_id)
+            partners = self.mapped("partner_id.commercial_partner_id")
+            if len(partners) != 1:  # a bill can only be issued to a single vendor
+                raise UserError(_("Please select PO lines for the same vendor."))
+            return self._action_create_bill_from_po_lines(partners, self.pol_id)
 
         pol_by_product = self.pol_id.grouped('product_id')
         aml_by_product = self.aml_id.grouped('product_id')
