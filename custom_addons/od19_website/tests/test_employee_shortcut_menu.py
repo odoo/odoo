@@ -11,7 +11,7 @@ class TestShortcutMenuAsset(HttpCase):
         assets = self.env["ir.qweb"]._get_asset_content("web.assets_backend")[0]
         urls = [asset["url"] for asset in assets]
         self.assertIn(
-            "od19_website/static/src/js/od19_shortcut_menu.js",
+            "/od19_website/static/src/js/od19_shortcut_menu.js",
             urls,
         )
 
