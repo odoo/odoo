@@ -312,6 +312,7 @@ class PurchaseOrderLine(models.Model):
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
             'product_packaging_id': self.product_packaging_id.id,
+            'never_product_template_attribute_value_ids': self.product_no_variant_attribute_value_ids,
             'sequence': self.sequence,
         }
 
