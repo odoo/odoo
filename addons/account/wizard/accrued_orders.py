@@ -63,7 +63,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         comodel_name='account.account',
         string='Accrual Account',
         check_company=True,
-        domain="[('account_type', '=', 'liability_current')] if context.get('active_model') in ['purchase.order', 'purchase.order.line'] else [('account_type', '=', 'asset_current')]",
+        domain="[('account_type', '=', 'liability_current')] if accrual_type in ('bill_to_receive', 'invoiced_not_delivered') else [('account_type', 'in', ('asset_current', 'asset_prepayments'))]",
     )
     preview_data = fields.Text(compute='_compute_preview_data')
     display_amount = fields.Boolean(compute='_compute_display_amount')
