@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form_inherit_pos_self_order_loyalty" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.pos.self.order.loyalty</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='order_customer_details']/field[@name='partner_id']" position="after">
+                <field name="delivery_partner_id" invisible="not delivery_partner_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

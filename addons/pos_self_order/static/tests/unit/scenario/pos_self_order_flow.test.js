@@ -852,7 +852,7 @@ test("self_mobile_meal_table_takeaway_in: meal mode, multiple orders, total/qty 
     await Utils.clickOrderNow();
     await Utils.selectLocation("In");
     await Utils.clickProduct("Coca-Cola");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Coca-Cola", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
@@ -860,7 +860,7 @@ test("self_mobile_meal_table_takeaway_in: meal mode, multiple orders, total/qty 
     await Utils.clickBtn("Ok");
     await Utils.clickBtn("Order Now");
     await Utils.clickProduct("Fanta");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Fanta", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Fanta", "2.53", "1");
@@ -879,7 +879,7 @@ test("self_mobile_meal_table_takeaway_out: meal mode with name/phone", async () 
     await Utils.clickOrderNow();
     await Utils.selectLocation("Test-Takeout");
     await Utils.clickProduct("Coca-Cola");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Coca-Cola", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
@@ -891,7 +891,7 @@ test("self_mobile_meal_table_takeaway_out: meal mode with name/phone", async () 
     await Utils.clickBtn("Ok");
     await Utils.clickBtn("Order Now");
     await Utils.clickProduct("Fanta");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Fanta", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Fanta", "2.53", "1");
@@ -910,7 +910,7 @@ test("self_mobile_meal_counter_takeaway_in: meal counter, confirm shown each tim
     await Utils.clickOrderNow();
     await Utils.selectLocation("In");
     await Utils.clickProduct("Coca-Cola");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Coca-Cola", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
@@ -919,7 +919,7 @@ test("self_mobile_meal_counter_takeaway_in: meal counter, confirm shown each tim
     await Utils.clickBtn("Ok");
     await Utils.clickBtn("Order Now");
     await Utils.clickProduct("Fanta");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Fanta", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Fanta", "2.53", "1");
@@ -938,7 +938,7 @@ test("self_mobile_meal_counter_takeaway_out: meal counter with name/phone", asyn
     await Utils.clickOrderNow();
     await Utils.selectLocation("Test-Takeout");
     await Utils.clickProduct("Coca-Cola");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Coca-Cola", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
@@ -950,7 +950,7 @@ test("self_mobile_meal_counter_takeaway_out: meal counter with name/phone", asyn
     await Utils.clickBtn("Ok");
     await Utils.clickBtn("Order Now");
     await Utils.clickProduct("Fanta");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Fanta", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Fanta", "2.53", "1");
@@ -969,7 +969,7 @@ test("self_order_mobile_meal_cancel: meal mode cancel and re-order", async () =>
     await Utils.clickOrderNow();
     await Utils.selectLocation("Test-Takeout");
     await Utils.clickProduct("Coca-Cola");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Coca-Cola", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
@@ -978,7 +978,7 @@ test("self_order_mobile_meal_cancel: meal mode cancel and re-order", async () =>
     await Utils.clickBtn("Order Now");
     await Utils.selectLocation("Test-Takeout");
     await Utils.clickProduct("Coca-Cola");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Coca-Cola", "1");
     await Utils.clickBtn("Checkout");
     await Utils.checkProductInCart("Coca-Cola", "2.53", "1");
@@ -990,7 +990,7 @@ test("self_order_mobile_meal_cancel: meal mode cancel and re-order", async () =>
     await Utils.clickBtn("Ok");
     await Utils.clickBtn("Order Now");
     await Utils.clickProduct("Fanta");
-    await Utils.checkOrderTotal("2.53");
+    await Utils.checkOrderCount("1");
     await Utils.checkProductQty("Fanta", "1");
     await Utils.clickBtn("Checkout");
     await Utils.clickBackFromCart();

@@ -3,15 +3,19 @@
     <t t-name="pos_self_order.PaymentPage">
         <div class="payment-page d-flex flex-column flex-grow-1 overflow-y-auto o_self_background o_self_fade"
         t-attf-style="background-image:#{this.selfOrder.kioskBackgroundImageUrl};background-size: cover; background-position: center;">
-            <div class="d-flex flex-column flex-grow-1 overflow-y-auto justify-content-center my-auto">
-               <div class="container o_self_container ">
+            <div class="o_self_payment_page d-flex flex-column flex-grow-1 overflow-y-auto justify-content-center my-auto">
+                <div class="container o_self_container text-center total-amount d-flex flex-column">
+                    <span>Amount to pay</span>
+                    <PriceFormatter price="this.selfOrder.formatMonetary(this.selfOrder.currentOrder.priceIncl)"/>
+                </div>
+                <div class="container o_self_container ">
                     <div t-if="this.state.selection" class="row align-items-center justify-content-center p-3 ">
                         <button
                             t-foreach="this.paymentMethods"
                             t-as="payment_method"
                             t-key="payment_method.id"
                             role="button"
-                            class="col-12 col-md-4 m-1 btn btn-light btn-lg d-flex flex-column align-items-center gap-2  px-0 py-5  border border-light shadow-sm overflow-hidden"
+                            class="col-12 col-md-4 m-1 btn btn-light btn-lg d-flex flex-column align-items-center gap-2  px-0 py-5  border border-light shadow-sm overflow-hidden payment-method"
                             t-on-click="() => this.selectMethod(payment_method.id)">
                             <i class="oi" data-icon="credit_card" aria-hidden="true"></i>
                             <span t-out="payment_method.name" />
@@ -59,7 +63,7 @@
                             </div>
                         </t>
                     </div>
-               </div>
+                </div>
             </div>
 
             <div class="o_self_footer container o_self_container d-flex justify-content-between align-items-center position-relative py-3">

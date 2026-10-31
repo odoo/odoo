@@ -14,6 +14,9 @@ def archive_products(env):
     # Archive all existing product to avoid noise during the tours
     all_pos_product = env['product.template'].search([('available_in_pos', '=', True)])
     all_pos_product._write({'active': False})
+    # Payment programs disable the payment page auto-skip in pos_self_order_loyalty
+    if 'loyalty.program' in env:
+        env['loyalty.program'].sudo().search([('program_type', 'in', ('gift_card', 'ewallet'))])._write({'active': False})
 
 
 class CommonPosTest(AccountTestInvoicingCommon):

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_loyalty.PresetInfoPopup" t-inherit="pos_self_order.PresetInfoPopup" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('select_popup_preset_info')]/div[hasclass('overflow-y-auto')]" position="before">
+            <div t-if="this.preset.needsPartner and !this.identifiedCustomer" class="d-flex justify-content-center mb-3">
+                <IdentifyBanner />
+            </div>
+            <t t-if="this.identifiedCustomer">
+                <div t-if="!this.state.showAddressForm" class="o_self_delivery_addresses d-flex flex-column gap-2 overflow-y-auto overflow-x-hidden flex-grow-1">
+                    <div t-foreach="this.state.addresses" t-as="address" t-key="address.id"
+                        class="o_self_delivery_address d-flex align-items-center gap-3 border rounded-3 p-3 cursor-pointer"
+                        t-att-class="{'text-bg-primary-faded border-primary': address.id === this.state.selectedAddressId}"
+                        t-on-click="() => address.id !== this.state.addressToArchiveId and this.selectAddress(address)">
+                        <t t-if="address.id === this.state.addressToArchiveId">
+                            <div class="flex-grow-1 text-break">
+                                <div class="fw-bold">Remove this address?</div>
+                                <div class="text-muted" t-out="this.formatAddress(address)"/>
+                            </div>
+                            <button type="button" class="btn btn-secondary" t-on-click.stop="this.cancelArchiveAddress">
+                                Cancel
+                            </button>
+                            <button type="button" class="o_self_confirm_archive_address btn btn-danger" t-on-click.stop="() => this.archiveAddress(address)">
+                                Remove
+                            </button>
+                        </t>
+                        <t t-else="">
+                            <div class="flex-grow-1 text-break">
+                                <div class="fw-bold" t-out="address.name or this.identifiedCustomer.name"/>
+                                <div class="text-muted" t-out="this.formatAddress(address)"/>
+                            </div>
+                            <button t-if="address.id !== this.identifiedCustomer.id"
+                                type="button"
+                                class="o_self_archive_address btn btn-link text-danger p-1"
+                                aria-label="Remove this address"
+                                t-on-click.stop="() => this.askArchiveAddress(address)">
+                                <i class="oi" data-icon="delete"/>
+                            </button>
+                        </t>
+                    </div>
+                    <button type="button" class="o_self_new_address btn btn-light" t-on-click="this.showNewAddressForm">
+                        <i class="oi me-1" data-icon="add"/> Add a new address
+                    </button>
+                    <p t-if="this.state.validationError" class="text-danger mb-0" t-out="this.state.validationError.message"/>
+                </div>
+                <button t-elif="this.state.addresses.length"
+                    type="button"
+                    class="btn btn-link align-self-start p-0 mb-3"
+                    t-on-click="this.showAddresses">
+                    <i class="oi me-1" data-icon="arrow_back"/> My addresses
+                </button>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('select_popup_preset_info')]/div[hasclass('overflow-y-auto')]" position="attributes">
+            <attribute name="t-if">!this.identifiedCustomer or this.state.showAddressForm</attribute>
+        </xpath>
+        <xpath expr="//input[@placeholder='Email']" position="attributes">
+            <attribute name="t-if">(this.preset.needsEmail or this.preset.needsPartner) and !this.identifiedCustomer</attribute>
+        </xpath>
+    </t>
+</templates>
