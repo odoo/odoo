@@ -298,13 +298,18 @@ class ProductProduct(models.Model):
             for bom_line, __ in bom_sub_lines:
                 if bom_line.product_id.id not in qties:
                     prefetch_component_ids.add(bom_line.product_id.id)
+
+        component_pool = self.env['product.product'].with_context(mrp_compute_quantities=qties).browse(prefetch_component_ids)
+        component_map = {p.id: p for p in component_pool}
         # compute kit quantities
         for product in bom_kits:
             bom_sub_lines = bom_sub_lines_per_kit[product]
             # group lines by component
             bom_sub_lines_grouped = collections.defaultdict(list)
             for info in bom_sub_lines:
-                bom_sub_lines_grouped[info[0].product_id].append(info)
+                comp_id = info[0].product_id.id
+                comp_record = component_map.get(comp_id, info[0].product_id)
+                bom_sub_lines_grouped[comp_record].append(info)
             ratios_virtual_available = []
             ratios_qty_available = []
             ratios_incoming_qty = []
@@ -312,7 +317,6 @@ class ProductProduct(models.Model):
             ratios_free_qty = []
 
             for component, bom_sub_lines in bom_sub_lines_grouped.items():
-                component = component.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
                 qty_per_kit = 0
                 for bom_line, bom_line_data in bom_sub_lines:
                     if not component.is_storable or bom_line.product_uom_id.is_zero(bom_line_data['qty']):
