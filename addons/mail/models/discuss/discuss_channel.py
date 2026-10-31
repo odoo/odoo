@@ -187,7 +187,7 @@ class DiscussChannel(models.Model):
     )
     _group_public_id_check = models.Constraint(
         "CHECK (channel_type = 'channel' OR group_public_id IS NULL)",
-        'Group authorization and group auto-subscription are only supported on channels.',
+        "Group authorization is only supported on channels.",
     )
     _readonly_channel_type_check = models.Constraint(
         "CHECK (is_readonly IS NOT TRUE OR channel_type = 'channel')",
@@ -237,12 +237,35 @@ class DiscussChannel(models.Model):
             if len(ch.channel_member_ids) > 2:
                 raise ValidationError(_("A channel of type 'chat' cannot have more than two users."))
 
-    @api.constrains('group_public_id', 'group_ids')
-    def _constraint_group_id_channel(self):
+    @api.constrains("group_public_id")
+    def _constraint_group_public_id_channel(self):
         # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
-        failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != 'channel' and (channel.group_public_id or channel.group_ids))
+        failing_channels = self.sudo().filtered(
+            lambda channel: (
+                channel.channel_type != "channel" and channel.group_public_id
+            )
+        )
         if failing_channels:
-            raise ValidationError(_("For %(channels)s, channel_type should be 'channel' to have the group-based authorization or group auto-subscription.", channels=', '.join([ch.name for ch in failing_channels])))
+            raise ValidationError(
+                self.env._(
+                    "For %(channels)s, channel_type should be 'channel' to have the group-based authorization",
+                    channels=failing_channels.mapped("name"),
+                )
+            )
+
+    @api.constrains("group_ids")
+    def _constraint_group_ids_channel(self):
+        # sudo: discuss.channel - skipping ACL for constraint, more performant and no sensitive information is leaked
+        failing_channels = self.sudo().filtered(
+            lambda channel: channel.channel_type != "channel" and channel.group_ids
+        )
+        if failing_channels:
+            raise ValidationError(
+                self.env._(
+                    "For %(channels)s, channel_type should be 'channel' to have the group auto-subscription.",
+                    channels=failing_channels.mapped("name"),
+                )
+            )
 
     # COMPUTE / INVERSE
 
