@@ -804,15 +804,39 @@ actual arch.
         to modules whose code is already loaded. Custom views defined
         directly in the database are loaded only after the module
         initialization phase is completely finished.
+
+        The views of the module being loaded count as loaded only once
+        the current load has (re)loaded them: before then, they may
+        still hold the arch of the previous version of the module.
         """
         # check that all found ids have a corresponding xml_id in a loaded module
         ids_to_check = [vid for vid in self.ids if vid not in check_view_ids]
         if not ids_to_check:
             return self
-        loaded_modules = tuple(self.pool._init_modules) + (self.env.context.get('install_module'),)
-        sql = self.browse(ids_to_check)._get_filter_xmlid_query(modules=loaded_modules)
-        valid_view_ids = {id_ for id_, in self.env.execute_query(sql)} | check_view_ids
+        valid_view_ids = set(check_view_ids)
+        # Views of modules being initialized count as loaded once their
+        # xml_id is present in the registry.
+        if self.pool._init_modules:
+            query = self.browse(ids_to_check)._get_filter_xmlid_query(modules=self.pool._init_modules)
+            valid_view_ids.update(id_ for id_, in self.env.execute_query(query))
+        # Views of the module being updated only count once the current
+        # load has (re)loaded them; otherwise they may still hold the
+        # arch of the previous version of the module.
+        pending_views = self.browse(vid for vid in ids_to_check if vid not in valid_view_ids)
+        valid_view_ids.update(pending_views._get_loaded_xmlid_view_ids())
         return self.browse(vid for vid in self.ids if vid in valid_view_ids)
+
+    def _get_loaded_xmlid_view_ids(self):
+        """ Return the ids of the views in ``self`` that the current registry
+        load has already loaded from data files.
+
+        This method is meant to be overridden by other modules.
+        """
+        return {
+            view_id
+            for view_id, xmlids in self._get_external_ids().items()
+            if not self.pool.loaded_xmlids.isdisjoint(xmlids)
+        }
 
     def _check_view_access(self):
         """ Verify that a view is accessible by the current user based on the
