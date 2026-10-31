@@ -62,11 +62,11 @@ class ProjectProductEmployeeMap(models.Model):
                 and map_entry.sale_line_id.order_partner_id.commercial_partner_id != map_entry.partner_id.commercial_partner_id
         ).update({'sale_line_id': False})
 
-    @api.depends('sale_line_id.price_unit')
+    @api.depends('sale_line_id.price_unit', 'sale_line_id.discount')
     def _compute_price_unit(self):
         for line in self:
             if line.sale_line_id:
-                line.price_unit = line.sale_line_id.price_unit
+                line.price_unit = line.sale_line_id.price_unit * (1 - line.sale_line_id.discount / 100)
             else:
                 line.price_unit = 0
 
