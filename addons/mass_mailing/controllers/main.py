@@ -2,16 +2,78 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import io
+import ipaddress
+import requests
 import urllib.parse
 
+from PIL import Image, UnidentifiedImageError
 from datetime import timedelta
 from markupsafe import Markup, escape
 from lxml import etree
 from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
+from urllib3.connectionpool import HTTPConnectionPool, HTTPSConnectionPool
 
 from odoo import _, fields, http, tools
+from odoo.exceptions import UserError
 from odoo.http import request, Response
 from odoo.tools import consteq
+
+from odoo.addons.base_import.models.base_import import ImportValidationError
+from odoo.addons.html_editor.controllers.main import attachment_create
+from odoo.addons.html_editor.models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
+
+ALLOWED_IMAGE_SCHEMES = ('http', 'https')
+_MAX_IMAGE_REDIRECTS = 3
+
+
+def check_valid_url_image_mimetype(url):
+    response = requests.head(url, timeout=10)
+    if response.status_code == 200:
+        mime_type = response.headers.get('content-type')
+        if mime_type in SUPPORTED_IMAGE_MIMETYPES:
+            return True
+    # Note: some severs don't support HEAD methods.
+    # We will consider the mimetype not supported
+    # for the resources on those servers.
+    return False
+
+
+class _PublicConnectionPoolMixin:
+
+    def _validate_conn(self, conn):
+        """Check the connected server before sending any HTTP request."""
+
+        super()._validate_conn(conn)
+        if conn.sock is None:
+            conn.connect()
+        try:
+            sock = conn.sock.socket
+        except AttributeError:
+            sock = conn.sock
+        ip = ipaddress.ip_address(sock.getpeername()[0])
+        if isinstance(ip, ipaddress.IPv6Address):
+            ip = ip.ipv4_mapped or ip
+        if not ip.is_global or ip.is_multicast or ip.is_reserved:
+            raise ValueError("only publicly reachable hosts are allowed.")
+
+
+class _PublicHTTPConnectionPool(_PublicConnectionPoolMixin, HTTPConnectionPool):
+    pass
+
+
+class _PublicHTTPSConnectionPool(_PublicConnectionPoolMixin, HTTPSConnectionPool):
+    pass
+
+
+class _ImageHTTPAdapter(requests.adapters.HTTPAdapter):
+
+    def init_poolmanager(self, *args, **kwargs):
+        super().init_poolmanager(*args, **kwargs)
+        self.poolmanager.pool_classes_by_scheme = {
+            'http': _PublicHTTPConnectionPool,
+            'https': _PublicHTTPSConnectionPool,
+        }
 
 
 class MassMailController(http.Controller):
@@ -562,3 +624,47 @@ class MassMailController(http.Controller):
     @http.route('/mailing/mobile/preview', methods=['GET'], type='http', auth='user', website=True)
     def mass_mailing_preview_mobile_content(self):
         return request.render("mass_mailing.preview_content_mobile", {})
+
+    # ------------------------------------------------------------
+    # HTML BUILDER
+    # ------------------------------------------------------------
+    @http.route('/mailing/attachment/add_url_data', methods=['POST'], type='jsonrpc', auth='user', website=True)
+    def add_url_image_data(self, url, res_model='mailing.mailing', res_id=False):
+        if not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+            raise Unauthorized()
+        parsed_url = urllib.parse.urlsplit(url)
+        if parsed_url.scheme not in ALLOWED_IMAGE_SCHEMES:
+            raise UserError(_("Only http and https URLs are supported."))
+        if not check_valid_url_image_mimetype(url):
+            raise UserError(_("The URL does not point at a valid image."))
+        try:
+            with requests.Session() as session:
+                session.trust_env = False
+                session.max_redirects = _MAX_IMAGE_REDIRECTS
+                for scheme in ALLOWED_IMAGE_SCHEMES:
+                    session.mount(f'{scheme}://', _ImageHTTPAdapter())
+                content = request.env['mailing.mailing']._get_image_by_url(url, session)
+        except ImportValidationError as exc:
+            raise UserError(_("The image could not be downloaded from this URL.")) from exc
+        except UnidentifiedImageError as exc:
+            raise UserError(_("The URL does not point to a valid image.")) from exc
+        image = Image.open(io.BytesIO(content))
+        mimetype = Image.MIME.get(image.format)
+        if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
+            raise UserError(_("This image format (%s) is not supported.", image.format))
+        try:
+            # Re-encode the image to get rid of any potentially malicious metadata
+            output = io.BytesIO()
+            image.save(output, format=image.format, save_all=getattr(image, 'is_animated', False))
+        except OSError as exc:
+            raise UserError(_("The image could not be processed.")) from exc
+
+        parsed = urllib.parse.urlsplit(url)
+        attachment = attachment_create(
+            request.env['ir.attachment'],
+            name=parsed.path.rstrip('/').split('/')[-1],
+            data=output.getvalue(),
+            res_id=res_id,
+            res_model=res_model
+        )
+        return attachment._get_media_info()
