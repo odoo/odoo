@@ -35,6 +35,13 @@
             <value name="install_demo" eval="True"/>
         </function>
 
+        <function model="account.chart.template" name="try_loading">
+            <value eval="[]"/>
+            <value>generic_coa</value>
+            <value model="res.company" eval="obj().env.ref('base.main_company')"/>
+            <value name="install_demo" eval="True"/>
+        </function>
+
         <!-- Payment Terms -->
 
         <record id="account_payment_term_advance" model="account.payment.term">
