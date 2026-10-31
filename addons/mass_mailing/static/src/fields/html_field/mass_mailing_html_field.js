@@ -492,6 +492,7 @@ export const massMailingHtmlField = {
     component: MassMailingHtmlField,
     extractProps({ attrs, options }) {
         const props = htmlField.extractProps(...arguments);
+        props.editorConfig.accessibilityDialog = true;
         props.editorConfig.allowChecklist = false;
         props.editorConfig.allowScrollableTables = false;
         props.editorConfig.allowVideo = false;

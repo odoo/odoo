@@ -118,30 +118,50 @@ export class ListPlugin extends Plugin {
             },
         ],
         shortcuts: [
-            { hotkey: "control+shift+7", commandId: "toggleListOL" },
-            { hotkey: "control+shift+8", commandId: "toggleListUL" },
-            { hotkey: "control+shift+9", commandId: "toggleListCL" },
+            {
+                category: _t("Lists"),
+                label: _t("Unordered List"),
+                hotkey: "control+shift+8",
+                commandId: "toggleListUL",
+            },
+            {
+                category: _t("Lists"),
+                label: _t("Check List"),
+                hotkey: "control+shift+9",
+                commandId: "toggleListCL",
+            },
+            {
+                category: _t("Lists"),
+                label: _t("Ordered List"),
+                hotkey: "control+shift+7",
+                commandId: "toggleListOL",
+            },
         ],
         shorthands: [
             {
+                label: _t("Ordered List"),
                 literals: ["1.", "1)"],
                 commandId: "toggleListOL",
             },
             {
+                label: _t("Lowercase Alphabetical List"),
                 literals: ["a.", "a)"],
                 commandId: "toggleListOL",
                 commandParams: { listStyle: "lower-alpha" },
             },
             {
+                label: _t("Uppercase Alphabetical List"),
                 literals: ["A.", "A)"],
                 commandId: "toggleListOL",
                 commandParams: { listStyle: "upper-alpha" },
             },
             {
+                label: _t("Unordered List"),
                 literals: ["*", "-"],
                 commandId: "toggleListUL",
             },
             {
+                label: _t("Check List"),
                 literals: ["[]"],
                 commandId: "toggleListCL",
             },

@@ -248,6 +248,7 @@ export class WebsiteBuilder extends Component {
         };
         builderProps.config.translatedElements = this.translatedElements;
         builderProps.config.allowVideoFile = true;
+        builderProps.config.accessibilityDialog = true;
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
         builderProps.animateThemeTabSwitch = true;
         const installSnippetModule = builderProps.installSnippetModule;
