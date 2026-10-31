@@ -455,6 +455,9 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
         // TODO: In master, update the #tracking_code_config script via XML.
         const trackingCodeConfigScriptEl = document.querySelector("#tracking_code_config");
         if (trackingCodeConfigScriptEl) {
+            // Remove the one-time event listener added by the original script
+            document.removeEventListener("optionalCookiesAccepted", window.allConsentsGranted);
+
             const updatedTrackingScript = `
                 window.dataLayer = window.dataLayer || [];
                 function gtag() {
@@ -470,11 +473,9 @@ publicWidget.registry.cookies_bar = PopupWidget.extend({
                     });
                 }
 
-                // Run our handler first and block the original script's handler
-                document.addEventListener("optionalCookiesAccepted", (ev) => {
-                    ev.stopImmediatePropagation();
+                document.addEventListener("optionalCookiesAccepted", () => {
                     updateConsents("granted");
-                }, { capture: true });
+                });
 
                 document.addEventListener("optionalCookiesDenied", () => {
                     updateConsents("denied");
