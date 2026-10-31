@@ -1062,9 +1062,16 @@ class AccountMove(models.Model):
                     invert_dict(tax_group, fields_to_reverse)
 
         currency_huf = self.env.ref('base.HUF')
-        tax_totals['total_vat_amount_in_huf'] = sum(
-            line.balance for line in self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
-        ) * (1 if self.is_purchase_document() else -1)
+        huf_rate = self._l10n_hu_get_currency_rate()
+        is_company_huf = self.company_id.currency_id == currency_huf
+
+        vat_lines = self.line_ids.filtered(lambda l: l.tax_line_id.l10n_hu_tax_type)
+        if is_company_huf:
+            total_vat_huf = sum(line.balance for line in vat_lines)
+        else:
+            total_vat_huf = sum(currency_huf.round(huf_rate * line.amount_currency) for line in vat_lines)
+
+        tax_totals['total_vat_amount_in_huf'] = total_vat_huf * (1 if self.is_purchase_document() else -1)
         tax_totals['formatted_total_vat_amount_in_huf'] = formatLang(
             self.env, tax_totals['total_vat_amount_in_huf'], currency_obj=currency_huf
         )
