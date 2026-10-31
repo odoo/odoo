@@ -7106,6 +7106,38 @@ class StockMove(TransactionCase):
             {'quantity': 0.03, 'quantity_product_uom': 0},
         ])
 
+    def test_validate_move_line_in_coarser_uom(self):
+        """ A move line in a UoM coarser than the product UoM must still update the quants:
+        300 g is 0.3 kg, which is zero only with the rounding of the gram. """
+        gram_uom = self.env.ref('uom.product_uom_gram')
+        gram_uom.rounding = 1.0
+        self.product.write({'uom_id': self.env.ref('uom.product_uom_kgm').id})
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 1)
+
+        delivery = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'move_ids': [(0, 0, {
+                'name': self.product.name,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': self.product.id,
+                'product_uom': gram_uom.id,
+                'product_uom_qty': 300.0,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.action_assign()
+        self.assertEqual(delivery.move_line_ids.quantity_product_uom, 0.3)
+        quant = self.env['stock.quant']._gather(self.product, self.stock_location)
+        self.assertEqual(quant.reserved_quantity, 0.3)
+
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
+        self.assertEqual(quant.quantity, 0.7)
+        self.assertEqual(quant.reserved_quantity, 0)
+
     def test_tracked_move_quantity_lot_ids_combined_write(self):
         """ Writing both `quantity` and `lot_ids` on a tracked move in the
         same call must keep `move.quantity` in sync with the resulting
