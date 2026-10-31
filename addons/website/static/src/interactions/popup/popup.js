@@ -73,7 +73,11 @@ export class Popup extends Interaction {
             const deviceInvisible = isMobile
                 ? el.classList.contains("o_snippet_mobile_invisible")
                 : el.classList.contains("o_snippet_desktop_invisible");
-            return (visibilitySelectors && el.matches(visibilitySelectors)) || deviceInvisible;
+            return (
+                (visibilitySelectors && el.matches(visibilitySelectors)) ||
+                deviceInvisible ||
+                el.classList.contains("o_datetime_range_hidden")
+            );
         });
         if (!this.popupAlreadyShown && !emptyPopup) {
             this.bindPopup();

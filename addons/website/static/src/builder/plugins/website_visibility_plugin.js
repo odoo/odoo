@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 import { registry } from "@web/core/registry";
 import { DEVICE_VISIBILITY_OPTION_SELECTOR } from "./options/visibility_option_plugin";
 
@@ -7,9 +8,15 @@ export class WebsiteVisibilityPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        system_classes: ["o_conditional_hidden"],
+        system_classes: ["o_conditional_hidden", "o_datetime_range_hidden"],
         on_target_shown_handlers: this.onTargetShow.bind(this),
         on_target_hidden_handlers: this.onTargetHide.bind(this),
+        clean_for_save_processors: (rootEl) => {
+            for (const el of selectElements(rootEl, ".o_datetime_range_hidden")) {
+                el.classList.remove("o_datetime_range_hidden");
+            }
+            return rootEl;
+        },
     };
 
     onTargetHide(editingEl) {
