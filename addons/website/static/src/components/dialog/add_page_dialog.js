@@ -540,25 +540,47 @@ export class AddPageDialog extends Component {
         this.lastTabName = name;
     }
 
-    async addPage(sectionsArch, name, templateId) {
-        if (this.props.forcedURL) {
-            // We also skip the possibility to choose to add in menu in that
-            // case (e.g. in creation from 404 page button). The user can still
-            // create its menu afterwards if needed.
-            await this.createPage(sectionsArch, this.props.forcedURL, false, this.props.pageTitle);
-        } else {
-            this.dialogs.add(AddPageConfirmDialog, {
-                createPage: (...args) => this.createPage(...args),
-                name: name || this.lastTabName,
-                sectionsArch: sectionsArch || "",
-                templateId: templateId || "",
-            });
-        }
+    // Remove any leading slash.
+    slugifyPageTitle(title) {
+        return title.replace(/^\/*/, "") || _t("New Page");
     }
 
+	async addPage(sectionsArch, name, templateId) {
+		if (this.props.forcedURL) {
+			// We also skip the possibility to choose to add in menu in that
+			// case (e.g. in creation from 404 page button). The user can still
+			// create its menu afterwards if needed.
+			await this.createPage(
+				sectionsArch,
+				this.props.forcedURL,
+				false,
+				name || this.props.pageTitle,
+			);
+		} else {
+            this.openAddPageConfirmDialog(
+                sectionsArch,
+                name || this.lastTabName,
+                templateId,
+            );
+		}
+    }
+
+    getDialogParams(sectionsArch, name, templateId) {
+        return {
+            createPage: (...args) => this.createPage(...args),
+            name: name,
+            sectionsArch: sectionsArch || "",
+            templateId: templateId || "",
+		}
+    }
+
+    openAddPageConfirmDialog(sectionsArch, name, templateId) {
+        const pageName = this.slugifyPageTitle(name);
+        this.dialogs.add(AddPageConfirmDialog, this.getDialogParams(sectionsArch, pageName, templateId));
+	}
+
     async createPage(sectionsArch, name = "", addMenu = false, pageTitle = "") {
-        // Remove any leading slash.
-        const pageName = name.replace(/^\/*/, "") || _t("New Page");
+        const pageName = this.slugifyPageTitle(name);
         const data = await this.http.post(`/website/add/${encodeURIComponent(pageName)}`, {
             // Needed to be passed as a (falsy) string because false would be
             // converted to 'false' with a POST.
