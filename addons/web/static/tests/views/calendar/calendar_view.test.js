@@ -1182,6 +1182,26 @@ test(`create and change events on desktop`, async () => {
     expect.verifySteps(["web_save"]);
 });
 
+test.tags("desktop");
+test(`reload when the form dialog is closed`, async () => {
+    onRpc("event", "search_read", () => {
+        expect.step("load");
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="month"/>`,
+    });
+    expect.verifySteps(["load"]);
+
+    await clickEvent(4);
+    await contains(`.o_cw_popover .o_cw_popover_edit`).click();
+    expect(`.modal`).toHaveCount(1);
+    await contains(`.modal .btn-close`).click();
+    expect(`.modal`).toHaveCount(0);
+    expect.verifySteps(["load"]);
+});
+
 test.tags("mobile");
 test(`create and change events on mobile`, async () => {
     onRpc("web_save", ({ args }) => {
