@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, useChildSubEnv, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler } from "@web/core/utils/components";
 
@@ -31,6 +31,11 @@ class OverlayItem extends Component {
             [OVERLAY_SYMBOL]: {
                 contains: (target) => this.contains(target),
             },
+        });
+
+        this.state = useState({ showOverlay: false });
+        onMounted(() => {
+            this.state.showOverlay = true;
         });
     }
 

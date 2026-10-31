@@ -18,6 +18,7 @@ beforeEach(async () => {
 test("effect service displays a rainbowman by default", async () => {
     getService("effect").add();
     await animationFrame();
+    await animationFrame();
 
     expect(".o_reward").toHaveCount(1);
     expect(".o_reward").toHaveText("Well Done!");
@@ -28,6 +29,7 @@ test("rainbowman effect with show_effect: false", async () => {
 
     getService("effect").add();
     await animationFrame();
+    await animationFrame();
 
     expect(".o_reward").toHaveCount(0);
     expect(".o_notification").toHaveCount(1);
@@ -35,6 +37,7 @@ test("rainbowman effect with show_effect: false", async () => {
 
 test("rendering a rainbowman destroy after animation", async () => {
     getService("effect").add(effectParams);
+    await animationFrame();
     await animationFrame();
 
     expect(".o_reward").toHaveCount(1);
@@ -45,11 +48,13 @@ test("rendering a rainbowman destroy after animation", async () => {
         animationName: "reward-fading-reverse",
     });
     await animationFrame();
+    await animationFrame();
     expect(".o_reward").toHaveCount(0);
 });
 
 test("rendering a rainbowman destroy on click", async () => {
     getService("effect").add(effectParams);
+    await animationFrame();
     await animationFrame();
 
     expect(".o_reward").toHaveCount(1);
@@ -57,11 +62,13 @@ test("rendering a rainbowman destroy on click", async () => {
 
     await click(".o_reward");
     await animationFrame();
+    await animationFrame();
     expect(".o_reward").toHaveCount(0);
 });
 
 test("rendering a rainbowman with an escaped message", async () => {
     getService("effect").add(effectParams);
+    await animationFrame();
     await animationFrame();
 
     expect(".o_reward").toHaveCount(1);
@@ -82,6 +89,7 @@ test("rendering a rainbowman with a custom component", async () => {
     }
 
     getService("effect").add({ Component: Custom, props });
+    await animationFrame();
     await animationFrame();
 
     expect(".o_reward_msg_content").toHaveInnerHTML(`<div class="custom">foo is bar</div>`);

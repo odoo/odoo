@@ -93,6 +93,7 @@ const callClick = async (clickFn, nodePromise, options) => {
         await action();
     }
     await animationFrame();
+    await animationFrame();
 };
 
 /**
