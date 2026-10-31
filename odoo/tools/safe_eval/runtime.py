@@ -151,6 +151,8 @@ class _SafeTransformer(ast.NodeTransformer):
     DECO_ID = '_safe_eval_deco'
     GEN_FUNC_ID = '_safe_eval_gen_func'
     GEN_ITER_ID = '_safe_eval_gen_iter'
+    EXC_ID = '_safe_eval_exc'
+    RAISE_ID = '_safe_eval_raise'
 
     def visit_Call(self, node):
         """
@@ -244,7 +246,19 @@ class _SafeTransformer(ast.NodeTransformer):
         return call
 
     def visit_Try(self, node):
-        """ Ensure no bare except is used """
+        """
+        Ensure no bare except is used and replace caught exceptions
+        with a safe surrogate. The surrogate only exposes `args`.
+
+        Transforms:
+            except SomeException as e:
+                <body>
+
+        Into:
+            except SomeException as e:
+                e = _safe_eval_exc(e)
+                <body>
+        """
         self.generic_visit(node)
 
         for handler in node.handlers:
@@ -254,6 +268,52 @@ class _SafeTransformer(ast.NodeTransformer):
                 )
                 if unsafe_policy() >= UnsafePolicy.RAISE:
                     raise SyntaxError('You cannot use bare except, use `except Exception:`')
+
+            if not handler.name:
+                continue
+
+            assign_safe_exc = ast.Assign(
+                targets=[ast.Name(id=handler.name, ctx=ast.Store())],
+                value=ast.Call(
+                    func=ast.Name(id=self.EXC_ID, ctx=ast.Load()),
+                    args=[ast.Name(id=handler.name, ctx=ast.Load())],
+                    keywords=[],
+                ),
+            )
+            ast.copy_location(assign_safe_exc, handler)
+            ast.fix_missing_locations(assign_safe_exc)
+            handler.body.insert(0, assign_safe_exc)
+
+        return node
+
+    def visit_Raise(self, node):
+        """
+        Re-raise the original exception instead of its surrogate.
+        A bare `raise` is left untouched. It already re-raises the active
+        (original) exception, not the surrogate bound in the handler.
+
+        Transforms:
+            raise exc [from cause]
+
+        Into:
+            raise _safe_eval_raise(exc) [from _safe_eval_raise(cause)]
+        """
+        self.generic_visit(node)
+
+        def _wrap_reraise(value):
+            call = ast.Call(
+                func=ast.Name(id=self.RAISE_ID, ctx=ast.Load()),
+                args=[value],
+                keywords=[],
+            )
+            ast.copy_location(call, value)
+            ast.copy_location(call.func, value)
+            return call
+
+        if node.exc is not None:
+            node.exc = _wrap_reraise(node.exc)
+        if node.cause is not None:
+            node.cause = _wrap_reraise(node.cause)
 
         return node
 
@@ -646,6 +706,22 @@ class _SafeGenerator(_GeneratorWrapper):  # noqa: OLS01002
     __await__ = __iter__
 
 
+class _SafeException(Exception):
+    __slots__ = ('__class__', '__exc', 'args')
+
+    def __init__(self, exc):
+        super().__init__()
+        self.__exc = exc
+        self.__class__ = type(exc)
+        self.args = exc.args
+
+    def __str__(self):
+        return str(self.__exc)
+
+    def __repr__(self):
+        return repr(self.__exc)
+
+
 def safe_gen_wrapper(func):
 
     def _wrapper(*args, **kwargs):
@@ -653,6 +729,18 @@ def safe_gen_wrapper(func):
         return _SafeGenerator(gen)
 
     return _wrapper
+
+
+def safe_exc(exc):
+    if type(exc) is _SafeException:
+        return exc
+    return _SafeException(exc)
+
+
+def safe_raise(exc):
+    if type(exc) is _SafeException:
+        return exc._SafeException__exc
+    return exc
 
 
 def safe_call(callee, /, *args, **kwargs):
@@ -674,8 +762,8 @@ safe_transform = safe_transformer.visit
 safe_whitelist = _SafeWhitelist()
 safe_checker = _SafeChecker()
 
-safe_whitelist.TRUSTED_CLASSES |= {_SafeGenerator}
-safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call, safe_call_deco, safe_gen_wrapper}
+safe_whitelist.TRUSTED_CLASSES |= {_SafeGenerator, _SafeException}
+safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call, safe_call_deco, safe_gen_wrapper, safe_exc, safe_raise}
 
 # ==========
 # Monitoring
@@ -684,7 +772,10 @@ safe_whitelist.TRUSTED_FUNCTIONS |= {safe_call, safe_call_deco, safe_gen_wrapper
 
 def monitoring_call(code, instruction_offset, callee, arg0):
     """ Ensure `_MONITORING_BUILTINS` are not overridden """
-    if callee in (safe_call, safe_call_deco, _SafeGenerator, safe_gen_wrapper):
+    if callee in (
+        safe_call, safe_call_deco, _SafeGenerator, safe_gen_wrapper,
+        safe_exc, safe_raise,
+    ):
         return
 
     frame = sys._getframe(1)
@@ -719,6 +810,8 @@ _MONITORING_BUILTINS = {
     safe_transformer.DECO_ID: safe_call_deco,
     safe_transformer.GEN_FUNC_ID: safe_gen_wrapper,
     safe_transformer.GEN_ITER_ID: _SafeGenerator,
+    safe_transformer.EXC_ID: safe_exc,
+    safe_transformer.RAISE_ID: safe_raise,
 }
 
 EVENTS = sys.monitoring.events

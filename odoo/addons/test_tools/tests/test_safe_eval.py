@@ -1,5 +1,6 @@
 import ast
 import inspect
+import logging
 from collections import OrderedDict
 from textwrap import dedent
 from unittest.mock import patch
@@ -864,3 +865,85 @@ class TestSafeEvalRuntime(TransactionCase):
 
         with self.assertRaises(UnsafeFunctionError):
             safe_checker.check(deque().append)
+
+    def test_check_handled_exception(self):
+
+        def raiser():
+            error = ValueError('foo', 42)
+            error.payload = self.UnsafeClass
+            raise error
+
+        exc_logger = logging.getLogger('odoo.tests.exception_log')
+        self.addCleanup(logging.Logger.manager.loggerDict.pop, 'odoo.tests.exception_log', None)
+
+        ctx = {
+            'raiser': raiser,
+            'ValueError': ValueError,
+            'isinstance': isinstance,
+            'log': lambda msg, *args: exc_logger.info(msg, *args, stack_info=False, exc_info=False),
+        }
+
+        # `args` stays usable
+        expr = """
+            try:
+                raiser()
+            except Exception as e:
+                out = e.args
+        """
+        safe_eval(dedent(expr), ctx, mode='exec')
+        self.assertEqual(ctx['out'], ('foo', 42))
+
+        # Other attribute is refused
+        expr = """
+            try:
+                raiser()
+            except Exception as e:
+                e.payload
+        """
+        with self.assertRaisesRegex(ValueError, '^AttributeError'):
+            safe_eval(dedent(expr), ctx, mode='exec')
+
+        # Re-raise the exception
+        expr = """
+            try:
+                raiser()
+            except Exception as e:
+                raise e
+        """
+        with self.assertRaisesRegex(ValueError, '^ValueError'):
+            safe_eval(dedent(expr), ctx, mode='exec')
+
+        # Bare re-raise
+        expr = """
+            try:
+                raiser()
+            except Exception as e:
+                raise
+        """
+        with self.assertRaisesRegex(ValueError, '^ValueError'):
+            safe_eval(dedent(expr), ctx, mode='exec')
+
+        # Correct log (string representation)
+        expr = """
+            try:
+                raiser()
+            except Exception as e:
+                log(e)
+        """
+        with self.assertLogs('odoo.tests.exception_log') as exc_logs:
+            safe_eval(dedent(expr), ctx, mode='exec')
+
+        try:
+            raiser()
+        except Exception as e:  # noqa: BLE001
+            self.assertEqual(exc_logs.output[0], f'INFO:odoo.tests.exception_log:{e}')
+
+        # Correct `isinstance` check
+        expr = """
+            try:
+                raiser()
+            except Exception as e:
+                out = isinstance(e, ValueError)
+        """
+        safe_eval(dedent(expr), ctx, mode='exec')
+        self.assertEqual(ctx['out'], True)
