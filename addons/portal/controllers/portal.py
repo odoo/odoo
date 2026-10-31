@@ -791,7 +791,7 @@ class CustomerPortal(Controller):
                     else:
                         address_values.pop(commercial_field_name, None)
 
-                for additional_identifier, value in address_values.get("additional_identifiers", {}).items():
+                for additional_identifier, value in list(address_values.get("additional_identifiers", {}).items()):
                     partner_sudo_value = partner_sudo._get_additional_identifier(additional_identifier)
                     # Allow to update additional identifiers on individual addresses, if not set.
                     if is_main_contact and not bool(partner_sudo_value):
