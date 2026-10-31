@@ -193,6 +193,16 @@ class AccountAccount(models.Model):
                 if record.tax_ids:
                     raise UserError(_('An Off-Balance account can not have taxes'))
 
+    @api.constrains('reconcile')
+    def _constrains_cash_basis_transition_account_reconcile(self):
+        if self.env.context.get('chart_template_load'):
+            return
+        if self.env['account.tax'].with_context(active_test=False).search_count([
+            ('cash_basis_transition_account_id', 'in', self.filtered(lambda a: not a.reconcile).ids),
+            ('tax_exigibility', '=', 'on_payment'),
+        ], limit=1):
+            raise ValidationError(_("The cash basis transition account needs to allow reconciliation."))
+
     @api.constrains('currency_id')
     def _check_journal_consistency(self):
         ''' Ensure the currency set on the journal is the same as the currency set on the
