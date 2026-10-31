@@ -98,6 +98,8 @@ class HrEmployee(models.Model):
             Domain.AND(
                 [Domain("employee_id", "in", employees.ids), Domain("is_certification", "=", True)],
             ),
+            # the same skill and level can appear several times, order so the one expiring last is kept in employee_cert_data
+            order="valid_to asc nulls last",
         )
 
         employee_cert_data = defaultdict(dict)
