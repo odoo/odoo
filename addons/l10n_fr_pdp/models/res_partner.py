@@ -271,27 +271,42 @@ class ResPartner(models.Model):
         if not siren_siret_re.fullmatch(self.routing_endpoint):
             raise UserError(self.env._("endpoint must begin with a 9 or 14 digits number to enable the lookup (ie: siren, siret), followed by an optional suffix starting with an underscore (ie: 123456789_ABC)"))
 
-        edi_mode = self.env.company._get_peppol_edi_mode()
-        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
-        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup'
+        lookup_result = self._fetch_active_annuaire_lines(self.routing_endpoint[:9], active_only=False)
 
-        response = requests.get(
-            url=endpoint,
-            params={
-                'pdp_endpoint': self.routing_endpoint[:9],  # We only want to take the first 9 char (for the siren)
-            },
-            timeout=10,
-        )
-        response.raise_for_status()
-        data = response.json()
-        if not data.get('annuaire_lines'):
+        if not (annuaire_lines := lookup_result.get('lines')):
             raise UserError(self.env._("No annuaire lines found for that identifier"))
 
         wizard = self.env['l10n_fr_pdp.partner.lookup'].create({
             'available_annuaire_line_ids': [
                 Command.create(line)
-                for line in data['annuaire_lines']
+                for line in annuaire_lines
             ],
             'partner_id': self.id,
         })
         return wizard._get_records_action(target='new')
+
+    @api.model
+    @handle_demo
+    def _fetch_active_annuaire_lines(self, siren, active_only=True):
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
+        query = parse.urlencode({'pdp_endpoint': siren, 'active_only': active_only})
+        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup?{query}'
+
+        try:
+            response = requests.get(endpoint, timeout=10)
+            response.raise_for_status()
+            decoded_response = response.json()
+        except (requests.exceptions.RequestException, ValueError) as e:
+            _logger.warning("failed to query active annuaire lines for identifier %s: %s", siren, e)
+            return {}
+
+        lines = decoded_response.get('annuaire_lines', [])
+        identifiers = list({line['identifier'] for line in lines})
+
+        return {
+            'in_annuaire': bool(identifiers),
+            'identifiers': identifiers,
+            'count': len(identifiers),
+            'lines': lines,
+        }
