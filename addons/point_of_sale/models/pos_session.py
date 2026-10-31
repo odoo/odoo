@@ -896,6 +896,14 @@ class PosSession(models.Model):
 
         return data
 
+    def _get_stock_move_price_unit(self, move):
+        if move.state == 'done':
+            return move._get_price_unit()
+        if move.product_id.cost_method in ('standard', 'average'):
+            return move.product_id.standard_price
+        qty = abs(move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, round=False))
+        return move.product_id._run_fifo(qty) / qty if qty else 0
+
     def _accumulate_amounts(self, data):
         # Accumulate the amounts for each accounting lines group
         # Each dict maps `key` -> `amounts`, where `key` is the group key.
@@ -1021,7 +1029,7 @@ class PosSession(models.Model):
                 partners = (order.partner_id | order.partner_id.commercial_partner_id)
                 partners._increase_rank('customer_rank')
 
-        all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced and not p.shipping_date).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
+        all_picking_ids = self.order_ids.filtered(lambda p: not p.is_invoiced).picking_ids.ids + self.picking_ids.filtered(lambda p: not p.pos_order_id).ids
         if all_picking_ids:
             # Combine stock lines
             stock_move_sudo = self.env['stock.move'].sudo()
@@ -1041,7 +1049,7 @@ class PosSession(models.Model):
                     signed_product_qty = move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id, round=False)
                     if move._is_in():
                         signed_product_qty *= -1
-                    amount = signed_product_qty * move._get_price_unit()
+                    amount = signed_product_qty * self._get_stock_move_price_unit(move)
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
                     if move._is_in():
                         stock_return[stock_key] = self._update_amounts(stock_return[stock_key], {'amount': amount}, move.picking_id.date_done, force_company_currency=True)
