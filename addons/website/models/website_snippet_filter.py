@@ -102,6 +102,7 @@ class WebsiteSnippetFilter(models.Model):
         max_limit = max(self.limit, 16)
         limit = limit and min(limit, max_limit) or max_limit
         single_record_filter = limit == 1 and model_name and res_id
+        website = self.env['website'].get_current_website()
 
         # Either a multi-record filter is provided, or a single record is specified.
         if self.filter_id or single_record_filter:
@@ -119,10 +120,13 @@ class WebsiteSnippetFilter(models.Model):
                     search_domain = Domain(search_domain)
                     domain &= search_domain
             try:
-                records = self.env[model_name].sudo(False).with_context(**literal_eval(filter_sudo.context)).search(
-                    domain,
-                    order=','.join(literal_eval(filter_sudo.sort)) or None,
-                    limit=limit
+                records = self.env[model_name].sudo(False).with_context(
+                    **literal_eval(filter_sudo.context),
+                    lang=website.default_lang_id.code,
+                ).search(
+                        domain,
+                        order=','.join(literal_eval(filter_sudo.sort)) or None,
+                        limit=limit,
                 ) if not single_record_filter else self.env[model_name].sudo(False).search([('id', '=', res_id)], limit=1)
                 return self._filter_records_to_values(records.sudo(), res_model=model_name)
             except MissingError:
@@ -135,6 +139,7 @@ class WebsiteSnippetFilter(models.Model):
                     dynamic_filter=self,
                     limit=limit,
                     search_domain=search_domain,
+                    lang=website.default_lang_id.code,
                 ).sudo().run() or []
             except MissingError:
                 _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)
