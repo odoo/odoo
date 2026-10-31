@@ -1,5 +1,5 @@
 from odoo.tests import TransactionCase, tagged
-from odoo.tools.partner_identifiers import TIN_METADATA
+from odoo.tools.partner_identifiers import TIN_METADATA, get_deduced_identifiers
 
 
 @tagged('post_install', '-at_install')
@@ -28,6 +28,14 @@ class TestPartnerIdentifiers(TransactionCase):
         self.partner.additional_identifiers = {'EAN_GLN': '9780471117094', 'FR_SIRET': ''}
         self.assertEqual(self.partner.additional_identifiers, {'EAN_GLN': '9780471117094'})
         self.assertNotIn('FR_SIRET', self.partner.additional_identifiers)
+
+    def test_au_acn_deduction_requires_valid_acn(self):
+        """Invalid ACNs should not prevent identifier enrichment from completing."""
+        self.assertEqual(get_deduced_identifiers('AU_ACN', 'not a number'), {})
+        self.assertEqual(
+            get_deduced_identifiers('AU_ACN', '002724334'),
+            {'AU_ABN': '43002724334'},
+        )
 
     def test_identifier_metadata_duns_other(self):
         """ International metadata exposed by the computed field (no country). """
