@@ -10,7 +10,8 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 export class Subscribe extends Interaction {
     static selector = '.js_subscribe';
     dynamicContent = {
-        '.js_subscribe_btn': { 't-on-click': this.onSubscribeClick },
+        'form': { 't-on-submit': this.onSubscribeClick.bind(this) },
+        '.js_subscribe_btn': { 't-on-click': this.onSubscribeClick.bind(this) },
     };
 
     setup() {
@@ -103,7 +104,9 @@ export class Subscribe extends Interaction {
         return this.el.closest('section[data-list-id]')?.dataset.listId || this.el.dataset.listId;
     }
 
-    async onSubscribeClick() {
+    async onSubscribeClick(event) {
+        event.preventDefault();
+        
         const inputName = this.el.querySelector('input').name;
         // js_subscribe_email is kept for compatibility (old name of js_subscribe_value)
         const input = this.el.querySelector('.js_subscribe_value, .js_subscribe_email');
