@@ -175,6 +175,9 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_admin, {  # note: force reply_to normally computed by message_post avoiding ACLs issues
                 'parent_id': admin_msg.id,
             }, False, 'No access on record but reply to notified parent'),
+            (self.record_internal_ro, {
+                'parent_id': admin_msg.id,
+            }, True, 'Notified parent is on another record'),
         ]:
             with self.subTest(record=record, msg_vals=msg_vals, reason=reason):
                 final_vals = dict(
@@ -312,6 +315,9 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_admin, {
                 'parent_id': admin_msg.id,
             }, False, 'No access on record but reply to notified parent'),
+            (self.record_internal, {
+                'parent_id': admin_msg.id,
+            }, True, 'Notified parent is on another record'),
             # internal = forbidden (internal users only)
             (self.record_portal, {'is_internal': True}, True, 'Internal subtype always forbidden'),
             (self.record_portal, {'is_internal': True, 'message_type': 'notification'}, False, 'Automatic log accepted'),

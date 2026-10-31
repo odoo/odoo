@@ -560,16 +560,18 @@ class Message(models.Model):
                     parent_ids_msg_ids[message['parent_id']].append(mid)
             if parent_ids_msg_ids:
                 query = SQL(
-                    """ SELECT m.id
+                    """ SELECT m.id, m.model, m.res_id
                         FROM "mail_message" m
                         JOIN "mail_message_res_partner_rel" partner_rel
                             ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %s
                         WHERE m.id = ANY(%s) """,
                     self.env.user.partner_id.id, list(parent_ids_msg_ids),
                 )
-                for [parent_id] in self.env.execute_query(query):
+                for parent_id, model, res_id in self.env.execute_query(query):
                     for mid in parent_ids_msg_ids[parent_id]:
-                        messages_to_check.pop(mid)
+                        message = messages_to_check[mid]
+                        if (message["model"], message["res_id"]) == (model, res_id):
+                            messages_to_check.pop(mid)
 
             if not messages_to_check:
                 return forbidden
