@@ -247,7 +247,7 @@ class Database(Controller):
                 with_filestore=str2bool(filestore),
             )
             dump_file.seek(0)
-            ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
+            ts = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d_%H-%M-%S")
             return send_file(
                 dump_file,
                 request.httprequest.environ,
