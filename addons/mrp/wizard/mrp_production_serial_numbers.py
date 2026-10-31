@@ -57,7 +57,10 @@ class MrpProductionSerials(models.TransientModel):
         split_amounts = {self.production_id: [1] * len(lots)}
         mos = self.production_id._split_productions(amounts=split_amounts)
         for mo, serial in zip(mos, lots):
-            mo.lot_producing_ids = [Command.link(serial.id)]
+            mo.lot_producing_ids = [Command.set([serial.id])]
+            mo.qty_producing = 0
+            for move in mo.move_raw_ids:
+                move.quantity = move.product_uom_qty
         return self._closing_action(mos)
 
     def action_apply(self):
