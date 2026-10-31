@@ -75,3 +75,17 @@ class TestSlidesMail(SlidesCase):
                     subtype_id=self.env.ref('mail.mt_comment').id,
                 )
                 self.assertEqual(message.notified_partner_ids, expected_value, error_message)
+
+    def test_slide_publication_notification_only_when_newly_published(self):
+        slide = self.env['slide.slide'].with_user(self.user_officer).create({
+            'name': 'Draft slide',
+            'channel_id': self.channel.id,
+            'slide_category': 'document',
+            'is_published': False,
+        })
+        messages_before = self.channel.message_ids
+        slide.is_published = True
+        messages_after_publish = self.channel.message_ids
+        self.assertEqual(len(messages_after_publish - messages_before), 1)
+        slide.is_published = True
+        self.assertEqual(self.channel.message_ids, messages_after_publish)
