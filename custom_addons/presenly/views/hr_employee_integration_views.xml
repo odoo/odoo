@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_employee_form_presenly" model="ir.ui.view">
+        <field name="name">hr.employee.form.presenly.tools</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_presenly_schedules"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-map-marker"
+                        groups="presenly.group_presenly_manager">
+                    <field name="presenly_schedule_count" widget="statinfo"
+                           string="Location Slots"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page name="presenly_working_hours_locations"
+                      string="Working Hours &amp; Locations"
+                      groups="presenly.group_presenly_manager">
+                    <field name="company_id" invisible="1"/>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button name="action_open_presenly_working_hours"
+                                type="object" string="Open Working Hours"
+                                icon="fa-clock-o" class="btn-secondary"/>
+                        <button name="action_generate_presenly_schedules"
+                                type="object" string="Generate from Working Hours"
+                                icon="fa-magic" class="btn-primary"
+                                invisible="not id"/>
+                        <button name="action_open_presenly_schedules"
+                                type="object" string="Open Full Schedule"
+                                icon="fa-external-link" class="btn-secondary"
+                                invisible="not id"/>
+                    </div>
+                    <group>
+                        <group string="Authoritative Working Time">
+                            <field name="resource_calendar_id"
+                                   help="Defines when this employee works. Location slots must stay inside these periods."/>
+                            <field name="work_location_id"
+                                   string="Primary / Fallback Work Location"/>
+                        </group>
+                        <group string="Location Coverage">
+                            <field name="presenly_schedule_health" widget="badge"
+                                   decoration-success="presenly_schedule_health == 'synced'"
+                                   decoration-warning="presenly_schedule_health in ('partial', 'flexible')"
+                                   decoration-danger="presenly_schedule_health in ('conflict', 'no_calendar')"/>
+                            <field name="presenly_schedule_gap_count" readonly="1"/>
+                            <field name="presenly_schedule_conflict_count" readonly="1"/>
+                            <field name="presenly_schedule_health_message" readonly="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="presenly_schedule_health != 'conflict'">
+                        One or more location slots are outside the current Working Hours. They are ignored during attendance resolution. Fix them below or regenerate the weekly schedule.
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="presenly_schedule_health != 'partial'">
+                        Some Working Hours periods have no location assignment. Use Generate from Working Hours to fill only the gaps.
+                    </div>
+                    <div class="alert alert-success" role="alert"
+                         invisible="presenly_schedule_health != 'synced'">
+                        Working Hours and regular Work Location slots are fully synchronized.
+                    </div>
+                    <separator string="Location Slots"/>
+                    <field name="presenly_schedule_ids"
+                           context="{'default_employee_id': id}"
+                           domain="[('employee_id', '=', id)]"
+                           nolabel="1">
+                        <list editable="bottom"
+                              decoration-muted="not active"
+                              decoration-success="calendar_sync_state in ('valid', 'flexible')"
+                              decoration-danger="calendar_sync_state in ('outside', 'no_calendar')">
+                            <field name="company_id" column_invisible="True"/>
+                            <field name="calendar_two_weeks" column_invisible="True"/>
+                            <field name="schedule_type"/>
+                            <field name="weekday" invisible="schedule_type != 'weekly'"/>
+                            <field name="week_type" optional="hide"
+                                   invisible="schedule_type != 'weekly'"/>
+                            <field name="schedule_date" invisible="schedule_type != 'date'"/>
+                            <field name="hour_from" widget="float_time"/>
+                            <field name="hour_to" widget="float_time"/>
+                            <field name="work_location_id" required="1"
+                                   domain="[('active', '=', True), ('company_id', '=', company_id)]"
+                                   options="{'no_create_edit': True}"/>
+                            <field name="calendar_sync_state" widget="badge"
+                                   decoration-success="calendar_sync_state in ('valid', 'flexible')"
+                                   decoration-danger="calendar_sync_state in ('outside', 'no_calendar')"/>
+                            <field name="check_in_tolerance_minutes" optional="hide"/>
+                            <field name="date_start" optional="hide"
+                                   invisible="schedule_type != 'weekly'"/>
+                            <field name="date_end" optional="hide"
+                                   invisible="schedule_type != 'weekly'"/>
+                            <field name="active" optional="hide"/>
+                        </list>
+                    </field>
+                    <div class="alert alert-info mt-3" role="alert">
+                        Working Hours answers <strong>when</strong> the employee works. Location Slots answer <strong>where</strong>. Split one Working Hours period into multiple rows when the employee changes school during that period.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_employee_overtime_hidden_presenly" model="ir.ui.view">
+        <field name="name">hr.employee.attendance.overtime.hidden.presenly</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_attendance.view_employee_form_inherit_hr_attendance"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ruleset_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
