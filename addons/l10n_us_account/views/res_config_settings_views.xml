@@ -16,6 +16,17 @@
                     </div>
                 </setting>
             </setting>
+            <block id="account_reports_settings" position="inside">
+                <setting id="access_matrix" string="Access Rights Matrix" company_dependent="1" groups="base.group_erp_manager"
+                    invisible="country_code != 'US'" help="Download a CSV matrix showing user access rights across the company">
+                    <field name="module_l10n_us_access_matrix" widget="upgrade_boolean"/>
+                    <div id="access_matrix_content" class="content-group" invisible="not module_l10n_us_access_matrix">
+                        <div class="text-warning mt16 mb4">
+                            Save this page and come back here to set up the feature.
+                        </div>
+                    </div>
+                </setting>
+            </block>
         </field>
     </record>
 </odoo>
