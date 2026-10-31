@@ -11,6 +11,7 @@ from stdnum.ee import registrikood as ee_en
 from stdnum.fi import ytunnus as fi_en
 from stdnum.fr import nir as fr_cn, siret as fr_siret, siren as fr_siren
 from stdnum.gb import vat as gb_vat
+from stdnum.hr import oib as hr_oib
 from stdnum.ie import pps as ie_ppsn
 from stdnum.jp import cn as jp_en
 from stdnum.lv import pvn as lv_en
@@ -662,11 +663,12 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'countries': ['HK'],
     },
     'HR_EN': {
-        **GLN_SHARED_VALS,
         'sequence': 10,
         'label': _lt('Company ID'),
-        'help': _lt('Croatian company ID number.'),
+        'help': _lt('Croatian company ID number (OIB).'),
+        'placeholder': '33392005961',
         'category': 'EN',
+        'validation_function': hr_oib.validate,
         'countries': ['HR'],
     },
     'HU_EN': {
