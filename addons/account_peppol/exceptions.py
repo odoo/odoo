@@ -1,6 +1,7 @@
 from typing import Callable
 from markupsafe import Markup
 
+from odoo.tools import html2plaintext
 from odoo.tools.translate import LazyTranslate
 from odoo.addons.account_peppol.tools.peppol_errors import render_peppol_errors
 
@@ -115,13 +116,10 @@ def _get_translation_lambda_message(translation_lambda: Callable[..., str], args
 
 
 def get_peppol_error_message(env, error_vals: dict, move=None):
-    """
-    Helper to process the error dictionary returned from the IAP response.
-    It will only get the code (or EBMS code) and map it to the correct translated message.
-    :param dict error_vals: the dictionary of encoded error json generated from the `_json` method in `peppol_proxy`
-    :return: the translated error message
-    :rtype: Markup
-    """
+    return get_peppol_error_message_html(env, error_vals, move)
+
+
+def get_peppol_error_split(env, error_vals):
     # handles errors raised directly from jsonrpc routes instead of being caught and converted
     if error_vals.get('data', {}).get('context'):
         error_vals = error_vals['data']['context']
@@ -133,15 +131,33 @@ def get_peppol_error_message(env, error_vals: dict, move=None):
         error_message = get_exception_message(env, error_vals)
     else:
         error_message = error_vals.get('message', 'Not able to retrieve error message')
+    return error_vals.get('code', ''), error_vals.get('subject', ''), error_message
 
+def get_peppol_error_message_html(env, error_vals: dict, move=None):
+    """
+    Helper to process the error dictionary returned from the IAP response.
+    It will only get the code (or EBMS code) and map it to the correct translated message.
+    :param dict error_vals: the dictionary of encoded error json generated from the `_json` method in `peppol_proxy`
+    :return: the translated error message, formatted as HTML (e.g. for a chatter message)
+    :rtype: Markup
+    """
+    code, subject, message = get_peppol_error_split(env, error_vals)
     return (
         Markup("%(peppol_error)s [code=%(error_code)s] : %(error_subject)s") % {
             'peppol_error': env._("Peppol Error"),
-            'error_code': error_vals['code'],
-            'error_subject': Markup("<strong>%s</strong>") % error_vals.get('subject', ''),
+            'error_code': code,
+            'error_subject': Markup("<strong>%s</strong>") % subject,
         }
-        + render_peppol_errors(move, env._("%s", error_message))
+        + render_peppol_errors(move, env._("%s", message))
     )
+
+
+def get_peppol_error_message_text(env, error_vals: dict, move=None):
+    """Same as `get_peppol_error_message_html`, formatted as plain text
+    (e.g. for a UserError popup).
+    """
+    code, subject, message = get_peppol_error_split(env, error_vals)
+    return f"{subject} [{code}]\n{message}"
 
 
 def get_exception_message(env, error_vals: dict):
