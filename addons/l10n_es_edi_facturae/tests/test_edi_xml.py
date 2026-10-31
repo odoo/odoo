@@ -468,6 +468,35 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
 
     @freeze_time('2023-01-01')
+    def test_generate_with_child_administrative_centers(self):
+        child = self.env['res.partner'].create({
+            'name': 'Department A',
+            'parent_id': self.partner_b.id,
+            'type': 'invoice',
+        })
+        center_template = self.partner_b.child_ids.filtered(lambda p: p.type == 'facturae_ac')
+        center_template.write({
+            'parent_id': child.id,
+            'l10n_es_edi_facturae_ac_center_code': 'GE0002273',
+            'l10n_es_edi_facturae_ac_role_type_ids': [Command.set(
+                self.env.ref('l10n_es_edi_facturae.ac_role_type_01').ids,
+            )],
+        })
+        invoice = self._create_invoice_es(
+            partner_id=child.id,
+            move_type='out_invoice',
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [self.tax.id]}],
+        )
+        invoice.action_post()
+        generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
+        self.assertFalse(errors)
+        self.assertTrue(generated_file)
+        xml = lxml.etree.fromstring(generated_file)
+        administrative_centers = xml.findall('.//BuyerParty/AdministrativeCentres/AdministrativeCentre')
+        self.assertEqual(len(administrative_centers), 1)
+        self.assertEqual(administrative_centers[0].findtext('CentreCode'), 'GE0002273')
+
+    @freeze_time('2023-01-01')
     def test_generate_with_invoice_period(self):
         invoice = self._create_invoice_es(
             partner_id=self.partner_a.id,
@@ -476,7 +505,6 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             l10n_es_invoicing_period_start_date='2023-01-01',
             l10n_es_invoicing_period_end_date='2023-01-31',
         )
-        invoice.action_post()
         generated_file, errors = invoice._l10n_es_edi_facturae_render_facturae()
         self.assertFalse(errors)
         self.assertTrue(generated_file)
