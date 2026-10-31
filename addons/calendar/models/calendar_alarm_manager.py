@@ -61,13 +61,24 @@ class AlarmManager(models.AbstractModel):
         # Upper bound on first_alarm of requested events
         first_alarm_max_value = ""
         if seconds is None:
+            bound_filter = "AND cal.active = True"
+            if partners:
+                bound_filter += """
+                AND cal.id IN (
+                    SELECT calendar_event_id
+                      FROM calendar_event_res_partner_rel
+                     WHERE res_partner_id IN %s
+                )"""
             # first alarm in the future + 3 minutes if there is one, now otherwise
             first_alarm_max_value = """
                 COALESCE((SELECT MIN(cal.start - interval '1' minute  * calcul_delta.max_delta)
                 FROM calendar_event cal
                 RIGHT JOIN calcul_delta ON calcul_delta.calendar_event_id = cal.id
                 WHERE cal.start - interval '1' minute  * calcul_delta.max_delta > now() at time zone 'utc'
-            ) + interval '3' minute, now() at time zone 'utc')"""
+                %s
+            ) + interval '3' minute, now() at time zone 'utc')""" % bound_filter
+            if partners:
+                tuple_params += (tuple(partners.ids), )
         else:
             # now + given seconds
             first_alarm_max_value = "(now() at time zone 'utc' + interval '%s' second )"
