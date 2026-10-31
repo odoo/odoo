@@ -8,6 +8,7 @@
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'data/ir_cron_data.xml',
         'views/hr_employee_views.xml',
         'views/res_users.xml',
     ],
