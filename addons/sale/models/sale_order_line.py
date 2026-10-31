@@ -1356,16 +1356,24 @@ class SaleOrderLine(models.Model):
 
     # no trigger product_id.invoice_policy to avoid retroactively changing SO
     @api.depends(
-        "qty_invoiced", "qty_delivered", "product_uom_qty", "state", "order_id.invoice_overages"
+        "qty_invoiced",
+        "qty_delivered",
+        "product_uom_qty",
+        "state",
+        "order_id.invoice_overages",
+        "invoice_lines.move_id.transaction_ids",
     )
     def _compute_qty_to_invoice(self):
         """
         Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
         calculated from the ordered quantity. Otherwise, the quantity delivered is used.
+        Lines invoiced automatically upon online payment were invoiced regardless of the delivered
+        quantities, so their quantity to invoice never becomes negative.
         For combo product lines, compute the value if a linked combo item line gets recomputed,
         and set `qty_to_invoice` only if at least one of its combo item lines is invoiceable.
         """
         combo_lines = set()
+        auto_invoiced_lines = self._get_automatically_invoiced_lines()
         for line in self:
             if line.state == "sale" and not line.display_type:
                 if line.product_id.type == "combo":
@@ -1374,6 +1382,9 @@ class SaleOrderLine(models.Model):
                     line.qty_overage and line.order_id.invoice_overages
                 ):
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
+                elif line in auto_invoiced_lines:
+                    # Paid quantities invoiced before their delivery must not be credited back.
+                    line.qty_to_invoice = max(line.qty_delivered - line.qty_invoiced, 0.0)
                 else:
                     line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
                 if line.combo_item_id and line.linked_line_id:
@@ -1387,6 +1398,20 @@ class SaleOrderLine(models.Model):
                 combo_line.qty_to_invoice = combo_line.product_uom_qty - combo_line.qty_invoiced
             else:
                 combo_line.qty_to_invoice = 0
+
+    def _get_automatically_invoiced_lines(self):
+        """Return the lines of `self` invoiced by the automatic invoicing of an online payment.
+
+        See `payment.transaction._invoice_sale_orders`.
+        """
+        auto_invoices = (
+            self.order_id.sudo()
+            .transaction_ids.filtered(lambda tx: tx.state == "done")
+            .invoice_ids.filtered(lambda move: move.state != "cancel")
+        )
+        if not auto_invoices:
+            return self.browse()
+        return self.filtered(lambda line: line.sudo().invoice_lines.move_id & auto_invoices)
 
     @api.depends("state", "product_uom_qty", "qty_delivered", "qty_to_invoice", "qty_invoiced")
     def _compute_invoice_status(self):
