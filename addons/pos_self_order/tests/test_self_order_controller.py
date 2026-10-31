@@ -418,6 +418,62 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertTrue(delivery_lines, "Delivery fee line should be added to the order")
         self.assertAlmostEqual(delivery_lines[0].price_unit, 5.0)
 
+    def test_delivery_fee_not_applied_above_limit(self):
+        """Test that the delivery fee line is not added when the preset is delivery
+        and the order total is above the free delivery threshold."""
+        self.pos_config.self_ordering_mode = 'mobile'
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        delivery_template = self.env['product.template'].create({
+            'name': 'Delivery Fee',
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+        delivery_product = delivery_template.product_variant_id
+        self.delivery_preset.write({
+            'delivery_product_id': delivery_product.id,
+            'delivery_product_price': 5.0,
+            'free_delivery_min_amount': 10.0,
+        })
+
+        # Submit a delivery order without a delivery fee line (cola total ~2.2, below 50.0 threshold)
+        order_data = {
+            'access_token': self.pos_config.access_token,
+            'table_identifier': self.pos_table_1.identifier,
+            'order': {
+                'table_id': self.pos_table_1.id,
+                'company_id': self.env.company.id,
+                'state': 'draft',
+                'preset_id': self.delivery_preset.id,
+                'session_id': self.pos_config.current_session_id.id,
+                'amount_total': 0,
+                'amount_paid': 0,
+                'amount_tax': 0,
+                'amount_return': 0,
+                'uuid': uuid.uuid4().hex,
+                'lines': [[0, 0, {
+                    'uuid': uuid.uuid4().hex,
+                    'product_id': self.cola.id,
+                    'qty': 10,
+                    'price_unit': self.cola.lst_price,
+                    'price_subtotal': self.cola.lst_price,
+                    'tax_ids': [(6, 0, self.cola.taxes_id.ids)],
+                    'price_subtotal_incl': self.cola.lst_price,
+                }]],
+            },
+        }
+
+        data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
+        order = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+
+        delivery_lines = order.lines.filtered(
+            lambda l: l.product_id == delivery_product
+        )
+        self.assertEqual(len(delivery_lines), 0, "Delivery fee line should not be added to the order")
+        self.assertEqual(len(order.lines), 1)
+        self.assertEqual(order.amount_total, 25.3)
+
     def test_preparation_categories_are_loaded(self):
         """
         Preparation categories needs to be loaded in the self-ordering interface

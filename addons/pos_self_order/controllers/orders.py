@@ -36,14 +36,14 @@ class PosSelfOrderController(http.Controller):
         safe_data = pos_config.env['pos.order']._check_pos_order(pos_config, order, device_type, table)
         results = pos_config.env['pos.order'].sudo().with_company(pos_config.company_id.id).sync_from_ui([safe_data])
         order_ids = pos_config.env['pos.order'].browse([order['id'] for order in results['pos.order']])
-        preset_id = order_ids.preset_id
-
-        if preset_id and preset_id.service_at == 'delivery':
-            self._ensure_delivery_fee(order_ids, preset_id)
 
         # Recompute all prices from newly created lines to ensure price correctness and
         # avoid potential manipulation from the frontend
         order_ids.recompute_prices()
+
+        preset_id = order_ids.preset_id
+        if preset_id and preset_id.service_at == 'delivery':
+            self._ensure_delivery_fee(order_ids, preset_id)
 
         # A negative line (a price_extra configured below the product price) would offset
         # the other lines of the order. A line priced at exactly 0 is still accepted: it can
@@ -101,10 +101,12 @@ class PosSelfOrderController(http.Controller):
         existing_delivery_lines = order.lines.filtered(
             lambda l: l.product_id == delivery_product
         )
-        if delivery_is_free:
+        is_changed = False
+        if delivery_is_free and existing_delivery_lines:
             existing_delivery_lines.unlink()
-        elif not existing_delivery_lines:
-            new_line = order.env['pos.order.line'].sudo().create({
+            is_changed = True
+        elif not (existing_delivery_lines or delivery_is_free):
+            order.env['pos.order.line'].sudo().create({
                 'order_id': order.id,
                 'product_id': delivery_product.id,
                 'qty': 1,
@@ -112,7 +114,9 @@ class PosSelfOrderController(http.Controller):
                 'price_subtotal_incl': 0.0,
                 'full_product_name': delivery_product.name,
             })
-            order._compute_line_price(new_line, price=preset.delivery_product_price)
+            is_changed = True
+        if is_changed:
+            order.recompute_prices()
 
     @http.route('/pos-self-order/get-order/<int:order_id>', auth='public', type='jsonrpc', website=True)
     def get_order(self, access_token, order_id, order_access_token):
