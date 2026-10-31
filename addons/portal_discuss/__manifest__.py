@@ -10,6 +10,9 @@
         "views/portal_templates.xml",
     ],
     "assets": {
+        "im_livechat.assets_embed_core": [
+            "portal_discuss/static/src/embed/common/thread_actions.js",
+        ],
         "mail.assets_public": [
             "portal_discuss/static/src/core/common/**/*",
         ],
