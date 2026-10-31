@@ -1380,3 +1380,29 @@ class TestSalePrices(SaleCommon):
         order.pricelist_id = eur_pricelist
         order.action_update_prices()
         self.assertAlmostEqual(order.amount_total, (100 + 50 + 10) * eur_curr.rate, 2)
+
+    def test_productless_line_pricelist_recompute(self):
+        """Check the pricelist change doesn't reset the price_unit of a productless line."""
+        order = self._create_so(
+            order_line=[
+                Command.create({"product_id": self.product.id, "product_uom_qty": 3.0}),
+                Command.create({"name": "Productless Manual Service", "price_unit": 11}),
+            ]
+        )
+
+        fixed_price_pricelist = self.env["product.pricelist"].create({
+            "name": "Fixed Price Pricelist",
+            "item_ids": [
+                Command.create({
+                    "applied_on": "3_global",
+                    "compute_price": "fixed",
+                    "fixed_price": 1,
+                })
+            ],
+        })
+
+        order.pricelist_id = fixed_price_pricelist
+        order.action_update_prices()
+
+        self.assertEqual(order.order_line[0].price_unit, 1)
+        self.assertEqual(order.order_line[1].price_unit, 11)

@@ -1936,7 +1936,7 @@ class SaleOrder(models.Model):
 
     def _get_update_prices_lines(self):
         """Determine the lines whose prices should be recomputed on pricelist change."""
-        return self.order_line.filtered(lambda line: not line.display_type)
+        return self.order_line.filtered(lambda line: not line.display_type and line.product_id)
 
     def _get_invoiceable_lines(self, final=False):
         """Return the invoiceable lines for order `self`."""
