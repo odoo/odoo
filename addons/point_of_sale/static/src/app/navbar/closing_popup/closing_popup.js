@@ -186,8 +186,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         } catch (error) {
             // We have to handle the error manually otherwise the validation check stops the script.
             // In case of "rescue session", we want to display the next popup with "handleClosingError".
-            // FIXME
-            if (!error.data && error.data.message !== "This session is already closed.") {
+            if (!error.data || error.data.message !== "This session is already closed.") {
                 throw error;
             }
         }
