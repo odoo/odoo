@@ -164,7 +164,7 @@ test("Flipped Connections shape takes previous element's background color", asyn
     expect(shapeData.flip.includes("y")).toBe(true);
 });
 
-test("Connections shape uses contrasting color when neighbor has same background", async () => {
+test("Connections shape uses a subtle shade when neighbor has same background", async () => {
     const { waitSidebarUpdated } = await setupHTMLBuilder(
         `
         ${getNoBgShapeSection1(RGB_RED)}
@@ -179,7 +179,22 @@ test("Connections shape uses contrasting color when neighbor has same background
     expect(":iframe #section1 .o_we_shape").toHaveCount(1);
     const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
     expect(shapeData.shape).toBe("html_builder/Connections/01");
-    expect(shapeData.colors.c5).toBe(HEX_O_CC_5);
+    expect(shapeData.colors.c5).toBe("#ff1a1a");
+});
+
+test("Connections shape shades matching transparent backgrounds", async () => {
+    const { waitSidebarUpdated } = await setupHTMLBuilder(
+        `
+        ${getNoBgShapeSection1("transparent")}
+        ${getNoBgShapeSection2("transparent")}
+    `,
+        { styleContent: getShapeTestCSS() }
+    );
+    queryOne(":iframe #section1").parentElement.style.backgroundColor = "#ffffff";
+
+    await clickOnSnippetAndApplyShape("#section1", waitSidebarUpdated);
+    const shapeData = JSON.parse(queryOne(":iframe #section1").dataset.oeShapeData);
+    expect(shapeData.colors.c5).toBe("#e6e6e6");
 });
 
 test("Connections shape takes color when neighbor has same background", async () => {

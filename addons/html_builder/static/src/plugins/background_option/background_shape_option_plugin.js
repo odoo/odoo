@@ -9,7 +9,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { getBgImageURLFromURL } from "@html_editor/utils/image";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getHtmlStyle, getCSSVariableValue } from "@html_editor/utils/formatting";
-import { rgbToHex, isColorGradient } from "@web/core/utils/colors";
+import { rgbToHex, isColorGradient, blendColors } from "@web/core/utils/colors";
 import { isVisible } from "@web/core/utils/ui";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
@@ -607,25 +607,38 @@ export class BackgroundShapeOptionPlugin extends Plugin {
             };
         }
         const neighborEl = this.getAdjacentEl(editingElement);
-        const neighborBgColor = neighborEl && getComputedStyle(neighborEl).backgroundColor;
-        const hasNeighborTransparency = neighborBgColor?.match(/rgba/);
+        const neighborStyle = neighborEl && getComputedStyle(neighborEl);
+        const neighborBgHexColor =
+            neighborStyle && !isColorGradient(neighborStyle.backgroundImage)
+                ? blendColors(neighborStyle.backgroundColor, neighborEl.parentElement)
+                : undefined;
         const computedHexColor =
-            neighborEl &&
-            !isColorGradient(getComputedStyle(neighborEl).backgroundImage) &&
-            !hasNeighborTransparency
-                ? rgbToHex(neighborBgColor)
-                : Object.values(defaultColors)[0]?.toLowerCase();
-        const curBgHexColor = rgbToHex(getComputedStyle(editingElement).backgroundColor);
+            neighborBgHexColor ?? Object.values(defaultColors)[0]?.toLowerCase();
+        const curBgHexColor = blendColors(
+            getComputedStyle(editingElement).backgroundColor,
+            editingElement.parentElement
+        );
+        const ignoreBackgroundColor = this.checkPredicates(
+            "should_ignore_background_color_for_shapes_predicates",
+            editingElement
+        );
+
+        let shapeHexColor =
+            curBgHexColor !== computedHexColor || ignoreBackgroundColor
+                ? computedHexColor
+                : this.getContrastingColor(computedHexColor);
+
+        // Soften the color only when the two snippets have matching backgrounds.
+        if (neighborBgHexColor && curBgHexColor === neighborBgHexColor && !ignoreBackgroundColor) {
+            const overlayColor =
+                this.getLuminance(curBgHexColor) > 127.5
+                    ? "rgba(0, 0, 0, 0.1)"
+                    : "rgba(255, 255, 255, 0.1)";
+            shapeHexColor = blendColors(overlayColor, editingElement);
+        }
 
         return {
-            [defaultKey]:
-                curBgHexColor !== computedHexColor ||
-                this.checkPredicates(
-                    "should_ignore_background_color_for_shapes_predicates",
-                    editingElement
-                )
-                    ? computedHexColor
-                    : this.getContrastingColor(computedHexColor),
+            [defaultKey]: shapeHexColor,
         };
     }
 
