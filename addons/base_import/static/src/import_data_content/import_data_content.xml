@@ -23,11 +23,11 @@
             </div>
             <div t-if="this.props.importMessages.length > 0" class="border-bottom p-2">
                 <t t-foreach="this.props.importMessages" t-as="message" t-key="`${message.lines[0]}-${message_index}`">
-                    <p t-att-class="this.getErrorMessageClass(this.props.importMessages, message.type, message_index)">
+                    <div t-att-class="this.getErrorMessageClass(this.props.importMessages, message.type, message_index)">
                         <t t-foreach="message.lines" t-as="line" t-key="`${line}-${line_index}`">
                             <b t-out="line" /><br/>
                         </t>
-                    </p>
+                    </div>
                 </t>
             </div>
             <table t-if="!this.props.previewError" class="table table-borderless w-100 bg-view">
@@ -36,7 +36,9 @@
                         <th scope="col">File Column</th>
                         <th scope="col">Odoo Field</th>
                         <th t-if="this.hasMultipleLanguages" class="o-translation" scope="col">Language</th>
-                        <th scope="col"/>
+                        <th scope="col" t-att-class="{ 'text-danger': this.hasErrors }">
+                            <t t-if="this.hasErrors">Error Details</t>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,8 +106,12 @@
                                 <t t-foreach="column.comments" t-as="comment" t-key="comment_index">
                                     <p class="m-0 p-2 alert" t-att-class="this.getCommentClass(column, comment, comment_index)"><t t-out="comment.content" /> <b t-if="comment.fieldName" t-out="comment.fieldName"/> <t t-if="this.hasMultipleLanguages and comment.lang"><br/>Lang: <b t-out="comment.lang"/></t></p>
                                 </t>
-                                <ImportDataColumnError t-if="column.errors.length" errors="column.errors" resultNames="column.resultNames" fieldInfo="column.fieldInfo" />
-                                <ImportDataOptions t-if="column.errors.length or column.importOptions" importOptions="column.importOptions" fieldInfo="column.fieldInfo" onOptionChanged="this.props.onOptionChanged" />
+                                <ImportDataColumnError t-if="column.errors.length"
+                                    errors="column.errors"
+                                    resultNames="this.props.resultNames"
+                                    fieldInfo="column.fieldInfo"
+                                    onErrorResolved="this.props.onErrorResolved"
+                                />
                             </td>
                         </tr>
                     </t>

@@ -30,9 +30,6 @@ class TestImportFiles(TransactionCase):
             field_names,
             [r.lower() for r in result["headers"]],
             {
-                "import_skip_records": [],
-                "import_set_empty_fields": [],
-                "fallback_values": {},
                 "name_create_enabled_fields": {},
                 "encoding": "",
                 "separator": "",
