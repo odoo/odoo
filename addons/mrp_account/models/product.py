@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools import float_round, groupby
 
 
@@ -126,3 +126,14 @@ class ProductCategory(models.Model):
         check_company=True,
         help="""This account will be used as a valuation counterpart for both components and final products for manufacturing orders.
                 If there are any workcenter/employee costs, this value will remain on the account once the production is completed.""")
+
+
+class ProductValue(models.Model):
+    _inherit = 'product.value'
+
+    @api.depends("product_id.is_kits")
+    def _compute_adjustment(self):
+        self.product_id.sudo()._compute_is_kits()
+        non_kit_products = self.filtered(lambda pv: not pv.product_id.is_kits)
+        super(ProductValue, non_kit_products)._compute_adjustment()
+        (self - non_kit_products).adjustment = 0
