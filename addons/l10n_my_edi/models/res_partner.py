@@ -97,8 +97,20 @@ class ResPartner(models.Model):
     # Action methods
     # --------------
 
-    def action_validate_tin(self):
-        """ Calling this action will reach our EDI proxy in order to validate the TIN against the provided identification information. """
+    def action_verify_tin(self):
+        """ Search for a missing TIN, otherwise validate the existing TIN. """
+        self.ensure_one()
+
+        # In case of foreign partners, we need to search for a Malaysian TIN, even if the VAT field is filled, cause that can be foreign VAT.
+        is_foreign_partner_without_tin = self.country_code and self.country_code != 'MY' and self.vat and not self.l10n_my_edi_malaysian_tin
+        if not self._l10n_my_edi_get_tin_for_myinvois() or is_foreign_partner_without_tin:
+            return self._search_tin()
+
+        # If a TIN is already set, we will validate it against the identification information.
+        return self._validate_tin()
+
+    def _validate_tin(self):
+        """ Validate the existing TIN against the provided identification information. """
         self.ensure_one()
         if not self._l10n_my_edi_get_tin_for_myinvois() or not self.l10n_my_identification_type or not self.l10n_my_identification_number:
             raise UserError(self.env._('In order to validate the TIN, you must provide the Identification type and number.'))
@@ -120,12 +132,67 @@ class ResPartner(models.Model):
             ref = response['error']['reference']
             # No need to rollback, we don't want to be blocking on that.
             if ref == 'document_tin_not_found':
-                self._message_log(body=self.env._('MyInvois was not able to match the TIN with the provided identification number.\nThis may happen when using generic TIN and will not prevent you from invoicing.'))
+                self._message_log(body=self.env._('The identification number provided does not match the TIN in Myinvois.\
+                    \nThis may happen when using generic TIN and will not prevent you from invoicing. Searching for the right TIN using the identification information.'))
                 self.l10n_my_tin_validation_state = 'invalid'
+                # In case TIN validation fails, we can search for the right TIN using the identification information, as the user may have changed an original TIN.
+                self._search_tin()
             else:
                 self._message_log(body=self.env._('An unexpected error occurred while validating the TIN. Please try again later.'))
         else:
-            self.l10n_my_tin_validation_state = 'valid' if response.get('success') else 'invalid'
+            if response.get('success'):
+                self.l10n_my_tin_validation_state = 'valid'
+            else:
+                self._message_log(body=self.env._('MyInvois was not able to match the TIN with the provided identification number.\
+                    \nSearching for the right TIN using the identification information.'))
+                self.l10n_my_tin_validation_state = 'invalid'
+                # In case TIN validation fails, we can search for the right TIN using the identification information, as the user may have changed an original TIN.
+                self._search_tin()
+
+    def _search_tin(self):
+        """ Fetch and store the TIN for the provided identification. """
+        self.ensure_one()
+        if not self.l10n_my_identification_type or not self.l10n_my_identification_number:
+            raise UserError(self.env._('In order to search for the TIN, you must provide the ID Number and Type.'))
+
+        # Sudo to allow a user without access to the proxy user to search the TIN if needed.
+        proxy_user = self.env.company.sudo().l10n_my_edi_proxy_user_id
+        if not proxy_user:
+            raise UserError(self.env._("Please register for the E-Invoicing service in the settings first."))
+
+        response = proxy_user._l10n_my_edi_contact_proxy('api/l10n_my_edi/1/search_tin', params={
+            'identification_values': {
+                'id_type': self.l10n_my_identification_type,
+                'id_val': self.l10n_my_identification_number,
+            },
+        })
+
+        if response.get('success') and response.get('tin'):
+            fetched_tin = response['tin']
+            if self.country_code and self.country_code != 'MY':
+                # For foreign partners, always set the Malaysian TIN field instead of the `vat` field to avoid issues with standard VAT validation.
+                self.l10n_my_edi_malaysian_tin = fetched_tin
+                self._message_log(body=self.env._("TIN search successful! Found TIN: %s set to Malaysian TIN", fetched_tin))
+            else:
+                # For Malaysian partners or partners without a country, set the TIN to the `vat` so it appears on invoices.
+                self.vat = fetched_tin
+                self._message_log(body=self.env._("TIN search successful! Found TIN: %s set to TIN", fetched_tin))
+            self.l10n_my_tin_validation_state = 'valid'
+        # TODO: With the help of local server setup with myinvois need to check for proper error handling.
+        # As of now for wrong identification information, the IAP does not return `document_not_found` reference which is wrong.
+        elif 'error' in response:
+            # No need to rollback, we don't want to be blocking on that.
+            ref = response['error']['reference']
+            if ref == 'multiple_tin_found':
+                self._message_log(body=self.env._("For the given ID Number and ID Type, multiple TINs were found.\nPlease check the identification information."))
+            elif ref == 'invalid_search_parameters':  # This should not happen, as we check for the parameters before calling the API.
+                self._message_log(body=self.env._("Either ID Number or ID Type is missing.\nPlease check the identification information."))
+            elif ref == 'tin_not_found':
+                self._message_log(body=self.env._("No TIN found for the ID Number and ID Type.\nPlease check the identification information."))
+            else:
+                self._message_log(body=self.env._("An unexpected error occurred while searching for the TIN.\nPlease try again later. Error: %s, and Reference: %s", response['error'].get('message', ''), ref))
+        else:
+            self._message_log(body=self.env._("TIN search did not return a valid result."))
 
     def _l10n_my_edi_get_tin_for_myinvois(self):
         """ Helper to return the VAT number relevant to the situation. """
