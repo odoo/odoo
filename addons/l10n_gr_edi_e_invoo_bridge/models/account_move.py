@@ -1,7 +1,7 @@
 import logging
 import requests
 
-from odoo import models
+from odoo import api, models
 from odoo.tools import LazyTranslate
 from odoo.addons.l10n_gr_edi_e_invoo_bridge.exceptions import EInvooAuthenticationError, EInvooRequestError
 
@@ -79,6 +79,7 @@ class AccountMove(models.Model):
 
         return result
 
+    @api.model
     def _l10n_gr_edi_issue_invoice(self, api_token, test_env, request_values):
         form_values = {
             'send_action': 'post_invoices',
