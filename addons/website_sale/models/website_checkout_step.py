@@ -140,13 +140,20 @@ class WebsiteCheckoutStep(models.Model):
         if invoice_partner_sudo._can_be_edited_by_current_customer(
             order_sudo=order_sudo
         ) and not invoice_partner_sudo._check_billing_address(order_sudo=order_sudo):
-            order_sudo._add_warning_alert(
-                self.env._(
-                    "Your billing address appears to be incomplete or invalid."
-                    " Please ensure all required fields are correctly filled and try again."
-                )
-            )
+            order_sudo._add_warning_alert(self._get_billing_address_alert(order_sudo))
             return f"/shop/address?partner_id={invoice_partner_sudo.id}&address_type=billing"
+
+    def _get_billing_address_alert(self, order_sudo):  # noqa: ARG002
+        """Return the alert shown when the billing address of the cart is incomplete or invalid.
+
+        :param sale.order order_sudo: The current cart, sudoed.
+        :return: The alert message.
+        :rtype: str
+        """
+        return self.env._(
+            "Your billing address appears to be incomplete or invalid."
+            " Please ensure all required fields are correctly filled and try again."
+        )
 
     def _check_shop_checkout_completion(self, order_sudo, **_kwargs):
         """Check whether the `/shop/checkout` step is valid and complete, and return the incomplete

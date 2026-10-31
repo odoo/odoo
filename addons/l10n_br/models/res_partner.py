@@ -16,6 +16,13 @@ class ResPartner(models.Model):
     def _get_all_additional_identifiers_metadata(self):
         return {**super()._get_all_additional_identifiers_metadata(), **BR_ADDITIONAL_IDENTIFIERS_METADATA}
 
+    @api.model
+    def _get_portal_additional_identifiers(self, country_sudo, **kwargs):
+        optional, mandatory = super()._get_portal_additional_identifiers(country_sudo, **kwargs)
+        if self.env.company.account_fiscal_country_id.code == 'BR' and country_sudo.code == 'BR':
+            mandatory.add('BR_CN')
+        return optional, mandatory
+
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()
         frontend_writable_fields.update({'street_number', 'street_name', 'street_number2'})
@@ -25,7 +32,7 @@ class ResPartner(models.Model):
     def _get_mandatory_address_fields(self, country_sudo, **kwargs):
         mandatory_fields = super()._get_mandatory_address_fields(country_sudo, **kwargs)
         if country_sudo.code == "BR":
-            mandatory_fields.update({'street_name', 'street2', 'street_number'})
+            mandatory_fields.update({'street_name', 'street2', 'street_number', 'state_id', 'zip'})
             mandatory_fields.remove('street')
 
         return mandatory_fields
