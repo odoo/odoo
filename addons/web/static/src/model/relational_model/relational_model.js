@@ -807,6 +807,14 @@ export class RelationalModel extends Model {
 
     /**
      * @param {RelationalModelConfig} config
+     * @returns {string[]} the aggregate specifications requested to web_read_group
+     */
+    _getAggregateSpecifications(config) {
+        return getAggregateSpecifications(pick(config.fields, ...config.fieldsToAggregate));
+    }
+
+    /**
+     * @param {RelationalModelConfig} config
      * @param {Object} cache
      */
     async _webReadGroup(config, cache) {
@@ -831,9 +839,7 @@ export class RelationalModel extends Model {
                 }
             });
         }
-        const aggregates = getAggregateSpecifications(
-            pick(config.fields, ...config.fieldsToAggregate)
-        );
+        const aggregates = this._getAggregateSpecifications(config);
         const currentGroupInfos = getGroupInfo(config.groups);
         const { activeFields, fields } = config;
         const evalContext = getBasicEvalContext(config);
