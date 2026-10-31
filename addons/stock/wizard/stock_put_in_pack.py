@@ -16,6 +16,8 @@ class StockPutInPack(models.TransientModel):
     package_capacity = fields.Float('Package Size', compute='_compute_package_capacity', store=True, readonly=False)
     package_uom = fields.Char('Unit', compute='_compute_package_uom')
     show_package_capacity = fields.Boolean(compute='_compute_show_package_capacity')
+    package_count = fields.Integer(compute='_compute_package_count')
+    pack_in_pack_message = fields.Text(help="Pack-in-pack warning message", compute='_compute_pack_in_pack_message', readonly=True)
 
     @api.depends('move_line_ids')
     def _compute_package_type_id(self):
@@ -71,11 +73,37 @@ class StockPutInPack(models.TransientModel):
         for wizard in self:
             wizard.show_package_capacity = len(wizard.move_line_ids) == 1
 
+    @api.depends('package_count')
+    def _compute_pack_in_pack_message(self):
+        for wizard in self:
+            if wizard.package_count == 1:
+                wizard.pack_in_pack_message = self.env._(
+                    "Are you sure you want to put %(package)s into another package?",
+                    package=wizard.package_ids.name)
+            else:
+                wizard.pack_in_pack_message = self.env._(
+                    "Are you sure you want to put the following packages into another package?")
+
+    @api.depends('package_ids')
+    def _compute_package_count(self):
+        for wizard in self:
+            wizard.package_count = len(wizard.package_ids)
+
     def action_put_in_pack(self):
-        context = self._get_put_in_pack_context()
+        self.package_ids._check_nesting_package_type(self.result_package_id.package_type_id or self.package_type_id)
+        if self.package_ids and self.env.context.get('confirm_pack_in_pack'):
+            action = self.env["ir.actions.actions"]._for_xml_id("stock.action_pack_in_pack_wizard")
+            action['res_id'] = self.id
+            return action
+        return self.with_context(self._get_put_in_pack_context())._put_in_pack()
+
+    def action_pack_in_pack(self):
+        return self.with_context(confirm_pack_in_pack=False)._put_in_pack()
+
+    def _put_in_pack(self):
         if self.package_ids:
-            return self.package_ids.with_context(**context).action_put_in_pack(package_id=self.result_package_id.id, package_type_id=self.package_type_id.id)
-        return self.move_line_ids.with_context(**context).action_put_in_pack(
+            return self.package_ids.action_put_in_pack(package_id=self.result_package_id.id, package_type_id=self.package_type_id.id)
+        return self.move_line_ids.action_put_in_pack(
             package_id=self.result_package_id.id,
             package_type_id=self.package_type_id.id,
             package_capacity=self.package_capacity,
