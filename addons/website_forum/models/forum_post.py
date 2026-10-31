@@ -501,7 +501,7 @@ class ForumPost(models.Model):
     def _update_content(self, content, forum_id):
         forum = self.env['forum.forum'].browse(forum_id)
         if content:
-            content = add_seo_rels_to_links(content)
+            content = add_seo_rels_to_links(content, forum.get_base_url())
 
         if self.env.user.karma < forum.karma_editor:
             filter_regexp = r'(<img.*?>)|(<a[^>]*?href[^>]*?>)|(<[a-z|A-Z]+[^>]*style\s*=\s*[\'"][^\'"]*\s*background[^:]*:[^url;]*url)'

@@ -413,7 +413,7 @@ test("not editable builder list option", async () => {
     await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     expect(".o_hb_bg_options_container .builder_list_add_item").toHaveCount(0);
-    expect(".o_hb_bg_options_container .o_hb_input_base[disabled]").toHaveCount(2);
+    expect(".o_hb_bg_options_container .o_hb_list_readonly_item").toHaveCount(2);
 });
 
 test("drops blank textual entries", async () => {

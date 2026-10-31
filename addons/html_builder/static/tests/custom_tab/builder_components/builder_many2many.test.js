@@ -77,7 +77,7 @@ test("many2many: find tag, select tag, unselect tag", async () => {
         `<div class="test-options-target" data-test="[{&quot;id&quot;:2,&quot;display_name&quot;:&quot;Second&quot;,&quot;name&quot;:&quot;Second&quot;}]">b</div>`
     );
     expect("table tr").toHaveCount(1);
-    expect("table input").toHaveValue("Second");
+    expect("table .o_hb_list_readonly_item").toHaveText("Second");
 });
 
 test("many2many: async load", async () => {

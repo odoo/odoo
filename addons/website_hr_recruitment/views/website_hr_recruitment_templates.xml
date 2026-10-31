@@ -182,7 +182,8 @@
 <!-- Apply -->
 <template id="apply">
     <t t-call="website.layout" additional_title.translate="Apply Job">
-
+        <t t-set="editor_message">Drag blocks here to add them on all job application pages</t>
+        <div class="oe_structure oe_empty" id="oe_structure_hr_recruitment_apply_top" t-att-data-editor-message="editor_message"/>
         <div id="wrap"  class="container">
             <nav aria-label="breadcrumb" class="mt-5">
                 <ol class="breadcrumb ps-0 mb-0 pb-1">
@@ -379,7 +380,7 @@
                     </section>
                 </div>
             </div>
-            <div class="oe_structure mt-2"/>
+            <div class="oe_structure oe_empty mt-2" t-att-data-editor-message="editor_message"/>
         </div>
     </t>
 </template>

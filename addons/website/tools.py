@@ -238,19 +238,38 @@ def create_image_attachment(env, image_path, image_name):
     return img
 
 
-def add_seo_rels_to_links(html_template):
+def add_seo_rels_to_links(html_template, base_url=None):
     """
-    Add 'nofollow', 'noopener', 'noreferrer', and 'ugc' to anchor tags.
+    Add 'nofollow', 'noopener', 'noreferrer', and 'ugc' to anchor tags
+    pointing to another website.
     This is useful to prevent users from harming SEO.
 
     :param html_template: the html code to edit
+    :param base_url: the url of the website the content belongs to, links to
+        its domain are considered internal and left untouched
     :return: the updated html template
     """
     try:
         tree = html.fragment_fromstring(str(html_template), create_parent="template")
     except etree.ParserError:
         return html_template
-    links = list(tree.iter('a'))
+    website_domain = base_url and (urlsplit(base_url).hostname or '').removeprefix('www.')
+    links = []
+    for link in tree.iter('a'):
+        # Mimic browsers, which ignore whitespaces and control characters and
+        # read backslashes as slashes (e.g. "/\evil.com" leads to evil.com).
+        url = re.sub(r'[\x00-\x20]', '', link.get('href', '')).replace('\\', '/')
+        try:
+            split_url = urlsplit(url)
+        except ValueError:
+            links.append(link)
+            continue
+        # "///evil.com" has no netloc but browsers also read it as evil.com.
+        if not split_url.scheme and not url.startswith('//'):
+            continue
+        if website_domain and (split_url.hostname or '').removeprefix('www.') == website_domain:
+            continue
+        links.append(link)
     if not links:
         return html_template
     for link in links:

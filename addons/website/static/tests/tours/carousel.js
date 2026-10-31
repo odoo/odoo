@@ -124,7 +124,7 @@ registerWebsitePreviewTour(
         // expose potential race conditions.)
         {
             content: "Add a slide",
-            trigger: "button.btn.btn-success[aria-label='Add Slide']",
+            trigger: "button[aria-label='Add Slide']",
             async run(helpers) {
                 await helpers.click();
                 await delay(360);
@@ -140,7 +140,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Add a slide",
-            trigger: "button.btn.btn-success[aria-label='Add Slide']",
+            trigger: "button[aria-label='Add Slide']",
             async run(helpers) {
                 await helpers.click();
                 await delay(360);

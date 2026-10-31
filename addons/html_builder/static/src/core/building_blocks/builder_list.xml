@@ -30,13 +30,17 @@
                                                 />
                                             </div>
                                         </t>
+                                        <span t-elif="isMany2X || !this.props.isEditable"
+                                              class="o_hb_list_readonly_item text-truncate"
+                                              data-text-truncate-tooltip=""
+                                              t-out="item[entry[0]]"
+                                        />
                                         <t t-else="">
                                             <input  class="o_hb_input_base"
                                                     t-att-type="entry[1]"
                                                     t-att-name="entry[0]"
                                                     t-att-value="item[entry[0]]"
                                                     t-att-data-id="item._id"
-                                                    t-att-disabled="isMany2X || !this.props.isEditable"
                                                     t-on-input="this.onInput"
                                                     t-on-change="this.onChange"
                                             />
