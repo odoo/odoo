@@ -1,6 +1,38 @@
 .o_kanban_view.o_event_kanban_view .o_kanban_renderer {
-    .o_kanban_record > div {
-        min-height: 140px;
+    --EventCardCalendar-width: #{map-get($spacers, 5) * 2};
+
+    .o_card_record {
+        --EventCardBanner-height: calc(var(--EventCardCalendar-width) * .5 + var(--Card-padding-v));
+    }
+
+    .o_event_card_calendar {
+        width: var(--EventCardCalendar-width);
+        aspect-ratio: 1 / 1;
+        background-color: var(--EventCardCalendar-bg-color, #{$white});
+    }
+
+    .o_has_banner {
+        .o_event_card_calendar {
+            margin-top: calc(var(--EventCardBanner-height) * -1);
+        }
+
+        &.o_event_card_main {
+            margin-top: var(--Card-padding-v);
+        }
+    }
+
+    .o_event_card_banner {
+        --Attachment-Image-border-radius: 0;
+
+        height: var(--EventCardBanner-height);
+        margin-top: calc(var(--Card-padding-v)* -1);
+        margin-left: calc(var(--Card-padding-h)* -1);
+        margin-right: calc(var(--Card-padding-h)* -1);
+        border-radius: var(--Card-border-radius-top, 0) var(--Card-border-radius-top, 0) 0 0;
+
+        .o_attachment_image {
+            flex-grow: 1;
+        }
     }
 }
 
