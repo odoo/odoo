@@ -295,3 +295,40 @@ class TestStructure(TransactionCase):
         ro_country = self.env.ref('base.ro').id
         partner_ro = self.env['res.partner'].create({'name': 'Test Peppol RO', 'country_id': ro_country, 'vat': '1234567897'})
         self.assertEqual(partner_ro.vat, '1234567897', "The RO prefix should not be appended for Romania (CUI exception).")
+
+    def test_vat_uz(self):
+        """Test Uzbekistan VAT validation for companies and individuals."""
+        uz_country = self.env.ref('base.uz')
+
+        company_partner = self.env['res.partner'].create({
+            'name': 'UZ Company',
+            'country_id': uz_country.id,
+            'vat': '123456789',
+            'is_company': True,
+        })
+
+        # Company partner must not accept a 14-digit PINFL.
+        with self.assertRaises(ValidationError):
+            company_partner.vat = '12345678901234'
+
+        # Child contact inherits the company's 9-digit TIN
+        company_contact = self.env['res.partner'].create({
+            'name': 'UZ Company Contact',
+            'parent_id': company_partner.id,
+        })
+        self.assertEqual(company_contact.vat, '123456789')
+
+        # Child contact of company must not accept a 14-digit TIN.
+        with self.assertRaises(ValidationError):
+            company_contact.vat = '12345678901234'
+
+        # Individual with a 14-digit PINFL
+        contact = self.env['res.partner'].create({
+        'name': 'UZ Contact',
+        'country_id': uz_country.id,
+        'vat': '12345678901234',
+        })
+
+        # An individual must not accept a 9-digit TIN.
+        with self.assertRaises(ValidationError):
+            contact.vat = '123456789'

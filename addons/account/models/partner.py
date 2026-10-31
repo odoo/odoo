@@ -848,7 +848,7 @@ class ResPartner(models.Model):
 
     def _check_vat(self, validation="error"):
         for partner in self:
-            vat, _country_code = self._run_vat_checks(partner.commercial_partner_id.country_id, partner.vat,
+            vat, _country_code = partner._run_vat_checks(partner.commercial_partner_id.country_id, partner.vat,
                                                partner_name=partner.name, validation=validation)
             if vat != partner.vat:  # To avoid unnecessary queries (perf tested)
                 partner.vat = vat
