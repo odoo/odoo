@@ -13,6 +13,13 @@ _logger = logging.getLogger(__name__)
 
 TEST_GST_NUMBER = "36AABCT1332L011"
 TEST_GST_NUMBER_BVM = "29AAGCB1286Q000"
+B2B_TREATMENTS = [
+            "regular",
+            "composition",
+            "deemed_export",
+            "special_economic_zone",
+            "uin_holders",
+        ]
 
 
 class ResPartner(models.Model):
@@ -267,3 +274,20 @@ class ResPartner(models.Model):
             self.state_id = state_id
         if self.ref_company_ids:
             self.ref_company_ids._update_l10n_in_fiscal_position()
+
+    @api.constrains("vat", "l10n_in_gst_treatment")
+    def _check_vat_and_l10n_in_gst_treatment(self):
+        for partner in self:
+            vat = (partner.vat or "").strip().upper()
+            if (
+                partner.country_code == "IN"
+                and partner.l10n_in_gst_treatment in B2B_TREATMENTS
+                and vat in {"/", "NA"}
+            ):
+                raise ValidationError(
+                    partner._build_vat_error_message(
+                        partner.country_code,
+                        partner.vat,
+                        _("partner%s", f" [{partner.name}]" if partner.name else ""),
+                    )
+                )
