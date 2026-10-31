@@ -166,6 +166,7 @@ export class FormOptionPlugin extends Plugin {
             OnSuccessAction,
             ToggleEndMessageAction,
             FormToggleRecaptchaLegalAction,
+            FormToggleTurnstileLegalAction,
             // Field actions
             CustomFieldAction,
             ExistingFieldAction,
@@ -198,6 +199,7 @@ export class FormOptionPlugin extends Plugin {
             ".s_website_form_send",
             ".s_website_form_field_description",
             ".s_website_form_recaptcha",
+            ".s_website_form_turnstile",
             ".row > div:not(.s_website_form_field, .s_website_form_submit, .s_website_form_field *, .s_website_form_submit *)",
             ".s_website_form_label_content",
         ].map((selector) => `.s_website_form form ${selector}`),
@@ -451,7 +453,7 @@ export class FormOptionPlugin extends Plugin {
                 const _field = { ...field, formatInfo };
                 _field.type = getDefaultFieldType(_field);
                 const locationEl = el.querySelector(
-                    ".s_website_form_submit, .s_website_form_recaptcha"
+                    ".s_website_form_submit, .s_website_form_recaptcha, .s_website_form_turnstile"
                 );
                 locationEl.insertAdjacentElement(
                     "beforebegin",
@@ -554,7 +556,7 @@ export class FormOptionPlugin extends Plugin {
         const fieldEl = renderField(field, this.dependencies.websiteBridge.renderToElement);
         if (editingElement === formEl) {
             const locationEl = formEl.querySelector(
-                ".s_website_form_submit, .s_website_form_recaptcha"
+                ".s_website_form_submit, .s_website_form_recaptcha, .s_website_form_turnstile"
             );
             if (locationEl) {
                 locationEl.insertAdjacentElement("beforebegin", fieldEl);
@@ -1364,6 +1366,23 @@ export class FormToggleRecaptchaLegalAction extends BuilderAction {
     isApplied({ editingElement: el }) {
         const recaptchaLegalEl = el.querySelector(".s_website_form_recaptcha");
         return !!recaptchaLegalEl;
+    }
+}
+export class FormToggleTurnstileLegalAction extends BuilderAction {
+    static id = "formToggleTurnstileLegal";
+    static dependencies = ["websiteBridge"];
+    apply({ editingElement: el }) {
+        const legalEl = this.dependencies.websiteBridge.renderToElement(
+            "website.s_website_form_turnstile_legal"
+        );
+        legalEl.setAttribute("contentEditable", true);
+        el.querySelector(".s_website_form_submit").insertAdjacentElement("beforebegin", legalEl);
+    }
+    clean({ editingElement: el }) {
+        el.querySelector(".s_website_form_turnstile").remove();
+    }
+    isApplied({ editingElement: el }) {
+        return !!el.querySelector(".s_website_form_turnstile");
     }
 }
 // Field actions
