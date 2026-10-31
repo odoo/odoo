@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@id='other_tab_entry']" position="after">
+                    <page id="l10n_si_edi_tab"
+                          string="Slovenia: e-SLOG 2.0"
+                          name="page_si_edi_tab"
+                          invisible="country_code != 'SI'">
+                        <group string="Accounting information"
+                                name="l10n_si_accounting_info_group">
+                            <field name="l10n_si_process_type"
+                                string="Business Process Type"
+                                readonly="state in ['cancel', 'posted']"
+                            />
+                            <field name="l10n_si_reference_type"
+                                readonly="state in ['cancel', 'posted']"
+                            />
+                            <field name="ref"
+                                readonly="state in ['cancel', 'posted']"
+                            />
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
