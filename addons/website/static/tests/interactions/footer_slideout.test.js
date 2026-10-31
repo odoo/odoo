@@ -2,7 +2,7 @@ import { startInteractions, setupInteractionWhiteList } from "@web/../tests/publ
 
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
-import { mockUserAgent } from "@odoo/hoot-mock";
+import { mockMatchMedia, mockUserAgent } from "@odoo/hoot-mock";
 
 setupInteractionWhiteList("website.footer_slideout");
 
@@ -45,4 +45,18 @@ test("footer_slideout adds a class and a pixel if the effect is enabled on safar
     core.stopInteractions();
     expect(core.interactions).toHaveLength(0);
     expect(queryFirst("#wrapwrap > div")).toBe(null);
+});
+
+test("footer_slideout does nothing if reduced motion is preferred", async () => {
+    mockUserAgent("safari");
+    mockMatchMedia({ "prefers-reduced-motion": "reduce" });
+    const { core } = await startInteractions(`
+        <div id="wrapwrap">
+            <main style="min-height: 1000px">Main Content</main>
+            <footer class="o_footer_slideout">Footer Content</footer>
+        </div>
+    `);
+    expect(core.interactions).toHaveLength(1);
+    expect("#wrapwrap").not.toHaveClass("o_footer_effect_enable");
+    expect(queryAll("#wrapwrap > div")).toHaveLength(0);
 });

@@ -80,10 +80,19 @@ export function generateVideoPlayer(parentEl, manageIframeSrcFct) {
         return null;
     }
 
+    // Users preferring reduced motion start the video themselves, which
+    // requires the controls to be visible.
+    const forcedOptions = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? { autoplay: false, hideControls: false }
+        : {};
+
     // A video file is played by a `<video>` element, rebuilt from the options
     // saved on the container since its url does not encode them.
     if (parentEl.dataset.platform === VideoFile.id) {
-        const options = JSON.parse(parentEl.dataset.videoOptions || "{}");
+        const options = {
+            ...JSON.parse(parentEl.dataset.videoOptions || "{}"),
+            ...forcedOptions,
+        };
         const videoEl = VideoFile.createPlayerElement({ embedUrl: src, options });
         parentEl.append(videoEl);
         return videoEl;
@@ -103,7 +112,7 @@ export function generateVideoPlayer(parentEl, manageIframeSrcFct) {
         return null;
     }
     // Sanitize the URL by processing it back into the platform matcher.
-    src = PLATFORMS[platform].getVideoUrlData(urlMatch).embedUrl;
+    src = PLATFORMS[platform].getVideoUrlData(urlMatch, forcedOptions).embedUrl;
 
     const iframeEl = document.createElement("iframe");
     iframeEl.setAttribute("frameborder", "0");

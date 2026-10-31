@@ -1808,7 +1808,9 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, var(--o-bs-spacer
            So we enable this only for >= XL devices. */
         &.s_parallax_is_fixed {
             > .s_parallax_bg, > .s_parallax_bg_wrap > .s_parallax_bg {
-                background-attachment: fixed;
+                @media (prefers-reduced-motion: no-preference) {
+                    background-attachment: fixed;
+                }
             }
         }
     }
@@ -2480,7 +2482,7 @@ header {
 }
 
 @if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
-    @media (min-width: 992px) {
+    @media (min-width: 992px) and (prefers-reduced-motion: no-preference) {
         #wrapwrap.o_footer_effect_enable {
             > main {
                 @if o-website-value('layout') == 'full' {

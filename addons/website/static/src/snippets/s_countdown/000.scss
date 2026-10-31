@@ -1,3 +1,15 @@
+@media (prefers-reduced-motion: reduce) {
+    .s_countdown {
+        .o_countdown_seconds, .o_count_separator:has(+ .o_countdown_seconds) {
+            display: none !important;
+        }
+
+        .o_count_item:has(+ .o_countdown_seconds)::after {
+            display: none;
+        }
+    }
+}
+
 .s_countdown_inline {
     font-variant-numeric: tabular-nums;
 
