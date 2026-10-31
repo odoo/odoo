@@ -1574,3 +1574,287 @@ test("Open record on new window", async () => {
     ]);
 });
 
+test("Display warning when record count limit is exceeded and check number of records abide", async () => {
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 2 });
+    Employee._records.push(
+        { id: 5, name: "Harrison" },
+        { id: 6, name: "Tyler" },
+    )
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+
+    expect(".o_notification_content").toHaveText(/hierarchy cannot display more than/);  // check if it's the specific warning
+    expect(".o_hierarchy_node_container").toHaveCount(2);
+});
+
+test("No warning when record count limit is not exceeded", async () => {
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 20 });
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+    expect(".o_notification").toHaveCount(0);
+});
+
+test("Display warning when viewing children leads to exceeding record count limit", async () => {
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 3 });
+    Employee._records.push(
+        { id: 5, name: "Tyler" },
+    );
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+    });
+
+    expect(".o_hierarchy_node_container").toHaveCount(2);
+    await contains("button[name='hierarchy_search_subsidiaries']").click();
+    expect(".o_notification_content").toHaveText(/hierarchy cannot display more than/);
+    expect(".o_hierarchy_node_container").toHaveCount(3);  // with test data, would be 4 with no limit
+});
+
+test("Display warning when viewing parent leads to exceeding record count limit", async () => {
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 3 });
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        viewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="test" domain="[['id', '=', 4]]"/>
+            </search>
+        `,
+    });
+    await enableFilters(["test"]);
+
+    expect(".o_hierarchy_node_container").toHaveCount(2);
+    expect(".o_notification").toHaveCount(0);
+
+    await contains("button[name='hierarchy_search_parent_node']").click();
+
+    expect(".o_notification_content").toHaveText(/hierarchy cannot display more than/);
+    expect(".o_hierarchy_node_container").toHaveCount(3);
+});
+
+function getEmpButton(empName){
+    return `.o_hierarchy_node_container:has(.o_hierarchy_node_header:contains('${empName}')) button[name='hierarchy_search_subsidiaries']`;
+}
+
+test("Cached children do not appear if it leads to exceeding record count limit", async () => {
+    /*
+        What we want to test is that Employee 1 does not render all children after
+        showing the Employee 5 ancestor as it would surpass the limit. However, Employee 1
+        should still be shown to have a total of all the children
+    */
+
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 5 });
+    Employee._records.push(
+        { id: 5, name: "Emp 0", parent_id: 6},
+        { id: 6, name: "Emp 1", parent_id: 7, child_ids: [5, 11]},
+        { id: 7, name: "Emp 2", parent_id: 10, child_ids: [6, 8]},
+        { id: 8, name: "Emp 3", parent_id: 7, child_ids: [9]},
+        { id: 9, name: "Emp 4", parent_id: 8},
+        { id: 10, name: "Emp 5", child_ids: [7]},
+        { id: 11, name: "Emp 6", parent_id: 6},
+    );
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        viewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="test" domain="[['id', '=', 6]]"/>
+            </search>
+        `,
+    });
+    await enableFilters(["test"]);
+
+    expect(".o_hierarchy_node_container").toHaveCount(5);
+    expect(".o_hierarchy_node_header:contains('Emp 6')").toHaveCount(1);  // employee 6 is the card we don't want to show again later
+    await contains(getEmpButton("Emp 1")).click();
+    expect(".o_hierarchy_node_container").toHaveCount(3);
+
+    await contains("button[name='hierarchy_search_parent_node']").click();
+    expect(".o_hierarchy_node_container").toHaveCount(4);
+
+    await contains(getEmpButton("Emp 1")).click();
+    expect(".o_notification_content").toHaveText(/hierarchy cannot display more than/);
+    expect(".o_hierarchy_node_container").toHaveCount(5);
+    expect(".o_hierarchy_node_header:contains('Emp 6')").toHaveCount(0);
+
+    await contains(getEmpButton("Emp 3")).click();
+    expect(`${getEmpButton("Emp 1")} span.text-end`).toHaveText("2");  // emp 1 should still be shown to have a total of 2 children
+});
+
+function overwriteEmployeesLimitTesting(){
+    // we will be placing test node in different spots for each test so dont define its parent
+    Employee._records = [
+        { id: 1, name: "root", child_ids: [2, 3]},
+        { id: 2, name: "child 1", parent_id: 1, child_ids: [4]},
+        { id: 3, name: "child 2", parent_id: 1},
+        { id: 4, name: "grandchild", parent_id: 2},
+        { id: 5, name: "test node", child_ids: [6, 7]},  // node that will be dragged around
+        { id: 6, name: "test node child 1", parent_id: 5},
+        { id: 7, name: "test node child 2", parent_id: 5},
+    ];
+
+    return Employee._records.find(record => record.id === 5);
+}
+
+test("Limit functions properly when moving node up", async () => {
+    // This test moves node to its uncle
+    const testNode = overwriteEmployeesLimitTesting();
+    testNode.parent_id = 3;
+
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 6 });
+    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
+        "<hierarchy>",
+        "<hierarchy draggable='1'>"
+    );
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        viewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="test" domain="[['id', '=', 3]]"/>
+            </search>
+        `,
+    });
+    await enableFilters(["test"]);
+
+    // show the children. wont surpass the limit so all rendered
+    expect(".o_hierarchy_node_container").toHaveCount(4);
+    await contains(getEmpButton("test node")).click();
+    expect(".o_notification").toHaveCount(0);
+    expect(".o_hierarchy_node_container").toHaveCount(6);
+
+    // dragging to other node will lead to exceeding limit
+    await contains(".o_hierarchy_node_container:eq(3) .o_hierarchy_node").dragAndDrop(
+        ".o_hierarchy_node_container:eq(2)"
+    );
+    expect(".o_notification_content").toHaveText(/hierarchy cannot display more than/);
+    expect(".o_hierarchy_node_container").toHaveCount(6);
+    expect(".o_hierarchy_node_header:contains('test node child 2')").toHaveCount(0);
+});
+
+test("Limit functions properly when node moved to sibling", async () => {
+    const testNode = overwriteEmployeesLimitTesting();
+    testNode.parent_id = 2;
+    Employee._records.push({id: 8, name: "grandchild child", parent_id: 4});
+    Employee._records.find(record => record.id === 4).child_ids = [8];
+
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 6 });
+    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
+        "<hierarchy>",
+        "<hierarchy draggable='1'>"
+    );
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        viewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="test" domain="[['id', '=', 2]]"/>
+            </search>
+        `,
+    });
+    await enableFilters(["test"]);
+
+    // show the children. will surpass the limit
+    expect(".o_hierarchy_node_container").toHaveCount(5);
+    await contains(getEmpButton("test node")).click();
+    expect(".o_notification_content").toHaveText(/hierarchy cannot display more than/);
+    expect(".o_hierarchy_node_container").toHaveCount(6);
+    expect(".o_hierarchy_node_header:contains('test node child 2')").toHaveCount(0);
+
+    // dragging to other node will lead to exceeding limit again
+    await contains(".o_hierarchy_node_container:eq(4) .o_hierarchy_node").dragAndDrop(
+        ".o_hierarchy_node_container:eq(3)"
+    );
+    expect(".o_notification_content").toHaveText(/hierarchy cannot display more than/);
+    expect(".o_hierarchy_node_container").toHaveCount(6);
+    // ordered by id instead of name in mock so grandchild child shouldn't appear
+    expect(".o_hierarchy_node_header:contains('grandchild child')").toHaveCount(0);
+});
+
+test("Limit functions properly when node moved down", async () => {
+    // node is at root level
+    overwriteEmployeesLimitTesting();
+    Employee._records.push({id: 8, name: "grandchild child", parent_id: 4});
+    Employee._records.find(record => record.id === 4).child_ids = [8];
+
+    let model;
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 6 });
+    patchWithCleanup(HierarchyModel.prototype, {
+        setup() {
+            super.setup(...arguments);
+            model = this;
+        },
+    });
+    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
+        "<hierarchy>",
+        "<hierarchy draggable='1'>"
+    );
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        viewId: false,
+    });
+
+    expect(".o_hierarchy_node_container").toHaveCount(2);
+    await contains(getEmpButton("root")).click();
+    await contains(getEmpButton("child 1")).click();
+    await contains(getEmpButton("grandchild")).click();
+    await contains(".o_hierarchy_node_container:eq(1) .o_hierarchy_node").dragAndDrop(
+        ".o_hierarchy_node_container:eq(5)"
+    );
+    expect(".o_hierarchy_node_container").toHaveCount(6);
+
+    // double check that node was moved from root and the limit is correct
+    expect(".o_hierarchy_row:first-child .o_hierarchy_node_container").toHaveCount(1);
+    expect(model.limit).toBe(0);
+});
+
+test("Limit functions properly when node moved to root", async () => {
+    // node is at root level
+    const testNode = overwriteEmployeesLimitTesting();
+    testNode.parent_id = 2;
+
+    let model;
+    patchWithCleanup(HierarchyModel, { RECORD_COUNT_LIMIT: 6 });
+    patchWithCleanup(HierarchyModel.prototype, {
+        setup() {
+            super.setup(...arguments);
+            model = this;
+        },
+    });
+    Employee._views["hierarchy"] = Employee._views["hierarchy"].replace(
+        "<hierarchy>",
+        "<hierarchy draggable='1'>"
+    );
+    await mountView({
+        type: "hierarchy",
+        resModel: "hr.employee",
+        viewId: false,
+        searchViewArch: `
+            <search>
+                <filter name="test" domain="[['id', '=', 2]]"/>
+            </search>
+        `,
+    });
+    await enableFilters(["test"]);
+
+    await contains(getEmpButton("test node")).click();
+    expect(".o_notification_content").toHaveText(/hierarchy cannot display more than/);
+    expect(".o_hierarchy_node_container").toHaveCount(6);
+    await contains(".o_notification_close").click();
+
+    await contains(".o_hierarchy_node_container:eq(4) .o_hierarchy_node").dragAndDrop(
+        ".o_hierarchy_row:first-child"
+    );
+    expect(".o_notification").toHaveCount(0);
+    expect(model.limit).toBe(2);
+    expect(".o_hierarchy_node_container").toHaveCount(4);
+});
