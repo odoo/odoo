@@ -659,6 +659,7 @@ class ThreadedServer(CommonServer):
         rc = preload_registries(preload)
 
         if stop:
+            keep_test_httpd = None
             if config['test_enable']:
                 logger = odoo.tests.result._logger
                 with Registry.registries._lock:
@@ -668,7 +669,25 @@ class ThreadedServer(CommonServer):
                          else logger.warning if not report.testsRun \
                          else logger.info
                         log("%s when loading database %r", report, db)
+                # when running tests we need to keep the httpd alive when start is invoked with stop
+                # otherwise depending on the startup time of httpd if self.httpd is already set
+                # when self.stop() is stopping it stops the self.httpd before the tests have run
+                # and tests depending on httpd / chromium will fail
+                # therefore we wait for test httpd startup and set self.httpd to None for stop and
+                # fix it after the "stop" has been executed
+                start_wait = None
+                while not self.httpd:
+                    if start_wait is None:
+                        _logger.info("waiting for httpd to be available for tests (30s)")
+                        start_wait = time.time()
+                    elif time.time() - start_wait > 30:
+                        _logger.warning("httpd for tests did not start within 30 seconds")
+                    time.sleep(0.1)
+                keep_test_httpd = self.httpd
+                self.httpd = None
             self.stop()
+            if config['test_enable'] and keep_test_httpd:
+                self.httpd = keep_test_httpd
             return rc
 
         self.cron_spawn()
