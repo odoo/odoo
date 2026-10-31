@@ -290,6 +290,9 @@ test("parse smart date input", async () => {
     expect(parseDateTime("now").toFormat(format)).toBe("2020-01-01 00:01");
     expect(parseDateTime("today").toFormat(format)).toBe("2020-01-01 00:00");
     expect(parseDateTime("today +1w").toFormat(format)).toBe("2020-01-08 00:00");
+    // dates are in UTC because tz does not matter and this is more in line with
+    // python implementation
+    expect(parseDateTime("today").offset).toBe(0);  
 
     expect(parseDateTime("=monday").toFormat(format)).toBe("2019-12-30 00:00");
     expect(parseDateTime("=sunday").toFormat(format)).toBe("2020-01-05 00:00");
