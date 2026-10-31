@@ -50,12 +50,11 @@
 .o-mail-Attachment-hover {
     background: var(--gray-100);
     z-index: 2;
+    &:has(.o-dropdown.show) {
+        opacity: 1 !important;
+    }
     &.o-bgTranslucent {
         background: rgba(0, 0, 0, 0.4);
-    }
-
-    .btn {
-        --btn-group-gap: 0;
     }
 }
 

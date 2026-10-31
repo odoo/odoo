@@ -74,8 +74,8 @@ test("can jump to attachment in conversation from attachment panel", async () =>
     await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
     await contains(".o-mail-DiscussContent-header button[title='Attachments']:count(1)").click();
     await contains(
-        `${actionPanel("Attachments")}
-        .o-mail-AttachmentButtons button[title='Show in Conversation']:count(1)`
+        `${actionPanel("Attachments")} .o-mail-AttachmentContainer [title='Actions']`
     ).click();
+    await contains(".dropdown-item:text('Show in Conversation')").click();
     await waitFor(".o-mail-Message.o-highlighted:contains('Here is my cat!'):count(1)");
 });
