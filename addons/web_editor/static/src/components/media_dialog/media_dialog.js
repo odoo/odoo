@@ -118,6 +118,7 @@ export class MediaDialog extends Component {
             this.addTab(TABS.IMAGES, {
                 useMediaLibrary: this.props.useMediaLibrary,
                 multiSelect: this.props.multiImages,
+                validateUrl: this.props.validateUrl,
             });
         }
         if (!noDocuments) {
