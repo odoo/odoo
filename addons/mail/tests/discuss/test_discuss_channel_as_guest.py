@@ -71,6 +71,27 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.assertTrue(self.channel.message_ids[0].author_guest_id)
         self.start_tour(self.channel.invitation_url, self.tour, cookies={guest._cookie_name: guest._format_auth_cookie()})
 
+    def test_discuss_channel_page_redirects_to_login_without_persona(self):
+        private_channel = self.env["discuss.channel"].channel_create(
+            name="Private channel",
+            group_id=self.env.ref("base.group_user").id,
+        )
+        for channel in self.channel + private_channel:
+            res = self.url_open(f"/discuss/channel/{channel.id}")
+            self.assertURLEqual(
+                res.url,
+                f"/web/login?redirect=%2Fdiscuss%2Fchannel%2F{channel.id}%3F",
+            )
+        guest = self.channel.channel_member_ids.guest_id
+        self.opener.cookies[guest._cookie_name] = guest._format_auth_cookie()
+        res = self.url_open(f"/discuss/channel/{private_channel.id}")
+        self.assertURLEqual(
+            res.url,
+            f"/web/login?redirect=%2Fdiscuss%2Fchannel%2F{private_channel.id}%3F",
+        )
+        res = self.url_open(f"/discuss/channel/{self.channel.id}")
+        self.assertURLEqual(res.url, f"/discuss/channel/{self.channel.id}")
+
     def test_discuss_channel_public_page_call_public(self):
         self.channel.default_display_mode = 'video_full_screen'
         self.start_tour(self.channel.invitation_url, "discuss_channel_call_public_tour.js")
