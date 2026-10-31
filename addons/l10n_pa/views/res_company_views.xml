@@ -12,6 +12,16 @@
                        class="o_address_street"
                        options="{'no_open': True, 'no_quick_create': True}"
                        invisible="country_code != 'PA'"/>
+                <field name="l10n_pa_poblado"
+                       placeholder="Poblado..."
+                       class="o_address_street"
+                       options="{'no_open': True, 'no_quick_create': True}"
+                       invisible="country_code != 'PA'"/>
+                <field name="l10n_pa_barrio"
+                       placeholder="Barrio..."
+                       class="o_address_street"
+                       options="{'no_open': True, 'no_quick_create': True}"
+                       invisible="country_code != 'PA'"/>
             </field>
             <xpath expr="//div[@name='identifiers']" position="after">
                 <field name="l10n_pa_dv" placeholder="e.g. 00" invisible="country_code != 'PA'"/>

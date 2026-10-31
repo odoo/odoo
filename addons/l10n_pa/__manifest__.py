@@ -5,7 +5,7 @@
     'icon': '/account/static/description/l10n.png',
     'countries': ['pa'],
     'description': """
-Panamenian accounting chart and tax localization.
+Panamanian accounting chart and tax localization.
 
 Plan contable panameño e impuestos de acuerdo a disposiciones vigentes
 
@@ -14,6 +14,7 @@ Con la Colaboración de
 
     """,
     'author': 'Cubic ERP',
+    'version': '1.1',
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'account',
@@ -27,10 +28,15 @@ Con la Colaboración de
         'views/res_company_views.xml',
         'views/res_city_views.xml',
         'views/res_city_corregimiento_views.xml',
+        'views/res_city_corregimiento_poblado_views.xml',
+        'views/res_city_corregimiento_poblado_barrio_views.xml',
         'data/res_country_data.xml',
+        'data/account_tax_report_data.xml',
         'data/l10n_latam.document.type.csv',
         'data/res.city.csv',
         'data/l10n_pa.res.city.corregimiento.csv',
+        'data/l10n_pa.res.city.corregimiento.poblado.csv',
+        'data/l10n_pa.res.city.corregimiento.poblado.barrio.csv',
         'security/ir.access.csv',
     ],
     'demo': [
