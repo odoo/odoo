@@ -694,21 +694,26 @@ will update the cost of every lot/serial number in stock."),
             products_orig_quantity_svl[product['id']] = product['quantity_svl']
         impacted_products |= self.env['product.product'].browse(impacted_product_ids)
 
+        # Only products holding stock are emptied: don't read valuation layers otherwise,
+        # so users without access to them can still change the category of such products.
+        products_with_stock = impacted_products.filtered(
+            # FIXME sle: why not use products_orig_quantity_svl here?
+            lambda p: not float_is_zero(p.quantity_svl, precision_rounding=p.uom_id.rounding))
+        if not products_with_stock:
+            return [], products_orig_quantity_svl, impacted_products
+
         # empty out the stock for the impacted products
         empty_stock_svl_list = []
         lots_by_product = defaultdict(lambda: self.env['stock.lot'])
         res = self.env["stock.valuation.layer"]._read_group(
-            [("product_id", "in", impacted_products.ids), ("remaining_qty", "!=", 0)],
+            [("product_id", "in", products_with_stock.ids), ("remaining_qty", "!=", 0)],
             ["product_id"],
             ["lot_id:recordset"],
         )
         for group in res:
             lots_by_product[group[0].id] |= group[1]
-        for product in impacted_products:
-            # FIXME sle: why not use products_orig_quantity_svl here?
-            if float_is_zero(product.quantity_svl, precision_rounding=product.uom_id.rounding):
-                # FIXME: create an empty layer to track the change?
-                continue
+        for product in products_with_stock:
+            # FIXME: create an empty layer to track the change?
             if product.lot_valuated:
                 if float_compare(product.quantity_svl, 0, precision_rounding=product.uom_id.rounding) > 0:
                     for lot in lots_by_product[product.id]:
