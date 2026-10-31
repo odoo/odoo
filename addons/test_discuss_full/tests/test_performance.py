@@ -89,6 +89,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: self_member_id of the current user (first occurrence)
     #       - fetch res_users
     #       - search discuss_channel JOIN member
+    #   1: search_fetch discuss_channel_member (_get_self_pinned_channel_ids)
     #   8: load more, twice per tab (the priority domain first, then the rest) for the
     #      chat, channel, meeting and livechat tabs:
     #       - search_fetch discuss_channel
@@ -166,7 +167,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_fetch mail_call_artifact (_compute_recording_media)
     #       - search mail_message_schedule (last message of the needaction message)
     #   1: select the current db snapshot
-    _query_count_messaging_menu_channels = 75
+    _query_count_messaging_menu_channels = 76
 
     def setUp(self):
         super().setUp()
