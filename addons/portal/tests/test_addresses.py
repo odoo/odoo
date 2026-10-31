@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.http import Request
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import JsonRpcException
@@ -78,6 +80,26 @@ class TestPortalAddresses(BaseCommon, HttpCase):
 
     def _submit_address_values(self, values):
         return self._make_http_post_request(self.submit_url, values).json()
+
+    def test_country_info_with_city_id_address_field(self):
+        #  Mocks the `get_address_fields()` method, city_id is allowed in base_address_extended module.
+        address_fields = ['street', 'city_id', 'zip', 'country_name']
+        country_info_url = urls.urljoin(
+            self.base_url(),
+            f'/my/address/country_info/{self.country_be.id}',
+        )
+        with patch.object(
+            self.env.registry['res.country'],
+            'get_address_fields',
+            return_value=address_fields,
+        ):
+            result = self.make_jsonrpc_request(
+                country_info_url,
+                params={'address_type': 'billing'},
+            )
+
+        self.assertEqual(result['fields'], ['street', 'city_id', 'zip', 'country_name'])
+        self.assertFalse(result['zip_before_city'])
 
     def test_required_values(self):
         """Check that empty values for required fields are correctly caught."""
