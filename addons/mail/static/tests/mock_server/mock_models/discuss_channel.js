@@ -710,6 +710,17 @@ export class DiscussChannel extends models.ServerModel {
         );
         const store = new Store().add(subChannels, "_store_channel_fields");
         BusBus._sendone(partner, "mail.record/insert", store.as_dict());
+        if (message) {
+            BusBus._sendone(
+                self,
+                "mail.record/insert",
+                new Store()
+                    .add(MailMessage.browse(message.id), (res) =>
+                        res.one("linkedSubChannel", [], { value: subChannels })
+                    )
+                    .as_dict()
+            );
+        }
         this.message_post(
             self.id,
             makeKwArgs({

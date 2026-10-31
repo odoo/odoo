@@ -269,6 +269,30 @@ export class MailMessage extends models.ServerModel {
 
     _store_extra_fields(res, { format_reply } = {}) {
         if (format_reply) {
+            /** @type {import("mock_models").DiscussChannel} */
+            const DiscussChannel = this.env["discuss.channel"];
+            const topChannelIds = DiscussChannel.browse(
+                this.filter((m) => m.model === "discuss.channel").map((m) => m.res_id)
+            )
+                .filter(
+                    (channel) => channel.channel_type === "channel" && !channel.parent_channel_id
+                )
+                .map((channel) => channel.id);
+            const channelMessageIds = this.filter(
+                (m) => m.model === "discuss.channel" && topChannelIds.includes(m.res_id)
+            ).map((m) => m.id);
+            if (channelMessageIds.length) {
+                const subChannels = DiscussChannel.browse(
+                    DiscussChannel.search([["from_message_id", "in", channelMessageIds]])
+                );
+                const subChannelIdByMessageId = Object.fromEntries(
+                    subChannels.map((channel) => [channel.from_message_id, channel.id])
+                );
+                res.one("linkedSubChannel", [], {
+                    predicate: (m) => channelMessageIds.includes(m.id),
+                    value: (m) => DiscussChannel.browse(subChannelIdByMessageId[m.id] ?? []),
+                });
+            }
             // discuss override: parent message of channel messages
             res.one("parent_id", "_store_message_fields", {
                 fields_params: { format_reply: false },
