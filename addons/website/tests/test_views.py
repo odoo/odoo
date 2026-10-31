@@ -1426,6 +1426,88 @@ class TestCowViewSaving(TestViewSavingCommon, HttpCase):
 
 
 @tagged('-at_install', 'post_install')
+class TestLoadedViews(common.TransactionCase):
+
+    def test_specific_view_loaded_with_its_generic_view(self):
+        """ During a module update, a website-specific view counts as loaded
+        once the update has reloaded the generic view with the same key. """
+        View = self.env['ir.ui.view']
+        generic_view, specific_view = View.create([{
+            'name': 'Test View',
+            'type': 'qweb',
+            'arch': '<div>%s</div>' % name,
+            'key': 'test_being_updated.test_view',
+            'website_id': website_id,
+        } for name, website_id in (('generic', False), ('specific', 1))])
+        self.env['ir.model.data'].create({
+            'module': 'test_being_updated',
+            'name': 'test_view',
+            'model': 'ir.ui.view',
+            'res_id': generic_view.id,
+        })
+        views = (generic_view + specific_view).with_context(website_id=1)
+
+        with patch.object(self.registry, 'loaded_xmlids', set()):
+            self.assertFalse(views._get_loaded_xmlid_view_ids())
+            self.registry.loaded_xmlids.add('test_being_updated.test_view')
+            self.assertEqual(views._get_loaded_xmlid_view_ids(), set(views.ids))
+
+    def test_copy_views_of_loading_module(self):
+        """ During the load of a module, writing one of its views in a website
+        context copies the tree of that view for the website. Each copy must be
+        checked with the copies of the views that the load has already loaded.
+        """
+        # P: primary, E: extension
+        #
+        #       P1
+        #      /  \
+        #    E1    E2
+        #
+        # P1, E1 and E2 belong to the module being loaded, E2 targets an
+        # element that E1 adds.
+        View = self.env['ir.ui.view']
+        p1 = View.create({
+            'name': 'test_view_p1',
+            'type': 'qweb',
+            'key': 'test_being_loaded.test_view_p1',
+            'arch': '<div><p1/></div>',
+        })
+        e1, e2 = View.create([{
+            'name': name,
+            'mode': 'extension',
+            'inherit_id': p1.id,
+            'key': 'test_being_loaded.%s' % name,
+            'arch': arch,
+        } for name, arch in (
+            ('test_view_e1', '<p1 position="after"><div id="anchor"/></p1>'),
+            ('test_view_e2', '<div id="anchor" position="inside"><e2/></div>'),
+        )])
+        views = p1 + e1 + e2
+        self.env['ir.model.data'].create([{
+            'module': 'test_being_loaded',
+            'name': view.name,
+            'model': 'ir.ui.view',
+            'res_id': view.id,
+        } for view in views])
+        website = self.env.ref('website.default_website')
+
+        # simulate the registry state while test_being_loaded is being loaded,
+        # after it loaded the three views
+        with (
+            patch.object(self.registry, '_init', True),
+            patch.object(self.registry, '_init_modules', {'base', 'website'}),
+            patch.object(self.registry, 'loaded_xmlids', set(views.get_external_id().values())),
+        ):
+            p1.with_context(website_id=website.id).write({'name': 'test_view_p1_copy'})
+
+        specific_p1 = View.search([('key', '=', p1.key), ('website_id', '=', website.id)])
+        self.assertEqual(
+            specific_p1.with_context(website_id=website.id).get_combined_arch(),
+            '<div><p1/><div id="anchor"><e2/></div></div>',
+        )
+
+
+@tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def setUp(self):
         super(Crawler, self).setUp()
