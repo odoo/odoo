@@ -10,7 +10,7 @@ import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
 import { registry } from "@web/core/registry";
-import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
+import { refresh, scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("PosLoyaltyTour1", {
     steps: () =>
@@ -355,16 +355,32 @@ registry.category("web_tour.tours").add("PosLoyaltyTour11.2", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Partner"),
             PosLoyalty.customerIs("AAA Partner"),
-            ProductScreen.clickDisplayedProduct("Product Test"),
-            ProductScreen.totalAmountIs("50.00"),
+            ProductScreen.addOrderline("Product Test", "2"),
+            ProductScreen.totalAmountIs("100.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.enterCode("123456"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product"),
             PosLoyalty.hasRewardLine("Free Product", "-3.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
-            ProductScreen.totalAmountIs("50.00"),
-            PosLoyalty.finalizeOrder("Cash", "50"),
+            ProductScreen.totalAmountIs("100.00"),
+            PosLoyalty.finalizeOrder("Cash", "100"),
+            refresh(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            Chrome.waitRequest(),
+            Chrome.waitRequest(),
+            {
+                trigger: "body",
+                run: () => {
+                    const order = posmodel.data.models["pos.order"]
+                        .getAll()
+                        .filter((o) => o.state === "paid")[0];
+                    if (!order.new_coupon_info && !order.raw.new_coupon_info) {
+                        throw Error("Next order coupon is missing");
+                    }
+                },
+            },
         ].flat(),
 });
 

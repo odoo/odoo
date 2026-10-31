@@ -3,9 +3,17 @@
 from collections import defaultdict
 from markupsafe import Markup
 
+<<<<<<< d7f40089f6b779949c53a1b50404cb91919a5aa7
 from odoo import _, models
 from odoo.tools import BinaryBytes, float_compare
 from odoo.tools.image import image_data_uri
+||||||| 875c54e4df119769a82c8c3304b2e60c79dbf2b5
+from odoo import _, models
+from odoo.tools import float_compare
+=======
+from odoo import _, models, api
+from odoo.tools import float_compare
+>>>>>>> c752c1b84f14ba067025850a4637935f27d4a426
 
 
 class PosOrder(models.Model):
@@ -254,6 +262,22 @@ class PosOrder(models.Model):
         ).format(message=_('Loyalty coupon sold'), order_name=self._get_html_link())
         for gift_card in gift_cards:
             gift_card.message_post(body=body)
+
+    @api.model
+    def read_pos_orders(self, domain=False):
+        data = super().read_pos_orders(domain)
+        order_ids = [order['id'] for order in data['pos.order']]
+        loyalty_data = self._get_loyalty_data(order_ids)
+
+        if not loyalty_data:
+            return data
+
+        for order in data['pos.order']:
+            order_data = loyalty_data.get(order['id'], {})
+            order['loyalties'] = order_data.get('loyalties', [])
+            order['new_coupon_info'] = order_data.get('new_coupons', [])
+
+        return data
 
     def _check_existing_loyalty_cards(self, coupon_data):
         coupon_key_to_modify = []
