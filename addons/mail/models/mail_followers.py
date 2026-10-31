@@ -26,7 +26,9 @@ class MailFollowers(models.Model):
     res_model = fields.Char(
         'Related Document Model Name', required=True, index=True)
     res_id = fields.Many2oneReference(
-        'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model')
+        'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model',
+        ondelete=lambda s, model: 'cascade' if isinstance(model, s.env.registry['mail.thread']) else 'ignore',
+    )
     partner_id = fields.Many2one(
         'res.partner', string='Related Partner', index=True, ondelete='cascade', required=True)
     subtype_ids = fields.Many2many(

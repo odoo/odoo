@@ -1,4 +1,6 @@
+from __future__ import annotations
 
+import typing
 from collections import defaultdict
 from operator import attrgetter
 
@@ -8,6 +10,12 @@ from .fields import Field
 from .fields_numeric import Integer
 from .fields_selection import Selection
 from .models import BaseModel
+
+if typing.TYPE_CHECKING:
+    from .fields_relational import OnDelete
+    from collections.abc import Callable
+
+    OnDeleteRef = OnDelete | typing.Literal['ignore']
 
 
 class Reference(Selection):
@@ -65,11 +73,21 @@ class Many2oneReference(Integer):
     `model_field` attribute for the current :class:`Many2oneReference` field.
 
     :param str model_field: name of the :class:`Char` where the model name is stored.
+
+    :param str|callable ondelete: what to do when the referred record is deleted
+
+        Possible values are: like in a ``Many2one`` field and "ignore".
+        By default: set to null or restrict if the field is required.
+
+        This may also be a callable to have a different behaviour for the field
+        based on the model where records are deleted.
+
     """
     type = 'many2one_reference'
 
     model_field = None
     aggregator = None
+    ondelete: OnDeleteRef | Callable[[BaseModel, BaseModel], OnDeleteRef] = 'set null'
 
     _related_model_field = property(attrgetter('model_field'))
 
@@ -77,8 +95,18 @@ class Many2oneReference(Integer):
 
     def _setup(self, model):
         super()._setup(model)
-        if self.model_field not in model._fields:
+        model_field = model._fields.get(self.model_field)
+        if model_field is None:
             raise Exception(f"Field {self} with unknown model_field {self.model_field!r}")
+        if not self.related:
+            if self.ondelete not in ('restrict', 'set null', 'cascade', 'ignore') and not callable(self.ondelete):
+                raise ValueError(f'Field {self}.ondelete value is invalid: {self.ondelte!r}')
+            if self.ondelete == 'set null' and self.required:
+                self.ondelete = 'restrict'
+            if self.ondelete in ('restrict', 'set null', 'cascade') and model_field.type == 'selection':
+                # if the model_field is a selection, apply the ondelete only on selectable models
+                ondelete_action = self.ondelete
+                self.ondelete = lambda self, model: ondelete_action if model._name in model_field.get_values(self.env) else 'ignore'
 
     def convert_to_cache(self, value, records, validate=True):
         # cache format: id or None

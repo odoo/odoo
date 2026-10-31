@@ -26,14 +26,18 @@ class RatingRating(models.Model):
     res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True)
     res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade')
     res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
-    res_id = fields.Many2oneReference(string='Document', model_field='res_model', required=True, index=True)
+    res_id = fields.Many2oneReference(string='Document', model_field='res_model', required=True, index=True,
+        ondelete=lambda self, model: 'cascade' if isinstance(model, self.env.registry['mail.thread']) else 'ignore',
+    )
     resource_ref = fields.Reference(
         string='Resource Ref', selection='_selection_target_model',
         compute='_compute_resource_ref', readonly=True)
     parent_res_name = fields.Char('Parent Document Name', compute='_compute_parent_res_name', store=True)
     parent_res_model_id = fields.Many2one('ir.model', 'Parent Related Document Model', index=True, ondelete='cascade')
     parent_res_model = fields.Char('Parent Document Model', store=True, related='parent_res_model_id.model', index=True, readonly=False)
-    parent_res_id = fields.Many2oneReference('Parent Document', model_field='parent_res_model', index=True)
+    parent_res_id = fields.Many2oneReference('Parent Document', model_field='parent_res_model', index=True,
+        ondelete=lambda self, model: 'set null' if isinstance(model, self.env.registry['mail.thread']) else 'ignore',
+    )
     parent_ref = fields.Reference(
         string='Parent Ref', selection='_selection_target_model',
         compute='_compute_parent_ref', readonly=True)
