@@ -85,7 +85,9 @@ export function encodeOptionsToParams(options, optionsConfig, useBoolean = false
                 if (useBoolean && config.type === Boolean) {
                     paramValue = paramName ? "true" : "false";
                 }
-                URLParams.push(`${encodeURI(paramName)}=${encodeURI(paramValue)}`);
+                URLParams.push(
+                    `${encodeURIComponent(paramName)}=${encodeURIComponent(paramValue)}`
+                );
             }
         }
 
@@ -97,7 +99,9 @@ export function encodeOptionsToParams(options, optionsConfig, useBoolean = false
                     if (useBoolean && config.type === Boolean) {
                         paramValue = paramName ? "true" : "false";
                     }
-                    URLParams.push(`${encodeURI(paramName)}=${encodeURI(paramValue)}`);
+                    URLParams.push(
+                        `${encodeURIComponent(paramName)}=${encodeURIComponent(paramValue)}`
+                    );
                 }
             }
         }

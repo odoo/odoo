@@ -1,5 +1,14 @@
 import { beforeEach, describe, expect, mockFetch, test, advanceTime } from "@odoo/hoot";
-import { click, edit, press, hover, queryAll, waitFor, waitForNone } from "@odoo/hoot-dom";
+import {
+    click,
+    edit,
+    press,
+    hover,
+    queryAll,
+    queryAllTexts,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { patch } from "@web/core/utils/patch";
 
@@ -174,6 +183,45 @@ describe("media dialog video", () => {
             expect(iframeContainerData.videoId).toBe("B6dXGTxggTG");
             expect(iframeContainerData.embedUrl).toBe(iframe.src);
         });
+
+        test("should only offer the options supported by each platform", async () => {
+            // An option a platform does not support is not offered for it.
+            // "Vertical" is handled by Odoo, so every platform supports it.
+            const playerOptions = [
+                "Autoplay",
+                "Loop",
+                "Hide player controls",
+                "Hide fullscreen button",
+            ];
+            const optionsByPlatform = {
+                youtube: [...playerOptions, "Vertical", "Start at"],
+                instagram: ["Vertical"],
+                facebook: ["Autoplay", "Hide fullscreen button", "Vertical", "Start at"],
+                gDrive: ["Vertical"],
+                dailymotion: ["Vertical", "Start at"],
+                vimeo: [...playerOptions, "Vertical", "Start at"],
+                twitch: ["Autoplay", "Vertical", "Start at"],
+                loom: ["Autoplay", "Hide player controls", "Vertical", "Start at"],
+            };
+            const { editor } = await setupEditor("<p>ab[]cd</p>", {
+                config: NO_EMBEDDED_COMPONENTS_CONFIG,
+            });
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+            await insertText(editor, "/video");
+            await animationFrame();
+            await press("Enter");
+            await waitFor(`div.modal #o_video_text`);
+
+            for (const [platform, options] of Object.entries(optionsByPlatform)) {
+                await click("#o_video_text");
+                await edit(PLATFORMS[platform].exampleUrls.base);
+                await advanceTime(100);
+                await animationFrame();
+                expect(
+                    queryAllTexts(".o_video_dialog_options .o_switch span.ms-2:not(.text-muted)")
+                ).toEqual(options, { message: platform });
+            }
+        });
     });
 
     describe("with embeded Components", () => {
@@ -208,6 +256,33 @@ describe("media dialog video", () => {
                 expect(embededProps.baseUrl).toBe(videoUrl);
             });
         }
+
+        test("should accept a YouTube playlist URL", async () => {
+            const { editor } = await setupEditor("<p>ab[]cd</p>", {
+                config: EMBEDDED_COMPONENTS_CONFIG,
+            });
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+            await insertText(editor, "/video");
+            await animationFrame();
+            await press("Enter");
+
+            const list = "playlistId";
+            await waitFor(`div.modal`);
+            await click("#o_video_text");
+            await edit(`https://www.youtube.com/playlist?list=${list}`);
+            await advanceTime(100);
+            await click(`div.modal .modal-footer button.btn-primary`);
+            await animationFrame();
+            await waitForNone(`div.modal`);
+
+            const iframe = await waitFor(`[data-embedded="video"] iframe`);
+            expect(iframe.dataset.src).toBe(
+                `https://www.youtube.com/embed/videoseries?enablejsapi=1&list=${list}&rel=0`
+            );
+            // The video overlay only exists if the component has been set up.
+            await hover('div[data-embedded="video"]');
+            await expectElementCount("button.video-options-button", 1);
+        });
 
         const mediaReplaceRegex = /<div.*data-embedded="video".*><iframe.*src="([^"]*)".*<\/div>/gi;
         test("Should insert a video", async () => {
