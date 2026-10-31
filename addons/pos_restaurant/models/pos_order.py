@@ -16,7 +16,7 @@ class PosOrder(models.Model):
             if not order.table_id:
                 order.duration = ""
                 continue
-            start_time = order.create_date
+            start_time = min(order.course_ids.filtered("fired_date").mapped("fired_date"), default=order.create_date)
             end_time = current_time if order.state == "draft" else order.date_order
             duration_minutes = int((end_time - start_time).total_seconds() // 60)
             if duration_minutes <= 0:
