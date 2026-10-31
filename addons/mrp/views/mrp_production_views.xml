@@ -795,7 +795,7 @@
                     <field name="picking_type_id"/>
                     <filter string="To Do" name="todo" domain="[('state', 'in', ('draft', 'confirmed', 'progress', 'to_close'))]"
                         help="Manufacturing Orders which are in confirmed state."/>
-                    <filter string="Unbuilt" name="filter_unbuilt" domain="[('unbuild_ids.state', '=', 'done')]"/>
+                    <filter string="Unbuilt" name="filter_unbuilt" domain="[('unbuild_ids.state', '=', 'done')]" groups="mrp.group_mrp_user"/>
                     <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
                     <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
                     <separator/>

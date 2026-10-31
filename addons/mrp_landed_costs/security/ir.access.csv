@@ -1,0 +1,14 @@
+id,name,model_id,group_id/id,operation,domain
+access_stock_landed_cost_mrp_manager,stock.landed.cost mrp manager,stock.landed.cost,mrp.group_mrp_manager,crud,
+access_stock_landed_cost_lines_mrp_manager,stock.landed.cost.lines mrp manager,stock.landed.cost.lines,mrp.group_mrp_manager,crud,"[('cost_id', 'access', 'read')]"
+access_stock_valuation_adjustment_lines_mrp_manager,stock.valuation.adjustment.lines mrp manager,stock.valuation.adjustment.lines,mrp.group_mrp_manager,crud,"[('cost_id', 'access', 'read')]"
+
+access_product_value_mrp_manager,product.value mrp manager,product.value,mrp.group_mrp_manager,r,
+access_account_journal_mrp_manager,account.journal mrp manager,account.journal,mrp.group_mrp_manager,r,
+access_account_move_mrp_manager,account.move mrp manager,account.move,mrp.group_mrp_manager,r,"[('move_type', '=', 'in_invoice'), ('landed_costs_ids', '!=', False)]"
+
+access_mrp_production_bookkeeper,mrp.production bookkeeper,mrp.production,account.group_account_user,r,
+access_mrp_workorder_bookkeeper,mrp.workorder bookkeeper,mrp.workorder,account.group_account_user,r,
+access_mrp_workorder_stock_manager,mrp.workorder stock manager,mrp.workorder,stock.group_stock_manager,r,
+access_mrp_production_group_bookkeeper,mrp.production.group bookkeeper,mrp.production.group,account.group_account_user,r,
+access_mrp_production_group_stock_manager,mrp.production.group stock manager,mrp.production.group,stock.group_stock_manager,r,

@@ -11,7 +11,6 @@ from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestLandedCosts(TestStockLandedCostsCommon):
 
     _test_user_groups = None  # FIXME list needed groups
@@ -55,6 +54,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'location_id': cls.warehouse.lot_stock_id.id,
             'location_dest_id': cls.customer_location_id})
 
+    @skip('Temporary to fast merge new valuation')
     def test_00_landed_costs_on_incoming_shipment(self):
         """ Test landed cost on incoming shipment """
         #
@@ -169,6 +169,7 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         stock_landed_cost.button_validate()
         self.assertFalse(stock_landed_cost.account_move_id)
 
+    @skip('Temporary to fast merge new valuation')
     def test_01_negative_landed_costs_on_incoming_shipment(self):
         """ Test negative landed cost on incoming shipment """
         #

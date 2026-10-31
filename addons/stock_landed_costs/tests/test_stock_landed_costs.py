@@ -10,11 +10,11 @@ from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsComm
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestStockLandedCosts(TestStockLandedCostsCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    @skip('Temporary to fast merge new valuation')
     def test_stock_landed_costs(self):
         # In order to test the landed costs feature of stock,
         # I create a landed cost, confirm it and check its account move created
@@ -165,6 +165,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
         self.assertEqual(len(picking_landed_cost_1.move_ids.stock_valuation_layer_ids), 5)
         self.assertEqual(len(picking_landed_cost_2.move_ids.stock_valuation_layer_ids), 5)
 
+    @skip('Temporary to fast merge new valuation')
     def test_aml_account_selection(self):
         """
         Process a PO with a landed cost, then create and post the bill. The
@@ -221,6 +222,7 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             self.assertEqual(bill.state, 'posted', 'Incorrect value with valuation %s' % valuation)
             self.assertEqual(landed_cost_aml.account_id, account, 'Incorrect value with valuation %s' % valuation)
 
+    @skip('Temporary to fast merge new valuation')
     def test_landed_cost_in_move_line(self):
         """
         Tests that a move line created through the catalog gives the right landed cost
