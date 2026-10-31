@@ -419,6 +419,17 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
             # Check the access token against the order values. Done after fetching the order as we
             # need the order fields to check the access token.
+            if payment_utils.check_access_token(
+                access_token,
+                order_sudo.partner_invoice_id.id,
+                amount,
+                order_sudo.currency_id.id,
+                order_sudo._name,
+                order_sudo.id,
+            ):
+                access_token = payment_utils.generate_access_token(
+                    order_sudo.partner_invoice_id.id, amount, order_sudo.currency_id.id
+                )
             if not payment_utils.check_access_token(
                 access_token, order_sudo.partner_invoice_id.id, amount, order_sudo.currency_id.id
             ):
