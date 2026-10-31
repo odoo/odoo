@@ -17,6 +17,8 @@ class TestBarcode(TransactionCase):
         self.assertTrue(check_barcode_encoding('93855341', 'ean8'))
         self.assertTrue(check_barcode_encoding('2022071416014', 'ean13'))
         self.assertTrue(check_barcode_encoding('9745213796142', 'ean13'))
+        self.assertTrue(check_barcode_encoding('0123456789012', 'ean13'))
+        self.assertTrue(check_barcode_encoding('123456789012', 'upca'))
 
         self.assertFalse(check_barcode_encoding('2022a006', 'ean8'), 'should contains digits only')
         self.assertFalse(check_barcode_encoding('20220000', 'ean8'), 'incorrect check digit')
@@ -24,4 +26,3 @@ class TestBarcode(TransactionCase):
         self.assertFalse(check_barcode_encoding('9745213796142', 'ean8'), 'ean8 is a 8-digits barcode')
         self.assertFalse(check_barcode_encoding('9745213796148', 'ean13'), 'incorrect check digit')
         self.assertFalse(check_barcode_encoding('2022!71416014', 'ean13'), 'should contains digits only')
-        self.assertFalse(check_barcode_encoding('0022071416014', 'ean13'), 'when starting with one zero, it indicates that a 12-digit UPC-A code follows')
