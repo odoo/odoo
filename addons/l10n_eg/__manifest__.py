@@ -27,6 +27,7 @@ Activates:
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
+        'data/ir_actions_server_data.xml',
         'views/account_tax.xml',
     ],
     'demo': [
