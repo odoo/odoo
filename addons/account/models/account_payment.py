@@ -859,8 +859,8 @@ class AccountPayment(models.Model):
     def _search_reconciled_invoice_ids(self, operator, value):
         if operator not in ('in', '='):
             return NotImplemented
-        move_ids = self.env['account.move'].browse(value).reconciled_payment_ids.ids
-        return [('id', 'in', move_ids)]
+        invoices = self.env['account.move'].browse(value).filtered(lambda move: move.is_invoice(True))
+        return [('id', 'in', invoices.reconciled_payment_ids.ids)]
 
     def _fetch_duplicate_reference(self, matching_states=('draft', 'paid')):
         """ Retrieve move ids for possible duplicates of payments. Duplicates moves:
