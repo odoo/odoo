@@ -1,18 +1,17 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, types, useProps } from "@odoo/owl";
+import { Component, signal, types, useProps } from "@odoo/owl";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export class Follower extends Component {
     static template = "mail.Follower";
-    static components = { DropdownItem };
+
+    isEditing = signal(false);
 
     setup() {
         this.store = useService("mail.store");
         this.props = useProps({
-            close: types.function([]).optional(),
             follower: types.instanceOf(this.store["mail.followers"]),
             onFollowerChanged: types.function([]).optional(),
         });
@@ -29,12 +28,16 @@ export class Follower extends Component {
         });
     }
 
-    async onClickEdit() {
-        this.env.services.dialog.add(FollowerSubtypeDialog, {
-            follower: this.props.follower,
-            onFollowerChanged: (thread) => this.props.onFollowerChanged?.(thread),
-        });
-        this.props.close?.();
+    onClickEdit() {
+        this.isEditing.set(true);
+        this.env.services.dialog.add(
+            FollowerSubtypeDialog,
+            {
+                follower: this.props.follower,
+                onFollowerChanged: (thread) => this.props.onFollowerChanged?.(thread),
+            },
+            { onClose: () => this.isEditing.set(false) }
+        );
     }
 
     async onClickRemove() {

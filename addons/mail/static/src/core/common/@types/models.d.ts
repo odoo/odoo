@@ -10,6 +10,7 @@ declare module "models" {
     import { DiscussCallHistory as DiscussCallHistoryClass } from "@mail/core/common/discuss_call_history_model";
     import { Failure as FailureClass } from "@mail/core/common/failure_model";
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
+    import { FollowerListView as FollowerListViewClass } from "@mail/core/common/follower_list_view_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
     import { MailActivityType as MailActivityTypeClass } from "@mail/core/common/mail_activity_type_model";
     import { MailGuest as MailGuestClass } from "@mail/core/common/mail_guest_model";
@@ -47,6 +48,7 @@ declare module "models" {
     export interface DiscussCallHistory extends DiscussCallHistoryClass {}
     export interface Failure extends FailureClass {}
     export interface Follower extends FollowerClass {}
+    export interface FollowerListView extends FollowerListViewClass {}
     export interface LinkPreview extends LinkPreviewClass {}
     export interface MailActivityType extends MailActivityTypeClass {}
     export interface MailGuest extends MailGuestClass {}
@@ -87,6 +89,7 @@ declare module "models" {
         DataResponse: StaticMailRecord<DataResponse, typeof DataResponseClass>;
         "discuss.call.history": StaticMailRecord<DiscussCallHistory, typeof DiscussCallHistoryClass>;
         Failure: StaticMailRecord<Failure, typeof FailureClass>;
+        FollowerListView: StaticMailRecord<FollowerListView, typeof FollowerListViewClass>;
         "ir.attachment": StaticMailRecord<Attachment, typeof AttachmentClass>;
         "mail.activity": StaticMailRecord<Activity, typeof ActivityClass>;
         "mail.activity.type": StaticMailRecord<MailActivityType, typeof MailActivityTypeClass>;
@@ -126,6 +129,7 @@ declare module "models" {
         DataResponse: DataResponse;
         "discuss.call.history": DiscussCallHistory;
         Failure: Failure;
+        FollowerListView: FollowerListView;
         "ir.attachment": Attachment;
         "mail.activity": Activity;
         "mail.activity.type": MailActivityType;

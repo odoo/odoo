@@ -1,15 +1,25 @@
 import {
     contains as mailContains,
     defineMailModels,
+    insertText,
     openFormView,
     scroll,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { FOLLOWERS_OPEN_MAX_WAIT, LOAD_MORE_LIMIT } from "@mail/core/web/follower_list";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { tick, waitFor, waitForNone } from "@odoo/hoot-dom";
-import { contains, mockService, serverState } from "@web/../tests/web_test_helpers";
+import {
+    advanceTime,
+    freezeTime,
+    press,
+    tick,
+    unfreezeTime,
+    waitFor,
+    waitForNone,
+} from "@odoo/hoot-dom";
+import { contains, mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
@@ -36,6 +46,41 @@ test("base rendering editable", async () => {
     await waitForNone(".o-mail-Followers-dropdown");
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Followers-dropdown:count(1)");
+});
+
+test("opening the dropdown waits for followers, up to a limit when it is slow", async () => {
+    const pyEnv = await startServer();
+    const partnerIds = pyEnv["res.partner"].create(range(21).map((i) => ({ name: `Partner${i}` })));
+    pyEnv["mail.followers"].create(
+        partnerIds.map((partnerId) => ({
+            partner_id: partnerId,
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
+    );
+    const followersDeferred = Promise.withResolvers();
+    onRpc("/mail/thread/followers", async () => {
+        await followersDeferred.promise;
+    });
+    await start();
+    await openFormView("res.partner", partnerIds[0]);
+    freezeTime();
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await advanceTime(FOLLOWERS_OPEN_MAX_WAIT - 1);
+    await waitForNone(".o-mail-Followers-dropdown");
+    await advanceTime(1);
+    await waitFor(".o-mail-FollowerList-list :text('Loading...'):count(1)");
+    await waitFor(".o-mail-Followers-dropdown button[title='Follow']:count(1)");
+    await waitFor(".o-mail-Followers-dropdown button[title='Add Followers']:count(1)");
+    await waitFor(
+        ".o-mail-Followers-dropdown input[placeholder='Search by name or email']:focus:count(1)"
+    );
+    await waitForNone(".o-mail-Follower");
+    await waitForNone(".o-mail-Followers-dropdown :text('No Followers')");
+    unfreezeTime();
+    followersDeferred.resolve();
+    await waitFor(".o-mail-Follower:count(20)");
+    await waitForNone(".o-mail-FollowerList-list :text('Loading...')");
 });
 
 test('click on "add followers" button', async () => {
@@ -79,7 +124,7 @@ test('click on "add followers" button', async () => {
     await waitFor(".o-mail-Followers-counter:text('1'):count(1)");
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Followers-dropdown:count(1)");
-    await contains("a:text('Add Followers'):count(1)").click();
+    await contains("button[title='Add Followers']:text('Add'):count(1)").click();
     await waitForNone(".o-mail-Followers-dropdown");
     await expect.waitForSteps(["action:open_view"]);
     await waitFor(".o-mail-Followers-counter:text('2'):count(1)");
@@ -107,18 +152,58 @@ test("click on remove follower", async () => {
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
     await waitFor(".o-mail-Follower:count(1)");
+    await contains(".o-mail-Follower:eq(0)").hover();
     await contains("[title='Remove this follower']:count(1)").click();
     await waitForNone(".o-mail-Follower");
     await waitFor(".o-mail-Followers-dropdown:count(1)");
 });
 
-test("Load 100 followers at once", async () => {
+test("followers update when navigating and creating records with hotkeys", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
+        { name: "Partner1" },
+        { name: "Partner2" },
+        { name: "Alice" },
+        { name: "Bob" },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            partner_id: partnerId_3,
+            res_id: partnerId_1,
+            res_model: "res.partner",
+        },
+        {
+            partner_id: partnerId_4,
+            res_id: partnerId_2,
+            res_model: "res.partner",
+        },
+    ]);
+    onRpc("/mail/thread/followers", async (request) => {
+        const { params } = await request.json();
+        expect.step(params.thread_id);
+    });
+    await start();
+    await openFormView("res.partner", partnerId_1, { resIds: [partnerId_1, partnerId_2] });
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await waitFor(".o-mail-Follower:text('Alice'):count(1)");
+    await press(["alt", "n"]);
+    await waitFor(".o-mail-Follower:text('Bob'):count(1)");
+    await waitForNone(".o-mail-Follower:text('Alice')");
+    await press(["alt", "c"]);
+    await waitFor(".o-mail-Message-body:text('Creating a new record...'):count(1)");
+    await waitFor(".o-mail-Followers-button:disabled:count(1)");
+    await waitForNone(".o-mail-Followers-dropdown");
+    await waitForNone(".o-mail-Follower");
+    expect.verifySteps([partnerId_1, partnerId_2]);
+});
+
+test("Load 20 followers at once", async () => {
     const pyEnv = await startServer();
     const partnerIds = pyEnv["res.partner"].create(
-        range(210).map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
+        range(60).map((i) => ({ display_name: `Partner${i}`, name: `Partner${i}` }))
     );
     pyEnv["mail.followers"].create(
-        range(210).map((i) => ({
+        range(60).map((i) => ({
             is_active: true,
             partner_id: i === 0 ? serverState.partnerId : partnerIds[i],
             res_id: partnerIds[0],
@@ -127,16 +212,87 @@ test("Load 100 followers at once", async () => {
     );
     await start();
     await openFormView("res.partner", partnerIds[0]);
-    await waitFor("button[title='Show Followers']:text('210'):count(1)");
-    await contains("[title='Show Followers']:enabled:count(1)").click();
-    await waitFor(".o-mail-Follower:count(100)");
+    await contains("button[title='Show Followers']:text('60'):enabled:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
     await waitFor(".o-mail-Followers-dropdown:has(:text('Load more')):count(1)");
-    await scroll(".o-mail-Followers-dropdown", "bottom");
-    await waitFor(".o-mail-Follower:count(200)");
+    await scroll(".o-mail-FollowerList-list", "bottom");
+    await waitFor(".o-mail-Follower:count(40)");
     await tick(); // give enough time for the useVisible hook to register load more as hidden
-    await scroll(".o-mail-Followers-dropdown", "bottom");
-    await waitFor(".o-mail-Follower:count(209)");
+    await scroll(".o-mail-FollowerList-list", "bottom");
+    await waitFor(".o-mail-Follower:count(59)");
     await waitForNone(".o-mail-Followers-dropdown:has(:text('Load more'))");
+});
+
+test("ArrowDown past Load more focuses the first new follower", async () => {
+    const pyEnv = await startServer();
+    const partnerIds = pyEnv["res.partner"].create(range(45).map((i) => ({ name: `Partner${i}` })));
+    pyEnv["mail.followers"].create(
+        partnerIds.map((partnerId) => ({
+            partner_id: partnerId,
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
+    );
+    const nextPage = Promise.withResolvers();
+    onRpc("/mail/thread/followers", async (request) => {
+        const { params } = await request.json();
+        if (params.offset === LOAD_MORE_LIMIT) {
+            expect.step("load next page");
+            await nextPage.promise;
+        }
+    });
+    await start();
+    await openFormView("res.partner", partnerIds[0]);
+    await contains(".o-mail-Followers-button:enabled:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    await contains(".o-mail-Follower:eq(19) .o-mail-Follower-details").focus();
+    await contains(".o-mail-Follower:eq(19) [title='Remove this follower']").press("ArrowDown");
+    await waitFor(".o-mail-Followers-dropdown button:text('Load more'):focus:count(1)");
+    await expect.waitForSteps(["load next page"]);
+    nextPage.resolve();
+    await waitFor(".o-mail-Follower:count(40)");
+    // Replacing the keyed Load more button transfers focus to its former position.
+    await waitFor(".o-mail-Follower:eq(20) .o-mail-Follower-details:focus:count(1)");
+});
+
+test("Search followers list by name or email", async () => {
+    const pyEnv = await startServer();
+    const partnerIds = pyEnv["res.partner"].create(
+        range(21).map((i) => ({ email: `partner${i}@example.com`, name: `Partner${i}` }))
+    );
+    pyEnv["mail.followers"].create(
+        partnerIds.map((partnerId) => ({
+            partner_id: partnerId,
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        }))
+    );
+    await start();
+    await openFormView("res.partner", partnerIds[0]);
+    // Search is visible when the thread has otherFollowersCount > 20 followers.
+    await contains("button[title='Show Followers']:text('21'):enabled:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    await waitFor("input[placeholder='Search by name or email']:focus:count(1)");
+    await insertText("input[placeholder='Search by name or email']", "Partner9");
+    await waitFor(".o-mail-Follower:has(:text('Partner9')):count(1)");
+    await contains("[title='Clear']:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    await insertText("input[placeholder='Search by name or email']", "partner9@example.com");
+    await waitFor(".o-mail-Follower:has(:text('Partner9')):count(1)");
+    await contains("[title='Clear']:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    await insertText("input[placeholder='Search by name or email']", "Armstrong");
+    await waitFor(".o-mail-FollowerList-list :text('No Matching Followers'):count(1)");
+    await contains("[title='Clear']:count(1)").click();
+    await waitFor(".o-mail-Follower:count(20)");
+    // Search is hidden when the thread has otherFollowersCount <= 20 followers.
+    await contains(".o-mail-Follower:has(:text('Partner0'))").hover();
+    await contains(
+        ".o-mail-Follower:has(:text('Partner0')) [title='Remove this follower']:count(1)"
+    ).click();
+    await waitFor("button[title='Show Followers']:text('20'):enabled:count(1)");
+    await waitFor(".o-mail-Follower:count(19)");
+    await waitForNone("input[placeholder='Search by name or email']");
 });
 
 test("Load 100 recipients at once", async () => {
@@ -184,17 +340,18 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     await start();
     await openFormView("res.partner", partnerId_1);
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
-    await waitFor("a:text('Add Followers'):count(1)");
+    await waitFor("button[title='Add Followers']:text('Add'):count(1)");
+    await contains(".o-mail-Follower:eq(0)").hover();
     await mailContains(":nth-child(1 of .o-mail-Follower)", {
         contains: [["[title='Edit Notification Preferences']"], ["[title='Remove this follower']"]],
     });
 });
 
-test('Show "No Followers" dropdown-item if there are no followers and user does not have write access', async () => {
+test('Show "No Followers" if there are no followers and user does not have write access', async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ hasWriteAccess: false });
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Followers-button:enabled:count(1)").click();
-    await waitFor("div.disabled:text('No Followers'):count(1)");
+    await waitFor(".o-mail-FollowerList-list :text('No Followers'):count(1)");
 });

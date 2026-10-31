@@ -5096,22 +5096,11 @@ class MailThread(models.AbstractModel):
 
         return True
 
-    @api.readonly
-    def message_get_followers(self, after=None, limit=100, filter_recipients=False):
-        return Store().add(
-            self,
-            "_store_message_followers_fields",
-            fields_params={"after": after, "limit": limit, "filter_recipients": filter_recipients},
-            as_thread=True,
-        )
-
     def _store_message_followers_fields(
         self,
         res: Store.FieldList,
-        after=None,
         limit=100,
         filter_recipients=False,
-        reset=False,
     ):
         def followers_by_thread(thread):
             # Not batched by simplicity as it is always called on a single thread.
@@ -5122,15 +5111,13 @@ class MailThread(models.AbstractModel):
                 mt_comment_id = thread.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
                 domain &= Domain("subtype_ids", "=", mt_comment_id)
                 domain &= Domain("partner_id.active", "=", True)
-            if after:
-                domain &= Domain("id", ">", after)
             return thread.env["mail.followers"].search_fetch(domain, limit=limit, order="id ASC")
 
         res.many(
             "recipients" if filter_recipients else "followers",
             "_store_follower_fields",
             value=followers_by_thread,
-            mode="REPLACE" if reset else "ADD",
+            mode="REPLACE",
         )
 
     # ------------------------------------------------------
@@ -5360,7 +5347,7 @@ class MailThread(models.AbstractModel):
                 value=lambda t: self_follower_by_tid[t.id],
             )
             # follower list with limit
-            self._store_message_followers_fields(res, reset=True)
+            self._store_message_followers_fields(res)
             # recipient count
             mt_comment_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
             recipient_count = self.env["mail.followers"]._read_group(
@@ -5373,7 +5360,7 @@ class MailThread(models.AbstractModel):
             recipient_count_by_tid = defaultdict(int, recipient_count)
             res.attr("recipientsCount", lambda t: recipient_count_by_tid[t.id])
             # recipient list with limit
-            self._store_message_followers_fields(res, filter_recipients=True, reset=True)
+            self._store_message_followers_fields(res, filter_recipients=True)
         pinned_domain = (
             Domain("res_id", "in", self.ids)
             & Domain("model", "=", self._name)

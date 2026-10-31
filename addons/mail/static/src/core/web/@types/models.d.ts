@@ -31,9 +31,6 @@ declare module "models" {
     }
     export interface Thread {
         follow: () => Promise<void>;
-        loadMoreFollowers: () => Promise<void>;
-        loadMoreRecipients: () => Promise<void>;
         openRecordActionRequest: Readonly<object>;
-        recipientsFullyLoaded: Readonly<boolean>;
     }
 }
