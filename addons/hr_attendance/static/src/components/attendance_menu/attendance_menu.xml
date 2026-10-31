@@ -9,9 +9,11 @@
                   state="dropdown">
             <button>
                 <i class="fa fa-circle"
-                   t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
-                   role="img"
-                   aria-label="Attendance"/>
+                    t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
+                    role="img"
+                    aria-label="Attendance"
+                    t-if="!state.gettingPosition"/>
+                <i class="fa fa-spinner fa-spin" role="img" aria-label="Attendance" t-if="state.gettingPosition"/>
             </button>
 
             <t t-set-slot="content">
@@ -64,7 +66,7 @@
                     </div>
 
                     <div class="o_wrap_btn_sign_out position-md-sticky bottom-0 p-3 pt-0 z-2">
-                        <button t-on-click="() => this.signInOut()"
+                        <button t-on-click="() => this.signInOut()" t-if="!state.gettingPosition"
                                 t-attf-class="btn btn-{{ this.state.checkedIn ? 'warning' : 'primary' }} w-100">
                             <span t-if="!this.state.checkedIn">Check in</span>
                             <span t-else="">Check out</span>
