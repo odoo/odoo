@@ -157,6 +157,7 @@ class ActionPanelDialog extends Component {
  * @property {Component} [extraContentComponent]
  * @property {(params: ActionParams_T) => Object} [extraContentComponentProps]
  * @property {boolean|(params: ActionParams_T) => boolean} [hasBtnBg]
+ * @property {boolean|(params: ActionParams_T) => boolean} [hidden] @see Action.hidden
  * @property {string|(params: ActionParams_T) => string} [hotkey]
  * @property {string|(params: ActionParams_T) => string} [icon]
  * @property {string|(params: ActionParams_T) => string} [iconClass]
@@ -289,6 +290,10 @@ export class Action {
             if (panelAction?.id === this.id) {
                 return;
             }
+            // remove it from stack if already there
+            this.actions.panelStack = this.actions.panelStack.filter(
+                (action) => action.id !== this.id
+            );
             if (panelAction) {
                 if (keepPrevious) {
                     this.actions.panelStack.push(panelAction);
@@ -317,8 +322,13 @@ export class Action {
             if (closeAll) {
                 this.actions.panelStack = [];
                 this.actions.panelAction = null;
-            } else {
+            } else if (this.actions.panelAction?.id === this.id) {
                 this.actions.panelAction = this.actions.panelStack.pop() ?? null;
+            } else {
+                // remove it from elsewhere in the stack
+                this.actions.panelStack = this.actions.panelStack.filter(
+                    (action) => action.id !== this.id
+                );
             }
         }
         this.definition.panel?.onClose?.call(
@@ -490,6 +500,18 @@ export class Action {
         );
     }
 
+    /** @param {Action} _action @returns {boolean|undefined} */
+    _hidden(_action) {}
+    /** Whether this action has no button, e.g. when its panel is only opened programmatically. */
+    get hidden() {
+        return (
+            this._hidden(this.params) ??
+            (typeof this.definition.hidden === "function"
+                ? this.definition.hidden.call(this, this.params)
+                : this.definition.hidden)
+        );
+    }
+
     /** @param {Action} action @returns {string|undefined} */
     _hotkey(action) {}
     /** Determines whether this action has a keyboard hotkey to trigger the onSelected */
@@ -539,7 +561,7 @@ export class Action {
             return true;
         }
         if (this.actions && this.hasPanel) {
-            return this.id === this.actions.panelAction?.id;
+            return this.condition && this.id === this.actions.panelAction?.id;
         }
         return (
             this._isActive(this.params) ??
@@ -746,17 +768,18 @@ export class UseActions {
         return moreAction;
     }
 
-    /** @returns {Action_T[]} */
+    /** @returns {Action_T[]} the available actions that have a button, @see Action.hidden */
     get actions() {
         return this.actionsComputed();
     }
 
     /**
      * @param {string} id
-     * @returns {Action_T|undefined} the available action with the given id, @see actions
+     * @returns {Action_T|undefined} the available action with the given id, even without a
+     *   button, @see Action.hidden
      */
     get(id) {
-        return this.actions.find((action) => action.id === id);
+        return this.transformedActions.find((action) => action.id === id && action.condition);
     }
 
     /** @returns {Panel|undefined} shown in the panel of the owner, @see panelAction */
@@ -781,7 +804,7 @@ export class UseActions {
 
     _computeActions() {
         const actions = this.transformedActions
-            .filter((action) => action.condition)
+            .filter((action) => action.condition && !action.hidden)
             .sort((a1, a2) => a1.sequence - a2.sequence);
         return actions;
     }
@@ -792,7 +815,9 @@ export class UseActions {
     }
 
     _computePartition() {
-        const actions = this.transformedActions.filter((action) => action.condition);
+        const actions = this.transformedActions.filter(
+            (action) => action.condition && !action.hidden
+        );
         const quick = actions
             .filter((a) => a.sequenceQuick)
             .sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);

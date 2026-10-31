@@ -55,7 +55,9 @@ export class ActionPanel extends Component {
             "o-mail-ActionPanel rounded-4 overflow-auto o-scrollbar-thin d-flex flex-column flex-shrink-0 position-relative py-2 pt-0 h-100 bg-inherit": true,
             "o-mail-ActionPanel-chatter": this.ancestors.inChatter,
             "o-chatWindow": this.ancestors.inChatWindow,
-            "px-2": this.ancestors.inDiscussApp || this.ancestors.inChatWindow,
+            "px-2":
+                (this.ancestors.inDiscussApp && !this.ancestors.inChannelPanel) ||
+                this.ancestors.inChatWindow,
             rounded: !this.props.resizable,
         });
     }
