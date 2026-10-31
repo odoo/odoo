@@ -214,6 +214,12 @@ class AccountAnalyticLine(models.Model):
 
         super()._check_can_write(values)
 
+    @api.constrains('unit_amount', 'project_id')
+    def _check_unit_amount_positive(self):
+        for line in self:
+            if line.project_id and line.unit_amount < 0:
+                raise ValidationError(_("The timesheet hours cannot be negative."))
+
     def _check_can_create(self):
         # override in other modules to check current user has create access
         pass
