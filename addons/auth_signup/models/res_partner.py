@@ -41,7 +41,7 @@ class ResPartner(models.Model):
 
         res = dict.fromkeys(self.ids, False)
         for partner in self:
-            base_url = partner.get_base_url()
+            base_url = (partner.user_ids[:1] or partner).get_base_url()
             # when required, make sure the partner has a valid signup token
             if self.env.context.get('signup_valid') and not partner.user_ids:
                 partner.sudo().signup_prepare()
