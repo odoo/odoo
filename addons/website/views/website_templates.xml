@@ -399,7 +399,7 @@
                        t-as="menu" t-foreach="env['ir.ui.menu'].with_context(force_action=True).load_menus_root()['children']"
                        t-attf-href="/odoo/action-#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
                 </div>
-                <a groups="website.group_website_restricted_editor" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
+                <a groups="website.group_website_restricted_editor" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none" data-hotkey="w">
                     <img src="/website/static/description/icon.png" alt=""/>Editor
                 </a>
             </div>
