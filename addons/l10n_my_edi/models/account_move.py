@@ -42,6 +42,11 @@ class AccountMove(models.Model):
         tracking=True,
         export_string_translation=False,
     )
+    l10n_my_edi_validation_time = fields.Datetime(
+        string='MyInvois Validation Date',
+        compute='_compute_l10n_my_edi_validation_time',
+        store=True,
+    )
     # Fields required to be set on the document in some cases.
     l10n_my_edi_exemption_reason = fields.Char(
         string="Tax Exemption Reason",
@@ -71,6 +76,11 @@ class AccountMove(models.Model):
                 )[:1]
 
             move.l10n_my_edi_state = myinvois_document.myinvois_state
+
+    @api.depends('l10n_my_edi_document_ids.myinvois_state', 'l10n_my_edi_document_ids.myinvois_validation_time')
+    def _compute_l10n_my_edi_validation_time(self):
+        for move in self:
+            move.l10n_my_edi_validation_time = move._get_active_myinvois_document().myinvois_validation_time
 
     @api.depends('l10n_my_edi_state')
     def _compute_need_cancel_request(self):

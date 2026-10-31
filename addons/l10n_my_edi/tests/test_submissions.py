@@ -333,9 +333,12 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
         with patch(CONTACT_PROXY_METHOD, new=self._test_10_mock):
             # Issue the invoice, and get a valid status.
             self.basic_invoice.action_l10n_my_edi_send_invoice()
+            validation_time = datetime.strptime('2024-07-15 05:00:00', '%Y-%m-%d %H:%M:%S')
+            self.assertEqual(self.basic_invoice.l10n_my_edi_validation_time, validation_time)
             # Update the status, and receive a rejection request.
             self.basic_invoice.action_l10n_my_edi_update_status()
             self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'rejected')
+            self.assertEqual(self.basic_invoice.l10n_my_edi_validation_time, validation_time)
             # We then cancel the invoice as the reason is valid.
             action = self.basic_invoice.button_request_cancel()
             wizard = self.env[action['res_model']].with_context(action['context']).create({
@@ -346,6 +349,7 @@ class L10nMyEDITestNewSubmission(TestAccountMoveSendCommon):
             self.assertEqual(self.basic_invoice.l10n_my_edi_document_ids[0].myinvois_state, 'cancelled')
             # The invoice itself should reflect the cancellation too, same as in test_04.
             self.assertEqual(self.basic_invoice.l10n_my_edi_state, 'cancelled')
+            self.assertFalse(self.basic_invoice.l10n_my_edi_validation_time)
 
     @freeze_time('2024-07-15 10:00:00')
     def test_11_qr_code_generation(self):
