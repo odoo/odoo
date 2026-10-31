@@ -37,9 +37,18 @@ class TestTaxesTaxTotalsSummaryAccountTaxPython(TestTaxCommonPOS, TestTaxesTaxTo
             self.assert_invoice_totals(order.account_move, expected_values)
 
     def test_point_of_sale_custom_tax_with_extra_product_uom_field(self):
-        assert 'relative_factor' not in self.env['uom.uom']._load_pos_data_fields(self.main_pos_config)
 
-        tax = self.python_tax('uom.relative_factor * quantity')
+        model_id = self.env['ir.model']._get_id('uom.uom')
+        self.env['ir.model.fields'].create([{
+                'name': 'x_studio_relative_facor',
+                'model': 'uom.uom',
+                'model_id': model_id,
+                'ttype': 'float',
+                'state': 'manual',
+            }
+        ])
+
+        tax = self.python_tax('uom.x_studio_relative_facor * quantity')
         document_params = self.init_document(
             lines=[
                 {'price_unit': 200.0, 'quantity': 10.0, 'tax_ids': tax},
@@ -53,6 +62,7 @@ class TestTaxesTaxTotalsSummaryAccountTaxPython(TestTaxCommonPOS, TestTaxesTaxTo
             'name': "test_point_of_sale_custom_tax_with_extra_product_uom_field",
             'relative_uom_id': self.env.ref('uom.product_uom_unit').id,
             'relative_factor': 4.2,
+            'x_studio_relative_facor': 4.2,
         })
 
         expected_values = {

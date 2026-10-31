@@ -314,6 +314,7 @@ export class ComboConfiguratorPopup extends Component {
                     forceVariantValue: product.product_template_variant_value_ids,
                     line,
                     comboItem: combo_item,
+                    hideUoMSelection: true,
                 });
 
                 if (payload) {

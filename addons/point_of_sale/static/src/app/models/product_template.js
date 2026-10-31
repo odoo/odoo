@@ -23,10 +23,15 @@ export class ProductTemplate extends ProductTemplateAccounting {
 
     async _onScaleNotAvailable() {}
 
+    skipUomSelection() {
+        return this.isCombo();
+    }
+
     isConfigurable() {
         return (
             this.attribute_line_ids.map((a) => a.active !== false && a.product_template_value_ids)
-                .length >= 1
+                .length >= 1 ||
+            (!this.skipUomSelection() && this.uom_ids.length)
         );
     }
 
@@ -36,7 +41,8 @@ export class ProductTemplate extends ProductTemplateAccounting {
             this.isCombo() ||
             (this.isConfigurable() &&
                 activeLines.length > 0 &&
-                activeLines.some((l) => l.attribute_id.create_variant === "no_variant"))
+                activeLines.some((l) => l.attribute_id.create_variant === "no_variant")) ||
+            (!this.skipUomSelection() && this.uom_ids.length)
         );
     }
 

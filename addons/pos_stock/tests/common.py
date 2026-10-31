@@ -17,6 +17,10 @@ class CommonPosStockTest(ValuationReconciliationTestCommon, CommonPosTest):
     def setUpClass(self):
         super().setUpClass()
         archive_products(self.env)
+        self.stock_location_components = self.env["stock.location"].create({
+            'name': 'Shelf 1',
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+        })
 
 
 class TestPosStockCommon(TestPoSCommon, ValuationReconciliationTestCommon):

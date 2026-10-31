@@ -1,4 +1,4 @@
-import { animationFrame, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, waitFor, queryOne } from "@odoo/hoot-dom";
 import { contains, getService } from "@web/../tests/web_test_helpers";
 import { ensurePane, isMobile } from "./common";
 import { clickNumpadButtons } from "./numpad_util";
@@ -87,6 +87,16 @@ export async function clickFastPaymentMethod(name) {
     await ensurePane("left");
     await contains(`.fast-pay-button:contains("${name}")`).click();
     await animationFrame();
+}
+
+export async function selectUomOption(uomName) {
+    await contains(`.uom-selection-value:contains("${uomName}")`).click();
+}
+
+export function getOrderlineElByPrice(productName, price) {
+    return queryOne(
+        `.orderline:has(.product-name:contains(${productName})):has(.product-price:contains(${price}))`
+    );
 }
 
 export function setFlatProductPrice(store, price) {
