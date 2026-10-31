@@ -44,7 +44,7 @@ class ReceptionReport(models.AbstractModel):
 
         # to support batch pickings we need to track the total already assigned
         move_ids = self._get_moves(docs)
-        assigned_moves = move_ids.mapped('move_dest_ids')
+        assigned_moves = move_ids.mapped('move_dest_ids').filtered(lambda m: m.state != 'cancel')
         product_to_assigned_qty = defaultdict(float)
         for assigned in assigned_moves:
             product_to_assigned_qty[assigned.product_id] += assigned.product_qty
@@ -56,12 +56,12 @@ class ReceptionReport(models.AbstractModel):
             )
             qty_already_assigned = 0
             if move.move_dest_ids:
-                qty_already_assigned = min(product_to_assigned_qty[move.product_id], move_quantity)
+                qty_already_assigned = min(product_to_assigned_qty[move.product_id], move_quantity, sum(move.move_dest_ids.mapped('product_qty')))
                 product_to_assigned_qty[move.product_id] -= qty_already_assigned
             if qty_already_assigned:
                 product_to_total_assigned[move.product_id][0] += qty_already_assigned
                 product_to_total_assigned[move.product_id][1].append(move.id)
-            if move_quantity != qty_already_assigned:
+            if move_quantity != qty_already_assigned or self.env.context.get('reception_show_all_out_moves'):
                 if move.state == 'draft':
                     product_to_qty_draft[move.product_id] += move_quantity - qty_already_assigned
                 else:
@@ -125,7 +125,7 @@ class ReceptionReport(models.AbstractModel):
                     if float_compare(qty_to_reserve, quantity, precision_rounding=product_uom.rounding) == 0:
                         break
 
-                if not float_is_zero(quantity, precision_rounding=product_uom.rounding):
+                if not float_is_zero(quantity, precision_rounding=product_uom.rounding) or self.env.context.get('reception_show_all_out_moves'):
                     sources_to_lines[source].append(self._prepare_report_line(quantity, product_id, out, source[0], move_ins=self.env['stock.move'].browse(moves_in_ids)))
 
                 # draft qtys can be shown but not assigned
@@ -140,7 +140,7 @@ class ReceptionReport(models.AbstractModel):
         for product_id, qty_and_ins in product_to_total_assigned.items():
             total_assigned = qty_and_ins[0]
             moves_in = self.env['stock.move'].browse(qty_and_ins[1])
-            out_moves = moves_in.move_dest_ids
+            out_moves = moves_in.move_dest_ids.filtered(lambda sm: sm.state != 'cancel')
 
             for out_move in out_moves:
                 if float_is_zero(total_assigned, precision_rounding=out_move.product_id.uom_id.rounding):
@@ -154,7 +154,7 @@ class ReceptionReport(models.AbstractModel):
                     source = (out_move.picking_id, source[0])
                 qty_assigned = min(total_assigned, out_move.product_qty)
                 sources_to_lines[source].append(
-                    self._prepare_report_line(qty_assigned, product_id, out_move, source[0], is_assigned=True, move_ins=moves_in))
+                    self._prepare_report_line(qty_assigned, product_id, out_move, source[0], is_assigned=True, move_ins=moves_in & out_move.move_orig_ids))
 
         # dates aren't auto-formatted when printed in report :(
         sources_to_formatted_scheduled_date = defaultdict(list)
