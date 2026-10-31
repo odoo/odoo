@@ -178,3 +178,43 @@ class TestRoEdi(TestROEdiCommon):
         self.assertFalse(
             invoice.l10n_ro_edi_document_ids.filtered(lambda d: d.state == "invoice_refused")
         )
+
+    def test_automatic_sending_foreign_customer_not_sent_to_spv(self):
+        """Invoices sent automatically to a non-Romanian customer must not be sent to the SPV. """
+        self.partner_a.write({
+            "country_id": self.env.ref("base.sa").id,
+            "state_id": self.env.ref("base.state_sa_2").id,
+            "city": "test",
+            "street": "test",
+            "vat": "300000000000003",
+        })
+        invoice = self.create_invoice(partner_id=self.partner_a.id)
+
+        with patch(
+            'odoo.addons.l10n_ro_edi.models.account_move._request_ciusro_send_invoice',
+            return_value={"key_loading": "AA"},
+        ) as mock_send:
+            self.env['account.move.send']._generate_and_send_invoices(
+                invoice,
+                allow_raising=False,
+                allow_fallback_pdf=True,
+            )
+            mock_send.assert_not_called()
+            self.assertFalse(invoice.l10n_ro_edi_state)
+
+    def test_send_wizard_foreign_customer_spv_optional(self):
+        """When sending manually to a non-Romanian customer, sending to the SPV is optional (unchecked by default)."""
+        invoice_ro = self.create_invoice()
+        wizard = self._create_account_move_send_wizard_single(invoice_ro)
+        self.assertTrue(wizard.extra_edi_checkboxes['ro_edi']['checked'])
+
+        self.partner_a.write({
+            "country_id": self.env.ref("base.sa").id,
+            "state_id": self.env.ref("base.state_sa_2").id,
+            "city": "test",
+            "street": "test",
+            "vat": "300000000000003",
+        })
+        invoice = self.create_invoice(partner_id=self.partner_a.id)
+        wizard = self._create_account_move_send_wizard_single(invoice)
+        self.assertFalse(wizard.extra_edi_checkboxes['ro_edi']['checked'])
