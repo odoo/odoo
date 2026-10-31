@@ -8,7 +8,30 @@ export class LoyaltyCard extends models.ServerModel {
     _name = "loyalty.card";
 
     _load_pos_data_fields() {
-        return ["partner_id", "code", "points", "program_id", "expiration_date", "write_date"];
+        return [
+            "partner_id",
+            "code",
+            "points",
+            "program_id",
+            "expiration_date",
+            "write_date",
+            "program_type",
+        ];
+    }
+
+    get_card_status(code) {
+        const cardId = this.search([["code", "=", code]]);
+        const [card] = this.read(
+            cardId,
+            [...this._load_pos_data_fields(), "source_pos_order_id"],
+            false
+        );
+        const isValidGiftCard = card && card.program_type === "gift_card";
+        return {
+            status: isValidGiftCard || Boolean(!card),
+            "loyalty.card": card ? [card] : [],
+            has_source_order: card?.source_pos_order_id || false,
+        };
     }
 
     _records = [
@@ -44,6 +67,14 @@ export class LoyaltyCard extends models.ServerModel {
             points: 3,
             partner_id: 1,
             program_id: 7,
+            write_date: DateTime.now().minus({ days: 2 }).toFormat("yyyy-MM-dd HH:mm:ss"),
+        },
+        {
+            id: 5,
+            code: "EXISTING_CARD",
+            points: 121,
+            partner_id: false,
+            program_id: 3,
             write_date: DateTime.now().minus({ days: 2 }).toFormat("yyyy-MM-dd HH:mm:ss"),
         },
     ];

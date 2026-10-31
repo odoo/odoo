@@ -178,7 +178,6 @@ export function useExistingLoyaltyCard(code, valid = true) {
     ];
 
     if (!valid) {
-        steps.push(Dialog.proceed({ title: "invalid gift card code", button: "Ok" }));
         steps.push(Dialog.cancel({ title: "sell/manage physical gift card" }));
         steps.push({
             trigger: `a:contains("Sell physical gift card?")`,
