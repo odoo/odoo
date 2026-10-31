@@ -207,7 +207,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
             if not work_entry_type.unit_of_measure or work_entry_type.unit_of_measure == 'day':
                 form.number_of_days_display = duration
             else:
-                form.number_of_hours_display = duration
+                form.number_of_hours = duration
             if date_to:
                 form.date_to = date_to
         return form.record
