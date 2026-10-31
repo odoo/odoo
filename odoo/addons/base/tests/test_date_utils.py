@@ -242,6 +242,23 @@ class TestDateUtils(TransactionCase):
         with freeze_time('2024-01-04 23:05:00'):
             self.assertEqual(parse('today'), date(2024, 1, 5))
 
+    def test_parse_date_relative_dst(self):
+        env = self.env(context={"tz": "Europe/Brussels"})
+        parse = partial(parse_date, env=env)
+
+        with freeze_time("2026-10-24 23:50:00"):
+            self.assertEqual(parse("+3H"), datetime(2026, 10, 25, 2, 50))
+        with freeze_time("2026-10-25 02:10:00"):
+            self.assertEqual(parse("-3H"), datetime(2026, 10, 24, 23, 10))
+            self.assertEqual(parse("-150M"), datetime(2026, 10, 24, 23, 40))
+        with freeze_time("2026-03-28 12:00:00"):
+            self.assertEqual(parse("+1d"), datetime(2026, 3, 29, 11, 0))
+        with freeze_time("2026-03-29 00:50:00"):
+            self.assertEqual(parse("+2H"), datetime(2026, 3, 29, 2, 50))
+        with freeze_time("2026-03-29 01:05:00"):
+            self.assertEqual(parse("-15M"), datetime(2026, 3, 29, 0, 50))
+            self.assertEqual(parse("-600S"), datetime(2026, 3, 29, 0, 55))
+
     def test_monday_override_on_sunday_locale(self):
         locale = babel.Locale.parse('en_US')
         self.assertEqual(locale.first_week_day, 6)
