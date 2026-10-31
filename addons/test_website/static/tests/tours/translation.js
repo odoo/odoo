@@ -222,7 +222,9 @@ function switchLanguage(lang, timeout = 50000) {
         },
         {
             content: "Select language",
-            trigger: `:iframe .o_header_language_selector .js_change_lang[data-url_code=${lang}]`,
+            trigger: `:iframe .o_header_language_selector .js_change_lang${
+                lang === "fr" ? '[title$="Français"]' : `[data-url_code=${lang}]`
+            }`,
             run: "click",
         },
         {

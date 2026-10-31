@@ -27,5 +27,5 @@ class TestWebsiteSaleStockMultilang(HttpCase):
             "out_of_stock_message", {"fr_FR": {"Out of stock": "Hors-stock"}}
         )
         self.start_tour(
-            "/fr/shop?search=unavailable", "website_sale_stock.product_warning_multilang"
+            f"/{lang_fr.url_code}/shop?search=unavailable", "website_sale_stock.product_warning_multilang"
         )

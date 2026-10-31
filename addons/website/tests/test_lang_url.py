@@ -15,7 +15,7 @@ class TestLangUrlCommon(HttpCase):
         # Simulate multi lang without loading translations
         self.website = self.env.ref('base.default_website')
         self.lang_fr = self.env['res.lang']._activate_lang('fr_FR')
-        self.lang_fr.write({'url_code': 'fr'})
+        self.fr_prefix = '/' + self.lang_fr.url_code
         self.website.language_ids = self.env.ref('base.lang_en') + self.lang_fr
         self.website.default_lang_id = self.env.ref('base.lang_en')
 
@@ -30,17 +30,17 @@ class TestLangUrl(TestLangUrlCommon):
         url = '/fr_WHATEVER/contactus'
         r = self.url_open(url)
         self.assertEqual(r.status_code, 200)
-        self.assertURLEqual(r.url, '/fr/contactus', f"fr_WHATEVER should be forwarded to 'fr_FR' lang as closest match, url: {r.url}")
+        self.assertURLEqual(r.url, self.fr_prefix + '/contactus', f"fr_WHATEVER should be forwarded to 'fr_FR' lang as closest match, url: {r.url}")
 
         url = '/fr_FR/contactus'
         r = self.url_open(url)
         self.assertEqual(r.status_code, 200)
-        self.assertURLEqual(r.url, '/fr/contactus', f"lang in url should use url_code ('fr' in this case), url: {r.url}")
+        self.assertURLEqual(r.url, self.fr_prefix + '/contactus', f"lang in url should use url_code, url: {r.url}")
 
     def test_03_url_cook_lang_not_available(self):
         """ An activated res.lang should not be displayed in the frontend if not a website lang. """
         self.website.language_ids = self.env.ref('base.lang_en')
-        r = self.url_open('/fr/contactus')
+        r = self.url_open(self.fr_prefix + '/contactus')
 
         if 'lang="en-US"' not in r.text:
             doc = lxml.html.document_fromstring(r.text)
@@ -110,10 +110,10 @@ class TestLangUrl(TestLangUrlCommon):
         self.assertEqual(anchor.get('href'), 'http://]', 'The invalid IP URL must be left untouched')
 
     def test_06_reroute_unicode(self):
-        res = self.url_open('/fr/привет')
+        res = self.url_open(self.fr_prefix + '/привет')
         self.assertEqual(res.status_code, 404, "Rerouting didn't crash because of unicode path")
 
-        res = self.url_open('/fr/path?привет=1')
+        res = self.url_open(self.fr_prefix + '/path?привет=1')
         self.assertEqual(res.status_code, 404, "Rerouting didn't crash because of unicode query-string")
 
     def test_07_nolang_prefix_underscore(self):
@@ -135,7 +135,7 @@ class TestLangUrl(TestLangUrlCommon):
                     return json.loads(session_info_str[:-1])
             raise ValueError('Session info not found in web page')
 
-        for url, lang in [('/contactus', 'en_US'), ('/fr/contactus', 'fr_FR')]:
+        for url, lang in [('/contactus', 'en_US'), (self.fr_prefix + '/contactus', 'fr_FR')]:
             with self.subTest(lang=lang):
                 self.env.transaction.invalidate_ormcache()
                 session_info = get_session_info(url)
@@ -173,7 +173,7 @@ class TestLangRedirectBots(TestLangUrlCommon):
             'Accept-Language': 'fr-FR,fr;q=0.9',
         }, allow_redirects=False)
         self.assertEqual(r.status_code, 303)
-        self.assertURLEqual(r.headers.get('Location'), '/fr/contactus')
+        self.assertURLEqual(r.headers.get('Location'), self.fr_prefix + '/contactus')
         self.assertEqual(r.cookies.get('frontend_lang'), 'fr_FR')
 
     def test_bots_not_redirected_by_accept_language(self):
@@ -194,7 +194,7 @@ class TestLangRedirectBots(TestLangUrlCommon):
     def test_bot_can_fetch_alternate_lang_url(self):
         """ Crawlers must still be able to index every language at its own
         URL. """
-        r = self.url_open('/fr/contactus', headers={
+        r = self.url_open(self.fr_prefix + '/contactus', headers={
             'User-Agent': 'Mozilla/5.0 (compatible; Google-InspectionTool/1.0;)',
             'Accept-Language': 'en-US,en;q=0.9',
         }, allow_redirects=False)
@@ -242,14 +242,14 @@ class TestControllerRedirect(TestLangUrlCommon):
 
         # == Same with language ==
         # Controllers
-        assertUrlRedirect('/fr/my/', '/fr/my', "Check for basic controller with language in URL.")
-        assertUrlRedirect('/fr/my/?a=b', '/fr/my?a=b', "Check for basic controller with language in URL + URL params.")
+        assertUrlRedirect(self.fr_prefix + '/my/', self.fr_prefix + '/my', "Check for basic controller with language in URL.")
+        assertUrlRedirect(self.fr_prefix + '/my/?a=b', self.fr_prefix + '/my?a=b', "Check for basic controller with language in URL + URL params.")
         # Homepage (which is a controller)
-        assertUrlRedirect('/fr/', '/fr', "Check for homepage + language.")
-        assertUrlRedirect('/fr/?a=b', '/fr?a=b', "Check for homepage + language + URL params")
+        assertUrlRedirect(self.fr_prefix + '/', self.fr_prefix, "Check for homepage + language.")
+        assertUrlRedirect(self.fr_prefix + '/?a=b', self.fr_prefix + '?a=b', "Check for homepage + language + URL params")
         # website.page
-        assertUrlRedirect('/fr/page_1/', '/fr/page_1', "Check for website.page with language in URL.")
-        assertUrlRedirect('/fr/page_1/?a=b', '/fr/page_1?a=b', "Check for website.page with language in URL + URL params.")
+        assertUrlRedirect(self.fr_prefix + '/page_1/', self.fr_prefix + '/page_1', "Check for website.page with language in URL.")
+        assertUrlRedirect(self.fr_prefix + '/page_1/?a=b', self.fr_prefix + '/page_1?a=b', "Check for website.page with language in URL + URL params.")
 
 
 @tagged('-at_install', 'post_install')
@@ -285,9 +285,9 @@ class TestTranslateUrl(TestLangUrl):
         # Trying to access the french url of a page (with the lang in the url)
         # should change the website language to french and access the french url
         # of the page.
-        r = self.url_open('/fr' + self.name_page_fr)
+        r = self.url_open(self.fr_prefix + self.name_page_fr)
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, self.base + '/fr' + self.name_page_fr)
+        self.assertEqual(r.url, self.base + self.fr_prefix + self.name_page_fr)
 
         # Trying to access the english url of a page (without the lang in the
         # url) if the website language is in french should redirect to the
@@ -295,7 +295,7 @@ class TestTranslateUrl(TestLangUrl):
         r = self.url_open(self.name_page_en)
         self.assertEqual(r.history[0].status_code, 303)
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, self.base + '/fr' + self.name_page_fr)
+        self.assertEqual(r.url, self.base + self.fr_prefix + self.name_page_fr)
 
     def test_access_translated_homepage(self):
         # From the homepage, changing the language of the website should
@@ -305,26 +305,26 @@ class TestTranslateUrl(TestLangUrl):
         homepage_domain = [('url', '=', '/')] + self.website.website_domain()
         homepage_specific = self.env['website.page'].search(homepage_domain, order='website_id asc', limit=1)
         homepage_specific.with_context(lang='fr_FR').url = name_homepage_url_fr
-        r = self.url_open('/fr')
+        r = self.url_open(self.fr_prefix)
         self.assertEqual(r.history[0].status_code, 303)
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, self.base + '/fr' + name_homepage_url_fr)
+        self.assertEqual(r.url, self.base + self.fr_prefix + name_homepage_url_fr)
 
     def test_translate_url_exists_in_other_language(self):
         # It should be possible to translate the url of a page with a url that
         # exists in another language.
         self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'translate_url_exists_in_other_language', login='admin')
-        r = self.url_open('/fr/page-en')
+        r = self.url_open(self.fr_prefix + '/page-en')
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, self.base + '/fr/page-en')
+        self.assertEqual(r.url, self.base + self.fr_prefix + '/page-en')
 
     def test_translate_url_exists_in_current_language(self):
         # It should not be possible to have two url that are the same in the
         # same language
         self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'translate_url_exists_in_same_language', login='admin')
-        r = self.url_open('/fr/page-fr-1')
+        r = self.url_open(self.fr_prefix + '/page-fr-1')
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.url, self.base + '/fr/page-fr-1')
+        self.assertEqual(r.url, self.base + self.fr_prefix + '/page-fr-1')
 
     def test_update_url_impact_homepage_url(self):
         # If a page url is the website homepage url, updating this url through

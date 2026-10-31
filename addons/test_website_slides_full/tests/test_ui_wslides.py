@@ -20,6 +20,7 @@ class TestUi(TestUICommon):
 
         cls.furniture_survey = cls.env['survey.survey'].create({
             'title': 'Furniture Creation Certification',
+            'lang_ids': [(6, 0, cls.env.ref('base.lang_en').ids)],
             'access_token': '5632a4d7-48cf-aaaa-8c52-2174d58cf50b',
             'access_mode': 'public',
             'questions_layout': 'one_page',
