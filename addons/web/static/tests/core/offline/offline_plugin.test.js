@@ -532,3 +532,158 @@ test("syncORM ConnectionLost", async () => {
         },
     });
 });
+
+test("syncORM delegates a scheduled call to its owner", async () => {
+    const setOffline = mockOffline();
+    onRpc("partner", "create", () => expect.step("create"));
+    await makeTestApp();
+    const offline = getService(OfflinePlugin);
+
+    await setOffline(true);
+    const key = offline.scheduleORM(
+        "partner",
+        "create",
+        [{}],
+        {},
+        {
+            extras: { timeStamp: 1 },
+            owner: async () => {
+                expect.step("owner");
+                offline.removeScheduledORM(key);
+                return true;
+            },
+        }
+    );
+    await setOffline(false);
+    await expect.waitForSteps(["owner"]);
+    expect(offline._ormToSync()).toEqual({});
+    expect.verifySteps([]);
+});
+
+test("syncORM makes the scheduled call if its owner can't", async () => {
+    const setOffline = mockOffline();
+    onRpc("partner", "create", () => expect.step("create"));
+    await makeTestApp();
+    const offline = getService(OfflinePlugin);
+
+    await setOffline(true);
+    offline.scheduleORM(
+        "partner",
+        "create",
+        [{}],
+        {},
+        {
+            extras: { timeStamp: 1 },
+            owner: async () => {
+                expect.step("owner");
+                return false;
+            },
+        }
+    );
+    await setOffline(false);
+    await expect.waitForSteps(["owner", "create"]);
+    expect(offline._ormToSync()).toEqual({});
+});
+
+test("syncORM doesn't schedule again a call done meanwhile", async () => {
+    const setOffline = mockOffline();
+    await makeTestApp();
+    const offline = getService(OfflinePlugin);
+
+    await setOffline(true);
+    const key = offline.scheduleORM(
+        "partner",
+        "create",
+        [{}],
+        {},
+        {
+            extras: { timeStamp: 1 },
+            owner: async () => {
+                offline.removeScheduledORM(key); // e.g. saved by the user meanwhile
+                throw new Error("owner failed");
+            },
+        }
+    );
+    await setOffline(false);
+    await runAllTimers();
+    expect(offline._ormToSync()).toEqual({});
+});
+
+test("syncORM skips a scheduled call owned by another tab", async () => {
+    const setOffline = mockOffline();
+    onRpc("partner", "create", () => expect.step("create"));
+    await makeTestApp();
+    const offline = getService(OfflinePlugin);
+
+    await setOffline(true);
+    // scheduled by another tab, which holds the owner lock
+    const key = offline.scheduleORM("partner", "create", [{}], {}, { extras: { timeStamp: 1 } });
+    patchWithCleanup(navigator.locks, {
+        async query() {
+            return { held: [{ name: OfflinePlugin.OWNER_LOCK_PREFIX + key }], pending: [] };
+        },
+    });
+    await setOffline(false);
+    await runAllTimers();
+    expect.verifySteps([]);
+    expect(Object.keys(offline._ormToSync())).toEqual([key]);
+});
+
+test("syncORM tries again a call its owner kept scheduled", async () => {
+    const setOffline = mockOffline();
+    await makeTestApp();
+    const offline = getService(OfflinePlugin);
+    await runAllTimers(); // execute first _syncORM triggered after a delay in the service startup
+
+    await setOffline(true);
+    let ready = false;
+    const key = offline.scheduleORM(
+        "partner",
+        "create",
+        [{}],
+        {},
+        {
+            extras: { timeStamp: 1 },
+            owner: async () => {
+                expect.step(ready ? "owner syncs" : "owner waits");
+                if (ready) {
+                    offline.removeScheduledORM(key);
+                }
+                return true;
+            },
+        }
+    );
+    await setOffline(false);
+    await expect.waitForSteps(["owner waits"]);
+
+    // e.g. the record had pending changes, which are saved or discarded since
+    ready = true;
+    await runAllTimers();
+    await expect.waitForSteps(["owner syncs"]);
+    expect(offline._ormToSync()).toEqual({});
+});
+
+test("syncORM makes a call owned by another tab once that tab is closed", async () => {
+    const setOffline = mockOffline();
+    onRpc("partner", "create", () => expect.step("create"));
+    await makeTestApp();
+    const offline = getService(OfflinePlugin);
+    await runAllTimers(); // execute first _syncORM triggered after a delay in the service startup
+
+    await setOffline(true);
+    const key = offline.scheduleORM("partner", "create", [{}], {}, { extras: { timeStamp: 1 } });
+    let held = [{ name: OfflinePlugin.OWNER_LOCK_PREFIX + key }];
+    patchWithCleanup(navigator.locks, {
+        async query() {
+            return { held, pending: [] };
+        },
+    });
+    await setOffline(false);
+    await animationFrame();
+    expect.verifySteps([]);
+
+    held = []; // the browser releases the lock of a closed tab
+    await runAllTimers();
+    await expect.waitForSteps(["create"]);
+    expect(offline._ormToSync()).toEqual({});
+});
