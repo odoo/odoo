@@ -51,9 +51,9 @@ export class GraphController extends Component {
      */
     getContext() {
         // expand context object? change keys?
-        const { measure, groupBy, mode } = this.model.metaData;
+        const { activeMeasures, groupBy, mode } = this.model.metaData;
         const context = {
-            graph_measure: measure,
+            graph_measure: activeMeasures,
             graph_mode: mode,
             graph_groupbys: groupBy.map((gb) => gb.spec),
         };
