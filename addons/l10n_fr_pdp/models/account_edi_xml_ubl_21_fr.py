@@ -2,6 +2,7 @@ from odoo import _, api, models
 from odoo.tools.misc import formatLang
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+from odoo.addons.l10n_fr.models.res_partner import VAT_SIREN_RE
 
 PDP_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr'  # Not accepted by SuperPDP due to missing validator
 
@@ -65,6 +66,28 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             constraints["ubl_21_fr_cpro_module_missing"] = self.env._("This partner is behind Chorus PRO. Please install the module '%s'", cpro_module_name)
 
         return constraints
+
+    def _ubl_get_company_tax_unit(self, company):
+        if 'account_tax_unit_ids' in company._fields:
+            return company.account_tax_unit_ids
+        return False
+
+    def _ubl_get_siren_from_vat(self, vat):
+        vat = (vat or '').replace(' ', '')
+        match = VAT_SIREN_RE.fullmatch(vat)
+        return match and match.group(1)
+
+    def _get_invoice_node(self, vals):
+        document_node = super()._get_invoice_node(vals)
+        self._add_invoice_tax_representative_party_nodes(document_node, vals)
+        return document_node
+
+    def _get_default_notes(self, vals):
+        # [BR-FR-CO-14] Add MEMBRE_ASSUJETTI_UNIQUE note for Single Taxpayer Groups
+        notes = super()._get_default_notes(vals)
+        if self._ubl_get_company_tax_unit(vals['company']):
+            notes['TXD'] = 'MEMBRE_ASSUJETTI_UNIQUE'
+        return notes
 
     def _add_invoice_header_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
@@ -136,6 +159,21 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 'cbc:ID': {'_text': invoice.purchase_order_reference}
             }
 
+    def _add_invoice_tax_representative_party_nodes(self, document_node, vals):
+        # [BR-FR-CO-15] For Single Taxpayer Groups, report the group in cac:TaxRepresentativeParty (BG-11)
+        if tax_unit := self._ubl_get_company_tax_unit(vals['company']):
+            address_node = self._get_address_node({'partner': tax_unit.main_company_id.partner_id})
+            # [UBL-CR-323] A UBL invoice should not include the TaxRepresentativeParty PostalAddress Country Name
+            address_node['cac:Country']['cbc:Name'] = None
+            document_node['cac:TaxRepresentativeParty'] = {
+                'cac:PartyName': {'cbc:Name': {'_text': tax_unit.name}},
+                'cac:PostalAddress': address_node,
+                'cac:PartyTaxScheme': {
+                    'cbc:CompanyID': {'_text': tax_unit.vat},
+                    'cac:TaxScheme': {'cbc:ID': {'_text': 'VAT'}},
+                },
+            }
+
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_bis3
         super()._add_invoice_payment_means_nodes(document_node, vals)
@@ -180,9 +218,20 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         else:  # id_type == 'siren'
             party_id_scheme = "0002"
         # [UBL-SR-16] Buyer identifier shall occur maximum once
-        vals['party_node']['cac:PartyIdentification'] = {
+        vals['party_node']['cac:PartyIdentification'] = [{
             'cbc:ID': {'_text': party_id, 'schemeID': party_id_scheme},
-        }
+        }]
+
+    def _ubl_add_accounting_supplier_party_identification_nodes(self, vals):
+        # [CGI art. 256 C] [BR-FR-32] For Single Taxpayer Groups, report the group SIREN (BT-29) with scheme 0231
+        super()._ubl_add_accounting_supplier_party_identification_nodes(vals)
+        if tax_unit := self._ubl_get_company_tax_unit(vals['company']):
+            vals['party_node']['cac:PartyIdentification'].append({
+                'cbc:ID': {
+                    '_text': self._ubl_get_siren_from_vat(tax_unit.vat),
+                    'schemeID': '0231',
+                },
+            })
 
     def _ubl_add_party_legal_entity_nodes(self, vals):
         # EXTENDS account.edi.xml.ubl_bis3
