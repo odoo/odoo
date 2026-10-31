@@ -68,7 +68,7 @@ class ProductTemplate(models.Model):
 
     def write(self, values):
         if 'active' in values:
-            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).bom_ids.write({
+            self.filtered(lambda p: p.active != values['active']).sudo().with_context(active_test=False).bom_ids.write({
                 'active': values['active']
             })
         return super().write(values)
@@ -92,7 +92,7 @@ class ProductTemplate(models.Model):
         return action
 
     def action_archive(self):
-        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.product_variant_ids.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')
+        filtered_products = self.env['mrp.bom.line'].sudo().search([('product_id', 'in', self.product_variant_ids.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')
         res = super().action_archive()
         if filtered_products:
             return {
@@ -174,7 +174,7 @@ class ProductProduct(models.Model):
 
     def write(self, values):
         if 'active' in values:
-            self.filtered(lambda p: p.active != values['active']).with_context(active_test=False).variant_bom_ids.write({
+            self.filtered(lambda p: p.active != values['active']).sudo().with_context(active_test=False).variant_bom_ids.write({
                 'active': values['active']
             })
         return super().write(values)
@@ -380,7 +380,7 @@ class ProductProduct(models.Model):
         return list(set(product_ids))
 
     def action_archive(self):
-        filtered_products = self.env['mrp.bom.line'].search([('product_id', 'in', self.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')
+        filtered_products = self.env['mrp.bom.line'].sudo().search([('product_id', 'in', self.ids), ('bom_id.active', '=', True)]).product_id.mapped('display_name')
         res = super().action_archive()
         if filtered_products:
             return {
