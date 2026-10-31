@@ -485,7 +485,7 @@ export class DeletePlugin extends Plugin {
             // Probably need to get deepest position's element
             // @todo: update fillEmpty
             // @todo: check if nodes does not already have a ZWS/ZWNBSP
-            if (!isBlock(node) && !isTangible(node)) {
+            if (!isBlock(node) && !isTangible(node) && !/\s/.test(node.textContent)) {
                 node.appendChild(this.document.createTextNode("\u200B"));
                 node.setAttribute("data-oe-zws-empty-inline", "");
             }
