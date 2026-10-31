@@ -624,10 +624,12 @@ class DiscussChannelMember(models.Model):
 
     def _get_recording_permissions(self, user, sfu_url=True):
         can_record = bool(user and user._is_internal() and sfu_url)
+        channel = self.env["discuss.channel"]
+        can_record_media = can_record and channel._has_recording_feature()
         return {
-            "audioRecording": can_record,
-            "transcription": False,
-            "videoRecording": can_record,
+            "audioRecording": can_record_media,
+            "transcription": can_record and channel._has_transcription_feature(),
+            "videoRecording": can_record_media,
         }
 
     def _get_rtc_server_info(self, rtc_session, ice_servers=None, key=None):

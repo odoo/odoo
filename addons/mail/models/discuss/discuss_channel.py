@@ -1151,9 +1151,18 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         return f"call_{self.id}"
 
+    def _has_recording_feature(self):
+        """Mail has no media upload destination; cloud_storage enables it when configured."""
+        return False
+
+    def _has_transcription_feature(self):
+        return False
+
     def _get_recording_address(self):
         """Return the recording callback URL for this channel's active call or None."""
         self.ensure_one()
+        if not (self._has_recording_feature() or self._has_transcription_feature()):
+            return None
         # sudo: discuss.call.history - SFU provisioning needs the current call of this accessible channel.
         call_history = (
             self.env["discuss.call.history"]

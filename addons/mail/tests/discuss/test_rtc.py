@@ -14,6 +14,7 @@ from odoo.tools.misc import mute_logger
 
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.controllers.discuss.rtc import _check_jwt
+from odoo.addons.mail.models.discuss.discuss_channel_member import DiscussChannelMember
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools import discuss, jwt
 from odoo.addons.mail.tools.discuss import Store
@@ -95,6 +96,8 @@ class TestChannelRTC(MailCommon, HttpCase):
     @freeze_time("2023-03-15 12:34:56")
     def test_01_join_call(self):
         """Join call should remove existing sessions, remove invitation, create a new session, and return data."""
+        self.patch(self.env.registry["discuss.channel"], "_has_recording_feature", lambda channel: False)
+        self.patch(self.env.registry["discuss.channel"], "_has_transcription_feature", lambda channel: False)
         self.member_of_employee_in_channel_internal.sudo()._rtc_join_call()
         initial_rtc_session = self.member_of_employee_in_channel_internal.sudo().rtc_session_ids
 
@@ -223,6 +226,13 @@ class TestChannelRTC(MailCommon, HttpCase):
         )
 
     def test_02_recording_permissions_internal_only(self):
+        # Installed addons may override this method, so test Mail's implementation directly.
+        self.patch(
+            self.env.registry["discuss.channel.member"],
+            "_get_recording_permissions",
+            DiscussChannelMember._get_recording_permissions,
+        )
+        self.patch(self.env.registry["discuss.channel"], "_has_transcription_feature", lambda channel: False)
         portal_user = new_test_user(
             self.env,
             "recording_portal_user",
@@ -230,38 +240,67 @@ class TestChannelRTC(MailCommon, HttpCase):
             email="recording_portal_user@example.com",
             partner_id=self.partner_employee.id,
         )
-        expected_permissions = {
-            "audioRecording": True,
-            "transcription": "ai" in self.env["ir.module.module"]._installed(),
-            "videoRecording": True,
-        }
-        self.assertEqual(
-            self.member_of_employee_in_group_a._get_recording_permissions(
-                self.user_employee,
-            ),
-            expected_permissions,
+        disabled_permissions = dict.fromkeys(
+            ("audioRecording", "transcription", "videoRecording"), False,
         )
-        expected_permissions = dict.fromkeys(expected_permissions, False)
-        self.assertEqual(
-            self.member_of_employee_in_group_a._get_recording_permissions(
-                self.user_employee,
-                False,
-            ),
-            expected_permissions,
-        )
-        self.assertEqual(
-            self.member_of_employee_in_group_a._get_recording_permissions(portal_user),
-            expected_permissions,
-        )
-        self.assertEqual(
-            self.member_of_employee_in_group_a._get_recording_permissions(
-                self.env["res.users"],
-            ),
-            expected_permissions,
-        )
+        with patch.object(self.env.registry["discuss.channel"], "_has_recording_feature", return_value=False):
+            self.assertEqual(
+                self.member_of_employee_in_group_a._get_recording_permissions(self.user_employee),
+                disabled_permissions,
+            )
+        with patch.object(self.env.registry["discuss.channel"], "_has_recording_feature", return_value=True):
+            self.assertEqual(
+                self.member_of_employee_in_group_a._get_recording_permissions(self.user_employee),
+                {
+                    "audioRecording": True,
+                    "transcription": False,
+                    "videoRecording": True,
+                },
+            )
+            self.assertEqual(
+                self.member_of_employee_in_group_a._get_recording_permissions(self.user_employee, False),
+                disabled_permissions,
+            )
+            self.assertEqual(
+                self.member_of_employee_in_group_a._get_recording_permissions(portal_user),
+                disabled_permissions,
+            )
+            self.assertEqual(
+                self.member_of_employee_in_group_a._get_recording_permissions(self.env["res.users"]),
+                disabled_permissions,
+            )
         self.assertFalse(portal_user.partner_id.partner_share)
 
-    def test_03_transcription_route_is_unavailable_without_ai(self):
+    def test_03_transcription_without_media_storage(self):
+        self.patch(
+            self.env.registry["discuss.channel.member"],
+            "_get_recording_permissions",
+            DiscussChannelMember._get_recording_permissions,
+        )
+        with patch.object(self.env.registry["discuss.channel"], "_has_recording_feature", return_value=False):
+            with patch.object(self.env.registry["discuss.channel"], "_has_transcription_feature", return_value=True):
+                self.assertEqual(
+                    self.member_of_employee_in_group_a._get_recording_permissions(self.user_employee),
+                    {
+                        "audioRecording": False,
+                        "transcription": True,
+                        "videoRecording": False,
+                    },
+                )
+                self.assertEqual(
+                    self.member_of_employee_in_group_a._get_recording_permissions(self.env.ref("base.public_user")),
+                    dict.fromkeys(("audioRecording", "transcription", "videoRecording"), False),
+                )
+                call = self.env["discuss.call.history"].create({
+                    "channel_id": self.channel_group_a.id,
+                    "start_dt": fields.Datetime.now(),
+                })
+                self.assertEqual(
+                    self.channel_group_a._get_recording_address(),
+                    f"{self.channel_group_a.get_base_url()}/mail/rtc/recording/{call.id}",
+                )
+
+    def test_04_transcription_route_is_unavailable_without_ai(self):
         if "ai" in self.env["ir.module.module"]._installed():
             self.skipTest("The AI module provides the transcription route.")
         call_start = fields.Datetime.now()
@@ -294,7 +333,7 @@ class TestChannelRTC(MailCommon, HttpCase):
         call.invalidate_recordset(["artifact_ids"])
         self.assertFalse(call.artifact_ids)
 
-    def test_04_recording_routing_rejects_session_token(self):
+    def test_05_recording_routing_rejects_session_token(self):
         call_start = fields.Datetime.now()
         call = self.env["discuss.call.history"].create(
             {
@@ -316,7 +355,7 @@ class TestChannelRTC(MailCommon, HttpCase):
         )
         self.assertEqual(routing_response.status_code, 404)
 
-    def test_05_recording_jwt_returns_user(self):
+    def test_06_recording_jwt_returns_user(self):
         now = fields.Datetime.now()
         request = SimpleNamespace(
             env=self.env,
@@ -353,7 +392,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                         _check_jwt(request, self.channel_group_a)
 
     @users("employee")
-    def test_06_sfu_provisioning_preserves_recording_identity(self):
+    def test_07_sfu_provisioning_preserves_recording_identity(self):
         rtc_sessions = self.env["discuss.channel.rtc.session"].sudo()
         for member, user in (
             (self.member_of_employee_in_group_a, self.user_employee),
@@ -415,30 +454,33 @@ class TestChannelRTC(MailCommon, HttpCase):
                 self.assertEqual(client_claims["label"], label)
 
     @users("employee")
-    def test_07_force_sfu_for_solo_recording(self):
+    def test_08_force_sfu_for_solo_recording(self):
+        self.patch(self.env.registry["discuss.channel"], "_has_recording_feature", lambda channel: False)
         member = self.member_of_employee_in_group_b.sudo()
         member._rtc_join_call()
         params = self.env["ir.config_parameter"].sudo()
         params.set_bool("mail.use_call_server", True)
         params.set_bool("mail.use_sfu_server", True)
         params.set_str("mail.sfu_server_url", "https://sfu.example.com")
-        with patch(
-            "odoo.addons.mail.models.discuss.discuss_channel_member.requests.get",
-        ) as get_channel:
-            get_channel.return_value.json.return_value = {
-                "uuid": "solo-recording-channel",
-                "url": "https://sfu.example.com",
-            }
-            member._join_sfu()
-            get_channel.assert_not_called()
-            member._join_sfu(force=True)
+        with patch.object(self.env.registry["discuss.channel"], "_has_transcription_feature", return_value=False):
+            with patch(
+                "odoo.addons.mail.models.discuss.discuss_channel_member.requests.get",
+            ) as get_channel:
+                get_channel.return_value.json.return_value = {
+                    "uuid": "solo-recording-channel",
+                    "url": "https://sfu.example.com",
+                }
+                member._join_sfu()
+                get_channel.assert_not_called()
+                member._join_sfu(force=True)
         get_channel.assert_called_once()
+        self.assertIsNone(get_channel.call_args.kwargs["params"]["recordingAddress"])
         self.assertEqual(member.channel_id.sfu_channel_uuid, "solo-recording-channel")
         self.assertEqual(member.channel_id.sfu_server_url, "https://sfu.example.com")
         self.assertTrue(member._get_rtc_server_info(member.rtc_session_ids))
 
     @users("employee")
-    def test_08_sfu_identity_uses_joining_user(self):
+    def test_09_sfu_identity_uses_joining_user(self):
         other_user = new_test_user(
             self.env,
             "recording_other_user",
