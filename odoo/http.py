@@ -183,7 +183,7 @@ from werkzeug.urls import URL, url_parse, url_encode, url_quote
 from werkzeug.exceptions import (
     default_exceptions as werkzeug_default_exceptions,
     HTTPException, NotFound, UnsupportedMediaType, UnprocessableEntity,
-    InternalServerError
+    InternalServerError, ServiceUnavailable,
 )
 try:
     from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
@@ -284,6 +284,14 @@ NOT_FOUND_NODB = """\
 <p>Please verify the hostname, <a href=/web/login>login</a> and try again.</p>
 
 <!-- Alternatively, use the X-Odoo-Database header. -->
+"""
+
+REGISTRY_ERROR = """\
+<!DOCTYPE html>
+<title>503 Service Unavailable</title>
+<h1>Service Unavailable</h1>
+<p>There was an error connecting to the database.</p>
+<p>Please try again later.</p>
 """
 
 # The @route arguments to propagate from the decorated method to the
@@ -2315,7 +2323,11 @@ class Request:
             # there was a ReadOnlySqlTransaction error
             if cr.readonly:
                 cr.close()
-                cr = self.env.registry.cursor()
+                try:
+                    cr = self.env.registry.cursor()
+                except psycopg2.OperationalError as exc:
+                    e = f"Cannot get read/write cursor for database {self.db}"
+                    raise RegistryError(e) from exc
             else:
                 # the cursor is already a RW cursor, start a new transaction
                 # that will avoid repeatable read serialization errors because
@@ -2849,9 +2861,9 @@ class Application:
                     try:
                         with request._get_profiler_context_manager():
                             response = request._serve_db()
-                    except RegistryError as e:
-                        _logger.warning("Database or registry unusable, trying without", exc_info=e.__cause__)
-                        request.db = None
+                    except RegistryError as exc_registry:
+                        _logger.warning("Database or registry unusable, trying without", exc_info=exc_registry.__cause__)
+                        request.db = request.registry = request.env = None
                         request.session.logout()
                         if (httprequest.path.startswith('/odoo/')
                             or httprequest.path in (
@@ -2861,7 +2873,16 @@ class Application:
                             args_nodb = request.httprequest.args.copy()
                             args_nodb.pop('db', None)
                             request.reroute(httprequest.path, url_encode(args_nodb))
-                        response = request._serve_nodb()
+                        try:
+                            response = request._serve_nodb()
+                        except NotFound as exc_not_found:
+                            raise ServiceUnavailable(response=Response(
+                                REGISTRY_ERROR,
+                                status=HTTPStatus.SERVICE_UNAVAILABLE,
+                                headers=[
+                                    ('Content-Type', 'text/html; charset=utf-8'),
+                                ],
+                            )) from exc_not_found
                 else:
                     response = request._serve_nodb()
                 return response(environ, start_response)
