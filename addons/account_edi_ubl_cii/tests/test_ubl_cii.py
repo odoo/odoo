@@ -298,6 +298,83 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         extra_attachments = self.env['account.move.send']._get_invoice_extra_attachments(move)
         self.assertIn(move.ubl_cii_xml_id, extra_attachments)
 
+<<<<<<< 43600cd719cfdc17339a8f1e9998eaba18622ef5
+||||||| 76c419dbd181ff160ea1119e22d01c0dd631d29a
+    def test_peppol_eas_endpoint_compute(self):
+        partner = self.partner_a
+        partner.vat = 'DE123456788'
+        partner.country_id = self.env.ref('base.de')
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9930',
+            'peppol_endpoint': 'DE123456788',
+        }])
+
+        partner.country_id = self.env.ref('base.fr')
+        partner.vat = 'FR23334175221'
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR23334175221',
+        }])
+
+        partner.vat = '23334175221'
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR23334175221',
+        }])
+
+        partner.write({
+            'vat': 'BE0477472701',
+            'company_registry': '0477472701',
+            'country_id': self.env.ref('base.be'),
+        })
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+        }])
+
+=======
+    def test_peppol_eas_endpoint_compute(self):
+        partner = self.partner_a
+        partner.vat = 'DE123456788'
+        partner.country_id = self.env.ref('base.de')
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9930',
+            'peppol_endpoint': 'DE123456788',
+        }])
+
+        partner.country_id = self.env.ref('base.fr')
+        partner.vat = 'FR23334175221'
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '9957',
+            'peppol_endpoint': 'FR23334175221',
+        }])
+
+        if self.env['ir.module.module']._get('base_vat').state == 'installed':
+            partner.vat = '23334175221'
+
+            self.assertRecordValues(partner, [{
+                'peppol_eas': '9957',
+                'peppol_endpoint': 'FR23334175221',
+            }])
+
+        partner.write({
+            'vat': 'BE0477472701',
+            'company_registry': '0477472701',
+            'country_id': self.env.ref('base.be'),
+        })
+
+        self.assertRecordValues(partner, [{
+            'peppol_eas': '0208',
+            'peppol_endpoint': '0477472701',
+        }])
+
+>>>>>>> b0114f6e19cddea07df89ca052d1247127c10029
     def test_import_partner_peppol_fields(self):
         """ Check that the peppol fields are used to retrieve the partner when importing a Bis 3 xml. """
         invoice = self.env['account.move'].create({
