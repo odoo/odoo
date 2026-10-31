@@ -14,6 +14,7 @@ condition/math builtins.
 import ast
 import dis
 import functools
+import logging
 import sys
 import types
 import typing
@@ -59,6 +60,8 @@ __all__ = [
     'unsafe_eval',
     'wrap_module'
 ]
+
+_logger = logging.getLogger(__name__)
 
 # The time module is usually already provided in the safe_eval environment
 # but some code, e.g. datetime.datetime.now() (Windows/Python 2.5.2, bug
@@ -225,6 +228,88 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'NOT_TAKEN',
 ])) - _BLACKLIST
 
+_CACHE_OPCODE = opmap.get('CACHE', -1)
+
+
+def _code_opcodes_dis(code_obj):
+    """ Reference opcode extraction based on ``dis.get_instructions``.
+
+    Robust (documented API) but slow because it builds a full
+    ``dis.Instruction`` object for every instruction.
+    """
+    return {instr.opcode for instr in dis.get_instructions(code_obj)}
+
+
+def _code_opcodes_fast(code_obj):
+    """ Fast opcode extraction, reading opcodes straight from ``co_code``.
+
+    ``co_code`` is a flat sequence of 2-byte code units whose first byte is
+    always the opcode (i.e real instructions, ``EXTENDED_ARG`` and inline
+    ``CACHE``), so every even-indexed byte is an opcode. The inert ``CACHE``
+    placeholder is discarded because it is an implementation detail with no
+    semantic.
+
+    This relies on a CPython implementation detail.
+    ``_confirm_fast_opcodes`` function guards against it silently diverging from
+    ``_code_opcodes_dis``.
+    """
+    opcodes = set(code_obj.co_code[::2])
+    opcodes.discard(_CACHE_OPCODE)
+    return opcodes
+
+
+_OPCODE_CONFIRMATION_SNIPPETS = (
+    "a + b * c - d / e % f ** g // h",                                          # arithmetic
+    "-a + ~b | c & d ^ e << f >> g",                                            # unary / bitwise
+    "a < b <= c == d != e >= f > g and h or not i",                             # comparisons / bool
+    "a if b else c",                                                            # conditional expr
+    "a[b] + a[b:c:d] + a.attr",                                                 # subscript / slice / attr
+    "[x for x in r if x] + list(y for y in r) + {z for z in r}",                # comprehensions
+    "{k: v for k, v in r}",                                                     # dict comprehension
+    "(1, 2) + [3, 4] + {5, 6} | {'k': 'v'}.keys()",                             # literal collections
+    "f'{a!r:>{w}}-{b:{s}}'",                                                    # f-strings
+    "func(a, *b, c=d, **e)",                                                    # calls / unpacking
+    "def f(a, /, b, *c, d=1, **e):\n    return [i for i in c]",                 # def / params
+    "x = 0\nfor i in r:\n    x += i\nelse:\n    x -= 1\nwhile x:\n    x -= 1",  # loops
+    "try:\n    g()\nexcept Exception as e:\n    raise\nfinally:\n    pass",     # exceptions
+    "with a as b:\n    pass",                                                   # context manager
+    "def g():\n    yield 1\n    yield from (2, 3)",                             # generators
+    "lam = lambda p, q=2: p + q",                                               # lambda
+)
+
+
+def _confirm_fast_opcodes():
+    """
+    Confirm, once, that ``_code_opcodes_fast`` is equivalent to the
+    reference ``_code_opcodes_dis`` on the running interpreter.
+    """
+    def _iter_code_objects(code_obj):
+        stack = [code_obj]
+        while stack:
+            code = stack.pop()
+            yield code
+            stack.extend(c for c in code.co_consts if isinstance(c, CodeType))
+
+    try:
+        for snippet in _OPCODE_CONFIRMATION_SNIPPETS:
+            for code in _iter_code_objects(compile(snippet, '<confirm>', 'exec')):
+                dis_set = _code_opcodes_dis(code)
+                fast_set = _code_opcodes_fast(code)
+                if dis_set != fast_set:
+                    return False
+    except Exception:  # noqa: BLE001
+        return False
+    return True
+
+
+_USE_FAST_OPCODES = _confirm_fast_opcodes()
+if not _USE_FAST_OPCODES:
+    _logger.warning(
+       "safe_eval: the fast opcode scan diverges from `dis` on this "
+       "interpreter (%s); falling back to the slower dis-based opcode "
+       "validation.", sys.version,
+    )
+
 
 def assert_no_dunder_name(code_obj, expr):
     """ assert_no_dunder_name(code_obj, expr) -> None
@@ -270,9 +355,11 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
     """
     assert_no_dunder_name(code_obj, expr)
 
-    # set operations are almost twice as fast as a manual iteration + condition
-    # when loading /web according to line_profiler
-    code_codes = {i.opcode for i in dis.get_instructions(code_obj)}
+    if _USE_FAST_OPCODES:
+        code_codes = _code_opcodes_fast(code_obj)
+    else:
+        code_codes = _code_opcodes_dis(code_obj)
+
     if not allowed_codes >= code_codes:
         raise ValueError("forbidden opcode(s) in %r: %s" % (expr, ', '.join(opname[x] for x in (code_codes - allowed_codes))))
 
