@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.1a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-08-11 22:19+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -27,6 +27,12 @@ msgstr ""
 #. module: pos_stripe
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__display_name
 msgid "Display Name"
+msgstr ""
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Do not have access to fetch the Stripe account"
 msgstr ""
 
 #. module: pos_stripe
@@ -123,6 +129,12 @@ msgid "Stripe readers %s not listed in your account"
 msgstr ""
 
 #. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Stripe's documentation"
+msgstr ""
+
+#. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid ""
@@ -132,7 +144,29 @@ msgstr ""
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid ""
+"Tips can't be added to this Stripe payment. Stripe only allows tips after "
+"payment (overcapture) for certain merchant categories and card brands. %"
+"(mccMessage)s To check whether your business is eligible, see %(link)s or "
+"contact Stripe support."
+msgstr ""
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "You cannot refund a non-Stripe payment via Stripe"
+msgstr ""
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Your current Stripe account's merchant category code (MCC) is %(mcc)s."
+msgstr ""
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Your current Stripe account's merchant category code (MCC) is not set."
 msgstr ""
 
 #. module: pos_stripe

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:36+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
 "PO-Revision-Date: 2026-08-13 16:13+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-s19-1/loyalty/"
@@ -223,19 +223,19 @@ msgstr ""
 "                    <h3 style=\"margin:0px; line-height:17px; font-"
 "family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
 "style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">कार्ड इस "
-"तारीख को बंद हो जाएगा: <t t-out=\"format_date(object.expiration_date) or ''\">"
-"05/05/2021</t></h3>\n"
+"तारीख को बंद हो जाएगा: <t t-out=\"format_date(object.expiration_date) or "
+"''\">05/05/2021</t></h3>\n"
 "                </div>\n"
-"                <div style=\"padding:20px; margin:0px; text-align:center;\">"
-"\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;"
+"\">\n"
 "                    <span style=\"background-color:#999999; display:inline-"
 "block; width:auto; border-radius:5px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
 "target=\"_blank\" t-attf-style=\"text-decoration:none; font-family:arial, "
-"'helvetica neue', helvetica, sans-serif; font-size:22px; color: {"
-"{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
-"border-width:20px 30px; display:inline-block; background-color: {"
-"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
+"'helvetica neue', helvetica, sans-serif; font-size:22px; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
+"border-width:20px 30px; display:inline-block; background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
 "font-weight:bold; font-style:normal; line-height:26px; width:auto; text-"
 "align:center\">इसे अभी इस्तेमाल करें!</a>\n"
 "                    </span>\n"
@@ -876,15 +876,13 @@ msgstr "ग्राहक बनाएं"
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 #, fuzzy
 msgid "Create a new one from scratch, or use one of the templates below."
-msgstr ""
-"शुरुआत से एक नया बनाएं, या नीचे दिए गए टेम्पलेट में से किसी एक का इस्तेमाल करें।"
+msgstr "शुरुआत से एक नया बनाएं, या नीचे दिए गए टेम्पलेट में से किसी एक का इस्तेमाल करें।"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 #, fuzzy
 msgid "Create one from scratch, or use a templates below:"
-msgstr ""
-"शुरुआत से एक नया बनाएं, या नीचे दिए गए टेम्पलेट में से किसी एक का इस्तेमाल करें:"
+msgstr "शुरुआत से एक नया बनाएं, या नीचे दिए गए टेम्पलेट में से किसी एक का इस्तेमाल करें:"
 
 #. module: loyalty
 #. odoo-javascript
@@ -1256,6 +1254,12 @@ msgstr "मुफ़्त प्रॉडक्ट - बड़ा कैबि�
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
+msgid "Free Product - [%(products)s, and %(count)s more]"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
 #, fuzzy
 msgid "Free Product - [%s]"
 msgstr "मुफ़्त प्रॉडक्ट - [%s]"
@@ -1421,8 +1425,8 @@ msgid ""
 "Grant 1 credit for each item bought then reward the customer with Y items in "
 "exchange of X credits."
 msgstr ""
-"खरीदे गए हर आइटम के लिए 1 क्रेडिट दें. फिर, ग्राहक को X क्रेडिट के बदले Y आइटम का इनाम दें"
-"।"
+"खरीदे गए हर आइटम के लिए 1 क्रेडिट दें. फिर, ग्राहक को X क्रेडिट के बदले Y आइटम का इनाम "
+"दें।"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__has_message
@@ -1752,8 +1756,7 @@ msgstr "नया बैलेंस"
 #: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
 #, fuzzy
 msgid "New Balance should be positive and different then old balance."
-msgstr ""
-"नया बैलेंस ज़ीरो से ज़्यादा होना चाहिए और पुराने बैलेंस से अलग होना चाहिए।"
+msgstr "नया बैलेंस ज़ीरो से ज़्यादा होना चाहिए और पुराने बैलेंस से अलग होना चाहिए।"
 
 #. module: loyalty
 #. odoo-python
@@ -2113,8 +2116,7 @@ msgstr "चुने गए ग्राहक"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, fuzzy
 msgid "Sell Gift Cards, that allows to purchase products"
-msgstr ""
-"गिफ़्ट कार्ड बेचें, जिनका इस्तेमाल प्रॉडक्ट खरीदने के लिए किया जा सकता है"
+msgstr "गिफ़्ट कार्ड बेचें, जिनका इस्तेमाल प्रॉडक्ट खरीदने के लिए किया जा सकता है"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
@@ -2251,8 +2253,7 @@ msgstr "शुरू होने की तारीख इस प्रोग�
 #, fuzzy
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
-msgstr ""
-"शुरू होने की तारीख, खत्म होने की तारीख से पहले या उसके बराबर होनी चाहिए।"
+msgstr "शुरू होने की तारीख, खत्म होने की तारीख से पहले या उसके बराबर होनी चाहिए।"
 
 #. module: loyalty
 #. odoo-javascript

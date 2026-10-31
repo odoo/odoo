@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-08-20 06:11+0000\n"
 "Last-Translator: MAHAMADASIF ANSARI <maan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -1777,13 +1777,10 @@ msgstr ""
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Выберите пользователя, отвечающего за согласование «Расходов» этого "
-"сотрудника.\n"
-"Если поле пустое, согласовывать расходы будет администратор или назначенный "
-"согласующий (см. Настройки > Пользователи)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1992,9 +1989,10 @@ msgstr "Журнал по умолчанию, используемый при с
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "The current user has no related employee. Please, create one."
+msgid ""
+"The current user has no related employee. Please, create one in %(company)s, "
+"or switch to a company where they have one."
 msgstr ""
-"У текущего пользователя нет связанного сотрудника. Пожалуйста, создайте его."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2496,6 +2494,21 @@ msgstr "используйте OCR для заполнения данных с �
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "с тем же чеком уже существует."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Выберите пользователя, отвечающего за согласование «Расходов» этого "
+#~ "сотрудника.\n"
+#~ "Если поле пустое, согласовывать расходы будет администратор или "
+#~ "назначенный согласующий (см. Настройки > Пользователи)."
+
+#~ msgid "The current user has no related employee. Please, create one."
+#~ msgstr ""
+#~ "У текущего пользователя нет связанного сотрудника. Пожалуйста, создайте "
+#~ "его."
 
 #~ msgid "$100.00"
 #~ msgstr "$100.00"

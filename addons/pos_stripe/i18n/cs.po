@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-08-13 18:52+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -34,6 +34,12 @@ msgstr "Zobrazovaný název"
 #. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Do not have access to fetch the Stripe account"
+msgstr ""
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid "Do not have access to fetch token from Stripe"
 msgstr "Nemáte přístup k načtení tokenu ze Stripe"
 
@@ -41,7 +47,8 @@ msgstr "Nemáte přístup k načtení tokenu ze Stripe"
 #: model_terms:ir.ui.view,arch_db:pos_stripe.pos_payment_method_view_form_inherit_pos_stripe
 msgid ""
 "Don't forget to complete Stripe connect before using this payment method."
-msgstr "Před použitím této platební metody nezapomeňte dokončit spojení Stripe."
+msgstr ""
+"Před použitím této platební metody nezapomeňte dokončit spojení Stripe."
 
 #. module: pos_stripe
 #. odoo-javascript
@@ -125,6 +132,12 @@ msgid "Stripe readers %s not listed in your account"
 msgstr "Čtečky Stripe %s nejsou uvedeny ve vašem účtu"
 
 #. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Stripe's documentation"
+msgstr ""
+
+#. module: pos_stripe
 #. odoo-python
 #: code:addons/pos_stripe/models/pos_payment_method.py:0
 msgid ""
@@ -134,7 +147,29 @@ msgstr "Terminál %(terminal)s se již používá při platbě %(payment_method)
 #. module: pos_stripe
 #. odoo-javascript
 #: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid ""
+"Tips can't be added to this Stripe payment. Stripe only allows tips after "
+"payment (overcapture) for certain merchant categories and card brands. %"
+"(mccMessage)s To check whether your business is eligible, see %(link)s or "
+"contact Stripe support."
+msgstr ""
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
 msgid "You cannot refund a non-Stripe payment via Stripe"
+msgstr ""
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Your current Stripe account's merchant category code (MCC) is %(mcc)s."
+msgstr ""
+
+#. module: pos_stripe
+#. odoo-javascript
+#: code:addons/pos_stripe/static/src/app/payment_stripe.js:0
+msgid "Your current Stripe account's merchant category code (MCC) is not set."
 msgstr ""
 
 #. module: pos_stripe

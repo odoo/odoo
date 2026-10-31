@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:36+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
 "PO-Revision-Date: 2026-08-13 11:52+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-1/loyalty/"
@@ -209,20 +209,20 @@ msgstr ""
 "margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
 "                    <h3 style=\"margin:0px; line-height:17px; font-"
 "family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
-"style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">วันหมดอายุ"
-"บัตร <t t-out=\"format_date(object.expiration_date) or ''\">05/05/2021</t></"
-"h3>\n"
+"style:normal; font-weight:normal; color:#A9A9A9; text-"
+"align:center\">วันหมดอายุบัตร <t t-out=\"format_date(object.expiration_date) or "
+"''\">05/05/2021</t></h3>\n"
 "                </div>\n"
-"                <div style=\"padding:20px; margin:0px; text-align:center;\">"
-"\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;"
+"\">\n"
 "                    <span style=\"background-color:#999999; display:inline-"
 "block; width:auto; border-radius:5px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
 "target=\"_blank\" t-attf-style=\"text-decoration:none; font-family:arial, "
-"'helvetica neue', helvetica, sans-serif; font-size:22px; color: {"
-"{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
-"border-width:20px 30px; display:inline-block; background-color: {"
-"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
+"'helvetica neue', helvetica, sans-serif; font-size:22px; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
+"border-width:20px 30px; display:inline-block; background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
 "font-weight:bold; font-style:normal; line-height:26px; width:auto; text-"
 "align:center\">ใช้เลยตอนนี้!</a>\n"
 "                    </span>\n"
@@ -288,8 +288,8 @@ msgstr ""
 "                                <span class=\"o_stat_text\" "
 "invisible=\"program_type != 'loyalty'\">บัตรสะสมคะแนน</span>\n"
 "                                <span class=\"o_stat_text\" "
-"invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">โปรโมชั่น</span>"
-"\n"
+"invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">โปรโมชั่น</"
+"span>\n"
 "                                <span class=\"o_stat_text\" "
 "invisible=\"program_type != 'promo_code'\">ส่วนลด</span>\n"
 "                                <span class=\"o_stat_text\" "
@@ -312,8 +312,8 @@ msgid ""
 "<span colspan=\"2\" invisible=\"program_type != 'coupons'\">Grant the amount "
 "of coupon points defined as the coupon value</span>"
 msgstr ""
-"<span colspan=\"2\" invisible=\"program_type != 'coupons'\">มอบคะแนนคูปองตามมูล"
-"ค่าคูปอง</span>"
+"<span colspan=\"2\" invisible=\"program_type != "
+"'coupons'\">มอบคะแนนคูปองตามมูลค่าคูปอง</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -445,8 +445,8 @@ msgstr ""
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
-"                <span t-attf-style=\"font-size: 50px; color: {"
-"{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
+"                <span t-attf-style=\"font-size: 50px; color: "
+"{{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
 "weight: bold;\" t-out=\"reward.description\">รายละเอียดของรางวัล</span>\n"
 "                <br/>\n"
 "            </t>\n"
@@ -457,19 +457,19 @@ msgstr ""
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        ใช้รหัสโปรโมชั่นนี้\n"
 "        <t t-if=\"object.expiration_date\">\n"
-"            ก่อนวันที่ <t t-out=\"format_date(object.expiration_date) or ''\">"
-"2021-06-16</t>\n"
+"            ก่อนวันที่ <t t-out=\"format_date(object.expiration_date) or "
+"''\">2021-06-16</t>\n"
 "        </t>\n"
 "        <p style=\"margin-top: 16px;\">\n"
 "            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; "
-"background-color: #F1F1F1;\" t-out=\"object.code or ''\">"
-"15637502648479132902</strong>\n"
+"background-color: #F1F1F1;\" t-out=\"object.code or "
+"''\">15637502648479132902</strong>\n"
 "        </p>\n"
 "        <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
 "            <t t-if=\"rule.minimum_qty not in [0, 1]\">\n"
 "                <span style=\"font-size: 14px;\">\n"
-"                    ยอดซื้อขั้นต่ำ สินค้า<t t-out=\"rule.minimum_qty or ''\">10</t>ชิ้"
-"น\n"
+"                    ยอดซื้อขั้นต่ำ สินค้า<t t-out=\"rule.minimum_qty or ''\">10</"
+"t>ชิ้น\n"
 "                </span><br/>\n"
 "            </t>\n"
 "            <t t-if=\"rule.minimum_amount != 0.00\">\n"
@@ -951,8 +951,7 @@ msgstr "วันที่"
 msgid ""
 "Define Discount codes on conditional rules then share it with your customers "
 "for rewards."
-msgstr ""
-"กำหนดรหัสส่วนลดตามกฎแบบมีเงื่อนไข จากนั้นแชร์กับลูกค้าของคุณเพื่อรับรางวัล"
+msgstr "กำหนดรหัสส่วนลดตามกฎแบบมีเงื่อนไข จากนั้นแชร์กับลูกค้าของคุณเพื่อรับรางวัล"
 
 #. module: loyalty
 #. odoo-python
@@ -1082,9 +1081,7 @@ msgstr "แสดงเป็น"
 msgid ""
 "Drive repeat purchases by sending a unique, single-use coupon code for the "
 "next purchase when a customer buys something in your store."
-msgstr ""
-"กระตุ้นการซื้อซ้ำด้วยการส่งรหัสคูปองแบบใช้ครั้งเดียวที่ไม่ซ้ำใครสำหรับการซื้อครั้งต่อไปเมื่อลูกค้าซื้อสินค้า"
-"ในร้านค้าของคุณ"
+msgstr "กระตุ้นการซื้อซ้ำด้วยการส่งรหัสคูปองแบบใช้ครั้งเดียวที่ไม่ซ้ำใครสำหรับการซื้อครั้งต่อไปเมื่อลูกค้าซื้อสินค้าในร้านค้าของคุณ"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1178,6 +1175,12 @@ msgstr "สินค้าฟรี - ตู้ขนาดใหญ่"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
+msgid "Free Product - [%(products)s, and %(count)s more]"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
 msgid "Free Product - [%s]"
 msgstr "สินค้าฟรี - [%s]"
 
@@ -1206,8 +1209,8 @@ msgid ""
 "Point of Sale or regular orders to claim the Reward. You can define "
 "constraints on its usage through conditional rule."
 msgstr ""
-"สร้าง &amp; แชร์รหัสคูปองด้วยตนเอง สามารถใช้ในอีคอมเมิร์ซ ระบบขายหน้าร้าน หรือคำสั่งซื้อปกติเพื่"
-"อรับรางวัล คุณสามารถกำหนดข้อจำกัดในการใช้งานได้ผ่านกฎแบบมีเงื่อนไข"
+"สร้าง &amp; แชร์รหัสคูปองด้วยตนเอง สามารถใช้ในอีคอมเมิร์ซ ระบบขายหน้าร้าน "
+"หรือคำสั่งซื้อปกติเพื่อรับรางวัล คุณสามารถกำหนดข้อจำกัดในการใช้งานได้ผ่านกฎแบบมีเงื่อนไข"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_generate_wizard
@@ -1286,8 +1289,7 @@ msgid ""
 msgstr ""
 "บัตรของขวัญถูกสร้างขึ้นด้วยตนเองหรือส่งทางอีเมลโดยอัตโนมัติเมื่อลูกค้าสั่งซื้อผลิตภัณฑ์บัตรของขวัญ\n"
 "                                    <br/>\n"
-"                                    จากนั้นบัตรของขวัญสามารถใช้เพื่อชำระเงินตามคำสั่งซื้อ"
-"ได้"
+"                                    จากนั้นบัตรของขวัญสามารถใช้เพื่อชำระเงินตามคำสั่งซื้อได้"
 
 #. module: loyalty
 #. odoo-python
@@ -1751,8 +1753,7 @@ msgstr "สินค้าที่ใช้ในคำสั่งขายเ
 msgid ""
 "Product used in the sales order to apply the discount. Each reward has its "
 "own product for reporting purpose"
-msgstr ""
-"สินค้าที่ใช้ในใบสั่งขายเพื่อใช้ส่วนลด รางวัลแต่ละรายการมีผลิตภัณฑ์ของตัวเองเพื่อการรายงาน"
+msgstr "สินค้าที่ใช้ในใบสั่งขายเพื่อใช้ส่วนลด รางวัลแต่ละรายการมีผลิตภัณฑ์ของตัวเองเพื่อการรายงาน"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger_product_ids
@@ -2041,8 +2042,7 @@ msgstr "สินค้าเหล่านี้เป็นสินค้า
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_max_amount
 msgid ""
 "This is the max amount this reward may discount, leave to 0 for no limit."
-msgstr ""
-"นี่คือจำนวนเงินสูงสุดที่รางวัลนี้สามารถลดราคาได้ ปล่อยให้เป็น 0 โดยไม่มีขีดจำกัด"
+msgstr "นี่คือจำนวนเงินสูงสุดที่รางวัลนี้สามารถลดราคาได้ ปล่อยให้เป็น 0 โดยไม่มีขีดจำกัด"
 
 #. module: loyalty
 #. odoo-python
@@ -2176,8 +2176,7 @@ msgstr ""
 msgid ""
 "When generating coupon, you can define a specific points value that can be "
 "exchanged for rewards."
-msgstr ""
-"เมื่อสร้างคูปอง คุณสามารถกำหนดมูลค่าคะแนนเฉพาะที่สามารถแลกเปลี่ยนเป็นรางวัลได้"
+msgstr "เมื่อสร้างคูปอง คุณสามารถกำหนดมูลค่าคะแนนเฉพาะที่สามารถแลกเปลี่ยนเป็นรางวัลได้"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_rule__reward_point_split
@@ -2186,8 +2185,8 @@ msgid ""
 "Whether to separate reward coupons per matched unit, only applies to "
 "'future' programs and trigger mode per money spent or unit paid..."
 msgstr ""
-"ไม่ว่าจะแยกคูปองรางวัลตามหน่วยที่ตรงกันหรือไม่นั้น ใช้ได้กับโปรแกรม 'ในอนาคต' เท่านั้น และโหมดท"
-"ริกเกอร์ต่อเงินที่ใช้จ่ายหรือหน่วยที่ชำระ..."
+"ไม่ว่าจะแยกคูปองรางวัลตามหน่วยที่ตรงกันหรือไม่นั้น ใช้ได้กับโปรแกรม 'ในอนาคต' เท่านั้น "
+"และโหมดทริกเกอร์ต่อเงินที่ใช้จ่ายหรือหน่วยที่ชำระ..."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__will_send_mail
@@ -2223,8 +2222,7 @@ msgstr "คุณไม่สามารถลบโปรแกรมที่
 msgid ""
 "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
 "archive it instead."
-msgstr ""
-"คุณไม่สามารถลบ %(name)s ได้ เนื่องจากมันถูกใช้ใน 'คูปองและสมาชิก' โปรดเก็บถาวรแทน"
+msgstr "คุณไม่สามารถลบ %(name)s ได้ เนื่องจากมันถูกใช้ใน 'คูปองและสมาชิก' โปรดเก็บถาวรแทน"
 
 #. module: loyalty
 #. odoo-python
@@ -2295,8 +2293,8 @@ msgid ""
 msgstr ""
 "eWallets สร้างขึ้นด้วยตนเองหรือโดยอัตโนมัติเมื่อลูกค้าสั่งซื้อผลิตภัณฑ์ eWallet\n"
 "                                    <br/>\n"
-"                                    จากนั้นจะมีการเสนอ eWallets ในระหว่างการชำระเ"
-"งินเพื่อชำระเงินตามคำสั่งซื้อ"
+"                                    จากนั้นจะมีการเสนอ eWallets "
+"ในระหว่างการชำระเงินเพื่อชำระเงินตามคำสั่งซื้อ"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
