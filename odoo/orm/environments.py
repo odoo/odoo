@@ -72,7 +72,11 @@ class Environment(Mapping[str, "BaseModel"]):
             if cr._closing:
                 _logger.error("The cursor is being closed, but starts a new transaction", stack_info=True)
             transaction = cr.transaction = Transaction(Registry(cr.dbname))
-            transaction._check_signaling(cr)
+            try:
+                transaction._check_signaling(cr)
+            except BaseException:
+                cr.transaction = None
+                raise
 
         else:
             # if env already exists, return it
