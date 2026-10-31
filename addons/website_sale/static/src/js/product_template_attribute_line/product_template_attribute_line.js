@@ -6,6 +6,15 @@ import { patch } from '@web/core/utils/patch';
 
 patch(ProductTemplateAttributeLine.prototype, {
     /**
+     * Check whether a non-empty custom value is set.
+     *
+     * @return {Boolean} - Whether a non-empty custom value is set.
+     */
+    hasCustomValue() {
+        return !!(this.props.customValue || "").trim();
+    },
+
+    /**
      * Return the display name of this PTAL.
      *
      * @return {String} - The display name of this PTAL.
@@ -17,7 +26,7 @@ patch(ProductTemplateAttributeLine.prototype, {
             .map(ptav => ptav.name)
             .join(', ');
         let ptalDisplayName = `${this.props.attribute.name}: ${selectedPtavNames}`;
-        if (this.isSelectedPTAVCustom()) {
+        if (this.hasCustomValue()) {
             ptalDisplayName += `: ${this.props.customValue}`;
         }
         return ptalDisplayName;
