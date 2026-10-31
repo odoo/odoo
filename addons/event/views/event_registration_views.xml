@@ -215,6 +215,7 @@
                 <field name="event_organizer_id" string="Organizer" invisible="1"/>
                 <filter string="Ongoing Events" name="filter_is_ongoing" domain="[('event_id.is_ongoing', '=', True)]"/>
                 <filter string="Taken" name="taken" domain="[('state', 'in', ['open', 'done'])]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
                 <separator/>
                 <filter string="Unconfirmed" name="unconfirmed" domain="[('state', '=', 'draft')]"/>
                 <filter string="Registered" name="confirmed" domain="[('state', '=', 'open')]"/>
@@ -277,6 +278,15 @@
     </record>
 
     <!-- EVENT.REGISTRATION ACTIONS -->
+    <record id="action_event_registration_cancel" model="ir.actions.server">
+        <field name="name">Cancel Registration</field>
+        <field name="model_id" ref="model_event_registration"/>
+        <field name="binding_model_id" ref="model_event_registration"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_cancel()</field>
+    </record>
+
     <record id="act_event_registration_from_event" model="ir.actions.act_window">
         <field name="res_model">event.registration</field>
         <field name="name">Attendees</field>
