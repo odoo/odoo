@@ -365,6 +365,7 @@ class HrCandidate(models.Model):
             'private_phone': address_sudo.phone,
             'private_email': address_sudo.email,
             'lang': address_sudo.lang,
+            'company_id': self.company_id.id,
             'address_id': self.company_id.partner_id.id,
             'candidate_id': self.ids,
             'phone': self.partner_phone
