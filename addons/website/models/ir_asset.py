@@ -38,7 +38,7 @@ class IrAsset(models.Model):
 
         IrModule = self.env['ir.module.module'].sudo()
         # discard all theme modules except website.theme_id
-        themes = IrModule.search(IrModule.get_themes_domain()) - self.env["website"].browse(website_id).theme_id
+        themes = IrModule.search(self.env['theme.utils'].get_themes_domain()) - self.env["website"].browse(website_id).theme_id
         to_remove = set(themes.mapped('name'))
 
         return [name for name in addons_list if name not in to_remove]

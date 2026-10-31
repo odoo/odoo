@@ -961,7 +961,7 @@ class Website(Home):
         if not theme_name or not re.fullmatch(r'[a-z0-9_]+', theme_name):
             raise NotFound()
         Module = request.env['ir.module.module'].sudo()
-        if not Module.search_count([*Module.get_themes_domain(), ('name', '=', theme_name)], limit=1):
+        if not Module.search_count([*request.env['theme.utils'].get_themes_domain(), ('name', '=', theme_name)], limit=1):
             raise NotFound()
         resources_theme_name = '' if preview_url else theme_name
         if preview_url:

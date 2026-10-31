@@ -792,7 +792,7 @@ class Website(models.CachedModel):
                                         industry_name='', website_type='', positioning='', skip_ai=False):
         self._check_configurator_access()
         Module = self.env['ir.module.module']
-        domain = Module.get_themes_domain()
+        domain = self.env['theme.utils'].get_themes_domain()
         domain = Domain.AND([[('name', '!=', 'theme_default')], domain])
         client_themes = Module.search(domain).mapped('name')
         manifests = {

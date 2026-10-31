@@ -31,6 +31,7 @@ from . import res_users
 from . import res_config_settings
 from . import res_lang
 from . import theme_models
+from . import theme_utils
 from . import website_configurator_feature
 from . import website_form
 from . import website_snippet_filter
