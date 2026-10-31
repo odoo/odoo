@@ -242,6 +242,17 @@ class SaleReport(models.Model):
     def _table_query(self):
         return self._query()
 
+    def _get_access_rule_fields(self):
+        return ('company_id', 'user_id')
+
+    def _fetch_query(self, query, fields):
+        # Prefetch the fields used by record rules so read() can check access
+        # without a cache miss that reloads the whole report, including
+        # historical data outside the original search domain.
+        if not self.env.su:
+            fields = list(fields) + [self._fields[name] for name in self._get_access_rule_fields()]
+        return super()._fetch_query(query, fields)
+
     def _get_order_reference(self):
         """Resolve the order from the line id, without reading the view."""
         self.ensure_one()
