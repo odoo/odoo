@@ -365,24 +365,57 @@ class StockValuationAdjustmentLines(models.Model):
         }
 
     def _create_account_move_line(self, credit_account_id, debit_account_id, remaining_qty):
-        """ In real time the vendor bill for landed costs only balance the COGS account.
-        We should credit what remains in stock and debit the stock valuation account.
+        """Capitalize the on-hand share and expense the already-sold share.
+
+        Remaining quantity is debited to stock valuation (or dropship expense).
+        Quantity already delivered is debited to the product expense (COGS) account
+        so late landed costs still hit P&L correctly (18.0 behaviour).
         """
         AccountMoveLine = []
-        if not remaining_qty:
+        if not self.quantity:
             return AccountMoveLine
+
         base_line = self._prepare_account_move_line_values()
-        debit_line = dict(base_line, account_id=debit_account_id)
-        credit_line = dict(base_line, account_id=credit_account_id)
-        diff = self.additional_landed_cost * (remaining_qty / self.quantity)
-        if diff > 0:
-            debit_line['debit'] = diff
-            credit_line['credit'] = diff
-        else:
-            # negative cost, reverse the entry
-            debit_line['credit'] = -diff
-            credit_line['debit'] = -diff
-        AccountMoveLine.append([0, 0, debit_line])
-        AccountMoveLine.append([0, 0, credit_line])
+        currency = self.cost_id.currency_id
+        on_hand_qty = max(remaining_qty, 0.0)
+        sold_qty = max(0.0, self.quantity - on_hand_qty)
+
+        def _append_balanced(debit_account, credit_account, amount, name=None):
+            if currency.is_zero(amount):
+                return
+            debit_line = dict(base_line, account_id=debit_account)
+            credit_line = dict(base_line, account_id=credit_account)
+            if name:
+                debit_line['name'] = name
+                credit_line['name'] = name
+            if amount > 0:
+                debit_line['debit'] = amount
+                credit_line['credit'] = amount
+            else:
+                debit_line['credit'] = -amount
+                credit_line['debit'] = -amount
+            AccountMoveLine.append([0, 0, debit_line])
+            AccountMoveLine.append([0, 0, credit_line])
+
+        if on_hand_qty:
+            _append_balanced(
+                debit_account_id,
+                credit_account_id,
+                self.additional_landed_cost * (on_hand_qty / self.quantity),
+            )
+
+        if sold_qty:
+            expense_account = self.product_id.product_tmpl_id.get_product_accounts().get('expense')
+            if not expense_account:
+                raise UserError(_('Please configure Expense Account for product: %s.', self.product_id.display_name))
+            # Same debit/credit account would only create a zero-net wash; leave that
+            # share on the original expense (matches 18.0 when accounts coincide).
+            if expense_account.id != credit_account_id:
+                _append_balanced(
+                    expense_account.id,
+                    credit_account_id,
+                    self.additional_landed_cost * (sold_qty / self.quantity),
+                    name=_("%(name)s: %(quantity)s already out", name=self.name, quantity=sold_qty),
+                )
 
         return AccountMoveLine
