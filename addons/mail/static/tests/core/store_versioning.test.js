@@ -10,7 +10,6 @@ const localRegistry = registry.category("discuss.model.test");
 
 defineMailModels();
 beforeEach(() => {
-    Record.register(localRegistry);
     Store.register(localRegistry);
     mockService("store", (env) => makeStore(env, { localRegistry }));
 });

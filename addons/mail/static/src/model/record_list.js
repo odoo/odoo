@@ -40,7 +40,6 @@ export class RecordList extends Array {
             for (const val of records) {
                 const record = recordList._.insert(val, function recordListPushInsert(record) {
                     recordList._.data().push(record);
-                    recordList._.syncLength();
                     record._.uses.add(recordList);
                 });
                 if (inverse) {
@@ -86,7 +85,6 @@ export class RecordList extends Array {
                     const list = recordList._.data().slice();
                     list.unshift(record);
                     recordList._.data.set(list);
-                    recordList._.syncLength();
                     record._.uses.add(recordList);
                 });
                 if (inverse) {
@@ -119,7 +117,6 @@ export class RecordList extends Array {
                 ...newRecordsProxy.map((recordProxy) => recordProxy._raw)
             );
             recordList._.data.set(list);
-            recordList._.syncLength();
             const inverse = recordList._.getInverse();
             for (const oldRecord of oldRecords) {
                 oldRecord._.uses.delete(recordList);
