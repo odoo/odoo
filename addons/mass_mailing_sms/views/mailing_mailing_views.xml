@@ -22,6 +22,10 @@
             <xpath expr="//button[@name='action_launch']" position="attributes">
                 <attribute name="invisible">mailing_type != 'mail' or state in ('in_queue', 'sending', 'processing', 'done')</attribute>
             </xpath>
+            <xpath expr="//button[@name='action_preview']" position="after">
+                <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="t"
+                    invisible="mailing_type != 'sms' or not body_plaintext"/>
+            </xpath>
             <xpath expr="//button[@name='action_schedule']" position="before">
                 <field name="sms_force_send" invisible="1"/>
                 <field name="schedule_type" invisible="1" readonly="state not in ['draft', 'in_queue']"/>
