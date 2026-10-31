@@ -62,10 +62,18 @@ cogMenuRegistry.add(
     {
         Component: PresenceCogMenu,
         groupNumber: 40,
+<<<<<<< c84fbd6b53c64b9b2aaa6168c47a1ca4378ab63c
         isDisplayed() {
             const env = useEnv();
             return env.searchModel.resModel === "hr.employee";
         },
+||||||| ce3e0e984ba6b3b82dcafd8b2702e602c35b0f17
+        isDisplayed: ({ searchModel }) => { return searchModel.resModel === "hr.employee" },
+=======
+        isDisplayed: ({ config, searchModel }) =>
+            searchModel.resModel === "hr.employee" &&
+            ["form", "kanban", "list"].includes(config.viewType),
+>>>>>>> 080fe1df86828cd98ec810479da0d60e7b995aa6
     },
     { sequence: 1 }
 );
