@@ -8,12 +8,14 @@ import glob
 import logging
 import optparse
 import os
+import secrets
 import sys
 import tempfile
 import warnings
 from os.path import abspath, expanduser, expandvars, normcase, realpath
 
 from passlib.context import CryptContext
+from passlib.hash import pbkdf2_sha512
 
 from odoo import release
 from odoo.tools.func import classproperty
@@ -27,6 +29,12 @@ crypt_context = CryptContext(schemes=['pbkdf2_sha512', 'plaintext'],
 _dangerous_logger = logging.getLogger(__name__)  # use config._log() instead
 
 optparse._ = str  # disable gettext  # ty:ignore[unresolved-attribute]
+
+XDG_CONFIG_DIR = (
+    appdirs.user_config_dir(release.product_name, release.author)
+    if os.path.isdir(os.path.expanduser('~')) else
+    appdirs.site_config_dir(release.product_name, release.author)
+)
 
 ALL_DEV_MODE = ['access', 'qweb', 'reload', 'xml']
 DEFAULT_SERVER_WIDE_MODULES = ['base', 'rpc', 'web']
@@ -557,13 +565,7 @@ class configmanager:
             f'/var/lib/{release.product_name}'
         )
 
-        default_config_dir = (
-            appdirs.user_config_dir(release.product_name, release.author)
-            if os.path.isdir(os.path.expanduser('~')) else
-            appdirs.site_config_dir(release.product_name, release.author)
-        )
-        default_config_file = os.path.join(default_config_dir, 'odoo.conf')
-
+        default_config_file = os.path.join(XDG_CONFIG_DIR, 'odoo.conf')
         if os.path.isfile(default_config_file):
             rcfilepath = default_config_file
         elif os.name == 'nt':
@@ -751,6 +753,10 @@ class configmanager:
 
     def _postprocess_options(self):
         self._runtime_options.clear()
+        try:
+            del self.server_secret  # clear the cache
+        except AttributeError:
+            pass
 
         # check for mutualy exclusive / dependant options
         if self.options['syslog'] and self.options['logfile']:
@@ -1188,6 +1194,57 @@ class configmanager:
             'configuration file': self._file_options.get(name, EMPTY),
             'hardcoded default': self._default_options.get(name, EMPTY),
         }
+
+    @functools.cached_property
+    def server_secret(self) -> bytes:
+        """
+        Get the security token stored in ~/.config/Odoo/server-secret.
+
+        In case the file doesn't exist or is corrupt: a new token is
+        generated and saved. If saving the token isn't possible (e.g.
+        readonly filesystem) then fallback on the ``admin_passwd``'s
+        salt (if there one); otherwise use a temporary token.
+        """
+        server_secret_path = os.path.join(XDG_CONFIG_DIR, 'server-secret')
+        try:
+            with open(server_secret_path, encoding='ascii') as file:
+                if len(secret := bytes.fromhex(file.read())) >= secrets.DEFAULT_ENTROPY:
+                    return secret
+        except (OSError, ValueError):
+            pass
+
+        self._log(logging.INFO, "Rotating server secret at %s: file was missing, empty or corrupted.", server_secret_path)
+        try:
+            return self.rotate_server_secret()
+        except OSError as exc:
+            # can't set a server secret: fallback on the admin_passwd salt
+            if crypt_context.identify(self['admin_passwd']) == 'pbkdf2_sha512':
+                self._log(logging.WARNING, "Can't save the server secret, fallback on %s salt.", self.options_index['admin_passwd'], exc_info=exc)
+                return pbkdf2_sha512.from_string(self['admin_passwd']).salt  # 128 bits: good enough
+
+            # no admin_passwd or no salt: generate a new secret
+            self._log(logging.WARNING, "Can't save the server secret, use a new in-memory one.", exc_info=exc)
+            return secrets.token_bytes()  # 256 bits
+
+    def rotate_server_secret(self) -> bytes:
+        """
+        Generate a new security token in ~/.config/Odoo/server-secret.
+
+        :raises OSError: When writing the file failed.
+        :returns: The generated token.
+        """
+        os.makedirs(XDG_CONFIG_DIR, exist_ok=True)
+        server_secret_path = os.path.join(XDG_CONFIG_DIR, 'server-secret')
+        secret = secrets.token_bytes()  # 256 bits
+        with open(server_secret_path, 'w', encoding='ascii') as file:
+            file.write(secret.hex())
+            file.write('\n')  # bytes.fromhex ignores this newline
+
+        try:
+            del self.server_secret  # clear the cache
+        except AttributeError:
+            pass
+        return secret
 
 
 config = configmanager()
