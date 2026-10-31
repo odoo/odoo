@@ -248,3 +248,23 @@ class MailTrackingDurationMixin(models.AbstractModel):
         ))
         rows = self.env.cr.dictfetchall()
         return [('id', operator, [r['id'] for r in rows])]
+
+    @api.model
+    def read_progress_bar(self, domain, group_by, progress_bar):
+        result = super().read_progress_bar(domain, group_by, progress_bar)
+        if not self._is_rotting_feature_enabled():
+            return result
+
+        def adapt(value):
+            if isinstance(value, tuple):
+                return value[0]
+            return value
+
+        rotting_groups = self.formatted_read_group(
+            Domain(domain) & Domain('is_rotting', '=', True), [group_by], ['__count'],
+        )
+        result['__rotting_counts'] = {
+            str(adapt(group[group_by])): group['__count']
+            for group in rotting_groups
+        }
+        return result
