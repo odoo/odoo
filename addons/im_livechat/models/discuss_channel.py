@@ -705,9 +705,11 @@ class DiscussChannel(models.Model):
             "<div data-embedded='file' data-oe-protected='true' contenteditable='false' data-embedded-props='%s'/>",
         ) % json.dumps({"fileData": attachment_data})
 
-    def _get_channel_history(self):
+    def _get_channel_history(self, message_limit: int | None = None):
         """
         Converting message body back to plaintext for correct data formatting in HTML field.
+
+        :param message_limit: if set, only the ``message_limit`` most recent messages are included
         """
         self.ensure_one()
         previous_message_author = None
@@ -719,8 +721,11 @@ class DiscussChannel(models.Model):
         filtered_messages = (
             self.message_ids.sudo() - self.message_ids.sudo()._filter_empty()
         ).filtered_domain(message_domain)
+        messages = filtered_messages.sorted("id")
+        if message_limit is not None:
+            messages = messages[-message_limit:]
         parts = []
-        for message in filtered_messages.sorted("id"):
+        for message in messages:
             message_author = message.author_id.sudo() or message.author_guest_id
             if previous_message_author != message_author and parts:
                 parts.append(Markup(""))
