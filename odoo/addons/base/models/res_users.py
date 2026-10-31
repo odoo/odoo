@@ -935,7 +935,9 @@ class Users(models.Model):
                     user = user.with_user(user)
                     auth_info = user._check_credentials(credential, user_agent_env)
                     tz = request.cookies.get('tz') if request else None
-                    if tz in pytz.all_timezones and (not user.tz or not user.login_date):
+                    # Fixed-offset browser timezones do not account for regional DST.
+                    if (tz in pytz.all_timezones and not tz.startswith(('Etc/GMT+', 'Etc/GMT-'))
+                            and (not user.tz or not user.login_date)):
                         # first login or missing tz -> set tz to browser tz
                         user.tz = tz
                     user._update_last_login()
