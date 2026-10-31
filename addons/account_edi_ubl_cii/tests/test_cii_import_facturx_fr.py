@@ -17,6 +17,20 @@ class CiiImportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
         partner.write({'invoice_edi_format': 'facturx'})
         return partner
 
+    def test_import_facturx_embedded_pdf(self):
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_facturx_embedded_pdf',
+        )
+        self.assertTrue(invoice)
+        self.assertEqual(
+            invoice.message_main_attachment_id.mimetype,
+            'application/pdf',
+        )
+        self.assertEqual(
+            invoice.message_main_attachment_id.name,
+            'Facture_0098748240.pdf',
+        )
+
     def test_import_invoice_deferred_and_delivery_dates(self):
         tax_20 = self.percent_tax(20.0)
 
