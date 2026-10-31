@@ -3829,7 +3829,7 @@ class BaseModel(metaclass=MetaModel):
                         if field.groups == '.':
                             return _("always forbidden")
 
-                        groups_list = [self.env.ref(g) for g in field.groups.split(',')]
+                        groups_list = [self.env.ref(g.strip()) for g in field.groups.split(',')]
                         groups = self.env['res.groups'].union(*groups_list).sorted('id')
                         return _(
                             "allowed for groups %s",

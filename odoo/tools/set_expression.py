@@ -89,6 +89,7 @@ class SetDefinitions:
         positives: list[Leaf] = []
         negatives: list[Leaf] = []
         for xmlid in refs.split(','):
+            xmlid = xmlid.strip()
             if xmlid.startswith('!'):
                 negatives.append(~self.__get_leaf(xmlid[1:], raise_if_not_found))
             else:
