@@ -510,11 +510,19 @@ class HrExpense(models.Model):
     def _inverse_total_amount_currency(self):
         for expense in self:
             if not expense.is_editable:
+<<<<<<< d6cd318f1c06b69dca2846460ea1719bc3c0deba
                 raise UserError(_(
                     "Uh-oh! You can’t edit this expense.\n\n"
                     "Reach out to the administrators, flash your best smile, and see if they'll grant you the magical access you seek."
                 ))
             expense.price_unit = (expense.total_amount / expense.quantity) if expense.quantity != 0 else 0.
+||||||| 9a1a1de9bc366f433a154514076259d1506e55a5
+                raise UserError(_('You are not authorized to edit this expense.'))
+            expense.price_unit = (expense.total_amount / expense.quantity) if expense.quantity != 0 else 0.
+=======
+                raise UserError(_('You are not authorized to edit this expense.'))
+            expense.price_unit = expense.total_amount / (expense.quantity or 1)
+>>>>>>> 4e768fcb1907d5c2a5a504e1c60d1de0c6644c11
 
     @api.depends(
         'date',
@@ -660,7 +668,7 @@ class HrExpense(models.Model):
                     company=expense.company_id,
                 )[product_id.id]
             else:
-                expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
+                expense.price_unit = expense.company_currency_id.round(expense.total_amount / (expense.quantity or 1))
 
     @api.depends('selectable_payment_method_line_ids')
     def _compute_payment_method_line_id(self):
