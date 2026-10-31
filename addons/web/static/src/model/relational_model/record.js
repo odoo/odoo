@@ -395,12 +395,7 @@ export class Record extends DataPoint {
 
     _applyDefaultValues() {
         const fieldNames = this.fieldNames.filter((fieldName) => !(fieldName in this.data));
-        const defaultValues = this._getDefaultValues(fieldNames);
-        if (this.isNew) {
-            this._applyChanges({}, defaultValues);
-        } else {
-            this._applyValues(defaultValues);
-        }
+        this._applyValues(this._getDefaultValues(fieldNames));
     }
 
     _applyValues(values) {
