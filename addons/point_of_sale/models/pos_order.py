@@ -1619,6 +1619,8 @@ class PosOrder(models.Model):
     def _generate_pos_order_invoice(self):
         if not self.env['res.company']._with_locked_records(self, allow_raising=False):
             raise UserError(_("Some orders are already being invoiced. Please try again later."))
+        if any(not order.partner_id for order in self):
+            raise UserError(_("A customer is required on the order to create an invoice."))
 
         company = self.company_id
         vals = self._prepare_invoice_vals()
