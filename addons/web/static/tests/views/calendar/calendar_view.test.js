@@ -4,6 +4,7 @@ import {
     animationFrame,
     click,
     drag,
+    pointerDown,
     press,
     queryAllRects,
     queryAll,
@@ -6357,6 +6358,63 @@ test("swiping from an event being dragged on touch devices", async () => {
     await animationFrame();
     expect(".o_calendar_header h5").toHaveText("January 2017");
     expect(".o_interacting").toHaveCount(0);
+});
+
+test.tags("desktop");
+test("touching the calendar during the swipe animation (month)", async () => {
+    mockTouch(true);
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="month"/>`,
+    });
+    expect(".o_calendar_header h5").toHaveText("December 2016");
+
+    const cell = `.o_calendar_current .o_calendar_day[data-date="2016-12-14"]`;
+    const swipeWidth = queryRect(".o_actionswiper").width;
+    const { moveTo, drop } = await drag(cell, { position: { x: 10 }, relative: true });
+    await moveTo(cell, { position: { x: 5 }, relative: true });
+    await moveTo(cell, { position: { x: -swipeWidth }, relative: true });
+    await drop();
+
+    // touch the part of the calendar still visible while it slides out
+    await advanceTime(100);
+    queryOne(".o_actionswiper_target_container").style.transform = "translateX(-100px)";
+    await pointerDown(`.o_calendar_current .o_calendar_day[data-date="2016-12-16"]`);
+    await advanceTime(1000);
+    await animationFrame();
+    await advanceTime(100);
+    expect(".o_calendar_header h5").toHaveText("January 2017");
+});
+
+test.tags("desktop");
+test("touching the calendar during the swipe animation (week)", async () => {
+    mockTouch(true);
+    // fit the whole time grid: fullcalendar would consider the asynchronous scroll events of the
+    // time grids (scrolled to the current time) as a touch scroll and ignore the touch
+    await resize({ height: 2000 });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="week"/>`,
+    });
+    expect(".o_calendar_header").toHaveText(/Week 50/);
+
+    const lane = `.o_calendar_current .o_calendar_lane[data-date="2016-12-14"]`;
+    const swipeWidth = queryRect(".o_actionswiper").width;
+    const { moveTo, drop } = await drag(lane, { position: { x: 10 }, relative: true });
+    await moveTo(lane, { position: { x: 5 }, relative: true });
+    await moveTo(lane, { position: { x: -swipeWidth }, relative: true });
+    await drop();
+
+    // touch the part of the calendar still visible while it slides out
+    await advanceTime(100);
+    queryOne(".o_actionswiper_target_container").style.transform = "translateX(-100px)";
+    await pointerDown(`.o_calendar_current .o_calendar_lane[data-date="2016-12-16"]`);
+    await advanceTime(1000);
+    await animationFrame();
+    await advanceTime(100);
+    expect(".o_calendar_header").toHaveText(/Week 51/);
 });
 
 test("Revert to the previous state if updateRecord fails (onEventResize)", async () => {
