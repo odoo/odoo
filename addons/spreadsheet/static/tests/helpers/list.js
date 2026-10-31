@@ -26,6 +26,7 @@ export function insertListInSpreadsheet(model, params, mode = "static") {
         domain: [],
         context: {},
         orderBy: params.orderBy || [],
+        groupBy: params.groupBy || [],
         actionXmlId: params.actionXmlId,
         name: params.name || "List",
     };
