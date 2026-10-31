@@ -1072,6 +1072,25 @@ class TestPartnerAddressCompany(TransactionCase):
         self.assertFalse(individual.industry_id)
         self.assertFalse(individual.vat)
 
+    def test_move_contact_to_empty_company_does_not_contaminate_parent(self):
+        """ Moving a contact to a new company without commercial values must not
+        push the (inherited) commercial fields of the old company onto the new
+        company or its descendants. Regression for odoo/odoo#296779. """
+        Partner = self.env['res.partner']
+        company_a = Partner.create({'name': 'Company A', 'is_company': True, 'vat': 'A-111'})
+        company_b = Partner.create({'name': 'Company B', 'is_company': True})
+        company_b_child = Partner.create({'name': 'B Employee', 'parent_id': company_b.id})
+        contact = Partner.create({'name': 'Contact C', 'parent_id': company_a.id})
+
+        # the move only changes parent_id; no synced commercial field is edited
+        contact.write({'parent_id': company_b.id})
+
+        # the new company and its contacts must stay untouched (no inherited VAT)
+        self.assertFalse(company_b.vat, 'Moving a contact must not copy the old VAT onto the new company')
+        self.assertFalse(company_b_child.vat, 'Moving a contact must not copy the old VAT onto the new company contacts')
+        # the contact keeps its own value (still the inherited A VAT, unchanged)
+        self.assertEqual(contact.vat, company_a.vat, 'The contact keeps its own inherited VAT')
+
     @warmup
     def test_fields_sync_fetch_optimization(self):
         """Check that _fields_sync prefetches required fields to reduce memory.
