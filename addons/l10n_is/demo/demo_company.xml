@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_is" model="res.partner" forcecreate="1">
+        <field name="name">IS Company</field>
+        <field name="vat">IS123456</field>
+        <field name="street">Laugavegur 1</field>
+        <field name="city">Reykjavík</field>
+        <field name="country_id" ref="base.is"/>
+        <field name="zip">101</field>
+        <field name="phone">+354 555 1234</field>
+        <field name="email">info@company.isexample.com</field>
+        <field name="website">www.isexample.com</field>
+    </record>
+
+    <record id="base.demo_company_is" model="res.company" forcecreate="1">
+        <field name="name">IS Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_is"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_is')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(Command.link(ref('base.demo_company_is')))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>is</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_is')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>
