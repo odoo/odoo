@@ -703,9 +703,10 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         lc_stock_valuation_account = self.landed_cost.categ_id.property_stock_valuation_account_id
         lc_expense_account = self.landed_cost.categ_id.property_account_expense_categ_id
 
+        foreign_currency = self.setup_other_currency('EUR')
         po = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'currency_id': self.company_data['currency'].id,
+            'currency_id': foreign_currency.id,
             'order_line': [
                 Command.create({
                     'name': self.product_a.name,
