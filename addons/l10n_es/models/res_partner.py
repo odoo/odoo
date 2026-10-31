@@ -153,24 +153,24 @@ class ResPartner(models.Model):
                 'sequence': 100,
                 'label': 'Passport',
                 'category': 'EN',
-                'countries': False,
+                'countries': ['ES'],
             },
             'ES_FOREIGN_ID': {
                 'sequence': 110,
                 'label': 'Country of residence ID document',
                 'category': 'EN',
-                'countries': False,
+                'countries': ['ES'],
             },
             'ES_RES_CERT': {
                 'sequence': 120,
                 'label': 'Residence certificate',
                 'category': 'EN',
-                'countries': False,
+                'countries': ['ES'],
             },
             'ES_OTHER_ID': {
                 'sequence': 130,
                 'label': 'Other supporting document',
                 'category': 'EN',
-                'countries': False,
+                'countries': ['ES'],
             },
         }
