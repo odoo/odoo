@@ -265,11 +265,9 @@ export class ListCorePlugin extends OdooCorePlugin {
      * @param {Record<string,FieldMatching>} listFieldMatches
      */
     _setListFieldMatching(filterId, listFieldMatches) {
-        const lists = { ...this.lists };
         for (const [listId, fieldMatch] of Object.entries(listFieldMatches)) {
-            lists[listId].fieldMatching[filterId] = fieldMatch;
+            this.history.update("lists", listId, "fieldMatching", filterId, fieldMatch);
         }
-        this.history.update("lists", lists);
     }
 
     _onFilterDeletion(filterId) {
