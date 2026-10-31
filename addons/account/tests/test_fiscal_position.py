@@ -273,6 +273,42 @@ class TestFiscalPosition(common.TransactionCase):
             fp_eu_extra
         )
 
+        # Domestic territory with its own taxes (e.g. Canary Islands, Ceuta or Melilla in Spain)
+        fp_be_special = self.env['account.fiscal.position'].create({
+            'name': 'Special territory',
+            'auto_apply': True,
+            'country_id': self.be.id,
+            'zip_from': '9000',
+            'zip_to': '9999',
+            'vat_required': True,
+        })
+        partner_be_vat.zip = '9000'
+        delivery_be = self.env['res.partner'].create({
+            'name': 'BE delivery',
+            'parent_id': partner_be_vat.id,
+            'type': 'delivery',
+            'country_id': self.be.id,
+            'zip': '1000',
+        })
+
+        # Case : 7
+        # Billing (VAT/country) : BE/BE special territory
+        # Delivery (VAT/country) : its own BE/BE mainland address
+        # Expected FP : Régime National
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_be_vat, delivery_be),
+            fp_be_nat
+        )
+
+        # Case : 8
+        # Billing (VAT/country) : BE/BE special territory
+        # Delivery (VAT/country) : another BE/BE partner (e.g. drop shipping)
+        # Expected FP : Special territory
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_be_vat, self.jc),
+            fp_be_special
+        )
+
     def test_fiscal_position_constraint(self):
         """
         Test fiscal position constraint by updating the record
