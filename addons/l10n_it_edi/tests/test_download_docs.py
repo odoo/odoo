@@ -18,7 +18,10 @@ class TestDownloadDocs(HttpCase, TestItEdi):
             invoice_line_ids=[Command.create({'price_unit': 100, 'tax_ids': [Command.set(self.default_tax.ids)]})],
             post=True,
         )
-        with patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis', return_value=[]):
+        with (
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis', return_value=[]),
+            patch('odoo.addons.l10n_it_edi.models.account_move.AccountMove._l10n_it_edi_send', return_value={}),
+        ):
             self.env['account.move.send']._generate_and_send_invoices(invoice)
         url = f'/account/download_invoice_documents/{invoice.id}/fatturapa'
         self.authenticate(self.env.user.login, self.env.user.login)

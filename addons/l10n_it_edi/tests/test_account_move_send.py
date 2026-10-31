@@ -1,10 +1,7 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 from unittest.mock import patch
 
 from odoo import Command
 from odoo.tests import tagged
-from odoo.tools import BinaryBytes
 from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
@@ -24,16 +21,16 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         invoice_args.setdefault('post', True)
         return self._create_invoice_one_line(**invoice_args)
 
-    def get_attachments(self, res_id):
+    def get_attachments(self, move):
         return self.env['ir.attachment'].with_company(self.company).search([
             ('res_model', '=', 'account.move'),
-            ('res_id', '=', res_id),
+            ('res_id', '=', move.id),
             ('res_field', 'in', ('invoice_pdf_report_file', 'l10n_it_edi_attachment_file')),
         ])
 
     def generate_l10n_it_edi_send_attachments(self, invoices, from_cron=False):
         moves_data = {invoice: self.env['account.move.send']._get_default_sending_settings(invoice, from_cron=from_cron) for invoice in invoices}
-        with patch('odoo.addons.l10n_it_edi.models.account_move_send.AccountMoveSend._call_web_service_after_invoice_pdf_render'):
+        with patch('odoo.addons.l10n_it_edi.models.account_move.AccountMove._l10n_it_edi_send', return_value={}):
             self.env['account.move.send']._generate_invoice_documents(moves_data)
 
     def test_invoice_multi_without_l10n_it_edi_xml_export(self):
@@ -46,18 +43,18 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             return []
 
         with patch(
-                'odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis',
-                _get_default_extra_edis
+            'odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis',
+            _get_default_extra_edis
         ):
             self.env['account.move.send']._generate_and_send_invoices(invoice1 + invoice2)
 
         # Asserts
         self.assertEqual((invoice1 + invoice2).mapped('sending_data'), [False, False])
-        self.assertEqual(1, len(self.get_attachments(invoice1.id)))
+        self.assertEqual(1, len(self.get_attachments(invoice1)))
         self.assertTrue(invoice1.invoice_pdf_report_id)
         self.assertFalse(invoice1.l10n_it_edi_attachment_file)
         self.assertFalse(invoice1.is_being_sent)
-        self.assertEqual(1, len(self.get_attachments(invoice2.id)))
+        self.assertEqual(1, len(self.get_attachments(invoice2)))
         self.assertTrue(invoice2.invoice_pdf_report_id)
         self.assertFalse(invoice2.l10n_it_edi_attachment_file)
         self.assertFalse(invoice2.is_being_sent)
@@ -71,65 +68,56 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             # in batch sending we use default settings, which is to use italian gov edi, bypass it
             return []
 
-        with patch(
-                'odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis',
-                _get_default_extra_edis
+        with (
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis', _get_default_extra_edis),
+            patch('odoo.addons.l10n_it_edi.models.account_move.AccountMove._l10n_it_edi_upload_single', return_value={}, autospec=True),
         ):
             self.env['account.move.send']._generate_and_send_invoices(invoice1 + invoice2, sending_methods=['email'])
 
         # Asserts
         self.assertEqual((invoice1 + invoice2).mapped('sending_data'), [False, False])
-        self.assertEqual(2, len(self.get_attachments(invoice1.id)))
+        self.assertEqual(2, len(self.get_attachments(invoice1)))
         self.assertTrue(invoice1.invoice_pdf_report_id)
         self.assertTrue(invoice1.l10n_it_edi_attachment_file)
         self.assertFalse(invoice1.is_being_sent)
-        self.assertEqual(2, len(self.get_attachments(invoice2.id)))
+        self.assertEqual(2, len(self.get_attachments(invoice2)))
         self.assertTrue(invoice2.invoice_pdf_report_id)
         self.assertTrue(invoice2.l10n_it_edi_attachment_file)
         self.assertFalse(invoice2.is_being_sent)
 
     def test_invoice_with_cig_or_cup_or_both(self):
-            
-            self.italian_partner_a.write({'l10n_it_pa_index': '1234567'})
+        self.italian_partner_a.write({'l10n_it_pa_index': '1234567'})
 
-            invoice_valid = self._create_invoice_it()
-            invoice_cig_only = self._create_invoice_it()
-            invoice_cup_only = self._create_invoice_it()
-            invoice_cig_cup = self._create_invoice_it()
-
-            invoice_valid.write({
+        for test_data in [
+            {
                 'l10n_it_cig': '1234567',
                 'l10n_it_cup': '7654321',
-                'l10n_it_origin_document_type': 'purchase_order'
-            }) 
-            
-            invoice_cig_only.write({
+                'l10n_it_origin_document_type': 'purchase_order',
+                'error': False,
+            }, {
                 'l10n_it_cig': '1234567',
                 'l10n_it_cup': False,
-                'l10n_it_origin_document_type': False
-            }) 
-            
-            invoice_cup_only.write({
+                'l10n_it_origin_document_type': False,
+                'error': True,
+            }, {
                 'l10n_it_cig': False,
                 'l10n_it_cup': '7654321',
-                'l10n_it_origin_document_type': False
-            })
-            
-            invoice_cig_cup.write({
+                'l10n_it_origin_document_type': False,
+                'error': True,
+            }, {
                 'l10n_it_cig': '1234567',
                 'l10n_it_cup': '7654321',
-                'l10n_it_origin_document_type': False
-            }) 
-
-            valid = invoice_valid._l10n_it_edi_base_export_check()
-            cig = invoice_cig_only._l10n_it_edi_base_export_check()
-            cup = invoice_cup_only._l10n_it_edi_base_export_check()
-            cig_cup = invoice_cig_cup._l10n_it_edi_base_export_check()
-
-            self.assertNotIn('move_missing_origin_document_field', valid)
-            self.assertIn('move_missing_origin_document_field', cig)
-            self.assertIn('move_missing_origin_document_field', cup)
-            self.assertIn('move_missing_origin_document_field', cig_cup)
+                'l10n_it_origin_document_type': False,
+                'error': True
+            },
+        ]:
+            with self.subTest(**test_data):
+                error = test_data.pop('error')
+                invoice = self._create_invoice_it(**test_data)
+                self.assertEqual(
+                    error,
+                    'l10n_it_edi_move_missing_origin_document' in invoice._l10n_it_edi_export_data_check()
+                )
 
     def test_invoice_send_with_multiple_company(self):
         second_company = self.company_data['company']
@@ -302,8 +290,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         })
         invoice = self._create_invoice_it(tax_ids=ref('22v') | ref('23vwo') | ref('enasarcov'))
         wizard = self.create_send_and_print(invoice, sending_methods=['l10n_it_edi'])
-        non_info_alerts = {k: v for k, v in wizard.alerts.items() if v.get('level') != 'info'}
-        self.assertFalse(non_info_alerts)
+        self.assertFalse(wizard.alerts)
 
     def test_l10n_it_edi_foreign_currency(self):
         invoice = self.env['account.move'].create({
@@ -332,9 +319,9 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
             return []
 
         # Fake sending to the EDI and reset to draft
-        with patch(
-            'odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis',
-            _get_default_extra_edis
+        with (
+            patch('odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis', _get_default_extra_edis),
+            patch('odoo.addons.l10n_it_edi.models.account_move.AccountMove._l10n_it_edi_send', return_value={}),
         ):
             self.env['account.move.send']._generate_and_send_invoices(invoice)
         attachments = self.env['ir.attachment'].search([
@@ -364,9 +351,11 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         bill = self.env['account.move'].with_company(self.company).create({'move_type': 'in_invoice', **values})
 
         # Post it, add an attachment, revert to draft
-        bill.action_post()
-        bill.l10n_it_edi_attachment_file = BinaryBytes(base64.b64encode(bill._l10n_it_edi_render_xml()))
-        bill.l10n_it_edi_attachment_name = "IT1234567890_10001.xml"
+        bill.with_company(self.company).action_post()
+
+        values = bill._l10n_it_edi_get_values()
+        xml_content = bill._l10n_it_edi_render_xml(values)
+        bill._l10n_it_edi_attach_file("IT1234567890_10001.xml", xml_content)
         attachments = self.env['ir.attachment'].search([
             ('res_model', '=', 'account.move'),
             ('res_field', '=', 'l10n_it_edi_attachment_file'),
@@ -411,7 +400,10 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
 
         # Post it, add an attachment, revert to draft
         bill.with_company(self.company).action_post()
-        bill.l10n_it_edi_attachment_file = BinaryBytes(base64.b64encode(bill._l10n_it_edi_render_xml()))
+
+        values = bill._l10n_it_edi_get_values()
+        xml_content = bill._l10n_it_edi_render_xml(values)
+        bill._l10n_it_edi_attach_file("IT1234567890_10001.xml", xml_content)
         attachments = self.env['ir.attachment'].search([
             ('res_model', '=', 'account.move'),
             ('res_field', '=', 'l10n_it_edi_attachment_file'),
@@ -433,4 +425,4 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
         self.assertFalse(invoice.l10n_it_edi_attachment_file)
 
         wizard = self.env['account.move.send.wizard'].create({'move_id': invoice.id})
-        self.assertIn('l10n_it_edi_pdf_already_generated', wizard.alerts)
+        self.assertIn('l10n_it_edi_move_pdf_already_generated', wizard.alerts)
