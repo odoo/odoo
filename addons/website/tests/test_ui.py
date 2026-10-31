@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from unittest.mock import patch
 
 from werkzeug.urls import url_encode
 
@@ -784,10 +785,32 @@ class TestUi(HttpCaseWithWebsiteUser):
             'name': 'googleFontMetadata',
             'type': 'binary',
             'mimetype': 'application/json',
-            'raw': b'{"familyMetadataList":[{"family":"First test font"}, {"family":"Second test font"}]}',
+            'raw': json.dumps({'familyMetadataList': [
+                {'family': 'First test font', 'fonts': {'300': {}}},
+                {'family': 'Second test font', 'fonts': {'300': {}, '400': {}, '700': {}}},
+                {'family': 'Third test font', 'fonts': {'400i': {}}},
+                # Enough fonts to load a second batch in the list.
+                *({'family': f'Extra test font {i}', 'fonts': {'400': {}}} for i in range(1, 9)),
+            ]}).encode(),
             'public': True,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/', True), "website_font_family", login="admin")
+        # The default proxy returns an empty Google Fonts CSS. Serve a local
+        # font for the light variant so the tour can check it is loaded.
+        font_css = (
+            '@font-face { font-family: "First test font"; font-weight: 300; '
+            f'src: url("{self.base_url()}/web/static/fonts/google/Roboto/Roboto-Light.ttf"); }}'
+        )
+        original_fetch_proxy = self.fetch_proxy
+
+        def fetch_proxy(url):
+            if 'https://fonts.googleapis.com/css2?family=First%20test%20font:ital,wght@0,300&' in url:
+                response = self.make_fetch_proxy_response(font_css)
+                response['responseHeaders'].append({'name': 'content-type', 'value': 'text/css'})
+                return response
+            return original_fetch_proxy(url)
+
+        with patch.object(self, 'fetch_proxy', fetch_proxy):
+            self.start_tour(self.env['website'].get_client_action_url('/', True), "website_font_family", login="admin")
 
     def test_website_seo_notification(self):
         self.start_tour(self.env['website'].get_client_action_url("/", False), "website_seo_notification", login="admin")
