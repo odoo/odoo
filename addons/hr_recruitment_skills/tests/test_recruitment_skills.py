@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from dateutil.relativedelta import relativedelta
+
+from odoo import Command, fields
 from odoo.tests import Form, TransactionCase, tagged
 from odoo.tests.common import new_test_user
 
@@ -580,6 +582,26 @@ class TestRecruitmentSkills(TransactionCase):
         applicant_skills_name_list = applicant.applicant_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
         employee_skills_name_list = applicant.employee_id.employee_skill_ids.mapped(lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id))
         self.assertCountEqual(applicant_skills_name_list, employee_skills_name_list)
+
+    def test_create_employee_keeps_certification_validity(self):
+        today = fields.Date.today()
+        valid_from, valid_to = today - relativedelta(months=10), today + relativedelta(months=14)
+        cert_type = self.env["hr.skill.type"].create({
+            "name": "Certifications for tests",
+            "is_certification": True,
+            "skill_ids": [Command.create({"name": "Test Certification"})],
+            "skill_level_ids": [Command.create({"name": "Certified", "level_progress": 100})],
+        })
+        self.t_applicant.applicant_skill_ids = [Command.create({
+            "skill_id": cert_type.skill_ids.id,
+            "skill_level_id": cert_type.skill_level_ids.id,
+            "skill_type_id": cert_type.id,
+            "valid_from": valid_from,
+            "valid_to": valid_to,
+        })]
+        self.t_applicant.create_employee_from_applicant()
+        cert = self.t_applicant.employee_id.employee_skill_ids
+        self.assertEqual((cert.valid_from, cert.valid_to), (valid_from, valid_to))
 
     def test_interviewer_skills_access(self):
         """
