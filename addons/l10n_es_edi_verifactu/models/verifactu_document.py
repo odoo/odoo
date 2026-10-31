@@ -377,7 +377,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         if vals['verifactu_move_type'] == 'correction_substitution' and not vals['substituted_document_reversal_document']:
             errors.append(_("There is no Veri*Factu document for the reversal of the substituted record."))
 
-        if vals['verifactu_move_type'] in ('correction_incremental', 'reversal_for_substitution') and not vals['refunded_document']:
+        if vals['verifactu_move_type'] == 'reversal_for_substitution' and not vals['refunded_document']:
             errors.append(_("There is no Veri*Factu document for the refunded record."))
 
         need_refund_reason = vals['verifactu_move_type'] in ('correction_incremental', 'correction_substitution')
@@ -662,8 +662,11 @@ class L10nEsEdiVerifactuDocument(models.Model):
             # vals['verifactu_move_type'] == 'correction_incremental':
             tipo_rectificativa = 'I'
             tipo_factura = vals['invoice_type']
-            rectified = rectified_document._get_record_identifier()
-            fecha_operacion = rectified['FechaOperacion'] or rectified['FechaExpedicionFactura']
+            if rectified_document:
+                rectified = rectified_document._get_record_identifier()
+                fecha_operacion = rectified['FechaOperacion'] or rectified['FechaExpedicionFactura']
+            else:
+                fecha_operacion = None
 
         # Note: Error [1189]
         # If TipoFactura in [F1, F3, R1, R2, R3, R4] block Destinatarios must be filled.
@@ -689,8 +692,18 @@ class L10nEsEdiVerifactuDocument(models.Model):
             'DescripcionOperacion': vals['description'] or 'manual',
         })
 
+        rectified_record_identifier = None
         if vals['verifactu_move_type'] in ('correction_incremental', 'correction_substitution'):
-            rectified_record_identifier = rectified_document._get_record_identifier()
+            if rectified_document:
+                rectified_record_identifier = rectified_document._get_record_identifier()
+            elif vals.get('refunded_move'):
+                # The AEAT does not require the refunded invoice to be registered (e.g. issued before using Veri*Factu).
+                rectified_record_identifier = {
+                    'IDEmisorFactura': company_values['NIF'],
+                    'NumSerieFactura': vals['refunded_move'].name,
+                    'FechaExpedicionFactura': self._format_date_type(vals['refunded_move'].invoice_date),
+                }
+        if rectified_record_identifier:
             render_vals.update({
                 'FacturasRectificadas': [{
                     'IDFacturaRectificada': {
