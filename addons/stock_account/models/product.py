@@ -8,6 +8,8 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL, split_every
 
+import time as mytime
+
 
 class FifoCandidate(NamedTuple):
     quantity: float
@@ -186,7 +188,7 @@ class ProductProduct(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         products = super().create(vals_list)
-        products._change_standard_price({product: 0 for product in products if product.standard_price}, valuation_date=datetime.min)
+        products._change_standard_price({product: 0 for product in products if product.standard_price}, valuation_date=datetime.now())
         return products
 
     def write(self, vals):
@@ -279,12 +281,16 @@ class ProductProduct(models.Model):
         return self.env['stock.move'].search(domain, order='product_id, date, id').grouped('product_id')
 
     def _get_std_price_history_by_product(self, from_date):
+        # get every manual price change after from_date
         return self.env['product.value'].sudo().search([
             ('product_id', 'in', self.ids), ('move_id', '=', False), ('date', '>', from_date),
             ('company_id', '=', self.env.company.id),
         ], order='product_id, date, id').grouped('product_id')
 
     def _get_last_product_value(self, date=None, lot=False):
+        # get the last manually entered value, since move_id is set to false this doesn't correspond to a move
+        # and is thus a safe place to start from, averything prior is irrelevant
+        # returns a dictionary that maps products to their last manually entered value
         domain = Domain([
             ('product_id', 'in', self.ids),
             ('move_id', '=', False),
@@ -306,6 +312,50 @@ class ProductProduct(models.Model):
         product_values = self.env['product.value'].browse(query._ids)
         product_values.sudo().fetch(['product_id', 'value', 'date'])
         return {pv.product_id: pv for pv in product_values}
+
+    def _get_first_product_value(self, lot=False):
+        # get the first manually entered value
+        domain = Domain([
+            ('product_id', 'in', self.ids),
+            ('move_id', '=', False),
+            ('company_id', '=', self.env.company.id),
+        ])
+        if lot:
+            domain &= Domain(['|', ('lot_id', '=', lot.id), ('lot_id', '=', False)])
+        else:
+            domain &= Domain([('lot_id', '=', False)])
+
+        query = self.env['product.value'].sudo()._search(domain)
+        query_select = SQL('distinct ON (product_value.product_id) product_value.id')
+        query.order = SQL('product_value.product_id, product_value.date ASC, product_value.id ASC')
+        query._ids = tuple(id_ for id_, in self.env.execute_query(query.select(query_select)))
+        product_values = self.env['product.value'].browse(query._ids)
+        product_values.sudo().fetch(['product_id', 'value', 'date'])
+        return {pv.product_id: pv for pv in product_values}
+
+    def _get_first_move(self, date=None, lot=False):
+        if not self:
+            return {}
+
+        domain = Domain([
+            ('product_id', 'in', self.ids),
+            ('company_id', '=', self.env.company.id),
+            '|', ('is_in', '=', True), ('is_out', '=', True),
+        ])
+        if lot:
+            domain &= Domain([('move_line_ids.lot_id', '=', lot.id)])
+        if date:
+            domain &= Domain([('date', '<=', date)])
+
+        query = self.env['stock.move'].sudo()._search(domain)
+        query_select = SQL('DISTINCT ON (stock_move.product_id) stock_move.id')
+        # ASC order picks the chronologically first move for each product
+        query.order = SQL('stock_move.product_id, stock_move.date ASC, stock_move.id ASC')
+        query._ids = tuple(id_ for id_, in self.env.execute_query(query.select(query_select)))
+
+        moves = self.env['stock.move'].browse(query._ids)
+        moves.sudo().fetch(['product_id', 'date'])
+        return {move.product_id: move for move in moves}
 
     def _get_last_in(self, date=None):
         last_in_domain = Domain([('is_in', '=', True), ('product_id', '=', self.id), ('company_id', '=', self.env.company.id)])
@@ -402,24 +452,53 @@ class ProductProduct(models.Model):
             moves_domain &= Domain([
                 ('date', '<=', at_date),
             ])
+        if lot:
+            last_manual_value_by_product = self._get_last_product_value(at_date, lot=lot)
+            first_manual_value_by_product = self._get_first_product_value(lot=lot)
+            first_move_by_product = self._get_first_move(lot=lot)
+        else:
+            last_manual_value_by_product = self._get_last_product_value(at_date)
+            first_manual_value_by_product = self._get_first_product_value()
+            first_move_by_product = self._get_first_move()
+        has_backdated_move = {product: first_move_by_product.get(product) and value.date > first_move_by_product[product].date for (product, value) in first_manual_value_by_product.items()}
+        has_extra_manual_entry = {product: last_manual_value_by_product.get(product) and value != last_manual_value_by_product.get(product) for (product, value) in first_manual_value_by_product.items()}
 
-        last_manual_value_by_product = self._get_last_product_value(at_date, lot=lot)
-        oldest_manual_value = min(pv.date for pv in last_manual_value_by_product.values()) if last_manual_value_by_product else False
-        if oldest_manual_value and self.env['product.product'].concat(last_manual_value_by_product.keys()) == self:
-            moves_domain &= Domain([('date', '>=', oldest_manual_value)])
+        min_date = datetime.max
+        for product in first_manual_value_by_product:
+            if has_extra_manual_entry[product]:
+                manual_value = last_manual_value_by_product[product]
+                if lot:
+                    quantity = lot.with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).product_qty
+                else:
+                    quantity = product.with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).qty_available
 
-        for manual_value in last_manual_value_by_product.values():
-            product = manual_value.product_id
-            # scope the opening qty to the current company, like the replayed moves
-            if lot:
-                quantity = lot.with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).product_qty
+                std_price_by_product_id[product.id] = manual_value.value
+                quantity_by_product_id[product.id] = quantity
+                value_by_product_id[product.id] = manual_value.value * quantity
+                date_by_product_id[product.id] = manual_value.date
+                min_date = min(min_date, manual_value.date)
             else:
-                quantity = product.with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).qty_available
+                initial_val = first_manual_value_by_product.get(product)
+                fallback_price = lot.standard_price if lot else product.standard_price
+                std_price_by_product_id[product.id] = initial_val.value if initial_val else fallback_price
+                quantity_by_product_id[product.id] = 0.0
+                value_by_product_id[product.id] = 0.0
+                if first_move_by_product.get(product):
+                    min_date = min(min_date, first_move_by_product[product].date)
+        if first_manual_value_by_product:
+            moves_domain &= Domain([('date', '>=', min_date)])
 
-            std_price_by_product_id[product.id] = manual_value.value
-            quantity_by_product_id[product.id] = quantity
-            value_by_product_id[product.id] = manual_value.value * quantity
-            date_by_product_id[product.id] = manual_value.date
+        # don't use any checkpoints, it works and everything is fine. so move replay is working as intended
+        # min_date = datetime.min
+        # first_manual_value_by_product = self._get_first_product_value(lot=lot)
+        # for product in self:
+        #     initial_val = first_manual_value_by_product.get(product)
+        #     fallback_price = lot.standard_price if lot else product.standard_price
+        #     std_price_by_product_id[product.id] = initial_val.value if initial_val else fallback_price
+        #     quantity_by_product_id[product.id] = 0.0
+        #     value_by_product_id[product.id] = 0.0
+        # moves_domain &= Domain([('date', '>=', min_date)])
+
 
         self.env['product.value'].invalidate_model()  # Avoid keeping too many records in cache
 
@@ -468,6 +547,10 @@ class ProductProduct(models.Model):
                     price_changes = iter(std_price_history_by_product_id.get(product, self.env['product.value']) if correction else self.env['product.value'])
                     next_change = next(price_changes, None)
                 while next_change and next_change.date <= move.date:
+                    if has_backdated_move[move.product_id] and next_change == self._get_first_product_value(lot=lot)[move.product_id]:
+                        next_change = next(price_changes, None)
+                        continue
+                    # for products where the first move has already been applied
                     average_cost = next_change.value
                     value = average_cost * quantity
                     next_change = next(price_changes, None)
@@ -511,6 +594,7 @@ class ProductProduct(models.Model):
             self.env['stock.move.line'].invalidate_model()
 
         return std_price_by_product_id, value_by_product_id
+
 
     def _run_fifo(self, at_date=None, lot=None, correction=False, old_values=None):
         std_price_by_product_id = {}
