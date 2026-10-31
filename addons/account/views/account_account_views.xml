@@ -35,21 +35,23 @@
                         <div>
                             <h1 style="font-size: 1.9rem;">
                                 <div class="row">
-                                    <div class="col-2">
-                                        <label for="code" string="Code"/>
-                                        <div>
-                                            <field name="placeholder_code" invisible="1"/>
-                                            <field name="code"
-                                                   placeholder="e.g. 101000"
-                                                   options="{'placeholder_field': 'placeholder_code'}"/>
-                                        </div>
-                                    </div>
                                     <div class="col mw-50">
                                         <label for="name" string="Account Name"/>
                                         <div>
                                             <field name="name"
                                                    placeholder="e.g. Current Assets"
                                                    default_focus="1"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label for="code" string="Code"/>
+                                        <div>
+                                            <field name="placeholder_code" invisible="1"/>
+                                            <field name="code"
+                                                   placeholder="e.g. 101000"
+                                                   options="{'placeholder_field': 'placeholder_code'}"/>
                                         </div>
                                     </div>
                                 </div>
