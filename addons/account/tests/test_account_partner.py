@@ -33,6 +33,17 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.env.invalidate_all()
         self.assertEqual(partner.days_sales_outstanding, 50)
 
+    def test_total_invoiced_includes_child_contacts(self):
+        company = self.env['res.partner'].create({'name': 'ACME', 'is_company': True})
+        contact = self.env['res.partner'].create({'name': 'John', 'parent_id': company.id})
+        self.init_invoice('out_invoice', company, '2023-01-01', amounts=[50], post=True)
+        self.init_invoice('out_invoice', contact, '2023-01-01', amounts=[100], post=True)
+        self.env.invalidate_all()
+        self.assertRecordValues(company | contact, [
+            {'total_invoiced': 150.0},
+            {'total_invoiced': 100.0},
+        ])
+
     def test_account_move_count(self):
         self.env['account.move'].create([
             {
