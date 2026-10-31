@@ -12,8 +12,6 @@ import time
 import typing
 import unicodedata
 
-from urllib3.exceptions import LocationParseError
-from urllib3.util import parse_url
 import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.utils
@@ -50,6 +48,7 @@ from odoo.http.session import (
 from odoo.tools.json import json_default
 from odoo.tools.misc import get_lang, submap
 from odoo.tools.translate import code_translations
+from odoo.tools.urls import idna_encode
 
 _logger = logging.getLogger(__name__)
 
@@ -259,9 +258,10 @@ class IrHttp(models.AbstractModel):
     def _get_host_id_from_domain(self, domain_name):
         """Get the website that matches domain_name.
 
-        First find the website for which the configured ``domain`` (after
-        ignoring a potential scheme) is equal to the given
-        ``domain_name``. If a match is found, return it immediately.
+        First find the website whose ``domain_punycode`` (the encoded
+        ``host[:port]`` of its configured ``domain``) is equal to the encoded
+        host of the given ``domain_name``. If a match is found, return it
+        immediately.
 
         If there is no website found for the given ``domain_name``, either
         fallback to the first found website (no matter its ``domain``).
@@ -284,25 +284,20 @@ class IrHttp(models.AbstractModel):
         # http://localhost:8080/hẞello => http://localhost/hẞello
 
         def _filter_domain(website, domain_name, ignore_port=False):
-            """Ignore ``scheme`` from the ``domain``, just match the ``netloc``
-            which is host:port in the version of ``parse_url`` we use."""
+            """Ignore the ``scheme`` from the ``domain``, only match the
+            host and the port, both IDNA-encoded so that a Unicode domain
+            and its punycode equivalent match each other."""
+            netloc = website.domain_punycode
             try:
-                url1 = parse_url(website.domain if '://' in str(website.domain) else f'//{website.domain}')
-                url2 = parse_url(domain_name if '://' in str(domain_name) else f'//{domain_name}')
-            except LocationParseError:
-                # If a domain name is invalid, don't match with anything
+                if ignore_port:
+                    netloc = idna_encode(netloc, with_port=False)
+                return netloc == idna_encode(domain_name, with_port=not ignore_port)
+            except ValueError:
                 return False
-            if ignore_port:
-                return url1.host == url2.host
-            return url1.netloc == url2.netloc
 
         Website = self.env['website'].sudo()
         existings = Website.get_all().sorted(lambda w: (w.sequence, w.id))
 
-        # Filter for the exact domain (to filter out potential subdomains) due
-        # to the use of ilike.
-        # ``domain_name` could be an empty string, in that case multiple website
-        # without a domain will be returned
         return (
             existings.filtered(lambda w: _filter_domain(w, domain_name))
             # If there is no domain matching for the given port, ignore the port.

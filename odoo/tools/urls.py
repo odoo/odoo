@@ -1,13 +1,64 @@
 import re
 import urllib.parse
 
-__all__ = ['urljoin']
+# IDNA2008. Beware of the standard library ``str.encode('idna')``: it is
+# IDNA2003 and encodes e.g. ``faß.de`` to ``fass.de``, not ``xn--fa-hia.de``.
+import idna
+from urllib3.util import parse_url
+
+__all__ = ['idna_encode', 'urljoin']
 
 
 def _contains_dot_segments(path: str | bytes) -> bool:
     # most servers decode url before doing dot segment resolutions
     decoded_path = urllib.parse.unquote(path, errors='strict')
     return any(seg in ('.', '..') for seg in decoded_path.split('/'))
+
+
+def idna_encode(url: str, with_port: bool = True) -> str:
+    """
+    Encode the host of ``url`` in the ASCII (punycode) form that is
+    actually sent over DNS, using IDNA2008. Everything but the host and,
+    optionally, the port is dropped.
+
+    Encoding every domain the same way is what makes a Unicode domain and
+    its punycode equivalent match each other.
+
+    :param str url: An URL (``https://exämple.com/path``), a netloc
+        (``exämple.com:443``) or a bare host name.
+    :param bool with_port: Whether the port is kept in the returned value.
+    :returns: The encoded ``host`` or ``host:port``.
+    :raises ValueError: When there is no host at all or when it is not a
+        valid domain name.
+
+    Examples::
+
+        >>> idna_encode('https://faß.de/hello')
+        'xn--fa-hia.de'
+        >>> idna_encode('https://faß.de:8069/hello')
+        'xn--fa-hia.de:8069'
+        >>> idna_encode('https://faß.de:8069/hello', with_port=False)
+        'xn--fa-hia.de'
+        >>> idna_encode('dü sseldorf.com')
+        Traceback (most recent call last):
+        ...
+        urllib3.exceptions.LocationParseError: Failed to parse: //dü sseldorf.com
+    """
+    if not url:
+        raise ValueError("The URL has no host")
+    parsed = parse_url(url if '://' in url else f'//{url}')
+    host = parsed.host
+    if not host:
+        raise ValueError("The URL has no host")
+    # an IPv6 literal has nothing to encode
+    if not host.startswith('['):
+        # ``parse_url`` only encodes the hosts that are not ASCII already,
+        # encoding again validates the ASCII ones too: a bogus ``xn--``
+        # label, an underscore or an over-long label are rejected here.
+        host = idna.encode(host, uts46=True).decode('ascii')
+    if with_port and parsed.port:
+        return f'{host}:{parsed.port}'
+    return host
 
 
 def urljoin(base: str, extra: str) -> str:
