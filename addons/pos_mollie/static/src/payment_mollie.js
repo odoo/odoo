@@ -10,21 +10,19 @@ export class PaymentMollie extends PaymentInterface {
         this.paymentLineResolvers = {};
 
         this.connectWebSocket("MOLLIE_PAYMENT_STATUS", (payload) => {
-            if (payload.session_id === this.pos.session.id) {
-                const paymentLine = this.pos.models["pos.payment"].find(
-                    (line) => line.transaction_id === payload.payment_id
-                );
+            const paymentLine = this.pos.models["pos.payment"].find(
+                (line) => line.transaction_id === payload.payment_id
+            );
 
-                if (
-                    paymentLine &&
-                    !paymentLine.isDone() &&
-                    paymentLine.getPaymentStatus() !== "retry"
-                ) {
-                    paymentLine.payment_method_id.payment_interface.handleMollieStatusResponse(
-                        paymentLine,
-                        payload
-                    );
-                }
+            if (
+                paymentLine &&
+                !paymentLine.isDone() &&
+                paymentLine.getPaymentStatus() !== "retry"
+            ) {
+                paymentLine.payment_method_id.payment_interface.handleMollieStatusResponse(
+                    paymentLine,
+                    payload
+                );
             }
         });
     }
@@ -50,6 +48,7 @@ export class PaymentMollie extends PaymentInterface {
             await this.callPaymentMethod("mollie_cancel_payment", [
                 this.payment_method_id.id,
                 line.transaction_id,
+                this.pos.session.id,
             ]);
             return true;
         } catch (error) {
@@ -72,11 +71,11 @@ export class PaymentMollie extends PaymentInterface {
             }
 
             // In test mode, the terminal is simulated using a popup
-            if (data._links.changePaymentState) {
-                browser.open(data._links.changePaymentState.href, "_blank");
+            if (data.test_terminal_url) {
+                browser.open(data.test_terminal_url, "_blank");
             }
 
-            paymentLine.transaction_id = data.id;
+            paymentLine.transaction_id = data.payment_id;
             await this.pos.data.synchronizeLocalDataInIndexedDB();
             return this._waitForPaymentConfirmation(paymentLine);
         } catch (error) {
@@ -100,7 +99,7 @@ export class PaymentMollie extends PaymentInterface {
                 return false;
             }
 
-            refundPaymentLine.transaction_id = data.id;
+            refundPaymentLine.transaction_id = data.payment_id;
             return true;
         } catch (error) {
             this._showMollieError(error);
@@ -143,6 +142,7 @@ export class PaymentMollie extends PaymentInterface {
                 const result = await this.callPaymentMethod("mollie_get_payment", [
                     this.payment_method_id.id,
                     transactionId,
+                    this.pos.session.id,
                 ]);
                 connectionLost = false;
                 if (!["open", "pending"].includes(result.status) && isPaymentStillValid()) {
