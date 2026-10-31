@@ -2850,3 +2850,26 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         branch.l10n_fr_pdp_pilot_phase = True
         self.assertTrue(branch.l10n_fr_f10_enable_reporting)
         self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
+
+    def test_reset_move_to_draft_as_invoicing_user(self):
+        """ Resetting a reported invoice creates its RE flow, also for a user who cannot
+        create flows himself. """
+        invoicing_user = new_test_user(
+            self.env,
+            login='pdp_invoicing_user',
+            groups='account.group_account_invoice',
+            company_id=self.company.id,
+            company_ids=self.company.ids,
+        )
+        invoice = self._create_reporting_invoice(partner=self.b2c_customer, invoice_date='2025-09-03')
+        initial_flow = invoice.l10n_fr_pdp_last_flow_id
+        self._run_send_cron('2025-09-20', identifier='RE-INVOICING-USER')
+
+        invoice.with_user(invoicing_user).button_draft()
+
+        initial_flow.invalidate_recordset(['rectificative_flow_ids'])
+        self.assertEqual(invoice.state, 'draft')
+        self.assertRecordValues(initial_flow.rectificative_flow_ids, [{
+            'transmission_type': 'rectificative',
+            'state': 'ready',
+        }])
