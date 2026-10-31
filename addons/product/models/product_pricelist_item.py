@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
@@ -675,3 +677,62 @@ class ProductPricelistItem(models.Model):
                 break
 
         return pricelist_item._compute_base_price(*args, **kwargs)
+
+    def _compute_prices_before_discount(self, products, quantity, uom, *, currency=None, **kwargs):
+        """Batched version of `_compute_price_before_discount`.
+
+        Note: self.ensure_one()
+
+        :param products: recordset of products (product.product/product.template)
+        :param float quantity: quantity of products requested (in given uom)
+        :param uom: unit of measure (uom.uom record)
+        :param currency: currency in which the returned prices must be expressed
+
+        :returns: {product_id: base price}, expressed in provided currency
+        :rtype: dict[int, float]
+        """
+        self.ensure_one()
+        pending_products_by_rule = defaultdict(products.browse, {self: products})
+        products_by_rule = defaultdict(products.browse)
+        # Same walk as `_compute_price_before_discount`, one rule lookup per chained rule instead
+        # of per product.
+        while pending_products_by_rule:
+            pricelist_item, rule_products = pending_products_by_rule.popitem()
+            if pricelist_item.base != 'pricelist':
+                products_by_rule[pricelist_item] |= rule_products
+                continue
+
+            base_rules = pricelist_item.base_pricelist_id._compute_price_rule(
+                rule_products, quantity, uom=uom, compute_price=False, **kwargs
+            )
+            for rule_id, next_products in rule_products.grouped(
+                lambda product: base_rules[product.id][1]
+            ).items():
+                rule_pricelist_item = self.browse(rule_id)
+                if rule_pricelist_item.is_plain_discount:
+                    pending_products_by_rule[rule_pricelist_item] |= next_products
+                else:
+                    products_by_rule[pricelist_item] |= next_products
+
+        prices = {}
+        for pricelist_item, rule_products in products_by_rule.items():
+            base_prices = None
+            if pricelist_item.base == 'pricelist' and pricelist_item.base_pricelist_id:
+                base_prices = pricelist_item.base_pricelist_id._get_products_price(
+                    rule_products,
+                    quantity,
+                    currency=pricelist_item.base_pricelist_id.currency_id,
+                    uom=uom,
+                    depth=1,
+                    **kwargs,
+                )
+            for product in rule_products:
+                prices[product.id] = pricelist_item._compute_base_price(
+                    product,
+                    quantity,
+                    uom,
+                    currency=currency,
+                    base_prices=base_prices,
+                    **kwargs,
+                )
+        return prices

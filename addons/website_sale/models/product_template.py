@@ -780,6 +780,25 @@ class ProductTemplate(models.Model):
             "website_sale.group_product_price_comparison"
         )
         uom_price_enabled = website.show_product_reference_price
+
+        PricelistItemSudo = self.env["product.pricelist.item"].sudo()
+
+        def discount_group_key(template):
+            pricelist_item_sudo = PricelistItemSudo.browse(pricelist_prices[template.id][1])
+            if pricelist_item_sudo._show_discount_on_shop():
+                return pricelist_item_sudo, template._get_main_uom()
+            return None
+
+        prices_before_discount = {}
+        for key, templates in self.grouped(discount_group_key).items():
+            if key:
+                pricelist_item_sudo, uom = key
+                prices_before_discount.update(
+                    pricelist_item_sudo._compute_prices_before_discount(
+                        templates, 1.0, uom, currency=currency
+                    )
+                )
+
         res = {}
         for template in self:
             pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
@@ -799,13 +818,8 @@ class ProductTemplate(models.Model):
                     website=website,
                 ),
             }
-            pricelist_item_sudo = (
-                template.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
-            )
-            if pricelist_item_sudo._show_discount_on_shop():
-                pricelist_base_price = pricelist_item_sudo._compute_price_before_discount(
-                    product=template, quantity=1.0, uom=template._get_main_uom(), currency=currency
-                )
+            if template.id in prices_before_discount:
+                pricelist_base_price = prices_before_discount[template.id]
                 if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
                     base_price = pricelist_base_price
                     template_price_vals["base_price"] = template._apply_taxes_to_price(
