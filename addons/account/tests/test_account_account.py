@@ -1073,3 +1073,26 @@ class TestAccountAccount(TestAccountMergeCommon):
         # get the accounts from the parent company with the branch user
         accounts = self.env['account.account'].with_user(branch_user.id).search([('company_ids', 'parent_of', [branch.id])])
         self.assertEqual(len(accounts), 1, "Branch user should have access to the accounts of the parent company")
+
+    def test_duplicate_entry_update_amount_recomputes_totals(self):
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'line_ids': [
+                Command.create({'account_id': self.company_data['default_account_revenue'].id, 'balance': -1000.0}),
+                Command.create({'account_id': self.company_data['default_account_expense'].id, 'balance': 1000.0}),
+            ],
+        })
+        move_copy = move.copy()
+        debit_line = move_copy.line_ids.filtered(lambda line: line.debit)
+        credit_line = move_copy.line_ids.filtered(lambda line: line.credit)
+        move_copy.write({
+            'line_ids': [
+                Command.update(debit_line.id, {'debit': 1500.0}),
+                Command.update(credit_line.id, {'credit': 1500.0}),
+            ],
+        })
+        self.assertRecordValues(debit_line + credit_line, [
+            {'amount_currency': 1500.0, 'price_subtotal': 1500.0, 'price_total': 1500.0},
+            {'amount_currency': -1500.0, 'price_subtotal': -1500.0, 'price_total': -1500.0},
+        ])
