@@ -218,7 +218,9 @@ class HrLeaveAttendanceReport(models.Model):
         """)
 
     def _cte_leave_day(self):
-        """Compute leave pro-ration once per leave/calendar/timezone."""
+        """Compute leave pro-ration once per leave/calendar/timezone, weighted
+        by the hours scheduled on each day so uneven schedules are respected.
+        """
         return SQL("""
             SELECT charge.employee_id,
                    charge.calendar_id,
@@ -230,10 +232,10 @@ class HrLeaveAttendanceReport(models.Model):
                            ec.calendar_id,
                            ec.tz,
                            d.day::date AS day,
-                           lv.number_of_hours
-                               / COUNT(*) OVER (
+                           lv.number_of_hours * cw.hours_per_day
+                               / NULLIF(SUM(cw.hours_per_day) OVER (
                                      PARTITION BY lv.id, ec.calendar_id, ec.tz
-                                 ) AS leave_hours
+                                 ), 0) AS leave_hours
                       FROM leave AS lv
                       JOIN emp_cal AS ec
                         ON ec.employee_id = lv.employee_id
@@ -247,7 +249,7 @@ class HrLeaveAttendanceReport(models.Model):
                        AND cw.dayofweek = EXTRACT(ISODOW FROM d.day)::integer - 1
                        AND (cw.week_type IS NULL OR cw.week_type::integer = %s)
                  LEFT JOIN holiday AS h
-                        ON NOT lv.include_public_holidays_in_duration
+                        ON NOT COALESCE(lv.include_public_holidays_in_duration, FALSE)
                        AND h.company_id = ec.company_id
                        AND h.calendar_id = ec.calendar_id
                        AND h.tz = ec.tz
