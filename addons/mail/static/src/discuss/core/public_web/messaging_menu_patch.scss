@@ -1,0 +1,21 @@
+.o-mail-MessagingMenu-moreActionsWrapper {
+    position: sticky;
+    right: 0;
+    padding-left: 0.25rem;
+    background: var(--o-view-background-color);
+}
+
+.o-mail-MessagingMenu-moreActions {
+    width: 2rem;
+    height: 2rem;
+    border: 0;
+    color: var(--o-gray-500);
+    background: color-mix(in srgb, var(--o-view-background-color) 95%, black);
+    font-size: 1.25rem;
+
+    &:hover,
+    &.show {
+        color: var(--o-bs-body-color);
+        background: var(--o-component-active-bg);
+    }
+}

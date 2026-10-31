@@ -1,14 +1,45 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from werkzeug.exceptions import BadRequest
+
 from odoo.fields import Domain
 from odoo.http import request
 
 from odoo.addons.mail.controllers.webclient import WebclientController
-from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.discuss import Store, mail_route
 from odoo.addons.mail.tools.store_handler import store_handler
 
 
 class DiscussMessagingMenuController(WebclientController):
+    def _get_unread_channel_domain(self, tab_id, filter_ids, search_term):
+        if tab_id not in ("chat", "channel", "meeting", "livechat", "whatsapp"):
+            raise BadRequest("Unsupported conversation tab")
+        domain = self._get_menu_tab_full_domain(tab_id, filter_ids) & Domain(
+            "self_member_id.is_unread", "=", True
+        )
+        if search_term:
+            domain &= Domain("name", "ilike", search_term)
+        return domain
+
+    @mail_route("/discuss/messaging_menu/unread_count", methods=["POST"], type="jsonrpc", auth="public")
+    def discuss_messaging_menu_unread_count(self, tab_id, filter_ids=None, search_term=None):
+        return self.env["discuss.channel"].search_count(
+            self._get_unread_channel_domain(tab_id, filter_ids, search_term), limit=1
+        )
+
+    @mail_route("/discuss/messaging_menu/mark_all_as_read", methods=["POST"], type="jsonrpc", auth="public")
+    def discuss_messaging_menu_mark_all_as_read(self, tab_id, filter_ids=None, search_term=None):
+        channels = self.env["discuss.channel"].search(
+            self._get_unread_channel_domain(tab_id, filter_ids, search_term)
+        )
+        last_message_by_channel = {
+            message.res_id: message.id for message in channels._get_last_messages()
+        }
+        for member in channels.self_member_id:
+            if last_message_id := last_message_by_channel.get(member.channel_id.id):
+                member._mark_as_read(last_message_id)
+        return channels.ids
+
     def _get_menu_tab_domain(self, tab_id):
         match tab_id:
             case "notification":

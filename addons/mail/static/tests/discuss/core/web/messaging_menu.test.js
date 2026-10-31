@@ -45,6 +45,61 @@ import { rpc } from "@web/core/network/rpc";
 describe.current.tags("desktop");
 defineMailModels();
 
+test("mark all as read only affects unread conversations in the selected filter", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Jane" });
+    const chatId = pyEnv["discuss.channel"].create({
+        name: "Direct chat",
+        channel_type: "chat",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const groupId = pyEnv["discuss.channel"].create({
+        name: "Group chat",
+        channel_type: "group",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    for (const channelId of [chatId, groupId]) {
+        pyEnv["mail.message"].create({
+            author_id: partnerId,
+            body: "Unread message",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    pyEnv["discuss.channel.member"]._compute_message_unread_counter();
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-MessagingMenu-filter:text('Group')").click();
+    await contains(".o-mail-MessagingMenu-moreActions").click();
+    await contains(".o-dropdown--menu .dropdown-item:text('Mark All as Read'):not(.disabled)").click();
+    await contains(".modal-title:text('Mark All Read')");
+    await contains(".modal-body:text('Are you sure you want to mark all unread conversations as read?')");
+    await contains(".modal-footer button:text('Discard')").click();
+    expect(pyEnv["discuss.channel.member"].search_read([
+        ["channel_id", "=", groupId],
+        ["partner_id", "=", serverState.partnerId],
+    ])[0].message_unread_counter).toBe(1);
+    await contains(".o-mail-MessagingMenu-moreActions").click();
+    await contains(".o-dropdown--menu .dropdown-item:text('Mark All as Read'):not(.disabled)").click();
+    await contains(".modal-footer button:text('Confirm')").click();
+    await waitFor(".o-mail-MessagingMenu-filter:text('Group')");
+    const memberFor = (channelId) => pyEnv["discuss.channel.member"].search_read([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ])[0];
+    expect(memberFor(groupId).message_unread_counter).toBe(0);
+    expect(memberFor(chatId).message_unread_counter).toBe(1);
+    await contains(".o-mail-MessagingMenu-moreActions").click();
+    await contains(".o-dropdown--menu .dropdown-item:text('Mark All as Read').disabled");
+});
+
 test("can make DM chat in mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
