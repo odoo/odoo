@@ -1156,7 +1156,7 @@ describe("sanitized values", () => {
         expect(".options-container input").toHaveValue(-3);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", -3);
     });
-    test("accept decimal numbers", async () => {
+    test("accept decimal numbers by default", async () => {
         addBuilderOption(
             class extends BaseOptionComponent {
                 static selector = ".test-options-target";
@@ -1171,7 +1171,28 @@ describe("sanitized values", () => {
         expect(".options-container input").toHaveValue(3.3);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "3.3");
     });
+<<<<<<< 7191168096ad0bfd77eaf15e3ef00299a84f9b7f
     test("use step 'any' to avoid tooltip when no step is defined", async () => {
+||||||| f4dfaf2943c03e5a110b024275901828c891e257
+    test("BuilderNumberInput transforms , into .", async () => {
+=======
+    test("does not accept decimal numbers when allowDecimals is false", async () => {
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderNumberInput dataAttributeAction="'number'" allowDecimals="false" composable="true"/>`;
+            }
+        );
+        await setupHTMLBuilder(`
+            <div class="test-options-target" data-number="10">Test</div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        await contains(".options-container input").edit(".5 4.4");
+        expect(".options-container input").toHaveValue("0 4");
+        expect(":iframe .test-options-target").toHaveAttribute("data-number", "0 4");
+    });
+    test("BuilderNumberInput transforms , into .", async () => {
+>>>>>>> b0e9b2609df8c13bc06777005132fdbba1c6a6de
         addBuilderOption(
             class extends BaseOptionComponent {
                 static selector = ".test-options-target";
