@@ -224,6 +224,8 @@ class ProductProduct(models.Model):
             "offers": offer,
             "image": f"{base_url}{self._get_image_1920_url()}",
         }
+        if website._prevent_product_sale(self, True) and website.currency_id.is_zero(price):
+            del vals["offers"]
         if description := (self.website_meta_description or self.description_sale):
             vals["description"] = description
         if self.default_code:
