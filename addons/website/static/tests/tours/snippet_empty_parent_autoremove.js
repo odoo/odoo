@@ -5,7 +5,14 @@ import wTourUtils from "@website/js/tours/tour_utils";
 function removeSelectedBlock() {
     return {
         content: "Remove selected block",
-        trigger: '#oe_snippets we-customizeblock-options:nth-last-child(3) .oe_snippet_remove',
+        // The customize panel is rebuilt asynchronously (behind the edition
+        // mutex) after every selection change or removal, and the stale panel
+        // of the previous selection has the same shape as the fresh one, so a
+        // bare :nth-last-child(3) can match the stale panel while its editor
+        // is being destroyed and the click is then silently swallowed. Every
+        // use of this helper removes a "Column" block and the stale panel of
+        // its parent snippet has no such block, so scope the match to it.
+        trigger: '#oe_snippets we-customizeblock-options:nth-last-child(3):has(we-title:contains("Column")) .oe_snippet_remove',
     };
 }
 
@@ -24,6 +31,14 @@ wTourUtils.registerWebsitePreviewTour('snippet_empty_parent_autoremove', {
         trigger: 'iframe #wrap .s_text_image .row > :nth-child(2)',
     },
     removeSelectedBlock(),
+    {
+        // The second column and its options panel are removed in the same
+        // synchronous block of removeSnippet, so once the column has left the
+        // iframe DOM the stale "Column" panel is guaranteed to be gone.
+        content: "Wait for the second column to be removed",
+        trigger: 'iframe #wrap .s_text_image .row > :first-child:last-child',
+        isCheck: true,
+    },
     {
         content: "Click on first column",
         trigger: 'iframe #wrap .s_text_image .row > :first-child',
