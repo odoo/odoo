@@ -2,10 +2,12 @@
 
 import logging
 import json
+from werkzeug.exceptions import Unauthorized
 
 from odoo import http, _
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.http.stream import content_disposition
 from odoo.tools import format_amount, file_open
 from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.exceptions import UserError
@@ -15,6 +17,26 @@ _logger = logging.getLogger(__name__)
 
 
 class PosController(PortalAccount):
+
+    @http.route('/pos/receipt/<order_id>', type='http', auth='user')
+    def pos_receipt_download(self, order_id=None, download=False):
+        pos_order = request.env['pos.order'].browse(int(order_id))
+        if not pos_order.exists():
+            return request.not_found()
+
+        if not pos_order.has_access('read'):
+            return Unauthorized()
+
+        # Portal users can read their orders, but not all the data needed to render a receipt.
+        order = pos_order.sudo().with_company(pos_order.company_id)
+        image = order.order_receipt_generate_image()
+        filename = f'{pos_order.pos_reference}.png'
+        return request.make_response(image, [
+            ('Content-Type', 'image/png'),
+            ('Content-Length', len(image)),
+            ('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"),
+            ('Content-Disposition', content_disposition(filename, disposition_type='attachment' if download else 'inline')),
+        ])
 
     @http.route('/pos/service-worker.js', type='http', auth='user')
     def pos_web_service_worker(self):
