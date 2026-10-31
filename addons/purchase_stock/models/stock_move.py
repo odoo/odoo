@@ -96,6 +96,16 @@ class StockMove(models.Model):
             if product.purchase_method == 'purchase':
                 # No unit price if the product is purchased on the ordered qty.
                 po_line_vals['price_unit'] = 0
+            elif product._select_seller(
+                partner_id=purchase_order.partner_id,
+                quantity=move.product_uom._compute_quantity(abs(quantity), product.uom_id),
+                date=max(fields.Date.context_today(move, timestamp=purchase_order.date_order), fields.Date.context_today(move)),
+                uom_id=product.uom_id,
+                params={'order_id': purchase_order},
+            ):
+                seller_vals = self.env['purchase.order.line']._prepare_purchase_order_line(
+                    product, abs(quantity), move.product_uom, purchase_order.company_id, purchase_order.partner_id, purchase_order)
+                po_line_vals.update(price_unit=seller_vals['price_unit'], discount=seller_vals['discount'])
             purchase_order_lines_vals.append(po_line_vals)
         if purchase_order_lines_vals:
             self.env['purchase.order.line'].with_context(bypass_move_update=True).create(purchase_order_lines_vals)
