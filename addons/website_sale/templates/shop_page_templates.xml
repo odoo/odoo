@@ -116,8 +116,10 @@
     <!-- /shop product listing -->
     <template id="website_sale.products" name="Products">
         <t t-set="website_sale_sortable" t-value="website._get_product_sort_mapping()"/>
+        <t t-if="category" t-set="additional_title" t-value="category.name"/>
+        <t t-else="" t-set="additional_title">Products</t>
         <t t-call="website.layout"
-            additional_title="category.name"
+            additional_title="additional_title"
             website_sale_sortable="website_sale_sortable">
             <t t-set="grid_block_name">Grid</t>
             <t t-set="product_block_name">Product</t>
