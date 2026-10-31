@@ -63,6 +63,11 @@
             <field name="is_published" eval="True"/>
         </record>
 
+        <record id="country_group_company_registry" model="res.country.group">
+            <field name="name">Company Registry on Checkout</field>
+            <field name="country_ids" eval="[Command.link(ref('base.fr'))]"/>
+        </record>
+
     </data>
     <data>
         <!-- Filters for Dynamic Filter -->
@@ -182,7 +187,7 @@ response = DynamicFilter._get_products('alternative_products', product_template_
             <value eval="[
                 'name', 'phone', 'email',
                 'city', 'zip', 'street', 'street2', 'state_id', 'country_id',
-                'vat', 'company_name'
+                'vat', 'company_name', 'company_registry'
             ]"/>
         </function>
     </data>
