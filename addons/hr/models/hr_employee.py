@@ -3445,6 +3445,5 @@ class HrEmployee(models.Model):
                 self[field_name], new_value,
                 field_name, self._track_get_fields_info([field_name])[field_name],
             )
-            display_field_name = '(' + tracking_values['field_label'] + ')'
-            version_changes_to_display[display_field_name] = (tracking_values['old_value'], tracking_values['new_value'])
+            version_changes_to_display[field_name] = (tracking_values['old_value'], tracking_values['new_value'])
         return version_changes_to_display
