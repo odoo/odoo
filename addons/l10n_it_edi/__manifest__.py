@@ -16,6 +16,7 @@ E-invoice implementation
         'data/account.account.tag.csv',
         'data/invoice_it_simplified_template.xml',
         'data/invoice_it_template.xml',
+        'data/ir_config_parameter_data.xml',
         'data/ir_cron.xml',
         'data/l10n_it.document.type.csv',
         'views/account_payment_method.xml',
@@ -25,6 +26,7 @@ E-invoice implementation
         'views/portal_address_templates.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_views.xml',
+        'report/account_invoice_report_templates.xml',
         'security/ir.access.csv',
     ],
     'assets': {

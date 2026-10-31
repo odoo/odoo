@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="account_invoices_sdi_preview">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="lang" t-value="o.partner_id.lang"/>
+                <t t-call="l10n_it_edi.report_invoice_document_sdi_preview"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_invoice_document_sdi_preview" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
+            <attribute name="t-call">l10n_it_edi.layout_invoices_generated_by_odoo</attribute>
+        </xpath>
+        <xpath expr="//p[@name='payment_communication']/parent::*" position="attributes">
+            <attribute name="t-if">o.payment_reference</attribute>
+        </xpath>
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/>
+            <t t-set="address">
+                <ul class="list-unstyled m-0">
+                    <li t-if="company.is_company_details_empty">
+                        <span t-field="company.partner_id"
+                              t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                    </li>
+                    <li t-else="">
+                        <span t-field="company.company_details"/>
+                    </li>
+                    <li t-if="not forced_vat and company.vat">
+                        <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                        <span t-out="company.vat"/>
+                    </li>
+                    <li t-elif="forced_vat">
+                        <t t-out="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                        <span t-out="forced_vat"/>
+                    </li>
+                    <li t-if="company.l10n_it_codice_fiscale
+                             and (not company.vat or company.l10n_it_codice_fiscale != company.vat)">
+                        Fiscal Code:
+                        <span t-out="company.l10n_it_codice_fiscale"/>
+                    </li>
+                </ul>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-set='taxes']" position="attributes">
+            <attribute name="t-value">
+                ', '.join(tax.tax_label for tax in line.tax_ids if tax.tax_label and not tax.l10n_it_pension_fund_type)
+            </attribute>
+        </xpath>
+        <xpath expr="//t[@t-call='account.document_tax_totals']" position="replace">
+            <t t-set="sdi_summary" t-value="o._l10n_it_edi_get_sdi_summary_values()"/>
+            <t t-if="sdi_summary" t-call="l10n_it_edi.document_tax_totals_sdi_preview"/>
+            <t t-elif="o.tax_totals" t-call="account.document_tax_totals"
+                tax_totals="o.tax_totals"
+                currency="o.currency_id"/>
+        </xpath>
+        <xpath expr="//t[@t-call='account.document_tax_totals_company_currency_template']" position="attributes">
+            <attribute name="t-if">
+                not sdi_summary and o.tax_totals and o.tax_totals.get('display_in_company_currency')
+            </attribute>
+        </xpath>
+    </template>
+
+    <template id="layout_invoices_generated_by_odoo" inherit_id="web.external_layout_standard" primary="True">
+        <xpath expr="//div[contains(@t-attf-class, 'header')]/table" position="replace">
+            <div class="mb-2" style="height: 50px" />
+            <div class="row">
+                <div name="company_address"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='company_address']" position="replace">
+            <div class="col-6" name="company_address">
+                <ul class="list-unstyled m-0">
+                    <li>
+                        <span t-field="o.partner_id"
+                              t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                    </li>
+                    <li t-if="o.partner_id.vat">
+                        <t t-if="o.company_id.account_fiscal_country_id.vat_label"
+                           t-out="o.company_id.account_fiscal_country_id.vat_label"/>
+                        <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                    </li>
+                    <li t-if="o.partner_id.l10n_it_codice_fiscale
+                             and (not o.partner_id.vat or o.partner_id.l10n_it_codice_fiscale != o.partner_id.vat)">
+                        Fiscal Code: <span t-field="o.partner_id.l10n_it_codice_fiscale"/>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-6" style="text-align: right;">
+                <div style="display: inline-block; padding: 12px 24px; border-radius: 8px;
+                            background-color: #714B67; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                    <span style="font-size: 16px; font-weight: bold; color: #ffffff; display: inline-block;
+                                 vertical-align: middle; text-transform: uppercase; margin: 0px 8px;
+                                 letter-spacing: 0.5px;">
+                        Preview
+                    </span>
+                </div>
+                <div style="font-size: 13px; color: #6c757d; margin-top: 12px; line-height: 1.4;">
+                    This is a visual representation of the xml content.<br/>
+                    <strong style="color: #495057;">It is not an official document.</strong>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="document_tax_totals_sdi_preview">
+        <!-- Arguments: sdi_summary, currency -->
+        <t t-set="currency" t-value="currency or o.currency_id"/>
+
+        <t t-foreach="sdi_summary" t-as="row">
+            <tr t-att-class="row.get('css_class', '')">
+                <td>
+                    <span t-out="row['title']"/>
+                    <t t-if="row.get('base') is not None">
+                        <span> on </span>
+                        <span class="text-nowrap"
+                              t-out="row['base']"
+                              t-options='{"widget": "monetary", "display_currency": currency}'/>
+                    </t>
+                    <div t-if="row.get('note')" class="text-muted small fst-italic ps-2" t-out="row['note']"/>
+                    <t t-foreach="row.get('notes', [])" t-as="subnote">
+                        <div class="text-muted small fst-italic ps-2" t-out="subnote"/>
+                    </t>
+                </td>
+                <td class="text-end">
+                    <span class="text-nowrap"
+                          t-out="row['value']"
+                          t-options='{"widget": "monetary", "display_currency": currency}'/>
+                </td>
+            </tr>
+        </t>
+    </template>
+
+    <record id="action_report_account_invoice_sdi_preview" model="ir.actions.report">
+        <field name="name">SDI Invoice Preview</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_it_edi.account_invoices_sdi_preview</field>
+    </record>
+</odoo>
