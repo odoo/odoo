@@ -92,7 +92,7 @@ class HrEmployee(models.Model):
     def _compute_allocation_remaining_display(self):
         current_date = date.today()
         allocations = self.env['hr.leave.allocation'].search([('employee_id', 'in', self.ids)])
-        leaves_taken = self._get_consumed_leaves(allocations.work_entry_type_id)[0]
+        leaves_taken, leaves_to_recheck = self._get_consumed_leaves(allocations.work_entry_type_id)
         for employee in self:
             employee_remaining_leaves = 0
             employee_max_leaves = 0
@@ -100,14 +100,25 @@ class HrEmployee(models.Model):
                 if not work_entry_type.requires_allocation or work_entry_type.hide_on_dashboard or not work_entry_type.active:
                     continue
                 primary_unit = 'hours' if work_entry_type.unit_of_measure == 'hour' else 'days'
+                has_current_allocation = False
                 for allocation in leaves_taken[employee][work_entry_type]:
                     if allocation and allocation.date_from <= current_date\
                             and (not allocation.date_to or allocation.date_to >= current_date):
+                        has_current_allocation = True
                         virtual_remaining_leaves = leaves_taken[employee][work_entry_type][allocation][f'{primary_unit}_virtual_remaining_leaves']
                         employee_remaining_leaves += virtual_remaining_leaves\
                             if work_entry_type.unit_of_measure == 'day'\
                             else virtual_remaining_leaves / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
                         employee_max_leaves += allocation.number_of_days
+                if has_current_allocation:
+                    # subtract the future leaves linked to an accrual plan
+                    to_recheck_leaves = leaves_to_recheck[employee][work_entry_type]['to_recheck_leaves']
+                    hours_per_day = employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY
+                    if work_entry_type.unit_of_measure == 'day':
+                        leaves_to_subtract = sum(to_recheck_leaves.mapped('number_of_days'))
+                    else:
+                        leaves_to_subtract = sum(to_recheck_leaves.mapped('number_of_hours')) / hours_per_day
+                    employee_remaining_leaves -= leaves_to_subtract
             employee.allocation_remaining_display = "%g" % float_round(employee_remaining_leaves, precision_digits=2)
             employee.allocation_display = "%g" % float_round(employee_max_leaves, precision_digits=2)
 
