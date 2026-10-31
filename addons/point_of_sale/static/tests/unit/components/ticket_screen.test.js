@@ -1,5 +1,6 @@
 import { test, expect, describe, waitFor, waitForNone } from "@odoo/hoot";
-import { mountWithCleanup, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getService, mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
+import { patch } from "@web/core/utils/patch";
 import { click, animationFrame } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 import { session } from "@web/session";
@@ -517,7 +518,7 @@ test("refund keeps the fiscal position of the refunded order when the default pr
 
 test("scanning a barcode on the ticket screen does not feed the refund quantity", async () => {
     // The buffer only drops fast multi-key sequences outside of test mode.
-    patchWithCleanup(session, { test_mode: false });
+    patch(session, { test_mode: false });
 
     const store = await setupPosEnv();
     const order = store.addNewOrder({});
@@ -533,7 +534,7 @@ test("scanning a barcode on the ticket screen does not feed the refund quantity"
     comp.state.selectedOrderlineIds[order.id] = line.id;
 
     const dialogTitles = [];
-    patchWithCleanup(comp.dialog, {
+    patch(comp.dialog, {
         add: (_component, props) => dialogTitles.push(props.title.toString()),
     });
 
@@ -594,4 +595,146 @@ test("reprint all prints the last preparation ticket again", async () => {
     expect(printed).toHaveLength(2);
     expect(printed[1].extra_data.reprint).toBe(true);
     expect(order.lastPrints).toHaveLength(1);
+});
+
+test("onClickScanOrder selects the filter matching the finalized order state and resets the list", async () => {
+    const store = await setupPosEnv();
+    const screen = await mountWithCleanup(TicketScreen);
+    const preset = store.models["pos.preset"].get(2);
+    onRpc("pos.order", "search_order_ids", () => ({ ordersInfo: [], totalCount: 0 }));
+    screen.state.nbrByPage = 30;
+
+    const cases = [
+        { state: "paid", screenName: "", filter: "SYNCED" },
+        { state: "done", screenName: "", filter: "SYNCED" },
+        { state: "paid", screenName: "TipScreen", filter: "ACTIVE_ORDERS" },
+        { state: "cancel", screenName: "", filter: "CANCELLED" },
+    ];
+    for (const { state, screenName, filter } of cases) {
+        const order = makeOrder(store, {
+            state,
+            getScreenData: () => ({ name: screenName }),
+        });
+        patch(store.data, { loadServerOrders: async () => [order] });
+
+        screen.state.filter = null;
+        screen.state.selectedPreset = preset;
+        screen.state.search = { fieldName: "RECEIPT_NUMBER", searchTerm: "foo" };
+        screen.state.page = 2;
+        await animationFrame();
+        expect(".pos-search-bar input").toHaveValue("foo");
+
+        // The camera scanner is open while scanning, and closed once the order is found
+        store.scanning = true;
+        await screen.onClickScanOrder(`http://localhost/?order_uuid=${order.uuid}`);
+        await animationFrame();
+
+        expect(store.scanning).toBe(false);
+
+        expect(screen.state.filter).toBe(filter);
+        expect(screen.getSelectedOrder()).toBe(order);
+        expect(screen.state.selectedPreset).toBe(null);
+        expect(screen.state.search).toEqual({ fieldName: "RECEIPT_NUMBER", searchTerm: "" });
+        expect(screen.state.page).toBe(1);
+        expect(".pos-search-bar input").toHaveValue("");
+        expect(screen.getFilteredOrderList()).toInclude(order);
+    }
+});
+
+test("onClickScanOrder displays the page holding the scanned order", async () => {
+    const store = await setupPosEnv();
+    const screen = await mountWithCleanup(TicketScreen);
+    screen.state.nbrByPage = 2;
+
+    onRpc("pos.order", "search_order_ids", () => ({ ordersInfo: [], totalCount: 0 }));
+
+    const now = DateTime.now();
+    const orders = [1, 2, 3].map((i) =>
+        makeOrder(store, {
+            state: "paid",
+            pos_reference: `O-0${i}`,
+            date_order: now.minus({ hours: 4 - i }),
+            getScreenData: () => ({ name: "" }),
+        })
+    );
+    const scannedOrder = orders[0];
+    patch(store.data, { loadServerOrders: async () => [scannedOrder] });
+
+    store.scanning = true;
+    await screen.onClickScanOrder(`http://localhost/?order_uuid=${scannedOrder.uuid}`);
+
+    expect(screen.state.filter).toBe("SYNCED");
+    expect(screen.state.page).toBe(2);
+    expect(screen.getFilteredOrderList()).toInclude(scannedOrder);
+    expect(screen.getSelectedOrder()).toBe(scannedOrder);
+});
+
+test("onClickScanOrder loads a draft order directly", async () => {
+    const store = await setupPosEnv();
+    const screen = await mountWithCleanup(TicketScreen);
+    const order = makeOrder(store);
+    store.addNewOrder();
+    patch(store.data, { loadServerOrders: async () => [order] });
+
+    store.scanning = true;
+    await screen.onClickScanOrder(`http://localhost/?order_uuid=${order.uuid}`);
+
+    expect(store.scanning).toBe(false);
+    expect(store.getOrder()).toBe(order);
+});
+
+test("onClickScanOrder warns without loading when the qr code holds no order", async () => {
+    const store = await setupPosEnv();
+    const screen = await mountWithCleanup(TicketScreen);
+    let loadCount = 0;
+    patch(store.data, { loadServerOrders: async () => ++loadCount && [] });
+    const notifications = [];
+    patch(getService("notification"), {
+        add: (message) => notifications.push(message.toString()),
+    });
+
+    await screen.onClickScanOrder("http://localhost/?foo=bar");
+    await screen.onClickScanOrder("not a url");
+
+    expect(loadCount).toBe(0);
+    expect(notifications).toEqual([
+        "Invalid QR Code! Please, Scan again!",
+        "Invalid QR Code! Please, Scan again!",
+    ]);
+});
+
+test("scanning an order qr code with a barcode scanner retrieves the order", async () => {
+    patch(session, { nomenclature_id: 1 });
+    await setupPosEnv();
+    const screen = await mountWithCleanup(TicketScreen);
+    const scannedCodes = [];
+    patch(screen, { onClickScanOrder: (qrcode) => scannedCodes.push(qrcode) });
+
+    const qrcode = "http://localhost/?order_uuid=abc";
+    await Utils.scanBarcode(qrcode);
+
+    expect(scannedCodes).toEqual([qrcode]);
+});
+
+test("onSearch retrieves the order of a qr code typed in the search bar", async () => {
+    await setupPosEnv();
+    const screen = await mountWithCleanup(TicketScreen);
+    const scannedCodes = [];
+    let searchCount = 0;
+    patch(screen, {
+        onClickScanOrder: (qrcode) => scannedCodes.push(qrcode),
+        _updateSyncedOrders: async () => searchCount++,
+    });
+
+    // Barcode scanners type into the focused search bar
+    const qrcode = "http://localhost/?order_uuid=abc";
+    await screen.onSearch({ fieldName: "RECEIPT_NUMBER", searchTerm: qrcode });
+    expect(scannedCodes).toEqual([qrcode]);
+    expect(searchCount).toBe(0);
+    expect(screen.state.search.searchTerm).not.toBe(qrcode);
+
+    await screen.onSearch({ fieldName: "RECEIPT_NUMBER", searchTerm: "O-01" });
+    expect(scannedCodes).toEqual([qrcode]);
+    expect(searchCount).toBe(1);
+    expect(screen.state.search).toEqual({ fieldName: "RECEIPT_NUMBER", searchTerm: "O-01" });
 });
