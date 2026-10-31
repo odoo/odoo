@@ -26,6 +26,13 @@ patch(Checkout.prototype, {
         await this.waitFor(super.selectDeliveryMethod(...arguments));
         // Show a button to open the location selector if required for the selected delivery method.
         this._showPickupLocation(checkedRadio);
+        // A pickup location replaces the delivery address of the order: set back the selected
+        // address as the delivery address if the selected delivery method does not require a
+        // pickup location.
+        const selectedAddress = this._getSelectedAddress();
+        if (selectedAddress && !this._isPickupLocationRequired(checkedRadio)) {
+            await this.waitFor(this.updateAddress(selectedAddress.dataset.partnerId));
+        }
     },
 
     /**
@@ -112,6 +119,23 @@ patch(Checkout.prototype, {
         );
     },
 
+
+    // #=== ADDRESS FLOW ===#
+
+    /**
+     * Set the address as billing address if the selected delivery method uses a pickup location,
+     * as the pickup location is the delivery address: the addresses are the contact details.
+     *
+     * @override method from `@website_sale/interactions/checkout`
+     */
+    async updateAddress(partnerId) {
+        const checkedRadio = this._getSelectedDeliveryRadio();
+        if (checkedRadio && this._isPickupLocationRequired(checkedRadio)) {
+            await rpc('/shop/update_address', { address_type: 'billing', partner_id: partnerId });
+            return;
+        }
+        await super.updateAddress(...arguments);
+    },
 
     // #=== DELIVERY FLOW ===#
 

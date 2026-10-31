@@ -44,4 +44,4 @@ class TestWebsiteSaleStockCheckout(WebsiteSaleStockCommon, HttpCase):
         })
         with self.mock_request():
             address_data = CheckoutController()._prepare_address_data(self.partner)
-        self.assertNotIn(pickup_address, address_data["delivery_addresses"])
+        self.assertNotIn(pickup_address, address_data["addresses"])

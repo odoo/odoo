@@ -97,11 +97,11 @@ class ResPartner(models.Model):
         self, address_type, country, use_delivery_as_billing=False, **kwargs
     ):
         required_address_fields = set()
-        if address_type == 'delivery' or use_delivery_as_billing:
+        if address_type in {'delivery', 'other'} or use_delivery_as_billing:
             required_address_fields |= self._get_mandatory_delivery_address_fields(
                 country, **kwargs
             )
-        if address_type == 'billing' or use_delivery_as_billing:
+        if address_type in {'billing', 'other'} or use_delivery_as_billing:
             required_address_fields |= self._get_mandatory_billing_address_fields(
                 country, **kwargs
             )

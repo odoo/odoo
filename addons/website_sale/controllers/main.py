@@ -1717,7 +1717,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     # === CHECKOUT FLOW - PAYMENT/CONFIRMATION METHODS === #
 
-    def _get_shop_payment_values(self, order, **_kwargs):
+    def _get_shop_payment_values(self, order, **kwargs):
         checkout_page_values = {
             "sale_order": order,
             "website_sale_order": order,
@@ -1729,7 +1729,21 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "payment_tracking_info": (
                 order._get_order_tracking_info() if self.env.website.google_analytics_key else {}
             ),
+            **self._prepare_address_data(order.partner_invoice_id, order_sudo=order, **kwargs),
         }
+        addresses = checkout_page_values["addresses"]
+        if self.env.website.is_public_user() and order._has_deliverable_products():
+            # Public users can't select saved addresses: a different billing address than the
+            # delivery one is always a new address.
+            selected_billing_address = self.env["res.partner"]
+        else:
+            selected_billing_address = (
+                order.partner_invoice_id if order.partner_invoice_id in addresses else addresses[:1]
+            )
+        checkout_page_values["selected_billing_address"] = selected_billing_address
+        checkout_page_values.update(
+            self._prepare_billing_address_form_data(order, selected_billing_address)
+        )
         payment_form_values = {
             **sale_portal.CustomerPortal._get_payment_values(
                 self, order, website_id=self.env.website.id
@@ -1743,6 +1757,49 @@ class WebsiteSale(payment_portal.PaymentPortal):
             payment_form_values.pop("payment_methods_sudo", "")
             payment_form_values.pop("tokens_sudo", "")
         return checkout_page_values | payment_form_values
+
+    def _prepare_billing_address_form_data(self, order_sudo, partner_sudo):
+        """Prepare the data of the billing address form of the payment page.
+
+        :param sale.order order_sudo: The current cart.
+        :param res.partner partner_sudo: The billing address to fill the fields with, or an empty
+                                         recordset to render the fields of a new address.
+        :return: The rendered address form fields and the comma-separated required fields.
+        :rtype: dict
+        """
+        address_form_values = self._prepare_address_form_values(
+            partner_sudo, address_type="billing", order_sudo=order_sudo, callback="/shop/payment"
+        )
+        return {
+            "billing_address_form": self.env.website._render_template(
+                "website_sale.address_form_fields", address_form_values
+            ),
+            "billing_address_required_fields": ",".join(address_form_values["required_fields"]),
+        }
+
+    @route("/shop/payment/billing_address_form", type="jsonrpc", auth="public", website=True)
+    def shop_payment_billing_address_form_fields(self, partner_id=None, **_kwargs):
+        """Prepare the billing address form data of the payment page for the given address.
+
+        :param int partner_id: The billing address to fill the fields with, if any, as a
+                               `res.partner` id. If not set, the fields of a new address are
+                               rendered.
+        :return: The rendered address form fields and the comma-separated required fields.
+        :rtype: dict
+        :raise Forbidden: If the given address is not one of the customer's billing addresses.
+        """
+        if not (order_sudo := request.cart):
+            raise Forbidden
+
+        partner_sudo = self.env["res.partner"].sudo()
+        if partner_id:
+            addresses = self._prepare_address_data(order_sudo.partner_id, order_sudo=order_sudo)[
+                "addresses"
+            ]
+            partner_sudo = addresses.filtered(lambda p: p.id == int(partner_id))
+            if not partner_sudo:
+                raise Forbidden
+        return self._prepare_billing_address_form_data(order_sudo, partner_sudo)
 
     @route(
         "/shop/payment",
