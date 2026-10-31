@@ -87,7 +87,6 @@
                             data-hotkey="d" invisible="not is_template and state != 'done'"/>
                         <button name="action_preview" type="object" class="btn-secondary" string="Preview" data-hotkey="k" invisible="is_template or not body_html or is_body_empty or state == 'done'"/>
                         <button name="action_test" type="object" class="btn-secondary" string="Test" data-hotkey="t" invisible="is_template or not body_html or is_body_empty or state == 'done'"/>
-                        <button name="action_cancel" type="object" invisible="is_template or state != 'in_queue'" class="btn-secondary" string="Cancel" data-hotkey="x"/>
                         <div class="alert alert-info o_mass_mailing_alert_message mb-0 ms-2 py-1" role="alert"
                             invisible="is_template or state != 'in_queue' and scheduled == 0 and not warning_message">
                             <div class="o_mails_in_queue" invisible="state != 'in_queue'">
@@ -98,6 +97,9 @@
                                 <strong invisible="not next_departure_is_past or schedule_type == 'now'" class="d-flex align-items-center">
                                     <field name="next_departure_is_past" invisible="1"/>
                                     <span name="refresh_text">This mailing will be sent as soon as possible.</span>
+                                    <button name="action_cancel" type="object" class="btn btn-link pe-0">
+                                        <u>Cancel <i class="oi ms-1" data-icon="close"/></u>
+                                    </button>
                                     <button name="action_reload" type="object" class="btn btn-link pe-0">
                                         <u>Refresh <i class="oi ms-1" data-icon="refresh"/></u>
                                     </button>
@@ -106,6 +108,9 @@
                                     <field name="next_departure_is_past" invisible="1"/>
                                     <field name="schedule_type" invisible="1"/>
                                     <span name="mailing_schedule_type_now_text">This mailing will be sent as soon as possible.</span>
+                                    <button name="action_cancel" type="object" class="btn btn-link pe-0">
+                                        <u>Cancel <i class="oi ms-1" data-icon="close"/></u>
+                                    </button>
                                     <button name="action_reload" type="object" class="btn btn-link pe-0">
                                         <u>Refresh <i class="oi ms-1" data-icon="refresh"/></u>
                                     </button>

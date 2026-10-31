@@ -14,7 +14,7 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import RedirectWarning, ValidationError, UserError
 from odoo.fields import Domain
 from odoo.sql_db import Cursor
 from odoo.tests import Form, HttpCase, users, tagged
@@ -912,6 +912,44 @@ class TestMailingScheduleDateWizard(MassMailCommon):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMassMailingActions(MassMailCommon):
+
+    def test_cancel_mailing_cancels_outgoing_emails(self):
+        mailing = self.env['mailing.mailing'].create({'subject': 'A queued mailing'})
+        queued_mail, sent_mail = self.env['mail.mail'].sudo().create([{
+            'body_html': '<p>Hello</p>',
+            'email_from': 'from@example.com',
+            'email_to': 'to@example.com',
+            'mailing_id': mailing.id,
+            'state': state,
+            'subject': 'Test',
+        } for state in ('outgoing', 'sent')])
+        mailing.action_put_in_queue()
+
+        action = self.env.ref('mass_mailing.mailing_mailing_action_set_draft')
+        action.with_context(active_model=mailing._name, active_ids=mailing.ids).run()
+
+        self.assertEqual(mailing.state, 'draft')
+        self.assertEqual(queued_mail.state, 'cancel')
+        self.assertEqual(sent_mail.state, 'sent')
+
+    def test_cannot_edit_non_draft_mailing(self):
+        """Only draft mailings should accept content changes."""
+        mailing = self.env['mailing.mailing'].create({'subject': 'A mailing'})
+        mailing.write({'body_html': False, 'state': 'done', 'subject': 'An edited mailing'})
+        self.assertRecordValues(mailing, [{'state': 'done', 'subject': 'An edited mailing'}])
+
+        action_id = self.env.ref('mass_mailing.mailing_mailing_action_set_draft').id  # action to set mailing back to draft
+        for state in ('in_queue', 'sending', 'done'):
+            with self.subTest(state=state):
+                mailing.state = state
+                with self.assertRaises(RedirectWarning) as error:
+                    mailing.subject = 'Edited too late'
+
+                self.assertEqual(mailing.subject, 'An edited mailing')
+                self.assertEqual(error.exception.args[0], "Oops, you cannot edit a queued mailing.")
+                self.assertEqual(error.exception.args[1], action_id)
+                self.assertEqual(error.exception.args[3]['active_ids'], mailing.ids)
+
     def test_mailing_action_open(self):
         mass_mailings = self.env['mailing.mailing'].create([
             {'subject': 'First subject'},
