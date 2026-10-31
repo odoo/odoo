@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Step 1 of the reproducer. Stands in for whatever gives the company a
+             country before hr_holidays loads its own records: a localization
+             module, a chart template, or a company-setup data file. The value is
+             irrelevant, it only has to differ from the one in step 3. -->
+        <record id="base.main_company" model="res.company">
+            <field name="country_id" ref="base.us"/>
+        </record>
+    </data>
+</odoo>
