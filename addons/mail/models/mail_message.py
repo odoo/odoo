@@ -1038,6 +1038,7 @@ class MailMessage(models.Model):
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
             ])
+            message_domain |= Domain("id", "in", self._message_fetch_poll_messages(domain, search_term).ids)
             domain &= message_domain
         if search_term or is_filtered:
             res["count"] = self.search_count(domain)
@@ -1053,6 +1054,28 @@ class MailMessage(models.Model):
         if after:
             res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
+
+    def _message_fetch_poll_messages(self, domain, search_term):
+        start_poll_domain = Domain.OR([
+                [("poll_question", "ilike", search_term)],
+                [("option_ids.option_label", "ilike", search_term)],
+            ])
+        end_poll_domain = Domain.OR([
+                [("poll_question", "ilike", search_term)],
+                [("winning_option_id.option_label", "ilike", search_term)],
+            ])
+        # sudo: mail.poll - searching allowed polls for accessible records
+        # Search using only the start poll domain, since the start and end poll messages
+        # belong to the same poll, allowing us to include matching end poll messages as well.
+        start_poll_ids = self.env["mail.poll"].sudo().search(
+            Domain.OR([
+                [("start_message_id", "any", domain)],
+                [("end_message_id", "any", domain)],
+            ])
+            & start_poll_domain,
+        )
+        end_poll_ids = start_poll_ids.filtered_domain(end_poll_domain)
+        return start_poll_ids.start_message_id | end_poll_ids.end_message_id
 
     def _message_reaction(self, content, action, partner, guest, store: Store = None):
         self.ensure_one()
