@@ -277,7 +277,7 @@ test("float field in editable list view", async () => {
 
     await contains("tr.o_data_row td:not(.o_list_record_selector)").click();
     await contains('div[name="float_field"] input').edit("18.8958938598598", { confirm: false });
-    await contains(".o_control_panel_main_buttons .o_list_button_save").click();
+    await contains(".o_control_panel_main .o_list_button_save").click();
     expect(".o_field_widget:eq(0)").toHaveText("18.896", {
         message: "The new value should be rounded properly.",
     });
@@ -416,7 +416,7 @@ test("field with enable_formatting option as false in editable list view", async
     await contains('div[name="float_field"] input').edit("18.8958938598598", {
         confirm: false,
     });
-    await contains(".o_control_panel_main_buttons .o_list_button_save").click();
+    await contains(".o_control_panel_main .o_list_button_save").click();
     expect(".o_field_widget:eq(0)").toHaveText("18.8958938598598", {
         message: "The new value should not be rounded as well.",
     });

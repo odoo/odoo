@@ -131,7 +131,7 @@ export class DynamicList extends DataPoint {
         return unique(resIds);
     }
 
-    async leaveEditMode({ discard } = {}) {
+    async leaveEditMode({ discard, canAbandon } = {}) {
         let editedRecord = this.editedRecord;
         if (editedRecord) {
             let canProceed = true;
@@ -146,16 +146,20 @@ export class DynamicList extends DataPoint {
             } else {
                 let isValid = true;
                 if (!this.model._urgentSave) {
-                    isValid = await editedRecord.checkValidity();
+                    // Only show the invalid notification when we click
+                    // on save or new buttons
+                    isValid = await editedRecord.checkValidity({
+                        displayNotification: !canAbandon,
+                    });
                     editedRecord = this.editedRecord;
                     if (!editedRecord) {
                         return true;
                     }
                 }
-                if (editedRecord.isNew && !editedRecord.dirty) {
+                if (editedRecord.isNew && !editedRecord.dirty && canAbandon) {
                     this._removeRecords([editedRecord.id]);
-                } else if (isValid || editedRecord.dirty) {
-                    canProceed = await editedRecord.save();
+                } else {
+                    canProceed = isValid ? await editedRecord.save() : false;
                 }
             }
 
@@ -376,11 +380,16 @@ export class DynamicList extends DataPoint {
                 invalidRecords.push(record);
             }
         }
-        const discardInvalidRecords = () => invalidRecords.forEach((record) => record._discard());
+        const discardInvalidRecords = (excludeEditedRecord) =>
+            invalidRecords.forEach((record) => {
+                if (!excludeEditedRecord || editedRecord !== record) {
+                    record._discard();
+                }
+            });
 
         if (validRecords.length === 0) {
             editedRecord._displayInvalidFieldNotification();
-            discardInvalidRecords();
+            discardInvalidRecords(true);
             return false;
         }
 
@@ -426,7 +435,7 @@ export class DynamicList extends DataPoint {
         canProceed = await this.model.hooks.onAskMultiSaveConfirmation(_changes, validRecords);
         if (canProceed === false) {
             selectedRecords.forEach((record) => record._discard());
-            this.leaveEditMode({ discard: true });
+            this.leaveEditMode({ discard: true, canAbandon: true });
             return false;
         }
 

@@ -1,5 +1,5 @@
     import { stepUtils } from "@web_tour/tour_utils";
-    import { registry } from "@web/core/registry";
+import { registry } from "@web/core/registry";
     var inc;
 
     registry.category("web_tour.tours").add('widget_x2many', {
@@ -411,7 +411,7 @@
     },
     {
         content: "click on a field of the editable list to edit content",
-        trigger: '.o_field_widget[name=messages] .o_data_row:eq(1) td',
+        trigger: '.o_field_widget[name=messages] .o_data_row:eq(1) td:eq(1)',
         run: "click",
     }, {
         content: "change text value",
