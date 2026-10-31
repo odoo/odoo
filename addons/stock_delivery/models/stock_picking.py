@@ -30,10 +30,16 @@ class StockPicking(models.Model):
     destination_country_code = fields.Char(related='partner_id.country_id.code', string="Destination Country")
 
     def button_validate(self):
+        # Keep the pickings that are not validated yet: `button_validate` returns an
+        # action instead of `True` when there is something to show once the transfers
+        # are done (e.g. the reports the operation type prints automatically), so the
+        # carrier can not be propagated based on the returned value. Propagate on the
+        # pickings that reached the `done` state instead: when the action comes from a
+        # wizard (backorder confirmation) nothing was validated and there is nothing
+        # to propagate.
+        pickings = self.filtered(lambda p: p.state != 'done')
         res = super().button_validate()
-        if res is not True:
-            return res
-        for picking in self:
+        for picking in pickings.filtered(lambda p: p.state == 'done'):
             # `_get_new_picking_values` is used to propagate the carrier before a picking is created (i.e. carrier is set on an SO).
             # Whereas this case handles the propagation of carrier after the picking validation as the carrier maybe set
             # at later stages as well, specifically at the picking level rather than on the Sales Order.
