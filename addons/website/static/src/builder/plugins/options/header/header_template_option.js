@@ -67,6 +67,10 @@ export function isHeaderBgBlurAvailable(editingElement) {
     let bgGradient = getCSSVariableValue("menu-gradient", navStyle) || getMenuColor("bg-gradient");
     bgGradient = bgGradient === "none" ? "" : bgGradient;
 
+    return isBgBlurAvailable(bgColor, bgGradient);
+}
+
+export function isBgBlurAvailable(bgColor, bgGradient) {
     // Should be available if no color is defined (fully transparent).
     if (!bgColor && !bgGradient) {
         return true;

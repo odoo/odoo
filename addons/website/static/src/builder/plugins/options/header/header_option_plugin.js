@@ -1,9 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { HeaderTemplateChoice } from "./header_template_option";
+import { isColorGradient } from "@web/core/utils/colors";
+import { HeaderTemplateChoice, isBgBlurAvailable } from "./header_template_option";
 import { HeaderTopOptions } from "./header_top_options";
-import { WebsiteConfigAction } from "../../customize_website_plugin";
+import { CustomizeWebsiteColorAction, WebsiteConfigAction } from "../../customize_website_plugin";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 
@@ -27,6 +28,7 @@ export class HeaderOptionPlugin extends Plugin {
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
+            CustomizeHeaderBackgroundColorAction,
             HeaderTemplateConfigAction,
         },
         builder_header_middle_buttons: [
@@ -111,6 +113,23 @@ export class HeaderOptionPlugin extends Plugin {
 
     getHeaderTemplates() {
         return this.headerTemplates;
+    }
+}
+
+export class CustomizeHeaderBackgroundColorAction extends CustomizeWebsiteColorAction {
+    static id = "customizeHeaderBackgroundColor";
+
+    getAdditionalVariables({ value }) {
+        const gradient = isColorGradient(value) ? value : "";
+        const [, cssVariable, colorCombination] =
+            value.match(/^var\(--(.+?)\)$|^o_cc([1-5])$/) || [];
+        const variable = cssVariable || (colorCombination && `o-cc${colorCombination}-bg`);
+        if (variable) {
+            value = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
+        }
+        return !value || !isBgBlurAvailable(gradient ? "" : value, gradient)
+            ? { "header-bg-blur": "0" }
+            : {};
     }
 }
 
