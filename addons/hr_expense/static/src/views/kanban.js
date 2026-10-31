@@ -1,7 +1,7 @@
 import { registry } from '@web/core/registry';
 
 import { ExpenseDashboard } from "@hr_expense/components/expense_dashboard";
-import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from "@hr_expense/mixins/document_upload";
+import { ExpenseDocumentDropZone, useExpenseDocumentUploadInput } from "@hr_expense/document_upload/document_upload";
 
 import { kanbanView } from '@web/views/kanban/kanban_view';
 import { KanbanController } from '@web/views/kanban/kanban_controller';
@@ -10,11 +10,16 @@ import { user } from "@web/core/user";
 import { rpc } from "@web/core/network/rpc";
 import { onWillStart } from "@odoo/owl";
 
-export class ExpenseKanbanController extends ExpenseDocumentUpload(KanbanController) {
+export class ExpenseKanbanController extends KanbanController {
     static template = "hr_expense.KanbanView";
 
     setup() {
         super.setup();
+        this.expenseUpload = useExpenseDocumentUploadInput({
+            bus: this.env.bus,
+            viewType: () => this.env.config.viewType,
+            context: () => this.props.context,
+        });
         onWillStart(async () => {
             [this.userIsExpenseTeamApprover, this.userHasEmployee] = await Promise.all([
                 user.hasGroup("hr_expense.group_hr_expense_team_approver"),
