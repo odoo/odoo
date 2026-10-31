@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.tools import groupby
 
@@ -72,6 +74,14 @@ class AccountMove(models.Model):
         for so_dpl in downpayment_lines:
             so_dpl.price_unit = so_dpl._get_downpayment_line_price_unit(real_invoices)
             so_dpl.tax_id = so_dpl.invoice_lines.tax_ids
+
+        for invoice in self:
+            downpayment_moves = invoice.invoice_line_ids._get_downpayment_lines().move_id.filtered(lambda m: m != invoice)
+            if downpayment_moves:
+                invoice.message_post(body=_(
+                    "This invoice deducts the down payment(s): %s",
+                    Markup(', ').join(move._get_html_link() for move in downpayment_moves),
+                ))
 
         return res
 

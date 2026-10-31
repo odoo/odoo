@@ -12,6 +12,31 @@ class AccountEdiUBLCenEn16931(models.AbstractModel):
     # EXPORT: NODES
     # -------------------------------------------------------------------------
 
+    def _ubl_add_invoice_type_code_node(self, vals):
+        super()._ubl_add_invoice_type_code_node(vals)
+
+        invoice = vals['invoice']
+        if self._is_document(vals, 'invoice'):
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 386 if invoice._is_downpayment() else 380
+        elif self._is_document(vals, 'self_invoice'):
+            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 389
+
+    def _ubl_add_billing_reference_nodes(self, vals):
+        super()._ubl_add_billing_reference_nodes(vals)
+
+        if self._is_document(vals, 'invoice', 'self_invoice'):
+            invoice = vals['invoice']
+            downpayment_moves = invoice.invoice_line_ids._get_downpayment_lines().move_id.filtered(lambda m: m != invoice)
+
+            nodes = vals['document_node']['cac:BillingReference']
+            for downpayment_move in downpayment_moves:
+                nodes.append({
+                    'cac:InvoiceDocumentReference': {
+                        'cbc:ID': {'_text': downpayment_move.name},
+                        'cbc:IssueDate': {'_text': downpayment_move.invoice_date},
+                    },
+                })
+
     def _ubl_add_notes_nodes(self, vals):
         super()._ubl_add_notes_nodes(vals)
 
