@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="action_picking_type_list" model="ir.actions.act_window">
-        <field name="name">Operations Types</field>
+        <field name="name">Operation Types</field>
         <field name="res_model">stock.picking.type</field>
         <field name="view_mode">list,form</field>
         <field name="help" type="html">
@@ -30,7 +30,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_pickingtype" name="Operations Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="2"/>
+    <menuitem id="menu_pickingtype" name="Operation Types" parent="stock.menu_warehouse_config" action="action_picking_type_list" sequence="2"/>
 
     <menuitem
         action="stock_picking_type_action"
