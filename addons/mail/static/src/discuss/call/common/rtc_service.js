@@ -92,6 +92,7 @@ function subscribe(target, event, f) {
 }
 
 export const PTT_RELEASE_DURATION = 200;
+export const PTT_MUTED_WARNING_DELAY = 500;
 const RECORDING_CONNECTION_TIMEOUT = 15_000;
 const SW_MESSAGE_TYPE = {
     POST_RTC_LOGS: "POST_RTC_LOGS",
@@ -346,6 +347,10 @@ export class Rtc extends Record {
     disconnectMicAudioTrackListeners;
     /** @type {ReturnType<setTimeout>} */
     pttReleaseTimeout;
+    showPttMutedWarning = false;
+    isPttMutedWarningDismissed = false;
+    /** @type {ReturnType<setTimeout>} */
+    pttMutedWarningDelayTimeout;
     /**
      * Whether the network fell back to p2p mode in a SFU call.
      */
@@ -663,6 +668,17 @@ export class Rtc extends Record {
             { initialRun: false }
         );
         this.onChange(
+            () => [this.localSession?.isMute, this.store.settings.usePushToTalk],
+            function onChangeIsMute(isMute, usePushToTalk) {
+                if (!isMute || !usePushToTalk) {
+                    this.cancelPttMutedWarningTimeout();
+                    this.showPttMutedWarning = false;
+                    this.isPttMutedWarningDismissed = false;
+                }
+            },
+            { initialRun: false }
+        );
+        this.onChange(
             () => [this.store.settings.audioInputDeviceId],
             function onChangeAudioInputDeviceId(audioInputDeviceId) {
                 if (this.localSession) {
@@ -779,6 +795,7 @@ export class Rtc extends Record {
         if (!this.isPushToTalkRelease(ev)) {
             return;
         }
+        this.cancelPttMutedWarningTimeout();
         this.setPttReleaseTimeout();
     }
 
@@ -786,16 +803,21 @@ export class Rtc extends Record {
         if (!this.isPushToTalkRelease()) {
             return;
         }
+        this.cancelPttMutedWarningTimeout();
         this.setPttReleaseTimeout();
     }
 
     setPttReleaseTimeout(duration = PTT_RELEASE_DURATION) {
+        const releaseDelay = this.localSession?.isMute
+            ? duration
+            : Math.max(this.store.settings.voiceActiveDuration || 0, duration);
         this.pttReleaseTimeout = window.setTimeout(() => {
+            this.cancelPttMutedWarningTimeout();
             this.setTalking(false);
             if (!this.localSession?.isMute) {
                 this.soundEffects.play("ptt-release");
             }
-        }, Math.max(this.store.settings.voiceActiveDuration || 0, duration));
+        }, releaseDelay);
     }
 
     onPushToTalk() {
@@ -807,10 +829,26 @@ export class Rtc extends Record {
             return;
         }
         window.clearTimeout(this.pttReleaseTimeout);
-        if (!this.localSession.isTalking && !this.localSession.isMute) {
+        if (this.localSession.isMute) {
+            this.startPttMutedWarningTimeout();
+        } else if (!this.localSession.isTalking) {
             this.soundEffects.play("ptt-press");
         }
         this.setTalking(true);
+    }
+
+    startPttMutedWarningTimeout() {
+        if (this.pttMutedWarningDelayTimeout || this.isPttMutedWarningDismissed) {
+            return;
+        }
+        this.pttMutedWarningDelayTimeout = setTimeout(() => {
+            this.showPttMutedWarning = true;
+        }, PTT_MUTED_WARNING_DELAY);
+    }
+
+    cancelPttMutedWarningTimeout() {
+        window.clearTimeout(this.pttMutedWarningDelayTimeout);
+        this.pttMutedWarningDelayTimeout = undefined;
     }
 
     async openPip(options) {
@@ -2227,6 +2265,7 @@ export class Rtc extends Record {
         };
         this.audioContext = undefined;
         this._p2pRecoveryCount = 0;
+        this.cancelPttMutedWarningTimeout();
         this.closeCallPermissionDialog?.();
         this.updateAndBroadcastDebounce?.cancel();
         this.disconnectAudioMonitor?.();
@@ -2259,12 +2298,14 @@ export class Rtc extends Record {
             isMicAudioTrackMuted: false,
             isCallPermissionDialogOpen: false,
             isMicrophonePermissionWarningDismissed: false,
+            isPttMutedWarningDismissed: false,
             localChannel: undefined,
             localSession: undefined,
             micAudioTrack: undefined,
             screenAudioTrack: undefined,
             screenTrack: undefined,
             serverInfo: undefined,
+            showPttMutedWarning: false,
             updateAndBroadcastDebounce: undefined,
         });
         this.pipService?.closePip();
