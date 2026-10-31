@@ -17,4 +17,8 @@ class AccountJournal(models.Model):
             account_vals.setdefault('tag_ids', [])
             account_vals['tag_ids'].append((4, self.env.ref('l10n_nl.account_tag_25').id))
 
+            # Ensure the new liquidity accounts have the right RGS tag
+            rgs_code = 'BLimKasKas' if vals.get('type') == 'cash' else 'BLimBanRba'
+            account_vals['tag_ids'].append((4, self.env.ref(f'l10n_nl.l10n_nl_account_tag_rgs_{rgs_code}').id))
+
         return account_vals
