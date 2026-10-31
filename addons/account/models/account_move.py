@@ -2102,7 +2102,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         return 0
 
-    @api.depends('company_id', 'partner_id', 'tax_totals', 'currency_id')
+    @api.depends('company_id', 'partner_id', 'tax_totals', 'currency_id', 'state')
     def _compute_partner_credit_warning(self):
         for move in self:
             move = move.with_company(move.company_id)
