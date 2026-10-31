@@ -17,6 +17,8 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
+        'data/account_tax_report_data.xml',
         'data/ir_cron.xml',
         'views/account_move_views.xml',
         'views/res_bank.xml',
