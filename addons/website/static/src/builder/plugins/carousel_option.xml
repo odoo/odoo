@@ -66,28 +66,29 @@
 </t>
 
 <t t-name="website.CarouselItemHeaderMiddleButtons">
-    <button class="btn btn-primary ms-0 py-0 px-1 me-1"
+    <button class="btn btn-primary ms-0 py-0 px-1 me-1 o_slide_move_backward"
             title="Move Backward"
             aria-label="Move Backward"
-            t-att-class="{ disabled: !state.hasMultiItems }"
+            t-att-class="{ disabled: !domState.hasMultiItems or state.isTransitioning }"
             t-on-click="() => this.slide('prev')">
         <span class="fa fa-fw fa-angle-left"/>
     </button>
-    <button class="btn btn-primary py-0 px-1 me-2"
+    <button class="btn btn-primary py-0 px-1 me-2 o_slide_move_forward"
             title="Move Forward"
             aria-label="Move Forward"
-            t-att-class="{ disabled: !state.hasMultiItems }"
+            t-att-class="{ disabled: !domState.hasMultiItems or state.isTransitioning }"
             t-on-click="() => this.slide('next')">
         <span class="fa fa-fw fa-angle-right"/>
     </button>
-    <button class="btn btn-success ms-0 py-0 px-1 me-1"
+    <button class="btn btn-success ms-0 py-0 px-1 me-1 o_slide_add"
             title="Add Slide"
             aria-label="Add Slide"
+            t-att-class="{ disabled: state.isTransitioning }"
             t-on-click="addSlide">
         <span class="oi fa-fw oi-plus"/>
     </button>
-    <button class="btn btn-danger py-0 px-1"
-            t-att-class="{ disabled: !state.hasMultiItems }"
+    <button class="btn btn-danger py-0 px-1 o_slide_remove"
+            t-att-class="{ disabled: !domState.hasMultiItems or state.isTransitioning }"
             title="Remove Slide"
             aria-label="Remove Slide"
             t-on-click="removeSlide">
