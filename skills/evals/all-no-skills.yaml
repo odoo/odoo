@@ -1,0 +1,57 @@
+# Baseline for all.yaml: the same agents and tasks, with no skill attached. The
+# difference between the two jobs is what the skills change.
+#   cd skills/evals && harbor run -c all-no-skills.yaml
+jobs_dir: jobs
+n_attempts: 3
+n_concurrent_trials: 3
+
+# The judges that grade every task, pinned here so a run records them; a task
+# run alone with -p falls back to the judge set in its tests/*.toml.
+verifier:
+  env:
+    REWARDKIT_JUDGE: anthropic/claude-opus-5-5
+    REWARDKIT_REASONING_EFFORT: high
+
+agents:
+  - name: claude-code
+    model_name: anthropic/claude-haiku-5-5
+  - name: claude-code
+    model_name: anthropic/claude-sonnet-5-5
+  - name: claude-code
+    model_name: anthropic/claude-opus-5-5
+  # Open-weight models through OpenRouter's Anthropic-compatible API, on the
+  # same claude-code harness. model_name is OpenRouter's model id; the key is
+  # read from OPENROUTER_API_KEY and replaces the Anthropic one for these agents.
+  - name: claude-code
+    model_name: z-ai/glm-5.3
+    env: &openrouter
+      ANTHROPIC_BASE_URL: https://openrouter.ai/api
+      ANTHROPIC_API_KEY: ${OPENROUTER_API_KEY}
+      ANTHROPIC_AUTH_TOKEN: ${OPENROUTER_API_KEY}
+  - name: claude-code
+    model_name: moonshotai/kimi-k3
+    env: *openrouter
+  - name: codex
+    model_name: openai/gpt-6-luna
+  - name: codex
+    model_name: openai/gpt-6-sol
+  - name: codex
+    model_name: openai/gpt-6-astra
+
+tasks:
+  - path: ./odoo-git-fix-message-from-ticket
+    source: odoo-git
+  - path: ./odoo-git-fix-message-without-ticket
+    source: odoo-git
+  - path: ./odoo-security-audit-coverage
+    source: odoo-security
+  - path: ./odoo-security-review-pr-flaw
+    source: odoo-security
+  - path: ./odoo-stable-policy-fix-without-update
+    source: odoo-stable-policy
+  - path: ./odoo-review-guideline-recall
+    source: odoo-review
+  - path: ./odoo-stable-policy-backport-master-fixes
+    source: odoo-stable-policy
+  - path: ./odoo-guidelines-new-module-from-spec
+    source: odoo-guidelines

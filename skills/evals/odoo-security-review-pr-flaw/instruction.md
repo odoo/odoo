@@ -1,0 +1,1 @@
+I'm about to open a PR with the last commit on my branch, a change to the payment module allowing payment with a card saved by a colleague, in the Odoo checkout at /app. Could you review it for security first? Put your findings in /app/security_review.md, and don't change the code: I'll fix things myself.

@@ -1,0 +1,33 @@
+diff --git a/addons/l10n_it_stock_ddt/models/stock_picking.py b/addons/l10n_it_stock_ddt/models/stock_picking.py
+index 344d5ef6..6e5ac42f 100644
+--- a/addons/l10n_it_stock_ddt/models/stock_picking.py
++++ b/addons/l10n_it_stock_ddt/models/stock_picking.py
+@@ -21,7 +21,7 @@ class StockPicking(models.Model):
+     l10n_it_transport_method_details = fields.Char('Transport Note')
+     l10n_it_parcels = fields.Integer(string="Parcels", default=1)
+     l10n_it_ddt_number = fields.Char('DDT Number', readonly=True)
+-    l10n_it_country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
++    l10n_it_country_code = fields.Char(related="company_id.account_fiscal_country_id.code", string="DDT Country Code")
+     l10n_it_show_print_ddt_button = fields.Boolean(compute="_compute_l10n_it_show_print_ddt_button")
+ 
+     @api.depends('l10n_it_country_code',
+@@ -90,7 +90,7 @@ class StockPickingType(models.Model):
+     def write(self, vals):
+         if 'sequence_code' in vals:
+             for picking_type in self.filtered(lambda p: p.l10n_it_ddt_sequence_id):
+-                warehouse = picking_type.warehouse_id.id if 'warehouse_id' not in vals else vals['warehouse_ids']
++                warehouse = picking_type.warehouse_id.id if 'warehouse_id' not in vals else vals['warehouse_id']
+                 ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(warehouse, vals['sequence_code'])
+                 picking_type.l10n_it_ddt_sequence_id.write({
+                         'name': ir_seq_name,
+diff --git a/addons/l10n_it_stock_ddt/tests/test_ddt.py b/addons/l10n_it_stock_ddt/tests/test_ddt.py
+index f0c8768e..cf5e6682 100644
+--- a/addons/l10n_it_stock_ddt/tests/test_ddt.py
++++ b/addons/l10n_it_stock_ddt/tests/test_ddt.py
+@@ -188,5 +188,5 @@ class TestDDT(TestSaleCommon):
+         self.assertEqual(picking_type.l10n_it_ddt_sequence_id.prefix, 'MOUTDDT')
+         self.assertEqual(picking_type.l10n_it_ddt_sequence_id.name, 'Milano Sequence MOUT')
+ 
+-        name, prefix = picking_type._get_dtt_ir_seq_vals(warehouse, 'MOUT')
++        name, prefix = picking_type._get_dtt_ir_seq_vals(warehouse.id, 'MOUT')
+         self.assertEqual((name, prefix), ('Milano Sequence MOUT', 'MOUTDDT'))

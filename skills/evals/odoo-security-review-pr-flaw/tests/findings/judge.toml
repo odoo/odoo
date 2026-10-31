@@ -1,0 +1,93 @@
+# LLM judge on the review of the PR. The PR widens the token ownership check
+# of /payment/transaction from same-commercial-partner to same-company; any
+# two partners without a company satisfy the comparison, which brings back
+# CVE-2021-23178. Recall (the issue is found, fixed, rated) and precision
+# (nothing else in the diff is reported as a vulnerability it introduces)
+# both count.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/security_review.md", "/logs/verifier/pr.diff"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "widened_check_allows_any_partner"
+type = "binary"
+description = """
+The review in /logs/verifier/security_review.md reports that the PR's
+company-level comparison (the added second condition on
+`partner.company_id != token.partner.company_id` in the `flow == 'token'`
+branch of `_create_transaction` in addons/payment/controllers/portal.py)
+does not restrict the payment to partners of the same company as intended:
+`res.partner.company_id` is unset for most customer partners, and two
+unset companies compare equal, so the condition is False and the check
+never raises. Any customer can thus charge any other customer's saved
+card through /payment/transaction (the access token authenticates the
+paying partner, not the token owner). Naming the missing partner-level
+ownership check passes; a general remark about sudo in the controller, or
+about the access token, does not.
+"""
+
+[[criterion]]
+name = "fix_restores_partner_ownership"
+type = "binary"
+description = """
+For that issue, the review proposes a fix restoring partner-level
+ownership: comparing the paying partner (or their commercial partner)
+with the token's partner and raising on mismatch, or restricting the
+same-company allowance to partners that both have a company set (and
+then only partners whose companies are related, or the same record).
+Reverting the PR's change, or dropping its company clause, passes: it
+restores the original commercial-partner comparison, which raises on
+mismatch; no new code is needed. Dropping sudo alone, or keeping
+company-level equality as the only condition, fails. If the issue is not
+reported, this fails.
+"""
+
+[[criterion]]
+name = "severity_high"
+type = "binary"
+description = """
+The review rates that issue High or Critical (or its top severity level). A
+Medium or lower rating, or an unrated mention, fails. If the issue is not
+reported, this fails.
+"""
+
+[[criterion]]
+name = "attributed_to_the_pr"
+type = "binary"
+description = """
+The review says the widened check is introduced by this PR (the commit
+added the company comparison when reworking the ownership check), rather
+than presenting it as a pre-existing issue of the module. If the issue is
+not reported, this fails.
+"""
+
+[[criterion]]
+name = "no_false_positives"
+type = "binary"
+description = """
+The widened ownership check is the only security issue the PR introduces.
+The review does not report other parts of the diff as vulnerabilities the
+PR introduces: the sudo browse of the token predates the PR and is
+legitimate once the ownership check is correct, the company story itself
+is a real feature. Remarks about behaviour that predates the PR pass
+when presented as pre-existing or as hardening suggestions, and fail when
+presented as introduced by this PR.
+Findings that share the widened check's root cause, the company
+comparison, are not false positives, even when listed as separate findings
+or rated High: a restatement of it, another consequence of it (customers
+of the same company, internal users, a nonexistent token_id slipping
+through), or the remark that the change is not needed for the feature.
+Remarks on the design, the tests or the commit that claim no further
+vulnerability pass too. Only a vulnerability with another root cause,
+presented as introduced by this PR, fails.
+"""
+
+[[criterion]]
+name = "findings_actionable"
+type = "binary"
+description = """
+Each finding in the review gives a severity, an exact location (file and
+line, method, or route), and a minimal fix, as the odoo-security skill asks.
+"""

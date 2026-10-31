@@ -1,11 +1,11 @@
 ---
 name: odoo-guidelines
 description: >-
-  House rules for Odoo addon code: module structure, manifest, Python/ORM,
-  fields, controllers, XML views and data, QWeb reports, access rights and
-  record rules, performance, tests. Use when writing or reviewing any file in
-  an Odoo addon outside static/ (for the JavaScript, Owl templates and SCSS
-  under static/, see odoo-web-guidelines).
+  House rules for Odoo addon code: which module code goes in, module
+  structure, manifest, Python/ORM, fields, controllers, XML views and data,
+  QWeb reports, access rights and record rules, performance, tests. Use when
+  writing or reviewing any file in an Odoo addon outside static/ (for the
+  JavaScript, Owl templates and SCSS under static/, see odoo-web-guidelines).
 ---
 
 # Odoo addon guidelines
@@ -20,6 +20,7 @@ touching instead of loading whole files.
 
 | Guideline | Read it when |
 | --- | --- |
+| [Put code in the module that owns its concern](guidelines/architecture.md#put-code-in-the-module-that-owns-its-concern) | starting a feature or a fix, before writing code: deciding which module each part goes in, or whether to add a module |
 | [Module structure and file naming](guidelines/module_structure.md#module-structure-and-file-naming) | creating or moving files in an addon, or adding a module |
 | [Manifest](guidelines/manifest.md#manifest) | touching `__manifest__.py` |
 | [Imports](guidelines/python.md#imports) | writing Python anywhere in an addon |
@@ -39,6 +40,10 @@ touching instead of loading whole files.
 | [Performance conventions](guidelines/performance.md#performance-conventions) | code that loops over records or filters query results |
 | [Tests](guidelines/tests.md#tests) | touching `tests/` |
 | [Plain ASCII punctuation in comments and messages](guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages) | writing a comment, a docstring, a user-facing string, or a commit message |
-| [Changes in a stable version](guidelines/stable.md#changes-in-a-stable-version) | any change targeting a released branch rather than master |
+| [Comment a deviation the requirements force](guidelines/comments.md#comment-a-deviation-the-requirements-force) | a requirement (spec, ticket, caller) makes the code break one of these guidelines |
+
+A change to a released version (17.0, saas-19.4, ...) also follows the
+`odoo-stable-policy` skill, which says how to tell a released version from
+master.
 
 To add or restructure a guideline, follow [AUTHORING.md](AUTHORING.md).

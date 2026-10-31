@@ -1,0 +1,17 @@
+[FIX] l10n_it_stock_ddt: crash when renaming a warehouse sequence
+
+Steps to reproduce:
+- In an Italian company, open the Delivery Orders operation type of a
+  warehouse
+- Change its sequence prefix and its warehouse in the same write
+
+A KeyError: 'warehouse_ids' is raised: write() reads the wrong key when
+the warehouse is part of the values, so the DDT sequence cannot be
+renamed, and test_ddt_sequence_follows_warehouse fails on the l10n
+build.
+
+Master fixes the key in 9e2d7c4b1a6f and, while at it, passes the
+warehouse record to _get_dtt_ir_seq_vals instead of its id. Only the
+key is fixed here: on a released version the method keeps its
+signature, extension modules may override it or call it with an id.
+The test is adapted to call it as 20.0 defines it.

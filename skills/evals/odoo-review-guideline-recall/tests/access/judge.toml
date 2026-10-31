@@ -1,0 +1,76 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Access rights.
+# Rules: odoo-guidelines guidelines/security.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "ac1_wizard_no_access_row"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/security/ir.access.csv`:
+The extend wizard equipment.booking.extend has no ir.access row: with
+default deny, users other than the superuser cannot use it.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ac2_portal_crud"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/security/ir.access.csv`, line 4:
+base.group_portal is granted crud on equipment.booking, with no domain:
+every portal user can read, create, edit and delete every booking through
+RPC.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ac3_company_restriction"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/security/ir.access.csv`:
+equipment.booking has a company_id but no group-less company restriction row
+([('company_id', 'in', company_ids)]).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "ac4_partial_restriction"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/security/ir.access.csv`, line 6:
+The restriction row on equipment.booking.lines covers only r, while
+base.group_user is granted crud: a user can still write and delete lines of
+other users' bookings they cannot read (and the read restriction applies to
+managers too). Cover every operation that needs restricting.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

@@ -1,0 +1,34 @@
+# Findings judge, False positives and the shape of the findings.
+# One file per group: a single judge call with every criterion exceeds the
+# structured-output size the API accepts. The answer key is solution/security_review.md.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/security_review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "no_false_positives"
+type = "binary"
+description = """
+The review does not report these correct constructs as vulnerabilities:
+_compute_active_lease_count in models/rental_property.py (SQL composed with
+the SQL wrapper on an ORM _search query); the commented sudo in
+_compute_property_name reading only the property name; csrf=False on
+/rental/listing/sync, a token-authenticated webhook comparing the token with
+consteq (reporting the pickle in that route is correct, not a false positive);
+the groups='base.group_system' attribute on the listing_signing_key field
+itself (reporting that the public method get_listing_signing_key reads the key
+with sudo or returns it is a planted issue, not a false positive). Mentioning
+the correct constructs as reviewed and fine, or as hardening suggestions
+clearly marked as such, passes.
+"""
+
+[[criterion]]
+name = "findings_actionable"
+type = "binary"
+description = """
+Each finding in the review gives a severity, an exact location (file and
+line, method, or route), and a minimal fix, as the odoo-security skill asks.
+Most findings having all three passes; a list of bare issue names fails.
+"""

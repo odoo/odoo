@@ -1,0 +1,36 @@
+schema_version = "1.4"
+
+[task]
+name = "odoo/odoo-stable-policy-fix-without-update"
+description = "Fix missing tracking separators in notification emails on the stable 20.0 branch, so that the fix works on a database that is not updated."
+keywords = ["odoo", "stable", "bug-fix", "skills", "odoo-stable-policy", "odoo-git"]
+
+[metadata]
+skill = "odoo-stable-policy"
+odoo_version = "20.0"
+# The checkout is 20.0 at this commit, with the stable fix (87e57ed44969) and
+# its master cleanup (8a2f76a796d6) reverted and folded into that commit.
+upstream_commit = "df9daf5ea0b5d8f40389757cd8cdc78c81cf17d4"
+# The reference is the stable fix: it rebuilds the tracking template's output
+# in Python, because a database that is not updated keeps the old template.
+reference_commit = "87e57ed449690a73f44141b7776df2e6ef33244a"
+
+[verifier]
+# The verifier installs test_mail on the base code, then checks the agent's
+# code without and with a module update, and runs the tracking tests.
+timeout_sec = 2400.0
+# The verifier reads the agent's commit as root; test.sh marks /app safe.
+user = "root"
+
+[verifier.env]
+# The LLM judges in tests/fix, tests/message and tests/process need it.
+ANTHROPIC_API_KEY = "${ANTHROPIC_API_KEY}"
+
+[agent]
+# Long enough to install mail and run its tests.
+timeout_sec = 2400.0
+
+[environment]
+build_timeout_sec = 2400.0
+cpus = 2
+memory_mb = 4096

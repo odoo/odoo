@@ -1,0 +1,1695 @@
+===== addons/printer/__init__.py =====
+from . import models
+from . import wizard
+
+===== addons/printer/__manifest__.py =====
+{
+    "name": "Printer",
+    "summary": "Base module to manage external printers (e.g. ePOS, ZPL)",
+    "version": "0.1",
+    "depends": ["base"],
+    "author": "Odoo S.A.",
+    "license": "LGPL-3",
+    "data": [
+        "views/ir_actions_report.xml",
+        "views/printer_views.xml",
+        "wizard/select_printers_wizard.xml",
+        "security/ir.access.csv",
+    ],
+    'demo': [
+        'demo/printers.xml'
+    ],
+    "assets": {
+        "web.assets_backend": [
+            "printer/static/src/**/*",
+        ],
+        'web.assets_unit_tests': [
+            'printer/static/tests/unit/**/*',
+        ],
+        'printer.assets_tests': [
+            'printer/static/tests/tours/**/*',
+        ],
+    },
+}
+
+===== addons/printer/demo/printers.xml =====
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="zebra_printer_demo" model="printer.printer">
+            <field name="name">Emulated Zebra</field>
+            <field name="ip_address">localhost:8080</field>
+            <field name="type">zpl</field>
+        </record>
+        <record id="epos_printer_demo" model="printer.printer">
+            <field name="name">Emulated ePOS</field>
+            <field name="ip_address">pos.stva.ovh/label</field>
+            <field name="type">epos</field>
+        </record>
+    </data>
+</odoo>
+
+===== addons/printer/models/__init__.py =====
+from . import printer
+from . import ir_actions_report
+
+===== addons/printer/models/ir_actions_report.py =====
+import base64
+from io import BytesIO
+from PIL import Image, ImageOps
+
+from odoo import api, fields, models, _
+
+epos_template = """
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+    <s:Body>
+        <epos-print xmlns="http://www.epson-pos.com/schemas/2011/03/epos-print">
+            <image width="576" height="%s" align="center">%s</image>
+            <cut type="feed" />
+        </epos-print>
+    </s:Body>
+</s:Envelope>
+"""
+
+
+def thermal_printer_format(data) -> bytes:
+    """Render the report and convert it to a black and white image
+    with a width of 576px to fit the ePOS printer paper width"""
+    img = Image.open(BytesIO(data)).convert("L")  # convert to grayscale
+
+    if img.width > img.height:
+        img = img.rotate(90, expand=True)  # ensure portrait mode
+
+    target_width = 576
+    ratio = target_width / img.width
+    target_height = int(img.height * ratio)  # Preserve aspect ratio
+    img = (
+        ImageOps.invert(img)
+        .resize((target_width, target_height), Image.Resampling.LANCZOS)
+        .convert("1", dither=Image.Dither.FLOYDSTEINBERG)
+    )
+    base64_image = base64.b64encode(img.tobytes()).decode()
+
+    return (epos_template % (target_height, base64_image)).encode()
+
+
+class IrActionsReport(models.Model):
+    _inherit = "ir.actions.report"
+
+    printer_ids = fields.Many2many("printer.printer", string="Printers")
+
+    @api.model
+    def get_print_jobs(self, report_name, docids, data) -> list:
+        """Method to render reports for printers.
+
+        This method is meant to be overridden by modules adding support
+        for specific printer types (e.g. IoT).
+
+        By default, we render ZPL reports as-is. Any qweb-pdf report linked to an
+        ePOS printer is rendered to an image instead: HTML -> wkhtmltoimage -> thermal
+        format.
+        """
+        report = self._get_report(report_name)
+
+        def has_printer(printer_type):
+            return bool(report.printer_ids.filtered(lambda p: p.type == printer_type))
+
+        jobs = []
+        if report.report_type == "qweb-text" and "zpl" in report.name.lower() and has_printer("zpl"):
+            jobs.append({"type": "zpl", "report": base64.b64encode(self._render(report_name, docids, data=data)[0])})
+        elif report.report_type == "qweb-pdf" and has_printer("epos"):
+            html = self._render_qweb_html(report_name, docids, data=data)[0].decode()
+            # Reports reference relative URLs (e.g. the barcode widget's <img src="/report/barcode/...">),
+            # which wkhtmltoimage can't resolve without a <base href> since it renders a standalone local file.
+            base_url = self._get_report_url()
+            html = html.replace("<head>", f'<head><base href="{base_url}"/>', 1)
+            image = self._run_image_engine("wkhtmltopdf", [html], 576, 0)[0]
+            if image:
+                jobs.append({"type": "epos", "report": base64.b64encode(thermal_printer_format(image))})
+
+        return jobs
+
+    def _read_format(self, *args, **kwargs):
+        """Override to add printer IPs and jobs to the context,
+        in order to avoid a second RPC call to get attachments"""
+        res = super()._read_format(*args, **kwargs)
+        docids = self.env.context.get("active_ids") or []
+        if not kwargs.get("load") or not len(self.printer_ids.exists()) or not docids:
+            return res
+
+        jobs = self.get_print_jobs(
+            self.report_name, docids, {}
+        )
+        for record in res:
+            record.setdefault("context", {})
+            record["context"].update({"report_id": self.id, "jobs": jobs})
+        return res
+
+    def report_action(self, docids=None, data=None, config=True):
+        res = super().report_action(docids, data, config)
+        if not len(self.printer_ids.exists()):
+            return res
+
+        res["context"] = {
+            **dict(res.get("context", {})),
+            "report_id": self.id,
+            "jobs": self.get_print_jobs(self.report_name, docids, data),
+        }
+        return res
+
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "printer_ids",
+        }
+
+    def get_select_printer_wizard(self, cached: dict | None = None):
+        """Wizard to select printers before printing a report
+
+        :param cached: printers already selected by the user,
+            saved in local storage
+        """
+        self.ensure_one()
+        cached = cached or {}
+        selected_printers = {p["id"] for p in cached.get("selectedPrinters", [])}
+        # Filter out printers that are deleted/no longer linked to the report
+        printer_ids = self.printer_ids.filtered(lambda p: p.id in selected_printers)
+        wizard = self.env["select.printers.wizard"].create(
+            [
+                {
+                    "printer_ids": printer_ids.ids,
+                }
+            ]
+        )
+        return {
+            "name": _("Select Printers for %s", self.name),
+            "res_id": wizard.id,
+            "type": "ir.actions.act_window",
+            "res_model": "select.printers.wizard",
+            "target": "new",
+            "views": [[False, "form"]],
+            "context": {
+                "report_id": self.id,
+                # make printer info available to wizard without doing another RPC call
+                "printer_ids": self.printer_ids.read(["id", "ip_address", "type", "name"]),
+                "available_printer_ids": self.printer_ids.ids,
+            },
+        }
+
+===== addons/printer/models/printer.py =====
+from odoo import api, models, fields
+
+
+class Printer(models.Model):
+    _name = "printer.printer"
+    _description = "External Printer"
+
+    name = fields.Char(required=True)
+    ip_address = fields.Char(string="IP Address")
+    report_ids = fields.Many2many("ir.actions.report", string="Linked Reports")
+    type = fields.Selection([
+            ("zpl", "ZPL"),
+            ('epos', 'ePOS'),
+        ],
+        default="zpl", required=True, string="Type"
+    )
+
+    @api.depends('name', 'type')
+    @api.depends_context('formatted_display_name')
+    def _compute_display_name(self):
+        for printer in self:
+            type_label = next(label for value, label in printer._fields["type"].selection if value == printer.type)
+            if printer.env.context.get("formatted_display_name"):
+                printer.display_name = f"{type_label} - {printer.name}"
+            else:
+                printer.display_name = printer.name
+
+===== addons/printer/security/ir.access.csv =====
+id,name,model_id,group_id/id,operation,domain
+access_select_printers_wizard_user,printer.select.printers.wizard,select.printers.wizard,base.group_user,cru,
+access_printer_user,printer.printer,printer.printer,base.group_user,cru,
+
+===== addons/printer/static/src/client_actions/reset_cached_printers.js =====
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { Component, onWillStart, proxy, useProps } from "@odoo/owl";
+
+class ReportPrintersLocalStorage extends Component {
+    static template = "printer.ReportPrintersLocalStorage";
+    props = useProps(standardActionServiceProps);
+
+    setup() {
+        this.orm = useService("orm");
+        this.printersCache = useService("report_printers_cache");
+        this.state = proxy({ reports: [] });
+
+        onWillStart(async () => {
+            this.state.reports = await this.orm.searchRead("ir.actions.report", [
+                ["id", "in", Object.keys(this.printersCache.cache || [])],
+            ]);
+        });
+    }
+    removeFromCache(id) {
+        this.printersCache.unCacheReport(id);
+        this.state.reports = this.state.reports.filter((report) => report.id !== id);
+    }
+}
+
+registry.category("actions").add("reset_linked_printers", ReportPrintersLocalStorage);
+
+===== addons/printer/static/src/client_actions/reset_cached_printers.xml =====
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="printer.ReportPrintersLocalStorage">
+        <div class="container mt-4">
+            <h2>Reports with linked printers</h2>
+            <div class="mt-3">
+                <p t-if="!this.state.reports.length">No report to display</p>
+                <div class="card mb-3"  t-foreach="this.state.reports" t-as="report" t-key="report.id">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <h5 class="card-title m-0" t-out="report.name" />
+                        <button class="btn btn-primary" t-on-click="() => this.removeFromCache(report.id)">Reset Linked Printers</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
+
+===== addons/printer/static/src/print_action_handler.js =====
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
+
+const base64Decode = (base64) => {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return new TextDecoder("utf-8").decode(bytes);
+}
+
+
+const baseRequestParams = (report) => {
+    return {
+        method: "POST",
+        body: report,
+        signal: AbortSignal.timeout(15000),
+    }
+}
+
+
+/**
+ * Zebra printers host a web server that accepts print jobs
+ * This server has not been updated to handle CORS preflight requests,
+ * so we have to use "no-cors" mode and can't check the response status.
+ */
+async function zplPrint(ip, report) {
+    const params = {
+        ...baseRequestParams(report),
+        headers: {
+            "Content-Length": report.length,
+            "Content-Type": "text/plain; charset=utf-8",
+        },
+        mode: "no-cors",
+    };
+
+    try {
+        await fetch(`http://${ip}/pstprnt`, params);
+        return { result: true };
+    } catch {
+        return { result: false };
+    }
+}
+
+async function ePosPrint(ip, report) {
+    try {
+        const res = await fetch(
+            `http://${ip}/cgi-bin/epos/service.cgi?devid=local_printer`,
+            baseRequestParams(report),
+        );
+        const body = await res.text();
+        const parser = new DOMParser();
+        const parsedBody = parser.parseFromString(body, "application/xml");
+        const response = parsedBody.querySelector("response");
+        return {
+            result: response.getAttribute("success") === "true",
+            errorCode: response.getAttribute("code"),
+        };
+    } catch {
+        return {
+            result: false,
+            errorCode: "",
+        };
+    }
+}
+
+export async function printJobs(printer, jobs, { notification }) {
+    jobs = [...jobs]; // copy to allow using the same array for multiple printers
+    // print jobs one by one and retry if the printers is waiting for the user to eject the paper
+    while (jobs.length > 0) {
+        const job = jobs.at(-1);
+        if (job.type !== printer.type) {
+            jobs.pop();
+            continue;
+        }
+        const print = job.type === "epos" ? ePosPrint : zplPrint;
+        const res = await print(printer.ip_address, base64Decode(job.report));
+
+        if (res.result) {
+            jobs.pop();
+            continue;
+        }
+
+        if (res.errorCode === "ERROR_WAIT_EJECT") {
+            await new Promise(r => setTimeout(r, 1000));
+            continue;
+        }
+
+        notification.add(_t(
+                "Error occurred while printing the document. Please check the printer and try again: %s",
+                res.errorCode
+            ), {
+                type: "danger",
+            },
+        );
+        jobs.pop();
+    }
+}
+
+const printerTypeRegistry = registry.category("printer.type.handlers");
+printerTypeRegistry.add("epos", (printer, _duplex, jobs, services) => printJobs(printer, jobs, services));
+printerTypeRegistry.add("zpl", (printer, _duplex, jobs, services) => printJobs(printer, jobs, services));
+
+async function printActionHandler(action, options, { services }) {
+    const printersCache = services.report_printers_cache;
+    const { report_id, jobs } = action.context;
+    if (!jobs?.length) {
+        return false;
+    }
+
+    const printerSettings = await printersCache.getPrinterSettingsForReport(report_id);
+    if (!printerSettings?.selectedPrinters) {
+        // If the user does not select any printer, fall back to normal printing
+        return false;
+    }
+
+    for (const printer of printerSettings.selectedPrinters) {
+        const handler = printerTypeRegistry.get(printer.type);
+        await handler?.(printer, printerSettings.duplex, jobs, services);
+    }
+    options.onClose?.();
+    return true;
+}
+
+registry
+    .category("ir.actions.report handlers")
+    .add("print_action_handler", printActionHandler);
+
+===== addons/printer/static/src/services/report_printers_cache.js =====
+import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
+
+const STORAGE_KEY = "odoo_reports_printer";
+
+function readFromStorage() {
+    try {
+        return JSON.parse(browser.localStorage.getItem(STORAGE_KEY) || "{}");
+    } catch {
+        return {};
+    }
+}
+
+function writeToStorage(cache) {
+    if (Object.keys(cache).length === 0) {
+        browser.localStorage.removeItem(STORAGE_KEY);
+    } else {
+        browser.localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+    }
+}
+
+/** @satisfies {import("registries").ServicesRegistryItemShape} */
+export const reportPrintersCacheService = {
+    dependencies: ["action", "orm", "ui"],
+
+    start(env, { action, orm, ui }) {
+        let cache = readFromStorage(); // hydrated once
+
+        function writeCache(newCache) {
+            cache = newCache;
+            writeToStorage(newCache);
+        }
+
+        return {
+            get cache() {
+                return cache;
+            },
+
+            unCacheReport(reportId) {
+                const updated = { ...cache };
+                delete updated[reportId];
+                writeCache(updated);
+            },
+
+            async getPrinterSettingsForReport(reportId) {
+                const deviceSettings = cache[reportId];
+
+                if (deviceSettings?.skipDialog) {
+                    return deviceSettings;
+                }
+
+                const openDeviceSelectionWizard = await orm.call(
+                    "ir.actions.report",
+                    "get_select_printer_wizard",
+                    [reportId, deviceSettings]
+                );
+                await action.doAction(openDeviceSelectionWizard);
+
+                const uiWasBlocked = ui.isBlocked;
+                if (uiWasBlocked) {
+                    ui.unblock();
+                }
+
+                return new Promise((resolve) => {
+                    const onPrinterSelected = ({ detail }) => {
+                        if (detail.reportId !== reportId) {
+                            return;
+                        }
+
+                        const { deviceSettings: newSettings } = detail;
+                        if (newSettings) {
+                            writeCache({ ...cache, [reportId]: newSettings });
+                        }
+                        env.bus.removeEventListener("printer-selected", onPrinterSelected);
+                        if (uiWasBlocked) {
+                            ui.block();
+                        }
+                        resolve(newSettings ?? null);
+                    };
+                    env.bus.addEventListener("printer-selected", onPrinterSelected);
+                });
+            },
+        };
+    },
+};
+
+registry.category("services").add("report_printers_cache", reportPrintersCacheService);
+
+===== addons/printer/static/src/wizard/select_printers_wizard.js =====
+import { onWillUnmount } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
+import { FormController } from "@web/views/form/form_controller";
+import { formView } from "@web/views/form/form_view";
+import {
+    provideViewButtonHandler,
+    useViewButtonHandler,
+} from "@web/views/view_button/view_button_hook";
+
+export class SelectPrintersWizard extends FormController {
+    setup() {
+        super.setup();
+        this.notification = useService("notification");
+        this.printersCache = useService("report_printers_cache");
+        this.onClickViewButton = useViewButtonHandler();
+
+        onWillUnmount(() => {
+            // If the user closes the popup without selecting a printer we still send a message back
+            this.env.bus.trigger("printer-selected", {
+                reportId: this.props.context.report_id,
+                deviceSettings: null,
+            });
+        });
+        provideViewButtonHandler(this.onClickPrinterSelectionSaveButton.bind(this));
+    }
+
+    get extractSettings() {
+        const { printer_ids, do_not_ask_again } = this.model.root.evalContextWithVirtualIds;
+        return {
+            selectedPrinters: this.props.context.printer_ids.filter((p) =>
+                printer_ids.includes(p.id)
+            ),
+            skipDialog: do_not_ask_again,
+        };
+    }
+
+    async onClickPrinterSelectionSaveButton(params) {
+        const deviceSettings = this.extractSettings;
+        if (deviceSettings.selectedPrinters.length > 0) {
+            this.env.bus.trigger("printer-selected", {
+                reportId: this.props.context.report_id,
+                deviceSettings,
+            });
+            this.onClickViewButton(params);
+        } else {
+            this.notification.add(_t("Select at least one printer"), {
+                type: "danger",
+            });
+        }
+    }
+}
+
+export const selectPrinterForm = {
+    ...formView,
+    Controller: SelectPrintersWizard,
+};
+
+registry.category("views").add("select_printers_wizard", selectPrinterForm);
+
+===== addons/printer/static/tests/tours/test_print_label_epos_tour.js =====
+import { registry } from "@web/core/registry";
+import * as PrinterUtils from "@printer/../tests/tours/utils";
+
+registry.category("web_tour.tours").add("print_label_epos_tour", {
+    steps: () =>
+        [
+            PrinterUtils.mockPrinterRequest(),
+            {
+                content: "Click cog icon",
+                trigger: ".o_cp_action_menus .dropdown-toggle",
+                run: "click",
+            },
+            {
+                content: "Click 'Print' section",
+                trigger: ".o-dropdown-item:contains('Print')",
+                run: "click",
+            },
+            {
+                content: "Click 'Shipping Labels' action",
+                trigger: ".o-dropdown-item:contains('Shipping Labels')",
+                run: "click",
+            },
+            {
+                content: "Click the printer field to later select the printer",
+                trigger: "div[name='printer_ids'] input",
+                run: "edit Test Epson Printer",
+            },
+            {
+                content: "Click the printer field to later select the printer",
+                trigger: "a span span:contains('Test Epson Printer')",
+                run: "click",
+            },
+            {
+                content: "Check printer has been selected before clicking 'Print'",
+                trigger: ".o_tag_badge_text:contains('Test Epson Printer')",
+            },
+            {
+                content: "Click 'Print'",
+                trigger: ".modal-footer .btn-primary:contains('Print')",
+                run: "click",
+            },
+            {
+                content: "Wait for the print request to be sent",
+                trigger: "body",
+                run: async () => {
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
+                },
+            }
+        ].flat(),
+});
+
+===== addons/printer/static/tests/tours/test_print_label_zebra_tour.js =====
+import { registry } from "@web/core/registry";
+import * as PrinterUtils from "@printer/../tests/tours/utils";
+
+registry.category("web_tour.tours").add("print_label_zebra_tour", {
+    steps: () =>
+        [
+            PrinterUtils.mockPrinterRequest(),
+            {
+                content: "Click cog icon",
+                trigger: ".o_cp_action_menus .dropdown-toggle",
+                run: "click",
+            },
+            {
+                content: "Click 'Print Label' action",
+                trigger: ".o-dropdown-item:contains('Print Label')",
+                run: "click",
+            },
+            {
+                content: "Select 'ZPL Labels' option",
+                trigger: ".o_field_widget[name='print_format'] .o_radio_input[data-value='zpl']",
+                run: "click",
+            },
+            {
+                content: "Click 'Print'",
+                trigger: ".modal-footer .btn-primary:contains('Print')",
+                run: "click",
+            },
+            {
+                content: "Click the printer field to later select the printer",
+                trigger: "div[name='printer_ids'] input",
+                run: "edit Test Zebra Printer",
+            },
+            {
+                content: "Click 'Test Zebra Printer' in the dropdown",
+                trigger: "a span span:contains('Test Zebra Printer')",
+                run: "click",
+            },
+            {
+                content: "Check printer has been selected before clicking 'Print'",
+                trigger: ".o_tag_badge_text:contains('Test Zebra Printer')",
+            },
+            {
+                content: "Click 'Print'",
+                trigger: ".modal-footer .btn-primary:contains('Print')",
+                run: "click",
+            },
+            {
+                content: "Wait for the print request to be sent",
+                trigger: "body",
+                run: async () => {
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
+                },
+            }
+        ].flat(),
+});
+
+===== addons/printer/static/tests/tours/utils.js =====
+/**
+ * Mock the browser requests to /pstprnt or /cgi-bin/epos/service.cgi
+ * These are requests to Zebra and ePOS printers.
+ */
+export function mockPrinterRequest(shouldThrow = false) {
+    return {
+        trigger: "body",
+        run: async () => {
+            const originalFetch = window.fetch;
+            window.fetch = async (url, options) => {
+                if (url.includes("/pstprnt")) {
+                    if (shouldThrow) {
+                        throw new Error("Mocked printer has been made unreachable");
+                    }
+                    const declaredLength = Number(options.headers?.["Content-Length"]);
+                    const actualLength = options.body?.length ?? 0;
+                    if (declaredLength !== actualLength) {
+                        console.error(
+                            `Content-Length header (${declaredLength}) does not match actual body length (${actualLength})`
+                        );
+                    }
+                    const zpl = (options.body ?? "").trim();
+                    if (!zpl.startsWith("^XA")) {
+                        console.error(`ZPL does not start with ^XA: ${zpl.slice(0, 50)}`);
+                    }
+                    if (!zpl.endsWith("^XZ")) {
+                        console.error(`ZPL does not end with ^XZ: ${zpl.slice(-50)}`);
+                    }
+                    return new Response("");
+                }
+                if (url.includes("/cgi-bin/epos/service.cgi")) {
+                    if (shouldThrow) {
+                        throw new Error("Mocked printer has been made unreachable");
+                    }
+                    const devid = new URL(url).searchParams.get("devid");
+                    if (devid !== "local_printer") {
+                        console.error(`Unexpected devid: expected 'local_printer', got '${devid}'`);
+                    }
+                    return new Response(`<response success="true" code=""/>`);
+                }
+                return originalFetch(url, options);
+            };
+        },
+    };
+}
+
+===== addons/printer/static/tests/unit/print_action_handler.test.js =====
+import { beforeEach, describe, expect, mockFetch, test } from "@odoo/hoot";
+import { printJobs } from "@printer/print_action_handler";
+import { allowTranslations } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
+
+describe.current.tags("headless");
+
+const notificationsReceived = [];
+const actionsExecuted = [];
+
+beforeEach(() => {
+    notificationsReceived.length = 0;
+    actionsExecuted.length = 0;
+});
+
+const mockReportId = 42;
+
+const makeEposPrinter = (overrides = {}) => ({
+    type: "epos",
+    ip_address: "1.2.3.4",
+    ...overrides,
+});
+
+const makeZplPrinter = (overrides = {}) => ({
+    type: "zpl",
+    ip_address: "5.6.7.8",
+    ...overrides,
+});
+
+const makeEposJob = (overrides = {}) => ({
+    type: "epos",
+    report: btoa("hello printer"),
+    ...overrides,
+});
+
+const makeZplJob = (overrides = {}) => ({
+    type: "zpl",
+    report: btoa("^XA^XZ"),
+    ...overrides,
+});
+
+const makeMockServices = () => ({
+    notification: {
+        add: (title, opts) => {
+            notificationsReceived.push({ title, opts });
+            return () => {};
+        },
+    },
+});
+
+const getHandler = () =>
+    registry.category("ir.actions.report handlers").get("print_action_handler");
+
+const makeMockEnv = (printerSettings = null) => ({
+    services: {
+        ...makeMockServices(),
+        report_printers_cache: {
+            getPrinterSettingsForReport: async () => printerSettings,
+        },
+        action: {
+            doAction: async (a) => actionsExecuted.push(a),
+        },
+    },
+});
+
+describe("printJobs", () => {
+    test("sends an epos job to the correct endpoint and resolves", async () => {
+        const fetchCalls = [];
+        mockFetch((input, init) => {
+            fetchCalls.push({ url: input, params: init });
+            return `<response success="true" code=""/>`;
+        });
+
+        const printer = makeEposPrinter();
+        const services = makeMockServices();
+        await printJobs(printer, [makeEposJob()], services);
+
+        expect(fetchCalls).toHaveLength(1);
+        expect(fetchCalls[0].url).toMatch(/epos\/service\.cgi/);
+        expect(notificationsReceived).toHaveLength(0);
+    });
+
+    test("sends a zpl job to /pstprnt in no-cors mode", async () => {
+        const fetchCalls = [];
+        mockFetch((input, init) => {
+            fetchCalls.push({ url: input, params: init });
+            return null;
+        });
+
+        const printer = makeZplPrinter();
+        const services = makeMockServices();
+        await printJobs(printer, [makeZplJob()], services);
+
+        expect(fetchCalls).toHaveLength(1);
+        expect(fetchCalls[0].url).toBe(`http://${printer.ip_address}/pstprnt`);
+        expect(fetchCalls[0].params.mode).toBe("no-cors");
+        expect(notificationsReceived).toHaveLength(0);
+    });
+
+    test("skips jobs whose type does not match the printer", async () => {
+        const fetchCalls = [];
+        mockFetch((input) => {
+            fetchCalls.push(input);
+            return null;
+        });
+
+        const printer = makeZplPrinter();
+        const services = makeMockServices();
+        await printJobs(printer, [makeEposJob()], services);
+
+        expect(fetchCalls).toHaveLength(0);
+        expect(notificationsReceived).toHaveLength(0);
+    });
+
+    test("shows a danger notification when epos returns a non-success response", async () => {
+        allowTranslations();
+        mockFetch(() => `<response success="false" code="ERROR_GENERAL"/>`);
+
+        const printer = makeEposPrinter();
+        const services = makeMockServices();
+        await printJobs(printer, [makeEposJob()], services);
+
+        expect(notificationsReceived).toHaveLength(1);
+        expect(notificationsReceived[0].opts.type).toBe("danger");
+    });
+
+    test("shows a danger notification when fetch throws", async () => {
+        allowTranslations();
+        mockFetch(() => {
+            throw new Error("network error");
+        });
+
+        const printer = makeEposPrinter();
+        const services = makeMockServices();
+        await printJobs(printer, [makeEposJob()], services);
+
+        expect(notificationsReceived).toHaveLength(1);
+        expect(notificationsReceived[0].opts.type).toBe("danger");
+    });
+
+    test("retries on ERROR_WAIT_EJECT before succeeding", async () => {
+        let callCount = 0;
+        mockFetch(() => {
+            callCount++;
+            const success = callCount > 1;
+            const code = success ? "" : "ERROR_WAIT_EJECT";
+            return `<response success="${success}" code="${code}"/>`;
+        });
+
+        const printer = makeEposPrinter();
+        const services = makeMockServices();
+        await printJobs(printer, [makeEposJob()], services);
+
+        expect(callCount).toBeGreaterThan(1);
+        expect(notificationsReceived).toHaveLength(0);
+    });
+
+    test("processes multiple jobs of matching type in sequence", async () => {
+        const fetchCalls = [];
+        mockFetch((input) => {
+            fetchCalls.push(input);
+            return `<response success="true" code=""/>`;
+        });
+
+        const printer = makeEposPrinter();
+        const services = makeMockServices();
+        await printJobs(printer, [makeEposJob(), makeEposJob()], services);
+
+        expect(fetchCalls).toHaveLength(2);
+        expect(notificationsReceived).toHaveLength(0);
+    });
+});
+
+describe("printActionHandler", () => {
+    const makeAction = (overrides = {}) => ({
+        id: mockReportId,
+        context: {
+            report_id: mockReportId,
+            jobs: [makeEposJob()],
+            active_ids: [1, 2, 3],
+        },
+        data: {},
+        ...overrides,
+    });
+
+    test("returns false when there are no jobs", async () => {
+        const env = makeMockEnv();
+        const action = makeAction({ context: { report_id: mockReportId, jobs: [] } });
+        const result = await getHandler()(action, {}, env);
+
+        expect(result).not.toBe(true);
+    });
+
+    test("returns false when jobs is undefined", async () => {
+        const env = makeMockEnv();
+        const action = makeAction({ context: { report_id: mockReportId } });
+        const result = await getHandler()(action, {}, env);
+
+        expect(result).not.toBe(true);
+    });
+
+    test("returns false when getPrinterSettingsForReport returns no selectedPrinters", async () => {
+        const env = makeMockEnv({ skipDialog: true }); // selectedPrinters absent
+        const result = await getHandler()(makeAction(), {}, env);
+
+        expect(result).not.toBe(true);
+    });
+
+    test("returns false when getPrinterSettingsForReport returns null", async () => {
+        const env = makeMockEnv(null);
+        const result = await getHandler()(makeAction(), {}, env);
+
+        expect(result).not.toBe(true);
+    });
+
+    test("returns true and calls onClose after a successful print", async () => {
+        mockFetch(() => `<response success="true" code=""/>`);
+
+        const env = makeMockEnv({
+            selectedPrinters: [makeEposPrinter()],
+        });
+        const closed = [];
+
+        const result = await getHandler()(makeAction(), { onClose: () => closed.push(true) }, env);
+
+        expect(result).toBe(true);
+        expect(closed).toHaveLength(1);
+    });
+
+    test("prints to every selected printer", async () => {
+        const fetchCalls = [];
+        mockFetch((input) => {
+            fetchCalls.push(input);
+            return `<response success="true" code=""/>`;
+        });
+
+        const env = makeMockEnv({
+            selectedPrinters: [
+                makeEposPrinter({ ip_address: "1.1.1.1" }),
+                makeEposPrinter({ ip_address: "2.2.2.2" }),
+            ],
+        });
+
+        await getHandler()(makeAction(), {}, env);
+
+        const hosts = fetchCalls.map((u) => new URL(u).hostname);
+        expect(hosts).toInclude("1.1.1.1");
+        expect(hosts).toInclude("2.2.2.2");
+    });
+});
+
+===== addons/printer/tests/__init__.py =====
+from . import test_get_print_jobs
+from . import test_thermal_printer_format
+
+===== addons/printer/tests/test_get_print_jobs.py =====
+import base64
+from io import BytesIO
+from unittest.mock import patch
+from xml.etree import ElementTree as ET
+
+from PIL import Image
+
+from odoo.tests import TransactionCase
+
+
+def make_png_bytes(width=100, height=200) -> bytes:
+    buf = BytesIO()
+    Image.new("RGB", (width, height), color=128).save(buf, format="PNG")
+    return buf.getvalue()
+
+
+class TestGetPrintJobs(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.report = cls.env.ref('base.ir_module_reference_print')
+        cls.doc = cls.env.ref('base.module_base')
+
+    def _link_printer(self, printer_type):
+        printer = self.env['printer.printer'].create({
+            'name': f'Test {printer_type}',
+            'ip_address': '127.0.0.1',
+            'type': printer_type,
+        })
+        self.report.printer_ids = [(6, 0, printer.ids)]
+        return printer
+
+    def test_epos_job_built_from_qweb_pdf_report(self):
+        """A qweb-pdf report linked to an ePOS printer must be rendered to an
+        image (html -> wkhtmltoimage -> thermal_printer_format) and returned as
+        an 'epos' job, without needing any dedicated ePOS template."""
+        self._link_printer('epos')
+        with patch(
+            'odoo.addons.base_report_wkhtmltox.models.ir_actions_report.IrActionsReport._run_image_engine',
+            return_value=[make_png_bytes()],
+        ) as run_image_engine:
+            jobs = self.report.get_print_jobs(self.report.report_name, self.doc.ids, {})
+
+        self.assertTrue(run_image_engine.called)
+        self.assertEqual(len(jobs), 1)
+        self.assertEqual(jobs[0]['type'], 'epos')
+        xml = base64.b64decode(jobs[0]['report']).decode()
+        ET.fromstring(xml)
+        self.assertIn('<image', xml)
+        self.assertIn('<cut type="feed"', xml)
+
+    def test_no_job_without_linked_epos_printer(self):
+        jobs = self.report.get_print_jobs(self.report.report_name, self.doc.ids, {})
+        self.assertEqual(jobs, [])
+
+    def test_no_job_when_image_rendering_fails(self):
+        self._link_printer('epos')
+        with patch(
+            'odoo.addons.base_report_wkhtmltox.models.ir_actions_report.IrActionsReport._run_image_engine',
+            return_value=[None],
+        ):
+            jobs = self.report.get_print_jobs(self.report.report_name, self.doc.ids, {})
+        self.assertEqual(jobs, [])
+
+    def test_non_pdf_report_not_rendered_as_image_even_with_epos_printer(self):
+        """Only qweb-pdf reports go through the image path; a qweb-text report
+        linked to an ePOS printer must not trigger it."""
+        self.report.report_type = 'qweb-text'
+        self._link_printer('epos')
+        with patch(
+            'odoo.addons.base_report_wkhtmltox.models.ir_actions_report.IrActionsReport._run_image_engine',
+        ) as run_image_engine:
+            self.report.get_print_jobs(self.report.report_name, self.doc.ids, {})
+        run_image_engine.assert_not_called()
+
+    def test_epos_html_gets_a_base_href(self):
+        """Relative URLs (e.g. the barcode widget's <img src="/report/barcode/...">)
+        only resolve for wkhtmltoimage if the standalone HTML carries a <base href>,
+        since wkhtmltoimage renders it as an isolated local file with no page URL
+        of its own to resolve relative paths against."""
+        self._link_printer('epos')
+        base_url = self.report._get_report_url()
+        with patch(
+            'odoo.addons.base_report_wkhtmltox.models.ir_actions_report.IrActionsReport._run_image_engine',
+        ) as run_image_engine:
+            run_image_engine.return_value = [make_png_bytes()]
+            self.report.get_print_jobs(self.report.report_name, self.doc.ids, {})
+        rendered_html = run_image_engine.call_args.args[1][0]
+        self.assertIn(f'<head><base href="{base_url}"/>', rendered_html)
+
+===== addons/printer/tests/test_thermal_printer_format.py =====
+import base64
+from io import BytesIO
+from PIL import Image
+from xml.etree import ElementTree as ET
+
+from odoo.tests import TransactionCase
+from odoo.addons.printer.models.ir_actions_report import thermal_printer_format
+
+
+def make_image_bytes(width: int, height: int, mode: str = "RGB") -> bytes:
+    """Return raw PNG bytes for a solid gray image of the given size."""
+    img = Image.new(mode, (width, height), color=128)
+    buf = BytesIO()
+    img.save(buf, format="PNG")
+    return buf.getvalue()
+
+
+class TestThermalPrinterFormat(TransactionCase):
+    def test_returns_bytes(self):
+        result = thermal_printer_format(make_image_bytes(100, 200))
+        self.assertIsInstance(result, bytes, "Expected bytes output")
+
+    def test_output_is_valid_xml(self):
+        result = thermal_printer_format(make_image_bytes(100, 200))
+        try:
+            ET.fromstring(result.decode())
+        except ET.ParseError as e:
+            self.fail(f"Output is not valid XML: {e}")
+
+    def test_output_width_is_576(self):
+        result = thermal_printer_format(make_image_bytes(100, 200)).decode()
+        self.assertIn('width="576"', result, "Image width should always be 576 to fit printer paper")
+
+    def test_aspect_ratio_preserved(self):
+        original_w, original_h = 100, 200  # 1:2 ratio
+        result = thermal_printer_format(make_image_bytes(original_w, original_h)).decode()
+        expected_height = int(original_h * (576 / original_w))
+        self.assertIn(f'height="{expected_height}"', result,
+                      f"Expected height {expected_height} to preserve aspect ratio")
+
+    def test_landscape_image_is_rotated(self):
+        # 400 wide x 100 tall → after 90° rotation: 100 wide x 400 tall
+        result = thermal_printer_format(make_image_bytes(400, 100)).decode()
+        expected_height = int(400 * (576 / 100))
+        self.assertIn(f'height="{expected_height}"', result,
+                      "Landscape image should be rotated to portrait before scaling")
+
+    def test_portrait_image_not_rotated(self):
+        result = thermal_printer_format(make_image_bytes(100, 400)).decode()
+        expected_height = int(400 * (576 / 100))
+        self.assertIn(f'height="{expected_height}"', result, "Portrait image should not be rotated")
+
+    def test_square_image_not_rotated(self):
+        result = thermal_printer_format(make_image_bytes(200, 200)).decode()
+        self.assertIn('height="576"', result, "Square image should not be rotated")
+
+    def test_base64_payload_is_valid(self):
+        result = thermal_printer_format(make_image_bytes(100, 200)).decode()
+        start = result.index('align="center">') + len('align="center">')
+        end = result.index("</image>")
+        try:
+            base64.b64decode(result[start:end])
+        except Exception as e:  # noqa: BLE001
+            self.fail(f"Image payload is not valid base64: {e}")
+
+    def test_contains_cut_element(self):
+        result = thermal_printer_format(make_image_bytes(100, 200)).decode()
+        self.assertIn('<cut type="feed"', result, "Missing paper cut command")
+
+    def test_accepts_grayscale_input(self):
+        try:
+            result = thermal_printer_format(make_image_bytes(100, 200, mode="L"))
+            self.assertIsInstance(result, bytes, "Expected bytes output for grayscale input")
+        except Exception as e:  # noqa: BLE001
+            self.fail(f"Failed to process grayscale image: {e}")
+
+    def test_accepts_rgba_input(self):
+        try:
+            result = thermal_printer_format(make_image_bytes(100, 200, mode="RGBA"))
+            self.assertIsInstance(result, bytes, "Expected bytes output for RGBA input")
+        except Exception as e:  # noqa: BLE001
+            self.fail(f"Failed to process RGBA image: {e}")
+
+===== addons/printer/views/ir_actions_report.xml =====
+<odoo>
+  <record id="act_report_xml_view_printer" model="ir.ui.view">
+    <field name="name">ir.actions.report.printer</field>
+    <field name="model">ir.actions.report</field>
+    <field name="inherit_id" ref="base.act_report_xml_view"/>
+    <field name="arch" type="xml">
+      <field name="paperformat_id" position="after">
+        <field name="printer_ids"
+               required="context.get('missing_printer')"
+               widget="many2many_tags"
+               context="{'default_report_ids': [id]}"/>
+      </field>
+    </field>
+  </record>
+</odoo>
+
+===== addons/printer/views/printer_views.xml =====
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record  id="printer_view_form" model="ir.ui.view">
+        <field name="name">printer.form</field>
+        <field name="model">printer.printer</field>
+        <field name="arch" type="xml">
+            <form string="Printer">
+                <sheet>
+                    <h1>
+                        <field name="name" placeholder="e.g. Zebra ZD421"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="type" widget="radio" options="{'horizontal': True}"/>
+                            <field name="ip_address" required="1"/>
+                            <field name="report_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="manage_printers_action" model="ir.actions.act_window">
+        <field name="name">Printers</field>
+        <field name="path">printers</field>
+        <field name="res_model">printer.printer</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No printer configured!
+            </p>
+            <p>Click "New" to configure a printer.</p>
+        </field>
+    </record>
+
+    <record id="printer_view_list" model="ir.ui.view">
+        <field name="name">printer.printer.view.list</field>
+        <field name="model">printer.printer</field>
+        <field name="arch" type="xml">
+            <list default_order="name">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="ip_address" required="1"/>
+                <field name="report_ids" widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_reset_linked_printers" model="ir.actions.client">
+        <field name="name">reset.linked.printers</field>
+        <field name="path">reset-printers</field>
+        <field name="tag">reset_linked_printers</field>
+    </record>
+</odoo>
+
+===== addons/printer/wizard/__init__.py =====
+from . import select_printers_wizard
+
+===== addons/printer/wizard/select_printers_wizard.py =====
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo import fields, models
+
+
+class SelectPrintersWizard(models.TransientModel):
+    _name = "select.printers.wizard"
+    _description = "Select printers to print the report on"
+
+    printer_ids = fields.Many2many(
+        "printer.printer",
+        domain="[('id', 'in', context.get('available_printer_ids', []))]",
+    )
+    do_not_ask_again = fields.Boolean(
+        "Do not ask me again",
+        help=(
+            "If checked, this dialog won't appear the next time you print "
+            "and the selected printers will be used automatically."
+        ),
+    )
+
+===== addons/printer/wizard/select_printers_wizard.xml =====
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="view_select_printers_wizard" model="ir.ui.view">
+        <field name="name">select.printers.wizard.form</field>
+        <field name="model">select.printers.wizard</field>
+        <field name="arch" type="xml">
+            <form js_class="select_printers_wizard">
+                <group>
+                    <field name="printer_ids" widget="many2many_tags"/>
+                </group>
+                <group>
+                    <field name="do_not_ask_again"/>
+                </group>
+                <footer>
+                    <button string="Print" class="btn-primary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+
+===== changes to existing modules (stock_delivery), as a diff =====
+diff --git b/addons/stock_delivery/__manifest__.py a/addons/stock_delivery/__manifest__.py
+index 6c3e1a8019fc..edb682be9825 100644
+--- b/addons/stock_delivery/__manifest__.py
++++ a/addons/stock_delivery/__manifest__.py
+@@ -10,9 +10,11 @@ Allows you to add delivery methods in pickings.
+ 
+ When creating invoices from picking, the system is able to add and compute the shipping line.
+ """,
+-    'depends': ['sale_stock', 'delivery'],
++    'depends': ['printer', 'sale_stock', 'delivery'],
+     'data': [
+         "data/mail_template_data.xml",
++        'report/shipping_reports.xml',
++        'views/ir_actions_report.xml',
+         'views/product_template_view.xml',
+         'views/product_product_view.xml',
+         'views/delivery_view.xml',
+@@ -27,6 +29,7 @@ When creating invoices from picking, the system is able to add and compute the s
+         'views/stock_picking_type_views.xml',
+         'views/stock_rule_views.xml',
+         'views/stock_move_line_views.xml',
++        'views/stock_menu_views.xml',
+         'report/product_templates.xml',
+         'security/ir.access.csv',
+     ],
+@@ -34,6 +37,9 @@ When creating invoices from picking, the system is able to add and compute the s
+         'web.assets_frontend': [
+             'stock_delivery/static/src/return_order_dialog/*',
+         ],
++        'web.assets_tests': [
++            ('include', 'printer.assets_tests'),
++        ],
+     },
+     'demo': ['data/delivery_demo.xml'],
+     'auto_install': ['sale_stock', 'delivery'],
+diff --git b/addons/stock_delivery/data/delivery_demo.xml a/addons/stock_delivery/data/delivery_demo.xml
+index 0ea02d978d2f..cb60b08fbacc 100644
+--- b/addons/stock_delivery/data/delivery_demo.xml
++++ a/addons/stock_delivery/data/delivery_demo.xml
+@@ -81,5 +81,9 @@
+                 ref('outgoing_shipment_with_carrier_done'),
+             ]"/>
+         </function>
++
++        <record id="printer.zebra_printer_demo" model="printer.printer">
++            <field name="report_ids" eval="[(4, ref('product.report_product_template_label_zpl'))]" />
++        </record>
+     </data>
+ </odoo>
+diff --git b/addons/stock_delivery/models/__init__.py a/addons/stock_delivery/models/__init__.py
+index f7d375a22c16..d854bc02ccb7 100644
+--- b/addons/stock_delivery/models/__init__.py
++++ a/addons/stock_delivery/models/__init__.py
+@@ -11,3 +11,4 @@ from . import stock_picking
+ from . import stock_picking_batch
+ from . import stock_picking_type
+ from . import stock_package
++from . import ir_actions_report
+diff --git b/addons/stock_delivery/models/ir_actions_report.py a/addons/stock_delivery/models/ir_actions_report.py
+new file mode 100644
+index 000000000000..b993d62959ec
+--- /dev/null
++++ a/addons/stock_delivery/models/ir_actions_report.py
+@@ -0,0 +1,87 @@
++import base64
++import logging
++
++from odoo import api, models, _
++from odoo.exceptions import UserError
++from odoo.fields import Domain
++
++from odoo.addons.printer.models.ir_actions_report import thermal_printer_format
++
++_logger = logging.getLogger(__name__)
++
++
++class IrActionsReport(models.Model):
++    _inherit = "ir.actions.report"
++
++    @api.model
++    def get_print_jobs(self, report_name, docids, data) -> list:
++        """Method to render chatter attachments for ePOS or ZPL printers
++
++        For ePOS, we limit to image attachments to avoid converting PDF to
++        images.
++        """
++        jobs = super().get_print_jobs(report_name, docids, data)
++        if report_name not in ['stock_delivery.report_shipping_labels', 'stock_delivery.report_shipping_docs']:
++            return jobs
++
++        use_zpl_printers = len(self.printer_ids.filtered(lambda p: p.type == "zpl").exists())
++        use_epos_printers = len(self.printer_ids.filtered(lambda p: p.type == "epos").exists())
++        if not use_zpl_printers and not use_epos_printers:
++            return jobs
++
++        for attachment in self.get_reports_from_chatter(report_name, docids):
++            name = attachment.name.lower()
++            if name.endswith((".jpeg", ".jpg", ".png")) and use_epos_printers:
++                jobs.append({
++                    "type": "epos",
++                    "report": base64.b64encode(thermal_printer_format(attachment.raw)),
++                })
++            elif ".zpl" in name and use_zpl_printers:
++                jobs.append({"type": "zpl", "report": attachment.raw.to_base64()})
++
++        return jobs
++
++    def get_reports_from_chatter(self, report_name, docids):
++        """Shipping labels and docs are generated by carrier providers
++        and are saved as attachments in the chatter"""
++        domain = [('res_model', '=', "stock.picking"), ('res_id', 'in', docids)]
++        if report_name == 'stock_delivery.report_shipping_labels':
++            domain = Domain.AND([domain, [('name', 'ilike', 'Label%')]])
++        elif report_name == 'stock_delivery.report_shipping_docs':
++            domain = Domain.AND([domain, [('name', 'ilike', 'ShippingDoc%')]])
++
++        attachments = self.env['ir.attachment'].search(domain, order='id desc')
++        if not attachments:
++            _logger.warning("No attachment found for report %s and docids %s", report_name, docids)
++            return []
++        return attachments
++
++    def _render_qweb_pdf(self, report_ref, res_ids=None, data=None):
++        """Override to ensure the user is informed when trying to print an empty report
++        without an actual printer.
++
++        This can happen when trying to print delivery labels, that have empty reports used to
++        print the attachments in the chatter with ePOS or IoT.
++
++        If the attachment is a PDF, we download it.
++        If there are multiple PDFs, we only print one as we can't make Odoo download multiple at once.
++        """
++        report = self._get_report(report_ref)
++        if report.report_name in ["stock_delivery.report_shipping_labels", "stock_delivery.report_shipping_docs"]:
++            attachments = self.get_reports_from_chatter(report.report_name, res_ids)
++            if not attachments:
++                raise UserError(_(
++                    "This action is meant to print %s attachments from the chatter: none was found.",
++                    report.name
++                ))
++            if not len(report.printer_ids.exists()):
++                raise UserError(_("Configure a printer to print this report: '%s'", report.name))
++            if attachments[0].mimetype != 'application/pdf':
++                raise UserError(_(
++                    "Configure the carrier to generate labels in PDF format, or use a ZPL/ePOS printer"
++                    " to print %s from the chatter.",
++                    report.name
++                ))
++            return base64.b64decode(attachments[0].raw), "pdf"
++
++        return super()._render_qweb_pdf(report_ref, res_ids, data=data)
+diff --git b/addons/stock_delivery/models/stock_picking.py a/addons/stock_delivery/models/stock_picking.py
+index 7333c883a974..782c64e8663c 100644
+--- b/addons/stock_delivery/models/stock_picking.py
++++ a/addons/stock_delivery/models/stock_picking.py
+@@ -7,6 +7,7 @@ import json
+ from odoo import _, api, fields, models
+ from odoo.exceptions import UserError
+ from odoo.fields import Domain
++from odoo.addons.web.controllers.utils import clean_action
+ 
+ 
+ class StockPicking(models.Model):
+@@ -296,6 +297,20 @@ class StockPicking(models.Model):
+             carrier_key = self.carrier_id.name
+         return carrier_key
+ 
++    def _get_autoprint_report_actions(self):
++        report_actions = []
++        shipping_labels_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_carrier_labels)
++        if shipping_labels_to_print:
++            action = self.env.ref("stock_delivery.action_report_shipping_labels").report_action(shipping_labels_to_print.ids, config=False)
++            clean_action(action, self.env)
++            report_actions.append(action)
++        shipping_documents_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_export_documents)
++        if shipping_documents_to_print:
++            action = self.env.ref("stock_delivery.action_report_shipping_docs").report_action(shipping_documents_to_print.ids, config=False)
++            clean_action(action, self.env)
++            report_actions.append(action)
++        return report_actions + super()._get_autoprint_report_actions()
++
+     def _get_possible_pickings_domain(self):
+         domain = super()._get_possible_pickings_domain()
+         if self.picking_type_id.batch_group_by_carrier:
+diff --git b/addons/stock_delivery/models/stock_picking_type.py a/addons/stock_delivery/models/stock_picking_type.py
+index afe97c1d23a6..7566a78ba3bc 100644
+--- b/addons/stock_delivery/models/stock_picking_type.py
++++ a/addons/stock_delivery/models/stock_picking_type.py
+@@ -9,6 +9,17 @@ class StockPickingType(models.Model):
+     def _get_default_weight_uom(self):
+         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+ 
++    auto_print_carrier_labels = fields.Boolean(
++        "Auto Print Carrier Labels",
++        help="Automatically print the carrier labels of the picking when they are created.",
++    )
++    auto_print_export_documents = fields.Boolean(
++        "Auto Print Export Documents",
++        help=(
++            "Automatically print the export documents of the picking when they are created. "
++            "Availability of export documents depends on the carrier and the destination."
++        ),
++    )
+     batch_group_by_carrier = fields.Boolean('Carrier', help="Automatically group batches by carriers")
+     batch_max_weight = fields.Integer("Maximum weight",
+                                       help="A transfer will not be automatically added to batches that will exceed this weight if the transfer is added to it.\n"
+diff --git b/addons/stock_delivery/report/shipping_reports.xml a/addons/stock_delivery/report/shipping_reports.xml
+new file mode 100644
+index 000000000000..a527d64ab407
+--- /dev/null
++++ a/addons/stock_delivery/report/shipping_reports.xml
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++    <!-- These are shells to allow for assigning printers -->
++    <data>
++        <template id="report_shipping_labels"/>
++        <template id="report_shipping_docs"/>
++        <record id="action_report_shipping_labels" model="ir.actions.report">
++            <field name="name">Shipping Labels</field>
++            <field name="model">stock.picking</field>
++            <field name="report_name">stock_delivery.report_shipping_labels</field>
++            <field name="print_report_name">'Shipping-Label-%s' % object.name</field>
++            <field name="binding_model_id" ref="stock.model_stock_picking"/>
++            <field name="binding_type">report</field>
++        </record>
++        <record id="action_report_shipping_docs" model="ir.actions.report">
++            <field name="name">Shipping Documents</field>
++            <field name="model">stock.picking</field>
++            <field name="report_name">stock_delivery.report_shipping_docs</field>
++            <field name="print_report_name">'Shipping-Document-%s' % object.name</field>
++            <field name="binding_model_id" ref="stock.model_stock_picking"/>
++            <field name="binding_type">report</field>
++        </record>
++    </data>
++</odoo>
+diff --git b/addons/stock_delivery/security/ir.access.csv a/addons/stock_delivery/security/ir.access.csv
+index 4468076d8afe..cef6eb8a38d8 100644
+--- b/addons/stock_delivery/security/ir.access.csv
++++ a/addons/stock_delivery/security/ir.access.csv
+@@ -6,5 +6,6 @@ access_delivery_zip_prefix_stock_user,delivery.zip.prefix stock_manager,delivery
+ access_delivery_zip_prefix_stock_manager,delivery.zip.prefix stock_manager,delivery.zip.prefix,stock.group_stock_manager,crud,
+ access_delivery_price_rule_stock_user,delivery.price.rule stock_manager,delivery.price.rule,stock.group_stock_user,r,
+ access_delivery_price_rule_stock_manager,delivery.price.rule stock_manager,delivery.price.rule,stock.group_stock_manager,crud,
++access_printer_stock_manager,printer.printer stock_manager,printer.printer,stock.group_stock_manager,crud,
+ access_pay_on_delivery_sale_user,pay.on.delivery sale_user,pay.on.delivery,sales_team.group_sale_salesman,cru,
+ access_pay_on_delivery_stock_user,pay.on.delivery stock_user,pay.on.delivery,stock.group_stock_user,cru,
+diff --git b/addons/stock_delivery/tests/__init__.py a/addons/stock_delivery/tests/__init__.py
+index 201095ee074d..0a59df33350b 100644
+--- b/addons/stock_delivery/tests/__init__.py
++++ a/addons/stock_delivery/tests/__init__.py
+@@ -6,3 +6,4 @@ from . import test_delivery_picking_batch
+ from . import test_delivery_stock_move
+ from . import test_packing_delivery
+ from . import test_pay_on_delivery
++from . import test_printer_tour
+diff --git b/addons/stock_delivery/tests/test_printer_tour.py a/addons/stock_delivery/tests/test_printer_tour.py
+new file mode 100644
+index 000000000000..c9f3ec29cde4
+--- /dev/null
++++ a/addons/stock_delivery/tests/test_printer_tour.py
+@@ -0,0 +1,86 @@
++import io
++
++from PIL import Image
++
++from odoo.fields import Command
++from odoo.tests import HttpCase
++
++from odoo.addons.stock.tests.common import TestStockCommon
++
++
++class TestPrinterTour(TestStockCommon, HttpCase):
++    _test_user_groups = None  # FIXME list needed groups
++
++    @classmethod
++    def setUpClass(cls):
++        super().setUpClass()
++        cls.env["printer.printer"].create(
++            [
++                {
++                    "name": "Test Zebra Printer",
++                    "type": "zpl",
++                    "ip_address": "127.0.0.1:8069",
++                    "report_ids": [
++                        Command.link(cls.env.ref("product.report_product_template_label_zpl").id),
++                    ],
++                },
++                {
++                    "name": "Test Epson Printer",
++                    "type": "epos",
++                    "ip_address": "127.0.0.1:8069",
++                    "report_ids": [
++                        Command.link(
++                            cls.env.ref(
++                                "stock_delivery.action_report_shipping_labels",
++                            ).id,
++                        ),
++                    ],
++                },
++            ],
++        )
++
++        cls.product = cls.env["product.product"].create(
++            {
++                "name": "Test Product",
++            },
++        )
++
++    def test_print_label_zpl(self):
++        """test that the print job sent to the (mocked) ``/pstprnt`` endpoint
++        has the correct content when printing a label with a ZPL printer."""
++        self.start_tour(f"/odoo/products/{self.product.product_tmpl_id.id}", "print_label_zebra_tour", login="admin")
++
++    def test_print_label_epos(self):
++        """test that the simulated ``/cgi-bin/epos/service.cgi`` controller
++        receives the print job when printing a label with an EPOS printer"""
++        picking_type = self.env["stock.picking.type"].search(
++            [("code", "=", "outgoing")],
++            limit=1,
++        )
++        picking = self.env["stock.picking"].create(
++            {
++                "picking_type_id": picking_type.id,
++                "partner_id": self.partner_1.id,
++                "product_id": self.product.id,
++            },
++        )
++
++        buffer = io.BytesIO()
++        Image.new("RGB", (100, 50), color=(255, 255, 255)).save(buffer, format="PNG")
++
++        self.env["ir.attachment"].create(
++            {
++                "name": "LabelShipping.png",
++                "type": "binary",
++                "raw": buffer.getvalue(),
++                "res_model": "stock.picking",
++                "res_id": picking.id,
++                "mimetype": "image/png",
++            },
++        )
++
++        self.start_tour(
++            f"/odoo/inventory/{picking_type.id}/deliveries/{picking.id}",
++            "print_label_epos_tour",
++            login="admin",
++        )
+diff --git b/addons/stock_delivery/views/ir_actions_report.xml a/addons/stock_delivery/views/ir_actions_report.xml
+new file mode 100644
+index 000000000000..f9d20dffaef5
+--- /dev/null
++++ a/addons/stock_delivery/views/ir_actions_report.xml
+@@ -0,0 +1,21 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++    <!-- Window action to help assigning printers to the reports. -->
++    <record id="open_shipping_labels_report" model="ir.actions.act_window">
++        <field name="name">Shipping Labels Report</field>
++        <field name="res_model">ir.actions.report</field>
++        <field name="view_mode">form</field>
++        <field name="res_id" ref="action_report_shipping_labels"/>
++        <field name="target">new</field>
++        <field name="context">{'missing_printer': True}</field>
++    </record>
++
++    <record id="open_export_docs_report" model="ir.actions.act_window">
++        <field name="name">Shipping Documents Report</field>
++        <field name="res_model">ir.actions.report</field>
++        <field name="view_mode">form</field>
++        <field name="res_id" ref="action_report_shipping_docs"/>
++        <field name="target">new</field>
++        <field name="context">{'missing_printer': True}</field>
++    </record>
++</odoo>
+diff --git b/addons/stock_delivery/views/stock_menu_views.xml a/addons/stock_delivery/views/stock_menu_views.xml
+new file mode 100644
+index 000000000000..20924f65da29
+--- /dev/null
++++ a/addons/stock_delivery/views/stock_menu_views.xml
+@@ -0,0 +1,17 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++    <!-- Reset cached printers submenu -->
++    <menuitem id="cached_printers_section" name="Reporting" parent="stock.menu_stock_config_settings" sequence="50"/>
++    <menuitem id="manage_printers_action" name="Manage Printers" sequence="1" parent="cached_printers_section" action="printer.manage_printers_action"/>
++    <menuitem id="cached_printers_action" name="Reset Linked Printers" sequence="2" parent="cached_printers_section" action="printer.action_reset_linked_printers"/>
++
++    <!-- Grant "Configuration" tab access to every user -->
++    <record id="stock.menu_stock_config_settings" model="ir.ui.menu">
++        <field name="group_ids" eval="[(6, 0, [])]"/>
++    </record>
++    <!-- Re-restrict access to all sections to 'group_stock_manager': -->
++    <!-- the goal is to grant access only to "Reset Linked Printers" to everyone -->
++    <record id="stock.menu_product_in_config_stock" model="ir.ui.menu">
++        <field name="group_ids" eval="[Command.link(ref('stock.group_stock_manager'))]"/>
++    </record>
++</odoo>
+diff --git b/addons/stock_delivery/views/stock_picking_type_views.xml a/addons/stock_delivery/views/stock_picking_type_views.xml
+index f620bd154ec3..2427420c0f46 100644
+--- b/addons/stock_delivery/views/stock_picking_type_views.xml
++++ a/addons/stock_delivery/views/stock_picking_type_views.xml
+@@ -9,6 +9,24 @@
+             <xpath expr="//field[@name='sequence_code']" position="after">
+                 <field name="print_label" invisible="code not in ['internal', 'outgoing']"/>
+             </xpath>
++            <field name="auto_print_reception_report_labels" position="after">
++                <div colspan="2" class="alert alert-warning" role="alert" invisible="code == 'incoming'">
++                    <a class="alert-link">Carrier Labels</a>
++                    and <a class="alert-link">Export documents</a>
++                    are uploaded to the chatter when the picking is validated. If you want to
++                    print them automatically on validation, you need to configure a printer on the
++                    report form.<br/>
++                    <a type="action" name="%(open_shipping_labels_report)d">
++                        <i class="oi pe-1" data-icon="arrow_forward"/>Configure Carrier Labels
++                    </a>
++                    <br/>
++                    <a type="action" name="%(open_export_docs_report)d">
++                        <i class="oi pe-1" data-icon="arrow_forward"/>Configure Export Documents
++                    </a>
++                </div>
++                <field name="auto_print_carrier_labels" string="Carrier Labels" invisible="code == 'incoming'"/>
++                <field name="auto_print_export_documents" string="Export Documents" invisible="code == 'incoming'"/>
++            </field>
+             <div name="wave_category" position="after">
+                 <div name="batch_carrier" class="o_row" invisible="batch_creation_type == 'manual'">
+                     <field name="batch_group_by_carrier"/>

@@ -34,4 +34,33 @@ raise UserError(self.env._("Book %s is already borrowed, return it first", book.
   content is the character itself.
 - Existing text in a stable branch. Fixing punctuation is a cosmetic change,
   and rewording a translatable term breaks its translations (see
-  [Changes in a stable version](stable.md#changes-in-a-stable-version)).
+  [Changes in a stable version](../../odoo-stable-policy/SKILL.md#changes-in-a-stable-version)).
+
+# Comment a deviation the requirements force
+
+When a requirement makes code break a guideline (the task's spec, a ticket,
+a caller that cannot change), the code says so where it happens: a comment at
+that spot names the guideline it departs from and the requirement that forces
+it. Everywhere else, the guideline applies as written.
+
+```xml
+<!-- good: the reader and the reviewer see why, and where the decision comes from -->
+<!-- XML ids: keeps its old id rather than library_book_action, because the
+     mobile app opens this action by its id and cannot be updated with us. -->
+<record id="action_book_list" model="ir.actions.act_window">
+```
+
+## Why
+
+- A reviewer applies the guidelines to the code in front of them; without
+  the comment, a deviation the requirements asked for reads as a mistake, and
+  gets flagged or "fixed".
+- The comment ties the deviation to its reason: the day the requirement
+  changes, the next developer knows the code can follow the guideline again.
+
+## Exceptions
+
+- Rules that already say how to justify themselves keep their own form: a
+  `sudo()` or a commit carries its comment as `odoo-security` and the
+  [Transactions and exceptions](orm.md#transactions-and-exceptions) section
+  say.

@@ -1,0 +1,1 @@
+I'm about to open a PR for the new property_rental module, the last commit on my branch in the Odoo checkout at /app. Could you do a security review of it first? Put your findings in /app/security_review.md, and don't change the module: I'll fix things myself.

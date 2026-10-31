@@ -1,0 +1,108 @@
+# LLM judge: recall of the seeded issues in one area.
+# Area: Manifest.
+# Rules: odoo-guidelines guidelines/manifest.md.
+# One binary criterion per issue; the area's score is the share found.
+[judge]
+judge = "anthropic/claude-opus-5-5"
+files = ["/logs/verifier/review.md"]
+reasoning_effort = "high"
+guard = "flag"
+
+[[criterion]]
+name = "mf1_depends_base"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/__manifest__.py`, line 12:
+The manifest's depends lists 'base', which is implied and should not be
+listed.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "mf2_direct_depends"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/__manifest__.py`, line 12:
+depends lists 'sale', which the module never uses, while it uses
+product.product (the accessory lines, the wizard) without depending on
+'product' directly. Flagging either half passes.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "mf3_demo_in_data"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/__manifest__.py`, line 22:
+demo/equipment_booking_demo.xml is listed under 'data', so its demo records
+(a projector, a location, a booking) are loaded on every database,
+production included; it belongs under 'demo'.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "mf4_license"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/__manifest__.py`, line 2:
+The manifest sets no 'license' (it falls back to LGPL-3 with a warning); set
+it deliberately.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "mf5_auto_install"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/__manifest__.py`, line 29:
+auto_install is True on a feature module: it installs itself on every
+database with maintenance, portal and sale. auto_install is for link
+(bridge) modules only.
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""
+
+[[criterion]]
+name = "mf6_external_dependencies"
+type = "binary"
+description = """
+Seeded issue in `addons/equipment_booking/report/booking_report.py`, line 6:
+report/booking_report.py imports the third-party phonenumbers library, which
+the manifest does not declare in external_dependencies (python).
+
+Passes when the review in /logs/verifier/review.md reports this problem at
+this spot, in any wording and with any severity, possibly grouped with
+similar findings as long as this spot is identified (file and line, or the
+method, field, record or file it is in). Fails when the review does not
+mention it, or covers it only with a general remark that does not point at
+this spot.
+"""

@@ -1,0 +1,1741 @@
+diff --git a/addons/equipment_booking/__init__.py b/addons/equipment_booking/__init__.py
+new file mode 100644
+index 000000000000..07837ea52d50
+--- /dev/null
++++ b/addons/equipment_booking/__init__.py
+@@ -0,0 +1,4 @@
++from . import controllers
++from . import models
++from . import report
++from . import wizard
+diff --git a/addons/equipment_booking/__manifest__.py b/addons/equipment_booking/__manifest__.py
+new file mode 100644
+index 000000000000..2daf612e30b7
+--- /dev/null
++++ b/addons/equipment_booking/__manifest__.py
+@@ -0,0 +1,30 @@
++{
++    'name': 'Equipment Booking',
++    'version': '1.0',
++    'category': 'Supply Chain/Maintenance',
++    'summary': 'Book shared equipment for a period, from the backend or the portal',
++    'description': """
++Employees and portal customers book shared equipment (projectors, vans,
++measuring tools) for a period. Bookings of the same equipment cannot overlap,
++the holder gets a reminder the day before, and a label with a check-in code is
++printed for each booking.
++""",
++    'depends': ['base', 'maintenance', 'portal', 'sale'],
++    'data': [
++        'security/groups.xml',
++        'security/ir.access.csv',
++        'data/equipment_booking_data.xml',
++        'data/mail-templates.xml',
++        'wizard/wizard_views.xml',
++        'views/booking.xml',
++        'views/portal.xml',
++        'report/booking_report.xml',
++        'demo/equipment_booking_demo.xml',
++    ],
++    'assets': {
++        'web.assets_backend': [
++            'equipment_booking/static/src/**/*',
++        ],
++    },
++    'auto_install': True,
++}
+diff --git a/addons/equipment_booking/controllers/__init__.py b/addons/equipment_booking/controllers/__init__.py
+new file mode 100644
+index 000000000000..ab78fd6b227e
+--- /dev/null
++++ b/addons/equipment_booking/controllers/__init__.py
+@@ -0,0 +1 @@
++from . import booking_portal
+diff --git a/addons/equipment_booking/controllers/booking_portal.py b/addons/equipment_booking/controllers/booking_portal.py
+new file mode 100644
+index 000000000000..d4b4bd1daedb
+--- /dev/null
++++ b/addons/equipment_booking/controllers/booking_portal.py
+@@ -0,0 +1,127 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++import json
++from datetime import timedelta
++
++from werkzeug.exceptions import NotFound
++
++from odoo import fields
++from odoo.http import request, route
++
++from odoo.addons.portal.controllers.portal import CustomerPortal
++
++
++class BookingPortal(CustomerPortal):
++
++    def _prepare_home_portal_values(self, counters):
++        values = super()._prepare_home_portal_values(counters)
++        if 'booking_count' in counters:
++            values['booking_count'] = request.env['equipment.booking'].search_count([
++                ('partner_id', '=', request.env.user.partner_id.id),
++            ])
++        return values
++
++    def home(self, **kw):
++        response = super().home(**kw)
++        response.qcontext['late_bookings'] = request.env.user.partner_id._get_upcoming_bookings().filtered('is_late')
++        return response
++
++    def _get_booking_sudo(self, booking_id):
++        booking_sudo = request.env['equipment.booking'].sudo().browse(booking_id).exists()
++        if not booking_sudo or booking_sudo.partner_id != request.env.user.partner_id:
++            raise NotFound()
++        return booking_sudo
++
++    @route('/my/bookings', type='http', auth='user', website=True)
++    def portal_my_bookings(self, sortby='start_datetime', filter_domain=None, **kw):
++        partner_id = request.env.user.partner_id
++        domain = [('partner_id', '=', partner_id.id)]
++        if filter_domain:
++            domain = json.loads(filter_domain) + domain
++        bookings = request.env['equipment.booking'].sudo().search(domain)
++        bookings = bookings.sorted(key=lambda booking: getattr(booking, sortby))
++        return request.render('equipment_booking.portal_my_bookings', {
++            'bookings': bookings,
++            'page_name': 'booking',
++        })
++
++    @route('/my/bookings/<int:booking_id>', type='http', auth='user', website=True)
++    def portal_booking_page(self, booking_id, **kw):
++        booking_sudo = self._get_booking_sudo(booking_id)
++        return request.render('equipment_booking.portal_booking_page', {
++            'booking': booking_sudo,
++            'page_name': 'booking',
++        })
++
++    @route('/my/bookings/new', type='http', auth='user', methods=['POST'], website=True)
++    def portal_booking_create(self, equipment_id, start, end, **post):
++        booked_by = int(post.get('user_id') or request.env.uid)
++        booking = request.env['equipment.booking'].with_user(booked_by).create({
++            'equipment': int(equipment_id),
++            'partner_id': request.env.user.partner_id.id,
++            'start_datetime': fields.Datetime.to_datetime(start),
++            'end_datetime': fields.Datetime.to_datetime(end) + timedelta(hours=23, minutes=59),
++        })
++        return request.redirect(f'/my/bookings/{booking.id}')
++
++    @route('/my/bookings/<int:booking_id>/update', type='http', auth='user', methods=['POST'], website=True, csrf=False)
++    def portal_booking_update(self, booking_id, **post):
++        booking_sudo = self._get_booking_sudo(booking_id)
++        booking_sudo.write(post)
++        return request.redirect(f'/my/bookings/{booking_id}')
++
++    @route('/my/bookings/<int:booking_id>/cancel', type='http', auth='user', website=True)
++    def portal_booking_cancel(self, booking_id, **kw):
++        booking_sudo = self._get_booking_sudo(booking_id)
++        booking_sudo.action_cancel()
++        return request.redirect('/my/bookings')
++
++    @route('/booking/checkin/<string:code>', type='http', auth='user', website=True)
++    def booking_checkin(self, code, **kw):
++        equipment = request.env['maintenance.equipment'].sudo().search([('checkin_code', '=', code)], limit=1)
++        booking_sudo = equipment.booking_ids.filtered(
++            lambda b: b.state == 'confirmed' and b.partner_id == request.env.user.partner_id
++        )[:1]
++        if not booking_sudo:
++            raise NotFound()
++        return request.redirect(f'/my/bookings/{booking_sudo.id}')
++
++    @route('/booking/availability', type='json', auth='user')
++    def booking_availability(self, equipment_id, day):
++        request.env.cr.execute(f"""
++            SELECT start_datetime, end_datetime
++              FROM equipment_booking
++             WHERE equipment = %s
++               AND start_datetime::date = '{day}'
++               AND state != 'cancelled'
++        """, [int(equipment_id)])
++        return [{'start': start, 'end': end} for start, end in request.env.cr.fetchall()]
++
++    @route('/booking/calendar/<int:equipment_id>', type='http', auth='public', website=True)
++    def booking_calendar(self, equipment_id, **kw):
++        bookings = request.env['equipment.booking'].sudo().search([
++            ('equipment', '=', equipment_id),
++            ('state', '!=', 'cancelled'),
++        ])
++        return request.render('equipment_booking.booking_calendar', {
++            'bookings': bookings,
++            'equipment_id': equipment_id,
++        })
++
++    @route('/booking/feed/<int:partner_id>/<string:token>', type='http', auth='public')
++    def booking_feed(self, partner_id, token, **kw):
++        partner = request.env['res.partner'].sudo().browse(partner_id).exists()
++        if not partner or not partner.booking_feed_token or partner.booking_feed_token != token:
++            raise NotFound()
++        lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Odoo//Equipment Booking//EN']
++        for booking in partner._get_upcoming_bookings():
++            lines += [
++                'BEGIN:VEVENT',
++                f'UID:equipment-booking-{booking.id}',
++                f'DTSTART:{booking.start_datetime:%Y%m%dT%H%M%SZ}',
++                f'DTEND:{booking.end_datetime:%Y%m%dT%H%M%SZ}',
++                f'SUMMARY:{booking.equipment.name}',
++                'END:VEVENT',
++            ]
++        lines.append('END:VCALENDAR')
++        return request.make_response('\r\n'.join(lines), headers=[('Content-Type', 'text/calendar')])
+diff --git a/addons/equipment_booking/data/equipment_booking_data.xml b/addons/equipment_booking/data/equipment_booking_data.xml
+new file mode 100644
+index 000000000000..ec220f573dd5
+--- /dev/null
++++ b/addons/equipment_booking/data/equipment_booking_data.xml
+@@ -0,0 +1,28 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo noupdate="1">
++    <record id="seq_equipment_booking" model="ir.sequence">
++        <field name="name">Equipment Booking</field>
++        <field name="code">equipment.booking</field>
++        <field name="prefix">BK/</field>
++        <field name="padding">5</field>
++        <field name="company_id" eval="False"/>
++    </record>
++
++    <record id="ir_cron_equipment_booking_reminder" model="ir.cron">
++        <field name="name">Equipment Booking: Send Reminders</field>
++        <field name="model_id" ref="model_equipment_booking"/>
++        <field name="state">code</field>
++        <field name="code">model._cron_send_reminders()</field>
++        <field name="interval_number">1</field>
++        <field name="interval_type">hours</field>
++    </record>
++
++    <record id="ir_cron_equipment_booking_archive" model="ir.cron">
++        <field name="name">Equipment Booking: Archive Past Bookings</field>
++        <field name="model_id" ref="model_equipment_booking"/>
++        <field name="state">code</field>
++        <field name="code">model._cron_archive_past_bookings()</field>
++        <field name="interval_number">1</field>
++        <field name="interval_type">days</field>
++    </record>
++</odoo>
+diff --git a/addons/equipment_booking/data/mail-templates.xml b/addons/equipment_booking/data/mail-templates.xml
+new file mode 100644
+index 000000000000..a2432aa61680
+--- /dev/null
++++ b/addons/equipment_booking/data/mail-templates.xml
+@@ -0,0 +1,22 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++    <data noupdate="1">
++        <record id="mail_template_booking_reminder" model="mail.template">
++            <field name="name">Equipment Booking: Reminder</field>
++            <field name="model_id" ref="model_equipment_booking"/>
++            <field name="subject">Reminder: {{ object.equipment.name }} is booked for you</field>
++            <field name="partner_to">{{ object.partner_id.id }}</field>
++            <field name="body_html" type="html">
++<div>
++    Hello <t t-out="object.partner_id.name"/>,<br/><br/>
++    Your booking <t t-out="object.name"/> of <t t-out="object.equipment.name"/>
++    starts on <t t-out="format_datetime(object.start_datetime, tz=object.partner_id.tz)"/>.
++    <t t-if="object.location_id">
++        Pick it up at <t t-out="object.location_id.complete_name"/>.
++    </t>
++</div>
++            </field>
++            <field name="auto_delete" eval="True"/>
++        </record>
++    </data>
++</odoo>
+diff --git a/addons/equipment_booking/demo/equipment_booking_demo.xml b/addons/equipment_booking/demo/equipment_booking_demo.xml
+new file mode 100644
+index 000000000000..b5e05ce10ed8
+--- /dev/null
++++ b/addons/equipment_booking/demo/equipment_booking_demo.xml
+@@ -0,0 +1,21 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++    <record id="equipment_booking_location_main" model="equipment.booking.location">
++        <field name="name">Main Office Reception</field>
++        <field name="city">Louvain-la-Neuve</field>
++    </record>
++
++    <record id="equipment_projector" model="maintenance.equipment">
++        <field name="name">Portable Projector</field>
++        <field name="serial_number">PJ/001/2026</field>
++        <field name="bookable" eval="True"/>
++    </record>
++
++    <record id="equipment_booking_demo_1" model="equipment.booking">
++        <field name="equipment" ref="equipment_projector"/>
++        <field name="partner_id" ref="base.partner_admin"/>
++        <field name="location_id" ref="equipment_booking_location_main"/>
++        <field name="start_datetime" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d 09:00:00')"/>
++        <field name="end_datetime" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d 17:00:00')"/>
++    </record>
++</odoo>
+diff --git a/addons/equipment_booking/models/__init__.py b/addons/equipment_booking/models/__init__.py
+new file mode 100644
+index 000000000000..6b38f7118e14
+--- /dev/null
++++ b/addons/equipment_booking/models/__init__.py
+@@ -0,0 +1,4 @@
++from . import booking
++from . import equipment_booking_location
++from . import maintenance_equipment
++from . import res_partner
+diff --git a/addons/equipment_booking/models/booking.py b/addons/equipment_booking/models/booking.py
+new file mode 100644
+index 000000000000..6709225c0d58
+--- /dev/null
++++ b/addons/equipment_booking/models/booking.py
+@@ -0,0 +1,240 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++from odoo import _, api, fields, models
++from odoo.exceptions import UserError, ValidationError
++from odoo.http import request
++from datetime import timedelta
++import logging
++from markupsafe import Markup
++
++_logger = logging.getLogger(__name__)
++
++DEFAULT_BOOKING_NAME = _("New Booking")
++
++
++class EquipmentBooking(models.Model):
++    _name = 'equipment.booking'
++    _description = 'Equipment Booking'
++    _inherit = ['mail.thread']
++    _order = 'start_datetime desc, id desc'
++
++    name = fields.Char('Reference', required=True, copy=False, readonly=True, default=lambda self: DEFAULT_BOOKING_NAME)
++    equipment = fields.Many2one('maintenance.equipment', string='Equipment', required=True, tracking=True)
++    location_id = fields.Many2one('equipment.booking.location', string='Pick-up Location')
++    user_id = fields.Many2one('res.users', string='Booked By', required=True, default=lambda self: self.env.user)
++    partner_id = fields.Many2one('res.partner', string='Holder', required=True, ondelete='cascade', tracking=True)
++    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company)
++    start_datetime = fields.Datetime('Start', required=True, tracking=True)
++    end_datetime = fields.Datetime('End', required=True, tracking=True)
++    start_date = fields.Date(compute='_compute_dates', inverse='_inverse_dates')
++    end_date = fields.Date(compute='_compute_dates', inverse='_inverse_dates')
++    duration = fields.Float('Duration (hours)', compute='_get_duration', store=True)
++    state = fields.Selection([
++        ('draft', 'Draft'),
++        ('confirmed', 'Confirmed'),
++        ('in_use', 'In Use'),
++        ('returned', 'Returned'),
++        ('cancelled', 'Cancelled'),
++    ], default='draft', required=True, tracking=True)
++    lines = fields.One2many('equipment.booking.lines', 'booking_id', string='Accessories')
++    accessory_name = fields.Char(related='lines.product_id.name', string='Main Accessory')
++    price = fields.Float('Price', compute='_compute_price', store=True)
++    is_late = fields.Boolean(compute='_compute_is_late')
++    is_archived = fields.Boolean('Archived', default=False)
++    reminder_sent = fields.Boolean(copy=False, index=True)
++    return_datetime = fields.Datetime(compute='_compute_return_datetime', store=True)
++    checkin = fields.Datetime('Checked In At', readonly=True, copy=False)
++    feed_token = fields.Char(related='partner_id.booking_feed_token')
++    manual_attachment_id = fields.Many2one('ir.attachment', string='Manual')
++    manual_file = fields.Binary(related='manual_attachment_id.raw', string='Manual File')
++    note = fields.Text('Notes', help="Anything the next holder should know: missing parts, battery level…")
++
++    @api.depends('start_datetime', 'end_datetime')
++    def _compute_dates(self):
++        for booking in self:
++            booking.start_date = booking.start_datetime and booking.start_datetime.date()
++            booking.end_date = booking.end_datetime and booking.end_datetime.date()
++
++    def _inverse_dates(self):
++        for booking in self:
++            if booking.start_date:
++                booking.start_datetime = fields.Datetime.to_datetime(booking.start_date)
++            if booking.end_date:
++                booking.end_datetime = fields.Datetime.to_datetime(booking.end_date) + timedelta(hours=23, minutes=59)
++
++    @api.depends('start_datetime', 'end_datetime')
++    def _get_duration(self):
++        for booking in self:
++            if booking.start_datetime and booking.end_datetime:
++                booking.duration = (booking.end_datetime - booking.start_datetime).total_seconds() / 3600
++            else:
++                booking.duration = 0.0
++
++    @api.depends('lines.price_unit', 'lines.quantity', 'duration')
++    def _compute_price(self):
++        for booking in self:
++            hourly = sum(line.price_unit * line.quantity for line in booking.lines)
++            booking.price = round(hourly * booking.duration, 2)
++
++    @api.depends('end_datetime')
++    def _compute_is_late(self):
++        now = fields.Datetime.now()
++        for booking in self:
++            booking.is_late = booking.state == 'in_use' and booking.end_datetime < now
++
++    @api.depends('state')
++    def _compute_return_datetime(self):
++        for booking in self:
++            if booking.state == 'returned' and not booking.return_datetime:
++                booking.return_datetime = fields.Datetime.now()
++                booking.message_post(body=self.env._("Equipment returned."))
++
++    @api.constrains('equipment', 'start_datetime', 'end_datetime', 'state')
++    def _validate_no_overlap(self):
++        if self.env.context.get('skip_overlap_check'):
++            return
++        bookings = self.search([
++            ('equipment', 'in', self.equipment.ids),
++            ('state', '!=', 'cancelled'),
++        ])
++        for booking in self.filtered(lambda b: b.state != 'cancelled'):
++            for other in bookings:
++                if (
++                    other != booking
++                    and other.equipment == booking.equipment
++                    and other.start_datetime <= booking.end_datetime
++                    and other.end_datetime >= booking.start_datetime
++                ):
++                    raise ValidationError(self.env._("Booking %s overlaps another booking of the same equipment" % booking.name))
++
++    @api.onchange('start_datetime', 'end_datetime')
++    def _onchange_dates(self):
++        if self.start_datetime and self.end_datetime and self.end_datetime <= self.start_datetime:
++            self.end_datetime = False
++            return {'warning': {
++                'title': self.env._("Invalid period"),
++                'message': self.env._("The end of a booking must come after its start."),
++            }}
++
++    @api.model_create_multi
++    def create(self, vals_list):
++        for vals in vals_list:
++            if vals.get('name', DEFAULT_BOOKING_NAME) == DEFAULT_BOOKING_NAME:
++                vals['name'] = self.env['ir.sequence'].next_by_code('equipment.booking') or DEFAULT_BOOKING_NAME
++        return super().create(vals_list)
++
++    def action_confirm(self):
++        for booking in self:
++            booking._check_missing_accessories()
++            if booking.location_id and not booking.location_id._accepts_booking(booking):
++                raise UserError(self.env._("Booking %s cannot be picked up at this location.", booking.name))
++        self.write({'state': 'confirmed'})
++
++    def action_return(self):
++        equipment_ids = []
++        for booking in self:
++            equipment_ids.append(booking.equipment.id)
++        self.write({'state': 'returned'})
++        self.env['maintenance.equipment'].browse(equipment_ids).message_post(
++            body=self.env._("Back from booking."),
++        )
++
++    def action_cancel(self, reason=''):
++        for booking in self:
++            if booking.state == 'returned':
++                raise UserError(self.env._("Booking %s cannot be cancelled once returned") % booking.name)
++        self.write({'state': 'cancelled'})
++        if reason:
++            for booking in self:
++                booking.message_post(body=Markup(f"<p>Cancelled: {reason}</p>"))
++
++    def action_open_equipment(self):
++        return {
++            'type': 'ir.actions.act_window',
++            'res_model': 'maintenance.equipment',
++            'res_id': self.equipment.id,
++            'view_mode': 'form',
++        }
++
++    def action_share_link(self):
++        self.ensure_one()
++        url = f"{request.httprequest.host_url}my/bookings/{self.id}"
++        return {'type': 'ir.actions.act_url', 'url': url, 'target': 'new'}
++
++    def checkin(self):
++        self.ensure_one()
++        if self.state != 'confirmed':
++            raise UserError(self.env._("Only a “confirmed” booking can be checked in."))
++        self.state = 'in_use'
++
++    def set_booking_state(self, state):
++        self.sudo().write({'state': state})
++
++    def compute_price_for_period(self, start, end):
++        self.ensure_one()
++        hours = (end - start).total_seconds() / 3600
++        return sum(line.price_unit * line.quantity for line in self.lines) * hours
++
++    def _get_reminder_delay(self):
++        return 1
++
++    def _prepare_reminder_values(self, extra_values={}):
++        extra_values.update({'reply_to': self.user_id.partner_id.email_formatted})
++        return extra_values
++
++    def _check_missing_accessories(self):
++        self.ensure_one()
++        missing = self.lines.filtered(lambda line: not line.product_id.active)
++        if missing:
++            raise UserError(self.env._("Missing accessories: %s", ", ".join(missing.product_id.mapped('display_name'))))
++
++    def _send_reminder(self):
++        if not self.partner_id.email:
++            _logger.warning("Booking %s: holder has no email, no reminder sent", self.ids)
++            return
++        try:
++            template = self.env.ref('equipment_booking.mail_template_booking_reminder')
++            for booking in self:
++                template.send_mail(booking.id, email_values=booking._prepare_reminder_values())
++            self.reminder_sent = True
++        except Exception:
++            pass
++
++    @api.model
++    def _cron_send_reminders(self):
++        # remind holders the day before — the cron runs every hour
++        limit = fields.Date.today() + timedelta(days=self._get_reminder_delay())
++        bookings = self.search([
++            ('state', '=', 'confirmed'),
++            ('reminder_sent', '=', False),
++            ('start_datetime', '<=', limit),
++        ])
++        if len(bookings) > 0:
++            bookings._send_reminder()
++
++    @api.model
++    def _cron_archive_past_bookings(self):
++        bookings = self.search(['|', ('end_datetime', '<', fields.Datetime.now() - timedelta(days=90)), ('state', '=', 'cancelled')])
++        for batch in self.env.cr.split_for_in_conditions(bookings.ids, 100):
++            self.browse(batch).write({'is_archived': True})
++            self.env.cr.commit()
++
++    def _get_late_labels(self):
++        late = self.filtered('is_late')
++        return [_("%s (late)", booking.name) for booking in late]
++
++
++class EquipmentBookingLines(models.Model):
++    _name = 'equipment.booking.lines'
++    _description = 'Equipment Booking Accessory'
++
++    booking_id = fields.Many2one('equipment.booking', required=True, ondelete='cascade', index=True)
++    product_id = fields.Many2one('product.product', string='Accessory', required=True)
++    quantity = fields.Float(default=1.0)
++    price_unit = fields.Float('Hourly Price')
++
++    @api.model
++    def create(self, vals):
++        lines = super().create(vals)
++        lines.booking_id.message_post(body=self.env._("Accessories updated."))
++        return lines
+diff --git a/addons/equipment_booking/models/equipment_booking_location.py b/addons/equipment_booking/models/equipment_booking_location.py
+new file mode 100644
+index 000000000000..80d0f38fd400
+--- /dev/null
++++ b/addons/equipment_booking/models/equipment_booking_location.py
+@@ -0,0 +1,57 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++from odoo import api, fields, models
++from odoo.tools.safe_eval import safe_eval
++
++
++class EquipmentBookingLocation(models.Model):
++    _name = 'equipment.booking.location'
++    _description = 'Equipment Pick-up Location'
++    _inherits = {'res.partner': 'partner_id'}
++    _order = 'complete_name'
++
++    @api.model_create_multi
++    def create(self, vals_list):
++        for vals in vals_list:
++            vals.setdefault('is_company', True)
++        return super().create(vals_list)
++
++    partner_id = fields.Many2one('res.partner', string='Address', required=True, ondelete='restrict')
++    parent_id = fields.Many2one('equipment.booking.location', string='Parent Location', ondelete='cascade')
++    child_ids = fields.One2many('equipment.booking.location', 'parent_id', string='Sub-locations')
++    complete_name = fields.Char(compute='_compute_complete_name', store=True, recursive=True)
++    booking_condition = fields.Char(
++        'Booking Condition',
++        help="Python expression a booking must satisfy to be picked up here, e.g. booking.duration <= 8",
++    )
++
++    _sql_constraints = [
++        ('code_uniq', 'unique(partner_id)', 'A location already uses this address.'),
++    ]
++
++    @api.depends('name', 'parent_id.complete_name')
++    def _compute_complete_name(self):
++        for location in self:
++            if location.parent_id:
++                location.complete_name = f"{location.parent_id.complete_name} / {location.name}"
++            else:
++                location.complete_name = location.name
++
++    def _accepts_booking(self, booking):
++        self.ensure_one()
++        if not self.booking_condition:
++            return True
++        return bool(safe_eval(self.booking_condition, {'booking': booking}))
++
++    def _get_bookings_in_subtree(self):
++        return self.env['equipment.booking'].search([('location_id', 'child_of', self.ids)])
++
++    def action_view_bookings(self):
++        self.ensure_one()
++        return {
++            'type': 'ir.actions.act_window',
++            'name': self.env._("Bookings"),
++            'res_model': 'equipment.booking',
++            'view_mode': 'list,form',
++            'domain': [('id', 'in', self._get_bookings_in_subtree().ids)],
++        }
+diff --git a/addons/equipment_booking/models/maintenance_equipment.py b/addons/equipment_booking/models/maintenance_equipment.py
+new file mode 100644
+index 000000000000..dbf4351264ad
+--- /dev/null
++++ b/addons/equipment_booking/models/maintenance_equipment.py
+@@ -0,0 +1,39 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++import hashlib
++import hmac
++
++from odoo import api, fields, models
++
++
++class MaintenanceEquipment(models.Model):
++    _inherit = 'maintenance.equipment'
++
++    equipment_assign_to = fields.Selection(
++        selection_add=[('booking', 'Booking Holder')], ondelete={'booking': 'set other'})
++    bookable = fields.Boolean('Bookable', help="Employees and portal customers can book this equipment.")
++    booking_ids = fields.One2many('equipment.booking', 'equipment', string='Bookings')
++    checkin_code = fields.Char('Check-in Code', compute='_compute_checkin_code', store=True, copy=False)
++
++    @api.depends('serial_number')
++    def _compute_checkin_code(self):
++        for equipment in self:
++            signer = equipment.get_label_signer()
++            signer.update(f"{equipment.id}-{equipment.serial_number or ''}".encode())
++            equipment.checkin_code = signer.hexdigest()[:12]
++
++    def _get_owner_methods_by_equipment_assign_to(self, date=None):
++        owner_methods = super()._get_owner_methods_by_equipment_assign_to(date=date)
++        owner_methods['booking'] = lambda equipment: equipment._get_holder_user(date).id or self.env.user.id
++        return owner_methods
++
++    def _get_holder_user(self, date):
++        self.ensure_one()
++        booking = self.booking_ids.filtered(
++            lambda b: b.state in ('confirmed', 'in_use') and b.start_datetime.date() <= date <= b.end_datetime.date()
++        )[:1]
++        return booking.user_id
++
++    def get_label_signer(self):
++        secret = self.env['ir.config_parameter'].sudo().get_str('database.secret')
++        return hmac.new(secret.encode(), digestmod=hashlib.sha256)
+diff --git a/addons/equipment_booking/models/res_partner.py b/addons/equipment_booking/models/res_partner.py
+new file mode 100644
+index 000000000000..8ccb89094e15
+--- /dev/null
++++ b/addons/equipment_booking/models/res_partner.py
+@@ -0,0 +1,46 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++import base64
++import pickle
++import secrets
++
++from odoo import fields, models
++
++
++class ResPartner(models.Model):
++    _inherit = 'res.partner'
++
++    booking_ids = fields.One2many('equipment.booking', 'partner_id', string='Equipment Bookings')
++    booking_count = fields.Integer(compute='_compute_booking_count')
++    booking_feed_token = fields.Char('Booking Calendar Token', copy=False)
++    booking_preferences = fields.Binary('Booking Preferences', attachment=False)
++
++    def _compute_booking_count(self):
++        for partner in self:
++            partner.booking_count = self.env['equipment.booking'].search_count([('partner_id', '=', partner.id)])
++
++    def _get_booking_feed_token(self):
++        self.ensure_one()
++        if not self.booking_feed_token:
++            self.sudo().booking_feed_token = secrets.token_urlsafe(16)
++        return self.booking_feed_token
++
++    def _get_booking_preferences(self):
++        self.ensure_one()
++        if not self.booking_preferences:
++            return {}
++        return pickle.loads(base64.b64decode(self.booking_preferences))
++
++    def _get_upcoming_bookings(self):
++        booking_obj = self.env['equipment.booking']
++        return booking_obj.search([('partner_id', 'in', self.ids)]).filtered(lambda b: b.state == 'confirmed')
++
++    def _get_equipment_in_use(self):
++        self.env.cr.execute("""
++            SELECT equipment
++              FROM equipment_booking
++             WHERE partner_id IN %s
++               AND state = 'in_use'
++        """, [tuple(self.ids)])
++        equipment_ids = [row[0] for row in self.env.cr.fetchall()]
++        return [self.env['maintenance.equipment'].browse(equipment_id) for equipment_id in equipment_ids]
+diff --git a/addons/equipment_booking/report/__init__.py b/addons/equipment_booking/report/__init__.py
+new file mode 100644
+index 000000000000..836d9b7aa287
+--- /dev/null
++++ b/addons/equipment_booking/report/__init__.py
+@@ -0,0 +1 @@
++from . import booking_report
+diff --git a/addons/equipment_booking/report/booking_report.py b/addons/equipment_booking/report/booking_report.py
+new file mode 100644
+index 000000000000..6fa3583b1b62
+--- /dev/null
++++ b/addons/equipment_booking/report/booking_report.py
+@@ -0,0 +1,39 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++import base64
++import os
++
++import phonenumbers
++
++from odoo import api, models
++from odoo.tools import config
++
++
++class ReportEquipmentBookingLabel(models.AbstractModel):
++    _name = 'report.equipment_booking.report_booking_label'
++    _description = 'Equipment Booking Label'
++
++    @api.model
++    def _get_report_values(self, docids, data=None):
++        bookings = self.env['equipment.booking'].browse(docids)
++        return {
++            'localized': {booking.id: booking.with_context(lang=booking.partner_id.lang) for booking in bookings},
++            'holder_phones': {booking.id: self._format_phone(booking.partner_id) for booking in bookings},
++            'pictures': {booking.id: self._get_equipment_picture(booking.equipment) for booking in bookings},
++        }
++
++    def _format_phone(self, partner):
++        if not partner.phone:
++            return ''
++        try:
++            number = phonenumbers.parse(partner.phone, partner.country_id.code or None)
++        except phonenumbers.NumberParseException:
++            return partner.phone
++        return phonenumbers.format_number(number, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
++
++    def _get_equipment_picture(self, equipment):
++        path = os.path.join(config['data_dir'], 'equipment_pictures', f'{equipment.serial_number}.png')
++        if not os.path.exists(path):
++            return False
++        with open(path, 'rb') as picture:
++            return base64.b64encode(picture.read()).decode()
+diff --git a/addons/equipment_booking/report/booking_report.xml b/addons/equipment_booking/report/booking_report.xml
+new file mode 100644
+index 000000000000..6e17233181b8
+--- /dev/null
++++ b/addons/equipment_booking/report/booking_report.xml
+@@ -0,0 +1,33 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++    <record id="action_report_booking_label" model="ir.actions.report">
++        <field name="name">Booking Label</field>
++        <field name="model">equipment.booking</field>
++        <field name="report_type">qweb-pdf</field>
++        <field name="report_name">equipment_booking.report_booking_label</field>
++        <field name="print_report_name">'Label - %s' % object.name</field>
++        <field name="binding_model_id" ref="model_equipment_booking"/>
++        <field name="binding_type">report</field>
++    </record>
++
++    <template id="report_booking_label">
++        <t t-call="web.html_container">
++            <t t-foreach="docs" t-as="doc">
++                <t t-call="web.external_layout">
++                    <div class="page" t-lang="doc.partner_id.lang">
++                        <h2 t-out="localized[doc.id].name"/>
++                        <p><strong>Equipment:</strong> <span t-out="doc.equipment.name"/></p>
++                        <p>
++                            <strong>Holder:</strong> <span t-out="doc.partner_id.name"/>
++                            <span t-esc="holder_phones[doc.id]"/>
++                        </p>
++                        <p><strong>From:</strong> <span t-field="localized[doc.id].start_datetime"/></p>
++                        <p><strong>To:</strong> <span t-field="localized[doc.id].end_datetime"/></p>
++                        <p><strong>Check-in code:</strong> <span t-out="doc.equipment.checkin_code"/></p>
++                        <img t-if="pictures[doc.id]" t-att-src="'data:image/png;base64,%s' % pictures[doc.id]" alt="Equipment"/>
++                    </div>
++                </t>
++            </t>
++        </t>
++    </template>
++</odoo>
+diff --git a/addons/equipment_booking/security/groups.xml b/addons/equipment_booking/security/groups.xml
+new file mode 100644
+index 000000000000..af8a5f6d363a
+--- /dev/null
++++ b/addons/equipment_booking/security/groups.xml
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++    <record id="group_booking_manager" model="res.groups">
++        <field name="name">Booking Manager</field>
++        <field name="sequence">20</field>
++        <field name="privilege_id" ref="maintenance.res_groups_privilege_maintenance"/>
++        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
++        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
++        <field name="comment">The user manages every equipment booking and the pick-up locations.</field>
++    </record>
++</odoo>
+diff --git a/addons/equipment_booking/security/ir.access.csv b/addons/equipment_booking/security/ir.access.csv
+new file mode 100644
+index 000000000000..378c4453f461
+--- /dev/null
++++ b/addons/equipment_booking/security/ir.access.csv
+@@ -0,0 +1,8 @@
++id,name,model_id,group_id/id,operation,domain
++equipment_booking_access_user,equipment.booking.user,equipment.booking,base.group_user,crud,"[('user_id', '=', user.id)]"
++equipment_booking_access_manager,equipment.booking.manager,equipment.booking,group_booking_manager,crud,
++equipment_booking_access_portal,equipment.booking.portal,equipment.booking,base.group_portal,crud,
++equipment_booking_lines_access_user,equipment.booking.lines.user,equipment.booking.lines,base.group_user,crud,
++equipment_booking_lines_restrict_own,equipment.booking.lines.own,equipment.booking.lines,,r,"[('booking_id.user_id', '=', user.id)]"
++equipment_booking_location_access_user,equipment.booking.location.user,equipment.booking.location,base.group_user,cru,
++equipment_booking_location_access_manager,equipment.booking.location.manager,equipment.booking.location,group_booking_manager,crud,
+diff --git a/addons/equipment_booking/static/src/components/booking_board.js b/addons/equipment_booking/static/src/components/booking_board.js
+new file mode 100644
+index 000000000000..829b08b244c7
+--- /dev/null
++++ b/addons/equipment_booking/static/src/components/booking_board.js
+@@ -0,0 +1,59 @@
++import { Component, markup, useProps } from "@odoo/owl";
++import { registry } from "@web/core/registry";
++import { _t } from "@web/core/l10n/translation";
++import { useService } from "@web/core/utils/hooks";
++import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
++import { useBoardBookings } from "@equipment_booking/hooks/use_board_bookings";
++
++/**
++ * The booking board: one column per equipment with its current and upcoming
++ * bookings, so the desk sees at a glance what goes out and what is late.
++ */
++export class BookingBoard extends Component {
++    static template = "equipment_booking.BookingBoard";
++    props = useProps(standardActionServiceProps);
++
++    setup() {
++        this.action = useService("action");
++        this.board = useBoardBookings();
++    }
++
++    get title() {
++        return _t("Booking Board");
++    }
++
++    get lateCount() {
++        return this.board.state.bookings.filter((booking) => booking.is_late).length;
++    }
++
++    columns() {
++        const byEquipment = new Map();
++        for (const booking of this.board.state.bookings) {
++            const [id, name] = booking.equipment;
++            if (!byEquipment.has(id)) {
++                byEquipment.set(id, { id, name, bookings: [] });
++            }
++            byEquipment.get(id).bookings.push(booking);
++        }
++        return [...byEquipment.values()];
++    }
++
++    noteHtml(booking) {
++        return markup(booking.note || "");
++    }
++
++    timeLeft(booking) {
++        return window.reltime.until(booking.end_datetime);
++    }
++
++    onClickBooking(booking) {
++        this.action.doAction({
++            type: "ir.actions.act_window",
++            res_model: "equipment.booking",
++            res_id: booking.id,
++            views: [[false, "form"]],
++        });
++    }
++}
++
++registry.category("actions").add("equipment_booking.board", BookingBoard);
+diff --git a/addons/equipment_booking/static/src/components/booking_board.xml b/addons/equipment_booking/static/src/components/booking_board.xml
+new file mode 100644
+index 000000000000..e3296ce2db82
+--- /dev/null
++++ b/addons/equipment_booking/static/src/components/booking_board.xml
+@@ -0,0 +1,30 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<templates xml:space="preserve">
++    <t t-name="equipment_booking.BookingBoard">
++        <div class="o_action o_equipment_booking_board h-100 overflow-auto">
++            <div id="booking_board_header" class="d-flex align-items-center gap-3 p-3">
++                <img src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/icons/calendar-week.svg" alt="" width="32" height="32"/>
++                <h2 class="m-0" t-out="this.title"/>
++                <span t-if="this.lateCount" class="booking_late o_equipment_booking_board_badge">
++                    <t t-out="this.lateCount"/> late
++                </span>
++                <button class="btn btn-secondary ms-auto" t-on-click="() => this.board.load()">Refresh</button>
++            </div>
++            <div t-if="!this.board.state.bookings.length" class="o_equipment_booking_board_empty">
++                No booking is confirmed or in use.
++            </div>
++            <div class="o_equipment_booking_board_columns d-flex">
++                <div t-foreach="this.columns()" t-as="column" t-key="column.id" class="o_equipment_booking_board_column">
++                    <h4 t-out="column.name"/>
++                    <div t-foreach="column.bookings" t-as="booking" t-key="booking.id"
++                         class="o-booking-card" t-on-click="() => this.onClickBooking(booking)">
++                        <div class="o_equipment_booking_board_column_card_header_title" t-out="booking.name"/>
++                        <div t-out="booking.partner_id[1]"/>
++                        <div class="text-muted">Due back <t t-out="this.timeLeft(booking)"/></div>
++                        <div class="o_equipment_booking_board_note" t-out="this.noteHtml(booking)"/>
++                    </div>
++                </div>
++            </div>
++        </div>
++    </t>
++</templates>
+diff --git a/addons/equipment_booking/static/src/hooks/use_board_bookings.js b/addons/equipment_booking/static/src/hooks/use_board_bookings.js
+new file mode 100644
+index 000000000000..1da13252d327
+--- /dev/null
++++ b/addons/equipment_booking/static/src/hooks/use_board_bookings.js
+@@ -0,0 +1,34 @@
++import { onWillStart, proxy } from "@odoo/owl";
++import { useService } from "@web/core/utils/hooks";
++
++export const BOARD_FIELDS = [
++    "name",
++    "equipment",
++    "partner_id",
++    "start_datetime",
++    "end_datetime",
++    "state",
++    "is_late",
++    "note",
++];
++
++/**
++ * Loads the bookings shown on the board: the confirmed ones and the ones in
++ * use, oldest start first.
++ */
++export function useBoardBookings() {
++    const orm = useService("orm");
++    const state = proxy({ bookings: [] });
++
++    async function load() {
++        state.bookings = await orm.searchRead(
++            "equipment.booking",
++            [["state", "in", ["confirmed", "in_use"]]],
++            BOARD_FIELDS,
++            { order: "start_datetime" }
++        );
++    }
++
++    onWillStart(load);
++    return { state, load };
++}
+diff --git a/addons/equipment_booking/static/src/patches/form_controller_patch.js b/addons/equipment_booking/static/src/patches/form_controller_patch.js
+new file mode 100644
+index 000000000000..016246cfb9ee
+--- /dev/null
++++ b/addons/equipment_booking/static/src/patches/form_controller_patch.js
+@@ -0,0 +1,15 @@
++import { patch } from "@web/core/utils/patch";
++import { _t } from "@web/core/l10n/translation";
++import { FormController } from "@web/views/form/form_controller";
++
++patch(FormController.prototype, {
++    async onRecordSaved(record, changes) {
++        await super.onRecordSaved(...arguments);
++        if (record.resModel === "equipment.booking" && record.data.state === "confirmed") {
++            this.env.services.notification.add(
++                _t("Print the booking label before the equipment leaves the desk."),
++                { type: "info" }
++            );
++        }
++    },
++});
+diff --git a/addons/equipment_booking/static/src/scss/booking_board.scss b/addons/equipment_booking/static/src/scss/booking_board.scss
+new file mode 100644
+index 000000000000..dbe3f7c01bf9
+--- /dev/null
++++ b/addons/equipment_booking/static/src/scss/booking_board.scss
+@@ -0,0 +1,67 @@
++@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap");
++
++$bookingCardColor: #2c7be5;
++
++@mixin cardShadow($size) {
++    box-shadow: 0 1px $size rgba(0, 0, 0, 0.15);
++}
++
++:root {
++    --booking-accent: #{$bookingCardColor};
++}
++
++#booking_board_header {
++    border-bottom: 1px solid $border-color;
++}
++
++.o_equipment_booking_board {
++    --columnGap: 12px;
++
++    font-family: "Inter", $font-family-sans-serif;
++}
++
++.o_equipment_booking_board_columns {
++    gap: var(--columnGap);
++    padding: 0 1rem 1rem;
++}
++
++.o_equipment_booking_board_column {
++    color: $gray-700;
++    font-size: 0.9rem;
++    background-color: $gray-100;
++    padding: 0.5rem;
++    width: 260px;
++    position: relative;
++    border-radius: 0.5rem;
++}
++
++.o_equipment_booking_board_column_card_header_title {
++    font-weight: 600;
++}
++
++.o-booking-card {
++    margin-bottom: 0.5rem;
++    padding: 0.5rem;
++    border-left: 3px solid var(--booking-accent);
++    background-color: $white;
++    cursor: pointer;
++    @include cardShadow(4px);
++}
++
++.booking_late {
++    color: $danger;
++}
++
++.o_equipment_booking_board_badge {
++    padding: 0.25rem 0.5rem;
++    font-weight: 600;
++    $-badge-radius: 1rem;
++    border-radius: $-badge-radius;
++}
++
++.o_equipment_booking_board_note { max-height: 4.5em; overflow: hidden; color: $text-muted; }
++
++.o_equipment_booking_board_empty {
++	padding: 2rem;
++	text-align: center;
++}
+diff --git a/addons/equipment_booking/static/src/vendor/reltime.min.js b/addons/equipment_booking/static/src/vendor/reltime.min.js
+new file mode 100644
+index 000000000000..608aa7a2597e
+--- /dev/null
++++ b/addons/equipment_booking/static/src/vendor/reltime.min.js
+@@ -0,0 +1,2 @@
++/*! reltime v1.4.2 | (c) reltime contributors | MIT License */
++!function(e){"use strict";var t=[["year",31536e6],["month",2592e6],["day",864e5],["hour",36e5],["minute",6e4]];function n(e){return"string"==typeof e?new Date(e.replace(" ","T")+"Z"):e}e.reltime={until:function(e,r){var o=n(e)-(r||Date.now()),i=new Intl.RelativeTimeFormat(void 0,{numeric:"auto"});for(var a=0;a<t.length;a++)if(Math.abs(o)>=t[a][1]||a===t.length-1)return i.format(Math.round(o/t[a][1]),t[a][0])}}}(window);
+diff --git a/addons/equipment_booking/tests/__init__.py b/addons/equipment_booking/tests/__init__.py
+new file mode 100644
+index 000000000000..89f65cd9641e
+--- /dev/null
++++ b/addons/equipment_booking/tests/__init__.py
+@@ -0,0 +1,2 @@
++from . import booking_tests
++from . import test_booking
+diff --git a/addons/equipment_booking/tests/booking_tests.py b/addons/equipment_booking/tests/booking_tests.py
+new file mode 100644
+index 000000000000..f0018fdc321d
+--- /dev/null
++++ b/addons/equipment_booking/tests/booking_tests.py
+@@ -0,0 +1,13 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++from odoo.tests import TransactionCase, tagged
++
++
++@tagged('at_install', '-post_install')
++class TestBookingLocation(TransactionCase):
++
++    def test_complete_name(self):
++        Location = self.env['equipment.booking.location']
++        building = Location.create({'name': 'Building A'})
++        floor = Location.create({'name': 'Floor 2', 'parent_id': building.id})
++        self.assertEqual(floor.complete_name, 'Building A / Floor 2')
+diff --git a/addons/equipment_booking/tests/test_booking.py b/addons/equipment_booking/tests/test_booking.py
+new file mode 100644
+index 000000000000..2e85bbef7582
+--- /dev/null
++++ b/addons/equipment_booking/tests/test_booking.py
+@@ -0,0 +1,71 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++from datetime import timedelta
++from unittest.mock import patch
++
++from odoo import Command, fields
++from odoo.exceptions import ValidationError
++from odoo.tests import TransactionCase, tagged
++
++
++@tagged('post_install', 'at_install')
++class TestEquipmentBooking(TransactionCase):
++
++    @classmethod
++    def setUpClass(cls):
++        super().setUpClass()
++        cls.partner = cls.env.ref('base.res_partner_2')
++        cls.equipment = cls.env['maintenance.equipment'].create({'name': 'Cordless Drill', 'bookable': True})
++        cls.start = fields.Datetime.now().replace(microsecond=0) + timedelta(hours=12)
++        cls.booking = cls.env['equipment.booking'].create({
++            'equipment': cls.equipment.id,
++            'partner_id': cls.partner.id,
++            'start_datetime': cls.start,
++            'end_datetime': cls.start + timedelta(hours=8),
++        })
++
++    def test_overlap_rejected(self):
++        with self.assertRaises(ValidationError):
++            self.env['equipment.booking'].create({
++                'equipment': self.equipment.id,
++                'partner_id': self.partner.id,
++                'start_datetime': self.start + timedelta(hours=2),
++                'end_datetime': self.start + timedelta(hours=10),
++            })
++
++    def test_price(self):
++        battery = self.env['product.product'].create({'name': 'Spare Battery'})
++        with self.assertQueryCount(60):
++            self.booking.lines = [Command.create({'product_id': battery.id, 'quantity': 2, 'price_unit': 1.25})]
++            self.booking.flush_recordset()
++        self.assertEqual(self.booking.price, 20.0)
++
++    def test_reminder_without_email(self):
++        self.partner.email = False
++        self.booking.action_confirm()
++        self.env['equipment.booking']._cron_send_reminders()
++        self.assertFalse(self.booking.reminder_sent)
++
++    def test_reminder_sent(self):
++        self.booking.action_confirm()
++        Booking = self.env.registry['equipment.booking']
++        with patch.object(Booking, '_send_reminder') as send_reminder:
++            self.env['equipment.booking']._cron_send_reminders()
++        send_reminder.assert_called_once()
++
++    def test_cancel(self):
++        self.booking.action_cancel()
++        self.assertTrue(self.booking.state)
++
++
++class TestEquipmentBookingManager(TestEquipmentBooking):
++
++    @classmethod
++    def setUpClass(cls):
++        super().setUpClass()
++        manager = cls.env['res.users'].create({
++            'name': 'Booking Manager',
++            'login': 'booking_manager',
++            'group_ids': [Command.set(cls.env.ref('equipment_booking.group_booking_manager').ids)],
++        })
++        cls.env = cls.env(user=manager)
+diff --git a/addons/equipment_booking/tests/test_portal.py b/addons/equipment_booking/tests/test_portal.py
+new file mode 100644
+index 000000000000..e88eded91af9
+--- /dev/null
++++ b/addons/equipment_booking/tests/test_portal.py
+@@ -0,0 +1,12 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++from odoo.tests import HttpCase, tagged
++
++
++@tagged('post_install', '-at_install')
++class TestBookingPortal(HttpCase):
++
++    def test_my_bookings_page(self):
++        self.authenticate('portal', 'portal')
++        response = self.url_open('/my/bookings')
++        self.assertEqual(response.status_code, 200)
+diff --git a/addons/equipment_booking/views/booking.xml b/addons/equipment_booking/views/booking.xml
+new file mode 100644
+index 000000000000..be68bcc94e23
+--- /dev/null
++++ b/addons/equipment_booking/views/booking.xml
+@@ -0,0 +1,211 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++
++    <record model="ir.ui.view" id="equipment_booking_view_form">
++        <field name="name">equipment.booking.view.form</field>
++        <field name="model">equipment.booking</field>
++        <field name="arch" type="xml">
++            <form string="Booking">
++                <header>
++                    <button name="action_confirm" string="Confirm" type="object" class="btn-primary" invisible="state != 'draft'"/>
++                    <button name="checkin" string="Check In" type="object" class="btn-primary" invisible="state != 'confirmed'"/>
++                    <button name="action_return" string="Return" type="object" class="btn-primary" invisible="state != 'in_use'"/>
++                    <button name="%(equipment_booking_extend_action)d" string="Extend" type="action" invisible="state not in ('confirmed', 'in_use')"/>
++                    <button name="action_share_link" string="Share" type="object" invisible="state == 'cancelled'"/>
++                    <button name="action_cancel" string="Cancel" type="object" invisible="state in ('returned', 'cancelled')"/>
++                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,in_use,returned"/>
++                </header>
++                <sheet>
++                    <div class="oe_button_box" name="button_box">
++                        <button name="action_open_equipment" type="object" class="oe_stat_button" icon="fa-wrench" string="Equipment"/>
++                    </div>
++                    <div class="oe_title">
++                        <h1><field name="name"/></h1>
++                    </div>
++                    <group>
++                        <group name="booking_info">
++                            <field name="equipment" domain="[('bookable', '=', True)]"/>
++                            <field name="partner_id"/>
++                            <field name="user_id"/>
++                            <field name="location_id"/>
++                            <field name="company_id" groups="base.group_multi_company"/>
++                        </group>
++                        <group name="period">
++                            <field name="start_datetime"/>
++                            <field name="end_datetime"/>
++                            <field name="duration" widget="float_time"/>
++                            <field name="price"/>
++                        </group>
++                    </group>
++                    <notebook>
++                        <page string="Accessories" name="accessories">
++                            <field name="lines">
++                                <list editable="bottom">
++                                    <field name="product_id"/>
++                                    <field name="quantity"/>
++                                    <field name="price_unit"/>
++                                </list>
++                            </field>
++                        </page>
++                        <page string="Notes" name="notes">
++                            <group>
++                                <field name="manual_attachment_id"/>
++                                <field name="manual_file" invisible="not manual_attachment_id"/>
++                            </group>
++                            <field name="note"/>
++                        </page>
++                    </notebook>
++                </sheet>
++                <chatter/>
++            </form>
++        </field>
++    </record>
++
++    <record id="action_bookings" model="ir.actions.act_window">
++        <field name="name">Bookings</field>
++        <field name="res_model">equipment.booking</field>
++        <field name="view_mode">list,form</field>
++        <field name="domain">[('is_archived', '=', False)]</field>
++        <field name="help" type="html">
++            <p class="o_view_nocontent_smiling_face">Book a piece of equipment</p>
++        </field>
++    </record>
++
++    <record id="view_booking_list" model="ir.ui.view">
++        <field name="name">equipment.booking.view.list</field>
++        <field name="model">equipment.booking</field>
++        <field name="arch" type="xml">
++            <list string="Bookings">
++                <field name="name"/>
++                <field name="equipment"/>
++                <field name="partner_id"/>
++                <field name="start_datetime"/>
++                <field name="end_datetime"/>
++                <field name="price" optional="hide"/>
++                <field name="state" widget="badge" decoration-success="state == 'returned'" decoration-info="state == 'confirmed'"/>
++            </list>
++        </field>
++    </record>
++
++    <record id="equipment_booking_view_search" model="ir.ui.view">
++        <field name="name">equipment.booking.view.search</field>
++        <field name="model">equipment.booking</field>
++        <field name="arch" type="xml">
++            <search string="Bookings">
++                <field name="name"/>
++                <field name="equipment"/>
++                <field name="partner_id"/>
++                <filter string="My Bookings" name="my_bookings" domain="[('user_id', '=', uid)]"/>
++                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
++                <filter string="In Use" name="in_use" domain="[('state', '=', 'in_use')]"/>
++                <group>
++                    <filter string="Equipment" name="group_by_equipment" context="{'group_by': 'equipment'}"/>
++                </group>
++            </search>
++        </field>
++    </record>
++
++    <record id="equipment_booking_view_form_quick" model="ir.ui.view">
++        <field name="name">equipment.booking.view.form.quick</field>
++        <field name="model">equipment.booking</field>
++        <field name="inherit_id" ref="equipment_booking_view_form"/>
++        <field name="arch" type="xml">
++            <page name="accessories" position="attributes">
++                <attribute name="invisible">1</attribute>
++            </page>
++        </field>
++    </record>
++
++    <record id="equipment_booking_action_quick" model="ir.actions.act_window">
++        <field name="name">Quick Booking</field>
++        <field name="res_model">equipment.booking</field>
++        <field name="view_mode">form</field>
++        <field name="view_id" ref="equipment_booking_view_form_quick"/>
++        <field name="target">new</field>
++    </record>
++
++    <record id="equipment_booking_location_view_form" model="ir.ui.view">
++        <field name="name">equipment.booking.location.view.form</field>
++        <field name="model">equipment.booking.location</field>
++        <field name="arch" type="xml">
++            <form string="Pick-up Location">
++                <sheet>
++                    <div class="oe_button_box" name="button_box">
++                        <button name="action_view_bookings" type="object" class="oe_stat_button" icon="fa-calendar" string="Bookings"/>
++                    </div>
++                    <div class="oe_title">
++                        <h1><field name="name"/></h1>
++                    </div>
++                    <group>
++                        <field name="parent_id"/>
++                        <field name="street"/>
++                        <field name="city"/>
++                        <field name="booking_condition"/>
++                    </group>
++                </sheet>
++            </form>
++        </field>
++    </record>
++
++    <record id="equipment_booking_location_view_list" model="ir.ui.view">
++        <field name="name">equipment.booking.location.view.list</field>
++        <field name="model">equipment.booking.location</field>
++        <field name="arch" type="xml">
++            <list string="Pick-up Locations">
++                <field name="complete_name"/>
++                <field name="city"/>
++            </list>
++        </field>
++    </record>
++
++    <record id="equipment_booking_location_action" model="ir.actions.act_window">
++        <field name="name">Pick-up Locations</field>
++        <field name="res_model">equipment.booking.location</field>
++        <field name="view_mode">list,form</field>
++    </record>
++
++    <record id="hr_equipment_view_form" model="ir.ui.view">
++        <field name="name">maintenance.equipment.form.booking</field>
++        <field name="model">maintenance.equipment</field>
++        <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
++        <field name="arch" type="xml">
++            <xpath expr="//sheet/group/group[2]/field[2]" position="after">
++                <field name="bookable"/>
++            </xpath>
++            <page name="maintenance" position="after">
++                <page string="Bookings" name="bookings" invisible="not bookable">
++                    <group>
++                        <field name="checkin_code"/>
++                        <field name="serial_number"/>
++                    </group>
++                    <field name="booking_ids" readonly="1">
++                        <list>
++                            <field name="name"/>
++                            <field name="partner_id"/>
++                            <field name="start_datetime"/>
++                            <field name="end_datetime"/>
++                            <field name="state"/>
++                        </list>
++                    </field>
++                </page>
++            </page>
++        </field>
++    </record>
++
++    <record id="equipment_booking_action_board" model="ir.actions.client">
++        <field name="name">Booking Board</field>
++        <field name="tag">equipment_booking.board</field>
++    </record>
++
++    <menuitem id="equipment_booking_menu_root" name="Bookings" parent="maintenance.menu_maintenance_title" sequence="5"/>
++    <record id="equipment_booking_menu" model="ir.ui.menu">
++        <field name="name">Bookings</field>
++        <field name="parent_id" ref="equipment_booking_menu_root"/>
++        <field name="action" ref="action_bookings"/>
++        <field name="sequence">1</field>
++    </record>
++    <menuitem id="equipment_booking_menu_board" name="Booking Board" parent="equipment_booking_menu_root" action="equipment_booking_action_board" sequence="3"/>
++    <menuitem id="equipment_booking_menu_quick" name="Quick Booking" parent="equipment_booking_menu_root" action="equipment_booking_action_quick" sequence="2"/>
++    <menuitem id="equipment_booking_location_menu" name="Pick-up Locations" parent="equipment_booking_menu_root" action="equipment_booking_location_action" sequence="10" groups="group_booking_manager"/>
++
++</odoo>
+diff --git a/addons/equipment_booking/views/portal.xml b/addons/equipment_booking/views/portal.xml
+new file mode 100644
+index 000000000000..d83f80810c22
+--- /dev/null
++++ b/addons/equipment_booking/views/portal.xml
+@@ -0,0 +1,81 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++    <template id="portal_my_bookings" name="My Equipment Bookings">
++        <t t-call="portal.portal_layout">
++            <t t-set="breadcrumbs_searchbar" t-value="True"/>
++            <h3 class="mt-3">Equipment Bookings</h3>
++            <p t-if="not bookings">You have no equipment bookings.</p>
++            <t t-if="bookings" t-call="portal.portal_table">
++                <thead>
++                    <tr>
++                        <th>Reference</th>
++                        <th>Equipment</th>
++                        <th>From</th>
++                        <th>To</th>
++                        <th class="text-end">Status</th>
++                    </tr>
++                </thead>
++                <tbody>
++                    <tr t-foreach="bookings" t-as="booking">
++                        <td><a t-attf-href="/my/bookings/#{booking.id}" t-out="booking.name"/></td>
++                        <td t-out="booking.equipment.name"/>
++                        <td t-field="booking.start_datetime"/>
++                        <td t-field="booking.end_datetime"/>
++                        <td class="text-end">
++                            <span t-attf-class="badge o_booking_status o_booking_status_#{booking.state}" t-field="booking.state"/>
++                        </td>
++                    </tr>
++                </tbody>
++            </t>
++        </t>
++    </template>
++
++    <template id="portal_booking_page" name="Equipment Booking">
++        <t t-call="portal.portal_layout">
++            <h3 class="mt-3" t-out="booking.name"/>
++            <p>
++                <t t-out="booking.equipment.name"/>:
++                <span t-field="booking.start_datetime"/> - <span t-field="booking.end_datetime"/>
++            </p>
++            <form t-attf-action="/my/bookings/#{booking.id}/update" method="post">
++                <div class="mb-3">
++                    <label for="note" class="form-label">Notes</label>
++                    <textarea name="note" id="note" class="form-control" t-out="booking.note"/>
++                </div>
++                <button type="submit" class="btn btn-primary">Save</button>
++            </form>
++            <a t-if="booking.state in ('draft', 'confirmed')" t-attf-href="/my/bookings/#{booking.id}/cancel" class="btn btn-secondary mt-3">Cancel the booking</a>
++        </t>
++    </template>
++
++    <template id="booking_calendar" name="Equipment Availability">
++        <t t-call="portal.frontend_layout">
++            <div class="container py-4">
++                <h3>Availability</h3>
++                <table class="table">
++                    <tr t-foreach="bookings" t-as="booking">
++                        <td t-field="booking.start_datetime"/>
++                        <td t-field="booking.end_datetime"/>
++                        <td t-out="booking.partner_id.name"/>
++                        <td t-out="booking.note"/>
++                    </tr>
++                </table>
++                <form t-if="not request.env.user._is_public()" action="/my/bookings/new" method="post">
++                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
++                    <input type="hidden" name="equipment_id" t-att-value="equipment_id"/>
++                    <div class="row mb-3">
++                        <div class="col">
++                            <label for="start" class="form-label">From</label>
++                            <input type="date" name="start" id="start" class="form-control" required="1"/>
++                        </div>
++                        <div class="col">
++                            <label for="end" class="form-label">To</label>
++                            <input type="date" name="end" id="end" class="form-control" required="1"/>
++                        </div>
++                    </div>
++                    <button type="submit" class="btn btn-primary">Book</button>
++                </form>
++            </div>
++        </t>
++    </template>
++</odoo>
+diff --git a/addons/equipment_booking/wizard/__init__.py b/addons/equipment_booking/wizard/__init__.py
+new file mode 100644
+index 000000000000..40272379f721
+--- /dev/null
++++ b/addons/equipment_booking/wizard/__init__.py
+@@ -0,0 +1 @@
++from . import wizard
+diff --git a/addons/equipment_booking/wizard/wizard.py b/addons/equipment_booking/wizard/wizard.py
+new file mode 100644
+index 000000000000..064810fbe17d
+--- /dev/null
++++ b/addons/equipment_booking/wizard/wizard.py
+@@ -0,0 +1,27 @@
++# Part of Odoo. See LICENSE file for full copyright and licensing details.
++
++from odoo import fields, models
++
++
++class EquipmentBookingExtend(models.TransientModel):
++    _name = 'equipment.booking.extend'
++    _description = 'Extend an Equipment Booking'
++
++    booking_id = fields.Many2one('equipment.booking', required=True)
++    new_end_datetime = fields.Datetime('New End', required=True)
++    extra_product_ids = fields.Many2many('product.product', string='Extra Accessories')
++    force = fields.Boolean('Ignore Next Bookings', help="Extend even if the equipment is booked right after.")
++
++    def action_extend(self):
++        self.ensure_one()
++        booking = self.booking_id
++        if self.force:
++            booking = booking.with_context(skip_overlap_check=True)
++        booking.end_datetime = self.new_end_datetime
++        for product in self.extra_product_ids:
++            self.env['equipment.booking.lines'].create({
++                'booking_id': booking.id,
++                'product_id': product.id,
++                'price_unit': product.lst_price,
++            })
++        return {'type': 'ir.actions.act_window_close'}
+diff --git a/addons/equipment_booking/wizard/wizard_views.xml b/addons/equipment_booking/wizard/wizard_views.xml
+new file mode 100644
+index 000000000000..9eb06caa4122
+--- /dev/null
++++ b/addons/equipment_booking/wizard/wizard_views.xml
+@@ -0,0 +1,29 @@
++<?xml version="1.0" encoding="utf-8"?>
++<odoo>
++    <record id="equipment_booking_extend_view_form" model="ir.ui.view">
++        <field name="name">equipment.booking.extend.view.form</field>
++        <field name="model">equipment.booking.extend</field>
++        <field name="arch" type="xml">
++            <form string="Extend Booking">
++                <group>
++                    <field name="booking_id" invisible="1"/>
++                    <field name="new_end_datetime"/>
++                    <field name="extra_product_ids" widget="many2many_tags"/>
++                    <field name="force"/>
++                </group>
++                <footer>
++                    <button name="action_extend" string="Extend" type="object" class="btn-primary"/>
++                    <button string="Discard" special="cancel"/>
++                </footer>
++            </form>
++        </field>
++    </record>
++
++    <record id="equipment_booking_extend_action" model="ir.actions.act_window">
++        <field name="name">Extend Booking</field>
++        <field name="res_model">equipment.booking.extend</field>
++        <field name="view_mode">form</field>
++        <field name="target">new</field>
++        <field name="context">{'default_booking_id': active_id}</field>
++    </record>
++</odoo>
+diff --git a/addons/maintenance/data/maintenance_demo.xml b/addons/maintenance/data/maintenance_demo.xml
+index 41119023b20d..1d1dd7cdfa66 100644
+--- a/addons/maintenance/data/maintenance_demo.xml
++++ b/addons/maintenance/data/maintenance_demo.xml
+@@ -38,7 +38,7 @@
+         <field name="owner_user_id" ref="base.user_admin"/>
+         <field name="technician_user_id" ref="base.user_admin"/>
+         <field name="assign_date" eval="time.strftime('%Y-%m-10')"/>
+-        <field name="serial_no">MT/122/11112222</field>
++        <field name="serial_number">MT/122/11112222</field>
+         <field name="model">NP300E5X</field>
+     </record>
+     <record id="equipment_monitor4" model="maintenance.equipment">
+@@ -47,7 +47,7 @@
+         <field name="owner_user_id" ref="base.user_admin"/>
+         <field name="technician_user_id" ref="base.user_admin"/>
+         <field name="assign_date" eval="time.strftime('%Y-01-01')"/>
+-        <field name="serial_no">MT/125/22778837</field>
++        <field name="serial_number">MT/125/22778837</field>
+         <field name="model">NP355E5X</field>
+     </record>
+     <record id="equipment_monitor6" model="maintenance.equipment">
+@@ -56,7 +56,7 @@
+         <field name="owner_user_id" ref="base.user_demo"/>
+         <field name="technician_user_id" ref="base.user_demo"/>
+         <field name="assign_date" eval="time.strftime('%Y-02-01')"/>
+-        <field name="serial_no">MT/127/18291018</field>
++        <field name="serial_number">MT/127/18291018</field>
+         <field name="model">NP355E5X</field>
+         <field name="color">3</field>
+     </record>
+@@ -66,7 +66,7 @@
+         <field name="owner_user_id" ref="base.user_demo"/>
+         <field name="technician_user_id" ref="base.user_admin"/>
+         <field name="assign_date" eval="time.strftime('%Y-03-08')"/>
+-        <field name="serial_no">LP/203/19281928</field>
++        <field name="serial_number">LP/203/19281928</field>
+         <field name="model">NE56R</field>
+      </record>
+      <record id="equipment_computer5" model="maintenance.equipment">
+@@ -75,7 +75,7 @@
+         <field name="owner_user_id" ref="base.user_admin"/>
+         <field name="technician_user_id" ref="base.user_demo"/>
+         <field name="assign_date" eval="time.strftime('%Y-04-08')"/>
+-        <field name="serial_no">LP/205/12928291</field>
++        <field name="serial_number">LP/205/12928291</field>
+         <field name="model">V5131</field>
+      </record>
+      <record id="equipment_computer9" model="maintenance.equipment">
+@@ -84,7 +84,7 @@
+         <field name="owner_user_id" ref="base.user_admin"/>
+         <field name="technician_user_id" ref="base.user_demo"/>
+         <field name="assign_date" eval="time.strftime('%Y-%m-11')"/>
+-        <field name="serial_no">LP/303/28292090</field>
++        <field name="serial_number">LP/303/28292090</field>
+         <field name="model">17-j059nr</field>
+      </record>
+      <record id="equipment_computer11" model="maintenance.equipment">
+@@ -93,13 +93,13 @@
+         <field name="owner_user_id" ref="base.user_demo"/>
+         <field name="technician_user_id" ref="base.user_demo"/>
+         <field name="assign_date" eval="time.strftime('%Y-05-01')"/>
+-        <field name="serial_no">LP/305/17281718</field>
++        <field name="serial_number">LP/305/17281718</field>
+      </record>
+      <record id="equipment_printer1" model="maintenance.equipment">
+         <field name="name">HP Inkjet printer</field>
+         <field name="category_id" ref="equipment_printer"/>
+         <field name="technician_user_id" ref="base.user_demo"/>
+-        <field name="serial_no">PR/011/2928191889</field>
++        <field name="serial_number">PR/011/2928191889</field>
+      </record>
+ 
+     <!--Maintenance Request-->
+diff --git a/addons/maintenance/models/maintenance.py b/addons/maintenance/models/maintenance.py
+index 8d8d30c3da58..ab86b4117052 100644
+--- a/addons/maintenance/models/maintenance.py
++++ b/addons/maintenance/models/maintenance.py
+@@ -122,11 +122,11 @@ class MaintenanceEquipment(models.Model):
+             return self.env.ref('maintenance.mt_mat_assign')
+         return super()._track_log_get_default_subtype(track_init_values)
+ 
+-    @api.depends('serial_no')
++    @api.depends('serial_number')
+     def _compute_display_name(self):
+         for record in self:
+-            if record.serial_no:
+-                record.display_name = (record.name or '') + '/' + record.serial_no
++            if record.serial_number:
++                record.display_name = (record.name or '') + '/' + record.serial_number
+             else:
+                 record.display_name = record.name
+ 
+@@ -139,7 +139,7 @@ class MaintenanceEquipment(models.Model):
+     partner_id = fields.Many2one('res.partner', string='Vendor', check_company=True)
+     partner_ref = fields.Char('Vendor Reference')
+     model = fields.Char('Model')
+-    serial_no = fields.Char('Serial Number', copy=False)
++    serial_number = fields.Char('Serial Number', copy=False)
+     assign_date = fields.Date(string='Assigned Date', compute='_compute_equipment_assignment_fields', store=True,
+                     readonly=False, tracking=True)
+     cost = fields.Float('Cost')
+@@ -155,7 +155,7 @@ class MaintenanceEquipment(models.Model):
+     technician_user_id = fields.Many2one(tracking=True)
+     equipment_req_properties_definition = fields.PropertiesDefinition('Maintenance Request Properties')
+ 
+-    def _get_owner_methods_by_equipment_assign_to(self):
++    def _get_owner_methods_by_equipment_assign_to(self, date=None):
+         return {
+             False: lambda equipment: equipment.owner_user_id,
+             'other': lambda equipment: self.env.user.id,
+@@ -171,7 +171,7 @@ class MaintenanceEquipment(models.Model):
+ 
+     @api.depends(lambda self: self._get_assign_fields() + ['equipment_assign_to'])
+     def _compute_owner(self):
+-        owner_methods = self._get_owner_methods_by_equipment_assign_to()
++        owner_methods = self._get_owner_methods_by_equipment_assign_to(date=fields.Date.context_today(self))
+         for equipment in self:
+             owner_method = owner_methods.get(equipment.equipment_assign_to)
+             if owner_method:
+@@ -200,8 +200,8 @@ class MaintenanceEquipment(models.Model):
+     def _onchange_category_id(self):
+         self.technician_user_id = self.category_id.technician_user_id
+ 
+-    _serial_no = models.Constraint(
+-        'unique(serial_no)',
++    _serial_number = models.Constraint(
++        'unique(serial_number)',
+         'Another asset already exists with this serial number!',
+     )
+ 
+diff --git a/addons/maintenance/tests/test_maintenance.py b/addons/maintenance/tests/test_maintenance.py
+index 80bb5a7feb9b..f27516fd1978 100644
+--- a/addons/maintenance/tests/test_maintenance.py
++++ b/addons/maintenance/tests/test_maintenance.py
+@@ -55,7 +55,7 @@ class TestEquipment(TestEquipmentCommon):
+             'technician_user_id': self.ref('base.user_root'),
+             'owner_user_id': self.user.id,
+             'assign_date': time.strftime('%Y-%m-%d'),
+-            'serial_no': 'MT/127/18291015',
++            'serial_number': 'MT/127/18291015',
+             'model': 'NP355E5X',
+             'color': 3,
+         })
+diff --git a/addons/maintenance/views/maintenance_views.xml b/addons/maintenance/views/maintenance_views.xml
+index 12ce8488a1f1..17c1197b3b41 100644
+--- a/addons/maintenance/views/maintenance_views.xml
++++ b/addons/maintenance/views/maintenance_views.xml
+@@ -397,7 +397,7 @@
+                                     <field name="partner_id"/>
+                                     <field name="partner_ref"/>
+                                     <field name="model"/>
+-                                    <field name="serial_no"/>
++                                    <field name="serial_number"/>
+                                 </group><group>
+                                     <field name="effective_date"/>
+                                     <field name="cost" groups="maintenance.group_equipment_manager"/>
+@@ -454,7 +454,7 @@
+                             <field name="name" class="fw-bold fs-5"/>
+                             <span t-if="record.model.raw_value" class="fw-bold small"> (<field name="model"/>)</span>
+                         </div>
+-                        <field t-if="record.serial_no.raw_value" name="serial_no"/>
++                        <field t-if="record.serial_number.raw_value" name="serial_number"/>
+                         <!-- below div is used in hr_maintenance and fleet_maintenance-->
+                         <div id="unassigned" invisible="1">Unassigned</div>
+                         <field name="equipment_properties" widget="properties"/>
+@@ -483,7 +483,7 @@
+                 <!-- <field name="active" invisible="1"/> -->
+                 <field name="owner_user_id" string="Owner"/>
+                 <field name="assign_date" groups="base.group_no_one"/>
+-                <field name="serial_no"/>
++                <field name="serial_number"/>
+                 <field name="technician_user_id"/>
+                 <field name="category_id"/>
+                 <field name="partner_id" column_invisible="True"/>
+@@ -500,7 +500,7 @@
+             <search string="Search">
+                 <field string="Equipment" name="name" filter_domain="[
+                     '|', '|', '|',
+-                    ('name', 'ilike', self), ('model', 'ilike', self), ('serial_no', 'ilike', self), ('partner_ref', 'ilike', self)]"/>
++                    ('name', 'ilike', self), ('model', 'ilike', self), ('serial_number', 'ilike', self), ('partner_ref', 'ilike', self)]"/>
+                 <field string="Category" name="category_id"/>
+                 <field name="owner_user_id"/>
+                 <filter string="My Equipment" name="my" domain="[('owner_user_id', '=', uid)]"/>
