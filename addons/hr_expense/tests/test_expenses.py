@@ -788,7 +788,7 @@ class TestExpenses(TestExpenseCommon):
             {'name':    'test update', 'price_unit': 1000.0, 'quantity': 1, 'total_amount': 1000.0},  # quantity & price_unit only are updated
         ])
 
-        expenses.action_submit()  # This expense should not be updated any more
+        expense_update.action_submit()  # This expense should not be updated any more
         product.standard_price = 300.0
         self.assertRecordValues(expenses.sorted('name'), [
             {'name': 'test no update', 'price_unit':  100.0, 'quantity': 1, 'total_amount':  100.0},
