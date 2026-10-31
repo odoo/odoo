@@ -1,7 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
@@ -82,7 +80,6 @@ export class TranslationPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        clean_for_save_processors: this.cleanForSave.bind(this),
         on_replicated_handlers: ({ sourceEl, targetEl }) => {
             targetEl.classList.toggle("o_dirty", sourceEl.classList.contains("o_dirty"));
         },
@@ -125,9 +122,6 @@ export class TranslationPlugin extends Plugin {
     };
 
     setup() {
-        this.websiteService = this.services.website;
-        this.notificationService = this.services.notification;
-        this.dialogService = this.services.dialog;
         this.nonTranslatedSelector =
             `:not(${this.config.translatedElements.join(", ")})` + `:not(.o_translate_inline)`;
     }
@@ -141,51 +135,6 @@ export class TranslationPlugin extends Plugin {
             if (translatedEl.matches("input[type=hidden].o_translatable_input_hidden")) {
                 translatedEl.setAttribute("type", "text");
             }
-        }
-
-        // We don't want the BS dropdown to close when clicking in a element to
-        // translate.
-        const menuEls = this.websiteService.pageDocument.querySelectorAll(".dropdown-menu");
-        for (const menuEl of menuEls) {
-            this.addDomListener(menuEl, "click", (ev) => {
-                const editableEl = ev.target.closest(".o_savable");
-                if (editableEl && menuEl.contains(editableEl)) {
-                    ev.stopPropagation();
-                    ev.preventDefault();
-                }
-            });
-        }
-
-        const showNotification = (ev) => {
-            // Prevent duplicate notifications for the same click but allow the
-            // event to bubble (i.e. for carousel sliding)
-            if (ev.__shownNotification) {
-                return;
-            }
-            ev.__shownNotification = true;
-            let message = _t("This translation is not editable.");
-            if (ev.target.closest(".s_table_of_content_navbar_wrap")) {
-                message = _t("Translate header in the text. Menu is generated automatically.");
-            }
-            if (ev.target.closest(".o_carousel_controllers")) {
-                return;
-            }
-            this.notificationService.add(message, {
-                type: "info",
-                sticky: false,
-            });
-        };
-        const savableInsideNotEditableEls = this.editable.querySelectorAll(
-            ".o_not_editable .o_savable, .o_not_editable .o_savable_attribute"
-        );
-        for (const savableInsideNotEditableEl of savableInsideNotEditableEls) {
-            if (
-                savableInsideNotEditableEl.matches(".o_editable_media") &&
-                shouldEditableMediaBeEditable(savableInsideNotEditableEl)
-            ) {
-                continue;
-            }
-            this.addDomListener(savableInsideNotEditableEl, "click", showNotification);
         }
     }
     /**
@@ -211,7 +160,7 @@ export class TranslationPlugin extends Plugin {
         /** @type {ElToTranslationInfoMap} */
         this.elToTranslationInfoMap = new Map();
         const translationRegex =
-            /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
+            /^<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>$/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
         const matchTag = (el) => el.matches("input, select, textarea, img");
 
@@ -377,13 +326,6 @@ export class TranslationPlugin extends Plugin {
             }
         }
         return dirtyInfo;
-    }
-
-    cleanForSave(root) {
-        root.querySelectorAll(".o_savable_attribute").forEach((el) => {
-            el.classList.remove("o_savable_attribute");
-        });
-        return root;
     }
 }
 
