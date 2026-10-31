@@ -694,6 +694,17 @@ class PaymentTransaction(models.Model):
         self.ensure_one()
         return dict()
 
+    def _get_line_items(self):
+        """Return the details of the items paid by the transaction.
+
+        Note: `self.ensure_one()`
+
+        :return: The details of the items.
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {}
+
     # === LIFECYCLE METHODS - OUTBOUND REQUESTS === #
 
     def _charge_with_token(self):
