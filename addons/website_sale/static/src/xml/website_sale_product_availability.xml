@@ -11,12 +11,35 @@
                 t-attf-class="availability_message_#{this.product_template} d-flex flex-column gap-2 mb-2"
             >
                 <div id="out_of_stock_message" class="d-flex flex-column gap-1 align-items-start">
+<<<<<<< db92e0dff1ffe0a440896c3541a72c1374ab207f
                     <t t-if="!this.allow_out_of_stock_order">
+||||||| e847dbad3afbcb67dd6102926a4be16fb131465c
+                    <t t-if="!allow_out_of_stock_order">
+=======
+                    <t
+                        t-if="allow_out_of_stock_order and has_out_of_stock_message"
+                        t-out="out_of_stock_message"
+                    />
+                    <t t-elif="has_out_of_stock_message">
+                        <div class="d-inline-flex align-items-center badge text-start text-bg-danger text-wrap">
+                            <i class="fa fa-circle me-2 text-danger"/>
+                            <span>
+                                <t t-out="out_of_stock_message"/>
+                            </span>
+                        </div>
+                    </t>
+                    <t t-elif="!allow_out_of_stock_order">
+>>>>>>> 0e2b808ff61d520490afee57e04d3f5aa6398960
                         <div class="badge text-bg-danger">
                             <i class="fa fa-circle me-2 text-danger"/>Out of Stock
                         </div>
                     </t>
+<<<<<<< db92e0dff1ffe0a440896c3541a72c1374ab207f
                     <t t-if="this.has_out_of_stock_message" t-out="this.out_of_stock_message"/>
+||||||| e847dbad3afbcb67dd6102926a4be16fb131465c
+                    <t t-if="has_out_of_stock_message" t-out="out_of_stock_message"/>
+=======
+>>>>>>> 0e2b808ff61d520490afee57e04d3f5aa6398960
                 </div>
                 <div id="stock_notification_div" t-if="!this.allow_out_of_stock_order">
                     <div class="btn btn-link px-0" t-if="!this.has_stock_notification"
