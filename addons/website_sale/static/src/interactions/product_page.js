@@ -53,6 +53,9 @@ export class ProductPage extends Interaction {
         "#wishlist_stock_notification_form_submit_button": {
             "t-on-click": this.onClickSubmitWishlistStockNotificationForm.bind(this),
         },
+        ".o_wsale_mobile_bar_add_to_cart": {
+            "t-on-click.prevent": this.onClickMobileAddToCart,
+        },
     };
 
     setup() {
@@ -784,6 +787,12 @@ export class ProductPage extends Interaction {
         if (price) {
             price.textContent = this._priceToStr(combination.price, precision);
         }
+        const stickyPrice = this.el.querySelector(
+            '#o_wsale_product_mobile_bar .oe_price .oe_currency_value'
+        );
+        if (stickyPrice) {
+            stickyPrice.textContent = this._priceToStr(combination.price, precision);
+        }
         if (defaultPrice) {
             defaultPrice.textContent = this._priceToStr(combination.list_price, precision);
             defaultPrice.closest('.oe_website_sale').classList
@@ -909,6 +918,15 @@ export class ProductPage extends Interaction {
         this.el.querySelector('div.availability_messages').append(renderToFragment(
             'website_sale.product_availability', combination
         ));
+    }
+
+    onClickMobileAddToCart() {
+        const addToCartButton = this.el.querySelector(
+            '#add_to_cart_wrap button[name="add_to_cart"]'
+        );
+        if (addToCartButton && !addToCartButton.disabled) {
+            addToCartButton.click();
+        }
     }
 
     _toggleOutOfStockButtons(parent, combination, in_stock) {

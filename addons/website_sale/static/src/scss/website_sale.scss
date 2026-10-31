@@ -1181,6 +1181,24 @@ $-product-radius-map: (
     }
 }
 
+#o_wsale_product_mobile_bar {
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+    height: 70px;
+
+    .o_wsale_mobile_bar_btn {
+        height: 44px;
+        min-width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 12px;
+    }
+}
+
+body:has(.o_wsale_comparison_bottom_bar) #o_wsale_product_mobile_bar {
+    display: none !important;
+}
+
 /* ==== Product Details Content ================================================ */
 #o_wsale_product_details_content {
     display: flex;
