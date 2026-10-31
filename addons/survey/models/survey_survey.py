@@ -746,9 +746,10 @@ class Survey(models.Model):
         if not go_back:
             if not pages_or_questions:
                 return Question
-            # First page
-            if page_or_question_id == 0:
-                return pages_or_questions[0]
+        if page_or_question_id not in pages_or_questions.ids:
+            answered_questions = user_input.user_input_line_ids.question_id
+            left_to_answer = pages_or_questions.filtered(lambda p_or_q: (p_or_q.question_ids or p_or_q) - answered_questions)
+            return (left_to_answer or pages_or_questions)[0] if not go_back else Question
 
         current_page_index = pages_or_questions.ids.index(page_or_question_id)
 

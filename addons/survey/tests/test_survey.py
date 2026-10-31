@@ -798,6 +798,42 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         self.assertEqual(question_and_page_ids - invalid_records, returned_questions_and_pages)
 
+    def test_get_next_page_or_question_stale_last_displayed(self):
+        """The last displayed question/page of an ongoing answer may not be part of
+        the pages/questions to show anymore, e.g. because the survey layout was
+        switched from 'page_per_question' to 'page_per_section' in the meantime.
+        Navigation should then restart from the first page/question left to answer."""
+        page_1 = self.env['survey.question'].create({
+            'title': 'Second page',
+            'survey_id': self.survey.id,
+            'sequence': 50,
+            'is_page': True,
+            'question_type': False,
+        })
+        self._add_question(page_1, 'Test Second Page', 'char_box', survey_id=self.survey.id)
+        self.survey.write({'questions_layout': 'page_per_question'})
+        answer = self.survey._create_answer(user=self.survey_user)
+        answer.write({'state': 'in_progress', 'last_displayed_page_id': self.question_ft.id})
+
+        self.survey.write({'questions_layout': 'page_per_section'})
+        self.assertNotIn(answer.last_displayed_page_id, self.survey._get_pages_or_questions(answer))
+
+        self.assertEqual(
+            self.survey._get_next_page_or_question(answer, answer.last_displayed_page_id.id),
+            self.page_0)
+        self.assertFalse(
+            self.survey._get_next_page_or_question(answer, answer.last_displayed_page_id.id, go_back=True))
+
+        # already answered pages/questions are not proposed again
+        self.env['survey.user_input.line'].create([{
+            'user_input_id': answer.id,
+            'question_id': question.id,
+            'skipped': True,
+        } for question in self.page_0.question_ids])
+        self.assertEqual(
+            self.survey._get_next_page_or_question(answer, answer.last_displayed_page_id.id),
+            page_1)
+
     def test_survey_session_leaderboard(self):
         """Check leaderboard rendering with small (max) scores values."""
         start_time = fields.datetime(2023, 7, 7, 12, 0, 0)
