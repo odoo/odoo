@@ -556,11 +556,27 @@ class TestUrlJoin(BaseCase):
             ('http://test.example.com', 'https://test2.example.com'),
             ('https://test.example.com', 'http://test.example.com'),
             ('https://example.com/p?example=test', 'https://example.com/q?example=example'),
+            ('http://example.com/b', 'http://example.com/bc'),
+            ('http://example.com/api/v1', 'http://example.com/api/v10/users'),
+            ('http://example.com/b', 'http://example.com/b%2Fc'),
         ]
         for base, extra in to_fail:
             with self.subTest(base=base, extra=extra):
                 with self.assertRaises(ValueError):
                     urls.urljoin(base, extra)
+
+    def test_absolute_url_under_base_path(self):
+        to_pass = [
+            ('http://example.com', 'http://example.com', 'http://example.com'),
+            ('http://example.com', 'http://example.com/c', 'http://example.com/c'),
+            ('http://example.com/b', 'http://example.com/b', 'http://example.com/b'),
+            ('http://example.com/b', 'http://example.com/b/c', 'http://example.com/b/c'),
+            ('http://example.com/b/', 'http://example.com/b/c', 'http://example.com/b/c'),
+            ('http://example.com/b', 'http://example.com/b/c?q=1#f', 'http://example.com/b/c?q=1#f'),
+        ]
+        for base, extra, expected in to_pass:
+            with self.subTest(base=base, extra=extra):
+                self.assertEqual(urls.urljoin(base, extra), expected)
 
     def test_dot_segments_not_allowed(self):
         urls_with_dot = [
