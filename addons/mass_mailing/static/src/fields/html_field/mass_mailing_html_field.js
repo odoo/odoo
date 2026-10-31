@@ -266,6 +266,17 @@ export class MassMailingHtmlField extends HtmlField {
             mobileBreakpoint: "md",
             defaultImageMimetype: "image/png",
             onEditorReady: () => this.commitChanges(),
+            onSwitchTemplateTheme: () => {
+                // Prevent the loading of the saved theme if there is one
+                if (this.props.record?.data) {
+                    this.props.record.data[this.props.name] = "";
+                }
+                // Discard the selected theme and changes then show the ThemeSelector
+                this.state.isNewlySelectedTheme = false;
+                this.state.key++;
+                this.state.activeTheme = undefined;
+                this.state.showThemeSelector = true;
+            },
         };
     }
 

@@ -2038,7 +2038,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'notified_partner_ids': all_partners,
                     'source_template_id': template,
                     'source_view_id': self.env['ir.ui.view'],
-                    'subtype_id': self.env['mail.message.subtype'],
+                    'subtype_id': self.env.ref('mail.mt_note'),
                     'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
                 }
@@ -2084,7 +2084,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'recipient_ids': test_record.customer_id,
                     'source_template_id': self.env['mail.template'],
                     'source_view_id': view_data,
-                    'subtype_id': self.env['mail.message.subtype'],
+                    'subtype_id': self.env.ref('mail.mt_note'),
                     'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
                 }

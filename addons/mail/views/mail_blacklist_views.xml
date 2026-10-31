@@ -17,7 +17,7 @@
         <field name="arch" type="xml">
             <form string="Add Email Blacklist" duplicate="false">
                 <header>
-                    <button name="mail_action_blacklist_remove" string="Unblacklist"
+                    <button name="mail_action_blacklist_remove" string="Remove from Blacklist"
                         type="object" class="oe_highlight" context="{'default_email': email}"
                         invisible="not active or not email"/>
                     <button name="action_add" string="Blacklist"

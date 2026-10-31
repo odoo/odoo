@@ -45,14 +45,13 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <list string="Mailing Contacts" sample="1" multi_edit="1">
+            <list string="Mailing Contacts" sample="1" multi_edit="1" default_order="create_date desc">
                 <header>
                     <button name="action_import" string="Paste" type="object" display="always"
                         context="{'from_mailing_list_ids': context.get('active_ids') if context.get('active_model') == 'mailing.list' else False}"/>
                     <button name="action_open_base_import" string="Upload" type="object" display="always"/>
                     <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
                 </header>
-                <field name="create_date" string="Create Date" optional="show"/>
                 <field name="partner_id" optional="hide"/>
                 <field name="name" optional="show" readonly="1"/>
                 <field name="company_name" optional="hide"/>
@@ -64,6 +63,7 @@
                 <field name="opt_out" readonly="1" column_invisible="'default_list_ids' not in context"/>
                 <field name="list_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                 <field name="properties" optional="hide"/>
+                <field name="create_date" string="Create Date" optional="show"/>
             </list>
         </field>
     </record>
