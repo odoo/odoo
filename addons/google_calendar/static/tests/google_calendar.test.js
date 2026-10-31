@@ -85,6 +85,7 @@ onRpc("/google_calendar/sync_data", () => ({ status: "no_new_event_from_google" 
 onRpc("check_synchronization_status", async () => ({ google_calendar: "sync_active" }));
 onRpc("get_attendee_detail", () => []);
 onRpc("get_default_duration", () => 3.25);
+onRpc("get_calendar_email", () => false);
 
 beforeEach(() => {
     mockDate("2016-12-12 08:00:00");
