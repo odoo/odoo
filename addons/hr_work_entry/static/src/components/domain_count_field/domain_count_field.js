@@ -1,7 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
-import { DomainField } from "@web/views/fields/domain/domain_field";
 import { ListRenderer } from "@web/views/list/list_renderer";
+import { DomainCompanyField } from "@hr_work_entry/components/domain_company_field/domain_company_field";
 
 patch(ListRenderer.prototype, {
     getCellTitle(column, record) {
@@ -12,7 +12,7 @@ patch(ListRenderer.prototype, {
     },
 });
 
-export class DomainCountField extends DomainField {
+export class DomainCountField extends DomainCompanyField {
     static template = "hr_work_entry.DomainCountField";
 }
 
