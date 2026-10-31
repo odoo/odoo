@@ -1,5 +1,6 @@
 from odoo import _, api, models
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+from odoo.addons.l10n_fr_pdp.models.legal_notes import coded_note_codes
 
 PDP_CUSTOMIZATION_ID = 'urn:cen.eu:en16931:2017'  # Not accepted by SuperPDP due to missing validator
 
@@ -142,12 +143,33 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
 
     def _get_note_vals_list(self, invoice):
         # EXTENDS account.edi.xml.ubl_20
+        # [BR-FR-05] Add mandatory notes. [BR-FR-06] skip a subject already present.
         note_vals = super()._get_note_vals_list(invoice)
-        # [BR-FR-05] Add mandatory notes with defaults if not already present
-        return note_vals + [
-            {'note': f"#{code}#{default_content}"}
-            for code, default_content in invoice._l10n_fr_pdp_get_default_notes().items()
-        ]
+        seen = set()
+        for note in note_vals:
+            seen.update(coded_note_codes(note.get('note')))
+        for code, default_content in invoice._l10n_fr_pdp_get_default_notes().items():
+            if code in seen:
+                continue
+            seen.add(code)
+            note_vals.append({'note': '#%s#%s' % (code, default_content)})
+        return note_vals
+
+    def _get_partner_party_vals(self, partner, role):
+        vals = super()._get_partner_party_vals(partner, role)
+        if role != 'supplier':
+            return vals
+        company = self.env['res.company'].search([
+            ('partner_id', '=', partner.commercial_partner_id.id),
+        ], limit=1)
+        if not company:
+            return vals
+        legal_form = company._l10n_fr_pdp_get_company_legal_form()
+        if not legal_form:
+            return vals
+        for entity in vals.get('party_legal_entity_vals') or []:
+            entity['company_legal_form'] = legal_form
+        return vals
 
     def _get_partner_party_identification_vals_list(self, partner):
         # OVERRIDE
