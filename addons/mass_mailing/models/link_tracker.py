@@ -1,9 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from markupsafe import Markup
 
 from odoo import api, fields, models, _
+
+# bot click: another link, or the hidden link from the same IP, clicked that close
+MULTI_LINK_INTERVAL = timedelta(seconds=2)
+HIDDEN_LINK_WINDOW = timedelta(seconds=10)
 
 
 class LinkTracker(models.Model):
@@ -19,6 +25,9 @@ class LinkTrackerClick(models.Model):
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', index='btree_not_null')
     email = fields.Char(string="Email", related="mailing_trace_id.email", help="The email address of the entity that clicked the link")
     url = fields.Char(string='URL', related='link_id.url')
+    bot_check_pending = fields.Boolean('Bot Check Pending', readonly=True)
+
+    _bot_check_pending_idx = models.Index('(create_date) WHERE bot_check_pending IS TRUE')
 
     def _prepare_click_values_from_route(self, **route_values):
         click_values = super(LinkTrackerClick, self)._prepare_click_values_from_route(**route_values)
@@ -39,11 +48,54 @@ class LinkTrackerClick(models.Model):
     def add_click(self, code, **route_values):
         click = super(LinkTrackerClick, self).add_click(code, **route_values)
 
-        if click and click.mailing_trace_id:
+        if click and click.bot_check_pending:
+            # opened / clicked only once confirmed, see '_cron_check_pending_clicks'
+            self.env.ref('mass_mailing.ir_cron_mass_mailing_pending_clicks')._trigger(
+                click.create_date + HIDDEN_LINK_WINDOW)
+        elif click and click.mailing_trace_id:
             click.mailing_trace_id.set_opened()
             click.mailing_trace_id.set_clicked()
 
         return click
+
+    @api.model
+    def _cron_check_pending_clicks(self, batch_size=1000):
+        """ Confirm held clicks, or delete those made by bots. """
+        domain = [('bot_check_pending', '=', True), ('create_date', '<=', self.env.cr.now() - HIDDEN_LINK_WINDOW)]
+        pending_clicks = self.search(domain, limit=batch_size)
+        # also newer clicks of the same emails, to delete a bot's clicks together
+        email_clicks = self.search([
+            ('mailing_trace_id', 'in', pending_clicks.mailing_trace_id.ids),
+            ('create_date', '>=', min(pending_clicks.mapped('create_date'), default=self.env.cr.now()) - MULTI_LINK_INTERVAL),
+        ])
+
+        bot_clicks = self.browse()
+        for trace, trace_clicks in email_clicks.grouped('mailing_trace_id').items():
+            for click in trace_clicks:
+                near_hidden_link = (
+                    trace.hidden_link_click_datetime
+                    and click.ip == trace.hidden_link_click_ip
+                    and abs(click.create_date - trace.hidden_link_click_datetime) <= HIDDEN_LINK_WINDOW
+                )
+                near_other_link = any(
+                    other.link_id != click.link_id and abs(other.create_date - click.create_date) <= MULTI_LINK_INTERVAL
+                    for other in trace_clicks
+                )
+                if near_hidden_link or near_other_link:
+                    bot_clicks |= click
+        # already confirmed clicks are kept
+        bot_clicks = bot_clicks.filtered('bot_check_pending')
+        human_clicks = pending_clicks - bot_clicks
+
+        bot_clicks.unlink()
+        human_clicks.bot_check_pending = False
+        human_clicks.mailing_trace_id.set_opened()
+        human_clicks.mailing_trace_id.set_clicked()
+
+        self.env['ir.cron']._commit_progress(
+            len(pending_clicks),
+            remaining=self.search_count(domain) if len(pending_clicks) == batch_size else 0,
+        )
 
     def _action_view_mailing_statistics(self, domain, group_by_field=None, graph_mode=False):
         """Display the click statistics for the given domain

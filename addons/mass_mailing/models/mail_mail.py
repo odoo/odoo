@@ -100,6 +100,14 @@ class MailMail(models.Model):
                         f'{base_url}/view',
                         view_url,
                     )
+                if self.mailing_trace_ids:
+                    # hidden link only bots click, kept out of the plain text body
+                    token = self._generate_mail_recipient_token(self.id)
+                    hidden_link_url = tools.urls.urljoin(base_url, f'mail/track/{self.id}/{token}/link')
+                    email_values['body'] = tools.mail.prepend_html_content(
+                        str(email_values['body']),
+                        f'<a href="{hidden_link_url}" style="display:none; mso-hide:all;" aria-hidden="true" tabindex="-1"></a>',
+                    )
 
             # add headers
             email_values['headers'].update({

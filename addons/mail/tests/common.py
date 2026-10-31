@@ -467,9 +467,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
         :return the trace id.
         """
-        res = re.findall(mail_lib.HTML_TAG_URL_REGEX, email['body'])
-        if (res):
-            _, link_url, _, _ = res[0]
+        for _, link_url, _, _ in re.findall(mail_lib.HTML_TAG_URL_REGEX, email['body']):
             if '/r/' in link_url:  # shortened link, like 'http://localhost:8069/r/LBG/m/53'
                 parsed_url = werkzeug.urls.url_parse(link_url)
                 path_items = parsed_url.path.split('/')
