@@ -53,13 +53,13 @@ class SmsTwilioController(Controller):
             _logger.warning("Twilio SMS: update_sms_status could not find a matching SMS tracker for sms_uuid=%s", uuid)
             return
 
+        # Mark Sms as to be deleted before updating trackers to avoid serialization/deadlock issues.
+        request.env['sms.sms'].sudo().search([('uuid', '=', uuid), ('to_delete', '=', False)]).to_delete = True
+
         if SmsStatus in TWILIO_TO_SMS_STATE_ERRORS:
             sms_tracker_sudo._action_update_from_twilio_error(SmsStatus, ErrorCode, ErrorMessage)
         else:
             sms_tracker_sudo._action_update_from_sms_state(TWILIO_TO_SMS_STATE[SmsStatus])
-
-        # Mark Sms as to be deleted
-        request.env['sms.sms'].sudo().search([('uuid', '=', uuid), ('to_delete', '=', False)]).to_delete = True
 
         return "OK"
 

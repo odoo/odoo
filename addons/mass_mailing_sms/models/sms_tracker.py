@@ -31,6 +31,7 @@ class SmsTracker(models.Model):
     def _update_sms_traces(self, trace_status, failure_type=False, failure_reason=False):
         if not self.mailing_trace_id:  # avoid a search below
             return self.env['mailing.trace']
+        self._lock_mailings()
         # See _update_sms_notifications
         statuses_to_ignore = {
             'cancel': ['cancel', 'process', 'pending', 'sent'],
@@ -54,6 +55,12 @@ class SmsTracker(models.Model):
                 lambda t: t.trace_status not in ['outgoing', 'process', 'error', 'cancel'] and not t.sent_datetime
             ).sent_datetime = self.env.cr.now()
         return traces
+
+    def _lock_mailings(self):
+        """ Lock the trackers' mailings and use FOR UPDATE to avoid serialization/deadlock rollback issues. """
+        if mailing_ids := self.mailing_trace_id.mass_mailing_id.ids:
+            query = "SELECT id FROM mailing_mailing WHERE id IN %s ORDER BY id FOR UPDATE"
+            self.env.cr.execute(query, [tuple(mailing_ids)])
 
     def _update_sms_mailings(self, trace_status, traces):
         traces.flush_recordset(['trace_status'])
