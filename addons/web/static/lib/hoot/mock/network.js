@@ -23,9 +23,7 @@ import { ensureTest } from "../main_runner";
  *  url?: string;
  * }} MockResponseInit
  *
- * @typedef {AbortController
- *  | MockBroadcastChannel
- *  | MockMessageChannel
+ * @typedef {MockMessageChannel
  *  | MockMessagePort
  *  | MockSharedWorker
  *  | MockWebSocket
@@ -41,8 +39,8 @@ import { ensureTest } from "../main_runner";
 const {
     AbortController,
     Blob,
-    BroadcastChannel,
     document,
+    DOMException,
     fetch,
     FormData,
     Headers,
@@ -55,10 +53,12 @@ const {
         entries: $entries,
     },
     ProgressEvent,
+    queueMicrotask,
     ReadableStream,
     Request,
     Response,
     Set,
+    structuredClone,
     TextEncoder,
     Uint8Array,
     URL,
@@ -143,7 +143,7 @@ function getHeaders(object, content) {
  * @param {...NetworkInstance} instances
  */
 function isOpen(...instances) {
-    return instances.every((i) => openNetworkInstances.has(i));
+    return instances.every((i) => openInstances.has(i));
 }
 
 /**
@@ -151,16 +151,15 @@ function isOpen(...instances) {
  */
 function markClosed(...instances) {
     for (const instance of instances) {
-        openNetworkInstances.delete(instance);
+        openInstances.delete(instance);
     }
 }
 
 /**
  * @param {NetworkInstance} instance
- * @param {Promise<any> | null} [promise]
  */
 function markOpen(instance) {
-    openNetworkInstances.add(instance);
+    openInstances.add(instance);
     return instance;
 }
 
@@ -258,10 +257,19 @@ const requestResponseMixin = {
     },
 };
 
+/** @type {Map<string, Set<MockBroadcastChannel>>} */
+const broadcastChannels = new Map();
 /** @type {Set<string>} */
 const objectURLs = new Set();
-/** @type {Set<NetworkInstance>} */
-const openNetworkInstances = new Set();
+/**
+ * Open network instances: clearing it closes them all at once.
+ * @type {Set<NetworkInstance>}
+ */
+const openInstances = new Set();
+/** @type {Set<AbortController>} */
+const pendingFetches = new Set();
+/** @type {Set<ServerWebSocket>} */
+const serverWebSockets = new Set();
 /** @type {Set<(worker: MockSharedWorker | MockWorker) => any>} */
 const workerConnections = new Set();
 
@@ -283,23 +291,16 @@ export function cleanupNetwork() {
     workerConnections.clear();
 
     // Network instances
-    for (const instance of openNetworkInstances) {
-        if (isInstanceOf(instance, AbortController)) {
-            instance.abort();
-        } else if (
-            instance instanceof MockBroadcastChannel ||
-            instance instanceof MockMessagePort ||
-            instance instanceof MockWebSocket ||
-            instance instanceof ServerWebSocket
-        ) {
-            instance.close();
-        } else if (instance instanceof MockSharedWorker) {
-            instance.port.close(); // Will also close `MockMessageChannel` instances
-        } else if (instance instanceof MockWorker) {
-            instance.terminate();
-        }
+    for (const controller of pendingFetches) {
+        controller.abort();
     }
-    openNetworkInstances.clear();
+    pendingFetches.clear();
+    for (const serverWs of serverWebSockets) {
+        serverWs.close();
+    }
+    serverWebSockets.clear();
+    broadcastChannels.clear();
+    openInstances.clear();
 
     // Object URLs: revoked to release the blobs they retain
     for (const url of objectURLs) {
@@ -332,7 +333,8 @@ export async function mockedFetch(input, init) {
             `Could not fetch "${strInput}": cannot make a request when fetch is not mocked`
         );
     }
-    const controller = markOpen(new AbortController());
+    const controller = new AbortController();
+    pendingFetches.add(controller);
 
     init = { ...init };
     init.headers = getHeaders(init, init.body);
@@ -373,9 +375,7 @@ export async function mockedFetch(input, init) {
         failed = true;
         error = err;
     }
-    if (isOpen(controller)) {
-        markClosed(controller);
-    } else {
+    if (!pendingFetches.delete(controller)) {
         return ENDLESS_PROMISE;
     }
     if (failed) {
@@ -543,11 +543,100 @@ export class MockBlob extends Blob {
     }
 }
 
-export class MockBroadcastChannel extends BroadcastChannel {
-    constructor() {
+/**
+ * Broadcast channels only reach the other channels of the current page: native
+ * ones are shared with all same-origin pages, including other test runners in
+ * different tabs. Tests simulating several tabs with several channels in the same
+ * page still communicate through them.
+ */
+export class MockBroadcastChannel extends MockEventTarget {
+    static publicListeners = ["message", "messageerror"];
+
+    /**
+     * @private
+     */
+    _name;
+
+    get name() {
+        return this._name;
+    }
+
+    /**
+     * @param {string} name
+     */
+    constructor(name) {
+        if (!arguments.length) {
+            throw new TypeError(
+                `Failed to construct 'BroadcastChannel': 1 argument required, but only 0 present.`
+            );
+        }
+
         super(...arguments);
 
-        markOpen(this);
+        this._name = String(name);
+        let channels = broadcastChannels.get(this._name);
+        if (!channels) {
+            channels = new Set();
+            broadcastChannels.set(this._name, channels);
+        }
+        channels.add(this);
+    }
+
+    /** @type {BroadcastChannel["close"]} */
+    close() {
+        broadcastChannels.get(this._name)?.delete(this);
+    }
+
+    /** @type {BroadcastChannel["postMessage"]} */
+    postMessage(message) {
+        const channels = broadcastChannels.get(this._name);
+        if (!channels?.has(this)) {
+            throw new DOMException(
+                `Failed to execute 'postMessage' on 'BroadcastChannel': Channel is closed`,
+                "InvalidStateError"
+            );
+        }
+        // Like native channels, the message is serialized right away, and only
+        // reaches the channels open at that time (and still open on delivery)
+        const data = structuredClone(message);
+        const receivers = [...channels];
+        queueMicrotask(() => {
+            for (const receiver of receivers) {
+                if (receiver !== this && broadcastChannels.get(this._name)?.has(receiver)) {
+                    receiver.dispatchEvent(
+                        new MessageEvent("message", { data: structuredClone(data) })
+                    );
+                }
+            }
+        });
+    }
+}
+
+/**
+ * Cache storage without any cache, as if storage were blocked: native caches are
+ * shared with all same-origin pages (including actual Odoo tabs), and persist
+ * between runs. Tests requiring actual caches are expected to patch it.
+ */
+export class MockCacheStorage {
+    async delete() {
+        return false;
+    }
+
+    async has() {
+        return false;
+    }
+
+    async keys() {
+        return [];
+    }
+
+    async match() {}
+
+    async open() {
+        throw new DOMException(
+            `caches.open: not allowed in tests (mock it to provide actual results)`,
+            "SecurityError"
+        );
     }
 }
 
@@ -1318,6 +1407,7 @@ export class ServerWebSocket extends MockEventTarget {
         super();
 
         markOpen(this);
+        serverWebSockets.add(this);
 
         this._clientWs = websocket;
         this._logger = logger;

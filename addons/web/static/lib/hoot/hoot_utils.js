@@ -768,10 +768,23 @@ export function createMock(target, descriptors) {
 
     // Copy original descriptors
     const mock = $assign($create(owner), target);
+    // Methods inherited from a prototype (e.g. `Navigator`) must be called on the
+    // actual target, which is the only valid receiver for native methods
+    const bindMethods = owner !== target;
+    /** @type {WeakMap<Function, Function>} */
+    const boundMethods = new WeakMap();
     for (const property of keys) {
         $defineProperty(mock, property, {
             get() {
-                return target[property];
+                const value = target[property];
+                if (!bindMethods || typeof value !== "function" || property === "constructor") {
+                    return value;
+                }
+                // Same bound function for a given method, to keep it comparable
+                if (!boundMethods.has(value)) {
+                    boundMethods.set(value, value.bind(target));
+                }
+                return boundMethods.get(value);
             },
             set(value) {
                 target[property] = value;
