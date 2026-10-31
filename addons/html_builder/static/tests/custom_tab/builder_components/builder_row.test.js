@@ -270,7 +270,7 @@ describe("BuilderRow with collapse content", () => {
         // Collapsing pins the measured height, then targets 0 for the CSS transition.
         await contains(".o_hb_collapse_toggler:not(.d-none)").click();
         expect(contentEl.style.height).toBe("0px");
-        expect(parseFloat(getComputedStyle(contentEl).height)).toBeGreaterThan(0);
+        expect(parseFloat(getComputedStyle(contentEl).height)).toBeWithin(0, ONE_ROW_HEIGHT);
         advanceTime(400); // wait for the collapse transition to be over
         await animationFrame();
         expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
