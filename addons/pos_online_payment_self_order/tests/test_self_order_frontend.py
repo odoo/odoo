@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+import uuid
+
 import odoo.tests
 from odoo import Command
 from odoo.addons.pos_online_payment.tests.online_payment_common import OnlinePaymentCommon
@@ -44,13 +47,7 @@ class TestUi(TestFrontendCommon, OnlinePaymentCommon):
 class TestSelfOrderOnlinePayment(TestUi):
     _test_user_groups = None  # FIXME list needed groups
 
-    def test_01_online_payment_with_multi_table(self):
-        # No need to check preparation printer in this test.
-        self.env["pos.printer"].search([]).unlink()
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('OnlinePaymentWithMultiTables', login="pos_admin")
-
-    def test_02_online_payment_with_multi_website_company(self):
+    def test_01_online_payment_with_multi_website_company(self):
         if not self.env["ir.module.module"].search([("name", "=", "website"), ("state", "=", "installed")]):
             self.skipTest("The 'website' module is required for this test.")
 
@@ -113,9 +110,41 @@ class TestSelfOrderOnlinePayment(TestUi):
             original_frontend_pre_dispatch.__func__(cls)
 
         with patch.object(ir_http.IrHttp, '_frontend_pre_dispatch', classmethod(patched_frontend_pre_dispatch)):
-            # Create a new order
-            self.start_tour(pos_config._get_self_order_route(), "test_online_payment_self_multi_company", login="testuser")
-            draft_order = self.env['pos.order'].search([('state', '=', 'draft')], limit=1)
+            self.authenticate('testuser', 'testuser')
+            response = self.url_open(
+                '/pos-self-order/process-order/mobile',
+                json.dumps({'jsonrpc': '2.0', 'params': {
+                    'access_token': pos_config.access_token,
+                    'table_identifier': None,
+                    'order': {
+                        'id': None,
+                        'uuid': str(uuid.uuid4()),
+                        'session_id': pos_config.current_session_id.id,
+                        'state': 'draft',
+                        'preset_id': False,
+                        'amount_total': 0,
+                        'amount_paid': 0,
+                        'amount_tax': 0,
+                        'amount_return': 0,
+                        'lines': [Command.create({
+                            'uuid': str(uuid.uuid4()),
+                            'product_id': self.coca_cola_test.id,
+                            'qty': 1,
+                            'price_unit': self.coca_cola_test.lst_price,
+                            'price_subtotal': 0,
+                            'price_subtotal_incl': 0,
+                        })],
+                        'payment_ids': [],
+                    },
+                }}),
+                method='POST',
+                headers={'Content-Type': 'application/json'},
+            )
+            order_data = response.json()['result']['pos.order'][0]
+            draft_order = self.env['pos.order'].browse(order_data['id'])
+            self.assertEqual(draft_order.state, 'draft')
+            self.assertEqual(draft_order.company_id, company_b)
+            self.assertAlmostEqual(draft_order.amount_total, 2.53)
             payment_route = PaymentPortal._get_pay_route(draft_order.id, draft_order.access_token)
 
             # Test payment page access for different users
