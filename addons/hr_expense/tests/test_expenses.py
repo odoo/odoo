@@ -1284,3 +1284,45 @@ class TestExpenses(TestExpenseCommon):
         expense.unlink()
         self.assertFalse(expense.exists())
         self.assertFalse(attachment.exists())
+
+    def test_expense_split_preserves_manager_and_department(self):
+        """ Test that when an expense is split, the resulting expenses inherit the manager and department of the original expense."""
+
+        department = self.env['hr.department'].sudo().create({'name': 'R&D Department'})
+        custom_manager = self.expense_user_manager_2
+
+        expense = self.create_expenses({'total_amount_currency': 100.0})
+        expense.write({
+            'department_id': department.id,
+            'manager_id': custom_manager.id,
+            'state': 'approved',
+        })
+
+        if 'approval_state' in expense:
+            expense.write({'approval_state': 'approved'})
+
+        self.assertNotEqual(expense.state, 'draft', "La dépense ne doit plus être en draft.")
+
+        line_vals = {
+            'expense_id': expense.id,
+            'product_id': self.product_c.id,
+            'employee_id': self.expense_employee.id,
+        }
+        if 'approval_state' in self.env['hr.expense.split']._fields:
+            line_vals['approval_state'] = 'approved'
+
+        wizard = self.env['hr.expense.split.wizard'].with_context(active_ids=expense.ids, active_model='hr.expense').create({
+            'expense_id': expense.id,
+            'expense_split_line_ids': [
+                Command.create(dict(line_vals, name='Split 1', total_amount_currency=40.0)),
+                Command.create(dict(line_vals, name='Split 2', total_amount_currency=60.0)),
+            ]
+        })
+
+        wizard.action_split_expense()
+        split_expenses = self.env['hr.expense'].search([('employee_id', '=', self.expense_employee.id)])
+
+        self.assertTrue(len(split_expenses) >= 2)
+        for split_expense in split_expenses:
+            self.assertEqual(split_expense.department_id, department)
+            self.assertEqual(split_expense.manager_id, custom_manager)
