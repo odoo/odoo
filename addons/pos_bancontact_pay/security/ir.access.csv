@@ -1,0 +1,6 @@
+id,name,model_id,group_id/id,operation,domain
+access_pos_bancontact_product_manager,pos.bancontact.product.manager,pos.bancontact.product,point_of_sale.group_pos_manager,crud,
+access_pos_bancontact_product_user,pos.bancontact.product.user,pos.bancontact.product,point_of_sale.group_pos_user,r,
+access_pos_bancontact_sticker_manager,pos.bancontact.sticker.manager,pos.bancontact.sticker,point_of_sale.group_pos_manager,crud,
+access_pos_bancontact_sticker_user,pos.bancontact.sticker.user,pos.bancontact.sticker,point_of_sale.group_pos_user,r,
+rule_pos_bancontact_product_multi_company,Bancontact Product multi-company,pos.bancontact.product,,crud,"[('company_id', 'in', company_ids)]"
