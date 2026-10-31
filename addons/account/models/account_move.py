@@ -2985,6 +2985,8 @@ class AccountMove(models.Model):
             return record._fields[field].convert_to_write(record[field], record)
 
         def get_tax_line_tracked_fields(line):
+            if line.move_id.is_invoice(include_receipts=True):
+                return ('amount_currency', 'analytic_distribution')
             return ('amount_currency', 'balance', 'analytic_distribution')
 
         def get_base_line_tracked_fields(line):
