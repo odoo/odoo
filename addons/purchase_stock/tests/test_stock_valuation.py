@@ -160,6 +160,7 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
 
         po.order_line.price_unit = 15
         self.assertEqual(move_in_1.value, 150)
+        self.assertEqual(move_in_1.price_unit, 15)
 
     def test_move_standard(self):
         po = self._create_purchase(self.product_standard, 5, 12)

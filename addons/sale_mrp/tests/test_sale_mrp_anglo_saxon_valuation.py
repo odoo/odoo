@@ -242,7 +242,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'uom_id': component.uom_id.id,
             'product_uom_qty': 1,
-            'price_unit': p,
         } for p in [10, 20, 60]])
         in_moves._action_confirm()
         in_moves.write({'quantity': 1, 'picked': True})
@@ -286,7 +285,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'uom_id': component.uom_id.id,
             'product_uom_qty': 1,
-            'price_unit': 100,
         })
         in_moves._action_confirm()
         in_moves.write({'quantity': 1, 'picked': True})
@@ -350,7 +348,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'uom_id': component.uom_id.id,
             'product_uom_qty': 1,
-            'price_unit': p,
         } for p in [10, 20, 60]])
         in_moves._action_confirm()
         in_moves.write({'quantity': 1, 'picked': True})
@@ -394,7 +391,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'uom_id': component.uom_id.id,
             'product_uom_qty': 1,
-            'price_unit': 100,
         })
         in_moves._action_confirm()
         in_moves.write({'quantity': 1, 'picked': True})
@@ -781,7 +777,6 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'uom_id': component.uom_id.id,
             'product_uom_qty': 1,
-            'price_unit': p,
         } for p in [10, 20]])
         in_moves._action_confirm()
         in_moves.write({'quantity': 1, 'picked': True})

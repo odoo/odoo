@@ -34,7 +34,6 @@ class TestStockLandedCostsLots(TestLotValuation):
                 'uom_id': self.ref('uom.product_uom_unit'),
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-                'price_unit': 10,
             })],
         })
         product2 = self.env['product.product'].create({
@@ -52,7 +51,6 @@ class TestStockLandedCostsLots(TestLotValuation):
                 'uom_id': self.ref('uom.product_uom_unit'),
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-                'price_unit': 11,
             })],
         })
 
@@ -149,7 +147,6 @@ class TestStockLandedCostsLots(TestLotValuation):
                 'uom_id': self.ref('uom.product_uom_unit'),
                 'location_id': self.supplier_location.id,
                 'location_dest_id': self.env.ref('stock.stock_location_stock').id,
-                'price_unit': 10000,
             })],
         })
         picking_1.action_confirm()

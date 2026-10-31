@@ -42,7 +42,6 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'uom_id': product.uom_id.id,
             'product_uom_qty': quantity,
-            'price_unit': unit_cost,
         })
         move._action_confirm()
         move.quantity = quantity

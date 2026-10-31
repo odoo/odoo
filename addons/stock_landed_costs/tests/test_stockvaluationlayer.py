@@ -83,7 +83,6 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'uom_id': product_uom.id if product_uom else self.env.ref('uom.product_uom_unit').id,
             'product_uom_qty': quantity,
-            'price_unit': unit_cost,
             'picking_type_id': self.company_data['default_warehouse'].in_type_id.id,
         })
 
