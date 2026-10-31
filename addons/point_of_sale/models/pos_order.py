@@ -917,7 +917,7 @@ class PosOrder(models.Model):
                 # In theory, this situation is unintended
                 # In practice it can happen when "Tip later" option is used
                 # This will update the order if edited after payent from UI.
-                if existing_order.state == "paid" and not existing_order.nb_print:
+                if existing_order.state == "paid" and not existing_order.nb_print and not existing_order.account_move:
                     self.process_saved_payments(order, existing_order)
                 order_ids.append(existing_order.id)
                 _logger.info("PoS synchronisation #%d order %s sync ignored for existing PoS order %s (state: %s)", sync_token, order_log_name, existing_order, existing_order.state)
