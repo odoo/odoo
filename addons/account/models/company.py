@@ -887,9 +887,17 @@ class ResCompany(models.Model):
 
         self.env['res.company'].invalidate_model(fnames=[f'user_{field}' for field in LOCK_DATE_FIELDS if field in vals])
 
+<<<<<<< acfb40374f6bd7b2c1677cc06079d649aa629d25
         if vals.get('fiscalyear_last_day') or vals.get('fiscalyear_last_month'):
             self.env.cr.cache.pop('cached_fiscalyears_by_company', None)
 
+||||||| 5db6442878226a1137e1e8b2b1291ab1bdb616c7
+=======
+        if vals.get('fiscalyear_last_day') or vals.get('fiscalyear_last_month'):
+            self.env.cr.cache.pop('cached_fiscalyears_by_company', None)
+            self.env.cr.cache.pop('res_currency_to_company_rates', None)
+
+>>>>>>> 563b4c8c2bddb9a23f9d9b2b7782a8571366529d
         # Reflect the change on accounts
         for company in self:
             if vals.get('bank_account_code_prefix'):

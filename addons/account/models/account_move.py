@@ -4411,8 +4411,32 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         # EXTENDS account sequence.mixin
         self.ensure_one()
+<<<<<<< acfb40374f6bd7b2c1677cc06079d649aa629d25
 
         year_part, move_date, is_staggered_year = self._get_sequence_date_info()
+||||||| 5db6442878226a1137e1e8b2b1291ab1bdb616c7
+        move_date = self.date or self.invoice_date or fields.Date.context_today(self)
+        year_part = "%04d" % move_date.year
+        last_day = int(self.company_id.fiscalyear_last_day)
+        last_month = int(self.company_id.fiscalyear_last_month)
+        is_staggered_year = last_month != 12 or last_day != 31
+        if is_staggered_year:
+            max_last_day = calendar.monthrange(move_date.year, last_month)[1]
+            last_day = min(last_day, max_last_day)
+            if move_date > date(move_date.year, last_month, last_day):
+                year_part = "%s-%s" % (move_date.strftime('%y'), (move_date + relativedelta(years=1)).strftime('%y'))
+            else:
+                year_part = "%s-%s" % ((move_date + relativedelta(years=-1)).strftime('%y'), move_date.strftime('%y'))
+=======
+        move_date = self.date or self.invoice_date or fields.Date.context_today(self)
+        year_part = "%04d" % move_date.year
+        fiscalyear_dates = self.env.company.compute_fiscalyear_dates(self.date)
+        date_from = fiscalyear_dates['date_from']
+        date_to = fiscalyear_dates['date_to']
+        is_staggered_year = date_from.year != date_to.year
+        if is_staggered_year:
+            year_part = "%s-%s" % (date_from.strftime('%y'), date_to.strftime('%y'))
+>>>>>>> 563b4c8c2bddb9a23f9d9b2b7782a8571366529d
         # Arbitrarily use annual sequence for sales documents, but monthly
         # sequence for other documents
         if self.journal_id.type in ['sale', 'bank', 'cash', 'credit']:
