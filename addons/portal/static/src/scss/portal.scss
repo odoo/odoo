@@ -502,7 +502,9 @@ img, .media_iframe_video, .o_image {
     max-width: calc(var(--o-bs-breakpoint-xxl) / 2);
 }
 
-.o_customer_address_fill {
+.o_customer_address_fill .address_autoformat {
+    // scoped to outrank Bootstrap's floating label, which uses the same
+    // pseudo-element
     .col-form-label:not(.label-optional)::after {
         content: " *";
         font-weight: normal;

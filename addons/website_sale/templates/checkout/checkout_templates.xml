@@ -19,7 +19,16 @@
         >
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div class="input-group w-100">
-                <input name="promo" class="form-control" type="text" placeholder="Discount code..."/>
+                <div class="form-floating">
+                    <input
+                        id="promo"
+                        name="promo"
+                        class="form-control"
+                        type="text"
+                        placeholder=" "
+                    />
+                    <label for="promo">Discount code</label>
+                </div>
                 <button type="submit" class="btn btn-light border">Apply</button>
             </div>
         </form>

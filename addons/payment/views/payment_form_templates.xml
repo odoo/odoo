@@ -391,20 +391,23 @@
             - currency: The currency of the payment, as a `res.currency` record
             - pm_sudo: The current payment method, as a sudoed `payment.method` recordset
         -->
-        <div name="o_payment_amount" class="w-100 mb-0 d-none position-relative z-1">
-            <label t-attf-for="o_payment_amount_{{pm_sudo.id}}" class="mt-0">
-                <small>Amount</small>
-            </label>
-            <input
-                type="number"
-                t-attf-name="o_payment_amount_{{pm_sudo.id}}"
-                t-attf-id="o_payment_amount_{{pm_sudo.id}}"
-                class="form-control"
-                t-att-value="amount"
-                t-att-max="amount"
-                t-att-data-decimals="currency.decimal_places"
-                placeholder="0"
-            />
+        <div
+            name="o_payment_amount"
+            class="w-100 mb-0 d-none position-relative z-1"
+        >
+            <div class="form-floating">
+                <input
+                    type="number"
+                    t-attf-name="o_payment_amount_{{pm_sudo.id}}"
+                    t-attf-id="o_payment_amount_{{pm_sudo.id}}"
+                    class="form-control"
+                    t-att-value="amount"
+                    t-att-max="amount"
+                    t-att-data-decimals="currency.decimal_places"
+                    placeholder="0"
+                />
+                <label t-attf-for="o_payment_amount_{{pm_sudo.id}}">Amount</label>
+            </div>
         </div>
     </template>
 
