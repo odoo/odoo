@@ -50,6 +50,17 @@ test("basic save", async () => {
     expect(":iframe #wrap .title:contains('H1ello')").toHaveCount(1);
 });
 
+test("save removes the class set by the offline mode", async () => {
+    const resultSave = setupSaveAndReloadIframe();
+    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
+    await modifyText(getEditor(), getEditableContent());
+    queryOne(":iframe .title").classList.add("o_disabled_offline");
+
+    await contains(".o-snippets-top-actions button:contains(Save)").click();
+    expect(resultSave.length).toBe(1);
+    expect(resultSave[0]).not.toInclude("o_disabled_offline");
+});
+
 test("nothing to save", async () => {
     const resultSave = setupSaveAndReloadIframe();
     const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
