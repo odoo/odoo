@@ -12,6 +12,9 @@ export class Tracking extends Interaction {
         'button[name="o_payment_submit_button"]': { 't-on-click': this.onOrderPayment },
         _root: {
             't-on-view_item_event': (ev) => this.onViewItem(ev),
+            "t-on-view_item_list_event": (ev) => this.onViewItemList(ev),
+            "t-on-view_promotion_event": (ev) => this.onViewPromotion(ev),
+            "t-on-select_promotion_event": (ev) => this.onSelectPromotion(ev),
             "t-on-select_item_event": (ev) => this.onSelectItem(ev),
             't-on-add_to_cart_event': (ev) => this.onAddToCart(ev),
             "t-on-update_cart_event": (ev) => this.onUpdateCart(ev),
@@ -66,9 +69,22 @@ export class Tracking extends Interaction {
         });
     }
 
+    onViewItemList(event) {
+        this._trackGa("event", "view_item_list", event.detail);
+    }
+
+    onViewPromotion(event) {
+        this._trackGa("event", "view_promotion", event.detail);
+    }
+
+    onSelectPromotion(event) {
+        this._trackGa("event", "select_promotion", event.detail);
+    }
+
     onSelectItem(event) {
-        const { item_list_name, trackingInfo } = event.detail;
+        const { currency, item_list_name, trackingInfo } = event.detail;
         this._trackGa("event", "select_item", {
+            currency,
             item_list_name,
             items: [trackingInfo],
         });
@@ -78,7 +94,7 @@ export class Tracking extends Interaction {
         this._trackGa("event", eventName, {
             currency,
             value: items.reduce((acc, item) => acc + item.subtotal, 0),
-            items: items.map(({ subtotal, ...item }) => item),
+            items: items.map(({ subtotal: _subtotal, ...item }) => item),
         });
     }
 
@@ -88,15 +104,15 @@ export class Tracking extends Interaction {
         this._trackCartEvent(
             "add_to_cart",
             currency,
-            items.map(({ delta_quantity, ...item }) => item),
+            items.map(({ delta_quantity: _deltaQuantity, ...item }) => item),
         );
     }
 
     onUpdateCart(event) {
         const { currency, items } = event.detail;
         if (!items?.length) return;
-        const added = items.filter(i => i.delta_quantity > 0).map(({ delta_quantity, ...i }) => i);
-        const removed = items.filter(i => i.delta_quantity < 0).map(({ delta_quantity, ...i }) => i);
+        const added = items.filter(i => i.delta_quantity > 0).map(({ delta_quantity: _deltaQuantity, ...i }) => i);
+        const removed = items.filter(i => i.delta_quantity < 0).map(({ delta_quantity: _deltaQuantity, ...i }) => i);
         if (added.length) this._trackCartEvent("add_to_cart", currency, added);
         if (removed.length) this._trackCartEvent("remove_from_cart", currency, removed);
     }
