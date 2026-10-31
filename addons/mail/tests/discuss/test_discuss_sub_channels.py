@@ -268,20 +268,33 @@ class TestDiscussSubChannels(HttpCase):
         self.assertIn(carol_user.partner_id, sub_channel.channel_member_ids.partner_id)
 
     def test_14_sub_channel_of_message_sent_to_non_member(self):
-        other_message = self.general.message_post(body="Hello again!")
-        sub_channel = self.general._create_sub_channel(from_message_id=self.general_message.id)
-        self.assertNotIn(self.user_employee.partner_id, sub_channel.channel_member_ids.partner_id)
+        group = self.env["discuss.channel"]._create_group(self.user_employee.partner_id.ids)
+        group_message = group.message_post(body="Hello group!")
         self.authenticate(self.user_employee.login, self.user_employee.password)
-        data = self.make_jsonrpc_request(
-            "/discuss/channel/messages",
-            {"channel_id": self.general.id},
-        )
-        vals_by_message_id = {vals["id"]: vals for vals in data["data"]["mail.message"]}
-        self.assertEqual(
-            vals_by_message_id[self.general_message.id]["linkedSubChannel"],
-            {"id": sub_channel.id, "model": "discuss.channel"},
-        )
-        self.assertFalse(vals_by_message_id[other_message.id]["linkedSubChannel"])
+        for channel, message in ((self.general, self.general_message), (group, group_message)):
+            with self.subTest(channel_type=channel.channel_type):
+                other_message = channel.message_post(body="Hello again!")
+                sub_channel = channel._create_sub_channel(from_message_id=message.id)
+                sub_channel_message = sub_channel.message_post(body="Hello thread!")
+                self.assertNotIn(
+                    self.user_employee.partner_id,
+                    sub_channel.channel_member_ids.partner_id,
+                )
+                data = self.make_jsonrpc_request(
+                    "/discuss/channel/messages",
+                    {"channel_id": channel.id},
+                )["data"]
+                vals_by_message_id = {vals["id"]: vals for vals in data["mail.message"]}
+                self.assertEqual(
+                    vals_by_message_id[message.id]["linkedSubChannel"],
+                    {"id": sub_channel.id, "model": "discuss.channel"},
+                )
+                self.assertFalse(vals_by_message_id[other_message.id]["linkedSubChannel"])
+                thread_vals = next(
+                    vals for vals in data["mail.thread"] if vals["id"] == sub_channel.id
+                )
+                self.assertEqual(thread_vals["name"], sub_channel.name)
+                self.assertIn(sub_channel_message.id, vals_by_message_id)
 
     def test_15_sub_channel_sent_to_parent_channel_on_create(self):
         self.env["bus.bus"].sudo().search([]).unlink()
@@ -306,8 +319,40 @@ class TestDiscussSubChannels(HttpCase):
                                 },
                             },
                         ],
+                        "mail.thread": [
+                            {
+                                "id": sub_channel.id,
+                                "model": "discuss.channel",
+                                "name": sub_channel.name,
+                            },
+                        ],
                     },
                 },
             ),
             notifications,
         )
+
+    def test_16_sub_channel_internal_note_not_sent_to_portal(self):
+        portal_user = mail_new_test_user(self.env, "portal_user", groups="base.group_portal")
+        channel = self.env["discuss.channel"].create({"name": "Public", "group_public_id": False})
+        channel.add_members(partner_ids=portal_user.partner_id.ids)
+        message = channel.message_post(
+            body="Hello portal!",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        sub_channel = channel._create_sub_channel(from_message_id=message.id)
+        note = sub_channel.message_post(
+            body="Internal note!",
+            message_type="comment",
+            subtype_xmlid="mail.mt_note",
+        )
+        self.assertFalse(note.with_user(portal_user).has_access("read"))
+        self.authenticate(portal_user.login, portal_user.login)
+        data = self.make_jsonrpc_request(
+            "/discuss/channel/messages",
+            {"channel_id": channel.id},
+        )["data"]
+        message_ids = [vals["id"] for vals in data["mail.message"]]
+        self.assertIn(message.id, message_ids)
+        self.assertNotIn(note.id, message_ids)
