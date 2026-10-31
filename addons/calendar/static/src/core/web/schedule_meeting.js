@@ -1,3 +1,5 @@
+import { registry } from "@web/core/registry";
+
 /**
  * Books a meeting from its slot: the calendar opens, and the quick create of the slot picked
  * there comes prefilled with a Discuss video call. Saving it brings the user back to where
@@ -17,3 +19,11 @@ export async function openScheduleMeeting(env) {
         },
     });
 }
+
+registry.category("actions").add("calendar.action_then_notify", async (env, action) => {
+    const { next, message, type } = action.params;
+    if (next) {
+        await env.services.action.doAction(next);
+    }
+    env.services.notification.add(message, { type: type || "info" });
+});

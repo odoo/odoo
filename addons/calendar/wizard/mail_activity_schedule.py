@@ -14,7 +14,17 @@ class MailActivitySchedule(models.TransientModel):
             raise UserError(_("Scheduling an activity using the calendar is not possible on more than one record."))
         if not self.res_model:
             return self._action_schedule_activities_personal().action_create_calendar_event()
-        return self.with_context({
+        action = self.with_context({
             'default_res_model': self.res_model or False,
             'default_res_id': self._evaluate_res_ids()[0],
         })._action_schedule_activities().action_create_calendar_event()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'calendar.action_then_notify',
+            'params': {
+                'next': action,
+                'message': _("Pick a date and time"),
+                'type': 'info',
+            },
+        }
