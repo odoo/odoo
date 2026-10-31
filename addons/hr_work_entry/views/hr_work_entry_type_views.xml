@@ -64,7 +64,8 @@
                             <field name="active" invisible="1"/> <!-- drives invisible of the Archived web_ribbon widget -->
                             <field name="code" string="Code" placeholder="e.g. 002.00, 128.00, 000.00, ..."/>
                             <field string="Considered as" name="count_as" widget="radio" options="{'horizontal': True}" />
-                            <span class="fw-bold">Availability</span>
+                            <span groups="!hr.group_hr_manager" class="fw-bold text-muted">Availability</span>
+                            <span groups="hr.group_hr_manager" class="fw-bold">Availability</span>
                             <div class="o_row" name="availability_row">
                                 <field name="resource_calendar_selectable" nolabel="1" help="Tells whether this time type can be selected in working schedules or not"/>
                                 <label for="resource_calendar_selectable" string="Working Schedule"/>
