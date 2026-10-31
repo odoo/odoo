@@ -2,8 +2,6 @@
 
 from datetime import date, timedelta
 
-from freezegun import freeze_time
-
 from odoo import Command
 from odoo.tests import users
 from odoo.tests.common import HttpCase, new_test_user
@@ -14,12 +12,6 @@ class TestAvatarCardTour(MailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Freeze on a fixed mid-week day so the time off below (created relative
-        # to "today") always ends on a working day. When it ends on a Sat/Sun
-        # its date_to is the weekend's 00:00, so the "currently on leave" window
-        # closes at midnight and the avatar card's out-of-office indicator flakes
-        # away once the run crosses it (runbot 242512).
-        cls.startClassPatcher(freeze_time("2024-06-12"))
         new_test_user(
             cls.env,
             login="hr_user",
@@ -84,6 +76,17 @@ class TestAvatarCardTour(MailCommon, HttpCase):
                 }
             )
         )
+        # Not frozen: the browser compares the return with its own clock, so the time
+        # off must be ongoing for real. Both ends are on working days: a time off
+        # ending on a Sat/Sun has the weekend's 00:00 as date_to, so the "currently
+        # on leave" window closes at midnight and the out-of-office indicator flakes
+        # away once the run crosses it (runbot 242512).
+        date_from = date.today() - timedelta(days=1)
+        while date_from.weekday() >= 5:
+            date_from -= timedelta(days=1)
+        date_to = date.today() + timedelta(days=1)
+        while date_to.weekday() >= 5:
+            date_to += timedelta(days=1)
         cls.env["hr.leave"].with_company(cls.company_2).with_context(
             leave_skip_state_check=True
         ).create(
@@ -92,8 +95,8 @@ class TestAvatarCardTour(MailCommon, HttpCase):
                 "company_id": cls.company_2.id,
                 "work_entry_type_id": work_entry_type.id,
                 "employee_id": cls.test_employee.id,
-                "request_date_from": (date.today() - timedelta(days=1)),
-                "request_date_to": (date.today() + timedelta(days=1)),
+                "request_date_from": date_from,
+                "request_date_to": date_to,
                 "state": "validate",
             }
         )

@@ -10,20 +10,38 @@ import {
     hrPresenceStatusPrivate,
 } from "@hr/components/hr_presence_status_private/hr_presence_status_private";
 
+const { DateTime } = luxon;
+
+/**
+ * @param {string} label
+ * @param {Object} data record data with `leave_datetime_to`
+ * @returns {string} the label followed by when the employee is back, in the day of the viewer
+ */
+function getLabelWithReturn(label, data) {
+    const backOn = data.leave_datetime_to;
+    if (backOn && backOn.hasSame(DateTime.now(), "day")) {
+        return _t("%(label)s, back at %(time)s", {
+            label,
+            time: backOn.toLocaleString(DateTime.TIME_SIMPLE),
+        });
+    }
+    return _t("%(label)s, back on %(date)s", {
+        label,
+        date: backOn.toLocaleString({
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+        }),
+    });
+}
+
 const patchHrPresenceStatus = () => ({
     get label() {
         if (this.value.includes("holiday")) {
-            return _t("%(label)s, back on %(date)s", {
-                label:
-                    this.value !== false
-                        ? this.options.find(([value, label]) => value === this.value)[1]
-                        : "",
-                date: this.props.record.data["leave_date_to"].toLocaleString({
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                }),
-            });
+            return getLabelWithReturn(
+                this.value !== false ? this.options.find(([value]) => value === this.value)[1] : "",
+                this.props.record.data
+            );
         } else if (this.location) {
             return this.props.record.data.work_location_name || _t("Unspecified");
         }
@@ -76,14 +94,8 @@ patch(HrPresenceStatusPrivate.prototype, {
     get label() {
         if (this.props.record.data.current_work_entry_type_id) {
             let label = this.props.record.data.current_work_entry_type_id.display_name;
-            if (this.props.record.data.leave_date_to) {
-                label +=
-                    _t(", back on ") +
-                    this.props.record.data["leave_date_to"].toLocaleString({
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                    });
+            if (this.props.record.data.leave_datetime_to) {
+                label = getLabelWithReturn(label, this.props.record.data);
             }
             return label;
         }
@@ -94,7 +106,7 @@ patch(HrPresenceStatusPrivate.prototype, {
 Object.assign(hrPresenceStatus, {
     fieldDependencies: [
         ...hrPresenceStatus.fieldDependencies,
-        { name: "leave_date_to", type: "date" },
+        { name: "leave_datetime_to", type: "datetime" },
     ],
 });
 

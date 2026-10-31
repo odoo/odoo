@@ -4,7 +4,7 @@ import { fields } from "@web/../tests/web_test_helpers";
 export class HrEmployee extends hrModels.HrEmployee {
     _name = "hr.employee";
 
-    leave_date_to = fields.Date();
+    leave_datetime_to = fields.Datetime();
 
     _records = [
         {
@@ -22,11 +22,11 @@ export class HrEmployee extends hrModels.HrEmployee {
 
     _store_avatar_card_fields(res) {
         super._store_avatar_card_fields(res);
-        res.attr("leave_date_to");
+        res.attr("leave_datetime_to");
     }
 
     _store_im_status_fields(res) {
         super._store_im_status_fields(res);
-        res.attr("leave_date_to");
+        res.attr("leave_datetime_to");
     }
 }

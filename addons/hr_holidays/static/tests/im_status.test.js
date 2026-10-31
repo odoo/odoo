@@ -1,4 +1,5 @@
 import { describe, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 
 import {
     contains,
@@ -16,8 +17,12 @@ describe.current.tags("desktop");
 defineHrHolidaysModels();
 
 test("change icon on change partner im_status for leave variants", async () => {
+    mockDate("2022-12-30 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["hr.employee"].create({ user_id: serverState.userId, leave_date_to: "2023-01-01" });
+    pyEnv["hr.employee"].create({
+        user_id: serverState.userId,
+        leave_datetime_to: "2023-01-01 08:00:00",
+    });
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     patchWithCleanup(ImStatusMixin, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     await start();
