@@ -9,13 +9,17 @@ from odoo.tests.common import tagged, HttpCase
 class TestMailFullComposer(MailCommon, HttpCase):
 
     def test_mail_composer_test_tour(self):
-        self.env['mail.template'].create({
+        self.env['mail.template'].create([{
             'auto_delete': True,
             'lang': '{{ object.lang }}',
             'model_id': self.env['ir.model']._get_id('res.partner'),
             'name': 'Test template',
             'partner_to': '{{ object.id }}',
-        })
+        }, {
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'Test template for my role',
+            'role_ids': [(4, self.role_employee.id)],
+        }])
 
         automation = self.env['base.automation'].create({
             'name': 'Test',

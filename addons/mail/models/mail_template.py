@@ -36,7 +36,7 @@ class MailTemplate(models.Model):
     # description
     name = fields.Char('Name', translate=True)
     description = fields.Text(
-        'Template Description', translate=True,
+        'Description', translate=True,
         help="This field is used for internal description of the template's usage.")
     active = fields.Boolean(default=True)
     template_category = fields.Selection(
@@ -51,6 +51,7 @@ class MailTemplate(models.Model):
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
     user_id = fields.Many2one('res.users', string='Owner', domain="[('share', '=', False)]")
+    role_ids = fields.Many2many('res.role', string='Roles')
     # recipients
     use_default_to = fields.Boolean(
         'Default Recipients',

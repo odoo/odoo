@@ -332,6 +332,30 @@ class TestMailTemplate(MailCommon):
         rendered = mail_template._render_field('email_to', record.ids)[record.id]
         self.assertIn(self.user_admin.name, rendered)
 
+    def test_mail_template_acl_owner_role(self):
+        """ Employees edit templates they own or restricted to one of their
+        roles, not other users' or roles' ones. """
+        role_other = self.env['res.role'].create({'name': 'Other Role', 'user_ids': [(4, self.user_employee_2.id)]})
+        templates = self.env['mail.template'].create([
+            {'name': 'Owned', 'user_id': self.user_employee.id},
+            {'name': 'Other Owner', 'user_id': self.user_employee_2.id},
+            {'name': 'Role', 'role_ids': [(4, self.role_employee.id)]},
+            {'name': 'Other Role', 'role_ids': [(4, role_other.id)]},
+            {'name': 'Other Owner, Role', 'role_ids': [(4, self.role_employee.id)], 'user_id': self.user_employee_2.id},
+        ])
+        for template, can_edit in zip(templates, (True, False, True, False, True)):
+            with self.subTest(template=template.name):
+                template = template.with_user(self.user_employee)
+                self.assertTrue(template.has_access('read'))
+                if can_edit:
+                    template.body_html = '<p>Updated</p>'
+                    template.unlink()
+                else:
+                    with self.assertRaises(AccessError):
+                        template.body_html = '<p>Updated</p>'
+                    with self.assertRaises(AccessError):
+                        template.unlink()
+
     def test_mail_template_acl_translation(self):
         ''' Test that a user that doesn't have the group_mail_template_editor cannot create / edit
         translation with dynamic code if he cannot write dynamic code on the related record itself.
