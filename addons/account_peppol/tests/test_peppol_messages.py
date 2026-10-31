@@ -492,14 +492,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         with mock_lookup_success('0208:0428759497'):
             wizard = self.create_send_and_print(moves, default=True)
         expected_result = {
-            "email": {
-                "count": 2,
-                "label": "by Email",
-                "moves": [
-                    {"id": move_1.id, "name": move_1.name, "partner_name": "Molly"},
-                    {"id": move_2.id, "name": move_2.name, "partner_name": "Molly"},
-                ],
-            },
             "peppol": {
                 "count": 2,
                 "label": "by Peppol",
