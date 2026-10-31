@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
-"PO-Revision-Date: 2026-08-13 11:09+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
+"PO-Revision-Date: 2026-10-30 11:33+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/website/"
 "it/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
@@ -269,12 +269,6 @@ msgid "$ 32M"
 msgstr "32M €"
 
 #. module: website
-#. odoo-python
-#: code:addons/website/models/ir_ui_view.py:0
-msgid "%(error)s (website: %(website_id)s)"
-msgstr "%(error)s (sito web: %(website_id)s)"
-
-#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_builder_action.js:0
 msgid "%s is not a valid URL."
@@ -323,7 +317,7 @@ msgstr "'. Mostrare risultati per '"
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_searchbar/search_bar.js:0
 msgid "(%(count)s found)"
-msgstr ""
+msgstr "(%(count)s trovati)"
 
 #. module: website
 #. odoo-javascript
@@ -7206,7 +7200,7 @@ msgstr "Ciambella"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/popup_option_plugin.js:0
 msgid "Drag blocks here"
-msgstr ""
+msgstr "Trascina i blocchi qui"
 
 #. module: website
 #. odoo-javascript
@@ -8095,6 +8089,12 @@ msgstr "Vista estesa"
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
 msgid "External ID"
 msgstr "ID esterno"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/ir_ui_view.py:0
+msgid "External ID can not be loaded: %(error)s (website: %(website_id)s)"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -9078,6 +9078,8 @@ msgid ""
 "Google Maps configuration has changed. Please reload the page for changes to "
 "take effect."
 msgstr ""
+"La configurazione di Google Maps è cambiata. Aggiorna la pagina affinché le "
+"modifiche vengano applicate."
 
 #. module: website
 #. odoo-javascript
@@ -13851,7 +13853,7 @@ msgstr "Segnaposto"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_api_key_dialog.xml:0
 msgid "Places API (NEW)"
-msgstr ""
+msgstr "API Places (NUOVO)"
 
 #. module: website
 #. odoo-javascript
@@ -16605,9 +16607,23 @@ msgid "Template ID: %s"
 msgstr "ID modello: %s"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/ir_ui_view.py:0
+msgid ""
+"Template does not exist or has been deleted: %(error)s (website: %"
+"(website_id)s)"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Template fallback"
 msgstr "Modello di riserva"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/ir_ui_view.py:0
+msgid "Template not found: '%(error)s' (website: %(website_id)s)"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega
@@ -17208,6 +17224,8 @@ msgstr ""
 msgid ""
 "This form cannot be submitted. Please contact the website administrator."
 msgstr ""
+"Non è possibile inviare questo modulo. Contatta l'amministratore del sito "
+"web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -19611,7 +19629,7 @@ msgstr "Non è possibile duplicare questo campo"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/card_image_option_plugin.js:0
 msgid "You cannot duplicate this image."
-msgstr ""
+msgstr "Non puoi duplicare questa immagine."
 
 #. module: website
 #. odoo-javascript
@@ -21287,6 +21305,9 @@ msgstr "✽  Pizze"
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
 msgstr "✽  Cosa offriamo"
+
+#~ msgid "%(error)s (website: %(website_id)s)"
+#~ msgstr "%(error)s (sito web: %(website_id)s)"
 
 #~ msgid "Places API"
 #~ msgstr "API Places"

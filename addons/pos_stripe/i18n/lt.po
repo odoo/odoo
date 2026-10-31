@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
 "PO-Revision-Date: 2026-10-06 09:37+0000\n"
 "Last-Translator: Ulevičienė <vilma.uleviciene@mededu.lt>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
@@ -32,6 +32,12 @@ msgstr "Mokėjimo užfiksavimas"
 #: model:ir.model.fields,field_description:pos_stripe.field_pos_payment_method__display_name
 msgid "Display Name"
 msgstr "Rodomas pavadinimas"
+
+#. module: pos_stripe
+#. odoo-python
+#: code:addons/pos_stripe/models/pos_payment_method.py:0
+msgid "Do not have access to fetch the Stripe account"
+msgstr ""
 
 #. module: pos_stripe
 #. odoo-python
@@ -140,8 +146,8 @@ msgstr ""
 msgid ""
 "Terminal %(terminal)s is already used on payment method %(payment_method)s."
 msgstr ""
-"Terminalas „ %(terminal)s “ jau naudojamas mokėjimo būdu „ %(payment_method)"
-"s “."
+"Terminalas „ %(terminal)s “ jau naudojamas mokėjimo būdu „ %"
+"(payment_method)s “."
 
 #. module: pos_stripe
 #. odoo-javascript

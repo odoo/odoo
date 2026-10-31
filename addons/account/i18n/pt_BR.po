@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-08-05 09:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
@@ -8382,13 +8382,10 @@ msgstr "Modelos de e-mail"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
-#, fuzzy
 msgid ""
-"Email addresses that will receive copy for sent and received invoices. "
-"Separate entries with ';'."
+"Email addresses that should receive invoices copy/return reminders. Separate "
+"entries with ';'."
 msgstr ""
-"Endereços de e-mail que receberão cópias das faturas enviadas e recebidas. "
-"Separe as entradas com “;”."
 
 #. module: account
 #. odoo-javascript
@@ -18384,6 +18381,12 @@ msgstr ""
 "diferente."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is using taxes (%(tax_names)s) from a different company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -22395,6 +22398,14 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Fatura de autofaturamento (Ref. {{ object.name "
 "or 'n/a' }})"
+
+#, fuzzy
+#~ msgid ""
+#~ "Email addresses that will receive copy for sent and received invoices. "
+#~ "Separate entries with ';'."
+#~ msgstr ""
+#~ "Endereços de e-mail que receberão cópias das faturas enviadas e "
+#~ "recebidas. Separe as entradas com “;”."
 
 #~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
 #~ msgstr "<span class=\"o_stat_text\">Lançamentos no diário</span>"

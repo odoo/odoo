@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 12:55+0000\n"
 "Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -1759,13 +1759,10 @@ msgstr "Scanați acest cod QR pentru a obține aplicația Odoo:"
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Selectați utilizatorul responsabil pentru aprobarea „Cheltuielilor” acestui "
-"angajat.\n"
-" Dacă este goală, aprobarea se face de către un administrator sau un "
-"aprobator (stabilit în setări / utilizatori)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1973,9 +1970,10 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "The current user has no related employee. Please, create one."
+msgid ""
+"The current user has no related employee. Please, create one in %(company)s, "
+"or switch to a company where they have one."
 msgstr ""
-"Utilizatorul actual nu are niciun angajat înrudit. Te rog, creează unul."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2484,6 +2482,20 @@ msgstr "utilizați OCR pentru a completa datele dintr-o imagine a facturii"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "cu aceeași chitanță există deja."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Selectați utilizatorul responsabil pentru aprobarea „Cheltuielilor” "
+#~ "acestui angajat.\n"
+#~ " Dacă este goală, aprobarea se face de către un administrator sau un "
+#~ "aprobator (stabilit în setări / utilizatori)."
+
+#~ msgid "The current user has no related employee. Please, create one."
+#~ msgstr ""
+#~ "Utilizatorul actual nu are niciun angajat înrudit. Te rog, creează unul."
 
 #~ msgid "$100.00"
 #~ msgstr "$100.00"

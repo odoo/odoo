@@ -49,7 +49,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-10-29 16:30+0000\n"
+"PO-Revision-Date: 2026-10-30 14:33+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/base/fi/>"
 "\n"
@@ -4265,11 +4265,11 @@ msgid ""
 "api from different job boards like indeed, monster, linkedin, etc.\n"
 msgstr ""
 "\n"
-"Perusmoduuli rekrytoinnin integrointia varten.\n"
+"Perusmoduuli rekrytoinnin integraatiota varten.\n"
 "========================================\n"
-"Tämä moduuli tarjoaa perustan rekrytoinnin integroinnille ulkoisten\n"
-"ohjelmointirajapintojen kanssa eri työnhakusivustoilta, kuten Indeed, "
-"Monster, Linkedin jne.\n"
+"Tämä moduuli tarjoaa perustan rekrytoinnin integrointiin ulkoisten\n"
+"ohjelmointirajapintojen kanssa eri työnhakusivustoilla, kuten Indeed, "
+"Monster, Linkedin, jne.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br
@@ -5005,7 +5005,7 @@ msgid ""
 "This module adds certification to resume for employees.\n"
 msgstr ""
 "\n"
-"Sertifiointi ja HR-taidot\n"
+"Sertifiointi ja taidot henkilöstöhallintoon\n"
 "===============================\n"
 "\n"
 "Tämä moduuli lisää sertifioinnin työntekijöiden ansioluetteloon.\n"
@@ -5350,16 +5350,16 @@ msgid ""
 "Allows to contact directly the employee in case of unjustified absence.\n"
 msgstr ""
 "\n"
-"Valvo työntekijöiden läsnäoloa\n"
+"Valvo työntekijöiden läsnäoloja\n"
 "==========================\n"
 "\n"
 "Perustuu:\n"
-"    * IP-osoiteeseen\n"
+"    * IP-osoitteeseen\n"
 "    * Käyttäjän istuntoon\n"
 "    * Lähetettyihin sähköposteihin\n"
 "\n"
-"Mahdollistaa yhteydenoton suoraan työntekijään, jos työntekijä on "
-"perusteettomasti poissa.\n"
+"Mahdollistaa yhteydenoton suoraan työntekijään perusteettoman poissaolon "
+"tilanteessa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_crm_helpdesk
@@ -5380,7 +5380,7 @@ msgid ""
 "Convert employee's extra hours to leave allocations.\n"
 msgstr ""
 "\n"
-"Muunna työntekijän ylityötunnit lomamäärärahoiksi.\n"
+"Muunna työntekijöiden ylityötunnit vapaapäiviksi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_fsm
@@ -5984,7 +5984,7 @@ msgid ""
 "This module add completed courses to resume for employees.\n"
 msgstr ""
 "\n"
-"Verkko-oppiminen ja HR-taidot\n"
+"Verkko-oppiminen ja taidot henkilöstöhallintoon\n"
 "============================\n"
 "\n"
 "Tämä moduuli lisää suoritetut kurssit työntekijöiden ansioluetteloon.\n"
@@ -7395,7 +7395,7 @@ msgid ""
 "Gantt view for Attendance\n"
 msgstr ""
 "\n"
-"Gantt-näkymä läsnäoloa varten\n"
+"Gantt-näkymä läsnäoloja varten\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
@@ -7404,7 +7404,7 @@ msgid ""
 "Gantt view for Time Off Dashboard\n"
 msgstr ""
 "\n"
-"Gantt-näkymä Vapaiden koontinäyttölle\n"
+"Gantt-näkymä Vapaiden koontinäyttöä varten\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uy
@@ -8822,28 +8822,27 @@ msgid ""
 "customers' expenses if your work by project.\n"
 msgstr ""
 "\n"
-"Hallitse kuluja työntekijöittäin\n"
+"Hallinnoi kuluja työntekijöittäin\n"
 "============================\n"
 "\n"
 "Tämän sovelluksen avulla voit hallita työntekijöidesi päivittäisiä kuluja. "
 "Se antaa sinulle pääsyn työntekijöidesi palkkiomerkintöihin ja antaa sinulle "
-"oikeuden täydentää ja vahvistaa tai hylätä merkinnät. Vahvistuksen jälkeen "
+"oikeuden täydentää ja vahvistaa tai hylätä merkintöjä. Vahvistuksen jälkeen "
 "se luo työntekijälle laskun.\n"
-"Työntekijä voi koodata omat kulunsa, ja vahvistuskulku siirtää sen "
-"automaattisesti kirjanpitoon esimiesten vahvistuksen jälkeen.\n"
+"Työntekijä voi lisätä omat kulunsa, ja vahvistusprosessi siirtää ne "
+"automaattisesti kirjanpitoon esihenkilöiden vahvistuksen seurauksena.\n"
 "\n"
 "\n"
 "Koko työnkulku on toteutettu seuraavasti:\n"
 "---------------------------------\n"
 "* Kululuonnos\n"
-"* Työntekijä toimittaa sen esimiehelleen\n"
-"* Esimies hyväksyy sen\n"
-"* Kirjanpitäjä vahvistaa ja luo kirjanpitokirjaukset\n"
+"* Työntekijä toimittaa sen esihenkilölleen\n"
+"* Esihenkilö hyväksyy kulun\n"
+"* Kirjanpitäjä vahvistaa ja luo kirjanpidon kirjaukset\n"
 "\n"
-"Tässä moduulissa käytetään myös analyyttistä kirjanpitoa ja se on "
-"yhteensopiva \"laskutus työaikakirjausten perusteella\" -moduulin kanssa, "
-"jotta voit laskuttaa asiakkaidesi kulut automaattisesti uudelleen, jos "
-"työskentelet projektikohtaisesti.\n"
+"Tämä moduuli käyttää myös laskentakohteita ja se on yhteensopiva "
+"työaikakirjaus-moduulin laskujen kanssa, jotta voit laskuttaa asiakkaidesi "
+"kulut automaattisesti uudelleen projektikohtaisesti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_management
@@ -9532,7 +9531,7 @@ msgid ""
 "Module linking the attendance module to the timesheet app.\n"
 msgstr ""
 "\n"
-"Moduuli, joka yhdistää läsnäolomoduulin Työaikakirjaus-sovellukseen.\n"
+"Moduuli linkittää läsnäolomoduulin Työaikakirjaukset-sovellukseen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_followup
@@ -13246,7 +13245,7 @@ msgid ""
 "actions(Check in/Check out) performed by them.\n"
 msgstr ""
 "\n"
-"Tämän moduulin tarkoituksena on hallinnoida työntekijän läsnäoloja.\n"
+"Tämän moduulin tarkoitus on hallinnoida työntekijöiden läsnäoloja.\n"
 "==================================================\n"
 "\n"
 "Pitää kirjaa työntekijöiden läsnäoloista\n"
@@ -13342,10 +13341,10 @@ msgid ""
 "descriptions that will attract potential candidates.\n"
 msgstr ""
 "\n"
-"Tämän moduulin avulla voidaan mukauttaa työnhakusivustojen integraatio "
-"online-rekrytointiin\n"
-"tekoälyn avulla, joka luo verkkosivun työpaikkatarjouksista houkuttelevat\n"
-"kuvaukset, jotka houkuttelevat potentiaalisia hakijoita.\n"
+"Tämän moduulin avulla mukautat työnhakusivustojen integraatiot "
+"verkkorekrytointiin.\n"
+"Tekoäly muuntaa verkkosivujesi työpaikkailmoitukset kiinnostaviksi\n"
+"kuvauksiksi, jotka houkuttelevat potentiaalisia hakijoita.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_partner_commission
@@ -14282,17 +14281,18 @@ msgid ""
 "up a management by affair.\n"
 msgstr ""
 "\n"
-"Tämä moduuli implementoi työaikakirjausten järjestelmän.\n"
+"Tämä moduuli ottaa käyttöön työaikakirjausjärjestelmän.\n"
 "==========================================\n"
 "\n"
-"Kukin työntekijä voi koodata ja seurata eri projekteihin käyttämäänsä "
+"Kukin työntekijä voi kirjata ja seurata eri projekteihin käyttämäänsä "
 "aikaa.\n"
 "\n"
 "Aikaa ja työntekijän seurantaa koskevia raportointimahdollisuuksia on "
 "paljon.\n"
 "\n"
-"Se on täysin integroitu kustannuslaskentamoduuliin. Sen avulla voit asettaa\n"
-"hallinnan asiaryhmittäin.\n"
+"Se on täysin integroitu kustannuslaskentamoduuliin. Sen avulla voit "
+"määrittää\n"
+"hallinnan aiheittain.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -14850,7 +14850,7 @@ msgid ""
 "process.\n"
 msgstr ""
 "\n"
-"Tämän moduulin avulla on mahdollista hallita työntekijöiden taitoja "
+"Tämä moduuli mahdollistaa työntekijöiden taitojen hallinnoimisen "
 "arviointiprosessin aikana.\n"
 
 #. module: base
@@ -21303,7 +21303,7 @@ msgstr "Pyydä tunnistautumista käyttäjän epäaktiivisuuden jälkeen"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
-msgstr "Arvioi työntekijäsi"
+msgstr "Arvioi työntekijöitäsi"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_asset
@@ -21473,7 +21473,7 @@ msgstr "Lista liitteistä ja asiakirjojen indeksointi"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_attendance_gantt
 msgid "Attendance Gantt"
-msgstr "Osallistumisen Gantt-kaavio"
+msgstr "Läsnäolojen Gantt-kaavio"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_attendance
@@ -30339,7 +30339,7 @@ msgstr "Pelillistäminen"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance_gantt
 msgid "Gantt view for Attendance"
-msgstr "Gantt-näkymä läsnäoloa varten"
+msgstr "Gantt-näkymä läsnäoloja varten"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_gantt
@@ -31246,7 +31246,7 @@ msgstr "Asiakaspalvelu, Vapaat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_timesheet
 msgid "Helpdesk Timesheet"
-msgstr "Asiakaspalvelu, Työaikakirjaus"
+msgstr "Asiakaspalvelu, Työaikakirjaukset"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_holidays
@@ -31439,7 +31439,7 @@ msgstr "Kuinka määritellä laskettu kenttä"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_extract
 msgid "Hr Expense Extract"
-msgstr "Henkilöstöhallinti ja Kulut, ote"
+msgstr "HR-kulujen poiminta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_predict_product
@@ -31449,12 +31449,12 @@ msgstr "Henkilöstöhallinto ja Kulut, tuotteen ennuste"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_extract
 msgid "Hr Recruitment Extract"
-msgstr "Henkilöstöhallinto ja Rekrytointi, ote"
+msgstr "HR-rekrytoinnin poiminta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
 msgid "Hr Recruitment Interview Forms"
-msgstr "Henkilöstöhallinto ja Rekrytointi, haastattelulomakkeet"
+msgstr "HR-rekrytoinnin haastattelulomakkeet"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.UAH
@@ -35158,7 +35158,7 @@ msgstr "Hallitse Monster-työnhakusivuston integraatiot taitojen kanssa"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment_integration_website_monster
 msgid "Manage Monster Job board integrations with website"
-msgstr "Hallitse Monster-työnhakusivuston integraatiot verkkosivun kanssa"
+msgstr "Hallinnoi Monster-työnhakusivuston integraatioita verkkosivujen kanssa"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment
@@ -35387,7 +35387,7 @@ msgstr "Hallitse arvopapereita, tapahtumia ja pääomataulukoita."
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment_skills
 msgid "Manage skills of your employees"
-msgstr "Hallitse työntekijöidesi taitoja"
+msgstr "Hallinnoi työntekijöidesi taitoja"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal_skills
@@ -35397,7 +35397,7 @@ msgstr "Hallitse työntekijöidesi taitoja arviointiprosessin aikana"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills
 msgid "Manage skills, knowledge and resume of your employees"
-msgstr "Hallitse työntekijöidesi taitoja, tietoja ja ansioluetteloa"
+msgstr "Hallinnoi työntekijöidesi taitoja, tietoja ja ansioluetteloita"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
@@ -41539,7 +41539,7 @@ msgstr "Palkanlaskenta - suunnittelu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
 msgid "Payroll Accounting"
-msgstr "Palkkakirjanpito"
+msgstr "Palkanlaskennan kirjanpito"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_payroll_localization
@@ -43473,12 +43473,12 @@ msgstr "Rekrytoinnin integrointi Base"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_integration_website
 msgid "Recruitment Integration website"
-msgstr "Rekrytoinnin integrointi verkkosivusto"
+msgstr "Rekrytoinnin integraatio verkkosivuihin"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_reports
 msgid "Recruitment Reporting"
-msgstr "Rekrytointiraportointi"
+msgstr "Rekrytoinnin raportointi"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_ai
@@ -47256,7 +47256,7 @@ msgstr "Tehtävien luonti myyntitilauksesta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
 msgid "Task Logs"
-msgstr "Tehtävien lokikirjaukset"
+msgstr "Tehtävälokit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_tattoo_shop
@@ -49473,7 +49473,7 @@ msgstr "Vapaa-ajan palkkalaskelmat (Enterprise)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
 msgid "Time off Gantt"
-msgstr "Vapaa-ajan Gantt"
+msgstr "Vapaiden Gantt-näkymä"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__timed_out_counter
@@ -49519,7 +49519,7 @@ msgstr "Työaikakirjaukset ja vapaa-aika"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance
 msgid "Timesheets/attendances reporting"
-msgstr "Työaikakirjaukset ja paikallaolotietojen raportointi"
+msgstr "Työaikakirjausten/läsnäolojen raportointi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__tz
@@ -49717,7 +49717,7 @@ msgstr "Seuraa puhujien tekstiviestimarkkinointia"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
 msgid "Track employee attendance"
-msgstr "Seuraa työntekijöiden paikallaoloa"
+msgstr "Seuraa työntekijöiden läsnäoloja"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet
@@ -49738,7 +49738,7 @@ msgstr "Seuraa liidejä ja sulje mahdollisuuksia"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Track your recruitment pipeline"
-msgstr "Seuraa rekrytointiprosessin kulkua"
+msgstr "Seuraa rekrytointiputkeasi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
@@ -50902,11 +50902,11 @@ msgid ""
 "This allow the user to send badges to employees instead of simple users.\n"
 "Badge received are displayed on the user profile.\n"
 msgstr ""
-"Käytä HR-resursseja pelillistämiseen.\n"
+"Käytä HR-resursseja pelillistämisprosessissa.\n"
 "\n"
-"Henkilöstöhallinnon esimies voi hallita haasteita ja ansiomerkkejä.\n"
-"Esimies voi lähettää merkkejä työntekijöille käyttäjien sijaan.\n"
-"Merkki vastaanotettu näkyvät käyttäjäprofiilissa.\n"
+"Henkilöstöhallinnon esihenkilö voi hallinnoida tehtäviä ja ansiomerkkejä.\n"
+"Esihenkilö voi lähettää ansiomerkkejä työntekijöille käyttäjien sijaan.\n"
+"Saadut ansiomerkit näkyvät käyttäjäprofiilissa.\n"
 
 #. module: base
 #. odoo-python
@@ -53346,7 +53346,7 @@ msgstr "pos_mrp"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product
 msgid "predict the product from the expense description based on old ones"
-msgstr "ennustaa tuote kulukuvauksesta vanhojen perusteella"
+msgstr "ennusta tuote kulujen kuvauksesta, edellisten perusteella"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_account

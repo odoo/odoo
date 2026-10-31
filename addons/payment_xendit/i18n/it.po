@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-24 17:39+0000\n"
-"PO-Revision-Date: 2026-08-02 12:52+0000\n"
+"PO-Revision-Date: 2026-10-30 11:33+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "payment_xendit/it/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: payment_xendit
 #. odoo-python
@@ -69,6 +69,9 @@ msgid ""
 "The payment requires authentication from the customer, which isn't possible "
 "for this unattended transaction. Please ask the customer to pay manually."
 msgstr ""
+"Il pagamento richiede l'autenticazione da parte del cliente, il che non è "
+"possibile per questa transazione automatica. Chiedi al cliente di effettuare "
+"il pagamento manualmente."
 
 #. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
@@ -85,7 +88,7 @@ msgstr "La transazione non è legata a un token."
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Update the Xendit webhook configuration"
-msgstr ""
+msgstr "Aggiorna la configurazione del webhook Xendit"
 
 #. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
@@ -101,7 +104,7 @@ msgstr "Xendit"
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "Xendit Dashboard"
-msgstr ""
+msgstr "Dashboard Xendit"
 
 #. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__xendit_public_key
@@ -127,12 +130,17 @@ msgid ""
 "(dashboard_link)s before %(deadline)s to keep receiving payment and card "
 "token status updates."
 msgstr ""
+"Xendit ha sostituito il singolo campo webhook utilizzato dal fornitore di "
+"pagamento %(provider)s con gruppi di eventi v3 separati. Aggiorna %"
+"(webhook_link)s su %(dashboard_link)s prima del %(deadline)s per continuare "
+"a ricevere gli aggiornamenti sullo stato dei pagamenti e dei token delle "
+"carte."
 
 #. module: payment_xendit
 #. odoo-python
 #: code:addons/payment_xendit/models/payment_provider.py:0
 msgid "webhook configuration"
-msgstr ""
+msgstr "configurazione webhook"
 
 #~ msgid "Card Code"
 #~ msgstr "Codice Carta"

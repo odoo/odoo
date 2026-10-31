@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-08-06 12:34+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -8271,11 +8271,10 @@ msgstr "EMail模板"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
-#, fuzzy
 msgid ""
-"Email addresses that will receive copy for sent and received invoices. "
-"Separate entries with ';'."
-msgstr "将接收已发送和已接收发票副本的电子邮件地址。各条目之间用 ';' 分隔。"
+"Email addresses that should receive invoices copy/return reminders. Separate "
+"entries with ';'."
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -17941,6 +17940,12 @@ msgid ""
 msgstr "该条目使用了来自另一家公司的账户（%(accounts_codes_names)s ）。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is using taxes (%(tax_names)s) from a different company."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 #: model:ir.model.fields,help:account.field_res_config_settings__expense_account_id
@@ -21643,6 +21648,12 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} 自助开票发票（参考号 {{ object.name or 'n/"
 "a' }}）"
+
+#, fuzzy
+#~ msgid ""
+#~ "Email addresses that will receive copy for sent and received invoices. "
+#~ "Separate entries with ';'."
+#~ msgstr "将接收已发送和已接收发票副本的电子邮件地址。各条目之间用 ';' 分隔。"
 
 #~ msgid "<span class=\"o_stat_text\">Journal Entries</span>"
 #~ msgstr "<span class=\"o_stat_text\">日记账分录</span>"

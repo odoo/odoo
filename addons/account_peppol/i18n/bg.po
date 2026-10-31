@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-10-30 17:38+0000\n"
 "PO-Revision-Date: 2026-08-02 11:37+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
@@ -1056,6 +1056,12 @@ msgstr "Грешка"
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "Error importing %(proxy_type)s document (UUID: %(uuid)s):"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Errors occurred while creating the EDI document (format: %s):"
 msgstr "Възникнаха грешки при създаването на EDI документа (формат: %s):"
@@ -1119,16 +1125,6 @@ msgstr ""
 #: code:addons/account_peppol/static/src/components/peppol_info/peppol_info.js:0
 msgid "Got it !"
 msgstr "Разбрах!"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "I accept that Odoo may process my e-invoices,"
-msgstr "Приемам, че Odoo може да обработва моите е-фактури,"
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
-msgid "I reckon I'm allowed to register this company."
-msgstr "Считам, че имам право да регистрирам това дружество."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
@@ -2580,6 +2576,13 @@ msgid "Yes, Proceed"
 msgstr "Да, продължи"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You accept that any fraudulent activity or spam will result in immediate and "
+"permanent exclusion from the Peppol network."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -2615,6 +2618,13 @@ msgid "You are sending your e-invoices via Odoo with this Peppol ID"
 msgstr "Изпращате своите електронни фактури през Odoo с този Peppol ID"
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You authorize Odoo to act as your Peppol Service Provider to send and "
+"receive e-invoices on your behalf."
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid "You can now send and receive electronic invoices via Peppol"
@@ -2645,6 +2655,13 @@ msgstr ""
 "през Peppol, на тип, различен от „Покупки“.\n"
 "Моля, променете дневника, използван за получаване през Peppol, преди да "
 "промените типа на този дневник."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You confirm that you are authorized to register this company on the Peppol "
+"network as a legal representative."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2680,6 +2697,13 @@ msgstr ""
 "Регистрацията ви беше отхвърлена, причината ви беше изпратена по имейл.\n"
 "                            Моля, свържете се с нашата поддръжка, ако се "
 "нуждаете от допълнително съдействие."
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
+msgid ""
+"You remain fully responsible for the content, accuracy, and legal compliance "
+"of your invoices."
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -2852,6 +2876,12 @@ msgstr "за изпращане на фактури, но тази"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "използва"
+
+#~ msgid "I accept that Odoo may process my e-invoices,"
+#~ msgstr "Приемам, че Odoo може да обработва моите е-фактури,"
+
+#~ msgid "I reckon I'm allowed to register this company."
+#~ msgstr "Считам, че имам право да регистрирам това дружество."
 
 #~ msgid " (Customer not on Peppol)"
 #~ msgstr " (Клиентът не е в Peppol)"

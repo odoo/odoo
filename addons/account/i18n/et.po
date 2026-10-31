@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 17:37+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-08-03 16:36+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/account/"
@@ -7708,8 +7708,8 @@ msgstr "E-kirjade mallid"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
 msgid ""
-"Email addresses that will receive copy for sent and received invoices. "
-"Separate entries with ';'."
+"Email addresses that should receive invoices copy/return reminders. Separate "
+"entries with ';'."
 msgstr ""
 
 #. module: account
@@ -17428,6 +17428,12 @@ msgstr "Kanne on kaitstud pöördumatu räsiga."
 msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "The entry is using taxes (%(tax_names)s) from a different company."
 msgstr ""
 
 #. module: account
