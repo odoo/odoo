@@ -11,6 +11,7 @@ patch(QuickVideoSettings.prototype, {
     onClickVideoSettings() {
         this.actionService.doAction({
             context: {
+                closeOnClickAway: true,
                 dialog_size: "medium",
                 footer: false,
                 initialTab: "video",
