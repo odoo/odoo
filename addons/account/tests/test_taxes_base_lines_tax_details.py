@@ -161,6 +161,72 @@ class TestTaxesBaseLinesTaxDetails(TestTaxCommon):
             expected_values = get_expected_values(base_expected_values, tax_7)
             self.assert_base_lines_tax_details(document, expected_values)
 
+    def test_dispatch_delta_on_net_zero_total(self):
+        """ Check that the base line delta is still dispatched when an untaxed line brings
+        the raw total of the document to exactly zero (e.g. a gift card paying the whole order).
+        """
+        def get_expected_values(base_values, tax):
+            return {
+                'base_lines_tax_details': [{
+                    'delta_total_excluded': delta,
+                    'delta_total_excluded_currency': delta,
+                    'total_excluded': total_excluded,
+                    'total_excluded_currency': total_excluded,
+                    'total_included': total_included,
+                    'total_included_currency': total_included,
+                    'taxes_data': [{
+                        'base_amount': base_amount,
+                        'base_amount_currency': base_amount,
+                        'tax_amount': tax_amount,
+                        'tax_amount_currency': tax_amount,
+                        'tax_id': tax.id,
+                    }] if tax_amount is not None else [],
+                } for total_excluded, total_included, delta, base_amount, tax_amount in base_values],
+            }
+
+        with self.subTest("16% tax price-included"):
+            tax_16 = self.percent_tax(16.0, price_include_override='tax_included')
+            lines_vals = [{
+                'price_unit': price,
+                'tax_ids': tax_16,
+            } for price in (62.0, 234.0, 27.0, 5.0, 10.0, 115.0, 46.0)]
+            lines_vals.append({'price_unit': -499.0})
+            document = self.populate_document(self.init_document(lines_vals))
+
+            base_expected_values = [
+            #   (total_excluded, total_included, delta_total_excluded, base_amount, tax_amount),
+                (53.45, 62.0, 0.0, 53.45, 8.55),
+                (201.72, 234.0, 0.0, 201.71, 32.29),
+                (23.28, 27.0, 0.0, 23.28, 3.72),
+                (4.31, 5.0, 0.0, 4.31, 0.69),
+                (8.62, 10.0, 0.0, 8.62, 1.38),
+                (99.14, 115.0, 0.0, 99.14, 15.86),
+                (39.66, 46.0, 0.0, 39.66, 6.34),
+                (-499.0, -499.0, -0.01, None, None),
+            ]
+            expected_values = get_expected_values(base_expected_values, tax_16)
+            self.assert_base_lines_tax_details(document, expected_values)
+
+        with self.subTest("10% tax price-excluded"):
+            tax_10 = self.percent_tax(10.0)
+            lines_vals = [{
+                'price_unit': 1.125,
+                'tax_ids': tax_10,
+            }] * 2
+            lines_vals.append({'price_unit': -2.25})
+            document = self.populate_document(self.init_document(lines_vals))
+
+            base_expected_values = [
+            #   (total_excluded, total_included, delta_total_excluded, base_amount, tax_amount),
+                (1.13, 1.24, 0.0, 1.1199999999999999, 0.12),
+                (1.13, 1.24, 0.0, 1.13, 0.11),
+                (-2.25, -2.25, -0.01, None, None),
+            ]
+            expected_values = get_expected_values(base_expected_values, tax_10)
+            self.assert_base_lines_tax_details(document, expected_values)
+
+        self._run_js_tests()
+
     def test_global_discount_raw_gross_total_excluded(self):
         """ Tests to ensure expected raw_gross_total_excluded is calculated
         correctly with both line discounts and global discounts
