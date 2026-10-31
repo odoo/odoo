@@ -1,10 +1,13 @@
 import base64
+import io
 import textwrap
 import uuid
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import config, file_open
+from odoo.tools.pdf import OdooPdfFileWriter
 
 
 class TestUblCiiCommon(AccountTestInvoicingCommon):
@@ -17,6 +20,18 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         cls.partner_nl = cls._create_partner_nl()
         cls.partner_au = cls._create_partner_au()
         cls.partner_fr = cls._create_partner_fr()
+
+        # No wkhtmltopdf in tests: the invoice report is rendered as HTML, store a real PDF instead.
+        IrActionsReport = cls.env.registry['ir.actions.report']
+        get_splitted_report = IrActionsReport._get_splitted_report
+
+        def _get_splitted_report(self, report_ref, content, report_type):
+            content_by_id = get_splitted_report(self, report_ref, content, report_type)
+            if report_type == 'html':
+                return {res_id: cls._get_pdf_bytes() for res_id in content_by_id}
+            return content_by_id
+
+        cls.startClassPatcher(patch.object(IrActionsReport, '_get_splitted_report', _get_splitted_report))
 
     @classmethod
     def _create_company(cls, **create_values):
@@ -164,6 +179,18 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
     @classmethod
     def subfolders(cls):
         return None, None, None
+
+    @classmethod
+    def _get_pdf_bytes(cls, xml_content=None, filename='factur-x.xml'):
+        """ Small A4 PDF, with `xml_content` embedded as `filename` if given. """
+        a4_width_pt, a4_height_pt = 595, 842
+        writer = OdooPdfFileWriter()
+        writer.addBlankPage(a4_width_pt, a4_height_pt)
+        if xml_content:
+            writer.addAttachment(filename, xml_content, subtype='text/xml', afrelationship='/Alternative')
+        buffer = io.BytesIO()
+        writer.write(buffer)
+        return buffer.getvalue()
 
     # -------------------------------------------------------------------------
     # EXPORT HELPERS
