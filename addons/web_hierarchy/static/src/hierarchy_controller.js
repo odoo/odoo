@@ -1,4 +1,4 @@
-import { Component, signal, t, useProps } from "@odoo/owl";
+import { Component, signal, t, useProps, proxy } from "@odoo/owl";
 
 import { useModel } from "@web/model/model";
 import { addFieldDependencies, extractFieldsFromArchInfo } from "@web/model/relational_model/utils";
@@ -8,7 +8,7 @@ import { Layout } from "@web/search/layout";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { standardViewProps } from "@web/views/standard_view_props";
-import { useViewButtons } from "@web/views/view_button/view_button_hook";
+import { executeButtonCallback, useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ActionHelper } from "@web/views/action_helper";
 
 export class HierarchyController extends Component {
@@ -42,19 +42,21 @@ export class HierarchyController extends Component {
         }
         addFieldDependencies(activeFields, fields, additionalFields);
         const modelConfig = this.props.state?.modelState?.config || {};
-        this.model = useModel(this.props.Model, {
-            config: modelConfig,
-            resModel: this.props.resModel,
-            activeFields,
+        this.model = proxy(useModel(this.props.Model, {
+            config: {
+                ...modelConfig,
+                resModel: this.props.resModel,
+                activeFields,
+                fields,
+            },
             defaultOrderBy: this.props.archInfo.defaultOrder,
-            fields,
             parentFieldName,
             childFieldName,
-        });
+        }));
         useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
-            reload: this.model.reload.bind(this.model),
+            reload: this.model.load.bind(this.model),
         });
         useSetupAction({
             rootRef: this.rootRef,
@@ -65,15 +67,20 @@ export class HierarchyController extends Component {
         this.searchBarToggler = useSearchBarToggler();
     }
     get displayNoContent() {
-        return this.model.resIds.length === 0;
+        return this.model.root?.count === 0;
     }
 
-    async openRecord(node, newWindow) {
-        const activeIds = this.model.root.resIds;
-        this.props.selectRecord(node.resId, { activeIds, newWindow });
+    async openRecord(record, newWindow) {
+        const activeIds = this.model.root.records.map((record) => record.resId);
+        this.props.selectRecord(record.resId, { activeIds, newWindow });
     }
 
     async beforeExecuteActionButton(clickParams) {}
 
     async afterExecuteActionButton(clickParams) {}
+
+    async onClickCreate(_ev, newWindow) {
+        return executeButtonCallback(this.rootRef(), () => this.props.createRecord(newWindow));
+    }
+
 }

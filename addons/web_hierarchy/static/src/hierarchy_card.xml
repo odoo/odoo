@@ -1,53 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates>
 
-    <t t-name="web_hierarchy.HierarchyCard">
-        <div class="o_hierarchy_node_container d-flex flex-column" t-att-class="this.classNames" t-att-data-node-id="this.props.node.id">
-            <div class="o_hierarchy_node_button_container w-100 d-flex justify-content-end">
-                <button t-if="this.props.node.canShowParentNode"
-                        name="hierarchy_search_parent_node"
-                        class="btn p-0"
-                        t-on-click.synthetic="this.onClickArrowUp"
-                >
-                    <i class="oi" data-icon="expand_less"/>
-                </button>
-            </div>
-            <div class="o_hierarchy_node w-100 h-100 d-flex flex-column justify-content-between border rounded-3 bg-view"
-                t-att-data-node-id="this.props.node.id"
-                t-custom-click.synthetic="this.onGlobalClick"
+    <t t-name="web_hierarchy.HierarchyCard" t-inherit="web.CardRenderer">
+        <xpath expr="article" position="attributes">
+            <attribute name="t-att-data-node-id">this.props.record.resId</attribute>
+            <attribute name="t-custom-click.synthetic">this.onGlobalClick</attribute>
+        </xpath>
+
+        <xpath expr="article" position="inside">
+            <button
+                t-if="this.countChildren"
+                class="btn btn-secondary text-center m-2 mt-0"
+                t-att-title="this.props.leaf ? 'Unfold' : 'Fold'"
+                t-on-click.synthetic="this.toggleChildren"
             >
-                <div class="o_hierarchy_node_content">
-                    <Record resModel="this.props.node.model.resModel"
-                            resId="this.props.node.resId"
-                            fields="this.props.node.model.fields"
-                            activeFields="this.props.node.model.activeFields"
-                            values="this.props.node.data"
-                            t-slot-scope="data"
-                    >
-                        <t t-call="{{ this.templates['hierarchy-box'] }}" t-call-context="this.getRenderingContext(data)"/>
-                    </Record>
-                </div>
-                <button t-if="this.props.node.nodes.length or this.props.node.canShowChildNodes"
-                        name="hierarchy_search_subsidiaries"
-                        class="o_hierarchy_node_button btn btn-secondary d-grid m-2 mt-0"
-                        t-att-title="!this.props.node.nodes.length ? 'Unfold' : 'Fold'"
-                        t-on-click.synthetic="this.onClickArrowDown"
-                >
-                    <t t-if="!this.props.node.nodes.length">
-                        <span style="grid-column: 2;">
-                            <i class="oi oi-fw" data-icon="arrow_right"/>
-                            <t t-out="this.props.node.childResIds.length + ' ' + (this.props.archInfo.label || 'Unfold')"/>
-                        </span>
-                    </t>
-                    <t t-else="">
-                        <span style="grid-column: 2;">
-                            <i class="oi oi-fw" data-icon="arrow_drop_down"/>
-                            <t t-out="this.props.node.childResIds.length + ' ' + (this.props.archInfo.label || 'Fold')"/>
-                        </span>
-                    </t>
-                </button>
-            </div>
-        </div>
+                <t t-if="this.props.leaf">
+                    <i class="oi oi-fw" data-icon="arrow_right"/>
+                    <t t-out="this.countChildren + ' ' + (this.env.config.getDisplayName() || 'Unfold')"/>
+                </t>
+                <t t-else="">
+                    <i class="oi oi-fw" data-icon="arrow_drop_down"/>
+                    <t t-out="this.countChildren + ' ' + (this.env.config.getDisplayName() || 'Fold')"/>
+                </t>
+            </button>
+        </xpath>
     </t>
 
 </templates>

@@ -126,6 +126,7 @@ export class RelationalModel extends Model {
     static DEFAULT_GROUP_LIMIT = 80;
     static DEFAULT_OPEN_GROUP_LIMIT = 10; // TODO: remove ?
     static withCache = true;
+    static forceAutoUnfold = false;
 
     offlinePlugin = usePlugin(OfflinePlugin);
 
@@ -996,6 +997,7 @@ export class RelationalModel extends Model {
             offset: config.offset,
             order: orderByToString(config.orderBy),
             auto_unfold: config.openGroupsByDefault,
+            force_auto_unfold: this.constructor.forceAutoUnfold,
             opening_info: currentGroupInfos,
             unfold_read_specification: unfoldReadSpecification,
             unfold_read_default_limit: this.initialLimit,

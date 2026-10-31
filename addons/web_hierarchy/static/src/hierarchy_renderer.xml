@@ -4,35 +4,39 @@
     <t t-name="web_hierarchy.HierarchyRenderer">
         <div class="o_hierarchy_renderer o_renderer w-100 d-flex justify-content-center" t-ref="this.rendererRef">
             <div class="o_hierarchy_container d-flex flex-column w-100 w-lg-75 h-100 p-2">
-                <t t-foreach="this.rows" t-as="row" t-key="row_index">
-                    <t t-set="previousRow" t-value="!row_first ? this.rows[row_index - 1] : null"/>
-                    <t t-if="!row_first">
-                        <div t-if="row.parentNode and previousRow.nodes.length > 1"
-                            class="o_hierarchy_parent_node_container d-flex justify-content-center align-items-center"
+                <div t-foreach="this.props.model.root.groups" t-as="row" t-key="row.id">
+                    <div
+                        t-att-data-row-id="row.id"
+                        class="o_hierarchy_row d-flex justify-content-center align-items-stretch flex-wrap"
+                    >
+                        <div
+                            t-foreach="row.list.records"
+                            t-as="record"
+                            t-key="record.resId"
+                            class="o_hierarchy_node_container m-2"
                         >
-                            <img t-if="this.props.archInfo.avatarField"
-                                t-att-src="'/web/image/' + row.parentNode.model.resModel + '/' + row.parentNode.resId + '/' + this.props.archInfo.avatarField"
-                                t-on-error="(ev) => ev.target.style.display = 'none'" class="o_avatar rounded me-2"/>
-                            <span t-out="row.parentNode.data.display_name || row.parentNode.data.name"/>
+                            <HierarchyCard
+                                classNames="'o_hierarchy_node'"
+                                archInfo="this.props.archInfo.cardArchInfo"
+                                openRecord="this.props.openRecord"
+                                record="record"
+                                model="this.props.model"
+                                leaf="row_last"
+                            />
                         </div>
-                        <div class="o_hierarchy_separator d-flex">
+                    </div>
+                    <t t-if="!row_last">
+                        <div t-if="row.hiddenChildren > 0" class="d-flex justify-content-center mt-2">
+                            <button class="btn btn-outline-secondary rounded-circle">
+                            + <t t-out="row.hiddenChildren" />
+                            </button>
+                        </div>
+                        <div class="o_hierarchy_separator d-flex mt-4">
                             <div class="o_hierarchy_line_part o_hierarchy_line_left"></div>
                             <div class="o_hierarchy_line_part o_hierarchy_line_right"></div>
                         </div>
                     </t>
-                    <div class="o_hierarchy_row row justify-content-center flex-wrap row-cols-2 row-cols-lg-5 g-2 g-lg-3"
-                        t-att-class="{ 'pb-4': row_last }" t-att-data-parent-node-id="row.parentNode?.id"
-                        t-att-data-row-id="row_index"
-                    >
-                        <t t-foreach="row.nodes" t-as="node" t-key="node.id">
-                            <HierarchyCard
-                                node="node"
-                                openRecord="this.props.openRecord"
-                                archInfo="this.props.archInfo"
-                            />
-                        </t>
-                    </div>
-                </t>
+                </div>
             </div>
         </div>
     </t>
