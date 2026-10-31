@@ -608,6 +608,8 @@ class PurchaseOrder(models.Model):
             return self.env.ref('purchase.mt_rfq_confirmed')
         elif 'state' in track_init_values and self.state == 'sent':
             return self.env.ref('purchase.mt_rfq_sent')
+        elif 'state' in track_init_values and self.state == 'draft':
+            return self.env.ref('purchase.mt_rfq_created')
         return super()._track_log_get_default_subtype(track_init_values)
 
     # ------------------------------------------------------------
