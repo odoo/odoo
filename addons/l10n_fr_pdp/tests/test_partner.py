@@ -115,7 +115,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
         self.assertEqual(wizard._get_peppol_checkbox_label("by Peppol"), "by the Approved Platform")
         self.assertEqual(
             wizard._get_peppol_checkbox_addendum_disable_reason(),
-            " (Customer not available for French E-Invoicing)",
+            " (Customer cannot receive non regulated messages)",
         )
         move.peppol_move_state = 'done'
         self.assertEqual(
@@ -312,6 +312,47 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'peppol_supported_documents': [CPRO_INVOICE_IDENTIFIER],
         }])
         self.assertTrue(self.env['account.edi.xml.ubl_21_fr']._pdp_is_b2g(partner))
+
+    def test_validate_partner_fr_regulated_only(self):
+        """ A partner in the annuaire that doesn't accept non regulated messages can't be sent to
+        as long as the company sends non regulated messages. """
+        partner = self.partner_a
+        company = self.env.company
+
+        def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
+            self.assertEqual(r.method, "GET")
+            origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
+            if r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
+                pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
+                return self._get_annuaire_lookup_response(pdp_identifier, "334175221_33417522105821", accepts_unregulated=False)
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier=0225%3A334175221_33417522105821"):
+                peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:334175221_33417522105821")
+
+        with (
+                mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+                mock.patch.object(requests.sessions.Session, 'send', _request_handler),
+        ):
+            partner.button_account_peppol_check_partner_endpoint()
+            move = self._create_invoice(partner_id=partner.id)
+            wizard = self.env['account.move.send.wizard'].new({'move_id': move})
+
+            self.assertRecordValues(partner, [{
+                'peppol_verification_state': 'valid',
+                'pdp_verification_display_state': 'pdp_valid',
+            }])
+            self.assertEqual(
+                wizard._get_peppol_checkbox_addendum_disable_reason(),
+                " (Customer cannot receive non regulated messages)",
+            )
+
+        company.write({
+            'account_peppol_proxy_state': 'receiver',
+            'l10n_fr_pdp_annuaire_start_date': '2024-12-01',
+        })
+        self.assertFalse(partner._l10n_fr_pdp_cannot_receive_unregulated(company))
+        company.l10n_fr_pdp_send_to_ppf = False
+        self.assertTrue(partner._l10n_fr_pdp_cannot_receive_unregulated(company))
 
     def test_account_move_send_annuaire_single_match(self):
         self.env.company.write({
