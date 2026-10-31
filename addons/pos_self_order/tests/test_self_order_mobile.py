@@ -2,7 +2,9 @@
 
 import odoo.tests
 from odoo import http
+from odoo.addons.mail.tests.common import mail_new_test_user
 
+from odoo.addons.point_of_sale.models.pos_bus_mixin import PosBusMixin
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 from odoo.addons.pos_self_order.controllers.orders import PosSelfOrderController
 from unittest.mock import patch
@@ -364,3 +366,42 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         result = self.env['product.template'].load_product_from_pos(self.pos_config.id, [('id', '=', desk_organizer.id)])
         product_data = result['product.template'][0]
         self.assertEqual(product_data['self_order_available'], desk_organizer.self_order_available)
+
+    def test_self_order_availability_toggle_from_other_company(self):
+        """Toggling self_order_available from another company notifies the open self-order configs."""
+        self.pos_config.write({'self_ordering_mode': 'mobile'})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        self.pos_admin.write({
+            'company_ids': [(4, company_b.id)],
+            'group_ids': [(4, self.env.ref('product.group_product_manager').id)],
+        })
+        desk_organizer = self.desk_organizer.product_tmpl_id
+
+        notifications = []
+
+        def _notify(config, *args):
+            notifications.append((config, args))
+
+        with patch.object(PosBusMixin, '_notify', _notify):
+            desk_organizer.with_user(self.pos_admin).with_context(
+                allowed_company_ids=company_b.ids,
+            ).write({'self_order_available': False})
+
+        # The writer has no access at all to the config's company
+        company_b_user = mail_new_test_user(
+            self.env,
+            groups="base.group_user,point_of_sale.group_pos_manager,product.group_product_manager",
+            login="company_b_user",
+            company_id=company_b.id,
+            company_ids=[(6, 0, company_b.ids)],
+        )
+        with patch.object(PosBusMixin, '_notify', _notify):
+            desk_organizer.with_user(company_b_user).write({'self_order_available': True})
+
+        config_notifications = [args for config, args in notifications if config == self.pos_config]
+        self.assertEqual(len(config_notifications), 2)
+        for (event, payload), available in zip(config_notifications, [False, True]):
+            self.assertEqual(event, 'PRODUCT_CHANGED')
+            self.assertEqual([p['id'] for p in payload['product.template']], desk_organizer.ids)
+            self.assertEqual(payload['product.template'][0]['self_order_available'], available)
