@@ -2,8 +2,6 @@
     --o-control-panel-breadcrumbs-display: none;
     --formView-sheetBg-padding-x: var(--modal-padding);
 
-    backdrop-filter: grayscale(50%);
-
     .modal-content {
         .modal-header .modal-title {
             overflow: hidden;
@@ -135,6 +133,13 @@
             }
         }
     }
+}
+
+.o_modal_backdrop_filter {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    backdrop-filter: grayscale(50%);
 }
 
 .modal.o_inactive_modal {

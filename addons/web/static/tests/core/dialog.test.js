@@ -24,7 +24,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 
 test("simple rendering", async () => {
-    expect.assertions(7);
+    expect.assertions(8);
     class Parent extends Component {
         static components = { Dialog };
         static template = xml`
@@ -36,6 +36,7 @@ test("simple rendering", async () => {
     assignDialogTestEnv();
     await mountWithCleanup(Parent);
     expect(".o_dialog").toHaveCount(1);
+    expect(".o_dialog .modal > .o_modal_backdrop_filter").toHaveCount(1);
     expect(".o_dialog header .modal-title").toHaveCount(1, {
         message: "the header is rendered by default",
     });
