@@ -397,7 +397,6 @@ class AccountAccount(models.Model):
             record.opening_credit = res['credit']
             record.opening_balance = res['balance']
 
-    @api.depends('code')
     def _compute_account_type(self):
         """ Compute the account type based on the account code.
         Search for the closest parent account code and sets the account type according to the parent.
