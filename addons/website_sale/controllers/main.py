@@ -1583,18 +1583,29 @@ class WebsiteSale(payment_portal.PaymentPortal):
         _express_checkout_delivery_route + '/compute_taxes', type='jsonrpc', auth='public',
         website=True, sitemap=False,
     )
-    def express_checkout_shipping_address_compute_taxes(self):
+    def express_checkout_shipping_address_compute_taxes(self, include_delivery=False):
         order_sudo = request.cart
         try:
             order_sudo.with_context(is_express_checkout_flow=True)._recompute_taxes()
         except ValidationError:
             return {'external_tax_error': True}
 
-        amount_without_delivery = order_sudo._compute_amount_total_without_delivery()
-
-        return payment_utils.to_minor_currency_units(
-            amount_without_delivery, order_sudo.currency_id
+        currency = order_sudo.currency_id
+        amount_without_delivery = payment_utils.to_minor_currency_units(
+            order_sudo._compute_amount_total_without_delivery(), currency
         )
+        if not include_delivery:
+            return amount_without_delivery
+
+        # The delivery line already carries its computed tax, including external tax.
+        # The wallet must add that total, not the carrier's untaxed price.
+        delivery_amount = payment_utils.to_minor_currency_units(
+            sum(order_sudo.order_line.filtered('is_delivery').mapped('price_total')), currency
+        )
+        return {
+            'amount_without_delivery': amount_without_delivery,
+            'delivery_amount': delivery_amount,
+        }
 
     def _get_shop_payment_errors(self, order):
         """ Check that there is no error that should block the payment.
