@@ -26,7 +26,11 @@ test("serialization of dynamic model without uuid", async () => {
         expect(pack_lot_ids.length).toBe(1);
         expect(pack_lot_ids[0][0]).toBe(0);
         expect(pack_lot_ids[0][0]).toBe(0);
-        expect(pack_lot_ids[0][2]).toEqual({ lot_name: "lot1", write_date: false });
+        expect(pack_lot_ids[0][2]).toEqual({
+            lot_name: "lot1",
+            write_date: false,
+            expiration_date: false,
+        });
     }
 
     models.connectNewData({
