@@ -532,6 +532,13 @@ export class FormController extends Component {
 
     async beforeVisibilityChange() {
         const root = this.model.root;
+        // While a form is still loading, `this.model.root` is undefined and the
+        // `visibilitychange` listener (registered during setup, before the form's
+        // `onWillStart` resolves) can fire when the tab is hidden. With no root
+        // there are no fields to save, so there is nothing to do.
+        if (!root) {
+            return;
+        }
         const isEditingX2Many = Object.keys(root.activeFields).some((fieldName) => {
             const field = root.fields[fieldName];
             return (
