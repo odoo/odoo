@@ -128,6 +128,27 @@ class ResUsers(models.Model):
                 self.env.cr.rollback()
 
     @api.model
+    def _sync_light_microsoft_calendar(self):
+        """ Cron job per la sincronizzazione veloce (Light Sync) """
+        users_to_sync = self.sudo().search([('microsoft_calendar_rtoken', '!=', False)])
+        for user in users_to_sync:
+            if user._get_microsoft_sync_status() == "sync_active":
+                user.with_user(user)._sync_light_microsoft_events()
+
+    def _sync_light_microsoft_events(self):
+        self.ensure_one()
+        domain = [
+            ('recurrency', '=', False),
+            ('need_sync_m', '=', True),
+            '|',
+            ('user_id', '=', self.id),
+            ('partner_ids', 'in', self.partner_id.id),
+        ]
+        events_to_sync = self.env['calendar.event'].search(domain)
+        if events_to_sync:
+            events_to_sync.with_context(microsoft_sync_light=True)._sync_odoo2microsoft()
+
+    @api.model
     def stop_microsoft_synchronization(self):
         self.env.user.microsoft_synchronization_stopped = True
         self.env.user.microsoft_last_sync_date = None
