@@ -95,6 +95,7 @@ export class CodeEditor extends Component {
             showLineNumbers: t.boolean().optional(true),
             lineWrapping: t.boolean().optional(),
             editorState: t.instanceOf(CodeEditorState).optional(),
+            annotations: t.array().optional(),
         });
 
         this.state = proxy({
@@ -198,6 +199,13 @@ export class CodeEditor extends Component {
             if (!this.aceEditor) {
                 return;
             }
+            this.aceEditor.getSession().setAnnotations(this.props.annotations || []);
+        });
+
+        useEffect(() => {
+            if (!this.aceEditor) {
+                return;
+            }
             const readonly = this.props.readonly;
             this.aceEditor.setOptions({
                 readOnly: readonly,
@@ -255,7 +263,7 @@ export class CodeEditor extends Component {
         if (mode) {
             return {
                 path: `ace/mode/${mode}`,
-                ...(this.props.modeOptions || {}),
+                ...this.props.modeOptions,
             };
         }
         return "";
