@@ -403,7 +403,7 @@ class HrEmployee(models.Model):
             "res_model": "hr.attendance",
             "views": [[False, "list"], [False, "form"]],
             "domain": [('employee_id', '=', self.id), ('check_in', '>=', month_start), ('check_in', '<', month_end)],
-            "context": {"group_by": ["check_in:week"]},
+            "context": {"group_by": ["check_in:week"], "default_employee_id": self.id},
         }
 
     @api.depends("user_id.im_status", "attendance_state")
