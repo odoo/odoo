@@ -14,6 +14,7 @@ class TestPartner(TransactionCase):
     @freeze_time('2024-06-04')
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
         # use a single value for today throughout the tests to avoid weird scenarios around midnight
         cls.today = fields.Date.today()
         baseUser = cls.env['res.users'].create({
@@ -41,6 +42,7 @@ class TestPartner(TransactionCase):
             'count_as': 'absence',
             'request_unit': 'day',
             'unit_of_measure': 'day',
+            'country_id': cls.env.company.country_id.id,
         })
         cls.leaves = cls.env['hr.leave'].create([{
             'request_date_from': "2024-06-03",

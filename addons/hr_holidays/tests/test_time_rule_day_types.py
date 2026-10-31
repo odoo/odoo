@@ -14,7 +14,7 @@ class TestTimeRuleDayTypes(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.calendar = cls.env['resource.calendar'].create({
             'name': '40h/week UTC',
             'attendance_ids': [

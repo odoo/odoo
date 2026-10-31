@@ -7,6 +7,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 class TestTimeOffOverviewMyDepartmentTour(HttpCaseWithUserDemo):
 
     def test_time_off_overview_my_department_tour(self):
+        self.user_demo.company_id.country_id = self.env.ref("base.us")
         self.user_demo.group_ids |= self.env.ref("hr_holidays.group_hr_holidays_employee")
 
         if not self.user_demo.employee_id:
@@ -22,6 +23,7 @@ class TestTimeOffOverviewMyDepartmentTour(HttpCaseWithUserDemo):
                 "name": "Test Leave Type",
                 "code": "TEST_LEAVE",
                 "requires_allocation": False,
+                "country_id": self.user_demo.company_id.country_id.id,
             },
         )
 
