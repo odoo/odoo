@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="website_duplicate_view_form" model="ir.ui.view">
+        <field name="name">website.duplicate.view.form</field>
+        <field name="model">website.duplicate</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                </group>
+                <footer>
+                    <button string="Create" name="action_duplicate" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="website_duplicate_action" model="ir.actions.act_window">
+        <field name="name">Duplicate</field>
+        <field name="res_model">website.duplicate</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="website.model_website"/>
+    </record>
+
+</odoo>
