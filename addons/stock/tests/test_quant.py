@@ -1006,7 +1006,6 @@ class TestStockQuant(TestStockCommon):
         def _get_relocate_wizard(quant_ids):
             return Form.from_action(self.env, quant_ids.action_stock_quant_relocate())
 
-        self.env['stock.package'].search([]).unlink()
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_tracking_lot').id)]})
         package_01 = self.env['stock.package'].create({})
         package_02 = self.env['stock.package'].create({})
@@ -1066,6 +1065,8 @@ class TestStockQuant(TestStockCommon):
         ### testing blocks on relocating quants from different companies
         package_03 = self.env['stock.package'].create({})
         package_04 = self.env['stock.package'].create({})
+        # packages from other data (e.g. demo) can match the wizard domain too
+        test_packages = package_01 | package_02 | package_03 | package_04
         company_B = self.env['res.company'].sudo().create({
             'name': 'company B',
             'currency_id': self.env.ref('base.USD').id
@@ -1093,16 +1094,16 @@ class TestStockQuant(TestStockCommon):
         # testing the available packs from company B
         quant_b_B = self.env['stock.quant'].search([('product_id', '=', product_b_company_B.id), ('quantity', '=', 10)])
         relocate_wizard = _get_relocate_wizard(quant_b_B)
-        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)), package_03+package_04)
+        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)) & test_packages, package_03 + package_04)
 
         # testing the available packs from company A with multiple quants
         quants_ab_A = self.env['stock.quant'].search([('product_id', 'in', (self.productA.id, product_b.id)), ('quantity', '=', 10)])
         relocate_wizard = _get_relocate_wizard(quants_ab_A)
-        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)), package_02+package_04)
+        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)) & test_packages, package_02 + package_04)
 
         # testing the recomputation of available packages
         relocate_wizard.dest_location_id = self.stock_location
-        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)), package_01+package_04)
+        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)) & test_packages, package_01 + package_04)
 
         # testing calling the wizard with quants from multiple companies
         quants_bab_AB = quant_b_B + quants_ab_A
