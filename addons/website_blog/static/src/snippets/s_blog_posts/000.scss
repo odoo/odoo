@@ -16,6 +16,17 @@
         }
     }
 
+    .s_blog_posts_post .card > a:focus-visible {
+        --o-focus-ring: none;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            box-shadow: var(--o-focus-ring-inset);
+        }
+    }
+
     &.s_blog_post_big_picture {
         .s_blog_posts_post_cover {
             @media (min-width: 992px) { /* media-breakpoint-up(lg) */

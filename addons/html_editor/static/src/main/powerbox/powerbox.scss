@@ -11,6 +11,11 @@
 .o-we-command {
     &.active {
         background: rgba($o-component-active-bg, .65);
+
+        @media screen and (forced-colors: active) {
+            outline: var(--o-forced-colors-active-outline-width) solid AccentColor !important;
+            outline-offset: -2px !important;
+        }
     }
 }
 

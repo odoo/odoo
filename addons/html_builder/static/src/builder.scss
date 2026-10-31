@@ -159,6 +159,10 @@
     &:active, &:focus-visible {
         outline: var(--o-we-border-width) solid  var(--o-hb-btn-active-color, var(--o-we-color-accent));
     }
+
+    @media screen and (forced-colors: active) {
+        forced-color-adjust: none;
+    }
 }
 
 .o_we_lower_panel {

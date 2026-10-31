@@ -29,7 +29,7 @@
             padding-top: var(--o-bs-border-width);
             padding-left: var(--o-bs-border-width);
         }
-        
+
         .o_wblog_bordered_grid_container {
             --border-color: #{$gray-300};
 
@@ -162,6 +162,11 @@
     .o_wblog_toc {
         .o_wblog_toc_nav .list-group {
             .o_wblog_toc_link {
+                &:focus-visible {
+                    --o-forced-colors-active-outline-offset: -2px;
+                    --o-focus-ring: var(--o-focus-ring-inset);
+                }
+
                 @for $i from 0 through 5 {
                     &.o_wblog_toc_link_#{$i} {
                         padding-left: $spacer * (0.75 + $i);
@@ -194,7 +199,7 @@
 
                     &.active {
                         padding-left: var(--o-bs-spacer);
-                    
+
                         /* Active vertical bar */
                         &::before {
                             content: "";
@@ -204,6 +209,10 @@
                             width: calc(var(--o-bs-border-width) * 2);
                             background-color: var(--primary);
                             transition: background-color 0.2s;
+
+                            @media (forced-colors: active) {
+                                background-color: Highlight;
+                            }
                         }
                     }
                 }

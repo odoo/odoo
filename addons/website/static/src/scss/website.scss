@@ -225,6 +225,76 @@ $o-mega-menu-btn-close-zindex: $o-mega-menu-zindex + 1 !default;
     }
 }
 
+/* :focus-visible ring */
+/* - Variables are defined in a layer to remain overridable no matter the
+     specificity.
+   - Variables are defined both on :root and on focused elements.
+      - On :root to be available whenever the ring is not on the focused element
+        (i.e.: sibling or ancestor). Limitation: when used on a sibling or
+        ancestor, overridden variables used within other variables will only
+        work if set on :root directly.
+      - On focused elements to keep them easily overridable in most cases.
+   - The default colors are the light/dark swatches of the color theme.
+   - Exposed custom properties, unused by default, overridden in .o_cc[1-5]:
+        --o-focus-ring-width: <length>;
+        --o-focus-ring-inner-color: <color>;
+        --o-focus-ring-outer-color: <color>;
+**/
+@layer {
+    :root,
+    body:not(.editor_enable) :not(input, textarea, select, .form-control):focus-visible {
+        --o-focus-ring-outset:
+            0 0 0 calc(var(--o-focus-ring-width, 2px) - 1px) var(--o-focus-ring-inner-color, var(--o-color-4)),
+            0 0 0 calc(2 * var(--o-focus-ring-width, 2px) - 1px) var(--o-focus-ring-outer-color, var(--o-color-5)),
+            0 0 0 calc(2 * var(--o-focus-ring-width, 2px)) var(--o-focus-ring-inner-color, var(--o-color-4));
+        --o-focus-ring-inset:
+            inset 0 0 0 1px var(--o-focus-ring-inner-color, var(--o-color-4)),
+            inset 0 0 0 calc(var(--o-focus-ring-width, 2px) + 1px) var(--o-focus-ring-outer-color, var(--o-color-5)),
+            inset 0 0 0 calc(2 * var(--o-focus-ring-width, 2px) + 1px) var(--o-focus-ring-inner-color, var(--o-color-4));
+        --o-focus-ring: var(--o-focus-ring-outset);
+        /* Fix a rendering issue on all browsers: with border-radius, a thin 1px
+           gap appears if the background color is close to the first focus ring
+           color. The default values (2px / -1px) are set for an outset outline.
+        */
+        --o-focus-ring-outline-width: 2px;
+        --o-focus-ring-outline: var(--o-focus-ring-outline-width) solid var(--o-focus-ring-inner-color, var(--o-color-4));
+
+        @media screen and (forced-colors: active) {
+            --o-focus-ring-outline: var(--o-focus-ring-outline-width) solid AccentColor;
+        }
+    }
+}
+
+body:not(.editor_enable) {
+    :not(input, textarea, select, .form-control):focus-visible {
+        box-shadow: var(--o-focus-ring);
+        /* Hide a rendering bug when border-radius is set and the background color
+           is close to the first focus ring color. */
+        outline: var(--o-focus-ring-outline);
+        outline-offset: -1px;
+
+        /* .shadow-none is sometimes used to hide focus on click. It should not impact
+           focus-visible. */
+        &:is(.shadow, .shadow-sm, .shadow-lg, .shadow-none) {
+            box-shadow: var(--o-focus-ring) !important;
+        }
+
+        &.btn {
+            --#{$prefix}btn-focus-box-shadow: var(--o-focus-ring);
+        }
+
+        &#o_logout, &.dropdown-item {
+            --o-forced-colors-active-outline-offset: -2px;
+            --o-focus-ring: var(--o-focus-ring-inset);
+            --o-focus-ring-outline-width: 3px;
+        }
+    }
+
+    .accordion {
+        --#{$prefix}accordion-btn-focus-box-shadow: var(--o-focus-ring);
+    }
+}
+
 body {
     /* The color behind the boxed layout is forced by Odoo. The box background
        color uses the `$body-bg` variable.
@@ -273,7 +343,11 @@ h1, h2, h3, h4, h5, h6,
    gradients. */
 @for $index from 1 through 5 {
     .o_cc#{$index} {
-        @include o-add-gradient('o-cc#{$index}-bg-gradient')
+        @include o-add-gradient('o-cc#{$index}-bg-gradient');
+
+        /* Adaptive focus ring */
+        --o-focus-ring-inner-color: var(--o-cc#{$index}-bg);
+        --o-focus-ring-outer-color: var(--o-cc#{$index}-text);
     }
 }
 
@@ -1286,6 +1360,17 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, var(--o-bs-spacer
 /* This style is shared by the new versions of carousels
    001 for s_carousel & 002 for s_quotes_carousel */
 %s_carousel_variants {
+    --o-forced-colors-active-outline-offset: -2px;
+
+    @media (forced-colors: active) {
+        --o-bs-carousel-dark-control-icon-filter: invert(0);
+        --o-bs-carousel-dark-indicator-active-bg: CanvasText;
+
+        @media (prefers-color-scheme: dark) {
+            --o-bs-carousel-dark-indicator-active-bg: Canvas;
+        }
+    }
+
     /* Before media-breakpoint-down so that it's overridden. */
     .o_carousel_pause {
         width: var(--o-bs-carousel-control-width);
@@ -1346,8 +1431,25 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, var(--o-bs-spacer
 
     .carousel-control-prev, .carousel-control-next {
         &:focus-visible {
+            outline: none;
+            box-shadow: none;
+
             .carousel-control-prev-icon, .carousel-control-next-icon {
-                box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+                &::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    box-shadow: var(--o-focus-ring-inset);
+                    outline: var(--o-focus-ring-outline);
+                    outline-offset: -2px;
+                    filter: invert(1);
+                }
+            }
+        }
+
+        &, .o_carousel_pause {
+            @media (forced-colors: active) {
+                background-color: ButtonFace !important;
             }
         }
     }
@@ -1360,10 +1462,9 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, var(--o-bs-spacer
         transition: var(--o-bs-carousel-control-transition);
 
         &:hover, &:focus-visible {
+            --o-focus-ring: var(--o-focus-ring-inset);
+
             opacity: var(--o-bs-carousel-control-hover-opacity);
-        }
-        &:focus-visible {
-            box-shadow: inset 0 0 0 2px black, inset 0 0 0 4px white;
         }
         &:active {
             border-color: transparent;
@@ -1390,6 +1491,15 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, var(--o-bs-spacer
 
     .carousel-control-prev-icon, .carousel-control-next-icon {
         background-size: 50%;
+
+        @media (forced-colors: active) {
+            filter: invert(1) !important;
+
+            @media (prefers-color-scheme: dark) {
+                background-color: Canvas;
+                z-index: -1; /* For the outline on focus-visible */
+            }
+        }
     }
 
     &.carousel-dark:not(.s_carousel_controllers_indicators_outside),
@@ -1490,6 +1600,10 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, var(--o-bs-spacer
             border-radius: var(--border-radius-pill);
             transform: scale(.5);
             transition: opacity .6s ease, transform .6s ease; /* Mirror '$carousel-indicator-transition' duration */
+
+            @media (forced-colors: active) {
+                background-color: ButtonText;
+            }
 
             /* Increases the click area for easier navigation. */
             &:before {
@@ -2620,7 +2734,6 @@ span.list-inline-item.o_add_language:last-child {
     bottom: 0;
     inset-inline: 0;
     display: flex;
-    outline: none;
     box-shadow: none;
     /* Need to update button size based on icon size. */
     @for $i from 1 through 5 {
@@ -2638,7 +2751,7 @@ span.list-inline-item.o_add_language:last-child {
     }
 
     &:focus-visible {
-        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color) 50%, transparent), 0 0 0 6px color-mix(in srgb, var(--background-color) 50%, transparent);
+        --o-focus-ring-width: 3px;
     }
 }
 
@@ -2743,15 +2856,20 @@ $ribbon-padding: 100px;
         }
     }
 
-    .oe_search_box:focus, .oe_search_button:focus {
+    .oe_search_box:focus-visible, .oe_search_button:focus-visible {
         z-index: 1;
         box-shadow: none !important;
+        outline: none;
     }
 
     &.o_keyboard_navigation {
-        .oe_search_box:focus, .oe_search_button:focus {
-            outline: calc(var(--o-bs-border-width) * 2) solid var(--primary);
-            outline-offset: calc((var(--o-bs-spacer-2)) * -1);
+        .oe_search_box:focus-visible, .oe_search_button:focus-visible {
+            box-shadow: var(--o-focus-ring-inset) !important;
+            outline: none !important;
+
+            @media screen and (forced-colors: active) {
+                outline: var(--o-forced-colors-active-outline-width) solid AccentColor !important;
+            }
         }
     }
 
@@ -2802,8 +2920,7 @@ $ribbon-padding: 100px;
     }
 
     .o_search_result_link:focus-visible {
-        outline: calc(var(--o-bs-border-width) * 2) solid var(--primary);
-        outline-offset: calc((var(--o-bs-border-width) * 2) * -1);
+        --o-focus-ring: var(--o-focus-ring-inset);
     }
 
     @container search-results (min-width: 768px) { /* media-breakpoint-up(md) */
@@ -3713,6 +3830,12 @@ input[value*="data-oe-translation-source-sha"] {
     border-right-width: 0;
 }
 
+@media screen and (forced-colors: active) {
+    .form-select:focus-visible {
+        color: CanvasText !important;
+    }
+}
+
 /* The `nav-link` and `btn` classes do not induce the same padding and border
    radius. However, in some cases, we need to apply these properties of `btn`
    with the color of `nav-link` (e.g. for the "Sign In" button of the "sidebar"
@@ -3830,15 +3953,22 @@ in a huge font size since it isn’t redefined for the frontend.
     font-size: 1.35rem !important;
 }
 
+.stretched-link:focus-visible {
+    box-shadow: none;
+}
+
 .stretched-link:focus-visible::after,
 .slide-link:focus-visible {
-    box-shadow:
-        inset 0 0 0 2px white,
-        inset 0 0 0 4px black;
+    --o-focus-ring: var(--o-focus-ring-inset);
+    --o-forced-colors-active-outline-offset: -2px;
+}
+
+.stretched-link:focus-visible::after {
+    box-shadow: var(--o-focus-ring);
 
     @media (forced-colors: active) {
-        outline: 2px solid transparent;
-        outline-offset: -2px;
+        outline: var(--o-forced-colors-active-outline-width) solid AccentColor !important;
+        outline-offset: var(--o-forced-colors-active-outline-offset) !important;
     }
 }
 

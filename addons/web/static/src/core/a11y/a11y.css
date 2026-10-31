@@ -1,0 +1,21 @@
+@media (forced-colors: active) {
+    :root {
+        --o-forced-colors-active-outline-width: 2px;
+        --o-forced-colors-active-outline-offset: 0;
+    }
+
+    *:focus-visible {
+        outline: var(--o-forced-colors-active-outline-width) solid AccentColor !important;
+        outline-offset: var(--o-forced-colors-active-outline-offset) !important;
+    }
+
+    a:hover {
+        text-decoration: revert !important;
+    }
+
+    .dropdown-toggle::after,
+    .o_accordion_toggle::after {
+        border-right-color: Canvas;
+        border-left-color: Canvas;
+    }
+}

@@ -26,6 +26,13 @@
             background-color: var(--body-bg);
             cursor: pointer;
 
+            @media screen and (forced-colors: active) {
+                &:focus-visible {
+                    --o-forced-colors-active-outline-width: 6px;
+                    --o-forced-colors-active-outline-offset: 10px;
+                }
+            }
+
             [data-snippet="s_carousel"],
             [data-snippet="s_carousel_intro"],
             [data-snippet="s_carousel_cards"],
