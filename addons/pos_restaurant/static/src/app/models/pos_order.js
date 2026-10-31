@@ -55,11 +55,7 @@ patch(PosOrder.prototype, {
             }
             if (this.getTable()) {
                 const table = this.getTable();
-                const child_tables = this.models["restaurant.table"].filter((t) => {
-                    if (t.floor_id && t.floor_id.id === table.floor_id?.id) {
-                        return table.isParent(t);
-                    }
-                });
+                const child_tables = table.getChildTables();
                 let name = "T " + table.table_number.toString();
                 for (const child_table of child_tables) {
                     name += ` & ${child_table.table_number}`;

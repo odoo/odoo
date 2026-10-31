@@ -227,7 +227,7 @@ class CalendarEvent(models.Model):
         'calendar.event.type', 'meeting_category_rel', 'event_id', 'type_id', 'Tags')
     # timing
     start = fields.Datetime(
-        'Start', required=True, tracking=True, default=_default_start, index=True,
+        'Start', required=True, tracking=True, default=lambda self: self._default_start(), index=True,
         help="Start date of an event, without time for full days events")
     stop = fields.Datetime(
         'Stop', required=True, tracking=True, default=_default_stop,
