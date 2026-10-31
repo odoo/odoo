@@ -7,6 +7,24 @@ from odoo.exceptions import UserError
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    def _l10n_in_get_invoice_report_header_values(self):
+        values = super()._l10n_in_get_invoice_report_header_values()
+        ewaybill = self.l10n_in_ewaybill_ids.filtered(
+            lambda bill: bill.state == 'generated'
+        ).sorted('id', reverse=True)[:1]
+        if ewaybill:
+            values.update({
+                'ewaybill_number': ewaybill.name or '',
+                'dispatched_through': ewaybill.transporter_id.name or dict(
+                    ewaybill._fields['mode']._description_selection(self.env)
+                ).get(ewaybill.mode, ''),
+                'destination': ewaybill.partner_ship_to_id.city or values['destination'],
+                'transport_document_no': ewaybill.transportation_doc_no or '',
+                'transport_document_date': ewaybill.transportation_doc_date,
+                'vehicle_no': ewaybill.vehicle_no or '',
+            })
+        return values
+
     l10n_in_ewaybill_ids = fields.One2many(
         'l10n.in.ewaybill',
         'account_move_id',
