@@ -2623,10 +2623,15 @@ class SaleOrder(models.Model):
 
         Note: self.ensure_one()
 
+        If no prepayment is required, the full amount must be paid to prevent partial (e.g., split)
+        payments from confirming the order.
+
         :return: Whether `self.amount_paid` is higher than the prepayment required amount.
         :rtype: bool
         """
         self.ensure_one()
+        if not self.prepayment_percent:
+            return self._is_paid()
         amount_comparison = self.currency_id.compare_amounts(
             self._get_prepayment_required_amount(), self.amount_paid
         )
