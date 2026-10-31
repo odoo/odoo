@@ -765,7 +765,7 @@ class TestSafeEvalRuntime(TransactionCase):
             builtins.object,
             builtins.bool, builtins.int, builtins.float, builtins.str,
             builtins.bytes, builtins.bytearray, builtins.memoryview,
-            builtins.Exception,
+            builtins.Exception, builtins.AssertionError,
             builtins.AttributeError, builtins.KeyError, builtins.TypeError,
             builtins.UnboundLocalError, builtins.ValueError, builtins.ZeroDivisionError,
             builtins.enumerate, builtins.filter, builtins.map, builtins.range,
@@ -864,3 +864,26 @@ class TestSafeEvalRuntime(TransactionCase):
 
         with self.assertRaises(UnsafeFunctionError):
             safe_checker.check(deque().append)
+
+    def test_trust_orm_fields(self):
+        from odoo.fields import Field  # noqa: PLC0415
+
+        field_instances = [field() for field in Field._by_type__.values()]
+        safe_checker.check(field_instances)
+
+    def test_trust_database_objects(self):
+        from odoo.sql_db import Cursor, Savepoint, _FlushingSavepoint  # noqa: PLC0415
+
+        cr = self.env.cr
+        self.assertIsInstance(cr, Cursor)
+        safe_checker.check(cr)
+
+        with cr.savepoint(flush=False) as savepoint:
+            self.assertIsInstance(savepoint, Savepoint)
+            safe_checker.check(savepoint)
+            safe_checker.check(savepoint.close)
+
+        with cr.savepoint() as flushing_savepoint:
+            self.assertIsInstance(flushing_savepoint, _FlushingSavepoint)
+            safe_checker.check(flushing_savepoint)
+            safe_checker.check(flushing_savepoint.close)
