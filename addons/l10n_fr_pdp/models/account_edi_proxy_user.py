@@ -771,7 +771,10 @@ class AccountEdiProxyClientUser(models.Model):
 
     @api.model
     def _pdp_proxy_error_message(self, error):
-        return error.get('data', {}).get('message') or error.get('message') or error.get('subject') or self.env._("Unknown error")
+        message = error.get('data', {}).get('message') or error.get('message') or error.get('subject') or self.env._("Unknown error")
+        if code := error.get('code'):
+            return self.env._("Error code %(code)s : %(message)s", code=code, message=message)
+        return message
 
     @api.model
     def _pdp_selection_label(self, record, field_name, value):
