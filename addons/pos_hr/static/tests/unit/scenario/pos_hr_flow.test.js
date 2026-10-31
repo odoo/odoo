@@ -299,3 +299,24 @@ test("test_switch_cashier_with_badge: scanning a badge switches the cashier", as
         expect(Utils.ticketRowContains(2, "A Little Guy")).toBe(true);
     }
 });
+
+test("test_navbar_is_inert_while_login_screen_shown", async () => {
+    // Regression test for issue #298753: while the login screen is shown, the
+    // navbar behind the overlay must be inert so keyboard focus and interaction
+    // cannot reach and activate its buttons (Orders, Register, burger menu,
+    // Cash In/Out) without a PIN.
+    const store = await Utils.setupAndMountPosHrApp();
+
+    expect(Utils.loginScreenIsShown()).toBe(true);
+    expect(".pos-topheader").toHaveAttribute("inert");
+
+    // Once a cashier logs in, the navbar becomes active again.
+    await Utils.login("Administrator", "1234");
+    await waitFor(".product-screen");
+    expect(".pos-topheader").not.toHaveAttribute("inert");
+
+    // Locking the register shows the login screen again and re-inerts the navbar.
+    await Utils.clickLockButton();
+    expect(Utils.loginScreenIsShown()).toBe(true);
+    expect(".pos-topheader").toHaveAttribute("inert");
+});
