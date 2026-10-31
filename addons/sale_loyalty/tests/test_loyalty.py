@@ -191,6 +191,29 @@ class TestLoyalty(TestSaleCouponCommon):
         order._action_cancel()
         self.assertFalse(order.coupon_point_ids)
 
+    def test_salesperson_can_archive_card_used_in_draft_order(self):
+        """Archiving a card drops its points from draft orders, also for a salesperson."""
+        user_salesman = new_test_user(
+            self.env, login="user_salesman", groups="sales_team.group_sale_salesman",
+        )
+        program = self.env["loyalty.program"].create({
+            "name": "Loyalty Points",
+            "program_type": "loyalty",
+            "trigger": "auto",
+            "rule_ids": [Command.create({"reward_point_mode": "money", "reward_point_amount": 1})],
+            "reward_ids": [Command.create({"reward_type": "discount", "discount": 10, "required_points": 100})],
+        })
+        order = self.env["sale.order"].with_user(user_salesman).create({
+            "partner_id": self.partner.id,
+            "order_line": [Command.create({"product_id": self.product_a.id})],
+        })
+        order._update_programs_and_rewards()
+        card = order.coupon_point_ids.coupon_id.filtered(lambda c: c.program_id == program)
+        self.assertTrue(card)
+        card.with_user(user_salesman).action_archive()
+        self.assertFalse(card.active)
+        self.assertFalse(order.coupon_point_ids.filtered(lambda p: p.coupon_id == card))
+
     def test_distribution_amount_payment_programs(self):
         """
         Check how the amount of a payment reward is distributed.

@@ -44,7 +44,7 @@ class LoyaltyCard(models.Model):
         return super()._has_source_order() or bool(self.order_id)
 
     def action_archive(self):
-        self.env['sale.order.coupon.points'].search([
+        self.env['sale.order.coupon.points'].sudo().search([
             ('coupon_id', 'in', self.ids),
             ('order_id.state', '=', 'draft'),
         ]).unlink()
