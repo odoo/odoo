@@ -162,7 +162,7 @@ class SaleOrderLine(models.Model):
         return invoiced_qties
 
     def _get_sale_order_fields(self):
-        return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_ids", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]
+        return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_ids", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment", "qty_delivered_method"]
 
     def read_converted(self):
         field_names = self._get_sale_order_fields()
