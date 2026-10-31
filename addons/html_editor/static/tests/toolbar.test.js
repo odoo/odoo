@@ -809,7 +809,7 @@ test("should not create empty extra nodes while changing format of link", async 
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
     expect(getContent(el)).toBe(
-        `<p>\ufeff[<a href="http://test.com" class="display-1-fs">\ufefftest.com\ufeff</a>\ufeff]</p>`
+        `<p>\ufeff[<a href="http://test.com"><span class="display-1-fs">\ufefftest.com\ufeff</span></a>\ufeff]</p>`
     );
 });
 
@@ -830,7 +830,7 @@ test("should not create empty extra nodes while changing format of link on mobil
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
     expect(getContent(el)).toBe(
-        `<p>\ufeff[<a href="http://test.com" class="display-1-fs">\ufefftest.com\ufeff</a>\ufeff]</p>`
+        `<p>\ufeff[<a href="http://test.com"><span class="display-1-fs">\ufefftest.com\ufeff</span></a>\ufeff]</p>`
     );
 });
 
