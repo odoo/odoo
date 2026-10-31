@@ -72,7 +72,9 @@ class AccountMoveLine(models.Model):
             else:
                 price_unit = self.product_id._run_fifo(cogs_qty) / cogs_qty if cogs_qty else 0
         line_quantity_uom = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-        return abs((price_unit * cogs_qty - self._get_posted_cogs_value()) / line_quantity_uom)
+        cogs_value = (price_unit * cogs_qty - self._get_posted_cogs_value()) / line_quantity_uom
+        # The COGS of a credit note is signed when its lines are created
+        return -cogs_value if self.move_id.move_type == 'out_refund' else cogs_value
 
     def _get_stock_moves(self):
         return self.env['stock.move']
@@ -89,7 +91,8 @@ class AccountMoveLine(models.Model):
         return 0
 
     def _get_lines_from_original_invoice(self):
+        valuation_account = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=self.move_id.fiscal_position_id)['stock_valuation']
         return self.move_id.reversed_entry_id.line_ids.filtered(
             lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and
-            l.product_uom_id == self.product_uom_id and l.price_unit >= 0
+            l.product_uom_id == self.product_uom_id and l.account_id == valuation_account
         )
