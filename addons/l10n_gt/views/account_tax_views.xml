@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_tax_form_inherit_l10n_gt" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit.l10n_gt</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="is_withholding_tax" position="after">
+                <field name="l10n_gt_minimum_base_threshold" invisible="country_code != 'GT' or not is_withholding_tax"/>
+                <field name="l10n_gt_max_taxable_base" invisible="country_code != 'GT' or not is_withholding_tax"/>
+                <field name="l10n_gt_nontaxable_base" invisible="country_code != 'GT' or not is_withholding_tax"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
