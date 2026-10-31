@@ -128,6 +128,11 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 'strikethrough_price': float,  # if there's a strikethrough_price to display.
             }
         """
+        if request.is_frontend and product_or_template.is_product_variant:
+            # Pricelist rules apply per cart line
+            kwargs["quantity"] = kwargs.get("quantity", 1.0) + request.cart._get_mergeable_line_qty(
+                product_or_template, uom or product_or_template._get_main_uom(), combination
+            )
         basic_product_information = super()._get_basic_product_information(
             product_or_template.with_context(display_default_code=not request.is_frontend),
             pricelist,
