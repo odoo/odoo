@@ -295,7 +295,9 @@ export class ProductProduct extends Base {
     }
 
     get productDisplayName() {
-        return this.default_code ? `[${this.default_code}] ${this.name}` : this.name;
+        return this.default_code
+            ? `[${this.default_code}] ${this.display_name}`
+            : this.display_name;
     }
     get canBeDisplayed() {
         return this.active && this.available_in_pos;
