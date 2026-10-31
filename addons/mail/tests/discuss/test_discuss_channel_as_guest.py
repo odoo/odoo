@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.tests.common import tagged
+from odoo.tests.common import JsonRpcException, tagged
+from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 
@@ -29,7 +30,7 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
         guest = self.env['mail.guest'].create({'name': 'Guest Mario'})
 
         self.channel = self.env['discuss.channel']._create_channel(group_id=None, name='Test channel')
-        self.channel._add_members(users=portal_user)
+        self.channel._add_members(users=portal_user + self.user_portal)
         self.channel._add_members(users=internal_user)
         self.channel._add_members(guests=guest)
         internal_member = self.channel.channel_member_ids.filtered(lambda m: internal_user.partner_id == m.partner_id)
@@ -41,7 +42,9 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
             partner_ids=[internal_user.partner_id.id],
             subtype_xmlid="mail.mt_comment",
         )
-        self.group = self.env['discuss.channel']._create_group(users_to=internal_user + portal_user, name="Test group")
+        self.group = self.env['discuss.channel']._create_group(
+            users_to=internal_user + portal_user + self.user_portal, name="Test group",
+        )
         self.group._add_members(guests=guest)
         self.tour = "discuss_channel_public_tour.js"
 
@@ -105,6 +108,24 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
     def test_mail_group_public_page_as_portal(self):
         self._open_group_page_as_user('portal')
 
+    def test_discuss_channel_join_as_portal_non_member(self):
+        peach = mail_new_test_user(self.env, "portal_peach", groups="base.group_portal")
+        self.start_tour(
+            self.channel.invitation_url,
+            "discuss_channel_as_guest_tour.js",
+            login=peach.login,
+        )
+        self.assertIn(peach.partner_id, self.channel.channel_member_ids.partner_id)
+
+    def test_discuss_channel_join_as_internal_non_member(self):
+        daisy = mail_new_test_user(self.env, "internal_daisy", groups="base.group_user")
+        self.start_tour(
+            self.channel.invitation_url,
+            "discuss_channel_as_guest_tour.js",
+            login=daisy.login,
+        )
+        self.assertIn(daisy.partner_id, self.channel.channel_member_ids.partner_id)
+
     def test_chat_from_token_as_guest(self):
         self.env['ir.config_parameter'].set_bool('mail.chat_from_token', True)
         self.url_open('/chat/xyz')
@@ -120,6 +141,45 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
 
         internal_response = self.url_open(internal_channel.invitation_url)
         self.assertEqual(internal_response.status_code, 404)
+
+    def test_invitation_link_does_not_join_before_welcome_page(self):
+        channel = self.env["discuss.channel"]._create_group(
+            name="Group 1",
+            users_to=self.env.ref("base.user_admin"),
+        )
+        guest_count = self.env["mail.guest"].search_count([])
+        members = channel.channel_member_ids
+        message = channel._get_last_messages()
+        response = self.url_open(channel.invitation_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.env["mail.guest"].search_count([]), guest_count)
+        self.assertEqual(channel.channel_member_ids, members)
+        self.assertEqual(channel._get_last_messages(), message)
+
+        def join(guest_name):
+            self.make_jsonrpc_request(
+                "/mail/store",
+                {
+                    "fetch_params": [
+                        [
+                            "/discuss/channel/join_from_invitation",
+                            {
+                                "channel_id": channel.id,
+                                "guest_name": guest_name,
+                                "invitation_token": channel.uuid,
+                            },
+                        ],
+                    ],
+                },
+            )
+
+        with self.assertRaises(JsonRpcException), mute_logger("odoo.http"):
+            join("  ")
+        self.assertEqual(self.env["mail.guest"].search_count([]), guest_count)
+        join("Alfred")
+        self.assertEqual(self.env["mail.guest"].search_count([]), guest_count + 1)
+        self.assertEqual((channel.channel_member_ids - members).guest_id.name, "Alfred")
+        self.assertIn('data-oe-type="channel-joined"', channel._get_last_messages().body)
 
     def test_sidebar_in_public_page(self):
         guest = self.env['mail.guest'].create({'name': 'Guest'})
@@ -145,11 +205,14 @@ class TestMailPublicPage(HttpCaseWithUserPortal):
         channel = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
         self.start_tour(f"/discuss/channel/{channel.id}", "public_page_as_anonymous_tour")
 
-    def test_invitation_link_redirects_internal_users_to_discuss(self):
+    def test_invitation_link_as_internal_user(self):
         bob = mail_new_test_user(self.env, "bob", groups="base.group_user")
         self.authenticate(bob.login, bob.login)
         channel = self.env["discuss.channel"]._create_channel(name="Channel 1", group_id=None)
         response = self.url_open(channel.invitation_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("/odoo/action-mail.action_discuss", response.url)
+        self.assertNotIn(bob.partner_id, channel.channel_member_ids.partner_id)
         group = self.env["discuss.channel"]._create_group(name="Group 1", users_to=bob)
         response = self.url_open(group.invitation_url)
         self.assertIn(f"/odoo/action-mail.action_discuss?active_id={group.id}", response.url)
