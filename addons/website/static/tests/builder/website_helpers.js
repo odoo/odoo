@@ -179,6 +179,7 @@ export async function setupWebsiteBuilder(
     patchDOMParser();
 
     onRpc("/website/get_translated_elements", () => getTranslatedElements());
+    onRpc("/website/get_allowed_root_attrs", () => ["style", "class", "target", "href"]);
 
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         setIframeLoaded() {
