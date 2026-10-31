@@ -87,6 +87,17 @@ class ImportO2mChild(models.Model):
     name = fields.Char()
     parent_id = fields.Many2one('import.o2m')
     value = fields.Integer()
+    image = fields.Binary(attachment=True)
+    child_ids = fields.One2many('import.o2m.grandchild', 'parent_id')
+
+
+class ImportO2mGrandchild(models.Model):
+    _name = 'import.o2m.grandchild'
+    _description = 'Tests: Base Import Model, One to Many grandchild'
+
+    name = fields.Char(required=True)
+    parent_id = fields.Many2one('import.o2m.child')
+    image = fields.Binary(attachment=True)
 
 
 class ImportPreview(models.Model):

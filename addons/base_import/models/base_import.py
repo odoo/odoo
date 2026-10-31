@@ -12,7 +12,6 @@ import logging
 import os
 import re
 import unicodedata
-from collections import defaultdict
 from collections.abc import Sequence
 
 import chardet
@@ -1587,6 +1586,11 @@ class Base_ImportImport(models.TransientModel):
             import_result = model.load(import_fields, merged_data, limit=import_limit)
             _logger.info('done importing data into model: %s', model._name)
 
+            # Tell the client where to upload the pending binary files. Kept
+            # inside the savepoint so test imports are rolled back entirely.
+            if binary_filenames:
+                import_result['binary_filenames'] = self._resolve_binary_filenames(binary_filenames)
+
             import_savepoint.close(rollback=dryrun)
         finally:
             # rollback if not already closed
@@ -1635,34 +1639,147 @@ class Base_ImportImport(models.TransientModel):
         # convert load's internal nextrow to the imported file's
         if import_result['nextrow']: # don't update if nextrow = 0 (= no nextrow)
             import_result['nextrow'] += skip
-        if binary_filenames:
-            import_result['binary_filenames'] = binary_filenames
 
         return import_result
 
-    def _extract_binary_filenames(self, import_fields, data, model=False, prefix='', binary_filenames=False):
-        model = model or self.res_model
-        binary_filenames = binary_filenames or defaultdict(list)
-        for name, field in self.env[model]._fields.items():
-            name = prefix + name
-            if any(name + '/' in import_field and name == import_field.split('/')[prefix.count('/')] for import_field in import_fields):
-                # Recursive call with the relational as new model and add the field name to the prefix
-                binary_filenames = self._extract_binary_filenames(import_fields, data, field.comodel_name, name + '/', binary_filenames)
-            elif field.type == 'binary' and field.attachment and name in import_fields:
-                index = import_fields.index(name)
-                for line in data:
-                    filename = None
-                    value = line[index]
-                    if isinstance(value, str):
-                        if re.match(config.get("import_url_regex"), value):
-                            pass
-                        elif '.' in value:
-                            # Detect if it's a filename
-                            filename = value
-                            line[index] = ''
-                        # else base64 nothing to do
-                    binary_filenames[name].append(filename)
+    def _extract_binary_filenames(self, import_fields, data):
+        """Detect binary columns containing file names, blank the file names
+        (``load`` must not import them as content) and collect one entry per
+        file to upload once the import is done.
+
+        Each entry carries a ``ref`` explaining how to find its target record
+        once ``load`` has run: the user's ``.id`` or ``id`` column when there
+        is one, else a generated external id injected in an appended ``id``
+        column (possible for one2many chains only). Entries are turned into
+        database ids by :meth:`_resolve_binary_filenames`.
+        """
+        binary_filenames = []
+        chains = {}
+        ref_counter = 0
+
+        for import_field in dict.fromkeys(import_fields):  # unique, in order
+            *steps, leaf = import_field.split('/')
+            chain = tuple(steps)
+
+            # resolve the model owning the binary field
+            model_name = self.res_model
+            for step in chain:
+                step_field = self.env[model_name]._fields.get(step)
+                if step_field is None or not step_field.relational:
+                    model_name = None
+                    break
+                model_name = step_field.comodel_name
+            if model_name is None:
+                continue
+            field = self.env[model_name]._fields.get(leaf)
+            if not (field and field.type == 'binary' and field.attachment):
+                continue
+
+            index = import_fields.index(import_field)
+            if chain not in chains:
+                chains[chain] = self._prepare_binary_ref_chain(chain, import_fields)
+                if chains[chain]['mode'] == 'xid':
+                    # append the column that will receive the generated ids
+                    import_fields.append('/'.join(chain + ('id',)))
+                    for line in data:
+                        line.append('')
+            chain_info = chains[chain]
+
+            for row_index, line in enumerate(data):
+                value = line[index]
+                filename = None
+                if isinstance(value, str):
+                    if re.match(config.get("import_url_regex"), value):
+                        pass
+                    elif '.' in value:
+                        # a file name: blank it, the client will upload the file
+                        filename = value
+                        line[index] = ''
+                    # else: inline base64, nothing to do
+                if not filename:
+                    continue
+
+                mode, ref_index = chain_info['mode'], chain_info['index']
+                if mode == 'xid':
+                    # one generated id per row, shared by every binary field
+                    # of the same record
+                    if row_index not in chain_info['refs']:
+                        ref_counter += 1
+                        chain_info['refs'][row_index] = ('xid', '__bin_%s_%s' % (self.id, ref_counter))
+                        line[ref_index] = chain_info['refs'][row_index][1]
+                    ref = chain_info['refs'][row_index]
+                elif mode and line[ref_index]:
+                    # the user references the record: use that reference
+                    ref = (mode, line[ref_index])
+                else:
+                    # no reference for this record: the file can't be uploaded
+                    ref = None
+                if ref:
+                    binary_filenames.append({
+                        'model': model_name,
+                        'field': leaf,
+                        'name': filename,
+                        'ref': ref,
+                    })
         return binary_filenames
+
+    def _prepare_binary_ref_chain(self, chain, import_fields):
+        """Decide how the records of ``chain/<binary field>`` are referenced:
+        the user's ``.id`` or ``id`` column when there is one, otherwise
+        generated external ids appended in a new ``id`` column. The latter is
+        only possible when every step of the chain is a one2many: ``load``
+        accepts unknown external ids on o2m sub-records only.
+        """
+        id_path = '/'.join(chain + ('id',))
+        db_id_path = '/'.join(chain + ('.id',))
+
+        if db_id_path in import_fields:
+            return {'mode': 'db_id', 'index': import_fields.index(db_id_path), 'refs': {}}
+        if id_path in import_fields:
+            return {'mode': 'ext_xid', 'index': import_fields.index(id_path), 'refs': {}}
+
+        is_one2many_chain = True
+        model_name = self.res_model
+        for step in chain:
+            step_field = self.env[model_name]._fields.get(step)
+            if not step_field or step_field.type != 'one2many':
+                is_one2many_chain = False
+                break
+            model_name = step_field.comodel_name
+        if is_one2many_chain:
+            return {'mode': 'xid', 'index': len(import_fields), 'refs': {}}
+        return {'mode': None, 'index': None, 'refs': {}}
+
+    def _resolve_binary_filenames(self, binary_filenames):
+        """Replace each entry's ``ref`` with the database id of its target
+        record, and delete the generated external ids. Entries whose record
+        was not imported (e.g. failed row) are dropped.
+        """
+        entries = []
+        generated_xids = []
+        for entry in binary_filenames:
+            kind, value = entry.pop('ref')
+            if kind == 'xid':
+                generated_xids.append(value)
+                record = self.env.ref('__import__.%s' % value, raise_if_not_found=False)
+            elif kind == 'ext_xid':
+                record = self.env.ref(
+                    value if '.' in value else '__import__.%s' % value,
+                    raise_if_not_found=False,
+                )
+            else:  # db_id
+                try:
+                    record = self.env[entry['model']].browse(int(value)).exists()
+                except ValueError:
+                    record = self.env[entry['model']]
+            if record and record._name == entry['model']:
+                entries.append({**entry, 'id': record.id})
+        if generated_xids:
+            self.env['ir.model.data'].search([
+                ('module', '=', '__import__'),
+                ('name', 'in', generated_xids),
+            ]).unlink()
+        return entries
 
     def _handle_multi_mapping(self, import_fields, input_file_data):
         """ This method handles multiple mapping on the same field.

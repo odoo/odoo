@@ -181,6 +181,35 @@ class TestO2M(BaseImportCase):
                         {'id': 'value', 'name': 'value', 'string': 'Value',
                          'required': False, 'translate': False, 'fields': [], 'type': 'integer', 'model_name': 'import.o2m.child',
                         },
+                        {'id': 'image', 'name': 'image', 'string': 'Image',
+                         'required': False, 'translate': False, 'fields': [], 'type': 'binary', 'model_name': 'import.o2m.child',
+                        },
+                        {
+                            'id': 'child_ids', 'name': 'child_ids', 'model_name': 'import.o2m.child',
+                            'string': 'Child', 'type': 'one2many', 'comodel_name': 'import.o2m.grandchild',
+                            'required': False, 'translate': False,
+                            'fields': [
+                                get_id_field("import.o2m.grandchild"),
+                                {'id': 'name', 'name': 'name', 'string': 'Name',
+                                 'required': True, 'translate': False, 'fields': [], 'type': 'char', 'model_name': 'import.o2m.grandchild',
+                                },
+                                {
+                                    'id': 'parent_id', 'name': 'parent_id', 'model_name': 'import.o2m.grandchild',
+                                    'string': 'Parent', 'type': 'many2one', 'comodel_name': 'import.o2m.child',
+                                    'required': False, 'translate': False, 'fields': [
+                                        {'id': 'parent_id', 'name': 'id', 'model_name': 'import.o2m.child',
+                                         'string': 'External ID', 'required': False, 'translate': False,
+                                         'fields': [], 'type': 'id'},
+                                        {'id': 'parent_id', 'name': '.id', 'model_name': 'import.o2m.child',
+                                         'string': 'Database ID', 'required': False, 'translate': False,
+                                         'fields': [], 'type': 'id'},
+                                    ]
+                                },
+                                {'id': 'image', 'name': 'image', 'string': 'Image',
+                                 'required': False, 'translate': False, 'fields': [], 'type': 'binary', 'model_name': 'import.o2m.grandchild',
+                                },
+                            ]
+                        },
                     ]
                 }
             ]
@@ -216,7 +245,37 @@ class TestO2M(BaseImportCase):
                             {'id': 'value', 'name': 'value', 'string': 'Value',
                             'required': False, 'translate': False, 'fields': [], 'type': 'integer', 'model_name': 'import.o2m.child',
                             },
-                            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'translate': False, 'fields': [], 'type': 'id', 'model_name': 'import.o2m.child'}
+                            {'id': 'value', 'name': '.id', 'string': 'Database ID', 'required': False, 'translate': False, 'fields': [], 'type': 'id', 'model_name': 'import.o2m.child'},
+                            {'id': 'image', 'name': 'image', 'string': 'Image',
+                             'required': False, 'translate': False, 'fields': [], 'type': 'binary', 'model_name': 'import.o2m.child',
+                            },
+                            {
+                                'id': 'child_ids', 'name': 'child_ids', 'model_name': 'import.o2m.child',
+                                'string': 'Child', 'type': 'one2many', 'comodel_name': 'import.o2m.grandchild',
+                                'required': False, 'translate': False,
+                                'fields': [
+                                    get_id_field("import.o2m.grandchild"),
+                                    {'id': 'child_ids', 'name': '.id', 'string': 'Database ID', 'required': False, 'translate': False, 'fields': [], 'type': 'id', 'model_name': 'import.o2m.grandchild'},
+                                    {'id': 'name', 'name': 'name', 'string': 'Name',
+                                     'required': True, 'translate': False, 'fields': [], 'type': 'char', 'model_name': 'import.o2m.grandchild',
+                                    },
+                                    {
+                                        'id': 'parent_id', 'name': 'parent_id', 'model_name': 'import.o2m.grandchild',
+                                        'string': 'Parent', 'type': 'many2one', 'comodel_name': 'import.o2m.child',
+                                        'required': False, 'translate': False, 'fields': [
+                                            {'id': 'parent_id', 'name': 'id', 'model_name': 'import.o2m.child',
+                                             'string': 'External ID', 'required': False, 'translate': False,
+                                             'fields': [], 'type': 'id'},
+                                            {'id': 'parent_id', 'name': '.id', 'model_name': 'import.o2m.child',
+                                             'string': 'Database ID', 'required': False, 'translate': False,
+                                             'fields': [], 'type': 'id'},
+                                        ]
+                                    },
+                                    {'id': 'image', 'name': 'image', 'string': 'Image',
+                                     'required': False, 'translate': False, 'fields': [], 'type': 'binary', 'model_name': 'import.o2m.grandchild',
+                                    },
+                                ]
+                            },
                         ]
                     }
                 ]
