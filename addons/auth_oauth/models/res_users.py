@@ -116,6 +116,23 @@ class ResUsers(models.Model):
         try:
             oauth_user = self.search([("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
             if not oauth_user:
+                oauth_provider = self.env['auth.oauth.provider'].browse(provider)
+                email = validation.get('email')
+                if oauth_provider.link_existing_users and email:
+                    oauth_user = self.search([
+                        ('login', '=ilike', email),
+                        ('active', '=', True),
+                        ('share', '=', False),
+                        ('oauth_uid', '=', False),
+                        ('oauth_provider_id', 'in', [False, provider]),
+                    ])
+                    if len(oauth_user) == 1:
+                        oauth_user.write({
+                            'oauth_provider_id': provider,
+                            'oauth_uid': oauth_uid,
+                            'oauth_access_token': params['access_token'],
+                        })
+                        return oauth_user.login
                 raise AccessDenied()
             assert len(oauth_user) == 1
             oauth_user.write({'oauth_access_token': params['access_token']})
