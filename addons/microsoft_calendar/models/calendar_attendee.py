@@ -19,7 +19,6 @@ class CalendarAttendee(models.Model):
         self._microsoft_sync_event('accept')
         return res
 
-
     def do_decline(self):
         # Synchronize event after state change
         res = super().do_decline()

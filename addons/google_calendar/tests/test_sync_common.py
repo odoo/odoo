@@ -53,6 +53,7 @@ class TestSyncGoogle(HttpCase):
         self._gsync_deleted_ids = []
         self._gsync_insert_values = []
         self._gsync_patch_values = defaultdict(list)
+        self._gsync_patch_notified = []
 
         # as these are normally post-commit hooks, we don't change any state here
         def _mock_delete(model, service, google_id, **kwargs):
@@ -71,6 +72,7 @@ class TestSyncGoogle(HttpCase):
             with google_calendar_token(user_id or model.env.user.sudo()) as token:
                 if token:
                     self._gsync_patch_values[google_id].append((values, kwargs))
+                    self._gsync_patch_notified.append(not model.env.context.get('google_skip_update_notification', False))
 
         with self.env.cr.savepoint(), \
              patch.object(GoogleCalendarSync, '_google_insert', autospec=True, wraps=GoogleCalendarSync, side_effect=_mock_insert), \
