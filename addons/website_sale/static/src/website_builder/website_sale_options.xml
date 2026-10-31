@@ -5,11 +5,11 @@
     <xpath expr="//t[@id='image_options']" position="before">
         <product_image_option
             template="website_sale.ProductImageOption"
-            t-attf-selector=".o_wsale_product_images :is({{replaceMediaOptionSelector}})"
-            t-att-exclude="replaceMediaOptionExclude"/>
+            t-attf-selector=".o_wsale_product_images :is({{replaceMediaOptionSelector}}, [data-embedded='video'])"
+            t-attf-exclude=":is({{replaceMediaOptionExclude}}):not([data-embedded='video']), [data-bs-slide] > *"/>
     </xpath>
     <xpath expr="//replace_media_option" position="attributes">
-        <attribute name="t-attf-exclude" add=".o_wsale_product_images :is({{replaceMediaOptionSelector}})" separator=", "/>
+        <attribute name="t-attf-exclude" add=".o_wsale_product_images :is({{replaceMediaOptionSelector}}):not([data-bs-slide] > *)" separator=", "/>
     </xpath>
     <xpath expr="//image_pop_up_option" position="attributes">
         <attribute name="t-attf-exclude" add="{{tagImageSelector}}" separator=", "/>
