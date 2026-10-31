@@ -1113,6 +1113,7 @@ SERVICES_MAPPING = {
     "action": ['ActionPlugin', '@web/webclient/actions/action_plugin'],
     "allowed_qweb_expressions": ['AllowedQwebExpressionsPlugin', '@web/views/fields/allowed_qweb_expressions_plugin'],
     "assetsWatchdog": ['AssetsWatchdogPlugin', '@bus/services/assets_watchdog_plugin'],
+    "batchedOrm": ['BatchedOrmPlugin', '@analytic/services/batched_orm_plugin'],
     "barcode": ['BarcodePlugin', '@barcodes/barcode_plugin'],
     "bottom_sheet": ['BottomSheetPlugin', '@web/core/bottom_sheet/bottom_sheet_plugin'],
     "bus.parameters": ['BusParametersPlugin', '@bus/bus_parameters_plugin'],

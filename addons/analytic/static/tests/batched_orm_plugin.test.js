@@ -1,9 +1,9 @@
-import { Component, proxy, t, useProps, xml } from "@odoo/owl";
+import { Component, proxy, t, usePlugin, useProps, xml } from "@odoo/owl";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
-import { useService } from "@web/core/utils/hooks";
 import { defineAnalyticModels } from "./analytic_test_helpers";
+import { BatchedOrmPlugin } from "@analytic/services/batched_orm_plugin";
 
 defineAnalyticModels();
 
@@ -14,7 +14,7 @@ class AccountName extends Component {
     props = useProps({ accountId: t.number() });
 
     setup() {
-        this.batchedOrm = useService("batchedOrm");
+        this.batchedOrm = usePlugin(BatchedOrmPlugin);
         this.state = proxy({ name: "" });
         accountNames[this.props.accountId] = this;
     }
