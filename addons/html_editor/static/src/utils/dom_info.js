@@ -36,38 +36,74 @@ export function isEmptyTextNode(node) {
     return !trimmedContent;
 }
 
+/** Build isBold with its own canvas and face cache. */
+function createIsBold() {
+    const ctx = document.createElement("canvas").getContext("2d");
+    const faceCache = new Map();
+
+    /**
+     * Return the text metrics of a family/weight pair. Two pairs with the same
+     * result render with the same face (e.g. no 500 face, falls back to 400).
+     */
+    function getFaceSignature(family, weight) {
+        const key = `${family}|${weight}`;
+        if (!faceCache.has(key)) {
+            ctx.font = `${weight} 48px ${family}`;
+            const m = ctx.measureText("AbcdefghiJKlmnOpqRsTuvWxyZ");
+            faceCache.set(
+                key,
+                [m.width, m.actualBoundingBoxAscent, m.actualBoundingBoxDescent].join()
+            );
+        }
+        return faceCache.get(key);
+    }
+
+    /**
+     * Return true if `weight` is heavier than `refWeight` AND the two
+     * family/weight pairs render with different faces.
+     */
+    function rendersHeavier(family, weight, refFamily, refWeight) {
+        return (
+            weight > refWeight &&
+            getFaceSignature(family, weight) !== getFaceSignature(refFamily, refWeight)
+        );
+    }
+
+    return (node) => {
+        const element = closestElement(node);
+        let regularFontWeightVariable = "--font-weight-normal";
+        if (element.closest(".btn")) {
+            regularFontWeightVariable = "--btn-font-weight";
+        } else if (element.closest(".display-1, .display-2, .display-3, .display-4")) {
+            regularFontWeightVariable = "--display-font-weight";
+        } else if (element.closest("h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6")) {
+            regularFontWeightVariable = "--headings-font-weight";
+        }
+        const style = getComputedStyle(element);
+        const fontWeight = +style.fontWeight;
+        const fontFamily = style.fontFamily;
+        const regularFontWeight = +style.getPropertyValue(regularFontWeightVariable) || 500;
+        const referenceElement = closestElement(
+            node,
+            (el) => isBlock(el) || +getComputedStyle(el).fontWeight !== fontWeight
+        );
+        const refStyle = getComputedStyle(referenceElement);
+        return (
+            rendersHeavier(fontFamily, fontWeight, fontFamily, regularFontWeight) ||
+            rendersHeavier(fontFamily, fontWeight, refStyle.fontFamily, +refStyle.fontWeight)
+        );
+    };
+}
+
 /**
  * Return true if the given node appears bold. The node is considered to appear
- * bold if its font weight is bigger than the regular font weight configured
- * for its context, or if its font weight is bigger than that of its closest
- * block.
+ * bold if it renders with a heavier face than the regular font weight
+ * configured for its context, or than that of its closest block.
  *
  * @param {Node} node
  * @returns {boolean}
  */
-export function isBold(node) {
-    const element = closestElement(node);
-    let regularFontWeightVariable = "--font-weight-normal";
-    if (element.closest(".btn")) {
-        regularFontWeightVariable = "--btn-font-weight";
-    } else if (element.closest(".display-1, .display-2, .display-3, .display-4")) {
-        regularFontWeightVariable = "--display-font-weight";
-    } else if (element.closest("h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6")) {
-        regularFontWeightVariable = "--headings-font-weight";
-    }
-    const style = getComputedStyle(element);
-    const fontWeight = +style.fontWeight;
-    const regularFontWeight = +style.getPropertyValue(regularFontWeightVariable) || 500;
-    const referenceElement = closestElement(
-        node,
-        (el) => isBlock(el) || +getComputedStyle(el).fontWeight !== fontWeight
-    );
-    return (
-        fontWeight > regularFontWeight ||
-        fontWeight > +getComputedStyle(referenceElement).fontWeight
-    );
-}
-
+export const isBold = createIsBold();
 /**
  * Return true if the given node appears italic.
  *
