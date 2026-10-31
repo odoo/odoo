@@ -116,10 +116,8 @@
                 <field name="create_date" column_invisible="True"/> <!-- compared to write_date by InventoryReportListModel JS to detect duplicate quant creation -->
                 <field name="write_date" column_invisible="True"/> <!-- compared to create_date by InventoryReportListModel JS to detect duplicate quant creation -->
                 <field name="id" column_invisible="True"/> <!-- used by readonly conditions on sibling fields in this list -->
-                <field name="location_id"
-                       column_invisible="context.get('hide_location', False)"
-                       readonly="id"
-                       options="{'no_create': True}"/>
+                <field name="location_id" column_invisible="context.get('hide_location', False) or context.get('create_locations', False)" readonly="id" options="{'no_create': True}"/>
+                <field name="location_id" column_invisible="context.get('hide_location', False) or not context.get('create_locations', False)" readonly="id" options="{'no_create': False}"/>
                 <field name="storage_category_id" optional="hide"/>
                 <field name="product_id"
                        readonly="context.get('single_product', False) or id" force_save="1"
@@ -285,7 +283,8 @@ in this location. That leads to a negative stock.
                 <field name="write_date" column_invisible="True"/> <!-- compared to create_date by InventoryReportListModel JS to detect duplicate quant creation -->
                 <field name="id" column_invisible="True"/> <!-- used by readonly conditions on sibling fields in this list -->
                 <field name="inventory_quantity_set" column_invisible="True"/> <!-- drives invisible on inventory_diff_quantity and the Apply/Clear buttons -->
-                <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" column_invisible="context.get('hide_location', False)" readonly="id" options="{'no_create': True}"/>
+                <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" column_invisible="context.get('hide_location', False) or context.get('create_locations', False)" readonly="id" options="{'no_create': True}"/>
+                <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" column_invisible="context.get('hide_location', False) or not context.get('create_locations', False)" readonly="id" options="{'no_create': False}"/>
                 <field name="cyclic_inventory_frequency" column_invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
                 <field name="product_id" readonly="context.get('single_product', False) or id" force_save="1" options="{'no_create': True}"/>
                 <field name="product_categ_id" optional="hide"/>
