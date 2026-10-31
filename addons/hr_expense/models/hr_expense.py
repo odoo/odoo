@@ -899,6 +899,8 @@ class HrExpense(models.Model):
 
         journal = self.sheet_id.journal_id
         payment_method_line = self.sheet_id.payment_method_line_id
+        if self.total_amount_currency < 0:
+            payment_method_line = journal._get_available_payment_method_lines('inbound').filtered(lambda line: line.code == 'manual')[:1]
         if not payment_method_line:
             raise UserError(_("You need to add a manual payment method on the journal (%s)", journal.name))
 
@@ -955,8 +957,8 @@ class HrExpense(models.Model):
             'date': self.date,
             'memo': self.name,
             'journal_id': journal.id,
-            'amount': self.total_amount_currency,
-            'payment_type': 'outbound',
+            'amount': abs(self.total_amount_currency),
+            'payment_type': payment_method_line.payment_type,
             'partner_type': 'supplier',
             'partner_id': self.vendor_id.id,
             'currency_id': self.currency_id.id,
