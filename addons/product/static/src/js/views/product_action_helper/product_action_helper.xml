@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="product.ProductActionHelper">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p>Create one from scratch, or use one of the templates below</p>
+                <div class="row row-cols-2 row-cols-sm-3 row-cols-lg-5 g-3 justify-content-center mx-auto" style="max-width: 900px;">
+                    <t t-foreach="this.getButtons()" t-as="entry" t-key="entry.label">
+                        <div class="col">
+                            <a role="button"
+                                class="btn btn-outline-secondary d-flex flex-column align-items-center text-center gap-1 p-3 h-100 w-100"
+                                t-on-click="() => this.createProduct(entry)">
+                                <i class="oi oi-lg mb-1" t-att-data-icon="entry.icon"/>
+                                <span class="fw-bold" t-out="entry.label"/>
+                                <span class="small text-muted" t-out="entry.description"/>
+                            </a>
+                        </div>
+                    </t>
+                </div>
+                <div t-if="this.getImportLinks().length" class="d-flex align-items-center gap-3 my-3 mx-auto" style="max-width: 300px;">
+                    <hr class="flex-grow-1 my-0"/>
+                    <span class="text-muted small text-uppercase">Or</span>
+                    <hr class="flex-grow-1 my-0"/>
+                </div>
+                <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
+                    <t t-foreach="this.getImportLinks()" t-as="entry" t-key="entry.label">
+                        <span t-if="!entry_first" class="text-muted">|</span>
+                        <a role="button"
+                            class="d-inline-flex align-items-center gap-1 text-decoration-none"
+                            t-on-click="() => this.runImportLink(entry)">
+                            <i class="oi" t-att-data-icon="entry.icon"/>
+                            <span t-out="entry.label"/>
+                        </a>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
