@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="point_of_sale.pos_sale_details_receipt">
-            <html id="pos-receipt">
+            <html id="pos-receipt" t-att-class="extra_data.get('receipt_class', '')">
                 <head>
                     <meta charset="UTF-8"></meta>  <!--  Needed for wkhtmltoimage to render UTF-8 characters properly -->
                     <t t-call="point_of_sale.pos_order_receipt_style" />

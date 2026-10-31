@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <template id="point_of_sale.pos_order_receipt">
-            <html id="pos-receipt">
+            <html id="pos-receipt" t-att-class="extra_data.get('receipt_class', '')">
                 <head>
                     <meta charset="UTF-8"></meta>  <!--  Needed for wkhtmltoimage to render UTF-8 characters properly -->
                     <t t-call="point_of_sale.pos_order_receipt_style" />
@@ -73,17 +73,22 @@
                         </table>
                     </div>
                     <div class="w-100" t-if="conditions['use_self_invoicing'] and order['state'] != 'draft' and not conditions['basic_receipt']">
+                        <t t-set="t_invoice_qr_code">
+                            <img class="invoice-qr-code w-narrow-75" t-att-src="image['invoice_qr_code']" />
+                        </t>
+
                         <table class="w-100">
                             <tbody>
                                 <tr>
-                                    <td class="w-25" t-if="conditions['display_qr_code']">
-                                        <img class="invoice-qr-code" t-att-src="image['invoice_qr_code']" />
-                                    </td>
-                                    <td class="text-start top w-75 ps-1" t-if="conditions['display_url']">
+                                    <td class="d-narrow-none w-25 pe-1" t-if="conditions['display_qr_code']" t-out="t_invoice_qr_code"/>
+                                    <td class="text-start text-narrow-center top w-75 w-narrow-100" t-if="conditions['display_url']">
                                         <div class="text-bold text-normal">Need an invoice?</div>
                                         <div class="text-small" t-out="extra_data['self_invoicing_url']" />
                                         <div class="text-small">Code: <t t-out="order['ticket_code']"/></div>
                                     </td>
+                                </tr>
+                                <tr class="d-none d-narrow-table-row" t-if="conditions['display_qr_code']">
+                                    <td class="w-100 text-center" t-out="t_invoice_qr_code" />
                                 </tr>
                             </tbody>
                         </table>
