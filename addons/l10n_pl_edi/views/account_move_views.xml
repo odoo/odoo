@@ -39,12 +39,12 @@
             </xpath>
 
             <xpath expr="//page[@id='pl_extra']/group" position="inside">
-                <group invisible="not l10n_pl_edi_register">
-                    <field name="l10n_pl_edi_number" groups="base.group_no_one" readonly="1"/>
+                <group>
+                    <field name="l10n_pl_edi_number" readonly="1"/>
                     <field name="l10n_pl_edi_ref" groups="base.group_no_one" readonly="1"/>
                     <field name="l10n_pl_edi_session_id" groups="base.group_no_one" readonly="1"/>
-                    <field name="l10n_pl_edi_attachment_id" groups="base.group_no_one" readonly="1"/>
-                    <field name="l10n_pl_edi_upo_id" groups="base.group_no_one" readonly="1"/>
+                    <field name="l10n_pl_edi_attachment_id" readonly="1"/>
+                    <field name="l10n_pl_edi_upo_id" readonly="1"/>
                 </group>
             </xpath>
         </field>

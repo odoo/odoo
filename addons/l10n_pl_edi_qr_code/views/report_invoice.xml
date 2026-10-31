@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="l10n_pl_edi.report_invoice_document">
+        <xpath expr="//div[@id='ksef_verification_code']/.." position="attributes">
+            <attribute name="t-if">o.country_code == 'PL' and o.l10n_pl_edi_status in ('accepted', 'fetched', 'offline_pending', 'offline_failed')</attribute>
+        </xpath>
+        <div id="ksef_verification_code" position="attributes">
+            <attribute name="t-if">o._l10n_pl_edi_generate_qr_link()</attribute>
+        </div>
+        <span id="ksef_number" position="replace">
+            <span class="center" id="ksef_number" t-out="o.l10n_pl_edi_number or 'OFFLINE'"/>
+        </span>
+        <div id="ksef_verification_code" position="after">
+            <div t-if="o.l10n_pl_edi_status in ('offline_pending', 'offline_failed')" class="col-3" id="ksef_certificate_code">
+                <div class="qrcode me-3">
+                    <img t-att-src="image_data_uri(o._l10n_pl_edi_generate_certificate_qr())"/>
+                </div>
+                <span class="center">CERTYFIKAT</span>
+            </div>
+        </div>
+    </template>
+</odoo>
