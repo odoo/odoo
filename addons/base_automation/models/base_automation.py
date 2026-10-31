@@ -186,7 +186,7 @@ class BaseAutomation(models.Model):
     trg_selection_field_id = fields.Many2one(
         'ir.model.fields.selection',
         string='Trigger Field',
-        domain="[('field_id', 'in', trigger_field_ids)]",
+        ui_domain="[('field_id', 'in', trigger_field_ids)]",
         compute='_compute_trg_selection_field_id',
         readonly=False, store=True,
         help="Some triggers need a reference to a selection field. This field is used to store it.")
@@ -204,7 +204,7 @@ class BaseAutomation(models.Model):
         'ir.model.fields', string='Trigger Date',
         compute='_compute_trg_date_id',
         readonly=False, store=True, tracking=True,
-        domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]",
+        ui_domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]",
         help="""When should the condition be triggered.
                 If present, will be checked by the scheduler. If empty, will be checked at creation and update.""")
     trg_date_range = fields.Integer(

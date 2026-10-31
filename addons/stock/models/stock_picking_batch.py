@@ -26,7 +26,7 @@ class StockPickingBatch(models.Model):
         index=True, default=lambda self: self.env.company)
     picking_ids = fields.One2many(
         'stock.picking', 'batch_id', string='Transfers',
-        domain="[('id', 'in', allowed_picking_ids)]", check_company=True,
+        ui_domain="[('id', 'in', allowed_picking_ids)]", check_company=True,
         help='List of transfers associated to this batch')
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',

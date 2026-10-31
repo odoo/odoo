@@ -16,7 +16,7 @@ class UomUom(models.Model):
             domain.append(Domain('product_id', 'in', self.env.context['product_ids']))
         return Domain.OR(domain) if domain else Domain.TRUE
 
-    product_uom_ids = fields.One2many('product.uom', 'uom_id', string='Barcodes', domain=_domain_product_uoms)
+    product_uom_ids = fields.One2many('product.uom', 'uom_id', string='Barcodes', ui_domain=_domain_product_uoms)
 
     def action_open_packaging_barcodes(self):
         self.ensure_one()

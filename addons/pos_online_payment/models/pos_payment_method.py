@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
-    online_payment_provider_ids = fields.Many2many('payment.provider', string="Allowed Providers", domain="[('is_published', '=', True)]")
+    online_payment_provider_ids = fields.Many2many('payment.provider', string="Allowed Providers", ui_domain="[('is_published', '=', True)]")
     has_an_online_payment_provider = fields.Boolean(compute='_compute_has_an_online_payment_provider', readonly=True)
     type = fields.Selection(
         selection_add=[('online', 'Online')],

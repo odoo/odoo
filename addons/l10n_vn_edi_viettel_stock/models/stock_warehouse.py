@@ -10,7 +10,7 @@ class StockWarehouse(models.Model):
         comodel_name='l10n_vn.symbol',
         string="Default Warehouse Symbol",
         help="Used only for this Warehouse. Leave it blank to use global default symbol.",
-        domain="[('company_id', '=', company_id), ('usage', '=', 'delivery_document')]",
+        ui_domain="[('company_id', '=', company_id), ('usage', '=', 'delivery_document')]",
     )
     l10n_vn_edi_country_code = fields.Char(
         string="Country",

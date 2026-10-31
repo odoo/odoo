@@ -106,7 +106,7 @@ class CrmLead(models.Model):
         compute='_compute_name', readonly=False, store=True)
     user_id = fields.Many2one(
         'res.users', string='Salesperson', default=lambda self: self.env.user,
-        domain="[('share', '=', False)]",
+        ui_domain="[('share', '=', False)]",
         check_company=True, index=True, tracking=True)
     user_company_ids = fields.Many2many(
         'res.company', compute='_compute_user_company_ids',
@@ -134,7 +134,7 @@ class CrmLead(models.Model):
         'crm.stage', string='Stage', index=True, tracking=True,
         compute='_compute_stage_id', readonly=False, store=True,
         copy=False, group_expand='_read_group_stage_ids', ondelete='restrict',
-        domain="['|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]")
+        ui_domain="['|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]")
     tag_ids = fields.Many2many(
         'crm.tag', 'crm_tag_rel', 'lead_id', 'tag_id', string='Tags',
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
@@ -210,7 +210,7 @@ class CrmLead(models.Model):
     state_id = fields.Many2one(
         "res.country.state", string='State',
         compute='_compute_partner_address_values', readonly=False, store=True,
-        domain="[('country_id', '=?', country_id)]", tracking=64)
+        ui_domain="[('country_id', '=?', country_id)]", tracking=64)
     country_id = fields.Many2one(
         'res.country', string='Country',
         compute='_compute_partner_address_values', readonly=False, store=True, index=True, tracking=65)

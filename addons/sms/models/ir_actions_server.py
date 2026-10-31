@@ -16,7 +16,7 @@ class IrActionsServer(models.Model):
         'sms.template', 'SMS Template',
         compute='_compute_sms_template_id',
         ondelete='set null', readonly=False, store=True,
-        domain="[('model_id', '=', model_id)]",
+        ui_domain="[('model_id', '=', model_id)]",
     )
 
     def _name_depends(self):
