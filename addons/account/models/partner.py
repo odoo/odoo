@@ -477,12 +477,22 @@ class ResPartner(models.Model):
         is either the one of the partner's company if they have one or the currency of the environment's company."""
         if self.ids:
             query_res = self.env.execute_query(SQL(
-                """SELECT move.partner_id, SUM(move.amount_total_signed * COALESCE(currency_rate.rate, 1))
+                """WITH RECURSIVE partner_hierarchy AS (
+                           SELECT id AS root_partner_id, id AS partner_id, company_id
+                             FROM res_partner
+                            WHERE id IN %(partner_ids)s
+                        UNION ALL
+                           SELECT ph.root_partner_id, child.id AS partner_id, ph.company_id
+                             FROM partner_hierarchy ph
+                             JOIN res_partner child
+                               ON child.parent_id = ph.partner_id
+                   )
+                   SELECT ph.root_partner_id, SUM(move.amount_total_signed * COALESCE(currency_rate.rate, 1))
                      FROM account_move move
-                     LEFT JOIN res_partner partner
-                       ON partner.id = move.partner_id
+                     LEFT JOIN partner_hierarchy ph
+                       ON ph.partner_id = move.partner_id
                      LEFT JOIN res_company company
-                       ON company.id = COALESCE(partner.company_id, %(default_company_id)s)
+                       ON company.id = COALESCE(ph.company_id, %(default_company_id)s)
                      /* To use the exchange rate effective at the creation of the invoice. */
                      LEFT JOIN LATERAL (
                          SELECT rate
@@ -496,9 +506,9 @@ class ResPartner(models.Model):
                        ON TRUE
                     WHERE move.state NOT IN ('draft', 'cancel')
                       AND move.company_id IN %(company_ids)s
-                      AND move.partner_id IN %(partner_ids)s
+                      AND ph.root_partner_id IN %(partner_ids)s
                       AND move.move_type IN ('out_invoice', 'out_refund')
-                    GROUP BY move.partner_id""",
+                    GROUP BY ph.root_partner_id""",
                 partner_ids=tuple(self.ids),
                 company_ids=tuple(self.env.companies.ids),
                 default_company_id=self.env.company.id,
