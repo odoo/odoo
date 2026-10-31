@@ -199,6 +199,12 @@ class Currency extends models.Model {
 
 defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 
+defineParams({
+    lang_parameters: {
+        time_format: "%I:%M:%S %p",
+    },
+});
+
 async function clickControlPanelAction(buttonName) {
     if (getMockEnv().isSmall) {
         await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
