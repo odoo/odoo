@@ -29,16 +29,18 @@ class WebsiteSnippetFilter(models.Model):
             search_domain.remove("hide_variants")
         update_limit_cache = False
         product_limit = limit or self.limit
+        product_offset = 0
         if hide_variants and self.filter_id.model_id == "product.product":
+            product_offset = kwargs.pop("offset", None) or 0
             # When hiding variants, temporarily update cache to increase `self.limit`
             # so we hopefully end up with the correct amount of product templates
             update_limit_cache = partial(self._fields["limit"]._update_cache, self)
-            limit = product_limit**2  # heuristic, may still be inadequate in some cases
+            limit = (product_offset + product_limit) ** 2
             stored_limit = self.limit
             update_limit_cache(limit)
         res = super(
             WebsiteSnippetFilter,
-            self.with_context(hide_variants=hide_variants, product_limit=product_limit),
+            self.with_context(hide_variants=hide_variants, product_limit=product_limit, product_offset=product_offset),
         )._prepare_values(limit=limit, search_domain=search_domain, **kwargs)
         if update_limit_cache:
             update_limit_cache(stored_limit)
@@ -129,7 +131,8 @@ class WebsiteSnippetFilter(models.Model):
         hide_variants = self.env.context.get("hide_variants") and not isinstance(records, list)
         if hide_variants:
             product_limit = self.env.context.get("product_limit") or self.limit
-            records = records.product_tmpl_id[:product_limit]
+            product_offset = self.env.context.get("product_offset") or 0
+            records = records.product_tmpl_id[product_offset:product_offset + product_limit]
         res_products = super()._filter_records_to_values(records, **options)
         if (self.model_name or options.get("res_model")) == "product.product":
             for res_product in res_products:
@@ -201,6 +204,7 @@ class WebsiteSnippetFilter(models.Model):
         website = self.env.website
         search_domain = self.env.context.get("search_domain")
         limit = self.env.context.get("limit")
+        offset = self.env.context.get("offset") or 0
         hide_variants = self.env.context.get("hide_variants")
         domain = Domain.AND([
             [("website_published", "=", True)]
@@ -211,7 +215,7 @@ class WebsiteSnippetFilter(models.Model):
             [("sale_ok", "=", True)],
             search_domain or [],
         ])
-        products = handler(website, limit, domain, **kwargs)
+        products = handler(website, limit + offset, domain, **kwargs)[offset:]
         return dynamic_filter.with_context(hide_variants=hide_variants)._filter_records_to_values(
             products, is_sample=False
         )

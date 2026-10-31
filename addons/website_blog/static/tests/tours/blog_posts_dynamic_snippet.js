@@ -39,7 +39,11 @@ registry.category("web_tour.tours").add("blog_posts_dynamic_snippet_options", {
             content: "Check That the `Model` option is visible",
             trigger: `.o_hb_options_container [data-label="Fetched Elements"]`,
         },
-        ...changeOptionInPopover("Dynamic Snippet", "Fetched Elements", `1`),
+        {
+            content: "Set Fetched Elements to 1",
+            trigger: ".o_hb_options_container [data-label='Fetched Elements'] input",
+            run: "edit 1 && click body",
+        },
         {
             content: "Check That the `Model` option is visible",
             trigger: `.o_hb_options_container [data-label="Model"]`,
