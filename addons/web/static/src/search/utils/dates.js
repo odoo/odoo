@@ -2,6 +2,8 @@ import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import {
     formatLocalWeekRange,
+    getEndOfLocalWeek,
+    getStartOfLocalWeek,
     serializeDate,
     serializeDateTime,
     toLocaleDateString,
@@ -101,7 +103,7 @@ function joinWithYear(description, year) {
  *      ['&', [fieldName, >=, leftBound_i], [fieldName, <=, rightBound_i]]
  * where leftBound_i and rightBound_i are date or datetime computed accordingly
  * to the given options and reference moment.
- * @see constructDateRange for the form taken by a filter spanning two fields.
+ * @see constructDateBoundsDomain for the form taken by a filter spanning two fields.
  */
 export function constructDateDomain(referenceMoment, searchItem, selectedOptionIds) {
     let plusParam;
@@ -158,58 +160,23 @@ export function constructDateDomain(referenceMoment, searchItem, selectedOptionI
 }
 
 /**
- * Constructs the string representation of a domain and its description. The
- * domain is a time range of the form:
- *      ['&', [fieldName, >=, leftBound],[fieldName, <=, rightBound]]
- * or, when the filter spans two fields, the range they describe must overlap it:
- *      ['&', [fieldName, <=, rightBound],
- *       '|', [endFieldName, >=, leftBound],
- *       '&', [endFieldName, =, false], [fieldName, >=, leftBound]]
- * where leftBound and rightBound are some date or datetime determined by setParam,
- * plusParam, granularity and the reference moment.
+ * Constructs the domain and the description of the period determined by
+ * setParam, plusParam, granularity and the reference moment.
+ * @see constructDateBoundsDomain for the form of the domain
  */
 export function constructDateRange(params) {
-    const {
-        referenceMoment,
-        fieldName,
-        fieldType,
-        endFieldName,
-        endFieldType,
-        granularity,
-        setParam,
-        plusParam,
-    } = params;
+    const { referenceMoment, granularity, setParam, plusParam } = params;
     if ("quarter" in setParam) {
         // Luxon does not consider quarter key in setParam (like moment did)
         setParam.month = QUARTERS[setParam.quarter].coveredMonths[0];
         delete setParam.quarter;
     }
     const date = referenceMoment.set(setParam).plus(plusParam || {});
-    // compute domain
-    const leftDate = date.startOf(granularity);
-    const rightDate = date.endOf(granularity);
-    const serialize = (date, type) =>
-        type === "date" ? serializeDate(date) : serializeDateTime(date);
-    let domain;
-    if (endFieldName) {
-        // The filter spans two fields: match the records overlapping the period,
-        // a record without an end date ending when it starts.
-        domain = new Domain([
-            "&",
-            [fieldName, "<=", serialize(rightDate, fieldType)],
-            "|",
-            [endFieldName, ">=", serialize(leftDate, endFieldType)],
-            "&",
-            [endFieldName, "=", false],
-            [fieldName, ">=", serialize(leftDate, fieldType)],
-        ]);
-    } else {
-        domain = new Domain([
-            "&",
-            [fieldName, ">=", serialize(leftDate, fieldType)],
-            [fieldName, "<=", serialize(rightDate, fieldType)],
-        ]);
-    }
+    const domain = constructDateBoundsDomain(
+        params,
+        date.startOf(granularity),
+        date.endOf(granularity)
+    );
     // compute description
     const year = date.toFormat("yyyy");
     let description = year;
@@ -219,6 +186,42 @@ export function constructDateRange(params) {
         description = joinWithYear(QUARTERS[date.quarter].description.toString(), year);
     }
     return { domain, description };
+}
+
+/**
+ * Constructs a time range domain of the form:
+ *      ['&', [fieldName, >=, leftDate],[fieldName, <=, rightDate]]
+ * or, when the filter spans two fields, the range they describe must overlap it:
+ *      ['&', [fieldName, <=, rightDate],
+ *       '|', [endFieldName, >=, leftDate],
+ *       '&', [endFieldName, =, false], [fieldName, >=, leftDate]]
+ * @param {Object} searchItem
+ * @param {import("luxon").DateTime} leftDate
+ * @param {import("luxon").DateTime} rightDate
+ * @returns {Domain}
+ */
+export function constructDateBoundsDomain(searchItem, leftDate, rightDate) {
+    const { fieldName, fieldType, endFieldName, endFieldType } = searchItem;
+    const serialize = (date, type) =>
+        type === "date" ? serializeDate(date) : serializeDateTime(date);
+    if (endFieldName) {
+        // The filter spans two fields: match the records overlapping the period,
+        // a record without an end date ending when it starts.
+        return new Domain([
+            "&",
+            [fieldName, "<=", serialize(rightDate, fieldType)],
+            "|",
+            [endFieldName, ">=", serialize(leftDate, endFieldType)],
+            "&",
+            [endFieldName, "=", false],
+            [fieldName, ">=", serialize(leftDate, fieldType)],
+        ]);
+    }
+    return new Domain([
+        "&",
+        [fieldName, ">=", serialize(leftDate, fieldType)],
+        [fieldName, "<=", serialize(rightDate, fieldType)],
+    ]);
 }
 
 /**
@@ -404,6 +407,34 @@ export function getRelativeFilterOptions() {
     return Object.entries(RELATIVE_FILTER_OPTIONS).map(([id, option]) => ({ id, ...option }));
 }
 
+/**
+ * @param {import("luxon").DateTime} date
+ * @param {string} granularity granularity of a relative filter option
+ * @returns {[import("luxon").DateTime, import("luxon").DateTime]} the start and
+ *  the end of the period of the given granularity containing the given date
+ */
+export function getPeriodBounds(date, granularity) {
+    if (granularity === "week") {
+        return [getStartOfLocalWeek(date), getEndOfLocalWeek(date)];
+    }
+    return [date.startOf(granularity), date.endOf(granularity)];
+}
+
+/**
+ * @param {import("luxon").DateTime} start
+ * @param {import("luxon").DateTime} end
+ * @returns {string}
+ */
+export function getDateBoundsLabel(start, end) {
+    if (start.hasSame(end, "day")) {
+        return toLocaleDateString(start);
+    }
+    return _t("%(start)s to %(end)s", {
+        start: toLocaleDateString(start),
+        end: toLocaleDateString(end),
+    });
+}
+
 export function constructRelativeDateDomain(searchItem, option, offset) {
     const { fieldName, fieldType, endFieldName, endFieldType } = searchItem;
     const { granularity } = option;
@@ -440,7 +471,16 @@ export function constructRelativeDateDomain(searchItem, option, offset) {
  */
 export function getRelativeDateLabel(referenceMoment, option, offset) {
     const { granularity } = option;
-    const date = referenceMoment.plus({ [granularity]: offset });
+    return getPeriodLabel(referenceMoment.plus({ [granularity]: offset }), granularity);
+}
+
+/**
+ * @param {import("luxon").DateTime} date
+ * @param {string} granularity granularity of a relative filter option
+ * @returns {TranslatedString} the description of the period of the given
+ *  granularity containing the given date
+ */
+export function getPeriodLabel(date, granularity) {
     const isCurrentYear = (date) => date.year === today().year;
     switch (granularity) {
         case "week":
