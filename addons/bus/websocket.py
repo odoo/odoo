@@ -135,6 +135,7 @@ _command_uid = count(0)
 class ControlCommand(IntEnum):
     CLOSE = 0
     SEND = 1
+    SUBSCRIBE = 2
 
 
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
@@ -211,6 +212,7 @@ class Websocket:
         # Command queue used to manage the websocket instance externally, such as sending
         # messages or terminating the connection.
         self.__cmd_queue = PollablePriorityQueue(maxsize=self.CMD_MAX_SIZE)
+        self._subscribe_data = None
         # Websocket start up
         self.__selector = (
             selectors.PollSelector()
@@ -248,9 +250,11 @@ class Websocket:
                     continue
                 if self.__cmd_queue in readables:
                     cmd, _, data = self.__cmd_queue.get_nowait()
-                    self._process_control_command(cmd, data)
+                    message = self._process_control_command(cmd, data)
                     if self.state is ConnectionState.CLOSED:
                         continue
+                    if message is not None:
+                        yield message
                 if self.__socket in readables:
                     message = self._process_next_message()
                     if message is not None:
@@ -295,6 +299,12 @@ class Websocket:
                 opcode = Opcode.TEXT
         try:
             self._enqueue_control_command(ControlCommand.SEND, Frame(opcode, payload))
+        except queue.Full:
+            self.close(CloseCode.TRY_LATER, "OUTGOING_QUEUE_SATURATED")
+
+    def subscribe_again(self, last):
+        try:
+            self._enqueue_control_command(ControlCommand.SUBSCRIBE, last)
         except queue.Full:
             self.close(CloseCode.TRY_LATER, "OUTGOING_QUEUE_SATURATED")
 
@@ -641,13 +651,19 @@ class Websocket:
         """Process a command received in `self.__cmd_queue`.
 
         :param ControlCommand command: The command to be executed. This key is required.
-        :param dict | None data: An optional dictionary of parameters.
+        :param dict | int | None data: An optional dictionary of parameters, or the last
+            notification id for `SUBSCRIBE`.
+        :return: The message to serve as if the client sent it, if any.
         """
         match command:
             case ControlCommand.SEND:
                 self._send_frame(data)
             case ControlCommand.CLOSE:
                 self._disconnect(data['code'], data.get('reason'))
+            case ControlCommand.SUBSCRIBE if self._subscribe_data is not None:
+                data = {**self._subscribe_data, "check_outdated": False, "last": data}
+                return orjson.dumps({"event_name": "subscribe", "data": data})
+        return None
 
 
 class TimeoutManager:
@@ -765,7 +781,9 @@ class WebsocketRequest:
         processing to the ir.websocket model which is extensible by applications."""
         self.env["ir.websocket"]._authenticate()
         if event_name == "subscribe":
+            subscribe_data = {**data, "channels": list(data["channels"])}
             self.env["ir.websocket"]._subscribe(data)
+            self.ws._subscribe_data = subscribe_data
         self.env["ir.websocket"]._serve_ir_websocket(event_name, data)
 
     def _get_session(self):

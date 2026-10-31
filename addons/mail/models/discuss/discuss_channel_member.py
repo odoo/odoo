@@ -320,6 +320,7 @@ class DiscussChannelMember(models.Model):
         # help the ORM to detect changes
         res.partner_id.invalidate_recordset(["channel_ids"])
         res.guest_id.invalidate_recordset(["channel_ids"])
+        res._subscribe_again()
         # Always link members to parent channels as well. Member list should be
         # kept in sync.
         for member in res:
@@ -413,6 +414,7 @@ class DiscussChannelMember(models.Model):
         members_by_channel = {
             channel: self.filtered(lambda m: m.channel_id == channel) for channel in self.channel_id
         }
+        self._subscribe_again()
         res = super().unlink()
         stores = Store.Stores()
         for channel, members in name_members_by_channel.items():
@@ -431,6 +433,10 @@ class DiscussChannelMember(models.Model):
 
     def _bus_channels(self):
         return self.partner_id._bus_channels() or self.guest_id._bus_channels()
+
+    def _subscribe_again(self):
+        self.env["bus.bus"]._subscribe_again(self.partner_id._bus_channels())
+        self.env["bus.bus"]._subscribe_again(self.guest_id._bus_channels())
 
     def _notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members

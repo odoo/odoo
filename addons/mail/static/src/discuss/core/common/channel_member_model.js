@@ -1,7 +1,6 @@
 import { Store } from "@mail/core/common/store_plugin";
 import { fields, Record } from "@mail/model/export";
 
-import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -264,10 +263,6 @@ export class ChannelMember extends Record {
      */
     getLangName() {
         return this.persona.lang_name;
-    }
-
-    get memberSince() {
-        return this.create_date ? deserializeDateTime(this.create_date) : undefined;
     }
 
     /**
