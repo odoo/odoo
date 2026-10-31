@@ -4,10 +4,6 @@ import { user } from "@web/core/user";
 import { CaledarListController } from "./calendar_list_controller";
 
 export class CalendarListModel extends listView.Model {
-    setup(params, { action, dialog, notification, rpc, user, view, company }) {
-        super.setup(...arguments);
-    }
-
     /**
      * @override
      * Add the calendar view's selected attendees to the list view's domain.

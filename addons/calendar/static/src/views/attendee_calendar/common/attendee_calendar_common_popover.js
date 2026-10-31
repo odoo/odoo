@@ -1,4 +1,3 @@
-import { onWillStart } from "@odoo/owl";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
 import { useService } from "@web/core/utils/hooks";
 import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
@@ -19,31 +18,6 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
         this.orm = useService("orm");
         this.actionService = useService("action");
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
-
-        onWillStart(this.onWillStart);
-    }
-
-    async onWillStart() {
-        if (this.isEventEditable) {
-            const stateSelections = await this.env.services.orm.call(
-                this.props.model.resModel,
-                "get_state_selections"
-            );
-            this.statusColors = {
-                accepted: "text-success",
-                declined: "text-danger",
-                tentative: "text-muted",
-                needsAction: "false",
-            };
-            this.statusInfo = {};
-            for (const selection of stateSelections) {
-                this.statusInfo[selection[0]] = {
-                    text: selection[1],
-                    color: this.statusColors[selection[0]],
-                };
-            }
-            this.selectedStatusInfo = this.statusInfo[this.props.record.attendeeStatus];
-        }
     }
 
     get isCurrentUserAttendee() {
