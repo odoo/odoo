@@ -1259,7 +1259,8 @@ class PosSession(models.Model):
         """
         self.ensure_one()
         orders.account_move.ensure_one()
-        orders.partner_id.ensure_one()
+        if not orders.partner_id:
+            raise UserError(_("Kindly ensure that each order contains a customer."))
 
         if any(not order.is_globally_invoiced for order in orders):
             raise UserError(_("Some orders are not globally invoiced."))
