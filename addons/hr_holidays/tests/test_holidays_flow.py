@@ -299,8 +299,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                     0,
                     0,
                     {
-                        "name": "Friday Morning",
-                        "dayofweek": "4",
+                        "name": "Thursday Morning",
+                        "dayofweek": "3",
                         "day_period": "morning",
                         "hour_from": 9,
                         "hour_to": 14,
@@ -311,8 +311,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                     0,
                     0,
                     {
-                        "name": "Friday Afternoon",
-                        "dayofweek": "4",
+                        "name": "Thursday Afternoon",
+                        "dayofweek": "3",
                         "day_period": "afternoon",
                         "hour_from": 17,
                         "hour_to": 20,
@@ -323,8 +323,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                     0,
                     0,
                     {
-                        "name": "Friday Morning (old)",
-                        "dayofweek": "4",
+                        "name": "Wednesday Morning (old)",
+                        "dayofweek": "2",
                         "day_period": "morning",
                         "hour_from": 8,
                         "hour_to": 13,
@@ -335,8 +335,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                     0,
                     0,
                     {
-                        "name": "Friday Afternoon (old)",
-                        "dayofweek": "4",
+                        "name": "Wednesday Afternoon (old)",
+                        "dayofweek": "2",
                         "day_period": "afternoon",
                         "hour_from": 19,
                         "hour_to": 21,
@@ -355,8 +355,8 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             "name": "Hol11",
             "employee_id": self.employee_emp.id,
             "holiday_status_id": self.holidays_status_hr.id,
-            "request_date_from": "2025-05-02",
-            "request_date_to": "2025-05-02",
+            "request_date_from": "2025-01-01",
+            "request_date_to": "2025-01-02",
         })
         self.assertEqual(holidays.date_from.hour, 7)
-        self.assertEqual(holidays.date_to.hour, 18)
+        self.assertEqual(holidays.date_to.hour, 19)
