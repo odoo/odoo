@@ -176,3 +176,40 @@ class TestWorkorder(TestMrpCommon):
 
         mo_copy = mo.copy()
         self.assertEqual(mo_copy.workorder_ids.mapped('name'), original_names)
+
+    def test_workorder_states(self):
+        self.bom_3.continuous = False
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        workorders = mo.workorder_ids
+
+        workorders.qty_produced = 1
+        self.assertEqual(mo.workorder_ids.mapped('state'), ['ready', 'blocked', 'blocked'])
+
+        workorders[0].button_start()
+        self.assertEqual(workorders[0].state, 'progress')
+
+        workorders[0].button_finish()
+        self.assertEqual(workorders[0].state, 'done')
+        self.assertEqual(workorders[1].state, 'ready')
+
+        workorders[1].action_cancel()
+        self.assertEqual(workorders[1].state, 'cancel')
+        self.assertEqual(workorders[2].state, 'ready')
+
+    def test_workorder_states_continuous(self):
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        workorders = mo.workorder_ids
+
+        workorders[0].qty_produced = 1
+        self.assertEqual(workorders.mapped('state'), ['ready', 'ready', 'blocked'])
+
+        workorders[1].button_finish()
+        self.assertEqual(workorders[2].state, 'ready')
