@@ -19,7 +19,7 @@ class HrEmployee(models.Model):
                 employee.courses_completion_text = False
                 employee.has_subscribed_courses = False
                 continue
-            total_completed_courses = len(employee.user_partner_id.slide_channel_completed_ids)
+            total_completed_courses = len(employee.user_partner_id.sudo().slide_channel_completed_ids)
             total = len(employee.subscribed_courses)
             employee.courses_completion_text = _("%(completed)s / %(total)s",
                 completed=total_completed_courses,
