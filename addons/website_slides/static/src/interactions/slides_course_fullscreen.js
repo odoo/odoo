@@ -9,7 +9,7 @@ import { session } from "@web/session";
 import { Interaction } from "@web/public/interaction";
 import { findSlide, insertHtmlContent } from "@website_slides/js/utils";
 import { markup } from "@odoo/owl";
-import { unhideConditionalElements } from "@website/utils/misc";
+import { unhideConditionalElements } from "@website/utils/visibility";
 import { TextHighlight } from "@website/interactions/text_highlights";
 import { exprToBoolean } from "@web/core/utils/strings";
 
