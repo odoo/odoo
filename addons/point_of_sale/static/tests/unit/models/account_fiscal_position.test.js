@@ -37,6 +37,28 @@ test("getTaxesAfterFiscalPosition: fiscal position has tax_ids, unmapped tax pas
     expect(result).toEqual([unmappedTax]);
 });
 
+test("getTaxesAfterFiscalPosition: tax linked only to fiscal positions not loaded in the PoS is removed", async () => {
+    const store = await setupPosEnv();
+    const models = store.models;
+    // The PoS loads only the fiscal positions of its config, presets and partners,
+    // so a tax can be linked to fiscal positions that are not in the store.
+    const unloadedFpId = 99;
+    const tax = models.loadConnectedData({
+        "account.tax": [
+            {
+                id: 90,
+                name: "Service charge",
+                amount_type: "percent",
+                amount: 10,
+                fiscal_position_ids: [unloadedFpId],
+            },
+        ],
+    })["account.tax"][0];
+
+    expect(models["account.fiscal.position"].get(1).getTaxesAfterFiscalPosition([tax])).toEqual([]);
+    expect(models["account.fiscal.position"].get(2).getTaxesAfterFiscalPosition([tax])).toEqual([]);
+});
+
 test("getProductInfo: VAT uses pricelist price and fiscal-position-mapped tax", async () => {
     const store = await setupPosEnv();
     const models = store.models;
