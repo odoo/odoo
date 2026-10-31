@@ -12,6 +12,8 @@
     /* Spacing knob for containers that inline the picker instead of floating it. */
     padding: var(--DateTimePicker-padding, var(--o-bs-spacer-2));
     width: var(--o-datetime-picker-width);
+    /* Hides the panels sliding in and out while swiping. */
+    overflow-x: clip;
 
     &.o_datetime_picker_reduced {
         width: var(--o-datetime-picker-reduced-width);
@@ -54,6 +56,19 @@
     }
 
     /* Grids */
+
+    .o_datetime_picker_swipeable {
+        /* Horizontal gestures are handled by the swipe, vertical ones scroll. */
+        touch-action: pan-y;
+
+        > .o_datetime_picker_previous {
+            inset-inline-end: calc(100% + var(--o-bs-spacer-3));
+        }
+
+        > .o_datetime_picker_next {
+            inset-inline-start: calc(100% + var(--o-bs-spacer-3));
+        }
+    }
 
     .o_date_picker {
         grid-template-rows: repeat(var(--DateTimePicker__Day-template-rows), 1fr);
