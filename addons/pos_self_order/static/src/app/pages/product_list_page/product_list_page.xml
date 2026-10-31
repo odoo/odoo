@@ -12,8 +12,8 @@
                                 <t t-set="isSelectedCategory" t-value="category === this.topSelectedCategory"/>
                                 <button t-on-click="() => this.selectCategory(category)" role="button" class="category_btn btn d-flex flex-column align-items-center p-0 border-0 "  t-att-data-category-pill="category.id">
                                     <img class="d-none d-kiosk-p-block mb-2 rounded-4 object-fit-cover transition-base" style="height: 110px; width: 110px;" t-attf-src="/web/image/pos.category/#{category.id}/image_128?unique=#{category.write_date}" draggable="false"/>
-                                    <div class="text-nowrap fw-medium rounded-pill px-3 py-1 d-flex align-items-center" t-att-class="{'text-bg-primary btn border-0': isSelectedCategory}" >
-                                       <span class="text-nowrap fw-medium" t-out="category.name" />
+                                    <div class="text-nowrap fw-medium rounded-3 px-3 py-1 border border-2 d-flex align-items-center" t-att-class="isSelectedCategory ? 'bg-primary-subtle text-primary border-primary' : 'border-transparent'">
+                                        <span class="text-nowrap fw-medium" t-out="category.name"/>
                                     </div>
                                 </button>
                             </t>
@@ -98,7 +98,7 @@
                         </div>
                         <button
                             role="button"
-                            t-attf-class="btn btn-primary cart btn-lg text-truncate {{this.checkoutDisabled ? 'disabled' : ''}}"
+                            t-attf-class="btn btn-primary cart btn-lg text-truncate flex-grow-1 {{this.checkoutDisabled ? 'disabled' : ''}}"
                             t-on-click="() => this.review()">Checkout</button>
                     </t>
                 </OrderWidget>

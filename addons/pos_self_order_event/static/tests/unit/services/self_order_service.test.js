@@ -11,7 +11,7 @@ describe("self_order_service", () => {
         const models = store.models;
         const event = models["event.event"].get(1);
         expect(store.eventImageUrl(event)).toBe(
-            "/pos_self_order_event/static/src/img/placeholder_thumbnail.png"
+            "/pos_self_order_event/static/src/img/event_placeholder.png"
         );
         event.image_1024 = "testimageformat";
         expect(store.eventImageUrl(event)).toBe("/web/image/event.event/1/image_1024");

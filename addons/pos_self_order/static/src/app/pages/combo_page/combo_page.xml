@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.ComboPage">
         <ProductInterface class="'o_self_combo_page'" productTemplate="this.props.productTemplate" goBack.bind="this.goBack">
             <t t-set-slot="content">
-                <div class="container o_self_container" t-att-class="{'o_self_combo_page_body': this.props.productTemplate.showProductImageInSelf, 'confirmation_container': this.state.showResume}">
+                <div class="o_self_combo_page_body container o_self_container" t-att-class="{'confirmation_container': this.state.showResume}">
                     <!-- Stepper -->
                     <div t-if="!this.state.showResume" class="stepper_container w-100 mt-2 mt-md-3 mb-4 mb-kiosk-p-5"  id="k-combo-scroll-target" >
                         <Stepper steps="this.comboChoices" selectedStep="this.selectedChoice" onStepClicked="(c)=>this.onChoiceClicked(c)" />
@@ -58,11 +58,11 @@
                     <div t-elif="!this.state.showResume" class="d-flex flex-column rounded-4 o_self_fade">
                         <t t-set="product" t-value="this.currentChoiceState.displayAttributesOfItem.product_id"/>
                         <div class="d-flex align-items-center justify-content-start flex-shrink-0 gap-4 p-3 mb-2 mb-md-3 rounded-4 text-bg-700 position-relative overflow-hidden">
-                            <div t-if="product.showProductImageInSelf" class="position-absolute top-0 start-0 w-100 h-100 z-0" style="opacity: 0.3; filter: blur(16px);">
-                                <img class="w-100 h-100 object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}"  loading="lazy"/>
+                            <div class="position-absolute top-0 start-0 w-100 h-100 z-0" style="opacity: 0.3; filter: blur(16px);">
+                                <img class="w-100 h-100 object-fit-cover" t-att-src="product.productImageUrl()" loading="lazy"/>
                             </div>
-                            <div t-if="product.showProductImageInSelf" class="o_self_variant_cover position-relative align-self-start rounded-4 ratio ratio-1x1 bg-white overflow-hidden z-1">
-                                <img class="object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}"  loading="lazy"/>
+                            <div class="o_self_variant_cover position-relative align-self-start rounded-4 ratio ratio-1x1 bg-white overflow-hidden z-1">
+                                <img class="object-fit-cover" t-att-src="product.productImageUrl()" loading="lazy"/>
                             </div>
                             <div class="o_self_variant_description d-flex flex-column justify-content-center">
                                 <h2 t-out="this.formatProductName(product)" class="mb-0 text-white"/>
@@ -87,7 +87,7 @@
                                         <t t-set="attributes" t-value="combo_item.attributes"/>
                                         <t t-set="extraPriceSelected" t-value="this.getExtraPriceForItem(combo_item.combo_item_id, selection_index, true)"/>
                                         <div class="o_self_product_image me-3 ratio ratio-1x1 w-25" >
-                                            <img class="object-fit-scale rounded-4" t-attf-src="/web/image/product.product/{{product.id}}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                            <img class="object-fit-scale rounded-4" t-att-src="product.productImageUrl()" loading="lazy"/>
                                         </div>
                                         <div class="d-flex flex-column gap-1">
                                             <div class="fs-4 fw-bold text-break">
