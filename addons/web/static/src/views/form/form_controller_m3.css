@@ -16,12 +16,6 @@
             background-color: var(--o-view-background-color);
         }
 
-        .o_outlined:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))),
-        .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value:has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))),
-        .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)):has(.o_field_widget.o_readonly_modifier):not(:has(.o_field_widget:not(.o_readonly_modifier))) {
-            background-color: var(--body-bg);
-        }
-
         .o_outlined:has(.o_field_invalid):not(:has(:focus-within)),
         .o_inner_group:not(.oe_subtotal_footer) .o_property_field.o_wrap_label .o_property_field_value:has(.o_field_invalid):not(:has(:focus-within)),
         .o_inner_group:not(.oe_subtotal_footer) :is(.o_cell,.o_cell_custom):not(.o_wrap_label):not(.o_no_box):not(:has(.o_outlined)):has(.o_field_invalid):not(:has(:focus-within)) {
@@ -62,7 +56,7 @@
             margin-bottom: calc(-1 * var(--body-font-size)) !important;
 
             /* Hide the border of the adjacent sibling box that is under the label */
-            background: linear-gradient(0deg, transparent 0%, var(--o-view-background-color) 45%, var(--o-view-background-color) 55%, transparent 100%);
+            background: linear-gradient(0deg, transparent 0%, var(--body-bg) 45%, var(--body-bg) 55%, transparent 100%);
 
             font-size: var(--o-bs-font-size-sm) !important;
             font-weight: var(--o-bs-font-weight-normal);
@@ -167,6 +161,14 @@
         .o_form_label:has(+ .o_outlined) {
             &:has(+ .o_outlined .o_required_modifier:not(.o_readonly_modifier)) {
                 font-weight: var(--o-bs-font-weight-semibold);
+            }
+        }
+
+        .o_notebook .nav {
+            background-color: var(--body-bg);
+
+            .nav-link.active {
+                border-bottom-color: var(--body-bg);
             }
         }
     }
