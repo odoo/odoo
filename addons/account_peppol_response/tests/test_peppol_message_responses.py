@@ -1,11 +1,13 @@
 import json
 
+from unittest.mock import patch
 from odoo.tests.common import tagged, freeze_time
 
 from odoo.addons.account_peppol.tests.test_peppol_messages import TestPeppolMessage
 from odoo.addons.account_peppol.tests.common import (
     mock_ack,
     mock_documents_retrieval,
+    mock_lookup_success,
     mock_send_response,
 )
 
@@ -126,3 +128,11 @@ class TestPeppolMessageResponse(TestPeppolMessage):
 
         all_peppol_responses = self.env['account.peppol.response'].search([])
         self.assertEqual(len(all_peppol_responses), 1)
+
+    @mock_lookup_success('0208:2718281828')
+    def test_check_partner_endpoint_unchanged_documents(self):
+        """ Test that we don't write on a partner or its contacts if the supported documents haven't changed. """
+        self.valid_partner.button_account_peppol_check_partner_endpoint()
+        self.assertTrue(self.valid_partner.peppol_supported_documents)
+        with patch.object(self.registry['res.partner'], 'write', side_effect=AssertionError("The partner should not be written again")):
+            self.valid_partner.button_account_peppol_check_partner_endpoint()
