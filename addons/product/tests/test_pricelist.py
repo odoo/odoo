@@ -155,6 +155,76 @@ class TestPricelist(ProductVariantsCommon):
 
         self.assertEqual(res_partner.property_product_pricelist, pl_first)
 
+    def test_35_pricelist_rule_date_start_precedence(self):
+        """A dated pricelist rule wins by its most recent in-effect start date,
+        not by the order in which rules were created (issue #295858)."""
+        from datetime import datetime, timedelta
+
+        product = self.env['product.product'].create({'name': 'Dated Rule Product'})
+        tmpl = product.product_tmpl_id
+        base_date = datetime.now().date()
+
+        # Two equally applicable rules (same product, applied_on, min_quantity) with
+        # different start dates, created in the "wrong" order: older date first (lower id).
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Dated Rules Pricelist',
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'fixed', 'fixed_price': 10, 'min_quantity': 1,
+                    'applied_on': '1_product', 'product_tmpl_id': tmpl.id,
+                    'date_start': base_date,
+                }),
+                Command.create({
+                    'compute_price': 'fixed', 'fixed_price': 12, 'min_quantity': 1,
+                    'applied_on': '1_product', 'product_tmpl_id': tmpl.id,
+                    'date_start': base_date + timedelta(days=3),
+                }),
+            ],
+        })
+        price, rule = pricelist._compute_price_rule(product, 1, date=base_date + timedelta(days=10))[product.id]
+        # The more recent start date (12) wins, regardless of creation order.
+        self.assertEqual(rule, pricelist.item_ids[1].id)
+        self.assertEqual(price, 12)
+
+        # When start dates are equal, the pre-existing id tiebreaker still applies.
+        pricelist2 = self.env['product.pricelist'].create({
+            'name': 'Same Date Rules Pricelist',
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'fixed', 'fixed_price': 20, 'min_quantity': 1,
+                    'applied_on': '1_product', 'product_tmpl_id': tmpl.id,
+                    'date_start': base_date,
+                }),
+                Command.create({
+                    'compute_price': 'fixed', 'fixed_price': 22, 'min_quantity': 1,
+                    'applied_on': '1_product', 'product_tmpl_id': tmpl.id,
+                    'date_start': base_date,
+                }),
+            ],
+        })
+        price, rule = pricelist2._compute_price_rule(product, 1, date=base_date + timedelta(days=10))[product.id]
+        self.assertEqual(rule, pricelist2.item_ids[1].id)
+        self.assertEqual(price, 22)
+
+        # A dated rule beats an undated (base-price) rule even when the undated one is created last.
+        pricelist3 = self.env['product.pricelist'].create({
+            'name': 'Dated vs Undated Pricelist',
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'fixed', 'fixed_price': 30, 'min_quantity': 1,
+                    'applied_on': '1_product', 'product_tmpl_id': tmpl.id,
+                    'date_start': base_date + timedelta(days=5),
+                }),
+                Command.create({
+                    'compute_price': 'fixed', 'fixed_price': 40, 'min_quantity': 1,
+                    'applied_on': '1_product', 'product_tmpl_id': tmpl.id,
+                }),
+            ],
+        })
+        price, rule = pricelist3._compute_price_rule(product, 1, date=base_date + timedelta(days=10))[product.id]
+        self.assertEqual(rule, pricelist3.item_ids[0].id)
+        self.assertEqual(price, 30)
+
     def test_40_specific_property_product_pricelist(self):
         """Ensure that that ``specific_property_product_pricelist`` value only gets set
         when changing ``property_product_pricelist`` to a non-default value for the partner.
