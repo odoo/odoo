@@ -23,7 +23,7 @@
                     <group name="Payment methods">
                         <group>
                             <field name="journal_id" invisible="type not in ['cash', 'bank']" required="type in ['cash', 'bank']" readonly="open_session_ids and journal_id" force_save="1" placeholder="Select a journal" />
-                            <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" required="type == 'bank'" readonly="open_session_ids and journal_id" force_save="1" placeholder="Selection of outstanding account is required" />
+                            <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" required="type == 'bank'" readonly="open_session_ids and journal_id and outstanding_account_id" force_save="1" placeholder="Selection of outstanding account is required" />
                             <field name="receivable_account_id" groups="account.group_account_readonly" invisible="type == 'pay_later'" widget="many2one" readonly="open_session_ids" placeholder="PoS Config default partner receivable"/>
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                             <field name="currency_ids"

@@ -251,8 +251,13 @@ class PosPaymentMethod(models.Model):
             if pm.journal_id and pm.journal_id.type not in ['cash', 'bank']:
                 raise UserError(_("Only journals of type 'Cash' or 'Bank' could be used with payment methods."))
             if pm.journal_id and pm.journal_id.type == 'bank':
-                chart_template = self.with_context(allowed_company_ids=self.env.company.root_id.ids).env['account.chart.template']
-                pm.outstanding_account_id = chart_template.ref('account_journal_payment_debit_account_id', raise_if_not_found=False) or self.company_id.transfer_account_id
+                pm.outstanding_account_id = pm._get_default_outstanding_account()
+
+    def _get_default_outstanding_account(self):
+        self.ensure_one()
+        company = self.company_id or self.env.company
+        chart_template = self.with_context(allowed_company_ids=company.root_id.ids).env['account.chart.template']
+        return chart_template.ref('account_journal_payment_debit_account_id', raise_if_not_found=False) or company.transfer_account_id
 
     def _compute_all_providers_installed(self):
         providers_status = self.get_provider_status()
@@ -286,6 +291,9 @@ class PosPaymentMethod(models.Model):
             forbidden_fields = self._get_write_forbidden_fields()
             if pm.type in ('cash', 'bank') and not pm.journal_id:
                 forbidden_fields -= {'journal_id', 'outstanding_account_id'}
+            if not pm.outstanding_account_id:
+                # Payments made without outstanding account have no journal entry, setting one cannot conflict with them
+                forbidden_fields -= {'outstanding_account_id'}
             if fields & forbidden_fields:
                 return True
         return False
@@ -295,7 +303,11 @@ class PosPaymentMethod(models.Model):
         for vals in vals_list:
             if vals.get('payment_method_type', False):
                 self._force_payment_method_type_values(vals, vals['payment_method_type'])
-        return super().create(vals_list)
+        payment_methods = super().create(vals_list)
+        # Same default as the form, which only sets it for accounting users
+        for pm in payment_methods.filtered(lambda pm: pm.type == 'bank' and not pm.outstanding_account_id):
+            super(PosPaymentMethod, pm).write({'outstanding_account_id': pm._get_default_outstanding_account().id})
+        return payment_methods
 
     def write(self, vals):
         if 'type' in vals and vals['type'] not in ['cash', 'bank']:
@@ -365,6 +377,9 @@ class PosPaymentMethod(models.Model):
         vals_list = super().copy_data(default=default)
 
         for pm, vals in zip(self, vals_list):
+            if vals.get('company_id', pm.company_id.id) != pm.company_id.id:
+                # Accounts belong to the original company, create() sets the default of the new one
+                vals['outstanding_account_id'] = False
             if pm.journal_id and pm.journal_id.type == 'cash':
                 if ('journal_id' in default and default['journal_id'] == pm.journal_id.id) or ('journal_id' not in default):
                     vals['journal_id'] = False
@@ -546,6 +561,14 @@ class PosPaymentMethod(models.Model):
             # and cannot be overridden by a direct write, so swapping via
             # outstanding_account_id silently fails and leaves both sides on the same account.
             account_payment.write({'payment_type': 'outbound'})
+
+        # Without an outstanding account the payment gets no journal entry to reconcile
+        if not account_payment.outstanding_account_id:
+            raise UserError(_(
+                "The payment method %(payment_method)s has no outstanding account, its payments cannot be posted.\n"
+                "Set an outstanding account on it.",
+                payment_method=self.name,
+            ))
 
         account_payment.action_post()
         if float_compare(amount, 0, precision_rounding=rounding) < 0:
