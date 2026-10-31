@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+    <!-- Invoice the reward line with the order. The company default may be 'delivery',
+         and a service never gets a delivered quantity, thus the line would never invoice -->
+    <record id="loyalty.discount_product" model="product.product">
+        <field name="invoice_policy">order</field>
+    </record>
+
     <record id="loyalty.gift_card_product_50" model="product.product">
         <field name="taxes_id" eval="False"/>
     </record>

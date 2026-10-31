@@ -27,6 +27,7 @@ class LoyaltyProgram(models.Model):
                 default_values = program_default_values[program_type]
                 defaults.update({k: v for k, v in default_values.items() if k in fields})
         return defaults
+
     name = fields.Char(string="Program Name", translate=True, required=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(copy=False)
@@ -590,9 +591,6 @@ class LoyaltyProgram(models.Model):
                 program.rule_ids.active = program.active
                 program.reward_ids.active = program.active
                 program.communication_plan_ids.active = program.active
-                program.reward_ids.with_context(
-                    active_test=True
-                ).discount_line_product_id.active = program.active
 
         return res
 
