@@ -60,6 +60,28 @@ class Od19ApprovalSource(models.Model):
     def _od19_main_state_field(self, steps):
         return steps[0].state_field or "state" if steps else "state"
 
+    def _od19_approver_domain(self, steps):
+        """Narrow the approver ``search`` to records that can be bucketed.
+
+        The approver classifier only ever looks at records resting on a step
+        (pending/incoming) or already resolved (rejected/done). Pushing that
+        into the domain keeps the record set small instead of loading the
+        whole model and filtering it in Python.
+        """
+        Model = self.env[self.model_name]
+        leaves = []
+        for step in steps:
+            field_name = step.state_field or "state"
+            if self._od19_field_ok(Model, field_name):
+                leaves.append((field_name, "=", step.state_value))
+        resolved = self._od19_csv(self.rejected_states) + self._od19_csv(self.success_states)
+        main_field = self._od19_main_state_field(steps)
+        if resolved and self._od19_field_ok(Model, main_field):
+            leaves.append((main_field, "in", resolved))
+        if not leaves:
+            return []
+        return ["|"] * (len(leaves) - 1) + leaves
+
     def _od19_field_ok(self, record, field_name):
         return bool(field_name) and field_name in record._fields
 
@@ -127,7 +149,9 @@ class Od19ApprovalSource(models.Model):
         rejected = self._od19_csv(self.rejected_states)
         success = self._od19_csv(self.success_states)
         main_field = self._od19_main_state_field(steps)
-        records = Model.search([], limit=self.OD19_MAX_RECORDS)
+        records = Model.search(
+            self._od19_approver_domain(steps), limit=self.OD19_MAX_RECORDS
+        )
         for record in records:
             my_index = self._od19_index_of_my_step(record, steps)
             if my_index is None:
@@ -244,6 +268,31 @@ class Od19ApprovalSource(models.Model):
             "pending_count": len(rows),
             "max_age_days": max(ages) if ages else 0,
             "over_sla_count": len([row for row in rows if row["sla_state"] == "over"]),
+        }
+
+    def _od19_approval_summary(self):
+        """Light KPI for the portal card: approver *pending* only.
+
+        Called on the sources to aggregate (normally every active source).
+        Unlike :meth:`_od19_summary` this never builds presentation rows -- the
+        portal card only needs three numbers, so we keep the record set narrow
+        and skip the row dicts entirely.
+        """
+        pending_count = 0
+        max_age_days = 0
+        over_sla_count = 0
+        for source in self:
+            for record in source._od19_classify_for_approver()["pending"]:
+                pending_count += 1
+                age_days = source._od19_age_days(record)
+                if age_days > max_age_days:
+                    max_age_days = age_days
+                if source._od19_sla_state(age_days) == "over":
+                    over_sla_count += 1
+        return {
+            "pending_count": pending_count,
+            "max_age_days": max_age_days,
+            "over_sla_count": over_sla_count,
         }
 
     # ------------------------------------------------------------------

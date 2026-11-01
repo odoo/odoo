@@ -306,15 +306,15 @@
                                 <p>Approval Center</p>
                                 <a href="/my/approvals">เปิดใช้งาน →</a>
                             </div>
-                            <t t-if="approval_summary and approval_summary['pending_count']">
+                            <div class="od19-approval-badge d-none" data-od19-approval-summary="/my/approvals/summary">
                                 <small class="text-danger d-block mt-1">
                                     <i class="fa fa-clock-o me-1"/>
-                                    รออนุมัติ <t t-esc="approval_summary['pending_count']"/> รายการ
-                                    <t t-if="approval_summary['max_age_days']">
-                                        (เก่าสุด <t t-esc="approval_summary['max_age_days']"/> วัน)
-                                    </t>
+                                    รออนุมัติ <span class="od19-approval-count">0</span> รายการ
+                                    <span class="od19-approval-age d-none">
+                                        (เก่าสุด <span class="od19-approval-max-age">0</span> วัน)
+                                    </span>
                                 </small>
-                            </t>
+                            </div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
                             <div class="od19-portal-card">

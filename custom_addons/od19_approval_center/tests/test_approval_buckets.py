@@ -562,3 +562,70 @@ class TestTierStrategy(TransactionCase):
         buckets = self.source._od19_classify_tier_for_approver()
         self.assertIn(self.order.id, [r.id for r in buckets["pending"]])
         self.assertNotIn(self.order.id, [r.id for r in buckets["done"]])
+
+
+@tagged("post_install", "-at_install")
+class TestApprovalSummary(TransactionCase):
+    """The light portal summary must match the full row-based summary."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.employee = cls.env["hr.employee"].create({
+            "name": "Summary Employee",
+            "user_id": cls.env.user.id,
+        })
+        cls.source = cls.env["od19.approval.source"].create({
+            "name": "Summary Source",
+            "model_id": cls.env["ir.model"]._get("hr.expense").id,
+            "strategy": "field",
+            "requester_field": "create_uid",
+            "requester_kind": "user",
+            "rejected_states": "refused",
+            "success_states": "approved,posted,in_payment,paid",
+            "sla_days": 3,
+            "step_ids": [(0, 0, {
+                "sequence": 10, "label": "Approve",
+                "state_field": "state", "state_value": "submitted",
+                "approver_field": "create_uid", "approver_kind": "user",
+            })],
+        })
+
+    def _pending_expense(self, days_ago=0):
+        expense = self.env["hr.expense"].create({
+            "name": "Summary Taxi",
+            "employee_id": self.employee.id,
+            "total_amount_currency": 100.0,
+            "total_amount": 100.0,
+        })
+        expense.write({"state": "submitted"})
+        if days_ago:
+            # ``create_date`` is a magic field the ORM will not age for us.
+            self.env.cr.execute(
+                "UPDATE hr_expense SET create_date = %s WHERE id = %s",
+                (fields.Datetime.now() - datetime.timedelta(days=days_ago), expense.id),
+            )
+            self.env["hr.expense"].invalidate_model(["create_date"])
+        return expense
+
+    def test_summary_matches_full_summary(self):
+        self._pending_expense()
+        summary = self.source._od19_approval_summary()
+        rows = self.source._od19_build_rows(
+            self.source._od19_classify_for_approver()["pending"]
+        )
+        self.assertEqual(summary, self.env["od19.approval.source"]._od19_summary(rows))
+        self.assertEqual(summary["pending_count"], 1)
+
+    def test_summary_empty_when_nothing_pending(self):
+        self.assertEqual(
+            self.source._od19_approval_summary(),
+            {"pending_count": 0, "max_age_days": 0, "over_sla_count": 0},
+        )
+
+    def test_summary_flags_over_sla(self):
+        self._pending_expense(days_ago=10)
+        summary = self.source._od19_approval_summary()
+        self.assertEqual(summary["pending_count"], 1)
+        self.assertGreaterEqual(summary["max_age_days"], 10)
+        self.assertEqual(summary["over_sla_count"], 1)

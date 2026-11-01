@@ -24,3 +24,14 @@ class TestApprovalPortal(HttpCase):
         response = self.url_open("/employee-portal")
         self.assertEqual(response.status_code, 200)
         self.assertIn(b"/my/approvals", response.content)
+        # The badge is rendered empty and filled by the portal JS afterwards.
+        self.assertIn(b"od19-approval-badge", response.content)
+
+    def test_summary_route_returns_json(self):
+        self.authenticate("approval_tester", "approval_tester")
+        response = self.url_open("/my/approvals/summary")
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertIn("pending_count", payload)
+        self.assertIn("max_age_days", payload)
+        self.assertIn("over_sla_count", payload)
