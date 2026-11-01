@@ -79,7 +79,7 @@ graph TD
 - [x] **Steps:** เตรียมข้อมูลตัวอย่าง (ประมาณ 10 รายการ/ส่วน) → รัน flow → บันทึกผล pass/fail → สรุปช่องว่าง
 - [x] **Acceptance:** 10 เคสผ่าน หรือมี defect list + งานติดตาม
 - [x] **Subagent:** `general_purpose_task`
-- [x] **ปิดงาน (2026-11-01):** `TestPayableUatBusinessFlow` 13 เคส ผ่านทั้งหมด; รันบน DB `odoo19_uat` → `0 failed, 1 error(s) of 40 tests` (1 error = defect ที่มีอยู่ก่อน `test_ap_closure`, นอกขอบเขต); หลักฐาน §9.2 ของ spec → commit `01ee128d2c7`
+- [x] **ปิดงาน (2026-11-01):** `TestPayableUatBusinessFlow` 13 เคส ผ่านทั้งหมด; รันบน DB `odoo19_uat` → `0 failed, 0 error(s) of 40 tests` (แก้ defect เดิม `test_ap_closure` ที่ต้นเหตุแล้ว → commit `d1ef6d695a3`); หลักฐาน §9.2 ของ spec → commit `01ee128d2c7`
 
 ### Task A3 — ปิดสถานะ spec (ปิดแล้ว 2026-11-01)
 - [x] **Objective:** เปลี่ยนบรรทัดที่ 6 ของ spec จาก "รอตรวจสอบ (Draft for review)" → `Approved / Implemented`

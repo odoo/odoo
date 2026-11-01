@@ -246,14 +246,20 @@
 | 12 | `test_uat_12_blocked_bill_excluded_from_payment_run` | Block Payment |
 | 13 | `test_uat_13_group_payments_merge_same_vendor_bills` | Group Payments |
 
-**ผลรัน:** `odoo.tests.result: 0 failed, 1 error(s) of 40 tests` บน DB `odoo19_uat` (โคลนจาก dev DB เพื่อไม่ชน lock กับ dev server)
-— 13 เคส UAT **ผ่านทั้งหมด**; 1 error คือ defect ที่มีอยู่ก่อนและอยู่นอกขอบเขต P1-T10:
-`od19_accounting_operational_closure.test_ap_closure.TestAccountingAPClosure.test_paid_bill_does_not_close_order_with_remaining_bill_work`
-(พิสูจน์แล้วว่า fail ที่ HEAD ก่อนเริ่มงานนี้) → ต้องเปิดงานซ่อมแยกต่างหาก
+**ผลรัน:** `odoo.tests.result: 0 failed, 0 error(s) of 40 tests` บน DB `odoo19_uat`
+(`powershell -ExecutionPolicy Bypass -File .\run-tests.ps1 -Module od19_accounting_operational_closure -Database odoo19_uat -LogFile uat_run.log`, exit code 0)
+— 13 เคส UAT **ผ่านทั้งหมด** รวมเทสต์ closure เดิม `TestAccountingAPClosure` ที่เคย fail ที่ HEAD
+(แก้ที่ต้นเหตุแล้ว ดูย่อหน้าถัดไป) จึงไม่เหลือ error ค้างในโมดูลนี้
 
-**Defect list / งานติดตาม (นอกขอบเขต P1-T10):**
-1. `test_ap_closure.test_paid_bill_does_not_close_order_with_remaining_bill_work` — `UserError: There's nothing left to pay for the selected journal items...`
-2. `od19_accounting_reporting.test_company_report_uses_remaining_amount_to_invoice_for_partial_invoicing` — `276.0 != 138.0`
+**Defect ที่พบและแก้แล้ว (เดิมจัดเป็น "นอกขอบเขต P1-T10"):**
+1. `test_ap_closure.test_paid_bill_does_not_close_order_with_remaining_bill_work`
+   — `UserError: There's nothing left to pay for the selected journal items...`
+   สาเหตุ: เขียน `quantity` เดี่ยว ๆ บนบรรทัดบิลที่สร้างจาก PO ทำให้ Odoo recompute
+   `price_unit` จากราคาซื้อของสินค้า (ว่าง → `0.0`) → ยอด payable เป็น 0 แล้ว register payment ไม่ได้
+   แก้โดยเขียน `{"quantity": 1.0, "price_unit": 500.0}` พร้อมกัน → commit `d1ef6d695a3`
+
+**Defect ค้าง (ต่างโมดูล, งานติดตามแยก):**
+1. `od19_accounting_reporting.test_company_report_uses_remaining_amount_to_invoice_for_partial_invoicing` — `276.0 != 138.0`
 
 ---
 
