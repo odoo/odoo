@@ -1,12 +1,14 @@
 {
     "name": "OD19 Accounting - Advance Payment",
     "author": "OD19",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Accounting/Payments",
-    "summary": "Customer and supplier advance payment tracking",
+    "summary": "Customer and supplier advance payment tracking "
+    "(deposit VAT, security deposit, prepayment WHT)",
     "depends": [
         "account",
         "purchase_stock",
+        "l10n_th_account_tax",
         "od19_accounting_features",
     ],
     "data": [

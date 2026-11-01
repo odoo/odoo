@@ -51,6 +51,52 @@ class TestAdvance(TransactionCase):
                 "default_account_id": cls.cash_account.id,
             }
         )
+        cls.vat_account = cls.env["account.account"].create(
+            {
+                "name": "Output VAT",
+                "code": "215001",
+                "account_type": "liability_current",
+            }
+        )
+        cls.wht_account = cls.env["account.account"].create(
+            {
+                "name": "WHT Payable",
+                "code": "216001",
+                "account_type": "liability_current",
+                "wht_account": True,
+            }
+        )
+        cls.sale_tax = cls.env["account.tax"].create(
+            {
+                "name": "VAT 7%",
+                "amount": 7.0,
+                "amount_type": "percent",
+                "type_tax_use": "sale",
+            }
+        )
+        cls.sale_tax.invoice_repartition_line_ids.filtered(
+            lambda line: line.repartition_type == "tax"
+        ).account_id = cls.vat_account
+        cls.wht_tax = cls.env["account.withholding.tax"].create(
+            {
+                "name": "WHT 3% Services",
+                "account_id": cls.wht_account.id,
+                "amount": 3.0,
+            }
+        )
+
+    def _create_customer_advance(self, kind, amount=100000.0, **kwargs):
+        vals = {
+            "advance_type": "customer",
+            "partner_id": self.customer.id,
+            "amount": amount,
+            "date": "2024-01-15",
+            "advance_account_id": self.customer_advance_account.id,
+            "journal_id": self.customer_journal.id,
+            "od19_advance_kind": kind,
+        }
+        vals.update(kwargs)
+        return self.env["account.advance"].create(vals)
 
     def test_create_customer_advance(self):
         advance = self.env["account.advance"].create(
@@ -218,3 +264,99 @@ class TestAdvance(TransactionCase):
 
         self.assertEqual(advance.state, "posted")
         self.assertEqual(advance.remaining_amount, 50000.0)
+
+    def _assert_balanced(self, move):
+        self.assertAlmostEqual(
+            sum(move.line_ids.mapped("debit")),
+            sum(move.line_ids.mapped("credit")),
+            2,
+        )
+
+    def test_advance_kind_defaults_to_prepayment(self):
+        advance = self.env["account.advance"].create(
+            {
+                "advance_type": "customer",
+                "partner_id": self.customer.id,
+                "amount": 1000.0,
+                "date": "2024-01-15",
+                "advance_account_id": self.customer_advance_account.id,
+            }
+        )
+        self.assertEqual(advance.od19_advance_kind, "prepayment")
+        self.assertEqual(advance.od19_tax_amount, 0.0)
+        self.assertEqual(advance.od19_total_amount, 1000.0)
+
+    def test_customer_deposit_applies_output_vat(self):
+        """รับมัดจำ 100,000 -> ใบกำกับ/รายการ 107,000 (VAT 7,000)."""
+        advance = self._create_customer_advance(
+            "deposit", od19_tax_id=self.sale_tax.id
+        )
+        self.assertEqual(advance.od19_tax_amount, 7000.0)
+        self.assertEqual(advance.od19_total_amount, 107000.0)
+
+        advance.action_post()
+
+        self.assertEqual(advance.state, "posted")
+        move = advance.move_id
+        self._assert_balanced(move)
+        vat_line = move.line_ids.filtered(
+            lambda line: line.account_id == self.vat_account
+        )
+        self.assertAlmostEqual(vat_line.credit, 7000.0, 2)
+        self.assertAlmostEqual(vat_line.debit, 0.0, 2)
+        cash_line = move.line_ids.filtered(
+            lambda line: line.account_id == self.cash_account
+        )
+        self.assertAlmostEqual(cash_line.debit, 107000.0, 2)
+
+    def test_security_deposit_has_no_output_vat(self):
+        """เงินประกันที่ต้องคืน ไม่เกิดภาษีขาย แม้จะเลือกภาษีไว้."""
+        advance = self._create_customer_advance(
+            "security", od19_tax_id=self.sale_tax.id
+        )
+        self.assertEqual(advance.od19_tax_amount, 0.0)
+        self.assertEqual(advance.od19_total_amount, 100000.0)
+
+        advance.action_post()
+
+        move = advance.move_id
+        self._assert_balanced(move)
+        self.assertFalse(
+            move.line_ids.filtered(lambda line: line.account_id == self.vat_account)
+        )
+
+    def test_supplier_prepayment_applies_wht(self):
+        """จ่ายล่วงหน้าผู้ขาย (ค่าบริการ) หัก WHT 3% -> จ่ายสุทธิ 97,000."""
+        advance = self.env["account.advance"].create(
+            {
+                "advance_type": "supplier",
+                "partner_id": self.supplier.id,
+                "amount": 100000.0,
+                "date": "2024-01-15",
+                "advance_account_id": self.supplier_advance_account.id,
+                "journal_id": self.supplier_journal.id,
+                "od19_advance_kind": "prepayment",
+                "od19_wht_tax_id": self.wht_tax.id,
+            }
+        )
+        self.assertEqual(advance.od19_wht_amount, 3000.0)
+        self.assertEqual(advance.od19_total_amount, 100000.0)
+
+        advance.action_post()
+
+        move = advance.move_id
+        self._assert_balanced(move)
+        wht_line = move.line_ids.filtered(
+            lambda line: line.account_id == self.wht_account
+        )
+        self.assertAlmostEqual(wht_line.credit, 3000.0, 2)
+        cash_line = move.line_ids.filtered(
+            lambda line: line.account_id == self.cash_account
+        )
+        self.assertAlmostEqual(cash_line.credit, 97000.0, 2)
+
+    def test_wht_ignored_for_customer_advance(self):
+        advance = self._create_customer_advance(
+            "prepayment", od19_wht_tax_id=self.wht_tax.id
+        )
+        self.assertEqual(advance.od19_wht_amount, 0.0)

@@ -25,6 +25,21 @@ class AccountAdvance(models.Model):
         default="customer",
         tracking=True,
     )
+    od19_advance_kind = fields.Selection(
+        [
+            ("deposit", "Deposit (Taxable)"),
+            ("security", "Security Deposit (Refundable)"),
+            ("prepayment", "Prepayment"),
+        ],
+        string="Advance Kind",
+        required=True,
+        default="prepayment",
+        tracking=True,
+        help="Deposit: money received/paid as a deposit, subject to VAT at "
+        "the time of receipt (Revenue Code s.79).\n"
+        "Security: refundable guarantee, not subject to VAT.\n"
+        "Prepayment: plain advance with no immediate VAT impact.",
+    )
     partner_id = fields.Many2one(
         "res.partner",
         string="Partner",
@@ -89,6 +104,62 @@ class AccountAdvance(models.Model):
         string="Journal",
     )
     note = fields.Text(string="Notes")
+    od19_tax_id = fields.Many2one(
+        "account.tax",
+        string="VAT",
+        check_company=True,
+        help="VAT applied when the kind is a taxable deposit (deposit).",
+    )
+    od19_tax_amount = fields.Monetary(
+        string="VAT Amount",
+        currency_field="currency_id",
+        compute="_compute_od19_tax_totals",
+        store=True,
+    )
+    od19_total_amount = fields.Monetary(
+        string="Total (incl. VAT)",
+        currency_field="currency_id",
+        compute="_compute_od19_tax_totals",
+        store=True,
+    )
+    od19_wht_tax_id = fields.Many2one(
+        "account.withholding.tax",
+        string="WHT",
+        check_company=True,
+        help="Withholding tax deducted when an advance is paid to a supplier "
+        "(e.g. services).\n"
+        "TODO(accounting): issuing the 50 tavi certificate is not automated "
+        "yet; the treatment must be confirmed with accounting.",
+    )
+    od19_wht_amount = fields.Monetary(
+        string="WHT Amount",
+        currency_field="currency_id",
+        compute="_compute_od19_tax_totals",
+        store=True,
+    )
+
+    @api.depends(
+        "amount",
+        "advance_type",
+        "od19_advance_kind",
+        "od19_tax_id",
+        "od19_tax_id.amount",
+        "od19_wht_tax_id",
+        "od19_wht_tax_id.amount",
+    )
+    def _compute_od19_tax_totals(self):
+        for advance in self:
+            vat = 0.0
+            if advance.od19_advance_kind == "deposit" and advance.od19_tax_id:
+                vat = advance.od19_tax_id.amount / 100.0 * advance.amount
+            advance.od19_tax_amount = vat
+            advance.od19_total_amount = advance.amount + vat
+            wht = 0.0
+            if advance.advance_type == "supplier" and advance.od19_wht_tax_id:
+                # TODO(accounting): PIT (is_pit) advances use progressive rates
+                # instead of a flat percentage - confirm the business case.
+                wht = advance.od19_wht_tax_id.amount / 100.0 * advance.amount
+            advance.od19_wht_amount = wht
 
     @api.depends("amount", "used_amount")
     def _compute_remaining_amount(self):
@@ -166,7 +237,7 @@ class AccountAdvance(models.Model):
                     _("Only posted or reconciled advances can be cancelled.")
                 )
             if advance.move_id:
-                advance.move_id.button_cancel()
+                advance.move_id.with_context(od19_skip_reason=True).button_cancel()
             advance.state = "cancel"
 
     def action_draft(self):
@@ -180,41 +251,92 @@ class AccountAdvance(models.Model):
                 advance.move_id.unlink()
             advance.state = "draft"
 
+    def _get_vat_account(self):
+        """Return the account where the VAT of ``od19_tax_id`` is posted."""
+        self.ensure_one()
+        if not self.od19_tax_id:
+            return self.env["account.account"]
+        repartition = self.od19_tax_id.invoice_repartition_line_ids.filtered(
+            lambda line: line.repartition_type == "tax"
+        )
+        return repartition[:1]._get_aml_target_tax_account()
+
     def _prepare_move_vals(self):
         self.ensure_one()
-        if self.advance_type == "customer":
-            debit_account = self.journal_id.default_account_id
-            credit_account = self.advance_account_id
-        else:
-            debit_account = self.advance_account_id
-            credit_account = self.journal_id.default_account_id
+        is_customer = self.advance_type == "customer"
+        is_supplier = not is_customer
+        cash_account = self.journal_id.default_account_id
+        advance_account = self.advance_account_id
+        # For a supplier advance the cash paid is reduced by the WHT withheld.
+        cash_amount = self.od19_total_amount - self.od19_wht_amount
+
+        line_ids = [
+            (
+                0,
+                0,
+                {
+                    "account_id": advance_account.id,
+                    "partner_id": self.partner_id.id,
+                    "debit": self.amount if is_supplier else 0.0,
+                    "credit": self.amount if is_customer else 0.0,
+                    "name": self.name,
+                },
+            ),
+            (
+                0,
+                0,
+                {
+                    "account_id": cash_account.id,
+                    "partner_id": self.partner_id.id,
+                    "debit": cash_amount if is_customer else 0.0,
+                    "credit": cash_amount if is_supplier else 0.0,
+                    "name": self.name,
+                },
+            ),
+        ]
+
+        if self.od19_tax_amount:
+            vat_account = self._get_vat_account()
+            if not vat_account:
+                raise ValidationError(
+                    _(
+                        "Please configure a tax account on the VAT '%s' before "
+                        "posting this advance."
+                    )
+                    % self.od19_tax_id.display_name
+                )
+            line_ids.append(
+                (
+                    0,
+                    0,
+                    {
+                        "account_id": vat_account.id,
+                        "partner_id": self.partner_id.id,
+                        "debit": self.od19_tax_amount if is_supplier else 0.0,
+                        "credit": 0.0 if is_supplier else self.od19_tax_amount,
+                        "name": self.name,
+                    },
+                )
+            )
+
+        if self.od19_wht_amount and self.od19_wht_tax_id:
+            line_ids.append(
+                (
+                    0,
+                    0,
+                    {
+                        "account_id": self.od19_wht_tax_id.account_id.id,
+                        "partner_id": self.partner_id.id,
+                        "debit": 0.0,
+                        "credit": self.od19_wht_amount,
+                        "name": self.name,
+                    },
+                )
+            )
 
         return {
             "date": self.date,
             "journal_id": self.journal_id.id,
             "ref": self.name,
-            "line_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "account_id": debit_account.id,
-                        "partner_id": self.partner_id.id,
-                        "debit": self.amount,
-                        "credit": 0.0,
-                        "name": self.name,
-                    },
-                ),
-                (
-                    0,
-                    0,
-                    {
-                        "account_id": credit_account.id,
-                        "partner_id": self.partner_id.id,
-                        "debit": 0.0,
-                        "credit": self.amount,
-                        "name": self.name,
-                    },
-                ),
-            ],
+            "line_ids": line_ids,
         }
