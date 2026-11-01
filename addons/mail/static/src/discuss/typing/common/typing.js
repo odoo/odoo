@@ -1,5 +1,4 @@
 import { Component, markup, t, useProps } from "@odoo/owl";
-import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -17,7 +16,6 @@ export class Typing extends Component {
             member: t.instanceOf(this.store["discuss.channel.member"]).optional(),
             size: t.string().optional("small"),
         });
-        this.isBrowserSafari = isBrowserSafari;
     }
 
     get text() {
