@@ -221,12 +221,12 @@
 
 | ID | Task | Owner (role) | สถานะ | Acceptance criteria | ไฟล์ที่แตะ |
 |---|---|---|---|---|---|
-| P1-T1 | เพิ่ม company settings 2 ตัว + สวิตช์ใน `res.config.settings` | Backend dev | **done (2026-11-01)** | บันทึก/อ่านค่าได้; default `enforce=False`, `sod=True` | `models/res_company.py`, `models/res_config_settings.py`, `views/res_config_settings_views.xml` |
-| P1-T2 | เพิ่ม hook `_od19_requires_prepare_approval()` + allow-list flow ยกเว้น | Backend dev | **done (2026-11-01)** | outbound+supplier = True; HR expense/auto = False (มีเทสต์) | `models/account_payment.py` |
-| P1-T3 | Guard ใน `action_post()` (บล็อกถ้ายังไม่ approved) | Backend dev | **done (2026-11-01)** | เทสต์ (1),(2),(6) ใน §9 ผ่าน | `models/account_payment.py` |
-| P1-T4 | ฟิลด์ override + action "ข้ามการอนุมัติ" + tracking | Backend dev | todo | เทสต์ (4) ผ่าน; เปิดเฉพาะกลุ่ม | `models/account_payment.py`, `views/account_payment_views.xml` |
-| P1-T5 | SoD check ใน `action_od19_approve()` | Backend dev | todo | เทสต์ (3) ผ่าน; ข้อยกเว้นแอดมินตามที่ตั้ง | `models/account_payment.py` |
-| P1-T6 | กลุ่มสิทธิ์ `group_od19_payment_approver` + record rule | Backend dev | todo | ผู้อนุมัติ/แอดมินเห็นปุ่ม; คนอื่นไม่เห็น | `security/*` |
+| P1-T1 | เพิ่ม company settings 2 ตัว + สวิตช์ใน `res.config.settings` | Backend dev | **done + verified (2026-11-01)** | บันทึก/อ่านค่าได้; default `enforce=False`, `sod=True` | `models/res_company.py`, `models/res_config_settings.py`, `views/res_config_settings_views.xml` |
+| P1-T2 | เพิ่ม hook `_od19_requires_prepare_approval()` + allow-list flow ยกเว้น | Backend dev | **done + verified (2026-11-01)** | outbound+supplier = True; HR expense/auto = False (มีเทสต์) | `models/account_payment.py` |
+| P1-T3 | Guard ใน `action_post()` (บล็อกถ้ายังไม่ approved) | Backend dev | **done + verified (2026-11-01)** | เทสต์ (1),(2),(6) ใน §9 ผ่าน | `models/account_payment.py` |
+| P1-T4 | ฟิลด์ override + action "ข้ามการอนุมัติ" + tracking | Backend dev | **done + verified (2026-11-01)** | เทสต์ (4) ผ่าน; เปิดเฉพาะกลุ่ม | `models/account_payment.py`, `views/account_payment_views.xml` |
+| P1-T5 | SoD check ใน `action_od19_approve()` | Backend dev | **done + verified (2026-11-01)** | เทสต์ (3) ผ่าน; ข้อยกเว้นแอดมินตามที่ตั้ง | `models/account_payment.py` |
+| P1-T6 | กลุ่มสิทธิ์ `group_od19_payment_approver` + `group_od19_payment_admin` (privilege เดียวกัน) | Backend dev | **done + verified (2026-11-01)** | ผู้อนุมัติ/แอดมินเห็นปุ่ม; คนอื่นไม่เห็น (คุมด้วย `groups=` ที่ปุ่ม) | `security/od19_payment_security.xml` |
 | P1-T7 | เปิด Three-Way Match (config) + แก้ `purchase_method` สินค้าคงคลัง | บัญชี + จัดซื้อ | todo | เทสต์ §9 (Purchase) ผ่าน; บริการไม่กระทบ | data/config (core `purchase`) |
 | P1-T8 | คู่มือ Block Payment + Group Payments ให้ฝ่าย AP | บัญชีเจ้าหนี้ | todo | มี SOP ระบุขั้นตอน; ทดลองใช้จริง 1 รอบ | `docs/...` (คู่มือ) |
 | P1-T9 | เทสต์ TDD P1 ครบ + อัปเดต spec wave-2 (sync) | Backend dev | todo | เกณฑ์ยอมรับ 1–9 ครบ | `tests/*`, `2026-10-21-...wave-2...md` |
