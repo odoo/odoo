@@ -301,7 +301,7 @@
                             <field name="vehicle_id" widget="image" options="{'preview_image': 'image_128'}" class="float-start col-2 pe-2"/>
                             <div class="col-10 pe-2 text-truncate">
                                 <field class="fw-bolder" name="vehicle_id"/>
-                                <span t-attf-class="float-end badge rounded-pill #{['todo', 'running'].indexOf(record.state.raw_value) > -1 ? 'text-bg-secondary' : ['cancelled'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : 'text-bg-success'}">
+                                <span t-attf-class="float-end badge rounded-pill #{['new', 'running'].indexOf(record.state.raw_value) > -1 ? 'text-bg-secondary' : ['cancelled'].indexOf(record.state.raw_value) > -1 ? 'text-bg-danger' : 'text-bg-success'}">
                                     <field name="state"/>
                                 </span>
                                 <div class="text-truncate">
