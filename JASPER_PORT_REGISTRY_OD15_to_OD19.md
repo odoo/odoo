@@ -10,7 +10,7 @@
 | ทะเบียนโมดูลที่ติดตั้งจริง | `migration/od15_export/modules.txt` | โมดูลใด "installed" ในฐานข้อมูลต้นทาง `AUTOERP-PRD` |
 | ฐานข้อมูลต้นทาง (dump) | `migration/od15_export/od15_autoerp_prd.dump` | สคีมาจริง/ข้อมูลจริง |
 | ซอร์ส jrxml ต้นทาง | `c:\odoo-dev\Odoo15Backup\odoo\odoo15_mods_*`, `...\odoo15_mods` | เทมเพลตต้นฉบับที่จะพอร์ต |
-| การวิเคราะห์ช่องว่าง | `GAP_ANALYSIS_DTR_OD15_to_OD19.md` | การตัดสินใจ Keep / Refactor / Replace / Retire ต่อโมดูล |
+| การวิเคราะห์ช่องว่าง | `GAP_ANALYSIS_OD15_to_OD19.md` (ส่วนที่ 2 — DTR) | การตัดสินใจ Keep / Refactor / Replace / Retire ต่อโมดูล |
 
 **เกณฑ์ขอบเขต**: โมดูลต้องมีสถานะ `installed` ใน `modules.txt` **และ** มีไฟล์ `.jrxml` ในซอร์ส
 

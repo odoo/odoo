@@ -10,8 +10,7 @@
 | ประเภท | ไฟล์ |
 |---|---|
 | แผนงานแม่ | [2026-10-22-odoo15-to-odoo19-data-migration-plan.md](../../plans/2026-10-22-odoo15-to-odoo19-data-migration-plan.md) |
-| Gap Analysis (autoinfo) | [GAP_ANALYSIS_OD15_to_OD19.md](../../../../GAP_ANALYSIS_OD15_to_OD19.md) |
-| Gap Analysis (DTR) | [GAP_ANALYSIS_DTR_OD15_to_OD19.md](../../../../GAP_ANALYSIS_DTR_OD15_to_OD19.md) |
+| Gap Analysis (โมดูล OD15 → OD19) | [GAP_ANALYSIS_OD15_to_OD19.md](../../../../GAP_ANALYSIS_OD15_to_OD19.md) (ส่วนที่ 1 autoinfo · ส่วนที่ 2 DTR) |
 | Mapping workbook (11 ชีต) | [od15-to-od19-data-mapping.xlsx](od15-to-od19-data-mapping.xlsx) |
 | CSV mapping | [migration/mapping/](../../../../migration/mapping) |
 | ETL runner | [migration/import/](../../../../migration/import) (`common.py`, `legacy.py`, `run.py`, `steps/s01…s09`) |
@@ -200,7 +199,7 @@
 
 ## 4. โมเดล custom ของ `dtr_*` ที่ยังไม่มีปลายทาง (ต้องตัดสินใจก่อน migrate)
 
-อ้างอิง [GAP_ANALYSIS_DTR_OD15_to_OD19.md](../../../../GAP_ANALYSIS_DTR_OD15_to_OD19.md) §9
+อ้างอิง [GAP_ANALYSIS_OD15_to_OD19.md](../../../../GAP_ANALYSIS_OD15_to_OD19.md) (ส่วนที่ 2 — DTR, §9)
 
 | โมเดล OD15 | Use case | สถานะปลายทาง OD19 | สิ่งที่ต้องทำ |
 |---|---|---|---|
