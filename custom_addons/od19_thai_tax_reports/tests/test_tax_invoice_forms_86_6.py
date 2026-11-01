@@ -25,7 +25,7 @@ class TestTaxInvoiceForms866(TransactionCase):
         cls.company.partner_id.write(
             {
                 "street": "1 Moo 1 Vibhavadi Rangsit Road",
-                "vat": "0105555555555",
+                "vat": "0105555555554",
                 "company_registry": "00000",
             }
         )
