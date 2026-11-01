@@ -8,8 +8,9 @@
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='subject']" position="after">
-                    <field name="mass_mailing_create"
+                    <field name="mass_mailing_create" groups="mass_mailing.group_mass_mailing_user"
                         invisible="composition_mode != 'mass_mail' or not model_is_thread"/>
+                    <field name="mass_mailing_create" invisible="1"/>
                     <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"
                         invisible="composition_mode != 'mass_mail' or not model_is_thread or not mass_mailing_create"/>
                 </xpath>
