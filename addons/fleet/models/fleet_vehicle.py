@@ -150,6 +150,7 @@ class FleetVehicle(models.Model):
     ], compute='_compute_service_activity')
     vehicle_properties = fields.Properties('Properties', definition='model_id.vehicle_properties_definition', copy=True)
     vehicle_range = fields.Integer(string="Range",
+        compute='_compute_vehicle_range', store=True, readonly=False,
         help="Range represents the maximum distance a vehicle can travel on a full charge (for EVs) or \
             a full tank (for fuel-powered vehicles)")
     range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')],
