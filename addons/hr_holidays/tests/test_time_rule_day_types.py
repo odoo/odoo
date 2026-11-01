@@ -201,3 +201,73 @@ class TestTimeRuleDayTypes(TransactionCase):
         )
         self.assertEqual(source.date_from, df, "date_from must be unchanged")
         self.assertEqual(source.date_to, dt, "date_to must be unchanged")
+
+    def test_weekly_rule_multi_day_leave_no_duplicate_remainder(self):
+        """A week-long leave cut by a weekly rule is not duplicated by remainders.
+
+        Mon-Fri leave of 5 x 8h, the rule fires above 16h per week: the source keeps Monday and
+        Tuesday, Wednesday to Friday become outputs of 8h each. As absences are clipped to the
+        schedule, Monday and Tuesday are two segments, both kept by the source: no remainder
+        may be created for Tuesday.
+        """
+        calendar = self.env['resource.calendar'].create({
+            'name': '40h/week UTC continuous',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': wd, 'hour_from': 8, 'hour_to': 16})
+                for wd in ['0', '1', '2', '3', '4']
+            ],
+        })
+        self.employee.resource_calendar_id = calendar
+        self.day_wet.request_unit = 'half_day'
+        self.other_day_wet.request_unit = 'half_day'
+        self.time_rule.write({
+            'working_hours_mode': 'week',
+            'expected_hours': 16.0,
+        })
+        source = self.env['hr.leave'].with_context(
+            tracking_disable=True,
+            mail_activity_automation_skip=True,
+            leave_skip_date_check=True,
+        ).create({
+            'employee_id': self.employee.id,
+            'work_entry_type_id': self.day_wet.id,
+            'request_date_from': '2022-01-03',
+            'request_date_to': '2022-01-07',
+        })
+        source.action_approve()
+
+        self.assertEqual(source.work_entry_type_id, self.day_wet)
+        self.assertEqual(source.date_from, datetime(2022, 1, 3, 8, 0))
+        self.assertEqual(source.date_to, datetime(2022, 1, 5, 8, 0))
+        self.assertAlmostEqual(source.number_of_hours, 16.0)
+        self.assertAlmostEqual(source.number_of_days, 2.0)
+        outputs = source.output_leave_ids.sorted('date_from')
+        self.assertFalse(
+            outputs.filtered(lambda leave: not leave.time_rule_id),
+            "Monday and Tuesday are covered by the source, no remainder expected",
+        )
+        self.assertEqual(len(outputs), 3)
+        self.assertEqual(outputs.work_entry_type_id, self.other_day_wet)
+        self.assertEqual(outputs.mapped('date_from'), [
+            datetime(2022, 1, 5, 8, 0), datetime(2022, 1, 6, 8, 0), datetime(2022, 1, 7, 8, 0),
+        ])
+        for output in outputs:
+            self.assertAlmostEqual(output.number_of_hours, 8.0)
+            self.assertAlmostEqual(output.number_of_days, 1.0)
+
+    def test_output_duration_ignores_source_resource_leave(self):
+        """The duration of a time rule output does not deduct the resource leave of its source.
+
+        The outputs are created while the resource leave of the source still spans its original
+        dates (it is only recreated afterwards), their duration must not depend on when it is
+        computed.
+        """
+        self.time_rule.active = False
+        source = self._make_day_leave(datetime(2022, 1, 3, 8, 0), datetime(2022, 1, 7, 17, 0))
+        source._create_resource_leave()
+        Leave = self.env['hr.leave'].sudo().with_context(**self.env['hr.leave']._time_rule_write_ctx)
+        output = Leave.create(self.time_rule._get_output_leave_vals(
+            self.employee, self.time_rule, datetime(2022, 1, 5, 8, 0), datetime(2022, 1, 5, 17, 0), source,
+        ))
+        self.assertAlmostEqual(output.number_of_hours, 8.0)
+        self.assertAlmostEqual(output.number_of_days, 1.0)
