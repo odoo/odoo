@@ -40,6 +40,8 @@
 
 **หลักฐาน ณ วันจัดทำ:** branch `feat/od19-wave3-corporate-income-tax` (ยังไม่ merge เข้า `19.0`); working tree มี 4 ไฟล์ modified; P1-T8 ปิดแล้ว (commit `df6a6873495`)
 
+**อัปเดต 2026-11-01 — ปิด Wave 1 / Task B1:** working tree สะอาด ✅ (commit `d4597c09cb5` เทสต์ `od19_hr_advance`, `7b6d2c7d209` search view ตาม Odoo 19, `7c31530e3dc` Summary Board First); P1-T9 ปิดแล้ว (commit `5fc3d68ffbe`); คงเหลือ defect นอกขอบเขต 1 รายการ (ดูหมายเหตุใน Task B1)
+
 ---
 
 ## Execution Sequence
@@ -88,11 +90,14 @@ graph TD
 
 > อ้างอิง: [git-and-release-baseline.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/foundation/git-and-release-baseline.md)
 
-### Task B1 — จัดการ working tree 4 ไฟล์ (มีจุดตัดสินใจ)
-- [ ] **B1a — ตัดสินใจไฟล์ core `addons/web`:** [mock_server.js](file:///c:/odoo-dev/odoo19/addons/web/static/tests/_framework/mock_server/mock_server.js) ถูกแก้ `groups_id`→`groups_ids` (hunk 1 — น่าจะพิมพ์ผิด) และ `group_ids` (hunk 2–3) — **ขัดนโยบาย "ห้ามแก้ core"** → แนะนำ `git checkout --` revert เว้นแต่ยืนยันว่าเป็น upstream patch
-- [ ] **B1b — commit `groups_id`→`group_ids` ที่ถูกต้อง:** [od15-to-od19-data-mapping.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/od15-to-od19-data-mapping.md) + [s06_people.py](file:///c:/odoo-dev/odoo19/migration/import/steps/s06_people.py)
-- [ ] **B1c — commit tracker:** [domain-wave-matrix.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/backlog/domain-wave-matrix.md) (sync 2026-11-01)
-- [ ] **Acceptance:** `git status` สะอาด; ไม่มีไฟล์ core ค้าง; commit แยกเรื่องชัดเจน
+### Task B1 — จัดการ working tree (ปิดแล้ว 2026-11-01)
+- [x] **B1a — ไฟล์ core `addons/web`:** [mock_server.js](file:///c:/odoo-dev/odoo19/addons/web/static/tests/_framework/mock_server/mock_server.js) — ผู้ใช้ยืนยัน **"คงไว้"** เพราะ hunk 1 อยู่ใต้ `ACTION_TYPES.embedded` จึงต้องเป็น `groups_ids` (ถูกต้อง) และ hunk 2–3 = `group_ids`; ตรวจซอร์สโค้ดจริงแล้วไม่ใช่ typo → commit `75391a6472c`
+- [x] **B1b — commit `groups_id`→`group_ids`:** [od15-to-od19-data-mapping.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/od15-to-od19-data-mapping.md) + [s06_people.py](file:///c:/odoo-dev/odoo19/migration/import/steps/s06_people.py) → รวมใน commit `75391a6472c`
+- [x] **B1c — commit tracker:** [domain-wave-matrix.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/backlog/domain-wave-matrix.md) (sync 2026-11-01)
+- [x] **B1d — Summary Board First (user-confirmed):** 4 dashboard `sequence` → `0,0,0,-1` (account / after-sales / hr-attendance / stock) + อัปเดต `TestAccountMenuStructure` เป็น "เมนูแรกของแอป" → commit `7c31530e3dc`
+- [x] **B1e — TDD coverage `od19_hr_advance`:** 15 เทสต์ (draft → อนุมัติ 2 ชั้น → จ่าย → เคลียร์) ผ่าน `0 failed, 0 error(s)` → commit `d4597c09cb5`; ปรับ search view ตามธรรมเนียม Odoo 19 → commit `7b6d2c7d209`
+- [x] **Acceptance:** `git status` สะอาด ✅ (2026-11-01); ไม่มีไฟล์ core ค้าง (mock_server.js คงไว้โดยเจตนา); commit แยกเรื่องชัดเจน (test / refactor / feat)
+- [ ] **หมายเหตุ (defect ที่พบระหว่างทาง, ยังไม่ปิด):** `od19_accounting_reporting` `TestAccountingReporting.test_company_report_uses_remaining_amount_to_invoice_for_partial_invoicing` fail (`276.0 != 138.0`) — ยืนยันว่า fail อยู่แล้วที่ HEAD ก่อนแก้ working tree (ไม่เกี่ยวกับ B1d); ต้องเปิดงานซ่อมแยก
 
 ### Task B2 — ปรับ branch naming ให้ตรง contract
 - [ ] **Objective:** ให้ทุก branch ใช้ prefix เดียว `feature/`
@@ -198,7 +203,7 @@ graph TD
 
 | # | ประเด็น | ตัวเลือก | แนะนำ |
 |---|---|---|---|
-| 1 | B1a — ไฟล์ core `mock_server.js` | revert / เก็บเป็น upstream patch | **revert** (ขัดนโยบาย + น่าจะ typo) |
+| 1 | ~~B1a — ไฟล์ core `mock_server.js`~~ **ปิดแล้ว** | ~~revert / เก็บเป็น upstream patch~~ | **คงไว้** — ผู้ใช้ยืนยันว่าเป็น patch ที่ถูกต้อง (commit `75391a6472c`) |
 | 2 | D1 — staging DB | ใช้ `od15_prd` / restore `od15_stage` แยก | restore read-only `od15_stage` |
 | 3 | D1 — สิทธิ์ profiling | อนุญาตอ่าน credential จาก `odoo.conf` / ผู้ใช้วางเอง | อนุญาต (drawn จาก config) |
 | 4 | F1 — Wave 6 | อนุมัติเริ่ม / เลื่อน | รอคำสั่ง |
