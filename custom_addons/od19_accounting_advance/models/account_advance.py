@@ -144,6 +144,21 @@ class AccountAdvance(models.Model):
             advance.move_id = move
             advance.state = "posted"
 
+    def action_reconcile(self):
+        """ตัดบัญชีเงินล่วงหน้ากับรายการคู่ที่เกี่ยวข้อง (reconcile)."""
+        for advance in self:
+            if advance.state != "posted":
+                raise ValidationError(_("Only posted advances can be reconciled."))
+            if not advance.move_id:
+                raise ValidationError(_("Please post the advance first."))
+            advance.move_id._od19_reconcile_account_lines(
+                advance.advance_account_id.id, advance.partner_id.id
+            )
+            advance.invalidate_recordset(["used_amount", "remaining_amount"])
+            if advance.currency_id.is_zero(advance.remaining_amount):
+                advance.state = "reconciled"
+        return True
+
     def action_cancel(self):
         for advance in self:
             if advance.state not in ("posted", "reconciled"):

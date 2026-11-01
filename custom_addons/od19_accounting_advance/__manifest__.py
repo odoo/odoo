@@ -7,6 +7,7 @@
     "depends": [
         "account",
         "purchase_stock",
+        "od19_accounting_features",
     ],
     "data": [
         "security/ir.model.access.csv",
