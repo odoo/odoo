@@ -222,3 +222,114 @@ class TestRequesterAndAge(TransactionCase):
         self.assertEqual(self.source._od19_sla_state(1), "normal")
         self.assertEqual(self.source._od19_sla_state(3), "warning")
         self.assertEqual(self.source._od19_sla_state(6), "over")
+
+
+@tagged("post_install", "-at_install")
+class TestRowsAndSummary(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # hr.expense requires a linked employee and a non-zero amount.
+        cls.employee = cls.env["hr.employee"].create({
+            "name": "Rows Employee",
+            "user_id": cls.env.user.id,
+        })
+        cls.source = cls.env["od19.approval.source"].create({
+            "name": "Rows Source",
+            "model_id": cls.env["ir.model"]._get("hr.expense").id,
+            "requester_field": "create_uid",
+            "success_states": "approved",
+            "rejected_states": "refused",
+            "sla_days": 3,
+            "step_ids": [(0, 0, {
+                "sequence": 10, "label": "L1", "state_field": "state",
+                "state_value": "submitted", "approver_field": "create_uid",
+                "approver_kind": "user",
+            })],
+        })
+
+    def test_row_carries_deep_link_age_and_sla(self):
+        expense = self.env["hr.expense"].create({
+            "name": "Paper",
+            "employee_id": self.employee.id,
+            "total_amount_currency": 100.0,
+            "total_amount": 100.0,
+        })
+        expense.write({"state": "submitted"})
+        # The ORM strips log-access fields (create_date) from create()/write(),
+        # so the submitted date must be set directly in SQL.
+        self.env.cr.execute(
+            "UPDATE hr_expense SET create_date = %s WHERE id = %s",
+            (fields.Datetime.now() - datetime.timedelta(days=7), expense.id),
+        )
+        expense.invalidate_recordset(["create_date"])
+        rows = self.source._od19_build_rows(expense)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["id"], expense.id)
+        self.assertEqual(rows[0]["model"], "hr.expense")
+        self.assertIn("/web#id=%s" % expense.id, rows[0]["url"])
+        self.assertEqual(rows[0]["age_days"], 7)
+        self.assertEqual(rows[0]["sla_state"], "over")
+        self.assertEqual(rows[0]["label"], "Paper")
+
+    def test_summary_kpis(self):
+        buckets = self.source._od19_classify_for_approver()
+        rows = self.source._od19_build_rows(buckets["pending"])
+        summary = self.source._od19_summary(rows)
+        self.assertEqual(summary["pending_count"], len(rows))
+        self.assertIn("max_age_days", summary)
+        self.assertIn("over_sla_count", summary)
+
+
+@tagged("post_install", "-at_install")
+class TestFurthestStep(TransactionCase):
+    """`_od19_current_index` must report the furthest step the record reached."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        expense_model = cls.env.get("hr.expense")
+        if (
+            expense_model is None
+            or "first_approver_id" not in expense_model._fields
+            or "second_approver_id" not in expense_model._fields
+            or "second_approval_state" not in expense_model._fields
+        ):
+            raise unittest.SkipTest(
+                "Requires hr.expense with od19 approval fields "
+                "(od19_hr_expense_enhanced and od19_hr_expense_thai)"
+            )
+        # hr.expense requires a linked employee and a non-zero amount.
+        cls.employee = cls.env["hr.employee"].create({
+            "name": "Furthest Employee",
+            "user_id": cls.env.user.id,
+        })
+        cls.source = cls.env["od19.approval.source"].create({
+            "name": "Furthest",
+            "model_id": cls.env["ir.model"]._get("hr.expense").id,
+            "step_ids": [
+                (0, 0, {
+                    "sequence": 10, "label": "L1", "state_field": "state",
+                    "state_value": "submitted", "approver_field": "first_approver_id",
+                    "approver_kind": "employee",
+                }),
+                (0, 0, {
+                    "sequence": 20, "label": "L2",
+                    "state_field": "second_approval_state", "state_value": "pending",
+                    "approver_field": "second_approver_id", "approver_kind": "employee",
+                }),
+            ],
+        })
+
+    def test_highest_matching_step_wins(self):
+        if "second_approval_state" not in self.env["hr.expense"]._fields:
+            self.skipTest("od19_hr_expense_thai not installed")
+        expense = self.env["hr.expense"].create({
+            "name": "Two tier",
+            "employee_id": self.employee.id,
+            "total_amount_currency": 100.0,
+            "total_amount": 100.0,
+        })
+        expense.write({"state": "submitted", "second_approval_state": "pending"})
+        steps = self.source.step_ids.sorted("sequence")
+        self.assertEqual(self.source._od19_current_index(expense, steps), 1)

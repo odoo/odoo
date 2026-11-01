@@ -1,6 +1,6 @@
 import datetime
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class Od19ApprovalSource(models.Model):
@@ -64,12 +64,18 @@ class Od19ApprovalSource(models.Model):
         return bool(field_name) and field_name in record._fields
 
     def _od19_current_index(self, record, steps):
-        """Index of the step the record waits at, or None."""
+        """Index of the furthest step the record has reached, or None.
+
+        A record can match several steps at once (e.g. ``hr.expense`` keeps
+        ``state='submitted'`` while ``second_approval_state='pending'``), so we
+        return the highest matching index -- the real current step.
+        """
+        current = None
         for index, step in enumerate(steps):
             field_name = step.state_field or "state"
             if self._od19_field_ok(record, field_name) and record[field_name] == step.state_value:
-                return index
-        return None
+                current = index
+        return current
 
     def _od19_index_of_my_step(self, record, steps):
         """Index of the first step where the current user is the approver, or None."""
@@ -183,3 +189,43 @@ class Od19ApprovalSource(models.Model):
         if age_days >= self.sla_days:
             return "warning"
         return "normal"
+
+    # ------------------------------------------------------------------
+    # Presentation layer (dict rows consumed by QWeb)
+    # ------------------------------------------------------------------
+    def _od19_record_label(self, record):
+        for field_name in ("name", "display_name"):
+            if self._od19_field_ok(record, field_name) and record[field_name]:
+                return str(record[field_name])
+        return "ID %s" % record.id
+
+    def _od19_deep_link(self, record):
+        return "/web#id=%s&model=%s&view_type=form" % (record.id, self.model_name)
+
+    def _od19_build_rows(self, records):
+        """Turn a recordset into plain dicts (safe to pass to QWeb)."""
+        rows = []
+        for record in records:
+            age_days = self._od19_age_days(record)
+            rows.append({
+                "id": record.id,
+                "source_name": self.name,
+                "icon": self.icon or "fa-inbox",
+                "model": self.model_name,
+                "model_label": self.model_id.name,
+                "label": self._od19_record_label(record),
+                "url": self._od19_deep_link(record),
+                "age_days": age_days,
+                "sla_state": self._od19_sla_state(age_days),
+            })
+        return rows
+
+    @api.model
+    def _od19_summary(self, rows):
+        """Aggregate KPI over a list of row dicts (approver *pending*)."""
+        ages = [row["age_days"] for row in rows]
+        return {
+            "pending_count": len(rows),
+            "max_age_days": max(ages) if ages else 0,
+            "over_sla_count": len([row for row in rows if row["sla_state"] == "over"]),
+        }
