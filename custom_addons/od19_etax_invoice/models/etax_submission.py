@@ -140,6 +140,13 @@ class Od19EtaxSubmission(models.Model):
         """Send every document of the submission through the RD gateway."""
         self.ensure_one()
         self.company_id._od19_etax_check_enabled()
+        if self.state == "accepted":
+            raise UserError(
+                self.env._(
+                    "This submission has already been accepted by the RD and "
+                    "cannot be submitted again."
+                )
+            )
         if not self.document_ids:
             raise UserError(
                 self.env._("กรุณาเลือกเอกสาร e-Tax ที่ต้องการนำส่งก่อน")

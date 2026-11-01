@@ -82,7 +82,13 @@ class HrExpense(models.Model):
             if expense.require_second_approval:
                 expense.second_approval_state = 'pending'
             else:
-                expense.action_approve_second()
+                # Expenses below the threshold only need one approval, so the
+                # second step is marked as approved right away. Approve
+                # directly instead of routing through ``action_approve_second``,
+                # which would reject the first approver for being the same user
+                # as the second approver.
+                expense.second_approval_state = 'approved'
+                expense.action_approve()
 
     def action_approve_second(self):
         """Second level approval."""

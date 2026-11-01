@@ -125,7 +125,9 @@ class PettyCashTransaction(models.Model):
             if transaction.state != "posted":
                 continue
             if transaction.move_id:
-                transaction.move_id.button_cancel()
+                transaction.move_id.with_context(
+                    od19_skip_reason=True
+                ).button_cancel()
             transaction.state = "cancelled"
 
     def action_draft(self):

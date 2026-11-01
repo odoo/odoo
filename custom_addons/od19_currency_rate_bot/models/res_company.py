@@ -11,6 +11,9 @@ class ResCompany(models.Model):
     bot_token = fields.Char(
         string="BOT Token",
         groups="base.group_system",
+        help="Token used to call the Bank of Thailand exchange-rate API. "
+        "The settings form renders it with widget=\"password\" so the value "
+        "is masked on screen.",
     )
     autoinfo_currency_rate_last_update = fields.Datetime(
         string="Currency Rate Last Update",

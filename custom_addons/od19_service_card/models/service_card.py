@@ -192,4 +192,6 @@ class ServiceCard(models.Model):
 
     def action_reset_to_draft(self):
         for card in self:
+            if card.state == 'done':
+                raise UserError(_('Cannot reset a done service card to draft.'))
             card.state = 'draft'

@@ -274,6 +274,20 @@ class Od19EtaxDocument(models.Model):
         """Build the unsigned XML and store it as an attachment."""
         self._ensure_etax_enabled()
         for record in self:
+            if record.state == "signed":
+                raise UserError(
+                    self.env._(
+                        "A signed e-Tax document cannot be regenerated. "
+                        "It is legally issued; issue a cancellation note "
+                        "instead."
+                    )
+                )
+            if record.state == "cancelled":
+                raise UserError(
+                    self.env._(
+                        "A cancelled e-Tax document cannot be regenerated."
+                    )
+                )
             tree = record._build_unsigned_tree()
             content = etree.tostring(
                 tree, xml_declaration=True, encoding="UTF-8", pretty_print=True
@@ -413,6 +427,8 @@ class Od19EtaxDocument(models.Model):
                 "state": "draft",
                 "xml_file": False,
                 "xml_filename": False,
+                "signed_xml_file": False,
+                "signed_xml_filename": False,
                 "digest": False,
             })
         return True

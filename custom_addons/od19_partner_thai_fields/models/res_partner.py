@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ResPartner(models.Model):
@@ -12,7 +13,6 @@ class ResPartner(models.Model):
     )
     branch_code = fields.Char(
         string="Branch Code",
-        size=5,
         help="5-digit branch code for Thai tax branch reporting. "
         "Use '00000' for head office.",
     )
@@ -33,6 +33,19 @@ class ResPartner(models.Model):
         string="Subdistrict / Tambon",
         help="Sub-district (ตำบล) or Khwaeng (แขวง) of the Thai address.",
     )
+
+    @api.constrains("branch_code")
+    def _check_branch_code(self):
+        for partner in self:
+            code = (partner.branch_code or "").strip()
+            if code and (len(code) != 5 or not code.isdigit()):
+                raise ValidationError(
+                    _(
+                        "Branch Code must be exactly 5 digits "
+                        "(use '00000' for the head office), got '%(code)s'.",
+                        code=partner.branch_code,
+                    )
+                )
 
 
 class ResCompany(models.Model):

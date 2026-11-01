@@ -153,7 +153,10 @@ class StampDuty(models.Model):
                 if rate.rate_type == "fixed":
                     duty = rate.rate_amount
                 elif rate.base_unit:
-                    units = math.ceil((rec.base_amount or 0.0) / rate.base_unit)
+                    # A negative instrument value is invalid; clamp it so the
+                    # duty can never become negative.
+                    base = max(rec.base_amount or 0.0, 0.0)
+                    units = math.ceil(base / rate.base_unit)
                     duty = units * rate.rate_amount
                 if rate.max_amount and duty > rate.max_amount:
                     duty = rate.max_amount
