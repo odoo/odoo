@@ -76,7 +76,13 @@ registry.category("web_tour.tours").add("od19_thai_tax_reports_tour", {
             run: "click",
         },
         {
-            trigger: ".o_form_view, .o_list_view, .o_kanban_view",
+            // `action_print()` hands the browser a report action: when no
+            // document layout is saved yet Odoo first shows the "Configure your
+            // document layout" dialog, and once it is closed the report is
+            // streamed and the action manager is left EMPTY — there is no
+            // form/list/kanban to wait for. Wait for the app navbar, which is
+            // always mounted, so the tour can carry on to the next register.
+            trigger: ".o_menu_sections, .o_control_panel, .o_action_manager",
         },
 
         // --- VAT Purchase Register ---
@@ -127,7 +133,13 @@ registry.category("web_tour.tours").add("od19_thai_tax_reports_tour", {
             run: "click",
         },
         {
-            trigger: ".o_form_view, .o_list_view, .o_kanban_view",
+            // `action_print()` hands the browser a report action: when no
+            // document layout is saved yet Odoo first shows the "Configure your
+            // document layout" dialog, and once it is closed the report is
+            // streamed and the action manager is left EMPTY — there is no
+            // form/list/kanban to wait for. Wait for the app navbar, which is
+            // always mounted, so the tour can carry on to the next register.
+            trigger: ".o_menu_sections, .o_control_panel, .o_action_manager",
         },
 
         // --- WHT Register ---
@@ -178,11 +190,21 @@ registry.category("web_tour.tours").add("od19_thai_tax_reports_tour", {
             run: "click",
         },
         {
-            trigger: ".o_form_view, .o_list_view, .o_kanban_view",
+            // `action_print()` hands the browser a report action: when no
+            // document layout is saved yet Odoo first shows the "Configure your
+            // document layout" dialog, and once it is closed the report is
+            // streamed and the action manager is left EMPTY — there is no
+            // form/list/kanban to wait for. Wait for the app navbar, which is
+            // always mounted, so the tour can carry on to the next register.
+            trigger: ".o_menu_sections, .o_control_panel, .o_action_manager",
         },
 
         {
-            trigger: ".o_kanban_view, .o_list_renderer, .o_form_view",
+            // Same reason as the steps above: after the last register is
+            // printed the action manager is empty, so there is no
+            // form/list/kanban left to click. The app navbar is always mounted
+            // and gives the final click that closes the tour.
+            trigger: ".o_menu_sections, .o_action_manager, .o_control_panel",
             content: markup(_t(
                 "Thai Tax Reports complete! Generate <b>VAT Sales Register</b>, " +
                 "<b>VAT Purchase Register</b>, and <b>WHT Register</b> for statutory compliance. " +
