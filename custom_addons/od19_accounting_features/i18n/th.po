@@ -126,9 +126,11 @@ msgstr ""
 "โดยต่อท้ายด้วยเลขที่ใบแจ้งหนี้เป็น ?id=invoice_name"
 
 #. module: od19_accounting_features
-#: model:ir.model.fields,help:od19_accounting_features.field_account_payment__od19_wht_base_amount
-msgid "Base amount used to compute the withholding tax."
-msgstr "มูลค่าฐานที่ใช้คำนวณภาษีหัก ณ ที่จ่าย"
+#: model:ir.model.fields,help:od19_accounting_features.field_account_payment__od19_wht_invoice_base_amount
+msgid ""
+"Sum of the untaxed amounts of the invoices reconciled with this payment."
+msgstr ""
+"ผลรวมของมูลค่าก่อนภาษีของใบแจ้งหนี้ที่กระทบยอดกับการจ่ายชำระครั้งนี้"
 
 #. module: od19_accounting_features
 #: model:ir.actions.report,name:od19_accounting_features.action_report_billing_note
@@ -159,9 +161,9 @@ msgid "Companies"
 msgstr "บริษัท"
 
 #. module: od19_accounting_features
-#: model:ir.model.fields,help:od19_accounting_features.field_account_payment__od19_wht_amount
-msgid "Computed withholding tax amount."
-msgstr "จำนวนภาษีหัก ณ ที่จ่ายที่คำนวณได้"
+#: model:ir.model.fields,help:od19_accounting_features.field_account_payment__od19_wht_invoice_amount
+msgid "Withholding tax amount = base amount x rate."
+msgstr "จำนวนภาษีหัก ณ ที่จ่าย = มูลค่าฐาน x อัตราภาษี"
 
 #. module: od19_accounting_features
 #: model:ir.model,name:od19_accounting_features.model_res_config_settings
@@ -373,24 +375,16 @@ msgid "The journal entries that will be cancelled."
 msgstr "รายการสมุดรายวันที่จะถูกยกเลิก"
 
 #. module: od19_accounting_features
+#: model:ir.model.fields,field_description:od19_accounting_features.field_account_payment__od19_wht_invoice_amount
 #: model_terms:ir.ui.view,arch_db:od19_accounting_features.view_account_payment_form_od19
 msgid "WHT Amount"
-msgstr "จำนวนภาษีหัก"
+msgstr "จำนวนภาษีหัก ณ ที่จ่าย"
 
 #. module: od19_accounting_features
-#: model:ir.model.fields,field_description:od19_accounting_features.field_account_payment__od19_wht_amount
-msgid "WHT Amount / จำนวนภาษีหัก"
-msgstr "จำนวนภาษีหัก / WHT Amount"
-
-#. module: od19_accounting_features
+#: model:ir.model.fields,field_description:od19_accounting_features.field_account_payment__od19_wht_invoice_base_amount
 #: model_terms:ir.ui.view,arch_db:od19_accounting_features.view_account_payment_form_od19
 msgid "WHT Base Amount"
-msgstr "มูลค่าคิดภาษีหัก"
-
-#. module: od19_accounting_features
-#: model:ir.model.fields,field_description:od19_accounting_features.field_account_payment__od19_wht_base_amount
-msgid "WHT Base Amount / มูลค่าคิดภาษี"
-msgstr "มูลค่าคิดภาษี / WHT Base Amount"
+msgstr "มูลค่าฐานภาษีหัก ณ ที่จ่าย"
 
 #. module: od19_accounting_features
 #: model:ir.model.fields,field_description:od19_accounting_features.field_account_payment__od19_wht_rate

@@ -34,10 +34,10 @@ class AccountPayment(models.Model):
     # ------------------------------------------------------------------
     # Feature 6: WHT base computed from selected invoices
     # ------------------------------------------------------------------
-    od19_wht_base_amount = fields.Monetary(
+    od19_wht_invoice_base_amount = fields.Monetary(
         string="WHT Base Amount",
         currency_field="currency_id",
-        compute="_compute_od19_wht_base_amount",
+        compute="_compute_od19_wht_invoice_base_amount",
         store=True,
         help="Sum of the untaxed amounts of the invoices reconciled "
         "with this payment.",
@@ -53,10 +53,10 @@ class AccountPayment(models.Model):
         string="WHT Type",
         help="Withholding tax type (OCA l10n_th_account_tax).",
     )
-    od19_wht_amount = fields.Monetary(
+    od19_wht_invoice_amount = fields.Monetary(
         string="WHT Amount",
         currency_field="currency_id",
-        compute="_compute_od19_wht_amount",
+        compute="_compute_od19_wht_invoice_amount",
         store=True,
         help="Withholding tax amount = base amount x rate.",
     )
@@ -67,7 +67,7 @@ class AccountPayment(models.Model):
         "reconciled_invoice_ids.amount_untaxed",
         "reconciled_bill_ids.amount_untaxed",
     )
-    def _compute_od19_wht_base_amount(self):
+    def _compute_od19_wht_invoice_base_amount(self):
         for payment in self:
             invoices = payment.reconciled_invoice_ids | payment.reconciled_bill_ids
             if not invoices:
@@ -76,20 +76,22 @@ class AccountPayment(models.Model):
                 base = 0.0
                 for line in wht_lines:
                     base += abs(line.balance)
-                payment.od19_wht_base_amount = base
+                payment.od19_wht_invoice_base_amount = base
             else:
-                payment.od19_wht_base_amount = sum(
+                payment.od19_wht_invoice_base_amount = sum(
                     invoices.mapped("amount_untaxed")
                 )
 
-    @api.depends("od19_wht_base_amount", "od19_wht_rate")
-    def _compute_od19_wht_amount(self):
+    @api.depends("od19_wht_invoice_base_amount", "od19_wht_rate")
+    def _compute_od19_wht_invoice_amount(self):
         for payment in self:
             try:
                 rate = float(payment.od19_wht_rate or 0.0)
             except (TypeError, ValueError):
                 rate = 0.0
-            payment.od19_wht_amount = payment.od19_wht_base_amount * rate / 100.0
+            payment.od19_wht_invoice_amount = (
+                payment.od19_wht_invoice_base_amount * rate / 100.0
+            )
 
     # ------------------------------------------------------------------
     # Bill-first rule (AP / ฝั่งทำจ่าย): require ตั้งหนี้ before payment

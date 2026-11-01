@@ -36,9 +36,18 @@ class TestVendorBillRequiredForPayment(AccountTestInvoicingCommon):
             "in_invoice",
             partner=self.partner_a,
             invoice_date="2016-01-01",
-            post=True,
+            post=False,
             amounts=[100.0],
         )
+        # เอกสารซื้อของไทยต้องมีเลขที่/วันที่ใบกำกับภาษีก่อน post
+        # (ข้อกำหนดของ OCA l10n_th_account_tax)
+        bill.tax_invoice_ids.write(
+            {
+                "tax_invoice_number": "TEST-TAX-001",
+                "tax_invoice_date": "2016-01-01",
+            }
+        )
+        bill.action_post()
         payment = (
             self.env["account.payment.register"]
             .with_context(active_model="account.move", active_ids=bill.ids)
