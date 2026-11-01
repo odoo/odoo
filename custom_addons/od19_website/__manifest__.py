@@ -17,6 +17,7 @@
         "od19_announcement",
         "od19_meeting_room_booking",
         "od19_knowledge_enhanced",
+        "od19_approval_center",
     ],
     "data": [
         "security/ir.model.access.csv",

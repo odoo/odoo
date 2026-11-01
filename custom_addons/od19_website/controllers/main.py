@@ -86,8 +86,43 @@ class AutoInfoWebsite(http.Controller):
                 "max_booking_date": today
                 + relativedelta(months=BOOKING_WINDOW_MONTHS),
                 "booking_window_months": BOOKING_WINDOW_MONTHS,
+                "approval_summary": self._od19_approval_data()["summary"],
             },
         )
+
+    # ------------------------------------------------------------------
+    # Approval Center (view-only)
+    # ------------------------------------------------------------------
+    @http.route(
+        ["/my/approvals"],
+        type="http",
+        auth="user",
+        website=True,
+        sitemap=False,
+    )
+    def od19_my_approvals(self, **kwargs):
+        """Approval Center page: what I must approve + my own requests."""
+        return request.render(
+            "od19_website.od19_approval_center", self._od19_approval_data()
+        )
+
+    def _od19_approval_data(self):
+        """Aggregate every active source into 2 tabs x 4 groups."""
+        Source = request.env["od19.approval.source"].sudo()
+        approver = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        requester = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        for source in Source.search([("active", "=", True)]):
+            for key, records in source._od19_classify_for_approver().items():
+                approver[key].extend(source._od19_build_rows(records))
+            for key, records in source._od19_classify_for_requester().items():
+                requester[key].extend(source._od19_build_rows(records))
+        return {
+            "user": request.env.user,
+            "datetime": datetime,
+            "approver": approver,
+            "requester": requester,
+            "summary": Source._od19_summary(approver["pending"]),
+        }
 
     @http.route(
         ["/employee-portal/book-room"],
