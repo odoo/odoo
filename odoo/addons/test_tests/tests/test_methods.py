@@ -14,7 +14,7 @@ class CustomError(Exception):
     ...
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestBasic(common.TransactionCase):
     def test_assertRecordValues(self):
         X1 = {'f1': "X", 'f2': 1}

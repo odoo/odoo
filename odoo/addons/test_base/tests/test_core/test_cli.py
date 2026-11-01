@@ -18,7 +18,7 @@ from odoo.tools import config, file_path
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCommand(BaseCase):
 
     @classmethod
@@ -166,7 +166,7 @@ class TestCommand(BaseCase):
         self.assertEqual(lines, [">>> Hello from Python!", '>>> '])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCommandUsingDb(TestCommand, TransactionCase):
 
     def test_i18n_export(self):

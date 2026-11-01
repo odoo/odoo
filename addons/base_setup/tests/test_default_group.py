@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import tagged, TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestResConfig(TransactionCase):
 
     def setUp(self):
-        super(TestResConfig, self).setUp()
+        super().setUp()
 
         self.user = self.env.ref('base.user_admin')
         self.company = self.env['res.company'].create({'name': 'oobO'})

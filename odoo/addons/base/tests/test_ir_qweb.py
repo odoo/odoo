@@ -17,10 +17,9 @@ from odoo.exceptions import UserError, MissingError
 unsafe_eval = eval
 
 
-@tagged('post_install', '-at_install')
 class TestQWebTField(TransactionCase):
     def setUp(self):
-        super(TestQWebTField, self).setUp()
+        super().setUp()
         self.env_branding = self.env(context={'inherit_branding': True})
         self.engine = self.env_branding['ir.qweb']
 
@@ -187,7 +186,6 @@ class TestQWebTField(TransactionCase):
         self.assertEqual(str(rendered.strip()), result.strip())
 
 
-@tagged('post_install', '-at_install')
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
         """ Test the rendering on a namespaced view with no static content. The resulting string should be untouched.
@@ -727,7 +725,6 @@ class TestQWebNS(TransactionCase):
         self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result))
 
 
-@tagged('post_install', '-at_install')
 class TestQWebBasic(TransactionCase):
     def test_compile_expr(self):
         tests = [
@@ -2476,7 +2473,6 @@ class TestQWebBasic(TransactionCase):
         self.assertEqual(str(rendered), result)
 
 
-@tagged('post_install', '-at_install')
 class TestQwebPerformance(TransactionCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):

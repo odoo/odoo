@@ -78,7 +78,7 @@ def verify_pdf_signatures(pdf_data, public_key, signer_certificate_der=None, exp
     return verified
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPdf(TransactionCase):
     """ Tests on pdf. """
 
@@ -221,7 +221,7 @@ class TestPdf(TransactionCase):
         self.assertEqual(processed_text, "(ﺍﺪﻘﻧ) ﻢﻫﺭﺩ (1000) ﺏﺎﻌﺗﻵﺍ")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSignature(TransactionCase):
     """Tests on signature tool"""
 

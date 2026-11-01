@@ -8,7 +8,7 @@ from lxml import etree
 from odoo.tests.common import HttpCase, tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPivotExport(HttpCase):
 
     def test_export_xlsx_with_integer_column(self):

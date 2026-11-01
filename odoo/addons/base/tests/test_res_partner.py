@@ -24,7 +24,7 @@ SAMPLES = [
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPartner(TransactionCaseWithUserDemo):
 
     @contextmanager
@@ -463,7 +463,7 @@ class TestPartner(TransactionCaseWithUserDemo):
 
 
 @tagged('res_partner', 'res_partner_address')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPartnerAddressCompany(TransactionCase):
 
     @classmethod
@@ -1293,8 +1293,7 @@ class TestPartnerForm(TransactionCase):
             self.assertEqual(partner_form.user_id, test_parent_partner.user_id)
 
 
-@tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('res_partner', 'at_install', '-post_install')
 class TestPartnerCategory(TransactionCase):
 
     def test_name_search(self):

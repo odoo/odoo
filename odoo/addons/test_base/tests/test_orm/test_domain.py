@@ -12,6 +12,7 @@ from odoo.tools import SQL, OrderedSet
 from .test_domain_expression import TransactionExpressionCase
 
 
+@tagged('at_install', '-post_install')
 class TestDomain(TransactionExpressionCase):
     def _search(self, model, domain, init_domain=Domain.TRUE, test_complement=False):
         # just overwrite the defaults here, because we test complements manually
@@ -370,6 +371,7 @@ class TestDomain(TransactionExpressionCase):
         self.assertEqual(res_search, related, "the archived message should still be found")
 
 
+@tagged('at_install', '-post_install')
 class TestDomainComplement(TransactionExpressionCase):
 
     def test_inequalities_int(self):
@@ -427,7 +429,7 @@ class TestDomainComplement(TransactionExpressionCase):
             self._search(Model, [('parent_id', '>=', 'Par')])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestDomainOptimize(TransactionCase):
     number_domain = Domain('numeric', '>', 5)
 

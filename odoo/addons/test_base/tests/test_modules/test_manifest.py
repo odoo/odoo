@@ -12,7 +12,7 @@ from odoo.tests.common import BaseCase, tagged
 import odoo.addons
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestModuleManifest(BaseCase):
     @classmethod
     def setUpClass(cls):

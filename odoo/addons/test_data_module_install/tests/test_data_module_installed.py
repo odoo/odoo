@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-from odoo.tests import tagged, common
+from odoo.tests.common import TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestDataModuleInstalled(common.TransactionCase):
+class TestDataModuleInstalled(TransactionCase):
     """ Test that the fake data module `test_data_module` is correctly installed.
     The use case of this test is that odoo supports installation of data modules only without `__init__.py`.
     """

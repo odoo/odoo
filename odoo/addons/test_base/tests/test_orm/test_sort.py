@@ -5,7 +5,7 @@ from odoo.fields import Command
 from odoo.tests import TransactionCase, tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSort(TransactionCase):
     @classmethod
     def setUpClass(cls):

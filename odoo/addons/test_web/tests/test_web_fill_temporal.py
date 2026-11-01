@@ -1,7 +1,7 @@
 from odoo.tests import tagged, common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFillTemporal(common.TransactionCase):
     """Test for fill temporal.
 
