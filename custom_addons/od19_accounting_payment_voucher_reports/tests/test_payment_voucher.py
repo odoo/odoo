@@ -118,13 +118,23 @@ class TestPreparePaymentFromWizard(AccountTestInvoicingCommon):
         return wizard._create_payments()
 
     def _create_bill(self, amount=1000.0):
-        return self.init_invoice(
+        bill = self.init_invoice(
             "in_invoice",
             partner=self.partner_a,
             invoice_date="2016-01-01",
-            post=True,
+            post=False,
             amounts=[amount],
         )
+        # เอกสารซื้อของไทยต้องมีเลขที่/วันที่ใบกำกับภาษีก่อน post
+        # (ข้อกำหนดของ OCA l10n_th_account_tax)
+        bill.tax_invoice_ids.write(
+            {
+                "tax_invoice_number": "TEST-TAX-001",
+                "tax_invoice_date": "2016-01-01",
+            }
+        )
+        bill.action_post()
+        return bill
 
     def test_prepare_option_keeps_payment_in_draft(self):
         bill = self._create_bill()

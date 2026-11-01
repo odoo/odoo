@@ -133,6 +133,7 @@ class AccountPayment(models.Model):
         Payment wizard are kept in draft, so the standard wizard reconciliation
         cannot run at creation time. It is replayed here instead.
         """
+        helper = self.env["account.move"]._od19_reconcile_move_lines
         for payment in self.filtered("od19_pending_reconcile_line_ids"):
             if not payment.move_id:
                 continue
@@ -144,9 +145,11 @@ class AccountPayment(models.Model):
             payment_lines = payment.move_id.line_ids.filtered_domain(domain)
             staged_lines = payment.od19_pending_reconcile_line_ids.filtered_domain(domain)
             for account in payment_lines.account_id:
-                (payment_lines + staged_lines).filtered_domain(
-                    [("account_id", "=", account.id), ("reconciled", "=", False)]
-                ).reconcile()
+                helper(
+                    (payment_lines + staged_lines).filtered_domain(
+                        [("account_id", "=", account.id), ("reconciled", "=", False)]
+                    )
+                )
             staged_lines.move_id.matched_payment_ids = [Command.link(payment.id)]
         return True
 

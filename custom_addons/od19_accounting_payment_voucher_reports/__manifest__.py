@@ -10,6 +10,7 @@
         "account",
         "od19_thai_font_support",
         "od19_accounting_document_sequence",
+        "od19_accounting_features",
     ],
     "data": [
         "views/account_payment_views.xml",
