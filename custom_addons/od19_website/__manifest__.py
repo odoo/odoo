@@ -13,6 +13,7 @@
         "website_hr_recruitment",
         "portal",
         "mail",
+        "web_tour",
         "od19_announcement",
         "od19_meeting_room_booking",
         "od19_knowledge_enhanced",
@@ -44,6 +45,7 @@
         ],
         "web.assets_backend": [
             "od19_website/static/src/js/od19_portal_hotkey.js",
+            "od19_website/static/src/js/od19_shortcut_menu.js",
         ],
     },
     "images": ["static/description/icon.png"],
