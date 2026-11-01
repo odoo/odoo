@@ -103,9 +103,10 @@ graph TD
 - [ ] **หมายเหตุ (defect ที่พบระหว่างทาง, ยังไม่ปิด):** `od19_accounting_reporting` `TestAccountingReporting.test_company_report_uses_remaining_amount_to_invoice_for_partial_invoicing` fail (`276.0 != 138.0`) — ยืนยันว่า fail อยู่แล้วที่ HEAD ก่อนแก้ working tree (ไม่เกี่ยวกับ B1d); ต้องเปิดงานซ่อมแยก
 
 ### Task B2 — ปรับ branch naming ให้ตรง contract
-- [ ] **Objective:** ให้ทุก branch ใช้ prefix เดียว `feature/`
+- [x] **Objective:** ให้ทุก branch ใช้ prefix เดียว `feature/`
 - [ ] **Evidence:** `git branch -a` แสดงเฉพาะ `feature/*` + `19.0` (main)
-- [ ] **Steps:** rename `feat/od19-wave2b-vat-compliance`, `feat/od19-wave3-corporate-income-tax`, `feat/od19-document-pull`, `feat/od19-employee-shortcut-menu`, `codex/wave1-accounting-operational-closure`, `wave1-sales-contract-core`
+- [x] **Steps (local — ปิดแล้ว 2026-11-01):** rename 6 branch แล้ว → `feature/od19-wave2b-vat-compliance`, `feature/od19-wave3-corporate-income-tax`, `feature/od19-document-pull`, `feature/od19-employee-shortcut-menu`, `feature/wave1-accounting-operational-closure`, `feature/wave1-sales-contract-core`; `git branch` เหลือ `19.0` main + `feature/*` (+ `backup/wave3-pre-rewrite` เก็บเป็น backup โดยเจตนา)
+- [ ] **คงเหลือ (ต้อง push — รอผู้ใช้อนุมัติ):** remote 3 ตัวยังชื่อเดิม `origin/feat/od19-wave2b-vat-compliance`, `origin/feat/od19-wave3-corporate-income-tax`, `origin/feat/od19-employee-shortcut-menu` → ต้อง rename บน origin จึงจะครบ Evidence (`git branch -a`)
 
 ### Task B3 — Merge Wave 3 เข้า 19.0
 - [ ] **Objective:** รวม `feature/od19-wave3-corporate-income-tax` เข้า `19.0` ผ่าน PR
