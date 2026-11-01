@@ -78,6 +78,12 @@ class WebTourTour(models.Model):
         Only ``id`` / ``name`` of the menu and the consumption state are
         exposed so that the guide service can start the right tour when the
         user opens an application for the first time.
+
+        The consumption state is the core one: a guide tour is marked as seen
+        by ``web_tour.tour.consume``, which the web client calls when the user
+        reaches the last step of the tour. A tour that is left unfinished is
+        therefore still reported as ``consumed = False`` and is proposed again
+        the next time the application is opened.
         """
         IrModelData = self.env["ir.model.data"].sudo()
         result = []
@@ -94,12 +100,3 @@ class WebTourTour(models.Model):
                 "consumed": self.env.user.id in tour.user_consumed_ids.ids,
             })
         return result
-
-    @api.model
-    def od19_guide_mark_seen(self, tour_name):
-        """Remember that the guide tour was already shown to the current user."""
-        if self.env.user and self.env.user._is_internal():
-            tour = self.sudo().search([("name", "=", tour_name)], limit=1)
-            if tour:
-                tour.user_consumed_ids = [(4, self.env.user.id)]
-        return True
