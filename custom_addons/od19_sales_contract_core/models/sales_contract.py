@@ -55,6 +55,26 @@ class Od19SalesContract(models.Model):
         string="Sale Orders",
         help="Sale orders linked to this contract (used to compute consumption).",
     )
+    billing_line_ids = fields.One2many(
+        "od19.contract.billing.line",
+        "contract_id",
+        string="Billing Schedule",
+    )
+    billing_scheduled_amount = fields.Float(
+        compute="_compute_billing_totals",
+        store=True,
+        help="Sum of all planned installment amounts.",
+    )
+    billing_invoiced_amount = fields.Float(
+        compute="_compute_billing_totals",
+        store=True,
+        help="Sum of installment amounts already invoiced.",
+    )
+    billing_remaining_amount = fields.Float(
+        compute="_compute_billing_totals",
+        store=True,
+        help="Remaining amount still to be billed from the schedule.",
+    )
 
     @api.depends(
         "contract_activity_ids.amount_to_consume",
@@ -74,6 +94,35 @@ class Od19SalesContract(models.Model):
                 lambda order: order.state == "sale"
             )
             contract.consumed_from_orders = sum(orders.mapped("amount_untaxed"))
+
+    @api.depends(
+        "billing_line_ids.amount",
+        "billing_line_ids.state",
+        "limit_amount",
+    )
+    def _compute_billing_totals(self):
+        for contract in self:
+            scheduled = sum(contract.billing_line_ids.mapped("amount"))
+            invoiced = sum(
+                contract.billing_line_ids.filtered(
+                    lambda line: line.state == "invoiced"
+                ).mapped("amount")
+            )
+            contract.billing_scheduled_amount = scheduled
+            contract.billing_invoiced_amount = invoiced
+            contract.billing_remaining_amount = scheduled - invoiced
+
+    def action_create_next_billing_invoice(self):
+        """Create the invoice for the next un-invoiced installment."""
+        self.ensure_one()
+        next_line = self.billing_line_ids.filtered(
+            lambda line: line.state != "invoiced"
+        ).sorted("sequence")[:1]
+        if not next_line:
+            raise UserError(
+                _("All installments of this contract have already been invoiced.")
+            )
+        return next_line.action_create_invoice()
 
     @api.constrains("start_date", "end_date")
     def _check_dates(self):
