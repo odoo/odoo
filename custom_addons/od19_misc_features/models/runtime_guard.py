@@ -12,7 +12,7 @@ administrator.
 import logging
 import sys
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.release import version_info
 
 _logger = logging.getLogger(__name__)
@@ -90,8 +90,14 @@ class Od19RuntimeGuard(models.Model):
             "user_id": self.env.user.id,
         }
 
+    @api.private
     def action_collect(self):
         """Collect runtime info and write it onto the current record.
+
+        Server-side only: decorated with :func:`api.private` so a malformed
+        RPC call (e.g. nested ids or extra positional arguments) is rejected
+        with a clean ``AccessError`` instead of crashing inside ``write``.
+        The wizard calls this directly through Python, which is unaffected.
 
         :returns: ``self``
         """
