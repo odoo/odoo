@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from odoo.tests import common, tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestAutovacuum(common.TransactionCase):
     def test_api_autovacuum(self):
         Model = self.env['test_orm.autovacuumed']

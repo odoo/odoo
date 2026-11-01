@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import Command
 from odoo.exceptions import ValidationError
@@ -67,7 +66,7 @@ class IrModelAccessTest(TransactionCase):
         self.assertNotIn("base.language.export", result)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrModel(TransactionCase):
 
     @classmethod

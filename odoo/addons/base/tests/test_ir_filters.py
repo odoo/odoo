@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
 import logging
 
-from odoo import exceptions
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests.common import TransactionCase, ADMIN_USER_ID, tagged
 
 _logger = logging.getLogger(__name__)
+
 
 def noid(seq):
     """ Removes values that are not relevant for the test comparisons """
@@ -19,9 +18,10 @@ def noid(seq):
         d.pop('embedded_parent_res_id', None)
     return seq
 
+
 class FiltersCase(TransactionCaseWithUserDemo):
     def setUp(self):
-        super(FiltersCase, self).setUp()
+        super().setUp()
         self.USER_NG = self.env['res.users'].name_search('demo')[0]
         self.USER_ID = self.USER_NG[0]
 
@@ -30,7 +30,7 @@ class FiltersCase(TransactionCaseWithUserDemo):
         Model.create(args)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestGetFilters(FiltersCase):
 
     def test_own_filters(self):
@@ -103,7 +103,7 @@ class TestAllFilters(TransactionCase):
             except ValueError as e:
                 raise self.failureException("Test filter '%s' failed: %s" % (name, e)) from None
             except KeyError as e:
-                raise self.failureException("Test filter '%s' failed: field or aggregate %s does not exist"% (name, e)) from None
+                raise self.failureException("Test filter '%s' failed: field or aggregate %s does not exist" % (name, e)) from None
         elif domain:
             try:
                 self.env[model].with_context(context).search(domain, order=order)
@@ -128,7 +128,7 @@ class TestAllFilters(TransactionCase):
                 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestEmbeddedFilters(FiltersCase):
 
     def setUp(self):

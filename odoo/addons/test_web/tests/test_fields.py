@@ -3,7 +3,7 @@ from odoo.tests import Form, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class test_shared_cache(TransactionCaseWithUserDemo):
     def test_shared_cache_computed_field(self):
         # Test case: Check that the shared cache is not used if a compute_sudo stored field

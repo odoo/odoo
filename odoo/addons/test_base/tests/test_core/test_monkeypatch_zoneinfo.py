@@ -10,7 +10,7 @@ from odoo.tools.date_utils import all_timezones
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestTZ(TransactionCase):
 
     def test_tz_legacy(self):

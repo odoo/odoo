@@ -5,7 +5,7 @@ from werkzeug.urls import url_parse
 from odoo.tests.common import tagged, HttpCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestWebRedirect(HttpCase):
     def setUp(self):
         super().setUp()

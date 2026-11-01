@@ -6,7 +6,7 @@ from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRules(TransactionCase):
     @classmethod
     def setUpClass(cls):

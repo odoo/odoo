@@ -34,7 +34,7 @@ _stats_logger = logging.getLogger('odoo.tests.stats')
 SPECIAL_CHARACTERS = " ¥®°²Æçéðπ⁉€∇⓵▲☑♂♥✓➔『にㄅ㊀中한︸🌈🌍👌😀"
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TranslationToolsTestCase(BaseCase):
     def assertItemsEqual(self, a, b, msg=None):
         self.assertEqual(sorted(a), sorted(b), msg)
@@ -475,7 +475,7 @@ class TranslationToolsTestCase(BaseCase):
             self.assertEqual(get_label(), "Settings")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestLanguageInstall(TransactionCase):
     def test_language_install(self):
         fr = self.env['res.lang'].with_context(active_test=False).search([('code', '=', 'fr_FR')])
@@ -524,7 +524,7 @@ class TestTranslationExport(TransactionCase):
         self.assertEqual(sources, ['g'])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestTranslation(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -784,7 +784,7 @@ class TestTranslation(TransactionCase):
     #         country_3 = Country.create({'name': 'Odoo'})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestTranslationWrite(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1136,7 +1136,7 @@ class TestTranslationWrite(TransactionCase):
         self.assertEqual(info['models'][model._name]["fields"]['name']['string'], LABEL)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestXMLTranslation(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -1897,7 +1897,7 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view1_us.arch_db, xml % ('Soccer', 'Clbus', 'Ranking'))  # fr_FR should fall back to en_US
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestXMLDuplicateTranslations(TransactionCase):
     """
     duplicate translations are not supported
@@ -2024,7 +2024,7 @@ class TestXMLDuplicateTranslations(TransactionCase):
         self.assertEqual(view1_en_copy.with_context(lang='es_ES').arch_db, self.xml % ('un estudiante', 'una estudiante'))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestHTMLTranslation(TransactionCase):
     def test_write_non_existing(self):
         html = '''
@@ -3035,7 +3035,7 @@ class TestLanguageInstallPerformance(TransactionCase):
         _stats_logger.info("installed language fr_BE in %.3fs", t1 - t0)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestTranslationTrigramIndexPatterns(BaseCase):
     def test_value_conversion(self):
         sc = SPECIAL_CHARACTERS

@@ -6,7 +6,7 @@ from odoo.tools.translate import FIELD_TRANSLATE
 from odoo.addons.base.models.ir_model import field_xmlid, model_xmlid, selection_xmlid
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestReflection(common.TransactionCase):
     """ Test the reflection into 'ir.model', 'ir.model.fields', etc. """
 

@@ -13,7 +13,7 @@ from odoo.addons.base.tests.files import PNG_RAW
 img_open = tools.binary_to_image
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestImage(TransactionCase):
     """Tests for the different image tools helpers."""
     def setUp(self):

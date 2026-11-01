@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import email.message
@@ -9,7 +8,6 @@ from unittest.mock import patch
 
 import psycopg2.errors
 
-from odoo import tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.base.tests import mail_examples
 from odoo.addons.base.tests.common import MockSmtplibCase
@@ -37,7 +35,7 @@ class _FakeSMTP:
 
 
 @tagged('mail_server')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class EmailConfigCase(TransactionCase):
 
     @patch.dict(config.options, {"email_from": "settings@example.com"})
@@ -51,7 +49,7 @@ class EmailConfigCase(TransactionCase):
 
 
 @tagged('mail_server')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
     @classmethod

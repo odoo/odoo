@@ -6,7 +6,7 @@ from odoo.tests import common, tagged
 from odoo.tools.xml_utils import _check_with_xsd
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestLXML(common.TransactionCase):
     def test_lxml_import_from_filestore(self):
         resolver_schema_int = b"""

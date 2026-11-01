@@ -6,7 +6,7 @@ from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import SQL, mute_logger, sql
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSQL(BaseCase):
 
     def test_sql_empty(self):
@@ -193,7 +193,7 @@ class TestSQL(BaseCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSqlTools(TransactionCase):
 
     def test_add_constraint(self):
@@ -228,6 +228,7 @@ class TestSqlTools(TransactionCase):
         self.assertEqual(db_comment, comment)
 
 
+@tagged('at_install', '-post_install')
 class TestFormatQuery(BaseCase):
 
     def test_empty(self):

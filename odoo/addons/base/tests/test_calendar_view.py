@@ -4,7 +4,7 @@ from odoo.tests.common import tagged
 from odoo.addons.base.tests.test_ir_ui_view import ViewCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCalendarView(ViewCase):
     def test_field_then_popover(self):
         self.assertValid(

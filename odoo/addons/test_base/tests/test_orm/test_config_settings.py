@@ -3,12 +3,13 @@ from datetime import datetime
 from freezegun import freeze_time
 
 from odoo.fields import Datetime
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 # the res_config_write_value for res_config_setting_values to simulate a never customized setting
 DEFAULT_SETTING = object()
 
 
+@tagged('at_install', '-post_install')
 class TestConfigSettings(TransactionCase):
     """Test res.config.settings functionality
 
