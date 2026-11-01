@@ -49,6 +49,9 @@ class ClaimReport(models.TransientModel):
     )
     p_Customer = fields.Many2many(
         "res.partner",
+        relation="claim_report_p_customer_rel",
+        column1="report_id",
+        column2="partner_id",
         string="Customer (Specific)",
         domain="[('customer', '=', True)]",
     )
