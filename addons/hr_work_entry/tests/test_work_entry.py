@@ -477,6 +477,13 @@ class TestWorkEntry(TestWorkEntryBase):
         self.assertTrue(export['url'])
         self.assertEqual(export['name'], 'Download Export')
 
+    def test_export_work_entries_duration_in_decimal_hours(self):
+        export = self.env['hr.export.work.entries'].create({})
+        duration_column = export._get_columns(self.env.company)[-1][1]
+        # 7h36
+        self.assertEqual(duration_column({'we_collection': {'duration': 7.6 * 3600}}), '7.6')
+        self.assertEqual(duration_column({'we_collection': {'duration': 8 * 3600}}), '8.0')
+
     def test_attendance_display_name_mixed_time_types(self):
         """
         Test that computing display_name for a batch of attendances with and without
