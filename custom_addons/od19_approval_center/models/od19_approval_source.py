@@ -1,3 +1,5 @@
+import datetime
+
 from odoo import fields, models
 
 
@@ -127,3 +129,57 @@ class Od19ApprovalSource(models.Model):
             elif current < my_index:
                 buckets["incoming"].append(record)
         return buckets
+
+    def _od19_classify_for_requester(self):
+        """Return the 4 requester buckets for the current user."""
+        self.ensure_one()
+        buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        if not self._od19_ready():
+            return buckets
+        if not self._od19_field_ok(self.env[self.model_name], self.requester_field):
+            return buckets
+        me_id = self._od19_me_ids(self.requester_kind)
+        if not me_id:
+            return buckets
+        steps = self.step_ids.sorted("sequence")
+        rejected = self._od19_csv(self.rejected_states)
+        success = self._od19_csv(self.success_states)
+        main_field = self._od19_main_state_field(steps)
+        records = self.env[self.model_name].sudo().search(
+            [(self.requester_field, "=", me_id)], limit=self.OD19_MAX_RECORDS
+        )
+        for record in records:
+            state_value = record[main_field] if self._od19_field_ok(record, main_field) else False
+            if state_value in rejected:
+                buckets["rejected"].append(record)
+            elif state_value in success:
+                buckets["done"].append(record)
+            else:
+                current = self._od19_current_index(record, steps)
+                if current is not None and current > 0:
+                    buckets["incoming"].append(record)
+                else:
+                    buckets["pending"].append(record)
+        return buckets
+
+    def _od19_age_days(self, record):
+        """Whole days between the submitted date and now (0 if unknown)."""
+        field_name = self.submitted_date_field or "create_date"
+        if not self._od19_field_ok(record, field_name):
+            field_name = "create_date"
+        start = record[field_name]
+        if not start:
+            return 0
+        if isinstance(start, datetime.date) and not isinstance(start, datetime.datetime):
+            start = datetime.datetime.combine(start, datetime.time.min)
+        delta = fields.Datetime.now() - start
+        return max(int(delta.total_seconds() // 86400), 0)
+
+    def _od19_sla_state(self, age_days):
+        if not self.sla_days:
+            return "normal"
+        if age_days >= 2 * self.sla_days:
+            return "over"
+        if age_days >= self.sla_days:
+            return "warning"
+        return "normal"

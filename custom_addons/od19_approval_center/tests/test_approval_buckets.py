@@ -1,3 +1,4 @@
+import datetime
 import unittest
 
 from odoo import fields
@@ -161,3 +162,63 @@ class TestIncomingBucket(TransactionCase):
         # The level 1 approver is the actionable one.
         l1 = self.source.with_user(first)._od19_classify_for_approver()
         self.assertIn(self.expense.id, [r.id for r in l1["pending"]])
+
+
+@tagged("post_install", "-at_install")
+class TestRequesterAndAge(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # hr.expense requires a linked employee and a non-zero amount.
+        cls.employee = cls.env["hr.employee"].create({
+            "name": "Requester Employee",
+            "user_id": cls.env.user.id,
+        })
+        cls.source = cls.env["od19.approval.source"].create({
+            "name": "Age Source",
+            "model_id": cls.env["ir.model"]._get("hr.expense").id,
+            "requester_field": "create_uid",
+            "requester_kind": "user",
+            "submitted_date_field": "create_date",
+            "success_states": "approved",
+            "rejected_states": "refused",
+            "sla_days": 3,
+            "step_ids": [(0, 0, {
+                "sequence": 10, "label": "L1", "state_field": "state",
+                "state_value": "submitted", "approver_field": "create_uid",
+                "approver_kind": "user",
+            })],
+        })
+
+    def test_requester_sees_own_pending(self):
+        expense = self.env["hr.expense"].create({
+            "name": "My Expense",
+            "employee_id": self.employee.id,
+            "total_amount_currency": 100.0,
+            "total_amount": 100.0,
+        })
+        expense.write({"state": "submitted"})
+        buckets = self.source.with_user(self.env.user)._od19_classify_for_requester()
+        self.assertIn(expense.id, [r.id for r in buckets["pending"]])
+
+    def test_age_days_from_submitted_field(self):
+        expense = self.env["hr.expense"].create({
+            "name": "Old",
+            "employee_id": self.employee.id,
+            "total_amount_currency": 100.0,
+            "total_amount": 100.0,
+        })
+        expense.write({"state": "submitted"})
+        # The ORM strips log-access fields (create_date) from create()/write(),
+        # so the submitted date must be set directly in SQL.
+        self.env.cr.execute(
+            "UPDATE hr_expense SET create_date = %s WHERE id = %s",
+            (fields.Datetime.now() - datetime.timedelta(days=5), expense.id),
+        )
+        expense.invalidate_recordset(["create_date"])
+        self.assertEqual(self.source._od19_age_days(expense), 5)
+
+    def test_sla_state_thresholds(self):
+        self.assertEqual(self.source._od19_sla_state(1), "normal")
+        self.assertEqual(self.source._od19_sla_state(3), "warning")
+        self.assertEqual(self.source._od19_sla_state(6), "over")
