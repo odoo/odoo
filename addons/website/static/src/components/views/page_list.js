@@ -88,8 +88,11 @@ export class PageListController extends listView.Controller {
         this.dialogService.add(DeletePageDialog, {
             resIds: pageIds,
             resModel: this.props.resModel,
-            onDelete: () => {
-                this.model.root.deleteRecords();
+            onDelete: async () => {
+                await this.orm.unlink(this.props.resModel, pageIds, {
+                    context: { ...this.props.context, website_url_dependencies_confirmed: true },
+                });
+                await this.model.load();
             },
             hasNewPageTemplate: newPageTemplateRecords.some(
                 (record) => record.is_new_page_template

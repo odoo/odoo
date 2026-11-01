@@ -22,6 +22,27 @@ class Website(models.Model):
         return {}
 
     @api.model
+    def search_url_dependencies(self, res_model, res_ids):
+        dependencies = super().search_url_dependencies(res_model, res_ids)
+        if not issubclass(self.env.registry[res_model], self.env.registry['website.searchable.mixin']):
+            return dependencies
+        records = self.env[res_model].browse([int(res_id) for res_id in res_ids])
+        answers_sudo = records._get_chatbot_redirect_answers()
+        if not answers_sudo:
+            return dependencies
+        model_display_name = self.env['ir.model']._display_name_for(['chatbot.script.answer'])[0]['display_name']
+        field_string = answers_sudo.fields_get(['redirect_record_ref'])['redirect_record_ref']['string']
+        dependencies.setdefault(model_display_name, [])
+        dependencies[model_display_name] += [{
+            'field_name': field_string,
+            'record_name': f"{answer.chatbot_script_id.title}: {answer.display_name}",
+            'link': f'/odoo/chatbot.script/{answer.chatbot_script_id.id}',
+            'model_name': model_display_name,
+            'url': answer.redirect_record_ref.website_url,
+        } for answer in answers_sudo]
+        return dependencies
+
+    @api.model
     def _get_settings_to_copy_onto_new_default_website(self):
         """ Provides a list of settings that should always be set on the default
         website. When the default website changes, a check is performed. If some
