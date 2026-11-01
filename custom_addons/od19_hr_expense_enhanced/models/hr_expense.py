@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class HrExpense(models.Model):
@@ -217,3 +217,86 @@ class HrExpense(models.Model):
         self.od19_delegated_by_id = False
         self.od19_delegation_date = False
         return True
+
+    # ------------------------------------------------------------------
+    # Supporting document type - payment certificate in lieu of receipt
+    # (ใบรับรองแทนใบเสร็จรับเงิน)
+    # ------------------------------------------------------------------
+    # A payment certificate is used when the payee cannot issue a receipt
+    # (e.g. a small cash purchase from a non-VAT-registered person). The
+    # document carries no input VAT, so the whole amount is booked as an
+    # expense and no input tax credit may be claimed.
+    od19_document_type = fields.Selection(
+        [
+            ('tax_invoice', 'ใบกำกับภาษี / Tax Invoice'),
+            ('receipt', 'ใบเสร็จรับเงิน / Receipt'),
+            ('payment_certificate',
+             'ใบรับรองแทนใบเสร็จรับเงิน / Payment Certificate'),
+        ],
+        string='ประเภทเอกสาร / Document Type',
+        default='tax_invoice',
+        required=True,
+        tracking=True,
+        help=(
+            'Thai supporting-document type. Choose "ใบรับรองแทนใบเสร็จรับเงิน" '
+            'when the payee cannot issue a receipt: the input VAT is then not '
+            'claimable and the whole amount is booked as an expense.'
+        ),
+    )
+    od19_certificate_number = fields.Char(
+        string='เลขที่ใบรับรอง / Certificate No',
+        copy=False,
+        help='Running number printed on the payment certificate.',
+    )
+    od19_vat_creditable = fields.Boolean(
+        string='ภาษีซื้อหักได้ / Input VAT Creditable',
+        compute='_compute_od19_vat_creditable',
+        store=True,
+        help='Unticked for a payment certificate: the payee does not charge '
+             'VAT, so no input tax can be claimed against output VAT.',
+    )
+
+    @api.depends('od19_document_type')
+    def _compute_od19_vat_creditable(self):
+        for expense in self:
+            expense.od19_vat_creditable = (
+                expense.od19_document_type != 'payment_certificate'
+            )
+
+    @api.depends('product_id', 'company_id', 'od19_document_type')
+    def _compute_tax_ids(self):
+        """Default taxes come from the product.
+
+        A payment certificate in lieu of receipt
+        (ใบรับรองแทนใบเสร็จรับเงิน) never carries VAT, so no input tax is
+        applied even when the product has default purchase taxes.
+        """
+        for expense in self:
+            if not expense.company_id:
+                continue
+            if expense.od19_document_type == 'payment_certificate':
+                expense.tax_ids = False
+            else:
+                expense.tax_ids = (
+                    expense.product_id.supplier_taxes_id.filtered_domain(
+                        self.env['account.tax']._check_company_domain(
+                            expense.company_id
+                        )
+                    )
+                )
+
+    @api.onchange('od19_document_type')
+    def _onchange_od19_document_type(self):
+        """A payment certificate never carries VAT, so drop any tax."""
+        if self.od19_document_type == 'payment_certificate':
+            self.tax_ids = [(5, 0, 0)]
+
+    @api.constrains('od19_document_type', 'tax_ids')
+    def _check_od19_payment_certificate_has_no_tax(self):
+        for expense in self:
+            if expense.od19_document_type == 'payment_certificate' and expense.tax_ids:
+                raise ValidationError(_(
+                    'A payment certificate in lieu of receipt '
+                    '(ใบรับรองแทนใบเสร็จรับเงิน) cannot carry VAT. '
+                    'Please remove the taxes or choose another document type.'
+                ))

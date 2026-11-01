@@ -75,6 +75,54 @@ class PettyCashTransaction(models.Model):
     )
     note = fields.Text(string="Notes")
 
+    # ------------------------------------------------------------------
+    # Supporting document type - payment certificate in lieu of receipt
+    # (ใบรับรองแทนใบเสร็จรับเงิน)
+    # ------------------------------------------------------------------
+    # Petty cash disbursements usually go to payees that cannot issue a
+    # receipt. A payment certificate documents the payment; it carries no
+    # input VAT, so the whole amount is booked as an expense.
+    od19_document_type = fields.Selection(
+        [
+            ("tax_invoice", "ใบกำกับภาษี / Tax Invoice"),
+            ("receipt", "ใบเสร็จรับเงิน / Receipt"),
+            ("payment_certificate",
+             "ใบรับรองแทนใบเสร็จรับเงิน / Payment Certificate"),
+        ],
+        string="ประเภทเอกสาร / Document Type",
+        default="tax_invoice",
+        required=True,
+        tracking=True,
+        help=(
+            'Thai supporting-document type. Choose "ใบรับรองแทนใบเสร็จรับเงิน" '
+            'when the payee cannot issue a receipt: there is no input VAT to '
+            'claim and the whole amount is booked as an expense.'
+        ),
+    )
+    od19_certificate_number = fields.Char(
+        string="เลขที่ใบรับรอง / Certificate No",
+        copy=False,
+        help="Running number printed on the payment certificate.",
+    )
+    od19_payee_name = fields.Char(
+        string="ผู้รับเงิน / Payee",
+        help="Person who received the petty cash, printed on the certificate.",
+    )
+    od19_vat_creditable = fields.Boolean(
+        string="ภาษีซื้อหักได้ / Input VAT Creditable",
+        compute="_compute_od19_vat_creditable",
+        store=True,
+        help="Unticked for a payment certificate: the payee does not charge "
+             "VAT, so no input tax can be claimed against output VAT.",
+    )
+
+    @api.depends("od19_document_type")
+    def _compute_od19_vat_creditable(self):
+        for transaction in self:
+            transaction.od19_vat_creditable = (
+                transaction.od19_document_type != "payment_certificate"
+            )
+
     @api.constrains("amount")
     def _check_amount(self):
         for transaction in self:

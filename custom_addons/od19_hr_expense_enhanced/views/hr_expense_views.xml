@@ -17,6 +17,10 @@
             </field>
 
             <xpath expr="//header" position="inside">
+                <button name="%(action_report_payment_certificate)d"
+                        type="action"
+                        string="พิมพ์ใบรับรองแทนใบเสร็จ"
+                        invisible="od19_document_type != 'payment_certificate'"/>
                 <button name="action_receive_cash"
                         string="Receive Cash"
                         type="object"
@@ -61,6 +65,12 @@
             </xpath>
 
             <xpath expr="//sheet" position="inside">
+                <group string="เอกสารประกอบ / Document" col="4">
+                    <field name="od19_document_type"/>
+                    <field name="od19_certificate_number"
+                           invisible="od19_document_type != 'payment_certificate'"/>
+                    <field name="od19_vat_creditable"/>
+                </group>
                 <group string="Delegation / การมอบหมาย" col="3">
                     <field name="od19_delegate_approver_id"/>
                     <field name="od19_delegated_by_id" readonly="1"/>
@@ -84,6 +94,8 @@
                        decoration-warning="od19_cash_state == 'used'"
                        decoration-muted="od19_cash_state == 'returned'"
                        optional="show"/>
+                <field name="od19_document_type" optional="show"/>
+                <field name="od19_vat_creditable" optional="hide"/>
             </xpath>
             <xpath expr="//list" position="inside">
                 <button name="action_open_xlsx_export_wizard"
