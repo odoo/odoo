@@ -1,4 +1,4 @@
-﻿﻿<#
+﻿<#
 .SYNOPSIS
     รัน unit test ของโมดูล Odoo 19 บน data-dir แยก (isolated) เพื่อผลลัพธ์ที่ deterministic
 
