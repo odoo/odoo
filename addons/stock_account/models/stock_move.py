@@ -781,14 +781,6 @@ class StockMove(models.Model):
         self.ensure_one()
         return self.restrict_partner_id and self.restrict_partner_id != self.company_id.partner_id
 
-    def _is_returned(self, valued_type):
-        self.ensure_one()
-        if valued_type == 'in':
-            return self.location_id and self.location_id.usage == 'customer'   # goods returned from customer
-        if valued_type == 'out':
-            return self.location_dest_id and self.location_dest_id.usage == 'supplier'
-        return bool(self.picking_id.return_picking_id)
-
     def _clear_journal_entries(self):
         account_moves = self.account_move_id
         account_moves.sudo().button_draft()
