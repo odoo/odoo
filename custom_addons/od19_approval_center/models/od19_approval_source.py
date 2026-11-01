@@ -78,8 +78,14 @@ class Od19ApprovalSource(models.Model):
         return current
 
     def _od19_index_of_my_step(self, record, steps):
-        """Index of the first step where the current user is the approver, or None."""
+        """Index of the first step this user acts on, or None.
+
+        A step with no ``approver_field`` is a shared pool step: it is the
+        current user's step for every internal user (design D10).
+        """
         for index, step in enumerate(steps):
+            if not step.approver_field:
+                return index
             if self._od19_is_approver_at(record, step):
                 return index
         return None

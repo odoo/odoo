@@ -390,3 +390,51 @@ class TestMultiStepSameApprover(TransactionCase):
         })
         buckets = self.source.with_user(self.env.user)._od19_classify_for_approver()
         self.assertIn(expense.id, [r.id for r in buckets["pending"]])
+
+
+@tagged("post_install", "-at_install")
+class TestSharedPoolStep(TransactionCase):
+    """A step without approver_field is actionable by every internal user."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        expense_model = cls.env.get("hr.expense")
+        if expense_model is None or "state" not in expense_model._fields:
+            raise unittest.SkipTest("Requires hr.expense with a state field")
+        # hr.expense requires a linked employee and a non-zero amount.
+        cls.employee = cls.env["hr.employee"].create({
+            "name": "Pool Employee",
+            "user_id": cls.env.user.id,
+        })
+
+    def test_pool_step_is_pending_for_anyone(self):
+        source = self.env["od19.approval.source"].create({
+            "name": "Pool Source",
+            "model_id": self.env["ir.model"]._get("hr.expense").id,
+            "success_states": "approved",
+            "rejected_states": "refused",
+            "step_ids": [(0, 0, {
+                "sequence": 10, "label": "Any approver", "state_field": "state",
+                "state_value": "submitted",
+            })],
+        })
+        expense = self.env["hr.expense"].create({
+            "name": "Pool doc",
+            "employee_id": self.employee.id,
+            "total_amount_currency": 100.0,
+            "total_amount": 100.0,
+        })
+        expense.write({"state": "submitted"})
+        # The source is readable only for the Approval Center group.
+        approver_group = self.env.ref("od19_approval_center.group_approval_admin")
+        internal_group = self.env.ref("base.group_user")
+        other = self.env["res.users"].create({
+            "name": "Pool Z", "login": "pool_z",
+            "group_ids": [
+                (4, internal_group.id),
+                (4, approver_group.id),
+            ],
+        })
+        buckets = source.with_user(other)._od19_classify_for_approver()
+        self.assertIn(expense.id, [r.id for r in buckets["pending"]])
