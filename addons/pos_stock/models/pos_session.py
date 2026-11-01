@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from odoo import Command, _, api, fields, models
-from odoo.tools import float_compare, split_every
+from odoo.tools import split_every
 from odoo.tools.constants import IN_MAX
 
 
@@ -75,21 +75,6 @@ class PosSession(models.Model):
         for location_dest_id, lines in lines_grouped_by_dest_location.items():
             pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type)
             pickings.write({'pos_session_id': self.id, 'origin': self.name})
-
-    def _get_rounding_difference_vals(self, amount, amount_converted):
-        if self.config_id.cash_rounding:
-            partial_args = {
-                'name': 'Rounding line',
-                'move_id': self.move_id.id,
-            }
-            if float_compare(0.0, amount, precision_rounding=self.currency_id.rounding) > 0:    # loss
-                partial_args['account_id'] = self.config_id.rounding_method.loss_account_id.id
-                return self._debit_amounts(partial_args, -amount, -amount_converted)
-
-            if float_compare(0.0, amount, precision_rounding=self.currency_id.rounding) < 0:   # profit
-                partial_args['account_id'] = self.config_id.rounding_method.profit_account_id.id
-                return self._credit_amounts(partial_args, amount, amount_converted)
-        return None
 
     def _create_stock_valuation_lines(self, data):
         MoveLine = data.get('MoveLine')
