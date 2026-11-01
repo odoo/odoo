@@ -3,7 +3,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import SUPERUSER_ID, api, Command, fields, models, _
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError
 
 
@@ -240,7 +240,6 @@ class PurchaseOrderLine(models.Model):
         self.ensure_one()
         order = self.order_id
         price_unit = self.price_unit_discounted
-        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if self.tax_ids:
             qty = self.product_qty or 1
             price_unit = self.tax_ids.compute_all(
@@ -259,7 +258,7 @@ class PurchaseOrderLine(models.Model):
             conversion_date = self.env.context.get('conversion_date', self.date_order) or fields.Date.today()
             price_unit = order.currency_id._convert(
                 price_unit, order.company_id.currency_id, self.company_id, conversion_date, round=False)
-        return float_round(price_unit, precision_digits=price_unit_prec)
+        return price_unit
 
     def _get_qty_procurement(self):
         self.ensure_one()
@@ -310,6 +309,7 @@ class PurchaseOrderLine(models.Model):
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
+            'never_product_template_attribute_value_ids': self.product_no_variant_attribute_value_ids,
             'sequence': self.sequence,
         }
 

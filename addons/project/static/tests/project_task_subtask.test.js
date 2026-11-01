@@ -77,7 +77,7 @@ beforeEach(() => {
             subtask_count: 0,
             child_ids: [],
             state: "01_in_progress",
-            user_ids: [7],
+            user_ids: [7, 8],
         },
         {
             id: 8,
@@ -161,6 +161,11 @@ test("project.task (kanban): check subtask list", async () => {
     expect(".subtask_name_col").toHaveCount(3, {
         message:
             "Each of the list's rows should display the subtask's name, thus we are looking for 3 in total",
+    });
+    expect(
+        ".subtask_list_row:has(.subtask_name_col:contains('Task 7 (Project 1)')) .subtask_user_widget_col img.o_m2m_avatar"
+    ).toHaveCount(2, {
+        message: "All inherited assignees should be displayed on the subtask kanban row",
     });
 
     await click(".subtask_list_button");

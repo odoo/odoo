@@ -2054,7 +2054,7 @@
                                     <record id="tax_report_15_balance_rounded" model="account.report.expression">
                                         <field name="label">balance_rounded</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">box_15.balance_from_tags</field>
+                                        <field name="formula">box_15.balance_from_tags - box_19.balance_negative - box_20.balance_negative</field>
                                         <field name="subformula">round(0)</field>
                                     </record>
                                     <record id="tax_report_15_balance_from_tags" model="account.report.expression">
@@ -2142,6 +2142,8 @@
                                 <field name="name">16 - Total gross VAT due</field>
                                 <field name="name@fr">16 - Total de la TVA brute due</field>
                                 <field name="code">box_16</field>
+                                <!-- Do not remove: deletes the `balance` expression created by the former aggregation_formula shortcut (no xmlid), needed to upgrade older databases -->
+                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_16_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2227,6 +2229,12 @@
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">19</field>
                                     </record>
+                                    <record id="tax_report_19_balance_negative" model="account.report.expression">
+                                        <field name="label">balance_negative</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_19.balance_rounded</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
+                                    </record>
                                 </field>
                             </record>
                             <record id="tax_report_20" model="account.report.line">
@@ -2250,6 +2258,12 @@
                                         <field name="label">balance_from_tags</field>
                                         <field name="engine">tax_tags</field>
                                         <field name="formula">20</field>
+                                    </record>
+                                    <record id="tax_report_20_balance_negative" model="account.report.expression">
+                                        <field name="label">balance_negative</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">box_20.balance_rounded</field>
+                                        <field name="subformula">if_below(EUR(0))</field>
                                     </record>
                                 </field>
                             </record>
@@ -2353,6 +2367,8 @@
                                 <field name="name">23 - Total deductible VAT</field>
                                 <field name="name@fr">23 - Total TVA déductible</field>
                                 <field name="code">box_23</field>
+                                <!-- Do not remove: deletes the `balance` expression created by the former aggregation_formula shortcut (no xmlid), needed to upgrade older databases -->
+                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_23_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2502,6 +2518,8 @@
                                 <field name="name">Total</field>
                                 <field name="name@fr">Total</field>
                                 <field name="code">box_TIC_total</field>
+                                <!-- Do not remove: deletes the `balance` expression created by the former aggregation_formula shortcut (no xmlid), needed to upgrade older databases -->
+                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_TIC_total_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2593,6 +2611,8 @@
                                 <field name="name">X4</field>
                                 <field name="name@fr">X4</field>
                                 <field name="code">box_X4</field>
+                                <!-- Do not remove: deletes the `balance` expression created by the former aggregation_formula shortcut (no xmlid), needed to upgrade older databases -->
+                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_X4_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2612,6 +2632,8 @@
                                 <field name="name">Y1</field>
                                 <field name="name@fr">Y1</field>
                                 <field name="code">box_Y1</field>
+                                <!-- Do not remove: deletes the `balance` expression created by the former aggregation_formula shortcut (no xmlid), needed to upgrade older databases -->
+                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_Y1_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2625,6 +2647,8 @@
                                 <field name="name">Y2</field>
                                 <field name="name@fr">Y2</field>
                                 <field name="code">box_Y2</field>
+                                <!-- Do not remove: deletes the `balance` expression created by the former aggregation_formula shortcut (no xmlid), needed to upgrade older databases -->
+                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_Y2_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2638,6 +2662,8 @@
                                 <field name="name">Y3</field>
                                 <field name="name@fr">Y3</field>
                                 <field name="code">box_Y3</field>
+                                <!-- Do not remove: deletes the `balance` expression created by the former aggregation_formula shortcut (no xmlid), needed to upgrade older databases -->
+                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_Y3_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2735,6 +2761,8 @@
                                 <field name="name">Z4</field>
                                 <field name="name@fr">Z4</field>
                                 <field name="code">box_Z4</field>
+                                <!-- Do not remove: deletes the `balance` expression created by the former aggregation_formula shortcut (no xmlid), needed to upgrade older databases -->
+                                <field name="aggregation_formula"></field>
                                 <field name="expression_ids">
                                     <record id="tax_report_Z4_formula" model="account.report.expression">
                                         <field name="label">balance</field>
@@ -2885,6 +2913,8 @@
                         <field name="name">32 - Total payable</field>
                         <field name="name@fr">32 - Total à payer</field>
                         <field name="code">box_32</field>
+                        <!-- Do not remove: deletes the `balance` expression created by the former aggregation_formula shortcut (no xmlid), needed to upgrade older databases -->
+                        <field name="aggregation_formula"></field>
                         <field name="expression_ids">
                             <record id="tax_report_32_formula" model="account.report.expression">
                                 <field name="label">balance</field>

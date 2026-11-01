@@ -220,9 +220,16 @@ class Survey(http.Controller):
 
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
 
-        if answer_from_cookie and access_data['validity_code'] in ('answer_wrong_user', 'token_wrong'):
+        if answer_from_cookie and (
+            access_data['validity_code'] in ('answer_wrong_user', 'token_wrong')
+            or (access_data['survey_sudo'].session_state
+                and access_data['answer_sudo'].is_session_answer
+                and access_data['answer_sudo'].state == 'done')
+        ):
             # If the cookie had been generated for another user or does not correspond to any existing answer object
             # (probably because it has been deleted), ignore it and redo the check.
+            # Same if it is a leftover of a previous run of the session: a session answer is only marked
+            # done when the host ends its run, so it cannot belong to the run currently open.
             # The cookie will be replaced by a legit value when resolving the URL, so we don't clean it further here.
             access_data = self._get_access_data(survey_token, None, ensure_token=False)
 
@@ -607,6 +614,10 @@ class Survey(http.Controller):
                         answer_sudo._mark_done()
 
             answer_sudo.last_displayed_page_id = page_or_question_id
+
+        # presence is used to check gamification challenges
+        if user := answer_sudo.partner_id.user_ids[:1]:
+            request.env['mail.presence']._update_presence(user, inactivity_period=0)
 
         return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo)
 

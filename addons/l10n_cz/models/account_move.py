@@ -22,3 +22,6 @@ class AccountMove(models.Model):
 
     def _get_invoice_currency_rate_date(self):
         return (self.country_code == 'CZ' and self.taxable_supply_date) or super()._get_invoice_currency_rate_date()
+
+    def _get_default_currency_rate_date(self):
+        return (self.country_code == 'CZ' and self.taxable_supply_date) or super()._get_default_currency_rate_date()

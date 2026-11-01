@@ -300,6 +300,9 @@ export class FormatPlugin extends Plugin {
     }
 
     formatSelection(formatName, options) {
+        // Toggle the format based on the selection if applyStyle is not given.
+        const applyStyle = options?.applyStyle ?? !this.isSelectionFormat(formatName);
+        options = { ...options, applyStyle };
         this.dispatchTo("format_selection_handlers", formatName, options);
         if (this._formatSelection(formatName, options) && !options?.removeFormat) {
             this.dependencies.history.addStep();
@@ -321,9 +324,6 @@ export class FormatPlugin extends Plugin {
         this.dependencies.selection.selectAroundNonEditable();
         // note: does it work if selection is in opposite direction?
         const selection = this.dependencies.split.splitSelection();
-        if (typeof applyStyle === "undefined") {
-            applyStyle = !this.isSelectionFormat(formatName);
-        }
 
         let zws;
         if (selection.isCollapsed) {
@@ -343,18 +343,32 @@ export class FormatPlugin extends Plugin {
         const cursor = this.dependencies.selection.preserveSelection();
         const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
         const selectedTextNodes = /** @type { Text[] } **/ (
-            this.dependencies.selection
-                .getTargetedNodes()
-                .filter(
-                    (n) =>
-                        (!systemNodesSelector || !closestElement(n, systemNodesSelector)) &&
-                        this.dependencies.selection.areNodeContentsFullySelected(n) &&
-                        ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
-                            (n.nodeName === "BR" &&
-                                (isFakeLineBreak(n) ||
-                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
-                        isContentEditable(n)
-                )
+            this.dependencies.selection.getTargetedNodes().filter((n) => {
+                if (systemNodesSelector && closestElement(n, systemNodesSelector)) {
+                    return false;
+                }
+                if (!this.dependencies.selection.areNodeContentsFullySelected(n)) {
+                    return false;
+                }
+
+                if (n.nodeName === "T") {
+                    return true;
+                }
+
+                if (!isContentEditable(n)) {
+                    return false;
+                }
+
+                if (isTextNode(n)) {
+                    return isVisibleTextNode(n) || isZWS(n);
+                }
+                if (n.nodeName === "BR") {
+                    return (
+                        isFakeLineBreak(n) || previousLeaf(n, closestBlock(n))?.nodeName === "BR"
+                    );
+                }
+                return false;
+            })
         );
         const unformattedTextNodes = selectedTextNodes.filter((n) => {
             if (!(this.checkPredicates("is_formattable_node_predicates", n) ?? true)) {
@@ -375,7 +389,12 @@ export class FormatPlugin extends Plugin {
             this.dependencies.selection
                 .getTargetedNodes()
                 .map((node) => closestElement(node, PROTECTED_QWEB_SELECTOR))
-                .filter((node) => node && this.dependencies.selection.isNodeEditable(node))
+                .filter(
+                    (node) =>
+                        node &&
+                        this.dependencies.selection.isNodeEditable(node) &&
+                        node.nodeName !== "T"
+                )
         );
         const formatSpec = formatsSpecs[formatName];
         for (const node of unformattedTextNodes) {
@@ -480,7 +499,7 @@ export class FormatPlugin extends Plugin {
                             formatProps
                         );
                     }
-                } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
+                } else if (formatName !== "fontSize" || formatProps.size) {
                     formatSpec.addStyle(
                         getOrCreateSpan(node, inlineAncestors, cursor),
                         formatProps
@@ -770,7 +789,7 @@ function getOrCreateSpan(node, ancestors, cursor) {
         return span;
     }
 }
-function removeFormat(node, formatSpec, cursor) {
+export function removeFormat(node, formatSpec, cursor) {
     const document = node.ownerDocument;
     node = closestElement(node);
     if (formatSpec.hasStyle(node)) {

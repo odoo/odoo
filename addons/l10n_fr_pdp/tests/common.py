@@ -30,6 +30,14 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
     TEST_PAYMENT_DATE = fields.Date.from_string('2025-02-15')
 
     @classmethod
+    def get_default_groups(cls):
+        # needed to create sale orders in test_export_downpayments_partner_fr
+        groups = super().get_default_groups()
+        if cls.env['ir.module.module']._get('sales_team').state != 'installed':
+            return groups
+        return groups | cls.quick_ref('sales_team.group_sale_manager')
+
+    @classmethod
     @TestUblCiiCommon.setup_country('fr')
     def setUpClass(cls):
         super().setUpClass()
@@ -44,7 +52,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'street': 'Rue Abbé Huet',
             'city': 'Rennes',
             'zip': '35043',
-            'vat': 'FR91746948785',
+            'vat': 'FR74968515759',
             'phone': '+33612345678',
             'pdp_identifier': '968515759_96851575905899'  # Should set company_id, peppol_eas and peppol_endpoint
         })
@@ -77,10 +85,10 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.fr').id,
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
-            'company_registry': '96851575905823',
+            'company_registry': '33417522105821',
             'invoice_edi_format': 'ubl_21_fr',
             'peppol_eas': '0225',
-            'peppol_endpoint': '968515759_96851575905823',
+            'peppol_endpoint': '334175221_33417522105821',
         })
         cls.belgian_partner = cls.partner_b
         cls.belgian_partner.write({

@@ -87,10 +87,11 @@ function updateDisabled(el, isDisabled) {
  */
 function enableDisabledProducts(productIds) {
     for (const productId of productIds) {
-        const productCompareButton = document.querySelector(
-            `.o_add_compare[data-product-product-id="${productId}"]`
+        const productCompareButtons = document.querySelectorAll(
+            `.o_add_compare[data-product-product-id="${productId}"],
+             .o_add_compare_dyn[data-product-product-id="${productId}"]`
         );
-        if (productCompareButton) {
+        for (const productCompareButton of productCompareButtons) {
             updateDisabled(productCompareButton, false);
         }
     }

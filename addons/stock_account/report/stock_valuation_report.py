@@ -46,7 +46,7 @@ class StockValuationReport(models.AbstractModel):
         domain = company._get_valuation_product_domain()
         valued_products = valued_product_context.search(domain)
         products_with_qty = valued_product_context.search(domain + ['|', ('qty_available', '!=', 0), ('lot_valuated', '=', True)])
-        accounts_by_product = company._get_accounts_by_product(products=valued_products)
+        accounts_by_product = company._get_accounts_by_product(products=valued_products.with_context(prefetch_fields=False))
         accounts_by_product_with_qty = {p: accounts_by_product[p] for p in products_with_qty}
         if not date:
             inventory_data = company.stock_value(accounts_by_product_with_qty)

@@ -2,14 +2,13 @@
 
 import { on, queryAll } from "@odoo/hoot-dom";
 import { reactive, useComponent, useEffect, useExternalListener } from "@odoo/owl";
-import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
+import { _isNode, _toSelector } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
     isIterable,
     isPromise,
     parseRegExp,
     R_WHITE_SPACE,
-    toSelector,
 } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { getRunner } from "./main_runner";
 
@@ -235,7 +234,7 @@ function _deepCopy(value, cache) {
         if (isInstanceOf(value, String, Number, Boolean)) {
             return value;
         }
-        if (isNode(value)) {
+        if (_isNode(value)) {
             // Nodes
             return value.cloneNode(true);
         } else if (isInstanceOf(value, Date, RegExp)) {
@@ -284,8 +283,8 @@ function _deepEqual(a, b, ignoreOrder, partial, cache) {
     cache.add(a, b);
 
     // Nodes
-    if (isNode(a)) {
-        return isNode(b) && a.isEqualNode(b);
+    if (_isNode(a)) {
+        return _isNode(b) && a.isEqualNode(b);
     }
 
     // Files
@@ -407,7 +406,7 @@ function _formatHumanReadable(value, length, cache) {
     // Iterable objects
     if (isIterable(value)) {
         const values = [...value];
-        if (values.length === 1 && isNode(values[0])) {
+        if (values.length === 1 && _isNode(values[0])) {
             // Special case for single-element nodes arrays
             return _formatHumanReadable(values[0], length, cache);
         }
@@ -583,7 +582,7 @@ const GENERIC_SERIALIZERS = new Map([
     [Boolean, (v) => v.valueOf()],
     [Date, (v) => v.toISOString()],
     [Error, (v) => v.toString()],
-    [Node, (v) => (v.nodeType === Node.ELEMENT_NODE ? `<${toSelector(v)}>` : toSelector(v))],
+    [Node, (v) => (v.nodeType === Node.ELEMENT_NODE ? `<${_toSelector(v)}>` : _toSelector(v))],
     [Number, (v) => v.valueOf()],
     [RegExp, (v) => v.toString()],
     [String, (v) => v.valueOf()],
@@ -1110,7 +1109,7 @@ export function getTypeOf(value) {
             if (isInstanceOf(value, Error)) {
                 return "error";
             }
-            if (isNode(value)) {
+            if (_isNode(value)) {
                 return "node";
             }
             if (isInstanceOf(value, RegExp)) {
@@ -1182,7 +1181,7 @@ export function isOfType(value, type) {
         case "integer":
             return $isInteger(value);
         case "node":
-            return isNode(value);
+            return _isNode(value);
         case "regex":
             return isInstanceOf(value, RegExp);
         case "url":

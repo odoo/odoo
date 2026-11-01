@@ -378,7 +378,6 @@ patch(Chatter.prototype, {
     },
 
     onFollowerChanged() {
-        document.body.click(); // hack to close dropdown
         this.reloadParentView();
     },
 

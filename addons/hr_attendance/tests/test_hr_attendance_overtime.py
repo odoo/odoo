@@ -849,6 +849,30 @@ class TestHrAttendanceOvertime(HttpCase):
         })
         self.assertEqual(attendance.overtime_hours, 0, 'There should be no overtime for the fully flexible resource.')
 
+        # A 'non working days' rule is use to match every single day for fully flexible resource,
+        # because their working days were read from an empty schedule, so the whole attendance
+        # was turned into overtime.
+        self.env['hr.attendance.overtime.rule'].create({
+            'name': "Rule non working days",
+            'base_off': 'timing',
+            'timing_type': 'non_work_days',
+            'ruleset_id': self.ruleset.id,
+        })
+
+        # 3) on weekday
+        attendance.write({
+            'check_in': datetime(2026, 9, 1, 9, 0),
+            'check_out': datetime(2026, 9, 1, 18, 0),
+        })
+        self.assertEqual(attendance.overtime_hours, 0)
+
+        # 4) on weekend
+        attendance.write({
+            'check_in': datetime(2026, 9, 6, 9, 0),
+            'check_out': datetime(2026, 9, 6, 18, 0),
+        })
+        self.assertEqual(attendance.overtime_hours, 0)
+
     def test_overtime_flexible_non_consecutive_days(self):
         """ A flexible hours employee working exactly their weekly budget
         spread across non consecutive days must not generate overtime. """
@@ -1248,12 +1272,14 @@ class TestHrAttendanceOvertime(HttpCase):
         """Validate that multiple overtime lines for today are summed correctly
         and that the entire attendance_employee_data response is consistent.
         """
-        for _ in range(2):
-            self.env['hr.attendance.overtime.line'].create({
-                'employee_id': self.employee.id,
-                'date': date.today(),
-                'duration': 5,
-            })
+        overtime_line_vals = {
+            'employee_id': self.employee.id,
+            'date': date.today(),
+            'duration': 5,
+        }
+        if 'compensable_as_leave' in self.env['hr.attendance.overtime.line']._fields:
+            overtime_line_vals['compensable_as_leave'] = True
+        self.env['hr.attendance.overtime.line'].create([overtime_line_vals.copy() for _ in range(2)])
         token = self.employee.company_id.attendance_kiosk_key
         response = self.make_jsonrpc_request(
             '/hr_attendance/attendance_employee_data',

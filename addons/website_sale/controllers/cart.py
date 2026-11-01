@@ -364,6 +364,16 @@ class Cart(PaymentPortal):
                 lambda sol: sol.product_id.id == product_id
             )[:1].id
 
+        # Combo item lines are updated together with their combo
+        if line_id:
+            target_line = order_sudo.order_line.filtered(lambda sol: sol.id == line_id)
+            if target_line.combo_item_id:
+                return {
+                    "warning": _(
+                        "This product is part of a combo and can't be updated individually."
+                    )
+                }
+
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
 
         values['cart_quantity'] = order_sudo.cart_quantity
@@ -415,6 +425,11 @@ class Cart(PaymentPortal):
         def is_same_combo(line1_, line2_):
             """Check if two combo lines have the same linked product combination."""
             return line1_.linked_line_ids.product_id.ids == line2_.linked_line_ids.product_id.ids
+
+        # The public partner is shared by every anonymous visitor: it has no order history of its
+        # own, and searching its orders by date scans the whole table on large databases.
+        if request.website.is_public_user():
+            return {'order_history': []}
 
         # Get the last 10 confirmed orders from the current website user.
         previous_orders_lines_sudo = request.env['sale.order'].sudo().search(

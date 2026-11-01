@@ -138,26 +138,19 @@ class kioskAttendanceApp extends Component{
         if (!this.props.deviceTrackingEnabled || !navigator.geolocation) {
             return rpc(route, { ...params });
         }
-
-        return new Promise((resolve) => {
-            navigator.geolocation.getCurrentPosition(
-                async ({ coords: { latitude, longitude } }) => {
-                    const result = await rpc(route, {
-                        ...params,
-                        latitude,
-                        longitude,
-                    });
-                    resolve(result);
-                },
-                async (err) => {
-                    const result = await rpc(route, {
-                        ...params
-                    });
-                    resolve(result);
-                },
-                { enableHighAccuracy: true }
-            );
-        });
+        this.ui.block();
+        try {
+            const coords = await new Promise((resolve) => {
+                navigator.geolocation.getCurrentPosition(
+                    ({ coords: { latitude, longitude } }) => resolve({ latitude, longitude }),
+                    () => resolve({}),
+                    { enableHighAccuracy: true }
+                );
+            });
+            return await rpc(route, { ...params, ...coords });
+        } finally {
+            this.ui.unblock();
+        }
     }
 
     async onManualSelection(employeeId, enteredPin) {

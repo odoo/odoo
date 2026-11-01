@@ -1143,13 +1143,13 @@ Please change the quantity done or the rounding precision in your settings.""",
         assert mode in ('generate', 'import')
         default_vals = {}
 
-        def generate_lot_qty(quantity, qty_per_lot):
+        def generate_lot_qty(quantity, qty_per_lot, rounding):
             if qty_per_lot <= 0:
                 raise UserError(_("The quantity per lot should always be a positive value."))
             line_count = int(quantity // qty_per_lot)
             leftover = quantity % qty_per_lot
             qty_array = [qty_per_lot] * line_count
-            if leftover:
+            if not float_is_zero(leftover, precision_rounding=rounding):
                 qty_array.append(leftover)
             return qty_array
 
@@ -1163,7 +1163,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                 default_vals[remove_prefix(key, 'default_')] = context_data[key]
 
         if default_vals['tracking'] == 'lot' and mode == 'generate':
-            lot_qties = generate_lot_qty(default_vals['quantity'], count)
+            product = self.env['product.product'].browse(default_vals['product_id'])
+            lot_qties = generate_lot_qty(default_vals['quantity'], count, product.uom_id.rounding)
         else:
             lot_qties = [1] * count
 
@@ -2158,7 +2159,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                     all_move_line_vals = []
                     for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
-                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, need), location_id, lot_id, package_id, owner_id, strict=True)
+                        effective_need = move._get_quantity_to_assign() - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
+                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, effective_need), location_id, lot_id, package_id, owner_id, strict=True)
                         all_move_line_vals += move_line_vals
                         if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
                             taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
@@ -2447,6 +2449,10 @@ Please change the quantity done or the rounding precision in your settings.""",
         from_wh = self.location_id.warehouse_id
         to_wh = self.location_dest_id.warehouse_id
         return self.picking_type_id.code in ('internal', 'outgoing') or (from_wh and to_wh and from_wh != to_wh)
+
+    def _get_quantity_to_assign(self):
+        self.ensure_one()
+        return self.product_qty
 
     def _get_lang(self):
         """Determine language to use for translated description"""

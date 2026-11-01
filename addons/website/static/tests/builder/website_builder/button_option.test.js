@@ -66,6 +66,20 @@ test("Drag & drop a 'Button' snippet should align the button style with the butt
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });
 
+test("Drag & drop a 'Button' snippet next to a rounded button should make it rounded", async () => {
+    await setupWebsiteBuilder(
+        `<div><a href="http://test.com" class="btn btn-primary rounded-pill">Rounded</a></div>`
+    );
+
+    const { moveTo, drop } = await contains(
+        ".o-website-builder_sidebar [name='Button'] .o_snippet_thumbnail"
+    ).drag();
+    await moveTo(":iframe .oe_drop_zone:nth-child(3)");
+    await drop(getDragHelper());
+    await waitForEndOfOperation();
+    expect(":iframe a[href='/contactus']").toHaveClass("rounded-pill");
+});
+
 test("Drag & drop a 'Button' snippet over a dropzone should preview it correctly", async () => {
     const { getEditableContent } = await setupWebsiteBuilder(
         `<div><a href="http://test.com" class="btn btn-fill-secondary">ButtonStyled</a>

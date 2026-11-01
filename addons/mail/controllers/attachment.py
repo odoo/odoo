@@ -5,6 +5,7 @@ import io
 import logging
 import zipfile
 
+import psycopg2
 from werkzeug.exceptions import NotFound, UnsupportedMediaType
 
 from odoo import _, http
@@ -99,11 +100,31 @@ class AttachmentController(ThreadController):
     @add_guest_to_context
     def mail_attachment_delete(self, attachment_id, access_token=None):
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
-        if not attachment or not attachment._has_attachments_ownership([access_token]):
-            request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
-            raise NotFound()
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
+        if not attachment or not attachment._has_attachments_ownership([access_token]):
+            if not attachment or not (
+                attachment.has_access("read") or self._get_message_with_access(message.id)
+            ):
+                partner, guest = request.env["res.partner"]._get_current_persona()
+                if target := partner or guest:
+                    # Notify from a new cursor, as NotFound rolls the request back.
+                    @request.env.cr.postrollback.add
+                    def notify_delete():
+                        try:
+                            with target.env.registry.cursor() as cr:
+                                target.with_env(target.env(cr=cr))._bus_send(
+                                    "ir.attachment/delete",
+                                    {"id": attachment_id},
+                                )
+                        except psycopg2.Error:
+                            logger.warning(
+                                "Could not notify the deletion of attachment %s",
+                                attachment_id,
+                                exc_info=True,
+                            )
+
+            raise NotFound()
         # sudo: ir.attachment: access is validated with _has_attachments_ownership
         attachment.sudo()._delete_and_notify(message)
 

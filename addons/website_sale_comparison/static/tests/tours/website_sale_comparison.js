@@ -67,6 +67,24 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color Shoes (Red)")',
     },
     {
+        content: "remove it again from the comparison bar",
+        trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color Shoes (Red)") button:has(i.oi-close)',
+        run: "click",
+    },
+    {
+        content: "the compare button of the product page is enabled back",
+        trigger: '.o_add_compare_dyn:not([disabled])',
+    },
+    {
+        content: "add the variant to the comparelist again",
+        trigger: '.o_add_compare_dyn',
+        run: "click",
+    },
+    {
+        content: "check the comparelist contains it again",
+        trigger: '[name="product_comparison_bottom_bar_row"]:contains("Color Shoes (Red)")',
+    },
+    {
         content: "select 2nd variant(Pink Color)",
         trigger: '.variant_attribute[data-attribute-name="Color"] input[data-value-name="Pink"]:not(:visible)',
         run: function (actions) {

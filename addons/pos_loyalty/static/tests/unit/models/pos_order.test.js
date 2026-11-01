@@ -273,6 +273,44 @@ describe("pos.order - loyalty", () => {
         expect(order._getDiscountableOnOrder(paymentReward).discountable).toBe(125);
     });
 
+    test("_getDiscountableOnSpecific keeps lines placed before a fully discounted line", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+
+        // Products 8, 9 and 10 all share the same (percent) tax.
+        const lines = [];
+        for (const id of [8, 9, 10]) {
+            lines.push(
+                await addProductLineToOrder(store, order, {
+                    templateId: id,
+                    productId: id,
+                    price_unit: 100,
+                })
+            );
+        }
+
+        const reward = models["loyalty.reward"].get(4);
+        reward.discount_applicability = "specific";
+        reward.all_discount_product_ids = [
+            models["product.product"].get(8),
+            models["product.product"].get(9),
+            models["product.product"].get(10),
+        ];
+
+        // Manually apply a 100% discount on the middle line, making it free.
+        lines[1].setDiscount(100);
+        order.triggerRecomputeAllPrices();
+
+        const result = order._getDiscountableOnSpecific(reward);
+
+        const taxKeys = Object.keys(result.discountablePerTax);
+        expect(taxKeys.length).toBe(1);
+        // Both the line before and the line after the free one must still
+        // contribute to the discountable amount.
+        expect(result.discountablePerTax[taxKeys[0]]).toBe(200);
+    });
+
     test("_computeNItems", async () => {
         const store = await setupPosEnv();
         const models = store.models;
@@ -721,5 +759,35 @@ describe("pos.order - rebuilt client state", () => {
         order._updateRewardLines();
 
         expect(order._get_reward_lines()).toHaveLength(0);
+    });
+
+    test("reward line keeps its new loyalty card when the order is reloaded from the server", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+        const program = models["loyalty.program"].get(7);
+        const reward = models["loyalty.reward"].get(1);
+        program.applies_on = "both";
+        program.reward_ids = [1];
+        reward.program_id = program;
+        reward.required_points = 1;
+        order.setPartner(models["res.partner"].get(4));
+        await addProductLineToOrder(store, order, { templateId: 5, productId: 5, price_unit: 10 });
+        await store.orderUpdateLoyaltyPrograms();
+        // The partner has no card yet: it will be created when the order is paid
+        const pointChange = Object.values(order.uiState.couponPointChanges)[0];
+        expect(pointChange.coupon_id).toBeLessThan(0);
+        expect(order._applyReward(reward, pointChange.coupon_id)).toBe(true);
+        const rewardLine = order._get_reward_lines()[0];
+        expect(rewardLine.coupon_id.id).toBe(pointChange.coupon_id);
+
+        await store.syncAllOrders({ orders: [order] });
+        expect(order.isSynced).toBe(true);
+        await store.data.loadServerOrders([["id", "=", order.id]]);
+
+        expect(rewardLine.coupon_id.id).toBe(pointChange.coupon_id);
+        const [loyaltyStat] = order.getLoyaltyPoints();
+        expect(loyaltyStat.points.spent).toBe(1);
     });
 });

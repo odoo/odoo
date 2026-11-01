@@ -751,6 +751,27 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.start_pos_tour('test_settle_so_with_non_pos_groupable_uom')
 
+    def test_settle_so_price_unit_not_rounded(self):
+        lang = self.env['res.lang'].search([('code', '=', self.pos_user.lang)])
+        lang.write({'thousands_sep': '.', 'decimal_point': ','})
+        product = self.env['product.product'].create({
+            'name': 'Cable',
+            'available_in_pos': True,
+            'taxes_id': False,
+            'lst_price': 0.1838,
+        })
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 100,
+                'price_unit': 0.1838,
+                'discount': 10,
+            })],
+        })
+        self.assertEqual(sale_order.amount_total, 16.54)
+        self.start_pos_tour('test_settle_so_price_unit_not_rounded')
+
     def test_settle_so_with_pos_downpayment(self):
         so = self.env['sale.order'].sudo().create({
             'partner_id': self.partner_a.id,
@@ -1424,6 +1445,28 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_down_payment_displayed', login="accountman")
 
+    def test_full_down_payment_so_still_listed(self):
+        """
+        Tests that a Sale Order fully paid by a down payment in the PoS is still listed, so it can be settled
+        """
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'lst_price': 10.0,
+        })
+        so = self.env['sale.order'].sudo().create({
+            'name': 'Full Down Payment SO',
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'product_uom_qty': 1,
+                'price_unit': product_a.lst_price,
+            })]
+        })
+        so.action_confirm()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_full_down_payment_so_still_listed', login="accountman")
+
     def test_amount_to_invoice(self):
         """
         Checks that the amount to invoice is updated correctly when paying an order in the PoS
@@ -1696,7 +1739,12 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pos_order = self.env['pos.order'].search([('partner_id', '=', test_partner.id)], limit=1)
 
         self.assertEqual(pos_order.lines[0].qty, 12.0, "quantity should be 12.0")
-        self.assertEqual(pos_order.lines[0].price_unit, 0.83, "price of product should be 0.83")
+        self.assertEqual(pos_order.lines[0].price_unit, sale_order.order_line.price_unit / 12)
+        self.assertEqual(pos_order.amount_total, sale_order.amount_total)
+
+        session = self.main_pos_config.current_session_id
+        session.close_session_from_ui()
+        self.assertEqual(session.state, 'closed')
 
     def test_multiple_lots_sale_order(self):
         self.product = self.env['product.product'].create({
@@ -2784,7 +2832,6 @@ class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
                 'product_uom_qty': 1,
                 'price_unit': self.product_a.lst_price,
             })],
-            'require_signature': False,
             'require_payment': True,
             'prepayment_percent': 0.3,
         })
