@@ -134,3 +134,36 @@ test("checkout greeting can continue to break entry", async () => {
 
     expect.verifySteps(["continue break"]);
 });
+
+test("check-out greeting hides the extra hours without overtime", async () => {
+    const employeeData = {
+        ...getEmployeeData({
+            check_in: "2026-07-21 09:30:00",
+            check_out: "2026-07-21 17:30:00",
+        }),
+        display_overtime: true,
+        overtime_today: 0,
+        total_overtime: 0,
+    };
+    await mountWithCleanup(KioskGreetings, {
+        props: { employeeData, kioskReturn: () => {} },
+    });
+    expect(".o_hr_attendance_kiosk_card").not.toHaveText(/extra hours/i);
+});
+
+test("check-out greeting shows the extra hours of the day", async () => {
+    const employeeData = {
+        ...getEmployeeData({
+            check_in: "2026-07-21 09:30:00",
+            check_out: "2026-07-21 19:30:00",
+        }),
+        display_overtime: true,
+        overtime_today: 2,
+        total_overtime: 0,
+    };
+    await mountWithCleanup(KioskGreetings, {
+        props: { employeeData, kioskReturn: () => {} },
+    });
+    expect(".o_hr_attendance_kiosk_card").toHaveText(/extra hours/i);
+    expect(".o_hr_attendance_kiosk_card").not.toHaveText(/Total/);
+});
