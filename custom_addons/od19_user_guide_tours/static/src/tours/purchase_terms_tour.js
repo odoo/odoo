@@ -8,7 +8,7 @@ import { markup } from "@odoo/owl";
  *
  * Walks the user through:
  *  1. Creating reusable purchase term templates
- *  2. Applying terms on a purchase order (OD19 Terms tab)
+ *  2. Applying terms on a purchase order (Terms tab)
  */
 registry.category("web_tour.tours").add("od19_purchase_terms_tour", {
     url: "/odoo",
@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add("od19_purchase_terms_tour", {
         {
             trigger: ".o_list_renderer",
             content: markup(_t(
-                "On any purchase order open the <b>OD19 Terms</b> tab and pick the templates for " +
+                "On any purchase order open the <b>Terms</b> tab and pick the templates for " +
                 "<b>Warranty</b>, <b>Delivery To</b>, <b>Payment Term</b>, <b>Shipment Term</b> " +
                 "and <b>Weight Term</b>."
             )),

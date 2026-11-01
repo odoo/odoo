@@ -7,7 +7,7 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@name='order_lines']" position="after">
+                <xpath expr="//page[@name='other_information']" position="after">
                     <page string="Stamp" name="od19_stamp_page">
                         <group string="Confirmed Stamp">
                             <group>

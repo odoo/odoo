@@ -2062,6 +2062,7 @@
         <field name="print_report_name">'Sale Order (Minimal) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_corporate" model="ir.actions.report">
@@ -2073,6 +2074,7 @@
         <field name="print_report_name">'Sale Order (Corporate) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_elegant" model="ir.actions.report">
@@ -2084,6 +2086,7 @@
         <field name="print_report_name">'Sale Order (Elegant) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_compact" model="ir.actions.report">
@@ -2095,6 +2098,7 @@
         <field name="print_report_name">'Sale Order (Compact) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_sidebar" model="ir.actions.report">
@@ -2106,6 +2110,7 @@
         <field name="print_report_name">'Sale Order (Sidebar) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_teal" model="ir.actions.report">
@@ -2117,6 +2122,7 @@
         <field name="print_report_name">'Sale Order (Teal Cards) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_invoice" model="ir.actions.report">
@@ -2128,6 +2134,7 @@
         <field name="print_report_name">'Sale Order (Tax Invoice) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_banded" model="ir.actions.report">
@@ -2139,6 +2146,7 @@
         <field name="print_report_name">'Sale Order (Banded) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_bw" model="ir.actions.report">
@@ -2150,6 +2158,7 @@
         <field name="print_report_name">'Sale Order (Print B/W) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_duotone" model="ir.actions.report">
@@ -2161,6 +2170,7 @@
         <field name="print_report_name">'Sale Order (Duotone) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
 </odoo>

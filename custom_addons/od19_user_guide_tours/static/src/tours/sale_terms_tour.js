@@ -8,7 +8,7 @@ import { markup } from "@odoo/owl";
  *
  * Walks the user through:
  *  1. Creating reusable sales term templates
- *  2. Applying terms on a quotation (OD19 Terms tab)
+ *  2. Applying terms on a quotation (Terms tab)
  */
 registry.category("web_tour.tours").add("od19_sale_terms_tour", {
     url: "/odoo",
@@ -84,7 +84,7 @@ registry.category("web_tour.tours").add("od19_sale_terms_tour", {
         {
             trigger: ".o_list_renderer",
             content: markup(_t(
-                "On any quotation open the <b>OD19 Terms</b> tab and pick the templates for " +
+                "On any quotation open the <b>Terms</b> tab and pick the templates for " +
                 "<b>Price</b>, <b>Delivery</b>, <b>Payment (Product / Engineering)</b>, " +
                 "<b>Validity</b>, <b>Warranty</b> and <b>Credit</b>."
             )),

@@ -681,6 +681,7 @@
         <field name="print_report_name">'Sale Order (Classic) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
     <record id="action_report_sale_order_modern" model="ir.actions.report">
@@ -692,6 +693,7 @@
         <field name="print_report_name">'Sale Order (Modern) - %s' % object.name</field>
         <field name="binding_model_id" ref="sale.model_sale_order"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
     </record>
 
 </odoo>
