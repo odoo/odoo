@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <menuitem id="menu_od19_doubtful_debt_root"
+              name="หนี้สงสัยจะสูญ (Doubtful Debt)"
+              parent="account.menu_finance_receivables"
+              groups="account.group_account_readonly"
+              sequence="50"/>
+
+    <menuitem id="menu_od19_doubtful_debt_provision"
+              name="ตั้งค่าเผื่อหนี้สงสัยจะสูญ"
+              parent="menu_od19_doubtful_debt_root"
+              action="action_od19_doubtful_debt_provision"
+              sequence="10"/>
+
+    <menuitem id="menu_od19_doubtful_debt_writeoff"
+              name="ตัดหนี้สูญ"
+              parent="menu_od19_doubtful_debt_root"
+              action="action_od19_doubtful_debt_writeoff"
+              sequence="20"/>
+
+    <menuitem id="menu_od19_doubtful_debt_aging"
+              name="ช่วงอายุหนี้ (Aging Buckets)"
+              parent="account.menu_finance_configuration"
+              action="action_od19_doubtful_debt_aging"
+              groups="account.group_account_manager"
+              sequence="90"/>
+
+</odoo>

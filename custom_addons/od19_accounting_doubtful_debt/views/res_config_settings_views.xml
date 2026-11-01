@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <record id="res_config_settings_view_form_od19_doubtful_debt" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.od19.doubtful.debt</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Doubtful Debt (หนี้สงสัยจะสูญ)" id="od19_doubtful_debt">
+                    <setting string="Doubtful Debt Expense Account (ค่าใช้จ่ายหนี้สงสัยจะสูญ)"
+                             help="เดบิตเมื่อตั้งค่าเผื่อและเมื่อตัดหนี้สูญ">
+                        <field name="od19_doubtful_debt_expense_account_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="Doubtful Debt Allowance Account (ค่าเผื่อหนี้สงสัยจะสูญ)"
+                             help="เครดิต — บัญชีปรับมูลค่าลูกหนี้การค้า">
+                        <field name="od19_doubtful_debt_allowance_account_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="Doubtful Debt Journal (สมุดรายวัน)"
+                             help="สมุดรายวันทั่วไปที่ใช้บันทึกค่าเผื่อและตัดหนี้สูญ">
+                        <field name="od19_doubtful_debt_journal_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="Aging Buckets (ช่วงอายุหนี้)"
+                             help="กำหนดช่วงอายุหนี้และอัตราการตั้งค่าเผื่อหนี้สงสัยจะสูญ">
+                        <button name="%(action_od19_doubtful_debt_aging)d"
+                                type="action"
+                                icon="fa-arrow-right"
+                                string="Configure Aging Buckets"
+                                class="btn-link"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

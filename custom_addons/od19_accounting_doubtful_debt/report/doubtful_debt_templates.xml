@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <!-- ============================================================= -->
+    <!-- Provision document (ใบสำคัญตั้งค่าเผื่อหนี้สงสัยจะสูญ)          -->
+    <!-- ============================================================= -->
+    <template id="doubtful_debt_provision_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page"
+                         style="font-family:'Sarabun','Noto Sans Thai','Tahoma',sans-serif;font-size:12px;color:#333333;">
+
+                        <!-- ===== Title ===== -->
+                        <div class="row mb-3">
+                            <div class="col-7">
+                                <div style="font-size:11px;color:#666666;">
+                                    <span>บริษัท : </span>
+                                    <span t-out="doc.company_id.name"/>
+                                </div>
+                                <div style="font-size:11px;color:#666666;">
+                                    <span>ประจำวันที่ : </span>
+                                    <span t-field="doc.date" t-options='{"widget": "date"}'/>
+                                </div>
+                            </div>
+                            <div class="col-5 text-end">
+                                <div style="font-size:20px;font-weight:bold;color:#9E2424;">
+                                    ใบสำคัญตั้งค่าเผื่อหนี้สงสัยจะสูญ
+                                </div>
+                                <div style="font-size:12px;letter-spacing:1px;color:#666666;">
+                                    DOUBTFUL DEBT PROVISION
+                                </div>
+                                <div style="font-size:11px;color:#666666;">
+                                    <span t-out="doc.name"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== Aging summary ===== -->
+                        <table class="table table-sm table-bordered mb-3" style="font-size:12px;">
+                            <thead>
+                                <tr style="background-color:#fafafa;">
+                                    <th style="text-align:left;">ลูกหนี้ / Customer</th>
+                                    <th style="text-align:left;">ช่วงอายุหนี้ / Aging</th>
+                                    <th style="text-align:right;width:18%;">ยอดคงค้าง / Balance</th>
+                                    <th style="text-align:right;width:12%;">อัตรา / Rate</th>
+                                    <th style="text-align:right;width:18%;">ตั้งเผื่อ / Provision</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.line_ids" t-as="line">
+                                    <td><span t-out="line.partner_id.name"/></td>
+                                    <td><span t-out="line.aging_line_id.name"/></td>
+                                    <td style="text-align:right;">
+                                        <span t-field="line.balance"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <span t-out="line.provision_rate"/>%
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <span t-field="line.provision_amount"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr t-if="not doc.line_ids">
+                                    <td colspan="5" style="text-align:center;color:#999999;">
+                                        ไม่มีรายการ
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="font-weight:bold;background-color:#fafafa;">
+                                    <td colspan="2">รวม / Total</td>
+                                    <td style="text-align:right;">
+                                        <span t-field="doc.total_balance"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                    <td/>
+                                    <td style="text-align:right;">
+                                        <span t-field="doc.total_provision_amount"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <p style="font-size:11px;color:#666666;">
+                            บันทึกบัญชี : เดบิต <span t-out="doc.expense_account_id.display_name"/>
+                            / เครดิต <span t-out="doc.allowance_account_id.display_name"/>
+                            (สมุดรายวัน <span t-out="doc.journal_id.display_name"/>)
+                        </p>
+                        <p t-if="doc.note" style="font-size:11px;color:#666666;">
+                            <span t-out="doc.note"/>
+                        </p>
+
+                        <!-- ===== Signature blocks ===== -->
+                        <div class="row" style="margin-top:48px;font-size:11px;text-align:center;">
+                            <div class="col-4">
+                                <div style="border-top:1px solid #999999;margin:0 12px;padding-top:4px;">
+                                    ผู้จัดทำ / Prepared
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="border-top:1px solid #999999;margin:0 12px;padding-top:4px;">
+                                    ผู้ตรวจสอบ / Checked
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="border-top:1px solid #999999;margin:0 12px;padding-top:4px;">
+                                    ผู้อนุมัติ / Approved
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ============================================================= -->
+    <!-- Write-off document (ใบสำคัญตัดหนี้สูญ)                          -->
+    <!-- ============================================================= -->
+    <template id="doubtful_debt_writeoff_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page"
+                         style="font-family:'Sarabun','Noto Sans Thai','Tahoma',sans-serif;font-size:12px;color:#333333;">
+
+                        <!-- ===== Title ===== -->
+                        <div class="row mb-3">
+                            <div class="col-7">
+                                <div style="font-size:11px;color:#666666;">
+                                    <span>บริษัท : </span>
+                                    <span t-out="doc.company_id.name"/>
+                                </div>
+                                <div style="font-size:11px;color:#666666;">
+                                    <span>ประจำวันที่ : </span>
+                                    <span t-field="doc.date" t-options='{"widget": "date"}'/>
+                                </div>
+                            </div>
+                            <div class="col-5 text-end">
+                                <div style="font-size:20px;font-weight:bold;color:#9E2424;">
+                                    ใบสำคัญตัดหนี้สูญ
+                                </div>
+                                <div style="font-size:12px;letter-spacing:1px;color:#666666;">
+                                    BAD DEBT WRITE-OFF
+                                </div>
+                                <div style="font-size:11px;color:#666666;">
+                                    <span t-out="doc.name"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== Customer / reason ===== -->
+                        <table class="table table-sm table-bordered mb-2" style="font-size:11px;">
+                            <tbody>
+                                <tr>
+                                    <td style="width:25%;color:#666666;">ลูกหนี้ / Customer</td>
+                                    <td><span t-out="doc.partner_id.name"/></td>
+                                </tr>
+                                <tr t-if="doc.partner_id.vat">
+                                    <td style="color:#666666;">เลขประจำตัวผู้เสียภาษี</td>
+                                    <td><span t-out="doc.partner_id.vat"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="color:#666666;">เหตุผล / Reason</td>
+                                    <td><span t-out="doc.reason"/></td>
+                                </tr>
+                                <tr t-if="doc.reference">
+                                    <td style="color:#666666;">หลักฐานอ้างอิง / Reference</td>
+                                    <td><span t-out="doc.reference"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="color:#666666;">ผู้อนุมัติ / Approved by</td>
+                                    <td>
+                                        <span t-out="doc.approver_id.name or '-'"/>
+                                        <t t-if="doc.approval_date">
+                                            <span> (</span>
+                                            <span t-field="doc.approval_date" t-options='{"widget": "date"}'/>
+                                            <span>)</span>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- ===== Lines ===== -->
+                        <table class="table table-sm table-bordered mb-3" style="font-size:12px;">
+                            <thead>
+                                <tr style="background-color:#fafafa;">
+                                    <th style="text-align:left;">เลขที่ใบกำกับ / Invoice</th>
+                                    <th style="text-align:center;width:14%;">วันที่ / Date</th>
+                                    <th style="text-align:center;width:14%;">ครบกำหนด / Due</th>
+                                    <th style="text-align:right;width:20%;">ยอดตัดหนี้ / Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.line_ids" t-as="line">
+                                    <td><span t-out="line.move_name"/></td>
+                                    <td style="text-align:center;">
+                                        <span t-field="line.date" t-options='{"widget": "date"}'/>
+                                    </td>
+                                    <td style="text-align:center;">
+                                        <span t-field="line.date_maturity" t-options='{"widget": "date"}'/>
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <span t-field="line.amount"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr t-if="not doc.line_ids">
+                                    <td colspan="4" style="text-align:center;color:#999999;">
+                                        ไม่มีรายการ
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr style="font-weight:bold;background-color:#fafafa;">
+                                    <td colspan="3">รวม / Total</td>
+                                    <td style="text-align:right;">
+                                        <span t-field="doc.total_amount"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <p style="font-size:11px;color:#666666;">
+                            บันทึกบัญชี : เดบิต <span t-out="doc.expense_account_id.display_name"/>
+                            / เครดิต บัญชีลูกหนี้การค้า และทำการกระทบยอด (reconcile) กับใบกำกับที่ตัดจำหน่าย
+                            โดยอ้างอิงหลักเกณฑ์ตามประมวลรัษฎากร มาตรา 65 ทวิ (9) และคำพิพากษาฎีกาที่ 186/2534
+                        </p>
+
+                        <!-- ===== Signature blocks ===== -->
+                        <div class="row" style="margin-top:48px;font-size:11px;text-align:center;">
+                            <div class="col-4">
+                                <div style="border-top:1px solid #999999;margin:0 12px;padding-top:4px;">
+                                    ผู้จัดทำ / Prepared
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="border-top:1px solid #999999;margin:0 12px;padding-top:4px;">
+                                    ผู้ตรวจสอบ / Checked
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="border-top:1px solid #999999;margin:0 12px;padding-top:4px;">
+                                    ผู้อนุมัติ / Approved
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

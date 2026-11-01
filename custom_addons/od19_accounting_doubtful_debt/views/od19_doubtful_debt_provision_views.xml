@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_od19_doubtful_debt_provision_list" model="ir.ui.view">
+        <field name="name">od19.doubtful.debt.provision.list</field>
+        <field name="model">od19.doubtful.debt.provision</field>
+        <field name="arch" type="xml">
+            <list string="Doubtful Debt Provisions">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="journal_id"/>
+                <field name="total_balance" sum="Total Open AR"/>
+                <field name="total_provision_amount" sum="Total Provision"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'posted'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_doubtful_debt_provision_form" model="ir.ui.view">
+        <field name="name">od19.doubtful.debt.provision.form</field>
+        <field name="model">od19.doubtful.debt.provision</field>
+        <field name="arch" type="xml">
+            <form string="Doubtful Debt Provision">
+                <header>
+                    <button name="action_compute"
+                            type="object"
+                            string="Compute"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_post"
+                            type="object"
+                            string="Post"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_view_move"
+                            type="object"
+                            string="Journal Entry"
+                            class="btn-secondary"
+                            invisible="not move_id"/>
+                    <button name="%(action_report_od19_doubtful_debt_provision)d"
+                            type="action"
+                            string="Print"
+                            class="btn-secondary"
+                            invisible="state == 'draft'"/>
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            class="btn-secondary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_draft"
+                            type="object"
+                            string="Reset to Draft"
+                            class="btn-secondary"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="journal_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="expense_account_id"
+                                   options="{'no_create': True}"/>
+                            <field name="allowance_account_id"
+                                   options="{'no_create': True}"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="total_balance"/>
+                        <field name="total_provision_amount"/>
+                    </group>
+                    <notebook>
+                        <page string="Provision Lines" name="provision_lines">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="aging_line_id"/>
+                                    <field name="balance" sum="Total Open AR"/>
+                                    <field name="provision_rate"/>
+                                    <field name="provision_amount" sum="Total Provision"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="note" placeholder="บันทึกเพิ่มเติม"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_od19_doubtful_debt_provision_search" model="ir.ui.view">
+        <field name="name">od19.doubtful.debt.provision.search</field>
+        <field name="model">od19.doubtful.debt.provision</field>
+        <field name="arch" type="xml">
+            <search string="Doubtful Debt Provisions">
+                <field name="name"/>
+                <field name="date"/>
+                <filter name="filter_draft" string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_posted" string="Posted"
+                        domain="[('state', '=', 'posted')]"/>
+                <separator/>
+                <filter name="filter_cancelled" string="Cancelled"
+                        domain="[('state', '=', 'cancelled')]"/>
+                <group name="group_by">
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_company" string="Company"
+                            context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_od19_doubtful_debt_provision" model="ir.actions.act_window">
+        <field name="name">ตั้งค่าเผื่อหนี้สงสัยจะสูญ (Provisions)</field>
+        <field name="res_model">od19.doubtful.debt.provision</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                สร้างเอกสารตั้งค่าเผื่อหนี้สงสัยจะสูญจากลูกหนี้คงค้าง
+            </p>
+        </field>
+    </record>
+</odoo>

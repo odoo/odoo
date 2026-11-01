@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_od19_doubtful_debt_writeoff_wizard_form" model="ir.ui.view">
+        <field name="name">od19.doubtful.debt.writeoff.wizard.form</field>
+        <field name="model">od19.doubtful.debt.writeoff.wizard</field>
+        <field name="arch" type="xml">
+            <form string="ตัดหนี้สูญ (Bad Debt Write-off)">
+                <group>
+                    <group>
+                        <field name="partner_id"
+                               options="{'no_create': True}"/>
+                        <field name="date"/>
+                        <field name="journal_id"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <group>
+                        <field name="expense_account_id"
+                               options="{'no_create': True}"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="reason"
+                           placeholder="เหตุผลการตัดหนี้สูญ เช่น ลูกหนี้เลิกกิจการ / ค้นหาตัวไม่พบ"/>
+                    <field name="reference"
+                           placeholder="เอกสารอ้างอิง เช่น ฎ.186 (2534), ม.65 ทวิ (9)"/>
+                </group>
+                <field name="line_ids">
+                    <list editable="bottom">
+                        <field name="move_line_id"
+                               domain="[('partner_id', '=', parent.partner_id), ('account_id.account_type', '=', 'asset_receivable'), ('reconciled', '=', False), ('parent_state', '=', 'posted')]"
+                               options="{'no_create': True}"/>
+                        <field name="date"/>
+                        <field name="date_maturity"/>
+                        <field name="amount" sum="Total"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_create_writeoff"
+                            type="object"
+                            string="Create Write-off"
+                            class="btn-primary"/>
+                    <button special="cancel"
+                            string="Cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_doubtful_debt_writeoff_wizard" model="ir.actions.act_window">
+        <field name="name">ตัดหนี้สูญ (Bad Debt Write-off)</field>
+        <field name="res_model">od19.doubtful.debt.writeoff.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_partner_id': active_id}</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">action</field>
+    </record>
+</odoo>

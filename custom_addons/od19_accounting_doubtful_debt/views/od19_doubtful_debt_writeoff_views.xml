@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_od19_doubtful_debt_writeoff_list" model="ir.ui.view">
+        <field name="name">od19.doubtful.debt.writeoff.list</field>
+        <field name="model">od19.doubtful.debt.writeoff</field>
+        <field name="arch" type="xml">
+            <list string="Bad Debt Write-offs">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="journal_id"/>
+                <field name="total_amount" sum="Total Write-off"/>
+                <field name="evidence_count"/>
+                <field name="approver_id"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'approved'"
+                       decoration-success="state == 'posted'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_doubtful_debt_writeoff_form" model="ir.ui.view">
+        <field name="name">od19.doubtful.debt.writeoff.form</field>
+        <field name="model">od19.doubtful.debt.writeoff</field>
+        <field name="arch" type="xml">
+            <form string="Bad Debt Write-off">
+                <header>
+                    <button name="action_approve"
+                            type="object"
+                            string="Approve"
+                            class="btn-primary"
+                            groups="account.group_account_manager"
+                            invisible="state != 'draft'"/>
+                    <button name="action_post"
+                            type="object"
+                            string="Write Off"
+                            class="btn-primary"
+                            invisible="state != 'approved'"/>
+                    <button name="action_view_move"
+                            type="object"
+                            string="Journal Entry"
+                            class="btn-secondary"
+                            invisible="not move_id"/>
+                    <button name="%(action_report_od19_doubtful_debt_writeoff)d"
+                            type="action"
+                            string="Print"
+                            class="btn-secondary"
+                            invisible="state == 'draft'"/>
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            class="btn-secondary"
+                            invisible="state not in ('draft', 'approved')"/>
+                    <button name="action_draft"
+                            type="object"
+                            string="Reset to Draft"
+                            class="btn-secondary"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,approved,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_move"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-book"
+                                invisible="not move_id">
+                            <div class="o_stat_info">
+                                <field name="move_id" string="Entry"/>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="partner_id" options="{'no_create': True}"/>
+                            <field name="journal_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="expense_account_id"
+                                   options="{'no_create': True}"/>
+                            <field name="approver_id"/>
+                            <field name="approval_date"/>
+                            <field name="evidence_count"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="reason"
+                               placeholder="เหตุผลการตัดหนี้สูญ"/>
+                        <field name="reference"
+                               placeholder="เอกสารอ้างอิง/หลักฐาน"/>
+                    </group>
+                    <notebook>
+                        <page string="Receivables" name="receivables">
+                            <field name="line_ids" readonly="state not in ('draft', 'approved')">
+                                <list editable="bottom">
+                                    <field name="move_line_id"
+                                           string="Receivable"
+                                           domain="[('partner_id', '=', parent.partner_id), ('account_id.account_type', '=', 'asset_receivable'), ('reconciled', '=', False), ('parent_state', '=', 'posted')]"
+                                           options="{'no_create': True}"/>
+                                    <field name="move_name"/>
+                                    <field name="date"/>
+                                    <field name="date_maturity"/>
+                                    <field name="amount" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="note" placeholder="บันทึกเพิ่มเติม"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_od19_doubtful_debt_writeoff_search" model="ir.ui.view">
+        <field name="name">od19.doubtful.debt.writeoff.search</field>
+        <field name="model">od19.doubtful.debt.writeoff</field>
+        <field name="arch" type="xml">
+            <search string="Bad Debt Write-offs">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <filter name="filter_draft" string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_approved" string="Approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <separator/>
+                <filter name="filter_posted" string="Posted"
+                        domain="[('state', '=', 'posted')]"/>
+                <group name="group_by">
+                    <filter name="group_partner" string="Customer"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_company" string="Company"
+                            context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_od19_doubtful_debt_writeoff" model="ir.actions.act_window">
+        <field name="name">ตัดหนี้สูญ (Write-offs)</field>
+        <field name="res_model">od19.doubtful.debt.writeoff</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                บันทึกการตัดหนี้สูญพร้อมหลักฐานและการอนุมัติ
+            </p>
+        </field>
+    </record>
+</odoo>
