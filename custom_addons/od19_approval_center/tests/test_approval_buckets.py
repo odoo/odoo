@@ -333,3 +333,60 @@ class TestFurthestStep(TransactionCase):
         expense.write({"state": "submitted", "second_approval_state": "pending"})
         steps = self.source.step_ids.sorted("sequence")
         self.assertEqual(self.source._od19_current_index(expense, steps), 1)
+
+
+@tagged("post_install", "-at_install")
+class TestMultiStepSameApprover(TransactionCase):
+    """A user who is the approver on more than one step must still see the
+    record while it waits at one of their steps (furthest-step regression)."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        expense_model = cls.env.get("hr.expense")
+        if (
+            expense_model is None
+            or "first_approver_id" not in expense_model._fields
+            or "second_approver_id" not in expense_model._fields
+            or "second_approval_state" not in expense_model._fields
+        ):
+            raise unittest.SkipTest("Requires od19 hr.expense approval fields")
+        cls.employee = cls.env["hr.employee"].create({
+            "name": "Dual Approver",
+            "user_id": cls.env.user.id,
+        })
+        cls.source = cls.env["od19.approval.source"].create({
+            "name": "Dual",
+            "model_id": cls.env["ir.model"]._get("hr.expense").id,
+            "requester_field": "create_uid",
+            "success_states": "approved",
+            "rejected_states": "refused",
+            "step_ids": [
+                (0, 0, {
+                    "sequence": 10, "label": "L1", "state_field": "state",
+                    "state_value": "submitted", "approver_field": "first_approver_id",
+                    "approver_kind": "employee",
+                }),
+                (0, 0, {
+                    "sequence": 20, "label": "L2", "state_field": "second_approval_state",
+                    "state_value": "pending", "approver_field": "second_approver_id",
+                    "approver_kind": "employee",
+                }),
+            ],
+        })
+
+    def test_dual_approver_sees_pending_at_second_step(self):
+        expense = self.env["hr.expense"].create({
+            "name": "Dual tier",
+            "employee_id": self.employee.id,
+            "total_amount_currency": 100.0,
+            "total_amount": 100.0,
+        })
+        expense.write({
+            "state": "submitted",
+            "second_approval_state": "pending",
+            "first_approver_id": self.employee.id,
+            "second_approver_id": self.employee.id,
+        })
+        buckets = self.source.with_user(self.env.user)._od19_classify_for_approver()
+        self.assertIn(expense.id, [r.id for r in buckets["pending"]])

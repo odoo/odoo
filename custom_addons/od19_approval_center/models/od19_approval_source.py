@@ -80,16 +80,20 @@ class Od19ApprovalSource(models.Model):
     def _od19_index_of_my_step(self, record, steps):
         """Index of the first step where the current user is the approver, or None."""
         for index, step in enumerate(steps):
-            if not self._od19_field_ok(record, step.approver_field):
-                continue
-            value = record[step.approver_field]
-            if not value:
-                continue
-            comodel = record._fields[step.approver_field].comodel_name
-            me_id = self._od19_me_ids_for_comodel(comodel, step.approver_kind)
-            if me_id and value.id == me_id:
+            if self._od19_is_approver_at(record, step):
                 return index
         return None
+
+    def _od19_is_approver_at(self, record, step):
+        """True when the current user is the approver designated by this step."""
+        if not self._od19_field_ok(record, step.approver_field):
+            return False
+        value = record[step.approver_field]
+        if not value:
+            return False
+        comodel = record._fields[step.approver_field].comodel_name
+        me_id = self._od19_me_ids_for_comodel(comodel, step.approver_kind)
+        return bool(me_id) and value.id == me_id
 
     def _od19_me_ids_for_comodel(self, comodel, kind):
         """Map the current user onto the comodel stored by the approver field."""
@@ -134,6 +138,8 @@ class Od19ApprovalSource(models.Model):
                 buckets["pending"].append(record)
             elif current < my_index:
                 buckets["incoming"].append(record)
+            elif self._od19_is_approver_at(record, steps[current]):
+                buckets["pending"].append(record)
         return buckets
 
     def _od19_classify_for_requester(self):
