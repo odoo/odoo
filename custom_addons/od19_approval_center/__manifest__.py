@@ -9,6 +9,8 @@
     "data": [
         "security/od19_approval_security.xml",
         "security/ir.model.access.csv",
+        "views/od19_approval_source_views.xml",
+        "views/od19_approval_menus.xml",
     ],
     "post_init_hook": "post_init_hook",
     "installable": True,

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_od19_approval_source_list" model="ir.ui.view">
+        <field name="name">od19.approval.source.list</field>
+        <field name="model">od19.approval.source</field>
+        <field name="arch" type="xml">
+            <list string="Approval Sources">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="model_name"/>
+                <field name="strategy"/>
+                <field name="sla_days"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_approval_source_form" model="ir.ui.view">
+        <field name="name">od19.approval.source.form</field>
+        <field name="model">od19.approval.source</field>
+        <field name="arch" type="xml">
+            <form string="Approval Source">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model_id"/>
+                            <field name="model_name"/>
+                            <field name="icon"/>
+                        </group>
+                        <group>
+                            <field name="strategy"/>
+                            <field name="sequence"/>
+                            <field name="sla_days"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="Requester">
+                        <field name="requester_field"/>
+                        <field name="requester_kind"/>
+                        <field name="submitted_date_field"/>
+                        <field name="decided_date_field"/>
+                    </group>
+                    <group string="States">
+                        <field name="rejected_states"/>
+                        <field name="success_states"/>
+                        <field name="action_xmlid"/>
+                    </group>
+                    <notebook>
+                        <page string="Steps" name="steps">
+                            <field name="step_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="label"/>
+                                    <field name="state_field"/>
+                                    <field name="state_value"/>
+                                    <field name="approver_field"/>
+                                    <field name="approver_kind"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_approval_source" model="ir.actions.act_window">
+        <field name="name">Approval Sources</field>
+        <field name="res_model">od19.approval.source</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_od19_approval_root"
+              name="Approval Center"
+              parent="base.menu_administration"
+              sequence="95"
+              groups="od19_approval_center.group_approval_admin"/>
+
+    <menuitem id="menu_od19_approval_source"
+              name="Approval Sources"
+              parent="menu_od19_approval_root"
+              action="action_od19_approval_source"
+              sequence="10"/>
+
+</odoo>
