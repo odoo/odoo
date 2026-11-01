@@ -124,8 +124,15 @@
 
 ### 5.5 Three-Way Match (เปิดใน CE)
 
+> **ข้อค้นพบ (2026-11-01):** สวิตช์ "3-way matching" ในหน้า Purchase Settings ผูกกับ
+> `module_account_3way_match` + `widget="upgrade_boolean"` → เป็นโมดูล **Enterprise**
+> จึง **เปิดจากหน้าตั้งค่าไม่ได้ใน CE** การควบคุม 3-way match ใน CE ทำที่ระดับสินค้าผ่าน
+> `product.purchase_method` โดยตรง (ค่าเริ่มต้นถูกต้องอยู่แล้ว: สินค้าคงคลัง=`receive`,
+> บริการถูกบังคับ=`purchase` ตาม [product.py](../../../addons/purchase/models/product.py))
+
 - ตั้ง **Bill Control = On received quantities** → `product.purchase_method='receive'` บนสินค้าคงคลัง (บริการคงไว้ `='purchase'`)
 - เมื่อเปิด: `qty_to_invoice = qty_received − qty_invoiced` (ยืนยันจาก [purchase_order_line.py](../../../addons/purchase/models/purchase_order_line.py)) → ออกบิลได้ไม่เกินของที่รับ
+- เทสต์พิสูจน์แล้วใน [test_three_way_match.py](../../../custom_addons/od19_purchase_procurement_core/tests/test_three_way_match.py) (5 เคส): default policy, บิลก่อนรับของไม่ได้, บิลจำกัดตามของที่รับ, ส่วนที่เหลือออกบิลได้หลังรับครบ, บริการ (2-way) ไม่ถูกกระทบ
 - เอกสารคู่มือ config: ตาราง Product Category / รายการสินค้าที่ใช้ 3-way vs 2-way + tolerance (ถ้าต้องใช้)
 - เป็น **data/config** เป็นหลัก ไม่เขียนโค้ดใหม่ (ใช้ความสามารถ core)
 
@@ -227,7 +234,7 @@
 | P1-T4 | ฟิลด์ override + action "ข้ามการอนุมัติ" + tracking | Backend dev | **done + verified (2026-11-01)** | เทสต์ (4) ผ่าน; เปิดเฉพาะกลุ่ม | `models/account_payment.py`, `views/account_payment_views.xml` |
 | P1-T5 | SoD check ใน `action_od19_approve()` | Backend dev | **done + verified (2026-11-01)** | เทสต์ (3) ผ่าน; ข้อยกเว้นแอดมินตามที่ตั้ง | `models/account_payment.py` |
 | P1-T6 | กลุ่มสิทธิ์ `group_od19_payment_approver` + `group_od19_payment_admin` (privilege เดียวกัน) | Backend dev | **done + verified (2026-11-01)** | ผู้อนุมัติ/แอดมินเห็นปุ่ม; คนอื่นไม่เห็น (คุมด้วย `groups=` ที่ปุ่ม) | `security/od19_payment_security.xml` |
-| P1-T7 | เปิด Three-Way Match (config) + แก้ `purchase_method` สินค้าคงคลัง | บัญชี + จัดซื้อ | todo | เทสต์ §9 (Purchase) ผ่าน; บริการไม่กระทบ | data/config (core `purchase`) |
+| P1-T7 | เปิด Three-Way Match (config) + แก้ `purchase_method` สินค้าคงคลัง | บัญชี + จัดซื้อ | **done + verified (2026-11-01)** | เทสต์ §9 (Purchase) ผ่าน; บริการไม่กระทบ | `custom_addons/od19_purchase_procurement_core/tests/test_three_way_match.py` |
 | P1-T8 | คู่มือ Block Payment + Group Payments ให้ฝ่าย AP | บัญชีเจ้าหนี้ | todo | มี SOP ระบุขั้นตอน; ทดลองใช้จริง 1 รอบ | `docs/...` (คู่มือ) |
 | P1-T9 | เทสต์ TDD P1 ครบ + อัปเดต spec wave-2 (sync) | Backend dev | todo | เกณฑ์ยอมรับ 1–9 ครบ | `tests/*`, `2026-10-21-...wave-2...md` |
 | P1-T10 | UAT จำลอง business flow (บิลจาก PO → รับของ → จ่าย) | บัญชี + จัดซื้อ | todo | ผ่านเคสจริง 10 รายการต่อส่วน (ข้อมูลตัวอย่าง) | UAT evidence |
