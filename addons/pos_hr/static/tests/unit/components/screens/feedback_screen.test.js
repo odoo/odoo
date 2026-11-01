@@ -4,7 +4,7 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 
 definePosModels();
 
-test("canEditPayment", async () => {
+test("canEditPaymentAccessible", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     order.state = "paid";

@@ -1459,13 +1459,62 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(self.main_pos_config.current_session_id.bank_statement_line_ids), 1, "There should be one cash in/out statement line")
         self.assertEqual(self.main_pos_config.current_session_id.bank_statement_line_ids[0].amount, -5, "The cash in/out amount should be -5")
 
-    def test_edit_paid_order(self):
+    def test_edit_paid_order_without_printing(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_edit_paid_order', login="pos_user")
         edited_orders = self.env['pos.order'].search([], limit=1)
         # check invoice created
         self.assertTrue(edited_orders[0].account_move)
         self.assertEqual(edited_orders[0].partner_id.name, 'Partner Test 1')
+
+    def test_edit_paid_order_with_printing(self):
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'printer_ip': '0.0.0.0',
+            'use_type': 'receipt',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
+        self.main_pos_config.write({
+            'use_order_printer': True,
+            'iface_print_auto': True,
+            'receipt_printer_ids': [Command.set(self.env['pos.printer'].search([('use_type', '=', 'receipt')]).ids)],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'test_edit_paid_order_after_print', login="pos_user")
+
+        # Editing a printed, paid order should preserve the original, create a refund,
+        # and create a replacement order with the updated payments.
+        main_order, refund_order, new_edit_order = self.env['pos.order'].search([], order='id asc', limit=3)
+
+        # Original order retains its Cash 5.00 and Bank 5.20 payments.
+        self.assertFalse(main_order.is_refund)
+        self.assertAlmostEqual(main_order.amount_total, 10.20, places=2)
+        self.assertEqual(
+            {(p.payment_method_id.name, p.amount) for p in main_order.payment_ids},
+            {('Cash', 5.00), ('Bank', 5.20)},
+        )
+
+        # Refund reverses the original payments.
+        self.assertTrue(refund_order.is_refund)
+        self.assertAlmostEqual(refund_order.amount_total, -10.20, places=2)
+        self.assertTrue(all(
+            line.refunded_orderline_id.order_id == main_order
+            for line in refund_order.lines
+        ))
+        self.assertEqual(
+            {(p.payment_method_id.name, round(p.amount, 2)) for p in refund_order.payment_ids},
+            {('Cash', -5.00), ('Bank', -5.20)},
+        )
+
+        # Edited order has two Cash payments: 3.00 and 7.20.
+        self.assertFalse(new_edit_order.is_refund)
+        self.assertAlmostEqual(new_edit_order.amount_total, 10.20, places=2)
+        self.assertEqual(
+            {(p.payment_method_id.name, round(p.amount, 2)) for p in new_edit_order.payment_ids},
+            {('Cash', 3.00), ('Cash', 7.20)},
+        )
 
     def test_reuse_empty_floating_order(self):
         """ Verify that after a payment, POS should reuse an existing empty floating order if available, instead of always creating new ones """

@@ -218,4 +218,10 @@ patch(PosAccessRightPlugin.prototype, {
     get canSwitchSelfAvailability() {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
+    get canEditPayment() {
+        if (this.config.module_pos_hr) {
+            return this.employeeIsAdmin;
+        }
+        return super.canEditPayment;
+    },
 });

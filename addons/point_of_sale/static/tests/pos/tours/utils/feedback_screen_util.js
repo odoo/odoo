@@ -439,6 +439,13 @@ export function clickEditPayment() {
     ];
 }
 
+export function isEditBtnShown() {
+    return {
+        content: "edit payment button is shown",
+        trigger: ".feedback-screen .edit-order-payment:contains(Back)",
+    };
+}
+
 export function printTicket(ticketLabel) {
     return [
         ...clickPrintButton(),
