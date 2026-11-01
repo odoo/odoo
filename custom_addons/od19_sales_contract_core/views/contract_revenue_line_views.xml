@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_od19_contract_revenue_line_list" model="ir.ui.view">
+        <field name="name">od19.contract.revenue.line.list</field>
+        <field name="model">od19.contract.revenue.line</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0">
+                <field name="contract_id"/>
+                <field name="name"/>
+                <field name="recognition_method"/>
+                <field name="total_amount"/>
+                <field name="recognized_amount"/>
+                <field name="remaining_amount"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_od19_contract_revenue_line" model="ir.actions.act_window">
+        <field name="name">Revenue Recognition Schedule</field>
+        <field name="res_model">od19.contract.revenue.line</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem
+        id="menu_od19_contract_revenue_line"
+        name="Revenue Recognition Schedule"
+        parent="sale.sale_menu_root"
+        action="action_od19_contract_revenue_line"
+        sequence="32"
+    />
+</odoo>

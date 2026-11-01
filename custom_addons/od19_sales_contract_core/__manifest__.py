@@ -1,7 +1,7 @@
 {
     "name": "OD19 Sales Contract Core",
     "author": "OD19",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.2.0",
     "depends": [
         "sale_management",
         "mail",
@@ -15,6 +15,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/sales_contract_views.xml",
+        "views/contract_revenue_line_views.xml",
         "views/sale_order_views.xml",
     ],
     "installable": True,

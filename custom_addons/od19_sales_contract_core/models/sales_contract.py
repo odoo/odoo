@@ -75,6 +75,43 @@ class Od19SalesContract(models.Model):
         store=True,
         help="Remaining amount still to be billed from the schedule.",
     )
+    revenue_line_ids = fields.One2many(
+        "od19.contract.revenue.line",
+        "contract_id",
+        string="Revenue Schedule",
+    )
+    revenue_journal_id = fields.Many2one(
+        "account.journal",
+        string="Revenue Journal",
+        help="Journal used to post TFRS 15 revenue recognition entries.",
+    )
+    deferred_revenue_account_id = fields.Many2one(
+        "account.account",
+        string="Deferred Revenue Account",
+        domain="[('account_type', 'in', ['liability_current', 'liability_non_current'])]",
+        help="Liability account debited when revenue is recognized.",
+    )
+    revenue_account_id = fields.Many2one(
+        "account.account",
+        string="Revenue Account",
+        domain="[('account_type', 'in', ['income', 'income_other'])]",
+        help="Income account credited when revenue is recognized.",
+    )
+    revenue_total_amount = fields.Float(
+        compute="_compute_revenue_totals",
+        store=True,
+        help="Transaction price allocated to the performance obligations.",
+    )
+    revenue_recognized_amount = fields.Float(
+        compute="_compute_revenue_totals",
+        store=True,
+        help="Revenue already recognized (reconciles with the general ledger).",
+    )
+    revenue_deferred_amount = fields.Float(
+        compute="_compute_revenue_totals",
+        store=True,
+        help="Revenue allocated but not yet recognized.",
+    )
 
     @api.depends(
         "contract_activity_ids.amount_to_consume",
@@ -111,6 +148,39 @@ class Od19SalesContract(models.Model):
             contract.billing_scheduled_amount = scheduled
             contract.billing_invoiced_amount = invoiced
             contract.billing_remaining_amount = scheduled - invoiced
+
+    @api.depends(
+        "revenue_line_ids.total_amount",
+        "revenue_line_ids.recognized_amount",
+    )
+    def _compute_revenue_totals(self):
+        for contract in self:
+            contract.revenue_total_amount = sum(
+                contract.revenue_line_ids.mapped("total_amount")
+            )
+            contract.revenue_recognized_amount = sum(
+                contract.revenue_line_ids.mapped("recognized_amount")
+            )
+            contract.revenue_deferred_amount = (
+                contract.revenue_total_amount - contract.revenue_recognized_amount
+            )
+
+    def action_recognize_revenue(self):
+        """Recognize the revenue of every obligation that still has a balance."""
+        self.ensure_one()
+        pending = self.revenue_line_ids.filtered(
+            lambda line: line._od19_target_recognized_amount()
+            - line.recognized_amount
+            > 1e-6
+        ).sorted("sequence")
+        if not pending:
+            raise UserError(
+                _("There is no revenue left to recognize for this contract.")
+            )
+        action = True
+        for line in pending:
+            action = line.action_recognize()
+        return action
 
     def action_create_next_billing_invoice(self):
         """Create the invoice for the next un-invoiced installment."""
