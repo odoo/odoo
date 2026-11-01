@@ -115,7 +115,7 @@
                 <separator/>
                 <filter string="My Advances" name="my_advances"
                         domain="[('employee_id.user_id', '=', uid)]"/>
-                <group expand="0" string="Group By">
+                <group>
                     <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
                     <filter string="Department" name="group_department" context="{'group_by': 'department_id'}"/>
                     <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
