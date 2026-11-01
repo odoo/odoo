@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!--  F-SS-001 Sales Services Form (ใบรับงานบริการ)                  -->
+    <!-- ============================================================ -->
+    <record id="view_sales_services_form" model="ir.ui.view">
+        <field name="name">sales.services.form</field>
+        <field name="model">sales.services.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sales_services_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Sales Services Form</field>
+        <field name="res_model">sales.services.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sales_services_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_service_card.model_od19_service_card"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  F-SS-002 Claim Form (ใบเคลม)                                  -->
+    <!-- ============================================================ -->
+    <record id="view_claim_form" model="ir.ui.view">
+        <field name="name">claim.form</field>
+        <field name="model">claim.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_claim_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Claim Form</field>
+        <field name="res_model">claim.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_claim_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_service_warranty.model_od19_warranty_claim"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  F-SS-003 Product Return Form (ใบรับคืนสินค้า)                 -->
+    <!-- ============================================================ -->
+    <record id="view_product_return_form" model="ir.ui.view">
+        <field name="name">product.return.form</field>
+        <field name="model">product.return.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_product_return_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Product Return Form</field>
+        <field name="res_model">product.return.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_product_return_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_product_return.model_od19_product_return"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  F-IV-013 Distribute Order Form (ใบส่งของ)                     -->
+    <!-- ============================================================ -->
+    <record id="view_distribute_order_form" model="ir.ui.view">
+        <field name="name">distribute.order.form</field>
+        <field name="model">distribute.order.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_distribute_order_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Distribute Order Form</field>
+        <field name="res_model">distribute.order.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_distribute_order_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_transportation.model_od19_transport_order"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  R-SS-001 Sales Services Report                                -->
+    <!-- ============================================================ -->
+    <record id="view_sales_services_report" model="ir.ui.view">
+        <field name="name">sales.services.report</field>
+        <field name="model">sales.services.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_Start_Date" required="1"/>
+                    <field name="p_End_Date" required="1"/>
+                    <field name="p_Customer" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sales_services_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Sales Services Report</field>
+        <field name="res_model">sales.services.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sales_services_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_service_card.model_od19_service_card"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  R-SS-002 Claim Report                                         -->
+    <!-- ============================================================ -->
+    <record id="view_claim_report" model="ir.ui.view">
+        <field name="name">claim.report</field>
+        <field name="model">claim.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_Start_Date" required="1"/>
+                    <field name="p_End_Date" required="1"/>
+                    <field name="p_Customer" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_claim_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Claim Report</field>
+        <field name="res_model">claim.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_claim_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_service_warranty.model_od19_warranty_claim"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  R-SS-003 Product Return Report                                -->
+    <!-- ============================================================ -->
+    <record id="view_product_return_report" model="ir.ui.view">
+        <field name="name">product.return.report</field>
+        <field name="model">product.return.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_Start_Date" required="1"/>
+                    <field name="p_End_Date" required="1"/>
+                    <field name="p_Customer" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_product_return_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Product Return Report</field>
+        <field name="res_model">product.return.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_product_return_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_product_return.model_od19_product_return"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+</odoo>
