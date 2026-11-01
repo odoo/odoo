@@ -3,6 +3,7 @@ from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, Test
 from odoo.tests import tagged
 
 from freezegun import freeze_time
+from lxml import etree
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -174,6 +175,28 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
         self.assertEqual(bill.message_main_attachment_id.mimetype, "application/pdf", "The main attachment should be a pdf")
         self.assertEqual(bill.message_main_attachment_id.res_id, bill.id, "The main attachment res_id should be the invoice id")
         self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 4, "All nested attachments should be attached to a chatter message")
+
+    def test_import_empty_embedded_document(self):
+        """
+        Importing an xml with an empty embedded document (self-closing EmbeddedDocumentBinaryObject) should skip it instead of failing the import
+        """
+        _filename, file_content = self._import_file_content('test_import_embedded_pdf', 'xml')
+        xml_tree = etree.fromstring(file_content)
+
+        # Keep a single additional document, without any content
+        additional_doc, *other_docs = xml_tree.findall('./{*}AdditionalDocumentReference')
+        for doc in other_docs:
+            xml_tree.remove(doc)
+        additional_doc.find('./{*}Attachment/{*}EmbeddedDocumentBinaryObject').text = None
+        xml_attachment = self.env['ir.attachment'].create({
+            'mimetype': 'application/xml',
+            'name': 'test_invoice.xml',
+            'raw': etree.tostring(xml_tree),
+        })
+
+        bill = self._import_invoice_as_attachment_on(attachment=xml_attachment)
+        self.assertRecordValues(bill.invoice_line_ids, [{'quantity': 1.0, 'price_unit': 657.0}])
+        self.assertFalse(bill.attachment_ids.filtered(lambda att: att.mimetype == 'application/pdf'))
 
     def test_import_credit_note_payment_due_date(self):
         """ Test that the due date are imported correctly from the credit note """

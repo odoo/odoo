@@ -345,7 +345,8 @@ class SaleOrderLine(models.Model):
             triggering_rule_ids = []
             seen_wh_ids = set()
             for move in sorted_moves:
-                if move.warehouse_id.id not in seen_wh_ids and move.rule_id:
+                # A move without warehouse (created by a rule without warehouse) does not start a new chain
+                if move.warehouse_id.id not in seen_wh_ids and move.rule_id and (move.warehouse_id or not triggering_rule_ids):
                     triggering_rule_ids.append(move.rule_id.id)
                     seen_wh_ids.add(move.warehouse_id.id)
         moves = moves.filtered(lambda m: m.state != 'cancel')

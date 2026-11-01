@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import Form, common, tagged, WhitespaceInsensitive
 from odoo.tools import mute_logger
 
@@ -1050,6 +1050,40 @@ action = {
                 self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 38)
 
+    def test_004_check_method_process_failing_record(self):
+        """ The record failing a time-based automation must be logged: the whole
+        run is rolled back and fails again until that record is fixed. """
+        model = self.env["ir.model"]._get("base.automation.lead.test")
+        self.env["base.automation"].search([('trigger', 'in', ['on_time', 'on_time_created', 'on_time_updated'])]).active = False
+        automation = create_automation(
+            self,
+            model_id=model.id,
+            trigger='on_time',
+            trg_date_id=model.field_id.filtered(lambda f: f.name == 'date_automation_last').id,
+            trg_date_range=2,
+            trg_date_range_type='minutes',
+            trg_date_range_mode='after',
+            _actions={
+                'state': 'code',
+                'code': "if record.name == 'bad':\n    raise UserError('boom')",
+            },
+        )
+        past_date = self.env.cr.now() - datetime.timedelta(days=1)
+        _good_1, bad, _good_2 = self.env["base.automation.lead.test"].create([
+            {'name': name, 'date_automation_last': past_date} for name in ('good 1', 'bad', 'good 2')
+        ])
+
+        with (
+            self.enter_registry_test_mode(),
+            mute_logger('odoo.addons.base.models.ir_cron'),
+            self.assertLogs('odoo.addons.base_automation', 'ERROR') as capture,
+        ):
+            self.automation_cron.method_direct_trigger()
+
+        self.assertEqual(len(capture.output), 1)
+        self.assertIn(f"`{automation.name}` on record base.automation.lead.test({bad.id},)", capture.output[0])
+        self.assertFalse(automation.last_run)
+
     def test_005_check_model_with_different_rec_name_char(self):
         model = self.env["ir.model"]._get("base.automation.model.with.recname.char")
 
@@ -1903,6 +1937,23 @@ class TestHttp(common.HttpCase):
         response = self.url_open("/web/hook/0123456789", data=json.dumps({"name": "some name"}))
         self.assertEqual(response.json(), {"status": "error"})
         self.assertEqual(response.status_code, 404)
+
+    def test_webhook_trigger_failing_record(self):
+        """ The record on which a webhook fails must be logged, as the payload is
+        only logged at debug level. """
+        model = self.env["ir.model"]._get("base.automation.linked.test")
+        record_getter = "model.search([('name', '=', payload['name'])])"
+        automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, _actions={
+            "state": "code",
+            "code": "raise UserError('boom')",
+        })
+        obj = self.env[model.model].create({"name": "some name"})
+
+        with self.assertLogs("odoo.addons.base_automation", "WARNING") as capture, self.assertRaises(UserError):
+            automation._execute_webhook({"name": "some name"})
+
+        self.assertEqual(len(capture.output), 1)
+        self.assertIn(f"Webhook #{automation.id} failed on record base.automation.linked.test({obj.id},)", capture.output[0])
 
     def test_payload_in_action_server(self):
         model = self.env["ir.model"]._get("base.automation.linked.test")

@@ -51,6 +51,7 @@ import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { Domain } from "@web/core/domain";
 import { SIZES } from "@web/core/ui/ui_service";
+import { clearLocalStorage } from "../utils/devices_identifier_sequence";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -296,7 +297,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.device.saveUnusedNumber(orders);
         await this.data.resetIndexedDB();
         sessionStorage.clear();
-        localStorage.clear();
+        clearLocalStorage();
         const url = new URL(window.location.href);
 
         if (fullReload) {
@@ -1214,24 +1215,11 @@ export class PosStore extends WithLazyGetterTrap {
                 // Find candidate based on instantly created variants.
                 const attributeValues = this.models["product.template.attribute.value"]
                     .readMany(payload.attribute_value_ids)
-                    .filter((value) => value.attribute_id.create_variant !== "no_variant")
-                    .map((value) => value.id);
+                    .filter((value) => value.attribute_id.create_variant !== "no_variant");
 
-                let candidate = productTemplate.product_variant_ids.find((variant) => {
-                    const attributeIds = variant.product_template_attribute_value_ids.map(
-                        (value) => value.id
-                    );
-                    return (
-                        attributeValues.every((id) => attributeIds.includes(id)) &&
-                        attributeValues.length
-                    );
-                });
+                let candidate = productTemplate.getVariantForCombination(attributeValues);
 
-                const isDynamic = productTemplate.attribute_line_ids.some(
-                    (line) => line.attribute_id.create_variant === "dynamic"
-                );
-
-                if (!candidate && isDynamic) {
+                if (!candidate && productTemplate.hasDynamicAttributes()) {
                     // Need to create the new product.
                     const result = await this.data.callRelated(
                         "product.template",
@@ -1239,6 +1227,14 @@ export class PosStore extends WithLazyGetterTrap {
                         [productTemplate.id, payload.attribute_value_ids, this.config.id]
                     );
                     candidate = result["product.product"][0];
+                }
+
+                if (!candidate && attributeValues.length) {
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Variant does not exist"),
+                        body: _t("This option or combination of options is not available"),
+                    });
+                    return false;
                 }
 
                 Object.assign(values, {
@@ -3178,11 +3174,26 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async validateOrderFast(paymentMethod) {
+        const order = this.getOrder();
         const validation = new OrderPaymentValidation({
             pos: this,
-            orderUuid: this.getOrder().uuid,
+            orderUuid: order.uuid,
             fastPaymentMethod: paymentMethod,
         });
+        if (paymentMethod.payment_method_type === "qr_code") {
+            const qrPaymentLines = order.payment_ids.filter(
+                (l) => l.payment_method_id.id === paymentMethod.id
+            );
+            if (!qrPaymentLines.length) {
+                return;
+            }
+            const line = qrPaymentLines[qrPaymentLines.length - 1];
+            const resp = await this.showQR(line);
+            if (!line.handlePaymentResponse(resp)) {
+                order.removePaymentline(line);
+                return;
+            }
+        }
         await validation.validateOrder(false);
     }
 

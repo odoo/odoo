@@ -159,7 +159,7 @@ class ProductProduct(models.Model):
                         [('move_dest_ids', '=', False)],
                     ]),
                 ]),  # includes moves going to customer or production
-                [('location_dest_id.usage', '!=', 'inventory')]  # exclude scrap
+                [('location_dest_id.usage', 'not in', ['inventory', 'supplier'])]  # exclude scrap and vendor returns
             ])
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):

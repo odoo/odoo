@@ -21,7 +21,7 @@ import {
     isValidEmail,
     orderUsageUTCtoLocalUtil,
 } from "@point_of_sale/utils";
-import { getOrderLineValues } from "./card_utils";
+import { getAttributeValues, getOrderLineValues } from "./card_utils";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
 
@@ -95,6 +95,12 @@ export class SelfOrder extends Reactive {
         if (this.config.self_ordering_mode === "kiosk") {
             this.data.connectWebSocket("STATUS", async ({ status }) => {
                 await this.handleKioskSessionStatusChange(status);
+            });
+            this.data.connectWebSocket("CONFIG_UPDATED", ({ write_date }) => {
+                // The bus replays recent notifications on first poll: skip those already loaded
+                if (write_date > this.config.raw.write_date) {
+                    window.location.reload();
+                }
             });
             this.data.connectWebSocket("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
@@ -219,7 +225,9 @@ export class SelfOrder extends Reactive {
     }
     computeAvailableCategories() {
         this.availableCategories = this.getAvailableCategories();
-        this.currentCategory = this.availableCategories[0];
+        if (!this.isCategoryAvailable(this.currentCategory?.id)) {
+            this.currentCategory = this.availableCategories[0];
+        }
     }
 
     isCategoryAvailable(categId) {
@@ -287,6 +295,9 @@ export class SelfOrder extends Reactive {
         customValues = {},
         comboValues = {}
     ) {
+        if (productTemplate.isDeletedCombination(getAttributeValues(selectedValues, this.models))) {
+            return;
+        }
         const product = productTemplate.product_variant_ids[0];
         const values = getOrderLineValues(
             this,
@@ -889,9 +900,20 @@ export class SelfOrder extends Reactive {
         return webFormatCurrency(price, this.currency.id);
     }
 
+    isLineProductAvailable(line) {
+        if (!line.product_id?.self_order_available) {
+            return false;
+        }
+        const categIds = line.product_id.product_tmpl_id?.pos_categ_ids?.length
+            ? line.product_id.product_tmpl_id.pos_categ_ids.map((c) => c.id)
+            : [0];
+        return categIds.some((id) => this.isCategoryAvailable(id));
+    }
+
     verifyCart() {
         let result = true;
         const unavailableProducts = new Set();
+        this.availableCategories = this.getAvailableCategories();
 
         for (const line of this.currentOrder.unsentLines) {
             if (line.combo_parent_id?.uuid) {
@@ -903,14 +925,14 @@ export class SelfOrder extends Reactive {
                 ? Object.values(this.currentOrder.uiState.lineChanges[line.uuid]).every((v) => !v)
                 : false;
 
-            const wrongChild = line.combo_line_ids.find((l) => !l.product_id.self_order_available);
-            if (wrongChild || !line.product_id?.self_order_available) {
+            const wrongChild = line.combo_line_ids.find((l) => !this.isLineProductAvailable(l));
+            if (wrongChild || !this.isLineProductAvailable(line)) {
                 if (alreadySent) {
                     line.qty = alreadySent.qty;
                     line.customer_note = alreadySent.customer_note;
                     line.selected_attributes = alreadySent.selected_attributes;
                 } else {
-                    const productName = !line.product_id?.self_order_available
+                    const productName = !this.isLineProductAvailable(line)
                         ? line.product_id?.name
                         : wrongChild?.product_id?.name;
 

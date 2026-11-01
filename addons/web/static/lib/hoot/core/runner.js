@@ -1,10 +1,16 @@
 /** @odoo-module */
 
-import { on, setFrameRate } from "@odoo/hoot-dom";
+import { on } from "@odoo/hoot-dom";
 import { markRaw, reactive, toRaw } from "@odoo/owl";
-import { cleanupDOM, defineRootNode } from "@web/../lib/hoot-dom/helpers/dom";
-import { cleanupEvents, enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
-import { cleanupTime, setupTime } from "@web/../lib/hoot-dom/helpers/time";
+import { _cleanupDOM, _defineRootNode } from "@web/../lib/hoot-dom/helpers/dom";
+import { _cleanupEvents, _enableEventLogs } from "@web/../lib/hoot-dom/helpers/events";
+import {
+    _cleanupTime,
+    _discardTimers,
+    _setDefaultWaitTimeout,
+    _setFrameRate,
+    _setupTime,
+} from "@web/../lib/hoot-dom/helpers/time";
 import { exposeHelpers, isInstanceOf, isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     CASE_EVENT_TYPES,
@@ -262,6 +268,12 @@ const WARNINGS = {
         "The following tag names are very similar to each other and may be confusing for other developers:",
 };
 const RESIZE_OBSERVER_MESSAGE = "ResizeObserver loop completed with undelivered notifications";
+/**
+ * Share of a test's timeout given by default to DOM waits ('waitUntil' and
+ * derived helpers), so that a failing wait is reported before the test itself
+ * times out.
+ */
+const WAIT_TIMEOUT_RATIO = 2 / 3;
 const handledErrors = new WeakSet();
 /** @type {string | null} */
 let lastPresetWarn = null;
@@ -989,6 +1001,9 @@ export class Runner {
             // (and not in debug).
             const restoreConsole = handleConsoleIssues(test, !this.debug);
 
+            const timeout = $floor(test.config.timeout || this.config.timeout);
+            _setDefaultWaitTimeout(timeout && !this.debug ? timeout * WAIT_TIMEOUT_RATIO : 0);
+
             // Before test
             this.state.currentTest = test;
             this.expectHooks.before(test);
@@ -1003,7 +1018,6 @@ export class Runner {
             // ! keep the smallest stack trace possible:
             // !    Runner.start() > Test.run() > Error
             const testPromise = Promise.resolve(test.run());
-            const timeout = $floor(test.config.timeout || this.config.timeout);
             const timeoutPromise = new Promise((resolve, reject) => {
                 // Set abort signal
                 this._resolveCurrent = resolve;
@@ -1026,6 +1040,9 @@ export class Runner {
             await Promise.race([testPromise, timeoutPromise])
                 .catch(this._handleError)
                 .finally(() => {
+                    // Prevent pending waits from resuming the test once it has
+                    // ended, e.g. after timing out
+                    _discardTimers();
                     this._resolveCurrent = null;
 
                     if (timeoutId) {
@@ -1931,28 +1948,28 @@ export class Runner {
         }
 
         // Register default hooks
-        this.beforeAll(defineRootNode.bind(null, this.fixture.get));
+        this.beforeAll(_defineRootNode.bind(null, this.fixture.get));
         this.afterAll(
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
             !this.debug && on(window, "pointerdown", warnUserEvent),
             !this.debug && on(window, "keydown", warnUserEvent)
         );
-        this.beforeEach(this.fixture.setup, setupWindow, setupTime);
+        this.beforeEach(this.fixture.setup, setupWindow, _setupTime);
         this.afterEach(
             this.fixture.cleanup,
             cleanupAnimations,
             cleanupWindow,
             cleanupNetwork,
             cleanupNavigator,
-            cleanupEvents,
-            cleanupDOM,
+            _cleanupEvents,
+            _cleanupDOM,
             cleanupDate,
-            cleanupTime
+            _cleanupTime
         );
 
-        enableEventLogs(logger.canLog("debug"));
-        setFrameRate(this.config.fps);
+        _enableEventLogs(logger.canLog("debug"));
+        _setFrameRate(this.config.fps);
 
         await this._callbacks.call("before-all", this, logger.error);
     }

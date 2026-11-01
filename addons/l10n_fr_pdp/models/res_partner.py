@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
+from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
 
 _logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ class ResPartner(models.Model):
         # Extend to rename the `peppol` option in the `invoice_sending_method` selection
         fields = super().fields_get(allfields, attributes)
         company = self.env.company
-        if not self.env.context.get("studio") and company._l10n_fr_pdp_uses_french_terminology() and 'invoice_sending_method' in fields:
+        if not self.env.context.get("studio") and company and company._l10n_fr_pdp_uses_french_terminology() and 'invoice_sending_method' in fields:
             field = fields['invoice_sending_method']
             if 'selection' in field:
                 field['selection'] = [('peppol', self.env._('by the Approved Platform')) if option[0] == 'peppol' else option for option in field['selection']]
@@ -87,6 +88,29 @@ class ResPartner(models.Model):
             return id_value[:9]
         return False
 
+    def _l10n_fr_pdp_get_flow_10_identifier(self):
+        """Return the scheme and identifier used for a Flow 10 party."""
+        self.ensure_one()
+        country_code = (self.country_id.code or '').upper()
+        specific_scheme = drom_com_territories.get_specific_identifier_scheme(country_code)
+        if specific_scheme and self.ref:
+            return specific_scheme['qualifier'], self.ref
+        if siren := self._l10n_fr_pdp_get_siren():
+            return '0002', siren
+
+        partner_vat = self.vat or ''
+        if country_code == 'WF' and self.name:
+            return '0227', country_code + self.name[:16]
+        if (
+            specific_scheme
+            or drom_com_territories.is_france_territory(country_code)
+            or self.country_id in self.env.ref('base.europe').country_ids
+        ):
+            return ('0223', partner_vat) if len(partner_vat) > 1 else (False, False)
+        if country_code and self.name:
+            return '0227', country_code + self.name[:16]
+        return False, False
+
     def _l10n_fr_pdp_get_base_identifier(self):
         self.ensure_one()
 
@@ -99,6 +123,8 @@ class ResPartner(models.Model):
             return 'siren', siren
         elif len(siret) == 14:
             return 'siret', siret
+        elif siren := self._l10n_fr_get_siren_from_vat():
+            return 'siren', siren
         return None, None
 
     def _get_suggested_pdp_identifier(self):

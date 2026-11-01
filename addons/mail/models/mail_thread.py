@@ -1678,7 +1678,13 @@ class MailThread(models.AbstractModel):
                 if part.get('Content-Type', '').startswith('pdf;'):
                     part.replace_header('Content-Type', 'application/pdf' + part.get('Content-Type', '')[3:])
 
-                content = part.get_content()
+                is_attachment = bool(filename) or part.get('content-disposition', '').strip().startswith('attachment')
+                content = None
+                if is_attachment:
+                    content = part.get_payload(decode=True)
+                if content is None:
+                    # Parts holding a message, such as a forwarded eml, decode to no payload
+                    content = part.get_content()
                 info = {'encoding': encoding}
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
@@ -1686,7 +1692,7 @@ class MailThread(models.AbstractModel):
                     attachments.append(self._Attachment(filename, content, info))
                     continue
                 # 1) Explicit Attachments -> attachments
-                if filename or part.get('content-disposition', '').strip().startswith('attachment'):
+                if is_attachment:
                     attachments.append(self._Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>

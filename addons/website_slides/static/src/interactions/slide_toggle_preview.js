@@ -18,7 +18,7 @@ export class SlideTogglePreview extends Interaction {
     };
 
     setup() {
-        this.isPreview = false;
+        this.isPreview = this.el.classList.contains("text-bg-success");
     }
 
     async toggleSlidePreview() {

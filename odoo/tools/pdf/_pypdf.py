@@ -1,7 +1,8 @@
 from typing import Dict, Any
 
 from pypdf import errors, filters, generic, PageObject, PdfReader as _Reader, PdfWriter as _Writer
-from pypdf.generic import create_string_object
+from pypdf.annotations import Link
+from pypdf.generic import create_string_object, Fit
 from pypdf import __version__  # noqa: F401
 
 __all__ = [
@@ -26,6 +27,7 @@ def _set_crop_box(self, value):
 
 PageObject.mergePage = lambda self, page2: self.merge_page(page2)
 PageObject.compressContentStreams = lambda self: self.compress_content_streams()
+PageObject.rotateClockwise = lambda self, angle: self.rotate(angle)
 PageObject.mediaBox = property(lambda self: self.mediabox, _set_media_box)
 PageObject.cropBox = property(lambda self: self.cropbox, _set_crop_box)
 # use lambdas (rather than copying) to allow overrides of the base method
@@ -54,6 +56,10 @@ class PdfReader(_Reader):
     def getDocumentInfo(self):
         return self.metadata
 
+    @property
+    def outlines(self):
+        return self.outline
+
     def getFormTextFields(self):
         return self.get_form_text_fields()
 
@@ -73,8 +79,8 @@ class PdfWriter(_Writer):
     def addPage(self, page):
         return self.add_page(page)
 
-    def appendPagesFromReader(self, reader):
-        return self.append_pages_from_reader(reader)
+    def appendPagesFromReader(self, reader, after_page_append=None):
+        return self.append_pages_from_reader(reader, after_page_append)
 
     def addBlankPage(self, width=None, height=None):
         return self.add_blank_page(width=width, height=height)
@@ -93,3 +99,30 @@ class PdfWriter(_Writer):
 
     def _addObject(self, *args, **kwargs):
         return self._add_object(*args, **kwargs)
+
+    def addLink(self, pagenum, pagedest, rect, border=None, fit='/Fit', *args):
+        return self.add_annotation(
+            page_number=pagenum,
+            annotation=Link(
+                rect=rect,
+                border=border,
+                target_page_index=pagedest,
+                fit=Fit(fit, args),
+            ),
+        )
+
+    def addBookmark(
+        self, title, pagenum, parent=None, color=None, bold=False, italic=False, fit='/Fit', *args,
+    ):
+        return self.add_outline_item(
+            title,
+            pagenum,
+            parent=parent,
+            color=color,
+            bold=bold,
+            italic=italic,
+            fit=Fit(fit, args),
+        )
+
+    def setPageMode(self, mode):
+        self.page_mode = mode

@@ -6,6 +6,8 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { dispatchCleanForSave } from "./_helpers/dispatch";
+import { setColor, setFontSize } from "./_helpers/user_actions";
+import { unformat } from "./_helpers/format";
 
 const config = { Plugins: [...MAIN_PLUGINS, QWebPlugin] };
 describe("qweb picker", () => {
@@ -364,5 +366,96 @@ test("cleaning does not remove t-out links", async () => {
     );
     expect(editor.getContent().trim().replace(/\s+/g, " ")).toBe(
         '<ul> <li><a href="xyz" t-out="xyz"></a></li> </ul>'
+    );
+});
+
+test("should wrap `t` in `span and be able to remove it`", async () => {
+    const { editor, el } = await setupEditor(`<p>x[<t t-out="hello">abc</t>]x</p>`, { config });
+    expect(getContent(el)).toBe(
+        `<p>x[<t t-out="hello" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">abc</t>]x</p>`
+    );
+    setFontSize("10px")(editor);
+    expect(getContent(el)).toBe(
+        `<p>x[<span style="font-size: 10px;"><t t-out="hello" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">abc</t></span>]x</p>`
+    );
+    setFontSize("")(editor);
+    expect(getContent(el)).toBe(
+        `<p>x[<t t-out="hello" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">abc</t>]x</p>`
+    );
+});
+
+test("should apply font size to the span parent when `t` tag is the sole child of a span and be able to remove it", async () => {
+    const { editor, el } = await setupEditor(`<p><span>[<t t-out="'Test'">Test</t>]</span></p>`, {
+        config,
+    });
+    expect(getContent(el)).toBe(
+        `<p><span>[<t t-out="'Test'" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Test</t>]</span></p>`
+    );
+    setFontSize("10px")(editor);
+    expect(getContent(el)).toBe(
+        `<p><span style="font-size: 10px;">[<t t-out="'Test'" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Test</t>]</span></p>`
+    );
+    setFontSize("")(editor);
+    expect(getContent(el)).toBe(
+        `<p>[<t t-out="'Test'" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Test</t>]</p>`
+    );
+});
+
+test("should color `t` with `span` and be able to remove it", async () => {
+    const { editor, el } = await setupEditor(
+        `<p>x<span style="color: rgb(255, 0, 0)">[<t t-out="hello">abc</t>]</span>x</p>`,
+        { config }
+    );
+    expect(getContent(el)).toBe(
+        `<p>x<span style="color: rgb(255, 0, 0)">[<t t-out="hello" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">abc</t>]</span>x</p>`
+    );
+    setColor("", "color")(editor);
+    expect(getContent(el)).toBe(
+        `<p>x[<t t-out="hello" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">abc</t>]x</p>`
+    );
+});
+
+test("should not apply font tag to t nodes (protects if else nodes separation)", async () => {
+    const { editor, el } = await setupEditor(
+        unformat(`[
+            <p>
+                <t t-if="object.partner_id.parent_id">
+                   <t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>
+                </t>
+                <t t-else="">
+                    <t t-out="object.partner_id.name or ''">Brandon Freeman</t>
+                </t>
+            </p>
+        ]`),
+        { config }
+    );
+    expect(getContent(el)).toBe(
+        unformat(`[
+            <p>
+                <t t-if="object.partner_id.parent_id" data-oe-t-inline="true" data-oe-t-group="0" data-oe-t-selectable="true" data-oe-t-group-active="true">
+                    <t t-out="object.partner_id.parent_id.name or ''" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Azure Interior</t>
+                </t>
+                <t t-else="" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="0">
+                    <t t-out="object.partner_id.name or ''" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Brandon Freeman</t>
+                </t>
+            </p>
+        ]`)
+    );
+    setColor("red", "color")(editor);
+    expect(getContent(el)).toBe(
+        unformat(`[
+            <p>
+                <t t-if="object.partner_id.parent_id" data-oe-t-inline="true" data-oe-t-group="1" data-oe-t-selectable="true" data-oe-t-group-active="true">
+                    <font style="color: red;">
+                        <t t-out="object.partner_id.parent_id.name or ''" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Azure Interior</t>
+                    </font>
+                </t>
+                <t t-else="" data-oe-t-inline="true" data-oe-t-selectable="true" data-oe-t-group="1">
+                    <font style="color: red;">
+                        <t t-out="object.partner_id.name or ''" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">Brandon Freeman</t>
+                    </font>
+                </t>
+            </p>
+        ]`)
     );
 });

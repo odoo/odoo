@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import unittest
 from unittest.mock import MagicMock, patch
 
+import requests
 from werkzeug.exceptions import Forbidden
 from werkzeug.urls import url_encode
 
@@ -10,6 +12,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 from odoo.tools.urls import urljoin as url_join
 
+from odoo.addons.payment.const import SENSITIVE_KEYS as PAYMENT_SENSITIVE_KEYS
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe.controllers.main import StripeController
@@ -258,6 +261,37 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         with patch.object(self.env.registry['payment.provider'], '_send_api_request') as mock:
             self.stripe.action_stripe_create_webhook()
             self.assertEqual(mock.call_count, 0)
+
+    def test_sensitive_values_are_redacted_from_logs(self):
+        """ Test that all Stripe sensitive values are redacted from the logged API requests and
+        responses. """
+        # Only rely on Stripe's sensitive keys, not on those added by other installed providers.
+        original_sensitive_keys = set(PAYMENT_SENSITIVE_KEYS)
+        PAYMENT_SENSITIVE_KEYS.clear()
+        PAYMENT_SENSITIVE_KEYS.update(const.SENSITIVE_KEYS)
+
+        def restore_sensitive_keys():
+            PAYMENT_SENSITIVE_KEYS.clear()
+            PAYMENT_SENSITIVE_KEYS.update(original_sensitive_keys)
+        self.addCleanup(restore_sensitive_keys)
+
+        sensitive_values = {key: f'dummy_{key}_KJtHgNwt2KS3' for key in ('client_secret', 'secret')}
+        response = requests.Response()
+        response.status_code = 200
+        response._content = json.dumps(sensitive_values).encode()
+
+        with self.assertLogs(
+            'odoo.addons.payment.models.payment_provider', level='INFO'
+        ) as log_catcher:
+            self.stripe._log_request('POST', 'https://dummy.url', sensitive_values)
+            self.stripe._log_response(response)
+
+        request_log, response_log = log_catcher.output
+        for key, value in sensitive_values.items():
+            self.assertNotIn(value, request_log)
+            self.assertIn(f"'{key}': '[REDACTED]'", request_log)
+            self.assertNotIn(value, response_log)
+            self.assertIn(f'"{key}": "[REDACTED]"', response_log)
 
     def test_create_account_link_pass_required_parameters(self):
         """ Test that the generation of an account link includes all the required parameters. """

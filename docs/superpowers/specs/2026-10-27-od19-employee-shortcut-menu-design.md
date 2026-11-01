@@ -2,7 +2,7 @@
 
 - **วันที่:** 2026-10-27
 - **โมดูลที่แก้:** `od19_website` (ไม่สร้างโมดูลใหม่)
-- **สถานะ:** รอตรวจสอบ (Draft for review)
+- **สถานะ:** อนุมัติแล้ว (Approved)
 - **ผู้เกี่ยวข้อง:** พนักงานทุกคน (ผู้ใช้ภายใน) / ฝ่ายไอที–แอดมิน
 
 ---
@@ -49,7 +49,7 @@
 |---|---|---|
 | 1 | ไอคอน systray + dropdown 4 ลิงก์ | หลังบ้าน (`web.assets_backend`) |
 | 2 | การ์ด "คู่มือการใช้งาน" ในกริด Quick Access | หน้าเว็บ Employee Portal |
-| 3 | เทสต์ JS (QUnit) ตรวจการลงทะเบียน systray และการเปิด dropdown | `static/tests/` |
+| 3 | เทสต์ Python (HttpCase) ตรวจการผูก asset ใน bundle และการ์ดบน Portal | `tests/` |
 
 ### 3.2 นอกขอบเขต (Out of scope)
 
@@ -95,10 +95,10 @@
 | ไฟล์ | การเปลี่ยนแปลง |
 |---|---|
 | `custom_addons/od19_website/static/src/js/od19_shortcut_menu.js` | **เพิ่ม** — ตัว component + การขึ้นทะเบียน systray |
-| `custom_addons/od19_website/static/src/css/od19_website.css` | **แก้ (เล็ก)** — สไตล์ dropdown/ไอคอนถ้าจำเป็น |
 | `custom_addons/od19_website/views/employee_portal.xml` | **แก้** — เพิ่มการ์ดคู่มือ |
 | `custom_addons/od19_website/__manifest__.py` | **แก้** — เพิ่ม asset `web.assets_backend` และ dependency `web_tour` |
-| `custom_addons/od19_website/static/tests/od19_shortcut_menu_tests.js` | **เพิ่ม** — เทสต์ JS |
+| `custom_addons/od19_website/tests/test_employee_shortcut_menu.py` | **เพิ่ม** — เทสต์ Python (HttpCase) |
+| `custom_addons/od19_website/tests/__init__.py` | **แก้** — เพิ่ม import เทสต์ใหม่ |
 
 ---
 
@@ -114,7 +114,7 @@
 
 | ระดับ | เนื้อหา |
 |---|---|
-| JS unit (QUnit) | ตรวจว่า systray registry มี key ของเรา และเมื่อ mount แล้วมีรายการครบ 4 รายการ + เปิด dropdown ได้ |
+| Python HttpCase | ตรวจว่าไฟล์ `od19_shortcut_menu.js` ถูกผูกเข้า bundle `web.assets_backend` จริง และหน้า `/employee-portal` มีการ์ด "คู่มือการใช้งาน" รวมทั้งสิ้น 10 ใบ |
 | Manual | ตรวจว่าไอคอนโผล่ทุกหน้า, กดแต่ละรายการไปถูกปลายทาง, และ `Alt+P` ยังทำงาน |
 
 > หมายเหตุ: เทสต์ต้องรันด้วยพอร์ตแยกจาก dev server (บทเรียน HttpCase/พอร์ตชนกัน) หรือปิด dev server ก่อนรัน

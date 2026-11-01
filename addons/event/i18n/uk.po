@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-24 17:38+0000\n"
-"PO-Revision-Date: 2026-10-08 11:33+0000\n"
+"PO-Revision-Date: 2026-10-15 12:33+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/event/"
 "uk/>\n"
@@ -3794,12 +3794,12 @@ msgstr "Відповідальний за подію"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_share_url
 msgid "Event Share URL"
-msgstr ""
+msgstr "Поділитися посиланням на подію"
 
 #. module: event
 #: model:ir.model,name:event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "Слот події"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -3888,7 +3888,7 @@ msgstr "Тип події"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__event_type_ids
 msgid "Event Types"
-msgstr ""
+msgstr "Тип події"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
@@ -4011,7 +4011,7 @@ msgstr "Насолоджуйтесь живою музикою, місцевою
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "Вказується у часовому поясі події."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -4019,6 +4019,8 @@ msgid ""
 "Finished events. Odoo will automatically move them to this stage once their "
 "end date has passed."
 msgstr ""
+"Завершені події. Odoo автоматично перемістить їх на цей етап після "
+"закінчення дати їх завершення."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
@@ -4050,6 +4052,9 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 msgstr ""
+"Для отримання додаткової інформації, будь ласка, звертайтеся до нас за "
+"адресою <a class=\"o_translate_inline\" href=\"mailto:events@odoo.com\">"
+"events@odoo.com</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -4058,6 +4063,10 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 msgstr ""
+"Для отримання додаткової інформації, будь ласка, звертайтеся до нас за "
+"адресами <a class=\"o_translate_inline\" "
+"href=\"mailto:events@openwood.example.com\">, events@penwood.example.com,</a>"
+"."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -4069,11 +4078,14 @@ msgid ""
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 msgstr ""
+"Для отримання додаткової інформації, будь ласка, звертайтеся до нас за "
+"адресами <a class=\"o_translate_inline\" "
+"href=\"mailto:events@yourcompany.com\">, events@yourcompany.com та</a>."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
 msgid "For each attendee"
-msgstr ""
+msgstr "Для кожного учасника"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -4082,6 +4094,10 @@ msgid ""
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"Для кожного заходу можна встановити максимальну кількість місць (кількість "
+"учасників); якщо ця кількість перевищена, реєстрація не приймається. Якщо "
+"захід має кілька сесій, ця максимальна кількість застосовується до кожної "
+"сесії окремо."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
@@ -4195,7 +4211,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Guest #"
-msgstr ""
+msgstr "К-сть гостей"
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -4234,7 +4250,7 @@ msgstr "Головна"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
 msgid "Hour range"
-msgstr ""
+msgstr "Діапазон годин"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -4363,7 +4379,7 @@ msgstr "В процесі"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_question__is_default
 msgid "Include by default in new events."
-msgstr ""
+msgstr "Включати за замовчуванням у нові події."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__date_tz
@@ -4372,6 +4388,7 @@ msgid ""
 "Indicates the timezone in which the event dates/times will be displayed on "
 "the website."
 msgstr ""
+"Вказує часовий пояс, у якому дати/час події відображатимуться на вебсайті."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__interval_type
@@ -4379,6 +4396,9 @@ msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"Вказує, коли надсилається повідомлення. Якщо подія має кілька часових "
+"проміжків, інтервал стосується кожного окремого часового проміжку, а не "
+"всієї події загалом."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4406,7 +4426,7 @@ msgstr "Передмова, CRM, Керування продажами"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "Неправильний вибір події / слоту"
 
 #. module: event
 #. odoo-python
@@ -4428,7 +4448,7 @@ msgstr "Доступний"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "Чи є подія багатослотовою"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -4449,7 +4469,7 @@ msgstr "Стежить"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Мульти-слоти"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -4464,13 +4484,13 @@ msgstr "У процесі"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_reusable
 msgid "Is Reusable"
-msgstr ""
+msgstr "Чи можна використовувати повторно"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "Сталася помилка: %(error)s."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -4491,7 +4511,7 @@ msgstr "John Doe"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John Doe's avatar"
-msgstr ""
+msgstr "Аватар Джона Доу"
 
 #. module: event
 #: model_terms:event.event,description:event.event_1

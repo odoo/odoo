@@ -59,9 +59,3 @@ body:has(.o_layout) {
         height: unset !important;
     }
 }
-
-// Redeclare CSS values that use color-mix()
-// to avoid issues with mail rendering engines
-:root {
-    --o-border-color: #{o-color('300')};
-}

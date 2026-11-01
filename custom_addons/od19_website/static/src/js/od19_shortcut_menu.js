@@ -48,6 +48,8 @@ export class ShortcutMenu extends Component {
         try {
             this.action.doAction(xmlid);
         } catch (error) {
+            // A missing target (e.g. its module is not installed) must never
+            // break the systray or the current screen.
             console.warn("[od19_website] shortcut target unavailable:", xmlid, error);
         }
     }

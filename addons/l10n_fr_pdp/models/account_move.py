@@ -171,7 +171,7 @@ class AccountMove(models.Model):
                 bool(move.peppol_message_uuid)
                 and move.peppol_is_sent
                 and move.company_id._get_peppol_proxy_type() == 'pdp'
-                and move.partner_id._get_pdp_receiver_identification_info()[0] == 'pdp'
+                and move.partner_id.commercial_partner_id._get_pdp_receiver_identification_info()[0] == 'pdp'
             )
 
     @api.depends('pdp_can_send_response')
@@ -236,10 +236,10 @@ class AccountMove(models.Model):
 
     def _pdp_get_tax_extract_state(self):
         self.ensure_one()
-        if not self.peppol_message_uuid or not self.peppol_is_sent:
+        if not self.peppol_message_uuid or not self.pdp_is_sent:
             return False
         tax_extract_responses = self.peppol_response_ids.filtered(lambda l: l.pdp_flow_number == '1' and l.peppol_state == 'done')
-        if not tax_extract_responses:
+        if not tax_extract_responses and self.partner_id.commercial_partner_id._get_pdp_receiver_identification_info()[0] == 'pdp':
             return 'in_progress'
         states = set(tax_extract_responses.mapped('response_code'))
         if {'refused', 'RE'} & states:
@@ -577,6 +577,12 @@ class AccountMove(models.Model):
                 yield self.env._("The company SIREN is missing or invalid.")
 
             if transaction_type == 'b2bi':
+                partner_identifier = self.commercial_partner_id._l10n_fr_pdp_get_flow_10_identifier()[1]
+                if not partner_identifier:
+                    if self.commercial_partner_id.country_id in self.env.ref('base.europe').country_ids:
+                        yield self.env._("The partner VAT number is required for EU e-reporting.")
+                    else:
+                        yield self.env._("The partner identifier required for Flow 10 is missing.")
                 try:
                     self.commercial_partner_id._check_vat()
                 except ValidationError:

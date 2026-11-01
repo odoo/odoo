@@ -2,20 +2,21 @@
 
 import { markRaw } from "@odoo/owl";
 import {
+    _getNodeAttribute,
+    _getNodeRect,
+    _getNodeText,
+    _getNodeValue,
+    _getStyle,
+    _isCheckable,
+    _isEmpty,
+    _isNode,
+    _isNodeDisplayed,
+    _isNodeVisible,
     formatXml,
     getActiveElement,
-    getNodeAttribute,
-    getNodeRect,
-    getNodeText,
-    getNodeValue,
-    getStyle,
-    isCheckable,
-    isEmpty,
-    isNode,
-    isNodeDisplayed,
-    isNodeVisible,
     queryRect,
 } from "@web/../lib/hoot-dom/helpers/dom";
+import { _getDefaultWaitTimeout } from "@web/../lib/hoot-dom/helpers/time";
 import {
     addInteractionListener,
     getColorHex,
@@ -238,7 +239,7 @@ function getStack(depth) {
  * @returns {Record<string, string>}
  */
 function getStyleValues(node, keys) {
-    const nodeStyle = getStyle(node);
+    const nodeStyle = _getStyle(node);
     const styleValues = $create(null);
     if (nodeStyle) {
         for (const key of keys) {
@@ -389,8 +390,6 @@ const LABEL_EXPECTED = "Expected:";
 const LABEL_RECEIVED = "Received:";
 /** @type {CaseEventType[]} */
 const CASE_EVENT_LOG_COLORS = ["assertion", "query", "step", "time"];
-// Time waitForSteps and waitForErrors give the steps and errors to arrive.
-const DEFAULT_WAIT_TIMEOUT = 10000;
 const MAX_STACK_LENGTH = 10;
 
 /** @type {WeakMap<any, any>} */
@@ -807,8 +806,8 @@ export function makeExpect(params) {
 
     /**
      * Same as {@link verifyErrors}, but will not immediatly fail if errors are
-     * not caught yet, and will instead wait for a certain timeout (default: 10000ms)
-     * to allow errors to be caught later.
+     * not caught yet, and will instead wait for a certain timeout (see
+     * `waitUntil`) to allow errors to be caught later.
      *
      * Checks are performed initially, at the end of the timeout, and each time
      * an error is detected.
@@ -840,7 +839,7 @@ export function makeExpect(params) {
             options,
             timeout: setTimeout(
                 () => checkErrors(currentResult.errorResolver, true),
-                options?.timeout ?? DEFAULT_WAIT_TIMEOUT
+                options?.timeout ?? _getDefaultWaitTimeout()
             ),
         };
         return currentResult.errorResolver.promise;
@@ -848,8 +847,8 @@ export function makeExpect(params) {
 
     /**
      * Same as {@link verifySteps}, but will not immediatly fail if steps have not
-     * been registered yet, and will instead wait for a certain timeout (default:
-     * 10000ms) to allow steps to be registered later.
+     * been registered yet, and will instead wait for a certain timeout (see
+     * `waitUntil`) to allow steps to be registered later.
      *
      * Checks are performed initially, at the end of the timeout, and each time
      * a step is registered.
@@ -881,7 +880,7 @@ export function makeExpect(params) {
             options,
             timeout: setTimeout(
                 () => checkSteps(currentResult.stepResolver, true),
-                options?.timeout ?? DEFAULT_WAIT_TIMEOUT
+                options?.timeout ?? _getDefaultWaitTimeout()
             ),
         };
         return currentResult.stepResolver.promise;
@@ -1241,7 +1240,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toBeEmpty",
             acceptedType: ["any"],
-            predicate: (received) => isEmpty(received),
+            predicate: (received) => _isEmpty(received),
             message: options?.message,
             onPass: () => [this._received, r`should[! not] be empty`],
             onFail: () => [this._received, r`is[! not] empty`],
@@ -1671,7 +1670,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toBeDisplayed",
             acceptedType: ["string", "node", "node[]"],
-            mapElements: isNodeDisplayed,
+            mapElements: _isNodeDisplayed,
             predicate: (displayed) => !!displayed,
             message: options?.message,
             onPass: () => [this._received, r`[is%are][! not] displayed`],
@@ -1743,7 +1742,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toBeVisible",
             acceptedType: ["string", "node", "node[]"],
-            mapElements: isNodeVisible,
+            mapElements: _isNodeVisible,
             predicate: (visible) => !!visible,
             message: options?.message,
             onPass: () => [this._received, r`[is%are] [visible!hidden]`],
@@ -1772,7 +1771,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toHaveAttribute",
             acceptedType: ["string", "node", "node[]"],
-            mapElements: (el) => getNodeAttribute(el, attribute),
+            mapElements: (el) => _getNodeAttribute(el, attribute),
             predicate: (elAttr, el) =>
                 expectsValue ? valueMatches(elAttr, value) : el.hasAttribute(attribute),
             message: options?.message,
@@ -1971,7 +1970,7 @@ export class Matcher {
         this._ensureArguments(arguments, ["object", "string", "node", "node[]"]);
 
         let refRect;
-        if (typeof rect === "string" || isNode(rect)) {
+        if (typeof rect === "string" || _isNode(rect)) {
             refRect = { ...queryRect(rect, options) };
         } else {
             refRect = rect;
@@ -1982,7 +1981,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toHaveRect",
             acceptedType: ["string", "node", "node[]"],
-            mapElements: (el) => getNodeRect(el, options),
+            mapElements: (el) => _getNodeRect(el, options),
             predicate: (elRect) => entries.every(([key, val]) => strictEqual(elRect[key], val)),
             message: options?.message,
             onPass: () => [this._received, r`[has%have] the expected DOM rect of`, rect],
@@ -2052,7 +2051,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toHaveText",
             acceptedType: ["string", "node", "node[]"],
-            mapElements: (el) => getNodeText(el, options),
+            mapElements: (el) => _getNodeText(el, options),
             predicate: (elText) => (expectsText ? valueMatches(elText, text) : elText.length > 0),
             message: options?.message,
             onPass: () => [this._received, r`[[has%have]![does%do] not have] text`, text],
@@ -2067,7 +2066,7 @@ export class Matcher {
      * - match a given regular expression;
      * - contain file objects matching the given `files` list.
      *
-     * @param {ReturnType<typeof getNodeValue>} [value]
+     * @param {ReturnType<typeof _getNodeValue>} [value]
      * @param {ExpectOptions & { raw?: boolean }} [options]
      * @example
      *  expect("input[name=age]").toHaveValue(29);
@@ -2093,9 +2092,9 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toHaveValue",
             acceptedType: ["string", "node", "node[]"],
-            mapElements: (el) => getNodeValue(el, options?.raw),
+            mapElements: (el) => _getNodeValue(el, options?.raw),
             predicate: (elValue, el) => {
-                if (isCheckable(el)) {
+                if (_isCheckable(el)) {
                     throw new HootError(
                         `cannot call \`toHaveValue()\` on a checkbox or radio input: use \`toBeChecked()\` instead`
                     );

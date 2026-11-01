@@ -37,11 +37,17 @@ $quick-reaction-menu-slide-in-duration: 0.20s;
     &.bg-secondary {
         --bg-opacity: .35;
     }
+}
 
-    &:hover,
-    &:focus {
+.o-mail-QuickReactionMenu-emoji,
+.o-mail-QuickReactionMenu-emojiPicker {
+    &.focus {
         background-color: rgba($o-action, .1);
         outline: 1px solid rgba($o-action, .5);
+    }
+
+    &:focus-visible:not(.focus) {
+        box-shadow: none;
     }
 }
 

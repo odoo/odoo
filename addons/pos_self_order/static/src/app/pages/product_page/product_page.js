@@ -106,7 +106,8 @@ export class ProductPage extends Component {
         return (
             this.isProductAvailable() &&
             !this.hasMissingAttributeValues() &&
-            !this.isArchivedCombination()
+            !this.isArchivedCombination() &&
+            !this.isDeletedCombination()
         );
     }
 
@@ -122,6 +123,15 @@ export class ProductPage extends Component {
             .getAllSelectedAttributeValuesIds()
             .map((attr) => Number(attr));
         return this.props.productTemplate._isArchivedCombination(variantAttributeValueIds);
+    }
+
+    isDeletedCombination() {
+        return (
+            !this.hasMissingAttributeValues() &&
+            this.productTemplate.isDeletedCombination(
+                getAttributeValues(this.getSelectedAttributesValues(), this.selfOrder.models)
+            )
+        );
     }
 
     getProductPrice() {

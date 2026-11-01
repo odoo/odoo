@@ -440,10 +440,11 @@ class ProductProduct(models.Model):
 
         for manual_value in last_manual_value_by_product.values():
             product = manual_value.product_id
+            # scope the opening qty to the current company, like the replayed moves
             if lot:
-                quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True).product_qty
+                quantity = lot.with_context(to_date=manual_value.date, skip_in_progress=True, allowed_company_ids=self.env.company.ids).product_qty
             else:
-                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date).qty_available
+                quantity = product.with_prefetch(product_ids_by_manual_value_date[manual_value.date]).with_context(to_date=manual_value.date, allowed_company_ids=self.env.company.ids).qty_available
 
             std_price_by_product_id[product.id] = manual_value.value
             quantity_by_product_id[product.id] = quantity
@@ -601,7 +602,7 @@ class ProductProduct(models.Model):
 
         moves_domain = Domain([
             ('product_id', '=', self.id),
-            ('company_id', 'in', self.env.companies.ids),
+            ('company_id', '=', self.env.company.id),
         ])
         if lot:
             moves_domain &= Domain([('move_line_ids.lot_id', 'in', lot.id)])
@@ -645,7 +646,9 @@ class ProductProduct(models.Model):
         products_by_cost_method = defaultdict(set)
         for product in self:
             if product.lot_valuated and product.cost_method != 'standard':
-                product.sudo().with_context(disable_auto_revaluation=True).standard_price = product.avg_cost
+                product.sudo().with_context(
+                    disable_auto_revaluation=True
+                ).standard_price = product.with_context(allowed_company_ids=self.env.company.ids).avg_cost
                 continue
             products_by_cost_method[product.cost_method].add(product.id)
         for cost_method, product_ids in products_by_cost_method.items():
