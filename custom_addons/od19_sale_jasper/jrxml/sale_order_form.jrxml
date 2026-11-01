@@ -1,0 +1,1811 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sale_order_form" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f72a463-64e4-4b71-ab9c-a3e1e7e0679e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="133 bnb"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="314"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="679"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<style name="Section Line">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{display_type}.toString().equals("line_section")]]></conditionExpression>
+			<style mode="Opaque" backcolor="#DBDBDB"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="p_Where" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["WHERE so.id  in (171)"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Company_No" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_ISO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["ISO Number"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_language" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["thai"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_DateFormat" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["dd-MM-yyyy"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_locale" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["th"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Path" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="p_EName" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="p_ESignature" class="java.lang.Boolean" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT sl.sequence as seq
+	,c.id AS company_id
+	,COALESCE(c.company_name_thai,'') AS company_name_thai
+	,COALESCE(c.company_name_en,'') AS company_name_en
+	,COALESCE(c.company_tax_id,'') AS company_tax_id
+	,COALESCE(c.company_branch,'00000') AS company_branch
+	,encode(c.company_logo,'escape') AS company_logo
+	,COALESCE(c.company_address_thai,'') AS company_address_thai
+	,COALESCE(c.company_address_en,'') AS company_address_en
+	,COALESCE(c.company_heaer_report,'') AS company_heaer_report
+	,COALESCE(c.company_footer_report,'') AS company_footer_report
+	,COALESCE(c.company_phone,'') AS company_phone
+	,COALESCE(c.company_fax,'') AS company_fax
+	,COALESCE(c.company_email,'') AS company_email
+	,COALESCE(c.company_website,'') AS company_website
+	,so.id AS so_id
+	,so.name
+	,so.date_order AS confirmation_date
+	,EXTRACT(YEAR FROM date(so.date_order)) AS sale_year
+	,EXTRACT(MONTH FROM date(so.date_order)) AS sale_month
+	,to_char(so.date_order, 'YYYY-MM') AS sale_year_month
+	,(SELECT e.name FROM hr_employee e WHERE e.user_id = so.user_id LIMIT 1) AS sale_name
+	,pn.ref AS customer_code
+	,pn.complete_name AS customer_name
+	,COALESCE(pn.name,'') AS customer_contact
+	,COALESCE(pn.phone,'') AS customer_phone
+	,COALESCE(pn.fax,'') AS customer_fax
+	,COALESCE(pn.vat,'') AS customer_tax
+	,COALESCE(pn.branch_code,'') AS customer_branch
+	,COALESCE((SELECT p.name FROM res_partner p WHERE p.id = so.partner_shipping_id),'') AS customer_shipping_name
+	,COALESCE((SELECT rp.name_en FROM hr_employee e LEFT JOIN res_partner rp ON rp.id = e.work_contact_id WHERE e.user_id = so.user_id LIMIT 1),'') AS sale_person1_en
+	,COALESCE((SELECT e.name FROM hr_employee e WHERE e.user_id = so.user_id LIMIT 1),'') AS sale_person1_thai
+	,COALESCE((SELECT e.mobile_phone FROM hr_employee e WHERE e.user_id = so.user_id LIMIT 1),'') AS sale_person1_mobile_phone
+	,COALESCE((SELECT e.work_phone FROM hr_employee e WHERE e.user_id = so.user_id LIMIT 1),'') AS sale_person1_work_phone
+	,'' AS sale_person2_en
+	,'' AS sale_person2_thai
+	,'' AS sale_person2_mobile_phone
+	,'' AS sale_person2_work_phone
+	,COALESCE(pn1.complete_name,'') AS customer_shipping_contact
+	,COALESCE(pn1.phone,'') AS customer_shipping_phone
+	,COALESCE(pn1.fax,'') AS customer_shipping_fax
+	,COALESCE(pn1.branch_code,'') AS customer_shipping_branch
+	,COALESCE(pn2.complete_name,'') AS customer_invoice_contact
+	,COALESCE(pn2.phone,'') AS customer_invoice_phone
+	,COALESCE(pn2.fax,'') AS customer_invoice_fax
+	,COALESCE(pn2.branch_code,'') AS customer_invoice_branch
+	,(SELECT COALESCE(a.name->>'th_TH', a.name->>'en_US', '') FROM account_payment_term a WHERE a.id = so.payment_term_id) AS payment_term
+	,pn.street AS partner_address
+	,pn.street2 AS partner_address2
+	,pn1.street AS partner_shipping_address
+	,pn1.street2 AS partner_shipping_address2
+	,pn2.street AS partner_invoice_address
+	,pn2.street2 AS partner_invoice_address2
+	,so.commitment_date::date AS plan_delivery_date
+	,so.effective_date
+	,sl.name AS product_name
+	,sl.product_uom_qty AS so_qty
+	,COALESCE(pu.name->>'th_TH', pu.name->>'en_US', '') AS product_uom
+	,sl.price_unit AS product_unitprice
+	,sl.discount AS product_discount
+	,sl.price_reduce_taxexcl AS price_reduce
+	,sl.price_subtotal
+	,so.note
+	,(SELECT max(b.amount)
+		FROM account_tax_sale_order_line_rel a
+		LEFT JOIN account_tax b ON b.id = a.account_tax_id
+		LEFT JOIN sale_order_line c ON c.id = a.sale_order_line_id
+		LEFT JOIN sale_order d ON d.id = c.order_id
+		WHERE d.id = so.id) AS so_taxes
+	,(SELECT a.name FROM res_currency a WHERE a.id = sl.currency_id) AS currency_name
+	,so.currency_rate AS exchange_rate
+	,so.client_order_ref
+	,so.state
+	,so.amount_untaxed
+	,0::numeric AS amount_trade_discount
+	,so.amount_untaxed AS amount_untaxed_before_trade_discount
+	,so.amount_untaxed AS amount_untaxed_trade_discount
+	,so.amount_untaxed AS amount_subtotal_before_tax
+	,so.amount_tax
+	,so.amount_total
+	,convert_num_th_with_currency(so.amount_total, sl.currency_id) AS so_amout_total_bahttext
+	,convert_num_en_with_currency(so.amount_total, sl.currency_id) AS so_amout_total_engtext
+	,sl.price_subtotal AS amount_total_item
+	,sl.product_uom_qty
+	,sl.qty_delivered
+	,sl.display_type
+	,so.write_date AS prepare_date
+	,(SELECT e.name FROM hr_employee e WHERE e.user_id = so.create_uid LIMIT 1) AS prepare_name
+	,(SELECT j.name->>'th_TH' FROM hr_employee e LEFT JOIN hr_version v ON v.id = e.current_version_id LEFT JOIN hr_job j ON j.id = v.job_id WHERE e.user_id = so.create_uid LIMIT 1) AS prepare_position
+	,(SELECT d.name->>'th_TH' FROM hr_employee e LEFT JOIN hr_version v ON v.id = e.current_version_id LEFT JOIN hr_department d ON d.id = v.department_id WHERE e.user_id = so.create_uid LIMIT 1) AS prepare_department
+	,(SELECT a.store_fname FROM ir_attachment a LEFT JOIN hr_employee e ON e.id = a.res_id WHERE a.res_model = 'hr.employee' AND a.res_field = 'signature' AND e.user_id = so.create_uid LIMIT 1) AS prepare_signature
+	,(SELECT e.name FROM hr_employee e WHERE e.user_id = (SELECT a.done_by FROM (SELECT * FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 2) a ORDER BY a.sequence LIMIT 1) LIMIT 1) AS pre_approved_name
+	,(SELECT d.name->>'th_TH' FROM hr_employee e LEFT JOIN hr_version v ON v.id = e.current_version_id LEFT JOIN hr_department d ON d.id = v.department_id WHERE e.user_id = (SELECT a.done_by FROM (SELECT * FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 2) a ORDER BY a.sequence LIMIT 1) LIMIT 1) AS pre_department
+	,(SELECT j.name->>'th_TH' FROM hr_employee e LEFT JOIN hr_version v ON v.id = e.current_version_id LEFT JOIN hr_job j ON j.id = v.job_id WHERE e.user_id = (SELECT a.done_by FROM (SELECT * FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 2) a ORDER BY a.sequence LIMIT 1) LIMIT 1) AS pre_position
+	,(SELECT a.reviewed_date FROM (SELECT * FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 2) a ORDER BY a.sequence LIMIT 1) AS pre_date_decided
+	,(SELECT a.store_fname FROM ir_attachment a LEFT JOIN hr_employee e ON e.id = a.res_id WHERE a.res_model = 'hr.employee' AND a.res_field = 'signature' AND e.user_id = (SELECT a.done_by FROM (SELECT * FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 2) a ORDER BY a.sequence LIMIT 1) LIMIT 1) AS pre_signature
+	,(SELECT e.name FROM hr_employee e WHERE e.user_id = (SELECT done_by FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 1) LIMIT 1) AS approved_name
+	,(SELECT d.name->>'th_TH' FROM hr_employee e LEFT JOIN hr_version v ON v.id = e.current_version_id LEFT JOIN hr_department d ON d.id = v.department_id WHERE e.user_id = (SELECT done_by FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 1) LIMIT 1) AS approved_department
+	,(SELECT j.name->>'th_TH' FROM hr_employee e LEFT JOIN hr_version v ON v.id = e.current_version_id LEFT JOIN hr_job j ON j.id = v.job_id WHERE e.user_id = (SELECT done_by FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 1) LIMIT 1) AS approved_position
+	,(SELECT reviewed_date FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 1) AS approved_date_decided
+	,(SELECT a.store_fname FROM ir_attachment a LEFT JOIN hr_employee e ON e.id = a.res_id WHERE a.res_model = 'hr.employee' AND a.res_field = 'signature' AND e.user_id = (SELECT done_by FROM tier_review WHERE model = 'sale.order' AND res_id = so.id AND status = 'approved' ORDER BY sequence DESC LIMIT 1) LIMIT 1) AS approved_signature
+FROM sale_order so
+LEFT JOIN sale_order_line sl ON sl.order_id = so.id
+LEFT JOIN company_address_header_report c ON c.id = so.company_id
+LEFT JOIN res_partner pn ON pn.id = so.partner_id
+LEFT JOIN res_partner pn1 ON pn1.id = so.partner_shipping_id
+LEFT JOIN res_partner pn2 ON pn2.id = so.partner_invoice_id
+LEFT JOIN uom_uom pu ON pu.id = sl.product_uom_id
+$P!{p_Where}
+ORDER BY so.id, sl.sequence, sl.id]]>
+	</queryString>
+	<field name="seq" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="seq"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="company_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="company_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_name_thai" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_name_thai"/>
+	</field>
+	<field name="company_name_en" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_name_en"/>
+	</field>
+	<field name="company_tax_id" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_tax_id"/>
+	</field>
+	<field name="company_branch" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_branch"/>
+	</field>
+	<field name="company_logo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_logo"/>
+	</field>
+	<field name="company_address_thai" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_address_thai"/>
+	</field>
+	<field name="company_address_en" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_address_en"/>
+	</field>
+	<field name="company_heaer_report" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_heaer_report"/>
+	</field>
+	<field name="company_footer_report" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_footer_report"/>
+	</field>
+	<field name="company_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_phone"/>
+	</field>
+	<field name="company_fax" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_fax"/>
+	</field>
+	<field name="company_email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_email"/>
+	</field>
+	<field name="company_website" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_website"/>
+	</field>
+	<field name="so_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="so_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="confirmation_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="confirmation_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="sale_year" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="sale_year"/>
+	</field>
+	<field name="sale_month" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="sale_month"/>
+	</field>
+	<field name="sale_year_month" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_year_month"/>
+	</field>
+	<field name="sale_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_name"/>
+	</field>
+	<field name="customer_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="customer_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="customer_contact" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_contact"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="customer_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_phone"/>
+	</field>
+	<field name="customer_fax" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_fax"/>
+	</field>
+	<field name="customer_tax" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_tax"/>
+	</field>
+	<field name="customer_branch" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_branch"/>
+	</field>
+	<field name="customer_shipping_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_shipping_name"/>
+	</field>
+	<field name="sale_person1_en" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_person1_en"/>
+	</field>
+	<field name="sale_person1_thai" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_person1_thai"/>
+	</field>
+	<field name="sale_person1_mobile_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_person1_mobile_phone"/>
+	</field>
+	<field name="sale_person1_work_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_person1_work_phone"/>
+	</field>
+	<field name="sale_person2_en" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_person2_en"/>
+	</field>
+	<field name="sale_person2_thai" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_person2_thai"/>
+	</field>
+	<field name="sale_person2_mobile_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_person2_mobile_phone"/>
+	</field>
+	<field name="sale_person2_work_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="sale_person2_work_phone"/>
+	</field>
+	<field name="customer_shipping_contact" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_shipping_contact"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="customer_shipping_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_shipping_phone"/>
+	</field>
+	<field name="customer_shipping_fax" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_shipping_fax"/>
+	</field>
+	<field name="customer_shipping_branch" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_shipping_branch"/>
+	</field>
+	<field name="customer_invoice_contact" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_invoice_contact"/>
+	</field>
+	<field name="customer_invoice_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_invoice_phone"/>
+	</field>
+	<field name="customer_invoice_fax" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_invoice_fax"/>
+	</field>
+	<field name="customer_invoice_branch" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="customer_invoice_branch"/>
+	</field>
+	<field name="payment_term" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="payment_term"/>
+	</field>
+	<field name="partner_address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_address"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="partner_address2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_address2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="partner_shipping_address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_shipping_address"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="partner_shipping_address2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_shipping_address2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="partner_invoice_address" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_invoice_address"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="partner_invoice_address2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="partner_invoice_address2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="res_partner"/>
+	</field>
+	<field name="plan_delivery_date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="plan_delivery_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="effective_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="effective_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="product_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="so_qty" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="so_qty"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="product_uom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_uom"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="uom_uom"/>
+	</field>
+	<field name="product_unitprice" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="product_unitprice"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="product_discount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="product_discount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="price_reduce" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="price_reduce"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="price_subtotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="price_subtotal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="note" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="note"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="so_taxes" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="so_taxes"/>
+	</field>
+	<field name="currency_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="currency_name"/>
+	</field>
+	<field name="exchange_rate" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="exchange_rate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="client_order_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="client_order_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="state" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="state"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="amount_untaxed" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_untaxed"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="amount_trade_discount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_trade_discount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="amount_untaxed_before_trade_discount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_untaxed_before_trade_discount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="amount_untaxed_trade_discount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_untaxed_trade_discount"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="amount_subtotal_before_tax" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_subtotal_before_tax"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="amount_tax" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_tax"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="amount_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_total"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="so_amout_total_bahttext" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="so_amout_total_bahttext"/>
+	</field>
+	<field name="so_amout_total_engtext" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="so_amout_total_engtext"/>
+	</field>
+	<field name="amount_total_item" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_total_item"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="product_uom_qty" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="product_uom_qty"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="qty_delivered" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="qty_delivered"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="display_type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="display_type"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order_line"/>
+	</field>
+	<field name="prepare_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="prepare_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="sale_order"/>
+	</field>
+	<field name="prepare_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prepare_name"/>
+	</field>
+	<field name="prepare_position" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prepare_position"/>
+	</field>
+	<field name="prepare_department" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prepare_department"/>
+	</field>
+	<field name="prepare_signature" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prepare_signature"/>
+	</field>
+	<field name="pre_approved_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="pre_approved_name"/>
+	</field>
+	<field name="pre_department" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="pre_department"/>
+	</field>
+	<field name="pre_position" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="pre_position"/>
+	</field>
+	<field name="pre_date_decided" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="pre_date_decided"/>
+	</field>
+	<field name="pre_signature" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="pre_signature"/>
+	</field>
+	<field name="approved_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="approved_name"/>
+	</field>
+	<field name="approved_department" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="approved_department"/>
+	</field>
+	<field name="approved_position" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="approved_position"/>
+	</field>
+	<field name="approved_date_decided" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="approved_date_decided"/>
+	</field>
+	<field name="approved_signature" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="approved_signature"/>
+	</field>
+	<variable name="Page" class="java.lang.String" resetType="Group" resetGroup="SONo">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER} + " OF " + $V{MASTER_TOTAL_PAGES}]]></variableExpression>
+	</variable>
+	<variable name="v_CompanyName" class="java.lang.String"/>
+	<group name="SONo" isStartNewColumn="true" isStartNewPage="true" isResetPageNumber="true" isReprintHeaderOnEachPage="true" footerPosition="StackAtBottom">
+		<groupExpression><![CDATA[$F{so_id}]]></groupExpression>
+		<groupHeader>
+			<band height="272">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<rectangle>
+					<reportElement x="0" y="-2" width="552" height="117" uuid="2f6a2425-c49d-4061-abcf-5e78e5babb6c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</rectangle>
+				<rectangle radius="10">
+					<reportElement key="" x="420" y="4" width="126" height="70" backcolor="#EDEDED" uuid="605f667e-cf2f-4971-8203-7959e5c6730b"/>
+				</rectangle>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="250" width="30" height="22" backcolor="#EDEDED" uuid="e20228e9-6a44-4a99-aee2-d5530fec580e"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ลำดับ ","Item ")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="30" y="250" width="200" height="22" backcolor="#EDEDED" uuid="f17e5536-0267-4e7f-8e0a-56ac8d84ccfd"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"รายละเอียด ","Description ")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="230" y="250" width="50" height="22" backcolor="#EDEDED" uuid="93dc688e-dd01-49dd-a601-bec4548606ea"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ปริมาณ ","Qty ")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="280" y="250" width="40" height="22" backcolor="#EDEDED" uuid="928b9164-70b9-4988-bcba-21cc0881d60d"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"หน่วยนับ ","UOM ")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="320" y="250" width="90" height="22" backcolor="#EDEDED" uuid="eda312fc-ef5c-4a38-80e9-c8968ba19367">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ราคาต่อหน่วย","Unit Price ")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="410" y="250" width="60" height="22" backcolor="#EDEDED" uuid="aacbf001-683c-47f7-9fd8-70bdb12b6f43">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="0" rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ส่วนลด","Discount ")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="470" y="250" width="82" height="22" backcolor="#EDEDED" uuid="b33a0221-5748-454b-87d8-03387d828f59"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"รวมทั้งสิ้น","Amount ")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="420" y="4" width="126" height="70" uuid="7068e717-9431-4bc4-a718-80a247af2675"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="16" isBold="true" isItalic="false"/>
+						<paragraph rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "ใบสั่งขาย", "Sales Order")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="115" width="320" height="17" backcolor="#EDEDED" uuid="c9518e1b-06cc-4591-8c13-62bf5a931af1">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ที่อยู่ใบกำกับภาษี","Invoice Address")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="148" width="320" height="17" uuid="c7fa17e3-66f5-48ed-a677-4de7b27c23d1">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ที่อยู่  : ","Address :  " ) +$F{partner_invoice_address}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="165" width="320" height="17" uuid="1e216a9c-6cac-440c-9e5c-f03f95034306">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{partner_invoice_address2}
+/*IF($P{p_language}.toString().equals("thai"),"เบอร์โทร  : ","Tel :  " ) + $F{customer_phone}+ 
+IF($P{p_language}.toString().equals("thai"),"   เบอร์โทรสาร  : ","   Fax :  " )  + $F{customer_fax}+
+IF($P{p_language}.toString().equals("thai"),"   ผู้ติดต่อ : ","   Contact :  " )  +$F{customer_contact}*/]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="25" width="320" height="89" uuid="53da1aaf-e5a5-4369-9fc2-06f6dcd9cc78">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement>
+						<font fontName="TH Sarabun New" size="14" isBold="false"/>
+						<paragraph lineSpacing="Fixed" lineSpacingSize="8.0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"สาขา : " + IF($F{company_branch}.toString().equals("00000"),"สำนักงานใหญ่",$F{company_branch}.toString())
++ "  รหัสประจำตัวผู้เสียภาษี : " + IF($F{company_tax_id}==null,"",$F{company_tax_id})
++ "\nที่อยู่ : " + IF($F{company_address_thai}==null,"",$F{company_address_thai})
++ "\nโทรศัพท์ : " + IF($F{company_phone}==null,"",$F{company_phone})
++ "   แฟกซ์ : " + IF($F{company_fax}==null,"",$F{company_fax})
++ "\nอีเมล์ : " + IF($F{company_email}==null,"",$F{company_email})
++ "   เว็บไซต์ : " + IF($F{company_website}==null,"",$F{company_website})
+,"Tax Branch : "+ IF($F{company_branch}.toString().equals("00000"),"Head Office",$F{company_branch}.toString())
++ "  Tax ID : " + IF($F{company_tax_id}==null,"",$F{company_tax_id})
++ "\nAddress : "+IF($F{company_address_en}==null,"",$F{company_address_en})
++ "\nPhone : " + IF($F{company_phone}==null,"",$F{company_phone})
++ "   Fax : " + IF($F{company_fax}==null,"",$F{company_fax})
++ "\nEmail : " + IF($F{company_email}==null,"",$F{company_email})
++ "   Website : " + IF($F{company_website}==null,"",$F{company_website})
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="5" width="320" height="20" uuid="300c0bf5-130f-410f-92e3-c81c0e64b7a1"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="14" isBold="true"/>
+						<paragraph rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai")
+	,IF($F{company_name_thai}==null,"",$F{company_name_thai})
+	,IF($F{company_name_en}==null,"",$F{company_name_en})
+)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="199" width="320" height="17" uuid="a6736dc0-9c40-4f19-8550-6be8f5bc5b89">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ชื่อลูกค้า : ","Customer Name : ") 
++ $F{customer_shipping_contact}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="216" width="320" height="17" uuid="6a55dfa0-7661-4712-b83c-58275edbee49">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ที่อยู่  : ","Address :  " ) + $F{partner_shipping_address}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="233" width="320" height="17" uuid="3aba6a8b-9975-45f9-a751-93ebac9f3fae">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{partner_shipping_address2}
+/*IF($P{p_language}.toString().equals("thai"),"เบอร์โทร  : ","Tel :  " ) + $F{customer_shipping_phone}+ 
+IF($P{p_language}.toString().equals("thai"),"   เบอร์โทรสาร  : ","   Fax :  " )  + $F{customer_shipping_fax}+
+IF($P{p_language}.toString().equals("thai"),"   ผู้ติดต่อ : ","   Contact :  " )  + $F{customer_shipping_contact}*/]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="420" y="96" width="100" height="18" uuid="79e1358d-2524-4970-aaeb-7630bd7eea22">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"หน้าที่ " + $V{PAGE_NUMBER},"Page " + $V{PAGE_NUMBER})]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SONo">
+					<reportElement x="520" y="96" width="30" height="18" uuid="7c4f159c-4c1a-40e8-9130-ee54dd5e4b92">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" / " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="131" width="320" height="17" uuid="9865527a-4caa-4db3-a2e7-db6993b2ed73">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ชื่อลูกค้า : ","Customer Name : ") 
++ $F{customer_invoice_contact}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="182" width="320" height="17" backcolor="#EDEDED" uuid="fa5dad72-1862-4985-ad2e-75c06df8f5b8">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"การจัดส่งสินค้า ","Delivery Address")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="320" y="115" width="90" height="17" backcolor="#EDEDED" uuid="cafcaf9f-fbb7-431a-a4dc-f0e59e315645">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"เลขที่เอกสาร","Document No")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="320" y="131" width="90" height="17" backcolor="#EDEDED" uuid="4ee9d7e3-6245-4b4a-8421-f1636803e237">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"วันที่เอกสาร","Issued Date")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="320" y="148" width="90" height="17" backcolor="#EDEDED" uuid="062cb5c5-7f84-4c32-800c-5a63708ad64c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"เงื่อนไขการชำระเงิน","Payment Method")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="320" y="165" width="90" height="17" backcolor="#EDEDED" uuid="7aa895c8-e797-4dd6-9b9f-c00c1873a560">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"สกุลเงิน","Currency")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="320" y="182" width="90" height="17" backcolor="#EDEDED" uuid="1785aea9-324e-4856-8e1d-2331b78956c0">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai")
+	,"เอกสารอ้างอิง"
+	,"Reference" 
+)]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="320" y="199" width="90" height="17" backcolor="#EDEDED" uuid="c33d1cb9-d238-4700-b6d3-dcf0aa36c6a6">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"พนักงานขาย","Salesperson")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="320" y="216" width="90" height="17" backcolor="#EDEDED" uuid="75535d99-3c6b-4c5d-9418-505b4e4a15c9">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"เบอร์ติดต่อ","Contact No.")]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="320" y="233" width="90" height="17" backcolor="#EDEDED" uuid="67c4258a-5d88-4876-84ad-7e6e1e1c4365">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"วันพิมพ์รายงาน","Print Date")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="410" y="115" width="142" height="17" uuid="10322a34-3e2e-492f-8342-cd4432b8883b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="410" y="131" width="142" height="17" uuid="ec5ae899-2fe8-4f74-93bc-a38ece5d703d">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{confirmation_date}==null,"", new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(new Date($F{confirmation_date}.getTime() + 7 * 3600*1000)))]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="410" y="148" width="142" height="17" isPrintInFirstWholeBand="true" uuid="8039f3e4-8c5b-4be1-8b0f-a5cb59f0b6fe">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{payment_term}.toString()]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="410" y="165" width="142" height="17" uuid="c66c4365-8ec7-46a9-80a6-bc67f59551f2">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{currency_name} + " (" + $F{exchange_rate}.toString()  + ")"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="410" y="182" width="142" height="17" uuid="01feb49a-473b-47f6-9eed-edcf78958eb1">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{client_order_ref}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="410" y="199" width="142" height="17" uuid="f19564d7-2915-45a9-bbaa-bd6cb411ce9b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), $F{sale_person1_thai}, $F{sale_person1_en})]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="410" y="216" width="142" height="17" uuid="1d60300d-2d45-48c9-b9d6-3c60d0387639">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sale_person1_mobile_phone}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
+					<reportElement x="410" y="233" width="142" height="17" uuid="5a5e77f3-27ef-4d3f-8b34-ea11a2df9b1e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(new java.util.Date().getTime() + 7 * 3600*1000)]]></textFieldExpression>
+				</textField>
+				<image>
+					<reportElement x="7" y="10" width="80" height="80" uuid="e62aa05c-2094-4a5e-95c0-abdb17704d8b">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{company_logo}.getBytes()))]]></imageExpression>
+				</image>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="240">
+				<rectangle>
+					<reportElement mode="Opaque" x="0" y="120" width="360" height="120" uuid="b9c1093f-4ded-4c6a-9e61-a8502b273648">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</rectangle>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="0" width="360" height="20" backcolor="#EDEDED" uuid="9f618cfc-decd-40f0-971e-1e59ce93a760"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"หมายเหตุ","Remark")]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement mode="Opaque" x="360" y="119" width="192" height="121" uuid="28566ebc-b3e3-4b5a-99c9-8610ca3a9ecd">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+				</rectangle>
+				<textField pattern="MMM d, yyyy">
+					<reportElement mode="Transparent" x="360" y="121" width="192" height="20" uuid="028cc2cd-e2f6-40fc-9618-438259a10097">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ผู้มีอำนาจลงนาม ","Authorized Signature")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="361" y="201" width="191" height="39" uuid="f54d9c72-bf51-424a-9602-6751f0dea98f"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai")
+	,IF($F{company_name_thai}==null,"",$F{customer_name})
+	,IF($F{company_name_en}==null,"",$F{customer_name})
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="20" width="360" height="40" backcolor="#FFFFFF" uuid="26259a9b-a7a6-4085-ad71-34d093b91cca"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Top" markup="html">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{note}==null,"",$F{note})]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement mode="Opaque" x="360" y="0" width="110" height="20" backcolor="#EDEDED" uuid="11fe2e44-6b6f-4640-a943-f5708c863e6c"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"จำนวนเงิน","Subtotal Amount")]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#;(#,##0.00#)">
+					<reportElement mode="Opaque" x="470" y="0" width="82" height="20" uuid="bda07e3a-5ab1-4a05-a0a2-1bb38aa15823">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{amount_untaxed_before_trade_discount}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement mode="Opaque" x="360" y="20" width="110" height="20" backcolor="#EDEDED" uuid="ce44b5ff-2208-4a74-a7af-d4817b57b05f"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ส่วนลดการค้า","Trade Discount Amount")]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#;(#,##0.00#)">
+					<reportElement mode="Opaque" x="470" y="20" width="82" height="20" uuid="ae81932c-f824-4cfd-9ab6-ddc9653835f6">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{amount_trade_discount}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement mode="Opaque" x="360" y="40" width="110" height="20" backcolor="#EDEDED" uuid="70e87083-970f-4111-b052-8ca6e160d049"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ราคาหลังหักส่วนลด","After Trade Amount")]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#;(#,##0.00#)">
+					<reportElement mode="Opaque" x="470" y="40" width="82" height="20" uuid="7e8dd2ed-9953-4609-82af-d4a19dd5673f">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{amount_untaxed_trade_discount}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement mode="Opaque" x="0" y="60" width="80" height="60" backcolor="#EDEDED" uuid="f92ea065-4e29-4be2-9f7a-c649642a2c6c">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="pixel"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"จำนวนเงิน (ตัวอักษร)","Total Amount")]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement mode="Opaque" x="80" y="60" width="280" height="60" uuid="7038d6dd-c600-4a14-b3e8-382647f4ab44"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph leftIndent="3"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),$F{so_amout_total_bahttext},$F{so_amout_total_engtext})]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement mode="Opaque" x="360" y="60" width="110" height="20" backcolor="#EDEDED" uuid="79bc198e-0117-4ab4-a5e0-0bae8c5138e6"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ราคาก่อนภาษี","Untaxed Amount")]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#;(#,##0.00#)">
+					<reportElement mode="Opaque" x="470" y="60" width="82" height="20" isPrintInFirstWholeBand="true" uuid="9df64d95-93d4-402a-adec-8f36e12a290e">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{amount_subtotal_before_tax}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="360" y="80" width="70" height="20" backcolor="#EDEDED" uuid="f56ad057-d12e-4918-a982-68528e622345"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai")
+	,"ภาษีมูลค่าเพิ่ม " 
+	,"VAT " 
+)]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="430" y="80" width="40" height="20" backcolor="#EDEDED" uuid="26dd412d-217c-4988-acf5-2d30ccb9c6b2"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{so_taxes}==null,"", String.format("%.2f", $F{so_taxes}.doubleValue())+" %")]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#;(#,##0.00#)">
+					<reportElement mode="Opaque" x="470" y="80" width="82" height="20" uuid="08663b19-1450-4e20-a3e4-d0ced3fc5456">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{amount_tax}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement mode="Opaque" x="360" y="100" width="110" height="20" backcolor="#EDEDED" uuid="153da058-107a-4b86-b194-f1c8a672a7a2"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"จำนวนเงินสุทธิ ","Grand Total ")]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#;(#,##0.00#)">
+					<reportElement mode="Opaque" x="470" y="100" width="82" height="20" uuid="fadbb29a-188a-490c-9971-05b16f59f118">
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+						<paragraph rightIndent="4"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{amount_total}]]></textFieldExpression>
+				</textField>
+				<image hAlign="Center">
+					<reportElement x="10" y="126" width="99" height="49" uuid="340e4f9b-45d9-41ae-90e3-e62913b97e77">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<printWhenExpression><![CDATA[$P{p_ESignature}]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA[IF($F{prepare_signature}== null,null, $P{p_Path} +$F{prepare_signature})]]></imageExpression>
+				</image>
+				<textField>
+					<reportElement x="7" y="173" width="122" height="20" uuid="54178ea9-770e-4a3d-a85e-65744f21a4ba">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ผู้จัดทำ","Quoted By")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="7" y="187" width="122" height="20" uuid="4a8f4733-55df-4aef-bf34-408124dc543b">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF ($P{p_EName}, $F{prepare_name}, ".........................................")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="7" y="201" width="122" height="20" uuid="00453858-3a3f-4a92-98ab-0cdebbbe832f"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF ($P{p_EName}, $F{prepare_position}, ".........................................")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="7" y="214" width="122" height="20" uuid="32604303-197d-4a5d-8dac-96cdd7db5953"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF ($P{p_EName}, new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format($F{prepare_date}), "........../............./................")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="129" y="214" width="111" height="20" uuid="a7558d6d-8e8c-485a-a41a-8a7741755f40">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF ($P{p_EName}, 
+	new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(IF($F{pre_date_decided}  == null, $F{prepare_date}, $F{pre_date_decided})),
+	"........../............./................"
+)]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="129" y="201" width="111" height="20" uuid="79e11499-6e92-4f42-9a89-c33b242237b4"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF ($P{p_EName}, 
+	IF($F{pre_position} == null, 
+		$F{prepare_position},
+		$F{pre_position}), 
+	"........................................."
+)]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="129" y="187" width="111" height="20" uuid="07aab0c3-5475-4036-9593-e99f88647f9f">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF ($P{p_EName}, 
+	IF($F{pre_approved_name}  == null, 
+		$F{prepare_name}, 
+		$F{pre_approved_name}
+	),
+	"........................................."
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="129" y="173" width="111" height="20" uuid="0344554a-69b0-4790-bdb6-42611e0bc621">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ผู้ตรวจสอบ","Reviewed By")]]></textFieldExpression>
+				</textField>
+				<image hAlign="Center">
+					<reportElement x="134" y="126" width="99" height="47" uuid="59da159f-e30e-4512-8b24-8fe3c30e85dd">
+						<printWhenExpression><![CDATA[$P{p_ESignature}]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA[IF($F{pre_approved_name} == null, 
+	IF($F{prepare_signature} == null, null,$P{p_Path} + $F{prepare_signature}),
+	IF($F{pre_signature} == null, null,$P{p_Path} + $F{pre_signature})
+)]]></imageExpression>
+				</image>
+				<image hAlign="Center">
+					<reportElement x="250" y="126" width="99" height="49" uuid="06780ba6-683a-48ff-bd81-8a2e186e7daa">
+						<printWhenExpression><![CDATA[$P{p_ESignature}]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA[IF($F{approved_name} == null, 
+	IF($F{pre_approved_name}== null,
+		IF($F{prepare_name}== null,
+			null,
+			IF($F{prepare_signature}== null,null,$P{p_Path} +$F{prepare_signature})
+		),
+		IF($F{pre_signature}== null,null,$P{p_Path} +$F{pre_signature})
+	),
+	IF($F{approved_signature}== null,null,$P{p_Path} +$F{approved_signature})
+)]]></imageExpression>
+				</image>
+				<textField>
+					<reportElement x="240" y="173" width="119" height="20" uuid="21a885e5-432a-4be4-b56f-616017f95830">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ผู้อนุมัติ","Approved By")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="240" y="187" width="119" height="20" uuid="70ce0c79-740c-4bf3-9982-f2f458aa0ca9">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF ($P{p_EName}, 
+	IF($F{approved_name} == null, 
+		IF($F{pre_approved_name} == null,
+			$F{prepare_name},
+			$F{pre_approved_name}), 
+		$F{approved_name}
+	),
+	"........................................."
+)]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="240" y="201" width="119" height="20" uuid="fb1b9e91-3526-4268-b53d-d06bc07e3f4a"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF ($P{p_EName}, 
+	IF($F{approved_position} == null, 
+		IF($F{pre_position} == null,
+			$F{prepare_position},
+			$F{pre_position}), 
+		$F{approved_position}
+	),
+	"........................................."
+)]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="240" y="214" width="120" height="20" uuid="c173f5f5-71bc-4f03-8d52-3cb75772cc0f">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF ($P{p_EName},
+	new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(IF($F{approved_date_decided} == null, IF($F{pre_date_decided} == null, $F{prepare_date}, $F{pre_date_decided}), $F{approved_date_decided})),
+	"........../............./................"
+)]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band height="787">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement x="0" y="0" width="553" height="282" uuid="f99afb27-438c-435b-9dcd-cfb402e8a7c7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</frame>
+			<frame>
+				<reportElement x="0" y="129" width="553" height="658" uuid="f0af9973-5ca4-4d98-89f5-49f9c1b8e9c3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<frame>
+					<reportElement x="0" y="143" width="30" height="515" uuid="30efd68a-350c-4aeb-918c-97a08e8842fe">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+				</frame>
+				<frame>
+					<reportElement x="30" y="143" width="200" height="515" uuid="b833bbd4-69a9-456a-b61c-a58cd2d63be7">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+				</frame>
+				<frame>
+					<reportElement x="230" y="143" width="50" height="515" uuid="3e9fc7d8-96c2-49d4-945f-3b30d1b2c56e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+				</frame>
+				<frame>
+					<reportElement x="280" y="143" width="40" height="515" uuid="7d16301c-aeda-4a21-bd93-12eec35a534a">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+				</frame>
+				<frame>
+					<reportElement x="320" y="143" width="90" height="515" uuid="a1f40f51-08bd-4c4b-9499-6a4585fff76d">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+				</frame>
+				<frame>
+					<reportElement x="410" y="143" width="60" height="515" uuid="5a3bc12a-fba6-4caa-8fc2-29dcfab20c9d">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+				</frame>
+				<frame>
+					<reportElement x="470" y="143" width="82" height="515" uuid="8ef9ef6f-eaba-4036-82bf-1b68e8012cca">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+				</frame>
+			</frame>
+		</band>
+	</background>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00#;(#,##0.00#)" isBlankWhenNull="true">
+				<reportElement x="230" y="0" width="50" height="20" uuid="0ac2f805-6e70-4fbc-a3cb-74da762b5afa">
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<printWhenExpression><![CDATA[$F{display_type} == null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{so_qty}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00#;(#,##0.00#)" isBlankWhenNull="true">
+				<reportElement x="320" y="0" width="90" height="20" uuid="8755b16a-280e-4909-a5fe-a09b6c472fa8">
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<printWhenExpression><![CDATA[$F{display_type} == null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_unitprice}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00#;(#,##0.00#)" isBlankWhenNull="true">
+				<reportElement x="410" y="0" width="60" height="20" uuid="9ebd22ec-825a-4474-ab05-f3debc8b942f">
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<printWhenExpression><![CDATA[$F{display_type} == null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_discount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00#;(#,##0.00#)" isBlankWhenNull="true">
+				<reportElement x="470" y="0" width="80" height="20" uuid="5940bfb0-f882-48fe-8306-5bcf1f1daee1">
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<printWhenExpression><![CDATA[$F{display_type} == null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+					<paragraph rightIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price_subtotal}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="30" y="0" width="200" height="20" uuid="6738fdb9-c9ca-4c09-8f7f-68bd54a02d44">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<printWhenExpression><![CDATA[$F{display_type} == null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="0" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="280" y="0" width="40" height="20" uuid="63b2a35d-1e46-4fe6-b635-daf55035b9c5">
+					<printWhenExpression><![CDATA[$F{display_type} == null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_uom}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="30" height="20" uuid="189deba9-d53e-4b01-bda5-8722188e7f65">
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<printWhenExpression><![CDATA[$F{display_type} == null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="0" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{seq}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="Section Line" x="31" y="1" width="198" height="20" uuid="1f345265-25f2-4b15-a0b1-a1383669f620">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$F{display_type} != null]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle" markup="styled">
+					<font fontName="TH Sarabun New" size="12"/>
+					<paragraph rightIndent="20"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($F{display_type}.toString().equals("line_section"),
+		"<b>" + $F{product_name} + "</b>",
+		"<i>" + $F{product_name} + "</i>"
+)]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<textField pattern="MMM d, yyyy">
+				<reportElement x="378" y="0" width="174" height="15" uuid="1480a76c-6aaf-49aa-b4f7-f6d68dc25b26">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="TH Sarabun New" size="10" isBold="true"/>
+					<paragraph leftIndent="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_ISO}==null,"",$P{p_ISO})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
