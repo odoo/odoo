@@ -527,3 +527,38 @@ class TestTierStrategy(TransactionCase):
         })
         buckets = self.source.with_user(other)._od19_classify_tier_for_approver()
         self.assertEqual(buckets["pending"], [])
+
+    def test_requester_rejected_when_cancelled(self):
+        self.order.write({"state": "cancel"})
+        buckets = self.source._od19_classify_tier_for_requester()
+        self.assertIn(self.order.id, [r.id for r in buckets["rejected"]])
+
+    def test_requester_done_when_success(self):
+        # The order sits under tier validation because setUpClass registers a
+        # tier.definition for sale.order, and the OCA mixin blocks any write to
+        # a _state_to state ("sale") until the reviews are approved. Drop the
+        # fixture definition so the plain write path can reach "sale" -- this
+        # test only exercises the requester bucket classifier on the state.
+        self.definition.unlink()
+        self.order.write({"state": "sale"})
+        buckets = self.source._od19_classify_tier_for_requester()
+        self.assertIn(self.order.id, [r.id for r in buckets["done"]])
+
+    def test_requester_pending_without_reviews(self):
+        buckets = self.source._od19_classify_tier_for_requester()
+        self.assertIn(self.order.id, [r.id for r in buckets["pending"]])
+
+    def test_requester_incoming_when_a_review_is_approved(self):
+        if "review_ids" not in self.env["sale.order"]._fields:
+            raise unittest.SkipTest("sale.order has no review_ids on this DB")
+        self._make_review("approved")
+        buckets = self.source._od19_classify_tier_for_requester()
+        self.assertIn(self.order.id, [r.id for r in buckets["incoming"]])
+        self.assertNotIn(self.order.id, [r.id for r in buckets["pending"]])
+
+    def test_approved_and_pending_prefers_pending(self):
+        self._make_review("approved")
+        self._make_review("pending")
+        buckets = self.source._od19_classify_tier_for_approver()
+        self.assertIn(self.order.id, [r.id for r in buckets["pending"]])
+        self.assertNotIn(self.order.id, [r.id for r in buckets["done"]])

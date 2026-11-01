@@ -113,7 +113,7 @@ class Od19ApprovalSource(models.Model):
         return self._od19_me_ids(kind)
 
     def _od19_classify_for_approver(self):
-        """Return the 4 approver buckets for the current user (strategy=field)."""
+        """Return the 4 approver buckets for the current user."""
         self.ensure_one()
         if self.strategy == "tier_validation":
             return self._od19_classify_tier_for_approver()
@@ -270,7 +270,7 @@ class Od19ApprovalSource(models.Model):
         reviews = self.env["tier.review"].sudo().search([
             ("model", "=", self.model_name),
             ("reviewer_ids", "in", [self.env.user.id]),
-        ])
+        ], limit=self.OD19_MAX_RECORDS)
         seen = {}
         for review in sorted(
             reviews, key=lambda r: self.OD19_TIER_STATUS_ORDER.get(r.status, 9)
