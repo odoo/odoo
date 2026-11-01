@@ -70,6 +70,15 @@ Odoo15Backup/
 *.bak
 *.backup
 
+# Legacy O15 database dump (may contain real business data - keep local only)
+migration/od15_export/*.dump
+
+# Local IDE debug notes (machine specific, not project source)
+debug-trae-terminal-crash.md
+
+# Generated report previews (sale report variants; local QA output only)
+srn_preview/
+
 # Ad-hoc API responses downloaded while developing (e.g. BOT OpenAPI specs)
 response_*.json
 
