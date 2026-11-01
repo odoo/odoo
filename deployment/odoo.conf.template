@@ -1,0 +1,67 @@
+[options]
+; ============================================================================
+;  Odoo 19 CE Enterprise — deployment template
+;  วิธีใช้:  cp odoo.conf.template <target>/odoo_local.conf  แล้วแก้ค่า __SET_ME__
+;  ห้าม commit ไฟล์ที่ใส่ค่าจริง (มี .gitignore กันไว้ที่ /odoo.conf, odoo_local.conf)
+; ============================================================================
+
+; ------------------------------- ผู้ดูแลระบบ -------------------------------
+; สร้าง hash ใหม่ด้วย: odoo-bin --save --stop-after-init แล้วตั้งผ่าน UI
+; หรือใช้ค่าที่เข้ารหัสแล้ว ห้ามใส่รหัสผ่าน plain text
+admin_passwd = __SET_ME__
+
+; ------------------------------- ฐานข้อมูล --------------------------------
+db_host = localhost
+db_port = 5432
+db_user = odoo
+db_password = __SET_ME__
+db_maxconn = 64
+dbfilter = ^__SET_DB_NAME__$
+list_db = False
+
+; ------------------------------- Add-ons ----------------------------------
+; ลำดับสำคัญ: core addons -> core odoo/addons -> OCA -> custom_addons (ท้ายสุด)
+addons_path = /opt/odoo19/addons,/opt/odoo19/odoo/addons,/opt/odoo19/custom_addons,/opt/odoo19/third_party/oca/l10n-thailand,/opt/odoo19/third_party/oca/sale-blanket,/opt/odoo19/third_party/oca/sale-workflow,/opt/odoo19/third_party/oca/server-backend,/opt/odoo19/third_party/oca/server-tools,/opt/odoo19/third_party/oca/server-ux,/opt/odoo19/third_party/oca/helpdesk,/opt/odoo19/third_party/oca/account-financial-tools,/opt/odoo19/third_party/oca/purchase-workflow,/opt/odoo19/third_party/oca/tier-validation,/opt/odoo19/third_party/oca/reporting-engine,/opt/odoo19/third_party/oca/knowledge,/opt/odoo19/third_party/oca/website,/opt/odoo19/third_party/oca/currency,/opt/odoo19/third_party/oca/stock-logistics-request,/opt/odoo19/third_party/oca/account-invoicing,/opt/odoo19/third_party/oca/account-financial-reporting,/opt/odoo19/third_party/oca/account-reconcile
+
+; ------------------------------- HTTP Server ------------------------------
+http_port = 8069
+gevent_port = 8072
+http_interface = 127.0.0.1
+proxy_mode = True
+
+; ------------------------------- Logging ----------------------------------
+logfile = /var/log/odoo/odoo19.log
+log_level = info
+
+; ------------------------------- Storage ----------------------------------
+data_dir = /var/lib/odoo/data
+
+; --------------------------- Workers / Performance ------------------------
+; Linux production: 2*CPU + 1 (ตัวอย่างสำหรับ 4 vCPU)
+workers = 9
+max_cron_threads = 2
+limit_memory_soft = 2147483648
+limit_memory_hard = 2684354560
+limit_time_real = 120
+limit_time_cpu = 60
+limit_time_real_cron = -1
+
+; ------------------------------- Email ------------------------------------
+;smtp_server = localhost
+;smtp_port = 25
+;smtp_ssl = False
+;email_from = __SET_ME__
+
+; ------------------------------- อื่นๆ -------------------------------------
+bin_path = /usr/bin
+without_demo = True
+websocket_keep_alive_timeout = 3600
+
+; ------------------------------- Sentry -----------------------------------
+; โมดูล Sentry (OCA) อ่าน section [sentry] แยกจาก [options]
+[sentry]
+sentry_enabled = False
+;sentry_dsn = __SET_ME__
+sentry_environment = production
+sentry_logging_level = error
+sentry_startup_message = False
