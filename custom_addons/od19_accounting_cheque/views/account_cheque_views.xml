@@ -49,6 +49,8 @@
                             invisible="not cheque_book_id or state not in ('confirmed', 'cancelled')"/>
                     <button name="action_draft" type="object" string="Reset to Draft"
                             invisible="state != 'cancelled'"/>
+                    <button name="action_reconcile" type="object" string="Reconcile"
+                            invisible="state not in ('confirmed', 'to_pay', 'deposited', 'cleared', 'paid')"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="available,draft,confirmed,to_pay,deposited,cleared,paid,bounced,cancelled"/>
                 </header>

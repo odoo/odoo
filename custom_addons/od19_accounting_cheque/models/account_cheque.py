@@ -363,6 +363,20 @@ class AccountCheque(models.Model):
             if cheque.state == "cancelled":
                 cheque.state = "draft"
 
+    def action_reconcile(self):
+        """ตัดบัญชีลูกหนี้/เจ้าหนี้ของเช็คกับใบแจ้งหนี้เดิม (reconcile)."""
+        for cheque in self:
+            if cheque.cheque_type == "customer":
+                move = cheque.received_move_id
+                account = cheque.partner_id.property_account_receivable_id
+            else:
+                move = cheque.issue_move_id
+                account = cheque.partner_id.property_account_payable_id
+            if not move or not account:
+                continue
+            move._od19_reconcile_account_lines(account.id, cheque.partner_id.id)
+        return True
+
     def action_back_to_available(self):
         for cheque in self:
             if cheque.state in ("confirmed", "cancelled") and cheque.cheque_book_id:

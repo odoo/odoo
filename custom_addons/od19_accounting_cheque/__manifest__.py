@@ -9,6 +9,7 @@
     "depends": [
         "account",
         "od19_partner_thai_fields",
+        "od19_accounting_features",
     ],
     "data": [
         "data/sequence.xml",
