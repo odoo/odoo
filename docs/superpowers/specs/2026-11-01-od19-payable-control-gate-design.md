@@ -208,6 +208,22 @@
 
 > หมายเหตุบทเรียนเดิม: รันเทสต์ด้วยพอร์ต/DB แยกจาก dev server เพื่อกันชนกัน
 
+### 9.1 Traceability — เกณฑ์ยอมรับ 1–9 → เทสต์ (ปิด P1-T9, 2026-11-01)
+
+| # | เกณฑ์ยอมรับ (§10) | เทสต์ที่พิสูจน์ | โมดูล |
+|---|---|---|---|
+| 1 | payment จ่ายผู้ขายที่ยัง `draft` Post ไม่ได้จนกว่า approved | `test_post_blocked_until_approved`, `test_post_passes_after_prepare_and_approve`, `test_post_allowed_when_enforcement_disabled` | `od19_accounting_payment_voucher_reports` |
+| 2 | SoD: ผู้จัดทำอนุมัติรายการตัวเองไม่ได้ | `test_sod_blocks_self_approval`, `test_sod_allows_different_approver`, `test_sod_bypassed_by_admin` | `od19_accounting_payment_voucher_reports` |
+| 3 | Override เฉพาะกลุ่มที่กำหนด + บังคับเหตุผล + ร่องรอย chatter | `test_override_requires_reason`, `test_override_allows_post`, `test_override_records_mail_message`, `test_override_denied_for_non_approver` | `od19_accounting_payment_voucher_reports` |
+| 4 | HR expense reimbursement / flow อัตโนมัติยังทำงาน (ไม่ถูกบล็อก) | `test_expense_payment_posts_when_enforcement_on`, `test_hook_false_for_expense_payment`, `test_post_allowed_with_skip_context` | `od19_accounting_payment_voucher_reports` |
+| 5 | 3-way match: บิลจาก PO สินค้าคงคลังออกบิลไม่เกินที่รับ; บริการไม่กระทบ | `test_goods_cannot_be_billed_before_receipt`, `test_goods_bill_limited_to_received_quantity`, `test_remaining_goods_billable_after_receipt`, `test_service_bill_not_blocked_by_receipt`, `test_goods_default_to_receive_and_services_to_purchase` | `od19_purchase_procurement_core` |
+| 6 | Block Payment ใช้ได้จริง (`payment_state='blocked'`) + บิลที่ block ไม่ถูกจ่าย | `test_block_payment_toggles_blocked_state`, `test_blocked_bill_refuses_register_payment`, `test_blocked_bill_kept_out_of_run_until_released`, `test_released_bill_can_be_paid` | `od19_accounting_payment_voucher_reports` |
+| 7 | Group Payments รวมบิลเจ้าเดียวกันได้ | `test_group_payments_merge_same_vendor_bills`, `test_group_payment_disabled_creates_one_payment_per_bill` | `od19_accounting_payment_voucher_reports` |
+| 8 | ไม่แก้ไฟล์ Odoo core; ไม่มี error/warning ใน log | ตรวจด้วย git — `git log --name-only` ของทั้งสองโมดูลไม่มีพาธ `addons/` หรือ `odoo/addons/`; log รอบรันสะอาด (ไม่มี ERROR/CRITICAL) | — |
+| 9 | เทสต์ P1 ผ่านทั้งหมด (`0 failed, 0 error(s)`) | **67 tests, `0 failed, 0 error(s)`** (2026-11-01) | ทั้งสองโมดูล |
+
+**หลักฐาน (P1-T9):** `powershell -ExecutionPolicy Bypass -File .\run-tests.ps1 -Module od19_purchase_procurement_core,od19_accounting_payment_voucher_reports` → `odoo.tests.result: 0 failed, 0 error(s) of 67 tests` (log `data_test_run.log`, exit code 0)
+
 ---
 
 ## 10. เกณฑ์ยอมรับ (Acceptance Criteria)
@@ -236,7 +252,7 @@
 | P1-T6 | กลุ่มสิทธิ์ `group_od19_payment_approver` + `group_od19_payment_admin` (privilege เดียวกัน) | Backend dev | **done + verified (2026-11-01)** | ผู้อนุมัติ/แอดมินเห็นปุ่ม; คนอื่นไม่เห็น (คุมด้วย `groups=` ที่ปุ่ม) | `security/od19_payment_security.xml` |
 | P1-T7 | เปิด Three-Way Match (config) + แก้ `purchase_method` สินค้าคงคลัง | บัญชี + จัดซื้อ | **done + verified (2026-11-01)** | เทสต์ §9 (Purchase) ผ่าน; บริการไม่กระทบ | `custom_addons/od19_purchase_procurement_core/tests/test_three_way_match.py` |
 | P1-T8 | คู่มือ Block Payment + Group Payments ให้ฝ่าย AP | บัญชีเจ้าหนี้ | **done + verified (2026-11-01)** | มี SOP ระบุขั้นตอน; ทดลองใช้จริง 1 รอบ | `ODOO19_USER_MANUAL_TH.md` (SOP AP), `custom_addons/od19_accounting_payment_voucher_reports/tests/test_ap_block_and_group_payments.py` (หลักฐานทดลองใช้) |
-| P1-T9 | เทสต์ TDD P1 ครบ + อัปเดต spec wave-2 (sync) | Backend dev | todo | เกณฑ์ยอมรับ 1–9 ครบ | `tests/*`, `2026-10-21-...wave-2...md` |
+| P1-T9 | เทสต์ TDD P1 ครบ + อัปเดต spec wave-2 (sync) | Backend dev | **done + verified (2026-11-01)** | เกณฑ์ยอมรับ 1–9 ครบ (traceability §9.1); เทสต์ 67 ตัว `0 failed, 0 error(s)` | `tests/*` (§9.1), `2026-10-21-...wave-2...md` §6.10 |
 | P1-T10 | UAT จำลอง business flow (บิลจาก PO → รับของ → จ่าย) | บัญชี + จัดซื้อ | todo | ผ่านเคสจริง 10 รายการต่อส่วน (ข้อมูลตัวอย่าง) | UAT evidence |
 
 ---
