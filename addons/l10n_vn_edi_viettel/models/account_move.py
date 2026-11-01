@@ -226,10 +226,14 @@ class AccountMove(models.Model):
         # Sometimes the documents are not available right away. This is quite rare, but I saw it happen a few times.
         # To handle that we will try up to three time to fetch the document => The impact should be negligible.
         threshold = 1
-        while not files_data['fileToBytes'] and threshold < 3:
+        while not files_data.get('fileToBytes') and threshold < 3:
             time.sleep(0.125 * threshold)
             files_data, error_message = self._l10n_vn_edi_try_fetch_invoice_file_data(file_format)
             threshold += 1
+        if not error_message and not files_data.get('fileToBytes'):
+            return {}, _(
+                "SInvoice returned an empty file for this invoice. Please try again later."
+            )
         return files_data, error_message
 
     def _l10n_vn_edi_try_fetch_invoice_file_data(self, file_format):
@@ -284,16 +288,22 @@ class AccountMove(models.Model):
 
         file_bytes = base64.b64decode(files_data['fileToBytes'])
 
-        with zipfile.ZipFile(io.BytesIO(file_bytes)) as outer_zip:
-            result = _zip_to_xml_file_data(outer_zip)
-            if not result:
-                for entry in outer_zip.infolist():
-                    if entry.filename.endswith('.zip'):
-                        with outer_zip.open(entry) as inner_bytes:
-                            with zipfile.ZipFile(inner_bytes) as inner_zip:
-                                result = _zip_to_xml_file_data(inner_zip)
-                                if result:
-                                    break
+        try:
+            with zipfile.ZipFile(io.BytesIO(file_bytes)) as outer_zip:
+                result = _zip_to_xml_file_data(outer_zip)
+                if not result:
+                    for entry in outer_zip.infolist():
+                        if entry.filename.endswith('.zip'):
+                            with outer_zip.open(entry) as inner_bytes:
+                                with zipfile.ZipFile(inner_bytes) as inner_zip:
+                                    result = _zip_to_xml_file_data(inner_zip)
+                                    if result:
+                                        break
+        except zipfile.BadZipFile:
+            return {}, _(
+                "The file received from SInvoice is not a valid ZIP archive. "
+                "Please try again later."
+            )
 
         if not result:
             return {}, _("No XML file found in the zip archive.")
@@ -328,14 +338,19 @@ class AccountMove(models.Model):
         if self.l10n_vn_edi_invoice_state != 'sent':
             raise UserError(_("Please send the invoice to SInvoice before fetching the tax invoice files."))
 
-        xml_data, xml_error_message = self._l10n_vn_edi_fetch_invoice_xml_file_data()
-        pdf_data, pdf_error_message = self._l10n_vn_edi_fetch_invoice_pdf_file_data()
+        # A stored SInvoice file never changes; fetching it again would only attach a duplicate.
+        xml_data, xml_error_message = {}, ''
+        if not self.l10n_vn_edi_sinvoice_xml_file:
+            xml_data, xml_error_message = self._l10n_vn_edi_fetch_invoice_xml_file_data()
+        pdf_data, pdf_error_message = {}, ''
+        if not self.l10n_vn_edi_sinvoice_pdf_file:
+            pdf_data, pdf_error_message = self._l10n_vn_edi_fetch_invoice_pdf_file_data()
 
         # Not using _link_invoice_documents for these because it depends on _need_invoice_document and I can't get it to work
         # well while allowing users to download the files before sending.
         attachments_data = []
         for file, error in [(xml_data, xml_error_message), (pdf_data, pdf_error_message)]:
-            if error:
+            if error or not file:
                 continue
 
             attachments_data.append({
