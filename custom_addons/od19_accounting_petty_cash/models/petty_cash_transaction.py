@@ -110,6 +110,16 @@ class PettyCashTransaction(models.Model):
             transaction.move_id = move
             transaction.state = "posted"
 
+    def action_reconcile(self):
+        """ตัดบัญชีเงินสดย่อยกับรายการคู่ที่เกี่ยวข้อง (reconcile)."""
+        for transaction in self:
+            if transaction.state != "posted" or not transaction.move_id:
+                continue
+            transaction.move_id._od19_reconcile_account_lines(
+                transaction.fund_id.account_id.id
+            )
+        return True
+
     def action_cancel(self):
         for transaction in self:
             if transaction.state != "posted":

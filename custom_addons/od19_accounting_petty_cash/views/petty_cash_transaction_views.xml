@@ -27,6 +27,8 @@
                 <header>
                     <button name="action_post" type="object" string="Post"
                             class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_reconcile" type="object" string="Reconcile"
+                            invisible="state != 'posted'"/>
                     <button name="action_cancel" type="object" string="Cancel"
                             invisible="state != 'posted'"/>
                     <button name="action_draft" type="object" string="Reset to Draft"
