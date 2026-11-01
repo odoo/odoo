@@ -19,6 +19,8 @@ from odoo.tools.sql import SQL
 from odoo.addons.base.models.avatar_mixin import generate_text_avatar_svg, get_random_ui_color_from_seed
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.models.discuss.discuss_channel_member import POST_LEAVE_MESSAGE
+from odoo.addons.mail.models.mail_thread import MailThread
+from odoo.addons.mail.models.mail_track_mixin import MailTrackMixin
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 
@@ -88,9 +90,7 @@ class DiscussChannel(models.Model):
     _mail_flat_thread = False
     _mail_post_access = 'read'
     _mail_message_reaction_access = "read"
-    _inherit = ["mail.thread", "bus.sync.mixin"]
-
-    MAX_BOUNCE_LIMIT = 10
+    _inherit = ["bus.listener.mixin", "bus.sync.mixin"]
 
     @api.model
     def _generate_random_token(self):
@@ -145,6 +145,27 @@ class DiscussChannel(models.Model):
     meeting_stop_dt = fields.Datetime("Meeting End", compute="_compute_meeting_dt")
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)
     message_count = fields.Integer("# Messages", readonly=True, compute="_compute_message_count")
+    message_ids = fields.One2many(
+        "mail.message",
+        "res_id",
+        string="Messages",
+        domain=lambda self: [("message_type", "!=", "user_notification")],
+        bypass_search_access=True,
+    )
+    has_message = fields.Boolean(
+        compute="_compute_has_message", search="_search_has_message", store=False
+    )
+    message_needaction = fields.Boolean(
+        "Action Needed",
+        compute="_compute_message_needaction",
+        search="_search_message_needaction",
+        help="If checked, new messages require your attention.",
+    )
+    message_needaction_counter = fields.Integer(
+        "Number of Actions",
+        compute="_compute_message_needaction",
+        help="Number of messages requiring action",
+    )
     last_interest_dt = fields.Datetime(
         "Last Activity",
         default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
@@ -488,6 +509,19 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.message_count = message_count_by_channel_id.get(channel.id, 0)
 
+    def _compute_has_message(self):
+        MailThread._compute_has_message(self)
+
+    def _search_has_message(self, operator, value):
+        return MailThread._search_has_message(self, operator, value)
+
+    def _compute_message_needaction(self):
+        MailThread._compute_message_needaction(self)
+
+    @api.model
+    def _search_message_needaction(self, operator, operand):
+        return MailThread._search_message_needaction(self, operator, operand)
+
     @api.depends("channel_type", "parent_channel_id.group_public_id")
     def _compute_group_public_id(self):
         channels = self.filtered(lambda channel: channel.channel_type == "channel")
@@ -608,6 +642,10 @@ class DiscussChannel(models.Model):
         # Delete discuss.channel
         for channel in self:
             channel._bus_send("discuss.channel/delete", {"id": channel.id})
+
+    def _delete_extra(self):
+        yield from super()._delete_extra()
+        yield self.env["mail.message"].search(self._get_message_domain())
 
     def write(self, vals):
         if 'channel_type' in vals:
@@ -1289,6 +1327,7 @@ class DiscussChannel(models.Model):
                  WHERE partner.active IS TRUE
                        AND partner.email != %(email)s
                        AND partner.id IN %(partner_ids)s AND partner.id != %(author_id)s
+                       AND partner.partner_share IS NOT TRUE
                 """,
                 email=email_from or "",
                 partner_ids=tuple(pids),
@@ -1306,9 +1345,9 @@ class DiscussChannel(models.Model):
                     'groups': [],
                     'lang': lang,
                     'name': name,
-                    'notif': "email" if partner_share else "inbox",
+                    'notif': "inbox",
                     'share': partner_share,
-                    'type': 'user' if not partner_share else 'customer',
+                    'type': 'user',
                     'uid': uid,
                     'uids': uids or [],
                     'ushare': ushare,
@@ -1365,23 +1404,12 @@ class DiscussChannel(models.Model):
             })
         return recipients_data
 
-    def _notify_get_recipients_groups(self, message, model_description):
-        # All recipients of a message on a channel are considered as partners.
-        # This means they will receive a minimal email, without a link to access
-        # in the backend. Mailing lists should indeed send minimal emails to avoid
-        # the noise.
-        groups = super()._notify_get_recipients_groups(message, model_description)
-        for (index, (group_name, _group_func, group_data)) in enumerate(groups):
-            if group_name != 'customer':
-                groups[index] = (group_name, lambda partner: False, group_data)
-        return groups
-
     def _get_notify_valid_parameters(self):
-        return super()._get_notify_valid_parameters() | {"silent"}
+        return MailThread._get_notify_valid_parameters(self) | {"silent"}
 
     def _notify_thread(self, message, **kwargs):
         # link message to channel
-        rdata = super()._notify_thread(message, **kwargs)
+        rdata = MailThread._notify_thread(self, message, **kwargs)
         payload = {"id": self.id}
         if temporary_id := self.env.context.get("temporary_id"):
             payload["temporary_id"] = temporary_id
@@ -1422,7 +1450,7 @@ class DiscussChannel(models.Model):
         # in a DM the title is already the author's name
         if self.channel_type == "chat":
             return ""
-        return super()._notify_by_push_get_body_prefix(message)
+        return MailThread._notify_by_push_get_body_prefix(self, message)
 
     def _notify_by_push_get_icon(self, message):
         if self.channel_type in ["channel", "group"]:
@@ -1431,30 +1459,22 @@ class DiscussChannel(models.Model):
         return f"/web/image/{author._name}/{author.id}/avatar_128"
 
     def _notify_by_web_push_prepare_payload(self, message, force_record_name=False):
-        payload = super()._notify_by_web_push_prepare_payload(message, force_record_name=force_record_name)
+        payload = MailThread._notify_by_web_push_prepare_payload(self, message, force_record_name=force_record_name)
         payload['options']['data']['action'] = 'mail.action_discuss'
         return payload
+
+    def _notify_thread_by_email(self, message, recipients_data, **kwargs):
+        # MailThread._notify_thread calls it whatever the recipients, and a channel has no email one
+        return True
 
     def _notify_thread_by_web_push(self, message, recipients_data, **kwargs):
         # only notify "web_push" recipients in discuss channels.
         # exclude "inbox" recipients in discuss channels as inbox and web push can be mutually exclusive.
         # the user can turn off the web push but receive notifs via inbox if they want to.
-        super()._notify_thread_by_web_push(message, [r for r in recipients_data if r["notif"] == "web_push"], **kwargs)
-
-    def _message_receive_bounce(self, email, partner):
-        # Override bounce management to unsubscribe bouncing addresses
-        bouncing_partners = partner.filtered(lambda p: p.message_bounce >= self.MAX_BOUNCE_LIMIT)
-        self.env["discuss.channel.member"].search_fetch(
-            [
-                ("channel_id", "in", self.ids),
-                ("channel_id.channel_type", "in", self._types_allowing_unfollow()),
-                ("partner_id", "in", bouncing_partners.ids),
-            ],
-        ).unlink()
-        return super()._message_receive_bounce(email, partner)
+        MailThread._notify_thread_by_web_push(self, message, [r for r in recipients_data if r["notif"] == "web_push"], **kwargs)
 
     def _get_allowed_message_params(self):
-        return super()._get_allowed_message_params() | {"special_mentions", "parent_id"}
+        return MailThread._get_allowed_message_params(self) | {"special_mentions", "parent_id"}
 
     def _get_allowed_message_partner_ids(self, partner_ids):
         """Ensure only partners having access to the channel can be mentioned."""
@@ -1497,10 +1517,11 @@ class DiscussChannel(models.Model):
         # The current client code might be setting the key to True on sending
         # message but it is only useful when targeting customers in chatter.
         # This value should simply be set to False in channels no matter what.
-        return super(
-            DiscussChannel,
+        return MailThread.message_post(
             self.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False),
-        ).message_post(message_type=message_type, **kwargs)
+            message_type=message_type,
+            **kwargs,
+        )
 
     def _message_post_after_hook(self, message):
         # Automatically set the message posted by the current user as seen for themselves.
@@ -1529,13 +1550,154 @@ class DiscussChannel(models.Model):
                     wants_channel_notifications
                 )
             self._add_members(partners=to_invite)
-        return super()._message_post_after_hook(message)
+        return MailThread._message_post_after_hook(self, message)
 
     def _message_update_content(self, message, /, *, partner_ids=None, **kwargs):
         if partner_ids:
             kwargs["partner_ids"] = self._get_allowed_message_partner_ids(partner_ids)
-        super()._message_update_content(message, **kwargs)
+        MailThread._message_update_content(self, message, **kwargs)
         self._bus_send_attachment_ownership(message)
+
+    # ------------------------------------------------------------
+    # MAIL.THREAD DELEGATION
+    # ------------------------------------------------------------
+    # discuss.channel does not inherit mail.thread: it delegates the necessary
+    # methods only, grouped by the flow that reaches them. Each group gives the
+    # stack from its entry point down to the stubs, so a group goes away with
+    # its entry point.
+
+    # message_post: DiscussChannel.message_post -> MailThread.message_post,
+    # which calls each of these; _message_create also calls the two
+    # _get_message_create_*_field_names and _raise_for_invalid_parameters.
+    def _fallback_lang(self, *args, **kwargs):
+        # first call of message_post and of _notify_thread
+        return MailTrackMixin._fallback_lang(self, *args, **kwargs)
+
+    def _get_message_create_ignore_field_names(self, *args, **kwargs):
+        return MailThread._get_message_create_ignore_field_names(self, *args, **kwargs)
+
+    def _get_message_create_valid_field_names(self, *args, **kwargs):
+        return MailThread._get_message_create_valid_field_names(self, *args, **kwargs)
+
+    def _message_compute_author(self, *args, **kwargs):
+        return MailThread._message_compute_author(self, *args, **kwargs)
+
+    def _message_compute_parent_id(self, *args, **kwargs):
+        return MailThread._message_compute_parent_id(self, *args, **kwargs)
+
+    def _message_create(self, *args, **kwargs):
+        return MailThread._message_create(self, *args, **kwargs)
+
+    def _process_attachments_for_post(self, *args, **kwargs):
+        return MailThread._process_attachments_for_post(self, *args, **kwargs)
+
+    def _raise_for_invalid_parameters(self, *args, **kwargs):
+        # message_post, _message_create, _notify_thread, _message_log_batch and message_post_with_source
+        return MailThread._raise_for_invalid_parameters(self, *args, **kwargs)
+
+    # _message_log: ai_session.post_agent_step (enterprise ai) logs the agent
+    # step on the channel with _message_log when the user is not internal;
+    # _message_log -> _message_log_batch -> _get_log_valid_parameters.
+    def _get_log_valid_parameters(self, *args, **kwargs):
+        return MailThread._get_log_valid_parameters(self, *args, **kwargs)
+
+    def _message_log(self, *args, **kwargs):
+        return MailThread._message_log(self, *args, **kwargs)
+
+    def _message_log_batch(self, *args, **kwargs):
+        return MailThread._message_log_batch(self, *args, **kwargs)
+
+    # pin: DiscussChannel.set_message_pin -> message_post_with_source
+    # -> _get_source_from_ref, _get_message_parameters_updated_for_rendering
+    def _get_message_parameters_updated_for_rendering(self, *args, **kwargs):
+        return MailThread._get_message_parameters_updated_for_rendering(self, *args, **kwargs)
+
+    def _get_source_from_ref(self, *args, **kwargs):
+        return MailThread._get_source_from_ref(self, *args, **kwargs)
+
+    def message_post_with_source(self, *args, **kwargs):
+        return MailThread.message_post_with_source(self, *args, **kwargs)
+
+    # partner_emails: ThreadController.mail_message_post with partner_emails
+    # and /mail/partner/from_email call _partner_find_from_emails_single on the
+    # thread; -> _partner_find_from_emails -> _get_customer_information.
+    def _get_customer_information(self, *args, **kwargs):
+        return MailThread._get_customer_information(self, *args, **kwargs)
+
+    def _partner_find_from_emails(self, *args, **kwargs):
+        return MailThread._partner_find_from_emails(self, *args, **kwargs)
+
+    def _partner_find_from_emails_single(self, *args, **kwargs):
+        return MailThread._partner_find_from_emails_single(self, *args, **kwargs)
+
+    # _notify_thread: DiscussChannel._notify_thread -> MailThread._notify_thread
+    # -> _is_notification_scheduled, then the inbox, out of office and web push
+    # groups below, on the recipients of _notify_get_recipients above.
+    def _is_notification_scheduled(self, *args, **kwargs):
+        return MailThread._is_notification_scheduled(self, *args, **kwargs)
+
+    # inbox: _notify_thread -> _notify_thread_by_inbox, for a mentioned
+    # internal partner (notif "inbox" in _notify_get_recipients).
+    def _notify_thread_by_inbox(self, *args, **kwargs):
+        return MailThread._notify_thread_by_inbox(self, *args, **kwargs)
+
+    # out of office: _notify_thread -> _notify_thread_with_out_of_office for a
+    # comment, -> _message_compute_real_author and
+    # _notify_thread_with_out_of_office_get_additional_users. message_post
+    # also calls _message_compute_real_author, under an author subscription
+    # that the channel disables with mail_post_autofollow_author_skip.
+    def _message_compute_real_author(self, *args, **kwargs):
+        return MailThread._message_compute_real_author(self, *args, **kwargs)
+
+    def _notify_thread_with_out_of_office(self, *args, **kwargs):
+        return MailThread._notify_thread_with_out_of_office(self, *args, **kwargs)
+
+    def _notify_thread_with_out_of_office_get_additional_users(self, *args, **kwargs):
+        return MailThread._notify_thread_with_out_of_office_get_additional_users(self, *args, **kwargs)
+
+    # web push: DiscussChannel._notify_thread_by_web_push
+    # -> MailThread._notify_thread_by_web_push
+    #   -> _notify_get_recipients_for_extra_notifications
+    #   -> _web_push_get_partners_parameters
+    #   -> DiscussChannel._notify_by_web_push_prepare_payload
+    #     -> MailThread._notify_by_web_push_prepare_payload -> _notify_by_push_get_body
+    #   -> _web_push_truncate_payload -> _truncate_payload_get_max_payload_length
+    #   -> _web_push_send_notification
+    # mail_mobile's OCN payload calls _notify_by_push_get_body too.
+    def _notify_by_push_get_body(self, *args, **kwargs):
+        return MailThread._notify_by_push_get_body(self, *args, **kwargs)
+
+    def _notify_get_recipients_for_extra_notifications(self, *args, **kwargs):
+        return MailThread._notify_get_recipients_for_extra_notifications(self, *args, **kwargs)
+
+    @staticmethod
+    def _truncate_payload_get_max_payload_length():
+        return MailThread._truncate_payload_get_max_payload_length()
+
+    def _web_push_get_partners_parameters(self, *args, **kwargs):
+        return MailThread._web_push_get_partners_parameters(self, *args, **kwargs)
+
+    def _web_push_send_notification(self, *args, **kwargs):
+        return MailThread._web_push_send_notification(self, *args, **kwargs)
+
+    def _web_push_truncate_payload(self, *args, **kwargs):
+        return MailThread._web_push_truncate_payload(self, *args, **kwargs)
+
+    # access: ThreadController._get_thread_with_access and
+    # mail.message._get_with_access call _get_thread_with_access on the thread
+    # model, which filters its kwargs with _get_allowed_access_params.
+    def _get_allowed_access_params(self, *args, **kwargs):
+        return MailThread._get_allowed_access_params(self, *args, **kwargs)
+
+    def _get_thread_with_access(self, *args, **kwargs):
+        return MailThread._get_thread_with_access(self, *args, **kwargs)
+
+    # Store: _store_thread_fields is looked up by name and silently skipped when
+    # missing, so a channel without it loses the whole payload of
+    # /mail/thread/data: pinned_messages (fetchPinnedMessages) and the
+    # hasReadAccess, hasWriteAccess and canPostOnReadonly attrs of that call.
+    def _store_thread_fields(self, *args, **kwargs):
+        return MailThread._store_thread_fields(self, *args, **kwargs)
 
     def _check_can_update_message_content(self, message):
         # Don't call super in this override as we want to ignore the mail.thread behavior completely
@@ -1559,7 +1721,7 @@ class DiscussChannel(models.Model):
 
     def _create_attachments_for_post(self, values_list, extra_list):
         # Create voice metadata from meta information
-        attachments = super()._create_attachments_for_post(values_list, extra_list)
+        attachments = MailThread._create_attachments_for_post(self, values_list, extra_list)
         voice = attachments.env['ir.attachment']  # keep env, notably for potential sudo
         for attachment, (_cid, _name, _token, info) in zip(attachments, extra_list):
             if info.get('voice'):
@@ -1619,7 +1781,7 @@ class DiscussChannel(models.Model):
     def set_message_pin(self, message_id, pinned):
         if self.is_readonly and not self.can_self_edit_readonly_channel:
             raise UserError(self.env._("You cannot pin messages in a read-only channel."))
-        result = super().set_message_pin(message_id, pinned)
+        result = MailThread.set_message_pin(self, message_id, pinned)
         if pinned and result:
             self.message_post_with_source(
                 "mail.message_pin_notification",
@@ -2074,7 +2236,7 @@ class DiscussChannel(models.Model):
         return messages.browse(mid for mid, in self.env.execute_query(sql) if mid)
 
     def _clean_empty_message(self, message):
-        super()._clean_empty_message(message)
+        MailThread._clean_empty_message(self, message)
         message.parent_id = False
 
     def _store_message_update_extra_fields(self, res: Store.FieldList):
