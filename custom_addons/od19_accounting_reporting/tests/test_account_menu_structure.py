@@ -23,22 +23,22 @@ class TestAccountMenuStructure(TransactionCase):
         self.assertIsNotNone(app)
         self.assertEqual(app.get("string"), "Accounting")
 
-    def test_finance_control_board_sits_before_reporting(self):
+    def test_finance_control_board_is_first_menu(self):
         board = self.env.ref(
             "od19_accounting_reporting.menu_od19_finance_control_dashboard"
         )
-        review = self.env.ref("account.account_audit_menu")
-        reporting = self.env.ref("account.menu_finance_reports")
-        self.assertEqual(board.parent_id, reporting.parent_id)
-        self.assertGreater(
-            board.sequence,
-            review.sequence,
-            "Finance Control Board must come after the Review menu",
-        )
+        dashboard = self.env.ref("account.menu_board_journal_1")
+        self.assertEqual(board.parent_id, dashboard.parent_id)
         self.assertLess(
             board.sequence,
-            reporting.sequence,
-            "Finance Control Board must come before the Reporting menu",
+            dashboard.sequence,
+            "Finance Control Board must open the app, before the core Dashboard",
+        )
+        siblings = self._root_siblings(board)
+        self.assertTrue(siblings)
+        self.assertTrue(
+            all(board.sequence < sibling.sequence for sibling in siblings),
+            "Finance Control Board must be the first menu of the app",
         )
 
     def test_configuration_is_last_menu(self):

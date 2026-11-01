@@ -577,10 +577,12 @@
         <field name="params" eval="{'dashboard_id': ref('dashboard_after_sales')}"/>
     </record>
 
+    <!-- The summary board is the first menu of the section, ahead of the
+         Service Tickets menu (sequence 10). -->
     <menuitem id="menu_od19_after_sales_dashboard"
               name="After-Sales Dashboard"
               parent="menu_od19_after_sales_reporting_root"
               action="action_od19_after_sales_dashboard"
-              sequence="5"/>
+              sequence="0"/>
 
 </odoo>

@@ -330,11 +330,13 @@
         <field name="params" eval="{'dashboard_id': ref('dashboard_hr_attendance')}"/>
     </record>
 
+    <!-- The summary board is the first menu of the app, ahead of the core
+         Overview (sequence 5). -->
     <menuitem id="menu_od19_hr_attendance_dashboard"
               name="HR Attendance Board"
               parent="hr_attendance.menu_hr_attendance_root"
               action="action_od19_hr_attendance_dashboard"
               groups="hr_attendance.group_hr_attendance_officer"
-              sequence="7"/>
+              sequence="0"/>
 
 </odoo>
