@@ -14,7 +14,7 @@ from markupsafe import Markup
 from odoo import api, Command, fields, models, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.models import Query
+from odoo.models import Query, parse_read_group_spec
 from odoo.tools import SQL, convert, format_date, format_time
 from odoo.tools.float_utils import float_is_zero
 from odoo.tools.intervals import Intervals
@@ -1847,8 +1847,22 @@ class HrEmployee(models.Model):
             ids = self.env['hr.employee.public']._search(domain, offset, limit, order, **kwargs)
         except (ValueError, KeyError) as e:
             raise AccessError(self.env._('You do not have access to this document.')) from e
-        # the result is expected from this table, so we should link tables
-        return super(HrEmployee, self.sudo())._search([('id', 'in', ids)], order=order)
+        # the result is expected from this table, so we should link tables;
+        # the query must not be bound to a sudo env: read_group builds its SQL
+        # from it and would skip the field access checks
+        return super()._search([('id', 'in', ids)], order=order, bypass_access=True)
+
+    def _read_group_groupby(self, table, groupby_spec):
+        """Restrict grouping to the fields of ``hr.employee.public`` for users without read access."""
+        if not self.browse().has_access('read'):
+            self._check_private_fields([parse_read_group_spec(groupby_spec)[0]])
+        return super()._read_group_groupby(table, groupby_spec)
+
+    def _read_group_select(self, table, aggregate_spec):
+        """Restrict aggregates to the fields of ``hr.employee.public`` for users without read access."""
+        if aggregate_spec != '__count' and not self.browse().has_access('read'):
+            self._check_private_fields([parse_read_group_spec(aggregate_spec)[0]])
+        return super()._read_group_select(table, aggregate_spec)
 
     @api.model
     def is_onboarding(self, company_ids):
