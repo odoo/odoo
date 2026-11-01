@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Per-diem policy page on the company form -->
+    <record id="view_company_form_inherit_per_diem" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.per.diem</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="เบี้ยเลี้ยง / Per Diem" name="od19_per_diem">
+                    <group string="วงเงินมาตรฐาน / Standard Limits">
+                        <field name="od19_per_diem_rate_domestic"/>
+                        <field name="od19_per_diem_rate_overseas"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

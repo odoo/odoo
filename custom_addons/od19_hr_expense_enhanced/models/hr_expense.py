@@ -300,3 +300,81 @@ class HrExpense(models.Model):
                     '(ใบรับรองแทนใบเสร็จรับเงิน) cannot carry VAT. '
                     'Please remove the taxes or choose another document type.'
                 ))
+
+    # ------------------------------------------------------------------
+    # Per diem allowance - Section 42(3) Revenue Code
+    # (เบี้ยเลี้ยง ม.42(3))
+    # ------------------------------------------------------------------
+    # A travel per-diem allowance is exempt from personal income tax up to
+    # the standard rate set by the company policy. When the claimed amount
+    # exceeds that limit the employee must justify it for the approver.
+    od19_is_per_diem = fields.Boolean(
+        string='Per Diem Allowance / เบี้ยเลี้ยง',
+        tracking=True,
+        help='Tick when this expense is a travel per-diem allowance '
+             'exempt under Section 42(3) of the Revenue Code.',
+    )
+    od19_per_diem_region = fields.Selection(
+        [
+            ('domestic', 'Domestic / ในประเทศ'),
+            ('overseas', 'Overseas / ต่างประเทศ'),
+        ],
+        string='Region / พื้นที่',
+        default='domestic',
+        tracking=True,
+    )
+    od19_per_diem_days = fields.Float(
+        string='Days / จำนวนวัน',
+        default=1.0,
+        tracking=True,
+    )
+    od19_per_diem_standard_rate = fields.Monetary(
+        string='Standard Rate / Day / วงเงินมาตรฐานต่อวัน',
+        compute='_compute_od19_per_diem', store=True,
+        currency_field='currency_id',
+        help='Standard exempt rate per day taken from the company policy.',
+    )
+    od19_per_diem_limit = fields.Monetary(
+        string='Allowance Limit / วงเงินเบี้ยเลี้ยง',
+        compute='_compute_od19_per_diem', store=True,
+        currency_field='currency_id',
+        help='Standard rate per day multiplied by the number of days.',
+    )
+    od19_per_diem_over_limit = fields.Boolean(
+        string='Over Limit / เกินวงเงิน',
+        compute='_compute_od19_per_diem', store=True,
+        help='Set when the claimed allowance is above the standard limit.',
+    )
+    od19_per_diem_reason = fields.Text(
+        string='Over-limit Reason / เหตุผลที่เกินวงเงิน',
+        help='Required when the allowance exceeds the standard limit. '
+             'The approver reviews this justification.',
+    )
+
+    @api.depends('od19_is_per_diem', 'od19_per_diem_region',
+                 'od19_per_diem_days', 'total_amount', 'company_id')
+    def _compute_od19_per_diem(self):
+        for expense in self:
+            if not expense.od19_is_per_diem or not expense.company_id:
+                expense.od19_per_diem_standard_rate = 0.0
+                expense.od19_per_diem_limit = 0.0
+                expense.od19_per_diem_over_limit = False
+                continue
+            rate = expense.company_id._od19_per_diem_rate(
+                expense.od19_per_diem_region)
+            limit = rate * (expense.od19_per_diem_days or 0.0)
+            expense.od19_per_diem_standard_rate = rate
+            expense.od19_per_diem_limit = limit
+            expense.od19_per_diem_over_limit = expense.total_amount > limit
+
+    @api.constrains('od19_is_per_diem', 'od19_per_diem_over_limit',
+                    'od19_per_diem_reason')
+    def _check_od19_per_diem_over_limit_reason(self):
+        for expense in self:
+            if (expense.od19_is_per_diem
+                    and expense.od19_per_diem_over_limit
+                    and not (expense.od19_per_diem_reason or '').strip()):
+                raise ValidationError(_(
+                    'The per-diem allowance exceeds the standard limit. '
+                    'Please provide a reason for the approver.'
+                ))

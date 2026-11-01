@@ -76,6 +76,21 @@
                     <field name="od19_delegated_by_id" readonly="1"/>
                     <field name="od19_delegation_date" readonly="1"/>
                 </group>
+                <group string="เบี้ยเลี้ยง ม.42(3) / Per Diem" col="4">
+                    <field name="od19_is_per_diem"/>
+                    <field name="od19_per_diem_region"
+                           invisible="not od19_is_per_diem"/>
+                    <field name="od19_per_diem_days"
+                           invisible="not od19_is_per_diem"/>
+                    <field name="od19_per_diem_standard_rate"
+                           invisible="not od19_is_per_diem"/>
+                    <field name="od19_per_diem_limit"
+                           invisible="not od19_is_per_diem"/>
+                    <field name="od19_per_diem_over_limit"
+                           invisible="not od19_is_per_diem"/>
+                    <field name="od19_per_diem_reason"
+                           invisible="not od19_is_per_diem"/>
+                </group>
             </xpath>
         </field>
     </record>
@@ -96,6 +111,8 @@
                        optional="show"/>
                 <field name="od19_document_type" optional="show"/>
                 <field name="od19_vat_creditable" optional="hide"/>
+                <field name="od19_is_per_diem" optional="hide"/>
+                <field name="od19_per_diem_over_limit" optional="hide"/>
             </xpath>
             <xpath expr="//list" position="inside">
                 <button name="action_open_xlsx_export_wizard"
