@@ -2,6 +2,7 @@
 from . import vat_sales_register
 from . import vat_purchase_register
 from . import wht_register
+from . import pp30_register
 from . import pp36_register
 from . import pnd3_register
 from . import pnd53_register

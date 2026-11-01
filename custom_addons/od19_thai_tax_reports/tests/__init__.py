@@ -9,4 +9,5 @@ from . import test_deferred_tax
 from . import test_npae_financial_statement
 from . import test_sbc3_register
 from . import test_sbt_pp40_register
+from . import test_pp30_register
 from . import test_stamp_duty

@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     "name": "Thai Tax Reports",
-    "version": "19.0.1.14.0",
+    "version": "19.0.1.15.0",
     "category": "Localization",
-    "summary": "Thai tax reports: VAT Sales/Purchase Register, WHT Register, "
+    "summary": "Thai tax reports: VAT Sales/Purchase Register, "
+    "PP30 Register (แบบแสดงรายการภาษีมูลค่าเพิ่ม ภ.พ.30), "
+    "WHT Register, "
     "WHT Certificate (หนังสือรับรองการหักภาษี ณ ที่จ่าย), "
     "PND3 Register (ภ.ง.ด.3 บุคคลธรรมดา), "
     "PND53 Register (ภ.ง.ด.53 นิติบุคคล), PND54 Register, "
@@ -35,6 +37,7 @@
         "report/vat_purchase_register.xml",
         "report/wht_register.xml",
         "report/wht_certificate.xml",
+        "report/pp30_register.xml",
         "report/pp36_register.xml",
         "report/pnd3_register.xml",
         "report/pnd53_register.xml",
