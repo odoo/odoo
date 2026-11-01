@@ -438,3 +438,36 @@ class TestSharedPoolStep(TransactionCase):
         })
         buckets = source.with_user(other)._od19_classify_for_approver()
         self.assertIn(expense.id, [r.id for r in buckets["pending"]])
+
+    def test_pool_step_after_earlier_match_still_shows_as_pending(self):
+        # Two steps: step 0 has an approver field, step 1 is a shared pool step.
+        # The record sits at step 1 (the furthest). A user who matches step 0
+        # must STILL see it as pending because step 1 is a pool step (D10).
+        employee = self.env["hr.employee"].create({"name": "Pool Mgr"})
+        approver_user = self.env["res.users"].create({
+            "name": "Pool Mgr User", "login": "pool_mgr",
+            "group_ids": [(4, self.env.ref("base.group_user").id),
+                          (4, self.env.ref("od19_approval_center.group_approval_admin").id)],
+        })
+        employee.user_id = approver_user
+        source = self.env["od19.approval.source"].create({
+            "name": "Pool After Regular",
+            "model_id": self.env["ir.model"]._get("hr.expense").id,
+            "success_states": "done,paid",
+            "rejected_states": "refused",
+            "step_ids": [
+                (0, 0, {"sequence": 10, "label": "Manager", "state_field": "state",
+                        "state_value": "submitted", "approver_field": "employee_id",
+                        "approver_kind": "employee"}),
+                (0, 0, {"sequence": 20, "label": "Pool", "state_field": "state",
+                        "state_value": "approved"}),
+            ],
+        })
+        expense = self.env["hr.expense"].create({
+            "name": "Pool after regular doc",
+            "employee_id": employee.id,
+            "total_amount": 100.0, "total_amount_currency": 100.0,
+        })
+        expense.write({"state": "approved"})
+        buckets = source.with_user(approver_user)._od19_classify_for_approver()
+        self.assertIn(expense.id, [r.id for r in buckets["pending"]])

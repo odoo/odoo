@@ -144,7 +144,7 @@ class Od19ApprovalSource(models.Model):
                 buckets["pending"].append(record)
             elif current < my_index:
                 buckets["incoming"].append(record)
-            elif self._od19_is_approver_at(record, steps[current]):
+            elif not steps[current].approver_field or self._od19_is_approver_at(record, steps[current]):
                 buckets["pending"].append(record)
         return buckets
 
