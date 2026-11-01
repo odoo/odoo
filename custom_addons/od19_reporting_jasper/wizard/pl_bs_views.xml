@@ -72,7 +72,7 @@
     </record>
 
     <record id="action_profit_loss_report" model="ir.actions.act_window">
-        <field name="name">Profit and Loss</field>
+        <field name="name">(J-Report OD15) Profit and Loss</field>
         <field name="res_model">profit.loss.report</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_profit_loss_report"/>
@@ -80,7 +80,7 @@
     </record>
 
     <record id="action_balance_sheet_report" model="ir.actions.act_window">
-        <field name="name">Balance Sheet</field>
+        <field name="name">(J-Report OD15) Balance Sheet</field>
         <field name="res_model">balance.sheet.report</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_balance_sheet_report"/>
@@ -89,7 +89,7 @@
 
     <menuitem
         id="menu_profit_loss_report"
-        name="Profit and Loss"
+        name="(J-Report OD15) Profit and Loss"
         parent="account.menu_finance_reports"
         action="action_profit_loss_report"
         groups="account.group_account_user,account.group_account_manager"
@@ -97,7 +97,7 @@
     />
     <menuitem
         id="menu_balance_sheet_report"
-        name="Balance Sheet"
+        name="(J-Report OD15) Balance Sheet"
         parent="account.menu_finance_reports"
         action="action_balance_sheet_report"
         groups="account.group_account_user,account.group_account_manager"
