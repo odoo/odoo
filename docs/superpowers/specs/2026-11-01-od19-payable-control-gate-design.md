@@ -235,7 +235,7 @@
 | P1-T5 | SoD check ใน `action_od19_approve()` | Backend dev | **done + verified (2026-11-01)** | เทสต์ (3) ผ่าน; ข้อยกเว้นแอดมินตามที่ตั้ง | `models/account_payment.py` |
 | P1-T6 | กลุ่มสิทธิ์ `group_od19_payment_approver` + `group_od19_payment_admin` (privilege เดียวกัน) | Backend dev | **done + verified (2026-11-01)** | ผู้อนุมัติ/แอดมินเห็นปุ่ม; คนอื่นไม่เห็น (คุมด้วย `groups=` ที่ปุ่ม) | `security/od19_payment_security.xml` |
 | P1-T7 | เปิด Three-Way Match (config) + แก้ `purchase_method` สินค้าคงคลัง | บัญชี + จัดซื้อ | **done + verified (2026-11-01)** | เทสต์ §9 (Purchase) ผ่าน; บริการไม่กระทบ | `custom_addons/od19_purchase_procurement_core/tests/test_three_way_match.py` |
-| P1-T8 | คู่มือ Block Payment + Group Payments ให้ฝ่าย AP | บัญชีเจ้าหนี้ | todo | มี SOP ระบุขั้นตอน; ทดลองใช้จริง 1 รอบ | `docs/...` (คู่มือ) |
+| P1-T8 | คู่มือ Block Payment + Group Payments ให้ฝ่าย AP | บัญชีเจ้าหนี้ | **done + verified (2026-11-01)** | มี SOP ระบุขั้นตอน; ทดลองใช้จริง 1 รอบ | `ODOO19_USER_MANUAL_TH.md` (SOP AP), `custom_addons/od19_accounting_payment_voucher_reports/tests/test_ap_block_and_group_payments.py` (หลักฐานทดลองใช้) |
 | P1-T9 | เทสต์ TDD P1 ครบ + อัปเดต spec wave-2 (sync) | Backend dev | todo | เกณฑ์ยอมรับ 1–9 ครบ | `tests/*`, `2026-10-21-...wave-2...md` |
 | P1-T10 | UAT จำลอง business flow (บิลจาก PO → รับของ → จ่าย) | บัญชี + จัดซื้อ | todo | ผ่านเคสจริง 10 รายการต่อส่วน (ข้อมูลตัวอย่าง) | UAT evidence |
 
