@@ -35,11 +35,13 @@ export class KioskGreetings extends Component {
     overtimeToday = computed(
         () =>
             this.props.employeeData.display_overtime &&
+            Boolean(this.props.employeeData.overtime_today) &&
             formatFloatTime(this.props.employeeData.overtime_today)
     );
     totalOvertime = computed(
         () =>
             this.props.employeeData.display_overtime &&
+            Boolean(this.props.employeeData.total_overtime) &&
             formatFloatTime(this.props.employeeData.total_overtime)
     );
 
