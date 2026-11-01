@@ -34,3 +34,22 @@ class TestApprovalSeed(TransactionCase):
                 source.model_name, self.env,
                 "seeded source points at a model not installed: %s" % source.model_name,
             )
+
+    def test_sale_order_source_is_tier_without_steps(self):
+        post_init_hook(self.env)
+        source = self.env["od19.approval.source"].search(
+            [("model_name", "=", "sale.order")], limit=1
+        )
+        self.assertTrue(source, "sale.order source should be seeded")
+        self.assertEqual(source.strategy, "tier_validation")
+        self.assertEqual(len(source.step_ids), 0)
+
+    def test_iso_document_source_has_three_steps(self):
+        if "od19.iso.document" not in self.env:
+            raise unittest.SkipTest("od19.iso.document not installed")
+        post_init_hook(self.env)
+        source = self.env["od19.approval.source"].search(
+            [("model_name", "=", "od19.iso.document")], limit=1
+        )
+        self.assertTrue(source, "od19.iso.document source should be seeded")
+        self.assertEqual(len(source.step_ids), 3)

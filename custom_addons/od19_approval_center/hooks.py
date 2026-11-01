@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 def _od19_step_values(env, model_name, step):
     approver_field = step.get("approver_field") or ""
     if approver_field and approver_field not in env[model_name]._fields:
-        _logger.info(
+        _logger.warning(
             "Approval Center: %s.%s missing -> shared pool step",
             model_name, approver_field,
         )
@@ -63,7 +63,7 @@ def post_init_hook(env):
         model = IrModel._get(model_name)
         if not model:
             continue
-        if Source.search([
+        if Source.with_context(active_test=False).search([
             ("model_id", "=", model.id),
             ("name", "=", spec["name"]),
         ], limit=1):
