@@ -317,6 +317,23 @@ class TestDashboardRuleEngine(TransactionCase):
         self.assertIsNone(start)
         self.assertEqual(end, today - timedelta(days=1))
 
+    def test_period_bounds_all_time_honours_custom_dates(self):
+        """An explicit custom range wins over the ``all_time`` default."""
+        start, end, _field_type = self.widget_a._period_bounds(
+            "all_time", "2026-03-01", "2026-03-31"
+        )
+        self.assertEqual(start.isoformat(), "2026-03-01")
+        self.assertEqual(end.isoformat(), "2026-03-31")
+
+    def test_build_domain_all_time_honours_custom_dates(self):
+        domain = self.widget_a._build_domain("all_time", "2026-03-01", "2026-03-31")
+        self.assertIn(("date_order", ">=", "2026-03-01 00:00:00"), domain)
+        self.assertIn(("date_order", "<=", "2026-03-31 23:59:59"), domain)
+
+    def test_build_domain_all_time_without_dates_stays_unbounded(self):
+        domain = self.widget_a._build_domain("all_time")
+        self.assertFalse([term for term in domain if term[0] == "date_order"])
+
     def test_date_bounds_on_a_date_field_has_no_time_suffix(self):
         widget = self.env["od19.dashboard.widget"].create(
             {
@@ -1040,6 +1057,35 @@ class TestDashboardAcceptance(TransactionCase):
             self.env["od19.dashboard"].with_user(stranger).update_widget(
                 widget.id, {"name": "Hijacked"}
             )
+
+    def test_delta_is_empty_when_both_periods_have_no_data(self):
+        """Two empty periods are "not comparable", not a flat 0%."""
+        widget = self.env["od19.dashboard.widget"].create(
+            self._values(name="Empty delta widget", show_delta=True, date_range="yesterday")
+        )
+        data = self.env["od19.dashboard"].get_dashboard_data(self.dashboard.id, "yesterday")
+        row = next(item for item in data["widgets"] if item["id"] == widget.id)
+        self.assertEqual(row["value"], 0.0)
+        self.assertIsNone(row["delta"])
+
+    def test_update_widget_clamps_the_grid_size(self):
+        widget = self.env["od19.dashboard.widget"].create(self._values(name="Clamp widget"))
+        self.env["od19.dashboard"].update_widget(widget.id, {"grid_w": 99, "grid_h": 99})
+        self.assertEqual(widget.grid_w, 12)
+        self.assertEqual(widget.grid_h, 6)
+        self.env["od19.dashboard"].update_widget(widget.id, {"grid_w": 1, "grid_h": -5})
+        self.assertEqual(widget.grid_w, 2)
+        self.assertEqual(widget.grid_h, 1)
+
+    def test_get_dashboard_data_echoes_the_custom_range(self):
+        self.env["od19.dashboard.widget"].create(
+            self._values(name="Custom range widget", date_range="all_time")
+        )
+        data = self.env["od19.dashboard"].get_dashboard_data(
+            self.dashboard.id, None, "2026-03-01", "2026-03-31"
+        )
+        self.assertEqual(data["meta"]["date_from"], "2026-03-01")
+        self.assertEqual(data["meta"]["date_to"], "2026-03-31")
 
     def test_operands_do_not_add_aggregation_queries(self):
         """Spec 10.2: operands must be batched into one aggregation per domain.
