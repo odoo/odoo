@@ -123,10 +123,16 @@ venv19\Scripts\python.exe odoo-bin -c odoo.conf -d odoo19_pdev -u <module_list> 
 >    `account.move._handle_withholding_taxes()` (สร้าง `account.withholding.move`)
 >    และ payment register wizard (`_onchange_wht()` ตั้ง `writeoff_account_id = wht_tax_id.account_id`)
 >    → **ไม่ต้องแก้ไข** (ใช้ OCA First)
-> 2. **ฟิลด์แสดงผล (advisory)** — `od19_wht_base_amount`, `od19_wht_rate`,
->    `od19_wht_type_id`, `od19_wht_amount` อยู่ใน
+> 2. **ฟิลด์แสดงผล (advisory)** — `od19_wht_invoice_base_amount`, `od19_wht_rate`,
+>    `od19_wht_type_id`, `od19_wht_invoice_amount` อยู่ใน
 >    `custom_addons/od19_accounting_features/models/account_payment.py`
 >    เป็น compute-only เพื่อโชว์ข้อมูล ไม่ได้สร้าง GL
+>    > **Correction (2026-11-01):** เดิมใช้ชื่อ `od19_wht_base_amount` /
+>    > `od19_wht_amount` ซึ่ง **ชนกับชื่อฟิลด์ของ `od19_hr_expense_enhanced`**
+>    > บนโมเดล `account.payment` ทำให้ Odoo merge field definition และ
+>    > `compute`/`store` ของฝั่ง features รั่วไปทับค่าที่เขียนด้วยมือ
+>    > (ทำให้ `od19_wht_amount` กลายเป็น 0.0) จึงเปลี่ยนชื่อเป็น
+>    > `od19_wht_invoice_base_amount` / `od19_wht_invoice_amount`
 >
 > **Action:** ไม่มีโค้ดต้องแก้ — ยืนยันว่า OCA สร้าง WHT GL ตอน post payment แทน
 
