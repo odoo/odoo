@@ -20,7 +20,8 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
-import { PRESENT_VIEWPORT_THRESHOLD, SMOOTH_SCROLLING_CHECK_DELAY } from "@mail/core/common/thread";
+import { PRESENT_VIEWPORT_THRESHOLD } from "@mail/core/common/thread";
+import { SCROLL_IDLE_DELAY } from "@mail/utils/common/scroll";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -89,7 +90,7 @@ test("Jump to present reaches the bottom in a browser without scrollend", async 
     });
     await click("[title='Jump to Present']");
     await smoothScrollStarted.promise;
-    await delay(SMOOTH_SCROLLING_CHECK_DELAY + 50);
+    await delay(SCROLL_IDLE_DELAY + 50);
     await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: { body: "New message", message_type: "comment" },

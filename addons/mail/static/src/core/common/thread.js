@@ -8,6 +8,7 @@ import {
     useMessageSelection,
     useVisible,
 } from "@mail/utils/common/hooks";
+import { useScrollManager } from "@mail/utils/common/scroll";
 import { incrementFn } from "@mail/utils/common/signal";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { assignGetter } from "@mail/utils/common/misc";
@@ -17,12 +18,10 @@ import {
     computed,
     onMounted,
     onPatched,
-    onWillPatch,
-    onWillUnmount,
     proxy,
-    shallowEqual,
     signal,
     t,
+    useListener,
     useOnChange,
     usePlugin,
     useProps,
@@ -36,7 +35,6 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 1;
-export const SMOOTH_SCROLLING_CHECK_DELAY = 250;
 /**
  * @typedef {Object} Props
  * @property {number} [jumpPresent=0]
@@ -56,24 +54,22 @@ export class Thread extends Component {
         this.orderedMessages.some((message) => this.isMessageHighlighted(message))
     );
     scope = useScope();
-    /** @type {Promise|undefined} */
-    smoothScrollingPromise;
-    /** @type {number} */
-    smoothScrollingTimeout;
-    isSmoothScrolling = false;
+    /**
+     * Message to scroll to, taking precedence over any other scroll.
+     *
+     * @type {import("@odoo/owl").ReactiveValue<import("@mail/utils/common/scroll").ScrollTarget|undefined>}
+     */
+    scrollTarget = computed(() => undefined);
 
     setup() {
         super.setup();
         this.ancestors = useAncestors({
             inThread: assignGetter(
-                { onImageLoaded: () => this.applyScroll() },
+                { onImageLoaded: () => this.scroll.apply() },
                 { thread: () => this.props.thread }
             ),
         });
         this.escape = escape;
-        this.applyScroll = this.applyScroll.bind(this);
-        this.saveScroll = this.saveScroll.bind(this);
-        this.onScroll = this.onScroll.bind(this);
         this.onWheel = this.onWheel.bind(this);
         // bound once so `onParentMessageClick` is a stable (useProps.static) handler
         this.onParentMessageClick = this.onParentMessageClick.bind(this);
@@ -108,22 +104,6 @@ export class Thread extends Component {
         this.incrementResetCount = incrementFn(this.resetCount);
         this.lastJumpPresent = this.props.jumpPresent;
         this.messageHighlight = useMaybePlugin(MessageHighlightPlugin);
-        this.scrollingToHighlight = false;
-        // from the patch rendering the highlight, or its message (e.g. after loading around it):
-        // the scroll restored by a patch (`applyScroll`) would stop a scroll started before
-        let scrolledFor;
-        const scrollToNewHighlighted = () => {
-            const highlightedMessageId = this.messageHighlight?.highlightedMessageId();
-            const messageEl = this.messageRefs.get(highlightedMessageId)?.();
-            const current = { highlightedMessageId, messageEl };
-            if (shallowEqual(current, scrolledFor)) {
-                return;
-            }
-            scrolledFor = current;
-            this.scrollToHighlighted();
-        };
-        onMounted(scrollToNewHighlighted);
-        onPatched(scrollToNewHighlighted);
         this.present = signal.ref();
         this.jumpPresentRef = signal.ref();
         this.loadOlderRef = signal.ref();
@@ -141,10 +121,7 @@ export class Thread extends Component {
         this.loadOlderState = useVisible(
             this.loadOlderRef,
             async () => {
-                await Promise.all([
-                    this.messageHighlight?.scrollPromise,
-                    this.smoothScrollingPromise,
-                ]);
+                await this.scroll.waitForIdle();
                 if (this.loadOlderState.isVisible && this.shouldTriggerLoadOnVisible) {
                     this.props.thread.fetchMoreMessages();
                 }
@@ -154,10 +131,7 @@ export class Thread extends Component {
         this.loadNewerState = useVisible(
             this.present,
             async () => {
-                await Promise.all([
-                    this.messageHighlight?.scrollPromise,
-                    this.smoothScrollingPromise,
-                ]);
+                await this.scroll.waitForIdle();
                 if (this.loadNewerState.isVisible && this.shouldTriggerLoadOnVisible) {
                     this.props.thread.fetchMoreMessages({ epoch: "newer" });
                 }
@@ -168,7 +142,55 @@ export class Thread extends Component {
         this.presentThresholdState = useVisible(this.presentThresholdRef, () =>
             this.updateShowJumpPresent()
         );
-        this.setupScroll();
+        /**
+         * These states need to be reset when the value changes on the record,
+         * because the transition is important, not only the final value. If
+         * resetting is depending on the update cycle, it can happen that the
+         * value quickly changes and then back again before there is any
+         * mounting/patching, and the change would therefore be undetected.
+         * The batched effect is enough: it runs in the microtask following the
+         * write, while the value only changes back once messages are fetched.
+         */
+        useOnChange(
+            () => [this.props.thread.isLoaded],
+            (isLoaded) => {
+                if (!isLoaded || !this.state.mountedAndLoaded) {
+                    this.reset();
+                }
+            },
+            { initialRun: false }
+        );
+        this.scroll = useScrollManager({
+            ref: this.scrollableRef,
+            reversed: () => this.props.order === "desc",
+            ready: () => this.props.thread.isLoaded && this.state.mountedAndLoaded,
+            bounds: () => ({
+                start: this.props.thread.oldestPersistentMessage?.id,
+                end: this.props.thread.newestPersistentMessage?.id,
+            }),
+            hasMoreAfterEnd: () => this.props.thread.loadNewer,
+            getPosition: () => this.props.thread.scrollTop,
+            setPosition: (position) => (this.props.thread.scrollTop = position),
+            getItemEl: (messageId) => this.messageRefs.get(messageId)?.(),
+            getItemScrollTarget: (messageEl) =>
+                messageEl.querySelector(".o-mail-Message-jumpTarget"),
+            getFirstItemAfter: (messageId) =>
+                this.channel?.getFirstNewerMessage({ from_message_id: messageId + 1 })?.id,
+            getTarget: () => this.scrollTarget(),
+            onTargetReached: (target) => this.onScrollTargetReached(target),
+            getRevealedItem: () =>
+                this.messageHighlight?.highlightedMessageId() && {
+                    key: this.messageHighlight.highlightedMessageId(),
+                    fromEnd: this.messageHighlight.isOlderThanLoaded(),
+                },
+            onNotReady: () => this.reset(),
+            onFirstApply: () => {
+                this.loadOlderState.ready = true;
+                this.loadNewerState.ready = true;
+            },
+            onScroll: () => this.onScroll(),
+        });
+        useListener(this.scrollableRef, "wheel", this.onWheel);
         useOnChange(
             () => [this.props.autofocus + this.props.thread.autofocus, this.state.mountedAndLoaded],
             (focus, mountedAndLoaded) => {
@@ -210,6 +232,16 @@ export class Thread extends Component {
                 }
             }
         );
+        const jumpPresentObserver = new ResizeObserver(() => this.computeJumpPresentPosition());
+        useOnChange(
+            () => [this.scrollableRef(), this.state.mountedAndLoaded],
+            (el, mountedAndLoaded) => {
+                if (el && mountedAndLoaded) {
+                    jumpPresentObserver.observe(el);
+                    return () => jumpPresentObserver.unobserve(el);
+                }
+            }
+        );
         onMounted(() => {
             if (!this.ancestors.inChatter) {
                 this.fetchInitialMessages();
@@ -225,9 +257,10 @@ export class Thread extends Component {
             }
         );
         /**
-         * Re-synced on each mount/patch, after `applyScroll` (registered before
-         * in `setupScroll`): a `reset()` forcing `mountedAndLoaded` false is
-         * followed by a render, as `resetCount` is observed by the rendering.
+         * Re-synced on each mount/patch, after `this.scroll.apply` (registered
+         * before in `useScrollManager`): a `reset()` forcing `mountedAndLoaded`
+         * false is followed by a render, as `resetCount` is observed by the
+         * rendering.
          */
         const syncMountedAndLoaded = () => {
             this.state.mountedAndLoaded = this.props.thread.isLoaded;
@@ -303,227 +336,9 @@ export class Thread extends Component {
     }
 
     /**
-     * The scroll on a message list is managed in several different ways.
-     *
-     * 1. When the user first accesses a thread with unread messages, or when
-     *    the user goes back to a thread with new unread messages, it should
-     *    scroll to the position of the first unread message if there is one.
-     * 2. When loading older or newer messages, the messages already on screen
-     *    should visually stay in place. When the extra messages are added at
-     *    the bottom (chatter loading older, or channel loading newer) the same
-     *    scroll top position should be kept, and when the extra messages are
-     *    added at the top (chatter loading newer, or channel loading older),
-     *    the extra height from the extra messages should be compensated in the
-     *    scroll position.
-     * 3. When the scroll is at the bottom, it should stay at the bottom when
-     *    there is a change of height: new messages, images loaded, ...
-     * 4. When the user goes back and forth between threads, it should restore
-     *    the last scroll position of each thread.
-     * 5. When currently highlighting a message it takes priority to allow the
-     *    highlighted message to be scrolled to.
+     * @param {import("@mail/utils/common/scroll").ScrollTarget} _target
      */
-    setupScroll() {
-        /**
-         * Last scroll value that was automatically set. This prevents from
-         * setting the same value 2 times in a row. This is not supposed to have
-         * an effect, unless the value was changed from outside in the meantime,
-         * in which case resetting the value would incorrectly override the
-         * other change. This should give enough time to scroll/resize event to
-         * register the new scroll value.
-         */
-        this.lastSetValue = undefined;
-        /**
-         * The snapshot mechanism (point 2) should only apply after the messages
-         * have been loaded and displayed at least once. Technically this is
-         * after the first patch following when `mountedAndLoaded` is true. This
-         * is what this variable holds.
-         */
-        this.loadedAndPatched = false;
-        /**
-         * The snapshot of current scrollTop and scrollHeight for the purpose
-         * of keeping messages in place when loading older/newer (point 2).
-         */
-        this.snapshot = undefined;
-        /**
-         * The newest message that is already rendered, useful to detect
-         * whether newer messages have been loaded since last render to decide
-         * when to apply the snapshot to keep messages in place (point 2).
-         */
-        this.newestPersistentMessage = undefined;
-        /**
-         * The oldest message that is already rendered, useful to detect
-         * whether older messages have been loaded since last render to decide
-         * when to apply the snapshot to keep messages in place (point 2).
-         */
-        this.oldestPersistentMessage = undefined;
-        /**
-         * Whether it was possible to load newer messages in the last rendered
-         * state, useful to decide when to apply the snapshot to keep messages
-         * in place (point 2).
-         */
-        this.loadNewer = undefined;
-        /**
-         * These states need to be immediately reset when the value changes on
-         * the record, because the transition is important, not only the final
-         * value. If resetting is depending on the update cycle, it can happen
-         * that the value quickly changes and then back again before there is
-         * any mounting/patching, and the change would therefore be undetected.
-         */
-        useOnChange(
-            () => [this.props.thread.isLoaded],
-            (isLoaded) => {
-                if (!isLoaded || !this.state.mountedAndLoaded) {
-                    this.reset();
-                }
-            },
-            { initialRun: false }
-        );
-        onWillPatch(() => {
-            if (!this.loadedAndPatched) {
-                return;
-            }
-            this.snapshot = {
-                scrollHeight: this.scrollableRef().scrollHeight,
-                scrollTop: this.scrollableRef().scrollTop,
-            };
-        });
-        onMounted(this.applyScroll);
-        onPatched(this.applyScroll);
-        const observer = new ResizeObserver(() => {
-            this.computeJumpPresentPosition();
-            this.applyScroll();
-        });
-        // listened from the patch rendering the loaded messages, after `applyScroll`: not
-        // from a change of `mountedAndLoaded`, as a reset patch sets it to false and back
-        // to true, and the scroll of that patch must not be saved
-        let listenedEl;
-        const stopListening = () => {
-            if (listenedEl) {
-                observer.unobserve(listenedEl);
-                listenedEl.removeEventListener("scroll", this.onScroll);
-                listenedEl.removeEventListener("wheel", this.onWheel);
-                listenedEl = undefined;
-            }
-        };
-        const listenScroll = () => {
-            const el = this.state.mountedAndLoaded ? this.scrollableRef() : undefined;
-            if (el === listenedEl) {
-                return;
-            }
-            stopListening();
-            if (el) {
-                el.addEventListener("scroll", this.onScroll);
-                el.addEventListener("wheel", this.onWheel);
-                observer.observe(el);
-                listenedEl = el;
-            }
-        };
-        onMounted(listenScroll);
-        onPatched(listenScroll);
-        onWillUnmount(stopListening);
-    }
-
-    applyScroll() {
-        if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
-            this.reset();
-            return;
-        }
-        if (!this.applyScrollContextually(this.props.thread)) {
-            return;
-        }
-        this.snapshot = undefined;
-        this.newestPersistentMessage = this.props.thread.newestPersistentMessage;
-        this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage;
-        this.loadNewer = this.props.thread.loadNewer;
-        if (!this.loadedAndPatched) {
-            this.loadedAndPatched = true;
-            this.loadOlderState.ready = true;
-            this.loadNewerState.ready = true;
-        }
-    }
-
-    /**
-     * @param {import("models").Thread} thread
-     * @returns {Boolean} true when the scroll is applied, false when the newer
-     *  messages are not rendered yet.
-     */
-    applyScrollContextually(thread) {
-        const olderMessages = thread.oldestPersistentMessage?.id < this.oldestPersistentMessage?.id;
-        const newerMessages = thread.newestPersistentMessage?.id > this.newestPersistentMessage?.id;
-        const messagesAtTop =
-            (this.props.order === "asc" && olderMessages) ||
-            (this.props.order === "desc" && newerMessages);
-        const messagesAtBottom =
-            (this.props.order === "desc" && olderMessages) ||
-            (this.props.order === "asc" &&
-                newerMessages &&
-                (this.loadNewer ||
-                    typeof thread.scrollTop !== "string" ||
-                    !thread.scrollTop?.includes("bottom")));
-        if (this.snapshot && messagesAtTop) {
-            this.setScroll(
-                this.snapshot.scrollTop +
-                    this.scrollableRef().scrollHeight -
-                    this.snapshot.scrollHeight
-            );
-        } else if (this.snapshot && messagesAtBottom) {
-            this.setScroll(this.snapshot.scrollTop);
-        } else if (
-            !this.messageHighlight?.highlightedMessageId() &&
-            thread.scrollTop !== undefined
-        ) {
-            let value;
-            if (typeof thread.scrollTop === "string" && thread.scrollTop?.includes("bottom")) {
-                if (newerMessages && this.channel) {
-                    const firstNewerMessage = this.channel.getFirstNewerMessage({
-                        from_message_id: this.newestPersistentMessage.id + 1,
-                    });
-                    if (firstNewerMessage) {
-                        const messageEl = this.messageRefs.get(firstNewerMessage.id)?.();
-                        if (!messageEl) {
-                            return false;
-                        }
-                        this.applyScrollContextuallyNewerChannelMessages(thread, messageEl);
-                        return true;
-                    }
-                }
-                value =
-                    this.props.order === "asc"
-                        ? this.scrollableRef().scrollHeight - this.scrollableRef().clientHeight
-                        : 0;
-            } else {
-                value =
-                    this.props.order === "asc"
-                        ? thread.scrollTop
-                        : this.scrollableRef().scrollHeight -
-                          thread.scrollTop -
-                          this.scrollableRef().clientHeight;
-            }
-            if (
-                (this.lastSetValue === undefined || Math.abs(this.lastSetValue - value) > 1) &&
-                !this.isSmoothScrolling
-            ) {
-                this.setScroll(value, {
-                    smooth:
-                        typeof thread.scrollTop === "string" &&
-                        thread.scrollTop?.includes("smooth"),
-                });
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @param {import("models").Thread} thread
-     * @param {Element} messageEl element of the first newer message.
-     */
-    applyScrollContextuallyNewerChannelMessages(thread, messageEl) {
-        messageEl.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
-            behavior: "instant",
-            block: this.props.order === "asc" ? "start" : "end",
-        });
-        thread.scrollTop = this.isAtBottom ? "bottom" : this.scrollableRef().scrollTop;
-    }
+    onScrollTargetReached(_target) {}
 
     fetchInitialMessages() {
         this.props.thread.fetchInitialMessages();
@@ -628,21 +443,16 @@ export class Thread extends Component {
         this.state.mountedAndLoaded = false;
         // Bump `resetCount` (observed by the rendering) so a patch follows
         // and re-syncs `mountedAndLoaded`. Only when loaded: while `!isLoaded`,
-        // `applyScroll` resets on every patch, so an unconditional bump would
-        // spin the render loop until the fetch resolves. When loaded the bump
-        // re-renders once, the mirror sets `mountedAndLoaded` true and
-        // `applyScroll` stops resetting, so it converges.
+        // `this.scroll.apply` resets on every patch, so an unconditional bump
+        // would spin the render loop until the fetch resolves. When loaded the
+        // bump re-renders once, the mirror sets `mountedAndLoaded` true and
+        // `this.scroll.apply` stops resetting, so it converges.
         if (this.props.thread.isLoaded) {
             this.incrementResetCount();
         }
         this.loadOlderState.ready = false;
         this.loadNewerState.ready = false;
-        this.lastSetValue = undefined;
-        this.snapshot = undefined;
-        this.newestPersistentMessage = undefined;
-        this.oldestPersistentMessage = undefined;
-        this.loadedAndPatched = false;
-        this.loadNewer = false;
+        this.scroll.reset();
     }
 
     isSquashed(msg, prevMsg) {
@@ -665,18 +475,6 @@ export class Thread extends Component {
         return msg.datetime.ts - prevMsg.datetime.ts < 5 * 60 * 1000;
     }
 
-    get isAtBottom() {
-        if (this.loadNewer) {
-            return false;
-        }
-        return this.props.order === "asc"
-            ? this.scrollableRef().scrollHeight -
-                  this.scrollableRef().scrollTop -
-                  this.scrollableRef().clientHeight <
-                  30
-            : this.scrollableRef().scrollTop < 30;
-    }
-
     onWheel(ev) {
         if (this.messageSelection.size) {
             ev.stopPropagation();
@@ -686,7 +484,7 @@ export class Thread extends Component {
 
     shouldMarkAsReadOnScroll(thread) {
         return (
-            this.isAtBottom &&
+            this.scroll.isAtEnd &&
             !thread.channel?.markedAsUnread &&
             thread.isFocused &&
             !thread.markingAsRead
@@ -696,38 +494,6 @@ export class Thread extends Component {
     onScroll() {
         if (this.shouldMarkAsReadOnScroll(this.props.thread)) {
             this.props.thread.markAsRead();
-        }
-        this.saveScroll();
-    }
-
-    saveScroll() {
-        if (this.isSmoothScrolling) {
-            return;
-        }
-        const isBottom = this.isAtBottom;
-        if (isBottom) {
-            this.props.thread.scrollTop = "bottom";
-        } else {
-            this.props.thread.scrollTop =
-                this.props.order === "asc"
-                    ? this.scrollableRef().scrollTop
-                    : this.scrollableRef().scrollHeight -
-                      this.scrollableRef().scrollTop -
-                      this.scrollableRef().clientHeight;
-        }
-    }
-
-    async scrollToHighlighted() {
-        if (!this.messageHighlight?.highlightedMessageId() || this.scrollingToHighlight) {
-            return;
-        }
-        const el = this.messageRefs.get(this.messageHighlight.highlightedMessageId())?.();
-        if (el) {
-            this.scrollingToHighlight = true;
-            await this.messageHighlight.startupPromise;
-            this.messageHighlight
-                .scrollTo(el.querySelector(".o-mail-Message-jumpTarget"))
-                .then(() => (this.scrollingToHighlight = false));
         }
     }
 
@@ -778,59 +544,6 @@ export class Thread extends Component {
 
     get errorStateText() {
         return _t("An error occurred while loading messages.");
-    }
-    setScroll(value, { smooth = false } = {}) {
-        if (smooth) {
-            clearTimeout(this.smoothScrollingTimeout);
-            this.isSmoothScrolling = true;
-            const { promise, resolve: resolveSmoothScrolling } = Promise.withResolvers();
-            this.smoothScrollingPromise = promise;
-            const thread = this.props.thread;
-            const onSmoothScrollingEnd = () => {
-                resolveSmoothScrolling();
-                this.smoothScrollingPromise = undefined;
-                this.isSmoothScrolling = false;
-                const el = this.scrollableRef();
-                if (!el || thread.notEq(this.props.thread)) {
-                    return;
-                }
-                if (Math.abs(el.scrollTop - value) <= 1) {
-                    thread.scrollTop = "bottom";
-                    this.applyScroll();
-                } else {
-                    this.saveScroll();
-                }
-            };
-            if ("onscrollend" in window) {
-                document.addEventListener("scrollend", onSmoothScrollingEnd, {
-                    capture: true,
-                    once: true,
-                });
-            } else {
-                // To remove when safari will support the "scrollend" event.
-                let lastScrollTop = this.scrollableRef().scrollTop;
-                const checkSmoothScrollingEnd = () => {
-                    const el = this.scrollableRef();
-                    if (!el || el.scrollTop === lastScrollTop) {
-                        onSmoothScrollingEnd();
-                        return;
-                    }
-                    lastScrollTop = el.scrollTop;
-                    this.smoothScrollingTimeout = setTimeout(
-                        checkSmoothScrollingEnd,
-                        SMOOTH_SCROLLING_CHECK_DELAY
-                    );
-                };
-                this.smoothScrollingTimeout = setTimeout(
-                    checkSmoothScrollingEnd,
-                    SMOOTH_SCROLLING_CHECK_DELAY
-                );
-            }
-        }
-        this.scrollableRef().scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });
-        this.lastSetValue = value;
-        this.messageHighlight?.resolveStartup?.();
-        this.saveScroll();
     }
 
     get startMessageChannelTypes() {
