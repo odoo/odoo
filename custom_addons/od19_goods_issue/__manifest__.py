@@ -29,4 +29,5 @@
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_goods_issue/static/description/icon.svg",
 }

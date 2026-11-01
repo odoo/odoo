@@ -25,4 +25,5 @@
     'installable': True,
     'application': False,
     'auto_install': False,
+    "icon": "/od19_hr_expense_enhanced/static/description/icon.svg",
 }

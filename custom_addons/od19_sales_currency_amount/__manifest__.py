@@ -8,4 +8,5 @@
     "depends": ["sale", "sale_company_currency"],
     "data": ["views/sale_order_views.xml"],
     "installable": True,
+    "icon": "/od19_sales_currency_amount/static/description/icon.svg",
 }

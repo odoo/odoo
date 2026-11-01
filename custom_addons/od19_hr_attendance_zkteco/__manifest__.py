@@ -43,4 +43,5 @@ The device then calls /iclock/cdata, /iclock/getrequest and /iclock/ping.
     'installable': True,
     'application': False,
     'auto_install': False,
+    "icon": "/od19_hr_attendance_zkteco/static/description/icon.svg",
 }

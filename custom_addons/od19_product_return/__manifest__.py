@@ -20,4 +20,5 @@
     ],
     "installable": True,
     "application": True,
+    "icon": "/od19_product_return/static/description/icon.svg",
 }

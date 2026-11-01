@@ -18,4 +18,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_accounting_dncn/static/description/icon.svg",
 }

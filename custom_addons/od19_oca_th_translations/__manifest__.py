@@ -67,4 +67,5 @@
     "installable": True,
     "application": False,
     "auto_install": True,
+    "icon": "/od19_oca_th_translations/static/description/icon.svg",
 }

@@ -15,4 +15,5 @@
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "icon": "/od19_ui_defaults/static/description/icon.svg",
 }

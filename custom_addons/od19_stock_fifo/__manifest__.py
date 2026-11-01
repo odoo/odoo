@@ -29,4 +29,5 @@
     'installable': True,
     'application': False,
     'auto_install': False,
+    "icon": "/od19_stock_fifo/static/description/icon.svg",
 }

@@ -17,4 +17,5 @@
     "installable": True,
     "application": True,
     "auto_install": False,
+    "icon": "/od19_iso_calibration/static/description/icon.svg",
 }

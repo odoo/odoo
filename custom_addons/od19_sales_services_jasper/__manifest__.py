@@ -18,4 +18,5 @@
     ],
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_sales_services_jasper/static/description/icon.svg",
 }

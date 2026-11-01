@@ -16,4 +16,5 @@
     "installable": True,
     "application": True,
     "auto_install": False,
+    "icon": "/od19_approval_center/static/description/icon.svg",
 }

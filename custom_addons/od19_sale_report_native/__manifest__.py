@@ -37,4 +37,5 @@ its "(J-Report OD15)" label; this module only adds the native equivalents.
     ],
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_sale_report_native/static/description/icon.svg",
 }

@@ -16,4 +16,5 @@
     ],
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_accounting_petty_cash/static/description/icon.svg",
 }

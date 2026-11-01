@@ -22,4 +22,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_accounting_money_in_report/static/description/icon.svg",
 }

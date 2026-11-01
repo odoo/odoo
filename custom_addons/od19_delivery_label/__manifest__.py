@@ -43,4 +43,5 @@ Fields added to hr.department:
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "icon": "/od19_delivery_label/static/description/icon.svg",
 }

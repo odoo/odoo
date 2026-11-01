@@ -20,4 +20,5 @@ asset stock checking/location transfer, cheque book, cash in/out, etc.
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_accounting_document_sequence/static/description/icon.svg",
 }

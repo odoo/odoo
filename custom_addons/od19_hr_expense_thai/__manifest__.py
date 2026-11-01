@@ -17,4 +17,5 @@
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
+    "icon": "/od19_hr_expense_thai/static/description/icon.svg",
 }

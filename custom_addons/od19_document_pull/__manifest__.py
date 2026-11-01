@@ -26,4 +26,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_document_pull/static/description/icon.svg",
 }

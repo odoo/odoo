@@ -66,4 +66,5 @@ Features
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "icon": "/od19_dashboard/static/description/icon.svg",
 }

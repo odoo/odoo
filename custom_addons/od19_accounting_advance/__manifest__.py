@@ -18,4 +18,5 @@
     ],
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_accounting_advance/static/description/icon.svg",
 }

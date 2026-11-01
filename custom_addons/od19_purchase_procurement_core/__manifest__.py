@@ -23,4 +23,5 @@
     ],
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_purchase_procurement_core/static/description/icon.svg",
 }

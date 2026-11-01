@@ -54,4 +54,5 @@ UI in. Install this bridge explicitly (which pulls both dependencies) or run
     "auto_install": True,
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_accounting_reconcile_ui/static/description/icon.svg",
 }

@@ -44,4 +44,5 @@ Receipts / Internal Transfers):
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "icon": "/od19_stock_picking_features/static/description/icon.svg",
 }

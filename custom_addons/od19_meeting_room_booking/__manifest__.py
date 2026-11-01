@@ -22,4 +22,5 @@
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_meeting_room_booking/static/description/icon.svg",
 }

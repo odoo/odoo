@@ -12,4 +12,5 @@
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "icon": "/od19_accounting_payment_fee/static/description/icon.svg",
 }

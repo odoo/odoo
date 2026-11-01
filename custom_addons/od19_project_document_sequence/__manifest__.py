@@ -30,4 +30,5 @@ Task Code format: T + dept_code + sales_initials + sequence.
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_project_document_sequence/static/description/icon.svg",
 }

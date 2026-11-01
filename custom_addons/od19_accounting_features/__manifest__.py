@@ -76,4 +76,5 @@ certificate printed from the OCA model ``withholding.tax.cert``
     ],
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_accounting_features/static/description/icon.svg",
 }

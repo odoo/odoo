@@ -14,4 +14,5 @@
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
+    "icon": "/od19_service_card/static/description/icon.svg",
 }

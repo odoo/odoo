@@ -30,4 +30,5 @@ Provides a disposal workflow for assets managed with OCA account_asset_managemen
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_asset_disposal/static/description/icon.svg",
 }

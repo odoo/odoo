@@ -55,4 +55,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_thai_tax_reports/static/description/icon.svg",
 }

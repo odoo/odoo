@@ -20,4 +20,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_accounting_payment_voucher_reports/static/description/icon.svg",
 }

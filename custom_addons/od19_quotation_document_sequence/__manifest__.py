@@ -28,4 +28,5 @@ Also supports quotation revision with /R01, /R02 suffix.
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_quotation_document_sequence/static/description/icon.svg",
 }

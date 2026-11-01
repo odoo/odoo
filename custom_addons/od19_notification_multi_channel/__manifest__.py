@@ -24,4 +24,5 @@
     ],
     "application": False,
     "installable": True,
+    "icon": "/od19_notification_multi_channel/static/description/icon.svg",
 }

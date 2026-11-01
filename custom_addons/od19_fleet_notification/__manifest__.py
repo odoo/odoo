@@ -25,4 +25,5 @@ Fleet Insurance & Service Notifications
     ],
     'installable': True,
     'application': False,
+    "icon": "/od19_fleet_notification/static/description/icon.svg",
 }

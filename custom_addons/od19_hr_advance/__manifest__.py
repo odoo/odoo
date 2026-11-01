@@ -23,4 +23,5 @@
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "icon": "/od19_hr_advance/static/description/icon.svg",
 }

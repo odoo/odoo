@@ -21,4 +21,5 @@ Auto-generates partner reference codes:
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_partner_document_sequence/static/description/icon.svg",
 }
