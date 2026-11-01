@@ -205,6 +205,11 @@ class SInvoiceService:
                 return {}, error
             threshold += 1
 
+        if not file_data.get('fileToBytes'):
+            return {}, self.env._(
+                "SInvoice returned an empty file for this invoice. Please try again later.",
+            )
+
         return file_data, None
 
     def get_all_invoice_templates(self):
@@ -254,6 +259,12 @@ class SInvoiceService:
         First searches in the outer zip (first layer), then in nested zip files (second layer).
         :return: (file_dict, error_message).
         """
+        if not zipfile.is_zipfile(io.BytesIO(zip_bytes)):
+            return {}, self.env._(
+                "The file received from SInvoice is not a valid ZIP archive. "
+                "Please try again later.",
+            )
+
         try:
             with zipfile.ZipFile(io.BytesIO(zip_bytes)) as outer_zip:
                 for file in outer_zip.infolist():
