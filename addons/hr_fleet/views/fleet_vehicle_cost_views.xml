@@ -71,6 +71,9 @@
         <field name="model">fleet.vehicle.log.services</field>
         <field name="inherit_id" ref="fleet.fleet_vehicle_log_services_view_kanban"/>
         <field name="arch" type="xml">
+            <xpath expr="//div/field[@name='purchaser_id']" position="attributes">
+                <attribute name="invisible">purchaser_employee_id</attribute>
+            </xpath>
             <xpath expr="//div/field[@name='purchaser_id']" position="after">
                 <field name="purchaser_employee_id"/>
             </xpath>
