@@ -32,3 +32,84 @@ class Od19ApprovalSource(models.Model):
     sla_days = fields.Integer(default=0, help="0 = no SLA warning.")
     active = fields.Boolean(default=True)
     step_ids = fields.One2many("od19.approval.step", "source_id", string="Steps")
+
+    # ------------------------------------------------------------------
+    # Low level helpers
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _od19_csv(value):
+        if not value:
+            return []
+        return [token.strip() for token in value.split(",") if token.strip()]
+
+    def _od19_me_ids(self, kind):
+        """Return the current user/employee/partner id for ``kind`` (0 if none)."""
+        user = self.env.user
+        if kind == "employee":
+            return user.employee_id.id if "employee_id" in user._fields else 0
+        if kind == "partner":
+            return user.partner_id.id or 0
+        return user.id or 0
+
+    def _od19_ready(self):
+        self.ensure_one()
+        return bool(self.model_name) and self.model_name in self.env
+
+    def _od19_main_state_field(self, steps):
+        return steps[0].state_field or "state" if steps else "state"
+
+    def _od19_field_ok(self, record, field_name):
+        return bool(field_name) and field_name in record._fields
+
+    def _od19_current_index(self, record, steps):
+        """Index of the step the record waits at, or None."""
+        for index, step in enumerate(steps):
+            field_name = step.state_field or "state"
+            if self._od19_field_ok(record, field_name) and record[field_name] == step.state_value:
+                return index
+        return None
+
+    def _od19_index_of_my_step(self, record, steps):
+        """Index of the first step where the current user is the approver, or None."""
+        for index, step in enumerate(steps):
+            if not self._od19_field_ok(record, step.approver_field):
+                continue
+            me_id = self._od19_me_ids(step.approver_kind)
+            value = record[step.approver_field]
+            if me_id and value and value.id == me_id:
+                return index
+        return None
+
+    def _od19_classify_for_approver(self):
+        """Return the 4 approver buckets for the current user (strategy=field)."""
+        self.ensure_one()
+        buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        if not self._od19_ready():
+            return buckets
+        steps = self.step_ids.sorted("sequence")
+        if not steps:
+            return buckets
+        Model = self.env[self.model_name].sudo()
+        rejected = self._od19_csv(self.rejected_states)
+        success = self._od19_csv(self.success_states)
+        main_field = self._od19_main_state_field(steps)
+        records = Model.search([], limit=self.OD19_MAX_RECORDS)
+        for record in records:
+            my_index = self._od19_index_of_my_step(record, steps)
+            if my_index is None:
+                continue
+            state_value = record[main_field] if self._od19_field_ok(record, main_field) else False
+            if state_value in rejected:
+                buckets["rejected"].append(record)
+                continue
+            if state_value in success:
+                buckets["done"].append(record)
+                continue
+            current = self._od19_current_index(record, steps)
+            if current is None:
+                continue
+            if current == my_index:
+                buckets["pending"].append(record)
+            elif current < my_index:
+                buckets["incoming"].append(record)
+        return buckets

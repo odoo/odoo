@@ -1,4 +1,5 @@
 from odoo import fields
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -25,17 +26,11 @@ class TestApprovalConfig(TransactionCase):
         self.assertIn(step, source.step_ids)
 
 
+@tagged("post_install", "-at_install")
 class TestPendingBucket(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        import logging as _logging
-        _rp = cls.env["res.partner"]._fields.get("autopost_bills")
-        _logging.getLogger("od19.debug").info(
-            "DEBUGAUTOPOST has=%s default=%s", bool(_rp), _rp and _rp.default
-        )
-        cls.env["res.partner"].create({"name": "Probe Partner DX"})
-        _logging.getLogger("od19.debug").info("DEBUGPARTNER ok")
         cls.approver = cls.env["res.users"].create({
             "name": "Approver A", "login": "approver_a",
         })
