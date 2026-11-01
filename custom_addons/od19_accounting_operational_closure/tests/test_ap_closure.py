@@ -222,10 +222,13 @@ class TestAccountingAPClosure(TransactionCase):
         order = self._create_po(self.product, quantity=2.0)
         order = self._receive_full_order(order)
         bill = self.env["account.move"].browse(order.action_create_invoice()["res_id"])
-        bill.invoice_line_ids.quantity = 1.0
+        # Reduce the billed quantity to 1 of the 2 received units. The price unit
+        # must be written together with the quantity: changing the quantity makes
+        # Odoo recompute ``price_unit`` from the product's vendor price list,
+        # which is empty here, so a separate write would reset it to 0.
+        bill.invoice_line_ids.write({"quantity": 1.0, "price_unit": 500.0})
         bill.invoice_date = "2026-10-07"
         self._post_vendor_bill(bill)
-
         self._register_payment(bill, amount=bill.amount_total)
 
         order = self._fresh_purchase_order(order)
