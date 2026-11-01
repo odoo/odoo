@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-IV-010 LOT or S/N Barcode label (ป้ายบาร์โค้ดล็อต).
+
+        Legacy bound this action to ``stock.model_stock_production_lot``; in
+        Odoo 19 the model was renamed to ``stock.lot`` (external id
+        ``stock.model_stock_lot``).
+    -->
+    <record id="view_product_lot_barcode_report" model="ir.ui.view">
+        <field name="name">product.lot.barcode.report</field>
+        <field name="model">product.lot.barcode.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_Print" required="1" default_focus="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_product_lot_barcode_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) LOT or S/N Barcode</field>
+        <field name="res_model">product.lot.barcode.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_product_lot_barcode_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <menuitem
+        id="menu_product_lot_barcode_report"
+        name="(J-Report OD15) LOT or S/N Barcode"
+        parent="menu_stock_report_od15"
+        action="action_product_lot_barcode_report"
+        sequence="30"
+    />
+
+</odoo>

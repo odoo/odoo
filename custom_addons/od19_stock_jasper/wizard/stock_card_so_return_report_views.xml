@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Stock Card - Sale Return view (บัตรสินค้า คืนจากลูกค้า).
+
+        Inherits the shared wizard layout and is reached from
+        Inventory > Reporting > Stock Reports (J-Report OD15).
+    -->
+    <record id="view_stock_card_so_return_report" model="ir.ui.view">
+        <field name="name">stock.card.so.return.report</field>
+        <field name="model">stock.card.so.return.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_Product_No" required="1" default_focus="1"/>
+                    <field name="p_Date_As_Off" required="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_stock_card_so_return_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Stock Card (Sale Return)</field>
+        <field name="res_model">stock.card.so.return.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_stock_card_so_return_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_stock_card_so_return_report"
+        name="(J-Report OD15) Stock Card (Sale Return)"
+        parent="menu_stock_report_od15"
+        action="action_stock_card_so_return_report"
+        sequence="180"
+    />
+
+</odoo>

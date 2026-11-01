@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Delivery Order report (ใบส่งของ - รายงาน).
+
+        Reached from Stock > any transfer > Print.  The report only needs the
+        ids of the selected transfers (legacy ``ids`` SQL fragment), so the
+        parameter group stays empty.
+    -->
+    <record id="view_delivery_order_report" model="ir.ui.view">
+        <field name="name">delivery.order.report</field>
+        <field name="model">delivery.order.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_delivery_order_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Delivery Order Report</field>
+        <field name="res_model">delivery.order.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_delivery_order_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

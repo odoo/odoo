@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-IV-011 LOT or S/N QR Code label (ป้าย QR ล็อต).
+    -->
+    <record id="view_product_lot_qrcode_report" model="ir.ui.view">
+        <field name="name">product.lot.qrcode.report</field>
+        <field name="model">product.lot.qrcode.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_Print" required="1" default_focus="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_product_lot_qrcode_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) LOT or S/N QR Code</field>
+        <field name="res_model">product.lot.qrcode.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_product_lot_qrcode_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="stock.model_stock_lot"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <menuitem
+        id="menu_product_lot_qrcode_report"
+        name="(J-Report OD15) LOT or S/N QR Code"
+        parent="menu_stock_report_od15"
+        action="action_product_lot_qrcode_report"
+        sequence="40"
+    />
+
+</odoo>

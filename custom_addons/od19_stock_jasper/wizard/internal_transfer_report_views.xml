@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-IV-005 Internal Transfer Form (ใบโอนย้ายภายใน).
+
+        Inherits the shared wizard layout and is reached from
+        Stock > any internal transfer > Print.
+    -->
+    <record id="view_internal_transfer_report" model="ir.ui.view">
+        <field name="name">internal.transfer.report</field>
+        <field name="model">internal.transfer.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_Header_Name"/>
+                    <field name="show_serial"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_internal_transfer_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Internal Transfer Form</field>
+        <field name="res_model">internal.transfer.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_internal_transfer_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+</odoo>

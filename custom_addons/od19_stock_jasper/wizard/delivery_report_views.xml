@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-IV-002 Delivery Order Form (ใบส่งของ).
+
+        Inherits the shared wizard layout
+        (od19_reporting_jasper: views/jasper_report_wizard.xml) and replaces the
+        placeholder <group name="parameters"/> with the parameters this form
+        needs.  Reached from Stock > any delivery order > Print.
+    -->
+    <record id="view_delivery_report" model="ir.ui.view">
+        <field name="name">delivery.report</field>
+        <field name="model">delivery.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_Header_Name"/>
+                    <field name="show_serial"/>
+                    <field name="p_Show_Satisfation"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_delivery_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Delivery Order Form</field>
+        <field name="res_model">delivery.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_delivery_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.10.0.final using JasperReports Library version 6.10.0-unknown  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dead_stock_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ab8a7b74-bdcc-441a-9599-a031c5a34703">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Localhost"/>
+	<parameter name="p_language" class="java.lang.String">
+		<defaultValueExpression><![CDATA["thai"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Print_By" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Test"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_DateFormat" class="java.lang.String">
+		<defaultValueExpression><![CDATA["dd-MM-yyyy"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_locale" class="java.lang.String">
+		<defaultValueExpression><![CDATA["th"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_location" class="java.lang.String"/>
+	<parameter name="p_days" class="java.lang.String"/>
+	<parameter name="p_Where" class="java.lang.String">
+		<defaultValueExpression><![CDATA["where a.remaining_qty != 0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_location_dest_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_location_src_id" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select *, CASE WHEN a.remaining_qty != 0 THEN (a.remaining_value / a.remaining_qty) ELSE 0 END as unit_cost from (select ptp.name->>'th_TH' as product_name, lot.id as lot_id, lot.name as lot_name, sum(q.quantity) as product_qty,
+COALESCE(c.company_name_thai,'') AS company_name_thai,
+COALESCE(c.company_name_en,'') AS company_name_en,
+(select CASE WHEN ml.date is null THEN ml.create_date ELSE ml.date END from stock_move_line ml
+left join stock_picking pick on pick.id = ml.picking_id
+left join stock_move m on m.id = ml.move_id
+left join stock_picking_type pt1 on pt1.id = pick.picking_type_id
+left join stock_picking_type pt2 on pt2.id = m.picking_type_id
+where ml.lot_id = lot.id and (pt1.code in ('incoming', 'mrp_operation') or pt2.code in ('incoming', 'mrp_operation')) and ml.date is not null and ml.state = 'done'
+order by ml.date asc
+limit 1) as first_incoming_date,
+(select ml.date from stock_move_line ml
+left join stock_picking pick on pick.id = ml.picking_id
+left join stock_move m on m.id = ml.move_id
+left join stock_picking_type pt1 on pt1.id = pick.picking_type_id
+left join stock_picking_type pt2 on pt2.id = m.picking_type_id
+where ml.lot_id = lot.id and (pt1.code = 'outgoing' or pt1.code = 'outgoing') and ml.state = 'done'
+order by ml.date desc
+limit 1) as last_outgoing_date,
+(sum(q.quantity) * COALESCE(NULLIF((lot.standard_price->>(lot.company_id::text))::numeric, 0), (p.standard_price->>(lot.company_id::text))::numeric, 0)) as remaining_value,
+sum(q.quantity) as remaining_qty,
+uom.name->>'th_TH' as uom_name,
+lot.company_id as company_id
+from stock_lot lot
+inner join stock_quant q on lot.id = q.lot_id
+inner join stock_location loc on q.location_id = loc.id
+inner join product_product p on p.id = lot.product_id
+left join product_template ptp on ptp.id = p.product_tmpl_id
+left join company_address_header_report c ON c.id = lot.company_id
+left join uom_uom uom on uom.id = ptp.uom_id
+where loc.usage in ('internal', 'transit') and ptp.sale_ok = True $P!{p_location_src_id}
+group by lot.name, lot.id, ptp.name, c.company_name_thai, c.company_name_en, uom.name, lot.company_id, p.standard_price) a
+$P!{p_Where}
+order by a.product_name, a.lot_name]]>
+	</queryString>
+	<field name="product_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_name"/>
+	</field>
+	<field name="lot_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="lot_id"/>
+	</field>
+	<field name="lot_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="lot_name"/>
+	</field>
+	<field name="product_qty" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="product_qty"/>
+	</field>
+	<field name="company_name_thai" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_name_thai"/>
+	</field>
+	<field name="company_name_en" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_name_en"/>
+	</field>
+	<field name="first_incoming_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="first_incoming_date"/>
+	</field>
+	<field name="last_outgoing_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="last_outgoing_date"/>
+	</field>
+	<field name="remaining_value" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="remaining_value"/>
+	</field>
+	<field name="remaining_qty" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="remaining_qty"/>
+	</field>
+	<field name="uom_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="uom_name"/>
+	</field>
+	<field name="company_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="company_id"/>
+	</field>
+	<field name="unit_cost" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="unit_cost"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="80" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true" pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="-15" width="280" height="20" uuid="8da514a9-c1de-4a6c-bc39-26ebad1bd917">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"วัน-เวลาพิมพ์ : " + new SimpleDateFormat($P{p_DateFormat} + " HH:mm:ss", new Locale($P{p_locale}, $P{p_locale})).format(new java.util.Date().getTime() + 7 * 3600*1000) + "\r" + "พิมพ์โดย : " + $P{p_Print_By},
+"Printed Date : " + new SimpleDateFormat($P{p_DateFormat} + " HH:mm:ss", new Locale($P{p_locale}, $P{p_locale})).format(new java.util.Date().getTime() + 7 * 3600*1000) + "\r" + "Printed By : " + $P{p_Print_By}
+)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="404" y="-10" width="120" height="20" uuid="73fa90d6-00bf-4a9a-8b26-ce91e313574c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"หน้าที่ " + $V{PAGE_NUMBER},
+"Page " + $V{PAGE_NUMBER}
+)]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement key="" x="524" y="-10" width="30" height="20" uuid="c85cd5f7-1274-4ff4-932b-7ae56539bfab">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} == 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),	
+" จาก " + $V{PAGE_NUMBER},
+" of " + $V{PAGE_NUMBER})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="554" height="30" uuid="de2ff826-6954-4da6-9cf0-30c2609ca5fd">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="16" isBold="true"/>
+					<paragraph rightIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+IF($F{company_name_thai}==null,"",$F{company_name_thai}),
+IF($F{company_name_en}==null,"",$F{company_name_en})
+)]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="30" width="554" height="19" backcolor="#FFFFFF" uuid="6ff0cff1-de59-42d8-aae8-d68d54e32764">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box leftPadding="0" bottomPadding="0">
+					<pen lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="10.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "รายงานสินค้าไม่เคลื่อนไหว (" + $P{p_days} + " วัน)", "Dead Stock Report (" + $P{p_days} + " days)")]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="50" width="554" height="19" backcolor="#FFFFFF" uuid="5a3f1d87-dae6-40de-8b44-ea423d959ab0">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box leftPadding="0" bottomPadding="0">
+					<pen lineColor="#FFFFFF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="styled">
+					<font fontName="TH Sarabun New" size="14" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="10.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"<style isBold='true'>คลังสินค้า :</style> "+ $P{p_location},
+"<style isBold='true'>Location : </style>"+ $P{p_location}
+)]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isStretchWithOverflow="true" pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="0" width="399" height="20" uuid="14e5f026-22d7-4eab-a7a1-132ae4688632">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"วัน-เวลาพิมพ์ : " + new SimpleDateFormat($P{p_DateFormat} + " HH:mm:ss", new Locale($P{p_locale}, $P{p_locale})).format(new java.util.Date().getTime() + 7 * 3600*1000) + "\r" + "พิมพ์โดย : " + $P{p_Print_By},
+"Printed Date : " + new SimpleDateFormat($P{p_DateFormat} + " HH:mm:ss", new Locale($P{p_locale}, $P{p_locale})).format(new java.util.Date().getTime() + 7 * 3600*1000) + "\r" + "Printed By : " + $P{p_Print_By}
+)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="404" y="0" width="120" height="20" uuid="2913a65b-d8d6-4cb8-a196-a06729b1cb88">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"หน้าที่ " + $V{PAGE_NUMBER},
+"Page " + $V{PAGE_NUMBER}
+)]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="524" y="0" width="30" height="20" uuid="81f462e3-9541-444f-b01c-2e5ba51ee3f0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),	
+" จาก " + $V{PAGE_NUMBER},
+" of " + $V{PAGE_NUMBER})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="114" height="22" uuid="01f3bd3a-1d43-4475-af03-8b915f102a72"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "สินค้า", "Product Name")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="0" width="80" height="22" uuid="f48c4937-9dd8-49ec-96ad-56dcdfc75130"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "เลขที่ล็อต/ซีเรียล", "Lot/SN")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="194" y="0" width="60" height="22" uuid="65d6218e-d931-4316-a5ba-6584c81f4f07"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "จำนวนคงเหลือ", "Remaining Qty.")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="254" y="0" width="60" height="22" uuid="3dbd3536-101a-4505-80cc-879a414d9e5a"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "หน่วยนับ", "Unit of Measure")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="314" y="0" width="100" height="22" uuid="d23b0da3-25e8-4590-8aee-d3a01928cbc6"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "มูลค่า", "Value")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="414" y="0" width="70" height="22" uuid="4604d142-1049-44c6-885b-4a17388d4ad6"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "วันที่เข้าระบบ", "First Incoming Date")]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="0" width="70" height="22" uuid="3f2882ee-141e-46b1-b525-d37a621507a7"/>
+				<box>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+					<topPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Dashed" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "วันที่ออกระบบ(ล่าสุด)", "Last Outgoing Date")]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="484" y="0" width="70" height="22" uuid="c51f9e80-a160-4ec5-bd12-6d147790a066">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($F{last_outgoing_date}==null,"", new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format($F{last_outgoing_date}))]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="414" y="0" width="70" height="22" uuid="fc1f46c6-235a-4eeb-b4d3-8c6617c1982e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($F{first_incoming_date}==null,"", new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format($F{first_incoming_date}))]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="314" y="0" width="100" height="22" uuid="079789fd-7ef5-4932-aeec-10ba4e8dbac2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{unit_cost}.multiply(BigDecimal.valueOf($F{product_qty}))]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="194" y="0" width="60" height="22" uuid="086f9cbb-488a-4523-9939-f1c0cf8cfacb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="114" y="0" width="80" height="22" uuid="e37ae66e-6d49-40d2-9f70-8221ba1c42da">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lot_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="114" height="22" uuid="363a8605-2745-4470-818d-c12ecf69d826">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="254" y="0" width="60" height="22" uuid="fb0472cc-5367-4c02-9bec-645daa0ba94c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{uom_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

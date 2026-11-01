@@ -1,0 +1,2930 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="inventory_valuation_aging_report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f72a463-64e4-4b71-ab9c-a3e1e7e0679e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="localhost.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="314"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="679"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_Days" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[30]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Start_Date" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["2019-12-01"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_To_Date" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["2020-01-22"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Location_ID" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[12]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Location_Name" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["Stock"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Show_BF_Detail" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Show_Transaction_Detail" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Internal" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Where" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[" WHERE sm.state='done' AND sm.location_id = 12 AND date(sml.date) <= '2020-01-22' OR sm.state='done' AND sm.location_dest_id = 12  AND date(sml.date) <= '2020-01-22'"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_oder_by" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[" ,sm.date"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_Path" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/Users/Dataroot/AppData/Local/OpenERP S.A/Odoo/filestore/odoo_avera/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_User_ID" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_ISO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["ISO Number"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_EName" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_ESignature" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_DateFormat" class="java.lang.String"/>
+	<parameter name="p_language" class="java.lang.String"/>
+	<parameter name="p_Period_Start" class="java.lang.String"/>
+	<parameter name="p_Period_End" class="java.lang.String"/>
+	<parameter name="p_locale" class="java.lang.String">
+		<defaultValueExpression><![CDATA["th"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+	c.id AS company_id
+	,COALESCE(c.company_name_thai,'') AS company_name_thai
+	,COALESCE(c.company_name_en,'') AS company_name_en
+	,COALESCE(c.company_tax_id,'') AS company_tax_id
+	,COALESCE(c.company_branch,'00000') AS company_branch
+	,encode(c.company_logo,'escape') AS company_logo      
+	,COALESCE(c.company_address_thai,'') AS company_address_thai
+	,COALESCE(c.company_address_en,'') AS company_address_en
+	,COALESCE(c.company_heaer_report,'') AS company_heaer_report
+	,COALESCE(c.company_footer_report,'') AS company_footer_report
+	,COALESCE(c.company_phone,'') AS company_phone
+	,COALESCE(c.company_fax,'') AS company_fax
+	,COALESCE(c.company_email,'') AS company_email
+	,COALESCE(c.company_website,'') AS company_website
+	   
+	,sp.name AS picking_name
+	,sp.origin AS picking_origin
+	,COALESCE(NULLIF(sm.description_picking_manual,''), sm.reference) as move_name
+	
+	,sm.location_id AS location_id
+	,sl.usage AS location_usage
+	,sl.name AS location_name
+	
+	,sm.location_dest_id as location_dest_id
+	
+	,(SELECT a.usage
+	   FROM stock_location a
+	   WHERE a.id=sm.location_dest_id
+	  )AS location_dest_usage
+	  
+	,(SELECT a.name
+	   FROM stock_location a
+	   WHERE a.id=sm.location_dest_id
+	  )AS location_dest_name
+	  
+	,sm.product_id AS product_id
+	,pp.default_code AS product_internal_code
+	
+	,sm.product_id AS product_id
+	,(SELECT c.name->>'th_TH'
+	   FROM product_product a 
+	   LEFT JOIN product_template b ON b.id=a.product_tmpl_id
+	   LEFT JOIN uom_uom c ON c.id=b.uom_id
+	   WHERE a.id=sm.product_id
+	  )AS product_uom
+	  
+	,sm.date AS move_date
+	,DATE_PART('day', TO_DATE($P{p_To_Date} ,'yyyy-mm-dd')::timestamp - sm.date::timestamp) as aging
+	
+	,case
+		when date(sml.date) between date( $P{p_Start_Date} ) and  date( $P{p_To_Date} ) then 'period'
+		else 'bf'
+	 end as period
+	 
+	,pt.name->>'th_TH' AS product_name
+
+	,lot.name AS lot_no 
+	,lot.expiration_date AS lot_expired 
+	 
+	,sml.quantity AS qty
+	,COALESCE(sm.price_unit,0) as price_unit_line
+	
+	,case 
+		when (sm.value)=0 and 
+							(SELECT a.usage
+								FROM stock_location a
+								WHERE a.id=sm.location_dest_id
+							)='customer' 
+						then -1
+			when (sm.value)=0 and 
+							(SELECT a.usage
+								FROM stock_location a
+								WHERE a.id=sm.location_dest_id
+							)='inventory'
+						then -1	
+		when (sm.value) <0 then -1
+     	else 1
+     end AS qty_report
+
+	,CASE WHEN sm.product_uom_qty=0.0 THEN 0.0
+	ELSE (sm.value) / sm.product_uom_qty END AS unit_price
+	, (sm.value) as svalues
+	,CASE WHEN sm.product_uom_qty=0.0 THEN 0.0
+	ELSE (sm.value) / sm.product_uom_qty END AS price_unit_cal
+
+	,(SELECT c.name->>'th_TH'
+	   FROM product_product a 
+	   LEFT JOIN product_template b ON b.id=a.product_tmpl_id
+	   LEFT JOIN uom_uom c ON c.id=b.uom_id
+	   WHERE a.id=sm.product_id
+	  )AS product_uom
+	  
+	,(SELECT b.name
+	    FROM res_users a 
+	    LEFT JOIN hr_employee b on b.user_id=a.id
+	    WHERE a.id= $P{p_User_ID}  limit 1
+	  ) AS reqeust_by
+	  
+	  	,(SELECT he.name
+	    FROM res_users ru
+	    LEFT JOIN hr_employee he ON he.user_id = ru.id
+	    WHERE ru.id= $P{p_User_ID}  limit 1
+	  ) AS prepare_name
+	  
+	   ,(SELECT d.name->>'th_TH'
+	    FROM hr_employee e
+	    LEFT JOIN hr_version v ON v.id = e.current_version_id
+	    LEFT JOIN hr_department d ON d.id = v.department_id
+	    WHERE e.user_id= $P{p_User_ID}  limit 1
+	  ) AS department_name
+	  
+	   ,(SELECT j.name->>'th_TH'
+	    FROM hr_employee e
+	    LEFT JOIN hr_version v ON v.id = e.current_version_id
+	    LEFT JOIN hr_job j ON j.id = v.job_id
+	    WHERE e.user_id= $P{p_User_ID}  limit 1
+	  ) AS position_name
+	  
+	  ,(SELECT s.store_fname
+	    FROM ir_attachment s
+	    LEFT JOIN hr_employee e ON e.id = s.res_id
+	    WHERE s.res_model='hr.employee' AND s.res_field='signature' AND e.user_id = $P{p_User_ID} LIMIT 1
+	  ) AS prepare_signature
+	
+FROM product_product pp
+LEFT JOIN stock_move sm ON pp.id=sm.product_id 
+LEFT JOIN stock_move_line sml ON sml.move_id=sm.id
+LEFT JOIN company_address_header_report c ON c.id=sm.company_id
+LEFT JOIN stock_picking sp ON sp.id=sm.picking_id and sp.company_id=sm.company_id
+LEFT JOIN stock_location sl ON sl.id=sm.location_id
+--LEFT JOIN product_product pp ON pp.id=sm.product_id 
+LEFT JOIN product_template pt ON pt.id=pp.product_tmpl_id
+LEFT JOIN stock_lot lot ON lot.id = sml.lot_id
+
+ $P!{p_Where} 
+ 
+ORDER BY  
+sm.product_id
+,case
+		when date(sml.date) between date( $P{p_Start_Date} ) and  date( $P{p_To_Date} ) then 'period'
+		else 'bf'
+ end
+  $P!{p_oder_by}]]>
+	</queryString>
+	<field name="company_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="company_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_name_thai" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_name_thai"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_name_en" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_name_en"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_tax_id" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_tax_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_branch" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_branch"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_logo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_logo"/>
+	</field>
+	<field name="company_address_thai" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_address_thai"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_address_en" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_address_en"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_heaer_report" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_heaer_report"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_footer_report" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_footer_report"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_phone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_phone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_fax" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_fax"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="company_website" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="company_website"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="company_address_header_report"/>
+	</field>
+	<field name="picking_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="picking_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_picking"/>
+	</field>
+	<field name="picking_origin" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="picking_origin"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_picking"/>
+	</field>
+	<field name="move_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="move_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move"/>
+	</field>
+	<field name="location_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="location_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move"/>
+	</field>
+	<field name="location_usage" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="location_usage"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_location"/>
+	</field>
+	<field name="location_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="location_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_location"/>
+	</field>
+	<field name="location_dest_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="location_dest_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move"/>
+	</field>
+	<field name="location_dest_usage" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="location_dest_usage"/>
+	</field>
+	<field name="location_dest_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="location_dest_name"/>
+	</field>
+	<field name="product_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="product_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move"/>
+	</field>
+	<field name="product_internal_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_internal_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="product_product"/>
+	</field>
+	<field name="COLUMN_26" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="product_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move"/>
+	</field>
+	<field name="product_uom" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_uom"/>
+	</field>
+	<field name="move_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="move_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move"/>
+	</field>
+	<field name="aging" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="aging"/>
+	</field>
+	<field name="period" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="period"/>
+	</field>
+	<field name="product_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="product_template"/>
+	</field>
+	<field name="lot_no" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="lot_no"/>
+	</field>
+	<field name="lot_expired" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="lot_expired"/>
+	</field>
+	<field name="qty" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="qty"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move_line"/>
+	</field>
+	<field name="price_unit_line" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="price_unit_line"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move_line"/>
+	</field>
+	<field name="qty_report" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="qty_report"/>
+	</field>
+	<field name="unit_price" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="unit_price"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move"/>
+	</field>
+	<field name="svalues" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="svalues"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move"/>
+	</field>
+	<field name="price_unit_cal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="price_unit_cal"/>
+	</field>
+	<field name="COLUMN_40" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_uom"/>
+	</field>
+	<field name="reqeust_by" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="reqeust_by"/>
+	</field>
+	<field name="prepare_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prepare_name"/>
+	</field>
+	<field name="department_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="department_name"/>
+	</field>
+	<field name="position_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="position_name"/>
+	</field>
+	<field name="prepare_signature" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="prepare_signature"/>
+	</field>
+	<variable name="v_BF_Qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name">
+		<variableExpression><![CDATA[$V{v_BF_Qty}]]></variableExpression>
+		<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+	</variable>
+	<variable name="v_BF_Values" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name">
+		<variableExpression><![CDATA[$V{v_BF_Values}]]></variableExpression>
+		<initialValueExpression><![CDATA[100.00]]></initialValueExpression>
+	</variable>
+	<variable name="v_unit_price_cal" class="java.lang.Double">
+		<variableExpression><![CDATA[IF($P{p_Internal}==1
+		,$F{price_unit_line}
+		,$F{price_unit_line}
+)]]></variableExpression>
+	</variable>
+	<variable name="v_unit_price" class="java.lang.Double">
+		<variableExpression><![CDATA[IF($P{p_Internal}==1
+		,$F{price_unit_line}
+		,$F{price_unit_line}
+)]]></variableExpression>
+	</variable>
+	<variable name="v_accu_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+	,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0
+		,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+			,$F{qty}.doubleValue()
+			,$F{qty}.doubleValue()*-1
+			)
+	)
+,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+)]]></variableExpression>
+	</variable>
+	<variable name="v_accu_value" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+	,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0
+		,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+			,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+			,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+			)
+	)
+,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_buy_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("supplier") && $F{location_dest_usage}.equals("internal")
+	,$F{qty}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_buy_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("supplier") && $F{location_dest_usage}.equals("internal")
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_buy_return_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("supplier")
+	,$F{qty}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_buy_return_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("supplier")
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_sale_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("customer")
+	,$F{qty}.doubleValue()
+	,0
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_sale_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("customer")
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_sale_return_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("customer") && $F{location_dest_usage}.equals("internal")
+	,$F{qty}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_sale_return_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("customer") && $F{location_dest_usage}.equals("internal")
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_usage_in_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("inventory") && $F{location_dest_usage}.equals("internal") 
+	|| $F{location_usage}.equals("production") && $F{location_dest_usage}.equals("internal") 
+	,$F{qty}.doubleValue()
+	,0.00
+	
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_usage_in_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("inventory") && $F{location_dest_usage}.equals("internal") 
+	|| $F{location_usage}.equals("production") && $F{location_dest_usage}.equals("internal") 
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_usage_out_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("inventory") 
+	|| $F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("production") 
+	,$F{qty}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_usage_out_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Period">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("inventory") 
+	|| $F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("production") 
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_in_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+	,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0.00
+		,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+			,$F{qty}.doubleValue()
+			,0.00
+			)
+	)
+,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_in_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+		,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0.00
+		,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+			,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+			,0.00
+			)
+	)
+,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_out_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+	,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0.00
+		,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+			,$F{qty}.doubleValue()
+			,0.00
+			)
+	)
+,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_out_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Period" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+	,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0.00
+		,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+			,$F{qty}.doubleValue()*($V{v_unit_price}.doubleValue())
+			,0.00
+			)
+	)
+,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage1_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=(0*1)+1,
+	IF($F{aging}<=($P{p_Days}*1) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage1_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=(0*1)+1,
+	IF($F{aging}<=($P{p_Days}*1) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage2_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*1)+1,
+	IF($F{aging}<=($P{p_Days}*2)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage2_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*1)+1,
+	IF($F{aging}<=($P{p_Days}*2)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage3_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*2)+1,
+	IF($F{aging}<=($P{p_Days}*3)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage3_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*2)+1,
+	IF($F{aging}<=($P{p_Days}*3)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage4_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*3)+1,
+	IF($F{aging}<=($P{p_Days}*4) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage4_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*3)+1,
+	IF($F{aging}<=($P{p_Days}*4) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage5_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*4)+1,
+	IF($F{aging}<=($P{p_Days}*5) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage5_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*4)+1,
+	IF($F{aging}<=($P{p_Days}*5) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage6_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >($P{p_Days}*5)	
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_sub_rage6_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Product_Name" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >($P{p_Days}*5)	
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_buy_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("supplier") && $F{location_dest_usage}.equals("internal")
+	,$F{qty}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_buy_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("supplier") && $F{location_dest_usage}.equals("internal")
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_buy_return_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("supplier")
+	,$F{qty}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_buy_return_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("supplier")
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_sale_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("customer")
+	,$F{qty}.doubleValue()
+	,0
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_sale_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("customer")
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_sale_return_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("customer") && $F{location_dest_usage}.equals("internal")
+	,$F{qty}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_sale_return_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("customer") && $F{location_dest_usage}.equals("internal")
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_usage_in_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("inventory") && $F{location_dest_usage}.equals("internal") 
+	|| $F{location_usage}.equals("production") && $F{location_dest_usage}.equals("internal") 
+	,$F{qty}.doubleValue()
+	,0.00
+	
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_usage_in_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("inventory") && $F{location_dest_usage}.equals("internal") 
+	|| $F{location_usage}.equals("production") && $F{location_dest_usage}.equals("internal") 
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_usage_out_qty" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("inventory") 
+	|| $F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("production") 
+	,$F{qty}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_usage_out_values" class="java.lang.Double" resetType="Group" resetGroup="Group_Location_No" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("inventory") 
+	|| $F{location_usage}.equals("internal") && $F{location_dest_usage}.equals("production") 
+	,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+	,0.00
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_in_qty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=(0*1)+1,
+	IF($F{aging}<=($P{p_Days}*1) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_in_values" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+		,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0
+		,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+			,$F{qty}.doubleValue()*$V{v_unit_price}.doubleValue()
+			,0
+			)
+	)
+,0
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_out_qty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+	,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0
+		,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+			,$F{qty}.doubleValue()
+			,0
+			)
+	)
+,0
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_out_values" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+	,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0
+		,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+			,$F{qty}.doubleValue()*($V{v_unit_price}.doubleValue())
+			,0
+			)
+	)
+,0
+)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage1_qty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=(0*1)+1,
+	IF($F{aging}<=($P{p_Days}*1) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage1_values" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=(0*1)+1,
+	IF($F{aging}<=($P{p_Days}*1) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage2_qty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*1)+1,
+	IF($F{aging}<=($P{p_Days}*2)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage2_values" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*1)+1,
+	IF($F{aging}<=($P{p_Days}*2)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage3_qty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*2)+1,
+	IF($F{aging}<=($P{p_Days}*3)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage3_values" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*2)+1,
+	IF($F{aging}<=($P{p_Days}*3)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage4_qty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*3)+1,
+	IF($F{aging}<=($P{p_Days}*4) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage4_values" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*3)+1,
+	IF($F{aging}<=($P{p_Days}*4) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage5_qty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*4)+1,
+	IF($F{aging}<=($P{p_Days}*5) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage5_values" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >=($P{p_Days}*4)+1,
+	IF($F{aging}<=($P{p_Days}*5) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,0.00)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage6_qty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >($P{p_Days}*5)	
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_location_rage6_values" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{aging} >($P{p_Days}*5)	
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+,0.00)]]></variableExpression>
+	</variable>
+	<variable name="v_total_qty" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+	,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0
+		,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+			,$F{qty}.doubleValue()
+			,$F{qty}.doubleValue()*-1
+			)
+	)
+,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+)]]></variableExpression>
+	</variable>
+	<variable name="v_total_values" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{location_usage}.equals( $F{location_dest_usage})
+	,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+		,0
+		,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+			,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+			,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+			)
+	)
+,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+)]]></variableExpression>
+	</variable>
+	<group name="Group_Location_No" isStartNewColumn="true" isStartNewPage="true" isReprintHeaderOnEachPage="true" footerPosition="StackAtBottom">
+		<groupHeader>
+			<band height="215">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<image>
+					<reportElement x="0" y="0" width="80" height="80" uuid="3fcb7f0e-9a08-4262-bc4b-aa3ce1e49006"/>
+					<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{company_logo}.getBytes()))]]></imageExpression>
+				</image>
+				<rectangle radius="10">
+					<reportElement key="" x="650" y="0" width="155" height="70" backcolor="#EDEDED" uuid="605f667e-cf2f-4971-8203-7959e5c6730b"/>
+				</rectangle>
+				<textField>
+					<reportElement x="0" y="127" width="804" height="20" uuid="3601e463-f15d-4c04-9067-15c8e4a7d5f5"/>
+					<textElement>
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"ชื่อคลังสินค้า : " + $P{p_Location_Name} + IF($P{p_Internal}==1,"  ( แสดงราคาเมื่อเป็นการโอนย้ายภายใน )","  ( ไม่แสดงราคาเมื่อเป็นการโอนย้ายภายใน )"),
+"Location Name : " + $P{p_Location_Name} + IF($P{p_Internal}==1,"  ( Show Price When Internal Transfer )","  ( No Show Price When Internal Transfer )")
+)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement x="650" y="0" width="154" height="70" uuid="8e59c86b-355f-47c3-96e7-836a2fd9a82d"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="14" isBold="true"/>
+						<paragraph lineSpacing="Fixed" lineSpacingSize="10.0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"มูลค่าสินค้าเคลื่อนไหว",
+"PRODUCT VALUATION \n(AGING)")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="0" width="550" height="20" uuid="c22cec27-bf27-415a-bd30-a0406d381862"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="14" isBold="true"/>
+						<paragraph rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+IF($F{company_name_thai}==null,"",$F{company_name_thai}),
+IF($F{company_name_en}==null,"",$F{company_name_en})
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="100" width="704" height="20" uuid="f847cacc-3353-4dab-a198-b8a758f77107"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="14" isBold="false" isItalic="false"/>
+						<paragraph rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"อีเมล์ :  " +IF($F{company_email}==null,"",$F{company_email} )
++ "   เว็บไซต์ : " + IF($F{company_website}==null,"",$F{company_website}),
+"Email :  " +IF($F{company_email}==null,"",$F{company_email} )
++ "   Website : " + IF($F{company_website}==null,"",$F{company_website})
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="80" width="704" height="20" uuid="757999f0-5a1b-449b-bdb0-a32c0d929cfd"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="14" isBold="false" isItalic="false"/>
+						<paragraph rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"โทรศัพท์ : " + IF($F{company_phone}==null,"",$F{company_phone} )
++ "   แฟกซ์ : " + IF($F{company_fax}==null,"",$F{company_fax}),
+"Phone : " + IF($F{company_phone}==null,"",$F{company_phone} )
++ "   Fax : " + IF($F{company_fax}==null,"",$F{company_fax})
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="20" width="550" height="60" uuid="e851c266-4b1d-4e0a-aff6-1eb2e19f02fe"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="14" isBold="false"/>
+						<paragraph rightIndent="0"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"สาขา : "+ IF($F{company_branch}.toString().equals("00000"),"สำนักงานใหญ่",$F{company_branch}.toString()) + "  รหัสประจำตัวผู้เสียภาษี : " + IF($F{company_tax_id}==null,"",$F{company_tax_id} ) + " \n"+  "ที่อยู่ : "+IF($F{company_address_thai}==null,"",$F{company_address_thai}),
+"Tax Branch : "+ IF($F{company_branch}.toString().equals("00000"),"Head Office",$F{company_branch}.toString()) + "  Tax ID : " + IF($F{company_tax_id}==null,"",$F{company_tax_id} ) + " \n"+  "Address : "+IF($F{company_address_en}==null,"",$F{company_address_en})
+)]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMMMM dd, yyyy">
+					<reportElement x="579" y="147" width="174" height="20" uuid="40fe15da-9bd0-4763-8b53-7d6da022dd0d"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"วันที่พิมพ์ : " + new SimpleDateFormat($P{p_DateFormat} + " hh:mm:ss", new Locale($P{p_locale}, $P{p_locale})).format(new java.util.Date().getTime() + 7 * 3600*1000) +"     ",
+"Print Date : " + new SimpleDateFormat($P{p_DateFormat} + " hh:mm:ss", new Locale($P{p_locale}, $P{p_locale})).format(new java.util.Date().getTime() + 7 * 3600*1000) +"     "
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="753" y="147" width="26" height="20" uuid="77a67093-0f42-4f7e-82be-eeac79f7ac42">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"หน้า " + $V{PAGE_NUMBER},
+"Page " + $V{PAGE_NUMBER}
+)]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement x="779" y="147" width="25" height="20" uuid="2fd6a743-4192-4b41-a2cd-2092aeb8b4b7">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+" จาก " + $V{PAGE_NUMBER},
+" of " + $V{PAGE_NUMBER}
+)]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Opaque" x="390" y="170" width="34" height="44" backcolor="#EDEDED" uuid="49c17a38-aaa6-4ce8-ab3f-13fddf0e5510"/>
+					<box leftPadding="1">
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Stage]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="0" y="147" width="579" height="20" uuid="bbe77333-68d0-4e5a-98e2-bf18d891654c"/>
+					<textElement>
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+"ตั้งแต่วันที่ : "+ new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(new SimpleDateFormat("yyyy-MM-dd", new Locale("en", "en")).parse($P{p_Period_Start})) + "  ถึงวันที่ : "+new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(new SimpleDateFormat("yyyy-MM-dd", new Locale("en", "en")).parse($P{p_Period_End})),
+"Start Date : "+ new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(new SimpleDateFormat("yyyy-MM-dd", new Locale("en", "en")).parse($P{p_Period_Start})) + "  To Date : "+new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(new SimpleDateFormat("yyyy-MM-dd", new Locale("en", "en")).parse($P{p_Period_End}))
+)]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="170" width="220" height="22" backcolor="#EDEDED" uuid="256b753b-95ca-4523-bc6c-631375a4f611"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "ชื่อสินค้า", "Product Name")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="0" y="192" width="80" height="22" backcolor="#EDEDED" uuid="610fffdf-15f6-4268-b23a-01ea5e2cc9a5"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "เลขที่เอกสาร", "Document No")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="80" y="192" width="40" height="22" backcolor="#EDEDED" uuid="397c8d6b-ad16-41ff-951a-c596bbf6627a"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "วันที่ย้าย", "Move Date")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="120" y="192" width="50" height="22" backcolor="#EDEDED" uuid="4cc78343-9331-44b7-b9ce-5b182add5bb8"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "เลขล็อต", "Lot No")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="170" y="192" width="49" height="22" backcolor="#EDEDED" uuid="839b8ee4-9466-4653-aa03-26d4cb7143a8"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "วันหมดอายุ", "Expired Date")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="220" y="170" width="110" height="22" backcolor="#EDEDED" uuid="4f5a0456-08b2-44e8-a32b-64ff430f216b"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "หน่วย", "UOM")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="220" y="192" width="110" height="22" backcolor="#EDEDED" uuid="064f1603-d7cd-4924-9d26-f1f52913635f"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "การเคลื่อนย้าย", "Stock Move")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="330" y="170" width="30" height="44" backcolor="#EDEDED" uuid="e9c886a9-b0a4-4a7c-ba2d-820d1bcaca9d"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "อายุ", "Age")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="360" y="170" width="30" height="44" backcolor="#EDEDED" uuid="ff121929-3e40-4fc6-86dc-e028e39e92cb"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "ราคาต่อหน่วย", "Unit Price")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="424" y="170" width="318" height="22" backcolor="#EDEDED" uuid="c53de1fd-2920-4504-a05c-a5b1196cf732"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "ช่วงวัน", "Aging Range")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement mode="Opaque" x="424" y="192" width="53" height="22" backcolor="#EDEDED" uuid="2c11f945-c5d5-4bc0-b414-c83dc7ee563d">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(0*1)+1+" - " +($P{p_Days}*1) + IF($P{p_language}.toString().equals("thai"), " วัน"," Days")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement mode="Opaque" x="477" y="192" width="53" height="22" backcolor="#EDEDED" uuid="3ea8bc22-35d3-4aae-abd6-cb95dee5387c">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(($P{p_Days}*1)+1) +" - " +($P{p_Days}*2) + IF($P{p_language}.toString().equals("thai"), " วัน"," Days")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement mode="Opaque" x="530" y="192" width="53" height="22" backcolor="#EDEDED" uuid="08c092c5-cfd5-4018-a371-258a31aa4482">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(($P{p_Days}*2)+1) +" - " +($P{p_Days}*3) + IF($P{p_language}.toString().equals("thai"), " วัน"," Days")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement mode="Opaque" x="583" y="192" width="53" height="22" backcolor="#EDEDED" uuid="92a55491-ac15-45c8-8855-b9e4049d91c4">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(($P{p_Days}*3)+1) +" - " +($P{p_Days}*4) + IF($P{p_language}.toString().equals("thai"), " วัน"," Days")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement mode="Opaque" x="636" y="192" width="53" height="22" backcolor="#EDEDED" uuid="ea5c06a5-e99f-46e0-b96f-13be9c8c82ec">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[(($P{p_Days}*4)+1) +" - " +($P{p_Days}*5) + IF($P{p_language}.toString().equals("thai"), " วัน"," Days")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+					<reportElement mode="Opaque" x="689" y="192" width="53" height="22" backcolor="#EDEDED" uuid="b20dc05f-b51e-408d-a579-156fadda4001">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[("Over " + ($P{p_Days}*5)) + IF($P{p_language}.toString().equals("thai"), " วัน"," Days")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="742" y="170" width="62" height="44" backcolor="#EDEDED" uuid="5a2bae94-11b6-4077-b6a7-be25645e4fb8"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "ยอดรวมสะสม", "Move Forward")]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="164">
+				<rectangle>
+					<reportElement x="1" y="53" width="804" height="111" uuid="9ec1e366-7b7c-40ca-a3c6-3fb1205d0757"/>
+				</rectangle>
+				<image>
+					<reportElement x="100" y="54" width="65" height="49" uuid="14267fc3-c549-4e49-bac1-72c18a3e7c1f">
+						<printWhenExpression><![CDATA[$P{p_ESignature}]]></printWhenExpression>
+					</reportElement>
+					<imageExpression><![CDATA[IF($F{prepare_signature}== null,null,$P{p_Path} +$F{prepare_signature})]]></imageExpression>
+				</image>
+				<textField pattern="MMM d, yyyy">
+					<reportElement x="31" y="123" width="192" height="20" uuid="1264d50d-1a1c-4b14-9776-374ef323743e"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_EName}==true
+	,IF($F{prepare_name}==null,"",$F{prepare_name})
+	,""
+)]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement mode="Opaque" x="2" y="54" width="24" height="109" backcolor="#EDEDED" uuid="96ea2ddf-7e2c-4f63-ae06-f33a3f0a08ea"/>
+					<box leftPadding="1" bottomPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="Left">
+						<font fontName="TH Sarabun New" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement x="31" y="143" width="192" height="20" uuid="16c209bb-9832-46c3-872c-d8db8fa8b58d"/>
+					<box leftPadding="1" bottomPadding="0">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_EName}==true
+	,new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(new Date())
+	,""
+)]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM d, yyyy">
+					<reportElement x="31" y="103" width="192" height="20" uuid="0e496aa2-07e9-4295-a18e-953422c45a30"/>
+					<box leftPadding="1" bottomPadding="1">
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),"ผู้จัดทำ", "Created By")]]></textFieldExpression>
+				</textField>
+				<frame>
+					<reportElement mode="Opaque" x="0" y="7" width="804" height="39" backcolor="#EDEBEB" uuid="ce1d9522-afb9-453d-9fec-a5a19970453f"/>
+					<box>
+						<bottomPen lineWidth="1.75"/>
+					</box>
+					<textField isStretchWithOverflow="true">
+						<reportElement isPrintRepeatedValues="false" x="0" y="0" width="360" height="20" uuid="7832d58c-ef17-4029-85e1-ce84303fbfd6">
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						</reportElement>
+						<box leftPadding="1" bottomPadding="1">
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Bottom">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph lineSpacing="Fixed" lineSpacingSize="4.0" leftIndent="3" rightIndent="3"/>
+						</textElement>
+						<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"), "รวมทั้งหมด","Grand Total")]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement x="360" y="0" width="30" height="38" uuid="c0d1a148-ffc1-46d0-baae-cf33eab3247b">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_total_values}.doubleValue()
+/
+$V{v_total_qty}.doubleValue()]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement stretchType="ElementGroupBottom" mode="Transparent" x="390" y="0" width="34" height="20" backcolor="#EDEDED" uuid="29fa54d5-5806-468a-8038-00fc093c90dd">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Qty"]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement stretchType="ElementGroupBottom" mode="Transparent" x="390" y="20" width="34" height="20" backcolor="#E0DEDE" uuid="b5cb31bd-b9de-4251-8693-e4cad6bc7c44">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Values"]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="477" y="20" width="53" height="20" backcolor="#EDEDED" uuid="2c0025c0-377e-4cec-9f22-95997555fa75">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage2_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="530" y="0" width="53" height="20" backcolor="#EDEDED" uuid="c015382c-7944-48b9-907f-7a5ef898e0d8">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage3_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="424" y="0" width="53" height="20" backcolor="#EDEDED" uuid="048716d3-3d6b-4abd-9b1e-fbda255859d0">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage1_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="530" y="20" width="53" height="20" backcolor="#EDEDED" uuid="5d647e44-db4b-4463-bdfe-3234f577b975">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage3_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="742" y="20" width="61" height="20" backcolor="#EDEDED" uuid="a36050f5-cfe6-46a3-9edb-4083f1d80355">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_total_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="689" y="20" width="53" height="20" backcolor="#EDEDED" uuid="19cc9be8-0ab0-4986-9cc3-fdbe5fe567df">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage6_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="583" y="0" width="53" height="20" backcolor="#EDEDED" uuid="449cf93b-a01b-404f-b54a-51aadda711bb">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage4_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="636" y="0" width="53" height="20" backcolor="#EDEDED" uuid="2b422f9d-9090-44a6-a0bf-6b2924e0a0a1">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage5_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="583" y="20" width="53" height="20" backcolor="#EDEDED" uuid="bdaae44d-002e-4f5a-afa5-42003836bf51">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage4_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="742" y="0" width="61" height="20" backcolor="#EDEDED" uuid="3e91cf74-541b-46c0-b7ea-e1f515751366">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_total_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="424" y="20" width="53" height="20" backcolor="#EDEDED" uuid="38e6ac43-21db-4354-9d9a-92b2add80738">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage1_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="636" y="20" width="53" height="20" backcolor="#EDEDED" uuid="e7165d8c-d1b5-4593-82c2-ca171e962223">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage5_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="477" y="0" width="53" height="20" backcolor="#EDEDED" uuid="5ee10245-931f-48ba-9938-a4e75e8b935d">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage2_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="689" y="0" width="53" height="20" backcolor="#EDEDED" uuid="caf2c596-bce1-45f6-b28a-3d740c827c0e">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_location_rage6_qty}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Group_Product_Name">
+		<groupExpression><![CDATA[$F{product_name}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<frame>
+					<reportElement mode="Opaque" x="0" y="1" width="804" height="20" backcolor="#EDEDED" uuid="9faa38fb-31c6-456c-b491-98e35f6d8e00"/>
+					<box>
+						<pen lineWidth="1.0" lineStyle="Dashed"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textField isStretchWithOverflow="true">
+						<reportElement isPrintRepeatedValues="false" x="0" y="0" width="220" height="20" uuid="d4a8eaaa-00ce-4293-a0f9-50e767abe968">
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						</reportElement>
+						<box leftPadding="1" bottomPadding="1">
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Left" verticalAlignment="Bottom">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph lineSpacing="Fixed" lineSpacingSize="4.0" leftIndent="7" rightIndent="3"/>
+						</textElement>
+						<textFieldExpression><![CDATA[IF($F{product_internal_code}==null,$F{product_name},"["+ $F{product_internal_code}+"] "+$F{product_name})]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement x="220" y="0" width="110" height="20" uuid="b70bcec6-2c3b-465e-806c-cc44ac635e4c">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<textElement textAlignment="Right" verticalAlignment="Bottom">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="10"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{product_uom}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Group_Period">
+		<groupExpression><![CDATA[$F{period}]]></groupExpression>
+		<groupHeader>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="42">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<frame>
+					<reportElement mode="Opaque" x="0" y="0" width="804" height="40" backcolor="#FCFAFA" uuid="1f6e659d-e1d3-40fd-be96-e040321f539e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="1.75"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement x="0" y="0" width="360" height="20" uuid="d9d05df9-78a3-4d56-be4f-cbf959ed126b">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="10" rightIndent="10"/>
+						</textElement>
+						<textFieldExpression><![CDATA[IF($P{p_language}.toString().equals("thai"),
+	IF($F{period}.equals( "bf" )
+	,"ยอดยกมา"
+	,"ผลรวมของ "+IF($F{product_internal_code}==null,$F{product_name},"["
+		+ $F{product_internal_code}+"] "+$F{product_name})
+	)
+,
+	IF($F{period}.equals( "bf" )
+	,"Bring Forward"
+	,"Sub Total of "+IF($F{product_internal_code}==null,$F{product_name},"["
+		+ $F{product_internal_code}+"] "+$F{product_name})
+	)
+)]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement stretchType="ElementGroupBottom" mode="Transparent" x="390" y="0" width="34" height="20" backcolor="#EDEDED" uuid="77c3701d-2767-41e6-bcfd-b206f3627fa1">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Qty"]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement stretchType="ElementGroupBottom" mode="Transparent" x="390" y="20" width="34" height="20" backcolor="#E0DEDE" uuid="f3125189-9b4e-4e4f-9465-39f052f3da5e">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA["Values"]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement stretchType="ElementGroupBottom" x="360" y="0" width="30" height="40" uuid="2f61b246-a456-4066-bc1b-d67ae01395a2">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font fontName="TH Sarabun New" size="8"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_accu_value}.doubleValue()
+/
+$V{v_accu_qty}.doubleValue()]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="477" y="20" width="53" height="20" backcolor="#EDEDED" uuid="36e807eb-8237-40a0-aeb9-30320ecc9c25">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage2_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="530" y="0" width="53" height="20" backcolor="#EDEDED" uuid="e4851fa6-dd5b-47a9-b8c7-3e5f823be70a">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage3_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="424" y="0" width="53" height="20" backcolor="#EDEDED" uuid="537e792a-c14f-434c-9167-14f8b3f3a2cd">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage1_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="530" y="20" width="53" height="20" backcolor="#EDEDED" uuid="1abe4c60-78b9-4883-9256-bff03b21c710">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage3_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="742" y="20" width="61" height="20" backcolor="#EDEDED" uuid="e0d88f34-3953-4cf2-bb13-0cb8756ef256">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_accu_value}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="689" y="20" width="53" height="20" backcolor="#EDEDED" uuid="5ee5b909-86a3-47ff-bb73-e9186b252f7b">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage6_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="583" y="0" width="53" height="20" backcolor="#EDEDED" uuid="8cb66907-5c37-4a2d-8035-c15661a10815">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage4_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="636" y="0" width="53" height="20" backcolor="#EDEDED" uuid="45a991d1-a23a-41ae-a719-25e28db5fefe">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage5_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="583" y="20" width="53" height="20" backcolor="#EDEDED" uuid="52e45ec2-8048-4d99-a18f-923e078e2951">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage4_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="742" y="0" width="61" height="20" backcolor="#EDEDED" uuid="5a84e1b9-fbaa-46f1-8586-4bf956af3fc3">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+							<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="true"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_accu_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="424" y="20" width="53" height="20" backcolor="#EDEDED" uuid="8a38113d-6964-4dce-88e8-011034925eb8">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage1_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="636" y="20" width="53" height="20" backcolor="#EDEDED" uuid="dc16e218-a038-4d78-8fb4-3086635c10d7">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage5_values}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="477" y="0" width="53" height="20" backcolor="#EDEDED" uuid="972ede96-7343-45c7-b44f-1c5b865d468a">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage2_qty}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+						<reportElement mode="Transparent" x="689" y="0" width="53" height="20" backcolor="#EDEDED" uuid="364b4aba-a82a-488d-8801-e56ede557786">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<box>
+							<pen lineColor="#FFFFFF"/>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right">
+							<font fontName="TH Sarabun New" size="8" isBold="false"/>
+							<paragraph leftIndent="7" rightIndent="7"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$V{v_sub_rage6_qty}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupFooter>
+	</group>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[IF($F{period}.equals( "bf" )
+	,IF($P{p_Show_BF_Detail}==1
+		,true
+		,false
+	)
+	,IF($P{p_Show_Transaction_Detail}==1
+		,true
+		,false
+	)
+)]]></printWhenExpression>
+			<frame>
+				<reportElement stretchType="ContainerBottom" x="0" y="0" width="804" height="40" uuid="13e00aaf-d1a9-443f-85fb-defd45b9fb9d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="120" y="0" width="50" height="20" uuid="b5e3fa60-c652-48c1-821f-d27498b1ccac">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{lot_no}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="yyyy-MM-dd" isBlankWhenNull="true">
+					<reportElement x="80" y="0" width="40" height="20" uuid="a9d08335-7f77-4992-bfc8-73bca304e1b5">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{move_date}==null,"", new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format($F{move_date}))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="ContainerBottom" x="275" y="0" width="55" height="40" uuid="99c4f470-34da-4c01-b806-2fdc0eacd6be">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{location_dest_name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupBottom" x="360" y="0" width="30" height="40" uuid="4586d190-7722-4678-a68e-0ff8734032bd">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_unit_price}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="0" y="0" width="80" height="20" uuid="1f2bc574-de47-4f65-9b0e-5496de897bfe">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{picking_name}==null
+	,$F{move_name}
+	,$F{picking_name} 
+	+
+		IF($F{picking_origin}==null
+			,""
+			," -(" + $F{picking_origin} +")"
+		)
+)]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="yyyy-MM-dd" isBlankWhenNull="true">
+					<reportElement x="170" y="0" width="50" height="20" uuid="5f57733a-934d-4e58-a1ce-108717b9abd7">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{lot_expired}==null,"", new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format($F{lot_expired}))]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="220" y="0" width="55" height="40" backcolor="#E0110D" uuid="ad182fc0-d3f0-40a0-ad5f-24a814806d68">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="1.0" lineStyle="Dotted"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{location_name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupBottom" mode="Transparent" x="390" y="0" width="34" height="20" backcolor="#EDEDED" uuid="d855489c-7d22-4669-8daf-a5e68d3c664e">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Qty"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupBottom" mode="Transparent" x="390" y="20" width="34" height="20" backcolor="#E0DEDE" uuid="65158e1b-585e-42c1-8b61-e57bcc08ea44">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Values"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement stretchType="ElementGroupBottom" x="330" y="0" width="30" height="40" uuid="2e26c262-4e7d-40dd-92c4-2e2b0ebaa98a">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="8"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{aging}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="477" y="0" width="53" height="20" backcolor="#EDEDED" uuid="39ab9ce0-e003-488d-9b3e-8f9e001d513f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=($P{p_Days}*1)+1,
+	IF($F{aging}<=($P{p_Days}*2)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="583" y="0" width="53" height="20" backcolor="#EDEDED" uuid="7c1f41bd-a57b-42c8-8115-c168dd18ddab">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=($P{p_Days}*3)+1,
+	IF($F{aging}<=($P{p_Days}*4) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="530" y="0" width="53" height="20" backcolor="#EDEDED" uuid="f8182299-6b50-4b4a-945c-e3e9d596105d">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=($P{p_Days}*2)+1,
+	IF($F{aging}<=($P{p_Days}*3)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="689" y="0" width="53" height="20" backcolor="#EDEDED" uuid="44fbaacf-5499-472c-8780-b3f979bc2a64">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >($P{p_Days}*5)	
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="424" y="0" width="53" height="20" backcolor="#EDEDED" uuid="c8557fea-7fe1-4ac5-930e-796805f1a081">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=(0*1)+1,
+	IF($F{aging}<=($P{p_Days}*1) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="636" y="0" width="53" height="20" backcolor="#EDEDED" uuid="17ddabc1-7b2c-4c2c-a0d7-b1f006963e6e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=($P{p_Days}*4)+1,
+	IF($F{aging}<=($P{p_Days}*5) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+				,0
+				,IF($F{location_dest_id}==$P{p_Location_ID}.intValue() 
+					,$F{qty}.doubleValue()
+					,$F{qty}.doubleValue()*-1
+				)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue(),$F{qty}.doubleValue()*-1)
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="742" y="0" width="61" height="20" backcolor="#EDEDED" uuid="eb897325-1782-432a-b3b7-98030f06e49c">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_accu_qty}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="742" y="20" width="61" height="20" backcolor="#EDEDED" uuid="9b7f22c3-1c24-4cbe-a93d-7ddd4ff50a20">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="true"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{v_accu_value}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="530" y="20" width="53" height="20" backcolor="#EDEDED" uuid="b7fb9fe7-af21-4c4d-bb8b-4a76a90d7ad5">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=($P{p_Days}*2)+1,
+	IF($F{aging}<=($P{p_Days}*3)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="424" y="20" width="53" height="20" backcolor="#EDEDED" uuid="2847e76e-3e5a-4834-9d1e-f4588d292cd3">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=(0*1)+1,
+	IF($F{aging}<=($P{p_Days}*1) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="583" y="20" width="53" height="20" backcolor="#EDEDED" uuid="582cdacf-35c4-4a53-baab-c674c2bd6c52">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=($P{p_Days}*3)+1,
+	IF($F{aging}<=($P{p_Days}*4) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="636" y="20" width="53" height="20" backcolor="#EDEDED" uuid="f843a04d-fcef-410f-b88d-cb525a5ac4f7">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=($P{p_Days}*4)+1,
+	IF($F{aging}<=($P{p_Days}*5) 
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="477" y="20" width="53" height="20" backcolor="#EDEDED" uuid="7dcad3fe-3a97-40b1-9eca-7829f0f5638b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >=($P{p_Days}*1)+1,
+	IF($F{aging}<=($P{p_Days}*2)
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+	,"")
+,"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="689" y="20" width="53" height="20" backcolor="#EDEDED" uuid="189f369a-857a-4f26-83e3-59bebffc81c3">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<pen lineColor="#FFFFFF"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font fontName="TH Sarabun New" size="8" isBold="false"/>
+						<paragraph leftIndent="7" rightIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{aging} >($P{p_Days}*5)	
+		,IF($F{location_usage}.equals( $F{location_dest_usage})
+			,IF($F{location_id}==$P{p_Location_ID}.intValue() && $F{location_dest_id}==$P{p_Location_ID}.intValue()
+					,0
+					,IF($F{location_id}==$P{p_Location_ID}.intValue() 
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())*-1
+						,($F{qty}.doubleValue()*$V{v_unit_price}.doubleValue())
+					)
+			)
+		,IF($F{qty_report}.doubleValue()==1,$F{qty}.doubleValue()*$V{v_unit_price_cal}.doubleValue(),($F{qty}.doubleValue())*$V{v_unit_price_cal}.doubleValue())
+		)
+,"")]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15">
+			<textField pattern="MMM d, yyyy">
+				<reportElement x="0" y="0" width="620" height="15" uuid="9f79f2ef-4dab-4f6b-977b-d522d283bdb5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="TH Sarabun New" size="10"/>
+					<paragraph leftIndent="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{company_name_en}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMM d, yyyy">
+				<reportElement x="620" y="0" width="184" height="15" uuid="9f7e14a1-7ce3-41ed-b1ef-952884820e08">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box leftPadding="1" bottomPadding="1">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="TH Sarabun New" size="10" isBold="true"/>
+					<paragraph leftIndent="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{p_ISO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

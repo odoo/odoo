@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        QC Inspection (ใบตรวจสอบคุณภาพ).
+
+        Re-targeted onto od19.qc.inspection, so it is reached from a QC
+        inspection record's Print menu.
+    -->
+    <record id="view_qc_inspection_report" model="ir.ui.view">
+        <field name="name">qc.inspection.report</field>
+        <field name="model">qc.inspection.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_Company_No" required="1"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_qc_inspection_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) QC Inspection</field>
+        <field name="res_model">qc.inspection.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_qc_inspection_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_quality_control.model_od19_qc_inspection"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

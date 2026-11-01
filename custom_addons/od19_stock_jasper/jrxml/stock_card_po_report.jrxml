@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_card_po_report" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="0" uuid="ab7bea68-239f-4870-9dea-4b304585aef5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="localhost.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_Product_No" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="p_Date_As_Off" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT 
+	COALESCE(sum(pl.product_qty), 0) as product_qty
+
+FROM purchase_order po
+LEFT JOIN purchase_order_line pl on pl.order_id=po.id and pl.company_id=po.company_id
+
+WHERE po.state in ('purchase','done')
+AND	pl.product_id=  $P{p_Product_No} 
+AND date(po.date_order) <= date( $P{p_Date_As_Off} )
+AND EXTRACT(YEAR FROM date(po.date_order))=EXTRACT(YEAR FROM date( $P{p_Date_As_Off} ))]]>
+	</queryString>
+	<field name="product_qty" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="product_qty"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="purchase_order_line"/>
+	</field>
+	<variable name="v_Purchase_Qty" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{product_qty}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="#,##0.00#;(#,##0.00#)">
+				<reportElement x="0" y="0" width="40" height="20" uuid="a31f3b7a-b0cd-4d88-9140-ca31ca057b06">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_qty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

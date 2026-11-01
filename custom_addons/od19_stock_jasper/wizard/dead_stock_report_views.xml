@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-IV-008 Dead Stock (สินค้าไม่เคลื่อนไหว).
+
+        Inherits the shared wizard layout and is reached from
+        Inventory > Reporting > Stock Reports (J-Report OD15).
+    -->
+    <record id="view_dead_stock_report" model="ir.ui.view">
+        <field name="name">dead.stock.report</field>
+        <field name="model">dead.stock.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_days" required="1"/>
+                    <field name="p_Print_By"/>
+                    <field name="p_location" widget="many2many_tags"/>
+                    <field name="company_id" invisible="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_dead_stock_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Dead Stock</field>
+        <field name="res_model">dead.stock.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_dead_stock_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_dead_stock_report"
+        name="(J-Report OD15) Dead Stock"
+        parent="menu_stock_report_od15"
+        action="action_dead_stock_report"
+        sequence="140"
+    />
+
+</odoo>

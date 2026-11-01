@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-IV-008 Product Barcode label (ป้ายบาร์โค้ดสินค้า).
+
+        Inherits the shared wizard layout and is reached from
+        Inventory > Products > Print, or from the
+        Stock > Reporting > Stock Reports (J-Report OD15) menu.
+    -->
+    <record id="view_product_barcode_report" model="ir.ui.view">
+        <field name="name">product.barcode.report</field>
+        <field name="model">product.barcode.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_Print" required="1" default_focus="1"/>
+                    <field name="p_Show_Price"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_product_barcode_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Product Barcode</field>
+        <field name="res_model">product.barcode.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_product_barcode_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Folder grouping every ported Stock Jasper report under Reporting. -->
+    <menuitem
+        id="menu_stock_report_od15"
+        name="Stock Reports (J-Report OD15)"
+        parent="stock.menu_warehouse_report"
+        groups="stock.group_stock_user,stock.group_stock_manager"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_product_barcode_report"
+        name="(J-Report OD15) Product Barcode"
+        parent="menu_stock_report_od15"
+        action="action_product_barcode_report"
+        sequence="10"
+    />
+
+</odoo>
