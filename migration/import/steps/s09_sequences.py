@@ -11,8 +11,8 @@ def run(stats):
     common.log("s09_sequences: (scaffold) — ตั้งเลขรันถัดไปให้ต่อเนื่องจากระบบเดิม")
 
     # ------------------------------------------------------------------
-    # TODO: อ่านเลขล่าสุดของเอกสารแต่ละชนิดจากระบบเดิม (read-only) แล้วตั้งค่าให้
-    #   ir.sequence โดยใช้เมธอด/ฟิลด์ที่ถูกต้อง:
+    # TODO: อ่านเลขล่าสุดของเอกสารแต่ละชนิดจากระบบเดิม (read-only) โดยดูรหัส sequence
+    #   ปลายทางจากไฟล์ sequence_map.csv (คอลัมน์ doc_type/od19_sequence_code) แล้วตั้งค่าให้
     #     seq = env['ir.sequence'].search([('code', '=', 'sale.order')], limit=1)
     #     seq.number_next_actual = last_legacy_number + 1
     #   ตรวจสอบแล้ว: ฟิลด์ number_next_actual อยู่ที่
