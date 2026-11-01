@@ -1010,6 +1010,93 @@ export function useLongPress(ref, { action, predicate = () => true } = {}) {
 }
 
 /**
+ * Subscribes to the pointer being pressed and held on the element of the given
+ * ref. Moving the pointer during the delay cancels the hold, so that clicks and
+ * selections are left untouched.
+ *
+ * @param {import("@odoo/owl").Signal<HTMLElement>} ref
+ * @param {Object} options
+ * @param {() => void} options.onHold called once the pointer is held long enough
+ * @param {() => void} options.onRelease called when the held pointer is released
+ * @param {(ev: PointerEvent) => boolean} [options.predicate] whether a press can start a hold
+ */
+export function usePressAndHold(ref, { onHold, onRelease, predicate = () => true }) {
+    const MOVE_TRESHOLD = 10;
+    let isHeld = false;
+    let pointerId;
+    let startX = 0;
+    let startY = 0;
+    let timer;
+
+    function reset() {
+        clearTimeout(timer);
+        timer = undefined;
+    }
+    function endHold() {
+        reset();
+        if (isHeld) {
+            isHeld = false;
+            onRelease();
+        }
+    }
+    function release(ev) {
+        if (ev.pointerId !== pointerId) {
+            return;
+        }
+        if (isHeld) {
+            // the release of a hold is not a click on what was held
+            const doc = ref()?.ownerDocument;
+            const preventClick = (clickEv) => {
+                clickEv.stopPropagation();
+                clickEv.preventDefault();
+            };
+            doc?.addEventListener("click", preventClick, { capture: true, once: true });
+            setTimeout(() => doc?.removeEventListener("click", preventClick, { capture: true }));
+        }
+        endHold();
+    }
+    useListener(ref, "pointerdown", (ev) => {
+        if (!ev.isPrimary || ev.button !== 0 || isHeld || !predicate(ev)) {
+            return;
+        }
+        pointerId = ev.pointerId;
+        startX = ev.clientX;
+        startY = ev.clientY;
+        timer = setTimeout(() => {
+            timer = undefined;
+            isHeld = true;
+            onHold();
+        }, LONG_PRESS_DELAY);
+    });
+    // on the document, so that the pointer is followed outside of the element
+    const getDocument = () => ref()?.ownerDocument;
+    useListener(
+        getDocument,
+        "pointermove",
+        (ev) => {
+            if (
+                timer &&
+                ev.pointerId === pointerId &&
+                Math.hypot(ev.clientX - startX, ev.clientY - startY) > MOVE_TRESHOLD
+            ) {
+                reset();
+            }
+        },
+        { capture: true }
+    );
+    useListener(getDocument, "pointerup", release, { capture: true });
+    useListener(getDocument, "pointercancel", release, { capture: true });
+    // a release out of the window, e.g. after switching to another app, is not seen
+    useListener(() => getDocument()?.defaultView, "blur", endHold);
+    useListener(ref, "contextmenu", (ev) => {
+        if (timer || isHeld) {
+            ev.preventDefault();
+        }
+    });
+    onWillUnmount(reset);
+}
+
+/**
  * Hook that gathers the signal refs of many children, each child saving its own
  * ref under an id of its choice.
  * @see useForwardRefsToParent

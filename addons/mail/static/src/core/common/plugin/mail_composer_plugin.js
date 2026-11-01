@@ -63,7 +63,13 @@ export class MailComposerPlugin extends Plugin {
         "input",
         "selection",
     ];
-    static shared = ["cancelSelection", "insert", "setCursorEnd", "updateEditableState"];
+    static shared = [
+        "cancelSelection",
+        "insert",
+        "makeDictationOperation",
+        "setCursorEnd",
+        "updateEditableState",
+    ];
     resources = {
         on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         paste_odoo_editor_html_overrides: (selection, sanitizedFragment) =>
@@ -158,6 +164,17 @@ export class MailComposerPlugin extends Plugin {
         }
         this.dependencies.dom.insert(content);
         this.dependencies.history.commit();
+    }
+
+    /**
+     * Operation appending a dictated text at the end, previewed while it is
+     * being dictated so that the whole dictation is a single history step.
+     */
+    makeDictationOperation() {
+        return this.dependencies.history.makePreviewableOperation((text) => {
+            this.setCursorEnd();
+            this.dependencies.dom.insert(text);
+        });
     }
 
     /** Directly in the editable, a non-editable element (e.g. a mention) can't be deleted. */
