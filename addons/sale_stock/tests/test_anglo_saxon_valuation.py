@@ -290,7 +290,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(income_aml.credit, 24)
 
     def test_avco_ordered_invoice_post_partial_delivery(self):
-        """Standard price set to 10. Sale order 2@12. Invoice after delivering 1."""
+        """Standard price set to 10. Sale order 2@12. Deliver 1, receive 2@16 (average cost 14),
+        invoice 2: the COGS amount should be 24: 1 really delivered at 10 and the other valued at
+        the average cost 14."""
         self.product_avco_auto.invoice_policy = 'order'
         self.product_avco_auto.standard_price = 10
 
@@ -303,6 +305,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         # Deliver one.
         sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
         Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
+        self._make_in_move(self.product_avco_auto, 2, 16)
 
         # Invoice the sale order.
         invoice = sale_order._create_invoices()
@@ -313,9 +316,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
         self.assertEqual(stock_out_aml.debit, 0)
-        self.assertEqual(stock_out_aml.credit, 20)
+        self.assertEqual(stock_out_aml.credit, 24)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
-        self.assertEqual(cogs_aml.debit, 20)
+        self.assertEqual(cogs_aml.debit, 24)
         self.assertEqual(cogs_aml.credit, 0)
         receivable_aml = amls.filtered(lambda aml: aml.account_id == self.account_receivable)
         self.assertEqual(receivable_aml.debit, 24)
@@ -678,7 +681,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
 
     def test_fifo_ordered_invoice_post_partial_delivery(self):
         """Receive 1@8, 1@10, so 2@12, standard price 12, deliver 1, invoice 2: the COGS amount
-        should be 20: 1 really delivered at 10 and the other valued at the standard price 10."""
+        should be 18: 1 really delivered at 8 and the other valued at the next FIFO cost 10."""
         self.product_fifo_auto.invoice_policy = 'order'
 
         self._fifo_in_one_eight_one_ten()
@@ -703,9 +706,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
         self.assertEqual(stock_out_aml.debit, 0)
-        self.assertEqual(stock_out_aml.credit, 16)
+        self.assertEqual(stock_out_aml.credit, 18)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
-        self.assertEqual(cogs_aml.debit, 16)
+        self.assertEqual(cogs_aml.debit, 18)
         self.assertEqual(cogs_aml.credit, 0)
         receivable_aml = amls.filtered(lambda aml: aml.account_id == self.account_receivable)
         self.assertEqual(receivable_aml.debit, 24)
@@ -791,9 +794,9 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
         self.assertEqual(stock_out_aml.debit, 0)
-        self.assertEqual(stock_out_aml.credit, 16)
+        self.assertEqual(stock_out_aml.credit, 18)
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
-        self.assertEqual(cogs_aml.debit, 16)
+        self.assertEqual(cogs_aml.debit, 18)
         self.assertEqual(cogs_aml.credit, 0)
         receivable_aml = amls.filtered(lambda aml: aml.account_id == self.account_receivable)
         self.assertEqual(receivable_aml.debit, 24)
@@ -1468,6 +1471,35 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
         self.assertEqual(cogs_aml.debit, 10)
         self.assertEqual(cogs_aml.credit, 0)
+
+    def test_fifo_reverse_and_create_new_invoice_after_delivery(self):
+        """Receive 1@10, 1@50, sale order 2 invoiced on delivered quantities. Deliver 1,
+        invoice it, deliver the other one, then reverse the invoice with a new draft, set its
+        quantity to 2 and post it: the COGS of the new invoice is 60, the cost of the 2
+        delivered units."""
+        self.product_fifo_auto.invoice_policy = 'delivery'
+        self._make_in_move(self.product_fifo_auto, 1, 10)
+        self._make_in_move(self.product_fifo_auto, 1, 50)
+        sale_order = self._so_deliver(self.product_fifo_auto, 2, 100, picking=False)
+        delivery = sale_order.picking_ids
+        delivery.move_ids.write({'quantity': 1, 'picked': True})
+        Form.from_action(self.env, delivery.button_validate()).save().process()
+        invoice = sale_order._create_invoices()
+        invoice.action_post()
+
+        delivery.backorder_ids.button_validate()
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
+            'journal_id': invoice.journal_id.id,
+        })
+        new_invoice = self.env['account.move'].browse(move_reversal.modify_moves()['res_id'])
+        new_invoice.invoice_line_ids.quantity = 2
+        new_invoice.action_post()
+
+        self.assertRecordValues(new_invoice.line_ids.filtered(lambda line: line.display_type == 'cogs'), [
+            {'account_id': self.account_stock_valuation.id, 'debit': 0, 'credit': 60},
+            {'account_id': self.account_expense.id, 'debit': 60, 'credit': 0},
+        ])
 
     def test_anglo_saxon_cogs_with_down_payment(self):
         """Create a SO with a product invoiced on delivered quantity.
