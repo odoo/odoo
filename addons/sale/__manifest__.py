@@ -27,6 +27,7 @@ This module contains all the common features of Sales Management and eCommerce.
         "data/sale_tour.xml",
         "data/ir_config_parameter.xml",  # Needs mail_template_data
         "wizard/account_accrued_orders_wizard_views.xml",
+        "wizard/mail_activity_schedule_views.xml",
         "wizard/mass_cancel_orders_views.xml",
         "wizard/payment_link_wizard_views.xml",
         "wizard/res_config_settings_views.xml",

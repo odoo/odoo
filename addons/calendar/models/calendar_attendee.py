@@ -2,11 +2,13 @@
 import uuid
 import logging
 
+from werkzeug.urls import url_encode
+
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
-from odoo.tools.misc import clean_context
-from odoo.tools import split_every
+from odoo.tools.misc import clean_context, hash_sign
+from odoo.tools import email_normalize, split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -88,6 +90,19 @@ class CalendarAttendee(models.Model):
     # ------------------------------------------------------------
     # MAILING
     # ------------------------------------------------------------
+
+    def _get_videocall_location(self):
+        """ The link the attendee joins the video call of the meeting through. One without a
+        user joins its Discuss channel as the guest of their email address (see
+        `calendar.event._add_videocall_channel_attendees`): their link carries that address,
+        so that they take that guest over rather than join as a stranger. """
+        self.ensure_one()
+        event = self.event_id
+        email = email_normalize(self.partner_id.email)
+        if event.videocall_source != 'discuss' or self.partner_id.user_ids or not email:
+            return event.videocall_location
+        email_token = hash_sign(self.env(su=True), "mail.invite_email", email)
+        return f"{event.videocall_location}?{url_encode({'email_token': email_token})}"
 
     @api.model
     def _mail_template_default_values(self):

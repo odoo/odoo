@@ -61,6 +61,20 @@ class DiscussChannel(models.Model):
             return False
         return super()._should_invite_members_to_join_call()
 
+    @api.depends("calendar_event_ids", "channel_member_ids.last_seen_dt", "channel_member_ids.rtc_session_ids")
+    def _compute_invited_member_ids(self):
+        """A meeting channel never rings its members, so none of them is ever invited by a
+        ring: show whichever attendee has not joined the conversation yet as invited
+        instead. One who did is a member like any other, even once the call is over."""
+        super()._compute_invited_member_ids()
+        for channel in self:
+            if not channel.calendar_event_ids:
+                continue
+            pending = channel.channel_member_ids.filtered(
+                lambda member: not member.last_seen_dt and not member.rtc_session_ids
+            )
+            channel.invited_member_ids |= pending
+
     def _generate_avatar(self):
         """A meeting channel identifies itself by the day of its meeting, not of its
         creation: the channel may be created days before the meeting takes place.

@@ -1,22 +1,27 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 from datetime import datetime, timedelta
 
 from odoo import fields
 from odoo.addons.base.models.avatar_mixin import generate_text_avatar_svg
+from odoo.addons.bus.tests.common import BusCase
 from odoo.fields import Domain
 from odoo.tests import Form
 from odoo.tests.common import HttpCase, TransactionCase, freeze_time, new_test_user
 
 
 @freeze_time("2024-05-20 10:00:00")
-class TestDiscussMeetings(TransactionCase):
+class TestDiscussMeetings(BusCase, TransactionCase):
     """A meeting holding a Discuss video call link owns its channel right away, so that it
     shows in the Discuss "Meetings" tab and its invitation link can be shared."""
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.organizer = new_test_user(cls.env, "test_meeting_organizer", tz="UTC")
+        cls.organizer = new_test_user(
+            cls.env, "test_meeting_organizer", tz="UTC",
+            groups="base.group_user,base.group_partner_manager",
+        )
         cls.attendee = new_test_user(cls.env, "test_meeting_attendee", tz="UTC")
         cls.env = cls.env(user=cls.organizer)
 
@@ -42,6 +47,20 @@ class TestDiscussMeetings(TransactionCase):
             return self.env["discuss.channel"]._create_group(
                 self.organizer, default_display_mode="video_full_screen", name=name,
             )
+
+    def _pushed_invitation_changes(self, member):
+        """How ``member`` was pushed over the bus so far: as invited to its channel ("ADD"),
+        or as no longer invited ("DELETE")."""
+        self.env.cr.precommit.run()  # bus.bus records are created on precommit
+        return [
+            mode
+            for notification in self.env["bus.bus"].sudo().search([])
+            if (message := json.loads(notification.message))["type"] == "mail.record/insert"
+            for values in message["payload"].get("discuss.channel", [])
+            if values["id"] == member.channel_id.id
+            for mode, member_ids in values.get("invited_member_ids", [])
+            if member.id in member_ids
+        ]
 
     def _create_recurring_meeting(self, name, start, **values):
         return self._create_meeting(
@@ -77,6 +96,33 @@ class TestDiscussMeetings(TransactionCase):
             "the channel waits for the meeting to be saved",
         )
 
+    def test_meeting_planned_from_a_document_gets_a_videocall(self):
+        """A meeting planned from a document gets a Discuss video call link of its own as a
+        default value, rather than as an edit of its form that leaving it would save."""
+        customer = self.env["res.partner"].create({"name": "Customer"})
+        events = self.env["calendar.event"].with_context(
+            default_res_id=customer.id, default_res_model="res.partner",
+        )
+        fields_list = ["access_token", "location", "videocall_location"]
+        first, second = events.default_get(fields_list), events.default_get(fields_list)
+        self.assertEqual(
+            first["videocall_location"],
+            f"{events.get_base_url()}/{events.DISCUSS_ROUTE}/{first['access_token']}",
+        )
+        self.assertNotEqual(first["access_token"], second["access_token"], "each meeting gets a link of its own")
+
+    def test_meeting_not_planned_from_a_document_gets_no_videocall(self):
+        defaults = self.env["calendar.event"].default_get(["access_token", "location", "videocall_location"])
+        self.assertFalse(defaults.get("videocall_location"))
+
+    def test_meeting_planned_from_a_document_held_in_person_gets_no_videocall(self):
+        customer = self.env["res.partner"].create({"name": "Customer"})
+        defaults = self.env["calendar.event"].with_context(
+            default_location="Room 3", default_res_id=customer.id, default_res_model="res.partner",
+        ).default_get(["access_token", "location", "videocall_location"])
+        self.assertEqual(defaults["location"], "Room 3")
+        self.assertFalse(defaults.get("videocall_location"))
+
     def test_meeting_with_videocall_owns_a_pinned_meeting_channel(self):
         meeting = self._create_meeting("Product Demo", datetime(2024, 5, 20, 14, 0))
         channel = meeting.videocall_channel_id
@@ -93,6 +139,91 @@ class TestDiscussMeetings(TransactionCase):
             all(channel.channel_member_ids.mapped("is_pinned")),
             "the meeting shows in the Discuss meetings tab of every member",
         )
+
+    def test_attendee_without_a_user_becomes_a_guest_member(self):
+        """A customer invited to a meeting has no user to log into Discuss with, but is
+        still expected on the call: they are a member of its channel as the guest of their
+        email address, the one their invitation links to, and show up as invited until
+        they join."""
+        customer = self.env["res.partner"].sudo().create({
+            "email": "Customer@Example.com",
+            "name": "Customer",
+        })
+        meeting = self._create_meeting(
+            "Product Demo", datetime(2024, 5, 20, 14, 0),
+            partner_ids=[(4, self.organizer.partner_id.id), (4, customer.id)],
+        )
+        channel = meeting.videocall_channel_id
+        self.assertEqual(channel.channel_member_ids.partner_id, self.organizer.partner_id)
+        guest_member = channel.channel_member_ids.filtered("guest_id")
+        self.assertEqual(guest_member.guest_id.email, "customer@example.com")
+        self.assertEqual(guest_member.guest_id.name, "Customer")
+        self.assertTrue(guest_member.invitation_sent_dt, "the guest takes this member over")
+        self.assertIn(
+            guest_member, channel.invited_member_ids,
+            "not having joined the call yet, the customer is invited to it",
+        )
+
+    def test_attendee_without_a_user_becomes_a_guest_member_despite_a_default_partner(self):
+        """A meeting planned from a lead defaults its `partner_id` to the customer of that
+        lead: that default is the meeting's, not the one of the guest members of its channel."""
+        customer = self.env["res.partner"].sudo().create({
+            "email": "customer@example.com",
+            "name": "Customer",
+        })
+        meeting = self.env["calendar.event"].with_context(default_partner_id=customer.id).create({
+            "name": "Product Demo",
+            "partner_ids": [(4, self.organizer.partner_id.id), (4, customer.id)],
+            "start": datetime(2024, 5, 20, 14, 0),
+            "stop": datetime(2024, 5, 20, 15, 0),
+            "videocall_location": self.env["calendar.event"].get_discuss_videocall_location(),
+        })
+        guest_member = meeting.videocall_channel_id.channel_member_ids.filtered("guest_id")
+        self.assertEqual(guest_member.guest_id.email, "customer@example.com")
+        self.assertFalse(guest_member.partner_id)
+
+    def test_attendee_who_joined_the_conversation_is_no_longer_invited(self):
+        """Invited stands for an invitation still pending: an attendee who joined the
+        conversation is a member like any other, whether a call is going on or not."""
+        meeting = self._create_meeting("Product Demo", datetime(2024, 5, 20, 14, 0))
+        channel = meeting.videocall_channel_id
+        self.assertIn(self.attendee.partner_id, channel.invited_member_ids.partner_id)
+
+        message = channel.message_post(body="See you there", message_type="comment")
+        channel.with_user(self.attendee).self_member_id._mark_as_read(message.id)
+
+        self.assertNotIn(
+            self.attendee.partner_id, channel.invited_member_ids.partner_id,
+            "having read the conversation, the attendee is no longer invited",
+        )
+
+    def test_attendee_who_joined_the_conversation_is_pushed_out_of_invited(self):
+        """Whoever has the meeting channel open sees an attendee joining the conversation
+        leave the invited ones right away, not on the next reload."""
+        meeting = self._create_meeting("Product Demo", datetime(2024, 5, 20, 14, 0))
+        channel = meeting.videocall_channel_id
+        member = channel.channel_member_ids.filtered(
+            lambda member: member.partner_id == self.attendee.partner_id
+        )
+        message = channel.message_post(body="See you there", message_type="comment")
+        self._reset_bus()
+        channel.with_user(self.attendee).self_member_id._mark_as_read(message.id)
+        self.assertEqual(self._pushed_invitation_changes(member), ["DELETE"])
+
+    def test_attendee_added_to_the_meeting_is_pushed_as_invited(self):
+        """An attendee added to a meeting whose channel already exists shows up among the
+        invited ones right away, not on the next reload."""
+        customer = self.env["res.partner"].sudo().create({
+            "email": "customer@example.com",
+            "name": "Customer",
+        })
+        meeting = self._create_meeting("Product Demo", datetime(2024, 5, 20, 14, 0))
+        channel = meeting.videocall_channel_id
+        self._reset_bus()
+        meeting.partner_ids = [(4, customer.id)]
+        member = channel.channel_member_ids.filtered("guest_id")
+        self.assertEqual(member.guest_id.email, "customer@example.com")
+        self.assertEqual(self._pushed_invitation_changes(member), ["ADD"])
 
     def test_only_upcoming_meetings_with_a_discuss_videocall_get_a_channel(self):
         upcoming = self._create_meeting("Product Demo", datetime(2024, 5, 20, 14, 0))
@@ -322,4 +453,29 @@ class TestDiscussMeetingsGuest(HttpCase):
             meeting.videocall_channel_id.id,
             [channel["id"] for channel in res["discuss.channel"]],
             "the guest gets the meeting of today they are invited to",
+        )
+
+    def test_attendee_without_a_user_joins_as_their_guest(self):
+        """The invitation of an attendee without a user links to the meeting as the guest
+        of their email address: following it takes that guest over, rather than joining
+        as a stranger while that guest stays invited."""
+        organizer = new_test_user(self.env, "test_meeting_organizer", tz="UTC")
+        customer = self.env["res.partner"].create({"email": "customer@example.com", "name": "Customer"})
+        meeting = self.env["calendar.event"].with_user(organizer).create({
+            "name": "Product Demo",
+            "partner_ids": [(4, organizer.partner_id.id), (4, customer.id)],
+            "start": datetime(2024, 5, 20, 14, 0),
+            "stop": datetime(2024, 5, 20, 15, 0),
+            "videocall_location": self.env["calendar.event"].get_discuss_videocall_location(),
+        })
+        channel = meeting.videocall_channel_id
+        guest = channel.channel_member_ids.guest_id
+        attendee = meeting.attendee_ids.filtered(lambda attendee: attendee.partner_id == customer)
+        self.assertIn("email_token=", attendee._get_videocall_location())
+        self.url_open(attendee._get_videocall_location())
+        self.env.invalidate_all()
+        self.assertEqual(channel.channel_member_ids.guest_id, guest, "no other guest joined")
+        self.assertFalse(
+            channel.channel_member_ids.filtered("guest_id").invitation_sent_dt,
+            "the invitation of the guest is no longer pending",
         )
