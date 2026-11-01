@@ -12,30 +12,40 @@
 
 html,
 body,
-.o_web_client {
-    font-family: var(--od19-thai-font-family) !important;
-}
-
-/* Prefer inheritance over broad widget-level overrides so component
- * internals (especially icons and mixed-content controls) keep their
- * original behavior while still rendering Thai text in Sarabun. */
-.o_web_client button,
-.o_web_client input,
-.o_web_client select,
-.o_web_client textarea,
-.o_web_client .btn,
-.o_web_client .form-control,
-.o_web_client .dropdown-menu,
-.o_web_client .modal,
-.o_web_client .toast,
-.o_web_client .navbar,
-.o_web_client .o_main_navbar,
-.o_web_client .o_field_widget,
-.o_web_client .o_widget,
+.o_web_client,
+.o_main_navbar,
+.o_kanban_view,
+.o_list_view,
+.o_form_view,
+.o_search_view,
+.o_list_renderer,
+.o_form_renderer,
+.o_kanban_renderer,
+.o_activity,
+.o-mail-ChatWindow,
+.o-mail-FormView,
+.oe_button_box,
+.oe_title,
+.oe_form_group,
+.navbar,
+.dropdown-menu,
+.modal,
+.toast,
+.btn,
+.form-control,
+.custom-select,
+.input-group-text,
+.o_field_widget,
+.o_widget,
+.o_notebook,
+.o_horizontal_accordion,
+.o_list_table,
+.o_data_cell,
+.o_column_sortable,
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6,
 .display-1, .display-2, .display-3, .display-4 {
-    font-family: inherit !important;
+    font-family: var(--od19-thai-font-family) !important;
 }
 
 /* Keep code/monospace surfaces using a mono stack */
@@ -69,28 +79,5 @@ em, .font-italic, .fst-italic {
 .oi,
 [class*=" oi-"],
 [class^="oi-"] {
-    display: inline-block;
     font-family: 'odoo_ui_icons' !important;
-    font-weight: normal !important;
-    font-variant: normal !important;
-    font-style: normal !important;
-    line-height: 1 !important;
-    text-transform: none !important;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.fa,
-.fas,
-.far,
-.fal,
-.fab,
-[class*=" fa-"],
-[class^="fa-"] {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome !important;
-    font-size: inherit !important;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
