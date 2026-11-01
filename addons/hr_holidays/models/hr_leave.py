@@ -912,7 +912,8 @@ class HrLeave(models.Model):
         triggering the computes depending on ``number_of_days``/``number_of_hours``. The hours
         are the working hours of the schedule within ``[date_from, date_to]``, minus the absence
         leaves: public holidays (unless the type has ``include_public_holidays_in_duration``) and
-        the other validated absences of the employee, but not the leave itself. Then:
+        the other validated absences of the employee, but not the leave itself nor its time rule
+        source. Then:
 
         - types counted in calendar days (``count_days_as = 'calendar'``) count every day;
         - a flexible schedule counts the real length of a single-day request;
@@ -944,8 +945,10 @@ class HrLeave(models.Model):
         domain = [('count_as', '=', 'absence'),
                   ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
                   # When searching for resource leave intervals, we exclude the one that
-                  # is related to the leave we're currently trying to compute for.
-                  '|', ('holiday_id', '=', False), ('holiday_id', 'not in', employee_leaves.ids)]
+                  # is related to the leave we're currently trying to compute for, and the one
+                  # of its time rule source, which can still span the output while it is created.
+                  '|', ('holiday_id', '=', False),
+                  ('holiday_id', 'not in', (employee_leaves | employee_leaves.source_leave_id).ids)]
         if additional_domain:
             domain = Domain.AND([domain, additional_domain])
         # Precompute values in batch for performance purposes
