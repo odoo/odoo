@@ -24,6 +24,7 @@ class TestBillingScheduleInvoice(TransactionCase):
                 "name": "Customer BI",
                 "is_company": True,
                 "od19_is_commercial_customer": True,
+                "email": "customer-bi@example.com",
             }
         )
         cls.product = cls.env["product.product"].create(
