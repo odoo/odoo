@@ -1,0 +1,22 @@
+# CODEOWNERS — Odoo 19 CE Enterprise (AutoInfo)
+# ตั้งเจ้าของเพื่อบังคับ review ตามพื้นที่ (ต้องเปิด branch protection ที่บังคับ CODEOWNERS review)
+
+# default owner
+*                       @nattanonvs
+
+# --------------------------- พื้นที่ของโปรเจกต์ ---------------------------
+/custom_addons/         @nattanonvs
+/docs/                  @nattanonvs
+/deployment/            @nattanonvs
+
+# ------------------------- พื้นที่ของ upstream ----------------------------
+# ห้ามแก้ Odoo core — ต้องได้รับอนุมัติชัดเจนก่อนแตะ
+/odoo/                  @nattanonvs
+/addons/                @nattanonvs
+/setup/                 @nattanonvs
+/debian/                @nattanonvs
+
+# ------------------------------ ไฟล์สำคัญ --------------------------------
+/.gitmodules            @nattanonvs
+/.gitattributes         @nattanonvs
+/requirements-od19.txt  @nattanonvs
