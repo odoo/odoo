@@ -1,3 +1,5 @@
+import unittest
+
 from odoo import fields
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
@@ -81,6 +83,16 @@ class TestIncomingBucket(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        expense_model = cls.env.get("hr.expense")
+        if (
+            expense_model is None
+            or "first_approver_id" not in expense_model._fields
+            or "second_approver_id" not in expense_model._fields
+        ):
+            raise unittest.SkipTest(
+                "Requires hr.expense with od19 approval fields "
+                "(od19_hr_expense_enhanced and od19_hr_expense_thai)"
+            )
         # hr.expense requires a linked employee and a non-zero amount.
         cls.owner_employee = cls.env["hr.employee"].create({
             "name": "Requester Employee",
@@ -116,13 +128,20 @@ class TestIncomingBucket(TransactionCase):
         # Approvers run inside the Approval Center, so they carry its group
         # (the source model is readable only for that group).
         approver_group = self.env.ref("od19_approval_center.group_approval_admin")
+        internal_group = self.env.ref("base.group_user")
         first = self.env["res.users"].create({
             "name": "L1", "login": "l1_user",
-            "group_ids": [(4, approver_group.id)],
+            "group_ids": [
+                (4, internal_group.id),
+                (4, approver_group.id),
+            ],
         })
         second = self.env["res.users"].create({
             "name": "L2", "login": "l2_user",
-            "group_ids": [(4, approver_group.id)],
+            "group_ids": [
+                (4, internal_group.id),
+                (4, approver_group.id),
+            ],
         })
         # The approver fields are Many2one on hr.employee; map users to employees.
         first_emp = self.env["hr.employee"].create({
