@@ -237,8 +237,13 @@ class AccountMove(models.Model):
         if self.l10n_vn_edi_invoice_state != 'sent':
             raise UserError(_("Please send the invoice to SInvoice before fetching the tax invoice files."))
 
-        xml_data, xml_error_message = self._l10n_vn_edi_fetch_invoice_xml_file_data()
-        pdf_data, pdf_error_message = self._l10n_vn_edi_fetch_invoice_pdf_file_data()
+        # A stored SInvoice file never changes; fetching it again would only attach a duplicate.
+        xml_data, xml_error_message = {}, ''
+        if not self.l10n_vn_edi_sinvoice_xml_file:
+            xml_data, xml_error_message = self._l10n_vn_edi_fetch_invoice_xml_file_data()
+        pdf_data, pdf_error_message = {}, ''
+        if not self.l10n_vn_edi_sinvoice_pdf_file:
+            pdf_data, pdf_error_message = self._l10n_vn_edi_fetch_invoice_pdf_file_data()
 
         # Not using _link_invoice_documents for these because it depends on _need_invoice_document and I can't get it to work
         # well while allowing users to download the files before sending.
