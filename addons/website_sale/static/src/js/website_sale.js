@@ -380,8 +380,22 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
         // or after the editor is ready.
         if ($images.length && !this._isEditorEnabled()) {
             const $newImages = $(newImages);
-            $images.after($newImages);
-            $images.remove();
+            const oldTop = this.$target.find('.js_add_cart_variants')[0].getBoundingClientRect().top;
+            $images.replaceWith($newImages);
+            // Ensure scroll position is kept on the variant settings after changing images
+            function waitForImages($element) {
+                const images = $element.find('img').addBack('img').toArray();
+                return Promise.all(
+                    images.map(img => 
+                        img.complete ? Promise.resolve() : new Promise(resolve => $(img).on('load', resolve))
+                    )
+                )
+            }
+            waitForImages($newImages).then(() => {
+                const newTop = this.$target.find('.js_add_cart_variants')[0].getBoundingClientRect().top;
+                $(window).scrollTop($(window).scrollTop() + (newTop - oldTop));
+            });
+
             $images = $newImages;
             // Update the sharable image (only work for Pinterest).
             const shareImageSrc = $images[0].querySelector('img').src;
