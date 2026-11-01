@@ -1674,6 +1674,46 @@ test("default_get, onchange, onchange on m2m", async () => {
     await contains(".o_field_widget[name=int_field] input").edit(2);
 });
 
+test("onchange replacing a new record of a many2many", async () => {
+    Partner._fields.int_field = fields.Integer({ onChange: function () {} });
+
+    onRpc("onchange", ({ args }) => {
+        if (!args[2].length) {
+            return { value: { timmy: [[0, 0, { name: "first" }]] } };
+        }
+        // the server unlinks the new record by its virtual id and creates another one
+        const [[, virtualId]] = args[1].timmy;
+        return { value: { timmy: [[3, virtualId], [0, 0, { name: "second" }]] } };
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].timmy.map(([command, , values]) => [command, values])).toEqual([
+            [0, { name: "second" }],
+        ]);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="int_field"/>
+                <field name="timmy">
+                    <list>
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+    expect(queryAllTexts(".o_data_cell")).toEqual(["first"]);
+
+    await contains(".o_field_widget[name=int_field] input").edit(2);
+    expect(queryAllTexts(".o_data_cell")).toEqual(["second"]);
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
+
 test("many2many list add *many* records, remove, re-add", async () => {
     Partner._fields.timmy = fields.Many2many({
         relation: "partner.type",
