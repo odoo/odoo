@@ -30,8 +30,8 @@
 | จัดซื้อ (Purchase) | 6 | 6 | 0 | **`od19_purchase_jasper`** (ใหม่) |
 | สต็อก (Stock) | 27 | 27 | 0 | **`od19_stock_jasper`** (ใหม่) |
 | ขาย (Sales) | 8 | 8 | 0 | `od19_sale_jasper` (เสริม) |
-| บริการหลังการขาย (Sales Services) | 7 | 0 | 7 | **`od19_sales_services_jasper`** (ใหม่) |
-| **รวม** | **94** | **53** | **41** | |
+| บริการหลังการขาย (Sales Services) | 7 | 7 | 0 | **`od19_sales_services_jasper`** (ใหม่) |
+| **รวม** | **94** | **60** | **34** | |
 
 ## 3. ทะเบียนรายไฟล์
 
@@ -185,15 +185,15 @@
 
 ### 3.11 บริการ — `dtr_sales_services_form` · `dtr_sales_services_report` (installed) → **`od19_sales_services_jasper`** (ใหม่)
 
-| โมดูลต้นทาง | jrxml | รายงาน | สถานะ |
+| jrxml | รายงาน | OD19 | สถานะ |
 |---|---|---|---|
-| `dtr_sales_services_form` | `sales_services_form.jrxml` | ใบสั่งงานบริการ | ⬜ |
-| `dtr_sales_services_form` | `claim_form.jrxml` | ใบเคลม | ⬜ |
-| `dtr_sales_services_form` | `product_return_form.jrxml` | ใบรับคืนสินค้า | ⬜ |
-| `dtr_sales_services_form` | `distribute_order_form.jrxml` | ใบสั่งจ่ายสินค้า | ⬜ |
-| `dtr_sales_services_report` | `sales_services_report.jrxml` | รายงานงานบริการ | ⬜ |
-| `dtr_sales_services_report` | `claim_report.jrxml` | รายงานเคลม | ⬜ |
-| `dtr_sales_services_report` | `product_return_report.jrxml` | รายงานรับคืนสินค้า | ⬜ |
+| `sales_services_form.jrxml` | ใบสั่งงานบริการ | `sales.services.form` | ✅ |
+| `claim_form.jrxml` | ใบเคลม | `claim.form` | ✅ |
+| `product_return_form.jrxml` | ใบรับคืนสินค้า | `product.return.form` | ✅ |
+| `distribute_order_form.jrxml` | ใบสั่งจ่ายสินค้า | `distribute.order.form` | ✅ |
+| `sales_services_report.jrxml` | รายงานงานบริการ | `sales.services.report` | ✅ |
+| `claim_report.jrxml` | รายงานเคลม | `claim.report` | ✅ |
+| `product_return_report.jrxml` | รายงานรับคืนสินค้า | `product.return.report` | ✅ |
 
 ## 4. รูปแบบการพอร์ต (pattern บังคับ)
 
@@ -209,7 +209,8 @@
 
 ## 5. หมายเหตุ
 
-- จำนวนนับ "พอร์ตแล้ว" 53 รายการ (12 ใน `od19_reporting_jasper` + 6 ใน `od19_purchase_jasper` + 27 ใน `od19_stock_jasper` + **8 ใน `od19_sale_jasper`**) จากทั้งหมด 94 เทมเพลตที่ใช้จริง — คงเหลือ 41 (Accounting 34 + Sales Services 7)
+- จำนวนนับ "พอร์ตแล้ว" 60 รายการ (12 ใน `od19_reporting_jasper` + 6 ใน `od19_purchase_jasper` + 27 ใน `od19_stock_jasper` + 8 ใน `od19_sale_jasper` + **7 ใน `od19_sales_services_jasper`**) จากทั้งหมด 94 เทมเพลตที่ใช้จริง — คงเหลือ 34 (Accounting 34)
+- **โดเมน Sales Services ปิดสมบูรณ์** — พอร์ตครบ 7 ไฟล์ (`dtr_sales_services_form` 4 + `dtr_sales_services_report` 3) แบบ **Flat mapping** (1 เอกสาร = 1 สินค้า ตามสคีมา Odoo 19) ติดตั้งโมดูลผ่าน + เทสต์ 0 failed / 0 error (45 tests)
 - เทมเพลตเช็คธนาคาร (thanachart/tmb/krungsri/uob) นับเป็น 1 งาน (รวมเข้าโมดูล cheque) จึงไม่นับซ้ำในยอดรวมโดเมนบัญชี
 - รายงาน Stock Card มี 6 มุมมอง แยกเป็นไฟล์ ต้องคงป้ายกำกับให้ผู้ใช้แยกออก — **พอร์ตครบทั้ง 6 มุมมองแล้ว** (เมนู `Stock Reports (J-Report OD15)` seq 70–190)
 - **โดเมน Stock ปิดสมบูรณ์** — ไฟล์จริงในซอร์ส: `dtr_stock_form` 13 + `dtr_stock_report` 15 = 28 (ไม่รวมไฟล์สำรอง 4 ไฟล์) → พอร์ต ✅ 27 / ตัดออก ➖ 1 / คงเหลือ 0 (verify 41/41 tests ผ่าน)
