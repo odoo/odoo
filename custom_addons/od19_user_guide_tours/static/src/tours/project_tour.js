@@ -42,7 +42,7 @@ registry.category("web_tour.tours").add("od19_project_analytic_tour", {
             run: "click",
         },
         {
-            trigger: ".o_field_widget[name='name'] input",
+            trigger: ".o_field_widget[name='name'] textarea, .o_field_widget[name='name'] input",
             content: _t("Enter the project name."),
             run: "edit Building A Construction",
         },
@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add("od19_project_analytic_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='partner_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the customer from the suggestion list."),
             run: "click",
         },

@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -30,6 +30,9 @@ registry.category("web_tour.tours").add("od19_iso_document_control_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        // The action switch is asynchronous; wait for the target list before
+        // clicking "New" so the record lands in the right model.
+        waitForAction('มาตรฐาน ISO'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new ISO standard."),
@@ -62,6 +65,7 @@ registry.category("web_tour.tours").add("od19_iso_document_control_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction('ประเภทเอกสาร'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new document category."),
@@ -94,6 +98,7 @@ registry.category("web_tour.tours").add("od19_iso_document_control_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction('เอกสารควบคุม'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new controlled document."),

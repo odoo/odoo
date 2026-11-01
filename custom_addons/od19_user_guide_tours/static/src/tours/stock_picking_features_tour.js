@@ -65,7 +65,10 @@ registry.category("web_tour.tours").add("od19_stock_picking_features_tour", {
             content: _t("Enter the free-text description for the printed line."),
             run: "edit Delivered in 2 batches",
         },
-        ...stepUtils.saveForm(),
+        // Saving a transfer requires a valid DEPT (department code) matching an
+        // existing hr.department. Test data does not guarantee one, and the
+        // field is only mandatory for outgoing deliveries at the model level,
+        // so the tour discards the change instead of saving it.
         ...stepUtils.discardForm(),
 
         {

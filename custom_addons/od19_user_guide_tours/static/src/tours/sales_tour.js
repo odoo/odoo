@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -27,6 +27,12 @@ registry.category("web_tour.tours").add("od19_sales_contract_billing_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        // "Sales Contracts" is a top-level section that directly opens an
+        // action. Switching actions is asynchronous (the previous view stays
+        // mounted for a few frames), so `.o_list_button_add` would click the
+        // *Quotations* list's "New" button and open a sale order instead of a
+        // contract. Wait for the target action breadcrumb first.
+        waitForAction('Sales Contracts'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new Sales Contract."),
@@ -44,7 +50,7 @@ registry.category("web_tour.tours").add("od19_sales_contract_billing_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='partner_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the customer from the suggestion list."),
             run: "click",
         },
@@ -56,7 +62,7 @@ registry.category("web_tour.tours").add("od19_sales_contract_billing_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='od19_project_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the project from the suggestion list."),
             run: "click",
         },
@@ -120,13 +126,25 @@ registry.category("web_tour.tours").add("od19_sales_contract_billing_tour", {
             run: "click",
         },
         {
-            trigger: navItem('Orders'),
-            content: markup(_t("Open the <b>Sales Orders</b> list.")),
+            // "Orders" (action 338) filters on `search_default_sales`
+            // ([('state','=','sale')]) and therefore shows only confirmed
+            // orders. A fresh database has none, so the list is empty and Odoo
+            // paints sample rows (REF0001…) that point at non-existent record
+            // ids: clicking one raises "records with IDs 1 cannot be found" and
+            // stays on the list. "Quotations" (action 339) uses
+            // `search_default_my_quotation` and lists the real draft / sent
+            // orders, so the following step can actually open a form.
+            trigger: navItem('Quotations'),
+            content: markup(_t("Open the <b>Quotations</b> list to access Sales Orders.")),
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction('Quotations'),
         {
-            trigger: ".o_list_renderer .o_data_row:first",
+            // The record is opened by clicking a *cell*: Odoo 19 binds
+            // `t-custom-click` on `td.o_data_cell`, not on `tr.o_data_row`,
+            // so clicking the row itself does nothing.
+            trigger: ".o_list_renderer .o_data_row:first .o_data_cell:first",
             content: markup(_t(
                 "Open a <b>Sales Order</b>. Billing Evidence is attached from the Sales Order form " +
                 "and tracks the <b>Billing Readiness State</b>."

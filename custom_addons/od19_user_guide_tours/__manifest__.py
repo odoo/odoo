@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'User Guide Tours',
-    'version': '19.0.1.0.1',
+    'version': '19.0.1.2.0',
     'category': 'Tools/User Guide',
     'summary': 'Interactive guided tours for all OD19 business modules',
     'description': """
@@ -81,6 +81,13 @@ Tours can be started from:
         'od19_reporting_jasper',
         'od19_hr_attendance_zkteco',
         'od19_meeting_room_booking',
+        'od19_document_sign',
+        'od19_helpdesk_extension',
+        'od19_goods_issue',
+        'od19_etax_invoice',
+        'od19_dashboard',
+        'od19_website',
+        'od19_sale_report_native',
     ],
     'data': [
         'data/tour_data.xml',
@@ -88,6 +95,7 @@ Tours can be started from:
     ],
     'assets': {
         'web.assets_backend': [
+            'od19_user_guide_tours/static/src/js/od19_guide_tour_service.js',
             'od19_user_guide_tours/static/src/tours/tour_utils.js',
             'od19_user_guide_tours/static/src/tours/contacts_tour.js',
             'od19_user_guide_tours/static/src/tours/sales_tour.js',
@@ -134,6 +142,14 @@ Tours can be started from:
             'od19_user_guide_tours/static/src/tours/jasper_report_tour.js',
             'od19_user_guide_tours/static/src/tours/hr_attendance_zkteco_tour.js',
             'od19_user_guide_tours/static/src/tours/meeting_room_booking_tour.js',
+            'od19_user_guide_tours/static/src/tours/signing_tour.js',
+            'od19_user_guide_tours/static/src/tours/internal_helpdesk_tour.js',
+            'od19_user_guide_tours/static/src/tours/goods_issue_tour.js',
+            'od19_user_guide_tours/static/src/tours/inventory_audit_count_tour.js',
+            'od19_user_guide_tours/static/src/tours/etax_invoice_tour.js',
+            'od19_user_guide_tours/static/src/tours/recruitment_tour.js',
+            'od19_user_guide_tours/static/src/tours/dashboard_tour.js',
+            'od19_user_guide_tours/static/src/tours/sale_report_native_tour.js',
         ],
     },
     'icon': '/od19_user_guide_tours/static/description/icon.svg',

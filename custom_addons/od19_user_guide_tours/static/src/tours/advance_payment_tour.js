@@ -45,7 +45,7 @@ registry.category("web_tour.tours").add("od19_advance_payment_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='partner_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add("od19_advance_payment_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='journal_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -70,7 +70,7 @@ registry.category("web_tour.tours").add("od19_advance_payment_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='advance_account_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {

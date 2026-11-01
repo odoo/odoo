@@ -213,7 +213,7 @@ registry.category("web_tour.tours").add("od19_inventory_operations_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='vehicle_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the vehicle from the suggestion list."),
             run: "click",
         },

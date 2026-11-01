@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -42,6 +42,12 @@ registry.category("web_tour.tours").add("od19_jasper_report_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        // Opening a menu entry switches the action asynchronously: the previous
+        // view stays mounted for a few frames. Without this guard the two steps
+        // below match the *previous* list and its "New" button, which gets
+        // disabled by `executeButtonCallback()` and then reused (still disabled)
+        // by the real list, so the form never opens.
+        waitForAction("Report Templates"),
         {
             trigger: ".o_list_renderer",
             content: markup(_t(

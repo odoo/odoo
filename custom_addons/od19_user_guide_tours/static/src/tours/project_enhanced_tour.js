@@ -34,7 +34,7 @@ registry.category("web_tour.tours").add("od19_project_enhanced_tour", {
             run: "click",
         },
         {
-            trigger: ".o_field_widget[name='name'] input",
+            trigger: ".o_field_widget[name='name'] input, .o_field_widget[name='name'] textarea",
             content: _t("Enter the type name (e.g. Installation)."),
             run: "edit Installation",
         },

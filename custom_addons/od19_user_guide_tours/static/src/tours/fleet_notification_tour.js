@@ -35,10 +35,10 @@ registry.category("web_tour.tours").add("od19_fleet_notification_tour", {
         {
             trigger: ".o_field_widget[name='model_id'] input",
             content: markup(_t("Select the vehicle <b>Model</b> (the only required field).")),
-            run: "edit Micra",
+            run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:contains('Micra')",
+            trigger: ".o_field_widget[name='model_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the model from the suggestion list."),
             run: "click",
         },

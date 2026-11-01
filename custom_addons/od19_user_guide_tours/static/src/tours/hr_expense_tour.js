@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add("od19_hr_expense_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='product_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the first available expense category."),
             run: "click",
         },
@@ -95,13 +95,18 @@ registry.category("web_tour.tours").add("od19_hr_expense_tour", {
 
         // --- Submit ---
         ...stepUtils.statusbarButtonsSteps(
-            "Submit to Manager",
-            markup(_t("Click <b>Submit to Manager</b> to send the expense for approval.")),
+            "Submit",
+            markup(_t("Click <b>Submit</b> to send the expense for approval.")),
             ".o_form_view"
         ),
 
         // --- L1 Approval ---
+        // An expense with no manager (or whose manager is the employee
+        // themselves) is auto-validated on submit (`_can_be_autovalidated`),
+        // so the L1/L2 buttons never show. Guard the steps instead of letting
+        // the tour hang on a button that cannot appear.
         {
+            isActive: ["button[name='action_approve_first']"],
             trigger: "button[name='action_approve_first']",
             content: markup(_t(
                 "The first approver clicks <b>Approve (L1)</b>."
@@ -111,7 +116,11 @@ registry.category("web_tour.tours").add("od19_hr_expense_tour", {
         },
 
         // --- L2 Approval ---
+        // Only required above the configured threshold (second_approval_state
+        // becomes 'pending' after L1); otherwise the expense is approved
+        // straight away and this step is skipped.
         {
+            isActive: ["button[name='action_approve_second']"],
             trigger: "button[name='action_approve_second']",
             content: markup(_t(
                 "The second approver clicks <b>Approve (L2)</b>. Two-level approval ensures proper control."
@@ -122,11 +131,22 @@ registry.category("web_tour.tours").add("od19_hr_expense_tour", {
 
         // --- Mark Reimbursed ---
         {
+            isActive: ["button[name='action_mark_reimbursed']"],
             trigger: "button[name='action_mark_reimbursed']",
             content: markup(_t(
                 "For own-account expenses, click <b>Mark Reimbursed</b> once the employee has been paid."
             )),
             tooltipPosition: "left",
+            run: "click",
+        },
+        // Submitting or reimbursing can raise a "Confirmation" dialog (e.g. an
+        // expense that duplicates an existing one). Acknowledge it first,
+        // otherwise the discard/back buttons below are blocked by the modal.
+        {
+            isActive: [".modal-footer .btn-primary"],
+            trigger: ".modal-footer .btn-primary",
+            content: _t("Acknowledge the confirmation dialog."),
+            tooltipPosition: "top",
             run: "click",
         },
         ...stepUtils.discardForm(),

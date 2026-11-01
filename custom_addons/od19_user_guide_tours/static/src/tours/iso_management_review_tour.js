@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -35,6 +35,10 @@ registry.category("web_tour.tours").add("od19_iso_management_review_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        // Switching action is asynchronous: the previous list stays mounted for
+        // a few frames, so `.o_list_button_add` would click the *previous*
+        // list's "New" button. Wait for the target action to be on screen.
+        waitForAction('การทบทวนระบบจัดการ'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new management review meeting."),
@@ -57,7 +61,15 @@ registry.category("web_tour.tours").add("od19_iso_management_review_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            // Scope the selector to the `chairman_id` field itself.
+            // `:not(.o_loading)` on the dropdown menu is NOT reliable: Odoo
+            // marks the *inline* loading entry (`a.o_loading.dropdown-item`),
+            // not the `<ul>`, so the menu keeps that class off while another
+            // field's stale/hidden dropdown may still be mounted. Targeting
+            // `[name='chairman_id'] .o-autocomplete--dropdown-menu
+            // a.dropdown-item:not(.o_loading)` guarantees we click the freshly
+            // loaded suggestion of *this* field.
+            trigger: ".o_field_widget[name='chairman_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         ...stepUtils.saveForm(),

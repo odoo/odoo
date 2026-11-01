@@ -60,7 +60,10 @@ registry.category("web_tour.tours").add("od19_asset_disposal_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            // Scope the pick to this field's own dropdown: several hidden
+            // autocomplete menus stay mounted, so an unscoped selector can hit
+            // a stale menu and leave the required field empty.
+            trigger: ".o_field_widget[name='account_asset_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -69,7 +72,7 @@ registry.category("web_tour.tours").add("od19_asset_disposal_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='account_depreciation_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -78,7 +81,7 @@ registry.category("web_tour.tours").add("od19_asset_disposal_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='account_expense_depreciation_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -89,7 +92,7 @@ registry.category("web_tour.tours").add("od19_asset_disposal_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='account_residual_value_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -98,7 +101,7 @@ registry.category("web_tour.tours").add("od19_asset_disposal_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='journal_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         ...stepUtils.saveForm(),
@@ -181,7 +184,11 @@ registry.category("web_tour.tours").add("od19_asset_disposal_tour", {
             run: "click",
         },
         {
-            trigger: ".o_list_renderer .o_data_row .o_data_cell[name='name']:contains('Machine A')",
+            // Several assets may share the name "Machine A" across runs, and
+            // the list is ordered by date_start, not by state. Target the row
+            // whose Status column is "Disposed" so we always re-open the asset
+            // that actually has the disposal entry (and the Revert button).
+            trigger: ".o_list_renderer .o_data_row:has(.o_data_cell[name='state']:contains('Disposed')) .o_data_cell[name='name']:contains('Machine A')",
             content: markup(_t(
                 "Re-open the disposed asset <b>Machine A</b> from the list to review its disposal details."
             )),

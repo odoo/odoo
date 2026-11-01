@@ -12,11 +12,16 @@
           * listed under Settings > Technical > Tours
           * reachable with /odoo?tour=<name>
 
-        custom = True keeps these guide tours out of the automatic
+        custom = True keeps these guide tours out of the core *sequential*
         onboarding queue (get_current_tour only returns custom = False
-        tours). They are started on demand by the user, from the tour
-        list or from a direct link, so 42 tours do not pop up on their
-        own. The sequence only controls the order in the list.
+        tours). They are instead started on demand by
+        od19_guide_tour_service (static/src/js/od19_guide_tour_service.js):
+        the first time a user opens an application, the tour registered for
+        that application in web_tour.tour.OD19_GUIDE_APP_TOURS is started
+        automatically. The remaining tours of the same application stay
+        reachable from User Guide > Interactive Tours or from a direct link
+        (/odoo?tour=<name>). The sequence only controls the order in the
+        list.
     -->
 
     <!-- Contacts & Credit Risk -->
@@ -253,6 +258,56 @@
     <record id="tour_od19_meeting_room_booking" model="web_tour.tour">
         <field name="name">od19_meeting_room_booking_tour</field>
         <field name="sequence">142</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+
+    <!-- Newly installed modules (2nd wave) -->
+    <record id="tour_od19_signing" model="web_tour.tour">
+        <field name="name">od19_signing_tour</field>
+        <field name="sequence">143</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_internal_helpdesk" model="web_tour.tour">
+        <field name="name">od19_internal_helpdesk_tour</field>
+        <field name="sequence">144</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_goods_issue" model="web_tour.tour">
+        <field name="name">od19_goods_issue_tour</field>
+        <field name="sequence">145</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_inventory_audit_count" model="web_tour.tour">
+        <field name="name">od19_inventory_audit_count_tour</field>
+        <field name="sequence">146</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_etax_invoice" model="web_tour.tour">
+        <field name="name">od19_etax_invoice_tour</field>
+        <field name="sequence">147</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_recruitment" model="web_tour.tour">
+        <field name="name">od19_recruitment_tour</field>
+        <field name="sequence">148</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_dashboard" model="web_tour.tour">
+        <field name="name">od19_dashboard_tour</field>
+        <field name="sequence">149</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_sale_report_native" model="web_tour.tour">
+        <field name="name">od19_sale_report_native_tour</field>
+        <field name="sequence">150</field>
         <field name="url">/odoo</field>
         <field name="custom">True</field>
     </record>

@@ -46,12 +46,20 @@ registry.category("web_tour.tours").add("od19_asset_loan_tour", {
             run: "click",
         },
         {
+            // A plain click on an empty Many2one input does not always open the
+            // dropdown; typing a term is what triggers the search and renders
+            // the options list.
             trigger: ".o_field_widget[name='borrower_id'] input",
-            content: _t("Select the borrower (employee or partner)."),
-            run: "click",
+            content: _t("Search for the borrower (employee or partner)."),
+            run: "edit a",
         },
         {
-            trigger: ".o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
+            // The "Loading..." placeholder is rendered as a sibling <li> that
+            // ALSO carries the o-autocomplete--dropdown-item class, so a bare
+            // selector clicks it and the typed text is never committed. Real
+            // option rows are the only ones with `d-block`; "Create ..." /
+            // "Search More..." rows carry o_m2o_dropdown_option.
+            trigger: ".o-autocomplete--dropdown-item.d-block:not(.o_m2o_dropdown_option)",
             run: "click",
         },
         {
@@ -83,11 +91,15 @@ registry.category("web_tour.tours").add("od19_asset_loan_tour", {
         },
         {
             trigger: ".o_selected_row .o_field_widget[name='equipment_id'] input",
-            content: _t("Select the equipment to loan."),
-            run: "edit ",
+            content: _t("Search for the equipment to loan."),
+            run: "edit OD19 Tour Equipment",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_selected_row .o_field_widget[name='equipment_id'] .o_m2o_dropdown_option_create",
+            content: markup(_t(
+                "Pick <b>Create ...</b> so the tour always borrows a brand new piece of " +
+                "equipment: an item that is already on loan cannot be borrowed twice."
+            )),
             run: "click",
         },
         {
@@ -95,8 +107,27 @@ registry.category("web_tour.tours").add("od19_asset_loan_tour", {
             content: _t("Set the quantity to loan."),
             run: "edit 1",
         },
-        ...stepUtils.saveForm(),
         {
+            trigger: ".o_control_panel .o_form_button_save:visible",
+            content: _t("Save the loan."),
+            run: "click",
+        },
+        // Saving may be rejected by a constraint (e.g. double borrow). Wait for
+        // either outcome first: a wait step is never blocked by a modal.
+        {
+            trigger: ".o_error_dialog, .o_form_readonly, .o_form_saved",
+        },
+        {
+            isActive: [".o_error_dialog"],
+            trigger: ".o_error_dialog .modal-footer .o-default-button",
+            content: markup(_t("Close the warning dialog.")),
+            tooltipPosition: "left",
+            run: "click",
+        },
+        {
+            // Only act on a saved record: header buttons on an unsaved form
+            // would save it again and could raise the same constraint.
+            isActive: [".o_form_readonly", "button[name='action_confirm']"],
             trigger: "button[name='action_confirm']",
             content: markup(_t(
                 "Click <b>Confirm</b> to mark the equipment as borrowed."
@@ -105,6 +136,7 @@ registry.category("web_tour.tours").add("od19_asset_loan_tour", {
             run: "click",
         },
         {
+            isActive: ["button[name='action_return']"],
             trigger: "button[name='action_return']",
             content: markup(_t(
                 "When the equipment is returned, click <b>Return</b>. " +
@@ -114,6 +146,7 @@ registry.category("web_tour.tours").add("od19_asset_loan_tour", {
             run: "click",
         },
         {
+            isActive: ["button[name='action_lost']"],
             trigger: "button[name='action_lost']",
             content: markup(_t(
                 "If equipment is not returned, click <b>Mark Lost</b> to record the loss."
@@ -121,15 +154,18 @@ registry.category("web_tour.tours").add("od19_asset_loan_tour", {
             tooltipPosition: "left",
             run: "click",
         },
-        ...stepUtils.discardForm(),
-
         {
-            trigger: ".o_list_renderer",
+            isActive: ["button.o_back_button"],
+            trigger: "button.o_back_button",
+            content: _t("Go back to the loans list."),
+            run: "click",
+        },
+        {
+            trigger: ".o_list_renderer, .o_form_view",
             content: markup(_t(
                 "Asset Loan workflow complete: <b>Create → Confirm → Return</b> (or <b>Mark Lost</b>). " +
                 "Use the <b>Overdue</b> filter to find loans past their expected return date."
             )),
-            run: "click",
         },
     ],
 });

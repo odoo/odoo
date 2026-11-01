@@ -46,11 +46,22 @@ registry.category("web_tour.tours").add("od19_misc_features_tour", {
             run: "click",
         },
         {
-            trigger: ".o_form_view, .o_list_renderer",
+            // "Run Check" persists the snapshot and re-opens it with
+            // `target: "current"`, so the wizard dialog closes and the snapshot
+            // form replaces the main action.
+            //
+            // The server-side check runs `SELECT pg_database_size(...)`, which
+            // can take tens of seconds on a large database, so this step needs a
+            // far longer timeout than the 10 s default. Waiting directly for the
+            // snapshot form avoids acting on the dialog/backdrop while the
+            // dialog is still tearing down (which aborts with "not allowed to do
+            // action on an element that's below a modal").
+            trigger: ".o_form_view .o_field_widget[name='odoo_version']",
             content: markup(_t(
                 "Each check is logged with the date, versions and metrics, so you can track " +
                 "environment drift over time."
             )),
+            timeout: 90000,
             run: "click",
         },
 

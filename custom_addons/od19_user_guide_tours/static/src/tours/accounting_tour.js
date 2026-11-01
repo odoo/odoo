@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -33,6 +33,7 @@ registry.category("web_tour.tours").add("od19_accounting_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction("Petty Cash Funds"),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new petty cash fund."),
@@ -160,7 +161,7 @@ registry.category("web_tour.tours").add("od19_accounting_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='account_asset_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -169,7 +170,7 @@ registry.category("web_tour.tours").add("od19_accounting_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='account_depreciation_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -178,7 +179,7 @@ registry.category("web_tour.tours").add("od19_accounting_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='account_expense_depreciation_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -187,7 +188,7 @@ registry.category("web_tour.tours").add("od19_accounting_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='account_residual_value_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -196,7 +197,7 @@ registry.category("web_tour.tours").add("od19_accounting_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:first",
+            trigger: ".o_field_widget[name='journal_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         ...stepUtils.saveForm(),
@@ -303,31 +304,38 @@ registry.category("web_tour.tours").add("od19_accounting_tour", {
             content: _t("Set the end date of the fiscal year."),
             run: "edit 2026-12-31",
         },
-        ...stepUtils.saveForm(),
+        {
+            trigger: ".o_field_widget[name='name'] input",
+            content: markup(_t(
+                "Fiscal years cannot overlap, so this demo form is <b>kept unsaved</b> and " +
+                "discarded to avoid clashing with the periods already defined in your database."
+            )),
+            run: "click",
+        },
         ...stepUtils.discardForm(),
 
         {
-            trigger: navSection("Accounting"),
-            content: markup(_t("Open the <b>Accounting</b> menu.")),
+            trigger: navSection("Reporting"),
+            content: markup(_t("Open the <b>Reporting</b> menu for the year-end statements.")),
             tooltipPosition: "bottom",
             run: "click",
         },
         {
-            trigger: navItem("Secure Entries"),
+            trigger: ".dropdown-menu .dropdown-item:contains('NPAE Financial Statement')",
             content: markup(_t(
-                "At the end of the year, use <b>Secure Entries</b> to close the fiscal year " +
-                "and carry forward balances."
+                "At the end of the year, file the <b>NPAE financial statement</b> " +
+                "(งบการเงินตามแบบ NPAE) with the Revenue Department."
             )),
             tooltipPosition: "bottom",
             run: "click",
         },
 
         {
-            trigger: ".o_list_renderer",
+            trigger: ".o_dialog .modal-title",
             content: markup(_t(
                 "Accounting tour complete! You've learned <b>petty cash</b> fund management, " +
                 "<b>WHT</b> on payments, <b>fixed asset</b> depreciation, and <b>fiscal year</b> " +
-                "management with year-end closing."
+                "management with year-end reporting."
             )),
             run: "click",
         },

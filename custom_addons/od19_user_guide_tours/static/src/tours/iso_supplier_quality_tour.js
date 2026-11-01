@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -37,6 +37,11 @@ registry.category("web_tour.tours").add("od19_iso_supplier_quality_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        // Switching action is asynchronous: the previous list stays mounted for
+        // a few frames, so `.o_list_button_add` would click the *previous*
+        // list's "New" button (creating a document-control record instead).
+        // Wait for the target action to be on screen first.
+        waitForAction('การประเมินผู้จำหน่าย'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new supplier evaluation."),
@@ -49,7 +54,11 @@ registry.category("web_tour.tours").add("od19_iso_supplier_quality_tour", {
             run: "edit Tesla",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item:contains('Tesla')",
+            // Scope to the `partner_id` field: a bare `.o-autocomplete--dropdown-item`
+            // can match the stale/hidden dropdown of another mounted field, and
+            // `.o-autocomplete--dropdown-menu:not(.o_loading)` is not reliable
+            // (the loading class lives on the inline `a.o_loading.dropdown-item`).
+            trigger: ".o_field_widget[name='partner_id'] .o-autocomplete--dropdown-menu a.dropdown-item:contains('Tesla')",
             run: "click",
         },
         ...stepUtils.saveForm(),
