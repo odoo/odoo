@@ -24,9 +24,4 @@ Allows to contact directly the employee in case of unjustified absence.
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
-     'assets': {
-        'web.assets_backend': [
-            'hr_presence/static/src/**/*',
-        ],
-    }
 }
