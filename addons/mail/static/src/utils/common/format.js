@@ -29,6 +29,7 @@ import { setAttributes } from "@web/core/utils/xml";
 export const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}(?:\.{1})?(?:[a-z]{2,13}))\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
 export const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/(\\d+)$`);
+const recordUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/odoo/\\S+$`);
 const MENTION_CLASSNAMES = new Set([
     "o_mail_redirect",
     "o_message_redirect",
@@ -162,6 +163,32 @@ export function markMessageLink(link) {
         link.classList.add("o_message_redirect");
     }
     return true;
+}
+
+/**
+ * Params of the record opened by a link to this database, as parsed by the web client router.
+ *
+ * @param {string} [href]
+ */
+export function getRecordLinkParams(href) {
+    if (!recordUrlRegExp.test(href ?? "") || !URL.canParse(href)) {
+        return;
+    }
+    const url = new URL(href);
+    // the browser opens the normalized URL, e.g. without its dot segments
+    if (url.href !== href) {
+        return;
+    }
+    let state;
+    try {
+        state = router.urlToState(url);
+    } catch {
+        return; // e.g. a malformed percent-encoding in the query
+    }
+    const { action, model, resId } = state;
+    if (Number.isInteger(resId) && (action || model)) {
+        return { action, model, resId };
+    }
 }
 
 /**

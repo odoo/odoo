@@ -17,6 +17,7 @@ import { services } from "@web/core/services";
 import { zip } from "@web/core/utils/arrays";
 import { PosDataPlugin } from "@point_of_sale/app/plugins/pos_data_plugin";
 import { PosTicketPrinterPlugin } from "@point_of_sale/app/plugins/pos_ticket_printer_plugin";
+import { RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
 import { StorePlugin } from "@mail/core/common/store_plugin";
 
 /**
@@ -146,9 +147,13 @@ class Root extends Component {
 
 test("each getter should only be called once and only when needed", async () => {
     clearRegistry(registry.category("services"));
-    // the store needs the legacy services that were just cleared
+    // the store, and the record links using it, need the legacy services that were just cleared
+    services.delete(RecordLinkPlugin);
     services.delete(StorePlugin);
-    after(() => services.add(StorePlugin));
+    after(() => {
+        services.add(RecordLinkPlugin);
+        services.add(StorePlugin);
+    });
 
     patchWithCleanup(PosDataPlugin.prototype, {
         _onWillStart() {
@@ -220,9 +225,13 @@ test("each getter should only be called once and only when needed", async () => 
 
 test("only dependent components rerender", async () => {
     clearRegistry(registry.category("services"));
-    // the store needs the legacy services that were just cleared
+    // the store, and the record links using it, need the legacy services that were just cleared
+    services.delete(RecordLinkPlugin);
     services.delete(StorePlugin);
-    after(() => services.add(StorePlugin));
+    after(() => {
+        services.add(RecordLinkPlugin);
+        services.add(StorePlugin);
+    });
 
     patchWithCleanup(PosDataPlugin.prototype, {
         _onWillStart() {

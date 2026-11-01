@@ -5,6 +5,7 @@ from odoo.addons.mail.models import mail_message as mail_message_module
 from odoo.addons.mail.tests import common
 from odoo.exceptions import UserError
 from odoo.tests import HttpCase, new_test_user, tagged, users
+from odoo.tools import mute_logger
 
 from unittest.mock import patch
 
@@ -46,6 +47,32 @@ class TestMailMessage(common.MailCommon, HttpCase):
             {"fetch_params": [["mail.message", {"ids": [readable.id, unreadable.id]}]]},
         )
         self.assertEqual([message["id"] for message in data["mail.message"]], readable.ids)
+
+    @users("employee")
+    def test_store_record_link_only_readable(self):
+        self.authenticate(self.env.user.login, self.env.user.login)
+        partner = self.partner_admin
+        # sudo: ir.config_parameter - a record the employee can't read
+        parameter = self.env["ir.config_parameter"].sudo().search([], limit=1)
+        self.assertFalse(parameter.with_user(self.env.user).has_access("read"))
+        fetch_params = [
+            ["record_link", {"model": "res.partner", "ids": [partner.id, -1]}],
+            ["record_link", {"model": "ir.config_parameter", "ids": [parameter.id]}],
+            ["record_link", {"model": "mail.thread", "ids": [partner.id]}],
+            ["record_link", {"model": "no.such.model", "ids": [partner.id]}],
+            ["record_link", {"model": "res.partner", "ids": ["x"]}],
+            ["record_link", {"model": ["res.partner"], "ids": [partner.id]}],
+        ]
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": fetch_params})
+        self.assertEqual(
+            data["mail.thread"],
+            [{"display_name": partner.display_name, "id": partner.id, "model": "res.partner"}],
+        )
+        portal_user = new_test_user(self.env, login="portal_r", groups="base.group_portal")
+        self.authenticate(portal_user.login, portal_user.login)
+        with mute_logger("odoo.addons.mail.tools.store_handler"):
+            data = self.make_jsonrpc_request("/mail/store", {"fetch_params": fetch_params[:1]})
+        self.assertEqual(data, {})
 
     def test_mail_message_read_inexisting(self):
         user = new_test_user(self.env, login="Bob", email="bob@test.com")

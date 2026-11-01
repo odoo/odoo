@@ -36,6 +36,7 @@ import { MailComposerPlugin } from "@mail/core/common/plugin/mail_composer_plugi
 import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
 import { MessageLinkPlugin } from "@mail/core/common/plugin/message_link_plugin";
 import { PersistSelectionPlugin } from "@mail/core/common/plugin/persist_selection_plugin";
+import { RecordLinkEditorPlugin } from "@mail/core/common/plugin/record_link_editor_plugin";
 import { StripPastedFormatPlugin } from "@mail/core/common/plugin/strip_pasted_format_plugin";
 import { MailSuggestionPlugin } from "@mail/core/common/plugin/suggestion_plugin";
 import { TextLineBreakPlugin } from "@mail/core/common/plugin/text_line_break_plugin";
@@ -62,6 +63,7 @@ export const MAIL_TEXT_PLUGINS = [
     MessageLinkPlugin,
     OverlayPlugin,
     PersistSelectionPlugin,
+    RecordLinkEditorPlugin,
     SanitizePlugin,
     SelectionPlugin,
     SplitPlugin,
@@ -89,6 +91,7 @@ export const MAIL_CORE_PLUGINS = [
     OdooLinkSelectionPlugin,
     PersistSelectionPlugin,
     ProtectedNodePlugin,
+    RecordLinkEditorPlugin,
     SelectionPlaceholderPlugin,
     ShortCutPlugin,
     TabulationPlugin,

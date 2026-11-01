@@ -207,7 +207,14 @@ const StorePatch = {
         const model = target.dataset.oeModel;
         const id = Number(target.dataset.oeId);
         const isLinkHandledBySuper = super.handleClickOnLink(...arguments);
-        if (!isLinkHandledBySuper && target.tagName === "A" && id && model) {
+        if (
+            !isLinkHandledBySuper &&
+            target.tagName === "A" &&
+            id &&
+            model &&
+            // a record link opens its url, with its action
+            !target.classList.contains("o_record_redirect")
+        ) {
             ev.preventDefault();
             Promise.resolve(
                 this.env.services.action.doAction({
