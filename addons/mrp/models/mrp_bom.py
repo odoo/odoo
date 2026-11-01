@@ -374,6 +374,7 @@ class MrpBom(models.Model):
         """
         product_ids = set()
         product_boms = {}
+        product_boms = self.env.context.get('product_boms', {}).get((picking_type or self.picking_type_id, self.company_id.id), {})
         def update_product_boms():
             products = self.env['product.product'].browse(product_ids)
             product_boms.update(self._bom_find(products, picking_type=picking_type or self.picking_type_id,
@@ -390,7 +391,8 @@ class MrpBom(models.Model):
             product_id = bom_line.product_id
             bom_lines.append((bom_line, product, quantity, False))
             product_ids.add(product_id.id)
-        update_product_boms()
+        if not product_boms:
+            update_product_boms()
         product_ids.clear()
         while bom_lines:
             current_line, current_product, current_qty, parent_line = bom_lines[0]
