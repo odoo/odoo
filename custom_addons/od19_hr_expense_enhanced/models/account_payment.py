@@ -101,7 +101,34 @@ class AccountPayment(models.Model):
                 and not payment.od19_wht_move_id
             ):
                 payment._create_od19_wht_move()
+                payment._od19_reconcile_wht_lines()
         return res
+
+    def _od19_reconcile_wht_lines(self):
+        """Settle the payable left open by a WHT bearing expense payment.
+
+        The withholding tax reduces what the supplier/employee really
+        receives, so the payable booked by the source document must be
+        matched with the payment entry and - when the WHT is booked on the
+        payable account itself - with the WHT journal entry as well. The
+        match is delegated to the central helper
+        ``account.move._od19_reconcile_account_lines`` (the same helper the
+        expense return-cash wizard uses), which works account by account
+        because Odoo only reconciles journal items sharing one account.
+        """
+        for payment in self.filtered("od19_wht_move_id"):
+            lines = (
+                payment.move_id.line_ids + payment.od19_wht_move_id.line_ids
+            ).filtered_domain([
+                ("parent_state", "=", "posted"),
+                ("reconciled", "=", False),
+                ("account_type", "in", ("liability_payable", "asset_receivable")),
+            ])
+            for account in lines.account_id:
+                payment.move_id._od19_reconcile_account_lines(
+                    account.id, payment.partner_id.id
+                )
+        return True
 
     def _create_od19_wht_move(self):
         """Create the WHT journal entry: debit WHT expense, credit WHT payable."""

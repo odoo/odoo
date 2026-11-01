@@ -14,6 +14,7 @@
         'hr_expense',
         'account',
         'mail',
+        'od19_accounting_features',
     ],
     'data': [
         'security/ir.model.access.csv',
