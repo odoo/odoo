@@ -115,6 +115,8 @@ class Od19ApprovalSource(models.Model):
     def _od19_classify_for_approver(self):
         """Return the 4 approver buckets for the current user (strategy=field)."""
         self.ensure_one()
+        if self.strategy == "tier_validation":
+            return self._od19_classify_tier_for_approver()
         buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
         if not self._od19_ready():
             return buckets
@@ -151,6 +153,8 @@ class Od19ApprovalSource(models.Model):
     def _od19_classify_for_requester(self):
         """Return the 4 requester buckets for the current user."""
         self.ensure_one()
+        if self.strategy == "tier_validation":
+            return self._od19_classify_tier_for_requester()
         buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
         if not self._od19_ready():
             return buckets
@@ -241,3 +245,73 @@ class Od19ApprovalSource(models.Model):
             "max_age_days": max(ages) if ages else 0,
             "over_sla_count": len([row for row in rows if row["sla_state"] == "over"]),
         }
+
+    # ------------------------------------------------------------------
+    # OCA tier_validation strategy
+    # ------------------------------------------------------------------
+    OD19_TIER_STATUS_BUCKET = {
+        "pending": "pending",
+        "waiting": "incoming",
+        "approved": "done",
+        "rejected": "rejected",
+    }
+    # Lower value = resolved first when a record has several reviews for me.
+    OD19_TIER_STATUS_ORDER = {"pending": 0, "waiting": 1, "rejected": 2, "approved": 3}
+
+    def _od19_classify_tier_for_approver(self):
+        """Approver buckets for a tier_validation source, read from tier.review."""
+        self.ensure_one()
+        buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        if not self._od19_ready() or "tier.review" not in self.env:
+            return buckets
+        # tier.review.reviewer_ids is a stored computed field; force a flush so
+        # freshly created/updated reviews are visible to the search below.
+        self.env["tier.review"].flush_model(["reviewer_ids"])
+        reviews = self.env["tier.review"].sudo().search([
+            ("model", "=", self.model_name),
+            ("reviewer_ids", "in", [self.env.user.id]),
+        ])
+        seen = {}
+        for review in sorted(
+            reviews, key=lambda r: self.OD19_TIER_STATUS_ORDER.get(r.status, 9)
+        ):
+            bucket = self.OD19_TIER_STATUS_BUCKET.get(review.status)
+            if not bucket or not review.res_id or review.res_id in seen:
+                continue
+            record = self.env[self.model_name].sudo().browse(review.res_id)
+            if not record.exists():
+                continue
+            seen[review.res_id] = bucket
+            buckets[bucket].append(record)
+        return buckets
+
+    def _od19_classify_tier_for_requester(self):
+        """Requester buckets for a tier_validation source (state + review history)."""
+        self.ensure_one()
+        buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        Model = self.env[self.model_name].sudo() if self._od19_ready() else None
+        if Model is None or not self._od19_field_ok(Model, self.requester_field):
+            return buckets
+        me_id = self._od19_me_ids(self.requester_kind)
+        if not me_id:
+            return buckets
+        steps = self.step_ids.sorted("sequence")
+        main_field = self._od19_main_state_field(steps)
+        rejected = self._od19_csv(self.rejected_states)
+        success = self._od19_csv(self.success_states)
+        records = Model.search(
+            [(self.requester_field, "=", me_id)], limit=self.OD19_MAX_RECORDS
+        )
+        for record in records:
+            state_value = record[main_field] if self._od19_field_ok(record, main_field) else False
+            if state_value in rejected:
+                buckets["rejected"].append(record)
+            elif state_value in success:
+                buckets["done"].append(record)
+            elif "review_ids" in record._fields and any(
+                rev.status == "approved" for rev in record.review_ids
+            ):
+                buckets["incoming"].append(record)
+            else:
+                buckets["pending"].append(record)
+        return buckets

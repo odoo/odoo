@@ -471,3 +471,59 @@ class TestSharedPoolStep(TransactionCase):
         expense.write({"state": "approved"})
         buckets = source.with_user(approver_user)._od19_classify_for_approver()
         self.assertIn(expense.id, [r.id for r in buckets["pending"]])
+
+
+@tagged("post_install", "-at_install")
+class TestTierStrategy(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        if "tier.review" not in cls.env or "tier.definition" not in cls.env:
+            raise unittest.SkipTest("base_tier_validation not installed")
+        cls.source = cls.env["od19.approval.source"].create({
+            "name": "Tier Source",
+            "model_id": cls.env["ir.model"]._get("sale.order").id,
+            "strategy": "tier_validation",
+            "requester_field": "create_uid",
+            "rejected_states": "cancel",
+            "success_states": "sale",
+        })
+        cls.order = cls.env["sale.order"].create({
+            "partner_id": cls.env["res.partner"].create({"name": "SO Partner"}).id,
+        })
+        cls.definition = cls.env["tier.definition"].create({
+            "name": "SO Tier Test",
+            "model_id": cls.env["ir.model"]._get("sale.order").id,
+            "review_type": "individual",
+            "reviewer_id": cls.env.user.id,
+        })
+
+    def _make_review(self, status):
+        return self.env["tier.review"].create({
+            "model": "sale.order",
+            "res_id": self.order.id,
+            "status": status,
+            "sequence": 1,
+            "definition_id": self.definition.id,
+        })
+
+    def test_pending_review_is_pending_bucket(self):
+        self._make_review("pending")
+        buckets = self.source._od19_classify_tier_for_approver()
+        self.assertIn(self.order.id, [r.id for r in buckets["pending"]])
+
+    def test_waiting_review_is_incoming_bucket(self):
+        self._make_review("waiting")
+        buckets = self.source._od19_classify_tier_for_approver()
+        self.assertIn(self.order.id, [r.id for r in buckets["incoming"]])
+        self.assertNotIn(self.order.id, [r.id for r in buckets["pending"]])
+
+    def test_other_reviewer_sees_nothing(self):
+        self._make_review("pending")
+        other = self.env["res.users"].create({
+            "name": "No Tier", "login": "no_tier",
+            "group_ids": [(4, self.env.ref("base.group_user").id),
+                          (4, self.env.ref("od19_approval_center.group_approval_admin").id)],
+        })
+        buckets = self.source.with_user(other)._od19_classify_tier_for_approver()
+        self.assertEqual(buckets["pending"], [])
