@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!--
+        Odoo 19 Core: account.group_account_manager ("Administrator") implies
+        only group_account_invoice — it does NOT imply account.group_account_user
+        ("Show Full Accounting Features").  As a result an accounting
+        Administrator cannot see the journal-entry / reporting features that
+        are gated on group_account_user (GL, Trial Balance, P&L, BS, AR/AP
+        Aging, ...).  Restore the expected hierarchy so that the highest
+        accounting role also carries the accountant rights.
+    -->
+    <record id="account.group_account_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
+    </record>
+
     <record id="od19_accounting_reporting_company_rule" model="ir.rule">
         <field name="name">OD19 Accounting Reporting Company Rule</field>
         <field name="model_id" ref="model_od19_report_accounting_operational_closure"/>
