@@ -1012,6 +1012,8 @@ Expected: FAIL — `AttributeError` (`_od19_build_rows` ไม่มี) แล�
         }
 ```
 
+> หมายเหตุ (execute-time, แก้ระหว่าง review): การเปลี่ยน `_od19_current_index` เป็น "ขั้นไกลสุด" ทำให้ผู้ใช้ที่**เป็นผู้อนุมัติหลายขั้นพร้อมกัน** (เช่น `first_approver_id` = `second_approver_id`) และเอกสารรออยู่ที่ขั้นปลายทางถูกตัดออกจากทั้ง `pending` และ `incoming` (`current > my_index` เดิมไม่มี branch รับ) จึงเพิ่ม helper `_od19_is_approver_at(record, step)` และเติม branch `elif self._od19_is_approver_at(record, steps[current]): buckets["pending"].append(record)` ใน `_od19_classify_for_approver` (commit `698b237`)
+
 - [ ] **Step 4: รันเทสต์ให้ PASS**
 
 Run: same as Step 2

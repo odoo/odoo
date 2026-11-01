@@ -153,7 +153,49 @@ class AccountPayment(models.Model):
             staged_lines.move_id.matched_payment_ids = [Command.link(payment.id)]
         return True
 
+    def _od19_requires_prepare_approval(self):
+        """Return whether this payment must pass the Prepare -> Approve gate.
+
+        Only vendor (outbound / supplier) disbursements are gated. Flows that
+        create and post a payment in a single shot (HR expense reimbursement,
+        automated / cross-module payments) are exempted here in one allow-list
+        so the rule stays auditable instead of being scattered across callers.
+        """
+        self.ensure_one()
+        if self.payment_type != "outbound" or self.partner_type != "supplier":
+            return False
+        if self.env.context.get("od19_skip_prepare_gate"):
+            return False
+        if "od19_is_expense_payment" in self._fields and self.od19_is_expense_payment:
+            return False
+        return True
+
+    def _od19_check_prepare_approval(self):
+        """Block posting when the Prepare -> Approve gate is enforced and unmet."""
+        for payment in self:
+            if not payment.company_id.od19_enforce_prepare_approval:
+                continue
+            if not payment._od19_requires_prepare_approval():
+                continue
+            if payment.od19_prepare_state == "approved":
+                continue
+            raise UserError(
+                _(
+                    "ยังไม่สามารถยืนยันรายการจ่ายได้ เนื่องจากยังไม่ผ่านการอนุมัติ\n\n"
+                    "ขั้นตอนบังคับ: กด \"เตรียมจ่าย\" (Prepare) แล้ว "
+                    "\"อนุมัติ\" (Approve) ก่อนจึงจะ Post ได้\n\n"
+                    "Payment %(name)s (คู่ค้า: %(partner)s) อยู่ในขั้น "
+                    "\"%(state)s\"",
+                    name=payment.name or payment.display_name,
+                    partner=payment.partner_id.display_name or "-",
+                    state=dict(PREPARE_STATE_SELECTION).get(
+                        payment.od19_prepare_state, ""
+                    ),
+                )
+            )
+
     def action_post(self):
+        self._od19_check_prepare_approval()
         res = super().action_post()
         self._od19_assign_voucher_number()
         self._od19_reconcile_staged_lines()
