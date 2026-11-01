@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_od19_hr_advance_clear_form" model="ir.ui.view">
+        <field name="name">od19.hr.advance.clear.form</field>
+        <field name="model">od19.hr.advance.clear</field>
+        <field name="arch" type="xml">
+            <form string="Clear Employee Advance">
+                <group>
+                    <group>
+                        <field name="advance_id" readonly="1"/>
+                        <field name="employee_id"/>
+                        <field name="remaining_amount"/>
+                    </group>
+                    <group>
+                        <field name="clear_date"/>
+                        <field name="journal_id"/>
+                        <field name="advance_account_id"/>
+                    </group>
+                </group>
+                <group string="Cleared Expenses">
+                    <field name="expense_ids" nolabel="1"
+                           domain="[('employee_id', '=', employee_id), ('od19_hr_advance_id', '=', False)]">
+                        <list>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="total_amount" sum="Total"/>
+                        </list>
+                    </field>
+                </group>
+                <group>
+                    <field name="returned_amount"/>
+                    <field name="currency_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_clear" type="object" string="Clear Advance"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

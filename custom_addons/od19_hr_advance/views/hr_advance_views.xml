@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_od19_hr_advance_list" model="ir.ui.view">
+        <field name="name">od19.hr.advance.list</field>
+        <field name="model">od19.hr.advance</field>
+        <field name="arch" type="xml">
+            <list string="Employee Advances" decoration-info="state == 'draft'"
+                  decoration-warning="state == 'waiting_approval'"
+                  decoration-success="state == 'cleared'"
+                  decoration-danger="state == 'cancel'">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="department_id" optional="show"/>
+                <field name="date"/>
+                <field name="amount" sum="Total"/>
+                <field name="cleared_amount" sum="Cleared"/>
+                <field name="remaining_amount" sum="Remaining"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_hr_advance_form" model="ir.ui.view">
+        <field name="name">od19.hr.advance.form</field>
+        <field name="model">od19.hr.advance</field>
+        <field name="arch" type="xml">
+            <form string="Employee Advance">
+                <header>
+                    <button name="action_confirm" type="object" string="Submit for Approval"
+                            class="btn-primary"
+                            invisible="state not in ('draft', 'waiting_approval')"/>
+                    <button name="action_pay" type="object" string="Pay Advance"
+                            class="btn-primary" invisible="state != 'approved'"/>
+                    <button name="action_open_clear_wizard" type="object" string="Clear"
+                            invisible="state != 'paid'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state in ('paid', 'cleared', 'cancel')"/>
+                    <button name="action_draft" type="object" string="Reset to Draft"
+                            invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,waiting_approval,approved,paid,cleared,cancel"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="department_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="date"/>
+                            <field name="purpose"/>
+                        </group>
+                        <group>
+                            <field name="amount"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="advance_account_id"/>
+                            <field name="journal_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Clearing">
+                            <field name="cleared_amount" readonly="1"/>
+                            <field name="remaining_amount" readonly="1"/>
+                        </group>
+                        <group string="Documents">
+                            <field name="payment_id" readonly="1"/>
+                            <field name="payment_date" readonly="1"/>
+                            <field name="clear_move_id" readonly="1"/>
+                            <field name="clear_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Cleared Expenses" name="cleared_expenses">
+                            <field name="hr_expense_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="total_amount" sum="Total"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="note" placeholder="Internal notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_od19_hr_advance_search" model="ir.ui.view">
+        <field name="name">od19.hr.advance.search</field>
+        <field name="model">od19.hr.advance</field>
+        <field name="arch" type="xml">
+            <search string="Search Employee Advances">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="partner_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Waiting Approval" name="waiting_approval"
+                        domain="[('state', '=', 'waiting_approval')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Paid" name="paid" domain="[('state', '=', 'paid')]"/>
+                <filter string="Cleared" name="cleared" domain="[('state', '=', 'cleared')]"/>
+                <filter string="Cancelled" name="cancel" domain="[('state', '=', 'cancel')]"/>
+                <separator/>
+                <filter string="My Advances" name="my_advances"
+                        domain="[('employee_id.user_id', '=', uid)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Department" name="group_department" context="{'group_by': 'department_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_od19_hr_advance" model="ir.actions.act_window">
+        <field name="name">Employee Advances</field>
+        <field name="res_model">od19.hr.advance</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new employee advance request
+            </p>
+            <p>
+                เบิกเงินทดรองจ่ายพนักงาน อนุมัติ 2 ชั้น จ่ายเงินจริง แล้วเคลียร์ด้วยค่าใช้จ่าย
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_od19_hr_advance"
+        name="Employee Advances"
+        parent="hr_expense.menu_hr_expense_root"
+        action="action_od19_hr_advance"
+        sequence="25"
+    />
+
+</odoo>
