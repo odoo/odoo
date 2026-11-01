@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        ทะเบียนทรัพย์สิน (ฟอร์ม) — J-Report OD15.
+
+        Inherits the shared wizard layout (views/jasper_report_wizard.xml) and
+        replaces the placeholder <group name="parameters"/> with the fields this
+        report needs.
+    -->
+    <record id="view_asset_card_form" model="ir.ui.view">
+        <field name="name">asset.card.form</field>
+        <field name="model">asset.card.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <group>
+                        <field name="p_language" required="1"/>
+                        <field name="date_format" required="1"/>
+                    </group>
+                    <group>
+                        <field name="p_asset_codes"
+                               placeholder="เช่น FA-0001,FA-0002"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_asset_card_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) ทะเบียนทรัพย์สิน (ฟอร์ม)</field>
+        <field name="res_model">asset.card.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_asset_card_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_asset_card_form"
+        name="(J-Report OD15) ทะเบียนทรัพย์สิน (ฟอร์ม)"
+        parent="account.menu_finance_reports"
+        action="action_asset_card_form"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="104"
+    />
+
+</odoo>

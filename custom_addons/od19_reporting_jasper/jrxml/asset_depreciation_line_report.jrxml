@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="asset_depreciation_line_report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a5ca8bd7-9a0d-4332-96c0-329d752fc89e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter (3)"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_account_asset_asset_id" class="java.lang.String"/>
+	<parameter name="p_DateFormat" class="java.lang.String">
+		<defaultValueExpression><![CDATA["dd-MM-yyyy"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_locale" class="java.lang.String">
+		<defaultValueExpression><![CDATA["th"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT a.asset_value, a.asset_initial, a.asset_salvage_value, a.depreciation_year, SUM(a.line_amount) AS line_amount, MAX(a.depreciated_value) as depreciated_value, a.final_cost AS final_cost, MIN(a.remaining_value) AS remaining_value
+FROM (
+SELECT asset.purchase_value AS asset_value,
+0 AS asset_initial,
+asset.salvage_value AS asset_salvage_value,
+EXTRACT(year FROM line.line_date) AS depreciation_year,
+line.line_date AS depreciation_date,
+line.amount AS line_amount,
+line.depreciated_value AS depreciated_value,
+line.remaining_value AS remaining_value,
+(case
+	when line2.remaining_value is not null then line2.remaining_value + asset.salvage_value
+	else 0.00
+end) AS final_cost
+FROM account_asset_line line
+LEFT JOIN account_asset asset ON line.asset_id = asset.id
+LEFT JOIN account_asset_line line2 ON line2.id = (SELECT line3.id FROM account_asset_line line3 WHERE line3.asset_id = line.asset_id and EXTRACT(year FROM line3.line_date) = EXTRACT(year FROM line.line_date)-1 ORDER BY line3.line_date DESC limit 1)
+LEFT JOIN account_move m ON m.id = line.move_id
+WHERE line.asset_id = $P!{p_account_asset_asset_id} and m.state = 'posted'
+ORDER BY depreciation_year,depreciation_date
+) a
+GROUP BY a.asset_value, a.asset_initial, a.asset_salvage_value, a.depreciation_year, a.final_cost]]>
+	</queryString>
+	<field name="asset_value" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="asset_value"/>
+	</field>
+	<field name="asset_initial" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="asset_initial"/>
+	</field>
+	<field name="asset_salvage_value" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="asset_salvage_value"/>
+	</field>
+	<field name="depreciation_year" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="depreciation_year"/>
+	</field>
+	<field name="line_amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="line_amount"/>
+	</field>
+	<field name="depreciated_value" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="depreciated_value"/>
+	</field>
+	<field name="final_cost" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="final_cost"/>
+	</field>
+	<field name="remaining_value" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="remaining_value"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="120" height="22" uuid="9db40820-6fb4-413e-a84d-65f9f84f1e3b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(new SimpleDateFormat("dd/MM/yyyy", new Locale("en", "en")).parse("01/01/" + $F{depreciation_year}.toString()))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="0" width="120" height="22" uuid="a8c25e1c-7bfd-45d8-9f36-f635706cc4a7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat($P{p_DateFormat}, new Locale($P{p_locale}, $P{p_locale})).format(new SimpleDateFormat("dd/MM/yyyy", new Locale("en", "en")).parse("31/12/" + $F{depreciation_year}.toString()))]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="240" y="0" width="100" height="22" uuid="6cd1ed65-d128-4dc8-ab4d-4ae836961eee"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{asset_value}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="340" y="0" width="100" height="22" uuid="21ce1f8f-0e27-4091-9397-0f4f23e5ec7b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{final_cost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="440" y="0" width="60" height="22" uuid="369f9328-890c-4e4e-9b57-61925dd25258"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{asset_initial}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="500" y="0" width="100" height="22" uuid="e640dc2d-500d-4b05-afbc-3e77f41a6b06"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{line_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="600" y="0" width="100" height="22" uuid="4eeddee1-df16-41d3-b69a-0b4bed3cd828"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{depreciated_value}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="700" y="0" width="100" height="22" uuid="356d9afc-f974-4784-8ce1-1db094d19fb4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{remaining_value}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

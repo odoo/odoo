@@ -104,4 +104,76 @@
         sequence="93"
     />
 
+    <!--
+        Level-3 / Level-4 variants of the financial statement.  The legacy
+        ``pl_bs_lvl3`` / ``pl_bs_lvl4`` templates are the same physical report
+        (``pl_bs.jrxml``) printed at a fixed depth, so both menus reuse the
+        ``pl.bs.report`` model and simply pre-select ``report_template``.
+    -->
+    <record id="view_pl_bs_report" model="ir.ui.view">
+        <field name="name">pl.bs.report</field>
+        <field name="model">pl.bs.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <group>
+                        <field name="rpt_nm" placeholder="Financial Statement"/>
+                        <field name="rpt_month" required="1"/>
+                        <field name="rpt_year" required="1"/>
+                        <field name="show_type" widget="radio" required="1"/>
+                        <field name="rpt_amt_flag"/>
+                    </group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="p_language" required="1"/>
+                        <field name="target_move" widget="radio" required="1"/>
+                        <field name="report_template" required="1"/>
+                        <field name="cmp_month" invisible="show_type != 'comp'"/>
+                        <field name="cmp_year" invisible="show_type != 'comp'"/>
+                    </group>
+                    <group colspan="4">
+                        <field name="analytic_account_ids" widget="many2many_tags"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_pl_bs_lvl3" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Financial Statement (Level 3)</field>
+        <field name="res_model">pl.bs.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_pl_bs_report"/>
+        <field name="target">new</field>
+        <field name="context">{'default_report_template': 'pl_bs_lvl3'}</field>
+    </record>
+
+    <record id="action_pl_bs_lvl4" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Financial Statement (Level 4)</field>
+        <field name="res_model">pl.bs.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_pl_bs_report"/>
+        <field name="target">new</field>
+        <field name="context">{'default_report_template': 'pl_bs_lvl4'}</field>
+    </record>
+
+    <menuitem
+        id="menu_pl_bs_lvl3"
+        name="(J-Report OD15) งบการเงิน (ระดับ 3)"
+        parent="account.menu_finance_reports"
+        action="action_pl_bs_lvl3"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="88"
+    />
+    <menuitem
+        id="menu_pl_bs_lvl4"
+        name="(J-Report OD15) งบการเงิน (ระดับ 4)"
+        parent="account.menu_finance_reports"
+        action="action_pl_bs_lvl4"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="89"
+    />
+
 </odoo>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sub_receipt_cheque" pageWidth="595" pageHeight="20" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f5956e20-b28a-434e-ae0b-b2f984a4f50b">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Hoilord"/>
+	<parameter name="ids" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[select bank.name as bank_name,
+        c.name as cheque_number,
+		c.cheque_date as cheque_date,
+		c.amount as cheque_amount
+from account_cheque as c
+inner join account_payment as pay on pay.id = c.payment_id
+inner join res_bank as bank on bank.id = c.bank_id
+where pay.id = $P{ids}]]>
+	</queryString>
+	<field name="bank_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="bank_name"/>
+	</field>
+	<field name="cheque_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cheque_number"/>
+	</field>
+	<field name="cheque_date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="cheque_date"/>
+	</field>
+	<field name="cheque_amount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="cheque_amount"/>
+	</field>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="0" width="574" height="20" uuid="20b02b37-a055-463c-820d-8aaf3746fbef"/>
+				<staticText>
+					<reportElement x="0" y="0" width="35" height="20" uuid="0a1691d0-25ab-4906-94b9-9af4bdf5837a"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ธนาคาร]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="35" y="0" width="55" height="20" uuid="77518d99-bff2-4a8d-971d-a4cb4b982d59"/>
+					<box>
+						<pen lineWidth="1.0" lineStyle="Dotted"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bank_name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="90" y="0" width="25" height="20" uuid="2061bf3f-273e-4da8-91f1-33aa421c6a10"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[เลขที่]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="115" y="0" width="65" height="20" uuid="ae69f80e-53a7-4c58-a608-04f68cf06dee"/>
+					<box>
+						<pen lineWidth="1.0" lineStyle="Dotted"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cheque_number}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="180" y="0" width="26" height="20" uuid="062d2bf6-e01d-4180-baf7-15ed0ae9b711"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ลงวันที่]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement x="206" y="0" width="44" height="20" uuid="147fc90f-8267-4eb4-acce-bb4e7632ec6f"/>
+					<box>
+						<pen lineWidth="1.0" lineStyle="Dotted"/>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Dotted" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[IF($F{cheque_date} == null,"",new java.text.SimpleDateFormat("dd/MM/yyyy",   java.util.Locale.US).format($F{cheque_date}) )]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="250" y="0" width="40" height="20" uuid="00ad2c20-d9a0-4bf6-8aa0-9cb4a8341300"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[จำนวนเงิน]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="290" y="0" width="60" height="20" uuid="5a284af4-95de-434e-b09c-d85fcb451508"/>
+					<box rightPadding="5">
+						<bottomPen lineWidth="1.0" lineStyle="Dotted"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cheque_amount}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

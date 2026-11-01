@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        (J-Report OD15) Tax Invoice Report.
+
+        Document-bound Jasper form (opened from the account.move "Print" menu).
+        It inherits the shared wizard layout and replaces the placeholder
+        <group name="parameters"/>: the form needs no parameter, the printed
+        scope comes from the selected moves (active_ids).
+    -->
+    <record id="view_tax_invoice_report" model="ir.ui.view">
+        <field name="name">tax.invoice.report</field>
+        <field name="model">tax.invoice.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_tax_invoice_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Tax Invoice Report</field>
+        <field name="res_model">tax.invoice.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_tax_invoice_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <record id="action_tax_invoice_report_copy" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Tax Invoice Report (Copy)</field>
+        <field name="res_model">tax.invoice.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_tax_invoice_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 1}</field>
+    </record>
+
+    <menuitem
+        id="menu_tax_invoice_report"
+        name="(J-Report OD15) Tax Invoice Report"
+        parent="account.menu_finance_reports"
+        action="action_tax_invoice_report"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="120"
+    />
+
+</odoo>
