@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="od19_approval_group" name="Approval Group Card">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">
+                    <span t-attf-class="#{'text-danger' if group_key == 'pending' else 'text-info' if group_key == 'incoming' else 'text-success' if group_key == 'done' else 'text-secondary'}">
+                        <i class="fa fa-circle me-1" style="font-size:0.55rem;"/>
+                        <t t-esc="group_title"/>
+                    </span>
+                </h6>
+                <span class="badge bg-light text-dark" t-esc="len(rows)"/>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive" t-if="rows">
+                    <table class="table table-sm mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th>รายการ</th>
+                                <th>ประเภท</th>
+                                <th class="text-center">อายุ (วัน)</th>
+                                <th class="text-end">เปิด</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="rows" t-as="row">
+                                <td>
+                                    <i t-attf-class="fa #{row['icon']} me-1 text-muted"/>
+                                    <span t-esc="row['label']"/>
+                                </td>
+                                <td><small class="text-muted" t-esc="row['source_name']"/></td>
+                                <td class="text-center">
+                                    <span t-attf-class="badge #{'bg-danger' if row['sla_state'] == 'over' else 'bg-warning text-dark' if row['sla_state'] == 'warning' else 'bg-light text-dark'}"
+                                          t-esc="row['age_days']"/>
+                                </td>
+                                <td class="text-end">
+                                    <a t-att-href="row['url']" target="_blank"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="fa fa-external-link"/> เปิด
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center text-muted py-4" t-else="">
+                    <i class="fa fa-inbox me-1"/> ไม่มีรายการ
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="od19_approval_center" name="Approval Center">
+        <t t-call="website.layout">
+            <t t-set="no_footer" t-value="True"/>
+            <div id="wrap" class="oe_structure">
+
+                <section class="od19-portal-hero">
+                    <div class="container">
+                        <h2><i class="fa fa-check-square-o me-2"/>ศูนย์อนุมัติ (Approval Center)</h2>
+                        <p class="mb-0" style="opacity:0.85;">
+                            รายการที่รอการอนุมัติของคุณ และความคืบหน้าคำขอของคุณ
+                        </p>
+                    </div>
+                </section>
+
+                <div class="container py-4">
+
+                    <div class="row mb-3" t-if="summary['pending_count']">
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <div class="fs-3 fw-bold text-danger" t-esc="summary['pending_count']"/>
+                                    <small class="text-muted">รอฉันอนุมัติ (คงค้าง)</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <div class="fs-3 fw-bold" t-esc="summary['max_age_days']"/>
+                                    <small class="text-muted">อายุมากที่สุด (วัน)</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body text-center">
+                                    <div class="fs-3 fw-bold text-danger" t-esc="summary['over_sla_count']"/>
+                                    <small class="text-muted">เกินกำหนด (Over SLA)</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="nav nav-tabs mb-3" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" type="button" role="tab"
+                                    data-bs-toggle="tab" data-bs-target="#od19-tab-approver">
+                                <i class="fa fa-gavel me-1"/>รอฉันอนุมัติ
+                                <span class="badge bg-danger ms-1" t-esc="len(approver['pending'])"/>
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" type="button" role="tab"
+                                    data-bs-toggle="tab" data-bs-target="#od19-tab-requester">
+                                <i class="fa fa-paper-plane me-1"/>คำขอของฉัน
+                                <span class="badge bg-secondary ms-1"
+                                      t-esc="len(requester['pending']) + len(requester['incoming'])"/>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="od19-tab-approver" role="tabpanel">
+                            <t t-foreach="[('pending', 'คงค้าง (Pending)', approver['pending']),
+                                           ('incoming', 'กำลังมาถึง (Incoming)', approver['incoming']),
+                                           ('done', 'สำเร็จ (Done)', approver['done']),
+                                           ('rejected', 'ปฏิเสธ (Rejected)', approver['rejected'])]"
+                               t-as="grp">
+                                <t t-call="od19_website.od19_approval_group">
+                                    <t t-set="group_key" t-value="grp[0]"/>
+                                    <t t-set="group_title" t-value="grp[1]"/>
+                                    <t t-set="rows" t-value="grp[2]"/>
+                                </t>
+                            </t>
+                        </div>
+
+                        <div class="tab-pane fade" id="od19-tab-requester" role="tabpanel">
+                            <t t-foreach="[('pending', 'รออนุมัติ (Pending)', requester['pending']),
+                                           ('incoming', 'กำลังดำเนินการ (In progress)', requester['incoming']),
+                                           ('done', 'สำเร็จ (Done)', requester['done']),
+                                           ('rejected', 'ปฏิเสธ (Rejected)', requester['rejected'])]"
+                               t-as="grp">
+                                <t t-call="od19_website.od19_approval_group">
+                                    <t t-set="group_key" t-value="grp[0]"/>
+                                    <t t-set="group_title" t-value="grp[1]"/>
+                                    <t t-set="rows" t-value="grp[2]"/>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <a href="/employee-portal" class="btn btn-sm btn-outline-secondary">
+                            <i class="fa fa-arrow-left me-1"/>กลับพอร์ทัลพนักงาน
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

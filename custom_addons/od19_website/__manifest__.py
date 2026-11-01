@@ -29,6 +29,7 @@
         "views/careers_pages.xml",
         "views/contact_page.xml",
         "views/employee_portal.xml",
+        "views/approval_center.xml",
         "views/res_company_views.xml",
         "views/job_application_views.xml",
         "views/job_opening_views.xml",
