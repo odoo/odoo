@@ -203,7 +203,7 @@ Traceability ระหว่างข้อกำหนดที่ฝ่าย�
 | `account_financial_report` (TB/GL/BS/P&L) | OCA `account-financial-reporting` | ✅ | + custom `od19_accounting_reporting` (QWeb) คู่ขนาน |
 | `auditlog` | OCA `server-tools` | ✅ | adopt 2026-10-26 (ISO 9001 / Internal / External Audit) |
 | `report_xlsx` (ภ.พ.30 / ภ.ง.ด.3 / 53) | OCA `reporting-engine` | ✅ | adopt 2026-10-26 สำหรับ Excel export |
-| `account_reconcile_model_oca` → `account_reconcile_oca` | OCA `account-reconcile` | ✅ | repo เพิ่มเป็น submodule + addons_path แล้ว (2026-10-26); ชื่อโมดูลจริงบน 19.0 คือ `account_reconcile_oca` |
+| `account_reconcile_model_oca` → `account_reconcile_oca` | OCA `account-reconcile` | ✅ | repo เพิ่มเป็น submodule + addons_path แล้ว (2026-10-26); ชื่อโมดูลจริงบน 19.0 คือ `account_reconcile_oca`; **เชื่อมกับ core ผ่าน bridge `od19_accounting_reconcile_ui`** (auto_install, LGPL) — core ไม่ hard-depend OCA อีกต่อไป |
 
 Open decisions จากตารางนี้: (1) `account_payment_order` — รับ Prepare Payment แทนหรือไม่; (2) `account_move_name_sequence`/`account_lock_date_update` — ใช้ OCA แทน/เสริม custom ที่มี; (3) `account_invoice_supplier_ref_unique` — รอ OCA 19.0 หรือทำ custom; (4) ฟิลด์อำเภอ/ตำบล สำหรับคู่ค้าไทย
 
@@ -216,7 +216,7 @@ Wave 2A = ติดตั้ง OCA modules ที่โคลนไว้แล
 | `account_financial_report` (+`date_range`) | account-financial-reporting | TB / GL / BS / P&L / Cash Flow |
 | `account_tax_balance` | account-financial-reporting | กระทบยอด VAT (ภาษีซื้อ/ขาย) |
 | `partner_statement` | account-financial-reporting | AR/AP statement |
-| `account_reconcile_oca` (+`account_statement_base`) | account-reconcile | กระทบยอดธนาคาร |
+| `account_reconcile_oca` (+`account_statement_base`) | account-reconcile | กระทบยอดธนาคาร (เชื่อมผ่าน bridge `od19_accounting_reconcile_ui`) |
 | `auditlog` | server-tools | Audit Trail (ISO 9001 / Internal / External Audit) |
 | `account_move_tier_validation` (+`base_tier_validation_formula`) | tier-validation | อนุมัติหลายชั้นบัญชี (Separation of Duties) |
 | `account_check_deposit` | account-financial-tools | เช็ครับ (นำฝากธนาคาร) |

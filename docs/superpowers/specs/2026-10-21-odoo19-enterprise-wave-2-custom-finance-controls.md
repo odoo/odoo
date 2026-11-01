@@ -46,7 +46,7 @@
   - OCA modules **not** present in `third_party/oca/`: `account_payment_order`
   - **Accounting requirement coverage sync (2026-10-26)**: ตรวจข้อกำหนดจากฝ่ายบัญชีกับแผนและดิสก์จริง แล้วเพิ่ม OCA repo เข้า `third_party/oca/` และ `odoo.conf` `addons_path` ตามนี้ —
     - ✅ `account_financial_report` + `account_tax_balance` (repo `account-financial-reporting`, branch 19.0)
-    - ✅ `account_reconcile_oca` (repo `account-reconcile`, branch 19.0) — โมดูลชื่อ `account_reconcile_oca` (ข้อกำหนดฝ่ายบัญชีเขียนว่า `account_reconcile_model_oca`)
+    - ✅ `account_reconcile_oca` (repo `account-reconcile`, branch 19.0) — โมดูลชื่อ `account_reconcile_oca` (ข้อกำหนดฝ่ายบัญชีเขียนว่า `account_reconcile_model_oca`); **เชื่อมกับ core ผ่าน bridge `od19_accounting_reconcile_ui` (created 2026-11-01)** — auto_install, LGPL; `od19_accounting_features` ไม่ hard-depend OCA อีกต่อไป
     - ✅ `auditlog` (repo `server-tools`, มีอยู่แล้ว) + `report_xlsx` (repo `reporting-engine`, มีอยู่แล้ว) — **ยังไม่ถูกอ้างในแผน** จึงบันทึก adopt ที่นี่
     - ✅ `account_move_name_sequence` + `account_lock_date_update` (repo `account-financial-tools`, มีอยู่แล้ว) — พร้อมใช้ ต้องตัดสินใจเทียบกับ custom sequence/lock ที่มี
     - ❌ `account_invoice_supplier_ref_unique` — **ยังไม่มีบน OCA branch 19.0** (repo `account-invoicing` clone แล้วแต่ยังไม่มีโมดูลนี้) → ต้องรอ OCA migrate หรือทำ custom ขนาดเล็ก
@@ -156,7 +156,7 @@ Wave 2 มีการพัฒนาไปแล้วบางส่วนบ�
 
 - Keep
   - OCA `l10n_th_account_tax`, `account_fiscal_year`, `account_asset_management`, `base_tier_validation`
-  - OCA ที่พร้อมใช้เพิ่มตามข้อกำหนดฝ่ายบัญชี (2026-10-26): `auditlog` (ISO/Internal-External Audit), `report_xlsx` (ภ.พ.30 / ภ.ง.ด.3 / ภ.ง.ด.53 / ทะเบียนภาษีซื้อ-ขาย Excel), `account_financial_report` (TB/GL/BS/P&L), `account_tax_balance` (กระทบยอด VAT), `account_reconcile_oca` (auto bank reconciliation), `account_move_name_sequence`, `account_lock_date_update`
+  - OCA ที่พร้อมใช้เพิ่มตามข้อกำหนดฝ่ายบัญชี (2026-10-26): `auditlog` (ISO/Internal-External Audit), `report_xlsx` (ภ.พ.30 / ภ.ง.ด.3 / ภ.ง.ด.53 / ทะเบียนภาษีซื้อ-ขาย Excel), `account_financial_report` (TB/GL/BS/P&L), `account_tax_balance` (กระทบยอด VAT), `account_reconcile_oca` (auto bank reconciliation — เชื่อมผ่าน bridge `od19_accounting_reconcile_ui`), `account_move_name_sequence`, `account_lock_date_update`
   - Odoo standard `account` (`account.payment.register`, PND CSV ผ่าน `l10n_th`)
   - โมดูล custom ที่ผ่านการตรวจสอบแล้ว: `od19_accounting_cheque`, `od19_accounting_money_in_report`, `od19_accounting_features`, `od19_thai_tax_reports`, `od19_asset_disposal`, `od19_asset_loan`, `od19_thai_font_support`, `od19_accounting_document_sequence`
 - Refactor

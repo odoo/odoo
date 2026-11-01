@@ -112,7 +112,7 @@
 | --- | --- | --- | --- |
 | TFRS for NPAEs | งบการเงินตามมาตรฐาน | ✅ | template งบการเงินตามแบบ NPAE ใน `od19_thai_tax_reports` (งบแสดงฐานะการเงิน + งบกำไรขาดทุน) **เสร็จ 2026-10-29** (Wave 3) |
 | งบทดลอง / กำไรขาดทุน / งบดุล / กระแสเงินสด | รายงานมาตรฐาน | ✅ | `account_financial_report` (OCA) **ติดตั้งแล้ว 2026-10-27** (Wave 2A) |
-| กระทบยอดธนาคาร | Monthly recon | ✅ | `account_reconcile_oca` + `account_statement_base` **ติดตั้งแล้ว 2026-10-27** (Wave 2A) |
+| กระทบยอดธนาคาร | Monthly recon | ✅ | `account_reconcile_oca` + `account_statement_base` **ติดตั้งแล้ว 2026-10-27** (Wave 2A); เชื่อมกับ core ผ่าน bridge `od19_accounting_reconcile_ui` (2026-11-01) |
 | ปิดงวดบัญชี | ล็อกงวด | ✅ | `account_lock_date_update` ติดตั้งแล้ว + `account_journal_lock_date` **ติดตั้งแล้ว 2026-10-27** (Wave 2A) |
 
 ### หมวด H: การควบคุมภายใน / Audit Trail
@@ -130,12 +130,14 @@
 
 **ผลการติดตั้ง**: 12 โมดูล state = `installed` บน `odoo19_pdev` (ตรวจด้วย psql 2026-10-27) และ Odoo โหลดผ่านทุกโมดูลใน log (`Loading module account_billing (265/274)` → `account_check_deposit (266/274)` → `account_reconcile_oca (274/274)`)
 
+> อัปเดต 2026-11-01: `od19_accounting_features` **ไม่ hard-depend** `account_reconcile_oca` อีกต่อไป — แยกเป็น bridge module `od19_accounting_reconcile_ui` (LGPL, `auto_install=True`) เพื่อให้ core ไม่ถูกล็อกกับ addon AGPL ภายนอก
+
 | # | โมดูล | Repo | ปิดช่องว่าง | สถานะ |
 | --- | --- | --- | --- | --- |
 | 1 | `account_financial_report` | account-financial-reporting | หมวด G — TB / GL / BS / P&L | ✅ installed |
 | 2 | `account_tax_balance` | account-financial-reporting | หมวด B — กระทบยอด VAT | ✅ installed |
 | 3 | `partner_statement` | account-financial-reporting | AR/AP statement | ✅ installed |
-| 4 | `account_reconcile_oca` (+`account_statement_base`) | account-reconcile | หมวด G — bank reconciliation | ✅ installed |
+| 4 | `account_reconcile_oca` (+`account_statement_base`) | account-reconcile | หมวด G — bank reconciliation (bridge: `od19_accounting_reconcile_ui`) | ✅ installed |
 | 5 | `auditlog` | server-tools | หมวด H — Audit Trail (ISO 9001) | ✅ installed |
 | 6 | `account_move_tier_validation` (+`base_tier_validation_formula`) | tier-validation | หมวด H — อนุมัติหลายชั้น | ✅ installed |
 | 7 | `account_check_deposit` | account-financial-tools | หมวด H — เช็ครับ | ✅ installed |
