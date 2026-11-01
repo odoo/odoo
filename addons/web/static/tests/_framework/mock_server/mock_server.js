@@ -695,13 +695,13 @@ export class MockServer {
                 action.context ||= {};
                 action.domain ||= [];
                 action.filter_ids ||= [];
-                action.groups_id ||= [];
+                action.groups_ids ||= [];
                 break;
             }
             case ACTION_TYPES.report: {
                 action.binding_type = rawAction.binding_type ?? "report";
                 action.report_type ??= "qweb-pdf";
-                action.groups_id ||= [];
+                action.group_ids ||= [];
                 break;
             }
             case ACTION_TYPES.server: {
@@ -709,7 +709,7 @@ export class MockServer {
                 action.child_ids ||= [];
                 action.code ??= "";
                 action.evaluation_type ??= "value";
-                action.groups_id ||= [];
+                action.group_ids ||= [];
                 action.sequence ??= 5;
                 action.state ??= "object_write";
                 action.update_boolean_value ??= "true";

@@ -12,7 +12,7 @@ def run(stats):
     # TODO(พนักงาน): นำเข้า hr.employee (name, department_id, job_title, work_email, ...)
     #   โดย map แผนกจากขั้นตอนก่อนหน้า
     #
-    # TODO(ผู้ใช้): สร้าง res.users สำหรับผู้ที่ต้องใช้งาน (login, groups_id)
+    # TODO(ผู้ใช้): สร้าง res.users สำหรับผู้ที่ต้องใช้งาน (login, group_ids)
     #   *** ห้ามตั้งรหัสผ่านเป็นค่าคงที่ *** ให้ส่งอีเมลรีเซ็ตรหัสผ่านหรือตั้งเป็น
     #   ขั้นตอนแยกที่ปลอดภัย
     #

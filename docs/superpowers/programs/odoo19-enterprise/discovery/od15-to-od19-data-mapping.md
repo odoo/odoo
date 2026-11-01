@@ -151,7 +151,7 @@
 | พนักงาน | `hr_employee` | `hr.employee` (`name`, `department_id`, `job_title`, `work_email`) | map แผนกจากขั้นก่อน | ✅ |
 | Badge/PIN | `hr_employee.barcode` / PIN | `hr.employee.barcode` | คง Badge/PIN ให้ตรงเครื่องสแกน (`od19_hr_attendance_zkteco`) | ✅ |
 | โควต้าลา | ยอดวันลาคงเหลือ | `hr.leave.allocation` / `hr.leave.type` | ตั้งยอดคงเหลือเป็นยอดยกมา | 🟡 |
-| ผู้ใช้ | `res_users` | `res.users` (`login`, `groups_id`, `employee_ids`) | สร้างหลังพนักงาน; **ห้ามตั้งรหัสผ่านคงที่** | ✅ |
+| ผู้ใช้ | `res_users` | `res.users` (`login`, `group_ids`, `employee_ids`) | สร้างหลังพนักงาน; **ห้ามตั้งรหัสผ่านคงที่** | ✅ |
 | กลุ่มสิทธิ์ | `res_groups` (จาก `dtr_access_right_*`) | `res.groups` + OCA `base_user_role` (`od19_security_roles`) | map บทบาทตาม RBAC ศูนย์กลาง (SoD) | ✅ |
 
 ### 3.7 s07_projects — โครงการ / Job No. / Analytic
