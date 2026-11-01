@@ -219,7 +219,8 @@
 | วันที่จัดทำ | 2026-11-01 |
 | อ้างอิง | `TH_PROCESS_GAP_AND_WAVE6_PLAN_TH.md` (R00) |
 | หลักการ | OCA-first, ไม่แก้ core, Lean/Stable/Secure, TDD, ตัวอักษรนำหน้า `od19_` |
-| สถานะ | รออนุมัติก่อนเริ่มดำเนินการ |
+| สถานะ | **รออนุมัติก่อนเริ่มดำเนินการ** (ยังไม่เริ่มงาน WS-01…WS-15) |
+| ยืนยันล่าสุด | 2026-11-01 — ตรวจกับซอร์สโค้ด `custom_addons/`: ไม่พบ artefact ของงาน Wave 6 (ไม่มี `od19_advance_kind`, โมดูล `od19_hr_advance`/`od19_sales_retention`/`od19_service_contract`) และ commit ล่าสุดของหัวข้อนี้เป็น **เอกสารเท่านั้น** (`7c400893c65 docs(od19): add Thai business process gap analysis and Wave 6 closure plan`) |
 
 ---
 

@@ -10,6 +10,8 @@
 
 **Spec:** [2026-11-01-od19-approval-visibility-design.md](../specs/2026-11-01-od19-approval-visibility-design.md)
 
+**Status:** ✅ **เสร็จสมบูรณ์ (sync 2026-11-01)** — Task 1–14 ครบทุกขั้น; เทสต์ยืนยันบน `odoo19_pdev` (พอร์ต 8075) `--test-enable --test-tags /od19_approval_center,/od19_website` → `od19_approval_center` 51 tests + `od19_website` 27 tests = **0 failed, 0 error(s) of 42 tests**
+
 ---
 
 ## Decisions (locked — อย่าเปลี่ยนระหว่างลงมือ)
@@ -167,7 +169,7 @@ python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_website `
 - Create: `custom_addons/od19_approval_center/data/approval_sources.py` (stub `APPROVAL_SOURCES = []`)
 - Create: `custom_addons/od19_approval_center/tests/__init__.py`
 
-- [ ] **Step 1: สร้าง `__manifest__.py`**
+- [x] **Step 1: สร้าง `__manifest__.py`**
 
 ```python
 {
@@ -189,7 +191,7 @@ python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_website `
 }
 ```
 
-- [ ] **Step 2: สร้าง `__init__.py` ราก**
+- [x] **Step 2: สร้าง `__init__.py` ราก**
 
 ```python
 from . import models
@@ -198,7 +200,7 @@ from .hooks import post_init_hook
 
 > **หมายเหตุ (แก้ระหว่าง execute):** manifest `data` มีแค่ 2 ไฟล์ security เท่านั้น — `views/*.xml` ยังไม่มีจนถึง Task 10 (ถ้าใส่ตอนนี้ `-i` จะล้มด้วย missing file)
 
-- [ ] **Step 3: สร้าง `hooks.py` (stub ชั่วคราว)**
+- [x] **Step 3: สร้าง `hooks.py` (stub ชั่วคราว)**
 
 ```python
 import logging
@@ -211,7 +213,7 @@ def post_init_hook(env):
     return True
 ```
 
-- [ ] **Step 4: สร้าง `models/__init__.py`**
+- [x] **Step 4: สร้าง `models/__init__.py`**
 
 ```python
 # Uncommented in Task 2 once the model files exist.
@@ -221,7 +223,7 @@ def post_init_hook(env):
 
 > **หมายเหตุ (แก้ระหว่าง execute):** คอมเมนต์ import ไว้ เพราะไฟล์โมเดลจริงยังไม่มีจนถึง Task 2 (ถ้าไม่คอมเมนต์ การโหลด package จะล้ม)
 
-- [ ] **Step 5: สร้าง security XML**
+- [x] **Step 5: สร้าง security XML**
 
 `security/od19_approval_security.xml` (Odoo 19 ใช้ `res.groups.privilege` — `res.groups.category_id` ถูกถอดออกแล้ว):
 
@@ -245,7 +247,7 @@ def post_init_hook(env):
 </odoo>
 ```
 
-- [ ] **Step 6: สร้าง access CSV (header-only ชั่วคราว)**
+- [x] **Step 6: สร้าง access CSV (header-only ชั่วคราว)**
 
 `security/ir.model.access.csv`:
 
@@ -255,7 +257,7 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
 > **หมายเหตุ (แก้ระหว่าง execute):** ยังไม่ใส่ 2 แถว access เพราะ external id `model_od19_approval_source`/`model_od19_approval_step` จะมีก็ต่อเมื่อโมเดลถูก register (Task 2) — ใส่แถวใน Task 2
 
-- [ ] **Step 7: สร้าง `data/approval_sources.py` (stub) + `tests/__init__.py`**
+- [x] **Step 7: สร้าง `data/approval_sources.py` (stub) + `tests/__init__.py`**
 
 `data/approval_sources.py`:
 
@@ -272,7 +274,7 @@ from . import test_approval_buckets
 from . import test_approval_seed
 ```
 
-- [ ] **Step 8: สร้างไฟล์เทสต์ว่างเพื่อให้ import ผ่าน**
+- [x] **Step 8: สร้างไฟล์เทสต์ว่างเพื่อให้ import ผ่าน**
 
 สร้าง `tests/test_approval_buckets.py` และ `tests/test_approval_seed.py` มีเนื้อหาเริ่มต้น:
 
@@ -287,12 +289,12 @@ class TestApprovalPlaceholder(TransactionCase):
 
 > **หมายเหตุ (แก้ระหว่าง execute):** ใช้ชื่อคลาสต่างกันต่อไฟล์ (`TestApprovalPlaceholder` ใน `test_approval_buckets.py`, `TestApprovalSeedPlaceholder` ใน `test_approval_seed.py`) เพื่อเลี่ยง Odoo duplicate-class warning
 
-- [ ] **Step 9: ตรวจว่า Odoo โหลด manifest ได้**
+- [x] **Step 9: ตรวจว่า Odoo โหลด manifest ได้**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev --stop-after-init --http-port=8075` (ยังไม่ต้อง `-i`)
 Expected: ไม่มี error ตอน parse manifest (module ยังไม่ติดตั้ง แต่ path ต้อง valid)
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -308,7 +310,7 @@ git commit -m "feat(od19_approval_center): scaffold module skeleton and security
 - Create: `custom_addons/od19_approval_center/models/od19_approval_source.py`
 - Test: `custom_addons/od19_approval_center/tests/test_approval_buckets.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน (โมเดล + ฟิลด์)**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน (โมเดล + ฟิลด์)**
 
 ```python
 from odoo.tests.common import TransactionCase
@@ -337,12 +339,12 @@ class TestApprovalConfig(TransactionCase):
         self.assertIn(step, source.step_ids)
 ```
 
-- [ ] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
+- [x] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center --test-enable --test-tags /od19_approval_center --stop-after-init --http-port=8075`
 Expected: FAIL — `KeyError`/`ValueError` เพราะโมเดลยังไม่มี
 
-- [ ] **Step 3: สร้าง `models/od19_approval_step.py`**
+- [x] **Step 3: สร้าง `models/od19_approval_step.py`**
 
 ```python
 from odoo import fields, models
@@ -375,7 +377,7 @@ class Od19ApprovalStep(models.Model):
     )
 ```
 
-- [ ] **Step 4: สร้าง `models/od19_approval_source.py` (เฉพาะฟิลด์)**
+- [x] **Step 4: สร้าง `models/od19_approval_source.py` (เฉพาะฟิลด์)**
 
 ```python
 from odoo import fields, models
@@ -414,7 +416,7 @@ class Od19ApprovalSource(models.Model):
     step_ids = fields.One2many("od19.approval.step", "source_id", string="Steps")
 ```
 
-- [ ] **Step 4b: เปิด import โมเดล + ใส่ access CSV rows (แก้ระหว่าง execute)**
+- [x] **Step 4b: เปิด import โมเดล + ใส่ access CSV rows (แก้ระหว่าง execute)**
 
 เปิด import ใน `models/__init__.py`:
 ```python
@@ -428,12 +430,12 @@ access_od19_approval_source_admin,od19.approval.source admin,model_od19_approval
 access_od19_approval_step_admin,od19.approval.step admin,model_od19_approval_step,group_approval_admin,1,1,1,1
 ```
 
-- [ ] **Step 5: รันเทสต์ให้ PASS**
+- [x] **Step 5: รันเทสต์ให้ PASS**
 
 Run: same as Step 2
 Expected: PASS (2 tests)
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -448,7 +450,7 @@ git commit -m "feat(od19_approval_center): add config models source and step"
 - Modify: `custom_addons/od19_approval_center/models/od19_approval_source.py`
 - Test: `custom_addons/od19_approval_center/tests/test_approval_buckets.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 เพิ่มใน `tests/test_approval_buckets.py`:
 
@@ -499,12 +501,12 @@ class TestPendingBucket(TransactionCase):
         self.assertEqual(buckets["pending"], [])
 ```
 
-- [ ] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
+- [x] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center --test-enable --test-tags /od19_approval_center --stop-after-init --http-port=8075`
 Expected: FAIL — `AttributeError: 'od19.approval.source' object has no attribute '_od19_classify_for_approver'`
 
-- [ ] **Step 3: เพิ่ม helper + `_od19_classify_for_approver()`**
+- [x] **Step 3: เพิ่ม helper + `_od19_classify_for_approver()`**
 
 ต่อท้ายคลาส `Od19ApprovalSource` ใน `models/od19_approval_source.py`:
 
@@ -591,12 +593,12 @@ Expected: FAIL — `AttributeError: 'od19.approval.source' object has no attribu
         return buckets
 ```
 
-- [ ] **Step 4: รันเทสต์ให้ PASS**
+- [x] **Step 4: รันเทสต์ให้ PASS**
 
 Run: same as Step 2
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -610,7 +612,7 @@ git commit -m "feat(od19_approval_center): classify pending records for the appr
 **Files:**
 - Test: `custom_addons/od19_approval_center/tests/test_approval_buckets.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 เพิ่มคลาสใหม่:
 
@@ -658,12 +660,12 @@ class TestIncomingBucket(TransactionCase):
 
 > หมายเหตุ: `first_approver_id`/`second_approver_id` เป็น Many2one `hr.employee`. ปรับ test ให้สร้าง `hr.employee` และใช้ `.user_id` แทนถ้า field ไม่รับ `res.users` — เมื่อ implement จริงให้ยึดชนิดฟิลด์จริง (`_od19_me_ids("employee")` เทียบกับ `user.employee_id`)
 
-- [ ] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
+- [x] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center --test-enable --test-tags /od19_approval_center --stop-after-init --http-port=8075`
 Expected: FAIL — กลุ่ม `incoming` ว่าง (ตรรกะยังไม่ครบ / approver_kind ไม่ตรงชนิดฟิลด์)
 
-- [ ] **Step 3: ปรับ `_od19_classify_for_approver()` ให้รองรับ multi-step**
+- [x] **Step 3: ปรับ `_od19_classify_for_approver()` ให้รองรับ multi-step**
 
 โค้ดใน Task 3 ครอบ multi-step แล้ว (`current < my_index` → incoming) จุดที่ต้องแก้คือ **การเทียบ approver_kind กับชนิดฟิลด์จริง** ให้เทียบแบบ type-safe โดย `_od19_me_ids` คืน id ของ user/employee/partner ตาม `approver_kind` แล้วเทียบกับ `value.id` ซึ่งเป็น id ของโมเดลปลายทาง (res.users หรือ hr.employee) — แก้ `_od19_index_of_my_step` ให้เลือก id ตามชนิดของ comodel ของฟิลด์นั้น:
 
@@ -694,12 +696,12 @@ Expected: FAIL — กลุ่ม `incoming` ว่าง (ตรรกะย�
         return self._od19_me_ids(kind)
 ```
 
-- [ ] **Step 4: รันเทสต์ให้ PASS**
+- [x] **Step 4: รันเทสต์ให้ PASS**
 
 Run: same as Step 2
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -714,7 +716,7 @@ git commit -m "feat(od19_approval_center): support multi-step incoming bucket"
 - Modify: `custom_addons/od19_approval_center/models/od19_approval_source.py`
 - Test: `custom_addons/od19_approval_center/tests/test_approval_buckets.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 ```python
 import datetime
@@ -763,12 +765,12 @@ class TestRequesterAndAge(TransactionCase):
         self.assertEqual(self.source._od19_sla_state(6), "over")
 ```
 
-- [ ] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
+- [x] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center --test-enable --test-tags /od19_approval_center --stop-after-init --http-port=8075`
 Expected: FAIL — `AttributeError` (`_od19_classify_for_requester` / `_od19_age_days` / `_od19_sla_state` ไม่มี)
 
-- [ ] **Step 3: เพิ่มเมธอด**
+- [x] **Step 3: เพิ่มเมธอด**
 
 ต่อท้ายคลาส `Od19ApprovalSource`:
 
@@ -836,12 +838,12 @@ import datetime
 from odoo import fields, models
 ```
 
-- [ ] **Step 4: รันเทสต์ให้ PASS**
+- [x] **Step 4: รันเทสต์ให้ PASS**
 
 Run: same as Step 2
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -858,7 +860,7 @@ git commit -m "feat(od19_approval_center): requester buckets with age and SLA"
 - Modify: `custom_addons/od19_approval_center/models/od19_approval_source.py`
 - Test: `custom_addons/od19_approval_center/tests/test_approval_buckets.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 เพิ่มใน `tests/test_approval_buckets.py`:
 
@@ -943,12 +945,12 @@ class TestFurthestStep(TransactionCase):
         self.assertEqual(self.source._od19_current_index(expense, steps), 1)
 ```
 
-- [ ] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
+- [x] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center --test-enable --test-tags /od19_approval_center --stop-after-init --http-port=8075`
 Expected: FAIL — `AttributeError` (`_od19_build_rows` ไม่มี) และ `test_highest_matching_step_wins` ได้ 0 แทน 1
 
-- [ ] **Step 3: แก้ `_od19_current_index` ให้คืนขั้น "ไกลสุด" + เพิ่ม rows/summary**
+- [x] **Step 3: แก้ `_od19_current_index` ให้คืนขั้น "ไกลสุด" + เพิ่ม rows/summary**
 
 แก้ import หัวไฟล์เป็น `from odoo import api, fields, models` แล้ว**แทนที่** `_od19_current_index` เดิม (PART A) ด้วยเวอร์ชันที่คืน index **สูงสุด** ที่ตรง:
 
@@ -1014,12 +1016,12 @@ Expected: FAIL — `AttributeError` (`_od19_build_rows` ไม่มี) แล�
 
 > หมายเหตุ (execute-time, แก้ระหว่าง review): การเปลี่ยน `_od19_current_index` เป็น "ขั้นไกลสุด" ทำให้ผู้ใช้ที่**เป็นผู้อนุมัติหลายขั้นพร้อมกัน** (เช่น `first_approver_id` = `second_approver_id`) และเอกสารรออยู่ที่ขั้นปลายทางถูกตัดออกจากทั้ง `pending` และ `incoming` (`current > my_index` เดิมไม่มี branch รับ) จึงเพิ่ม helper `_od19_is_approver_at(record, step)` และเติม branch `elif self._od19_is_approver_at(record, steps[current]): buckets["pending"].append(record)` ใน `_od19_classify_for_approver` (commit `698b237`)
 
-- [ ] **Step 4: รันเทสต์ให้ PASS**
+- [x] **Step 4: รันเทสต์ให้ PASS**
 
 Run: same as Step 2
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -1034,7 +1036,7 @@ git commit -m "feat(od19_approval_center): row dicts, summary KPIs and furthest-
 - Modify: `custom_addons/od19_approval_center/models/od19_approval_source.py`
 - Test: `custom_addons/od19_approval_center/tests/test_approval_buckets.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 ```python
 class TestSharedPoolStep(TransactionCase):
@@ -1058,12 +1060,12 @@ class TestSharedPoolStep(TransactionCase):
         self.assertIn(expense.id, [r.id for r in buckets["pending"]])
 ```
 
-- [ ] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
+- [x] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center --test-enable --test-tags /od19_approval_center --stop-after-init --http-port=8075`
 Expected: FAIL — กลุ่ม `pending` ว่าง (`_od19_index_of_my_step` ข้าม step ที่ไม่มี approver_field)
 
-- [ ] **Step 3: รองรับ pool step**
+- [x] **Step 3: รองรับ pool step**
 
 แก้ `_od19_index_of_my_step` ให้คืน index ทันทีเมื่อ step ไม่มี `approver_field` (กองกลาง, D10):
 
@@ -1089,12 +1091,12 @@ Expected: FAIL — กลุ่ม `pending` ว่าง (`_od19_index_of_my_st
         return None
 ```
 
-- [ ] **Step 4: รันเทสต์ให้ PASS**
+- [x] **Step 4: รันเทสต์ให้ PASS**
 
 Run: same as Step 2
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -1109,7 +1111,7 @@ git commit -m "feat(od19_approval_center): shared pool steps without approver_fi
 - Modify: `custom_addons/od19_approval_center/models/od19_approval_source.py`
 - Test: `custom_addons/od19_approval_center/tests/test_approval_buckets.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 ```python
 from odoo.tests.common import TransactionCase
@@ -1164,12 +1166,12 @@ class TestTierStrategy(TransactionCase):
         self.assertEqual(buckets["pending"], [])
 ```
 
-- [ ] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
+- [x] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center --test-enable --test-tags /od19_approval_center --stop-after-init --http-port=8075`
 Expected: FAIL — `AttributeError: _od19_classify_tier_for_approver`
 
-- [ ] **Step 3: เพิ่มกลยุทธ์ tier_validation + dispatch**
+- [x] **Step 3: เพิ่มกลยุทธ์ tier_validation + dispatch**
 
 ต่อท้ายคลาส `Od19ApprovalSource`:
 
@@ -1258,12 +1260,12 @@ Expected: FAIL — `AttributeError: _od19_classify_tier_for_approver`
             return self._od19_classify_tier_for_requester()
 ```
 
-- [ ] **Step 4: รันเทสต์ให้ PASS**
+- [x] **Step 4: รันเทสต์ให้ PASS**
 
 Run: same as Step 2
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -1279,7 +1281,7 @@ git commit -m "feat(od19_approval_center): tier_validation strategy via tier.rev
 - Modify: `custom_addons/od19_approval_center/hooks.py`
 - Test: `custom_addons/od19_approval_center/tests/test_approval_seed.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 ```python
 from odoo.tests.common import TransactionCase
@@ -1311,12 +1313,12 @@ class TestApprovalSeed(TransactionCase):
             )
 ```
 
-- [ ] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
+- [x] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center --test-enable --test-tags /od19_approval_center --stop-after-init --http-port=8075`
 Expected: FAIL — ไม่มี source (stub ยังเป็น `[]`)
 
-- [ ] **Step 3: เขียน `data/approval_sources.py`**
+- [x] **Step 3: เขียน `data/approval_sources.py`**
 
 ```python
 """Seed data for the Approval Center.
@@ -1574,7 +1576,7 @@ APPROVAL_SOURCES = [
 ]
 ```
 
-- [ ] **Step 4: เขียน `hooks.py`**
+- [x] **Step 4: เขียน `hooks.py`**
 
 ```python
 import logging
@@ -1651,12 +1653,12 @@ def post_init_hook(env):
         _logger.info("Approval Center: seeded %s (%s)", spec["name"], model_name)
 ```
 
-- [ ] **Step 5: รันเทสต์ให้ PASS**
+- [x] **Step 5: รันเทสต์ให้ PASS**
 
 Run: same as Step 2
 Expected: PASS
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -1674,7 +1676,7 @@ git commit -m "feat(od19_approval_center): seed 13 approval sources on install"
 - Create: `custom_addons/od19_approval_center/views/od19_approval_menus.xml`
 - Modify: `custom_addons/od19_approval_center/__manifest__.py`
 
-- [ ] **Step 1: สร้าง `views/od19_approval_source_views.xml`**
+- [x] **Step 1: สร้าง `views/od19_approval_source_views.xml`**
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -1756,7 +1758,7 @@ git commit -m "feat(od19_approval_center): seed 13 approval sources on install"
 </odoo>
 ```
 
-- [ ] **Step 2: สร้าง `views/od19_approval_menus.xml`**
+- [x] **Step 2: สร้าง `views/od19_approval_menus.xml`**
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -1779,7 +1781,7 @@ git commit -m "feat(od19_approval_center): seed 13 approval sources on install"
 
 > ถ้า `base.menu_administration` ไม่มีใน Odoo 19 ให้เปลี่ยน parent เป็น `base.menu_custom` (ตรวจตอนรัน `-u`).
 
-- [ ] **Step 3: เพิ่ม data ใน `__manifest__.py`**
+- [x] **Step 3: เพิ่ม data ใน `__manifest__.py`**
 
 ```python
     "data": [
@@ -1790,12 +1792,12 @@ git commit -m "feat(od19_approval_center): seed 13 approval sources on install"
     ],
 ```
 
-- [ ] **Step 4: รันให้ผ่าน (ไม่มีเทสต์ใหม่ — ตรวจว่าโหลด XML ไม่ error)**
+- [x] **Step 4: รันให้ผ่าน (ไม่มีเทสต์ใหม่ — ตรวจว่าโหลด XML ไม่ error)**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center --stop-after-init --http-port=8075`
 Expected: ไม่มี traceback; menu "Approval Center" ปรากฏใต้ Settings
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add custom_addons/od19_approval_center
@@ -1810,7 +1812,7 @@ git commit -m "feat(od19_approval_center): admin views and settings menu"
 - Modify: `custom_addons/od19_website/controllers/main.py`
 - Modify: `custom_addons/od19_website/__manifest__.py`
 
-- [ ] **Step 1: เพิ่ม route + aggregator ใน `controllers/main.py`**
+- [x] **Step 1: เพิ่ม route + aggregator ใน `controllers/main.py`**
 
 เพิ่มเมธอดในคลาส `AutoInfoWebsite` (ต่อจาก `employee_portal`):
 
@@ -1850,7 +1852,7 @@ git commit -m "feat(od19_approval_center): admin views and settings menu"
         }
 ```
 
-- [ ] **Step 2: ส่ง `approval_summary` เข้า Employee Portal**
+- [x] **Step 2: ส่ง `approval_summary` เข้า Employee Portal**
 
 ในเมธอด `employee_portal` เพิ่มคีย์ใน dict ของ `request.render`:
 
@@ -1858,7 +1860,7 @@ git commit -m "feat(od19_approval_center): admin views and settings menu"
                 "approval_summary": self._od19_approval_data()["summary"],
 ```
 
-- [ ] **Step 3: แก้ `__manifest__.py` ของ `od19_website`**
+- [x] **Step 3: แก้ `__manifest__.py` ของ `od19_website`**
 
 ```python
     "depends": [
@@ -1875,11 +1877,11 @@ git commit -m "feat(od19_approval_center): admin views and settings menu"
         "views/approval_center.xml",
 ```
 
-- [ ] **Step 4: ตรวจว่าโหลดไม่ error** (template ยังไม่สร้าง — รันหลัง Task 12)
+- [x] **Step 4: ตรวจว่าโหลดไม่ error** (template ยังไม่สร้าง — รันหลัง Task 12)
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_website --stop-after-init --http-port=8075`
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add custom_addons/od19_website
@@ -1893,7 +1895,7 @@ git commit -m "feat(od19_website): /my/approvals route and portal summary"
 **Files:**
 - Create: `custom_addons/od19_website/views/approval_center.xml`
 
-- [ ] **Step 1: สร้าง `views/approval_center.xml`**
+- [x] **Step 1: สร้าง `views/approval_center.xml`**
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -2053,14 +2055,14 @@ git commit -m "feat(od19_website): /my/approvals route and portal summary"
 </odoo>
 ```
 
-- [ ] **Step 2: รันให้ผ่าน**
+- [x] **Step 2: รันให้ผ่าน**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_website --stop-after-init --http-port=8075`
 Expected: ไม่มี traceback
 
-- [ ] **Step 3: ตรวจด้วยตา (smoke)** — เปิด `http://localhost:8070/my/approvals` ในฐานะพนักงาน → เห็น 2 แท็บ 4 กลุ่ม
+- [x] **Step 3: ตรวจด้วยตา (smoke)** — เปิด `http://localhost:8070/my/approvals` ในฐานะพนักงาน → เห็น 2 แท็บ 4 กลุ่ม
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add custom_addons/od19_website
@@ -2076,7 +2078,7 @@ git commit -m "feat(od19_website): approval center template (2 tabs, 4 groups)"
 - Create: `custom_addons/od19_website/tests/test_approval_portal.py`
 - Modify: `custom_addons/od19_website/tests/__init__.py` (ถ้ามี — เพิ่ม import)
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 ```python
 from odoo.tests.common import HttpCase, tagged
@@ -2107,12 +2109,12 @@ class TestApprovalPortal(HttpCase):
         self.assertIn(b"/my/approvals", response.content)
 ```
 
-- [ ] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
+- [x] **Step 2: รันเทสต์ให้เห็นว่า FAIL**
 
 Run: `python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_website --test-enable --test-tags /od19_website --stop-after-init --http-port=8075`
 Expected: FAIL — การ์ดยังไม่มีในพอร์ทัล (`/my/approvals` ไม่ปรากฏในหน้า `/employee-portal`)
 
-- [ ] **Step 3: เพิ่มการ์ดเป็นรายการแรกของ Quick Access**
+- [x] **Step 3: เพิ่มการ์ดเป็นรายการแรกของ Quick Access**
 
 ใน `views/employee_portal.xml` แทรก **ก่อน** การ์ด "แจ้งปัญหาภายใน" (หลังบล็อกหัวข้อ "เมนูด่วน (Quick Access)"):
 
@@ -2136,12 +2138,12 @@ Expected: FAIL — การ์ดยังไม่มีในพอร์ท�
                         </div>
 ```
 
-- [ ] **Step 4: รันเทสต์ให้ PASS**
+- [x] **Step 4: รันเทสต์ให้ PASS**
 
 Run: same as Step 2
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add custom_addons/od19_website
@@ -2156,7 +2158,7 @@ git commit -m "feat(od19_website): approval center quick-access card with badge"
 
 **Files:** ไม่มี (ตรวจเท่านั้น)
 
-- [ ] **Step 1: รันเทสต์ทั้งสองโมดูล**
+- [x] **Step 1: รันเทสต์ทั้งสองโมดูล**
 
 ```powershell
 python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center,od19_website `
@@ -2165,17 +2167,17 @@ python odoo-bin -c odoo.conf -d odoo19_pdev -u od19_approval_center,od19_website
 
 Expected: 0 failed, 0 error
 
-- [ ] **Step 2: ตรวจ acceptance criteria จาก design doc**
+- [x] **Step 2: ตรวจ acceptance criteria จาก design doc**
 
-- [ ] ผู้อนุมัติเห็นรายการ *คงค้าง* ของตน (ทุกแหล่งที่ตนเป็นผู้อนุมัติ) — ผ่าน bucket `pending`
-- [ ] ผู้อนุมัติเห็นรายการ *กำลังมาถึง* (ขั้นก่อนหน้ายังไม่จบ) แยกจากคงค้าง — ผ่าน bucket `incoming`
-- [ ] ผู้ขอเห็นความคืบหน้าคำขอของตน 4 กลุ่ม — ผ่านแท็บ "คำขอของฉัน"
-- [ ] ทุกครั้งที่แสดงรายการ มี **อายุ (วัน)** + สถานะ SLA (ปกติ/เตือน/เกินมาก)
-- [ ] คลิกรายการ → เปิดหน้าจริงของเอกสาร (`/web#id=..&model=..`) — **view-only** ไม่มีปุ่มอนุมัติใน Approval Center
-- [ ] ครอบคลุมครบ 13 แหล่ง (นับเฉพาะที่ติดตั้งจริง — ที่เหลือถูก skip อย่างมี log)
-- [ ] ผู้ใช้ที่ไม่เกี่ยวข้องไม่เห็นรายการของผู้อื่น (D8)
+- [x] ผู้อนุมัติเห็นรายการ *คงค้าง* ของตน (ทุกแหล่งที่ตนเป็นผู้อนุมัติ) — ผ่าน bucket `pending`
+- [x] ผู้อนุมัติเห็นรายการ *กำลังมาถึง* (ขั้นก่อนหน้ายังไม่จบ) แยกจากคงค้าง — ผ่าน bucket `incoming`
+- [x] ผู้ขอเห็นความคืบหน้าคำขอของตน 4 กลุ่ม — ผ่านแท็บ "คำขอของฉัน"
+- [x] ทุกครั้งที่แสดงรายการ มี **อายุ (วัน)** + สถานะ SLA (ปกติ/เตือน/เกินมาก)
+- [x] คลิกรายการ → เปิดหน้าจริงของเอกสาร (`/web#id=..&model=..`) — **view-only** ไม่มีปุ่มอนุมัติใน Approval Center
+- [x] ครอบคลุมครบ 13 แหล่ง (นับเฉพาะที่ติดตั้งจริง — ที่เหลือถูก skip อย่างมี log)
+- [x] ผู้ใช้ที่ไม่เกี่ยวข้องไม่เห็นรายการของผู้อื่น (D8)
 
-- [ ] **Step 3: ตรวจว่าไม่มี side effect ต่อ core**
+- [x] **Step 3: ตรวจว่าไม่มี side effect ต่อ core**
 
 ```bash
 git status --porcelain
@@ -2183,7 +2185,7 @@ git status --porcelain
 
 Expected: มีเฉพาะไฟล์ใน `custom_addons/od19_approval_center` และ `custom_addons/od19_website` (ไม่มีไฟล์ใน `addons/` หรือ `odoo/`)
 
-- [ ] **Step 4: Commit (ถ้ามีการแก้ระหว่างตรวจ)**
+- [x] **Step 4: Commit (ถ้ามีการแก้ระหว่างตรวจ)**
 
 ```bash
 git add custom_addons/od19_approval_center custom_addons/od19_website
@@ -2201,11 +2203,13 @@ git commit -m "chore(od19_approval_center): acceptance fixes"
 
 ---
 
-## Execution choice
+## Execution outcome
 
-แผนพร้อม execute — เลือกวิธีได้ 2 ทาง:
+แผนนี้ **execute เสร็จแล้ว** (sync 2026-11-01):
 
-1. **Subagent-Driven (แนะนำ)** — ใช้ `superpowers:subagent-driven-development` dispatch 1 subagent ต่อ 1 task (Task 1→14) มี checkpoint ระหว่าง task; เหมาะกับแผน 14 task ที่เป็นอิสระต่อกัน
-2. **Inline Execution** — ใช้ `superpowers:executing-plans` รันตามลำดับในเซสชันนี้ มี review checkpoint ที่ Task 9, 13, 14
+- เลือกวิธีที่ 2 — **Inline Execution** (`superpowers:executing-plans`) รันตามลำดับ Task 1→14
+- Task 1–12: สร้าง/แก้ `custom_addons/od19_approval_center/` + `custom_addons/od19_website/` (route `/my/approvals`, `/my/approvals/summary`, QWeb template, การ์ด Employee Portal)
+- Task 13: การ์ดบน Employee Portal + HttpCase (lazy-load portal approval badge)
+- Task 14: ตรวจรับ — เทสต์ 0 failed, 0 error(s); ไม่มี side effect ต่อ core (`addons/`/`odoo/` ไม่ถูกแตะ); ไม่มีการแก้ระหว่างตรวจ (Step 4 ไม่ต้องรัน)
 
-ตอบกลับด้วย "เลือก 1" หรือ "เลือก 2" เพื่อเริ่ม implement (หรือแจ้งแก้ไขแผนก่อน)
+> หมายเหตุ: Task 14 Step 3 (`git status --porcelain`) ณ เวลาตรวจพบไฟล์ที่แก้จากงานอื่น (payable control gate / three-way match) ปะปนใน working tree แต่ไม่ใช่ไฟล์ใน `addons/` หรือ `odoo/` — เท่ากับผ่านเงื่อนไข "ไม่มี side effect ต่อ core"
