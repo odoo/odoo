@@ -788,3 +788,160 @@ class TestVNEDI(AccountTestInvoicingCommon):
 
         self.assertTrue(error, "Expected an error when no XML file is present in the ZIP.")
         self.assertFalse(result, "Expected no result when no XML file is found.")
+
+    def _get_sinvoice_file_attachments(self, invoice):
+        field_names = ('l10n_vn_edi_sinvoice_xml_file', 'l10n_vn_edi_sinvoice_pdf_file')
+        return tuple(
+            self.env['ir.attachment'].search([
+                ('res_model', '=', invoice._name),
+                ('res_id', '=', invoice.id),
+                ('res_field', '=', field_name),
+            ])
+            for field_name in field_names
+        )
+
+    def _send_and_print_again(self, invoice):
+        """Send & Print the invoice again with the SInvoice file fetches mocked.
+
+        Returns the two mocks, in the order (XML fetch, PDF fetch)."""
+        xml_file_data = {
+            'name': 'sinvoice.xml',
+            'raw': b'<invoice>test xml content</invoice>',
+            'mimetype': 'application/xml',
+            'res_field': 'l10n_vn_edi_sinvoice_xml_file',
+        }
+        pdf_file_data = {
+            'name': 'sinvoice.pdf',
+            'raw': b'%PDF-1.4 test pdf content',
+            'mimetype': 'application/pdf',
+            'res_field': 'l10n_vn_edi_sinvoice_pdf_file',
+        }
+        with patch(
+            'odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove'
+            '._l10n_vn_edi_fetch_invoice_xml_file_data',
+            return_value=(xml_file_data, ''),
+        ) as fetch_xml, patch(
+            'odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove'
+            '._l10n_vn_edi_fetch_invoice_pdf_file_data',
+            return_value=(pdf_file_data, ''),
+        ) as fetch_pdf:
+            wizard = self.env['account.move.send.wizard'].with_context(
+                active_model=invoice._name,
+                active_ids=invoice.ids,
+            ).create({})
+            wizard.action_send_and_print()
+        return fetch_xml, fetch_pdf
+
+    @freeze_time('2024-01-01')
+    def test_resend_does_not_fetch_stored_sinvoice_files(self):
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+        self._send_invoice(invoice)
+        messages_before = invoice.message_ids
+
+        fetch_xml, fetch_pdf = self._send_and_print_again(invoice)
+
+        fetch_xml.assert_not_called()
+        fetch_pdf.assert_not_called()
+        xml_attachments, pdf_attachments = self._get_sinvoice_file_attachments(invoice)
+        self.assertEqual(len(xml_attachments), 1)
+        self.assertEqual(len(pdf_attachments), 1)
+        json_attachment = invoice.l10n_vn_edi_sinvoice_file_id
+        new_messages = invoice.message_ids - messages_before
+        fetch_notes = new_messages.filtered(lambda msg: json_attachment in msg.attachment_ids)
+        self.assertFalse(fetch_notes)
+
+    @freeze_time('2024-01-01')
+    def test_resend_fetches_only_missing_sinvoice_file(self):
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+        self._send_invoice(invoice)
+        invoice.l10n_vn_edi_sinvoice_xml_file_id.unlink()
+
+        fetch_xml, fetch_pdf = self._send_and_print_again(invoice)
+
+        fetch_xml.assert_called_once()
+        fetch_pdf.assert_not_called()
+        xml_attachments, pdf_attachments = self._get_sinvoice_file_attachments(invoice)
+        self.assertEqual(len(xml_attachments), 1)
+        self.assertEqual(xml_attachments.raw, b'<invoice>test xml content</invoice>')
+        self.assertEqual(len(pdf_attachments), 1)
+
+    @freeze_time('2024-01-01')
+    def test_empty_sinvoice_file_is_an_error(self):
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+        self._send_invoice(invoice)
+        invoice.l10n_vn_edi_sinvoice_xml_file_id.unlink()
+        invoice.l10n_vn_edi_sinvoice_pdf_file_id.unlink()
+
+        with patch(
+            'odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove'
+            '._l10n_vn_edi_try_fetch_invoice_file_data',
+            return_value=({'fileToBytes': '', 'fileName': 'sinvoice.pdf'}, None),
+        ), patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.time.sleep'):
+            error = invoice._l10n_vn_edi_fetch_invoice_files()
+
+        self.assertEqual(len(error['errors']), 2)
+        xml_attachments, pdf_attachments = self._get_sinvoice_file_attachments(invoice)
+        self.assertFalse(xml_attachments)
+        self.assertFalse(pdf_attachments)
+
+    def test_sinvoice_reply_without_file_is_an_error(self):
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+        self._send_invoice(invoice)
+
+        with patch(
+            'odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove'
+            '._l10n_vn_edi_try_fetch_invoice_file_data',
+            return_value=({}, None),
+        ), patch('odoo.addons.l10n_vn_edi_viettel.models.account_move.time.sleep'):
+            xml_data, xml_error = invoice._l10n_vn_edi_fetch_invoice_xml_file_data()
+            pdf_data, pdf_error = invoice._l10n_vn_edi_fetch_invoice_pdf_file_data()
+
+        self.assertTrue(xml_error)
+        self.assertFalse(xml_data)
+        self.assertTrue(pdf_error)
+        self.assertFalse(pdf_data)
+
+    def test_non_zip_sinvoice_file_is_an_error(self):
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            products=self.product_a,
+            taxes=self.tax_sale_a,
+            post=True,
+        )
+        self._send_invoice(invoice)
+
+        html_bytes = b'<html>Service unavailable</html>'
+        html_response = {
+            'fileToBytes': base64.b64encode(html_bytes).decode('utf-8'),
+            'fileName': 'sinvoice.zip',
+        }, ""
+
+        with patch(
+            'odoo.addons.l10n_vn_edi_viettel.models.account_move.AccountMove'
+            '._l10n_vn_edi_fetch_invoice_file_data',
+            return_value=html_response,
+        ):
+            result, error = invoice._l10n_vn_edi_fetch_invoice_xml_file_data()
+
+        self.assertTrue(error)
+        self.assertFalse(result)
