@@ -134,7 +134,10 @@ class DiscussMessagingMenuController(WebclientController):
             add_channels_last_needaction=True,
         )
         store.resolve_data_request(
-            lambda res: res.attr("is_fully_loaded", len(channels) < limit),
+            lambda res: (
+                res.attr("is_fully_loaded", len(channels) < limit),
+                res.many("channels", [], value=channels),
+            ),
         )
 
     @store_handler("/mail/messaging_menu/get_most_popular_channels", audience="everyone")

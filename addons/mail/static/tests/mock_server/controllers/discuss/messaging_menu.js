@@ -291,7 +291,10 @@ registerStoreHandler(
         }
         store.add_channels_last_message = true;
         store.add_channels_last_needaction = true;
-        store.resolve_data_request({ is_fully_loaded: channelIds.length < limit });
+        store.resolve_data_request((r) => {
+            r.attr("is_fully_loaded", channelIds.length < limit);
+            r.many("channels", [], { value: DiscussChannel.browse(channelIds) });
+        });
     },
     { audience: "everyone" }
 );
