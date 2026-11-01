@@ -74,11 +74,25 @@ class Od19ApprovalSource(models.Model):
         for index, step in enumerate(steps):
             if not self._od19_field_ok(record, step.approver_field):
                 continue
-            me_id = self._od19_me_ids(step.approver_kind)
             value = record[step.approver_field]
-            if me_id and value and value.id == me_id:
+            if not value:
+                continue
+            comodel = record._fields[step.approver_field].comodel_name
+            me_id = self._od19_me_ids_for_comodel(comodel, step.approver_kind)
+            if me_id and value.id == me_id:
                 return index
         return None
+
+    def _od19_me_ids_for_comodel(self, comodel, kind):
+        """Map the current user onto the comodel stored by the approver field."""
+        user = self.env.user
+        if comodel == "hr.employee":
+            return user.employee_id.id if "employee_id" in user._fields else 0
+        if comodel == "res.partner":
+            return user.partner_id.id or 0
+        if comodel == "res.users":
+            return user.id or 0
+        return self._od19_me_ids(kind)
 
     def _od19_classify_for_approver(self):
         """Return the 4 approver buckets for the current user (strategy=field)."""
