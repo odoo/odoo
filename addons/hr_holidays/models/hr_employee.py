@@ -7,7 +7,6 @@ from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tools import OrderedSet, float_round
@@ -346,10 +345,6 @@ class HrEmployee(models.Model):
         department is copied on the requests to approve or in the future.
         """
         values = vals
-        # Prevent the resource calendar of leaves to be updated by a write to
-        # employee. When this module is enabled the resource calendar of
-        # leaves are determined by those of the contracts.
-        self = self.with_context(no_leave_resource_calendar_update=True)  # noqa: PLW0642
         if 'parent_id' in values:
             manager = self.env['hr.employee'].browse(values['parent_id']).user_id
             if manager:
@@ -369,24 +364,6 @@ class HrEmployee(models.Model):
         res = super().write(values)
         # remove users from the Responsible group if they are no longer leave managers
         old_managers.sudo()._clean_leave_responsible_users()
-
-        # Change the resource calendar of the employee's leaves in the future
-        # Other modules can disable this behavior by setting the context key
-        # 'no_leave_resource_calendar_update'
-        if 'resource_calendar_id' in values and not self.env.context.get('no_leave_resource_calendar_update'):
-            try:
-                leaves = self.env['hr.leave'].search([
-                    ('employee_id', 'in', self.ids),
-                    ('resource_calendar_id', '!=', int(values['resource_calendar_id'])),
-                    ('date_from', '>', fields.Datetime.now())])
-                leaves.write({'resource_calendar_id': values['resource_calendar_id']})
-                non_hourly_leaves = leaves.filtered(lambda l: l.leave_type_request_unit != 'hour')
-                non_hourly_leaves.with_context(leave_skip_date_check=True, leave_skip_state_check=True)._compute_date_from_to()
-                non_hourly_leaves.filtered(lambda l: l.state == 'validate')._validate_leave_request()
-            except ValidationError:
-                raise ValidationError(_("Changing this working schedule results in the affected employee(s) not having enough "
-                                        "leaves allocated to accomodate for their leaves already taken in the future. Please "
-                                        "review this employee's leaves and adjust their allocation accordingly."))
 
         if 'parent_id' in values or 'department_id' in values:
             today_date = fields.Datetime.now()
