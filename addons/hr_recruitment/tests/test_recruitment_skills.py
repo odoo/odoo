@@ -417,3 +417,18 @@ class TestRecruitmentSkills(TransactionCase):
         self.assertEqual(talent.applicant_skill_ids.skill_type_id, applicant.applicant_skill_ids.skill_type_id)
         self.assertEqual(talent.applicant_skill_ids.skill_level_id, applicant.applicant_skill_ids.skill_level_id)
         self.assertEqual(talent.applicant_skill_ids.skill_id, applicant.applicant_skill_ids.skill_id)
+
+    def test_matching_score_name_of_applicant_without_name(self):
+        self.t_job_1.expected_degree = self.env['hr.recruitment.degree'].create({
+            'name': 'Master',
+            'score': 0.5,
+        })
+        applicant = self.env['hr.applicant'].create({
+            'job_id': self.t_job_1.id,
+            'type_id': self.t_job_1.expected_degree.id,
+        })
+        self.assertTrue(applicant.matching_score)
+        self.assertEqual(
+            applicant.with_context(show_matching_score_in_name=True).display_name,
+            f"--{applicant.matching_score}%--",
+        )

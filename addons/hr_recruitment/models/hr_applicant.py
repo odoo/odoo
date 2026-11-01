@@ -1120,7 +1120,7 @@ class HrApplicant(models.Model):
         if self.env.context.get("show_matching_score_in_name", False):
             for applicant in self:
                 if applicant.matching_score:
-                    name = f"{applicant.display_name or applicant.name} \t --{applicant.matching_score:.0f}%--"
+                    name = f"{applicant.display_name or ''} \t --{applicant.matching_score:.0f}%--"
                     applicant.display_name = name.strip()
 
     @api.model
