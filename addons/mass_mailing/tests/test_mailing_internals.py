@@ -13,7 +13,7 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.sql_db import Cursor
 from odoo.tests import Form, HttpCase, users, tagged
 from odoo.tools import mute_logger
@@ -28,6 +28,36 @@ class TestMassMailValues(MassMailCommon):
     def setUpClass(cls):
         super(TestMassMailValues, cls).setUpClass()
         cls._create_mailing_list()
+
+    def test_mail_composer_mailing_name(self):
+        """ Only email marketing users can create a mailing from the mass mail composer:
+        the mailing name is hidden from other users, and no sudo gives the right away. """
+        recipients = self.env['res.partner'].create([
+            {'name': f'Recipient {idx}', 'email': f'recipient.{idx}@example.com'} for idx in range(2)
+        ])
+        ctx = {
+            'default_body': '<p>Hello</p>',
+            'default_composition_mode': 'mass_mail',
+            'default_model': 'res.partner',
+            'default_res_ids': recipients.ids,
+            'default_subject': 'Composer Mailing',
+        }
+        composer_form = Form(self.env['mail.compose.message'].with_user(self.user_employee).with_context(ctx))
+        with self.assertRaisesRegex(AssertionError, "invisible field 'mass_mailing_name'"):
+            composer_form.mass_mailing_name = 'Composer Mailing'
+        composer = composer_form.save()
+        # filled anyway, e.g. through RPC
+        composer.mass_mailing_name = 'Composer Mailing'
+        with self.assertRaises(AccessError):
+            composer._action_send_mail()
+
+        composer_form = Form(self.env['mail.compose.message'].with_user(self.user_marketing).with_context(ctx))
+        composer_form.mass_mailing_name = 'Composer Mailing'
+        composer = composer_form.save()
+        composer._action_send_mail()
+        mailing = self.env['mailing.mailing'].search([('name', '=', 'Composer Mailing')])
+        self.assertEqual(composer.mass_mailing_id, mailing)
+        self.assertEqual(len(mailing), 1)
 
     @users('user_marketing')
     def test_mailing_body_cropped_vml_image(self):
