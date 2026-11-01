@@ -11,6 +11,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { getMimetype } from "@html_editor/utils/image";
 import { WebsiteDialog } from "./dialog";
+import { lcpMeasurement } from "./lcp_measurement_utils";
 import {
     Component,
     onMounted,
@@ -1146,6 +1147,8 @@ export class OptimizeSEODialog extends Component {
                 };
             }
         }
+
+        Object.assign(data, await lcpMeasurement.measureLcpImages(this.website.pageDocument));
 
         await this.orm.write(this.object.model, [this.object.id], data, {
             context: {
