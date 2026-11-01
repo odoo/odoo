@@ -1,6 +1,13 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { useProps, t } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
+
+const BORDER_RADIUS_OPTIONS = [
+    { label: _t("Small"), class: "rounded-1" },
+    { label: _t("Normal"), class: "rounded-2" },
+    { label: _t("Large"), class: "rounded-3" },
+];
 
 export class BorderConfigurator extends BaseOptionComponent {
     static template = "html_builder.BorderConfiguratorOption";
@@ -13,6 +20,7 @@ export class BorderConfigurator extends BaseOptionComponent {
         withBSClass: t.boolean().optional(true),
         action: t.string().optional("styleAction"),
         level: t.number().optional(),
+        showSuggestions: t.boolean().optional(true),
     });
 
     setup() {
@@ -20,6 +28,7 @@ export class BorderConfigurator extends BaseOptionComponent {
         this.state = useDomState((editingElement) => ({
             hasBorder: this.hasBorder(editingElement),
         }));
+        this.borderRadiusOptions = this.showSuggestions() ? BORDER_RADIUS_OPTIONS : [];
     }
     getStyleActionParam(param) {
         const property = `border-${this.props.direction ? this.props.direction + "-" : ""}${param}`;
@@ -39,5 +48,18 @@ export class BorderConfigurator extends BaseOptionComponent {
         });
         const values = (styleActionValue || "0").match(/\d+/g);
         return values.some((value) => parseInt(value) > 0);
+    }
+    showSuggestions() {
+        return (
+            this.props.showSuggestions &&
+            this.props.action === "styleAction" &&
+            ["--box-border-radius", "border-radius"].includes(this.radiusActionParam.mainParam)
+        );
+    }
+    get radiusActionParam() {
+        return {
+            mainParam: this.getStyleActionParam("radius"),
+            extraClass: this.props.withBSClass ? "rounded" : undefined,
+        };
     }
 }
