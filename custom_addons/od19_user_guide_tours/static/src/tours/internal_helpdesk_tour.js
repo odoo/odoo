@@ -47,6 +47,14 @@ registry.category("web_tour.tours").add("od19_internal_helpdesk_tour", {
             run: "edit Printer on the 3rd floor is not responding",
         },
         {
+            trigger: ".o_field_widget[name='description'] .odoo-editor-editable",
+            content: markup(_t(
+                "<b>Description</b> is mandatory — add the details of the incident."
+            )),
+            tooltipPosition: "bottom",
+            run: "editor The printer on the 3rd floor does not respond when printing from the ERP.",
+        },
+        {
             trigger: ".o_field_widget[name='team_id']",
             content: markup(_t(
                 "Check the <b>team</b>. Internal tickets always go to the internal IT team."

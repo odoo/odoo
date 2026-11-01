@@ -16,10 +16,7 @@
         <field name="res_model">helpdesk.ticket</field>
         <field name="view_mode">kanban,list,form,pivot</field>
         <field name="domain">[('team_type', '=', 'internal')]</field>
-        <field name="context">
-            {'default_team_id': ref('od19_helpdesk_extension.team_internal_it'),
-             'search_default_open': 1}
-        </field>
+        <field name="context" eval="{'default_team_id': ref('od19_helpdesk_extension.team_internal_it'), 'search_default_open': 1}"/>
     </record>
 
     <menuitem
@@ -36,9 +33,7 @@
         <field name="res_model">helpdesk.ticket</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('team_type', '=', 'internal'), ('user_id', '=', uid)]</field>
-        <field name="context">
-            {'default_team_id': ref('od19_helpdesk_extension.team_internal_it')}
-        </field>
+        <field name="context" eval="{'default_team_id': ref('od19_helpdesk_extension.team_internal_it')}"/>
     </record>
 
     <menuitem
@@ -58,10 +53,7 @@
         <field name="res_model">helpdesk.ticket</field>
         <field name="view_mode">kanban,list,form,pivot</field>
         <field name="domain">[('team_type', '=', 'customer_service')]</field>
-        <field name="context">
-            {'default_team_id': ref('od19_helpdesk_extension.team_sales_services'),
-             'search_default_open': 1}
-        </field>
+        <field name="context" eval="{'default_team_id': ref('od19_helpdesk_extension.team_sales_services'), 'search_default_open': 1}"/>
     </record>
 
     <menuitem
@@ -86,9 +78,7 @@
         <field name="res_model">helpdesk.ticket</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('team_type', '=', 'customer_service'), ('user_id', '=', uid)]</field>
-        <field name="context">
-            {'default_team_id': ref('od19_helpdesk_extension.team_sales_services')}
-        </field>
+        <field name="context" eval="{'default_team_id': ref('od19_helpdesk_extension.team_sales_services')}"/>
     </record>
 
     <menuitem
