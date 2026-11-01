@@ -3,7 +3,7 @@
 - **วันที่:** 2026-11-01
 - **Child spec ID:** W2-PAYABLE-CONTROL-GATE (ภายใต้ W2-FINANCE-CONTROLS)
 - **โมดูลที่แตะ:** `od19_accounting_payment_voucher_reports` (แก้), `od19_accounting_features` (แก้ config/สิทธิ์), data/config มาตรฐาน Odoo (`purchase`, `account`) — **ไม่แตะ Odoo core**
-- **สถานะ:** รอตรวจสอบ (Draft for review)
+- **สถานะ:** Approved / Implemented (2026-11-01) — ปิดครบ P1-T1…P1-T10
 - **ผู้เกี่ยวข้อง:** ฝ่ายบัญชีเจ้าหนี้ / ผู้จัดการบัญชี / ผู้จัดทำจ่าย / ผู้อนุมัติ / ไอที–แอดมิน
 - **Canonical path:** `docs/superpowers/specs/2026-11-01-od19-payable-control-gate-design.md`
 
@@ -224,6 +224,37 @@
 
 **หลักฐาน (P1-T9):** `powershell -ExecutionPolicy Bypass -File .\run-tests.ps1 -Module od19_purchase_procurement_core,od19_accounting_payment_voucher_reports` → `odoo.tests.result: 0 failed, 0 error(s) of 67 tests` (log `data_test_run.log`, exit code 0)
 
+### 9.2 UAT business-flow evidence (ปิด P1-T10, 2026-11-01)
+
+หลักฐาน UAT ที่รันได้จริง = `TestPayableUatBusinessFlow` (`AccountTestInvoicingCommon`) ใน
+`custom_addons/od19_accounting_operational_closure/tests/test_payable_uat_business_flow.py`
+(13 เคส ≥ 10) จำลองวงจร **PO → รับของ → บิล → เตรียมจ่าย → อนุมัติ → จ่าย** และเทียบผลกับ gate จริงทุกตัว:
+
+| เคส | เทสต์ | gate ที่พิสูจน์ |
+|---|---|---|
+| 01 | `test_uat_01_full_flow_goods_prepare_approve_pay` | วงจรครบ (goods): closure state = `paid` |
+| 02 | `test_uat_02_goods_not_billable_before_receipt` | 3-way match (ยังไม่รับของ ออกบิลไม่ได้) |
+| 03 | `test_uat_03_goods_bill_limited_to_received_quantity` | 3-way match (ออกบิลจำกัดที่จำนวนรับ 6/10) |
+| 04 | `test_uat_04_service_two_way_match_bills_without_receipt` | 2-way match (บริการไม่ต้องรอรับของ) |
+| 05 | `test_uat_05_bill_first_gate_blocks_payment_without_bill` | bill-first (`od19_require_vendor_bill_for_payment`) |
+| 06 | `test_uat_06_payment_from_bill_passes_bill_first_gate` | bill-first (มีบิลแล้วจ่ายได้) |
+| 07 | `test_uat_07_prepare_approve_gate_blocks_post` | Prepare→Approve (`od19_enforce_prepare_approval`) |
+| 08 | `test_uat_08_prepare_then_approve_then_post` | Prepare→Approve + ร่องรอย (`od19_prepared_by`/`od19_approved_by`) |
+| 09 | `test_uat_09_sod_blocks_self_approval` | SoD (`od19_enforce_prepare_sod`) |
+| 10 | `test_uat_10_sod_allows_independent_approver` | SoD (ผู้อนุมัติคนละคน) |
+| 11 | `test_uat_11_override_requires_reason_and_allows_post` | override บังคับเหตุผล |
+| 12 | `test_uat_12_blocked_bill_excluded_from_payment_run` | Block Payment |
+| 13 | `test_uat_13_group_payments_merge_same_vendor_bills` | Group Payments |
+
+**ผลรัน:** `odoo.tests.result: 0 failed, 1 error(s) of 40 tests` บน DB `odoo19_uat` (โคลนจาก dev DB เพื่อไม่ชน lock กับ dev server)
+— 13 เคส UAT **ผ่านทั้งหมด**; 1 error คือ defect ที่มีอยู่ก่อนและอยู่นอกขอบเขต P1-T10:
+`od19_accounting_operational_closure.test_ap_closure.TestAccountingAPClosure.test_paid_bill_does_not_close_order_with_remaining_bill_work`
+(พิสูจน์แล้วว่า fail ที่ HEAD ก่อนเริ่มงานนี้) → ต้องเปิดงานซ่อมแยกต่างหาก
+
+**Defect list / งานติดตาม (นอกขอบเขต P1-T10):**
+1. `test_ap_closure.test_paid_bill_does_not_close_order_with_remaining_bill_work` — `UserError: There's nothing left to pay for the selected journal items...`
+2. `od19_accounting_reporting.test_company_report_uses_remaining_amount_to_invoice_for_partial_invoicing` — `276.0 != 138.0`
+
 ---
 
 ## 10. เกณฑ์ยอมรับ (Acceptance Criteria)
@@ -253,7 +284,7 @@
 | P1-T7 | เปิด Three-Way Match (config) + แก้ `purchase_method` สินค้าคงคลัง | บัญชี + จัดซื้อ | **done + verified (2026-11-01)** | เทสต์ §9 (Purchase) ผ่าน; บริการไม่กระทบ | `custom_addons/od19_purchase_procurement_core/tests/test_three_way_match.py` |
 | P1-T8 | คู่มือ Block Payment + Group Payments ให้ฝ่าย AP | บัญชีเจ้าหนี้ | **done + verified (2026-11-01)** | มี SOP ระบุขั้นตอน; ทดลองใช้จริง 1 รอบ | `ODOO19_USER_MANUAL_TH.md` (SOP AP), `custom_addons/od19_accounting_payment_voucher_reports/tests/test_ap_block_and_group_payments.py` (หลักฐานทดลองใช้) |
 | P1-T9 | เทสต์ TDD P1 ครบ + อัปเดต spec wave-2 (sync) | Backend dev | **done + verified (2026-11-01)** | เกณฑ์ยอมรับ 1–9 ครบ (traceability §9.1); เทสต์ 67 ตัว `0 failed, 0 error(s)` | `tests/*` (§9.1), `2026-10-21-...wave-2...md` §6.10 |
-| P1-T10 | UAT จำลอง business flow (บิลจาก PO → รับของ → จ่าย) | บัญชี + จัดซื้อ | todo | ผ่านเคสจริง 10 รายการต่อส่วน (ข้อมูลตัวอย่าง) | UAT evidence |
+| P1-T10 | UAT จำลอง business flow (บิลจาก PO → รับของ → จ่าย) | บัญชี + จัดซื้อ | **done + verified (2026-11-01)** | 13 เคสผ่าน (≥ 10); จำลองวงจร PO → รับของ → บิล → เตรียมจ่าย → อนุมัติ → จ่าย ครบทุก gate — หลักฐาน §9.2 | `custom_addons/od19_accounting_operational_closure/tests/test_payable_uat_business_flow.py` |
 
 ---
 

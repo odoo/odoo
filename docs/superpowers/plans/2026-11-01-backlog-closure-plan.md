@@ -60,29 +60,32 @@ graph TD
 
 ## EPIC A — Payable Control Gate Closure
 
-> อ้างอิง: [Payable Control Gate Design](file:///c:/odoo-dev/odoo19/docs/superpowers/specs/2026-11-01-od19-payable-control-gate-design.md) — T1–T8 = done+verified 2026-11-01; T9–T10 = todo
+> อ้างอิง: [Payable Control Gate Design](file:///c:/odoo-dev/odoo19/docs/superpowers/specs/2026-11-01-od19-payable-control-gate-design.md) — T1–T10 = done+verified 2026-11-01 (spec สถานะ Approved / Implemented)
 
-### Task A1 — ปิด T9: เทสต์ TDD ครบเกณฑ์ + sync wave-2 spec
-- [ ] **Objective:** ทำให้เทสต์ P1 ครบเกณฑ์ทั้ง 9 ข้อ และ sync สถานะ spec ที่สองให้ตรง
-- [ ] **Evidence ที่ต้องมี:** ผลรัน `--test-enable` ของ `od19_purchase_procurement_core` + `od19_accounting_payment_voucher_reports` = `0 failed, 0 error`; ไฟล์ [wave-2 spec](file:///c:/odoo-dev/odoo19/docs/superpowers/specs/2026-10-21-odoo19-enterprise-wave-2-custom-finance-controls.md) อัปเดตหัวข้อ Payment Preparation
-- [ ] **Steps:**
+### Task A1 — ปิด T9: เทสต์ TDD ครบเกณฑ์ + sync wave-2 spec (ปิดแล้ว 2026-11-01)
+- [x] **Objective:** ทำให้เทสต์ P1 ครบเกณฑ์ทั้ง 9 ข้อ และ sync สถานะ spec ที่สองให้ตรง
+- [x] **Evidence ที่ต้องมี:** ผลรัน `--test-enable` ของ `od19_purchase_procurement_core` + `od19_accounting_payment_voucher_reports` = `0 failed, 0 error`; ไฟล์ [wave-2 spec](file:///c:/odoo-dev/odoo19/docs/superpowers/specs/2026-10-21-odoo19-enterprise-wave-2-custom-finance-controls.md) อัปเดตหัวข้อ Payment Preparation
+- [x] **Steps:**
   1. ตรวจ criteria 1–9 ใน spec T9 ว่าเทสต์ใดขาด
   2. เขียนเทสต์ที่ขาด (TDD) แล้วรันด้วย `$env:PYTHONDONTWRITEBYTECODE=1; python -B odoo-bin -d odoo19_pdev --test-enable --test-tags <tag>`
   3. อัปเดต wave-2 spec ให้ระบุว่า Payment Preparation ครอบด้วย `od19_require_vendor_bill_for_payment`
-- [ ] **Acceptance:** เทสต์ผ่านครบ, spec 2 ฉบับสถานะตรงกัน, commit `test(...)`
-- [ ] **Subagent:** `general_purpose_task`
+- [x] **Acceptance:** เทสต์ผ่านครบ, spec 2 ฉบับสถานะตรงกัน, commit `test(...)`
+- [x] **Subagent:** `general_purpose_task`
+- [x] **ปิดงาน (2026-11-01):** traceability §9.1 ครบเกณฑ์ 1–9, เทสต์ 67 ตัว `0 failed, 0 error(s)`; sync wave-2 spec §6.10 → commit `5fc3d68ffbe`
 
-### Task A2 — ปิด T10: UAT จำลอง business flow
-- [ ] **Objective:** จำลอง flow บิลจาก PO → รับของ → ขอจ่าย → อนุมัติ → จ่ายครบทุกข้อบังคับ
-- [ ] **Evidence:** สคริปต์/บันทึกผล UAT ≥ 10 เคส + ผลเทียบกับ gate (`od19_require_vendor_bill_for_payment`, SoD, three-way match)
-- [ ] **Steps:** เตรียมข้อมูลตัวอย่าง (ประมาณ 10 รายการ/ส่วน) → รัน flow → บันทึกผล pass/fail → สรุปช่องว่าง
-- [ ] **Acceptance:** 10 เคสผ่าน หรือมี defect list + งานติดตาม
-- [ ] **Subagent:** `general_purpose_task`
+### Task A2 — ปิด T10: UAT จำลอง business flow (ปิดแล้ว 2026-11-01)
+- [x] **Objective:** จำลอง flow บิลจาก PO → รับของ → ขอจ่าย → อนุมัติ → จ่ายครบทุกข้อบังคับ
+- [x] **Evidence:** สคริปต์/บันทึกผล UAT ≥ 10 เคส + ผลเทียบกับ gate (`od19_require_vendor_bill_for_payment`, SoD, three-way match)
+- [x] **Steps:** เตรียมข้อมูลตัวอย่าง (ประมาณ 10 รายการ/ส่วน) → รัน flow → บันทึกผล pass/fail → สรุปช่องว่าง
+- [x] **Acceptance:** 10 เคสผ่าน หรือมี defect list + งานติดตาม
+- [x] **Subagent:** `general_purpose_task`
+- [x] **ปิดงาน (2026-11-01):** `TestPayableUatBusinessFlow` 13 เคส ผ่านทั้งหมด; รันบน DB `odoo19_uat` → `0 failed, 1 error(s) of 40 tests` (1 error = defect ที่มีอยู่ก่อน `test_ap_closure`, นอกขอบเขต); หลักฐาน §9.2 ของ spec → commit `01ee128d2c7`
 
-### Task A3 — ปิดสถานะ spec
-- [ ] **Objective:** เปลี่ยนบรรทัดที่ 6 ของ spec จาก "รอตรวจสอบ (Draft for review)" → `Approved / Implemented`
-- [ ] **Depends on:** A1, A2
-- [ ] **Acceptance:** สถานะ spec = Implemented + ประวัติปิดงานในไฟล์
+### Task A3 — ปิดสถานะ spec (ปิดแล้ว 2026-11-01)
+- [x] **Objective:** เปลี่ยนบรรทัดที่ 6 ของ spec จาก "รอตรวจสอบ (Draft for review)" → `Approved / Implemented`
+- [x] **Depends on:** A1, A2
+- [x] **Acceptance:** สถานะ spec = Implemented + ประวัติปิดงานในไฟล์
+- [x] **ปิดงาน (2026-11-01):** บรรทัด 6 = `Approved / Implemented (2026-11-01)`; §11 P1-T10 = `done + verified`; เพิ่ม §9.2 UAT evidence + closure history
 
 ---
 
