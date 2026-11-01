@@ -63,8 +63,8 @@ SO_STATES = ('sale', 'done')
 partner_map = {}   # legacy res_partner.id -> res.partner.id
 product_map = {}   # legacy product_product.id -> (product.product.id, uom id)
 
-# ชื่อฟิลด์หน่วยนับของ sale.order.line (ต่างกันตามเวอร์ชัน)
-UOM_FIELD = 'product_uom'
+# ชื่อบรรทัดสรุปที่ใช้แทนรายละเอียดบรรทัดจากระบบเดิม
+SUMMARY_LINE_NAME = 'ยอดยกมาจากระบบเดิม'
 
 
 def _lim(sql):
@@ -105,6 +105,18 @@ def _maybe_commit(env, stats):
     if done and done % COMMIT_EVERY == 0:
         env.cr.commit()
         common.log("... progress %s" % stats.summary())
+
+
+def _summary_product(env):
+    """คืน product.product ที่ใช้เป็นบรรทัดสรุปยอดยกมา (สร้างครั้งเดียว รันซ้ำได้)."""
+    vals = {
+        'name': 'ยอดยกมาจากระบบเดิม (สรุป)',
+        'type': 'service',
+        'sale_ok': True,
+        'purchase_ok': False,
+    }
+    rec, _action = common.upsert('product.template', '__summary__', vals)
+    return rec.product_variant_id
 
 
 # --------------------------------------------------------------------------
@@ -192,7 +204,7 @@ def phase_products(env):
 def phase_sale_orders(env):
     common.set_step('dash.sale_orders')
     orders = legacy.fetch_all(_lim(
-        "SELECT id, date_order, partner_id, client_order_ref "
+        "SELECT id, date_order, partner_id, client_order_ref, amount_total "
         "FROM sale_order WHERE state = ANY(%s) "
         "AND date_order >= %s AND date_order < %s ORDER BY id"),
         (list(SO_STATES), DATE_FROM, DATE_TO))
@@ -200,16 +212,12 @@ def phase_sale_orders(env):
     if not orders:
         return
 
-    ids = [o['id'] for o in orders]
-    lines = legacy.fetch_all(
-        "SELECT id, order_id, name, product_id, product_uom_qty, price_unit, discount, "
-        "       display_type, sequence "
-        "FROM sale_order_line WHERE order_id = ANY(%s) ORDER BY order_id, sequence, id",
-        (ids,))
-    lines_by_order = {}
-    for ln in lines:
-        lines_by_order.setdefault(ln['order_id'], []).append(ln)
+    summary_product = _summary_product(env)
 
+    # หมายเหตุ: ไม่สร้างบรรทัดจาก sale_order_line ของระบบเดิมโดยตรง เพราะคอลัมน์
+    # discount ในฐานนี้เก็บเป็น "จำนวนเงิน" ไม่ใช่เปอร์เซ็นต์ ทำให้ยอด SO เพี้ยนมาก
+    # dashboard ต้องการเฉพาะยอดรวม (amount_total) จึงเขียนบรรทัดสรุปบรรทัดเดียว
+    # จาก amount_total พร้อมล้างภาษีเพื่อให้ยอดตรงกับระบบเดิม
     stats = common.Stats('sale_orders')
     for o in orders:
         pid = partner_map.get(o.get('partner_id'))
@@ -217,37 +225,30 @@ def phase_sale_orders(env):
             stats.skipped += 1
             continue
 
-        order_lines = []
-        for ln in lines_by_order.get(o['id'], []):
-            if ln.get('display_type'):
-                continue
-            pm = product_map.get(ln.get('product_id'))
-            if not pm:
-                continue
-            lv = {
-                'product_id': pm[0],
-                'name': ln.get('name') or '',
-                'product_uom_qty': float(ln.get('product_uom_qty') or 0.0),
-                'price_unit': float(ln.get('price_unit') or 0.0),
-                'discount': float(ln.get('discount') or 0.0),
-            }
-            if UOM_FIELD:
-                lv[UOM_FIELD] = pm[1]
-            order_lines.append((0, 0, lv))
-
-        if not order_lines:
-            stats.skipped += 1
-            continue
-
         vals = {
             'partner_id': pid,
             'date_order': o.get('date_order'),
             'client_order_ref': o.get('client_order_ref') or False,
-            'order_line': order_lines,
         }
         rec, action = common.upsert('sale.order', o['id'], vals)
         stats.bump(action)
-        if rec and rec.state != 'sale':
+        if not rec:
+            continue
+
+        # เขียนบรรทัดใหม่ทับของเดิมเสมอ (upsert ข้าม x2many จึงต้องเขียนตรงนี้)
+        # ต้องปลดสถานะยืนยันก่อน เพราะ Odoo ห้ามลบบรรทัดของใบสั่งขายที่ยืนยันแล้ว
+        if rec.state in ('sale', 'done'):
+            rec.action_cancel()
+        if rec.state == 'cancel':
+            rec.action_draft()
+        rec.write({'order_line': [(5, 0, 0), (0, 0, {
+            'product_id': summary_product.id,
+            'name': SUMMARY_LINE_NAME,
+            'product_uom_qty': 1.0,
+            'price_unit': float(o.get('amount_total') or 0.0),
+            'tax_ids': [(6, 0, [])],
+        })]})
+        if rec.state != 'sale':
             rec.write({'state': 'sale'})
         _maybe_commit(env, stats)
     common.log("dash.sale_orders: %s" % stats.summary())
@@ -294,16 +295,23 @@ def phase_invoices(env):
             'invoice_date_due': inv.get('invoice_date_due') or inv_date,
             'journal_id': sale_journal.id,
             'ref': inv.get('ref') or False,
-            'invoice_line_ids': [(0, 0, {
-                'name': 'ยอดยกมาจากระบบเดิม',
-                'quantity': 1.0,
-                'price_unit': float(inv.get('amount_total') or 0.0),
-                'tax_ids': [(6, 0, [])],
-            })],
         }
         rec, action = common.upsert('account.move', inv['id'], vals)
         stats.bump(action)
-        if rec and rec.state == 'draft':
+        if not rec:
+            continue
+
+        # เขียนบรรทัดใหม่ทับของเดิมเสมอ (upsert ข้าม x2many จึงต้องเขียนตรงนี้)
+        # ต้องเปิดฉบับร่างก่อน เพราะใบแจ้งหนี้ที่ post แล้วแก้บรรทัดไม่ได้
+        if rec.state == 'posted':
+            rec.button_draft()
+        rec.write({'invoice_line_ids': [(5, 0, 0), (0, 0, {
+            'name': SUMMARY_LINE_NAME,
+            'quantity': 1.0,
+            'price_unit': float(inv.get('amount_total') or 0.0),
+            'tax_ids': [(6, 0, [])],
+        })]})
+        if rec.state == 'draft':
             rec.action_post()
         _maybe_commit(env, stats)
     common.log("dash.invoices: %s" % stats.summary())
@@ -344,10 +352,6 @@ def verify(env):
 
 def main():
     common.init(env)  # noqa: F821 — env มีให้โดย odoo shell
-    global UOM_FIELD
-    SOL_FIELDS = env['sale.order.line']._fields  # noqa: F821
-    UOM_FIELD = ('product_uom_id' if 'product_uom_id' in SOL_FIELDS
-                 else ('product_uom' if 'product_uom' in SOL_FIELDS else ''))
 
     common.log("dash_sales_history: เริ่ม | ปี %d-%d | LIMIT=%s | DRY_RUN=%s" % (
         YEAR_FROM, YEAR_TO, LIMIT or 'ทั้งหมด', common.DRY_RUN))
