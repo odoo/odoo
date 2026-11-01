@@ -818,7 +818,6 @@ class HrTimeRule(models.Model):
                     first_end_utc = _to_utc(first.end, tz)
                     extra_vals = first.rule._get_source_annotation_vals(accumulated_pp=first.pp)
                     # source record is repurposed as the first output; all remainder segments need new records
-                    rem_offset = 0
                     # remainder: time between/after outputs that reverts to the original work type
                     remainder_secs = sum(
                         _utc_seconds(seg_s, seg_e, tz)
@@ -867,8 +866,8 @@ class HrTimeRule(models.Model):
                     subsequent = output_intervals[1:]
                 else:
                     min_out_start_local = min(iv.start for iv in output_intervals)
-                    # source record is repurposed as the first remainder
-                    rem_offset = 1
+                    # source record is cut at the first output: it keeps all the remainder
+                    # segments before it (several when absences are clipped to the schedule)
                     # eligible pool: all remainder segments + output slices
                     # that keep the original type/pp
                     break_pool_secs = sum(
@@ -889,7 +888,9 @@ class HrTimeRule(models.Model):
                     source.sudo().with_context(**source._time_rule_write_ctx).write(write_vals)
                     subsequent = output_intervals
 
-                for seg_s, seg_e, _ in remainder_segments[rem_offset:]:
+                for seg_s, seg_e, _ in remainder_segments:
+                    if _to_utc(seg_e, tz) <= min_out_start_utc:
+                        continue
                     # snap a start that lands on the end-of-day boundary to midnight
                     if seg_s.time() == time.max:
                         seg_s = datetime.combine(seg_s.date() + timedelta(1), time.min)
