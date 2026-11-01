@@ -2137,6 +2137,7 @@ class TestFlushSearch(TransactionCase):
         self.assertEqual(self.env['test_orm.custom.table_query_sql'].search([]).sum_quantity, 25)
 
 
+@tagged('at_install', '-post_install')
 class TestDatePartNumber(TransactionExpressionCase):
     @classmethod
     def setUpClass(cls):
@@ -2232,6 +2233,7 @@ class TestDatePartNumber(TransactionExpressionCase):
         self.assertEqual(result, account)
 
 
+@tagged('at_install', '-post_install')
 class TestBinarySearch(TransactionExpressionCase):
     def test_binary_search(self):
         binary_value = BinaryBytes(b'content', filename='test')

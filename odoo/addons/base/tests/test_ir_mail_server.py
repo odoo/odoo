@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import email.message
@@ -9,7 +8,6 @@ from unittest.mock import patch
 
 import psycopg2.errors
 
-from odoo import tools
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.base.tests import mail_examples
 from odoo.addons.base.tests.common import MockSmtplibCase

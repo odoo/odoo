@@ -17,7 +17,6 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(len(field), 1)
         self.assertEqual(field.module, 'test_base')
 
-
     def test_ir_model_data_inherits_depends(self):
         """ Check the existence of the correct ir.model.data """
         IrModelData = self.env['ir.model.data']

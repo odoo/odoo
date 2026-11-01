@@ -18,6 +18,7 @@ from odoo.tools.misc import config
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
+@tagged('at_install', '-post_install')
 class TestOrmCache(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -157,6 +158,7 @@ class TestOrmCache(TransactionCase):
         cr.execute(f"SELECT setval('orm_signaling_registry_id_seq', {sequence_start})")
 
 
+@tagged('-at_install', 'post_install')
 class TestOrmCacheSignaling(BaseCase):
     @classmethod
     def setUpClass(cls):
@@ -165,6 +167,7 @@ class TestOrmCacheSignaling(BaseCase):
         # an autoretry hidding errors
         cls._retry = False
         cls.registry = Registry(common.get_db_name())
+        assert cls.registry.ready, "Registry must be ready for this test to run."
 
     def setUp(self):
         super().setUp()

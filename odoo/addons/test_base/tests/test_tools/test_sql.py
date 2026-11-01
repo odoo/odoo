@@ -228,6 +228,7 @@ class TestSqlTools(TransactionCase):
         self.assertEqual(db_comment, comment)
 
 
+@tagged('at_install', '-post_install')
 class TestFormatQuery(BaseCase):
 
     def test_empty(self):

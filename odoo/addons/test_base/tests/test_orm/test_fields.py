@@ -3391,6 +3391,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         )
 
 
+@tagged('at_install', '-post_install')
 class TestX2many(TransactionExpressionCase):
     def test_definition_many2many(self):
         """ Test the definition of inherited many2many fields. """
@@ -5567,6 +5568,7 @@ class TestAttributes(TransactionCase):
             instance.unknown = 42
 
 
+@tagged('at_install', '-post_install')
 class TestCompanyDependent(TransactionCase):
     def test_orm_ondelete_restrict(self):
         # model_A

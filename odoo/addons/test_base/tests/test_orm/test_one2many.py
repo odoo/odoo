@@ -1,9 +1,11 @@
 from odoo import Command
 from odoo.exceptions import MissingError
+from odoo.tests.common import tagged
 
 from .test_domain_expression import TransactionExpressionCase
 
 
+@tagged('at_install', '-post_install')
 class One2manyCase(TransactionExpressionCase):
     def setUp(self):
         super().setUp()

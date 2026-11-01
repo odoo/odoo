@@ -6114,6 +6114,7 @@ class ViewModifiers(ViewCase):
             })
 
 
+@tagged('at_install', '-post_install')
 class TestPropertiesFieldViewValidation(ViewCase):
 
     def test_properties_field_without_definition_record(self):

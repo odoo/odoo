@@ -17,6 +17,7 @@ from odoo.tools.mimetypes import (
 TEST_FOLDER = Path(file_path('base/tests/files'))
 
 
+@tagged('at_install', '-post_install')
 class MimeGuessingCases:
     allow_inherited_tests_method: bool = True
     guess_mimetype: typing.Callable[[bytes, str], str]

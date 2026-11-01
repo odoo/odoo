@@ -216,7 +216,7 @@ class TestXMLID(TransactionCase):
         xmlid = 'base.test_xmlid_noupdates'
         with self.assertQueryCount(1):
             self.env['ir.model.data']._update_xmlids([
-                {'xml_id': xmlid, 'record': records[3], 'noupdate':True}, # record created as noupdate
+                {'xml_id': xmlid, 'record': records[3], 'noupdate': True},  # record created as noupdate
             ])
 
         assert_xmlid(xmlid, records[3], f'The xmlid {xmlid} should have been created for record {records[2]}')
@@ -378,6 +378,7 @@ class TestIrModelEdition(TransactionCase):
         fnames = [str(field) for field in self.registry.field_setup_dependents[res_partner_name]]
         self.assertEqual(len(fnames), len(set(fnames)), "registry.field_setup_dependents contains duplicates")
 
+
 @tagged('test_eval_context')
 @tagged('at_install', '-post_install')
 class TestEvalContext(TransactionCase):
@@ -394,6 +395,7 @@ class TestEvalContext(TransactionCase):
                         "dateutil.relativedelta.relativedelta(hours=1)")
         })
         self.env['res.partner'].create({'name': 'foo'}).x_foo_bar_baz
+
 
 @tagged('-at_install', 'post_install')
 class TestIrModelFieldsTranslation(HttpCase):
@@ -436,6 +438,7 @@ class TestIrModelInherit(TransactionCase):
         self.assertEqual(len(imi), 1)
         self.assertEqual(imi.parent_id.model, "res.partner")
         self.assertEqual(imi.parent_field_id.name, "partner_id")
+
 
 class TestCommonCustomFields(TransactionCase):
     MODEL = 'res.partner'
@@ -824,6 +827,7 @@ class TestCustomFields(TestCommonCustomFields):
         self.assertEqual(rec3.x_sel, 'baz')
 
 
+@tagged('-at_install', 'post_install')
 class TestCustomFieldsPostInstall(TestCommonCustomFields):
     def test_related_field_non_stored_not_allowed(self):
         """ Test related field behavior with stored/non-stored combinations """

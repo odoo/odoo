@@ -1830,6 +1830,7 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(discussion.attributes_definition, definition)
 
 
+@tagged('at_install', '-post_install')
 class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
     @classmethod
     def setUpClass(cls):

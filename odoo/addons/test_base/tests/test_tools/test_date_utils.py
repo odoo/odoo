@@ -451,6 +451,7 @@ class TestDateRangeFunction(BaseCase):
             list(date_range(start, end, relativedelta(hours=-1)))
 
 
+@tagged('at_install', '-post_install')
 class TestFloatToTime(BaseCase):
     def test_minutes_carry_over_when_rounding_up(self):
         # 16.9959 h -> 59.754 min -> rounds to 60. This must carry into the hour

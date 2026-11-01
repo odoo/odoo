@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
@@ -13,7 +12,7 @@ def just_raise(*args):
 class TestResConfig(TransactionCase):
 
     def setUp(self):
-        super(TestResConfig, self).setUp()
+        super().setUp()
 
         self.user = self.env.ref('base.user_admin')
         self.company = self.env['res.company'].create({'name': 'oobO'})

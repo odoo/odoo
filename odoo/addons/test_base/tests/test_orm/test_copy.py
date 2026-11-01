@@ -1,7 +1,9 @@
 import odoo.tests
+from odoo.tests import tagged
 from odoo.tools.translate import StoredTranslations, code_translations, mark_as_copy
 
 
+@tagged('at_install', '-post_install')
 class TestCopyTranslations(odoo.tests.TransactionCase):
 
     @classmethod

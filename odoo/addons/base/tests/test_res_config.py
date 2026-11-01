@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -15,7 +14,7 @@ _logger = logging.getLogger(__name__)
 class TestResConfig(TransactionCase):
 
     def setUp(self):
-        super(TestResConfig, self).setUp()
+        super().setUp()
         self.ResConfig = self.env['res.config.settings']
 
         # Define the test values
