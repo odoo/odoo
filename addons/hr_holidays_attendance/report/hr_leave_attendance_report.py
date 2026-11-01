@@ -49,6 +49,7 @@ class HrLeaveAttendanceReport(models.Model):
         attendances_by_employees = dict(self.env['hr.attendance']._read_group(
             domain=[
                 ('employee_id', 'in', self.employee_id.ids),
+                ('state', '=', 'validated'),
                 ('check_in', '>=', min_date),
                 ('check_in', '<=', max_date),
             ],
@@ -59,7 +60,7 @@ class HrLeaveAttendanceReport(models.Model):
         for rec in self:
             leaves = leaves_by_employees.get(rec.employee_id, self.env['hr.leave'])
             rec_date_leaves = leaves.filtered(
-                lambda lv: self._timestamped(lv.date_from) <= rec.date <= self._timestamped(lv.date_to),
+                lambda lv: self._timestamped(lv.date_from, rec.employee_id) <= rec.date <= self._timestamped(lv.date_to, rec.employee_id),
             )
             rec.leave_ids = rec_date_leaves.ids
             work_entry_type_ids = rec_date_leaves.mapped('work_entry_type_id')
@@ -67,11 +68,12 @@ class HrLeaveAttendanceReport(models.Model):
 
             attendances = attendances_by_employees.get(rec.employee_id, self.env['hr.attendance'])
             rec.attendance_ids = attendances.filtered(
-                lambda att: self._timestamped(att.check_in) == rec.date,
+                lambda att: self._timestamped(att.check_in, rec.employee_id) == rec.date,
             ).ids
 
-    def _timestamped(self, date):
-        return fields.Datetime.context_timestamp(self, date).date()
+    def _timestamped(self, date, employee):
+        """Local date of ``date`` for ``employee``, as the days of the report."""
+        return fields.Datetime.context_timestamp(self.with_context(tz=employee._get_tz()), date).date()
 
     def _cte_bounds(self):
         return SQL("""
@@ -266,14 +268,21 @@ class HrLeaveAttendanceReport(models.Model):
     def _cte_attendance(self):
         """Aggregate only rows that can map to a day in the report window."""
         return SQL("""
-            SELECT employee_id,
-                   (check_in AT TIME ZONE 'UTC')::date AS check_date,
-                   SUM(worked_hours) AS worked_hours
-              FROM hr_attendance
+            SELECT att.employee_id,
+                   ec.tz,
+                   (att.check_in AT TIME ZONE 'UTC' AT TIME ZONE ec.tz)::date AS check_date,
+                   SUM(att.worked_hours) AS worked_hours
+              FROM hr_attendance AS att
+              JOIN (
+                    SELECT DISTINCT employee_id, tz
+                      FROM emp_cal
+                   ) AS ec
+                ON ec.employee_id = att.employee_id
         CROSS JOIN bounds AS b
-             WHERE check_in >= b.date_from - INTERVAL '1 day'
-               AND check_in < b.date_to + INTERVAL '2 days'
-          GROUP BY employee_id, check_date
+             WHERE att.state = 'validated'
+               AND att.check_in >= b.date_from - INTERVAL '1 day'
+               AND att.check_in < b.date_to + INTERVAL '2 days'
+          GROUP BY att.employee_id, ec.tz, check_date
         """)
 
     def _cte_leave(self):
@@ -365,6 +374,7 @@ class HrLeaveAttendanceReport(models.Model):
                AND cd.day = ed.day
          LEFT JOIN attendance AS att
                 ON att.employee_id = ed.employee_id
+               AND att.tz = ed.tz
                AND att.check_date = ed.day
          LEFT JOIN leave_day AS ld
                 ON ld.employee_id = ed.employee_id
