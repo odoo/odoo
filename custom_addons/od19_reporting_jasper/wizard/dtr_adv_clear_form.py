@@ -6,9 +6,12 @@ Odoo 19 port of the legacy ``dtr_advance`` report ``f_adv_002``
 (``self.env.ref('dtr_advance.f_adv_002')``) is dropped because the module is
 not installed on Odoo 19; fixed date defaults are used instead.
 
-On Odoo 19 there is no separate clearing document: an ``account_advance`` in
-state ``reconciled`` is treated as the clearing document and its posted move
-lines provide the expense breakdown.
+On Odoo 19 there is no separate clearing document: an ``od19.hr.advance``
+(table ``od19_hr_advance``) carries both the request and the cleared amount
+(``cleared_amount``), so the form prints that record.  The legacy
+``account_advance`` table and its ``used_amount`` column do not exist on
+Odoo 19 and are replaced accordingly.  The form is bound to
+``od19.hr.advance`` so the Print menu on an advance passes ``active_ids``.
 """
 from odoo import _, fields, models
 from odoo.exceptions import UserError

@@ -5,6 +5,11 @@ Odoo 19 port of the legacy ``dtr_advance`` report ``f_adv_001``
 (``dtr.adv.request.form``).  The legacy report template allow-guard
 (``self.env.ref('dtr_advance.f_adv_001')``) is dropped because the module is
 not installed on Odoo 19; fixed date defaults are used instead.
+
+The template queries the employee advance model of the new stack
+(``od19.hr.advance``, table ``od19_hr_advance``) instead of the legacy
+``account_advance`` table, which does not exist on Odoo 19.  The form is bound
+to ``od19.hr.advance`` so the Print menu on an advance passes ``active_ids``.
 """
 from odoo import _, fields, models
 from odoo.exceptions import UserError

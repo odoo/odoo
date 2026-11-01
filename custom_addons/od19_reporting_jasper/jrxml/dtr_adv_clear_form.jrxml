@@ -34,13 +34,13 @@ COALESCE(a.code_store->>(j.company_id::text), '') AS account_code,
 COALESCE(a.name->>'th_TH', a.name->>'en_US', '') AS account_name,
 '' AS pay_ref,
 COALESCE(clear.note,'') AS memo,
-COALESCE(clear.used_amount, clear.amount) AS pay_amount_untaxed,
+COALESCE(clear.cleared_amount, clear.amount) AS pay_amount_untaxed,
 clear.amount AS fund_amount,
 0::numeric AS pay_tax,
 0::numeric AS pay_wht,
-COALESCE(clear.used_amount, 0) AS pay_amount_total,
-convert_num_th_with_currency(COALESCE(clear.used_amount, clear.amount), clear.currency_id) AS amount_total_th_txt,
-convert_num_en_with_currency(COALESCE(clear.used_amount, clear.amount), clear.currency_id) AS amount_total_en_txt,
+COALESCE(clear.cleared_amount, 0) AS pay_amount_total,
+convert_num_th_with_currency(COALESCE(clear.cleared_amount, clear.amount), clear.currency_id) AS amount_total_th_txt,
+convert_num_en_with_currency(COALESCE(clear.cleared_amount, clear.amount), clear.currency_id) AS amount_total_en_txt,
 COALESCE(c.company_name_thai,'') AS company_name_thai,
 COALESCE(c.company_name_en,'') AS company_name_en,
 COALESCE(c.company_tax_id,'') AS company_tax_id,
@@ -53,7 +53,7 @@ COALESCE(c.company_phone,'') AS company_phone,
 COALESCE(c.company_fax,'') AS company_fax,
 COALESCE(c.company_email,'') AS company_email,
 COALESCE(c.company_website,'') AS company_website
-FROM account_advance clear
+FROM od19_hr_advance clear
 LEFT JOIN account_journal j ON j.id = clear.journal_id
 LEFT JOIN company_address_header_report c ON c.id = j.company_id
 LEFT JOIN res_partner emp ON emp.id = clear.partner_id

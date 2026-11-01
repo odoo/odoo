@@ -42,7 +42,7 @@ COALESCE(c.company_phone,'') AS company_phone,
 COALESCE(c.company_fax,'') AS company_fax,
 COALESCE(c.company_email,'') AS company_email,
 COALESCE(c.company_website,'') AS company_website
-FROM account_advance req
+FROM od19_hr_advance req
 LEFT JOIN account_journal j ON j.id = req.journal_id
 LEFT JOIN company_address_header_report c ON c.id = j.company_id
 LEFT JOIN res_partner emp ON emp.id = req.partner_id

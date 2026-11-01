@@ -31,6 +31,14 @@ MODELS = {
     ),
 }
 
+# The two document forms print a single advance record, so they are bound to
+# the Odoo 19 employee advance model and re-pointed to its table.
+HR_ADVANCE_FORMS = ("dtr.adv.request.form", "dtr.adv.clear.form")
+HR_ADVANCE_ACTIONS = (
+    "od19_reporting_jasper.action_dtr_adv_request_form",
+    "od19_reporting_jasper.action_dtr_adv_clear_form",
+)
+
 
 @tagged("post_install", "-at_install")
 class TestAdvancePorts(TransactionCase):
@@ -46,3 +54,26 @@ class TestAdvancePorts(TransactionCase):
             report = self.env[model].create({})
             self.assertTrue(report.jasper_file.endswith(jasper), report.jasper_file)
             self.assertTrue(os.path.isfile(report.jasper_file), report.jasper_file)
+
+    def test_forms_query_hr_advance_table(self):
+        """The advance forms must read the real ``od19.hr.advance`` model.
+
+        The legacy ``account_advance`` table and its ``used_amount`` column do
+        not exist on Odoo 19; the shipped JRXML must be re-pointed to
+        ``od19_hr_advance`` and ``used_amount`` mapped to ``cleared_amount``.
+        """
+        for model in HR_ADVANCE_FORMS:
+            report = self.env[model].create({})
+            jrxml = report.get_jrxml_file()
+            self.assertTrue(os.path.isfile(jrxml), jrxml)
+            with open(jrxml, encoding="utf-8") as stream:
+                sql = stream.read()
+            self.assertIn("FROM od19_hr_advance", sql)
+            self.assertNotIn("account_advance", sql)
+            self.assertNotIn("used_amount", sql)
+
+    def test_forms_are_bound_to_hr_advance(self):
+        """Both forms must be reachable from an ``od19.hr.advance`` record."""
+        for xmlid in HR_ADVANCE_ACTIONS:
+            action = self.env.ref(xmlid)
+            self.assertEqual(action.binding_model_id.model, "od19.hr.advance")

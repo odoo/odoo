@@ -9,6 +9,7 @@
         "hr",
         "mail",
         "od19_accounting_dncn",
+        "od19_hr_advance",
         "od19_iso_document_control",
         "purchase_stock",
     ],
