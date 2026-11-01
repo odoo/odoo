@@ -1,0 +1,361 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_kanban_stage
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-01 02:10+0000\n"
+"PO-Revision-Date: 2017-12-01 02:10+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"Language-Team: Thai (https://www.transifex.com/oca/teams/23907/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__kanban_status
+msgid ""
+"A record can have one of several Kanban statuses, which are used to indicate "
+"whether there are any special situations affecting it. The exact meaning of "
+"each status is allowed to vary based on the stage the record is in but they "
+"are roughly as follow:\n"
+"* Normal Handling: Default status, no special situations\n"
+"* Ready: Ready to transition to the next stage\n"
+"* Special Handling: Blocked in some way (e.g. must be handled by a specific "
+"user)\n"
+msgstr "บันทึกหนึ่งรายการสามารถมีสถานะ Kanban ได้หลายสถานะ ซึ่งใช้เพื่อระบุว่ามีสถานการณ์พิเศษใดๆ ที่ส่งผลกระทบต่อบันทึกนั้นหรือไม่ ความหมายที่แน่นอนของแต่ละสถานะอาจแตกต่างกันไปตามขั้นตอนที่บันทึกนั้นอยู่ แต่โดยทั่วไปมีดังนี้:\n* การจัดการปกติ: สถานะเริ่มต้น ไม่มีสถานการณ์พิเศษ\n* พร้อม: พร้อมที่จะเปลี่ยนไปยังขั้นตอนถัดไป\n* การจัดการพิเศษ: ถูกบล็อกในบางลักษณะ (เช่น ต้องจัดการโดยผู้ใช้ที่ระบุ)\n"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__user_id
+msgid "Assigned To"
+msgstr "มอบหมายให้"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__res_model_id
+msgid "Associated Model"
+msgstr "โมเดลที่เชื่อมโยง"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__fold
+msgid "Collapse?"
+msgstr "ย่อหรือไม่"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__kanban_color
+msgid "Color index to be used for the record's Kanban card"
+msgstr "ดัชนีสีที่ใช้สำหรับการ์ด Kanban ของบันทึก"
+
+#. module: base_kanban_stage
+#: model_terms:ir.ui.view,arch_db:base_kanban_stage.base_kanban_stage_view_form
+msgid "Core Info"
+msgstr "ข้อมูลหลัก"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: base_kanban_stage
+#: model_terms:ir.ui.view,arch_db:base_kanban_stage.base_kanban_abstract_view_kanban
+msgid "Delete"
+msgstr "ลบ"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__description
+msgid "Description"
+msgstr "รายละเอียด"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_stage__fold
+msgid "Determines whether this stage will be collapsed down in Kanban views"
+msgstr "กำหนดว่าขั้นตอนนี้จะถูกย่อในมุมมอง Kanban หรือไม่"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_stage__name
+msgid "Displayed as the header for this stage in Kanban views"
+msgstr "แสดงเป็นส่วนหัวของขั้นตอนนี้ในมุมมอง Kanban"
+
+#. module: base_kanban_stage
+#: model_terms:ir.ui.view,arch_db:base_kanban_stage.base_kanban_abstract_view_kanban
+msgid "Dropdown menu"
+msgstr "เมนูแบบเลื่อนลง"
+
+#. module: base_kanban_stage
+#: model_terms:ir.ui.view,arch_db:base_kanban_stage.base_kanban_abstract_view_kanban
+msgid "Edit"
+msgstr "แก้ไข"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__kanban_legend_normal
+msgid ""
+"Explanation text to help users understand how the normal handling status "
+"applies to this record (depends on current stage)"
+msgstr "ข้อความอธิบายเพื่อช่วยให้ผู้ใช้เข้าใจว่าสถานะการจัดการปกติใช้กับบันทึกนี้อย่างไร (ขึ้นอยู่กับขั้นตอนปัจจุบัน)"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_stage__legend_normal
+msgid ""
+"Explanation text to help users understand how the normal handling status "
+"applies to this stage"
+msgstr "ข้อความอธิบายเพื่อช่วยให้ผู้ใช้เข้าใจว่าสถานะการจัดการปกติใช้กับขั้นตอนนี้อย่างไร"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__kanban_legend_priority
+msgid ""
+"Explanation text to help users understand how the priority/star mechanism "
+"applies to this record (depends on current stage)"
+msgstr "ข้อความอธิบายเพื่อช่วยให้ผู้ใช้เข้าใจว่ากลไกความสำคัญ/ดาวใช้กับบันทึกนี้อย่างไร (ขึ้นอยู่กับขั้นตอนปัจจุบัน)"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_stage__legend_priority
+msgid ""
+"Explanation text to help users understand how the priority/star mechanism "
+"applies to this stage"
+msgstr "ข้อความอธิบายเพื่อช่วยให้ผู้ใช้เข้าใจว่ากลไกความสำคัญ/ดาวใช้กับขั้นตอนนี้อย่างไร"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__kanban_legend_done
+msgid ""
+"Explanation text to help users understand how the ready status applies to "
+"this record (depends on current stage)"
+msgstr "ข้อความอธิบายเพื่อช่วยให้ผู้ใช้เข้าใจว่าสถานะพร้อมใช้กับบันทึกนี้อย่างไร (ขึ้นอยู่กับขั้นตอนปัจจุบัน)"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_stage__legend_done
+msgid ""
+"Explanation text to help users understand how the ready status applies to "
+"this stage"
+msgstr "ข้อความอธิบายเพื่อช่วยให้ผู้ใช้เข้าใจว่าสถานะพร้อมใช้กับขั้นตอนนี้อย่างไร"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__kanban_legend_blocked
+msgid ""
+"Explanation text to help users understand how the special handling status "
+"applies to this record (depends on current stage)"
+msgstr "ข้อความอธิบายเพื่อช่วยให้ผู้ใช้เข้าใจว่าสถานะการจัดการพิเศษใช้กับบันทึกนี้อย่างไร (ขึ้นอยู่กับขั้นตอนปัจจุบัน)"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_stage__legend_blocked
+msgid ""
+"Explanation text to help users understand how the special handling status "
+"applies to this stage"
+msgstr "ข้อความอธิบายเพื่อช่วยให้ผู้ใช้เข้าใจว่าสถานะการจัดการพิเศษใช้กับขั้นตอนนี้อย่างไร"
+
+#. module: base_kanban_stage
+#: code:addons/base_kanban_stage/models/ir_model.py:0
+#, python-format
+msgid "Field \"Kanban\" cannot be changed to \"False\"."
+msgstr "ฟิลด์ \"Kanban\" ไม่สามารถเปลี่ยนเป็น \"False\" ได้"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract__kanban_priority__2
+msgid "High"
+msgstr "สูง"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_ir_model__is_kanban
+#: model:ir.ui.menu,name:base_kanban_stage.base_kanban_stage_root_menu
+#: model_terms:ir.ui.view,arch_db:base_kanban_stage.model_search_view
+msgid "Kanban"
+msgstr "Kanban"
+
+#. module: base_kanban_stage
+#: model:ir.model,name:base_kanban_stage.model_base_kanban_abstract
+msgid "Kanban Abstract"
+msgstr "Kanban Abstract"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__kanban_color
+msgid "Kanban Color Index"
+msgstr "ดัชนีสี Kanban"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__kanban_priority
+msgid "Kanban Priority"
+msgstr "ความสำคัญ Kanban"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__kanban_sequence
+#, fuzzy
+msgid "Kanban Sequence"
+msgstr "กำหนดเลขที่เอกสาร"
+
+#. module: base_kanban_stage
+#: model:ir.model,name:base_kanban_stage.model_base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__stage_id
+#: model_terms:ir.ui.view,arch_db:base_kanban_stage.base_kanban_stage_view_form
+msgid "Kanban Stage"
+msgstr "ขั้นตอน Kanban"
+
+#. module: base_kanban_stage
+#: model:ir.actions.act_window,name:base_kanban_stage.base_kanban_stage_action
+#: model_terms:ir.ui.view,arch_db:base_kanban_stage.base_kanban_stage_view_search
+msgid "Kanban Stages"
+msgstr "ขั้นตอน Kanban"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__kanban_status
+msgid "Kanban Status"
+msgstr "สถานะ Kanban"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage____last_update
+msgid "Last Modified on"
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract__kanban_priority__1
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract_tester__kanban_priority__1
+msgid "Medium"
+msgstr "ปานกลาง"
+
+#. module: base_kanban_stage
+#: model:ir.model,name:base_kanban_stage.model_ir_model
+msgid "Models"
+msgstr "โมเดล"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract__kanban_priority__0
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract_tester__kanban_priority__0
+msgid "Normal"
+msgstr "ปกติ"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract__kanban_status__normal
+msgid "Normal Handling"
+msgstr "การจัดการปกติ"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__kanban_legend_normal
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__legend_normal
+msgid "Normal Handling Explanation"
+msgstr "คำอธิบายการจัดการปกติ"
+
+#. module: base_kanban_stage
+#: code:addons/base_kanban_stage/models/ir_model.py:0
+#, python-format
+msgid "Only custom models can be modified."
+msgstr "สามารถแก้ไขได้เฉพาะโมเดลที่กำหนดเองเท่านั้น"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__kanban_sequence
+msgid ""
+"Order of record in relation to other records in the same Kanban stage and "
+"with the same priority"
+msgstr "ลำดับของบันทึกเมื่อเทียบกับบันทึกอื่นในขั้นตอน Kanban เดียวกันและมีความสำคัญเดียวกัน"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_stage__sequence
+msgid "Order of stage in relation to other stages available for the same model"
+msgstr "ลำดับของขั้นตอนเมื่อเทียบกับขั้นตอนอื่นที่ใช้ได้สำหรับโมเดลเดียวกัน"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__kanban_legend_priority
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__legend_priority
+msgid "Priority Explanation"
+msgstr "คำอธิบายความสำคัญ"
+
+#. module: base_kanban_stage
+#: model_terms:ir.ui.view,arch_db:base_kanban_stage.base_kanban_stage_view_form
+msgid "Priority and Statuses"
+msgstr "ความสำคัญและสถานะ"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract__kanban_status__done
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract_tester__kanban_status__done
+msgid "Ready"
+msgstr "พร้อม"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__kanban_legend_done
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__legend_done
+msgid "Ready Explanation"
+msgstr "คำอธิบายสถานะพร้อม"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__sequence
+msgid "Sequence"
+msgstr "กำหนดเลขที่เอกสาร"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_stage__description
+msgid "Short description of the stage's meaning/purpose"
+msgstr "คำอธิบายสั้นๆ เกี่ยวกับความหมาย/วัตถุประสงค์ของขั้นตอน"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract__kanban_status__blocked
+#: model:ir.model.fields.selection,name:base_kanban_stage.selection__base_kanban_abstract_tester__kanban_status__blocked
+msgid "Special Handling"
+msgstr "การจัดการพิเศษ"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_abstract__kanban_legend_blocked
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__legend_blocked
+msgid "Special Handling Explanation"
+msgstr "คำอธิบายการจัดการพิเศษ"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,field_description:base_kanban_stage.field_base_kanban_stage__name
+msgid "Stage Name"
+msgstr "ชื่อขั้นตอน"
+
+#. module: base_kanban_stage
+#: model:ir.ui.menu,name:base_kanban_stage.base_kanban_stage_menu
+msgid "Stages"
+msgstr "ขั้นตอน"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__stage_id
+msgid "The Kanban stage that this record is currently in"
+msgstr "ขั้นตอน Kanban ที่บันทึกนี้อยู่ปัจจุบัน"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_stage__res_model_id
+msgid "The model that this Kanban stage will be used for"
+msgstr "โมเดลที่จะใช้ขั้นตอน Kanban นี้"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__kanban_priority
+msgid "The priority of the record (shown as stars in Kanban views)"
+msgstr "ความสำคัญของบันทึก (แสดงเป็นดาวในมุมมอง Kanban)"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_base_kanban_abstract__user_id
+msgid "User that the record is currently assigned to"
+msgstr "ผู้ใช้ที่บันทึกนี้ได้รับมอบหมายในปัจจุบัน"
+
+#. module: base_kanban_stage
+#: model:ir.model.fields,help:base_kanban_stage.field_ir_model__is_kanban
+msgid "Whether this model support kanban stages."
+msgstr "โมเดลนี้รองรับขั้นตอน Kanban หรือไม่"

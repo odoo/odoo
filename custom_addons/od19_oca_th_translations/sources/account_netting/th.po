@@ -1,0 +1,191 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_netting
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-03 03:46+0000\n"
+"PO-Revision-Date: 2017-12-03 03:46+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"Language-Team: Thai (https://www.transifex.com/oca/teams/23907/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_netting
+#. odoo-python
+#: code:addons/account_netting/wizards/account_move_make_netting.py:0
+#, python-format
+msgid "AR/AP netting"
+msgstr "การหักกลบ AR/AP"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__balance
+msgid "Balance"
+msgstr "ยอดคงเหลือ"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__balance_type
+msgid "Balance Type"
+msgstr "ประเภทของยอดคงเหลือ"
+
+#. module: account_netting
+#: model_terms:ir.ui.view,arch_db:account_netting.view_account_move_make_netting_form
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: account_netting
+#: model:ir.actions.act_window,name:account_netting.act_account_move_make_netting
+#: model_terms:ir.ui.view,arch_db:account_netting.view_account_move_make_netting_form
+msgid "Compensate"
+msgstr "หักกลบ"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__company_currency_id
+msgid "Currency"
+msgstr "สกุลเงิน"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__journal_id
+msgid "Journal"
+msgstr "สมุดบันทึก"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__move_line_ids
+msgid "Journal Items to Compensate"
+msgstr "รายการสมุดรายวันที่จะหักกลบ"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: account_netting
+#. odoo-python
+#: code:addons/account_netting/wizards/account_move_make_netting.py:0
+#, python-format
+msgid ""
+"Line '%(line)s' has account '%(account)s' which is not a payable nor a "
+"receivable account."
+msgstr "บรรทัด '%(line)s' มีบัญชี '%(account)s' ซึ่งไม่ใช่บัญชีเจ้าหนี้หรือลูกหนี้"
+
+#. module: account_netting
+#. odoo-python
+#: code:addons/account_netting/wizards/account_move_make_netting.py:0
+#, python-format
+msgid "Line '%s' doesn't have a partner."
+msgstr "บรรทัด '%s' ไม่มีพาร์ทเนอร์"
+
+#. module: account_netting
+#. odoo-python
+#: code:addons/account_netting/wizards/account_move_make_netting.py:0
+#, python-format
+msgid "Line '%s' is already reconciled."
+msgstr "บรรทัด '%s' ได้รับการกระทบยอดแล้ว"
+
+#. module: account_netting
+#. odoo-python
+#: code:addons/account_netting/wizards/account_move_make_netting.py:0
+#, python-format
+msgid "Line '%s' is not posted."
+msgstr "บรรทัด '%s' ยังไม่ได้ลงบัญชี"
+
+#. module: account_netting
+#: model:ir.model.fields,field_description:account_netting.field_account_move_make_netting__partner_id
+msgid "Partner"
+msgstr "พาร์ทเนอร์"
+
+#. module: account_netting
+#. odoo-python
+#: code:addons/account_netting/wizards/account_move_make_netting.py:0
+#, python-format
+msgid ""
+"The 'Compensate' function is intended to balance operations on different "
+"accounts for the same partner. The selected journal items have the same "
+"account '%s', so you should use the 'Reconcile' function instead."
+msgstr ""
+"ฟังก์ชัน 'Compensate' มีวัตถุประสงค์เพื่อปรับยอดการดำเนินการในบัญชีที่แตกต่างกันของ"
+"พาร์ทเนอร์รายเดียวกัน รายการสมุดรายวันที่เลือกมีบัญชี '%s' เหมือนกัน "
+"ดังนั้นคุณควรใช้ฟังก์ชัน 'Reconcile' แทน"
+
+#. module: account_netting
+#. odoo-python
+#: code:addons/account_netting/wizards/account_move_make_netting.py:0
+#, python-format
+msgid ""
+"The selected journal items have different partners: %s. All the selected "
+"journal items must have the same partner."
+msgstr ""
+"รายการสมุดรายวันที่เลือกมีพาร์ทเนอร์ที่แตกต่างกัน: %s รายการสมุดรายวันที่เลือก"
+"ทั้งหมดต้องมีพาร์ทเนอร์รายเดียวกัน"
+
+#. module: account_netting
+#: model_terms:ir.ui.view,arch_db:account_netting.view_account_move_make_netting_form
+msgid ""
+"This operation will generate a journal entry whose lines are counterpart of "
+"the receivable/payable accounts selected, and reconcile each other, letting "
+"this balance in the partner."
+msgstr ""
+"การดำเนินการนี้จะสร้างรายการสมุดรายวันที่มีบรรทัดเป็นบัญชีคู่สวนทางกับบัญชีลูกหนี้/"
+"เจ้าหนี้ที่เลือกไว้ และกระทบยอดซึ่งกันและกัน ทำให้ยอดคงเหลือนี้อยู่ในพาร์ทเนอร์"
+
+#. module: account_netting
+#: model:ir.model.fields.selection,name:account_netting.selection__account_move_make_netting__balance_type__pay
+msgid "To pay"
+msgstr "เพื่อชำระ"
+
+#. module: account_netting
+#: model:ir.model.fields.selection,name:account_netting.selection__account_move_make_netting__balance_type__receive
+msgid "To receive"
+msgstr "เพื่อรับชำระ"
+
+#. module: account_netting
+#: model:ir.model,name:account_netting.model_account_move_make_netting
+msgid "Wizard to generate account moves for netting"
+msgstr "ตัวช่วยสร้างรายการบัญชีสำหรับการหักกลบ"
+
+#. module: account_netting
+#. odoo-python
+#: code:addons/account_netting/wizards/account_move_make_netting.py:0
+#, python-format
+msgid "You should select at least 2 journal items."
+msgstr "คุณต้องเลือกรายการสมุดรายวันอย่างน้อย 2 รายการ"
+
+#~ msgid "Last Modified on"
+#~ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"

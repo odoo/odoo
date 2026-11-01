@@ -1,0 +1,902 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * bi_sql_editor
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-12 02:51+0000\n"
+"PO-Revision-Date: 2017-08-12 02:51+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"Language-Team: Thai (https://www.transifex.com/oca/teams/23907/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+msgid "%(model_name)s Access %(full_name)s"
+msgstr "%(model_name)s การเข้าถึง %(full_name)s"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+msgid "%s (Copy)"
+msgstr "%s (สำเนา)"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+msgid "Access %s"
+msgstr "การเข้าถึง %s"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__action_context
+msgid "Action Context"
+msgstr "บริบทของการดำเนินการ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__message_needaction
+msgid "Action Needed"
+msgstr "จำเป็นต้องดำเนินการ"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Action Settings"
+msgstr "การตั้งค่าการดำเนินการ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__group_ids
+msgid "Allowed Groups"
+msgstr "กลุ่มที่ได้รับอนุญาต"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__user_ids
+msgid "Allowed Users"
+msgstr "ผู้ใช้ที่ได้รับอนุญาต"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__message_attachment_count
+msgid "Attachment Count"
+msgstr "จำนวนสิ่งที่แนบมา"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__tree_visibility__available
+msgid "Available"
+msgstr "พร้อม"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__group_operator__avg
+msgid "Average"
+msgstr "เฉลี่ย"
+
+#. module: bi_sql_editor
+#: model:ir.model,name:bi_sql_editor.model_bi_sql_view
+msgid "BI SQL View"
+msgstr "มุมมอง BI SQL"
+
+#. module: bi_sql_editor
+#: model:ir.model,name:bi_sql_editor.model_bi_sql_view_field
+msgid "Bi SQL View Field"
+msgstr "ฟิลด์มุมมอง BI SQL"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__parent_menu_id
+msgid ""
+"By assigning a value to this field before manually creating the UI, you're "
+"overwriting the parent menu on which the menu related to the SQL report will "
+"be created."
+msgstr ""
+"การกำหนดค่าให้ฟิลด์นี้ก่อนสร้าง UI ด้วยตนเอง จะเป็นการเขียนทับเมนูหลักที่เมนู "
+"ที่เกี่ยวข้องกับรายงาน SQL จะถูกสร้างขึ้น"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__group_operator
+msgid ""
+"By default, Odoo will sum the values when grouping. If you wish to alter the "
+"behaviour, choose an alternate Group Operator"
+msgstr ""
+"โดยค่าเริ่มต้น Odoo จะรวมค่าเมื่อจัดกลุ่ม หากต้องการเปลี่ยนพฤติกรรม "
+"ให้เลือก Group Operator อื่น"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__is_group_by
+msgid ""
+"Check this box if you want to create a 'group by' option in the search view"
+msgstr "เลือกช่องนี้หากต้องการสร้างตัวเลือก 'group by' ในมุมมองค้นหา"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__is_index
+msgid ""
+"Check this box if you want to create an index on that field. This is "
+"recommended for searchable and groupable fields, to reduce duration"
+msgstr ""
+"เลือกช่องนี้หากต้องการสร้างดัชนีบนฟิลด์นั้น แนะนำสำหรับฟิลด์ที่ค้นหาและจัดกลุ่มได้ "
+"เพื่อลดระยะเวลา"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__graph_type__col
+msgid "Column"
+msgstr "คอลัมน์"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__view_order
+msgid ""
+"Comma-separated text. Possible values: \"graph\", \"pivot\", \"list\" or "
+"\"form\""
+msgstr ""
+"ข้อความคั่นด้วยเครื่องหมายจุลภาค ค่าที่เป็นไปได้: \"graph\", \"pivot\", \"list\" "
+"หรือ \"form\""
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__computed_action_context
+msgid "Computed Action Context"
+msgstr "บริบทการดำเนินการที่คำนวณ"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Computed Context"
+msgstr "บริบทที่คำนวณ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__field_context
+msgid ""
+"Context value that will be inserted for this field in all the views. "
+"Important note : please write a context with single quote."
+msgstr ""
+"ค่าบริบทที่จะถูกแทรกสำหรับฟิลด์นี้ในทุกมุมมอง หมายเหตุสำคัญ: "
+"กรุณาเขียนบริบทด้วยเครื่องหมายอัญประกาศเดี่ยว"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Create SQL Elements"
+msgstr "สร้างองค์ประกอบ SQL"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Create UI"
+msgstr "สร้าง UI"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__create_uid
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__create_date
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__cron_id
+msgid "Cron Task that will refresh the materialized view"
+msgstr "งาน Cron ที่จะรีเฟรช materialized view"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Custom Context"
+msgstr "บริบทกำหนดเอง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__size
+msgid "Database Size"
+msgstr "ขนาดฐานข้อมูล"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__action_context
+msgid ""
+"Define here a context that will be used by default, when creating the action."
+msgstr "กำหนดบริบทที่จะใช้โดยค่าเริ่มต้นเมื่อสร้างการดำเนินการที่นี่"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__domain_force
+msgid ""
+"Define here access restriction to data.\n"
+" Take care to use field name prefixed by 'x_'. A global 'ir.rule' will be "
+"created. A typical Multi Company rule is for exemple \n"
+" ['|', ('x_company_id','child_of', [user.company_id.id]),"
+"('x_company_id','=',False)]."
+msgstr ""
+"กำหนดข้อจำกัดการเข้าถึงข้อมูลที่นี่\n"
+" โปรดระวังให้ใช้ชื่อฟิลด์ที่ขึ้นต้นด้วย 'x_' ระบบจะสร้าง 'ir.rule' แบบส่วนกลาง "
+"กฎ Multi Company ทั่วไป ตัวอย่างเช่น \n"
+" ['|', ('x_company_id','child_of', [user.company_id.id]),"
+"('x_company_id','=',False)]."
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Delete SQL Elements"
+msgstr "ลบองค์ประกอบ SQL"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Delete UI"
+msgstr "ลบ UI"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__display_name
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__display_name
+#: model:ir.model.fields,field_description:bi_sql_editor.field_ir_model_fields__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__domain_force
+msgid "Extra Rule Definition"
+msgstr "คำจำกัดความกฎเพิ่มเติม"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Extras Information"
+msgstr "ข้อมูลเพิ่มเติม"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__field_context
+msgid "Field Context"
+msgstr "บริบทฟิลด์"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__field_description
+msgid "Field Description"
+msgstr "คำอธิบายฟิลด์"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__ttype
+msgid "Field Type"
+msgstr "ประเภทฟิลด์"
+
+#. module: bi_sql_editor
+#: model:ir.model,name:bi_sql_editor.model_ir_model_fields
+msgid "Fields"
+msgstr "ฟิลด์"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__message_follower_ids
+msgid "Followers"
+msgstr "ผู้ติดตาม"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__many2one_model_id
+msgid ""
+"For 'Many2one' Odoo field.\n"
+" Comodel of the field."
+msgstr ""
+"สำหรับฟิลด์ Odoo ประเภท 'Many2one'\n"
+" Comodel ของฟิลด์"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__selection
+msgid ""
+"For 'Selection' Odoo field.\n"
+" List of options, specified as a Python expression defining a list of (key, "
+"label) pairs. For example: [('blue','Blue'), ('yellow','Yellow')]"
+msgstr ""
+"สำหรับฟิลด์ Odoo ประเภท 'Selection'\n"
+" รายการตัวเลือก ระบุเป็นนิพจน์ Python ที่กำหนดลิสต์ของคู่ (key, label) "
+"ตัวอย่าง: [('blue','Blue'), ('yellow','Yellow')]"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__model_name
+msgid "Full Qualified Name of the transient model that will be created."
+msgstr "ชื่อแบบเต็ม (Full Qualified Name) ของ transient model ที่จะถูกสร้าง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__view_name
+msgid "Full name of the SQL view"
+msgstr "ชื่อเต็มของมุมมอง SQL"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__graph_type
+msgid "Graph Type"
+msgstr "ประเภทกราฟ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__group_operator
+msgid "Group Operator"
+msgstr "ตัวดำเนินการจัดกลุ่ม"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__has_group_changed
+msgid "Has Group Changed"
+msgstr "กลุ่มมีการเปลี่ยนแปลง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__has_message
+msgid "Has Message"
+msgstr "มีข้อความ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__id
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__id
+#: model:ir.model.fields,field_description:bi_sql_editor.field_ir_model_fields__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__use_external_database
+msgid ""
+"If filled, the query will be executed against an external database, "
+"configured in Odoo main configuration file. "
+msgstr ""
+"หากระบุ คิวรีจะถูกเรียกใช้กับฐานข้อมูลภายนอกที่กำหนดค่าไว้ในไฟล์กำหนดค่าหลักของ Odoo "
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__is_many2one_clickable
+msgid ""
+"If the field is of type Many2one and the option is enabled, the field will "
+"be clickable on the list view."
+msgstr ""
+"หากฟิลด์เป็นประเภท Many2one และเปิดใช้งานตัวเลือกนี้ ฟิลด์จะสามารถคลิกได้ในมุมมองรายการ"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view_field.py:0
+msgid ""
+"Impossible to delete fields if the view is in the state 'Model Valid' or 'UI "
+"Valid'."
+msgstr ""
+"ไม่สามารถลบฟิลด์ได้หากมุมมองอยู่ในสถานะ 'Model Valid' หรือ 'UI Valid'"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__index_name
+msgid "Index Name"
+msgstr "ชื่อดัชนี"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__tree_visibility__invisible
+msgid "Invisible"
+msgstr "มองไม่เห็น"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__message_is_follower
+msgid "Is Follower"
+msgstr "เป็นผู้ติดตาม"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__is_group_by
+msgid "Is Group by"
+msgstr "เป็น Group by"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__is_index
+msgid "Is Index"
+msgstr "เป็นดัชนี"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__is_many2one_clickable
+msgid "Is Many2One Clickable"
+msgstr "Many2One คลิกได้"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__is_materialized
+msgid "Is Materialized View"
+msgstr "เป็น Materialized View"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid ""
+"It will delete the materialized view, and all the previous mapping realized "
+"with the columns"
+msgstr ""
+"จะลบ materialized view และการแมปทั้งหมดที่เคยทำกับคอลัมน์"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__write_uid
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__write_date
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__materialized_text
+msgid "Materialized Text"
+msgstr "ข้อความ Materialized"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__group_operator__max
+msgid "Maximum"
+msgstr "สูงสุด"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__graph_type__measure
+msgid "Measure"
+msgstr "ตัวชี้วัด"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__message_has_error
+msgid "Message Delivery error"
+msgstr "เกิดข้อผิดพลาดในการส่งข้อความ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__message_ids
+msgid "Messages"
+msgstr "ข้อความ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__group_operator__min
+msgid "Minimum"
+msgstr "ขั้นต่ำ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__many2one_model_id
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Model"
+msgstr "โมเดล"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__model_name
+msgid "Model Name"
+msgstr "ชื่อโมเดล"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__name
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+msgid ""
+"No Column was found.\n"
+"Columns name should be prefixed by 'x_'."
+msgstr ""
+"ไม่พบคอลัมน์\n"
+"ชื่อคอลัมน์ควรขึ้นต้นด้วย 'x_'"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__note
+msgid "Note"
+msgstr "โน้ต"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__message_needaction_counter
+msgid "Number of Actions"
+msgstr "จํานวนการดําเนินการ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__message_has_error_counter
+msgid "Number of errors"
+msgstr "จํานวนข้อผิดพลาด"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__action_id
+msgid "Odoo Action"
+msgstr "การดำเนินการ Odoo"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__cron_id
+msgid "Odoo Cron"
+msgstr "Cron ของ Odoo"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__form_view_id
+msgid "Odoo Form View"
+msgstr "มุมมองฟอร์ม Odoo"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__graph_view_id
+msgid "Odoo Graph View"
+msgstr "มุมมองกราฟ Odoo"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__tree_view_id
+msgid "Odoo List View"
+msgstr "มุมมองรายการ Odoo"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__menu_id
+msgid "Odoo Menu"
+msgstr "เมนู Odoo"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__model_id
+msgid "Odoo Model"
+msgstr "โมเดล Odoo"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__pivot_view_id
+msgid "Odoo Pivot View"
+msgstr "มุมมอง Pivot Odoo"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__rule_id
+msgid "Odoo Rule"
+msgstr "กฎ Odoo"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__search_view_id
+msgid "Odoo Search View"
+msgstr "มุมมองค้นหา Odoo"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+msgid "Only graph, pivot, list or form views are supported"
+msgstr "รองรับเฉพาะมุมมอง graph, pivot, list หรือ form เท่านั้น"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Open View"
+msgstr "เปิดมุมมอง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__tree_visibility__optional_hide
+msgid "Optional (hidden)"
+msgstr "ไม่บังคับ (ซ่อน)"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__tree_visibility__optional_show
+msgid "Optional (shown)"
+msgstr "ไม่บังคับ (แสดง)"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__parent_menu_id
+msgid "Parent Odoo Menu"
+msgstr "เมนู Odoo หลัก"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+msgid "Please set related models on the following fields %s"
+msgstr "กรุณากำหนดโมเดลที่เกี่ยวข้องในฟิลด์ต่อไปนี้ %s"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__query
+msgid "Query"
+msgstr "คิวรี"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Refresh"
+msgstr "รีเฟรช"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Refresh Materialized View"
+msgstr "รีเฟรช Materialized View"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+msgid "Refresh Materialized View %s"
+msgstr "รีเฟรช Materialized View %s"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__graph_type__row
+msgid "Row"
+msgstr "แถว"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Rule Definition"
+msgstr "คำจำกัดความกฎ"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+msgid ""
+"SQL Error while creating %(materialized_text)s VIEW %(view_name)s :\n"
+" %(error)s"
+msgstr ""
+"เกิดข้อผิดพลาด SQL ขณะสร้าง %(materialized_text)s VIEW %(view_name)s :\n"
+" %(error)s"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__bi_sql_view_field_ids
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "SQL Fields"
+msgstr "ฟิลด์ SQL"
+
+#. module: bi_sql_editor
+#: model:ir.ui.menu,name:bi_sql_editor.menu_bi_sql_editor
+msgid "SQL Reports"
+msgstr "รายงาน SQL"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__query
+msgid ""
+"SQL Request that will be inserted as the view. Take care to :\n"
+" * set a name for all your selected fields, specially if you use SQL "
+"function (like EXTRACT, ...);\n"
+" * Do not use 'SELECT *' or 'SELECT table.*';\n"
+" * prefix the name of the selectable columns by 'x_';"
+msgstr ""
+"คำขอ SQL ที่จะถูกแทรกเป็นมุมมอง โปรดระวังดังนี้:\n"
+" * ตั้งชื่อให้ฟิลด์ที่เลือกทั้งหมด โดยเฉพาะเมื่อใช้ฟังก์ชัน SQL "
+"(เช่น EXTRACT, ...);\n"
+" * ห้ามใช้ 'SELECT *' หรือ 'SELECT table.*';\n"
+" * ขึ้นต้นชื่อคอลัมน์ที่เลือกได้ด้วย 'x_';"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__sql_type
+msgid "SQL Type"
+msgstr "ประเภท SQL"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__sql_type
+msgid "SQL Type in the database"
+msgstr "ประเภท SQL ในฐานข้อมูล"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__bi_sql_view_id
+msgid "SQL View"
+msgstr "มุมมอง SQL"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view__state__model_valid
+msgid "SQL View and Model Created"
+msgstr "สร้างมุมมอง SQL และโมเดลแล้ว"
+
+#. module: bi_sql_editor
+#: model:ir.actions.act_window,name:bi_sql_editor.action_bi_sql_view
+#: model:ir.ui.menu,name:bi_sql_editor.menu_bi_sql_view
+msgid "SQL Views"
+msgstr "มุมมอง SQL"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__selection
+msgid "Selection Options"
+msgstr "ตัวเลือกการเลือก"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__size
+msgid "Size of the materialized view and its indexes"
+msgstr "ขนาดของ materialized view และดัชนีของมัน"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__state
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__state
+msgid "State"
+msgstr "รัฐ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__state
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__state
+msgid ""
+"State of the Request:\n"
+" * 'Draft': Not tested\n"
+" * 'SQL Valid': SQL Request has been checked and is valid"
+msgstr ""
+"สถานะของคำขอ:\n"
+" * 'Draft': ยังไม่ทดสอบ\n"
+" * 'SQL Valid': คำขอ SQL ผ่านการตรวจสอบและถูกต้อง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__technical_name
+msgid ""
+"Suffix of the SQL view. SQL full name will be computed and prefixed by "
+"'x_bi_sql_view_'. Syntax should follow: https://www.postgresql.org/docs/"
+"current/static/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS"
+msgstr ""
+"คำต่อท้ายของมุมมอง SQL ชื่อเต็ม SQL จะถูกคำนวณและขึ้นต้นด้วย "
+"'x_bi_sql_view_' ไวยากรณ์ควรเป็นไปตาม: https://www.postgresql.org/docs/"
+"current/static/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__group_operator__sum
+msgid "Sum"
+msgstr "ผลรวม"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__technical_name
+msgid "Technical Name"
+msgstr "ชื่อทางเทคนิค"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__has_group_changed
+msgid ""
+"Technical fields, used in modules that depends on this one to know if groups "
+"has changed, and that according access should be updated."
+msgstr ""
+"ฟิลด์ทางเทคนิค ใช้ในโมดูลที่พึ่งพาโมดูลนี้เพื่อทราบว่ากลุ่มมีการเปลี่ยนแปลง "
+"และควรอัปเดตการเข้าถึงที่เกี่ยวข้อง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__field_description
+msgid "This will be used as the name of the Odoo field, displayed for users"
+msgstr "ค่านี้จะถูกใช้เป็นชื่อฟิลด์ Odoo ที่แสดงต่อผู้ใช้"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "This will create Odoo View, Action and Menu"
+msgstr "การดำเนินการนี้จะสร้างมุมมอง การดำเนินการ และเมนูของ Odoo"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid ""
+"This will try to create an SQL View, based on the SQL request and the "
+"according Transient Model and fields, based on settings"
+msgstr ""
+"การดำเนินการนี้จะพยายามสร้างมุมมอง SQL จากคำขอ SQL และ Transient Model "
+"รวมถึงฟิลด์ที่เกี่ยวข้องตามการตั้งค่า"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__tree_visibility
+msgid "Tree Visibility"
+msgstr "การแสดงในมุมมองรายการ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view_field__ttype
+msgid ""
+"Type of the Odoo field that will be created. Keep empty if you don't want to "
+"create a new field. If empty, this field will not be displayed neither "
+"available for search or group by function"
+msgstr ""
+"ประเภทของฟิลด์ Odoo ที่จะถูกสร้าง เว้นว่างไว้หากไม่ต้องการสร้างฟิลด์ใหม่ "
+"หากเว้นว่าง ฟิลด์นี้จะไม่ถูกแสดงและไม่พร้อมใช้งานสำหรับฟังก์ชันค้นหาหรือ group by"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "UI Instances"
+msgstr "อินสแตนซ์ UI"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "UI Parameters"
+msgstr "พารามิเตอร์ UI"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__tree_visibility__unavailable
+msgid "Unavailable"
+msgstr "ไม่พร้อม"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "Update Model Access"
+msgstr "อัปเดตการเข้าถึงโมเดล"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid ""
+"Update Model Access. Required if you changed groups list after having "
+"created the model"
+msgstr ""
+"อัปเดตการเข้าถึงโมเดล จำเป็นหากคุณเปลี่ยนรายการกลุ่มหลังจากสร้างโมเดลแล้ว"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__use_external_database
+msgid "Use External Database"
+msgstr "ใช้ฐานข้อมูลภายนอก"
+
+#. module: bi_sql_editor
+#: model_terms:ir.ui.view,arch_db:bi_sql_editor.view_bi_sql_view_form
+msgid "User Interface"
+msgstr "ส่วนติดต่อผู้ใช้"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__view_name
+msgid "View Name"
+msgstr "ชื่อมุมมอง"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__view_order
+msgid "View Order"
+msgstr "ดูคำสั่งซื้อ"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view__state__ui_valid
+msgid "Views, Action and Menu Created"
+msgstr "สร้างมุมมอง การดำเนินการ และเมนูแล้ว"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความเว็บไซต์"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,help:bi_sql_editor.field_bi_sql_view__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารของเว็บไซต์"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+#: code:addons/bi_sql_editor/models/bi_sql_view_field.py:0
+msgid "You can not create indexes on non materialized views"
+msgstr "คุณไม่สามารถสร้างดัชนีบนมุมมองที่ไม่ได้เป็น materialized ได้"
+
+#. module: bi_sql_editor
+#. odoo-python
+#: code:addons/bi_sql_editor/models/bi_sql_view.py:0
+msgid ""
+"You can only unlink draft views. If you want to delete them, first set them "
+"to draft."
+msgstr ""
+"คุณสามารถลบได้เฉพาะมุมมองที่เป็นร่างเท่านั้น หากต้องการลบ ให้ตั้งเป็นร่างก่อน"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__ttype__boolean
+msgid "boolean"
+msgstr "boolean"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__ttype__char
+msgid "char"
+msgstr "char"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__ttype__date
+msgid "date"
+msgstr "วันที่"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__ttype__datetime
+msgid "datetime"
+msgstr "วันที่เวลา"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__ttype__float
+msgid "float"
+msgstr "เลขทศนิยม"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__ttype__integer
+msgid "integer"
+msgstr "ตัวเลขจำนวนเต็ม"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__ttype__many2one
+msgid "many2one"
+msgstr "many2one"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields.selection,name:bi_sql_editor.selection__bi_sql_view_field__ttype__selection
+msgid "selection"
+msgstr "เลือก"
+
+#. module: bi_sql_editor
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view__sequence
+#: model:ir.model.fields,field_description:bi_sql_editor.field_bi_sql_view_field__sequence
+msgid "sequence"
+msgstr "ลำดับ"
+
+#~ msgid "Last Modified on"
+#~ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+
+#~ msgid "Set to Draft"
+#~ msgstr "กำหนดให้เป็นแบบร่าง"
+
+#~ msgid "Security"
+#~ msgstr "ความปลอดภัย"
+
+#~ msgid "Draft"
+#~ msgstr "ฉบับร่าง"

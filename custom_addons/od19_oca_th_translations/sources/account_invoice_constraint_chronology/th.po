@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_invoice_constraint_chronology
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: account-financial-tools (8.0)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-30 16:31+0000\n"
+"PO-Revision-Date: 2015-06-03 15:57+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: Thai (http://www.transifex.com/oca/OCA-account-financial-"
+"tools-8-0/language/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_invoice_constraint_chronology
+#: model:ir.model.fields,field_description:account_invoice_constraint_chronology.field_account_journal__check_chronology
+msgid "Check Chronology"
+msgstr "ตรวจสอบลำดับเหตุการณ์"
+
+#. module: account_invoice_constraint_chronology
+#. odoo-python
+#: code:addons/account_invoice_constraint_chronology/model/account_move.py:0
+#, python-format
+msgid ""
+"Chronology conflict: A conflicting draft invoice dated before {date_invoice} "
+"exists, please validate it first."
+msgstr ""
+"ความขัดแย้งของลำดับเหตุการณ์: มีใบแจ้งหนี้ร่างที่ขัดแย้งซึ่งลงวันที่ก่อน "
+"{date_invoice} โปรดตรวจสอบรายการนั้นก่อน"
+
+#. module: account_invoice_constraint_chronology
+#. odoo-python
+#: code:addons/account_invoice_constraint_chronology/model/account_move.py:0
+#, python-format
+msgid ""
+"Chronology conflict: A conflicting validated invoice dated after "
+"{date_invoice} exists."
+msgstr ""
+"ความขัดแย้งของลำดับเหตุการณ์: มีใบแจ้งหนี้ที่ตรวจสอบแล้วซึ่งขัดแย้งและ"
+"ลงวันที่หลัง {date_invoice}"
+
+#. module: account_invoice_constraint_chronology
+#. odoo-python
+#: code:addons/account_invoice_constraint_chronology/model/account_move.py:0
+#, python-format
+msgid ""
+"Chronology conflict: An invoice with a higher number {highest_name} dated "
+"before {date_invoice} exists."
+msgstr ""
+"ความขัดแย้งของลำดับเหตุการณ์: มีใบแจ้งหนี้ที่มีหมายเลขสูงกว่า "
+"{highest_name} ซึ่งลงวันที่ก่อน {date_invoice}"
+
+#. module: account_invoice_constraint_chronology
+#. odoo-python
+#: code:addons/account_invoice_constraint_chronology/model/account_move.py:0
+#, python-format
+msgid ""
+"Chronology conflict: Invoice {name} cannot be {time} invoice {inv_name}."
+msgstr ""
+"ความขัดแย้งของลำดับเหตุการณ์: ใบแจ้งหนี้ {name} ไม่สามารถเป็น {time} "
+"ใบแจ้งหนี้ {inv_name}"
+
+#. module: account_invoice_constraint_chronology
+#: model:ir.model,name:account_invoice_constraint_chronology.model_account_journal
+msgid "Journal"
+msgstr "สมุดบันทึก"
+
+#. module: account_invoice_constraint_chronology
+#: model:ir.model,name:account_invoice_constraint_chronology.model_account_move
+msgid "Journal Entry"
+msgstr "รายการสมุดรายวัน"
+
+#~ msgid "Invoice"
+#~ msgstr "ใบแจ้งหนี้"

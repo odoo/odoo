@@ -1,0 +1,589 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * database_cleanup
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 9.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-04-19 18:00+0000\n"
+"PO-Revision-Date: 2017-04-19 18:00+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2016\n"
+"Language-Team: Thai (https://www.transifex.com/oca/teams/23907/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_create_indexes_line
+msgid "Cleanup Create Indexes line"
+msgstr "บรรทัดสร้างดัชนีของล้างข้อมูล"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_line_column
+msgid "Cleanup Purge Line Column"
+msgstr "บรรทัดล้างข้อมูล: คอลัมน์"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_line_data
+msgid "Cleanup Purge Line Data"
+msgstr "บรรทัดล้างข้อมูล: ข้อมูล"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_line_menu
+msgid "Cleanup Purge Line Menu"
+msgstr "บรรทัดล้างข้อมูล: เมนู"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_line_model
+msgid "Cleanup Purge Line Model"
+msgstr "บรรทัดล้างข้อมูล: โมเดล"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_line_module
+msgid "Cleanup Purge Line Module"
+msgstr "บรรทัดล้างข้อมูล: โมดูล"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_line_table
+msgid "Cleanup Purge Line Table"
+msgstr "บรรทัดล้างข้อมูล: ตาราง"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_column__purge_line_ids
+msgid "Columns to purge"
+msgstr "คอลัมน์ที่จะล้าง"
+
+#. module: database_cleanup
+#: model:ir.actions.server,name:database_cleanup.cleanup_create_indexes_line_action
+#: model_terms:ir.ui.view,arch_db:database_cleanup.cleanup_create_indexes_wizard_view_form
+msgid "Create"
+msgstr "สร้าง"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.cleanup_create_indexes_wizard_view_form
+msgid "Create all"
+msgstr "สร้างทั้งหมด"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_create_indexes_wizard
+msgid "Create indexes"
+msgstr "สร้างดัชนี"
+
+#. module: database_cleanup
+#: model:ir.actions.server,name:database_cleanup.cleanup_create_indexes_wizard_action
+#: model:ir.ui.menu,name:database_cleanup.menu_create_indexes
+msgid "Create missing indexes"
+msgstr "สร้างดัชนีที่ขาดหาย"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.cleanup_create_indexes_line_view_tree
+msgid "Create this index"
+msgstr "สร้างดัชนีนี้"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__purged
+msgid "Created"
+msgstr "สร้างแล้ว"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_wizard__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_column__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_data__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_field__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_menu__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_model__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_module__create_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_table__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_wizard__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_column__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_data__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_field__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_menu__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_model__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_module__create_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_table__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__data_id
+msgid "Data entry"
+msgstr "รายการข้อมูล"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_data__purge_line_ids
+msgid "Data to purge"
+msgstr "ข้อมูลที่จะล้าง"
+
+#. module: database_cleanup
+#: model:ir.ui.menu,name:database_cleanup.menu_database_cleanup
+msgid "Database cleanup"
+msgstr "ล้างข้อมูลฐานข้อมูล"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_wizard__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_column__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_data__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_field__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_menu__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_model__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_module__display_name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_table__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__field_id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__field_id
+msgid "Field"
+msgstr "ฟิลด์"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_ir_model_fields
+msgid "Fields"
+msgstr "ฟิลด์"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_field__purge_line_ids
+msgid "Fields to purge"
+msgstr "ฟิลด์ที่จะล้าง"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_wizard__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_column__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_data__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_field__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_menu__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_model__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_module__id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_table__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_wizard__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_column__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_data__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_field__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_menu__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_model__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_module__write_uid
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_table__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_wizard__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_column__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_data__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_field__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_menu__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_model__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_module__write_date
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_table__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__menu_id
+msgid "Menu entry"
+msgstr "รายการเมนู"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_menu__purge_line_ids
+msgid "Menus to purge"
+msgstr "เมนูที่จะล้าง"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__model_id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__model_id
+msgid "Model"
+msgstr "โมเดล"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_ir_model_data
+msgid "Model Data"
+msgstr "ข้อมูลโมเดล"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__model_name
+msgid "Model Technical Name"
+msgstr "ชื่อทางเทคนิคของโมเดล"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_ir_model
+msgid "Models"
+msgstr "โมเดล"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_model__purge_line_ids
+msgid "Models to purge"
+msgstr "โมเดลที่จะล้าง"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_module__purge_line_ids
+msgid "Modules to purge"
+msgstr "โมดูลที่จะล้าง"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line__name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__name
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: database_cleanup
+#. odoo-python
+#: code:addons/database_cleanup/models/purge_menus.py:0
+msgid "No dangling menu entries found"
+msgstr "ไม่พบรายการเมนูที่ค้างอยู่"
+
+#. module: database_cleanup
+#. odoo-python
+#: code:addons/database_cleanup/models/purge_modules.py:0
+msgid "No modules found to purge"
+msgstr "ไม่พบโมดูลที่จะล้าง"
+
+#. module: database_cleanup
+#. odoo-python
+#: code:addons/database_cleanup/models/purge_columns.py:0
+msgid "No orphaned columns found"
+msgstr "ไม่พบคอลัมน์ที่ไม่มีผู้ใช้งาน"
+
+#. module: database_cleanup
+#. odoo-python
+#: code:addons/database_cleanup/models/purge_data.py:0
+msgid "No orphaned data entries found"
+msgstr "ไม่พบรายการข้อมูลที่ไม่มีผู้ใช้งาน"
+
+#. module: database_cleanup
+#. odoo-python
+#: code:addons/database_cleanup/models/purge_fields.py:0
+msgid "No orphaned fields found"
+msgstr "ไม่พบฟิลด์ที่ไม่มีผู้ใช้งาน"
+
+#. module: database_cleanup
+#. odoo-python
+#: code:addons/database_cleanup/models/purge_models.py:0
+msgid "No orphaned models found"
+msgstr "ไม่พบโมเดลที่ไม่มีผู้ใช้งาน"
+
+#. module: database_cleanup
+#. odoo-python
+#: code:addons/database_cleanup/models/purge_tables.py:0
+msgid "No orphaned tables found"
+msgstr "ไม่พบตารางที่ไม่มีผู้ใช้งาน"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.form_purge_wizard
+msgid "Nothing found to clean up."
+msgstr "ไม่พบสิ่งใดที่ต้องล้างข้อมูล"
+
+#. module: database_cleanup
+#: model:ir.actions.server,name:database_cleanup.action_purge_column_line
+#: model:ir.actions.server,name:database_cleanup.action_purge_data_line
+#: model:ir.actions.server,name:database_cleanup.action_purge_field_line
+#: model:ir.actions.server,name:database_cleanup.action_purge_menu_line
+#: model:ir.actions.server,name:database_cleanup.action_purge_model_line
+#: model:ir.actions.server,name:database_cleanup.action_purge_module_line
+#: model:ir.actions.server,name:database_cleanup.action_purge_table_line
+#: model_terms:ir.ui.view,arch_db:database_cleanup.form_purge_wizard
+msgid "Purge"
+msgstr "ล้างข้อมูล"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_line
+msgid "Purge Column Abstract Wizard"
+msgstr "ตัวช่วยนามธรรมล้างคอลัมน์"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_wizard__purge_line_ids
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard__purge_line_ids
+msgid "Purge Line"
+msgstr "บรรทัดล้างข้อมูล"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__wizard_id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__wizard_id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__wizard_id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__wizard_id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__wizard_id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__wizard_id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__wizard_id
+msgid "Purge Wizard"
+msgstr "ตัวช่วยล้างข้อมูล"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.form_purge_wizard
+msgid "Purge all"
+msgstr "ล้างทั้งหมด"
+
+#. module: database_cleanup
+#: model:ir.actions.server,name:database_cleanup.action_purge_columns
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_wizard_column
+msgid "Purge columns"
+msgstr "ล้างคอลัมน์"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_wizard_data
+msgid "Purge data"
+msgstr "ล้างข้อมูล"
+
+#. module: database_cleanup
+#: model:ir.actions.server,name:database_cleanup.action_purge_data
+msgid "Purge data entries that refer to missing resources"
+msgstr "ล้างรายการข้อมูลที่อ้างอิงถึงทรัพยากรที่ไม่มีอยู่"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_line_field
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_wizard_field
+msgid "Purge fields"
+msgstr "ล้างฟิลด์"
+
+#. module: database_cleanup
+#: model:ir.actions.server,name:database_cleanup.action_purge_menus
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_wizard_menu
+msgid "Purge menus"
+msgstr "ล้างเมนู"
+
+#. module: database_cleanup
+#: model:ir.actions.server,name:database_cleanup.action_purge_fields
+#: model:ir.actions.server,name:database_cleanup.action_purge_models
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_wizard_model
+msgid "Purge models"
+msgstr "ล้างโมเดล"
+
+#. module: database_cleanup
+#: model:ir.actions.server,name:database_cleanup.action_purge_modules
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_wizard_module
+msgid "Purge modules"
+msgstr "ล้างโมดูล"
+
+#. module: database_cleanup
+#: model:ir.ui.menu,name:database_cleanup.menu_purge_columns
+msgid "Purge obsolete columns"
+msgstr "ล้างคอลัมน์ที่ล้าสมัย"
+
+#. module: database_cleanup
+#: model:ir.ui.menu,name:database_cleanup.menu_purge_data
+msgid "Purge obsolete data entries"
+msgstr "ล้างรายการข้อมูลที่ล้าสมัย"
+
+#. module: database_cleanup
+#: model:ir.ui.menu,name:database_cleanup.menu_purge_fields
+msgid "Purge obsolete fields"
+msgstr "ล้างฟิลด์ที่ล้าสมัย"
+
+#. module: database_cleanup
+#: model:ir.ui.menu,name:database_cleanup.menu_purge_menus
+msgid "Purge obsolete menu entries"
+msgstr "ล้างรายการเมนูที่ล้าสมัย"
+
+#. module: database_cleanup
+#: model:ir.ui.menu,name:database_cleanup.menu_purge_models
+msgid "Purge obsolete models"
+msgstr "ล้างโมเดลที่ล้าสมัย"
+
+#. module: database_cleanup
+#: model:ir.ui.menu,name:database_cleanup.menu_purge_modules
+msgid "Purge obsolete modules"
+msgstr "ล้างโมดูลที่ล้าสมัย"
+
+#. module: database_cleanup
+#: model:ir.ui.menu,name:database_cleanup.menu_purge_tables
+msgid "Purge obsolete tables"
+msgstr "ล้างตารางที่ล้าสมัย"
+
+#. module: database_cleanup
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_wizard
+msgid "Purge stuff"
+msgstr "ล้างข้อมูลที่ไม่จำเป็น"
+
+#. module: database_cleanup
+#: model:ir.actions.server,name:database_cleanup.action_purge_tables
+#: model:ir.model,name:database_cleanup.model_cleanup_purge_wizard_table
+msgid "Purge tables"
+msgstr "ล้างตาราง"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.purge_column_line_tree
+msgid "Purge this column"
+msgstr "ล้างคอลัมน์นี้"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.purge_field_line_tree
+msgid "Purge this field"
+msgstr "ล้างฟิลด์นี้"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.purge_menu_line_tree
+msgid "Purge this menu"
+msgstr "ล้างเมนูนี้"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.purge_model_line_tree
+msgid "Purge this model"
+msgstr "ล้างโมเดลนี้"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.purge_module_line_tree
+msgid "Purge this module"
+msgstr "ล้างโมดูลนี้"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.tree_purge_line
+msgid "Purge this record"
+msgstr "ล้างบันทึกนี้"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.purge_table_line_tree
+msgid "Purge this table"
+msgstr "ล้างตารางนี้"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line__purged
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__purged
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__purged
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__purged
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__purged
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__purged
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__purged
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__purged
+msgid "Purged"
+msgstr "ล้างแล้ว"
+
+#. module: database_cleanup
+#: model:ir.model.fields.selection,name:database_cleanup.selection__cleanup_purge_line_table__table_type__base
+msgid "SQL Table"
+msgstr "ตาราง SQL"
+
+#. module: database_cleanup
+#: model:ir.model.fields.selection,name:database_cleanup.selection__cleanup_purge_line_table__table_type__view
+msgid "SQL View"
+msgstr "มุมมอง SQL"
+
+#. module: database_cleanup
+#: model_terms:ir.ui.view,arch_db:database_cleanup.form_purge_wizard
+msgid "Select lines"
+msgstr "เลือกรายการ"
+
+#. module: database_cleanup
+#. odoo-python
+#: code:addons/database_cleanup/models/purge_wizard.py:0
+msgid "Select lines to purge"
+msgstr "เลือกรายการที่จะล้าง"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_wizard__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_column__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_data__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_field__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_menu__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_model__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_module__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_column__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_data__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_field__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_menu__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_model__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_module__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_table__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_ir_model__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_ir_model_data__smart_search
+#: model:ir.model.fields,field_description:database_cleanup.field_ir_model_fields__smart_search
+msgid "Smart Search"
+msgstr "ค้นหาอัจฉริยะ"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line_table__table_type
+msgid "Table Type"
+msgstr "ประเภทตาราง"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_wizard_table__purge_line_ids
+msgid "Tables to purge"
+msgstr "ตารางที่จะล้าง"
+
+#. module: database_cleanup
+#: model:ir.model.fields,help:database_cleanup.field_cleanup_purge_line_field__model_id
+msgid "The model this field belongs to"
+msgstr "โมเดลที่เป็นของฟิลด์นี้"
+
+#. module: database_cleanup
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_create_indexes_line__wizard_id
+#: model:ir.model.fields,field_description:database_cleanup.field_cleanup_purge_line__wizard_id
+msgid "Wizard"
+msgstr "ตัวช่วย"
+
+#~ msgid "Reason"
+#~ msgstr "เหตุผล"
+
+#~ msgid "Last Modified on"
+#~ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"

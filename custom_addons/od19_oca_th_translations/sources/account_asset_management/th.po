@@ -1,0 +1,1651 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_asset_management
+#
+# Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2015-2016
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012-2014
+# Hotellook, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: account-financial-tools (8.0)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-13 03:39+0000\n"
+"PO-Revision-Date: 2016-11-25 14:55+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>\n"
+"Language-Team: Thai (http://www.transifex.com/oca/OCA-account-financial-"
+"tools-8-0/language/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+msgid ""
+"\n"
+"Error while processing asset '{ref}': {exception}"
+msgstr "\nเกิดข้อผิดพลาดขณะประมวลผลสินทรัพย์ '{ref}': {exception}"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_profile_view_form
+msgid ""
+"<span class=\"o_form_label oe_inline\" invisible=\"salvage_type != "
+"'percent'\">%</span>"
+msgstr "<span class=\"o_form_label oe_inline\" invisible=\"salvage_type != 'percent'\">%</span>"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.view_move_form
+msgid "<span class=\"o_stat_text\"> Asset(s)</span>"
+msgstr "<span class=\"o_stat_text\"> สินทรัพย์</span>"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model,name:account_asset_management.model_account_account
+msgid "Account"
+msgstr "บัญชี"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__carry_forward_missed_depreciations
+msgid "Accumulate missed depreciations"
+msgstr "สะสมค่าเสื่อมราคาที่พลาดไป"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__message_needaction
+msgid "Action Needed"
+msgstr "จำเป็นต้องดำเนินการ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__active
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Active Assets"
+msgstr "สินทรัพย์ที่ใช้งานอยู่"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__activity_ids
+msgid "Activities"
+msgstr "กิจกรรม"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "การตกแต่งข้อยกเว้นกิจกรรม"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__activity_state
+msgid "Activity State"
+msgstr "สถานะกิจกรรม"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "ไอคอนประเภทกิจกรรม"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Add an internal note here..."
+msgstr "เพิ่มบันทึกภายในที่นี่..."
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_compute__date_end
+msgid "All depreciation lines prior to this date will be automatically posted"
+msgstr "รายการค่าเสื่อมราคาทั้งหมดก่อนวันที่นี้จะถูกลงบัญชีโดยอัตโนมัติ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__allow_reversal
+msgid "Allow Reversal of journal entries"
+msgstr "อนุญาตให้ย้อนกลับรายการสมุดรายวัน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__amount
+msgid "Amount"
+msgstr "จำนวน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__depreciated_value
+msgid "Amount Already Depreciated"
+msgstr "จำนวนที่คิดค่าเสื่อมราคาแล้ว"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__analytic_distribution
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "การกระจายการวิเคราะห์"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_profile_view_form
+msgid "Analytic Information"
+msgstr "ข้อมูลการวิเคราะห์"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__analytic_precision
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__analytic_precision
+msgid "Analytic Precision"
+msgstr "ความแม่นยำในการวิเคราะห์"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_profile_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_profile_view_search
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_search
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Are you sure ?"
+msgstr "คุณแน่ใจหรือไม่ ?"
+
+#. module: account_asset_management
+#: model:ir.model,name:account_asset_management.model_account_asset
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__asset_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_move_line__asset_id
+msgid "Asset"
+msgstr "สินทรัพย์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/wizard/account_asset_remove.py:0
+msgid "Asset '%s' Removal Journal Entry"
+msgstr "รายการสมุดรายวันการนำสินทรัพย์ '%s' ออก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__account_asset_id
+msgid "Asset Account"
+msgstr "บัญชีสินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_bank_statement_line__asset_count
+#: model:ir.model.fields,field_description:account_asset_management.field_account_move__asset_count
+msgid "Asset Count"
+msgstr "จำนวนสินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.model,name:account_asset_management.model_account_asset_group
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__asset_group_id
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_group_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_group_view_search
+msgid "Asset Group"
+msgstr "หมวดหมู่สินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.actions.act_window,name:account_asset_management.account_asset_group_action
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__group_ids
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__group_ids
+#: model:ir.ui.menu,name:account_asset_management.account_asset_group_menu
+msgid "Asset Groups"
+msgstr "หมวดหมู่สินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__line_id
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Asset Line"
+msgstr "รายการสินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.actions.server,name:account_asset_management.ir_cron_assets_generator_ir_actions_server
+msgid "Asset Management: Generate assets"
+msgstr "การจัดการสินทรัพย์: สร้างสินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__name
+msgid "Asset Name"
+msgstr "ชื่อสินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_account__asset_profile_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__profile_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_move_line__asset_profile_id
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_profile_view_search
+msgid "Asset Profile"
+msgstr "หมวดหมู่สินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.actions.act_window,name:account_asset_management.account_asset_profile_action
+#: model:ir.ui.menu,name:account_asset_management.account_asset_profile_menu
+msgid "Asset Profiles"
+msgstr "หมวดหมู่สินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset_line__type__remove
+msgid "Asset Removal"
+msgstr "การนำสินทรัพย์ออก"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__date_remove
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__date_remove
+msgid "Asset Removal Date"
+msgstr "วันที่นำสินทรัพย์ออก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__account_sale_id
+msgid "Asset Sale Account"
+msgstr "บัญชีการขายสินทรัพย์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__date_start
+msgid "Asset Start Date"
+msgstr "วันที่เริ่มต้นสินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.model,name:account_asset_management.model_account_asset_line
+msgid "Asset depreciation table line"
+msgstr "รายการตารางค่าเสื่อมราคาสินทรัพย์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_move.py:0
+msgid "Asset name must be set in the label of the line."
+msgstr "ต้องระบุชื่อสินทรัพย์ในป้ายกำกับของรายการ"
+
+#. module: account_asset_management
+#: model:ir.model,name:account_asset_management.model_account_asset_profile
+msgid "Asset profile"
+msgstr "หมวดหมู่สินทรัพย์"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Asset removal."
+msgstr "การนำสินทรัพย์ออก"
+
+#. module: account_asset_management
+#: model:ir.model,name:account_asset_management.model_account_asset_recompute_trigger
+msgid "Asset table recompute triggers"
+msgstr "ตัวกระตุ้นการคำนวณตารางสินทรัพย์ใหม่"
+
+#. module: account_asset_management
+#: model:ir.actions.act_window,name:account_asset_management.account_asset_action
+#: model:ir.ui.menu,name:account_asset_management.account_asset_menu
+#: model:ir.ui.menu,name:account_asset_management.menu_finance_assets
+#: model:ir.ui.menu,name:account_asset_management.menu_finance_config_assets
+msgid "Assets"
+msgstr "สินทรัพย์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Assets to be corrected"
+msgstr "สินทรัพย์ที่ต้องแก้ไข"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__message_attachment_count
+msgid "Attachment Count"
+msgstr "จำนวนสิ่งที่แนบมา"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__asset_product_item
+msgid ""
+"By default during the validation of an invoice, an asset is created by "
+"invoice line as long as an accounting entry is created by invoice line. With "
+"this setting, an accounting entry will be created by product item. So, there "
+"will be an asset by product item."
+msgstr "โดยค่าเริ่มต้น ในระหว่างการตรวจสอบใบแจ้งหนี้ สินทรัพย์จะถูกสร้างตามรายการใบแจ้งหนี้ ตราบใดที่มีการสร้างรายการบัญชีตามรายการใบแจ้งหนี้ ด้วยการตั้งค่านี้ รายการบัญชีจะถูกสร้างตามรายการสินค้า ดังนั้น จะมีสินทรัพย์ตามรายการสินค้า"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__days_calc
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__days_calc
+msgid "Calculate by days"
+msgstr "คำนวณตามจำนวนวัน"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_compute_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_compute_view_form_result
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_remove_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.wiz_account_asset_report_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.wiz_asset_move_reverse_view_form
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__open_asset
+msgid ""
+"Check this if you want to automatically confirm the assets of this profile "
+"when created by invoices."
+msgstr "เลือกตัวเลือกนี้หากคุณต้องการยืนยันสินทรัพย์ของโปรไฟล์นี้โดยอัตโนมัติเมื่อสร้างจากใบแจ้งหนี้"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__child_ids
+msgid "Child Asset Groups"
+msgstr "หมวดหมู่สินทรัพย์ย่อย"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__method_time
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__method_time
+msgid ""
+"Choose the method to use to compute the dates and number of depreciation "
+"lines.\n"
+"  * Number of Years: Specify the number of years for the depreciation.\n"
+"  * Number of Depreciations: Fix the number of depreciation lines and the "
+"time between 2 depreciations.\n"
+msgstr "เลือกวิธีการที่ใช้ในการคำนวณวันที่และจำนวนรายการค่าเสื่อมราคา\n  * จำนวนปี: ระบุจำนวนปีสำหรับค่าเสื่อมราคา\n  * จำนวนครั้งของค่าเสื่อมราคา: กำหนดจำนวนรายการค่าเสื่อมราคาและช่วงเวลาระหว่างการคิดค่าเสื่อมราคา 2 ครั้ง\n"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__method
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__method
+msgid ""
+"Choose the method to use to compute the depreciation lines.\n"
+"  * Linear: Calculated on basis of: Depreciation Base / Number of "
+"Depreciations. Depreciation Base = Purchase Value - Salvage Value.\n"
+"  * Linear-Limit: Linear up to Salvage Value. Depreciation Base = Purchase "
+"Value.\n"
+"  * Degressive: Calculated on basis of: Residual Value * Degressive Factor.\n"
+"  * Degressive-Linear (only for Time Method = Year): Degressive becomes "
+"linear when the annual linear depreciation exceeds the annual degressive "
+"depreciation.\n"
+"   * Degressive-Limit: Degressive up to Salvage Value. The Depreciation Base "
+"is equal to the asset value."
+msgstr "เลือกวิธีการที่ใช้ในการคำนวณรายการค่าเสื่อมราคา\n  * เชิงเส้น: คำนวณจาก: ฐานค่าเสื่อมราคา / จำนวนครั้งของค่าเสื่อมราคา ฐานค่าเสื่อมราคา = มูลค่าซื้อ - มูลค่าซาก\n  * เชิงเส้น-จำกัด: เชิงเส้นจนถึงมูลค่าซาก ฐานค่าเสื่อมราคา = มูลค่าซื้อ\n  * แบบลดลง: คำนวณจาก: มูลค่าคงเหลือ * ตัวคูณแบบลดลง\n  * แบบลดลง-เชิงเส้น (สำหรับวิธีเวลา = ปี เท่านั้น): แบบลดลงจะกลายเป็นเชิงเส้นเมื่อค่าเสื่อมราคาเชิงเส้นรายปีสูงกว่าค่าเสื่อมราคาแบบลดลงรายปี\n   * แบบลดลง-จำกัด: แบบลดลงจนถึงมูลค่าซาก ฐานค่าเสื่อมราคาเท่ากับมูลค่าสินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset__state__close
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_search
+msgid "Close"
+msgstr "ปิด"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__code
+msgid "Code"
+msgstr "โค้ด"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__company_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__company_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__company_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__company_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__company_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__company_id
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__currency_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__currency_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__currency_id
+msgid "Company Currency"
+msgstr "สกุลเงินของบริษัท"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__date_completed
+msgid "Completion Date"
+msgstr "วันที่เสร็จ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Comput. Method"
+msgstr "วิธีคำนวณ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__method
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__method
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_profile_view_search
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_search
+msgid "Computation Method"
+msgstr "วิธีการคำนวณ"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_compute_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Compute"
+msgstr "คำนวน"
+
+#. module: account_asset_management
+#: model:ir.actions.act_window,name:account_asset_management.account_asset_compute_action
+#: model:ir.model,name:account_asset_management.model_account_asset_compute
+#: model:ir.ui.menu,name:account_asset_management.account_asset_compute_menu
+msgid "Compute Assets"
+msgstr "คำนวณสินทรัพย์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/wizard/account_asset_compute.py:0
+msgid "Compute Assets errors"
+msgstr "คำนวณสินทรัพย์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/wizard/account_asset_compute.py:0
+msgid "Compute Assets result"
+msgstr "คำนวณสินทรัพย์"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.wiz_asset_move_reverse_view_form
+msgid "Confirm"
+msgstr "ยืนยัน"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Confirm Asset"
+msgstr "ยืนยันสินทรัพย์"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Create Move"
+msgstr "สร้างรายการ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__asset_product_item
+msgid "Create an asset by product item"
+msgstr "สร้างสินทรัพย์ตามรายการสินค้า"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/wizard/account_asset_compute.py:0
+msgid "Created Asset Moves"
+msgstr "รายการสินทรัพย์ที่สร้างขึ้น"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__create_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_compute__create_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__create_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__create_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__create_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__create_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__create_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__create_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__create_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_compute__create_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__create_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__create_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__create_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__create_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__create_date
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__create_date
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_compute__date_end
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__line_date
+msgid "Date"
+msgstr "วันที่"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_recompute_trigger__date_trigger
+msgid "Date of the event triggering the need to recompute the Asset Tables."
+msgstr "วันที่ของเหตุการณ์ที่ทำให้ต้องคำนวณตารางสินทรัพย์ใหม่"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__line_days
+msgid "Days"
+msgstr "วัน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_account__asset_profile_id
+msgid "Default Asset Profile when creating invoice lines with this account."
+msgstr "โปรไฟล์สินทรัพย์เริ่มต้นเมื่อสร้างรายการใบแจ้งหนี้ด้วยบัญชีนี้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Degressive"
+msgstr "แบบลดลง"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Degressive  up to Salvage Value"
+msgstr "แบบลดลงจนถึงมูลค่าซาก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__method_progress_factor
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__method_progress_factor
+msgid "Degressive Factor"
+msgstr "ตัวคูณแบบลดลง"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Degressive-Linear"
+msgstr "แบบลดลง-เชิงเส้น"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Degressive-Linear is only supported for Time Method = Year."
+msgstr "แบบลดลง-เชิงเส้นรองรับเฉพาะวิธีเวลา = ปี เท่านั้น"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Delete/Reverse Move"
+msgstr "ลบ/ย้อนกลับรายการ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__account_expense_depreciation_id
+msgid "Depr. Expense Account"
+msgstr "บัญชีค่าเสื่อมราคา-ค่าใช้จ่าย"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__value_depreciated
+msgid "Depreciated Value"
+msgstr "มูลค่าที่คิดค่าเสื่อมราคาแล้ว"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset_line__type__depreciate
+msgid "Depreciation"
+msgstr "ค่าเสื่อมสภาพ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__account_depreciation_id
+msgid "Depreciation Account"
+msgstr "บัญชีค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__depreciation_base
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__depreciation_base
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset_line__type__create
+msgid "Depreciation Base"
+msgstr "ฐานค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Depreciation Board"
+msgstr "กระดานค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_profile_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Depreciation Dates"
+msgstr "วันที่คิดค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__move_id
+msgid "Depreciation Entry"
+msgstr "รายการค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__depreciation_line_ids
+msgid "Depreciation Lines"
+msgstr "รายการค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_profile_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Depreciation Method"
+msgstr "วิธีคิดค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__name
+msgid "Depreciation Name"
+msgstr "ชื่อค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__display_name
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_compute__display_name
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__display_name
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__display_name
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__display_name
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__display_name
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__display_name
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__display_name
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__distribution_analytic_account_ids
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__distribution_analytic_account_ids
+msgid "Distribution Analytic Account"
+msgstr "บัญชีวิเคราะห์การจัดจำหน่าย"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset_recompute_trigger__state__done
+msgid "Done"
+msgstr "เสร็จสิ้น"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset__state__draft
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_search
+msgid "Draft"
+msgstr "ฉบับร่าง"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Duplicate reporting entries"
+msgstr "รายการรายงานซ้ำ"
+
+#. module: account_asset_management
+#: model:ir.model,name:account_asset_management.model_report_account_asset_management_asset_report_xls
+msgid "Dynamic XLS asset report generator"
+msgstr "ตัวสร้างรายงานสินทรัพย์ XLS แบบไดนามิก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__date_to
+msgid "End Date"
+msgstr "วันที่สิ้นสุด"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__method_end
+msgid "Ending Date"
+msgstr "วันที่สิ้นสุด"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__account_move_line_ids
+msgid "Entries"
+msgstr "รายการ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+msgid ""
+"Error while processing asset '{ref}': \n"
+"\n"
+"{tb}"
+msgstr "เกิดข้อผิดพลาดขณะประมวลผลสินทรัพย์ '{ref}': \n\n{tb}"
+
+#. module: account_asset_management
+#: model:ir.ui.menu,name:account_asset_management.account_asset_report_menu
+msgid "Financial Assets"
+msgstr "สินทรัพย์ทางการเงิน"
+
+#. module: account_asset_management
+#: model:ir.actions.act_window,name:account_asset_management.wiz_account_asset_report_action
+#: model:ir.model,name:account_asset_management.model_wiz_account_asset_report
+#: model:ir.ui.menu,name:account_asset_management.wiz_account_asset_report_menu
+msgid "Financial Assets report"
+msgstr "รายงานสินทรัพย์ทางการเงิน"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset_profile__salvage_type__fixed
+msgid "Fixed"
+msgstr "คงที่"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__message_follower_ids
+msgid "Followers"
+msgstr "ผู้ติดตาม"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "ไอคอนแบบฟอนต์ที่ยอดเยี่ยมเช่น fa-tasks"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__force_date
+msgid "Force accounting date"
+msgstr "บังคับวันที่ทางบัญชี"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/wizard/account_asset_remove.py:0
+msgid "Gain/Loss on Sale"
+msgstr "กำไร/ขาดทุนจากการขาย"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "General"
+msgstr "ทั่วไป"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+msgid "Generate Asset Removal entries"
+msgstr "สร้างรายการนำสินทรัพย์ออก"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_remove_view_form
+msgid "Generate Removal entries"
+msgstr "สร้างรายการนำออก"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.wiz_account_asset_report_view_form
+msgid "Generate Report"
+msgstr "สร้างรายงาน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__has_message
+msgid "Has Message"
+msgstr "มีข้อความ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__move_line_check
+msgid "Has accounting entries"
+msgstr "มีรายการบัญชี"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "History"
+msgstr "ประวัติ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_compute__id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__id
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__id
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__activity_exception_icon
+msgid "Icon"
+msgstr "ไอคอน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "ไอคอนเพื่อระบุการยกเว้นกิจกรรม"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__carry_forward_missed_depreciations
+msgid ""
+"If create an asset in a fiscal period that is now closed\n"
+"        the accumulated amount of depreciations that cannot be posted will "
+"be\n"
+"        carried forward to the first depreciation line of the current open\n"
+"        period."
+msgstr "หากสร้างสินทรัพย์ในงวดบัญชีที่ปิดไปแล้ว\n        ยอดสะสมของค่าเสื่อมราคาที่ไม่สามารถลงบัญชีได้จะถูก\n        ยกยอดไปยังรายการค่าเสื่อมราคาแรกของ\n        งวดที่เปิดอยู่ในปัจจุบัน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_wiz_asset_move_reverse__journal_id
+msgid "If empty, uses the journal of the journal entry to be reversed."
+msgstr "ถ้าว่างให้ใช้สมุดรายวันของรายการสมุดรายวันที่จะย้อนกลับ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__use_leap_years
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__use_leap_years
+msgid ""
+"If not set, the system will distribute evenly the amount to amortize across "
+"the years, based on the number of years. So the amount per year will be the "
+"depreciation base / number of years.\n"
+" If set, the system will consider if the current year is a leap year. The "
+"amount to depreciate per year will be calculated as depreciation base / "
+"(depreciation end date - start date + 1) * days in the current year."
+msgstr "หากไม่ตั้งค่า ระบบจะกระจายจำนวนเงินที่ต้องตัดจำหน่ายอย่างเท่าเทียมกันตลอดทั้งปี ตามจำนวนปี ดังนั้นจำนวนต่อปีจะเท่ากับ ฐานค่าเสื่อมราคา / จำนวนปี\n หากตั้งค่า ระบบจะพิจารณาว่าปีปัจจุบันเป็นปีอธิกสุรทินหรือไม่ จำนวนที่คิดค่าเสื่อมราคาต่อปีจะคำนวณเป็น ฐานค่าเสื่อมราคา / (วันที่สิ้นสุดค่าเสื่อมราคา - วันที่เริ่มต้น + 1) * จำนวนวันในปีปัจจุบัน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__allow_reversal
+msgid ""
+"If set, when pressing the Delete/Reverse Move button in a posted "
+"depreciation line will prompt the option to reverse the journal entry, "
+"instead of deleting them."
+msgstr "หากตั้งค่า เมื่อกดปุ่ม ลบ/ย้อนกลับรายการ ในรายการค่าเสื่อมราคาที่ลงบัญชีแล้ว จะแสดงตัวเลือกให้ย้อนกลับรายการสมุดรายวันแทนการลบ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+msgid "Illegal value %s in asset.method."
+msgstr "ค่าไม่ถูกต้อง %s ใน asset.method"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__draft
+msgid "Include draft assets"
+msgstr "รวมสินทรัพย์ที่เป็นร่าง"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid ""
+"Inconsistent reporting structure.\n"
+"Please correct Asset Group '{group}' (id {id})"
+msgstr "โครงสร้างรายงานไม่สอดคล้องกัน\nโปรดแก้ไขหมวดหมู่สินทรัพย์ '{group}' (id {id})"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__prorata
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__prorata
+msgid ""
+"Indicates that the first depreciation entry for this asset has to be done "
+"from the depreciation start date instead of the first day of the fiscal year."
+msgstr "ระบุว่ารายการค่าเสื่อมราคาแรกของสินทรัพย์นี้ต้องทำตั้งแต่วันที่เริ่มต้นค่าเสื่อมราคาแทนที่จะเป็นวันแรกของปีบัญชี"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Init"
+msgstr "เริ่มต้น"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__init_entry
+msgid "Initial Balance Entry"
+msgstr "รายการยอดคงเหลือเริ่มต้น"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__message_is_follower
+msgid "Is Follower"
+msgstr "เป็นผู้ติดตาม"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__journal_id
+msgid "Journal"
+msgstr "สมุดบันทึก"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Journal Entries"
+msgstr "รายการบันทึกสมุดรายวัน"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_line.py:0
+#: model:ir.model,name:account_asset_management.model_account_move
+msgid "Journal Entry"
+msgstr "รายการสมุดรายวัน"
+
+#. module: account_asset_management
+#: model:ir.model,name:account_asset_management.model_account_move_line
+msgid "Journal Item"
+msgstr "รายการสมุดรายวัน"
+
+#. module: account_asset_management
+#: model:ir.actions.act_window,name:account_asset_management.act_entries_open
+msgid "Journal Items"
+msgstr "รายการบันทึก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__write_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_compute__write_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__write_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__write_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__write_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__write_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__write_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__write_uid
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__write_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_compute__write_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__write_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__write_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__write_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__write_date
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__write_date
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__write_date
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Linear"
+msgstr "เชิงเส้น"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Linear up to Salvage Value"
+msgstr "เชิงเส้นจนถึงมูลค่าซาก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__message_has_error
+msgid "Message Delivery error"
+msgstr "เกิดข้อผิดพลาดในการส่งข้อความ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__message_ids
+msgid "Messages"
+msgstr "ข้อความ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__account_min_value_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__account_min_value_id
+msgid "Min-Value Account"
+msgstr "บัญชีมูลค่าขั้นต่ำ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Missing depreciation table"
+msgstr "ตารางค่าเสื่อมราคาหายไป"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Month"
+msgstr "เดือน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "วันครบกำหนดกิจกรรมของฉัน"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__name
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "New Acquisitions"
+msgstr "การได้มาใหม่"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "วันครบกำหนดกิจกรรมถัดไป"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__activity_summary
+msgid "Next Activity Summary"
+msgstr "สรุปกิจกรรมถัดไป"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__activity_type_id
+msgid "Next Activity Type"
+msgstr "ประเภทกิจกรรมถัดไป"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__remaining_value
+msgid "Next Period Depreciation"
+msgstr "ค่าเสื่อมราคางวดถัดไป"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "No"
+msgstr "ไม่"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__note
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_compute__note
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__note
+msgid "Note"
+msgstr "บันทึกย่อ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__note
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_profile_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_remove_view_form
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Notes"
+msgstr "บันทึกย่อ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__message_needaction_counter
+msgid "Number of Actions"
+msgstr "จํานวนการดําเนินการ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Number of Depreciations"
+msgstr "จำนวนครั้งของค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__method_number
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__method_number
+msgid "Number of Years"
+msgstr "จำนวนปี"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Number of Years or end date"
+msgstr "จำนวนปีหรือวันที่สิ้นสุด"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__message_has_error_counter
+msgid "Number of errors"
+msgstr "จํานวนข้อผิดพลาด"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset_recompute_trigger__state__open
+msgid "Open"
+msgstr "เปิด"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Other Information"
+msgstr "ข้อมูลอื่นๆ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__parent_id
+msgid "Parent Asset Group"
+msgstr "หมวดหมู่สินทรัพย์หลัก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_group__parent_path
+msgid "Parent Path"
+msgstr "เส้นทางหลัก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__partner_id
+msgid "Partner"
+msgstr "พาร์ทเนอร์"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset_profile__salvage_type__percent
+msgid "Percentage of Price"
+msgstr "เปอร์เซ็นต์ของราคา"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Period Depreciation"
+msgstr "ค่าเสื่อมราคางวด"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Period End Value"
+msgstr "มูลค่าสิ้นงวด"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__method_period
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__method_period
+msgid "Period Length"
+msgstr "ความยาวงวด"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Period Start Value"
+msgstr "มูลค่าเริ่มต้นงวด"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__method_period
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__method_period
+msgid "Period length for the depreciation accounting entries"
+msgstr "ความยาวงวดสำหรับรายการบัญชีค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__account_plus_value_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__account_plus_value_id
+msgid "Plus-Value Account"
+msgstr "บัญชีมูลค่าเพิ่ม"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__move_check
+msgid "Posted"
+msgstr "ลงบัญชีแล้ว"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__previous_id
+msgid "Previous Depreciation Line"
+msgstr "รายการค่าเสื่อมราคาก่อนหน้า"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_search
+msgid "Profile"
+msgstr "โปรไฟล์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__prorata
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__prorata
+msgid "Prorata Temporis"
+msgstr "ตามสัดส่วนเวลา"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__purchase_value
+msgid "Purchase Value"
+msgstr "ค่าการซื้อ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Quarter"
+msgstr "ไตรมาส"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__reason
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__reason
+msgid "Reason"
+msgstr "เหตุผล"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__code
+msgid "Reference"
+msgstr "อ้างถึง"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__posting_regime
+msgid "Removal Entry Policy"
+msgstr "นโยบายรายการนำออก"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_remove__posting_regime
+msgid ""
+"Removal Entry Policy \n"
+"  * Residual Value: The non-depreciated value will be posted on the "
+"'Residual Value Account' \n"
+"  * Gain/Loss on Sale: The Gain or Loss will be posted on the 'Plus-Value "
+"Account' or 'Min-Value Account' "
+msgstr "นโยบายรายการนำออก \n  * มูลค่าคงเหลือ: มูลค่าที่ไม่คิดค่าเสื่อมราคาจะถูกลงบัญชีใน 'บัญชีมูลค่าคงเหลือ' \n  * กำไร/ขาดทุนจากการขาย: กำไรหรือขาดทุนจะถูกลงบัญชีใน 'บัญชีมูลค่าเพิ่ม' หรือ 'บัญชีมูลค่าขั้นต่ำ' "
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_remove__date_remove
+msgid ""
+"Removal date must be after the last posted entry in case of early removal"
+msgstr "วันที่นำออกต้องอยู่หลังรายการที่ลงบัญชีล่าสุดในกรณีที่นำออกก่อนกำหนด"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Remove"
+msgstr "นำออก"
+
+#. module: account_asset_management
+#: model:ir.model,name:account_asset_management.model_account_asset_remove
+msgid "Remove Asset"
+msgstr "นำสินทรัพย์ออก"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset__state__removed
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_search
+msgid "Removed"
+msgstr "ถูกลบออก"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Removed Assets"
+msgstr "สินทรัพย์ที่นำออกแล้ว"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/wizard/account_asset_remove.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__value_residual
+msgid "Residual Value"
+msgstr "ค่าคงเหลือ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__account_residual_value_id
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__account_residual_value_id
+msgid "Residual Value Account"
+msgstr "บัญชีมูลค่าคงเหลือ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__activity_user_id
+msgid "Responsible User"
+msgstr "ผู้ใช้ที่รับผิดชอบ"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_compute_view_form_result
+msgid "Results :"
+msgstr "ผลลัพธ์ :"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__date_reversal
+msgid "Reversal date"
+msgstr "วันที่"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.wiz_asset_move_reverse_view_form
+msgid "Reverse Journal Entry"
+msgstr "รายการสมุดรายวันย้อนกลับ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_line.py:0
+msgid "Reverse Move"
+msgstr "ย้อนกลับรายการ"
+
+#. module: account_asset_management
+#: model:ir.model,name:account_asset_management.model_wiz_asset_move_reverse
+msgid "Reverse posted journal entry on depreciation line"
+msgstr "ย้อนกลับรายการสมุดรายวันที่ลงบัญชีแล้วในรายการค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model:ir.model.fields.selection,name:account_asset_management.selection__account_asset__state__open
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_search
+msgid "Running"
+msgstr "กำลังทำงานอยู่"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_remove__sale_value
+msgid "Sale Value"
+msgstr "มูลค่าการขาย"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__salvage_type
+msgid "Salvage Type"
+msgstr "ประเภทมูลค่าซาก"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__salvage_value
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__salvage_value
+msgid "Salvage Value"
+msgstr "มูลค่าซาก"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_group_view_search
+msgid "Search Asset Group"
+msgstr "ค้นหาหมวดหมู่สินทรัพย์"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_line__init_entry
+msgid ""
+"Set this flag for entries of previous fiscal years for which Odoo has not "
+"generated accounting entries."
+msgstr "ตั้งค่าสถานะนี้สำหรับรายการของปีบัญชีก่อนหน้าที่ Odoo ยังไม่ได้สร้างรายการบัญชี"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Set to Draft"
+msgstr "กำหนดให้เป็นแบบร่าง"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__open_asset
+msgid "Skip Draft State"
+msgstr "ข้ามสถานะร่าง"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_account_asset_report__date_from
+msgid "Start Date"
+msgstr "วันที่เริ่ม"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__state
+msgid "State"
+msgstr "รัฐ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__parent_state
+msgid "State of Asset"
+msgstr "สถานะของสินทรัพย์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__state
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_search
+msgid "Status"
+msgstr "สถานะ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr "สถานะตามกิจกรรม\\nเกินกำหนด: วันที่ครบกำหนดผ่านไปแล้ว\\nวันนี้: วันที่จัดกิจกรรมคือวันนี้\\nวางแผน: กิจกรรมในอนาคต"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+msgid ""
+"The '_compute_year_amount' method is only intended for Time Method 'Number "
+"of Years'."
+msgstr "เมธอด '_compute_year_amount' มีไว้สำหรับวิธีเวลา 'จำนวนปี' เท่านั้น"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "The 'account' field is a mandatory entry of the '_xls_%s_fields' list !"
+msgstr "ฟิลด์ 'account' เป็นรายการที่จำเป็นของรายการ '_xls_%s_fields' !"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_account.py:0
+msgid ""
+"The Asset Account defined in the Asset Profile must be equal to the account."
+msgstr "บัญชีสินทรัพย์ที่กำหนดในโปรไฟล์สินทรัพย์ต้องตรงกับบัญชี"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/wizard/account_asset_remove.py:0
+msgid "The Sale Value must be positive!"
+msgstr "มูลค่าการขายต้องเป็นค่าบวก!"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+#: code:addons/account_asset_management/wizard/wiz_account_asset_report.py:0
+msgid "The Start Date must precede the Ending Date."
+msgstr "วันที่เริ่มต้นต้องมาก่อนวันที่สิ้นสุด"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+msgid ""
+"The duration of the asset conflicts with the posted depreciation table entry "
+"dates."
+msgstr "ระยะเวลาของสินทรัพย์ขัดแย้งกับวันที่ของรายการตารางค่าเสื่อมราคาที่ลงบัญชีแล้ว"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__salvage_value
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__salvage_value
+msgid ""
+"The estimated value that an asset will realize upon its sale at the end of "
+"its useful life.\n"
+"This value is used to determine the depreciation amounts."
+msgstr "มูลค่าประมาณการที่สินทรัพย์จะได้รับเมื่อขาย ณ สิ้นสุดอายุการใช้งาน\nมูลค่านี้ใช้ในการกำหนดจำนวนค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__method_number
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__method_number
+msgid "The number of years needed to depreciate your asset"
+msgstr "จำนวนปีที่ต้องใช้ในการคิดค่าเสื่อมราคาสินทรัพย์ของคุณ"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/wizard/account_asset_remove.py:0
+msgid "The removal date must be after the last depreciation date."
+msgstr "วันที่นำออกต้องอยู่หลังวันที่คิดค่าเสื่อมราคาครั้งสุดท้าย"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__depreciation_base
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_line__depreciation_base
+msgid ""
+"This amount represent the depreciation base of the asset (Purchase Value - "
+"Salvage Value)."
+msgstr "จำนวนนี้แสดงถึงฐานค่าเสื่อมราคาของสินทรัพย์ (มูลค่าซื้อ - มูลค่าซาก)"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__purchase_value
+msgid ""
+"This amount represent the initial value of the asset.\n"
+"The Depreciation Base is calculated as follows:\n"
+"Purchase Value - Salvage Value."
+msgstr "จำนวนนี้แสดงถึงมูลค่าเริ่มต้นของสินทรัพย์\nฐานค่าเสื่อมราคาคำนวณได้ดังนี้:\nมูลค่าซื้อ - มูลค่าซาก"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_move.py:0
+msgid "This invoice created the asset(s): %s"
+msgstr "ใบแจ้งหนี้นี้สร้างสินทรัพย์: %s"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__method_time
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__method_time
+msgid "Time Method"
+msgstr "วิธีเวลา"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Tot. Depreciation"
+msgstr "ค่าเสื่อมราคารวม"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "Total Days"
+msgstr "จำนวนวันทั้งหมด"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Totals"
+msgstr "ยอดรวม"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_recompute_trigger__date_trigger
+msgid "Trigger Date"
+msgstr "วันที่เปิดใช้งาน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_line__type
+msgid "Type"
+msgstr "ชนิด"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "ประเภทกิจกรรมข้อยกเว้นบนบันทึก"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/report/account_asset_report_xls.py:0
+msgid "Undetermined error"
+msgstr "ข้อผิดพลาดที่ไม่ทราบสาเหตุ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__use_leap_years
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset_profile__use_leap_years
+msgid "Use Leap Years"
+msgstr "ใช้ปีอธิกสุรทิน"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_wiz_asset_move_reverse__journal_id
+msgid "Use Specific Journal"
+msgstr "ใช้สมุดรายวันเฉพาะ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__days_calc
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_profile__days_calc
+msgid "Use number of days to calculate depreciation amount"
+msgstr "ใช้จำนวนวันในการคำนวณจำนวนค่าเสื่อมราคา"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_compute_view_form_result
+msgid "View Asset Moves"
+msgstr "ดูรายการสินทรัพย์"
+
+#. module: account_asset_management
+#: model_terms:ir.ui.view,arch_db:account_asset_management.account_asset_view_form
+msgid "View Move"
+msgstr "ดูรายการ"
+
+#. module: account_asset_management
+#: model:ir.model.fields,field_description:account_asset_management.field_account_asset__website_message_ids
+msgid "Website Messages"
+msgstr "ข้อความเว็บไซต์"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__website_message_ids
+msgid "Website communication history"
+msgstr "ประวัติการสื่อสารของเว็บไซต์"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__state
+#: model:ir.model.fields,help:account_asset_management.field_account_asset_line__parent_state
+msgid ""
+"When an asset is created, the status is 'Draft'.\n"
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted to the accounting.\n"
+"If the last depreciation line is posted, the asset goes into the 'Close' "
+"status.\n"
+"When the removal entries are generated, the asset goes into the 'Removed' "
+"status."
+msgstr "เมื่อสร้างสินทรัพย์ สถานะจะเป็น 'ร่าง'\nหากยืนยันสินทรัพย์ สถานะจะเปลี่ยนเป็น 'กำลังทำงาน' และรายการค่าเสื่อมราคาสามารถลงบัญชีได้\nหากรายการค่าเสื่อมราคารายการสุดท้ายลงบัญชีแล้ว สินทรัพย์จะเข้าสู่สถานะ 'ปิด'\nเมื่อสร้างรายการนำออกแล้ว สินทรัพย์จะเข้าสู่สถานะ 'นำออกแล้ว'"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_profile.py:0
+msgid "Year"
+msgstr "ปี"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_move.py:0
+msgid ""
+"You are not allowed to link an accounting entry to an asset.\n"
+"You should generate such entries from the asset."
+msgstr "คุณไม่ได้รับอนุญาตให้เชื่อมโยงรายการบัญชีกับสินทรัพย์\nคุณควรสร้างรายการดังกล่าวจากสินทรัพย์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_line.py:0
+#: code:addons/account_asset_management/models/account_move.py:0
+msgid ""
+"You are not allowed to remove an accounting entry linked to an asset.\n"
+"You should remove such entries from the asset."
+msgstr "คุณไม่ได้รับอนุญาตให้นำรายการบัญชีที่เชื่อมโยงกับสินทรัพย์ออก\nคุณควรนำรายการดังกล่าวออกจากสินทรัพย์"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+msgid "You can only delete assets in draft state."
+msgstr "คุณสามารถลบสินทรัพย์ได้เฉพาะในสถานะร่างเท่านั้น"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/wizard/account_asset_remove.py:0
+msgid ""
+"You can't make an early removal if all the depreciation lines for previous "
+"periods are not posted."
+msgstr "คุณไม่สามารถนำออกก่อนกำหนดได้หากรายการค่าเสื่อมราคาทั้งหมดของงวดก่อนหน้ายังไม่ได้ลงบัญชี"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_line.py:0
+msgid ""
+"You cannot change a depreciation line with an associated accounting entry."
+msgstr "คุณไม่สามารถแก้ไขรายการค่าเสื่อมราคาที่มีรายการบัญชีเชื่อมโยงอยู่ได้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_move.py:0
+msgid ""
+"You cannot change an accounting entry linked to an asset depreciation line."
+msgstr "คุณไม่สามารถแก้ไขรายการบัญชีที่เชื่อมโยงกับรายการค่าเสื่อมราคาสินทรัพย์ได้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_move.py:0
+msgid ""
+"You cannot change an accounting item linked to an asset depreciation line."
+msgstr "คุณไม่สามารถแก้ไขรายการทางบัญชีที่เชื่อมโยงกับรายการค่าเสื่อมราคาสินทรัพย์ได้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+msgid "You cannot change the profile of an asset with accounting entries."
+msgstr "คุณไม่สามารถเปลี่ยนโปรไฟล์ของสินทรัพย์ที่มีรายการบัญชีได้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_line.py:0
+msgid ""
+"You cannot delete a depreciation line with an associated accounting entry."
+msgstr "คุณไม่สามารถลบรายการค่าเสื่อมราคาที่มีรายการบัญชีเชื่อมโยงอยู่ได้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset.py:0
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr "คุณไม่สามารถลบสินทรัพย์ที่มีรายการค่าเสื่อมราคาที่ลงบัญชีแล้วได้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_line.py:0
+msgid "You cannot remove an asset line of type 'Depreciation Base'."
+msgstr "คุณไม่สามารถนำรายการสินทรัพย์ประเภท 'ฐานค่าเสื่อมราคา' ออกได้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_line.py:0
+msgid ""
+"You cannot set the 'Initial Balance Entry' flag on a depreciation line with "
+"prior posted entries."
+msgstr "คุณไม่สามารถตั้งค่าสถานะ 'รายการยอดคงเหลือเริ่มต้น' บนรายการค่าเสื่อมราคาที่มีรายการลงบัญชีก่อนหน้าได้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_line.py:0
+msgid "You cannot set the Asset Start Date after already posted entries."
+msgstr "คุณไม่สามารถกำหนดวันที่เริ่มต้นสินทรัพย์หลังรายการที่ลงบัญชีแล้วได้"
+
+#. module: account_asset_management
+#. odoo-python
+#: code:addons/account_asset_management/models/account_asset_line.py:0
+msgid ""
+"You cannot set the date on a depreciation line prior to already posted "
+"entries."
+msgstr "คุณไม่สามารถกำหนดวันที่บนรายการค่าเสื่อมราคาก่อนรายการที่ลงบัญชีแล้วได้"
+
+#. module: account_asset_management
+#: model:ir.model.fields,help:account_asset_management.field_account_asset__date_start
+msgid ""
+"You should manually add depreciation lines with the depreciations of "
+"previous fiscal years if the Depreciation Start Date is different from the "
+"date for which accounting entries need to be generated."
+msgstr "คุณควรเพิ่มรายการค่าเสื่อมราคาด้วยค่าเสื่อมราคาของปีบัญชีก่อนหน้าด้วยตนเอง หากวันที่เริ่มต้นค่าเสื่อมราคาแตกต่างจากวันที่ที่ต้องสร้างรายการบัญชี"
+
+#~ msgid "Compute Asset"
+#~ msgstr "คำนวณสินทรัพย์"
+
+#, fuzzy
+#~ msgid "Compute Assets results"
+#~ msgstr "คำนวณสินทรัพย์"
+
+#~ msgid "or"
+#~ msgstr "หรือ"
+
+#~ msgid "Last Modified on"
+#~ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+
+#~ msgid "Analytic account"
+#~ msgstr "วิเคราะห์บัญชี"
+
+#~ msgid "Group By..."
+#~ msgstr "จัดกลุ่มตาม..."
+
+#~ msgid "Invoice"
+#~ msgstr "ใบแจ้งหนี้"
+
+#~ msgid "Category"
+#~ msgstr "หมวด"
+
+#~ msgid "Error!"
+#~ msgstr "ผิดพลาด!"
+
+#~ msgid "Modify"
+#~ msgstr "ปรับเปลี่ยน"
+
+#~ msgid "User"
+#~ msgstr "ผู้ใช้"

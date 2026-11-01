@@ -1,0 +1,64 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_fiscal_position_vat_check
+#
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: account-financial-tools (8.0)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-07-01 13:25+0000\n"
+"PO-Revision-Date: 2015-06-03 15:57+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: Thai (http://www.transifex.com/oca/OCA-account-financial-"
+"tools-8-0/language/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_fiscal_position_vat_check
+#: model_terms:ir.ui.view,arch_db:account_fiscal_position_vat_check.view_partner_property_form
+msgid "<b>Missing VAT number</b>: this partner has the fiscal position"
+msgstr "<b>ไม่มีเลข VAT</b>: ผู้ติดต่อรายนี้มีตำแหน่งทางภาษี"
+
+#. module: account_fiscal_position_vat_check
+#: model:ir.model,name:account_fiscal_position_vat_check.model_res_partner
+msgid "Contact"
+msgstr "ติดต่อ"
+
+#. module: account_fiscal_position_vat_check
+#: model:ir.model,name:account_fiscal_position_vat_check.model_account_move
+msgid "Journal Entry"
+msgstr "รายการสมุดรายวัน"
+
+#. module: account_fiscal_position_vat_check
+#: model:ir.model.fields,field_description:account_fiscal_position_vat_check.field_res_partner__show_warning_vat_required
+#: model:ir.model.fields,field_description:account_fiscal_position_vat_check.field_res_users__show_warning_vat_required
+msgid "Show Warning Vat Required"
+msgstr "แสดงคำเตือนต้องระบุ VAT"
+
+#. module: account_fiscal_position_vat_check
+#. odoo-python
+#: code:addons/account_fiscal_position_vat_check/models/account_move.py:0
+msgid ""
+"You are trying to validate a customer invoice/refund with the fiscal "
+"position '%(fp)s' that require the customer to have a VAT number. But the "
+"partner '%(rp)s' doesn't have a VAT number in Odoo. Please add the VAT "
+"number of this partner in Odoo and try to validate again."
+msgstr ""
+"คุณกำลังพยายามตรวจสอบใบแจ้งหนี้/การคืนเงินของลูกค้าด้วยตำแหน่งทางภาษี "
+"'%(fp)s' ซึ่งกำหนดให้ลูกค้าต้องมีเลข VAT แต่ผู้ติดต่อ '%(rp)s' ไม่มีเลข VAT "
+"ใน Odoo โปรดเพิ่มเลข VAT ของผู้ติดต่อรายนี้ใน Odoo แล้วลองตรวจสอบอีกครั้ง"
+
+#. module: account_fiscal_position_vat_check
+#: model_terms:ir.ui.view,arch_db:account_fiscal_position_vat_check.view_partner_property_form
+msgid "that require to know the VAT number of the partner."
+msgstr "ที่กำหนดให้ต้องทราบเลข VAT ของผู้ติดต่อ"
+
+#~ msgid "Invoice"
+#~ msgstr "ใบแจ้งหนี้"
+
+#~ msgid "Partner"
+#~ msgstr "พาร์ทเนอร์"

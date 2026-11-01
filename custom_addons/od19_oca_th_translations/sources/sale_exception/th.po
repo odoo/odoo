@@ -1,0 +1,270 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_exception
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-05-13 01:19+0000\n"
+"PO-Revision-Date: 2017-05-13 01:19+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"Language-Team: Thai (https://www.transifex.com/oca/teams/23907/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_exception
+#: model_terms:ir.ui.view,arch_db:sale_exception.view_order_form
+msgid ""
+"<strong>There are exceptions blocking the confirmation of this Sale Order:</"
+"strong>"
+msgstr "<strong>มีข้อยกเว้นที่ปิดกั้นการยืนยันใบสั่งขายนี้:</strong>"
+
+#. module: sale_exception
+#: model_terms:ir.ui.view,arch_db:sale_exception.view_order_form
+msgid ""
+"<strong>There are exceptions on this line blocking the confirmation of this "
+"quotation:</strong>"
+msgstr "<strong>มีข้อยกเว้นในรายการนี้ที่ปิดกั้นการยืนยันใบเสนอราคานี้:</strong>"
+
+#. module: sale_exception
+#: model:exception.rule,description:sale_exception.excep_no_dumping
+msgid "A product is sold cheaper than his cost."
+msgstr "สินค้าถูกขายในราคาต่ำกว่าต้นทุน"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_exception_rule__model
+msgid "Apply on"
+msgstr "ใช้เมื่อ"
+
+#. module: sale_exception
+#: model:exception.rule,description:sale_exception.excep_no_sol
+msgid "At least one order line should be present in the sale"
+msgstr "ต้องมีรายการสั่งซื้ออย่างน้อยหนึ่งรายการในการขาย"
+
+#. module: sale_exception
+#: model_terms:ir.ui.view,arch_db:sale_exception.view_sales_order_filter
+msgid "Blocked in draft"
+msgstr "ถูกปิดกั้นในสถานะร่าง"
+
+#. module: sale_exception
+#: model:ir.actions.act_window,name:sale_exception.action_sale_exception_confirm
+#: model_terms:ir.ui.view,arch_db:sale_exception.view_sale_exception_confirm
+msgid "Blocked in draft due to exceptions"
+msgstr "ถูกปิดกั้นในสถานะร่างเนื่องจากข้อยกเว้น"
+
+#. module: sale_exception
+#: model_terms:ir.ui.view,arch_db:sale_exception.view_sale_exception_confirm
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: sale_exception
+#: model_terms:ir.ui.view,arch_db:sale_exception.view_order_form
+msgid ""
+"Click here to be able to confirm this Sale Orders regardless of the "
+"exceptions."
+msgstr "คลิกที่นี่เพื่อให้สามารถยืนยันใบสั่งขายนี้ได้โดยไม่สนใจข้อยกเว้น"
+
+#. module: sale_exception
+#: model:ir.model,name:sale_exception.model_res_company
+msgid "Companies"
+msgstr "บริษัท"
+
+#. module: sale_exception
+#: model:ir.model,name:sale_exception.model_res_config_settings
+msgid "Config Settings"
+msgstr "ตั้งค่าการกำหนดค่า"
+
+#. module: sale_exception
+#: model_terms:ir.ui.view,arch_db:sale_exception.view_sale_exception_confirm
+msgid "Confirm"
+msgstr "ยืนยัน"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: sale_exception
+#: model:exception.rule,name:sale_exception.exception_partner_sale_warning
+msgid "Customer sale warning"
+msgstr "คำเตือนการขายของลูกค้า"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: sale_exception
+#: model_terms:ir.ui.view,arch_db:sale_exception.res_config_settings_view_form_sale_exception
+msgid ""
+"Display popup at confirm or simply rely on the red alert already visible on "
+"top of the order."
+msgstr "แสดงป๊อปอัปเมื่อยืนยัน หรือใช้เพียงการแจ้งเตือนสีแดงที่ปรากฏอยู่ด้านบนของใบสั่งอยู่แล้ว"
+
+#. module: sale_exception
+#: model:ir.model,name:sale_exception.model_exception_rule
+msgid "Exception Rule"
+msgstr "กฎข้อยกเว้น"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_order__exception_ids
+#: model:ir.model.fields,field_description:sale_exception.field_sale_order_line__exception_ids
+msgid "Exceptions"
+msgstr "ข้อยกเว้น"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_order__exceptions_summary
+#: model:ir.model.fields,field_description:sale_exception.field_sale_order_line__exceptions_summary
+msgid "Exceptions Summary"
+msgstr "รายละเอียด"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__exception_ids
+msgid "Exceptions to resolve"
+msgstr "ข้อยกเว้นที่ต้องแก้ไข"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__ignore
+#: model:ir.model.fields,field_description:sale_exception.field_sale_order__ignore_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_order_line__ignore_exception
+#: model_terms:ir.ui.view,arch_db:sale_exception.view_order_form
+msgid "Ignore Exceptions"
+msgstr "ไม่สนใจข้อยกเว้น"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_order_line__is_exception_danger
+msgid "Is Exception Danger"
+msgstr "เป็นข้อยกเว้นระดับอันตราย"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_order__main_exception_id
+msgid "Main Exception"
+msgstr "ข้อยกเว้นหลัก"
+
+#. module: sale_exception
+#: model:exception.rule,description:sale_exception.excep_no_zip
+#: model:exception.rule,name:sale_exception.excep_no_zip
+msgid "No ZIP code on destination"
+msgstr "ไม่มีรหัสไปรษณีย์ที่ปลายทาง"
+
+#. module: sale_exception
+#: model:exception.rule,name:sale_exception.excep_no_dumping
+msgid "No dumping"
+msgstr "ไม่ขายต่ำกว่าทุน"
+
+#. module: sale_exception
+#: model:exception.rule,name:sale_exception.excep_no_free
+msgid "No free order"
+msgstr "ไม่มีใบสั่งแบบฟรี"
+
+#. module: sale_exception
+#: model:exception.rule,name:sale_exception.excep_no_sol
+msgid "No order lines"
+msgstr "ไม่มีรายการสั่งซื้อ"
+
+#. module: sale_exception
+#: model:exception.rule,description:sale_exception.excep_no_stock
+#: model:exception.rule,name:sale_exception.excep_no_stock
+msgid "Not Enough Virtual Stock"
+msgstr "สต็อกเสมือนไม่เพียงพอ"
+
+#. module: sale_exception
+#: model:exception.rule,name:sale_exception.exception_product_sale_warning
+msgid "Product warning"
+msgstr "คำเตือนสินค้า"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_sale_exception_confirm__related_model_id
+msgid "Sale"
+msgstr "การขาย"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_res_company__sale_exception_show_popup
+#: model:ir.model.fields,field_description:sale_exception.field_res_config_settings__sale_exception_show_popup
+msgid "Sale Exception Popup"
+msgstr "ป๊อปอัปข้อยกเว้นการขาย"
+
+#. module: sale_exception
+#: model:ir.actions.act_window,name:sale_exception.action_sale_test_tree
+#: model:ir.ui.menu,name:sale_exception.menu_sale_test
+msgid "Sale Exception Rules"
+msgstr "กฎข้อยกเว้นการขาย"
+
+#. module: sale_exception
+#: model:ir.model,name:sale_exception.model_sale_exception_confirm
+msgid "Sale exception confirm wizard"
+msgstr "ตัวช่วยยืนยันข้อยกเว้นการขาย"
+
+#. module: sale_exception
+#: model:ir.model.fields.selection,name:sale_exception.selection__exception_rule__model__sale_order
+msgid "Sale order"
+msgstr "ใบสั่งขาย"
+
+#. module: sale_exception
+#: model:ir.model.fields.selection,name:sale_exception.selection__exception_rule__model__sale_order_line
+msgid "Sale order line"
+msgstr "รายการใบสั่งขาย"
+
+#. module: sale_exception
+#: model:ir.model.fields,field_description:sale_exception.field_exception_rule__sale_ids
+msgid "Sales"
+msgstr "การขาย"
+
+#. module: sale_exception
+#: model:ir.model,name:sale_exception.model_sale_order
+msgid "Sales Order"
+msgstr "คำสั่งขาย"
+
+#. module: sale_exception
+#: model:ir.model,name:sale_exception.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "รายการคำสั่งขาย"
+
+#. module: sale_exception
+#: model:ir.actions.server,name:sale_exception.ir_cron_test_orders_ir_actions_server
+msgid "Test Draft Orders"
+msgstr "ทดสอบใบสั่งสถานะร่าง"
+
+#. module: sale_exception
+#: model:exception.rule,description:sale_exception.exception_partner_sale_warning
+msgid "The customer has a sale warning in his form"
+msgstr "ลูกค้ามีคำเตือนการขายในแบบฟอร์มของตน"
+
+#. module: sale_exception
+#: model:exception.rule,description:sale_exception.exception_product_sale_warning
+msgid "The product has a warning in his form"
+msgstr "สินค้ามีคำเตือนในแบบฟอร์มของตน"
+
+#. module: sale_exception
+#: model:exception.rule,description:sale_exception.excep_no_free
+msgid "The total can't be 0"
+msgstr "ยอดรวมต้องไม่เป็น 0"
+
+#~ msgid "Last Modified on"
+#~ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"

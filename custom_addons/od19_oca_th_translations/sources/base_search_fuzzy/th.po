@@ -1,0 +1,132 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_search_fuzzy
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0c\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-01-14 04:21+0000\n"
+"PO-Revision-Date: 2017-01-14 04:21+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2017\n"
+"Language-Team: Thai (https://www.transifex.com/oca/teams/23907/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,help:base_search_fuzzy.field_trgm_index__index_type
+msgid ""
+"Cite from PostgreSQL documentation: GIN indexes are the preferred text "
+"search index type.See: https://www.postgresql.org/docs/current/textsearch-"
+"indexes.html"
+msgstr ""
+"อ้างอิงจากเอกสาร PostgreSQL: ดัชนี GIN เป็นประเภทดัชนีค้นหาข้อความที่แนะนำ "
+"ดูเพิ่มเติม: https://www.postgresql.org/docs/current/textsearch-indexes.html"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__field_id
+msgid "Field"
+msgstr "ฟิลด์"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields.selection,name:base_search_fuzzy.selection__trgm_index__index_type__gin
+msgid "GIN"
+msgstr "GIN"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields.selection,name:base_search_fuzzy.selection__trgm_index__index_type__gist
+msgid "GiST"
+msgstr "GiST"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__index_name
+msgid "Index Name"
+msgstr "ชื่อดัชนี"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__index_type
+msgid "Index Type"
+msgstr "ประเภทดัชนี"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__lang
+msgid "Language"
+msgstr "ภาษา"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,field_description:base_search_fuzzy.field_trgm_index__smart_search
+msgid "Smart Search"
+msgstr "การค้นหาอัจฉริยะ"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,help:base_search_fuzzy.field_trgm_index__index_name
+msgid ""
+"The index name is automatically generated like fieldname_indextype_idx. If "
+"the index already exists and the index is located in the same table then "
+"this index is reused. If the index is located in another table then a number "
+"is added at the end of the index name."
+msgstr ""
+"ชื่อดัชนีถูกสร้างขึ้นโดยอัตโนมัติในรูปแบบ fieldname_indextype_idx "
+"หากดัชนีมีอยู่แล้วและอยู่ในตารางเดียวกัน ดัชนีนี้จะถูกนำมาใช้ซ้ำ "
+"หากดัชนีอยู่ในตารางอื่น จะมีการเพิ่มหมายเลขต่อท้ายชื่อดัชนี"
+
+#. module: base_search_fuzzy
+#. odoo-python
+#: code:addons/base_search_fuzzy/models/trgm_index.py:0
+msgid "The pg_trgm extension does not exists or cannot be installed."
+msgstr "ส่วนขยาย pg_trgm ไม่มีอยู่หรือไม่สามารถติดตั้งได้"
+
+#. module: base_search_fuzzy
+#: model:ir.actions.act_window,name:base_search_fuzzy.trgm_index_action
+#: model:ir.model,name:base_search_fuzzy.model_trgm_index
+#: model:ir.ui.menu,name:base_search_fuzzy.trgm_index_menu
+msgid "Trigram Index"
+msgstr "ดัชนี Trigram"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,help:base_search_fuzzy.field_trgm_index__field_id
+msgid "You can either select a field of type \"text\" or \"char\"."
+msgstr "คุณสามารถเลือกฟิลด์ประเภท \"text\" หรือ \"char\" ได้"
+
+#. module: base_search_fuzzy
+#: model:ir.model.fields,help:base_search_fuzzy.field_trgm_index__lang
+msgid "You will need one index per installed language."
+msgstr "คุณจะต้องมีหนึ่งดัชนีต่อหนึ่งภาษาที่ติดตั้ง"
+
+#~ msgid "Last Modified on"
+#~ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
