@@ -25,6 +25,40 @@
                         </div>
                     </setting>
                 </block>
+                <block title="Period Clearing Default Accounts (บัญชีคุมสำหรับกระทบยอดปิดงวด)" id="od19_clearing_accounts">
+                    <setting string="Output VAT Account (ภาษีขาย)"
+                             help="Control account accumulating output VAT cleared by the VAT Clearing (ภ.พ.30) wizard.">
+                        <field name="od19_vat_output_account_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="Input VAT Account (ภาษีซื้อ)"
+                             help="Control account accumulating input VAT cleared by the VAT Clearing (ภ.พ.30) wizard.">
+                        <field name="od19_vat_input_account_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="VAT Payable Account (ภาษีมูลค่าเพิ่มค้างจ่าย)"
+                             help="Account receiving the net VAT payable at period close.">
+                        <field name="od19_vat_settlement_account_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="VAT Refundable Account (ภาษีมูลค่าเพิ่มรอขอคืน)"
+                             help="Account receiving the net VAT refundable when input VAT exceeds output VAT.">
+                        <field name="od19_vat_refund_account_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="WHT Payable Accounts (ภาษีหัก ณ ที่จ่ายค้างจ่าย)"
+                             help="Control accounts accumulating withholding tax payable per rate, cleared by the WHT Clearing wizard.">
+                        <field name="od19_wht_payable_account_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="WHT to Remit Account (ภาษีหัก ณ ที่จ่ายนำส่ง)"
+                             help="Account receiving the consolidated WHT payable before remitting to the Revenue Department.">
+                        <field name="od19_wht_settlement_account_id" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="Suspense Accounts (บัญชีพัก)"
+                             help="Suspense / pending-investigation accounts reconciled by the Suspense Clearing wizard.">
+                        <field name="od19_suspense_account_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </setting>
+                    <setting string="Intercompany Accounts (บัญชีระหว่างบริษัท)"
+                             help="Intercompany due to / due from accounts reconciled by the Intercompany Clearing wizard.">
+                        <field name="od19_intercompany_account_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>
