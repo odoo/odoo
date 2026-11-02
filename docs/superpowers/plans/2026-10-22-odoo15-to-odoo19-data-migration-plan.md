@@ -37,7 +37,7 @@
 
 ## Precondition
 
-- ได้ **DB dump ของ Odoo 15** (custom format) + **filestore** แล้ว — ปัจจุบันยังไม่มี (blocker ลำดับ 1)
+- ได้ **DB dump ของ Odoo 15** (custom format) แล้ว ✅ — มีอยู่แล้ว 2 ไฟล์ใน `migration/od15_export/`: `odoo_golive.dump` (158 MB — ชุด go-live) และ `od15_autoerp_prd.dump` (10 MB — ชุด production ของ ออโต้อินโฟ); รายการไฟล์แนบ (filestore) อยู่ที่ `migration/od15_export/attach_files.txt` → **ไม่ใช่ blocker ลำดับ 1 อีกต่อไป** (อัปเดต 2026-11-02)
 - มีสิทธิ์ SSH เข้า server Linux ของ Odoo 15 (`/var/odoo`) และสิทธิ์ `pg_dump`/`psql`
 - เครื่อง Windows dev: `c:\odoo-dev\odoo19`, venv `venv19`, config `odoo.conf`, DB พัฒนา `odoo19_pdev` (พอร์ต 8070)
 - โมดูล `od19_*` ติดตั้ง/อัปเกรดผ่านได้ปกติ และ snapshot DB ก่อนเริ่ม import ทุกครั้ง
