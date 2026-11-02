@@ -125,12 +125,12 @@
                         <group id="alloc_left_col">
                             <field name="is_name_custom" invisible="1"/> <!-- needed for triggering reasons -->
                             <field name="type_request_unit" invisible="1"/>
-                            <div class="o_td_label" name="validity_label" invisible="not is_officer">
+                            <div class="o_td_label" name="validity_label" invisible="not is_officer or (not accrual_plan_id and state != 'confirm')">
                                 <label for="date_from" string="Validity Period"
                                     invisible="accrual_plan_id or state != 'confirm'"/>
                                 <label for="date_from" string="Start Date" invisible="not accrual_plan_id"/>
                             </div>
-                            <div class="o_row" name="validity" invisible="not is_officer">
+                            <div class="o_row" name="validity" invisible="not is_officer or (not accrual_plan_id and state != 'confirm')">
                                 <field name="date_from" nolabel="1"
                                     readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
                                     invisible="not accrual_plan_id and state != 'confirm'"/>
@@ -209,6 +209,12 @@
                     readonly="state in ['refuse', 'validate']"
                     widget="many2one_avatar_employee"/>
             </field>
+            <div name="validity_label" position="attributes">
+                <attribute name="invisible">not is_officer</attribute>
+            </div>
+            <div name="validity" position="attributes">
+                <attribute name="invisible">not is_officer</attribute>
+            </div>
             <label for="date_from" position="replace">
                 <label for="date_from" string="Validity Period" invisible="accrual_plan_id"/>
             </label>
@@ -490,7 +496,7 @@
                                 <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128?unique=' + record.write_date.raw_value"
                                     class="o_image_40_cover float-start rounded" alt="Employee's image"/>
                             </aside>
-                            <main class="d-flex flex-column lh-sm">
+                            <main class="d-flex flex-column flex-grow-1 lh-sm">
                                 <field class="fw-bold" name="employee_id"/>
                                 <div class="content d-flex flex-column">
                                     <field name="work_entry_type_id" class="text-muted"/>
