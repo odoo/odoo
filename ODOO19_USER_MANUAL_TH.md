@@ -23,6 +23,7 @@
   - [บังคับใช้บัญชีวิเคราะห์ (`od19_accounting_analytic_require`)](#บังคับใช้บัญชีวิเคราะห์-od19accountinganalyticrequire)
   - [รายงานภาษีไทย (`od19_thai_tax_reports`)](#รายงานภาษีไทย-od19thaitaxreports)
   - [e-Tax Invoice (`od19_etax_invoice`)](#etax-invoice-od19etaxinvoice)
+  - [คำขอเปิดบิล AR/AP (`od19_billing_request`)](#คำขอเปิดบิล-arap-od19billingrequest)
   - [รายงาน Jasper (`od19_reporting_jasper`)](#รายงาน-jasper-od19reportingjasper)
   - [ดึงเอกสารต้นทาง (`od19_document_pull`)](#ดึงเอกสารต้นทาง-od19documentpull)
   - [จำหน่ายสินทรัพย์ (`od19_asset_disposal`)](#จำหน่ายสินทรัพย์-od19assetdisposal)
@@ -617,7 +618,7 @@
 
 **โมดูล:** `od19_etax_invoice`
 **จุดประสงค์:** ออกใบกำกับภาษีอิเล็กทรอนิกส์ตามมาตรฐาน ETDA (ขมธอ.3-2560) สร้าง XML ลงลายมือชื่ออิเล็กทรอนิกส์ (XAdES-BES) สร้าง PDF และนำส่งกรมสรรพากร (RD) พร้อมรองรับโหมด mock-first และการส่งออกเป็น Batch
-**เมนูที่เกี่ยวข้อง:** การบัญชี → e-Tax Invoice → e-Tax Documents / Signing Certificates / RD Submissions
+**เมนูที่เกี่ยวข้อง:** การบัญชี → e-Tax Invoice → e-Tax Documents / Import Purchase e-Tax / Signing Certificates / RD Submissions
 
 #### ฟังก์ชัน: เอกสาร e-Tax (e-Tax Documents)
 
@@ -640,6 +641,17 @@
 2. กด **Create e-Tax Document**
 3. ไปจัดการต่อที่ e-Tax Documents (Generate XML → Sign → Print/Submit)
 **หมายเหตุ/ข้อควรระวัง:** ปุ่มจะปรากฏเฉพาะเมื่อเปิดใช้งาน e-Tax ที่บริษัท (`od19_etax_enabled`)
+
+#### ฟังก์ชัน: นำเข้า e-Tax ฝั่งซื้อ (Import Purchase e-Tax)
+
+**เข้าที่:** การบัญชี → e-Tax Invoice → Import Purchase e-Tax
+**ใช้ทำอะไร:** อ่านไฟล์ e-Tax XML ที่ได้รับจากผู้จำหน่าย แล้วแปลงเป็นใบวางบิลผู้จำหน่าย (Vendor Bill) อัตโนมัติ โดยสกัดข้อมูลหัวเอกสาร คู่ค้า และรายการสินค้า/บริการจากไฟล์
+**ขั้นตอนใช้งาน:**
+1. เปิดเมนู Import Purchase e-Tax (เปิดเป็นหน้าต่างวิซาร์ด)
+2. อัปโหลดไฟล์ e-Tax XML ของผู้จำหน่าย แล้วกด **Parse XML**
+3. ตรวจสอบข้อมูล **Vendor Document** และ **Parties** ที่สกัดได้
+4. กด **Create Vendor Bill** เพื่อสร้างใบวางบิลผู้จำหน่ายในระบบบัญชี
+**หมายเหตุ/ข้อควรระวัง:** เป็นวิซาร์ดแบบ target=new ใช้คู่กับขั้นตอน e-Tax ขาออก (Generate XML → Sign → Generate PDF → Submit to RD)
 
 #### ฟังก์ชัน: ใบรับรองลายมือชื่อ (Signing Certificates)
 
@@ -667,6 +679,37 @@
 **ใช้ทำอะไร:** เปิดใช้งาน e-Tax (`od19_etax_enabled`) เลือกใบรับรองเริ่มต้น (`od19_etax_certificate_id`) และตั้งค่าการนำส่ง RD (โหมด `od19_etax_rd_mode`, endpoint `od19_etax_rd_endpoint`, provider `od19_etax_rd_provider_id`)
 **ขั้นตอนใช้งาน:** เลือกบริษัท กรอกค่าในกลุ่ม e-Tax Invoice (RD) และ RD Submission แล้วบันทึก
 **หมายเหตุ/ข้อควรระวัง:** เมื่อโหมดเป็น live จึงจะแสดงช่อง endpoint และ provider
+
+---
+
+### คำขอเปิดบิล AR/AP (`od19_billing_request`)
+
+**โมดูล:** `od19_billing_request` (เวอร์ชัน 19.0.1.0.0)
+**จุดประสงค์:** เป็นศูนย์กลางการขอเปิดบิล (Billing Request) ทั้งฝั่งลูกหนี้ (AR) และเจ้าหนี้ (AP) เพื่อให้ฝ่ายขาย/จัดซื้อส่งคำขอ แล้วฝ่ายบัญชีตรวจสอบและออกใบแจ้งหนี้/ใบวางบิลจากที่เดียว
+**Depends:** `sale_management`, `purchase`, `stock`, `account`, `hr`, `od19_sales_billing_evidence`, `od19_document_pull`
+**เมนูที่เกี่ยวข้อง:** คำขอเปิดบิล → All Requests / Billing Queue (คิวรอออกบิล)
+
+#### ฟังก์ชัน: ทะเบียนคำขอเปิดบิล (All Requests)
+
+**เข้าที่:** คำขอเปิดบิล → All Requests
+**ใช้ทำอะไร:** แสดงรายการคำขอเปิดบิลทั้งหมด พร้อมทิศทาง (AR/AP) และสถานะ (draft / submitted / invoiced)
+**ขั้นตอนใช้งาน:**
+1. เปิดเมนู All Requests และดูรายการคำขอ
+2. กด **New** เพื่อสร้างคำขอใหม่ เลือก **ทิศทาง (direction)** = AR หรือ AP และเลือก **คู่ค้า (partner_id)**
+3. กด **Pull Lines** เพื่อดึงรายการจากเอกสารต้นทางเข้าคำขอ
+4. กด **Submit** เพื่อส่งคำขอเข้าคิวให้ฝ่ายบัญชี
+
+**หมายเหตุ/ข้อควรระวัง:** ฟอร์มมีแท็บ Lines / Evidence / AP Original / Other Info และ Chatter สำหรับการสนทนา
+
+#### ฟังก์ชัน: คิวรอออกบิล (Billing Queue)
+
+**เข้าที่:** คำขอเปิดบิล → Billing Queue (คิวรอออกบิล) — เปิดให้เฉพาะบทบาทบัญชี
+**ใช้ทำอะไร:** ให้ฝ่ายบัญชีตรวจสอบคำขอที่ Submitted แล้วออกเอกสารจริง
+**ขั้นตอนใช้งาน:**
+1. เปิดเมนู Billing Queue เพื่อดูคำขอที่รอออกบิล
+2. ตรวจสอบรายละเอียด แล้วกด **Create Invoice/Bill** เพื่อออกใบแจ้งหนี้ (AR) หรือใบวางบิล (AP) — หรือกด **Reject** เพื่อตีกลับ
+
+**หมายเหตุ/ข้อควรระวัง:** เมนูนี้จำกัดสิทธิ์เฉพาะกลุ่มบัญชี (accounting) ถ้าไม่เห็นเมนูแสดงว่าผู้ใช้ไม่มีสิทธิ์
 
 ---
 
@@ -1206,7 +1249,7 @@
 
 **โมดูล:** `od19_sales_project_context`
 **จุดประสงค์:** เชื่อมโยงใบสั่งขายเข้ากับโครงการ (Project) และผู้รับผิดชอบโครงการ พร้อมวิเคราะห์กำไร–ขาดทุน (P&L) ของคำสั่งขายตามข้อมูลโครงการ
-**เมนูที่เกี่ยวข้อง:** `การขาย → โครงการ`
+**เมนูที่เกี่ยวข้อง:** `การขาย → Sale Projects (โครงการ)`
 
 #### ฟังก์ชัน: โหมดการขายและบริบทโครงการบนใบสั่งขาย
 
@@ -1219,7 +1262,7 @@
 
 **หมายเหตุ/ข้อควรระวัง:**
 - มี constraint ตรวจสอบความสอดคล้องของเจ้าของโครงการและบทบาท
-- โครงการแสดงในเมนู `การขาย → โครงการ`
+- โครงการแสดงในเมนู `การขาย → Sale Projects`
 
 #### ฟังก์ชัน: การวิเคราะห์ต้นทุนและกำไร (Cost & Profit Analysis)
 
@@ -3528,7 +3571,7 @@
 **เมนู/เส้นทางที่เกี่ยวข้อง:**
 - การตั้งค่า → Misc Features (`menu_od19_misc_features_root`, อยู่ใต้ `base.menu_administration`, seq 99)
 - การตั้งค่า → Misc Features → Runtime Guard
-- การตั้งค่า → Misc Features → Repeat Customer Enhanced
+- การขาย → การรายงาน → Repeat Customer Enhanced (ย้ายจาก Misc Features)
 
 #### ฟังก์ชัน: Runtime Guard (ตรวจสุขภาพระบบ)
 **เข้าที่:** การตั้งค่า → Misc Features → Runtime Guard → "Run Runtime Check"
@@ -3541,12 +3584,12 @@
 **หมายเหตุ/ข้อควรระวัง:** ฟังก์ชันนี้ทำงานด้วยการกดเรียกเองเท่านั้น (Manual Trigger) ไม่ใช่ Cron และจำกัดสิทธิ์ให้เฉพาะผู้ดูแลระบบ (Administrator) เท่านั้นที่เรียกใช้งานได้
 
 #### ฟังก์ชัน: Repeat Customer Enhanced (รายงานลูกค้าซื้อซ้ำ)
-**เข้าที่:** การตั้งค่า → Misc Features → Repeat Customer Enhanced
+**เข้าที่:** การขาย → การรายงาน → Repeat Customer Enhanced
 **ใช้ทำอะไร:** แสดงรายชื่อคู่ค้าและประวัติการซื้อซ้ำ โดยดึงจาก SQL View ชื่อ `od19.repeat.customer.enhanced` (ฟิลด์: คู่ค้า, คู่ค้าจริง, วันที่สั่งซื้อล่าสุด, จำนวนครั้งที่สั่ง, ยอดรวม)
 **ขั้นตอนใช้งาน:**
-1. ไปที่ การตั้งค่า → Misc Features → Repeat Customer Enhanced
+1. ไปที่ การขาย → การรายงาน → Repeat Customer Enhanced
 2. ดูรายการที่ระบบประมวลผลไว้ (เป็นมุมมองอ่านข้อมูล)
-**หมายเหตุ/ข้อควรระวัง:** เป็น SQL View ที่อ่านข้อมูลอย่างเดียว ไม่สามารถแก้ไขได้จากหน้านี้
+**หมายเหตุ/ข้อควรระวัง:** เป็น SQL View ที่อ่านข้อมูลอย่างเดียว ไม่สามารถแก้ไขได้จากหน้านี้ (เมนูนี้ถูกย้ายจาก การตั้งค่า → Misc Features มายัง การขาย → การรายงาน เมื่อรวมเมนู OD19)
 
 #### ฟังก์ชัน: โลโก้ ISO ของบริษัท
 **เข้าที่:** การตั้งค่า → บริษัท → บริษัทของฉัน (ฟอร์มบริษัท) / การตั้งค่าทั่วไป
