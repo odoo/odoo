@@ -173,3 +173,44 @@ class TestPettyCash(TransactionCase):
         )
         with self.assertRaises(ValidationError):
             transaction.action_post()
+
+    def test_action_reconcile_matches_fund_account_lines(self):
+        fund = self.env["petty.cash.fund"].create(
+            {
+                "name": "Office Petty Cash",
+                "account_id": self.petty_cash_account.id,
+                "amount": 10000.0,
+            }
+        )
+        expense = self.env["petty.cash.transaction"].create(
+            {
+                "fund_id": fund.id,
+                "name": "Office supplies",
+                "amount": 500.0,
+                "transaction_type": "expense",
+                "expense_account_id": self.expense_account.id,
+                "date": "2024-01-15",
+                "journal_id": self.journal.id,
+            }
+        )
+        expense.action_post()
+        replenishment = self.env["petty.cash.transaction"].create(
+            {
+                "fund_id": fund.id,
+                "name": "Replenishment",
+                "amount": 500.0,
+                "transaction_type": "replenishment",
+                "date": "2024-01-16",
+                "journal_id": self.journal.id,
+            }
+        )
+        replenishment.action_post()
+
+        expense.action_reconcile()
+
+        fund_lines = self.env["account.move.line"].search(
+            [("account_id", "=", self.petty_cash_account.id)]
+        )
+        self.assertEqual(len(fund_lines), 2)
+        self.assertTrue(all(fund_lines.mapped("reconciled")))
+        self.assertEqual(len(fund_lines.mapped("full_reconcile_id")), 1)

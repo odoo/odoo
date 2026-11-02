@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pnd53_register">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center">
+                        แบบแสดงรายการภาษีเงินได้หัก ณ ที่จ่าย (ภ.ง.ด.53)
+                    </h2>
+                    <h3 class="text-center">
+                        Withholding Tax Return (PND53 — มาตรา 3 เตรส / นิติบุคคล)
+                    </h3>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <strong>ผู้จ่ายเงิน:</strong> <span t-out="company.name"/>
+                        </div>
+                        <div class="col-6 text-right">
+                            <strong>เลขประจำตัวผู้เสียภาษี:</strong>
+                            <span t-out="company.vat"/>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <strong>รอบระยะเวลาภาษี:</strong>
+                            <span t-out="date_from" t-options='{"widget": "date"}'/>
+                            <strong> ถึง </strong>
+                            <span t-out="date_to" t-options='{"widget": "date"}'/>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-bordered mt-3">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center" style="width:5%">ลำดับ</th>
+                                <th class="text-center" style="width:10%">วันที่จ่าย</th>
+                                <th class="text-center" style="width:13%">เลขที่จ่าย</th>
+                                <th class="text-center" style="width:12%">เลขผู้เสียภาษี</th>
+                                <th class="text-center">ชื่อผู้ถูกหักภาษี</th>
+                                <th class="text-center" style="width:15%">ประเภทเงินได้</th>
+                                <th class="text-right" style="width:7%">อัตรา</th>
+                                <th class="text-right" style="width:11%">ยอดเงินได้</th>
+                                <th class="text-right" style="width:10%">ภาษีที่หัก</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="seq" t-value="0"/>
+                            <t t-foreach="lines" t-as="line">
+                                <tr>
+                                    <td class="text-center">
+                                        <t t-set="seq" t-value="seq + 1"/>
+                                        <span t-esc="seq"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-out="line['date']" t-options='{"widget": "date"}'/>
+                                    </td>
+                                    <td><span t-esc="line['name']"/></td>
+                                    <td class="text-center">
+                                        <span t-esc="line['partner_vat']"/>
+                                    </td>
+                                    <td><span t-esc="line['partner_name']"/></td>
+                                    <td><span t-esc="line['income_type']"/></td>
+                                    <td class="text-right">
+                                        <span t-esc="'{:.2f}%'.format(line['wht_percent'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{:,.2f}'.format(line['base_amount'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="'{:,.2f}'.format(line['wht_amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr class="font-weight-bold">
+                                <td colspan="7" class="text-right">รวมทั้งสิ้น</td>
+                                <td class="text-right">
+                                    <span t-esc="'{:,.2f}'.format(total_base)"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="'{:,.2f}'.format(total_wht)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_pnd53_register" model="ir.actions.report">
+        <field name="name">PND53 Register</field>
+        <field name="model">thai.tax.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_thai_tax_reports.pnd53_register</field>
+        <field name="report_file">od19_thai_tax_reports.pnd53_register</field>
+    </record>
+</odoo>

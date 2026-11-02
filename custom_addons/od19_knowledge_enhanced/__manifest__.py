@@ -13,4 +13,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_knowledge_enhanced/static/description/icon.svg",
 }

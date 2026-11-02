@@ -229,6 +229,12 @@ class AccountCheque(models.Model):
         for cheque in self:
             if cheque.amount < 0:
                 raise ValidationError(_("Cheque amount cannot be negative."))
+            # A blank cheque recycled back into the book (state 'available')
+            # legitimately has a zero amount; any other state must be > 0.
+            if cheque.amount == 0 and cheque.state != "available":
+                raise ValidationError(
+                    _("Cheque amount must be greater than zero.")
+                )
 
     @api.constrains("cheque_date", "due_date")
     def _check_dates(self):
@@ -302,7 +308,10 @@ class AccountCheque(models.Model):
                     date=cheque.due_date or cheque.cheque_date,
                 )
                 cheque.write({"state": "deposited", "deposited_move_id": move.id})
-            elif cheque.state in ("confirmed", "to_pay"):
+            elif (
+                cheque.state in ("confirmed", "to_pay")
+                and cheque.cheque_type == "customer"
+            ):
                 cheque.state = "deposited"
 
     def action_clear(self):
@@ -362,6 +371,20 @@ class AccountCheque(models.Model):
         for cheque in self:
             if cheque.state == "cancelled":
                 cheque.state = "draft"
+
+    def action_reconcile(self):
+        """ตัดบัญชีลูกหนี้/เจ้าหนี้ของเช็คกับใบแจ้งหนี้เดิม (reconcile)."""
+        for cheque in self:
+            if cheque.cheque_type == "customer":
+                move = cheque.received_move_id
+                account = cheque.partner_id.property_account_receivable_id
+            else:
+                move = cheque.issue_move_id
+                account = cheque.partner_id.property_account_payable_id
+            if not move or not account:
+                continue
+            move._od19_reconcile_account_lines(account.id, cheque.partner_id.id)
+        return True
 
     def action_back_to_available(self):
         for cheque in self:

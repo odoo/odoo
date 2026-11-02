@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        (J-Report OD15) Advance Request Form.
+
+        Odoo 19 port of the legacy dtr_advance report f_adv_001.  Inherits the
+        shared wizard layout (views/jasper_report_wizard.xml) and replaces the
+        placeholder <group name="parameters"/> with the parameters this form
+        needs.
+    -->
+    <record id="view_dtr_adv_request_form" model="ir.ui.view">
+        <field name="name">dtr.adv.request.form</field>
+        <field name="model">dtr.adv.request.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_dtr_adv_request_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Advance Request Form</field>
+        <field name="res_model">dtr.adv.request.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_dtr_adv_request_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_hr_advance.model_od19_hr_advance"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <menuitem
+        id="menu_dtr_adv_request_form"
+        name="(J-Report OD15) Advance Request Form"
+        parent="account.menu_finance_reports"
+        action="action_dtr_adv_request_form"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="116"
+    />
+
+</odoo>

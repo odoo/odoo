@@ -148,15 +148,39 @@ class AccountMove(models.Model):
     @api.depends("matched_payment_ids", "line_ids.full_reconcile_id")
     def _compute_od19_payment_number(self):
         for move in self:
-            payments = move._get_od19_reconciled_payments()
-            if payments:
-                move.od19_payment_number = ", ".join(
-                    payments.filtered(lambda p: p.name and p.name != "/").mapped(
-                        "name"
-                    )
-                )
-            else:
-                move.od19_payment_number = False
+            names = move._get_od19_reconciled_payments().filtered(
+                lambda payment: payment.name and payment.name != "/"
+            ).mapped("name")
+            names += move._get_od19_reconciled_refunds().filtered(
+                lambda refund: refund.name and refund.name != "/"
+            ).mapped("name")
+            move.od19_payment_number = ", ".join(names) if names else False
+
+    def _get_od19_reconciled_refunds(self):
+        """Return the credit/debit notes reconciled with this move.
+
+        A vendor bill can be settled by a credit note instead of a payment;
+        in that case the credit note number belongs in the payment number.
+        """
+        self.ensure_one()
+        rec_lines = self.line_ids.filtered(
+            lambda line: line.account_id.reconcile and line.full_reconcile_id
+        )
+        if not rec_lines:
+            return self.env["account.move"]
+        aml = self.env["account.move.line"].search(
+            [
+                (
+                    "full_reconcile_id",
+                    "in",
+                    rec_lines.mapped("full_reconcile_id").ids,
+                ),
+                ("move_id", "!=", self.id),
+            ]
+        )
+        return aml.move_id.filtered(
+            lambda move: move.move_type in ("out_refund", "in_refund")
+        )
 
     def _get_od19_reconciled_payments(self):
         """Return the account.payment records linked to this move.
@@ -204,3 +228,56 @@ class AccountMove(models.Model):
             "or refund using this reference in this company."
         ),
     )
+
+    # ------------------------------------------------------------------
+    # Feature 7: Central reconciliation helper (ตัดบัญชี)
+    # ------------------------------------------------------------------
+    def _od19_reconcile_account_lines(self, account_id, partner_id=None):
+        """Reconcile every posted, unreconciled journal item of ``account_id``.
+
+        Used by the advance / cheque / petty-cash / expense flows so the
+        custom journal entries are really matched against the related
+        invoice or payment lines instead of leaving an open residual.
+
+        :param account_id: id of the account whose lines must be matched
+        :param partner_id: optional partner to restrict the match to
+        :return: ``True`` when lines were reconciled, ``False`` otherwise
+        """
+        self.ensure_one()
+        account = self.env["account.account"].browse(account_id)
+        if not account or not (
+            account.reconcile
+            or account.account_type in ("asset_cash", "liability_credit_card")
+        ):
+            return False
+        domain = [
+            ("company_id", "=", self.company_id.id),
+            ("account_id", "=", account.id),
+            ("parent_state", "=", "posted"),
+            ("reconciled", "=", False),
+        ]
+        if partner_id:
+            domain.append(("partner_id", "=", partner_id))
+        lines = self.env["account.move.line"].search(domain)
+        return self._od19_reconcile_move_lines(lines)
+
+    @api.model
+    def _od19_reconcile_move_lines(self, lines):
+        """Reconcile an explicit set of journal items.
+
+        Unlike :meth:`_od19_reconcile_account_lines`, which searches every
+        open line of an account, this helper only matches the given lines.
+        Use it when several unrelated documents share the same account and
+        partner (credit notes, staged payments, ...) and the match must stay
+        scoped to one document pair.
+
+        :param lines: ``account.move.line`` recordset
+        :return: ``True`` when the lines were reconciled, ``False`` otherwise
+        """
+        lines = lines.filtered(
+            lambda line: line.parent_state == "posted" and not line.reconciled
+        )
+        if len(lines) < 2:
+            return False
+        lines.reconcile()
+        return True

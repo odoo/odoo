@@ -11,7 +11,7 @@ def run(stats):
     #   - สินค้าคงคลัง: type='consu' และ is_storable=True (Odoo 17+ ใช้ is_storable)
     #   - นำเข้า default_code (รหัสสินค้า) และ barcode
     #   - map หน่วยนับผ่าน uom_map.csv -> uom_id และ uom_po_id
-    #   - map หมวดหมู่สินค้า (product.category) ให้ตรงกัน
+    #   - map หมวดหมู่สินค้า (product.category) ให้ตรงกัน ผ่าน product_category_map.csv
     #   - ตั้งบัญชีสินค้าคงคลัง/รายได้/ต้นทุน ให้ตรงกับระบบเดิม
     #     (บัญชีขึ้นกับหมวดหมู่สินค้าเป็นหลัก)
     stats.skipped += 1

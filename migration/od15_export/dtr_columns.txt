@@ -1,0 +1,2390 @@
+dtr_access_rights_template|id|integer
+dtr_access_rights_template|name|character varying
+dtr_access_rights_template|description|text
+dtr_access_rights_template|create_uid|integer
+dtr_access_rights_template|create_date|timestamp without time zone
+dtr_access_rights_template|write_uid|integer
+dtr_access_rights_template|write_date|timestamp without time zone
+dtr_access_rights_template_res_groups_rel|dtr_access_rights_template_id|integer
+dtr_access_rights_template_res_groups_rel|res_groups_id|integer
+dtr_account_billing|id|integer
+dtr_account_billing|name|character varying
+dtr_account_billing|number|character varying
+dtr_account_billing|company_id|integer
+dtr_account_billing|partner_id|integer
+dtr_account_billing|bill_date|date
+dtr_account_billing|actual_due_date|date
+dtr_account_billing|currency_id|integer
+dtr_account_billing|state|character varying
+dtr_account_billing|billing_note|text
+dtr_account_billing|payment_method_id|integer
+dtr_account_billing|tax_id1|integer
+dtr_account_billing|tax_id2|integer
+dtr_account_billing|tax_id3|integer
+dtr_account_billing|income_type1|character varying
+dtr_account_billing|income_type2|character varying
+dtr_account_billing|income_type3|character varying
+dtr_account_billing|pay_amount1|numeric
+dtr_account_billing|pay_amount2|numeric
+dtr_account_billing|pay_amount3|numeric
+dtr_account_billing|wht_amount1|numeric
+dtr_account_billing|wht_amount2|numeric
+dtr_account_billing|wht_amount3|numeric
+dtr_account_billing|document_date|date
+dtr_account_billing|create_uid|integer
+dtr_account_billing|create_date|timestamp without time zone
+dtr_account_billing|write_uid|integer
+dtr_account_billing|write_date|timestamp without time zone
+dtr_account_billing_batch_wizard|id|integer
+dtr_account_billing_batch_wizard|due_date_from|date
+dtr_account_billing_batch_wizard|due_date_to|date
+dtr_account_billing_batch_wizard|type_generate|character varying
+dtr_account_billing_batch_wizard|input_to_date|date
+dtr_account_billing_batch_wizard|input_bill_date|date
+dtr_account_billing_batch_wizard|create_uid|integer
+dtr_account_billing_batch_wizard|create_date|timestamp without time zone
+dtr_account_billing_batch_wizard|write_uid|integer
+dtr_account_billing_batch_wizard|write_date|timestamp without time zone
+dtr_account_billing_batch_wizard_res_partner_rel|dtr_account_billing_batch_wizard_id|integer
+dtr_account_billing_batch_wizard_res_partner_rel|res_partner_id|integer
+dtr_account_billing_confirm_wizard|id|integer
+dtr_account_billing_confirm_wizard|create_uid|integer
+dtr_account_billing_confirm_wizard|create_date|timestamp without time zone
+dtr_account_billing_confirm_wizard|write_uid|integer
+dtr_account_billing_confirm_wizard|write_date|timestamp without time zone
+dtr_account_cash|id|integer
+dtr_account_cash|name|character varying
+dtr_account_cash|partner_id|integer
+dtr_account_cash|type|character varying
+dtr_account_cash|company_id|integer
+dtr_account_cash|currency_id|integer
+dtr_account_cash|amount_untaxed|numeric
+dtr_account_cash|amount_tax|numeric
+dtr_account_cash|amount_total|numeric
+dtr_account_cash|trade_discount|numeric
+dtr_account_cash|trade_discount_type|character varying
+dtr_account_cash|amount_trade_discount|numeric
+dtr_account_cash|amount_untaxed_after_trade_discount|numeric
+dtr_account_cash|amount|numeric
+dtr_account_cash|amount_fee|numeric
+dtr_account_cash|amount_net|numeric
+dtr_account_cash|amount_transfer|numeric
+dtr_account_cash|partner_type|character varying
+dtr_account_cash|state|character varying
+dtr_account_cash|journal_id|integer
+dtr_account_cash|date|date
+dtr_account_cash|exchange_rate|numeric
+dtr_account_cash|remark|text
+dtr_account_cash|cancel_remark|text
+dtr_account_cash|create_uid|integer
+dtr_account_cash|create_date|timestamp without time zone
+dtr_account_cash|write_uid|integer
+dtr_account_cash|write_date|timestamp without time zone
+dtr_account_cash|origin_po|character varying
+dtr_account_cash|origin_mr|character varying
+dtr_account_cash|purchase_picking_type_id|integer
+dtr_account_cash|origin_so|character varying
+dtr_account_cash|origin_do|character varying
+dtr_account_cash|sale_picking_type_id|integer
+dtr_account_cash_cancel_wizard|id|integer
+dtr_account_cash_cancel_wizard|dtr_account_cash_id|integer
+dtr_account_cash_cancel_wizard|remark|text
+dtr_account_cash_cancel_wizard|create_uid|integer
+dtr_account_cash_cancel_wizard|create_date|timestamp without time zone
+dtr_account_cash_cancel_wizard|write_uid|integer
+dtr_account_cash_cancel_wizard|write_date|timestamp without time zone
+dtr_account_cash_do_wizard|id|integer
+dtr_account_cash_do_wizard|dtr_account_cash_id|integer
+dtr_account_cash_do_wizard|create_uid|integer
+dtr_account_cash_do_wizard|create_date|timestamp without time zone
+dtr_account_cash_do_wizard|write_uid|integer
+dtr_account_cash_do_wizard|write_date|timestamp without time zone
+dtr_account_cash_line|id|integer
+dtr_account_cash_line|dtr_account_cash_id|integer
+dtr_account_cash_line|product_id|integer
+dtr_account_cash_line|description|character varying
+dtr_account_cash_line|quantity|double precision
+dtr_account_cash_line|product_uom_id|integer
+dtr_account_cash_line|price_unit|double precision
+dtr_account_cash_line|price_subtotal|numeric
+dtr_account_cash_line|price_total|numeric
+dtr_account_cash_line|amount_tax|numeric
+dtr_account_cash_line|sequence|integer
+dtr_account_cash_line|account_id|integer
+dtr_account_cash_line|company_id|integer
+dtr_account_cash_line|company_currency_id|integer
+dtr_account_cash_line|is_trade_discount|boolean
+dtr_account_cash_line|discount|numeric
+dtr_account_cash_line|discount_type|character varying
+dtr_account_cash_line|create_uid|integer
+dtr_account_cash_line|create_date|timestamp without time zone
+dtr_account_cash_line|write_uid|integer
+dtr_account_cash_line|write_date|timestamp without time zone
+dtr_account_cash_line|vendor_source_doc|character varying
+dtr_account_cash_line|purchase_line_id|integer
+dtr_account_cash_line|customer_source_doc|character varying
+dtr_account_cash_line|sale_line_id|integer
+dtr_account_cash_line_account_tax_rel|dtr_account_cash_line_id|integer
+dtr_account_cash_line_account_tax_rel|account_tax_id|integer
+dtr_account_cash_mr_wizard|id|integer
+dtr_account_cash_mr_wizard|dtr_account_cash_id|integer
+dtr_account_cash_mr_wizard|create_uid|integer
+dtr_account_cash_mr_wizard|create_date|timestamp without time zone
+dtr_account_cash_mr_wizard|write_uid|integer
+dtr_account_cash_mr_wizard|write_date|timestamp without time zone
+dtr_account_cash_po_wizard|id|integer
+dtr_account_cash_po_wizard|dtr_account_cash_id|integer
+dtr_account_cash_po_wizard|create_uid|integer
+dtr_account_cash_po_wizard|create_date|timestamp without time zone
+dtr_account_cash_po_wizard|write_uid|integer
+dtr_account_cash_po_wizard|write_date|timestamp without time zone
+dtr_account_cash_so_wizard|id|integer
+dtr_account_cash_so_wizard|dtr_account_cash_id|integer
+dtr_account_cash_so_wizard|create_uid|integer
+dtr_account_cash_so_wizard|create_date|timestamp without time zone
+dtr_account_cash_so_wizard|write_uid|integer
+dtr_account_cash_so_wizard|write_date|timestamp without time zone
+dtr_account_cash_transfer_line|id|integer
+dtr_account_cash_transfer_line|journal_id|integer
+dtr_account_cash_transfer_line|dtr_account_cash_id|integer
+dtr_account_cash_transfer_line|amount|numeric
+dtr_account_cash_transfer_line|remark|text
+dtr_account_cash_transfer_line|create_uid|integer
+dtr_account_cash_transfer_line|create_date|timestamp without time zone
+dtr_account_cash_transfer_line|write_uid|integer
+dtr_account_cash_transfer_line|write_date|timestamp without time zone
+dtr_account_invoice_payment_method|id|integer
+dtr_account_invoice_payment_method|name|character varying
+dtr_account_invoice_payment_method|code|character varying
+dtr_account_invoice_payment_method|create_uid|integer
+dtr_account_invoice_payment_method|create_date|timestamp without time zone
+dtr_account_invoice_payment_method|write_uid|integer
+dtr_account_invoice_payment_method|write_date|timestamp without time zone
+dtr_account_invoice_payment_method_dtr_account_cash_rel|dtr_account_cash_id|integer
+dtr_account_invoice_payment_method_dtr_account_cash_rel|dtr_account_invoice_payment_method_id|integer
+dtr_account_move_product_return_rel|account_move_id|integer
+dtr_account_move_product_return_rel|dtr_product_return_id|integer
+dtr_account_prepayment|id|integer
+dtr_account_prepayment|name|character varying
+dtr_account_prepayment|number|character varying
+dtr_account_prepayment|company_id|integer
+dtr_account_prepayment|partner_id|integer
+dtr_account_prepayment|bill_date|date
+dtr_account_prepayment|actual_due_date|date
+dtr_account_prepayment|currency_id|integer
+dtr_account_prepayment|state|character varying
+dtr_account_prepayment|notes|text
+dtr_account_prepayment|payment_method_id|integer
+dtr_account_prepayment|document_date|date
+dtr_account_prepayment|create_uid|integer
+dtr_account_prepayment|create_date|timestamp without time zone
+dtr_account_prepayment|write_uid|integer
+dtr_account_prepayment|write_date|timestamp without time zone
+dtr_account_prepayment_confirm_wizard|id|integer
+dtr_account_prepayment_confirm_wizard|create_uid|integer
+dtr_account_prepayment_confirm_wizard|create_date|timestamp without time zone
+dtr_account_prepayment_confirm_wizard|write_uid|integer
+dtr_account_prepayment_confirm_wizard|write_date|timestamp without time zone
+dtr_accounting_report_excel|id|integer
+dtr_accounting_report_excel|file_name|character varying
+dtr_accounting_report_excel|create_uid|integer
+dtr_accounting_report_excel|create_date|timestamp without time zone
+dtr_accounting_report_excel|write_uid|integer
+dtr_accounting_report_excel|write_date|timestamp without time zone
+dtr_adv_ac_mapping|id|integer
+dtr_adv_ac_mapping|company_id|integer
+dtr_adv_ac_mapping|currency_id|integer
+dtr_adv_ac_mapping|name|character varying
+dtr_adv_ac_mapping|account_id|integer
+dtr_adv_ac_mapping|analytic_id|integer
+dtr_adv_ac_mapping|default_amount|numeric
+dtr_adv_ac_mapping|active|boolean
+dtr_adv_ac_mapping|create_uid|integer
+dtr_adv_ac_mapping|create_date|timestamp without time zone
+dtr_adv_ac_mapping|write_uid|integer
+dtr_adv_ac_mapping|write_date|timestamp without time zone
+dtr_adv_clear|id|integer
+dtr_adv_clear|message_main_attachment_id|integer
+dtr_adv_clear|company_id|integer
+dtr_adv_clear|currency_id|integer
+dtr_adv_clear|number|character varying
+dtr_adv_clear|name|character varying
+dtr_adv_clear|date|date
+dtr_adv_clear|requester_id|integer
+dtr_adv_clear|journal_id|integer
+dtr_adv_clear|payment_move_id|integer
+dtr_adv_clear|transfer_move_id|integer
+dtr_adv_clear|memo|character varying
+dtr_adv_clear|state|character varying
+dtr_adv_clear|department_id|integer
+dtr_adv_clear|create_uid|integer
+dtr_adv_clear|create_date|timestamp without time zone
+dtr_adv_clear|write_uid|integer
+dtr_adv_clear|write_date|timestamp without time zone
+dtr_adv_clear_dtr_adv_fund_rel|dtr_adv_clear_id|integer
+dtr_adv_clear_dtr_adv_fund_rel|dtr_adv_fund_id|integer
+dtr_adv_clear_form|id|integer
+dtr_adv_clear_form|name|character varying
+dtr_adv_clear_form|name_pdf|character varying
+dtr_adv_clear_form|name_xlsx|character varying
+dtr_adv_clear_form|jasper_file|character varying
+dtr_adv_clear_form|state|character varying
+dtr_adv_clear_form|email_template_id|integer
+dtr_adv_clear_form|can_send_email|boolean
+dtr_adv_clear_form|email_subject|character varying
+dtr_adv_clear_form|email_document_number|character varying
+dtr_adv_clear_form|email_to|character varying
+dtr_adv_clear_form|create_uid|integer
+dtr_adv_clear_form|create_date|timestamp without time zone
+dtr_adv_clear_form|write_uid|integer
+dtr_adv_clear_form|write_date|timestamp without time zone
+dtr_adv_clear_form|p_language|character varying
+dtr_adv_clear_form_res_partner_rel|dtr_adv_clear_form_id|integer
+dtr_adv_clear_form_res_partner_rel|res_partner_id|integer
+dtr_adv_fund|id|integer
+dtr_adv_fund|message_main_attachment_id|integer
+dtr_adv_fund|company_id|integer
+dtr_adv_fund|currency_id|integer
+dtr_adv_fund|state|character varying
+dtr_adv_fund|paid|boolean
+dtr_adv_fund|name|character varying
+dtr_adv_fund|date|date
+dtr_adv_fund|journal_id|integer
+dtr_adv_fund|adv_request_id|integer
+dtr_adv_fund|memo|text
+dtr_adv_fund|create_uid|integer
+dtr_adv_fund|create_date|timestamp without time zone
+dtr_adv_fund|write_uid|integer
+dtr_adv_fund|write_date|timestamp without time zone
+dtr_adv_fund_approver|id|integer
+dtr_adv_fund_approver|company_id|integer
+dtr_adv_fund_approver|name|character varying
+dtr_adv_fund_approver|approval_limit|numeric
+dtr_adv_fund_approver|create_uid|integer
+dtr_adv_fund_approver|create_date|timestamp without time zone
+dtr_adv_fund_approver|write_uid|integer
+dtr_adv_fund_approver|write_date|timestamp without time zone
+dtr_adv_fund_approver_res_users_rel|dtr_adv_fund_approver_id|integer
+dtr_adv_fund_approver_res_users_rel|res_users_id|integer
+dtr_adv_fund_line|id|integer
+dtr_adv_fund_line|fund_id|integer
+dtr_adv_fund_line|currency_id|integer
+dtr_adv_fund_line|state|character varying
+dtr_adv_fund_line|date|date
+dtr_adv_fund_line|journal_id|integer
+dtr_adv_fund_line|amount|numeric
+dtr_adv_fund_line|approve_uid|integer
+dtr_adv_fund_line|move_id|integer
+dtr_adv_fund_line|payment_move_id|integer
+dtr_adv_fund_line|create_uid|integer
+dtr_adv_fund_line|create_date|timestamp without time zone
+dtr_adv_fund_line|write_uid|integer
+dtr_adv_fund_line|write_date|timestamp without time zone
+dtr_adv_fund_line|cheque_paid_id|integer
+dtr_adv_payment|id|integer
+dtr_adv_payment|message_main_attachment_id|integer
+dtr_adv_payment|partner_id|integer
+dtr_adv_payment|tax_condition|character varying
+dtr_adv_payment|tax_type|character varying
+dtr_adv_payment|tax_condition2|character varying
+dtr_adv_payment|tax_condition3|character varying
+dtr_adv_payment|severance_pay|boolean
+dtr_adv_payment|foreigner|boolean
+dtr_adv_payment|send_date|date
+dtr_adv_payment|remark|character varying
+dtr_adv_payment|currency_id|integer
+dtr_adv_payment|tax_id1|integer
+dtr_adv_payment|tax_id2|integer
+dtr_adv_payment|tax_id3|integer
+dtr_adv_payment|tax_rate1|numeric
+dtr_adv_payment|tax_rate2|numeric
+dtr_adv_payment|tax_rate3|numeric
+dtr_adv_payment|pay_amount1|numeric
+dtr_adv_payment|pay_amount2|numeric
+dtr_adv_payment|pay_amount3|numeric
+dtr_adv_payment|wht_amount1|numeric
+dtr_adv_payment|wht_amount2|numeric
+dtr_adv_payment|wht_amount3|numeric
+dtr_adv_payment|income_type1|character varying
+dtr_adv_payment|income_type2|character varying
+dtr_adv_payment|income_type3|character varying
+dtr_adv_payment|partner_branch_id|integer
+dtr_adv_payment|tax_name|character varying
+dtr_adv_payment|tax_code|character varying
+dtr_adv_payment|branch_code|character varying
+dtr_adv_payment|street|character varying
+dtr_adv_payment|street2|character varying
+dtr_adv_payment|city|character varying
+dtr_adv_payment|zip|character varying
+dtr_adv_payment|state_name|character varying
+dtr_adv_payment|country_id|integer
+dtr_adv_payment|clear_id|integer
+dtr_adv_payment|company_id|integer
+dtr_adv_payment|date|date
+dtr_adv_payment|ref|character varying
+dtr_adv_payment|name|character varying
+dtr_adv_payment|mapping_id|integer
+dtr_adv_payment|account_id|integer
+dtr_adv_payment|analytic_id|integer
+dtr_adv_payment|employee_id|integer
+dtr_adv_payment|fund_id|integer
+dtr_adv_payment|state|character varying
+dtr_adv_payment|pay_date|date
+dtr_adv_payment|vat_date|date
+dtr_adv_payment|vat_send_date|date
+dtr_adv_payment|vat_id|integer
+dtr_adv_payment|wht_id|integer
+dtr_adv_payment|amount|double precision
+dtr_adv_payment|untaxed_amount|numeric
+dtr_adv_payment|vat_tax_id|integer
+dtr_adv_payment|amount_tax|numeric
+dtr_adv_payment|amount_wht|numeric
+dtr_adv_payment|amount_total|numeric
+dtr_adv_payment|product_id|integer
+dtr_adv_payment|create_uid|integer
+dtr_adv_payment|create_date|timestamp without time zone
+dtr_adv_payment|write_uid|integer
+dtr_adv_payment|write_date|timestamp without time zone
+dtr_adv_request|id|integer
+dtr_adv_request|message_main_attachment_id|integer
+dtr_adv_request|company_id|integer
+dtr_adv_request|currency_id|integer
+dtr_adv_request|number|character varying
+dtr_adv_request|name|character varying
+dtr_adv_request|cash_loans|numeric
+dtr_adv_request|note|text
+dtr_adv_request|requester_id|integer
+dtr_adv_request|to_date|date
+dtr_adv_request|due_date|date
+dtr_adv_request|state|character varying
+dtr_adv_request|clearing_date|date
+dtr_adv_request|department_id|integer
+dtr_adv_request|create_uid|integer
+dtr_adv_request|create_date|timestamp without time zone
+dtr_adv_request|write_uid|integer
+dtr_adv_request|write_date|timestamp without time zone
+dtr_adv_request_at_date_report|id|integer
+dtr_adv_request_at_date_report|name|character varying
+dtr_adv_request_at_date_report|name_pdf|character varying
+dtr_adv_request_at_date_report|name_xlsx|character varying
+dtr_adv_request_at_date_report|jasper_file|character varying
+dtr_adv_request_at_date_report|state|character varying
+dtr_adv_request_at_date_report|email_template_id|integer
+dtr_adv_request_at_date_report|can_send_email|boolean
+dtr_adv_request_at_date_report|email_subject|character varying
+dtr_adv_request_at_date_report|email_document_number|character varying
+dtr_adv_request_at_date_report|email_to|character varying
+dtr_adv_request_at_date_report|create_uid|integer
+dtr_adv_request_at_date_report|create_date|timestamp without time zone
+dtr_adv_request_at_date_report|write_uid|integer
+dtr_adv_request_at_date_report|write_date|timestamp without time zone
+dtr_adv_request_at_date_report|p_At_Date|date
+dtr_adv_request_at_date_report|p_language|character varying
+dtr_adv_request_at_date_report|p_request_id|integer
+dtr_adv_request_at_date_report_res_partner_rel|dtr_adv_request_at_date_report_id|integer
+dtr_adv_request_at_date_report_res_partner_rel|res_partner_id|integer
+dtr_adv_request_condition_report|id|integer
+dtr_adv_request_condition_report|name|character varying
+dtr_adv_request_condition_report|name_pdf|character varying
+dtr_adv_request_condition_report|name_xlsx|character varying
+dtr_adv_request_condition_report|jasper_file|character varying
+dtr_adv_request_condition_report|state|character varying
+dtr_adv_request_condition_report|email_template_id|integer
+dtr_adv_request_condition_report|can_send_email|boolean
+dtr_adv_request_condition_report|email_subject|character varying
+dtr_adv_request_condition_report|email_document_number|character varying
+dtr_adv_request_condition_report|email_to|character varying
+dtr_adv_request_condition_report|create_uid|integer
+dtr_adv_request_condition_report|create_date|timestamp without time zone
+dtr_adv_request_condition_report|write_uid|integer
+dtr_adv_request_condition_report|write_date|timestamp without time zone
+dtr_adv_request_condition_report|p_Start_Date|date
+dtr_adv_request_condition_report|p_End_Date|date
+dtr_adv_request_condition_report|p_language|character varying
+dtr_adv_request_condition_report|p_request_id|integer
+dtr_adv_request_condition_report_res_partner_rel|dtr_adv_request_condition_report_id|integer
+dtr_adv_request_condition_report_res_partner_rel|res_partner_id|integer
+dtr_adv_request_form|id|integer
+dtr_adv_request_form|name|character varying
+dtr_adv_request_form|name_pdf|character varying
+dtr_adv_request_form|name_xlsx|character varying
+dtr_adv_request_form|jasper_file|character varying
+dtr_adv_request_form|state|character varying
+dtr_adv_request_form|email_template_id|integer
+dtr_adv_request_form|can_send_email|boolean
+dtr_adv_request_form|email_subject|character varying
+dtr_adv_request_form|email_document_number|character varying
+dtr_adv_request_form|email_to|character varying
+dtr_adv_request_form|create_uid|integer
+dtr_adv_request_form|create_date|timestamp without time zone
+dtr_adv_request_form|write_uid|integer
+dtr_adv_request_form|write_date|timestamp without time zone
+dtr_adv_request_form|p_language|character varying
+dtr_adv_request_form_res_partner_rel|dtr_adv_request_form_id|integer
+dtr_adv_request_form_res_partner_rel|res_partner_id|integer
+dtr_asset_batch_checking|id|integer
+dtr_asset_batch_checking|company_id|integer
+dtr_asset_batch_checking|state|character varying
+dtr_asset_batch_checking|name|character varying
+dtr_asset_batch_checking|date|date
+dtr_asset_batch_checking|asset_class_id|integer
+dtr_asset_batch_checking|analytic_account_id|integer
+dtr_asset_batch_checking|location_id|integer
+dtr_asset_batch_checking|confirm_user_id|integer
+dtr_asset_batch_checking|counting_user_id|integer
+dtr_asset_batch_checking|create_uid|integer
+dtr_asset_batch_checking|create_date|timestamp without time zone
+dtr_asset_batch_checking|write_uid|integer
+dtr_asset_batch_checking|write_date|timestamp without time zone
+dtr_asset_batch_transfer|id|integer
+dtr_asset_batch_transfer|company_id|integer
+dtr_asset_batch_transfer|state|character varying
+dtr_asset_batch_transfer|name|character varying
+dtr_asset_batch_transfer|date|date
+dtr_asset_batch_transfer|description|character varying
+dtr_asset_batch_transfer|create_uid|integer
+dtr_asset_batch_transfer|create_date|timestamp without time zone
+dtr_asset_batch_transfer|write_uid|integer
+dtr_asset_batch_transfer|write_date|timestamp without time zone
+dtr_asset_brand|id|integer
+dtr_asset_brand|asset_class_id|integer
+dtr_asset_brand|name|character varying
+dtr_asset_brand|create_uid|integer
+dtr_asset_brand|create_date|timestamp without time zone
+dtr_asset_brand|write_uid|integer
+dtr_asset_brand|write_date|timestamp without time zone
+dtr_asset_brand_series|id|integer
+dtr_asset_brand_series|asset_class_id|integer
+dtr_asset_brand_series|brand_id|integer
+dtr_asset_brand_series|name|character varying
+dtr_asset_brand_series|create_uid|integer
+dtr_asset_brand_series|create_date|timestamp without time zone
+dtr_asset_brand_series|write_uid|integer
+dtr_asset_brand_series|write_date|timestamp without time zone
+dtr_asset_card_report_wiz|id|integer
+dtr_asset_card_report_wiz|from_ref|character varying
+dtr_asset_card_report_wiz|to_ref|character varying
+dtr_asset_card_report_wiz|create_uid|integer
+dtr_asset_card_report_wiz|create_date|timestamp without time zone
+dtr_asset_card_report_wiz|write_uid|integer
+dtr_asset_card_report_wiz|write_date|timestamp without time zone
+dtr_asset_checking|id|integer
+dtr_asset_checking|asset_id|integer
+dtr_asset_checking|asset_code|character varying
+dtr_asset_checking|batch_id|integer
+dtr_asset_checking|date|date
+dtr_asset_checking|qty_bf|numeric
+dtr_asset_checking|scrap|numeric
+dtr_asset_checking|lost|numeric
+dtr_asset_checking|qty_cf|numeric
+dtr_asset_checking|subset1_qty|numeric
+dtr_asset_checking|subset2_qty|numeric
+dtr_asset_checking|subset3_qty|numeric
+dtr_asset_checking|subset4_qty|numeric
+dtr_asset_checking|subset5_qty|numeric
+dtr_asset_checking|remark|text
+dtr_asset_checking|create_uid|integer
+dtr_asset_checking|create_date|timestamp without time zone
+dtr_asset_checking|write_uid|integer
+dtr_asset_checking|write_date|timestamp without time zone
+dtr_asset_class|id|integer
+dtr_asset_class|active|boolean
+dtr_asset_class|company_id|integer
+dtr_asset_class|code|character varying
+dtr_asset_class|name|character varying
+dtr_asset_class|initial_depreciation|integer
+dtr_asset_class|sequence_id|integer
+dtr_asset_class|create_uid|integer
+dtr_asset_class|create_date|timestamp without time zone
+dtr_asset_class|write_uid|integer
+dtr_asset_class|write_date|timestamp without time zone
+dtr_asset_insurance|id|integer
+dtr_asset_insurance|asset_id|integer
+dtr_asset_insurance|seq|integer
+dtr_asset_insurance|name|character varying
+dtr_asset_insurance|insurer_id|integer
+dtr_asset_insurance|policy_no|character varying
+dtr_asset_insurance|cover_begin|date
+dtr_asset_insurance|cover_end|date
+dtr_asset_insurance|premium|numeric
+dtr_asset_insurance|currency_id|integer
+dtr_asset_insurance|create_uid|integer
+dtr_asset_insurance|create_date|timestamp without time zone
+dtr_asset_insurance|write_uid|integer
+dtr_asset_insurance|write_date|timestamp without time zone
+dtr_asset_insurer|id|integer
+dtr_asset_insurer|active|boolean
+dtr_asset_insurer|code|character varying
+dtr_asset_insurer|name|character varying
+dtr_asset_insurer|create_uid|integer
+dtr_asset_insurer|create_date|timestamp without time zone
+dtr_asset_insurer|write_uid|integer
+dtr_asset_insurer|write_date|timestamp without time zone
+dtr_asset_keeper|id|integer
+dtr_asset_keeper|active|boolean
+dtr_asset_keeper|name|character varying
+dtr_asset_keeper|email|character varying
+dtr_asset_keeper|phone|character varying
+dtr_asset_keeper|create_uid|integer
+dtr_asset_keeper|create_date|timestamp without time zone
+dtr_asset_keeper|write_uid|integer
+dtr_asset_keeper|write_date|timestamp without time zone
+dtr_asset_repair|id|integer
+dtr_asset_repair|asset_id|integer
+dtr_asset_repair|seq|integer
+dtr_asset_repair|date|date
+dtr_asset_repair|name|character varying
+dtr_asset_repair|amount|numeric
+dtr_asset_repair|currency_id|integer
+dtr_asset_repair|create_uid|integer
+dtr_asset_repair|create_date|timestamp without time zone
+dtr_asset_repair|write_uid|integer
+dtr_asset_repair|write_date|timestamp without time zone
+dtr_asset_transfer|id|integer
+dtr_asset_transfer|asset_id|integer
+dtr_asset_transfer|asset_code|character varying
+dtr_asset_transfer|batch_id|integer
+dtr_asset_transfer|date|date
+dtr_asset_transfer|name|character varying
+dtr_asset_transfer|analytic_account_id|integer
+dtr_asset_transfer|location_id|integer
+dtr_asset_transfer|create_uid|integer
+dtr_asset_transfer|create_date|timestamp without time zone
+dtr_asset_transfer|write_uid|integer
+dtr_asset_transfer|write_date|timestamp without time zone
+dtr_billing_date_config|id|integer
+dtr_billing_date_config|name|character varying
+dtr_billing_date_config|company_id|integer
+dtr_billing_date_config|partner_id|integer
+dtr_billing_date_config|calculate_due_invoice|character varying
+dtr_billing_date_config|every_monday|boolean
+dtr_billing_date_config|every_monday1|boolean
+dtr_billing_date_config|every_monday2|boolean
+dtr_billing_date_config|every_monday3|boolean
+dtr_billing_date_config|every_monday4|boolean
+dtr_billing_date_config|every_tuesday|boolean
+dtr_billing_date_config|every_tuesday1|boolean
+dtr_billing_date_config|every_tuesday2|boolean
+dtr_billing_date_config|every_tuesday3|boolean
+dtr_billing_date_config|every_tuesday4|boolean
+dtr_billing_date_config|every_wednesday|boolean
+dtr_billing_date_config|every_wednesday1|boolean
+dtr_billing_date_config|every_wednesday2|boolean
+dtr_billing_date_config|every_wednesday3|boolean
+dtr_billing_date_config|every_wednesday4|boolean
+dtr_billing_date_config|every_thursday|boolean
+dtr_billing_date_config|every_thursday1|boolean
+dtr_billing_date_config|every_thursday2|boolean
+dtr_billing_date_config|every_thursday3|boolean
+dtr_billing_date_config|every_thursday4|boolean
+dtr_billing_date_config|every_friday|boolean
+dtr_billing_date_config|every_friday1|boolean
+dtr_billing_date_config|every_friday2|boolean
+dtr_billing_date_config|every_friday3|boolean
+dtr_billing_date_config|every_friday4|boolean
+dtr_billing_date_config|every_all_day|boolean
+dtr_billing_date_config|every_end_of_month|boolean
+dtr_billing_date_config|every_day_one|boolean
+dtr_billing_date_config|every_day_two|boolean
+dtr_billing_date_config|every_day_three|boolean
+dtr_billing_date_config|every_day_four|boolean
+dtr_billing_date_config|every_day_five|boolean
+dtr_billing_date_config|every_day_six|boolean
+dtr_billing_date_config|every_day_seven|boolean
+dtr_billing_date_config|every_day_eight|boolean
+dtr_billing_date_config|every_day_nine|boolean
+dtr_billing_date_config|every_day_ten|boolean
+dtr_billing_date_config|every_day_eleven|boolean
+dtr_billing_date_config|every_day_twelve|boolean
+dtr_billing_date_config|every_day_thirteen|boolean
+dtr_billing_date_config|every_day_fourteen|boolean
+dtr_billing_date_config|every_day_fifteen|boolean
+dtr_billing_date_config|every_day_sixteen|boolean
+dtr_billing_date_config|every_day_seventeen|boolean
+dtr_billing_date_config|every_day_eighteen|boolean
+dtr_billing_date_config|every_day_nineteen|boolean
+dtr_billing_date_config|every_day_twenty|boolean
+dtr_billing_date_config|every_day_twenty_one|boolean
+dtr_billing_date_config|every_day_twenty_two|boolean
+dtr_billing_date_config|every_day_twenty_three|boolean
+dtr_billing_date_config|every_day_twenty_four|boolean
+dtr_billing_date_config|every_day_twenty_five|boolean
+dtr_billing_date_config|every_day_twenty_six|boolean
+dtr_billing_date_config|every_day_twenty_seven|boolean
+dtr_billing_date_config|every_day_twenty_eight|boolean
+dtr_billing_date_config|every_day_twenty_nine|boolean
+dtr_billing_date_config|every_day_thirty|boolean
+dtr_billing_date_config|every_day_thirty_one|boolean
+dtr_billing_date_config|every_remark|text
+dtr_billing_date_config|create_uid|integer
+dtr_billing_date_config|create_date|timestamp without time zone
+dtr_billing_date_config|write_uid|integer
+dtr_billing_date_config|write_date|timestamp without time zone
+dtr_bring_forward|id|integer
+dtr_bring_forward|doc_no|character varying
+dtr_bring_forward|name|character varying
+dtr_bring_forward|remark|text
+dtr_bring_forward|date|date
+dtr_bring_forward|journal_id|integer
+dtr_bring_forward|state|character varying
+dtr_bring_forward|company_id|integer
+dtr_bring_forward|move_id|integer
+dtr_bring_forward|create_uid|integer
+dtr_bring_forward|create_date|timestamp without time zone
+dtr_bring_forward|write_uid|integer
+dtr_bring_forward|write_date|timestamp without time zone
+dtr_bring_forward_line|id|integer
+dtr_bring_forward_line|dtr_bring_forward_id|integer
+dtr_bring_forward_line|account_id|integer
+dtr_bring_forward_line|account_id_show|integer
+dtr_bring_forward_line|target_total_debit|numeric
+dtr_bring_forward_line|compute_debit|numeric
+dtr_bring_forward_line|difference_debit|numeric
+dtr_bring_forward_line|target_total_credit|numeric
+dtr_bring_forward_line|compute_credit|numeric
+dtr_bring_forward_line|difference_credit|numeric
+dtr_bring_forward_line|is_create_manual|boolean
+dtr_bring_forward_line|create_uid|integer
+dtr_bring_forward_line|create_date|timestamp without time zone
+dtr_bring_forward_line|write_uid|integer
+dtr_bring_forward_line|write_date|timestamp without time zone
+dtr_cheque|id|integer
+dtr_cheque|journal_id|integer
+dtr_cheque|company_id|integer
+dtr_cheque|currency_id|integer
+dtr_cheque|name|character varying
+dtr_cheque|date|date
+dtr_cheque|memo|character varying
+dtr_cheque|amount|numeric
+dtr_cheque|state|character varying
+dtr_cheque|ac_payee|boolean
+dtr_cheque|payment_id|integer
+dtr_cheque|return_date|date
+dtr_cheque|transform_date|date
+dtr_cheque|return_move_id|integer
+dtr_cheque|return_move_line_id|integer
+dtr_cheque|clear_payment_id|integer
+dtr_cheque|clear_date|date
+dtr_cheque|journal_id_for_account|integer
+dtr_cheque|bank_id|integer
+dtr_cheque|bank_branch|character varying
+dtr_cheque|pay_to|character varying
+dtr_cheque|parent_cheque_id|integer
+dtr_cheque|tranform_move_id|integer
+dtr_cheque|new_cheque_move_id|integer
+dtr_cheque|new_cheque_post_move_id|integer
+dtr_cheque|partner_id|integer
+dtr_cheque|cheque_move_id|integer
+dtr_cheque|create_uid|integer
+dtr_cheque|create_date|timestamp without time zone
+dtr_cheque|write_uid|integer
+dtr_cheque|write_date|timestamp without time zone
+dtr_cheque_book|id|integer
+dtr_cheque_book|state|character varying
+dtr_cheque_book|name|character varying
+dtr_cheque_book|journal_id|integer
+dtr_cheque_book|company_id|integer
+dtr_cheque_book|first_cheque_no|character varying
+dtr_cheque_book|quantity|integer
+dtr_cheque_book|last_cheque_no|character varying
+dtr_cheque_book|last_cheque_no_number|integer
+dtr_cheque_book|date|date
+dtr_cheque_book|create_uid|integer
+dtr_cheque_book|create_date|timestamp without time zone
+dtr_cheque_book|write_uid|integer
+dtr_cheque_book|write_date|timestamp without time zone
+dtr_cheque_leaf|id|integer
+dtr_cheque_leaf|journal_id|integer
+dtr_cheque_leaf|company_id|integer
+dtr_cheque_leaf|currency_id|integer
+dtr_cheque_leaf|name|character varying
+dtr_cheque_leaf|date|date
+dtr_cheque_leaf|memo|character varying
+dtr_cheque_leaf|amount|numeric
+dtr_cheque_leaf|state|character varying
+dtr_cheque_leaf|ac_payee|boolean
+dtr_cheque_leaf|book_id|integer
+dtr_cheque_leaf|pay_to|character varying
+dtr_cheque_leaf|journal_id_for_account|integer
+dtr_cheque_leaf|change_to_cheque_id|integer
+dtr_cheque_leaf|change_remark|text
+dtr_cheque_leaf|deposited_move_id|integer
+dtr_cheque_leaf|paid_date|date
+dtr_cheque_leaf|clear_date|date
+dtr_cheque_leaf|is_internal_transfer|boolean
+dtr_cheque_leaf|create_uid|integer
+dtr_cheque_leaf|create_date|timestamp without time zone
+dtr_cheque_leaf|write_uid|integer
+dtr_cheque_leaf|write_date|timestamp without time zone
+dtr_cheque_leaf_mark_as_deposited|id|integer
+dtr_cheque_leaf_mark_as_deposited|create_uid|integer
+dtr_cheque_leaf_mark_as_deposited|create_date|timestamp without time zone
+dtr_cheque_leaf_mark_as_deposited|write_uid|integer
+dtr_cheque_leaf_mark_as_deposited|write_date|timestamp without time zone
+dtr_cheque_leaf_mark_as_paid|id|integer
+dtr_cheque_leaf_mark_as_paid|clear_date|date
+dtr_cheque_leaf_mark_as_paid|create_uid|integer
+dtr_cheque_leaf_mark_as_paid|create_date|timestamp without time zone
+dtr_cheque_leaf_mark_as_paid|write_uid|integer
+dtr_cheque_leaf_mark_as_paid|write_date|timestamp without time zone
+dtr_cheque_leaf_mark_as_to_pay|id|integer
+dtr_cheque_leaf_mark_as_to_pay|create_uid|integer
+dtr_cheque_leaf_mark_as_to_pay|create_date|timestamp without time zone
+dtr_cheque_leaf_mark_as_to_pay|write_uid|integer
+dtr_cheque_leaf_mark_as_to_pay|write_date|timestamp without time zone
+dtr_cheque_leaf_printing|id|integer
+dtr_cheque_leaf_printing|name|character varying
+dtr_cheque_leaf_printing|name_pdf|character varying
+dtr_cheque_leaf_printing|name_xlsx|character varying
+dtr_cheque_leaf_printing|jasper_file|character varying
+dtr_cheque_leaf_printing|state|character varying
+dtr_cheque_leaf_printing|email_template_id|integer
+dtr_cheque_leaf_printing|can_send_email|boolean
+dtr_cheque_leaf_printing|email_subject|character varying
+dtr_cheque_leaf_printing|email_document_number|character varying
+dtr_cheque_leaf_printing|email_to|character varying
+dtr_cheque_leaf_printing|err_msg|character varying
+dtr_cheque_leaf_printing|create_uid|integer
+dtr_cheque_leaf_printing|create_date|timestamp without time zone
+dtr_cheque_leaf_printing|write_uid|integer
+dtr_cheque_leaf_printing|write_date|timestamp without time zone
+dtr_cheque_leaf_printing|template|character varying
+dtr_cheque_leaf_printing|ref_no|character varying
+dtr_cheque_leaf_printing|rpt_nm|character varying
+dtr_cheque_leaf_printing_res_partner_rel|dtr_cheque_leaf_printing_id|integer
+dtr_cheque_leaf_printing_res_partner_rel|res_partner_id|integer
+dtr_cheque_posted|id|integer
+dtr_cheque_posted|clear_date|date
+dtr_cheque_posted|create_uid|integer
+dtr_cheque_posted|create_date|timestamp without time zone
+dtr_cheque_posted|write_uid|integer
+dtr_cheque_posted|write_date|timestamp without time zone
+dtr_cheque_report|id|integer
+dtr_cheque_report|account_no_from_id|integer
+dtr_cheque_report|account_no_to_id|integer
+dtr_cheque_report|create_uid|integer
+dtr_cheque_report|create_date|timestamp without time zone
+dtr_cheque_report|write_uid|integer
+dtr_cheque_report|write_date|timestamp without time zone
+dtr_cheque_transformation_cash|id|integer
+dtr_cheque_transformation_cash|journal_id|integer
+dtr_cheque_transformation_cash|amount|numeric
+dtr_cheque_transformation_cash|remark|text
+dtr_cheque_transformation_cash|cheque_id|integer
+dtr_cheque_transformation_cash|company_id|integer
+dtr_cheque_transformation_cash|move_id|integer
+dtr_cheque_transformation_cash|create_uid|integer
+dtr_cheque_transformation_cash|create_date|timestamp without time zone
+dtr_cheque_transformation_cash|write_uid|integer
+dtr_cheque_transformation_cash|write_date|timestamp without time zone
+dtr_claim|id|integer
+dtr_claim|message_main_attachment_id|integer
+dtr_claim|state|character varying
+dtr_claim|name|character varying
+dtr_claim|company_id|integer
+dtr_claim|date|date
+dtr_claim|customer_id|integer
+dtr_claim|inform_by|character varying
+dtr_claim|installation_place|character varying
+dtr_claim|phone|character varying
+dtr_claim|fax|character varying
+dtr_claim|email|character varying
+dtr_claim|line|character varying
+dtr_claim|service_id|integer
+dtr_claim|appointment_date|date
+dtr_claim|appointment_time|numeric
+dtr_claim|prv_claim|integer
+dtr_claim|invoice_id|integer
+dtr_claim|product_id|integer
+dtr_claim|product_uom_id|integer
+dtr_claim|lot_id|integer
+dtr_claim|type|character varying
+dtr_claim|symptoms|text
+dtr_claim|sale_order_id|integer
+dtr_claim|credit_note_id|integer
+dtr_claim|department_id|integer
+dtr_claim|is_use_in_product_return|boolean
+dtr_claim|dtr_service_level_agreement_setting_id|integer
+dtr_claim|create_uid|integer
+dtr_claim|create_date|timestamp without time zone
+dtr_claim|write_uid|integer
+dtr_claim|write_date|timestamp without time zone
+dtr_claim_line|id|integer
+dtr_claim_line|claim_id|integer
+dtr_claim_line|company_id|integer
+dtr_claim_line|sequence|integer
+dtr_claim_line|product_id|integer
+dtr_claim_line|lot_id|integer
+dtr_claim_line|qty|numeric
+dtr_claim_line|product_uom_id|integer
+dtr_claim_line|name|character varying
+dtr_claim_line|claim_product_id|integer
+dtr_claim_line|create_uid|integer
+dtr_claim_line|create_date|timestamp without time zone
+dtr_claim_line|write_uid|integer
+dtr_claim_line|write_date|timestamp without time zone
+dtr_claim_symptoms|id|integer
+dtr_claim_symptoms|claim_id|integer
+dtr_claim_symptoms|company_id|integer
+dtr_claim_symptoms|sequence|integer
+dtr_claim_symptoms|name|character varying
+dtr_claim_symptoms|solution|character varying
+dtr_claim_symptoms|create_uid|integer
+dtr_claim_symptoms|create_date|timestamp without time zone
+dtr_claim_symptoms|write_uid|integer
+dtr_claim_symptoms|write_date|timestamp without time zone
+dtr_close_reason|id|integer
+dtr_close_reason|name|text
+dtr_close_reason|create_uid|integer
+dtr_close_reason|create_date|timestamp without time zone
+dtr_close_reason|write_uid|integer
+dtr_close_reason|write_date|timestamp without time zone
+dtr_confirm_delivered_status|id|integer
+dtr_confirm_delivered_status|create_uid|integer
+dtr_confirm_delivered_status|create_date|timestamp without time zone
+dtr_confirm_delivered_status|write_uid|integer
+dtr_confirm_delivered_status|write_date|timestamp without time zone
+dtr_confirm_delivered_status_rel|dtr_confirm_delivered_status_id|integer
+dtr_confirm_delivered_status_rel|stock_picking_id|integer
+dtr_contact_branch_info|id|integer
+dtr_contact_branch_info|name|character varying
+dtr_contact_branch_info|telephone|character varying
+dtr_contact_branch_info|email|character varying
+dtr_contact_branch_info|other_info|character varying
+dtr_contact_branch_info|remark|character varying
+dtr_contact_branch_info|dtr_partner_branch_relate|integer
+dtr_contact_branch_info|create_uid|integer
+dtr_contact_branch_info|create_date|timestamp without time zone
+dtr_contact_branch_info|write_uid|integer
+dtr_contact_branch_info|write_date|timestamp without time zone
+dtr_create_goods_picking|id|integer
+dtr_create_goods_picking|create_uid|integer
+dtr_create_goods_picking|create_date|timestamp without time zone
+dtr_create_goods_picking|write_uid|integer
+dtr_create_goods_picking|write_date|timestamp without time zone
+dtr_create_vat_wizard|id|integer
+dtr_create_vat_wizard|send_date|date
+dtr_create_vat_wizard|move_id|integer
+dtr_create_vat_wizard|partner_id|integer
+dtr_create_vat_wizard|partner_branch_id|integer
+dtr_create_vat_wizard|vat_no|character varying
+dtr_create_vat_wizard|tax_name|character varying
+dtr_create_vat_wizard|tax_code|character varying
+dtr_create_vat_wizard|branch_code|character varying
+dtr_create_vat_wizard|street|character varying
+dtr_create_vat_wizard|street2|character varying
+dtr_create_vat_wizard|city|character varying
+dtr_create_vat_wizard|zip|character varying
+dtr_create_vat_wizard|state_name|character varying
+dtr_create_vat_wizard|country_name|character varying
+dtr_create_vat_wizard|tax_id|integer
+dtr_create_vat_wizard|base_amount|numeric
+dtr_create_vat_wizard|vat_account_id|integer
+dtr_create_vat_wizard|create_uid|integer
+dtr_create_vat_wizard|create_date|timestamp without time zone
+dtr_create_vat_wizard|write_uid|integer
+dtr_create_vat_wizard|write_date|timestamp without time zone
+dtr_create_vat_wizard_vat_base_rel|dtr_create_vat_wizard_id|integer
+dtr_create_vat_wizard_vat_base_rel|account_move_line_id|integer
+dtr_create_vat_wizard_vat_line_rel|dtr_create_vat_wizard_id|integer
+dtr_create_vat_wizard_vat_line_rel|account_move_line_id|integer
+dtr_create_wht_wizard|id|integer
+dtr_create_wht_wizard|partner_id|integer
+dtr_create_wht_wizard|tax_condition|character varying
+dtr_create_wht_wizard|tax_type|character varying
+dtr_create_wht_wizard|tax_condition2|character varying
+dtr_create_wht_wizard|tax_condition3|character varying
+dtr_create_wht_wizard|severance_pay|boolean
+dtr_create_wht_wizard|foreigner|boolean
+dtr_create_wht_wizard|send_date|date
+dtr_create_wht_wizard|remark|character varying
+dtr_create_wht_wizard|tax_id1|integer
+dtr_create_wht_wizard|tax_id2|integer
+dtr_create_wht_wizard|tax_id3|integer
+dtr_create_wht_wizard|tax_rate1|numeric
+dtr_create_wht_wizard|tax_rate2|numeric
+dtr_create_wht_wizard|tax_rate3|numeric
+dtr_create_wht_wizard|pay_amount1|numeric
+dtr_create_wht_wizard|pay_amount2|numeric
+dtr_create_wht_wizard|pay_amount3|numeric
+dtr_create_wht_wizard|wht_amount1|numeric
+dtr_create_wht_wizard|wht_amount2|numeric
+dtr_create_wht_wizard|wht_amount3|numeric
+dtr_create_wht_wizard|income_type1|character varying
+dtr_create_wht_wizard|income_type2|character varying
+dtr_create_wht_wizard|income_type3|character varying
+dtr_create_wht_wizard|partner_branch_id|integer
+dtr_create_wht_wizard|tax_name|character varying
+dtr_create_wht_wizard|tax_code|character varying
+dtr_create_wht_wizard|branch_code|character varying
+dtr_create_wht_wizard|street|character varying
+dtr_create_wht_wizard|street2|character varying
+dtr_create_wht_wizard|city|character varying
+dtr_create_wht_wizard|zip|character varying
+dtr_create_wht_wizard|state_name|character varying
+dtr_create_wht_wizard|country_id|integer
+dtr_create_wht_wizard|move_id|integer
+dtr_create_wht_wizard|tax_account_id1|integer
+dtr_create_wht_wizard|tax_account_id2|integer
+dtr_create_wht_wizard|tax_account_id3|integer
+dtr_create_wht_wizard|move_line_id1|integer
+dtr_create_wht_wizard|move_line_id2|integer
+dtr_create_wht_wizard|move_line_id3|integer
+dtr_create_wht_wizard|sso_amount|numeric
+dtr_create_wht_wizard|pvf_amount|numeric
+dtr_create_wht_wizard|create_uid|integer
+dtr_create_wht_wizard|create_date|timestamp without time zone
+dtr_create_wht_wizard|write_uid|integer
+dtr_create_wht_wizard|write_date|timestamp without time zone
+dtr_credit_limit|id|integer
+dtr_credit_limit|credit_line_no|integer
+dtr_credit_limit|credit_limit|numeric
+dtr_credit_limit|credit_remain|numeric
+dtr_credit_limit|credit_start_date|date
+dtr_credit_limit|credit_end_date|date
+dtr_credit_limit|credit_old|double precision
+dtr_credit_limit|credit_remark|character varying
+dtr_credit_limit|res_partner_id|integer
+dtr_credit_limit|create_uid|integer
+dtr_credit_limit|create_date|timestamp without time zone
+dtr_credit_limit|write_uid|integer
+dtr_credit_limit|write_date|timestamp without time zone
+dtr_customer_company_group|id|integer
+dtr_customer_company_group|name|character varying
+dtr_customer_company_group|remark|text
+dtr_customer_company_group|create_uid|integer
+dtr_customer_company_group|create_date|timestamp without time zone
+dtr_customer_company_group|write_uid|integer
+dtr_customer_company_group|write_date|timestamp without time zone
+dtr_customer_grade|id|integer
+dtr_customer_grade|name|character varying
+dtr_customer_grade|create_uid|integer
+dtr_customer_grade|create_date|timestamp without time zone
+dtr_customer_grade|write_uid|integer
+dtr_customer_grade|write_date|timestamp without time zone
+dtr_customer_image|id|integer
+dtr_customer_image|name|character varying
+dtr_customer_image|res_partner_id|integer
+dtr_customer_image|image_type|integer
+dtr_customer_image|create_uid|integer
+dtr_customer_image|create_date|timestamp without time zone
+dtr_customer_image|write_uid|integer
+dtr_customer_image|write_date|timestamp without time zone
+dtr_customer_image_type|id|integer
+dtr_customer_image_type|name|character varying
+dtr_customer_image_type|create_uid|integer
+dtr_customer_image_type|create_date|timestamp without time zone
+dtr_customer_image_type|write_uid|integer
+dtr_customer_image_type|write_date|timestamp without time zone
+dtr_customer_master_group|id|integer
+dtr_customer_master_group|code|character varying
+dtr_customer_master_group|name|character varying
+dtr_customer_master_group|create_uid|integer
+dtr_customer_master_group|create_date|timestamp without time zone
+dtr_customer_master_group|write_uid|integer
+dtr_customer_master_group|write_date|timestamp without time zone
+dtr_customer_selling_area|id|integer
+dtr_customer_selling_area|name|character varying
+dtr_customer_selling_area|create_uid|integer
+dtr_customer_selling_area|create_date|timestamp without time zone
+dtr_customer_selling_area|write_uid|integer
+dtr_customer_selling_area|write_date|timestamp without time zone
+dtr_customer_selling_type|id|integer
+dtr_customer_selling_type|name|character varying
+dtr_customer_selling_type|create_uid|integer
+dtr_customer_selling_type|create_date|timestamp without time zone
+dtr_customer_selling_type|write_uid|integer
+dtr_customer_selling_type|write_date|timestamp without time zone
+dtr_customer_type|id|integer
+dtr_customer_type|name|character varying
+dtr_customer_type|create_uid|integer
+dtr_customer_type|create_date|timestamp without time zone
+dtr_customer_type|write_uid|integer
+dtr_customer_type|write_date|timestamp without time zone
+dtr_declined_causing|id|integer
+dtr_declined_causing|name|character varying
+dtr_declined_causing|create_uid|integer
+dtr_declined_causing|create_date|timestamp without time zone
+dtr_declined_causing|write_uid|integer
+dtr_declined_causing|write_date|timestamp without time zone
+dtr_depreciation_report_wiz|id|integer
+dtr_depreciation_report_wiz|asset_start|character varying
+dtr_depreciation_report_wiz|asset_stop|character varying
+dtr_depreciation_report_wiz|create_uid|integer
+dtr_depreciation_report_wiz|create_date|timestamp without time zone
+dtr_depreciation_report_wiz|write_uid|integer
+dtr_depreciation_report_wiz|write_date|timestamp without time zone
+dtr_distribute_order|id|integer
+dtr_distribute_order|message_main_attachment_id|integer
+dtr_distribute_order|name|character varying
+dtr_distribute_order|state|character varying
+dtr_distribute_order|vehicle_id|integer
+dtr_distribute_order|day_period|integer
+dtr_distribute_order|delivery_fee|double precision
+dtr_distribute_order|trunk_opened_fee|double precision
+dtr_distribute_order|extra_fee|double precision
+dtr_distribute_order|extra_fee_txt|character varying
+dtr_distribute_order|doc_date|date
+dtr_distribute_order|send_date|date
+dtr_distribute_order|trip_no|integer
+dtr_distribute_order|remark|text
+dtr_distribute_order|total_line_route_fee|double precision
+dtr_distribute_order|total_line_extra_fee|double precision
+dtr_distribute_order|amount_total|double precision
+dtr_distribute_order|is_full_load|boolean
+dtr_distribute_order|is_extended_area|boolean
+dtr_distribute_order|distance|integer
+dtr_distribute_order|distance_uom_id|integer
+dtr_distribute_order|company_id|integer
+dtr_distribute_order|driver_id|integer
+dtr_distribute_order|driver_user_id|integer
+dtr_distribute_order|department_id|integer
+dtr_distribute_order|create_uid|integer
+dtr_distribute_order|create_date|timestamp without time zone
+dtr_distribute_order|write_uid|integer
+dtr_distribute_order|write_date|timestamp without time zone
+dtr_distribute_order_line|id|integer
+dtr_distribute_order_line|message_main_attachment_id|integer
+dtr_distribute_order_line|name|character varying
+dtr_distribute_order_line|order_id|integer
+dtr_distribute_order_line|sequence|integer
+dtr_distribute_order_line|partner_shipping_id|integer
+dtr_distribute_order_line|street|character varying
+dtr_distribute_order_line|street2|character varying
+dtr_distribute_order_line|zip|character varying
+dtr_distribute_order_line|city|character varying
+dtr_distribute_order_line|state_id|integer
+dtr_distribute_order_line|country_id|integer
+dtr_distribute_order_line|latitude|character varying
+dtr_distribute_order_line|longitude|character varying
+dtr_distribute_order_line|extra_route_fee|double precision
+dtr_distribute_order_line|extra_fee|double precision
+dtr_distribute_order_line|extra_fee_txt|character varying
+dtr_distribute_order_line|company_id|integer
+dtr_distribute_order_line|state|character varying
+dtr_distribute_order_line|link_map|character varying
+dtr_distribute_order_line|create_uid|integer
+dtr_distribute_order_line|create_date|timestamp without time zone
+dtr_distribute_order_line|write_uid|integer
+dtr_distribute_order_line|write_date|timestamp without time zone
+dtr_dto_product_line|id|integer
+dtr_dto_product_line|message_main_attachment_id|integer
+dtr_dto_product_line|order_line_id|integer
+dtr_dto_product_line|sequence|integer
+dtr_dto_product_line|tr_line_id|integer
+dtr_dto_product_line|stml_line_id|integer
+dtr_dto_product_line|origin|character varying
+dtr_dto_product_line|order_type|character varying
+dtr_dto_product_line|product_id|integer
+dtr_dto_product_line|product_uom_id|integer
+dtr_dto_product_line|request_qty|numeric
+dtr_dto_product_line|lot_id|integer
+dtr_dto_product_line|remark|text
+dtr_dto_product_line|qty_confirmed|numeric
+dtr_dto_product_line|create_uid|integer
+dtr_dto_product_line|create_date|timestamp without time zone
+dtr_dto_product_line|write_uid|integer
+dtr_dto_product_line|write_date|timestamp without time zone
+dtr_except_payment_date_config_line|id|integer
+dtr_except_payment_date_config_line|except_payment_date|date
+dtr_except_payment_date_config_line|except_payment_date_config_id|integer
+dtr_except_payment_date_config_line|company_id|integer
+dtr_except_payment_date_config_line|create_uid|integer
+dtr_except_payment_date_config_line|create_date|timestamp without time zone
+dtr_except_payment_date_config_line|write_uid|integer
+dtr_except_payment_date_config_line|write_date|timestamp without time zone
+dtr_general_amount|id|integer
+dtr_general_amount|template_id|integer
+dtr_general_amount|company_id|integer
+dtr_general_amount|sequence|integer
+dtr_general_amount|name|character varying
+dtr_general_amount|tax_line_id|integer
+dtr_general_amount|analytic_account_id|integer
+dtr_general_amount|create_uid|integer
+dtr_general_amount|create_date|timestamp without time zone
+dtr_general_amount|write_uid|integer
+dtr_general_amount|write_date|timestamp without time zone
+dtr_general_amount_move|id|integer
+dtr_general_amount_move|move_id|integer
+dtr_general_amount_move|template_amount_id|integer
+dtr_general_amount_move|amount|numeric
+dtr_general_amount_move|create_uid|integer
+dtr_general_amount_move|create_date|timestamp without time zone
+dtr_general_amount_move|write_uid|integer
+dtr_general_amount_move|write_date|timestamp without time zone
+dtr_general_amount_tax|dtr_general_amount_id|integer
+dtr_general_amount_tax|account_tax_id|integer
+dtr_general_ledger_report|id|integer
+dtr_general_ledger_report|name|character varying
+dtr_general_ledger_report|name_pdf|character varying
+dtr_general_ledger_report|name_xlsx|character varying
+dtr_general_ledger_report|jasper_file|character varying
+dtr_general_ledger_report|state|character varying
+dtr_general_ledger_report|email_template_id|integer
+dtr_general_ledger_report|can_send_email|boolean
+dtr_general_ledger_report|email_subject|character varying
+dtr_general_ledger_report|email_document_number|character varying
+dtr_general_ledger_report|email_to|character varying
+dtr_general_ledger_report|create_uid|integer
+dtr_general_ledger_report|create_date|timestamp without time zone
+dtr_general_ledger_report|write_uid|integer
+dtr_general_ledger_report|write_date|timestamp without time zone
+dtr_general_ledger_report|report_name|character varying
+dtr_general_ledger_report|company_id|integer
+dtr_general_ledger_report|p_From_Date|date
+dtr_general_ledger_report|p_To_Date|date
+dtr_general_ledger_report|date_format|character varying
+dtr_general_ledger_report|locale|character varying
+dtr_general_ledger_report|p_State|character varying
+dtr_general_ledger_report|p_Sort|character varying
+dtr_general_ledger_report_res_partner_rel|dtr_general_ledger_report_id|integer
+dtr_general_ledger_report_res_partner_rel|res_partner_id|integer
+dtr_general_ledger_wiz|id|integer
+dtr_general_ledger_wiz|company_id|integer
+dtr_general_ledger_wiz|p_From_Date|date
+dtr_general_ledger_wiz|p_To_Date|date
+dtr_general_ledger_wiz|language|character varying
+dtr_general_ledger_wiz|p_State|character varying
+dtr_general_ledger_wiz|p_Sort|character varying
+dtr_general_ledger_wiz|create_uid|integer
+dtr_general_ledger_wiz|create_date|timestamp without time zone
+dtr_general_ledger_wiz|write_uid|integer
+dtr_general_ledger_wiz|write_date|timestamp without time zone
+dtr_general_template|id|integer
+dtr_general_template|name|character varying
+dtr_general_template|company_id|integer
+dtr_general_template|create_uid|integer
+dtr_general_template|create_date|timestamp without time zone
+dtr_general_template|write_uid|integer
+dtr_general_template|write_date|timestamp without time zone
+dtr_general_template_line|id|integer
+dtr_general_template_line|template_id|integer
+dtr_general_template_line|company_id|integer
+dtr_general_template_line|sequence|integer
+dtr_general_template_line|account_id|integer
+dtr_general_template_line|name|character varying
+dtr_general_template_line|debit|boolean
+dtr_general_template_line|credit|boolean
+dtr_general_template_line|create_uid|integer
+dtr_general_template_line|create_date|timestamp without time zone
+dtr_general_template_line|write_uid|integer
+dtr_general_template_line|write_date|timestamp without time zone
+dtr_general_template_line_amount|dtr_general_template_line_id|integer
+dtr_general_template_line_amount|dtr_general_amount_id|integer
+dtr_general_template_line_subtract|dtr_general_template_line_id|integer
+dtr_general_template_line_subtract|dtr_general_amount_id|integer
+dtr_goods_issue|id|integer
+dtr_goods_issue|name|character varying
+dtr_goods_issue|state|character varying
+dtr_goods_issue|date|date
+dtr_goods_issue|type_id|integer
+dtr_goods_issue|department_id|integer
+dtr_goods_issue|request_id|integer
+dtr_goods_issue|job|character varying
+dtr_goods_issue|reason|text
+dtr_goods_issue|picking_type_id|integer
+dtr_goods_issue|picking_id|integer
+dtr_goods_issue|goods_picking_id|integer
+dtr_goods_issue|submitted_by_user_id|integer
+dtr_goods_issue|company_id|integer
+dtr_goods_issue|create_uid|integer
+dtr_goods_issue|create_date|timestamp without time zone
+dtr_goods_issue|write_uid|integer
+dtr_goods_issue|write_date|timestamp without time zone
+dtr_goods_issue|service_id|integer
+dtr_goods_issue_line|id|integer
+dtr_goods_issue_line|goods_issue_id|integer
+dtr_goods_issue_line|company_id|integer
+dtr_goods_issue_line|seq|integer
+dtr_goods_issue_line|product_id|integer
+dtr_goods_issue_line|product_uom_id|integer
+dtr_goods_issue_line|qty_todo|numeric
+dtr_goods_issue_line|qty_done|numeric
+dtr_goods_issue_line|remark|character varying
+dtr_goods_issue_line|account_analytic_id|integer
+dtr_goods_issue_line|create_uid|integer
+dtr_goods_issue_line|create_date|timestamp without time zone
+dtr_goods_issue_line|write_uid|integer
+dtr_goods_issue_line|write_date|timestamp without time zone
+dtr_goods_issue_line_lot|id|integer
+dtr_goods_issue_line_lot|goods_issue_line_id|integer
+dtr_goods_issue_line_lot|company_id|integer
+dtr_goods_issue_line_lot|lot_id|integer
+dtr_goods_issue_line_lot|ref|character varying
+dtr_goods_issue_line_lot|qty_todo|numeric
+dtr_goods_issue_line_lot|qty|numeric
+dtr_goods_issue_line_lot|create_uid|integer
+dtr_goods_issue_line_lot|create_date|timestamp without time zone
+dtr_goods_issue_line_lot|write_uid|integer
+dtr_goods_issue_line_lot|write_date|timestamp without time zone
+dtr_goods_issue_type|id|integer
+dtr_goods_issue_type|active|boolean
+dtr_goods_issue_type|name|character varying
+dtr_goods_issue_type|company_id|integer
+dtr_goods_issue_type|picking_type_id|integer
+dtr_goods_issue_type|create_uid|integer
+dtr_goods_issue_type|create_date|timestamp without time zone
+dtr_goods_issue_type|write_uid|integer
+dtr_goods_issue_type|write_date|timestamp without time zone
+dtr_goods_picking|id|integer
+dtr_goods_picking|name|character varying
+dtr_goods_picking|date|date
+dtr_goods_picking|create_uid|integer
+dtr_goods_picking|create_date|timestamp without time zone
+dtr_goods_picking|write_uid|integer
+dtr_goods_picking|write_date|timestamp without time zone
+dtr_goods_picking_issue_rel|dtr_goods_picking_id|integer
+dtr_goods_picking_issue_rel|dtr_goods_issue_id|integer
+dtr_goods_picking_line|id|integer
+dtr_goods_picking_line|goods_picking_id|integer
+dtr_goods_picking_line|seq|integer
+dtr_goods_picking_line|goods_issue_id|integer
+dtr_goods_picking_line|goods_issue_line_id|integer
+dtr_goods_picking_line|lot_sn_id|integer
+dtr_goods_picking_line|name|character varying
+dtr_goods_picking_line|product_id|integer
+dtr_goods_picking_line|lot_id|integer
+dtr_goods_picking_line|qty_todo|numeric
+dtr_goods_picking_line|qty|numeric
+dtr_goods_picking_line|location_id|integer
+dtr_goods_picking_line|create_uid|integer
+dtr_goods_picking_line|create_date|timestamp without time zone
+dtr_goods_picking_line|write_uid|integer
+dtr_goods_picking_line|write_date|timestamp without time zone
+dtr_guarantee|id|integer
+dtr_guarantee|guarantee_line_no|integer
+dtr_guarantee|guarantee_number|character varying
+dtr_guarantee|guarantee_date|date
+dtr_guarantee|guarantee_start_date|date
+dtr_guarantee|guarantee_end_date|date
+dtr_guarantee|guarantee_type|character varying
+dtr_guarantee|guarantee_username|character varying
+dtr_guarantee|guarantee_spouse_name|character varying
+dtr_guarantee|guarantee_credit_limit|numeric
+dtr_guarantee|guarantee_remark|character varying
+dtr_guarantee|res_partner_id|integer
+dtr_guarantee|create_uid|integer
+dtr_guarantee|create_date|timestamp without time zone
+dtr_guarantee|write_uid|integer
+dtr_guarantee|write_date|timestamp without time zone
+dtr_jasper|id|integer
+dtr_jasper|username|character varying
+dtr_jasper|password|character varying
+dtr_jasper|flag|boolean
+dtr_jasper|create_uid|integer
+dtr_jasper|create_date|timestamp without time zone
+dtr_jasper|write_uid|integer
+dtr_jasper|write_date|timestamp without time zone
+dtr_jasper_report|id|integer
+dtr_jasper_report|name|character varying
+dtr_jasper_report|name_pdf|character varying
+dtr_jasper_report|name_xlsx|character varying
+dtr_jasper_report|jasper_file|character varying
+dtr_jasper_report|state|character varying
+dtr_jasper_report|email_template_id|integer
+dtr_jasper_report|can_send_email|boolean
+dtr_jasper_report|email_subject|character varying
+dtr_jasper_report|email_document_number|character varying
+dtr_jasper_report|email_to|character varying
+dtr_jasper_report|create_uid|integer
+dtr_jasper_report|create_date|timestamp without time zone
+dtr_jasper_report|write_uid|integer
+dtr_jasper_report|write_date|timestamp without time zone
+dtr_jasper_report_res_partner_rel|dtr_jasper_report_id|integer
+dtr_jasper_report_res_partner_rel|res_partner_id|integer
+dtr_partner_branch|id|integer
+dtr_partner_branch|partner_id|integer
+dtr_partner_branch|name|character varying
+dtr_partner_branch|tax_name|character varying
+dtr_partner_branch|vat|character varying
+dtr_partner_branch|branch_code|character varying
+dtr_partner_branch|street|character varying
+dtr_partner_branch|street2|character varying
+dtr_partner_branch|city|character varying
+dtr_partner_branch|state_id|integer
+dtr_partner_branch|zip|character varying
+dtr_partner_branch|country_id|integer
+dtr_partner_branch|create_uid|integer
+dtr_partner_branch|create_date|timestamp without time zone
+dtr_partner_branch|write_uid|integer
+dtr_partner_branch|write_date|timestamp without time zone
+dtr_partner_fee|id|integer
+dtr_partner_fee|name|character varying
+dtr_partner_fee|account_id|integer
+dtr_partner_fee|analytic_account_id|integer
+dtr_partner_fee|percent|numeric
+dtr_partner_fee|amount|numeric
+dtr_partner_fee|is_profit|boolean
+dtr_partner_fee|payment_partner_id|integer
+dtr_partner_fee|receipt_partner_id|integer
+dtr_partner_fee|create_uid|integer
+dtr_partner_fee|create_date|timestamp without time zone
+dtr_partner_fee|write_uid|integer
+dtr_partner_fee|write_date|timestamp without time zone
+dtr_parts_history|id|integer
+dtr_parts_history|message_main_attachment_id|integer
+dtr_parts_history|lot_id|integer
+dtr_parts_history|receive_date|date
+dtr_parts_history|product_id|integer
+dtr_parts_history|company_id|integer
+dtr_parts_history|is_lock|boolean
+dtr_parts_history|create_uid|integer
+dtr_parts_history|create_date|timestamp without time zone
+dtr_parts_history|write_uid|integer
+dtr_parts_history|write_date|timestamp without time zone
+dtr_parts_history_line|id|integer
+dtr_parts_history_line|history_id|integer
+dtr_parts_history_line|product_id|integer
+dtr_parts_history_line|lot_id|integer
+dtr_parts_history_line|receive_date|date
+dtr_parts_history_line|deliver_date|date
+dtr_parts_history_line|origin|text
+dtr_parts_history_line|company_id|integer
+dtr_parts_history_line|create_uid|integer
+dtr_parts_history_line|create_date|timestamp without time zone
+dtr_parts_history_line|write_uid|integer
+dtr_parts_history_line|write_date|timestamp without time zone
+dtr_payment_condition|id|integer
+dtr_payment_condition|name|character varying
+dtr_payment_condition|company_id|integer
+dtr_payment_condition|create_uid|integer
+dtr_payment_condition|create_date|timestamp without time zone
+dtr_payment_condition|write_uid|integer
+dtr_payment_condition|write_date|timestamp without time zone
+dtr_payment_date_config|id|integer
+dtr_payment_date_config|company_id|integer
+dtr_payment_date_config|every_monday|boolean
+dtr_payment_date_config|every_monday1|boolean
+dtr_payment_date_config|every_monday2|boolean
+dtr_payment_date_config|every_monday3|boolean
+dtr_payment_date_config|every_monday4|boolean
+dtr_payment_date_config|every_tuesday|boolean
+dtr_payment_date_config|every_tuesday1|boolean
+dtr_payment_date_config|every_tuesday2|boolean
+dtr_payment_date_config|every_tuesday3|boolean
+dtr_payment_date_config|every_tuesday4|boolean
+dtr_payment_date_config|every_wednesday|boolean
+dtr_payment_date_config|every_wednesday1|boolean
+dtr_payment_date_config|every_wednesday2|boolean
+dtr_payment_date_config|every_wednesday3|boolean
+dtr_payment_date_config|every_wednesday4|boolean
+dtr_payment_date_config|every_thursday|boolean
+dtr_payment_date_config|every_thursday1|boolean
+dtr_payment_date_config|every_thursday2|boolean
+dtr_payment_date_config|every_thursday3|boolean
+dtr_payment_date_config|every_thursday4|boolean
+dtr_payment_date_config|every_friday|boolean
+dtr_payment_date_config|every_friday1|boolean
+dtr_payment_date_config|every_friday2|boolean
+dtr_payment_date_config|every_friday3|boolean
+dtr_payment_date_config|every_friday4|boolean
+dtr_payment_date_config|every_all_day|boolean
+dtr_payment_date_config|every_end_of_month|boolean
+dtr_payment_date_config|every_day_one|boolean
+dtr_payment_date_config|every_day_two|boolean
+dtr_payment_date_config|every_day_three|boolean
+dtr_payment_date_config|every_day_four|boolean
+dtr_payment_date_config|every_day_five|boolean
+dtr_payment_date_config|every_day_six|boolean
+dtr_payment_date_config|every_day_seven|boolean
+dtr_payment_date_config|every_day_eight|boolean
+dtr_payment_date_config|every_day_nine|boolean
+dtr_payment_date_config|every_day_ten|boolean
+dtr_payment_date_config|every_day_eleven|boolean
+dtr_payment_date_config|every_day_twelve|boolean
+dtr_payment_date_config|every_day_thirteen|boolean
+dtr_payment_date_config|every_day_fourteen|boolean
+dtr_payment_date_config|every_day_fifteen|boolean
+dtr_payment_date_config|every_day_sixteen|boolean
+dtr_payment_date_config|every_day_seventeen|boolean
+dtr_payment_date_config|every_day_eighteen|boolean
+dtr_payment_date_config|every_day_nineteen|boolean
+dtr_payment_date_config|every_day_twenty|boolean
+dtr_payment_date_config|every_day_twenty_one|boolean
+dtr_payment_date_config|every_day_twenty_two|boolean
+dtr_payment_date_config|every_day_twenty_three|boolean
+dtr_payment_date_config|every_day_twenty_four|boolean
+dtr_payment_date_config|every_day_twenty_five|boolean
+dtr_payment_date_config|every_day_twenty_six|boolean
+dtr_payment_date_config|every_day_twenty_seven|boolean
+dtr_payment_date_config|every_day_twenty_eight|boolean
+dtr_payment_date_config|every_day_twenty_nine|boolean
+dtr_payment_date_config|every_day_thirty|boolean
+dtr_payment_date_config|every_day_thirty_one|boolean
+dtr_payment_date_config|every_remark|text
+dtr_payment_date_config|condition|character varying
+dtr_payment_date_config|create_uid|integer
+dtr_payment_date_config|create_date|timestamp without time zone
+dtr_payment_date_config|write_uid|integer
+dtr_payment_date_config|write_date|timestamp without time zone
+dtr_payment_date_config_line|id|integer
+dtr_payment_date_config_line|payment_date|date
+dtr_payment_date_config_line|payment_date_config_id|integer
+dtr_payment_date_config_line|company_id|integer
+dtr_payment_date_config_line|create_uid|integer
+dtr_payment_date_config_line|create_date|timestamp without time zone
+dtr_payment_date_config_line|write_uid|integer
+dtr_payment_date_config_line|write_date|timestamp without time zone
+dtr_payment_fee|id|integer
+dtr_payment_fee|name|character varying
+dtr_payment_fee|account_id|integer
+dtr_payment_fee|analytic_account_id|integer
+dtr_payment_fee|percent|numeric
+dtr_payment_fee|amount|numeric
+dtr_payment_fee|is_profit|boolean
+dtr_payment_fee|payment_id|integer
+dtr_payment_fee|move_id|integer
+dtr_payment_fee|move_line_id|integer
+dtr_payment_fee|create_uid|integer
+dtr_payment_fee|create_date|timestamp without time zone
+dtr_payment_fee|write_uid|integer
+dtr_payment_fee|write_date|timestamp without time zone
+dtr_payment_fee|dtr_account_cash_id|integer
+dtr_pc_ac_mapping|id|integer
+dtr_pc_ac_mapping|company_id|integer
+dtr_pc_ac_mapping|currency_id|integer
+dtr_pc_ac_mapping|name|character varying
+dtr_pc_ac_mapping|account_id|integer
+dtr_pc_ac_mapping|analytic_id|integer
+dtr_pc_ac_mapping|default_amount|numeric
+dtr_pc_ac_mapping|active|boolean
+dtr_pc_ac_mapping|create_uid|integer
+dtr_pc_ac_mapping|create_date|timestamp without time zone
+dtr_pc_ac_mapping|write_uid|integer
+dtr_pc_ac_mapping|write_date|timestamp without time zone
+dtr_pc_fund|id|integer
+dtr_pc_fund|message_main_attachment_id|integer
+dtr_pc_fund|company_id|integer
+dtr_pc_fund|state|character varying
+dtr_pc_fund|active|boolean
+dtr_pc_fund|name|character varying
+dtr_pc_fund|date|date
+dtr_pc_fund|journal_id|integer
+dtr_pc_fund|currency_id|integer
+dtr_pc_fund|memo|text
+dtr_pc_fund|create_uid|integer
+dtr_pc_fund|create_date|timestamp without time zone
+dtr_pc_fund|write_uid|integer
+dtr_pc_fund|write_date|timestamp without time zone
+dtr_pc_fund_approver|id|integer
+dtr_pc_fund_approver|company_id|integer
+dtr_pc_fund_approver|name|character varying
+dtr_pc_fund_approver|approval_limit|numeric
+dtr_pc_fund_approver|create_uid|integer
+dtr_pc_fund_approver|create_date|timestamp without time zone
+dtr_pc_fund_approver|write_uid|integer
+dtr_pc_fund_approver|write_date|timestamp without time zone
+dtr_pc_fund_approver_res_users_rel|dtr_pc_fund_approver_id|integer
+dtr_pc_fund_approver_res_users_rel|res_users_id|integer
+dtr_pc_fund_line|id|integer
+dtr_pc_fund_line|fund_id|integer
+dtr_pc_fund_line|state|character varying
+dtr_pc_fund_line|date|date
+dtr_pc_fund_line|journal_id|integer
+dtr_pc_fund_line|currency_id|integer
+dtr_pc_fund_line|amount|numeric
+dtr_pc_fund_line|approve_uid|integer
+dtr_pc_fund_line|move_id|integer
+dtr_pc_fund_line|payment_move_id|integer
+dtr_pc_fund_line|create_uid|integer
+dtr_pc_fund_line|create_date|timestamp without time zone
+dtr_pc_fund_line|write_uid|integer
+dtr_pc_fund_line|write_date|timestamp without time zone
+dtr_pc_payment|id|integer
+dtr_pc_payment|message_main_attachment_id|integer
+dtr_pc_payment|partner_id|integer
+dtr_pc_payment|tax_condition|character varying
+dtr_pc_payment|tax_type|character varying
+dtr_pc_payment|tax_condition2|character varying
+dtr_pc_payment|tax_condition3|character varying
+dtr_pc_payment|severance_pay|boolean
+dtr_pc_payment|foreigner|boolean
+dtr_pc_payment|send_date|date
+dtr_pc_payment|remark|character varying
+dtr_pc_payment|currency_id|integer
+dtr_pc_payment|tax_id1|integer
+dtr_pc_payment|tax_id2|integer
+dtr_pc_payment|tax_id3|integer
+dtr_pc_payment|tax_rate1|numeric
+dtr_pc_payment|tax_rate2|numeric
+dtr_pc_payment|tax_rate3|numeric
+dtr_pc_payment|pay_amount1|numeric
+dtr_pc_payment|pay_amount2|numeric
+dtr_pc_payment|pay_amount3|numeric
+dtr_pc_payment|wht_amount1|numeric
+dtr_pc_payment|wht_amount2|numeric
+dtr_pc_payment|wht_amount3|numeric
+dtr_pc_payment|income_type1|character varying
+dtr_pc_payment|income_type2|character varying
+dtr_pc_payment|income_type3|character varying
+dtr_pc_payment|partner_branch_id|integer
+dtr_pc_payment|tax_name|character varying
+dtr_pc_payment|tax_code|character varying
+dtr_pc_payment|branch_code|character varying
+dtr_pc_payment|street|character varying
+dtr_pc_payment|street2|character varying
+dtr_pc_payment|city|character varying
+dtr_pc_payment|zip|character varying
+dtr_pc_payment|state_name|character varying
+dtr_pc_payment|country_id|integer
+dtr_pc_payment|company_id|integer
+dtr_pc_payment|date|date
+dtr_pc_payment|ref|character varying
+dtr_pc_payment|name|character varying
+dtr_pc_payment|mapping_id|integer
+dtr_pc_payment|account_id|integer
+dtr_pc_payment|analytic_id|integer
+dtr_pc_payment|employee_id|integer
+dtr_pc_payment|payee|character varying
+dtr_pc_payment|fund_id|integer
+dtr_pc_payment|state|character varying
+dtr_pc_payment|pay_date|date
+dtr_pc_payment|vat_date|date
+dtr_pc_payment|vat_send_date|date
+dtr_pc_payment|vat_id|integer
+dtr_pc_payment|wht_id|integer
+dtr_pc_payment|amount|numeric
+dtr_pc_payment|untaxed_amount|numeric
+dtr_pc_payment|vat_tax_id|integer
+dtr_pc_payment|amount_tax|numeric
+dtr_pc_payment|amount_wht|numeric
+dtr_pc_payment|amount_total|numeric
+dtr_pc_payment|payment_move_id|integer
+dtr_pc_payment|is_travel|boolean
+dtr_pc_payment|origin|character varying
+dtr_pc_payment|destination|character varying
+dtr_pc_payment|distance|double precision
+dtr_pc_payment|start_date|date
+dtr_pc_payment|end_date|date
+dtr_pc_payment|department_id|integer
+dtr_pc_payment|create_uid|integer
+dtr_pc_payment|create_date|timestamp without time zone
+dtr_pc_payment|write_uid|integer
+dtr_pc_payment|write_date|timestamp without time zone
+dtr_pc_payment_dtr_pc_requests_rel|dtr_pc_requests_id|integer
+dtr_pc_payment_dtr_pc_requests_rel|dtr_pc_payment_id|integer
+dtr_pc_requests|id|integer
+dtr_pc_requests|message_main_attachment_id|integer
+dtr_pc_requests|company_id|integer
+dtr_pc_requests|currency_id|integer
+dtr_pc_requests|state|character varying
+dtr_pc_requests|date|date
+dtr_pc_requests|name|character varying
+dtr_pc_requests|fund_id|integer
+dtr_pc_requests|journal_id|integer
+dtr_pc_requests|cashovershort_journal_id|integer
+dtr_pc_requests|payment_move_id|integer
+dtr_pc_requests|transfer_move_id|integer
+dtr_pc_requests|withdrawal_move_id|integer
+dtr_pc_requests|cashovershort_move_id|integer
+dtr_pc_requests|memo|character varying
+dtr_pc_requests|cashover_shortaccount_id|integer
+dtr_pc_requests|cashover_shortaccount|numeric
+dtr_pc_requests|department_id|integer
+dtr_pc_requests|create_uid|integer
+dtr_pc_requests|create_date|timestamp without time zone
+dtr_pc_requests|write_uid|integer
+dtr_pc_requests|write_date|timestamp without time zone
+dtr_pending_reason|id|integer
+dtr_pending_reason|name|text
+dtr_pending_reason|create_uid|integer
+dtr_pending_reason|create_date|timestamp without time zone
+dtr_pending_reason|write_uid|integer
+dtr_pending_reason|write_date|timestamp without time zone
+dtr_pending_reason_wizard|id|integer
+dtr_pending_reason_wizard|dtr_pending_reason_id|integer
+dtr_pending_reason_wizard|dtr_service_card_id|integer
+dtr_pending_reason_wizard|dtr_service_card_time_record_id|integer
+dtr_pending_reason_wizard|create_uid|integer
+dtr_pending_reason_wizard|create_date|timestamp without time zone
+dtr_pending_reason_wizard|write_uid|integer
+dtr_pending_reason_wizard|write_date|timestamp without time zone
+dtr_prefix_partner|id|integer
+dtr_prefix_partner|name|character varying
+dtr_prefix_partner|prefix_name|character varying
+dtr_prefix_partner|subfix_name|character varying
+dtr_prefix_partner|prefix_type|character varying
+dtr_prefix_partner|create_uid|integer
+dtr_prefix_partner|create_date|timestamp without time zone
+dtr_prefix_partner|write_uid|integer
+dtr_prefix_partner|write_date|timestamp without time zone
+dtr_product_brand|id|integer
+dtr_product_brand|name|character varying
+dtr_product_brand|create_uid|integer
+dtr_product_brand|create_date|timestamp without time zone
+dtr_product_brand|write_uid|integer
+dtr_product_brand|write_date|timestamp without time zone
+dtr_product_brand_model|id|integer
+dtr_product_brand_model|name|character varying
+dtr_product_brand_model|brand_id|integer
+dtr_product_brand_model|create_uid|integer
+dtr_product_brand_model|create_date|timestamp without time zone
+dtr_product_brand_model|write_uid|integer
+dtr_product_brand_model|write_date|timestamp without time zone
+dtr_product_return|id|integer
+dtr_product_return|message_main_attachment_id|integer
+dtr_product_return|state|character varying
+dtr_product_return|name|character varying
+dtr_product_return|company_id|integer
+dtr_product_return|date|date
+dtr_product_return|partner_id|integer
+dtr_product_return|remark|text
+dtr_product_return|department_id|integer
+dtr_product_return|create_uid|integer
+dtr_product_return|create_date|timestamp without time zone
+dtr_product_return|write_uid|integer
+dtr_product_return|write_date|timestamp without time zone
+dtr_product_return_cn_wiz_domain_rel|dtr_product_return_wiz_id|integer
+dtr_product_return_cn_wiz_domain_rel|dtr_product_return_id|integer
+dtr_product_return_cn_wiz_product_return_rel|dtr_product_return_wiz_id|integer
+dtr_product_return_cn_wiz_product_return_rel|dtr_product_return_id|integer
+dtr_product_return_line|id|integer
+dtr_product_return_line|product_return_id|integer
+dtr_product_return_line|sequence|integer
+dtr_product_return_line|claim_id|integer
+dtr_product_return_line|product_id|integer
+dtr_product_return_line|lot_id|integer
+dtr_product_return_line|qty|numeric
+dtr_product_return_line|product_uom_id|integer
+dtr_product_return_line|name|character varying
+dtr_product_return_line|to_cn|boolean
+dtr_product_return_line|to_stock|boolean
+dtr_product_return_line|create_uid|integer
+dtr_product_return_line|create_date|timestamp without time zone
+dtr_product_return_line|write_uid|integer
+dtr_product_return_line|write_date|timestamp without time zone
+dtr_product_return_to_cn_wizard|id|integer
+dtr_product_return_to_cn_wizard|create_uid|integer
+dtr_product_return_to_cn_wizard|create_date|timestamp without time zone
+dtr_product_return_to_cn_wizard|write_uid|integer
+dtr_product_return_to_cn_wizard|write_date|timestamp without time zone
+dtr_product_tag|id|integer
+dtr_product_tag|name|character varying
+dtr_product_tag|create_uid|integer
+dtr_product_tag|create_date|timestamp without time zone
+dtr_product_tag|write_uid|integer
+dtr_product_tag|write_date|timestamp without time zone
+dtr_product_tag_product_template_rel|product_template_id|integer
+dtr_product_tag_product_template_rel|dtr_product_tag_id|integer
+dtr_profit_loss_by_monthly_wiz|id|integer
+dtr_profit_loss_by_monthly_wiz|report_name|character varying
+dtr_profit_loss_by_monthly_wiz|company_id|integer
+dtr_profit_loss_by_monthly_wiz|rpt_year|character varying
+dtr_profit_loss_by_monthly_wiz|target_move|character varying
+dtr_profit_loss_by_monthly_wiz|report_template|character varying
+dtr_profit_loss_by_monthly_wiz|create_uid|integer
+dtr_profit_loss_by_monthly_wiz|create_date|timestamp without time zone
+dtr_profit_loss_by_monthly_wiz|write_uid|integer
+dtr_profit_loss_by_monthly_wiz|write_date|timestamp without time zone
+dtr_project_analysis|id|integer
+dtr_project_analysis|department_id|integer
+dtr_project_analysis|active|boolean
+dtr_project_analysis|state|character varying
+dtr_project_analysis|company_id|integer
+dtr_project_analysis|name|character varying
+dtr_project_analysis|customer_id|integer
+dtr_project_analysis|contact|character varying
+dtr_project_analysis|project_id|integer
+dtr_project_analysis|sale_user_id|integer
+dtr_project_analysis|date|date
+dtr_project_analysis|quoted_by|character varying
+dtr_project_analysis|email_date|date
+dtr_project_analysis|vendor_quotation|character varying
+dtr_project_analysis|payment_term_id|integer
+dtr_project_analysis|contract_no|character varying
+dtr_project_analysis|project_value|numeric
+dtr_project_analysis|project_cost_estimate|numeric
+dtr_project_analysis|project_begin|date
+dtr_project_analysis|project_end|date
+dtr_project_analysis|project_days|integer
+dtr_project_analysis|project_resp_id|integer
+dtr_project_analysis|supplier_fob_lp|numeric
+dtr_project_analysis|discount_lp|numeric
+dtr_project_analysis|net_fob|numeric
+dtr_project_analysis|fright_insurance|numeric
+dtr_project_analysis|cif|numeric
+dtr_project_analysis|custom_tax|numeric
+dtr_project_analysis|custom_clearing|numeric
+dtr_project_analysis|landed_cost|numeric
+dtr_project_analysis|gross_margin|numeric
+dtr_project_analysis|discount_to_customer|numeric
+dtr_project_analysis|list_price|numeric
+dtr_project_analysis|std_discount_to_customer|numeric
+dtr_project_analysis|std_net_selling_price|numeric
+dtr_project_analysis|final_gross_margin|numeric
+dtr_project_analysis|required_selling_price|numeric
+dtr_project_analysis|landed_cost_ext|numeric
+dtr_project_analysis|gross_profit|numeric
+dtr_project_analysis|gross_profit_pct|numeric
+dtr_project_analysis|sales_admin_cost|numeric
+dtr_project_analysis|sales_admin_cost_pct|numeric
+dtr_project_analysis|other_expense|numeric
+dtr_project_analysis|other_expense_pct|numeric
+dtr_project_analysis|net_profit|numeric
+dtr_project_analysis|net_profit_pct|numeric
+dtr_project_analysis|create_uid|integer
+dtr_project_analysis|create_date|timestamp without time zone
+dtr_project_analysis|write_uid|integer
+dtr_project_analysis|write_date|timestamp without time zone
+dtr_project_monthly_progress|id|integer
+dtr_project_monthly_progress|project_analysis_id|integer
+dtr_project_monthly_progress|month|integer
+dtr_project_monthly_progress|bom_date|date
+dtr_project_monthly_progress|eom_date|date
+dtr_project_monthly_progress|progress|integer
+dtr_project_monthly_progress|create_uid|integer
+dtr_project_monthly_progress|create_date|timestamp without time zone
+dtr_project_monthly_progress|write_uid|integer
+dtr_project_monthly_progress|write_date|timestamp without time zone
+dtr_project_vendor_price|id|integer
+dtr_project_vendor_price|project_analysis_id|integer
+dtr_project_vendor_price|partner_id|integer
+dtr_project_vendor_price|name|character varying
+dtr_project_vendor_price|currency_id|integer
+dtr_project_vendor_price|supplier_currency_id|integer
+dtr_project_vendor_price|exchange_rate_base|numeric
+dtr_project_vendor_price|exchange_rate_add_rate|numeric
+dtr_project_vendor_price|email_date|date
+dtr_project_vendor_price|payment_term_id|integer
+dtr_project_vendor_price|quoted_by|character varying
+dtr_project_vendor_price|vendor_quotation|character varying
+dtr_project_vendor_price|total_amount|numeric
+dtr_project_vendor_price|supplier_fob_lp|numeric
+dtr_project_vendor_price|discount_lp_pct|numeric
+dtr_project_vendor_price|discount_lp|numeric
+dtr_project_vendor_price|net_fob|numeric
+dtr_project_vendor_price|fright_insurance_pct|numeric
+dtr_project_vendor_price|fright_insurance|numeric
+dtr_project_vendor_price|cif|numeric
+dtr_project_vendor_price|custom_tax_pct|numeric
+dtr_project_vendor_price|custom_tax|numeric
+dtr_project_vendor_price|custom_clearing_pct|numeric
+dtr_project_vendor_price|custom_clearing|numeric
+dtr_project_vendor_price|landed_cost|numeric
+dtr_project_vendor_price|gross_margin_pct|numeric
+dtr_project_vendor_price|gross_margin|numeric
+dtr_project_vendor_price|discount_to_customer_pct|numeric
+dtr_project_vendor_price|discount_to_customer|numeric
+dtr_project_vendor_price|list_price|numeric
+dtr_project_vendor_price|std_discount_to_customer_pct|numeric
+dtr_project_vendor_price|std_discount_to_customer|numeric
+dtr_project_vendor_price|std_net_selling_price|numeric
+dtr_project_vendor_price|factor_for_std_price_list|numeric
+dtr_project_vendor_price|gross_profit|numeric
+dtr_project_vendor_price|gross_profit_pct|numeric
+dtr_project_vendor_price|sales_admin_cost_pct|numeric
+dtr_project_vendor_price|sales_admin_cost|numeric
+dtr_project_vendor_price|other_expense_pct|numeric
+dtr_project_vendor_price|other_expense|numeric
+dtr_project_vendor_price|net_profit|numeric
+dtr_project_vendor_price|net_profit_pct|numeric
+dtr_project_vendor_price|create_uid|integer
+dtr_project_vendor_price|create_date|timestamp without time zone
+dtr_project_vendor_price|write_uid|integer
+dtr_project_vendor_price|write_date|timestamp without time zone
+dtr_project_vendor_price_line|id|integer
+dtr_project_vendor_price_line|project_vendor_price_id|integer
+dtr_project_vendor_price_line|currency_id|integer
+dtr_project_vendor_price_line|seq|integer
+dtr_project_vendor_price_line|product_id|integer
+dtr_project_vendor_price_line|name|text
+dtr_project_vendor_price_line|product_uom_qty|numeric
+dtr_project_vendor_price_line|product_uom|integer
+dtr_project_vendor_price_line|price_unit|numeric
+dtr_project_vendor_price_line|discount|numeric
+dtr_project_vendor_price_line|price_total|numeric
+dtr_project_vendor_price_line|price_factor|numeric
+dtr_project_vendor_price_line|create_uid|integer
+dtr_project_vendor_price_line|create_date|timestamp without time zone
+dtr_project_vendor_price_line|write_uid|integer
+dtr_project_vendor_price_line|write_date|timestamp without time zone
+dtr_quality_controls|id|integer
+dtr_quality_controls|name|character varying
+dtr_quality_controls|remark|text
+dtr_quality_controls|created_date|date
+dtr_quality_controls|picking_id|integer
+dtr_quality_controls|state|character varying
+dtr_quality_controls|dest_location_id|integer
+dtr_quality_controls|operated_by_id|integer
+dtr_quality_controls|company_id|integer
+dtr_quality_controls|create_uid|integer
+dtr_quality_controls|create_date|timestamp without time zone
+dtr_quality_controls|write_uid|integer
+dtr_quality_controls|write_date|timestamp without time zone
+dtr_quality_controls_list|id|integer
+dtr_quality_controls_list|qc_id|integer
+dtr_quality_controls_list|product_id|integer
+dtr_quality_controls_list|lot_id|integer
+dtr_quality_controls_list|qty|double precision
+dtr_quality_controls_list|result|character varying
+dtr_quality_controls_list|declined_cause|integer
+dtr_quality_controls_list|remark|text
+dtr_quality_controls_list|pass_qty|double precision
+dtr_quality_controls_list|not_pass_qty|double precision
+dtr_quality_controls_list|passed_location_id|integer
+dtr_quality_controls_list|failed_location_id|integer
+dtr_quality_controls_list|is_config_location|boolean
+dtr_quality_controls_list|purchase_line_id|integer
+dtr_quality_controls_list|product_uom|integer
+dtr_quality_controls_list|create_uid|integer
+dtr_quality_controls_list|create_date|timestamp without time zone
+dtr_quality_controls_list|write_uid|integer
+dtr_quality_controls_list|write_date|timestamp without time zone
+dtr_report_base|id|integer
+dtr_report_base|name|character varying
+dtr_report_base|description|character varying
+dtr_report_base|s_model|character varying
+dtr_report_base|iso_no|character varying
+dtr_report_base|e_name|boolean
+dtr_report_base|e_signature|boolean
+dtr_report_base|date_type|character varying
+dtr_report_base|date_format|character varying
+dtr_report_base|allow|boolean
+dtr_report_base|create_uid|integer
+dtr_report_base|create_date|timestamp without time zone
+dtr_report_base|write_uid|integer
+dtr_report_base|write_date|timestamp without time zone
+dtr_request_limit|id|integer
+dtr_request_limit|company_id|integer
+dtr_request_limit|name|character varying
+dtr_request_limit|request_limit|numeric
+dtr_request_limit|department_id|integer
+dtr_request_limit|create_uid|integer
+dtr_request_limit|create_date|timestamp without time zone
+dtr_request_limit|write_uid|integer
+dtr_request_limit|write_date|timestamp without time zone
+dtr_sale_scheduled_date|id|integer
+dtr_sale_scheduled_date|scheduled_date|timestamp without time zone
+dtr_sale_scheduled_date|create_uid|integer
+dtr_sale_scheduled_date|create_date|timestamp without time zone
+dtr_sale_scheduled_date|write_uid|integer
+dtr_sale_scheduled_date|write_date|timestamp without time zone
+dtr_sales_services|id|integer
+dtr_sales_services|message_main_attachment_id|integer
+dtr_sales_services|state|character varying
+dtr_sales_services|name|character varying
+dtr_sales_services|company_id|integer
+dtr_sales_services|date|date
+dtr_sales_services|customer_id|integer
+dtr_sales_services|type|character varying
+dtr_sales_services|inform_by|character varying
+dtr_sales_services|installation_place|character varying
+dtr_sales_services|phone|character varying
+dtr_sales_services|fax|character varying
+dtr_sales_services|email|character varying
+dtr_sales_services|line|character varying
+dtr_sales_services|prv_claim|integer
+dtr_sales_services|remark|text
+dtr_sales_services|engineer1|integer
+dtr_sales_services|engineer2|integer
+dtr_sales_services|repair_from|date
+dtr_sales_services|repair_to|date
+dtr_sales_services|map|character varying
+dtr_sales_services|appointment_date|date
+dtr_sales_services|appointment_time|numeric
+dtr_sales_services|department_id|integer
+dtr_sales_services|dtr_service_level_agreement_setting_id|integer
+dtr_sales_services|dtr_close_reason_id|integer
+dtr_sales_services|create_uid|integer
+dtr_sales_services|create_date|timestamp without time zone
+dtr_sales_services|write_uid|integer
+dtr_sales_services|write_date|timestamp without time zone
+dtr_sales_services_line|id|integer
+dtr_sales_services_line|service_id|integer
+dtr_sales_services_line|company_id|integer
+dtr_sales_services_line|sequence|integer
+dtr_sales_services_line|invoice_id|integer
+dtr_sales_services_line|product_id|integer
+dtr_sales_services_line|lot_id|integer
+dtr_sales_services_line|qty|numeric
+dtr_sales_services_line|note|character varying
+dtr_sales_services_line|remark|character varying
+dtr_sales_services_line|name|character varying
+dtr_sales_services_line|wc_type|character varying
+dtr_sales_services_line|claim_id|integer
+dtr_sales_services_line|create_uid|integer
+dtr_sales_services_line|create_date|timestamp without time zone
+dtr_sales_services_line|write_uid|integer
+dtr_sales_services_line|write_date|timestamp without time zone
+dtr_service_card|id|integer
+dtr_service_card|message_main_attachment_id|integer
+dtr_service_card|state|character varying
+dtr_service_card|name|character varying
+dtr_service_card|company_id|integer
+dtr_service_card|date|date
+dtr_service_card|type|character varying
+dtr_service_card|so_ref|character varying
+dtr_service_card|service_card_type|integer
+dtr_service_card|service_id|integer
+dtr_service_card|customer_id|integer
+dtr_service_card|completion_date|date
+dtr_service_card|contact_no|character varying
+dtr_service_card|remark|text
+dtr_service_card|app_date_from|date
+dtr_service_card|app_date_to|date
+dtr_service_card|appointment_time|numeric
+dtr_service_card|vehicle|integer
+dtr_service_card|service_team_id|integer
+dtr_service_card|technician_cnt|integer
+dtr_service_card|sale_order_id|integer
+dtr_service_card|crm_lead_id|integer
+dtr_service_card|estimated_complete_date|date
+dtr_service_card|out_time|double precision
+dtr_service_card|start_time|double precision
+dtr_service_card|complete_time|double precision
+dtr_service_card|result_description|text
+dtr_service_card|edit_description|text
+dtr_service_card|result|character varying
+dtr_service_card|plan_edit_date|date
+dtr_service_card|department_id|integer
+dtr_service_card|origin|character varying
+dtr_service_card|dtr_service_card_reason_id|integer
+dtr_service_card|dtr_service_level_agreement_setting_id|integer
+dtr_service_card|is_no_next_line|boolean
+dtr_service_card|create_uid|integer
+dtr_service_card|create_date|timestamp without time zone
+dtr_service_card|write_uid|integer
+dtr_service_card|write_date|timestamp without time zone
+dtr_service_card_claim_rel|dtr_service_card_id|integer
+dtr_service_card_claim_rel|dtr_claim_id|integer
+dtr_service_card_reason|id|integer
+dtr_service_card_reason|name|text
+dtr_service_card_reason|create_uid|integer
+dtr_service_card_reason|create_date|timestamp without time zone
+dtr_service_card_reason|write_uid|integer
+dtr_service_card_reason|write_date|timestamp without time zone
+dtr_service_card_result|id|integer
+dtr_service_card_result|service_card_id|integer
+dtr_service_card_result|company_id|integer
+dtr_service_card_result|seq|integer
+dtr_service_card_result|date|date
+dtr_service_card_result|result|text
+dtr_service_card_result|create_uid|integer
+dtr_service_card_result|create_date|timestamp without time zone
+dtr_service_card_result|write_uid|integer
+dtr_service_card_result|write_date|timestamp without time zone
+dtr_service_card_technician|id|integer
+dtr_service_card_technician|service_card_id|integer
+dtr_service_card_technician|company_id|integer
+dtr_service_card_technician|seq|integer
+dtr_service_card_technician|technician_id|integer
+dtr_service_card_technician|name|character varying
+dtr_service_card_technician|start_date|date
+dtr_service_card_technician|start_time|numeric
+dtr_service_card_technician|duration|integer
+dtr_service_card_technician|allday|boolean
+dtr_service_card_technician|remark|character varying
+dtr_service_card_technician|technician_ext_id|integer
+dtr_service_card_technician|create_uid|integer
+dtr_service_card_technician|create_date|timestamp without time zone
+dtr_service_card_technician|write_uid|integer
+dtr_service_card_technician|write_date|timestamp without time zone
+dtr_service_card_time_record|id|integer
+dtr_service_card_time_record|dtr_service_card_id|integer
+dtr_service_card_time_record|type|character varying
+dtr_service_card_time_record|state|character varying
+dtr_service_card_time_record|start_date|timestamp without time zone
+dtr_service_card_time_record|end_date|timestamp without time zone
+dtr_service_card_time_record|dtr_pending_reason_id|integer
+dtr_service_card_time_record|dtr_service_level_agreement_setting_line_id|integer
+dtr_service_card_time_record|remark|text
+dtr_service_card_time_record|is_sent_email_notice|boolean
+dtr_service_card_time_record|is_sent_email_response_time|boolean
+dtr_service_card_time_record|create_uid|integer
+dtr_service_card_time_record|create_date|timestamp without time zone
+dtr_service_card_time_record|write_uid|integer
+dtr_service_card_time_record|write_date|timestamp without time zone
+dtr_service_card_type|id|integer
+dtr_service_card_type|name|character varying
+dtr_service_card_type|company_id|integer
+dtr_service_card_type|running_id|integer
+dtr_service_card_type|create_uid|integer
+dtr_service_card_type|create_date|timestamp without time zone
+dtr_service_card_type|write_uid|integer
+dtr_service_card_type|write_date|timestamp without time zone
+dtr_service_level_agreement_setting|id|integer
+dtr_service_level_agreement_setting|name|character varying
+dtr_service_level_agreement_setting|partner_id|integer
+dtr_service_level_agreement_setting|product_id|integer
+dtr_service_level_agreement_setting|dtr_service_level_agreement_type_id|integer
+dtr_service_level_agreement_setting|create_uid|integer
+dtr_service_level_agreement_setting|create_date|timestamp without time zone
+dtr_service_level_agreement_setting|write_uid|integer
+dtr_service_level_agreement_setting|write_date|timestamp without time zone
+dtr_service_level_agreement_setting_line|id|integer
+dtr_service_level_agreement_setting_line|dtr_service_level_agreement_setting_id|integer
+dtr_service_level_agreement_setting_line|dtr_service_level_agreement_state_id|integer
+dtr_service_level_agreement_setting_line|response_time|double precision
+dtr_service_level_agreement_setting_line|notice_before|double precision
+dtr_service_level_agreement_setting_line|tolerance|integer
+dtr_service_level_agreement_setting_line|remark|text
+dtr_service_level_agreement_setting_line|create_uid|integer
+dtr_service_level_agreement_setting_line|create_date|timestamp without time zone
+dtr_service_level_agreement_setting_line|write_uid|integer
+dtr_service_level_agreement_setting_line|write_date|timestamp without time zone
+dtr_service_level_agreement_state|id|integer
+dtr_service_level_agreement_state|name|character varying
+dtr_service_level_agreement_state|running_id|integer
+dtr_service_level_agreement_state|create_uid|integer
+dtr_service_level_agreement_state|create_date|timestamp without time zone
+dtr_service_level_agreement_state|write_uid|integer
+dtr_service_level_agreement_state|write_date|timestamp without time zone
+dtr_service_level_agreement_type|id|integer
+dtr_service_level_agreement_type|name|character varying
+dtr_service_level_agreement_type|running_id|integer
+dtr_service_level_agreement_type|create_uid|integer
+dtr_service_level_agreement_type|create_date|timestamp without time zone
+dtr_service_level_agreement_type|write_uid|integer
+dtr_service_level_agreement_type|write_date|timestamp without time zone
+dtr_service_level_agreement_type_line|id|integer
+dtr_service_level_agreement_type_line|dtr_service_level_agreement_state_id|integer
+dtr_service_level_agreement_type_line|remark|text
+dtr_service_level_agreement_type_line|dtr_service_level_agreement_type_id|integer
+dtr_service_level_agreement_type_line|create_uid|integer
+dtr_service_level_agreement_type_line|create_date|timestamp without time zone
+dtr_service_level_agreement_type_line|write_uid|integer
+dtr_service_level_agreement_type_line|write_date|timestamp without time zone
+dtr_service_team|id|integer
+dtr_service_team|name|character varying
+dtr_service_team|company_id|integer
+dtr_service_team|team_supervisor_id|integer
+dtr_service_team|is_after_sale_service_team|boolean
+dtr_service_team|create_uid|integer
+dtr_service_team|create_date|timestamp without time zone
+dtr_service_team|write_uid|integer
+dtr_service_team|write_date|timestamp without time zone
+dtr_service_team_hr_employee_rel|dtr_service_team_id|integer
+dtr_service_team_hr_employee_rel|hr_employee_id|integer
+dtr_service_team_res_partner_rel|dtr_service_team_id|integer
+dtr_service_team_res_partner_rel|res_partner_id|integer
+dtr_stock_valuation_adjustment|id|integer
+dtr_stock_valuation_adjustment|name|character varying
+dtr_stock_valuation_adjustment|adjustment_date|date
+dtr_stock_valuation_adjustment|operated_by_id|integer
+dtr_stock_valuation_adjustment|move_id|integer
+dtr_stock_valuation_adjustment|remark|text
+dtr_stock_valuation_adjustment|state|character varying
+dtr_stock_valuation_adjustment|journal_id|integer
+dtr_stock_valuation_adjustment|department_id|integer
+dtr_stock_valuation_adjustment|company_id|integer
+dtr_stock_valuation_adjustment|create_uid|integer
+dtr_stock_valuation_adjustment|create_date|timestamp without time zone
+dtr_stock_valuation_adjustment|write_uid|integer
+dtr_stock_valuation_adjustment|write_date|timestamp without time zone
+dtr_stock_valuation_adjustment_line|id|integer
+dtr_stock_valuation_adjustment_line|stock_valuation_adjust_id|integer
+dtr_stock_valuation_adjustment_line|company_id|integer
+dtr_stock_valuation_adjustment_line|currency_id|integer
+dtr_stock_valuation_adjustment_line|reference|character varying
+dtr_stock_valuation_adjustment_line|product_id|integer
+dtr_stock_valuation_adjustment_line|qty|double precision
+dtr_stock_valuation_adjustment_line|product_uom_id|integer
+dtr_stock_valuation_adjustment_line|current_price_unit|numeric
+dtr_stock_valuation_adjustment_line|current_total_value|numeric
+dtr_stock_valuation_adjustment_line|new_price_unit|numeric
+dtr_stock_valuation_adjustment_line|new_total_value|numeric
+dtr_stock_valuation_adjustment_line|cost_account_id|integer
+dtr_stock_valuation_adjustment_line|remark|character varying
+dtr_stock_valuation_adjustment_line|stock_move_id|integer
+dtr_stock_valuation_adjustment_line|create_uid|integer
+dtr_stock_valuation_adjustment_line|create_date|timestamp without time zone
+dtr_stock_valuation_adjustment_line|write_uid|integer
+dtr_stock_valuation_adjustment_line|write_date|timestamp without time zone
+dtr_stock_valuation_adjustment_stock_move_wizard|id|integer
+dtr_stock_valuation_adjustment_stock_move_wizard|create_uid|integer
+dtr_stock_valuation_adjustment_stock_move_wizard|create_date|timestamp without time zone
+dtr_stock_valuation_adjustment_stock_move_wizard|write_uid|integer
+dtr_stock_valuation_adjustment_stock_move_wizard|write_date|timestamp without time zone
+dtr_stock_valuation_adjustment_stock_move_wizard_stock_move_rel|dtr_stock_valuation_adjustment_stock_move_wizard_id|integer
+dtr_stock_valuation_adjustment_stock_move_wizard_stock_move_rel|stock_move_id|integer
+dtr_technical_team_product|id|integer
+dtr_technical_team_product|name|character varying
+dtr_technical_team_product|product_id|integer
+dtr_technical_team_product|dtr_service_team_id|integer
+dtr_technical_team_product|create_uid|integer
+dtr_technical_team_product|create_date|timestamp without time zone
+dtr_technical_team_product|write_uid|integer
+dtr_technical_team_product|write_date|timestamp without time zone
+dtr_technical_team_product_res_partner_rel|dtr_technical_team_product_id|integer
+dtr_technical_team_product_res_partner_rel|res_partner_id|integer
+dtr_tr_period|id|integer
+dtr_tr_period|name|character varying
+dtr_tr_period|company_id|integer
+dtr_tr_period|create_uid|integer
+dtr_tr_period|create_date|timestamp without time zone
+dtr_tr_period|write_uid|integer
+dtr_tr_period|write_date|timestamp without time zone
+dtr_transportation_method|id|integer
+dtr_transportation_method|name|character varying
+dtr_transportation_method|company_id|integer
+dtr_transportation_method|create_uid|integer
+dtr_transportation_method|create_date|timestamp without time zone
+dtr_transportation_method|write_uid|integer
+dtr_transportation_method|write_date|timestamp without time zone
+dtr_transportation_request|id|integer
+dtr_transportation_request|message_main_attachment_id|integer
+dtr_transportation_request|name|character varying
+dtr_transportation_request|state|character varying
+dtr_transportation_request|partner_id|integer
+dtr_transportation_request|day_period|integer
+dtr_transportation_request|doc_date|date
+dtr_transportation_request|deliver_date|timestamp without time zone
+dtr_transportation_request|remark|text
+dtr_transportation_request|vehicle_type_id|integer
+dtr_transportation_request|company_id|integer
+dtr_transportation_request|partner_shipping_id|integer
+dtr_transportation_request|request_by|integer
+dtr_transportation_request|transportation_request_type_id|integer
+dtr_transportation_request|department_id|integer
+dtr_transportation_request|create_uid|integer
+dtr_transportation_request|create_date|timestamp without time zone
+dtr_transportation_request|write_uid|integer
+dtr_transportation_request|write_date|timestamp without time zone
+dtr_transportation_request_line|id|integer
+dtr_transportation_request_line|order_id|integer
+dtr_transportation_request_line|company_id|integer
+dtr_transportation_request_line|sequence|integer
+dtr_transportation_request_line|request_type|character varying
+dtr_transportation_request_line|product_id|integer
+dtr_transportation_request_line|product_uom_id|integer
+dtr_transportation_request_line|request_qty|numeric
+dtr_transportation_request_line|lot_id|integer
+dtr_transportation_request_line|remark|text
+dtr_transportation_request_line|is_distributed|boolean
+dtr_transportation_request_line|link_map|character varying
+dtr_transportation_request_line|detail|text
+dtr_transportation_request_line|create_uid|integer
+dtr_transportation_request_line|create_date|timestamp without time zone
+dtr_transportation_request_line|write_uid|integer
+dtr_transportation_request_line|write_date|timestamp without time zone
+dtr_transportation_request_type|id|integer
+dtr_transportation_request_type|name|character varying
+dtr_transportation_request_type|create_uid|integer
+dtr_transportation_request_type|create_date|timestamp without time zone
+dtr_transportation_request_type|write_uid|integer
+dtr_transportation_request_type|write_date|timestamp without time zone
+dtr_trial_balance_wiz|id|integer
+dtr_trial_balance_wiz|from_date|date
+dtr_trial_balance_wiz|to_date|date
+dtr_trial_balance_wiz|company_id|integer
+dtr_trial_balance_wiz|language|character varying
+dtr_trial_balance_wiz|balance_zero|character varying
+dtr_trial_balance_wiz|create_uid|integer
+dtr_trial_balance_wiz|create_date|timestamp without time zone
+dtr_trial_balance_wiz|write_uid|integer
+dtr_trial_balance_wiz|write_date|timestamp without time zone
+dtr_truck_size|id|integer
+dtr_truck_size|name|character varying
+dtr_truck_size|truck_height|double precision
+dtr_truck_size|truck_width|double precision
+dtr_truck_size|truck_length|double precision
+dtr_truck_size|truck_total_carrying_weight|double precision
+dtr_truck_size|create_uid|integer
+dtr_truck_size|create_date|timestamp without time zone
+dtr_truck_size|write_uid|integer
+dtr_truck_size|write_date|timestamp without time zone
+dtr_update_po_price|id|integer
+dtr_update_po_price|name|character varying
+dtr_update_po_price|state|character varying
+dtr_update_po_price|date_created|date
+dtr_update_po_price|remark|text
+dtr_update_po_price|company_id|integer
+dtr_update_po_price|create_uid|integer
+dtr_update_po_price|create_date|timestamp without time zone
+dtr_update_po_price|write_uid|integer
+dtr_update_po_price|write_date|timestamp without time zone
+dtr_update_po_price_list|id|integer
+dtr_update_po_price_list|name|character varying
+dtr_update_po_price_list|product_id|integer
+dtr_update_po_price_list|product_uom_id|integer
+dtr_update_po_price_list|old_approval_price|numeric
+dtr_update_po_price_list|new_approval_price|numeric
+dtr_update_po_price_list|remark|text
+dtr_update_po_price_list|update_po_price_id|integer
+dtr_update_po_price_list|company_id|integer
+dtr_update_po_price_list|recent_price|numeric
+dtr_update_po_price_list|recent_buy_date|timestamp without time zone
+dtr_update_po_price_list|create_uid|integer
+dtr_update_po_price_list|create_date|timestamp without time zone
+dtr_update_po_price_list|write_uid|integer
+dtr_update_po_price_list|write_date|timestamp without time zone
+dtr_vat|id|integer
+dtr_vat|partner_id|integer
+dtr_vat|partner_branch_id|integer
+dtr_vat|tax_name|character varying
+dtr_vat|tax_code|character varying
+dtr_vat|branch_code|character varying
+dtr_vat|street|character varying
+dtr_vat|street2|character varying
+dtr_vat|city|character varying
+dtr_vat|zip|character varying
+dtr_vat|state_name|character varying
+dtr_vat|country_id|integer
+dtr_vat|state|character varying
+dtr_vat|company_id|integer
+dtr_vat|currency_id|integer
+dtr_vat|name|character varying
+dtr_vat|vat_type|character varying
+dtr_vat|vat_no|character varying
+dtr_vat|vat_date|date
+dtr_vat|send_date|date
+dtr_vat|country_name|character varying
+dtr_vat|tax_id|integer
+dtr_vat|amount|numeric
+dtr_vat|amount_nonvat|numeric
+dtr_vat|amount_vat|numeric
+dtr_vat|amount_total|numeric
+dtr_vat|invoice_id|integer
+dtr_vat|is_tax_invoice|boolean
+dtr_vat|dncn|character varying
+dtr_vat|ref_inv_no|character varying
+dtr_vat|remark|text
+dtr_vat|payment_id|integer
+dtr_vat|move_id|integer
+dtr_vat|is_hide_in_tax_report|boolean
+dtr_vat|create_uid|integer
+dtr_vat|create_date|timestamp without time zone
+dtr_vat|write_uid|integer
+dtr_vat|write_date|timestamp without time zone
+dtr_vat|invoice_cash_id|integer
+dtr_vat_rel_move|dtr_vat_id|integer
+dtr_vat_rel_move|account_move_id|integer
+dtr_vat_rel_taxed|dtr_vat_id|integer
+dtr_vat_rel_taxed|account_move_line_id|integer
+dtr_vat_rel_untaxed|dtr_vat_id|integer
+dtr_vat_rel_untaxed|account_move_line_id|integer
+dtr_vehicle_type|id|integer
+dtr_vehicle_type|name|character varying
+dtr_vehicle_type|create_uid|integer
+dtr_vehicle_type|create_date|timestamp without time zone
+dtr_vehicle_type|write_uid|integer
+dtr_vehicle_type|write_date|timestamp without time zone
+dtr_warranty_card|id|integer
+dtr_warranty_card|message_main_attachment_id|integer
+dtr_warranty_card|name|character varying
+dtr_warranty_card|partner_id|integer
+dtr_warranty_card|remark|text
+dtr_warranty_card|install_date|date
+dtr_warranty_card|exp_date|date
+dtr_warranty_card|product_tmpl_id|integer
+dtr_warranty_card|lot_id|integer
+dtr_warranty_card|part_other_start_date_warranty|date
+dtr_warranty_card|part_other_end_date_warranty|date
+dtr_warranty_card|part_other_month_warranty|integer
+dtr_warranty_card|invoice_id|integer
+dtr_warranty_card|state|character varying
+dtr_warranty_card|create_uid|integer
+dtr_warranty_card|create_date|timestamp without time zone
+dtr_warranty_card|write_uid|integer
+dtr_warranty_card|write_date|timestamp without time zone
+dtr_warranty_card|engineer1|integer
+dtr_warranty_card|engineer2|integer
+dtr_warranty_card_line|id|integer
+dtr_warranty_card_line|wcard_id|integer
+dtr_warranty_card_line|product_id|integer
+dtr_warranty_card_line|lot_id|integer
+dtr_warranty_card_line|warranty_time|integer
+dtr_warranty_card_line|start_date|date
+dtr_warranty_card_line|end_date|date
+dtr_warranty_card_line|warranty_status|character varying
+dtr_warranty_card_line|create_uid|integer
+dtr_warranty_card_line|create_date|timestamp without time zone
+dtr_warranty_card_line|write_uid|integer
+dtr_warranty_card_line|write_date|timestamp without time zone
+dtr_warranty_list|id|integer
+dtr_warranty_list|name|character varying
+dtr_warranty_list|category_id|integer
+dtr_warranty_list|product_tmpl_id|integer
+dtr_warranty_list|warranty_time|integer
+dtr_warranty_list|remark|character varying
+dtr_warranty_list|create_uid|integer
+dtr_warranty_list|create_date|timestamp without time zone
+dtr_warranty_list|write_uid|integer
+dtr_warranty_list|write_date|timestamp without time zone
+dtr_wht|id|integer
+dtr_wht|state|character varying
+dtr_wht|company_id|integer
+dtr_wht|currency_id|integer
+dtr_wht|payment_id|integer
+dtr_wht|name|character varying
+dtr_wht|name_book|character varying
+dtr_wht|name_seq|character varying
+dtr_wht|remark|character varying
+dtr_wht|partner_id|integer
+dtr_wht|partner_branch_id|integer
+dtr_wht|payee_name|character varying
+dtr_wht|payee_tax_id|character varying
+dtr_wht|branch_code|character varying
+dtr_wht|income_type|character varying
+dtr_wht|tax_type|character varying
+dtr_wht|severance_pay|boolean
+dtr_wht|foreigner|boolean
+dtr_wht|move_id|integer
+dtr_wht|pay_date|date
+dtr_wht|send_date|date
+dtr_wht|street|character varying
+dtr_wht|street2|character varying
+dtr_wht|city|character varying
+dtr_wht|zip|character varying
+dtr_wht|state_name|character varying
+dtr_wht|country_id|integer
+dtr_wht|tax_condition|character varying
+dtr_wht|tax_condition2|character varying
+dtr_wht|tax_condition3|character varying
+dtr_wht|tax_id1|integer
+dtr_wht|tax_id2|integer
+dtr_wht|tax_id3|integer
+dtr_wht|tax_rate1|numeric
+dtr_wht|tax_rate2|numeric
+dtr_wht|tax_rate3|numeric
+dtr_wht|pay_amount1|numeric
+dtr_wht|pay_amount2|numeric
+dtr_wht|pay_amount3|numeric
+dtr_wht|wht_amount1|numeric
+dtr_wht|wht_amount2|numeric
+dtr_wht|wht_amount3|numeric
+dtr_wht|income_type1|character varying
+dtr_wht|income_type2|character varying
+dtr_wht|income_type3|character varying
+dtr_wht|move_line_id1|integer
+dtr_wht|move_line_id2|integer
+dtr_wht|move_line_id3|integer
+dtr_wht|pay_amount|numeric
+dtr_wht|wht_amount|numeric
+dtr_wht|sso_amount|numeric
+dtr_wht|pvf_amount|numeric
+dtr_wht|create_uid|integer
+dtr_wht|create_date|timestamp without time zone
+dtr_wht|write_uid|integer
+dtr_wht|write_date|timestamp without time zone
+dtr_wht|building_name|character varying
+dtr_wht|building_room|character varying
+dtr_wht|building_floor|character varying
+dtr_wht|village_name|character varying
+dtr_wht|house_no|character varying
+dtr_wht|village_no|character varying
+dtr_wht|alley_lane|character varying
+dtr_wht|road|character varying
+dtr_wht|sub_district|character varying
+dtr_wht|district|character varying
+dtr_wht|prepayment_id|integer
+dtr_wht|billing_id|integer
+dtr_year_end|id|integer
+dtr_year_end|company_id|integer
+dtr_year_end|name|character varying
+dtr_year_end|journal_id|integer
+dtr_year_end|begin_date|date
+dtr_year_end|end_date|date
+dtr_year_end|opening_date|date
+dtr_year_end|move_revenue_id|integer
+dtr_year_end|move_expense_id|integer
+dtr_year_end|move_summary_id|integer
+dtr_year_end|move_dividend_id|integer
+dtr_year_end|move_carry_forward_id|integer
+dtr_year_end|move_opening_id|integer
+dtr_year_end|unbalanced_account_id|integer
+dtr_year_end|state|character varying
+dtr_year_end|create_uid|integer
+dtr_year_end|create_date|timestamp without time zone
+dtr_year_end|write_uid|integer
+dtr_year_end|write_date|timestamp without time zone

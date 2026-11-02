@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -35,6 +35,7 @@ registry.category("web_tour.tours").add("od19_purchase_approval_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction("Purchase Requests"),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new PR."),
@@ -70,23 +71,31 @@ registry.category("web_tour.tours").add("od19_purchase_approval_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='line_ids'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the product from the suggestion list."),
             run: "click",
         },
         ...stepUtils.saveForm(),
         {
-            trigger: "button[name='button_to_approve']",
+            // The OCA module `purchase_request_tier_validation` forces the core
+            // "Request approval" button (`button_to_approve`) to `invisible="1"`
+            // and repurposes `button_approved` as the single "Confirm" button
+            // that starts the approval flow. Click whichever one is rendered.
+            trigger: "button[name='button_approved'], button[name='button_to_approve']",
             content: markup(_t(
-                "Click <b>Request approval</b>. <b>Every PR must be approved</b> before it can be used."
+                "Click <b>Confirm</b> to submit the Purchase Requisition for approval. " +
+                "<b>Every PR must be approved</b> before it can be used."
             )),
             tooltipPosition: "left",
             run: "click",
         },
         {
-            trigger: "button[name='button_approved']",
+            // Only rendered when a Tier Validation definition applies to
+            // `purchase.request` (the assigned reviewer must clear the review).
+            isActive: ["button[name='validate_tier']"],
+            trigger: "button[name='validate_tier']",
             content: markup(_t(
-                "The Purchase Request Manager clicks <b>Approve</b> to validate the PR."
+                "The assigned reviewer clicks <b>Validate</b> to approve the PR."
             )),
             tooltipPosition: "left",
             run: "click",
@@ -106,6 +115,7 @@ registry.category("web_tour.tours").add("od19_purchase_approval_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction("Purchase Orders"),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new PO."),
@@ -118,7 +128,7 @@ registry.category("web_tour.tours").add("od19_purchase_approval_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='partner_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the vendor from the suggestion list."),
             run: "click",
         },
@@ -133,7 +143,7 @@ registry.category("web_tour.tours").add("od19_purchase_approval_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='order_line'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the product from the suggestion list."),
             run: "click",
         },

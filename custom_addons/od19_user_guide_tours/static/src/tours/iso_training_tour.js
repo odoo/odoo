@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -37,6 +37,9 @@ registry.category("web_tour.tours").add("od19_iso_training_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        // The action switch is asynchronous; wait for the target list before
+        // clicking "New" so the record lands in the right model.
+        waitForAction('หลักสูตรการฝึกอบรม'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new training course."),
@@ -95,6 +98,7 @@ registry.category("web_tour.tours").add("od19_iso_training_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction('ความสามารถ/ทักษะ'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new competence/skill."),
@@ -128,6 +132,7 @@ registry.category("web_tour.tours").add("od19_iso_training_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction('ตารางความสามารถพนักงาน'),
 
         {
             trigger: ".o_list_renderer",

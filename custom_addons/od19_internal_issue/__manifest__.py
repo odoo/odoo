@@ -36,4 +36,5 @@ Extends OCA helpdesk_mgmt with:
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_internal_issue/static/description/icon.svg",
 }

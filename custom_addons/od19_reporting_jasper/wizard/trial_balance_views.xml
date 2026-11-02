@@ -11,6 +11,7 @@
     <record id="view_trial_balance_report" model="ir.ui.view">
         <field name="name">trial.balance.report</field>
         <field name="model">trial.balance.report</field>
+        <field name="mode">primary</field>
         <field name="inherit_id" ref="view_jasper_report_wizard"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='parameters']" position="replace">
@@ -47,7 +48,7 @@
     </record>
 
     <record id="action_trial_balance_report" model="ir.actions.act_window">
-        <field name="name">Trial Balance</field>
+        <field name="name">(J-Report OD15) Trial Balance</field>
         <field name="res_model">trial.balance.report</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_trial_balance_report"/>
@@ -56,10 +57,10 @@
 
     <menuitem
         id="menu_trial_balance_report"
-        name="Trial Balance"
+        name="(J-Report OD15) Trial Balance"
         parent="account.menu_finance_reports"
         action="action_trial_balance_report"
-        groups="account.group_account_user"
+        groups="account.group_account_user,account.group_account_manager"
         sequence="91"
     />
 

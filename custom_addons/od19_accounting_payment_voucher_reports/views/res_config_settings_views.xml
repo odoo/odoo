@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <record id="res_config_settings_view_form_od19_payable_gate" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.od19.payable.gate</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Accounts Payable – Prepare/Approve Gate (ประตูควบคุมฝั่งจ่าย)"
+                       id="od19_payable_control_gate_block">
+                    <setting string="Enforce Prepare → Approve before Payment"
+                             help="When enabled, a vendor (outbound) payment cannot be posted until it has been prepared and approved.">
+                        <field name="od19_enforce_prepare_approval"/>
+                    </setting>
+                    <setting string="Segregation of Duties (prepare ≠ approve)"
+                             help="When enabled, the user who prepared a payment cannot also approve it.">
+                        <field name="od19_enforce_prepare_sod"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

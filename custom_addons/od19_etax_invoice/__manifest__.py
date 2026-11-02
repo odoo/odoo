@@ -36,4 +36,5 @@
     ],
     "installable": True,
     "application": True,
+    "icon": "/od19_etax_invoice/static/description/icon.svg",
 }

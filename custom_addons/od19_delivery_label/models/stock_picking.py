@@ -159,22 +159,27 @@ class StockPicking(models.Model):
     # ------------------------------------------------------------------
     @api.model
     def _format_name_with_department(self, name, dept_code):
-        """Insert the department code into the picking reference.
+        """Insert (or replace) the department code in the picking reference.
 
         Example: 'WH/OUT/00001' -> 'WH/IA/OUT/00001'
-        If the name already contains the department code, it is left unchanged.
+        If the name already carries a department code it is replaced so the
+        code is never inserted twice:
+        'WH/IA/OUT/00001' + 'BA' -> 'WH/BA/OUT/00001'
         """
         if not name or name == "/" or not dept_code:
             return name
-        # If the department code is already in the name, do nothing.
         parts = name.split("/")
-        if len(parts) >= 3 and parts[1] == dept_code:
+        # Drop a previously inserted department code (2nd segment) before
+        # re-inserting, otherwise a department change would produce
+        # 'WH/BA/IA/OUT/00001' instead of 'WH/BA/OUT/00001'.
+        if len(parts) >= 3 and self.env["hr.department"].search_count(
+            [("code", "=", parts[1])]
+        ):
+            del parts[1]
+        if len(parts) < 2:
             return name
-        # Insert after the first segment (e.g. 'WH').
-        first, _, rest = name.partition("/")
-        if not rest:
-            return name
-        return f"{first}/{dept_code}/{rest}"
+        parts.insert(1, dept_code)
+        return "/".join(parts)
 
     def _update_name_with_department(self):
         """Rewrite the picking name to include the department code.

@@ -17,4 +17,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_sales_customer_risk_gate/static/description/icon.svg",
 }

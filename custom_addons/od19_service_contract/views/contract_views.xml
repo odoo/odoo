@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Extend the base contract form: renewal button, service stat button,
+         Service tab with PM cards and covered equipment. This extension is
+         applied before the customer/supplier primary views, so it shows up
+         on both of them as well. -->
+    <record id="contract_contract_form_view_service" model="ir.ui.view">
+        <field name="name">contract.contract form view (service contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//button[@name='action_preview']" position="after">
+                <button name="action_renew" type="object" string="Renew Contract"
+                        class="btn-primary" groups="base.group_user"
+                        confirm="Renew this contract for another term?"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_service_cards" type="object"
+                        icon="fa-wrench" class="oe_stat_button"
+                        invisible="service_card_count == 0">
+                    <field name="service_card_count" widget="statinfo"
+                           string="Service Cards"/>
+                </button>
+            </xpath>
+
+            <xpath expr="//page[@name='info']" position="after">
+                <page name="service_contract" string="Service">
+                    <group string="Service Contract">
+                        <group>
+                            <field name="is_service_contract"/>
+                            <field name="is_expiring_soon" readonly="1"/>
+                            <field name="renewal_notice_sent" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="auto_renew"/>
+                            <field name="renewal_interval_months"/>
+                            <field name="renewal_notice_days"/>
+                        </group>
+                    </group>
+                    <group string="Covered Equipment">
+                        <field name="warranty_lot_ids" nolabel="1">
+                            <list>
+                                <field name="name"/>
+                                <field name="product_id"/>
+                                <field name="warranty_start_date"/>
+                                <field name="warranty_end_date"/>
+                                <field name="warranty_status" widget="badge"
+                                       decoration-success="warranty_status == 'active'"
+                                       decoration-danger="warranty_status == 'expired'"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Service Cards (PM)">
+                        <field name="service_card_ids" nolabel="1"
+                               context="{'default_contract_id': id, 'default_partner_id': partner_id}">
+                            <list>
+                                <field name="name"/>
+                                <field name="service_date"/>
+                                <field name="service_type"/>
+                                <field name="next_service_date"/>
+                                <field name="state" widget="badge"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add a "Service Contracts" filter to the contract search view. -->
+    <record id="contract_contract_search_view_service" model="ir.ui.view">
+        <field name="name">contract.contract search view (service contract)</field>
+        <field name="model">contract.contract</field>
+        <field name="inherit_id" ref="contract.contract_contract_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='not_finished']" position="before">
+                <filter name="service_contract" string="Service Contracts"
+                        domain="[('is_service_contract', '=', True)]"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="is_service_contract"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action + menu: dedicated list of service contracts. -->
+    <record id="action_service_contract" model="ir.actions.act_window">
+        <field name="name">Service Contracts</field>
+        <field name="res_model">contract.contract</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_service_contract', '=', True)]</field>
+        <field name="context">{'default_is_service_contract': True,
+            'default_contract_type': 'sale',
+            'search_default_service_contract': 1}</field>
+        <field name="search_view_id" ref="contract.contract_contract_search_view"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a service contract
+            </p>
+            <p>
+                Recurring maintenance / AMC contracts billed automatically each period.
+            </p>
+        </field>
+    </record>
+    <record id="action_service_contract_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="contract.contract_contract_tree_view"/>
+        <field name="act_window_id" ref="action_service_contract"/>
+    </record>
+    <record id="action_service_contract_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="contract.contract_contract_customer_form_view"/>
+        <field name="act_window_id" ref="action_service_contract"/>
+    </record>
+
+</odoo>

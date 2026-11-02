@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        (J-Report OD15) Advance Request Condition.
+
+        Odoo 19 port of the legacy dtr_advance report r_adv_001.  Inherits the
+        shared wizard layout (views/jasper_report_wizard.xml) and replaces the
+        placeholder <group name="parameters"/> with the parameters this report
+        needs.
+    -->
+    <record id="view_dtr_adv_request_condition_report" model="ir.ui.view">
+        <field name="name">dtr.adv.request.condition.report</field>
+        <field name="model">dtr.adv.request.condition.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_Start_Date" required="1"/>
+                    <field name="p_End_Date" required="1"/>
+                    <field name="p_request_id"/>
+                    <field name="p_language" required="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_dtr_adv_request_condition_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Advance Request Condition</field>
+        <field name="res_model">dtr.adv.request.condition.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_dtr_adv_request_condition_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_dtr_adv_request_condition_report"
+        name="(J-Report OD15) Advance Request Condition"
+        parent="account.menu_finance_reports"
+        action="action_dtr_adv_request_condition_report"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="118"
+    />
+
+</odoo>

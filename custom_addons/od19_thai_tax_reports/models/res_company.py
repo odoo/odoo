@@ -36,6 +36,38 @@ class ResCompany(models.Model):
         help="รหัสผู้ให้บริการ (Service Provider ID) ที่ธนาคารออกให้กับบริษัทนี้",
     )
 
+    od19_deferred_tax_asset_account_id = fields.Many2one(
+        "account.account",
+        string="บัญชีสินทรัพย์ภาษีเงินได้รอตัดบัญชี (DTA)",
+        domain="[('internal_group', '=', 'asset')]",
+        help="บัญชีที่ใช้บันทึกสินทรัพย์ภาษีเงินได้รอตัดบัญชี (TAS 12)",
+    )
+    od19_deferred_tax_liability_account_id = fields.Many2one(
+        "account.account",
+        string="บัญชีหนี้สินภาษีเงินได้รอตัดบัญชี (DTL)",
+        domain="[('internal_group', '=', 'liability')]",
+        help="บัญชีที่ใช้บันทึกหนี้สินภาษีเงินได้รอตัดบัญชี (TAS 12)",
+    )
+    od19_deferred_tax_expense_account_id = fields.Many2one(
+        "account.account",
+        string="บัญชีค่าใช้จ่ายภาษีเงินได้รอตัดบัญชี",
+        domain="[('internal_group', '=', 'expense')]",
+        help="บัญชีที่ใช้บันทึกค่าใช้จ่าย/รายได้ภาษีเงินได้รอตัดบัญชี (TAS 12)",
+    )
+    od19_deferred_tax_journal_id = fields.Many2one(
+        "account.journal",
+        string="สมุดรายวันภาษีเงินได้รอตัดบัญชี",
+        domain="[('type', '=', 'general')]",
+        help="สมุดรายวันสำหรับบันทึกรายการภาษีเงินได้รอตัดบัญชี "
+        "(เว้นว่างได้ ระบบจะใช้สมุดรายวันทั่วไปลำดับแรก)",
+    )
+    od19_deferred_tax_rate = fields.Float(
+        string="อัตราภาษีเงินได้รอตัดบัญชี (%)",
+        default=20.0,
+        digits=(5, 2),
+        help="อัตราภาษีเงินได้นิติบุคคลที่ใช้คำนวณภาษีรอตัดบัญชี (ค่าเริ่มต้น 20%)",
+    )
+
     def _od19_ewht_check_enabled(self):
         """Raise when this company has not enabled the e-Withholding feature.
 

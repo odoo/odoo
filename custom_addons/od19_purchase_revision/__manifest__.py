@@ -28,4 +28,5 @@ locked as read-only.
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_purchase_revision/static/description/icon.svg",
 }

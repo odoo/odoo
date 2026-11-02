@@ -52,6 +52,22 @@ export function navItem(label) {
     return `.dropdown-menu .dropdown-item:text('${label}')`;
 }
 
+/**
+ * Wait until the action opened by the previous `navItem()` is really on screen.
+ *
+ * Clicking a menu entry switches the action asynchronously: the previous view
+ * stays mounted for a few frames. A following generic step such as
+ * `.o_list_button_add` would then click the *previous* list's "New" button and
+ * create a record in the wrong model (e.g. an invoice instead of a petty-cash
+ * fund). Waiting for the expected action name in the control-panel breadcrumb
+ * guarantees the new view is displayed before the tour continues.
+ */
+export function waitForAction(name) {
+    return {
+        trigger: `.o_last_breadcrumb_item:contains('${name}')`,
+    };
+}
+
 export const stepUtils = {
     ...coreStepUtils,
 
@@ -79,6 +95,19 @@ export const stepUtils = {
                 tooltipPosition: "right",
                 run: "click",
             },
+            {
+                // Switching apps is asynchronous: the previous app stays
+                // mounted for a few frames. A following `navSection()` would
+                // then click the *old* app's menu — several apps expose a
+                // section literally named "Configuration" — and the tour would
+                // open the wrong dropdown and fail to find its entry.
+                //
+                // `.o_menu_brand` carries `data-menu-xmlid` = the xmlid of the
+                // app that is really current (see web navbar.xml), so waiting
+                // for it guarantees the new app navbar is mounted before the
+                // tour continues.
+                trigger: `.o_menu_brand[data-menu-xmlid="${dataMenuXmlid}"]`,
+            },
         ].map((step) =>
             this.addDebugHelp(this._getHelpMessage("goToApp", dataMenuXmlid, description), step)
         );
@@ -99,7 +128,12 @@ export const stepUtils = {
                 run: "click",
             },
             {
-                trigger: ".o_form_readonly, .o_form_saved",
+                // Saving can either leave the form open in readonly mode
+                // (`.o_form_readonly` / `.o_form_saved`) or — when the form was
+                // opened from a list — close it and fall back to the list view.
+                // Accept both outcomes so tours that save-and-return do not
+                // hang waiting for a form that is already gone.
+                trigger: ".o_form_readonly, .o_form_saved, .o_list_view, .o_list_renderer, .o_kanban_view",
             },
         ];
     },

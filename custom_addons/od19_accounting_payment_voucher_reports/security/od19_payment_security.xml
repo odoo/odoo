@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <record id="res_groups_privilege_od19_payment_gate" model="res.groups.privilege">
+        <field name="name">Payables Control Gate</field>
+        <field name="category_id" ref="base.module_category_accounting"/>
+        <field name="sequence">70</field>
+    </record>
+
+    <!-- ผู้อนุมัติรายการจ่าย: เห็นปุ่ม "อนุมัติ" และ "ข้ามการอนุมัติ" -->
+    <record id="group_od19_payment_approver" model="res.groups">
+        <field name="name">Payment Approver</field>
+        <field name="comment">Approve vendor payments and use the "skip approval" override with a mandatory reason.</field>
+        <field name="privilege_id" ref="res_groups_privilege_od19_payment_gate"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user')), Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('base.group_system'))]"/>
+    </record>
+
+    <!-- ผู้ดูแลประตูควบคุมฝั่งจ่าย: ตั้งค่า gate และข้าม SoD ได้ -->
+    <record id="group_od19_payment_admin" model="res.groups">
+        <field name="name">Payment Control Administrator</field>
+        <field name="comment">Configure the payables control gate and bypass the segregation-of-duties rule.</field>
+        <field name="privilege_id" ref="res_groups_privilege_od19_payment_gate"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_od19_payment_approver'))]"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('base.group_system'))]"/>
+    </record>
+
+</odoo>

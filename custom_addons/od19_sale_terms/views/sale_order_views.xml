@@ -6,8 +6,8 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <page string="OD19 Terms" name="od19_terms">
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page string="Terms" name="od19_terms">
                     <group>
                         <group string="Terms / เงื่อนไข">
                             <field name="od19_price_term_id"/>

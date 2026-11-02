@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-P-002 Requests for Quotation (ใบขอราคา).
+
+        Inherits the shared wizard layout
+        (od19_reporting_jasper: views/jasper_report_wizard.xml) and replaces the
+        placeholder <group name="parameters"/>.  Reached from Purchase > any
+        order > Print > (J-Report OD15).
+    -->
+    <record id="view_requests_for_quotation_form" model="ir.ui.view">
+        <field name="name">requests.for.quotation.form</field>
+        <field name="model">requests.for.quotation.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_requests_for_quotation_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Requests for Quotation Form</field>
+        <field name="res_model">requests.for.quotation.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_requests_for_quotation_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+</odoo>

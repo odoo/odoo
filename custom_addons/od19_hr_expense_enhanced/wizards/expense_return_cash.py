@@ -89,16 +89,23 @@ class ExpenseReturnCash(models.TransientModel):
 
         # Determine the accounts:
         # Debit: cash/bank account (money comes back)
-        # Credit: the expense account (reverse the expense)
+        # Credit: the employee's payable account so the return can be matched
+        # (reconciled) against the cash advance given to the employee.
         debit_account = self.journal_id.default_account_id
-        credit_account = expense.account_id
-        if not credit_account:
-            credit_account = debit_account
-
         employee_partner = (
             expense.employee_id.work_contact_id
             or expense.employee_id.user_id.partner_id
         )
+        credit_account = expense.account_id
+        if employee_partner:
+            payable_account = (
+                employee_partner.with_company(expense.company_id)
+                .property_account_payable_id
+            )
+            if payable_account:
+                credit_account = payable_account
+        if not credit_account:
+            credit_account = debit_account
 
         move_vals = {
             'date': self.return_date,
@@ -129,4 +136,7 @@ class ExpenseReturnCash(models.TransientModel):
         }
         move = self.env['account.move'].create(move_vals)
         move.action_post()
+        move._od19_reconcile_account_lines(
+            credit_account.id, employee_partner.id or None
+        )
         return move

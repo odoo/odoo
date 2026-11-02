@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        บัญชีอัตราอากรแสตมป์ (ประมวลรัษฎากร หมวด 6 ว่าด้วยอากรแสตมป์)
+        เฉพาะลักษณะแห่งตราสารที่ใช้บ่อยในทางปฏิบัติ
+
+        กติกาคำนวน: "ทุกจำนวนเงิน X บาท หรือเศษของ X บาท" = ปัดขึ้น (ceil)
+        เช่น ค่าเช่า 5,500 บาท อัตรา 1 บาท/1,000 = ceil(5.5) = 6 บาท
+
+        - ลักษณะ 1/2/3/4 : อัตรา 1 บาท ต่อทุก 1,000 บาท (หรือเศษของ 1,000)
+        - ลักษณะ 5       : อัตรา 1 บาท ต่อทุก 2,000 บาท เพดาน 10,000 บาท/ฉบับ
+        - ลักษณะ 9       : อัตราคงที่ 3 บาทต่อฉบับ
+    -->
+    <record id="stamp_duty_rate_1" model="od19.stamp.duty.rate">
+        <field name="name">เช่าที่ดิน โรงเรือน สิ่งปลูกสร้างอย่างอื่น หรือแพ</field>
+        <field name="code">1</field>
+        <field name="rate_type">scale</field>
+        <field name="rate_amount">1.0</field>
+        <field name="base_unit">1000.0</field>
+        <field name="notes">คิดจากค่าเช่าหรือเงินกินเปล่าตลอดอายุการเช่า · ผู้ให้เช่าเป็นผู้เสียอากร</field>
+    </record>
+
+    <record id="stamp_duty_rate_2" model="od19.stamp.duty.rate">
+        <field name="name">โอนใบหุ้น ใบหุ้นกู้ พันธบัตร และใบรับรองหนี้</field>
+        <field name="code">2</field>
+        <field name="rate_type">scale</field>
+        <field name="rate_amount">1.0</field>
+        <field name="base_unit">1000.0</field>
+        <field name="notes">คิดตามราคาหุ้นที่ชำระแล้วหรือราคาในตราสาร (อย่างใดมากกว่า) · ผู้โอนเป็นผู้เสียอากร</field>
+    </record>
+
+    <record id="stamp_duty_rate_3" model="od19.stamp.duty.rate">
+        <field name="name">เช่าซื้อทรัพย์สิน</field>
+        <field name="code">3</field>
+        <field name="rate_type">scale</field>
+        <field name="rate_amount">1.0</field>
+        <field name="base_unit">1000.0</field>
+        <field name="notes">คิดจากราคาทั้งหมดตามสัญญาเช่าซื้อ · ผู้ให้เช่าซื้อเป็นผู้เสียอากร</field>
+    </record>
+
+    <record id="stamp_duty_rate_4" model="od19.stamp.duty.rate">
+        <field name="name">จ้างทำของ</field>
+        <field name="code">4</field>
+        <field name="rate_type">scale</field>
+        <field name="rate_amount">1.0</field>
+        <field name="base_unit">1000.0</field>
+        <field name="notes">คิดจากสินจ้างที่กำหนดไว้ · ผู้รับจ้างเป็นผู้เสียอากร</field>
+    </record>
+
+    <record id="stamp_duty_rate_5" model="od19.stamp.duty.rate">
+        <field name="name">กู้ยืมเงิน หรือตกลงให้เบิกเงินเกินบัญชีจากธนาคาร</field>
+        <field name="code">5</field>
+        <field name="rate_type">scale</field>
+        <field name="rate_amount">1.0</field>
+        <field name="base_unit">2000.0</field>
+        <field name="max_amount">10000.0</field>
+        <field name="notes">คิดจากยอดเงินที่กู้ยืม · ถ้าคำนวณแล้วเกิน 10,000 บาท ให้เสีย 10,000 บาท · ผู้ให้กู้เป็นผู้เสียอากร</field>
+    </record>
+
+    <record id="stamp_duty_rate_9" model="od19.stamp.duty.rate">
+        <field name="name">ตั๋วแลกเงิน ตั๋วสัญญาใช้เงิน หรือคำสั่งจ่ายเงิน</field>
+        <field name="code">9</field>
+        <field name="rate_type">fixed</field>
+        <field name="rate_amount">3.0</field>
+        <field name="base_unit">0.0</field>
+        <field name="notes">อัตราคงที่ 3 บาทต่อฉบับ</field>
+    </record>
+</odoo>

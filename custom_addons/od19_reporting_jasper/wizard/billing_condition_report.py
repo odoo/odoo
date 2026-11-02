@@ -1,0 +1,148 @@
+# -*- coding: utf-8 -*-
+"""R-AC-003 Billing Condition report.
+
+Odoo 19 port of the legacy ``dtr_accounting_report`` report
+``billing_condition_report``.  It lists the invoices attached to customer
+``account.billing`` documents (ใบวางบิล) for a billing-date / actual-due-date
+range, grouped per billing document.
+
+Odoo 19 adaptations applied to ``jrxml/billing_condition_report.jrxml``:
+
+* ``dtr_account_billing`` -> OCA ``account_billing`` (``bill_type='out_invoice'``);
+  ``bill.number`` -> ``bill.name``, ``bill.bill_date`` -> ``bill.date``,
+  ``bill.actual_due_date`` -> ``bill.threshold_date``, ``bill.billing_note`` ->
+  ``bill.narration``.
+* the invoice relation ``account_move_dtr_account_billing_rel`` is replaced by
+  the OCA ``account_billing_line`` (``billing_id`` / ``move_id``).
+* ``dtr_account_invoice_payment_method`` (removed) -> the invoice's
+  ``preferred_payment_method_line_id`` (``account_payment_method_line``).
+* ``res_partner.display_name`` -> ``res_partner.name``; the customer domain now
+  uses ``customer_rank``.
+"""
+from odoo import fields, models
+
+from .invoice_form import DATE_FORMATS
+
+
+class BillingConditionReport(models.TransientModel):
+    _name = "billing.condition.report"
+    _description = "Billing Condition Report"
+    _inherit = "od19.jasper.report"
+
+    name = fields.Char()
+    jasper_file = fields.Char(default=lambda self: self.get_jasper_file(__file__))
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        required=True,
+        default=lambda self: self.env.company,
+    )
+
+    p_language = fields.Selection(
+        [("thai", "Thai"), ("english", "English")],
+        string="Document Language",
+        default="thai",
+    )
+    p_Bill_Start_Date = fields.Date(
+        string="Bill Start Date",
+        required=True,
+        default=lambda self: self.default_start_date(),
+    )
+    p_Bill_End_Date = fields.Date(
+        string="Bill End Date",
+        required=True,
+        default=fields.Date.context_today,
+    )
+    p_Act_Start_Date = fields.Date(
+        string="Actual Due Start Date",
+        required=True,
+        default=lambda self: self.default_start_date(),
+    )
+    p_Act_End_Date = fields.Date(
+        string="Actual Due End Date",
+        required=True,
+        default=fields.Date.context_today,
+    )
+    p_Customer = fields.Many2many(
+        "res.partner",
+        relation="od19_billing_condition_report_customer_rel",
+        string="Customer (Specific)",
+        domain=[("customer_rank", ">", 0)],
+    )
+    p_Payment_Method = fields.Many2many(
+        "account.payment.method.line",
+        relation="od19_billing_condition_report_payment_method_rel",
+        string="Payment Method (Specific)",
+    )
+    p_Currency = fields.Many2many(
+        "res.currency",
+        relation="od19_billing_condition_report_currency_rel",
+        string="Currency (Specific)",
+    )
+    date_type = fields.Selection(
+        [("AD", "AD"), ("BE", "BE")],
+        string="Date Type",
+        default="AD",
+        required=True,
+        help="AD = คริสตศักราช\nBE = พุทธศักราช",
+    )
+    date_format = fields.Selection(
+        [(value, value) for value in DATE_FORMATS],
+        string="Date Format",
+        default="dd-MM-yyyy",
+        required=True,
+    )
+
+    def default_start_date(self):
+        return fields.Date.context_today(self).replace(day=1)
+
+    def get_parameters(self):
+        """Values handed to jasperstarter as ``-P key=value``."""
+        self.name = "Billing Report"
+        company = self.company_id or self.env.company
+        p_Where = (
+            "WHERE bill.state in ('done', 'open') AND bill.bill_type = 'out_invoice' "
+            "AND date(bill.date) >= '{0}' AND date(bill.date) <= '{1}' "
+            "AND date(bill.threshold_date) >= '{2}' AND date(bill.threshold_date) <= '{3}' "
+            "AND bill.company_id = {4}"
+        ).format(
+            self.p_Bill_Start_Date,
+            self.p_Bill_End_Date,
+            self.p_Act_Start_Date,
+            self.p_Act_End_Date,
+            company.id,
+        )
+        p_Customer = "ทั้งหมด" if self.p_language == "thai" else "All"
+        p_Payment_Method = "ทั้งหมด" if self.p_language == "thai" else "All"
+        p_Currency = "ทั้งหมด" if self.p_language == "thai" else "All"
+        if self.p_Customer:
+            p_Where += " AND bill.partner_id in ({0})".format(
+                ", ".join(str(i.id) for i in self.p_Customer)
+            )
+            p_Customer = ", ".join(i.display_name for i in self.p_Customer)
+        if self.p_Payment_Method:
+            p_Where += " AND inv.preferred_payment_method_line_id in ({0})".format(
+                ", ".join(str(i.id) for i in self.p_Payment_Method)
+            )
+            p_Payment_Method = ", ".join(i.name for i in self.p_Payment_Method)
+        if self.p_Currency:
+            p_Where += " AND bill.currency_id in ({0})".format(
+                ", ".join(str(i.id) for i in self.p_Currency)
+            )
+            p_Currency = ", ".join(i.name for i in self.p_Currency)
+
+        parameters = self.get_common_parameters()
+        parameters.update(
+            {
+                "p_Print_By": self._legacy_print_by(),
+                "p_Where": p_Where,
+                "p_Bill_Start_Date": str(self.p_Bill_Start_Date),
+                "p_Bill_End_Date": str(self.p_Bill_End_Date),
+                "p_Act_Start_Date": str(self.p_Act_Start_Date),
+                "p_Act_End_Date": str(self.p_Act_End_Date),
+                "p_Customer": p_Customer,
+                "p_Payment_Method": p_Payment_Method,
+                "p_Currency": p_Currency,
+            }
+        )
+        return parameters

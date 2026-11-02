@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+    Employee Advance Tier Validation
+    ================================
+    สายอนุมัติ 2 ชั้น (อนุมัติตามลำดับ):
+      ชั้นที่ 1  หัวหน้างาน/ผู้จัดการค่าใช้จ่าย (hr_expense.group_hr_expense_manager)
+      ชั้นที่ 2  ฝ่ายบัญชี (account.group_account_manager)
+
+    หมายเหตุกลไก OCA ``request_validation`` จะเรียง ``tier.definition``
+    ด้วย ``sequence desc`` แล้วแปลงเป็น ``tier.review.sequence`` 1, 2, ...
+    ดังนั้น definition ที่มี ``sequence`` สูงกว่า จะได้ review.sequence ต่ำกว่า
+    และถูกอนุมัติก่อน  =>  ชั้นที่ 1 ใช้ sequence 20, ชั้นที่ 2 ใช้ sequence 10
+
+    TODO(ยืนยันกับ HR/บัญชี): โครงสายอนุมัติและกลุ่มผู้อนุมัติจริง
+    - ปัจจุบันใช้กลุ่มสำเร็จรูปของ Odoo (HR Expense Manager + Account Manager)
+    - หากต้องการกำหนดวงเงินขั้นบันได (เช่น >= 50,000 ต้องอนุมัติเพิ่ม)
+      ให้เพิ่ม tier.definition พร้อม definition_domain
+    -->
+    <record id="tier_definition_hr_advance_supervisor" model="tier.definition">
+        <field name="name">Employee Advance - Supervisor (ชั้นที่ 1 หัวหน้างาน)</field>
+        <field name="model_id" ref="model_od19_hr_advance"/>
+        <field name="review_type">group</field>
+        <field name="reviewer_group_id" ref="hr_expense.group_hr_expense_manager"/>
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">[(1, '=', 1)]</field>
+        <field name="sequence">20</field>
+        <field name="approve_sequence" eval="True"/>
+        <field name="company_id" eval="False"/>
+        <field name="notify_on_create" eval="True"/>
+        <field name="notify_on_pending" eval="True"/>
+    </record>
+
+    <record id="tier_definition_hr_advance_accounting" model="tier.definition">
+        <field name="name">Employee Advance - Accounting (ชั้นที่ 2 บัญชี)</field>
+        <field name="model_id" ref="model_od19_hr_advance"/>
+        <field name="review_type">group</field>
+        <field name="reviewer_group_id" ref="account.group_account_manager"/>
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">[(1, '=', 1)]</field>
+        <field name="sequence">10</field>
+        <field name="approve_sequence" eval="True"/>
+        <field name="company_id" eval="False"/>
+        <field name="notify_on_create" eval="True"/>
+        <field name="notify_on_pending" eval="True"/>
+    </record>
+</odoo>

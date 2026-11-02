@@ -1,0 +1,21 @@
+[Unit]
+Description=Odoo 19 CE Enterprise (AutoInfo)
+Requires=postgresql.service
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+SyslogIdentifier=odoo19
+User=odoo
+Group=odoo
+WorkingDirectory=/opt/odoo19
+ExecStart=/opt/odoo19/venv/bin/python3 /opt/odoo19/odoo-bin -c /etc/odoo/odoo19.conf
+StandardOutput=journal
+StandardError=journal
+Restart=always
+RestartSec=5
+KillMode=mixed
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

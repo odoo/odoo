@@ -1,0 +1,366 @@
+import datetime
+
+from odoo import api, fields, models
+
+
+class Od19ApprovalSource(models.Model):
+    _name = "od19.approval.source"
+    _description = "Approval Center Source"
+    _order = "sequence, id"
+
+    OD19_MAX_RECORDS = 500
+
+    name = fields.Char(required=True)
+    model_id = fields.Many2one(
+        "ir.model", string="Model", required=True, ondelete="cascade"
+    )
+    model_name = fields.Char(related="model_id.model", store=True, string="Model Name")
+    icon = fields.Char(default="fa-inbox")
+    action_xmlid = fields.Char(string="Action XML ID")
+    sequence = fields.Integer(default=10)
+    requester_field = fields.Char(default="create_uid")
+    requester_kind = fields.Selection(
+        [("user", "User"), ("employee", "Employee")], default="user", required=True
+    )
+    submitted_date_field = fields.Char(default="create_date")
+    decided_date_field = fields.Char()
+    rejected_states = fields.Char(help="Comma separated state values meaning rejected.")
+    success_states = fields.Char(help="Comma separated state values meaning success.")
+    strategy = fields.Selection(
+        [("field", "Field"), ("tier_validation", "Tier Validation")],
+        default="field",
+        required=True,
+    )
+    sla_days = fields.Integer(default=0, help="0 = no SLA warning.")
+    active = fields.Boolean(default=True)
+    step_ids = fields.One2many("od19.approval.step", "source_id", string="Steps")
+
+    # ------------------------------------------------------------------
+    # Low level helpers
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _od19_csv(value):
+        if not value:
+            return []
+        return [token.strip() for token in value.split(",") if token.strip()]
+
+    def _od19_me_ids(self, kind):
+        """Return the current user/employee/partner id for ``kind`` (0 if none)."""
+        user = self.env.user
+        if kind == "employee":
+            return user.employee_id.id if "employee_id" in user._fields else 0
+        if kind == "partner":
+            return user.partner_id.id or 0
+        return user.id or 0
+
+    def _od19_ready(self):
+        self.ensure_one()
+        return bool(self.model_name) and self.model_name in self.env
+
+    def _od19_main_state_field(self, steps):
+        return steps[0].state_field or "state" if steps else "state"
+
+    def _od19_approver_domain(self, steps):
+        """Narrow the approver ``search`` to records that can be bucketed.
+
+        The approver classifier only ever looks at records resting on a step
+        (pending/incoming) or already resolved (rejected/done). Pushing that
+        into the domain keeps the record set small instead of loading the
+        whole model and filtering it in Python.
+        """
+        Model = self.env[self.model_name]
+        leaves = []
+        for step in steps:
+            field_name = step.state_field or "state"
+            if self._od19_field_ok(Model, field_name):
+                leaves.append((field_name, "=", step.state_value))
+        resolved = self._od19_csv(self.rejected_states) + self._od19_csv(self.success_states)
+        main_field = self._od19_main_state_field(steps)
+        if resolved and self._od19_field_ok(Model, main_field):
+            leaves.append((main_field, "in", resolved))
+        if not leaves:
+            return []
+        return ["|"] * (len(leaves) - 1) + leaves
+
+    def _od19_field_ok(self, record, field_name):
+        return bool(field_name) and field_name in record._fields
+
+    def _od19_current_index(self, record, steps):
+        """Index of the furthest step the record has reached, or None.
+
+        A record can match several steps at once (e.g. ``hr.expense`` keeps
+        ``state='submitted'`` while ``second_approval_state='pending'``), so we
+        return the highest matching index -- the real current step.
+        """
+        current = None
+        for index, step in enumerate(steps):
+            field_name = step.state_field or "state"
+            if self._od19_field_ok(record, field_name) and record[field_name] == step.state_value:
+                current = index
+        return current
+
+    def _od19_index_of_my_step(self, record, steps):
+        """Index of the first step this user acts on, or None.
+
+        A step with no ``approver_field`` is a shared pool step: it is the
+        current user's step for every internal user (design D10).
+        """
+        for index, step in enumerate(steps):
+            if not step.approver_field:
+                return index
+            if self._od19_is_approver_at(record, step):
+                return index
+        return None
+
+    def _od19_is_approver_at(self, record, step):
+        """True when the current user is the approver designated by this step."""
+        if not self._od19_field_ok(record, step.approver_field):
+            return False
+        value = record[step.approver_field]
+        if not value:
+            return False
+        comodel = record._fields[step.approver_field].comodel_name
+        me_id = self._od19_me_ids_for_comodel(comodel, step.approver_kind)
+        return bool(me_id) and value.id == me_id
+
+    def _od19_me_ids_for_comodel(self, comodel, kind):
+        """Map the current user onto the comodel stored by the approver field."""
+        user = self.env.user
+        if comodel == "hr.employee":
+            return user.employee_id.id if "employee_id" in user._fields else 0
+        if comodel == "res.partner":
+            return user.partner_id.id or 0
+        if comodel == "res.users":
+            return user.id or 0
+        return self._od19_me_ids(kind)
+
+    def _od19_classify_for_approver(self):
+        """Return the 4 approver buckets for the current user."""
+        self.ensure_one()
+        if self.strategy == "tier_validation":
+            return self._od19_classify_tier_for_approver()
+        buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        if not self._od19_ready():
+            return buckets
+        steps = self.step_ids.sorted("sequence")
+        if not steps:
+            return buckets
+        Model = self.env[self.model_name].sudo()
+        rejected = self._od19_csv(self.rejected_states)
+        success = self._od19_csv(self.success_states)
+        main_field = self._od19_main_state_field(steps)
+        records = Model.search(
+            self._od19_approver_domain(steps), limit=self.OD19_MAX_RECORDS
+        )
+        for record in records:
+            my_index = self._od19_index_of_my_step(record, steps)
+            if my_index is None:
+                continue
+            state_value = record[main_field] if self._od19_field_ok(record, main_field) else False
+            if state_value in rejected:
+                buckets["rejected"].append(record)
+                continue
+            if state_value in success:
+                buckets["done"].append(record)
+                continue
+            current = self._od19_current_index(record, steps)
+            if current is None:
+                continue
+            if current == my_index:
+                buckets["pending"].append(record)
+            elif current < my_index:
+                buckets["incoming"].append(record)
+            elif not steps[current].approver_field or self._od19_is_approver_at(record, steps[current]):
+                buckets["pending"].append(record)
+        return buckets
+
+    def _od19_classify_for_requester(self):
+        """Return the 4 requester buckets for the current user."""
+        self.ensure_one()
+        if self.strategy == "tier_validation":
+            return self._od19_classify_tier_for_requester()
+        buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        if not self._od19_ready():
+            return buckets
+        if not self._od19_field_ok(self.env[self.model_name], self.requester_field):
+            return buckets
+        me_id = self._od19_me_ids(self.requester_kind)
+        if not me_id:
+            return buckets
+        steps = self.step_ids.sorted("sequence")
+        rejected = self._od19_csv(self.rejected_states)
+        success = self._od19_csv(self.success_states)
+        main_field = self._od19_main_state_field(steps)
+        records = self.env[self.model_name].sudo().search(
+            [(self.requester_field, "=", me_id)], limit=self.OD19_MAX_RECORDS
+        )
+        for record in records:
+            state_value = record[main_field] if self._od19_field_ok(record, main_field) else False
+            if state_value in rejected:
+                buckets["rejected"].append(record)
+            elif state_value in success:
+                buckets["done"].append(record)
+            else:
+                current = self._od19_current_index(record, steps)
+                if current is not None and current > 0:
+                    buckets["incoming"].append(record)
+                else:
+                    buckets["pending"].append(record)
+        return buckets
+
+    def _od19_age_days(self, record):
+        """Whole days between the submitted date and now (0 if unknown)."""
+        field_name = self.submitted_date_field or "create_date"
+        if not self._od19_field_ok(record, field_name):
+            field_name = "create_date"
+        start = record[field_name]
+        if not start:
+            return 0
+        if isinstance(start, datetime.date) and not isinstance(start, datetime.datetime):
+            start = datetime.datetime.combine(start, datetime.time.min)
+        delta = fields.Datetime.now() - start
+        return max(int(delta.total_seconds() // 86400), 0)
+
+    def _od19_sla_state(self, age_days):
+        if not self.sla_days:
+            return "normal"
+        if age_days >= 2 * self.sla_days:
+            return "over"
+        if age_days >= self.sla_days:
+            return "warning"
+        return "normal"
+
+    # ------------------------------------------------------------------
+    # Presentation layer (dict rows consumed by QWeb)
+    # ------------------------------------------------------------------
+    def _od19_record_label(self, record):
+        for field_name in ("name", "display_name"):
+            if self._od19_field_ok(record, field_name) and record[field_name]:
+                return str(record[field_name])
+        return "ID %s" % record.id
+
+    def _od19_deep_link(self, record):
+        return "/web#id=%s&model=%s&view_type=form" % (record.id, self.model_name)
+
+    def _od19_build_rows(self, records):
+        """Turn a recordset into plain dicts (safe to pass to QWeb)."""
+        rows = []
+        for record in records:
+            age_days = self._od19_age_days(record)
+            rows.append({
+                "id": record.id,
+                "source_name": self.name,
+                "icon": self.icon or "fa-inbox",
+                "model": self.model_name,
+                "model_label": self.model_id.name,
+                "label": self._od19_record_label(record),
+                "url": self._od19_deep_link(record),
+                "age_days": age_days,
+                "sla_state": self._od19_sla_state(age_days),
+            })
+        return rows
+
+    @api.model
+    def _od19_summary(self, rows):
+        """Aggregate KPI over a list of row dicts (approver *pending*)."""
+        ages = [row["age_days"] for row in rows]
+        return {
+            "pending_count": len(rows),
+            "max_age_days": max(ages) if ages else 0,
+            "over_sla_count": len([row for row in rows if row["sla_state"] == "over"]),
+        }
+
+    def _od19_approval_summary(self):
+        """Light KPI for the portal card: approver *pending* only.
+
+        Called on the sources to aggregate (normally every active source).
+        Unlike :meth:`_od19_summary` this never builds presentation rows -- the
+        portal card only needs three numbers, so we keep the record set narrow
+        and skip the row dicts entirely.
+        """
+        pending_count = 0
+        max_age_days = 0
+        over_sla_count = 0
+        for source in self:
+            for record in source._od19_classify_for_approver()["pending"]:
+                pending_count += 1
+                age_days = source._od19_age_days(record)
+                if age_days > max_age_days:
+                    max_age_days = age_days
+                if source._od19_sla_state(age_days) == "over":
+                    over_sla_count += 1
+        return {
+            "pending_count": pending_count,
+            "max_age_days": max_age_days,
+            "over_sla_count": over_sla_count,
+        }
+
+    # ------------------------------------------------------------------
+    # OCA tier_validation strategy
+    # ------------------------------------------------------------------
+    OD19_TIER_STATUS_BUCKET = {
+        "pending": "pending",
+        "waiting": "incoming",
+        "approved": "done",
+        "rejected": "rejected",
+    }
+    # Lower value = resolved first when a record has several reviews for me.
+    OD19_TIER_STATUS_ORDER = {"pending": 0, "waiting": 1, "rejected": 2, "approved": 3}
+
+    def _od19_classify_tier_for_approver(self):
+        """Approver buckets for a tier_validation source, read from tier.review."""
+        self.ensure_one()
+        buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        if not self._od19_ready() or "tier.review" not in self.env:
+            return buckets
+        # tier.review.reviewer_ids is a stored computed field; force a flush so
+        # freshly created/updated reviews are visible to the search below.
+        self.env["tier.review"].flush_model(["reviewer_ids"])
+        reviews = self.env["tier.review"].sudo().search([
+            ("model", "=", self.model_name),
+            ("reviewer_ids", "in", [self.env.user.id]),
+        ], limit=self.OD19_MAX_RECORDS)
+        seen = {}
+        for review in sorted(
+            reviews, key=lambda r: self.OD19_TIER_STATUS_ORDER.get(r.status, 9)
+        ):
+            bucket = self.OD19_TIER_STATUS_BUCKET.get(review.status)
+            if not bucket or not review.res_id or review.res_id in seen:
+                continue
+            record = self.env[self.model_name].sudo().browse(review.res_id)
+            if not record.exists():
+                continue
+            seen[review.res_id] = bucket
+            buckets[bucket].append(record)
+        return buckets
+
+    def _od19_classify_tier_for_requester(self):
+        """Requester buckets for a tier_validation source (state + review history)."""
+        self.ensure_one()
+        buckets = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        Model = self.env[self.model_name].sudo() if self._od19_ready() else None
+        if Model is None or not self._od19_field_ok(Model, self.requester_field):
+            return buckets
+        me_id = self._od19_me_ids(self.requester_kind)
+        if not me_id:
+            return buckets
+        steps = self.step_ids.sorted("sequence")
+        main_field = self._od19_main_state_field(steps)
+        rejected = self._od19_csv(self.rejected_states)
+        success = self._od19_csv(self.success_states)
+        records = Model.search(
+            [(self.requester_field, "=", me_id)], limit=self.OD19_MAX_RECORDS
+        )
+        for record in records:
+            state_value = record[main_field] if self._od19_field_ok(record, main_field) else False
+            if state_value in rejected:
+                buckets["rejected"].append(record)
+            elif state_value in success:
+                buckets["done"].append(record)
+            elif "review_ids" in record._fields and any(
+                rev.status == "approved" for rev in record.review_ids
+            ):
+                buckets["incoming"].append(record)
+            else:
+                buckets["pending"].append(record)
+        return buckets

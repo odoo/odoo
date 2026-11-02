@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!--  F-S-003 Quotation Form (ใบเสนอราคา)                          -->
+    <!-- ============================================================ -->
+    <record id="view_sale_quotation_form" model="ir.ui.view">
+        <field name="name">sale.quotation.form</field>
+        <field name="model">sale.quotation.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_quotation_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Quotation Form</field>
+        <field name="res_model">sale.quotation.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sale_quotation_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  F-S-004 Proforma Invoice Form (ใบแจ้งหนี้ชั่วคราว)             -->
+    <!-- ============================================================ -->
+    <record id="view_sale_order_proforma_form" model="ir.ui.view">
+        <field name="name">sale.order.proforma.form</field>
+        <field name="model">sale.order.proforma.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_order_proforma_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Proforma Invoice Form</field>
+        <field name="res_model">sale.order.proforma.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sale_order_proforma_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  Warranty Card Form (ใบรับประกัน)                              -->
+    <!-- ============================================================ -->
+    <record id="view_warranty_card_form" model="ir.ui.view">
+        <field name="name">warranty.card.form</field>
+        <field name="model">warranty.card.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_warranty_card_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Warranty Card Form</field>
+        <field name="res_model">warranty.card.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_warranty_card_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="od19_service_warranty.model_od19_warranty_claim"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  R-S-001 Sale Order Outstanding Report                         -->
+    <!-- ============================================================ -->
+    <record id="view_sale_order_outstanding_report" model="ir.ui.view">
+        <field name="name">sale.order.outstanding.report</field>
+        <field name="model">sale.order.outstanding.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                    <field name="p_Show_Picture"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_order_outstanding_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Sale Order Outstanding Report</field>
+        <field name="res_model">sale.order.outstanding.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sale_order_outstanding_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  R-S-002 Sale Order Values Report                              -->
+    <!-- ============================================================ -->
+    <record id="view_sale_order_values_report" model="ir.ui.view">
+        <field name="name">sale.order.values.report</field>
+        <field name="model">sale.order.values.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="date_start" required="1"/>
+                    <field name="date_end" required="1"/>
+                    <field name="p_Group" required="1"/>
+                    <field name="p_Group_Name"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_order_values_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Sale Order Values Report</field>
+        <field name="res_model">sale.order.values.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sale_order_values_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  R-S-003 Sale Invoice Values Report                            -->
+    <!-- ============================================================ -->
+    <record id="view_sale_invoice_values_report" model="ir.ui.view">
+        <field name="name">sale.invoice.values.report</field>
+        <field name="model">sale.invoice.values.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="date_start" required="1"/>
+                    <field name="date_end" required="1"/>
+                    <field name="p_Group" required="1"/>
+                    <field name="p_Group_Name"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_invoice_values_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Sale Invoice Values Report</field>
+        <field name="res_model">sale.invoice.values.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sale_invoice_values_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  R-S-004 First Sales Incoming Report                           -->
+    <!-- ============================================================ -->
+    <record id="view_first_sales_incoming_report" model="ir.ui.view">
+        <field name="name">first.sales.incoming.report</field>
+        <field name="model">first.sales.incoming.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_Year" required="1"/>
+                    <field name="p_Month" required="1"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_first_sales_incoming_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) First Sales Incoming Report</field>
+        <field name="res_model">first.sales.incoming.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_first_sales_incoming_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+</odoo>

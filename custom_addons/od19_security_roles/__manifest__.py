@@ -40,4 +40,5 @@ Business roles themselves live in ``od19_role_catalog`` (Layer 2).
     "application": False,
     "auto_install": False,
     "license": "LGPL-3",
+    "icon": "/od19_security_roles/static/description/icon.svg",
 }

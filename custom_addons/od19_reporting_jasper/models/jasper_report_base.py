@@ -37,7 +37,18 @@ class JasperReportEngine(models.TransientModel):
 
     # ---------------------------------------------------------------- wizard
     name = fields.Char(string="Report Name", default="Print Form", required=True)
-    iso_no = fields.Char(string="ISO No.")
+    iso_document_id = fields.Many2one(
+        "od19.iso.document",
+        string="ISO Document",
+        help="เลือกเอกสารควบคุม ISO เพื่อนำเลขทะเบียน (code) มาต่อท้ายชื่อไฟล์ "
+        "และพิมพ์ลงในรายงาน; ถ้าไม่เลือกจะไม่แสดงเลขทะเบียน",
+    )
+    iso_no = fields.Char(
+        string="ISO No.",
+        compute="_compute_iso_no",
+        store=True,
+        help="เลขทะเบียน ISO ที่ดึงจากเอกสารควบคุม ISO ที่เลือกไว้",
+    )
     name_pdf = fields.Char(string="PDF File Name", compute="_compute_file_name", store=True)
     name_xlsx = fields.Char(string="XLSX File Name", compute="_compute_file_name", store=True)
     jasper_file = fields.Char(
@@ -64,12 +75,17 @@ class JasperReportEngine(models.TransientModel):
     err_msg = fields.Text(string="Error", readonly=True)
 
     # ------------------------------------------------------------ boundaries
+    @api.depends("iso_document_id")
+    def _compute_iso_no(self):
+        for record in self:
+            record.iso_no = record.iso_document_id.code or ""
+
     @api.depends("name", "iso_no")
     def _compute_file_name(self):
         for record in self:
             base = record.name or "Print Form"
             if record.iso_no:
-                base = "%s %s" % (record.iso_no, base)
+                base = "%s (%s)" % (base, record.iso_no)
             record.name_pdf = "%s.pdf" % base
             record.name_xlsx = "%s.xlsx" % base
 
@@ -228,13 +244,29 @@ class JasperReportEngine(models.TransientModel):
         self.write(values)
 
     # -------------------------------------------------------------- lifecycle
-    @api.model
-    def show_report(self, report_name=False, email_subject=False, email_document_number=False):
-        """Generate the report and flip the wizard to its output state.
+    def _action_reopen_wizard(self):
+        """Return the action that keeps the wizard dialog on screen.
 
-        Returning nothing makes the (dialog) form reload in place, so the user
-        stays on the same record and can re-print with the same parameters.
+        Odoo 19 treats a falsy return value of an ``object`` button as
+        ``ir.actions.act_window_close`` (see ``action_service.js``), so a
+        ``return None`` closes the dialog before the user can see the
+        generated file.  Returning an ``act_window`` action whose
+        ``target`` is ``new`` makes the action service swap the current
+        dialog for this very record, now rendered in its ``output`` state.
         """
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": self._description or self.name or _("Print Form"),
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
+            "context": dict(self.env.context),
+        }
+
+    def show_report(self, report_name=False, email_subject=False, email_document_number=False):
+        """Generate the report and flip the wizard to its output state."""
         self.ensure_one()
         self._auto_compile_if_needed()
 
@@ -260,7 +292,7 @@ class JasperReportEngine(models.TransientModel):
 
         if not self.output_pdf:
             raise UserError(_("The report engine did not produce any file."))
-        return None
+        return self._action_reopen_wizard()
 
     def reprint(self):
         """Go back to the input state, keeping the entered parameters."""
@@ -273,7 +305,7 @@ class JasperReportEngine(models.TransientModel):
                 "err_msg": False,
             }
         )
-        return None
+        return self._action_reopen_wizard()
 
     def action_send_email(self):
         self.ensure_one()

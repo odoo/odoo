@@ -9,6 +9,7 @@
     "depends": [
         "account",
         "od19_partner_thai_fields",
+        "od19_accounting_features",
     ],
     "data": [
         "data/sequence.xml",
@@ -21,4 +22,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_accounting_cheque/static/description/icon.svg",
 }

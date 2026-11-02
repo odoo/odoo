@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="action_od19_sales_project" model="ir.actions.act_window">
-        <field name="name">Projects</field>
+        <field name="name">Sale Projects</field>
         <field name="res_model">project.project</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="context">{'default_user_id': uid}</field>
@@ -9,9 +9,9 @@
 
     <menuitem
         id="menu_od19_sales_project"
-        name="Projects"
+        name="Sale Projects"
         parent="sale.sale_menu_root"
         action="action_od19_sales_project"
-        sequence="32"
+        sequence="34"
     />
 </odoo>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <!-- ============================================================ -->
+    # ใบรับรองแทนใบเสร็จรับเงิน (Payment certificate in lieu of receipt)
+    # Used when the payee cannot issue a receipt; there is no input VAT.
+    <!-- ============================================================ -->
+    <template id="payment_certificate_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="expense">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family:'Sarabun','Noto Sans Thai','Tahoma',sans-serif;">
+                        <h2 class="text-center">ใบรับรองแทนใบเสร็จรับเงิน</h2>
+                        <h4 class="text-center">PAYMENT CERTIFICATE IN LIEU OF RECEIPT</h4>
+
+                        <div class="row mt-3">
+                            <div class="col-7">
+                                <strong>ผู้จ่ายเงิน / Payer:</strong>
+                                <div t-field="expense.company_id.partner_id.name"/>
+                                <div t-if="expense.company_id.partner_id.street"
+                                     t-field="expense.company_id.partner_id.street"/>
+                                <div>
+                                    <span>เลขประจำตัวผู้เสียภาษี / Tax ID: </span>
+                                    <span t-field="expense.company_id.partner_id.vat"/>
+                                </div>
+                            </div>
+                            <div class="col-5 text-right">
+                                <div>
+                                    <strong>เลขที่ใบรับรอง / Certificate No: </strong>
+                                    <span t-esc="expense.od19_certificate_number or expense.name"/>
+                                </div>
+                                <div>
+                                    <strong>วันที่ / Date: </strong>
+                                    <span t-field="expense.date"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <strong>ผู้รับเงิน / Payee: </strong>
+                                <span t-field="expense.employee_id.name"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm table-bordered mt-4">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center" style="width:8%">ลำดับ</th>
+                                    <th>รายการ / Description</th>
+                                    <th class="text-right" style="width:20%">จำนวนเงิน / Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td>
+                                        <span t-field="expense.name"/>
+                                        <t t-if="expense.description">
+                                            <div><span t-field="expense.description"/></div>
+                                        </t>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="expense.total_amount"
+                                              t-options='{"widget": "monetary", "display_currency": expense.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr class="font-weight-bold">
+                                    <td colspan="2" class="text-right">รวมทั้งสิ้น / Total</td>
+                                    <td class="text-right">
+                                        <span t-field="expense.total_amount"
+                                              t-options='{"widget": "monetary", "display_currency": expense.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <strong>จำนวนเงิน (ตัวอักษร): </strong>
+                                <span t-esc="expense.currency_id.amount_to_text(expense.total_amount)"/>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <em>
+                                    รายการนี้ไม่มีภาษีมูลค่าเพิ่ม เนื่องจากผู้รับเงินไม่ได้จดทะเบียนภาษีมูลค่าเพิ่ม
+                                    (This document carries no VAT; the payee is not VAT-registered.)
+                                </em>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <div>__________________________</div>
+                                <div>ผู้จ่ายเงิน / Payer</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div>__________________________</div>
+                                <div>ผู้รับเงิน / Payee</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div>__________________________</div>
+                                <div>พยาน / Witness</div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_payment_certificate" model="ir.actions.report">
+        <field name="name">Payment Certificate (ใบรับรองแทนใบเสร็จรับเงิน)</field>
+        <field name="model">hr.expense</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_hr_expense_enhanced.payment_certificate_document</field>
+        <field name="report_file">od19_hr_expense_enhanced.payment_certificate_document</field>
+        <field name="binding_model_id" ref="hr_expense.model_hr_expense"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Payment Certificate - %s' % (object.name or '')</field>
+    </record>
+
+</odoo>

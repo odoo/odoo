@@ -14,4 +14,5 @@
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "icon": "/od19_accounting_analytic_require/static/description/icon.svg",
 }

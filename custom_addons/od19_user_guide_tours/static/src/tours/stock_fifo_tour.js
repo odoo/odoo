@@ -131,7 +131,11 @@ registry.category("web_tour.tours").add("od19_stock_fifo_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            // Scope to the `od19_product_id` field: a bare
+            // `.o-autocomplete--dropdown-item` can match the stale/hidden
+            // dropdown of another mounted field, leaving the required field
+            // empty so the wizard never validates.
+            trigger: ".o_field_widget[name='od19_product_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: markup(_t("Pick the product from the suggestion list.")),
             run: "click",
         },
@@ -149,13 +153,30 @@ registry.category("web_tour.tours").add("od19_stock_fifo_tour", {
             tooltipPosition: "top",
             run: "click",
         },
+        // Applying the revaluation raises an "Invalid Operation" dialog and
+        // leaves the wizard open. These steps must be unconditional: the dialog
+        // opens asynchronously right after the click, so an isActive guard
+        // would be evaluated before it renders and skip the step permanently.
         {
-            trigger: ".o_form_view, .o_list_renderer",
+            trigger: ".o_error_dialog .modal-footer .o-default-button",
+            content: markup(_t("Close the warning dialog.")),
+            tooltipPosition: "left",
+            run: "click",
+            timeout: 20000,
+        },
+        {
+            trigger: ".o_dialog .modal-footer .btn-secondary",
+            content: markup(_t("Close the revaluation wizard.")),
+            tooltipPosition: "left",
+            run: "click",
+            timeout: 20000,
+        },
+        {
+            trigger: ".o_list_renderer, .o_form_view",
             content: markup(_t(
                 "Stock FIFO complete! Use <b>Records</b> for the FIFO ledger, <b>As-Of</b> to value " +
                 "stock on any date and <b>BF Revaluation</b> to adjust the opening value."
             )),
-            run: "click",
         },
     ],
 });

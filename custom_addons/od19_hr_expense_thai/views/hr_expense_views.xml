@@ -17,6 +17,8 @@
                 <field name="second_approval_date"/>
                 <field name="second_approval_state"/>
                 <field name="reimbursement_date"/>
+                <field name="od19_reimbursement_payment_id"
+                       invisible="not od19_reimbursement_payment_id"/>
             </field>
             <xpath expr="//header" position="inside">
                 <button name="action_approve_first"
@@ -34,9 +36,10 @@
                         type="object"
                         invisible="second_approval_state != 'pending'"/>
                 <button name="action_mark_reimbursed"
-                        string="Mark Reimbursed"
+                        string="Reimburse Employee"
                         type="object"
-                        invisible="payment_mode != 'own_account' or state not in ('approved', 'posted', 'in_payment', 'paid')"/>
+                        class="btn-primary"
+                        invisible="payment_mode != 'own_account' or not account_move_id or od19_reimbursement_payment_id"/>
             </xpath>
         </field>
     </record>

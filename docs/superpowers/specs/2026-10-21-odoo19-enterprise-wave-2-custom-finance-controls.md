@@ -46,7 +46,7 @@
   - OCA modules **not** present in `third_party/oca/`: `account_payment_order`
   - **Accounting requirement coverage sync (2026-10-26)**: ตรวจข้อกำหนดจากฝ่ายบัญชีกับแผนและดิสก์จริง แล้วเพิ่ม OCA repo เข้า `third_party/oca/` และ `odoo.conf` `addons_path` ตามนี้ —
     - ✅ `account_financial_report` + `account_tax_balance` (repo `account-financial-reporting`, branch 19.0)
-    - ✅ `account_reconcile_oca` (repo `account-reconcile`, branch 19.0) — โมดูลชื่อ `account_reconcile_oca` (ข้อกำหนดฝ่ายบัญชีเขียนว่า `account_reconcile_model_oca`)
+    - ✅ `account_reconcile_oca` (repo `account-reconcile`, branch 19.0) — โมดูลชื่อ `account_reconcile_oca` (ข้อกำหนดฝ่ายบัญชีเขียนว่า `account_reconcile_model_oca`); **เชื่อมกับ core ผ่าน bridge `od19_accounting_reconcile_ui` (created 2026-11-01)** — auto_install, LGPL; `od19_accounting_features` ไม่ hard-depend OCA อีกต่อไป
     - ✅ `auditlog` (repo `server-tools`, มีอยู่แล้ว) + `report_xlsx` (repo `reporting-engine`, มีอยู่แล้ว) — **ยังไม่ถูกอ้างในแผน** จึงบันทึก adopt ที่นี่
     - ✅ `account_move_name_sequence` + `account_lock_date_update` (repo `account-financial-tools`, มีอยู่แล้ว) — พร้อมใช้ ต้องตัดสินใจเทียบกับ custom sequence/lock ที่มี
     - ❌ `account_invoice_supplier_ref_unique` — **ยังไม่มีบน OCA branch 19.0** (repo `account-invoicing` clone แล้วแต่ยังไม่มีโมดูลนี้) → ต้องรอ OCA migrate หรือทำ custom ขนาดเล็ก
@@ -156,7 +156,7 @@ Wave 2 มีการพัฒนาไปแล้วบางส่วนบ�
 
 - Keep
   - OCA `l10n_th_account_tax`, `account_fiscal_year`, `account_asset_management`, `base_tier_validation`
-  - OCA ที่พร้อมใช้เพิ่มตามข้อกำหนดฝ่ายบัญชี (2026-10-26): `auditlog` (ISO/Internal-External Audit), `report_xlsx` (ภ.พ.30 / ภ.ง.ด.3 / ภ.ง.ด.53 / ทะเบียนภาษีซื้อ-ขาย Excel), `account_financial_report` (TB/GL/BS/P&L), `account_tax_balance` (กระทบยอด VAT), `account_reconcile_oca` (auto bank reconciliation), `account_move_name_sequence`, `account_lock_date_update`
+  - OCA ที่พร้อมใช้เพิ่มตามข้อกำหนดฝ่ายบัญชี (2026-10-26): `auditlog` (ISO/Internal-External Audit), `report_xlsx` (ภ.พ.30 / ภ.ง.ด.3 / ภ.ง.ด.53 / ทะเบียนภาษีซื้อ-ขาย Excel), `account_financial_report` (TB/GL/BS/P&L), `account_tax_balance` (กระทบยอด VAT), `account_reconcile_oca` (auto bank reconciliation — เชื่อมผ่าน bridge `od19_accounting_reconcile_ui`), `account_move_name_sequence`, `account_lock_date_update`
   - Odoo standard `account` (`account.payment.register`, PND CSV ผ่าน `l10n_th`)
   - โมดูล custom ที่ผ่านการตรวจสอบแล้ว: `od19_accounting_cheque`, `od19_accounting_money_in_report`, `od19_accounting_features`, `od19_thai_tax_reports`, `od19_asset_disposal`, `od19_asset_loan`, `od19_thai_font_support`, `od19_accounting_document_sequence`
 - Refactor
@@ -240,6 +240,7 @@ Snapshot report (`od19.money.in.report.run` / `.line`) สร้างจาก 
   - `ir.actions.report` 2 ตัว (`report_type=qweb-pdf`) ผูก `binding_model_id = account.model_account_payment` พร้อม `domain` แยก `payment_type`
   - ใช้ `amount_to_text(lang='th_TH')` และฟอนต์ Sarabun/Noto Sans Thai
 - **AP bill-first rule (บังคับ, 2026-10-23)**: ฝั่งทำจ่าย (outbound payment) ต้องตั้งหนี้ (Vendor Bill ที่ post แล้ว) ก่อนเข้าสู่ payment — `od19_accounting_features` override `account.payment.action_post()` เพื่อบล็อก standalone vendor payment ที่ไม่ผูก Vendor Bill (ตั้งค่าได้ที่ `res.company.od19_require_vendor_bill_for_payment`, default True) Register Payment wizard bypass ผ่าน context `od19_skip_vendor_bill_check`; expense reimbursement ยกเว้น
+- **ประตูควบคุมฝั่งจ่าย enforce (couple กับ child spec W2-PAYABLE-CONTROL-GATE, 2026-11-01)**: ต่อยอดจาก Prepare/Approve เดิมให้ **บังคับใช้จริง** — บล็อก Post จนกว่า `approved` (`od19_enforce_prepare_approval`) + แยกหน้าที่ผู้จัดทำ≠ผู้อนุมัติ (`od19_enforce_prepare_sod`) + override พร้อมเหตุผลและร่องรอย chatter + Three-Way Match + Block Payment + Group Payments ตาม [2026-11-01-od19-payable-control-gate-design.md](2026-11-01-od19-payable-control-gate-design.md) (spec นั้นเป็น source of truth ของ enforcement); ทำงานคู่กับ AP bill-first gate เดิมผ่าน `res.company.od19_require_vendor_bill_for_payment` (default True)
 - WHT Certificate PDF (2026-10-23): พิมพ์จากโมเดล OCA `withholding.tax.cert` (ไม่ใช่ advisory จาก payment) — `ir.actions.report` ใน `od19_thai_tax_reports` model `withholding.tax.cert`, binding ไปที่ `l10n_th_account_tax.model_withholding_tax_cert`, `print_report_name` = `WHT-Cert-%s` ตามเลขที่ cert
 - Optional (ยังไม่ทำ): อนุมัติก่อนชำระแบบหลายชั้น (OCA `base_tier_validation`); จัดกลุ่มหลาย partner ต่อ payment ครั้งเดียว (OCA `account_payment_order` — upgrade path ของแนวทาง A)
 

@@ -23,4 +23,5 @@
     "installable": True,
     "application": False,
     "license": "LGPL-3",
+    "icon": "/od19_sale_wizards/static/description/icon.svg",
 }

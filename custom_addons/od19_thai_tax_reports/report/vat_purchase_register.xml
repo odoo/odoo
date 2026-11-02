@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="vat_purchase_register_document">
+    <template id="vat_purchase_register">
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <div class="page">
@@ -8,19 +8,19 @@
                     <h3 class="text-center">VAT Purchase Register</h3>
                     <div class="row mt-3">
                         <div class="col-6">
-                            <strong>บริษัท:</strong> <span t-field="company.name"/>
+                            <strong>บริษัท:</strong> <span t-out="company.name"/>
                         </div>
                         <div class="col-6 text-right">
                             <strong>เลขประจำตัวผู้เสียภาษี:</strong>
-                            <span t-field="company.vat"/>
+                            <span t-out="company.vat"/>
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-6">
                             <strong>ระหว่างวันที่:</strong>
-                            <span t-field="date_from"/>
+                            <span t-out="date_from" t-options='{"widget": "date"}'/>
                             <strong> ถึง </strong>
-                            <span t-field="date_to"/>
+                            <span t-out="date_to" t-options='{"widget": "date"}'/>
                         </div>
                     </div>
 
@@ -47,7 +47,7 @@
                                         <span t-esc="seq"/>
                                     </td>
                                     <td class="text-center">
-                                        <span t-field="line['invoice_date']"/>
+                                        <span t-out="line['invoice_date']" t-options='{"widget": "date"}'/>
                                     </td>
                                     <td><span t-esc="line['name']"/></td>
                                     <td><span t-esc="line['partner_name']"/></td>

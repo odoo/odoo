@@ -73,6 +73,18 @@ class QcInspection(models.Model):
         string='Inspection Lines',
     )
 
+    @api.constrains('qty_tested', 'qty_accepted')
+    def _check_quantities(self):
+        for rec in self:
+            if rec.qty_tested < 0:
+                raise UserError(_('Quantity Tested cannot be negative.'))
+            if rec.qty_accepted < 0:
+                raise UserError(_('Quantity Accepted cannot be negative.'))
+            if rec.qty_accepted > rec.qty_tested:
+                raise UserError(
+                    _('Quantity Accepted cannot exceed Quantity Tested.')
+                )
+
     @api.depends('qty_tested', 'qty_accepted')
     def _compute_qty_rejected(self):
         for rec in self:
@@ -104,7 +116,7 @@ class QcInspection(models.Model):
         for rec in self:
             if rec.state not in ('draft', 'in_progress'):
                 raise UserError(_('Cannot pass this inspection.'))
-            if rec.result == 'fail' and not rec.line_ids:
+            if rec.result == 'fail':
                 raise UserError(_('Inspection result is Fail. Cannot mark as Passed.'))
             rec.state = 'passed'
 

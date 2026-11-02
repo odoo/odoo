@@ -7,7 +7,7 @@
 | Artifact | Thai accounting & tax regulatory compliance gap analysis |
 | Program | Odoo 19 CE Program |
 | สร้างเมื่อ | 2026-10-27 |
-| ปรับปรุงล่าสุด | 2026-10-28 (Wave 2A ติดตั้งสำเร็จ · Wave 2B ปิดช่อง VAT สำเร็จ · Wave 2C Phase 0–4 ปิดแล้ว — เหลือ Bank API spec สำหรับโหมด live) |
+| ปรับปรุงล่าสุด | 2026-10-29 (Wave 3 ปิดสมบูรณ์ · Wave 4: ปิด ส.บช.3 ยื่นงบ DBD, ภ.ธ.40 SBT และทะเบียนอากรแสตมป์แล้ว · เพิ่มทะเบียน ภ.ง.ด.3/53 fallback สำหรับ CE) |
 | ตรวจจาก | สภาพจริงบนดิสก์ (`custom_addons/`, `third_party/oca/`, core `addons/l10n_th`), สถานะโมดูลใน DB `odoo19_pdev`, `odoo.conf`, และงานวิจัยกฎหมายไทย (ยืนยันซ้ำด้วยการค้นเว็บ) |
 | มุมมอง | **ข้อบังคับ/กฎหมาย** (ต่างจาก `accounting-requirements-coverage.md` ที่เป็นมุม "requirement checklist ของฝ่ายบัญชี") |
 | ผู้จัดทำ | ทีมเทคนิค |
@@ -26,7 +26,7 @@
 - พร้อมกันนั้น **Wave 2A ติดตั้งสำเร็จแล้ว (2026-10-27)** — OCA 12 โมดูล state = `installed` บน `odoo19_pdev` แล้ว ซึ่งปิดช่องว่างด้านรายงานการเงิน/การควบคุมภายในได้ทันที — ได้แก่ `account_financial_report`, `account_tax_balance`, `partner_statement`, `account_reconcile_oca` (+`account_statement_base`), `auditlog`, `account_move_tier_validation` (+`base_tier_validation_formula`), `account_check_deposit`, `account_billing`, `account_journal_lock_date`, `date_range`
 - **Wave 2B ปิดช่อง VAT ครบแล้ว (2026-10-27)** — custom module `od19_thai_tax_reports` v19.0.1.5.0 ครอบคลุม ม.82/5 ภาษีซื้อต้องห้าม, ม.83/6 Reverse charge ภ.พ.36, ม.86/4 validate 8 รายการ, ม.86/6 ใบกำกับภาษีอย่างย่อ และ ม.86/9-10 ใบเพิ่มหนี้/ใบลดหนี้ (unit tests ของโมดูลผ่าน 39 รายการ, 0 failed)
 - **Wave 2C audit + ปิดงานเกือบครบ (2026-10-27 → 2026-10-28)** — ตรวจโมดูล `od19_etax_invoice` แบบ read-only 21 ไฟล์ พบว่า **XML ขมธอ.3-2560 + XSD ETDA + XAdES-BES ทำเสร็จแล้วและได้มาตรฐาน** หลังจากนั้นปิด Phase 0–4 ครบ (**PDF/A-3 ผ่าน veraPDF 1.30.3 flavour 3b**, **ช่องทางยื่น RD** แบบ mock + batch export, **ภ.ง.ด.54**, และ **e-Withholding Tax** แบบ mock-first ใน `od19_thai_tax_reports`) เหลือเพียงการเชื่อมต่อจริงกับธนาคาร (Bank API spec) สำหรับโหมด `live` (ดูรายละเอียดในข้อ 4 Wave 2C)
-- **ข้อเสนอ**: Wave 2A ✅ Wave 2B ✅ และ Wave 2C Phase 0–4 ✅ ปิดแล้ว (เทสต์ `od19_etax_invoice` 33 tests + `od19_thai_tax_reports` 50 tests, 0 failed ทั้งคู่); ขั้นถัดไปคือ **Wave 3 (ภ.ง.ด.50/51 + TAS 12 Deferred Tax + TFRS for NPAEs)**
+- **สถานะปัจจุบัน**: Wave 2A ✅ Wave 2B ✅ Wave 2C Phase 0–4 ✅ **Wave 3 ✅ ปิดสมบูรณ์ (2026-10-29)** — ภ.ง.ด.50/51, TAS 12 Deferred Tax และ TFRS for NPAEs · **Wave 4 ✅ ปิดครบ (2026-10-29)** — **ส.บช.3 / ยื่นงบ DBD** (ลำดับที่ 1), **ภ.ธ.40 SBT** (ลำดับที่ 2) และ **ทะเบียนอากรแสตมป์** (ลำดับที่ 3) · เพิ่ม **ทะเบียน ภ.ง.ด.3/53 (CE fallback) ใน Wave 2C** เมื่อ 2026-10-29 · เทสต์ `od19_etax_invoice` 33 tests + `od19_thai_tax_reports` 96 tests, 0 failed ทั้งคู่; เหลือเฉพาะ e-Stamp / โหมด `live` ที่รอ API spec ภายนอก
 
 ## 2. สิ่งที่ระบบมีวันนี้ (As-Is)
 
@@ -35,7 +35,7 @@
 | กลุ่ม | โมดูล | บทบาท |
 | --- | --- | --- |
 | Core Odoo 19 | `account`, `account_payment`, `account_asset_management`, `account_fiscal_year` | บัญชีแกนหลัก + สินทรัพย์ถาวร + ปีบัญชี |
-| Core Thai | `l10n_th` | ผังบัญชีไทย + ภาษีไทย + **รายงาน ภ.พ.30 / ภ.ง.ด.3 / ภ.ง.ด.53** (account.report engine) |
+| Core Thai | `l10n_th` | ผังบัญชีไทย + ภาษีไทย + รายงาน ภ.พ.30 / ภ.ง.ด.3 / ภ.ง.ด.53 (account.report engine — **ภ.ง.ด.3/53 บน CE ต้องใช้ทะเบียน fallback ใน `od19_thai_tax_reports`** เพราะ viewer อยู่ใน Enterprise `account_reports`) |
 | OCA Thai | `l10n_th_account_tax` | VAT + WHT บนบรรทัดใบแจ้งหนี้ + `withholding.tax.cert` (50 ทวิ) + `account.move.tax.invoice` (`tax_invoice_number`/`tax_invoice_date`) |
 | OCA Finance Tools | `account_lock_date_update`, `account_move_name_sequence` | ล็อกงวดบัญชี + รันเลขที่เอกสารไม่มีช่องว่าง |
 | OCA (Wave 2A, 2026-10-27) | `account_financial_report`(+`date_range`), `account_tax_balance`, `partner_statement`, `account_reconcile_oca`(+`account_statement_base`), `auditlog`, `account_move_tier_validation`(+`base_tier_validation_formula`), `account_check_deposit`, `account_billing`, `account_journal_lock_date` | รายงานการเงิน + กระทบยอด VAT/ธนาคาร + AR/AP statement + Audit Trail + อนุมัติหลายชั้น + เช็ครับ + จัดกลุ่มใบแจ้งหนี้ + ล็อกงวดสมุดรายวัน |
@@ -57,8 +57,8 @@
 
 | ข้อบังคับ | สิ่งที่กฎหมายกำหนด | สถานะ | ช่องว่าง |
 | --- | --- | --- | --- |
-| พ.ร.บ.การบัญชี 2543 ม.14 | เก็บรักษาสมุดบัญชี/เอกสาร **5 ปี** | 🟡 | มี DB เก็บถาวร แต่ไม่มีกลไก retention policy / ห้ามลบชัดเจน |
-| พ.ร.บ.การบัญชี 2543 ม.11 | งบการเงินรายปี + ยื่น DBD **150 วัน** | 🔴 | ไม่มีงบการเงินตามแบบ ส.บช.3 และไม่มีชุดยื่น DBD |
+| พ.ร.บ.การบัญชี 2543 ม.14 | เก็บรักษาสมุดบัญชี/เอกสาร **5 ปี** | 🟡 | มี DB เก็บถาวร + รายงาน ส.บช.3 ระบุนโยบายจัดเก็บ 5 ปี แต่ยังไม่มีกลไกห้ามลบ/retention enforcement ชัดเจน |
+| พ.ร.บ.การบัญชี 2543 ม.11 | งบการเงินรายปี + ยื่น DBD **150 วัน** | ✅ | รายงาน `od19_thai_tax_reports.sbc3_register` (แบบ ส.บช.3) ต่อยอดยอดจากงบ TFRS for NPAEs + แสดงเลขทะเบียนนิติบุคคล/เลขผู้เสียภาษี/ที่อยู่ และคำนวณกำหนดยื่น 150 วัน |
 | พ.ร.บ.การบัญชี 2543 ม.17 | งบการเงินต้องมีผู้สอบบัญชีรับรอง (บางประเภท) | 🔴 | ไม่รองรับสายงานผู้สอบบัญชี |
 
 ### หมวด B: ภาษีมูลค่าเพิ่ม (VAT)
@@ -77,8 +77,8 @@
 
 | ข้อบังคับ | สิ่งที่กฎหมายกำหนด | สถานะ | ช่องว่าง |
 | --- | --- | --- | --- |
-| ภ.ง.ด.1 / 2 / 3 | หักจากเงินเดือน/บุคคล/นิติบุคคล | ✅ | OCA personal_income_tax + core `tax_report_pnd3` |
-| ภ.ง.ด.53 | ยื่น **7 วัน** (e-Filing +8 = 15 วัน) | ✅ | core `tax_report_pnd53` |
+| ภ.ง.ด.1 / 2 / 3 | หักจากเงินเดือน/บุคคล/นิติบุคคล | ✅ | OCA `l10n_th_account_tax` (PIT) + ทะเบียน `od19_thai_tax_reports.pnd3_register` รวบรวม ภ.ง.ด.3/3a จาก `account.withholding.move` (core `tax_report_pnd3` ใช้ไม่ได้บน CE เพราะ viewer อยู่ใน Enterprise `account_reports`) |
+| ภ.ง.ด.53 | ยื่น **7 วัน** (e-Filing +8 = 15 วัน) | ✅ | ทะเบียน `od19_thai_tax_reports.pnd53_register` (กรอง `income_tax_form = pnd53` จาก `account.withholding.move`; core `tax_report_pnd53` ใช้ไม่ได้บน CE เพราะ viewer อยู่ใน Enterprise `account_reports`) |
 | ภ.ง.ด.54 | นำส่งภาษีให้ราชการ/องค์กร | ✅ | report เฉพาะใน `od19_thai_tax_reports` (flag `pnd54` บน `account.withholding.tax.income_tax_form`) |
 | ม.50 ทวิ | หนังสือรับรองการหักภาษี **2 ฉบับ** (ม.40(1)(2) ภายใน 15 ก.พ. ปีถัดไป) | ✅ | OCA `withholding.tax.cert` |
 | e-Withholding Tax | นำส่งอิเล็กทรอนิกส์ผ่านธนาคาร | 🟡 | mock-first พร้อม (Live รอ Bank API spec) |
@@ -103,16 +103,16 @@
 
 | ข้อบังคับ | สิ่งที่กฎหมายกำหนด | สถานะ | ช่องว่าง |
 | --- | --- | --- | --- |
-| ภ.ธ.40 | ภาษีธุรกิจเฉพาะ (SBT) | 🔴 | ไม่มี |
-| อากรแสตมป์ / e-Stamp | อากรแสตมป์ + นำส่งอิเล็กทรอนิกส์ | 🔴 | ไม่มี |
+| ภ.ธ.40 | ภาษีธุรกิจเฉพาะ (SBT) | ✅ | กลุ่มภาษี `tax_group_sbt` + ภาษี SBT 3% และส่วนท้องถิ่น 0.3% (`data/od19_sbt_data.xml`) + รายงาน `od19_thai_tax_reports.sbt_pp40_register` (รายรับ/ภาษี 3%/ท้องถิ่น/รวม) |
+| อากรแสตมป์ / e-Stamp | อากรแสตมป์ + นำส่งอิเล็กทรอนิกส์ | 🟡 | **ทะเบียนอากรแสตมป์ + รายงาน** (2026-10-29): โมเดล `od19.stamp.duty.rate` (บัญชีอัตราอากร 6 ลักษณะ ใน `data/od19_stamp_duty_data.xml`) + `od19.stamp.duty` (คำนวณอากรจากอัตรา ปัดขึ้นตามกติกา "ทุก X บาทหรือเศษของ X บาท" + เพดานอากร) + รายงาน `od19_thai_tax_reports.stamp_duty_register` — **ยังไม่มี e-Stamp ยื่นอิเล็กทรอนิกส์ต่อ RD** (รอ API spec) |
 
 ### หมวด G: รายงานการเงิน / การปิดงบ
 
 | ข้อบังคับ | สิ่งที่กฎหมายกำหนด | สถานะ | ช่องว่าง |
 | --- | --- | --- | --- |
-| TFRS for NPAEs | งบการเงินตามมาตรฐาน | 🟡 | มี GL แต่ไม่มี template งบตามแบบ NPAE |
+| TFRS for NPAEs | งบการเงินตามมาตรฐาน | ✅ | template งบการเงินตามแบบ NPAE ใน `od19_thai_tax_reports` (งบแสดงฐานะการเงิน + งบกำไรขาดทุน) **เสร็จ 2026-10-29** (Wave 3) |
 | งบทดลอง / กำไรขาดทุน / งบดุล / กระแสเงินสด | รายงานมาตรฐาน | ✅ | `account_financial_report` (OCA) **ติดตั้งแล้ว 2026-10-27** (Wave 2A) |
-| กระทบยอดธนาคาร | Monthly recon | ✅ | `account_reconcile_oca` + `account_statement_base` **ติดตั้งแล้ว 2026-10-27** (Wave 2A) |
+| กระทบยอดธนาคาร | Monthly recon | ✅ | `account_reconcile_oca` + `account_statement_base` **ติดตั้งแล้ว 2026-10-27** (Wave 2A); เชื่อมกับ core ผ่าน bridge `od19_accounting_reconcile_ui` (2026-11-01) |
 | ปิดงวดบัญชี | ล็อกงวด | ✅ | `account_lock_date_update` ติดตั้งแล้ว + `account_journal_lock_date` **ติดตั้งแล้ว 2026-10-27** (Wave 2A) |
 
 ### หมวด H: การควบคุมภายใน / Audit Trail
@@ -130,12 +130,14 @@
 
 **ผลการติดตั้ง**: 12 โมดูล state = `installed` บน `odoo19_pdev` (ตรวจด้วย psql 2026-10-27) และ Odoo โหลดผ่านทุกโมดูลใน log (`Loading module account_billing (265/274)` → `account_check_deposit (266/274)` → `account_reconcile_oca (274/274)`)
 
+> อัปเดต 2026-11-01: `od19_accounting_features` **ไม่ hard-depend** `account_reconcile_oca` อีกต่อไป — แยกเป็น bridge module `od19_accounting_reconcile_ui` (LGPL, `auto_install=True`) เพื่อให้ core ไม่ถูกล็อกกับ addon AGPL ภายนอก
+
 | # | โมดูล | Repo | ปิดช่องว่าง | สถานะ |
 | --- | --- | --- | --- | --- |
 | 1 | `account_financial_report` | account-financial-reporting | หมวด G — TB / GL / BS / P&L | ✅ installed |
 | 2 | `account_tax_balance` | account-financial-reporting | หมวด B — กระทบยอด VAT | ✅ installed |
 | 3 | `partner_statement` | account-financial-reporting | AR/AP statement | ✅ installed |
-| 4 | `account_reconcile_oca` (+`account_statement_base`) | account-reconcile | หมวด G — bank reconciliation | ✅ installed |
+| 4 | `account_reconcile_oca` (+`account_statement_base`) | account-reconcile | หมวด G — bank reconciliation (bridge: `od19_accounting_reconcile_ui`) | ✅ installed |
 | 5 | `auditlog` | server-tools | หมวด H — Audit Trail (ISO 9001) | ✅ installed |
 | 6 | `account_move_tier_validation` (+`base_tier_validation_formula`) | tier-validation | หมวด H — อนุมัติหลายชั้น | ✅ installed |
 | 7 | `account_check_deposit` | account-financial-tools | หมวด H — เช็ครับ | ✅ installed |
@@ -207,21 +209,45 @@
 | Phase 3 — ภ.ง.ด.54 | ✅ report เฉพาะใน `od19_thai_tax_reports` (mirror `wht_register`) · v19.0.1.6.1 |
 | Phase 3.5 — ปิดประเด็นคุณภาพ #6/#7 | ✅ default mapping ครบ families ตาม buyer VAT + receipt · เอกสารแยกขอบเขต paper 86/6 vs electronic T05 ชัดเจน · v19.0.1.2.3 / v19.0.1.6.1 |
 | Phase 4 — e-Withholding | ✅ mock-first ใน `od19_thai_tax_reports` — model `od19.ewht.submission` + adapter `lib/ewht_gateway.py` (Mock/Live) + config บริษัท + view/security/เทสต์ · v19.0.1.7.0 (โหมด `live` รอ Bank API spec) |
+| Phase 5 — ภ.ง.ด.3 / ภ.ง.ด.53 (CE fallback) | ✅ (2026-10-29) — core `l10n_th` มี ภ.ง.ด.3/53 เป็น `account.report` variant แต่ renderer อยู่ใน Enterprise `account_reports` (ชุดนี้ไม่มี) จึงเปิดจากเมนูไม่ได้ · เพิ่มทะเบียน QWeb PDF ในโมดูลเราเอง: `report/pnd3_register.py`/`.xml` (กรอง `income_tax_form in (pnd3, pnd3a)`) และ `report/pnd53_register.py`/`.xml` (กรอง `= pnd53`) อ่านจาก `account.withholding.move` (OCA) · ผูกเข้า wizard + เมนู `menu_pnd3_register`/`menu_pnd53_register` (seq 55/56) · เทสต์ bound/gathers/render · v19.0.1.14.0 |
 
 **ต้องตัดสินใจ / รอข้อมูล**: (1) ~~PDF/A-3 ใช้ `pikepdf` หรือ `ghostscript`~~ ✅ เลือก `pikepdf` · (2) ~~มี RD Service Provider ID + API spec แล้วหรือยัง~~ 🟡 adapter ทำเป็น mock ได้แล้ว (`od19_etax_rd_mode`); mode `live` ยังต้องมี Provider ID + API spec จริง · (3) ~~ยืนยันการแยก TypeCode 80/81 (กระทบเอกสารที่ออกไปแล้ว)~~ ✅ ยืนยันแล้ว (ดูประเด็นคุณภาพ #1) · (4) ~~ลำดับเริ่ม Phase 0 หรือ Phase 1~~ ✅ เริ่มจาก Phase 0 (ปิดแล้วทั้งสอง) · (5) ~~ธนาคารสำหรับ e-Withholding (Phase 4)~~ 🟡 adapter ทำเป็น mock ได้แล้ว (`od19_ewht_mode`); mode `live` ยังต้องยืนยันธนาคาร + bank API spec · (6) **ยืนยันสมมุติฐาน ภ.ง.ด.54**: ใช้ flag `pnd54` ที่เพิ่มบน `account.withholding.tax.income_tax_form` เป็นเกณฑ์คัดรายการ (OCA ไม่มีค่านี้) — หากต้องการเกณฑ์อื่น (เช่น ตามประเภทผู้จ่าย/หน่วยงานราชการ) ต้องปรับ domain ใน `report/pnd54_register.py`
-**ติดตาม**: terminal บน Windows กลับมาใช้งานได้แล้ว (2026-10-28) — Wave 2B/2C commit + **push ขึ้น `origin/feat/od19-wave2b-vat-compliance` แล้ว (HEAD ล่าสุด `d08a3c225b1`)** · Wave 2C Phase 0 (ข้อ 1–5 ครบ) + Phase 1 + Phase 2 + Phase 3 + Phase 3.5 (ปิดประเด็นคุณภาพ #6/#7 ครบทั้ง 7 ข้อ) + Phase 4 (e-Withholding mock-first) ปิดแล้ว · เทสต์ `od19_etax_invoice` 0 failed, 0 error(s) of 33 tests · เทสต์ `od19_thai_tax_reports` 0 failed, 0 error(s) of 50 tests (รวม 9 เทสต์ e-WHT) · คงเหลือเพียงการเชื่อมต่อจริงกับธนาคาร/RD สำหรับโหมด `live`
+**ติดตาม**: terminal บน Windows กลับมาใช้งานได้แล้ว (2026-10-28) — Wave 2B/2C commit + **push ขึ้น `origin/feat/od19-wave2b-vat-compliance` แล้ว (HEAD ล่าสุด `d08a3c225b1`)** · Wave 2C Phase 0 (ข้อ 1–5 ครบ) + Phase 1 + Phase 2 + Phase 3 + Phase 3.5 (ปิดประเด็นคุณภาพ #6/#7 ครบทั้ง 7 ข้อ) + Phase 4 (e-Withholding mock-first) ปิดแล้ว · เทสต์ `od19_etax_invoice` 0 failed, 0 error(s) of 33 tests · เทสต์ `od19_thai_tax_reports` 0 failed, 0 error(s) of 63 tests (รวมเทสต์ e-WHT และ TAS 12 Deferred Tax) · คงเหลือเพียงการเชื่อมต่อจริงกับธนาคาร/RD สำหรับโหมด `live`
 
 > หมายเหตุ: ผล audit ข้างต้นมาจากการตรวจแบบ read-only (ขั้นตอน audit ไม่ได้แก้ไขไฟล์ในโมดูล `od19_etax_invoice`) — การแก้ไขเกิดขึ้นภายหลังใน Phase 0–4 ตามแผนด้านบน
 
 ### Wave 3 — ภาษีเงินได้นิติบุคคล + มาตรฐานบัญชี
-- **ภ.ง.ด.50 / ภ.ง.ด.51**: รายงาน + ประมาณการ
-- **TAS 12 Deferred Tax**: คำนวณผลต่างชั่วคราว + รายงาน
-- **TFRS for NPAEs template**: งบการเงินตามแบบ NPAE
+
+| รายการ | สถานะ | สิ่งที่ต้องทำ |
+| --- | --- | --- |
+| ภ.ง.ด.50 (รายปี) | ✅ | อยู่ใน `od19_thai_tax_reports` — `report/pnd50_register.py` (`_get_profit_and_loss` รวบยอดบัญชี `internal_group in (income, expense)` ที่ `parent_state='posted'` ผ่าน `_read_group(balance:sum)`) + template/report action `report/pnd50_register.xml` + selection/menu บน wizard · v19.0.1.8.0 |
+| ภ.ง.ด.51 (ครึ่งปี/ประมาณการ) | ✅ | อยู่ใน `od19_thai_tax_reports` — `report/pnd51_register.py` ใช้ `_get_profit_and_loss` ร่วมกับ ภ.ง.ด.50, ประมาณการกำไรทั้งปี (`net_profit × 12 ÷ จำนวนเดือน`) และภาษีครึ่งปี = 50% ของประมาณการทั้งปี · v19.0.1.8.0 |
+| TAS 12 Deferred Tax | ✅ | อยู่ใน `od19_thai_tax_reports` — Worksheet/Register `od19.deferred.tax.worksheet` + `od19.deferred.tax.line` (มูลค่าตามบัญชี vs ฐานภาษี → ผลต่างชั่วคราว taxable/deductible → ภาษีรอตัดบัญชี) · บันทึกบัญชีอัตโนมัติเฉพาะ **ส่วนเคลื่อนไหว** (ยอดปิดงวด − ยอดยกมาจาก `previous_worksheet_id` ที่ Post แล้ว) ผ่าน `action_post_deferred_tax` · ตั้งค่าบัญชี DTA/DTL/ค่าใช้จ่าย + สมุดรายวัน + อัตราภาษี ที่หน้าตั้งค่าบริษัท · v19.0.1.9.0 |
+| TFRS for NPAEs template | ✅ | อยู่ใน `od19_thai_tax_reports` — `report/npae_financial_statement.py` (AbstractModel สรุป **งบแสดงฐานะการเงิน** จากยอดสะสม `parent_state='posted'` จัดกลุ่มตาม `account_type` เป็นหมุนเวียน/ไม่หมุนเวียน + **งบกำไรขาดทุน** เฉพาะรอบระยะเวลา) + template/report action `report/npae_financial_statement.xml` + selection/menu บน wizard · ตรวจสมการบัญชีผ่าน `balance_difference` (สินทรัพย์ − หนี้สิน − ส่วนของผู้ถือหุ้นรวมผลกำไร) · v19.0.1.10.0 |
+
+**ประเด็นคุณภาพที่พบ (แก้แล้วใน Wave 3)**
+
+| # | เรื่อง | ระดับ | รายละเอียด |
+| --- | --- | --- | --- |
+| 1 | รายงานเดิม 5 ตัว Print ไม่ได้ (`MissingError: Template not found`) | ✅ | แก้แล้ว — `report_name` ของ `ir.actions.report` ไม่ตรงกับ xmlid ของ QWeb template (template เดิมลงท้าย `_document`) ทำให้ `_render_template` หา template ไม่เจอ · rename xmlid ของ vat_sales/vat_purchase/wht/pp36/pnd54 ให้ตรง `report_name` (`od19_thai_tax_reports.<name>`) |
+| 2 | เทมเพลตใช้ `t-field` กับค่า dict/ตัวแปร (compile ไม่ผ่าน) | ✅ | แก้แล้ว — `_compile_directive_field` บังคับ `assert "." in t-field` (ใช้กับ record.field เท่านั้น) ทำให้ `t-field="date_from"` และ `t-field="line['date']"` compile ไม่ผ่าน · เปลี่ยนเป็น `t-out` (+ `t-options='{"widget": "date"}'` สำหรับวันที่) ใน pnd50/pnd51/vat_sales/vat_purchase/wht/pp36/pnd54 |
+| 3 | Computed field อ้าง computed field ของโมเดลเดียวกัน (TAS 12) | ✅ | แก้แล้ว — `total_dta`/`total_dtl` ถูกใช้เป็น dependency ของ `_compute_totals` ผ่าน `previous_worksheet_id.total_*` (self-reference) ทำให้ Odoo เตือน `should be declared with recursive=True` · ประกาศ `recursive=True` บนสองฟิลด์ |
+
+**แผนดำเนินการ Wave 3**: ✅ ลำดับที่ 1 — ภ.ง.ด.50 + ภ.ง.ด.51 (report + ประมาณการ + เทสต์ render/compute ผ่าน) · ✅ ลำดับที่ 2 — TAS 12 Deferred Tax (worksheet + auto GL + เทสต์ 8 ตัวผ่าน) · ✅ ลำดับที่ 3 — TFRS for NPAEs (งบแสดงฐานะการเงิน + งบกำไรขาดทุน + เทสต์ render/compute/wizard ผ่าน) — **Wave 3 ปิดสมบูรณ์**
 
 ### Wave 4 — ภาษีอื่น + การยื่นราชการ
-- **ภ.ธ.40 SBT** (กรณีเข้าข่ายธุรกิจเฉพาะ)
-- **อากรแสตมป์ / e-Stamp**
-- **ส.บช.3 / ยื่นงบ DBD 150 วัน** + retention policy 5 ปี
+- ✅ **ส.บช.3 / ยื่นงบ DBD 150 วัน** + retention policy 5 ปี (2026-10-29)
+  - รายงาน `od19_thai_tax_reports.sbc3_register` (model `report.od19_thai_tax_reports.sbc3_register`) — ต่อยอดยอดจากงบ TFRS for NPAEs ผ่าน `_get_report_values` ในโมดูล `od19_thai_tax_reports`
+  - เทมเพลต QWeb `report/sbc3_register.xml` แสดง 5 ส่วน: ข้อมูลทั่วไป, งบแสดงฐานะการเงิน, งบกำไรขาดทุน, สรุปสาระสำคัญ, คำรับรอง + หมายเหตุ 150 วัน/5 ปี
+  - คำนวณ `filing_deadline = date_to + 150 วัน` (พ.ร.บ.การบัญชี 2543 ม.11) และแสดง `retention_years = 5` (ม.14)
+  - เพิ่มเข้า wizard `thai.tax.report.wizard` (selection `sbc3`) + เมนู `menu_sbc3_register` (seq 65) + เทสต์ 5 ตัว (`test_sbc3_register.py`)
+- ✅ **ภ.ธ.40 SBT** (กรณีเข้าข่ายธุรกิจเฉพาะ) (2026-10-29) — กลุ่มภาษี `tax_group_sbt` + ภาษี SBT 3% (`tax_sbt_specific`) และส่วนท้องถิ่น 0.3% (`tax_sbt_local`) ใน `data/od19_sbt_data.xml`; รายงาน `od19_thai_tax_reports.sbt_pp40_register` สรุปรายรับ/ภาษี 3%/ท้องถิ่น/รวม แยกใบกำกับขาย–ใบลดหนี้ (ใบลดหนี้เป็นค่าลบ), เทสต์ 7 ตัว (`test_sbt_pp40_register.py`)
+- ✅ **อากรแสตมป์ (Stamp Duty)** — ทะเบียน + รายงาน (2026-10-29)
+  - โมเดล `od19.stamp.duty.rate` (บัญชีอัตราอากรแสตมป์ 6 ลักษณะ: 1/2/3/4 = 1 บาท/1,000, 5 = 1 บาท/2,000 เพดาน 10,000, 9 = 3 บาท/ฉบับ) ใน `data/od19_stamp_duty_data.xml`
+  - โมเดล `od19.stamp.duty` คำนวณอากรอัตโนมัติ (`_compute_duty_amount`) ตามกติกา "ทุกจำนวนเงิน X บาท หรือเศษของ X บาท" = **ปัดขึ้น (ceil)** + เพดาน `max_amount`; มี sequence `ST/%(year)s/` และสถานะ ร่าง→ปิดอากร
+  - รายงาน `od19_thai_tax_reports.stamp_duty_register` (ทะเบียนอากร + สรุปตามลักษณะแห่งตราสาร) + เมนู `menu_stamp_duty` (register/rates/report) + wizard selection `stamp_duty`
+  - เทสต์ 13 ตัว (`test_stamp_duty.py`) ผ่านทั้งหมด
+- **อากรแสตมป์ / e-Stamp** — เหลือเฉพาะการนำส่งอิเล็กทรอนิกส์ (e-Stamp ต่อ RD API) รอ API spec
 
 ## 5. ลำดับความสำคัญเชิงธุรกิจ (Criticality)
 

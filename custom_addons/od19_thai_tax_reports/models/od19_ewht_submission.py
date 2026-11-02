@@ -108,7 +108,11 @@ class Od19EwhtSubmission(models.Model):
                     self.env["ir.sequence"].next_by_code("od19.ewht.submission")
                     or "New"
                 )
-        return super().create(vals_list)
+        records = super().create(vals_list)
+        # Nothing may be filed for a company that never opted in to e-WHT.
+        for record in records:
+            record.company_id._od19_ewht_check_enabled()
+        return records
 
     # ------------------------------------------------------------------
     # Submission
@@ -117,6 +121,12 @@ class Od19EwhtSubmission(models.Model):
         """Send every withholding record of the submission through the bank."""
         self.ensure_one()
         self.company_id._od19_ewht_check_enabled()
+        if self.state == "accepted":
+            raise UserError(
+                self.env._(
+                    "รายการนำส่งนี้ธนาคารตอบรับแล้ว ไม่สามารถนำส่งซ้ำได้"
+                )
+            )
         if not self.move_ids:
             raise UserError(
                 self.env._("กรุณาเลือกรายการหัก ณ ที่จ่ายที่ต้องการนำส่งก่อน")

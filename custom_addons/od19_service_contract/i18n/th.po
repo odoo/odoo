@@ -1,0 +1,174 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* od19_service_contract
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-02 08:00+0000\n"
+"PO-Revision-Date: 2026-11-02 08:00+0000\n"
+"Last-Translator: The Auto-Info Co., Ltd.\n"
+"Language-Team: Thai\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: od19_service_contract
+#. odoo-python
+#: code:addons/od19_service_contract/models/contract.py:0
+msgid "Cannot renew a contract without dated contract lines."
+msgstr "ไม่สามารถต่ออายุสัญญาที่ไม่มีรายการสัญญาซึ่งระบุวันสิ้นสุดได้"
+
+#. module: od19_service_contract
+#: model_terms:ir.ui.view,arch_db:od19_service_contract.contract_contract_form_view_service
+msgid "Covered Equipment"
+msgstr "อุปกรณ์ที่รับประกัน"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,field_description:od19_service_contract.field_contract_contract__warranty_lot_ids
+msgid "Covered Warranty Lots"
+msgstr "ล็อตที่รับประกัน"
+
+#. module: od19_service_contract
+#: model_terms:ir.ui.view,arch_db:od19_service_contract.action_service_contract
+msgid "Create a service contract"
+msgstr "สร้างสัญญาบริการ"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,field_description:od19_service_contract.field_contract_contract__auto_renew
+msgid "Auto Renew"
+msgstr "ต่ออายุอัตโนมัติ"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,help:od19_service_contract.field_contract_contract__auto_renew
+msgid "Automatically extend the contract when it reaches its end date."
+msgstr "ต่ออายุสัญญาโดยอัตโนมัติเมื่อถึงวันสิ้นสุด"
+
+#. module: od19_service_contract
+#. odoo-python
+#: code:addons/od19_service_contract/models/contract.py:0
+msgid ""
+"Contract %(name)s will expire on %(date)s (%(days)s day(s) left). Please "
+"review the renewal."
+msgstr ""
+"สัญญา %(name)s จะครบกำหนดในวันที่ %(date)s (เหลือ %(days)s วัน) "
+"โปรดพิจารณาการต่ออายุ"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,field_description:od19_service_contract.field_contract_contract__is_expiring_soon
+msgid "Expiring Soon"
+msgstr "ใกล้ครบกำหนด"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,help:od19_service_contract.field_contract_contract__renewal_interval_months
+msgid "How many months the contract is extended by each renewal."
+msgstr "จำนวนเดือนที่สัญญาจะถูกขยายในแต่ละครั้งที่ต่ออายุ"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,help:od19_service_contract.field_contract_contract__renewal_notice_sent
+msgid "Internal flag preventing duplicate renewal reminders."
+msgstr "ธงภายในเพื่อป้องกันการแจ้งเตือนต่ออายุซ้ำซ้อน"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,help:od19_service_contract.field_contract_contract__warranty_lot_ids
+msgid "Lots / serials whose warranty is covered by this contract."
+msgstr "ล็อต/ซีเรียลที่ได้รับการรับประกันภายใต้สัญญานี้"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,help:od19_service_contract.field_od19_service_card__contract_id
+msgid "Preventive-maintenance cards delivered under this contract."
+msgstr "บัตรงานบำรุงรักษาเชิงป้องกันที่ให้บริการภายใต้สัญญานี้"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,help:od19_service_contract.field_contract_contract__renewal_notice_days
+msgid "Raise a reminder this many days before the end date."
+msgstr "แจ้งเตือนล่วงหน้ากี่วันก่อนวันสิ้นสุด"
+
+#. module: od19_service_contract
+#: model_terms:ir.ui.view,arch_db:od19_service_contract.action_service_contract
+msgid ""
+"Recurring maintenance / AMC contracts billed automatically each period."
+msgstr "สัญญาบำรุงรักษารายงวด / AMC ที่ออกใบแจ้งหนี้อัตโนมัติทุกรอบ"
+
+#. module: od19_service_contract
+#: model_terms:ir.ui.view,arch_db:od19_service_contract.contract_contract_form_view_service
+msgid "Renew Contract"
+msgstr "ต่ออายุสัญญา"
+
+#. module: od19_service_contract
+#: model_terms:ir.ui.view,arch_db:od19_service_contract.contract_contract_form_view_service
+msgid "Renew this contract for another term?"
+msgstr "ต่ออายุสัญญานี้อีกหนึ่งรอบ?"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,field_description:od19_service_contract.field_contract_contract__renewal_interval_months
+msgid "Renewal Interval (Months)"
+msgstr "รอบต่ออายุ (เดือน)"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,field_description:od19_service_contract.field_contract_contract__renewal_notice_days
+msgid "Renewal Notice (Days)"
+msgstr "แจ้งเตือนล่วงหน้า (วัน)"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,field_description:od19_service_contract.field_contract_contract__renewal_notice_sent
+msgid "Renewal Notice Sent"
+msgstr "ส่งแจ้งเตือนต่ออายุแล้ว"
+
+#. module: od19_service_contract
+#: model_terms:ir.ui.view,arch_db:od19_service_contract.contract_contract_form_view_service
+msgid "Service"
+msgstr "บริการ"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,field_description:od19_service_contract.field_contract_contract__is_service_contract
+#: model:ir.model.fields,field_description:od19_service_contract.field_od19_service_card__contract_id
+msgid "Service Contract"
+msgstr "สัญญาบริการ"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,help:od19_service_contract.field_contract_contract__is_service_contract
+msgid ""
+"Tick to manage this contract as a recurring service contract (PM / AMC). "
+"Service contracts appear under Accounting > Customers > Service Contracts."
+msgstr ""
+"เลือกเพื่อจัดการสัญญานี้เป็นสัญญาบริการรายงวด (PM / AMC) "
+"สัญญาบริการจะแสดงภายใต้ บัญชี > ลูกค้า > สัญญาบริการ"
+
+#. module: od19_service_contract
+#: model:ir.actions.act_window,name:od19_service_contract.action_service_contract
+#: model:ir.ui.menu,name:od19_service_contract.menu_service_contract
+#: model_terms:ir.ui.view,arch_db:od19_service_contract.contract_contract_search_view_service
+msgid "Service Contracts"
+msgstr "สัญญาบริการ"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,field_description:od19_service_contract.field_contract_contract__service_card_count
+#: model:ir.model.fields,field_description:od19_service_contract.field_contract_contract__service_card_ids
+#: model_terms:ir.ui.view,arch_db:od19_service_contract.contract_contract_form_view_service
+msgid "Service Cards"
+msgstr "บัตรงานบริการ"
+
+#. module: od19_service_contract
+#: model_terms:ir.ui.view,arch_db:od19_service_contract.contract_contract_form_view_service
+msgid "Service Cards (PM)"
+msgstr "บัตรงานบริการ (PM)"
+
+#. module: od19_service_contract
+#. odoo-python
+#: code:addons/od19_service_contract/models/contract.py:0
+msgid "Service contract %s expires soon"
+msgstr "สัญญาบริการ %s ใกล้ครบกำหนด"
+
+#. module: od19_service_contract
+#: model:ir.model.fields,help:od19_service_contract.field_od19_service_card__contract_id
+msgid "Service contract this preventive-maintenance card belongs to."
+msgstr "สัญญาบริการที่บัตรงานบำรุงรักษาเชิงป้องกันนี้สังกัดอยู่"
+
+#. module: od19_service_contract
+#: model:ir.cron,name:od19_service_contract.ir_cron_service_contract_renewal
+msgid "Service Contracts: Renewal & Expiry Reminder (OD19)"
+msgstr "สัญญาบริการ: ต่ออายุและแจ้งเตือนครบกำหนด (OD19)"

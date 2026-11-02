@@ -1,0 +1,220 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_external_dbsource
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-18 02:29+0000\n"
+"PO-Revision-Date: 2017-02-18 02:29+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2016\n"
+"Language-Team: Thai (https://www.transifex.com/oca/teams/23907/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,help:base_external_dbsource.field_base_external_dbsource__conn_string
+msgid ""
+"\n"
+"    Sample connection strings:\n"
+"    - Microsoft SQL Server:\n"
+"      mssql+pymssql://username:%s@server:port/dbname?charset=utf8\n"
+"    - MySQL: mysql://user:%s@server:port/dbname\n"
+"    - ODBC: DRIVER={FreeTDS};SERVER=server.address;Database=mydb;UID=sa\n"
+"    - ORACLE: username/%s@//server.address:port/instance\n"
+"    - PostgreSQL:\n"
+"        dbname='template1' user='dbuser' host='localhost' "
+"port='5432'         password=%s\n"
+"    - SQLite: sqlite:///test.db\n"
+"    - Elasticsearch: https://user:%s@localhost:9200\n"
+"    "
+msgstr ""
+"\n"
+"    ตัวอย่างสตริงการเชื่อมต่อ:\n"
+"    - Microsoft SQL Server:\n"
+"      mssql+pymssql://username:%s@server:port/dbname?charset=utf8\n"
+"    - MySQL: mysql://user:%s@server:port/dbname\n"
+"    - ODBC: DRIVER={FreeTDS};SERVER=server.address;Database=mydb;UID=sa\n"
+"    - ORACLE: username/%s@//server.address:port/instance\n"
+"    - PostgreSQL:\n"
+"        dbname='template1' user='dbuser' host='localhost' "
+"port='5432'         password=%s\n"
+"    - SQLite: sqlite:///test.db\n"
+"    - Elasticsearch: https://user:%s@localhost:9200\n"
+"    "
+
+#. module: base_external_dbsource
+#. odoo-python
+#: code:addons/base_external_dbsource/models/base_external_dbsource.py:0
+#, python-format
+msgid ""
+"\"%(method)s\" method not found, check that all assets are installedfor the "
+"%(connector)s connector type."
+msgstr ""
+"\"%(method)s\" ไม่พบเมธอด โปรดตรวจสอบว่าติดตั้งส่วนประกอบทั้งหมดสำหรับ "
+"ตัวเชื่อมต่อ %(connector)s แล้ว"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__ca_certs
+msgid "Ca Certs"
+msgstr "ใบรับรอง CA"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__client_cert
+msgid "Client Cert"
+msgstr "ใบรับรองไคลเอนต์"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__client_key
+msgid "Client Key"
+msgstr "รหัสลูกค้า"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__company_id
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__conn_string_full
+msgid "Conn String Full"
+msgstr "สตริงการเชื่อมต่อแบบเต็ม"
+
+#. module: base_external_dbsource
+#: model_terms:ir.ui.view,arch_db:base_external_dbsource.view_dbsource_form
+msgid "Connection String"
+msgstr "สตริงการเชื่อมต่อ"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__conn_string
+msgid "Connection string"
+msgstr "สตริงการเชื่อมต่อ"
+
+#. module: base_external_dbsource
+#. odoo-python
+#: code:addons/base_external_dbsource/models/base_external_dbsource.py:0
+#, python-format
+msgid ""
+"Connection test failed:\n"
+"Here is what we got instead:\n"
+"%s"
+msgstr ""
+"การทดสอบการเชื่อมต่อล้มเหลว:\n"
+"นี่คือสิ่งที่เราได้รับแทน:\n"
+"%s"
+
+#. module: base_external_dbsource
+#. odoo-python
+#: code:addons/base_external_dbsource/models/base_external_dbsource.py:0
+#, python-format
+msgid ""
+"Connection test succeeded:\n"
+"Everything seems properly set up!"
+msgstr ""
+"การทดสอบการเชื่อมต่อสำเร็จ:\n"
+"ทุกอย่างดูเหมือนตั้งค่าเรียบร้อยแล้ว!"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__connector
+msgid "Connector"
+msgstr "ตัวเชื่อมต่อ"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: base_external_dbsource
+#: model:ir.ui.menu,name:base_external_dbsource.menu_dbsource
+msgid "Database Sources"
+msgstr "แหล่งข้อมูลฐานข้อมูล"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__name
+msgid "Datasource name"
+msgstr "ชื่อแหล่งข้อมูล"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: base_external_dbsource
+#: model_terms:ir.ui.view,arch_db:base_external_dbsource.view_dbsource_form
+msgid "External DB Source"
+msgstr "แหล่งฐานข้อมูลภายนอก"
+
+#. module: base_external_dbsource
+#: model:ir.actions.act_window,name:base_external_dbsource.action_dbsource
+#: model:ir.model,name:base_external_dbsource.model_base_external_dbsource
+msgid "External Database Sources"
+msgstr "แหล่งข้อมูลฐานข้อมูลภายนอก"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,help:base_external_dbsource.field_base_external_dbsource__connector
+msgid ""
+"If a connector is missing from the list, check the server log to confirm "
+"that the required components were detected."
+msgstr ""
+"หากตัวเชื่อมต่อหายไปจากรายการ โปรดตรวจสอบบันทึกของเซิร์ฟเวอร์เพื่อยืนยัน "
+"ว่าตรวจพบส่วนประกอบที่จำเป็นแล้ว"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,field_description:base_external_dbsource.field_base_external_dbsource__password
+msgid "Password"
+msgstr "ใส่รหัส"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields,help:base_external_dbsource.field_base_external_dbsource__ca_certs
+msgid "Path to CA Certs file on server."
+msgstr "เส้นทางไปยังไฟล์ใบรับรอง CA บนเซิร์ฟเวอร์"
+
+#. module: base_external_dbsource
+#: model_terms:ir.ui.view,arch_db:base_external_dbsource.view_dbsource_form
+msgid "Please check the tooltip for connection string examples"
+msgstr "โปรดดูคำแนะนำเครื่องมือสำหรับตัวอย่างสตริงการเชื่อมต่อ"
+
+#. module: base_external_dbsource
+#: model:ir.model.fields.selection,name:base_external_dbsource.selection__base_external_dbsource__connector__postgresql
+msgid "PostgreSQL"
+msgstr "PostgreSQL"
+
+#. module: base_external_dbsource
+#: model_terms:ir.ui.view,arch_db:base_external_dbsource.view_dbsource_form
+msgid "Test Connection"
+msgstr "ทดสอบการเชื่อมต่อ"
+
+#. module: base_external_dbsource
+#. odoo-python
+#: code:addons/base_external_dbsource/models/base_external_dbsource.py:0
+#, python-format
+msgid "query is a required argument"
+msgstr "query เป็นอาร์กิวเมนต์ที่จำเป็น"
+
+#~ msgid "Last Modified on"
+#~ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"

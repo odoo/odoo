@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class HrExpense(models.Model):
@@ -217,3 +217,164 @@ class HrExpense(models.Model):
         self.od19_delegated_by_id = False
         self.od19_delegation_date = False
         return True
+
+    # ------------------------------------------------------------------
+    # Supporting document type - payment certificate in lieu of receipt
+    # (ใบรับรองแทนใบเสร็จรับเงิน)
+    # ------------------------------------------------------------------
+    # A payment certificate is used when the payee cannot issue a receipt
+    # (e.g. a small cash purchase from a non-VAT-registered person). The
+    # document carries no input VAT, so the whole amount is booked as an
+    # expense and no input tax credit may be claimed.
+    od19_document_type = fields.Selection(
+        [
+            ('tax_invoice', 'ใบกำกับภาษี / Tax Invoice'),
+            ('receipt', 'ใบเสร็จรับเงิน / Receipt'),
+            ('payment_certificate',
+             'ใบรับรองแทนใบเสร็จรับเงิน / Payment Certificate'),
+        ],
+        string='ประเภทเอกสาร / Document Type',
+        default='tax_invoice',
+        required=True,
+        tracking=True,
+        help=(
+            'Thai supporting-document type. Choose "ใบรับรองแทนใบเสร็จรับเงิน" '
+            'when the payee cannot issue a receipt: the input VAT is then not '
+            'claimable and the whole amount is booked as an expense.'
+        ),
+    )
+    od19_certificate_number = fields.Char(
+        string='เลขที่ใบรับรอง / Certificate No',
+        copy=False,
+        help='Running number printed on the payment certificate.',
+    )
+    od19_vat_creditable = fields.Boolean(
+        string='ภาษีซื้อหักได้ / Input VAT Creditable',
+        compute='_compute_od19_vat_creditable',
+        store=True,
+        help='Unticked for a payment certificate: the payee does not charge '
+             'VAT, so no input tax can be claimed against output VAT.',
+    )
+
+    @api.depends('od19_document_type')
+    def _compute_od19_vat_creditable(self):
+        for expense in self:
+            expense.od19_vat_creditable = (
+                expense.od19_document_type != 'payment_certificate'
+            )
+
+    @api.depends('product_id', 'company_id', 'od19_document_type')
+    def _compute_tax_ids(self):
+        """Default taxes come from the product.
+
+        A payment certificate in lieu of receipt
+        (ใบรับรองแทนใบเสร็จรับเงิน) never carries VAT, so no input tax is
+        applied even when the product has default purchase taxes.
+        """
+        for expense in self:
+            if not expense.company_id:
+                continue
+            if expense.od19_document_type == 'payment_certificate':
+                expense.tax_ids = False
+            else:
+                expense.tax_ids = (
+                    expense.product_id.supplier_taxes_id.filtered_domain(
+                        self.env['account.tax']._check_company_domain(
+                            expense.company_id
+                        )
+                    )
+                )
+
+    @api.onchange('od19_document_type')
+    def _onchange_od19_document_type(self):
+        """A payment certificate never carries VAT, so drop any tax."""
+        if self.od19_document_type == 'payment_certificate':
+            self.tax_ids = [(5, 0, 0)]
+
+    @api.constrains('od19_document_type', 'tax_ids')
+    def _check_od19_payment_certificate_has_no_tax(self):
+        for expense in self:
+            if expense.od19_document_type == 'payment_certificate' and expense.tax_ids:
+                raise ValidationError(_(
+                    'A payment certificate in lieu of receipt '
+                    '(ใบรับรองแทนใบเสร็จรับเงิน) cannot carry VAT. '
+                    'Please remove the taxes or choose another document type.'
+                ))
+
+    # ------------------------------------------------------------------
+    # Per diem allowance - Section 42(3) Revenue Code
+    # (เบี้ยเลี้ยง ม.42(3))
+    # ------------------------------------------------------------------
+    # A travel per-diem allowance is exempt from personal income tax up to
+    # the standard rate set by the company policy. When the claimed amount
+    # exceeds that limit the employee must justify it for the approver.
+    od19_is_per_diem = fields.Boolean(
+        string='Per Diem Allowance / เบี้ยเลี้ยง',
+        tracking=True,
+        help='Tick when this expense is a travel per-diem allowance '
+             'exempt under Section 42(3) of the Revenue Code.',
+    )
+    od19_per_diem_region = fields.Selection(
+        [
+            ('domestic', 'Domestic / ในประเทศ'),
+            ('overseas', 'Overseas / ต่างประเทศ'),
+        ],
+        string='Region / พื้นที่',
+        default='domestic',
+        tracking=True,
+    )
+    od19_per_diem_days = fields.Float(
+        string='Days / จำนวนวัน',
+        default=1.0,
+        tracking=True,
+    )
+    od19_per_diem_standard_rate = fields.Monetary(
+        string='Standard Rate / Day / วงเงินมาตรฐานต่อวัน',
+        compute='_compute_od19_per_diem', store=True,
+        currency_field='currency_id',
+        help='Standard exempt rate per day taken from the company policy.',
+    )
+    od19_per_diem_limit = fields.Monetary(
+        string='Allowance Limit / วงเงินเบี้ยเลี้ยง',
+        compute='_compute_od19_per_diem', store=True,
+        currency_field='currency_id',
+        help='Standard rate per day multiplied by the number of days.',
+    )
+    od19_per_diem_over_limit = fields.Boolean(
+        string='Over Limit / เกินวงเงิน',
+        compute='_compute_od19_per_diem', store=True,
+        help='Set when the claimed allowance is above the standard limit.',
+    )
+    od19_per_diem_reason = fields.Text(
+        string='Over-limit Reason / เหตุผลที่เกินวงเงิน',
+        help='Required when the allowance exceeds the standard limit. '
+             'The approver reviews this justification.',
+    )
+
+    @api.depends('od19_is_per_diem', 'od19_per_diem_region',
+                 'od19_per_diem_days', 'total_amount', 'company_id')
+    def _compute_od19_per_diem(self):
+        for expense in self:
+            if not expense.od19_is_per_diem or not expense.company_id:
+                expense.od19_per_diem_standard_rate = 0.0
+                expense.od19_per_diem_limit = 0.0
+                expense.od19_per_diem_over_limit = False
+                continue
+            rate = expense.company_id._od19_per_diem_rate(
+                expense.od19_per_diem_region)
+            limit = rate * (expense.od19_per_diem_days or 0.0)
+            expense.od19_per_diem_standard_rate = rate
+            expense.od19_per_diem_limit = limit
+            expense.od19_per_diem_over_limit = expense.total_amount > limit
+
+    @api.constrains('od19_is_per_diem', 'od19_per_diem_over_limit',
+                    'od19_per_diem_reason')
+    def _check_od19_per_diem_over_limit_reason(self):
+        for expense in self:
+            if (expense.od19_is_per_diem
+                    and expense.od19_per_diem_over_limit
+                    and not (expense.od19_per_diem_reason or '').strip()):
+                raise ValidationError(_(
+                    'The per-diem allowance exceeds the standard limit. '
+                    'Please provide a reason for the approver.'
+                ))

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-S-002 Sale Order Form (ใบสั่งขาย).
+
+        Inherits the shared wizard layout
+        (od19_reporting_jasper: views/jasper_report_wizard.xml) and replaces the
+        placeholder <group name="parameters"/> with the parameters this form
+        needs.  Reached from Sales > any order > Print > (J-Report OD15).
+    -->
+    <record id="view_sale_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_order_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Sale Order Form</field>
+        <field name="res_model">sale.order.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_sale_order_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+</odoo>

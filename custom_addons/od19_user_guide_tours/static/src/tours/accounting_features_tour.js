@@ -66,7 +66,7 @@ registry.category("web_tour.tours").add("od19_accounting_features_tour", {
             run: "click",
         },
         {
-            trigger: ".o_field_widget[name='od19_wht_amount']",
+            trigger: ".o_field_widget[name='od19_wht_invoice_amount']",
             content: markup(_t(
                 "The <b>WHT Base Amount</b> and <b>WHT Amount</b> are computed automatically " +
                 "from the base and the rate."

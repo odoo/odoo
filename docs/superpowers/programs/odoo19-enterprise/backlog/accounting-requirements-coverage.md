@@ -87,7 +87,7 @@
 
 | รายการที่ขอ | โมดูลที่เกี่ยวข้อง | สถานะ | หมายเหตุ |
 | --- | --- | --- | --- |
-| `account_reconcile_model_oca` | OCA `account-reconcile` | ✅ | clone repo + ต่อ addons_path (2026-10-26) + **ติดตั้งแล้ว 2026-10-27** (Wave 2A); ชื่อโมดูลจริงบน 19.0 คือ **`account_reconcile_oca`** (พร้อม `account_statement_base` dependency) |
+| `account_reconcile_model_oca` | OCA `account-reconcile` | ✅ | clone repo + ต่อ addons_path (2026-10-26) + **ติดตั้งแล้ว 2026-10-27** (Wave 2A); ชื่อโมดูลจริงบน 19.0 คือ **`account_reconcile_oca`** (พร้อม `account_statement_base` dependency) — **เชื่อมกับ core ผ่าน bridge `od19_accounting_reconcile_ui`** (ดู §3.3) แทนการผูก hard dependency |
 
 ## 3. สิ่งที่ดำเนินการแล้ว (2026-10-26)
 
@@ -131,6 +131,21 @@
 | ม.86/6 ใบกำกับภาษีอย่างย่อ | รายงาน Abbreviated Tax Invoice สำหรับขายปลีก | `report/tax_invoice_forms.xml` |
 | ม.86/9-10 ใบเพิ่มหนี้/ใบลดหนี้ | ฟิลด์ `od19_tax_invoice_doc_type` + block อ้างอิงใบกำกับเดิม/เหตุผล บนรายงานใบกำกับภาษี | `models/account_move.py`, `report/tax_invoice_forms.xml` |
 
+## 3.3 Bridge `od19_accounting_reconcile_ui` — ถอด hard dependency ออกจาก core (2026-11-01)
+
+หลัง Wave 2A พบว่า `od19_accounting_features` ผูก `account_reconcile_oca` เป็น hard dependency โดยตรง ทำให้ core (LGPL) ถูกล็อกกับ addon ภายนอก AGPL และขนย้าย/ใช้บน Enterprise ไม่ได้ ตัดสินใจแยกด้วย **bridge module**:
+
+| ประเด็น | รายละเอียด |
+| --- | --- |
+| โมดูล | `od19_accounting_reconcile_ui` (v19.0.1.0.0, LGPL-3) |
+| หน้าที่ | ไม่มี business logic — ทำหน้าที่เชื่อม `od19_accounting_features` ↔ `account_reconcile_oca` เท่านั้น |
+| depends | `od19_accounting_features`, `account_reconcile_oca` |
+| `auto_install` | `True` — ติดตั้งอัตโนมัติเมื่อทั้งสองฝั่งมีอยู่แล้ว (CE deployment ได้ OCA UI ตามปกติ) |
+| ผลต่อ core | `od19_accounting_features` **ไม่ hard-depend** `account_reconcile_oca` อีกต่อไป — ฟีเจอร์ period-clearing/helper ใน core ทำงานได้เองโดยไม่ต้องมี OCA |
+| สิ่งที่ OCA UI เสริม | หน้าจอจับคู่ manual (เมนู `Accounting ▸ Accounting ▸ Reconcile`) + contextual action "Reconcile" บนบัญชี/คู่ค้า |
+
+> หมายเหตุ: DB ที่สร้างใหม่ด้วย `-i od19_accounting_features` เพียงอย่างเดียวจะ **ไม่** ดึง OCA UI เข้ามา ต้องติดตั้ง bridge (ซึ่งดึง dependency ทั้งคู่) หรือรัน `STEP-2-Install-Odoo19.ps1 -All`
+
 ## 4. บันทึกการตัดสินใจ (ปิดครบ 2026-10-26)
 
 | # | เรื่อง | ผลการตัดสินใจ | ผลกระทบ |
@@ -146,4 +161,5 @@
 | --- | --- | --- |
 | `l10n_th_withholding_tax` | `l10n_th_account_tax` | OCA `l10n-thailand` |
 | `account_reconcile_model_oca` | `account_reconcile_oca` | OCA `account-reconcile` |
+| — (bridge ของโครงการ) | `od19_accounting_reconcile_ui` | custom `od19_*` (เชื่อม core ↔ OCA reconcile UI) |
 | `l10n_th_base` / `l10n_th_partner` / `l10n_th_account` | core `l10n_th` (รวมเป็นโมดูลเดียว) | Odoo core `addons/` |

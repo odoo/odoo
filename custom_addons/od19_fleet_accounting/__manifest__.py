@@ -24,4 +24,5 @@ Fleet Accounting Integration
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
+    "icon": "/od19_fleet_accounting/static/description/icon.svg",
 }

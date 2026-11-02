@@ -49,4 +49,51 @@
             </xpath>
         </field>
     </record>
+
+    <record id="res_config_settings_view_form_od19_deferred_tax" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.od19.deferred.tax</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block title="Deferred Tax (TAS 12 — ภาษีเงินได้รอตัดบัญชี)"
+                       id="od19_deferred_tax_settings">
+                    <setting string="Deferred Tax Rate"
+                             help="อัตราภาษีเงินได้นิติบุคคลที่ใช้คำนวณภาษีเงินได้รอตัดบัญชี (ค่าเริ่มต้น 20%)">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="od19_deferred_tax_rate" class="col-lg-3 o_light_label"/>
+                                <field name="od19_deferred_tax_rate"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Deferred Tax Accounts"
+                             help="กำหนดบัญชีและสมุดรายวันสำหรับบันทึกรายการภาษีเงินได้รอตัดบัญชี">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="od19_deferred_tax_asset_account_id" class="col-lg-3 o_light_label"/>
+                                <field name="od19_deferred_tax_asset_account_id"
+                                       options="{'no_create': True}"/>
+                            </div>
+                            <div class="row">
+                                <label for="od19_deferred_tax_liability_account_id" class="col-lg-3 o_light_label"/>
+                                <field name="od19_deferred_tax_liability_account_id"
+                                       options="{'no_create': True}"/>
+                            </div>
+                            <div class="row">
+                                <label for="od19_deferred_tax_expense_account_id" class="col-lg-3 o_light_label"/>
+                                <field name="od19_deferred_tax_expense_account_id"
+                                       options="{'no_create': True}"/>
+                            </div>
+                            <div class="row">
+                                <label for="od19_deferred_tax_journal_id" class="col-lg-3 o_light_label"/>
+                                <field name="od19_deferred_tax_journal_id"
+                                       options="{'no_create': True}"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
 </odoo>

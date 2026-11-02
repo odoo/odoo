@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        ค่าเสื่อมราคา — J-Report OD15.
+
+        Inherits the shared wizard layout (views/jasper_report_wizard.xml) and
+        replaces the placeholder <group name="parameters"/> with the fields this
+        report needs.
+    -->
+    <record id="view_asset_depreciation_report" model="ir.ui.view">
+        <field name="name">asset.depreciation.report</field>
+        <field name="model">asset.depreciation.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <group>
+                        <field name="p_language" required="1"/>
+                        <field name="date_type" required="1"/>
+                        <field name="date_format" required="1"/>
+                        <field name="company_id" groups="base.group_multi_company"
+                               required="1"/>
+                    </group>
+                    <group>
+                        <field name="rpt_month" required="1"/>
+                        <field name="rpt_year" required="1"/>
+                        <field name="p_category_codes"
+                               placeholder="เช่น เครื่องใช้สำนักงาน"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_asset_depreciation_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) ค่าเสื่อมราคา</field>
+        <field name="res_model">asset.depreciation.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_asset_depreciation_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_asset_depreciation_report"
+        name="(J-Report OD15) ค่าเสื่อมราคา"
+        parent="account.menu_finance_reports"
+        action="action_asset_depreciation_report"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="108"
+    />
+
+</odoo>

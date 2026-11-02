@@ -24,4 +24,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_purchase_wizards/static/description/icon.svg",
 }

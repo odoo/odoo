@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
 from odoo import fields
+from odoo.exceptions import UserError
 
 
 class TestHrExpenseThai(TransactionCase):
@@ -71,12 +72,11 @@ class TestHrExpenseThai(TransactionCase):
         self.assertEqual(expense.second_approval_state, 'approved')
         self.assertEqual(expense.state, 'approved')
 
-    def test_mark_reimbursed(self):
-        """Mark reimbursed sets reimbursement date for own account."""
+    def test_mark_reimbursed_requires_posted_expense(self):
+        """Reimbursement needs a posted journal entry: nothing to settle yet."""
         expense = self._create_expense(1000.0)
-        expense.action_approve_first()
-        expense.action_mark_reimbursed()
-        self.assertEqual(expense.reimbursement_date, fields.Date.context_today(self.env.user))
+        with self.assertRaises(UserError):
+            expense.action_mark_reimbursed()
 
     def test_mark_reimbursed_company_account_raises(self):
         """Mark reimbursed should fail for company account expenses."""

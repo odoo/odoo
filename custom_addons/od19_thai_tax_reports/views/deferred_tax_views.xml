@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="seq_od19_deferred_tax_worksheet" model="ir.sequence">
+        <field name="name">TAS 12 Deferred Tax Worksheet</field>
+        <field name="code">od19.deferred.tax.worksheet</field>
+        <field name="prefix">DT/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="view_od19_deferred_tax_worksheet_list" model="ir.ui.view">
+        <field name="name">od19.deferred.tax.worksheet.list</field>
+        <field name="model">od19.deferred.tax.worksheet</field>
+        <field name="arch" type="xml">
+            <list string="TAS 12 Deferred Tax Worksheet">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="net_deferred"/>
+                <field name="movement_expense"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'posted'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_deferred_tax_worksheet_form" model="ir.ui.view">
+        <field name="name">od19.deferred.tax.worksheet.form</field>
+        <field name="model">od19.deferred.tax.worksheet</field>
+        <field name="arch" type="xml">
+            <form string="TAS 12 Deferred Tax Worksheet">
+                <header>
+                    <button name="action_post_deferred_tax" type="object"
+                            string="Post Deferred Tax" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_view_journal_entry" type="object"
+                            string="Journal Entry"
+                            invisible="not journal_entry_id"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Worksheet Reference"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="previous_worksheet_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="posted_date"/>
+                            <field name="journal_entry_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Temporary Differences" name="differences">
+                            <field name="line_ids">
+                                <list string="Temporary Differences" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="category"/>
+                                    <field name="carrying_amount"/>
+                                    <field name="tax_base"/>
+                                    <field name="difference"/>
+                                    <field name="difference_type"/>
+                                    <field name="tax_rate"/>
+                                    <field name="deferred_tax_amount"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Summary" name="summary">
+                            <group>
+                                <group string="Closing Balance">
+                                    <field name="total_dta"/>
+                                    <field name="total_dtl"/>
+                                    <field name="net_deferred"/>
+                                </group>
+                                <group string="Movement of the Period">
+                                    <field name="opening_dta"/>
+                                    <field name="opening_dtl"/>
+                                    <field name="movement_dta"/>
+                                    <field name="movement_dtl"/>
+                                    <field name="movement_expense"/>
+                                </group>
+                            </group>
+                            <group string="Accounts">
+                                <field name="dta_account_id"/>
+                                <field name="dtl_account_id"/>
+                                <field name="expense_account_id"/>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_od19_deferred_tax_worksheet_search" model="ir.ui.view">
+        <field name="name">od19.deferred.tax.worksheet.search</field>
+        <field name="model">od19.deferred.tax.worksheet</field>
+        <field name="arch" type="xml">
+            <search string="TAS 12 Deferred Tax Worksheet">
+                <field name="name"/>
+                <field name="previous_worksheet_id"/>
+                <filter string="Draft" name="draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Posted" name="posted"
+                        domain="[('state', '=', 'posted')]"/>
+                <group>
+                    <filter string="Status" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Company" name="group_company"
+                            context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_od19_deferred_tax_worksheet" model="ir.actions.act_window">
+        <field name="name">Deferred Tax (TAS 12)</field>
+        <field name="res_model">od19.deferred.tax.worksheet</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_od19_deferred_tax_worksheet_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first deferred tax worksheet
+            </p>
+            <p>
+                บันทึกผลต่างชั่วคราว (temporary difference) ระหว่างมูลค่าตามบัญชี
+                และฐานภาษี แล้วให้ระบบคำนวณและบันทึกภาษีเงินได้รอตัดบัญชี (TAS 12)
+            </p>
+        </field>
+    </record>
+
+</odoo>

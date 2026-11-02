@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -38,6 +38,7 @@ registry.category("web_tour.tours").add("od19_dncn_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction("DN/CN Reasons"),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new DN/CN reason."),

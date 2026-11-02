@@ -60,6 +60,9 @@ class Od19DashboardWidgetRule(models.Model):
         selection=COMPARE_TYPES,
         required=True,
         default="constant",
+        help="What the widget value is compared with. 'Previous month' and "
+             "'Previous quarter' shift the whole period window back by one month "
+             "or three months, keeping its length.",
     )
     compare_value = fields.Float(help="Used when the compare type is a constant value.")
     compare_percent = fields.Float(

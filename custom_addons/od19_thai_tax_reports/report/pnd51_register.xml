@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pnd51_register">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center">
+                        แบบแสดงรายการภาษีเงินได้นิติบุคคลครึ่งปี (ภ.ง.ด.51)
+                    </h2>
+                    <h3 class="text-center">
+                        Corporate Income Tax Return — Half Year (PND51)
+                    </h3>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <strong>ผู้มีหน้าที่เสียภาษี:</strong>
+                            <span t-out="company.name"/>
+                        </div>
+                        <div class="col-6 text-right">
+                            <strong>เลขประจำตัวผู้เสียภาษี:</strong>
+                            <span t-out="company.vat"/>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <strong>รอบระยะเวลาบัญชี (ครึ่งปี):</strong>
+                            <span t-out="date_from" t-options='{"widget": "date"}'/>
+                            <strong> ถึง </strong>
+                            <span t-out="date_to" t-options='{"widget": "date"}'/>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-4">1. รายได้</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center" style="width:15%">รหัสบัญชี</th>
+                                <th>ชื่อบัญชี</th>
+                                <th class="text-right" style="width:20%">จำนวนเงิน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="income_lines" t-as="line">
+                                <tr>
+                                    <td class="text-center">
+                                        <span t-esc="line['code']"/>
+                                    </td>
+                                    <td><span t-esc="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-esc="'{:,.2f}'.format(line['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr class="font-weight-bold">
+                                <td colspan="2" class="text-right">รวมรายได้</td>
+                                <td class="text-right">
+                                    <span t-esc="'{:,.2f}'.format(total_income)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 class="mt-4">2. ค่าใช้จ่าย</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center" style="width:15%">รหัสบัญชี</th>
+                                <th>ชื่อบัญชี</th>
+                                <th class="text-right" style="width:20%">จำนวนเงิน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="expense_lines" t-as="line">
+                                <tr>
+                                    <td class="text-center">
+                                        <span t-esc="line['code']"/>
+                                    </td>
+                                    <td><span t-esc="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-esc="'{:,.2f}'.format(line['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr class="font-weight-bold">
+                                <td colspan="2" class="text-right">รวมค่าใช้จ่าย</td>
+                                <td class="text-right">
+                                    <span t-esc="'{:,.2f}'.format(total_expense)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 class="mt-4">3. ประมาณการกำไรสุทธิและภาษี</h4>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>กำไร (ขาดทุน) สุทธิของรอบระยะเวลา</td>
+                                <td class="text-right" style="width:25%">
+                                    <span t-esc="'{:,.2f}'.format(net_profit)"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    จำนวนเดือนที่คำนวณ
+                                    (<span t-esc="months"/> เดือน)
+                                </td>
+                                <td class="text-right"/>
+                            </tr>
+                            <tr>
+                                <td>ประมาณการกำไรสุทธิทั้งปี</td>
+                                <td class="text-right">
+                                    <span t-esc="'{:,.2f}'.format(estimated_annual_profit)"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    ประมาณการภาษีเงินได้นิติบุคคลทั้งปี (อัตรา
+                                    <span t-esc="'{:.0f}'.format(tax_rate_percent)"/>%)
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="'{:,.2f}'.format(estimated_annual_tax)"/>
+                                </td>
+                            </tr>
+                            <tr class="font-weight-bold">
+                                <td>
+                                    ภาษีเงินได้นิติบุคคลที่ต้องชำระครึ่งปี
+                                    (50% ของประมาณการทั้งปี)
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="'{:,.2f}'.format(half_year_payable)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="mt-3 text-muted">
+                        หมายเหตุ: ประมาณการทั้งปีคำนวณโดยขยายกำไรของรอบระยะเวลา
+                        (12 ÷ จำนวนเดือน) และยังไม่รวมรายการบวกกลับ/หักออกตามประมวลรัษฎากร
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_pnd51_register" model="ir.actions.report">
+        <field name="name">PND51 Register</field>
+        <field name="model">thai.tax.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_thai_tax_reports.pnd51_register</field>
+        <field name="report_file">od19_thai_tax_reports.pnd51_register</field>
+    </record>
+</odoo>

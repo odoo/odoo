@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <!-- ============================================================== -->
+    <!-- VAT Clearing (ภ.พ.30)                                          -->
+    <!-- ============================================================== -->
+    <record id="view_od19_account_vat_clear_wizard_form" model="ir.ui.view">
+        <field name="name">od19.account.vat.clear.wizard.form</field>
+        <field name="model">od19.account.vat.clear.wizard</field>
+        <field name="arch" type="xml">
+            <form string="VAT Clearing (ภ.พ.30)">
+                <group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="date_to"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <group>
+                        <field name="output_vat_account_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="input_vat_account_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="settlement_account_id"
+                               options="{'no_create': True}"/>
+                        <field name="refund_account_id"
+                               options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <field name="output_vat_balance"/>
+                        <field name="input_vat_balance"/>
+                    </group>
+                    <group>
+                        <field name="net_vat_amount"/>
+                        <field name="net_vat_type"/>
+                    </group>
+                </group>
+                <field name="line_ids" readonly="1">
+                    <list create="0" delete="0" edit="0">
+                        <field name="account_id"/>
+                        <field name="partner_id"/>
+                        <field name="line_count"/>
+                        <field name="debit" sum="Total Debit"/>
+                        <field name="credit" sum="Total Credit"/>
+                        <field name="balance" sum="Total Balance"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_load" string="Load Open Items"
+                            type="object" class="btn-secondary"/>
+                    <button name="action_clear" string="Clear &amp; Reconcile"
+                            type="object" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_account_vat_clear_wizard" model="ir.actions.act_window">
+        <field name="name">VAT Clearing (ภ.พ.30)</field>
+        <field name="res_model">od19.account.vat.clear.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_od19_account_vat_clear_wizard"
+        name="VAT Clearing (ภ.พ.30)"
+        parent="account.menu_finance_entries"
+        action="action_od19_account_vat_clear_wizard"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="151"
+    />
+
+    <!-- ============================================================== -->
+    <!-- WHT Clearing                                                   -->
+    <!-- ============================================================== -->
+    <record id="view_od19_account_wht_clear_wizard_form" model="ir.ui.view">
+        <field name="name">od19.account.wht.clear.wizard.form</field>
+        <field name="model">od19.account.wht.clear.wizard</field>
+        <field name="arch" type="xml">
+            <form string="WHT Clearing (ภาษีหัก ณ ที่จ่าย)">
+                <group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="date_to"/>
+                        <field name="journal_id"/>
+                    </group>
+                    <group>
+                        <field name="wht_account_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="settlement_account_id"
+                               options="{'no_create': True}"/>
+                        <field name="od19_post_settlement"/>
+                        <field name="wht_balance"/>
+                    </group>
+                </group>
+                <field name="line_ids" readonly="1">
+                    <list create="0" delete="0" edit="0">
+                        <field name="account_id"/>
+                        <field name="partner_id"/>
+                        <field name="line_count"/>
+                        <field name="debit" sum="Total Debit"/>
+                        <field name="credit" sum="Total Credit"/>
+                        <field name="balance" sum="Total Balance"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_load" string="Load Open Items"
+                            type="object" class="btn-secondary"/>
+                    <button name="action_clear" string="Clear &amp; Reconcile"
+                            type="object" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_account_wht_clear_wizard" model="ir.actions.act_window">
+        <field name="name">WHT Clearing (ภาษีหัก ณ ที่จ่าย)</field>
+        <field name="res_model">od19.account.wht.clear.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_od19_account_wht_clear_wizard"
+        name="WHT Clearing (ภาษีหัก ณ ที่จ่าย)"
+        parent="account.menu_finance_entries"
+        action="action_od19_account_wht_clear_wizard"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="152"
+    />
+
+    <!-- ============================================================== -->
+    <!-- Suspense / Intercompany Clearing                               -->
+    <!-- ============================================================== -->
+    <record id="view_od19_account_suspense_clear_wizard_form" model="ir.ui.view">
+        <field name="name">od19.account.suspense.clear.wizard.form</field>
+        <field name="model">od19.account.suspense.clear.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Suspense / Intercompany Clearing (บัญชีพัก)">
+                <group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="suspense_account_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                        <field name="intercompany_account_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <field name="line_ids" readonly="1">
+                    <list create="0" delete="0" edit="0">
+                        <field name="account_id"/>
+                        <field name="partner_id"/>
+                        <field name="line_count"/>
+                        <field name="debit" sum="Total Debit"/>
+                        <field name="credit" sum="Total Credit"/>
+                        <field name="balance" sum="Total Balance"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_load" string="Load Open Items"
+                            type="object" class="btn-secondary"/>
+                    <button name="action_clear" string="Clear &amp; Reconcile"
+                            type="object" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_account_suspense_clear_wizard" model="ir.actions.act_window">
+        <field name="name">Suspense / Intercompany Clearing (บัญชีพัก)</field>
+        <field name="res_model">od19.account.suspense.clear.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_od19_account_suspense_clear_wizard"
+        name="Suspense / Intercompany Clearing (บัญชีพัก)"
+        parent="account.menu_finance_entries"
+        action="action_od19_account_suspense_clear_wizard"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="153"
+    />
+
+</odoo>

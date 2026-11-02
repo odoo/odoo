@@ -1,0 +1,437 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * date_range
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-08-01 02:44+0000\n"
+"PO-Revision-Date: 2017-08-01 02:44+0000\n"
+"Last-Translator: OCA Transbot <transbot@odoo-community.org>, 2016\n"
+"Language-Team: Thai (https://www.transifex.com/oca/teams/23907/th/)\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: date_range
+#. odoo-python
+#: code:addons/date_range/models/date_range.py:0
+msgid "%(name)s is not a valid range (%(date_start)s > %(date_end)s)"
+msgstr "%(name)s ไม่ใช่ช่วงวันที่ที่ถูกต้อง (%(date_start)s > %(date_end)s)"
+
+#. module: date_range
+#. odoo-python
+#: code:addons/date_range/models/date_range.py:0
+msgid "%(thisname)s overlaps %(dtname)s"
+msgstr "%(thisname)s ซ้อนทับกับ %(dtname)s"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
+msgid ""
+",\n"
+"                                or generate"
+msgstr ",\n                                หรือสร้าง"
+
+#. module: date_range
+#: model:ir.model.constraint,message:date_range.constraint_date_range_date_range_uniq
+msgid "A date range must be unique per company !"
+msgstr "ช่วงวันที่ต้องไม่ซ้ำกันภายในบริษัทเดียวกัน !"
+
+#. module: date_range
+#: model:ir.model.constraint,message:date_range.constraint_date_range_type_date_range_type_uniq
+msgid "A date range type must be unique per company !"
+msgstr "ประเภทช่วงวันที่ต้องไม่ซ้ำกันภายในบริษัทเดียวกัน !"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__active
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__allow_overlap
+msgid "Allow Overlap"
+msgstr "อนุญาตให้ซ้อนทับ"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_form_view
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_search
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: date_range
+#: model:ir.actions.server,name:date_range.ir_cron_autocreate_ir_actions_server
+msgid "Auto-generate date ranges"
+msgstr "สร้างช่วงวันที่อัตโนมัติ"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
+msgid "Auto-generation settings"
+msgstr "การตั้งค่าการสร้างอัตโนมัติ"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__autogeneration_count
+msgid "Autogeneration Count"
+msgstr "จำนวนการสร้างอัตโนมัติ"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__autogeneration_date_start
+msgid "Autogeneration Start Date"
+msgstr "วันที่เริ่มต้นการสร้างอัตโนมัติ"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__autogeneration_unit
+msgid "Autogeneration Unit"
+msgstr "หน่วยการสร้างอัตโนมัติ"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
+msgid "Cancel"
+msgstr "ยกเลิก"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__company_id
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__company_id
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__company_id
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
+msgid "Configuration"
+msgstr "การกำหนดค่า"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
+msgid "Create"
+msgstr "สร้าง"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__create_uid
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__create_uid
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__create_date
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__create_date
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: date_range
+#: model:ir.model,name:date_range.model_date_range
+msgid "Date Range"
+msgstr "ช่วงวันที่"
+
+#. module: date_range
+#: model:ir.model,name:date_range.model_date_range_generator
+msgid "Date Range Generator"
+msgstr "ตัวสร้างช่วงวันที่"
+
+#. module: date_range
+#: model:ir.model,name:date_range.model_date_range_type
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
+msgid "Date Range Type"
+msgstr "ประเภทช่วงวันที่"
+
+#. module: date_range
+#: model:ir.actions.act_window,name:date_range.date_range_type_action
+#: model:ir.ui.menu,name:date_range.menu_date_range_type_action
+msgid "Date Range Types"
+msgstr "ประเภทช่วงวันที่"
+
+#. module: date_range
+#: model:ir.actions.act_window,name:date_range.date_range_action
+#: model:ir.ui.menu,name:date_range.menu_date_range_action
+msgid "Date Ranges"
+msgstr "ช่วงวันที่"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__date_ranges_exist
+msgid "Date Ranges Exist"
+msgstr "มีช่วงวันที่อยู่"
+
+#. module: date_range
+#: model:ir.ui.menu,name:date_range.menu_date_range
+msgid "Date ranges"
+msgstr "ช่วงวันที่"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
+msgid "Defaults for generating date ranges"
+msgstr "ค่าเริ่มต้นสำหรับการสร้างช่วงวันที่"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__display_name
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__display_name
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__duration_count
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__duration_count
+msgid "Duration"
+msgstr "ระยะเวลา"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
+msgid "End Date"
+msgstr "วันที่สิ้นสุด"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__date_end
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__date_end
+msgid "End date"
+msgstr "วันที่สิ้นสุด"
+
+#. module: date_range
+#: model:ir.model.fields,help:date_range.field_date_range_generator__name_expr
+#: model:ir.model.fields,help:date_range.field_date_range_type__name_expr
+msgid ""
+"Evaluated expression. E.g. \"'FY%s' % date_start.strftime('%Y%m%d')\"\n"
+"You can use the Date types 'date_end' and 'date_start', as well as the "
+"'index' variable."
+msgstr "นิพจน์ที่ประเมินค่า เช่น \"'FY%s' % date_start.strftime('%Y%m%d')\"\nคุณสามารถใช้ชนิดวันที่ 'date_end' และ 'date_start' รวมทั้งตัวแปร 'index' ได้"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_search_mixin__date_range_search_id
+msgid "Filter by period (technical field)"
+msgstr "กรองตามงวด (ฟิลด์ทางเทคนิค)"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
+msgid "Generate"
+msgstr "สร้าง"
+
+#. module: date_range
+#: model:ir.actions.act_window,name:date_range.date_range_generator_action
+#: model:ir.ui.menu,name:date_range.menu_date_range_generator_action
+#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
+msgid "Generate Date Ranges"
+msgstr "สร้างช่วงวันที่"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
+msgid "Generation"
+msgstr "การสร้าง"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__id
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__id
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: date_range
+#: model:ir.model.fields,help:date_range.field_date_range_type__allow_overlap
+msgid "If set, date ranges of same type must not overlap."
+msgstr "หากเปิดใช้งาน ช่วงวันที่ชนิดเดียวกันต้องไม่ซ้อนทับกัน"
+
+#. module: date_range
+#. odoo-python
+#: code:addons/date_range/wizard/date_range_generator.py:0
+msgid "Invalid name expression: %s"
+msgstr "นิพจน์ชื่อไม่ถูกต้อง: %s"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__write_uid
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__write_uid
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__write_uid
+msgid "Last Updated by"
+msgstr "อัพเดทครั้งสุดท้ายโดย"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__write_date
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__write_date
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__write_date
+msgid "Last Updated on"
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
+
+#. module: date_range
+#: model:ir.model,name:date_range.model_date_range_search_mixin
+msgid "Mixin class to add a Many2one style period search field"
+msgstr "คลาส Mixin สำหรับเพิ่มฟิลด์ค้นหางวดแบบ Many2one"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__name
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: date_range
+#. odoo-python
+#: code:addons/date_range/wizard/date_range_generator.py:0
+msgid "No ranges to generate with these settings"
+msgstr "ไม่มีช่วงวันที่ที่จะสร้างด้วยการตั้งค่านี้"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__count
+msgid "Number of ranges to generate"
+msgstr "จำนวนช่วงวันที่ที่จะสร้าง"
+
+#. module: date_range
+#: model:ir.model.fields,help:date_range.field_date_range_type__autogeneration_date_start
+msgid "Only applies when there are no date ranges of this type yet"
+msgstr "ใช้เฉพาะเมื่อยังไม่มีช่วงวันที่ประเภทนี้"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
+msgid "Parameters"
+msgstr "พารามิเตอร์"
+
+#. module: date_range
+#. odoo-python
+#: code:addons/date_range/models/date_range_search_mixin.py:0
+msgid "Period"
+msgstr "งวด"
+
+#. module: date_range
+#. odoo-python
+#: code:addons/date_range/wizard/date_range_generator.py:0
+msgid "Please enter an end date, or the number of ranges to generate."
+msgstr "กรุณากรอกวันที่สิ้นสุด หรือจำนวนช่วงวันที่ที่จะสร้าง"
+
+#. module: date_range
+#. odoo-python
+#: code:addons/date_range/wizard/date_range_generator.py:0
+msgid "Please set a prefix or an expression to generate the range names."
+msgstr "กรุณาตั้งคำนำหน้าหรือนิพจน์เพื่อสร้างชื่อช่วงวันที่"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__range_name_preview
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__range_name_preview
+msgid "Range Name Preview"
+msgstr "ตัวอย่างชื่อช่วงวันที่"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__name_expr
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__name_expr
+msgid "Range name expression"
+msgstr "นิพจน์ชื่อช่วงวันที่"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__name_prefix
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__name_prefix
+msgid "Range name prefix"
+msgstr "คำนำหน้าชื่อช่วงวันที่"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__date_range_ids
+msgid "Ranges"
+msgstr "ช่วงวันที่"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_search
+msgid "Start Date"
+msgstr "วันที่เริ่ม"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__date_start
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__date_start
+msgid "Start date"
+msgstr "วันที่เริ่มต้น"
+
+#. module: date_range
+#. odoo-python
+#: code:addons/date_range/wizard/date_range_generator.py:0
+msgid ""
+"The Company in the Date Range Generator and in Date Range Type must be the "
+"same."
+msgstr "บริษัทในตัวสร้างช่วงวันที่และในประเภทช่วงวันที่ต้องเป็นบริษัทเดียวกัน"
+
+#. module: date_range
+#: model:ir.model.fields,help:date_range.field_date_range_type__active
+msgid ""
+"The active field allows you to hide the date range type without removing it."
+msgstr "ฟิลด์ active ช่วยให้คุณซ่อนประเภทช่วงวันที่โดยไม่ต้องลบออก"
+
+#. module: date_range
+#: model:ir.model.fields,help:date_range.field_date_range__active
+msgid "The active field allows you to hide the date range without removing it."
+msgstr "ฟิลด์ active ช่วยให้คุณซ่อนช่วงวันที่โดยไม่ต้องลบออก"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range__type_id
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__type_id
+msgid "Type"
+msgstr "ประเภท"
+
+#. module: date_range
+#: model:ir.model.fields,field_description:date_range.field_date_range_generator__unit_of_time
+#: model:ir.model.fields,field_description:date_range.field_date_range_type__unit_of_time
+msgid "Unit Of Time"
+msgstr "หน่วยเวลา"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
+msgid "Until"
+msgstr "จนถึง"
+
+#. module: date_range
+#. odoo-python
+#: code:addons/date_range/models/date_range_type.py:0
+msgid ""
+"You cannot change the company, as this Date Range Type is assigned to Date "
+"Range '%s'."
+msgstr "คุณไม่สามารถเปลี่ยนบริษัทได้ เนื่องจากประเภทช่วงวันที่นี้ถูกกำหนดให้กับช่วงวันที่ '%s'"
+
+#. module: date_range
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_generator__unit_of_time__3
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_type__autogeneration_unit__3
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_type__unit_of_time__3
+msgid "days"
+msgstr "วัน"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
+msgid "entries."
+msgstr "รายการ"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
+msgid "in advance"
+msgstr "ล่วงหน้า"
+
+#. module: date_range
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_generator__unit_of_time__1
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_type__autogeneration_unit__1
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_type__unit_of_time__1
+msgid "months"
+msgstr "เดือน"
+
+#. module: date_range
+#: model_terms:ir.ui.view,arch_db:date_range.date_range_generator_view_form
+#: model_terms:ir.ui.view,arch_db:date_range.view_date_range_type_form_view
+msgid "or enter a complex expression below"
+msgstr "หรือกรอกนิพจน์ซับซ้อนด้านล่าง"
+
+#. module: date_range
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_generator__unit_of_time__2
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_type__autogeneration_unit__2
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_type__unit_of_time__2
+msgid "weeks"
+msgstr "สัปดาห์"
+
+#. module: date_range
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_generator__unit_of_time__0
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_type__autogeneration_unit__0
+#: model:ir.model.fields.selection,name:date_range.selection__date_range_type__unit_of_time__0
+msgid "years"
+msgstr "ปี"
+
+#, fuzzy
+#~ msgid "Type Name"
+#~ msgstr "ชื่อ"
+
+#~ msgid "Last Modified on"
+#~ msgstr "แก้ไขครั้งสุดท้ายเมื่อ"

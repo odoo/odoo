@@ -304,10 +304,12 @@
         <field name="params" eval="{'dashboard_id': ref('dashboard_logistics')}"/>
     </record>
 
+    <!-- The summary board is the first menu of the app, ahead of the core
+         Overview (sequence 0). -->
     <menuitem id="menu_od19_logistics_dashboard"
               name="Logistics Board"
               parent="stock.menu_stock_root"
               action="action_od19_logistics_dashboard"
-              sequence="21"/>
+              sequence="-1"/>
 
 </odoo>

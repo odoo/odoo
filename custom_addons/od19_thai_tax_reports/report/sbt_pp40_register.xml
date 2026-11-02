@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sbt_pp40_register">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center">รายงานภาษีธุรกิจเฉพาะ (ภ.ธ.40)</h2>
+                    <h3 class="text-center">Specific Business Tax Register (PP40)</h3>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <strong>บริษัท:</strong> <span t-out="company.name"/>
+                        </div>
+                        <div class="col-6 text-right">
+                            <strong>เลขประจำตัวผู้เสียภาษี:</strong>
+                            <span t-out="company.vat"/>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <strong>ระหว่างวันที่:</strong>
+                            <span t-out="date_from" t-options='{"widget": "date"}'/>
+                            <strong> ถึง </strong>
+                            <span t-out="date_to" t-options='{"widget": "date"}'/>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-bordered mt-3">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center" style="width:5%">ลำดับ</th>
+                                <th class="text-center" style="width:9%">วันที่</th>
+                                <th class="text-center" style="width:12%">เลขที่เอกสาร</th>
+                                <th class="text-center">ชื่อผู้ซื้อ / ผู้รับบริการ</th>
+                                <th class="text-center" style="width:11%">เลขผู้เสียภาษี</th>
+                                <th class="text-right" style="width:12%">รายรับที่ต้องเสียภาษี</th>
+                                <th class="text-right" style="width:10%">SBT 3%</th>
+                                <th class="text-right" style="width:10%">ท้องถิ่น 10%</th>
+                                <th class="text-right" style="width:11%">รวมภาษี</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="seq" t-value="0"/>
+                            <t t-foreach="lines" t-as="line">
+                                <tr>
+                                    <td class="text-center">
+                                        <t t-set="seq" t-value="seq + 1"/>
+                                        <span t-out="seq"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-out="line['invoice_date']" t-options='{"widget": "date"}'/>
+                                    </td>
+                                    <td><span t-out="line['name']"/></td>
+                                    <td><span t-out="line['partner_name']"/></td>
+                                    <td class="text-center"><span t-out="line['partner_vat']"/></td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['tax_base'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['sbt_amount'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['local_amount'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['total_amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr class="font-weight-bold">
+                                <td colspan="5" class="text-right">รวมทั้งสิ้น</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_tax_base)"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_sbt_amount)"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_local_amount)"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_amount)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="mt-3 text-muted">
+                        หมายเหตุ: ภาษีธุรกิจเฉพาะต้องนำส่งภายใน 15 วันนับแต่วันสิ้นเดือน
+                        ของรอบระยะเวลาที่ยื่นรายรับ (ประมวลรัษฎากร มาตรา 91/11) ·
+                        อัตรา SBT 3% และภาษีส่วนท้องถิ่น 10% ของ SBT (0.3% ของรายรับ) ·
+                        รายงานนี้สรุปจากเอกสารที่ Post แล้วเท่านั้น
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_sbt_pp40_register" model="ir.actions.report">
+        <field name="name">PP40 SBT Register (ภ.ธ.40)</field>
+        <field name="model">thai.tax.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_thai_tax_reports.sbt_pp40_register</field>
+        <field name="report_file">od19_thai_tax_reports.sbt_pp40_register</field>
+    </record>
+</odoo>

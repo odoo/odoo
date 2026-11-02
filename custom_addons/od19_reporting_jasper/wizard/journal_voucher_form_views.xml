@@ -12,6 +12,7 @@
     <record id="view_journal_voucher_form" model="ir.ui.view">
         <field name="name">journal.voucher.form</field>
         <field name="model">journal.voucher.form</field>
+        <field name="mode">primary</field>
         <field name="inherit_id" ref="view_jasper_report_wizard"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='parameters']" position="replace">
@@ -31,7 +32,7 @@
     </record>
 
     <record id="action_journal_voucher_form" model="ir.actions.act_window">
-        <field name="name">Journal Voucher Form</field>
+        <field name="name">(J-Report OD15) Journal Voucher Form</field>
         <field name="res_model">journal.voucher.form</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_journal_voucher_form"/>

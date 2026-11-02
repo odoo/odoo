@@ -62,4 +62,5 @@ without the next module upgrade overwriting their changes.
     "application": False,
     "auto_install": False,
     "license": "LGPL-3",
+    "icon": "/od19_role_catalog/static/description/icon.svg",
 }

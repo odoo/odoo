@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        ค่าเสื่อมราคา (รายบรรทัด) — J-Report OD15.
+
+        Inherits the shared wizard layout (views/jasper_report_wizard.xml) and
+        replaces the placeholder <group name="parameters"/> with the fields this
+        report needs.
+    -->
+    <record id="view_asset_depreciation_line_report" model="ir.ui.view">
+        <field name="name">asset.depreciation.line.report</field>
+        <field name="model">asset.depreciation.line.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <group>
+                        <field name="p_account_asset_asset_id"
+                               placeholder="รหัสทรัพย์สิน (ID)"/>
+                        <field name="date_type" required="1"/>
+                        <field name="date_format" required="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_asset_depreciation_line_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) ค่าเสื่อมราคา (รายบรรทัด)</field>
+        <field name="res_model">asset.depreciation.line.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_asset_depreciation_line_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_asset_depreciation_line_report"
+        name="(J-Report OD15) ค่าเสื่อมราคา (รายบรรทัด)"
+        parent="account.menu_finance_reports"
+        action="action_asset_depreciation_line_report"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="109"
+    />
+
+</odoo>

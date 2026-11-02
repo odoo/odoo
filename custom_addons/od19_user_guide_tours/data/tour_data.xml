@@ -12,11 +12,16 @@
           * listed under Settings > Technical > Tours
           * reachable with /odoo?tour=<name>
 
-        custom = True keeps these guide tours out of the automatic
+        custom = True keeps these guide tours out of the core *sequential*
         onboarding queue (get_current_tour only returns custom = False
-        tours). They are started on demand by the user, from the tour
-        list or from a direct link, so 42 tours do not pop up on their
-        own. The sequence only controls the order in the list.
+        tours). They are instead started on demand by
+        od19_guide_tour_service (static/src/js/od19_guide_tour_service.js):
+        the first time a user opens an application, the tour registered for
+        that application in web_tour.tour.OD19_GUIDE_APP_TOURS is started
+        automatically. The remaining tours of the same application stay
+        reachable from User Guide > Interactive Tours or from a direct link
+        (/odoo?tour=<name>). The sequence only controls the order in the
+        list.
     -->
 
     <!-- Contacts & Credit Risk -->
@@ -257,6 +262,56 @@
         <field name="custom">True</field>
     </record>
 
+    <!-- Newly installed modules (2nd wave) -->
+    <record id="tour_od19_signing" model="web_tour.tour">
+        <field name="name">od19_signing_tour</field>
+        <field name="sequence">143</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_internal_helpdesk" model="web_tour.tour">
+        <field name="name">od19_internal_helpdesk_tour</field>
+        <field name="sequence">144</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_goods_issue" model="web_tour.tour">
+        <field name="name">od19_goods_issue_tour</field>
+        <field name="sequence">145</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_inventory_audit_count" model="web_tour.tour">
+        <field name="name">od19_inventory_audit_count_tour</field>
+        <field name="sequence">146</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_etax_invoice" model="web_tour.tour">
+        <field name="name">od19_etax_invoice_tour</field>
+        <field name="sequence">147</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_recruitment" model="web_tour.tour">
+        <field name="name">od19_recruitment_tour</field>
+        <field name="sequence">148</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_dashboard" model="web_tour.tour">
+        <field name="name">od19_dashboard_tour</field>
+        <field name="sequence">149</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_sale_report_native" model="web_tour.tour">
+        <field name="name">od19_sale_report_native_tour</field>
+        <field name="sequence">150</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+
     <!-- ISO -->
     <record id="tour_od19_iso_document_control" model="web_tour.tour">
         <field name="name">od19_iso_document_control_tour</field>
@@ -309,6 +364,147 @@
     <record id="tour_od19_iso_supplier_quality" model="web_tour.tour">
         <field name="name">od19_iso_supplier_quality_tour</field>
         <field name="sequence">208</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+
+    <!--
+        Modules installed / updated later (reporting, dashboards, approval
+        centre, transportation, document pull, Jasper wizards, Apps filter).
+        These guides live inside an existing application and are reachable
+        from User Guide > Interactive Tours or /odoo?tour=<name>.
+    -->
+    <record id="tour_od19_approval_center" model="web_tour.tour">
+        <field name="name">od19_approval_center_tour</field>
+        <field name="sequence">209</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_quality_control" model="web_tour.tour">
+        <field name="name">od19_quality_control_tour</field>
+        <field name="sequence">210</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_hr_advance" model="web_tour.tour">
+        <field name="name">od19_hr_advance_tour</field>
+        <field name="sequence">211</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_transportation" model="web_tour.tour">
+        <field name="name">od19_transportation_tour</field>
+        <field name="sequence">212</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_inventory_reporting" model="web_tour.tour">
+        <field name="name">od19_inventory_reporting_tour</field>
+        <field name="sequence">213</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_after_sales_reporting" model="web_tour.tour">
+        <field name="name">od19_after_sales_reporting_tour</field>
+        <field name="sequence">214</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_sales_reporting" model="web_tour.tour">
+        <field name="name">od19_sales_reporting_tour</field>
+        <field name="sequence">215</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_sales_project_context" model="web_tour.tour">
+        <field name="name">od19_sales_project_context_tour</field>
+        <field name="sequence">216</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_accounting_reporting" model="web_tour.tour">
+        <field name="name">od19_accounting_reporting_tour</field>
+        <field name="sequence">217</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_document_pull" model="web_tour.tour">
+        <field name="name">od19_document_pull_tour</field>
+        <field name="sequence">218</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_stock_jasper" model="web_tour.tour">
+        <field name="name">od19_stock_jasper_tour</field>
+        <field name="sequence">219</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_apps_filter" model="web_tour.tour">
+        <field name="name">od19_apps_filter_tour</field>
+        <field name="sequence">220</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+
+    <!--
+        Modules installed / updated later (service contracts, doubtful debt,
+        sales retention, customer credit gate, purchase Jasper reports and the
+        accounting clearing wizards). These guides live inside an existing
+        application and are reachable from User Guide > Interactive Tours or
+        from /odoo?tour=<name>.
+    -->
+    <record id="tour_od19_service_contract" model="web_tour.tour">
+        <field name="name">od19_service_contract_tour</field>
+        <field name="sequence">221</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_doubtful_debt" model="web_tour.tour">
+        <field name="name">od19_doubtful_debt_tour</field>
+        <field name="sequence">222</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_sales_retention" model="web_tour.tour">
+        <field name="name">od19_sales_retention_tour</field>
+        <field name="sequence">223</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_credit_gate" model="web_tour.tour">
+        <field name="name">od19_credit_gate_tour</field>
+        <field name="sequence">224</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_purchase_jasper" model="web_tour.tour">
+        <field name="name">od19_purchase_jasper_tour</field>
+        <field name="sequence">225</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_accounting_clearing" model="web_tour.tour">
+        <field name="name">od19_accounting_clearing_tour</field>
+        <field name="sequence">226</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_sales_services" model="web_tour.tour">
+        <field name="name">od19_sales_services_tour</field>
+        <field name="sequence">227</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_service_card" model="web_tour.tour">
+        <field name="name">od19_service_card_tour</field>
+        <field name="sequence">228</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_petty_cash" model="web_tour.tour">
+        <field name="name">od19_petty_cash_tour</field>
+        <field name="sequence">229</field>
         <field name="url">/odoo</field>
         <field name="custom">True</field>
     </record>

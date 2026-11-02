@@ -1,6 +1,7 @@
 import base64
 import datetime
 import logging
+import time
 from urllib.parse import quote as url_quote
 
 import pytz
@@ -37,6 +38,12 @@ ALLOWED_DOC_EXT = (
 MAX_RESUME_SIZE = 10 * 1024 * 1024      # 10 MB
 MAX_DOCUMENT_SIZE = 10 * 1024 * 1024    # 10 MB per supporting document
 MAX_DOCUMENTS = 5
+
+# Short-lived per-user cache for the portal approval badge. The badge only
+# needs three numbers, so a 60s staleness window is a fair trade for not
+# rescanning every source on each portal page load.
+APPROVAL_SUMMARY_CACHE = {}
+APPROVAL_SUMMARY_TTL = 60
 
 
 class AutoInfoWebsite(http.Controller):
@@ -88,6 +95,65 @@ class AutoInfoWebsite(http.Controller):
                 "booking_window_months": BOOKING_WINDOW_MONTHS,
             },
         )
+
+    # ------------------------------------------------------------------
+    # Approval Center (view-only)
+    # ------------------------------------------------------------------
+    @http.route(
+        ["/my/approvals"],
+        type="http",
+        auth="user",
+        website=True,
+        sitemap=False,
+    )
+    def od19_my_approvals(self, **kwargs):
+        """Approval Center page: what I must approve + my own requests."""
+        return request.render(
+            "od19_website.od19_approval_center", self._od19_approval_data()
+        )
+
+    @http.route(
+        ["/my/approvals/summary"],
+        type="http",
+        auth="user",
+        website=True,
+        sitemap=False,
+    )
+    def od19_my_approvals_summary(self, **kwargs):
+        """Light JSON KPI for the portal approval card (approver pending only).
+
+        Kept out of the portal page itself so the page renders without
+        scanning every approval source; the card fetches this afterwards.
+        """
+        user_id = request.env.user.id
+        now = time.monotonic()
+        cached = APPROVAL_SUMMARY_CACHE.get(user_id)
+        if cached and now - cached[0] < APPROVAL_SUMMARY_TTL:
+            return request.make_json_response(cached[1])
+        sources = (
+            request.env["od19.approval.source"].sudo().search([("active", "=", True)])
+        )
+        payload = sources._od19_approval_summary()
+        APPROVAL_SUMMARY_CACHE[user_id] = (now, payload)
+        return request.make_json_response(payload)
+
+    def _od19_approval_data(self):
+        """Aggregate every active source into 2 tabs x 4 groups."""
+        Source = request.env["od19.approval.source"].sudo()
+        approver = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        requester = {"pending": [], "incoming": [], "done": [], "rejected": []}
+        for source in Source.search([("active", "=", True)]):
+            for key, records in source._od19_classify_for_approver().items():
+                approver[key].extend(source._od19_build_rows(records))
+            for key, records in source._od19_classify_for_requester().items():
+                requester[key].extend(source._od19_build_rows(records))
+        return {
+            "user": request.env.user,
+            "datetime": datetime,
+            "approver": approver,
+            "requester": requester,
+            "summary": Source._od19_summary(approver["pending"]),
+        }
 
     @http.route(
         ["/employee-portal/book-room"],

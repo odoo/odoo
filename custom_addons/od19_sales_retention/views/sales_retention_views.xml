@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===================== List / Form / Search ===================== -->
+
+    <record id="view_od19_sales_retention_list" model="ir.ui.view">
+        <field name="name">od19.sales.retention.list</field>
+        <field name="model">od19.sales.retention</field>
+        <field name="arch" type="xml">
+            <list string="Retentions"
+                  decoration-danger="is_overdue"
+                  decoration-success="state in ('released', 'closed')">
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="partner_id"/>
+                <field name="invoice_id"/>
+                <field name="invoice_date"/>
+                <field name="retention_rate"/>
+                <field name="retention_amount" sum="Total Retention"/>
+                <field name="release_date"/>
+                <field name="released_date" optional="hide"/>
+                <field name="is_overdue" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'held'"
+                       decoration-success="state in ('released', 'closed')"
+                       decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_sales_retention_form" model="ir.ui.view">
+        <field name="name">od19.sales.retention.form</field>
+        <field name="model">od19.sales.retention</field>
+        <field name="arch" type="xml">
+            <form string="Retention">
+                <header>
+                    <button name="action_hold" type="object" string="Hold"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_release" type="object" string="Release"
+                            class="btn-primary" invisible="state != 'held'"/>
+                    <button name="action_close" type="object" string="Close"
+                            class="btn-secondary" invisible="state != 'released'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state != 'draft'"/>
+                    <button name="action_draft" type="object" string="Reset to Draft"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,held,released,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_report_od19_sales_retention)d"
+                                type="action" string="Retention Receipt"
+                                class="oe_stat_button" icon="fa-print"
+                                invisible="state == 'draft'"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="contract_id"/>
+                            <field name="billing_line_id"/>
+                            <field name="partner_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="invoice_id"/>
+                            <field name="invoice_date"/>
+                            <field name="invoice_amount_untaxed"/>
+                            <field name="invoice_amount_total"/>
+                        </group>
+                    </group>
+                    <group string="Retention">
+                        <group>
+                            <field name="base_amount"/>
+                            <field name="retention_rate"/>
+                            <field name="retention_amount"/>
+                        </group>
+                        <group>
+                            <field name="release_date"/>
+                            <field name="released_date"/>
+                            <field name="is_overdue"/>
+                        </group>
+                    </group>
+                    <group string="Accounting">
+                        <group>
+                            <field name="journal_id"/>
+                            <field name="retention_account_id"/>
+                        </group>
+                        <group>
+                            <field name="move_id"/>
+                            <field name="release_move_id"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Internal note..."/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_od19_sales_retention_search" model="ir.ui.view">
+        <field name="name">od19.sales.retention.search</field>
+        <field name="model">od19.sales.retention</field>
+        <field name="arch" type="xml">
+            <search string="Retentions">
+                <field name="name"/>
+                <field name="contract_id"/>
+                <field name="partner_id"/>
+                <field name="invoice_id"/>
+                <filter name="filter_held" string="Held"
+                        domain="[('state', '=', 'held')]"/>
+                <filter name="filter_overdue" string="Overdue"
+                        domain="[('is_overdue', '=', True)]"/>
+                <filter name="filter_due_soon" string="Due within 30 days"
+                        domain="[('state', '=', 'held'), ('release_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="filter_released" string="Released"
+                        domain="[('state', 'in', ('released', 'closed'))]"/>
+                <separator/>
+                <group name="group_by">
+                    <filter name="group_contract" string="Contract"
+                            context="{'group_by': 'contract_id'}"/>
+                    <filter name="group_partner" string="Customer"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ===================== Actions / Menu ===================== -->
+
+    <record id="action_od19_sales_retention" model="ir.actions.act_window">
+        <field name="name">Retentions (เงินประกันผลงาน)</field>
+        <field name="res_model">od19.sales.retention</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_held': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ยังไม่มีรายการเงินประกันผลงาน
+            </p>
+            <p>
+                ระบบจะสร้างรายการ retention อัตโนมัติเมื่อมีการ post ใบกำกับภาษี
+                ของงวดงานที่มีการหักเงินประกันผลงาน
+            </p>
+        </field>
+    </record>
+
+    <record id="action_od19_sales_retention_outstanding" model="ir.actions.act_window">
+        <field name="name">Retention Outstanding (ค้างคืน)</field>
+        <field name="res_model">od19.sales.retention</field>
+        <field name="view_mode">pivot,list,form</field>
+        <field name="domain">[('state', '=', 'held')]</field>
+        <field name="context">{'search_default_filter_held': 1}</field>
+    </record>
+
+    <menuitem
+        id="menu_od19_sales_retention"
+        name="Retentions (เงินประกันผลงาน)"
+        parent="sale.sale_menu_root"
+        action="action_od19_sales_retention"
+        sequence="33"
+    />
+
+    <menuitem
+        id="menu_od19_sales_retention_outstanding"
+        name="Retention Outstanding (ค้างคืน)"
+        parent="menu_od19_sales_retention"
+        action="action_od19_sales_retention_outstanding"
+        sequence="10"
+    />
+
+    <!-- ============ Extend the sales contract form with retention ============ -->
+
+    <record id="view_od19_sales_contract_form_retention" model="ir.ui.view">
+        <field name="name">od19.sales.contract.form.retention</field>
+        <field name="model">od19.sales.contract</field>
+        <field name="inherit_id" ref="od19_sales_contract_core.view_od19_sales_contract_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[field[@name='revenue_journal_id']]" position="after">
+                <group string="Retention (เงินประกันผลงาน)">
+                    <field name="od19_default_retention_rate"/>
+                    <field name="od19_default_retention_days"/>
+                    <field name="od19_retention_account_id"/>
+                    <field name="od19_retention_journal_id"/>
+                    <field name="od19_retention_held_amount" readonly="1"/>
+                    <field name="od19_retention_released_amount" readonly="1"/>
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Retentions">
+                    <field name="od19_retention_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="invoice_id"/>
+                            <field name="retention_rate"/>
+                            <field name="retention_amount" sum="Total"/>
+                            <field name="release_date"/>
+                            <field name="is_overdue"/>
+                            <field name="state" widget="badge"
+                                   decoration-warning="state == 'held'"
+                                   decoration-success="state in ('released', 'closed')"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

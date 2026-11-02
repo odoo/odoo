@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -27,6 +27,7 @@ registry.category("web_tour.tours").add("od19_cheque_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction("Cheques"),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new cheque."),
@@ -57,7 +58,7 @@ registry.category("web_tour.tours").add("od19_cheque_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            trigger: ".o_field_widget[name='partner_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             run: "click",
         },
         {
@@ -84,6 +85,23 @@ registry.category("web_tour.tours").add("od19_cheque_tour", {
         {
             trigger: "button[name='action_confirm']",
             content: markup(_t("<b>Confirm</b> the cheque.")),
+            tooltipPosition: "left",
+            run: "click",
+        },
+        // Confirming a receivable cheque with no "Cheque Received Account"
+        // configured raises a UserError ("Invalid Operation") which opens a
+        // dialog; while it is up every following click fails with "It is not
+        // allowed to do action on an element that's below a modal". Wait for
+        // that dialog (a step without run is never blocked by a modal) and
+        // close it before continuing.
+        {
+            trigger: ".modal-header .btn-close, .modal-footer .o-default-button, .o_form_readonly, .o_form_saved",
+            timeout: 20000,
+        },
+        {
+            isActive: [".modal-header .btn-close"],
+            trigger: ".modal-header .btn-close",
+            content: markup(_t("Acknowledge the warning about the Cheque Received Account.")),
             tooltipPosition: "left",
             run: "click",
         },
@@ -117,6 +135,24 @@ registry.category("web_tour.tours").add("od19_cheque_tour", {
                 "Use the <b>Print Cheque</b> button to print the cheque. " +
                 "A single QWeb template supports all banks."
             )),
+            tooltipPosition: "left",
+            run: "click",
+        },
+        // Printing opens the report, and Odoo 19 first shows the "Configure
+        // your document layout" dialog when no report layout has been saved.
+        // Target a *visible* element: the `.o_dialog` wrapper has no box of
+        // its own, so a `visible:true` query never matches it. Close the
+        // dialog (a step without run is never blocked by the modal) before
+        // discarding the form, otherwise the back button below is hidden
+        // behind the modal.
+        {
+            trigger: "button[name='document_layout_save'], .o_dialog .modal-title",
+            timeout: 20000,
+        },
+        {
+            isActive: [".o_dialog .modal-header .btn-close"],
+            trigger: ".o_dialog .modal-header .btn-close",
+            content: markup(_t("Close the document layout dialog.")),
             tooltipPosition: "left",
             run: "click",
         },

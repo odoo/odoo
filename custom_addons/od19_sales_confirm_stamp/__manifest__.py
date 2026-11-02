@@ -33,4 +33,5 @@ Also renames the legacy x_stamp_date signal to stamp_date.
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_sales_confirm_stamp/static/description/icon.svg",
 }

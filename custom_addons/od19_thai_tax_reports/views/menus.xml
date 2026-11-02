@@ -28,11 +28,39 @@
         sequence="30"
     />
     <menuitem
+        id="menu_pp30_register"
+        name="PP30 Register (แบบแสดงรายการภาษีมูลค่าเพิ่ม ภ.พ.30)"
+        parent="menu_thai_tax_reports"
+        action="action_thai_tax_report_wizard"
+        sequence="35"
+    />
+    <menuitem
         id="menu_pp36_register"
         name="PP36 Register (รายงานภาษีนำส่ง ภ.พ.36)"
         parent="menu_thai_tax_reports"
         action="action_thai_tax_report_wizard"
         sequence="40"
+    />
+    <menuitem
+        id="menu_sbt_pp40_register"
+        name="PP40 SBT Register (รายงานภาษีธุรกิจเฉพาะ ภ.ธ.40)"
+        parent="menu_thai_tax_reports"
+        action="action_thai_tax_report_wizard"
+        sequence="45"
+    />
+    <menuitem
+        id="menu_pnd3_register"
+        name="PND3 Register (แบบแสดงรายการ ภ.ง.ด.3)"
+        parent="menu_thai_tax_reports"
+        action="action_thai_tax_report_wizard"
+        sequence="55"
+    />
+    <menuitem
+        id="menu_pnd53_register"
+        name="PND53 Register (แบบแสดงรายการ ภ.ง.ด.53)"
+        parent="menu_thai_tax_reports"
+        action="action_thai_tax_report_wizard"
+        sequence="56"
     />
     <menuitem
         id="menu_pnd54_register"
@@ -42,10 +70,72 @@
         sequence="50"
     />
     <menuitem
+        id="menu_npae_financial_statement"
+        name="NPAE Financial Statement (งบการเงินตามแบบ NPAE)"
+        parent="menu_thai_tax_reports"
+        action="action_thai_tax_report_wizard"
+        sequence="60"
+    />
+    <menuitem
+        id="menu_sbc3_register"
+        name="SBC3 DBD Filing (งบการเงินนำส่ง DBD ส.บช.3)"
+        parent="menu_thai_tax_reports"
+        action="action_thai_tax_report_wizard"
+        sequence="65"
+    />
+    <menuitem
+        id="menu_pnd50_register"
+        name="PND50 Register (แบบแสดงรายการ ภ.ง.ด.50)"
+        parent="menu_thai_tax_reports"
+        action="action_thai_tax_report_wizard"
+        sequence="70"
+    />
+    <menuitem
+        id="menu_pnd51_register"
+        name="PND51 Register (แบบแสดงรายการ ภ.ง.ด.51)"
+        parent="menu_thai_tax_reports"
+        action="action_thai_tax_report_wizard"
+        sequence="80"
+    />
+    <menuitem
         id="menu_ewht_submission"
         name="e-Withholding Tax (นำส่ง ภ.ง.ด. อิเล็กทรอนิกส์)"
         parent="menu_thai_tax_reports"
         action="action_od19_ewht_submission"
-        sequence="60"
+        sequence="90"
+    />
+    <menuitem
+        id="menu_deferred_tax"
+        name="Deferred Tax (TAS 12 — ภาษีเงินได้รอตัดบัญชี)"
+        parent="menu_thai_tax_reports"
+        action="action_od19_deferred_tax_worksheet"
+        sequence="85"
+    />
+    <menuitem
+        id="menu_stamp_duty"
+        name="Stamp Duty (อากรแสตมป์)"
+        parent="menu_thai_tax_reports"
+        sequence="66"
+    />
+    <menuitem
+        id="menu_stamp_duty_register"
+        name="Stamp Duty Register (ทะเบียนอากรแสตมป์)"
+        parent="menu_stamp_duty"
+        action="action_od19_stamp_duty"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_stamp_duty_rate"
+        name="Stamp Duty Rates (บัญชีอัตราอากรแสตมป์)"
+        parent="menu_stamp_duty"
+        action="action_od19_stamp_duty_rate"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_stamp_duty_report"
+        name="Stamp Duty Report (รายงานทะเบียนอากรแสตมป์)"
+        parent="menu_stamp_duty"
+        action="action_thai_tax_report_wizard"
+        sequence="30"
     />
 </odoo>

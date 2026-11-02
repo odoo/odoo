@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -35,6 +35,10 @@ registry.category("web_tour.tours").add("od19_iso_risk_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        // The previous action's list stays mounted for a few frames while the
+        // new one loads; wait for the target action's breadcrumb before
+        // clicking "New" so the record is created in the right model.
+        waitForAction('ความเสี่ยงและโอกาส'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new risk/opportunity record."),

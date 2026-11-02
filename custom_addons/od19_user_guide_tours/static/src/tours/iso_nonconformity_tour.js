@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
@@ -35,6 +35,11 @@ registry.category("web_tour.tours").add("od19_iso_nonconformity_tour", {
             tooltipPosition: "bottom",
             run: "click",
         },
+        // Switching action is asynchronous: the previous list stays mounted for
+        // a few frames, so `.o_list_button_add` would click the *previous*
+        // list's "New" button (creating a document-control record instead).
+        // Wait for the target action to be on screen first.
+        waitForAction('ไม่สอดคล้อง / CAPA'),
         {
             trigger: ".o_list_button_add",
             content: _t("Create a new nonconformity record."),

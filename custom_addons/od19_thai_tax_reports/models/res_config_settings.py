@@ -30,3 +30,29 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         string="e-WHT Service Provider ID",
     )
+
+    od19_deferred_tax_asset_account_id = fields.Many2one(
+        related="company_id.od19_deferred_tax_asset_account_id",
+        readonly=False,
+        string="บัญชีสินทรัพย์ภาษีเงินได้รอตัดบัญชี (DTA)",
+    )
+    od19_deferred_tax_liability_account_id = fields.Many2one(
+        related="company_id.od19_deferred_tax_liability_account_id",
+        readonly=False,
+        string="บัญชีหนี้สินภาษีเงินได้รอตัดบัญชี (DTL)",
+    )
+    od19_deferred_tax_expense_account_id = fields.Many2one(
+        related="company_id.od19_deferred_tax_expense_account_id",
+        readonly=False,
+        string="บัญชีค่าใช้จ่ายภาษีเงินได้รอตัดบัญชี",
+    )
+    od19_deferred_tax_journal_id = fields.Many2one(
+        related="company_id.od19_deferred_tax_journal_id",
+        readonly=False,
+        string="สมุดรายวันภาษีเงินได้รอตัดบัญชี",
+    )
+    od19_deferred_tax_rate = fields.Float(
+        related="company_id.od19_deferred_tax_rate",
+        readonly=False,
+        string="อัตราภาษีเงินได้รอตัดบัญชี (%)",
+    )

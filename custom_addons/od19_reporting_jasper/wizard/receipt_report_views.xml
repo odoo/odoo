@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Customer Receipt report (ใบเสร็จรับเงิน) - multi-payment.
+
+        Inherits the shared wizard layout (views/jasper_report_wizard.xml) and
+        replaces the placeholder <group name="parameters"/>.  The report has no
+        parameter of its own: the payment selection (``active_ids``) and the
+        ``iscopy`` flag come from the context set by the action, so the group
+        stays empty.  Bound to account.payment so the report shows up in the
+        Print menu of the selected payments, and additionally reachable from
+        the Accounting > Reporting menu.
+    -->
+    <record id="view_receipt_report" model="ir.ui.view">
+        <field name="name">receipt.report</field>
+        <field name="model">receipt.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_receipt_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Receipt Report</field>
+        <field name="res_model">receipt.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_receipt_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <record id="action_receipt_report_copy" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Receipt Report (Copy)</field>
+        <field name="res_model">receipt.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_receipt_report"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 1}</field>
+    </record>
+
+    <record id="action_receipt_report_menu" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Receipt Report</field>
+        <field name="res_model">receipt.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_receipt_report"/>
+        <field name="target">new</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+    <menuitem
+        id="menu_receipt_report"
+        name="(J-Report OD15) Receipt Report"
+        parent="account.menu_finance_reports"
+        action="action_receipt_report_menu"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="103"
+    />
+
+</odoo>

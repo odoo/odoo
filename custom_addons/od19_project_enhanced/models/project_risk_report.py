@@ -145,13 +145,18 @@ class Od19ProjectRiskReport(models.Model):
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
+        # project_project.name is a jsonb translated column in Odoo 19; it must
+        # be flattened to plain text here, otherwise the dict leaks into the
+        # Char field and crashes the web client (VToggler.mount). Same pattern
+        # as odoo core report views: current language, then en_US fallback.
+        lang = (self.env.lang or "en_US").replace("'", "")
         self.env.cr.execute(
             f"""
             CREATE OR REPLACE VIEW {self._table} AS (
                 SELECT
                     p.id AS id,
                     p.id AS project_id,
-                    p.name AS project_name,
+                    COALESCE(p.name->>'{lang}', p.name->>'en_US') AS project_name,
                     p.company_id AS company_id,
                     p.account_id AS analytic_account_id,
                     COALESCE(so_agg.contract_amount, 0.0) AS contract_amount,

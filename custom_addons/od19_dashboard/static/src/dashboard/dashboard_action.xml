@@ -39,6 +39,7 @@
                             t-if="state.dashboard"
                             t-model="state.dateRange"
                             t-on-change="onSelectDateRange">
+                        <option value="">Per widget</option>
                         <option t-foreach="state.meta.date_ranges" t-as="range" t-key="range.key"
                                 t-att-value="range.key">
                             <t t-esc="range.label"/>

@@ -76,6 +76,17 @@ registry.category("web_tour.tours").add("od19_contacts_credit_risk_tour", {
             trigger: ".o-form-buttonbox",
         },
         {
+            // Odoo 19 keeps at most 7 buttons visible in the form button box;
+            // the rest are moved into a lazy "More" dropdown. Depending on how
+            // many other buttons the partner form has, "Request Credit" may be
+            // hidden there, so open the menu first when the button is absent.
+            isActive: ["body:not(:has(button[name='action_od19_request_credit']))"],
+            trigger: ".o-form-buttonbox .o_button_more",
+            content: markup(_t("Some actions are grouped under <b>More</b> — open it.")),
+            tooltipPosition: "left",
+            run: "click",
+        },
+        {
             trigger: "button[name='action_od19_request_credit']",
             content: markup(_t(
                 "Now request credit for this customer. <b>Sales</b> can only request; " +
@@ -106,6 +117,13 @@ registry.category("web_tour.tours").add("od19_contacts_credit_risk_tour", {
             run: "edit Approved by Accounting - OD19 demo.",
         },
         {
+            isActive: ["body:not(:has(button[name='action_od19_approve_credit']))"],
+            trigger: ".o-form-buttonbox .o_button_more",
+            content: markup(_t("Open <b>More</b> to reach the approval action.")),
+            tooltipPosition: "left",
+            run: "click",
+        },
+        {
             trigger: "button[name='action_od19_approve_credit']",
             content: markup(_t(
                 "Accounting can now <b>Approve Credit</b>. Once approved, credit sales are allowed."
@@ -119,6 +137,13 @@ registry.category("web_tour.tours").add("od19_contacts_credit_risk_tour", {
                 "A <b>blacklist reason</b> is required before blacklisting."
             )),
             run: "edit Overdue balance - OD19 demo.",
+        },
+        {
+            isActive: ["body:not(:has(button[name='action_od19_set_blacklist']))"],
+            trigger: ".o-form-buttonbox .o_button_more",
+            content: markup(_t("Open <b>More</b> to reach the blacklist action.")),
+            tooltipPosition: "left",
+            run: "click",
         },
         {
             trigger: "button[name='action_od19_set_blacklist']",
@@ -135,6 +160,13 @@ registry.category("web_tour.tours").add("od19_contacts_credit_risk_tour", {
                 "A red <b>Blacklisted</b> ribbon now warns every user. " +
                 "Use <b>Clear Blacklist</b> to remove it when the risk is resolved."
             )),
+            run: "click",
+        },
+        {
+            isActive: ["body:not(:has(button[name='action_od19_clear_blacklist']))"],
+            trigger: ".o-form-buttonbox .o_button_more",
+            content: markup(_t("Open <b>More</b> to find <b>Clear Blacklist</b>.")),
+            tooltipPosition: "left",
             run: "click",
         },
         {

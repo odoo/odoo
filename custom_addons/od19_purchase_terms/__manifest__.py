@@ -24,4 +24,5 @@ This consolidates the five separate master report models into a single
     ],
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_purchase_terms/static/description/icon.svg",
 }

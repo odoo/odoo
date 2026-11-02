@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="seq_od19_stamp_duty" model="ir.sequence">
+        <field name="name">Stamp Duty</field>
+        <field name="code">od19.stamp.duty</field>
+        <field name="prefix">ST/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <!-- ============================ Rate ============================ -->
+    <record id="view_od19_stamp_duty_rate_list" model="ir.ui.view">
+        <field name="name">od19.stamp.duty.rate.list</field>
+        <field name="model">od19.stamp.duty.rate</field>
+        <field name="arch" type="xml">
+            <list string="บัญชีอัตราอากรแสตมป์">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="rate_type"/>
+                <field name="rate_amount"/>
+                <field name="base_unit"/>
+                <field name="max_amount"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_stamp_duty_rate_form" model="ir.ui.view">
+        <field name="name">od19.stamp.duty.rate.form</field>
+        <field name="model">od19.stamp.duty.rate</field>
+        <field name="arch" type="xml">
+            <form string="บัญชีอัตราอากรแสตมป์">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="rate_type"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="rate_amount"/>
+                            <field name="base_unit"/>
+                            <field name="max_amount"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group string="หมายเหตุ">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_od19_stamp_duty_rate_search" model="ir.ui.view">
+        <field name="name">od19.stamp.duty.rate.search</field>
+        <field name="model">od19.stamp.duty.rate</field>
+        <field name="arch" type="xml">
+            <search string="บัญชีอัตราอากรแสตมป์">
+                <field name="name"/>
+                <field name="code"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_od19_stamp_duty_rate" model="ir.actions.act_window">
+        <field name="name">Stamp Duty Rates</field>
+        <field name="res_model">od19.stamp.duty.rate</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_od19_stamp_duty_rate_search"/>
+    </record>
+
+    <!-- =========================== Register =========================== -->
+    <record id="view_od19_stamp_duty_list" model="ir.ui.view">
+        <field name="name">od19.stamp.duty.list</field>
+        <field name="model">od19.stamp.duty</field>
+        <field name="arch" type="xml">
+            <list string="รายการอากรแสตมป์">
+                <field name="name"/>
+                <field name="instrument_date"/>
+                <field name="rate_id"/>
+                <field name="partner_id"/>
+                <field name="document_reference"/>
+                <field name="base_amount"/>
+                <field name="duty_amount" sum="รวมอากร"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'paid'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_od19_stamp_duty_form" model="ir.ui.view">
+        <field name="name">od19.stamp.duty.form</field>
+        <field name="model">od19.stamp.duty</field>
+        <field name="arch" type="xml">
+            <form string="รายการอากรแสตมป์">
+                <header>
+                    <button name="action_mark_paid" type="object"
+                            string="ปิดอากรแล้ว" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reset_draft" type="object"
+                            string="กลับเป็นร่าง"
+                            invisible="state != 'paid'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,paid"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="เลขที่รายการ"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="partner_id"/>
+                            <field name="instrument_date"/>
+                        </group>
+                        <group>
+                            <field name="rate_id"
+                                   options="{'no_create': True}"/>
+                            <field name="rate_code" invisible="1"/>
+                            <field name="document_reference"/>
+                        </group>
+                    </group>
+                    <group string="การคำนวณอากร">
+                        <group>
+                            <field name="base_amount"/>
+                        </group>
+                        <group>
+                            <field name="duty_amount"/>
+                        </group>
+                    </group>
+                    <group string="บันทึกช่วยจำ">
+                        <field name="note" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_od19_stamp_duty_search" model="ir.ui.view">
+        <field name="name">od19.stamp.duty.search</field>
+        <field name="model">od19.stamp.duty</field>
+        <field name="arch" type="xml">
+            <search string="รายการอากรแสตมป์">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="document_reference"/>
+                <field name="rate_id"/>
+                <filter string="ร่าง" name="draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="ปิดอากรแล้ว" name="paid"
+                        domain="[('state', '=', 'paid')]"/>
+                <group>
+                    <filter string="สถานะ" name="group_state"
+                            context="{'group_by': 'state'}"/>
+                    <filter string="ลักษณะแห่งตราสาร" name="group_rate"
+                            context="{'group_by': 'rate_id'}"/>
+                    <filter string="บริษัท" name="group_company"
+                            context="{'group_by': 'company_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_od19_stamp_duty" model="ir.actions.act_window">
+        <field name="name">Stamp Duty</field>
+        <field name="res_model">od19.stamp.duty</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_od19_stamp_duty_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                บันทึกรายการอากรแสตมป์รายการแรก
+            </p>
+            <p>
+                บันทึกตราสารที่ต้องเสียอากรแสตมป์ เลือกลักษณะแห่งตราสาร
+                และระบุมูลค่า ระบบจะคำนวณอากรให้อัตโนมัติตามบัญชีอัตราอากรแสตมป์
+            </p>
+        </field>
+    </record>
+
+</odoo>

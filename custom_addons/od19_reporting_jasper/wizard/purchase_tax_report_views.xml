@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        (J-Report OD15) Purchase Tax Report.
+
+        Inherits the shared wizard layout (views/jasper_report_wizard.xml) and
+        replaces the placeholder <group name="parameters"/> with the fields this
+        report needs.  The wizard is reachable from the Accounting > Reporting
+        menu.
+    -->
+    <record id="view_purchase_tax_report" model="ir.ui.view">
+        <field name="name">purchase.tax.report</field>
+        <field name="model">purchase.tax.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <group>
+                        <field name="p_language" required="1" default_focus="1"/>
+                        <field name="year" required="1"/>
+                        <field name="month" required="1"/>
+                        <field name="vat_types" widget="many2many_tags" required="1"/>
+                    </group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_purchase_tax_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Purchase Tax Report</field>
+        <field name="res_model">purchase.tax.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_purchase_tax_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_purchase_tax_report"
+        name="(J-Report OD15) Purchase Tax Report"
+        parent="account.menu_finance_reports"
+        action="action_purchase_tax_report"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="115"
+    />
+
+</odoo>

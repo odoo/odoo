@@ -23,4 +23,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_currency_rate_bot/static/description/icon.svg",
 }

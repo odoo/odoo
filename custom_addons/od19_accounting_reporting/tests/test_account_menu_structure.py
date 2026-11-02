@@ -27,10 +27,17 @@ class TestAccountMenuStructure(TransactionCase):
         board = self.env.ref(
             "od19_accounting_reporting.menu_od19_finance_control_dashboard"
         )
+        dashboard = self.env.ref("account.menu_board_journal_1")
+        self.assertEqual(board.parent_id, dashboard.parent_id)
+        self.assertLess(
+            board.sequence,
+            dashboard.sequence,
+            "Finance Control Board must open the app, before the core Dashboard",
+        )
         siblings = self._root_siblings(board)
         self.assertTrue(siblings)
         self.assertTrue(
-            all(sibling.sequence >= board.sequence for sibling in siblings),
+            all(board.sequence < sibling.sequence for sibling in siblings),
             "Finance Control Board must be the first menu of the app",
         )
 

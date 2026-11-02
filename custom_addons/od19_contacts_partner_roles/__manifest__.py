@@ -9,4 +9,5 @@
     ],
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_contacts_partner_roles/static/description/icon.svg",
 }

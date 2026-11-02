@@ -88,7 +88,10 @@ class PlBsReport(models.TransientModel):
     _description = "Profit & Loss / Balance Sheet Report"
     _inherit = "od19.jasper.report"
 
-    name = fields.Char(default="Financial Statement")
+    # ``name`` is the inherited technical rec_name (invisible in the wizard);
+    # give it a distinct label so it does not collide with ``rpt_nm``'s
+    # "Report Name" (otherwise Odoo logs a duplicate-label warning).
+    name = fields.Char(string="Internal Name", default="Financial Statement")
     jasper_file = fields.Char(
         default=lambda self: self.get_jasper_file(__file__, base_name="pl_bs")
     )

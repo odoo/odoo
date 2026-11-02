@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <record id="view_od19_account_period_clear_wizard_form" model="ir.ui.view">
+        <field name="name">od19.account.period.clear.wizard.form</field>
+        <field name="model">od19.account.period.clear.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Period Clearing">
+                <group>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="account_ids" widget="many2many_tags"
+                               options="{'no_create': True}"/>
+                    </group>
+                </group>
+                <field name="line_ids" readonly="1">
+                    <list create="0" delete="0" edit="0">
+                        <field name="account_id"/>
+                        <field name="partner_id"/>
+                        <field name="line_count"/>
+                        <field name="debit" sum="Total Debit"/>
+                        <field name="credit" sum="Total Credit"/>
+                        <field name="balance" sum="Total Balance"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_load" string="Load Open Items"
+                            type="object" class="btn-secondary"/>
+                    <button name="action_reconcile" string="Reconcile"
+                            type="object" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_account_period_clear_wizard" model="ir.actions.act_window">
+        <field name="name">Period Clearing</field>
+        <field name="res_model">od19.account.period.clear.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_od19_account_period_clear_wizard"
+        name="Period Clearing"
+        parent="account.menu_finance_entries"
+        action="action_od19_account_period_clear_wizard"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="150"
+    />
+
+</odoo>

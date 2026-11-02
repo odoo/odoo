@@ -41,7 +41,10 @@ body,
 .o_horizontal_accordion,
 .o_list_table,
 .o_data_cell,
-.o_column_sortable {
+.o_column_sortable,
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.display-1, .display-2, .display-3, .display-4 {
     font-family: var(--od19-thai-font-family) !important;
 }
 
@@ -61,7 +64,7 @@ samp,
 strong, b, .font-weight-bold, .fw-bold {
     font-weight: 700;
 }
-em, i, .font-italic, .fst-italic {
+em, .font-italic, .fst-italic {
     font-style: italic;
 }
 
@@ -77,14 +80,4 @@ em, i, .font-italic, .fst-italic {
 [class*=" oi-"],
 [class^="oi-"] {
     font-family: 'odoo_ui_icons' !important;
-}
-
-.fa,
-.fas,
-.far,
-.fal,
-.fab,
-[class*=" fa-"],
-[class^="fa-"] {
-    font-family: 'FontAwesome' !important;
 }

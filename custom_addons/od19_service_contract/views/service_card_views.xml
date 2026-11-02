@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Show the linked service contract on the service card. -->
+    <record id="service_card_view_form_contract" model="ir.ui.view">
+        <field name="name">od19.service.card form view (contract)</field>
+        <field name="model">od19.service.card</field>
+        <field name="inherit_id" ref="od19_service_card.service_card_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_order_id']" position="after">
+                <field name="contract_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="service_card_view_list_contract" model="ir.ui.view">
+        <field name="name">od19.service.card list view (contract)</field>
+        <field name="model">od19.service.card</field>
+        <field name="inherit_id" ref="od19_service_card.service_card_view_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="contract_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="service_card_view_search_contract" model="ir.ui.view">
+        <field name="name">od19.service.card search view (contract)</field>
+        <field name="model">od19.service.card</field>
+        <field name="inherit_id" ref="od19_service_card.service_card_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="contract_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <!-- ============================================================ -->
+    # ใบรับรองแทนใบเสร็จรับเงิน (Payment certificate in lieu of receipt)
+    # Used when the petty cash payee cannot issue a receipt.
+    <!-- ============================================================ -->
+    <template id="payment_certificate_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="transaction">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family:'Sarabun','Noto Sans Thai','Tahoma',sans-serif;">
+                        <h2 class="text-center">ใบรับรองแทนใบเสร็จรับเงิน</h2>
+                        <h4 class="text-center">PAYMENT CERTIFICATE IN LIEU OF RECEIPT</h4>
+
+                        <div class="row mt-3">
+                            <div class="col-7">
+                                <strong>ผู้จ่ายเงิน / Payer:</strong>
+                                <div t-field="res_company.partner_id.name"/>
+                                <div t-if="res_company.partner_id.street"
+                                     t-field="res_company.partner_id.street"/>
+                                <div>
+                                    <span>เลขประจำตัวผู้เสียภาษี / Tax ID: </span>
+                                    <span t-field="res_company.partner_id.vat"/>
+                                </div>
+                            </div>
+                            <div class="col-5 text-right">
+                                <div>
+                                    <strong>เลขที่ใบรับรอง / Certificate No: </strong>
+                                    <span t-esc="transaction.od19_certificate_number or transaction.name"/>
+                                </div>
+                                <div>
+                                    <strong>วันที่ / Date: </strong>
+                                    <span t-field="transaction.date"/>
+                                </div>
+                                <div>
+                                    <strong>กองทุน / Fund: </strong>
+                                    <span t-field="transaction.fund_id.name"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <strong>ผู้รับเงิน / Payee: </strong>
+                                <span t-esc="transaction.od19_payee_name or ''"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm table-bordered mt-4">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center" style="width:8%">ลำดับ</th>
+                                    <th>รายการ / Description</th>
+                                    <th class="text-right" style="width:20%">จำนวนเงิน / Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">1</td>
+                                    <td><span t-field="transaction.name"/></td>
+                                    <td class="text-right">
+                                        <span t-field="transaction.amount"
+                                              t-options='{"widget": "monetary", "display_currency": transaction.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr class="font-weight-bold">
+                                    <td colspan="2" class="text-right">รวมทั้งสิ้น / Total</td>
+                                    <td class="text-right">
+                                        <span t-field="transaction.amount"
+                                              t-options='{"widget": "monetary", "display_currency": transaction.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <strong>จำนวนเงิน (ตัวอักษร): </strong>
+                                <span t-esc="transaction.currency_id.amount_to_text(transaction.amount)"/>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <em>
+                                    รายการนี้ไม่มีภาษีมูลค่าเพิ่ม เนื่องจากผู้รับเงินไม่ได้จดทะเบียนภาษีมูลค่าเพิ่ม
+                                    (This document carries no VAT; the payee is not VAT-registered.)
+                                </em>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <div>__________________________</div>
+                                <div>ผู้จ่ายเงิน / Payer</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div>__________________________</div>
+                                <div>ผู้รับเงิน / Payee</div>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div>__________________________</div>
+                                <div>พยาน / Witness</div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_payment_certificate" model="ir.actions.report">
+        <field name="name">Payment Certificate (ใบรับรองแทนใบเสร็จรับเงิน)</field>
+        <field name="model">petty.cash.transaction</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_accounting_petty_cash.payment_certificate_document</field>
+        <field name="report_file">od19_accounting_petty_cash.payment_certificate_document</field>
+        <field name="binding_model_id" ref="model_petty_cash_transaction"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Payment Certificate - %s' % (object.name or '')</field>
+    </record>
+
+</odoo>

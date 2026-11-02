@@ -6,6 +6,9 @@
         <field name="team_type">internal</field>
         <field name="show_in_portal" eval="False" />
         <field name="sequence">10</field>
+        <!-- Members: helpdesk_mgmt requires the user to belong to the team
+             before "Assign to me" is allowed (see helpdesk.ticket.assign_to_me). -->
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]" />
     </record>
 
     <record id="team_sales_services" model="helpdesk.ticket.team">

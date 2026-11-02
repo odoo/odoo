@@ -126,7 +126,9 @@ registry.category("web_tour.tours").add("od19_money_in_report_tour", {
             run: "click",
         },
         {
-            trigger: ".o_list_renderer .o_data_row:first",
+            // Odoo 19 opens a record when a `td.o_data_cell` is clicked; the
+            // `tr.o_data_row` itself is not clickable.
+            trigger: ".o_list_renderer .o_data_row:first .o_data_cell:first",
             content: markup(_t("Open a report run to review the results.")),
             run: "click",
             // A run is only persisted when analysis lines are produced; when

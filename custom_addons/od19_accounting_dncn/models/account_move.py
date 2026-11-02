@@ -73,13 +73,54 @@ class AccountMove(models.Model):
         return mapping.get(self.dncn, "")
 
     def action_post(self):
-        """Validate DN/CN reason before posting."""
+        """Validate DN/CN reason before posting and settle credit notes."""
         for move in self:
             if move.dncn and not move.reason_id:
                 raise ValidationError(_(
                     "Please select a reason before posting this %s."
                 ) % move._get_dncn_label())
-        return super().action_post()
+        res = super().action_post()
+        credit_notes = self.filtered(lambda move: move.dncn == "cn")
+        if credit_notes:
+            credit_notes._od19_reconcile_with_parent()
+        return res
+
+    def _od19_get_dncn_open_account(self):
+        """Return the receivable/payable account used by this document."""
+        self.ensure_one()
+        partner = self.partner_id.with_company(self.company_id)
+        if self.move_type in ("out_invoice", "out_refund"):
+            return partner.property_account_receivable_id
+        if self.move_type in ("in_invoice", "in_refund"):
+            return partner.property_account_payable_id
+        return self.env["account.account"]
+
+    def _od19_reconcile_with_parent(self):
+        """Match a credit note against the invoice it settles (ใบลดหนี้).
+
+        A credit note offsets the receivable/payable of its parent invoice,
+        so once it is posted the two journal items must be matched.
+        Otherwise the parent keeps a residual balance and the customer /
+        vendor account shows an amount that is already settled.
+        """
+        self.ensure_one()
+        parent = self.parent_id or self.reversed_entry_id
+        if (
+            not parent
+            or parent.state != "posted"
+            or self.state != "posted"
+            or parent.partner_id != self.partner_id
+        ):
+            return False
+        account = self._od19_get_dncn_open_account()
+        if not account:
+            return False
+        lines = (parent.line_ids + self.line_ids).filtered_domain([
+            ("account_id", "=", account.id),
+            ("parent_state", "=", "posted"),
+            ("reconciled", "=", False),
+        ])
+        return self._od19_reconcile_move_lines(lines)
 
     def _prepare_dncn_defaults(self, dncn_type):
         self.ensure_one()

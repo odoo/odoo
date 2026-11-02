@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-P-001 Purchase Request (ใบสั่งซื้ออ้างอิงใบขอซื้อ).
+
+        Bound to the OCA purchase.request document, so it is reached from the
+        Purchase Request form > Print > (J-Report OD15).
+    -->
+    <record id="view_po_purchase_request_form" model="ir.ui.view">
+        <field name="name">po.purchase.request.form</field>
+        <field name="model">po.purchase.request.form</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_po_purchase_request_form" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Purchase Request Form</field>
+        <field name="res_model">po.purchase.request.form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_po_purchase_request_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="purchase_request.model_purchase_request"/>
+        <field name="binding_type">report</field>
+        <field name="context">{'iscopy': 0}</field>
+    </record>
+
+</odoo>

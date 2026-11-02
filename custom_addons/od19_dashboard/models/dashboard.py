@@ -147,7 +147,12 @@ class Od19Dashboard(models.Model):
         help="Accent colour used by the dashboard header.",
     )
 
-    widget_ids = fields.One2many("od19.dashboard.widget", "dashboard_id", string="Widgets")
+    widget_ids = fields.One2many(
+        "od19.dashboard.widget",
+        "dashboard_id",
+        string="Widgets",
+        copy=True,
+    )
     widget_count = fields.Integer(compute="_compute_widget_count")
 
     _name_company_default = models.Constraint(
@@ -267,7 +272,10 @@ class Od19Dashboard(models.Model):
             },
             "widgets": widgets,
             "meta": {
-                "date_range": date_range or dashboard.default_date_range,
+                "date_range": date_range or None,
+                "date_from": date_from or None,
+                "date_to": date_to or None,
+                "default_date_range": dashboard.default_date_range,
                 "generated_at": fields.Datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             },
         }
@@ -518,8 +526,22 @@ class Od19Dashboard(models.Model):
         if not values.get("sequence"):
             last = dashboard.widget_ids.mapped("sequence")
             values["sequence"] = (max(last) + 10) if last else 10
+        self._clamp_grid_values(values)
         widget = self.env["od19.dashboard.widget"].create(values)
         return {"id": widget.id, "config": widget._to_config()}
+
+    @api.model
+    def _clamp_grid_values(self, values, widget=None):
+        """Keep the widget grid size inside the ranges the dashboard offers."""
+        for key, low, high, default in (
+            ("grid_w", MIN_GRID_W, MAX_GRID_W, 4),
+            ("grid_h", MIN_GRID_H, MAX_GRID_H, 2),
+        ):
+            if key not in values:
+                continue
+            current = (widget[key] if widget is not None else 0) or default
+            values[key] = min(max(int(values.get(key) or current), low), high)
+        return values
 
     @api.model
     def update_widget(self, widget_id, values):
@@ -528,7 +550,7 @@ class Od19Dashboard(models.Model):
             raise UserError(_("This widget does not exist or is no longer available."))
         widget.dashboard_id._check_edit_access()
         widget.check_access("write")
-        widget.write(dict(values or {}))
+        widget.write(self._clamp_grid_values(dict(values or {}), widget))
         return {"id": widget.id, "config": widget._to_config()}
 
     @api.model
@@ -655,7 +677,9 @@ class Od19DashboardWidget(models.Model):
         selection=FORMULA_BASIS,
         default="previous",
         required=True,
-        help="Reference period of the period comparison shown on a KPI.",
+        help="Reference period of the period comparison shown on a KPI. "
+             "Previous month / quarter shift the whole period window back by one "
+             "month or three months, keeping its length.",
     )
     default_status = fields.Selection(
         selection=STATUS_SELECTION,
@@ -667,6 +691,7 @@ class Od19DashboardWidget(models.Model):
         "od19.dashboard.widget.rule",
         "widget_id",
         string="Status Rules",
+        copy=True,
     )
 
     grid_w = fields.Integer(default=4, string="Width (columns)")
@@ -909,7 +934,9 @@ class Od19DashboardWidget(models.Model):
         elif value:
             data["delta"] = 100.0
         else:
-            data["delta"] = 0.0
+            # Both periods are empty: there is nothing to compare, so no delta
+            # is shown rather than a misleading flat 0%.
+            data["delta"] = None
 
     def _fill_chart_data(self, data, model, domain, requests, date_range=None, date_from=None, date_to=None, widget_values=None):
         groupby_spec = self._groupby_spec()
@@ -1711,7 +1738,7 @@ class Od19DashboardWidget(models.Model):
             domain += parsed
 
         effective_range = date_range or self.date_range or "all_time"
-        if self.date_key and effective_range != "all_time":
+        if self.date_key and (effective_range != "all_time" or date_from or date_to):
             domain += self._date_bounds(effective_range, date_from, date_to, shift)
         return domain
 
@@ -1733,8 +1760,6 @@ class Od19DashboardWidget(models.Model):
         if not self.date_key:
             return None, None, field_type
         effective_range = date_range or self.date_range or "all_time"
-        if effective_range == "all_time":
-            return None, None, field_type
 
         today = fields.Date.context_today(self)
 
@@ -1742,6 +1767,8 @@ class Od19DashboardWidget(models.Model):
         if date_from or date_to:
             start = fields.Date.to_date(date_from) if date_from else None
             end = fields.Date.to_date(date_to) if date_to else None
+        elif effective_range == "all_time":
+            return None, None, field_type
         elif effective_range == "today":
             start = end = today
         elif effective_range == "yesterday":

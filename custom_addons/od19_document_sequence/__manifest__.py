@@ -13,4 +13,5 @@
     "data": [],
     "installable": True,
     "application": False,
+    "icon": "/od19_document_sequence/static/description/icon.svg",
 }

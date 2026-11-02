@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_card_so_return_report" pageWidth="595" pageHeight="842" columnWidth="575" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="0" uuid="52adbf6a-ca01-4c69-9db6-4ea3b66b8f8c">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="AVERA"/>
+	<parameter name="p_Date_As_Off" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="p_Product_No" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[select 
+COALESCE(sum (c.quantity),0) as qty_done
+,d.usage
+,c.product_id
+
+from stock_picking a 
+left join stock_move b on b.picking_id=a.id
+left join stock_move_line c on c.move_id=b.id 
+left join stock_location d on d.id=b.location_dest_id
+where 
+lower(a.origin) like 'return of%' 
+and a.state='done' 
+and d.usage ='customer'
+and c.product_id =$P{p_Product_No} 
+and b.date<=date($P{p_Date_As_Off})
+AND EXTRACT(YEAR FROM date(b.date))=EXTRACT(YEAR FROM date($P{p_Date_As_Off}))
+
+
+group by c.product_id,d.usage]]>
+	</queryString>
+	<field name="qty_done" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="qty_done"/>
+	</field>
+	<field name="usage" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="usage"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_location"/>
+	</field>
+	<field name="product_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="product_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="stock_move_line"/>
+	</field>
+	<variable name="v_Return_Qty" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[IF($F{qty_done}==null,0,$F{qty_done})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<textField pattern="#,##0.00#;(#,##0.00#)">
+				<reportElement x="0" y="0" width="40" height="20" uuid="1e9d836d-457a-4057-927f-2b4e9fe8429f"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12"/>
+					<paragraph rightIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($V{v_Return_Qty} == null, 0, $V{v_Return_Qty})]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

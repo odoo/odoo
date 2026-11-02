@@ -17,6 +17,7 @@
         "od19_announcement",
         "od19_meeting_room_booking",
         "od19_knowledge_enhanced",
+        "od19_approval_center",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -28,6 +29,7 @@
         "views/careers_pages.xml",
         "views/contact_page.xml",
         "views/employee_portal.xml",
+        "views/approval_center.xml",
         "views/res_company_views.xml",
         "views/job_application_views.xml",
         "views/job_opening_views.xml",
@@ -42,6 +44,7 @@
             "od19_website/static/src/css/od19_website.css",
             "od19_website/static/src/js/od19_products.js",
             "od19_website/static/src/js/od19_portal_rooms.js",
+            "od19_website/static/src/js/od19_approval_badge.js",
         ],
         "web.assets_backend": [
             "od19_website/static/src/js/od19_portal_hotkey.js",
@@ -53,4 +56,5 @@
     "application": False,
     "auto_install": False,
     "post_init_hook": "post_init_hook",
+    "icon": "/od19_website/static/description/icon.svg",
 }

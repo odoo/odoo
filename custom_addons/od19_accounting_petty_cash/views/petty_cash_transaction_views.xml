@@ -11,6 +11,7 @@
                 <field name="name"/>
                 <field name="transaction_type"/>
                 <field name="amount" sum="Total"/>
+                <field name="od19_document_type" optional="show"/>
                 <field name="state" widget="badge"
                        decoration-info="state == 'draft'"
                        decoration-success="state == 'posted'"
@@ -27,10 +28,15 @@
                 <header>
                     <button name="action_post" type="object" string="Post"
                             class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_reconcile" type="object" string="Reconcile"
+                            invisible="state != 'posted'"/>
                     <button name="action_cancel" type="object" string="Cancel"
                             invisible="state != 'posted'"/>
                     <button name="action_draft" type="object" string="Reset to Draft"
                             invisible="state != 'cancelled'"/>
+                    <button name="%(action_report_payment_certificate)d" type="action"
+                            string="พิมพ์ใบรับรองแทนใบเสร็จ"
+                            invisible="od19_document_type != 'payment_certificate'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted,cancelled"/>
                 </header>
                 <sheet>
@@ -45,6 +51,18 @@
                             <field name="amount"/>
                             <field name="date"/>
                             <field name="journal_id"/>
+                        </group>
+                    </group>
+                    <group string="เอกสารประกอบ / Document">
+                        <group>
+                            <field name="od19_document_type"/>
+                            <field name="od19_certificate_number"
+                                   invisible="od19_document_type != 'payment_certificate'"/>
+                            <field name="od19_payee_name"
+                                   invisible="od19_document_type != 'payment_certificate'"/>
+                        </group>
+                        <group>
+                            <field name="od19_vat_creditable"/>
                         </group>
                     </group>
                     <group>

@@ -35,4 +35,5 @@ Manage internal tool/equipment loans:
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_asset_loan/static/description/icon.svg",
 }

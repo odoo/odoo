@@ -16,4 +16,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_partner_thai_fields/static/description/icon.svg",
 }

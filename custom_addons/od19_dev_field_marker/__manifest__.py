@@ -13,4 +13,5 @@
     "auto_install": True,
     "installable": True,
     "application": False,
+    "icon": "/od19_dev_field_marker/static/description/icon.svg",
 }

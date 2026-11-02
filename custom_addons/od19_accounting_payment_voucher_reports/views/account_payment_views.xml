@@ -18,6 +18,11 @@
                         string="อนุมัติ / Approve"
                         type="object"
                         invisible="state != 'draft' or od19_prepare_state != 'prepared'"/>
+                <button name="action_od19_override"
+                        string="ข้ามการอนุมัติ / Override"
+                        type="object"
+                        groups="od19_accounting_payment_voucher_reports.group_od19_payment_approver"
+                        invisible="state != 'draft' or od19_approval_override or od19_prepare_state == 'approved'"/>
             </xpath>
             <field name="memo" position="after">
                 <field name="od19_voucher_no"
@@ -38,6 +43,17 @@
                 <field name="od19_approved_date"
                        readonly="1"
                        invisible="not od19_approved_date"/>
+                <field name="od19_override_reason"
+                       placeholder="ระบุเหตุผลการข้ามการอนุมัติ (บังคับ)..."
+                       groups="od19_accounting_payment_voucher_reports.group_od19_payment_approver"
+                       readonly="od19_approval_override"
+                       invisible="state != 'draft' or od19_prepare_state == 'approved'"/>
+                <field name="od19_approval_override"
+                       readonly="1"
+                       invisible="not od19_approval_override"/>
+                <field name="od19_override_by"
+                       readonly="1"
+                       invisible="not od19_override_by"/>
             </field>
         </field>
     </record>

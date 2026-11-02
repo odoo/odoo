@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <record id="action_report_od19_doubtful_debt_provision" model="ir.actions.report">
+        <field name="name">ใบสำคัญตั้งค่าเผื่อหนี้สงสัยจะสูญ / Doubtful Debt Provision</field>
+        <field name="model">od19.doubtful.debt.provision</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_accounting_doubtful_debt.doubtful_debt_provision_document</field>
+        <field name="report_file">od19_accounting_doubtful_debt.doubtful_debt_provision_document</field>
+        <field name="print_report_name">'DDP-%s' % object.name</field>
+        <field name="binding_model_id" ref="model_od19_doubtful_debt_provision"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="action_report_od19_doubtful_debt_writeoff" model="ir.actions.report">
+        <field name="name">ใบสำคัญตัดหนี้สูญ / Bad Debt Write-off</field>
+        <field name="model">od19.doubtful.debt.writeoff</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_accounting_doubtful_debt.doubtful_debt_writeoff_document</field>
+        <field name="report_file">od19_accounting_doubtful_debt.doubtful_debt_writeoff_document</field>
+        <field name="print_report_name">'DDW-%s' % object.name</field>
+        <field name="binding_model_id" ref="model_od19_doubtful_debt_writeoff"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

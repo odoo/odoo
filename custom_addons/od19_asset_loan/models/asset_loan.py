@@ -117,6 +117,10 @@ class AssetLoan(models.Model):
 
     def action_confirm(self):
         for record in self:
+            if record.state != "draft":
+                raise UserError(
+                    _("Only draft asset loans can be confirmed.")
+                )
             if not record.line_ids:
                 raise UserError(_("Please add at least one equipment to borrow."))
             record.write(
@@ -129,6 +133,10 @@ class AssetLoan(models.Model):
 
     def action_return(self):
         for record in self:
+            if record.state != "borrowed":
+                raise UserError(
+                    _("Only borrowed asset loans can be returned.")
+                )
             record.write(
                 {
                     "state": "returned",
@@ -145,15 +153,27 @@ class AssetLoan(models.Model):
 
     def action_lost(self):
         for record in self:
+            if record.state != "borrowed":
+                raise UserError(
+                    _("Only borrowed asset loans can be marked as lost.")
+                )
             record.write({"state": "lost"})
             record.line_ids.write({"state": "lost"})
 
     def action_cancel(self):
         for record in self:
+            if record.state in ("returned", "lost"):
+                raise UserError(
+                    _("Cannot cancel a %s asset loan.") % record.state
+                )
             record.write({"state": "cancelled"})
 
     def action_draft(self):
         for record in self:
+            if record.state != "cancelled":
+                raise UserError(
+                    _("Only cancelled asset loans can be reset to draft.")
+                )
             record.write({"state": "draft"})
 
     # ------------------------------------------------------------------

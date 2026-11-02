@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        R-AC-002 Payment Inbound.
+
+        Inherits the shared wizard layout (views/jasper_report_wizard.xml) and
+        replaces the placeholder <group name="parameters"/> with the fields
+        this report needs.  The wizard is reachable from the Accounting >
+        Reporting menu.
+    -->
+    <record id="view_payment_inbound_report" model="ir.ui.view">
+        <field name="name">payment.inbound.report</field>
+        <field name="model">payment.inbound.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <group>
+                        <field name="p_language" required="1"/>
+                        <field name="p_From_Date" required="1"/>
+                        <field name="p_To_Date" required="1"/>
+                        <field name="date_type" required="1"/>
+                        <field name="date_format" required="1"/>
+                    </group>
+                    <group>
+                        <field name="p_Journal" widget="many2many_tags"/>
+                        <field name="p_Customer" widget="many2many_tags"/>
+                        <field name="p_Group_By" required="1"/>
+                        <field name="p_Order_By" required="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_payment_inbound_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Payment Inbound</field>
+        <field name="res_model">payment.inbound.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_payment_inbound_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_payment_inbound_report"
+        name="(J-Report OD15) Payment Inbound"
+        parent="account.menu_finance_reports"
+        action="action_payment_inbound_report"
+        groups="account.group_account_user,account.group_account_manager"
+        sequence="95"
+    />
+
+</odoo>

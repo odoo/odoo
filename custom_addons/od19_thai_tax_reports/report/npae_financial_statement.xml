@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="npae_financial_statement">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2 class="text-center">
+                        งบการเงินตามมาตรฐานการรายงานทางการเงินสำหรับ
+                        กิจการที่ไม่มีส่วนได้เสียสาธารณะ
+                    </h2>
+                    <h3 class="text-center">
+                        Financial Statements — TFRS for NPAEs
+                    </h3>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <strong>กิจการ:</strong>
+                            <span t-out="company.name"/>
+                        </div>
+                        <div class="col-6 text-right">
+                            <strong>เลขประจำตัวผู้เสียภาษี:</strong>
+                            <span t-out="company.vat"/>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <strong>รอบระยะเวลาบัญชี:</strong>
+                            <span t-out="date_from" t-options='{"widget": "date"}'/>
+                            <strong> ถึง </strong>
+                            <span t-out="date_to" t-options='{"widget": "date"}'/>
+                        </div>
+                    </div>
+
+                    <!-- 1. งบแสดงฐานะการเงิน -->
+                    <h4 class="mt-4">
+                        1. งบแสดงฐานะการเงิน (Statement of Financial Position)
+                    </h4>
+                    <p class="text-muted mb-1">
+                        ณ วันที่
+                        <span t-out="date_to" t-options='{"widget": "date"}'/>
+                    </p>
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center" style="width:15%">รหัสบัญชี</th>
+                                <th>ชื่อบัญชี</th>
+                                <th class="text-right" style="width:20%">จำนวนเงิน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="font-weight-bold">
+                                <td colspan="3">สินทรัพย์</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><em>สินทรัพย์หมุนเวียน</em></td>
+                            </tr>
+                            <t t-foreach="assets_current" t-as="line">
+                                <tr>
+                                    <td class="text-center"><span t-out="line['code']"/></td>
+                                    <td><span t-out="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td colspan="2" class="text-right">รวมสินทรัพย์หมุนเวียน</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_assets_current)"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><em>สินทรัพย์ไม่หมุนเวียน</em></td>
+                            </tr>
+                            <t t-foreach="assets_non_current" t-as="line">
+                                <tr>
+                                    <td class="text-center"><span t-out="line['code']"/></td>
+                                    <td><span t-out="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td colspan="2" class="text-right">รวมสินทรัพย์ไม่หมุนเวียน</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_assets_non_current)"/>
+                                </td>
+                            </tr>
+                            <tr class="font-weight-bold">
+                                <td colspan="2" class="text-right">รวมสินทรัพย์</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_assets)"/>
+                                </td>
+                            </tr>
+
+                            <tr class="font-weight-bold">
+                                <td colspan="3">หนี้สิน</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><em>หนี้สินหมุนเวียน</em></td>
+                            </tr>
+                            <t t-foreach="liabilities_current" t-as="line">
+                                <tr>
+                                    <td class="text-center"><span t-out="line['code']"/></td>
+                                    <td><span t-out="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td colspan="2" class="text-right">รวมหนี้สินหมุนเวียน</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_liabilities_current)"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"><em>หนี้สินไม่หมุนเวียน</em></td>
+                            </tr>
+                            <t t-foreach="liabilities_non_current" t-as="line">
+                                <tr>
+                                    <td class="text-center"><span t-out="line['code']"/></td>
+                                    <td><span t-out="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td colspan="2" class="text-right">รวมหนี้สินไม่หมุนเวียน</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_liabilities_non_current)"/>
+                                </td>
+                            </tr>
+                            <tr class="font-weight-bold">
+                                <td colspan="2" class="text-right">รวมหนี้สิน</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_liabilities)"/>
+                                </td>
+                            </tr>
+
+                            <tr class="font-weight-bold">
+                                <td colspan="3">ส่วนของผู้ถือหุ้น</td>
+                            </tr>
+                            <t t-foreach="equity_lines" t-as="line">
+                                <tr>
+                                    <td class="text-center"><span t-out="line['code']"/></td>
+                                    <td><span t-out="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td colspan="2">กำไร (ขาดทุน) สุทธิสำหรับงวด</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(net_profit)"/>
+                                </td>
+                            </tr>
+                            <tr class="font-weight-bold">
+                                <td colspan="2" class="text-right">รวมส่วนของผู้ถือหุ้น</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_equity_with_result)"/>
+                                </td>
+                            </tr>
+                            <tr class="font-weight-bold">
+                                <td colspan="2" class="text-right">
+                                    รวมหนี้สินและส่วนของผู้ถือหุ้น
+                                </td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_liabilities_equity)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- 2. งบกำไรขาดทุน -->
+                    <h4 class="mt-4">
+                        2. งบกำไรขาดทุน (Statement of Profit or Loss)
+                    </h4>
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="text-center" style="width:15%">รหัสบัญชี</th>
+                                <th>ชื่อบัญชี</th>
+                                <th class="text-right" style="width:20%">จำนวนเงิน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="font-weight-bold">
+                                <td colspan="3">รายได้</td>
+                            </tr>
+                            <t t-foreach="income_lines" t-as="line">
+                                <tr>
+                                    <td class="text-center"><span t-out="line['code']"/></td>
+                                    <td><span t-out="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td colspan="2" class="text-right">รวมรายได้</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_income)"/>
+                                </td>
+                            </tr>
+                            <tr class="font-weight-bold">
+                                <td colspan="3">ค่าใช้จ่าย</td>
+                            </tr>
+                            <t t-foreach="expense_lines" t-as="line">
+                                <tr>
+                                    <td class="text-center"><span t-out="line['code']"/></td>
+                                    <td><span t-out="line['name']"/></td>
+                                    <td class="text-right">
+                                        <span t-out="'{:,.2f}'.format(line['amount'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr>
+                                <td colspan="2" class="text-right">รวมค่าใช้จ่าย</td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(total_expense)"/>
+                                </td>
+                            </tr>
+                            <tr class="font-weight-bold">
+                                <td colspan="2" class="text-right">
+                                    กำไร (ขาดทุน) สุทธิสำหรับงวด
+                                </td>
+                                <td class="text-right">
+                                    <span t-out="'{:,.2f}'.format(net_profit)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="mt-3 text-muted">
+                        หมายเหตุ: รายงานนี้สรุปจากยอดบัญชีที่ Post แล้วเท่านั้น
+                        และจัดกลุ่มสินทรัพย์/หนี้สินตามประเภทบัญชี (หมุนเวียน /
+                        ไม่หมุนเวียน) ตามแนวทาง TFRS for NPAEs
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_npae_financial_statement" model="ir.actions.report">
+        <field name="name">NPAEs Financial Statement</field>
+        <field name="model">thai.tax.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_thai_tax_reports.npae_financial_statement</field>
+        <field name="report_file">od19_thai_tax_reports.npae_financial_statement</field>
+    </record>
+</odoo>

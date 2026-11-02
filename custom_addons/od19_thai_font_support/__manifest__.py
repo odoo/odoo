@@ -46,4 +46,5 @@ Thai Localization Strategy (Wave 0).
     },
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_thai_font_support/static/description/icon.svg",
 }

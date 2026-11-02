@@ -24,7 +24,7 @@ class TestVatTaxInvoice864(TransactionCase):
         cls.company.partner_id.write(
             {
                 "street": "1 Moo 1 Vibhavadi Rangsit Road",
-                "vat": "0105555555555",
+                "vat": "0105555555554",
                 "company_registry": "00000",
             }
         )
@@ -132,7 +132,7 @@ class TestVatTaxInvoice864(TransactionCase):
             {
                 "name": "No Address Buyer Co., Ltd.",
                 "company_type": "company",
-                "vat": "0105555555579",
+                "vat": "0105555555571",
                 "company_registry": "00002",
                 "country_id": self.th_country.id,
             }
@@ -175,7 +175,7 @@ class TestVatTaxInvoice864(TransactionCase):
             {
                 "name": "Bypass Buyer",
                 "company_type": "company",
-                "vat": "0105555555586",
+                "vat": "0105555555589",
             }
         )
         invoice = self._create_invoice(buyer)
@@ -188,7 +188,7 @@ class TestVatTaxInvoice864(TransactionCase):
             {
                 "name": "Setting Off Buyer",
                 "company_type": "company",
-                "vat": "0105555555593",
+                "vat": "0105555555597",
             }
         )
         invoice = self._create_invoice(buyer)

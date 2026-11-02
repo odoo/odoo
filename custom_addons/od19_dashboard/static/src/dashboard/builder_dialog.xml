@@ -242,6 +242,13 @@
                                         <t t-esc="range.label"/>
                                     </option>
                                 </select>
+                                <p class="text-muted small mb-0 mt-1"
+                                   t-if="state.draft.date_range === 'overdue'">
+                                    Overdue reads every record dated up to yesterday and sets no start
+                                    bound. Pair it with a status or due-date condition in the filter
+                                    (for example invoices not paid, or deliveries not done) so the
+                                    figure really means "still open and late".
+                                </p>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label" for="od19_widget_limit">
@@ -326,6 +333,13 @@
                                         <t t-esc="basis.label"/>
                                     </option>
                                 </select>
+                                <p class="text-muted small mb-0 mt-1"
+                                   t-if="state.draft.delta_basis === 'mtm' or state.draft.delta_basis === 'qtq'">
+                                    Previous month / quarter shifts the whole period window back by one
+                                    month or three months and keeps its length. On a short period such
+                                    as This Month it lands on the previous month, but on a long period
+                                    such as This Year it moves the whole year-long window instead.
+                                </p>
                             </div>
                         </div>
 
@@ -340,6 +354,8 @@
                         <p class="text-muted od19-rules__hint">
                             The first matching rule, from the top, decides the colour of the widget.
                             Drag the handle or use the arrows to change the order.
+                            "Previous month" and "Previous quarter" shift the whole period window back,
+                            keeping its length — the same behaviour as the KPI comparison period.
                         </p>
                         <div class="table-responsive" t-if="ruleRows.length">
                             <table class="table table-sm align-middle od19-rules">

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!--
+        Daily job: remind before a service contract expires and auto-renew
+        the contracts flagged with ``auto_renew``.
+        Runs every day at 06:00.
+    -->
+    <record id="ir_cron_service_contract_renewal" model="ir.cron">
+        <field name="name">Service Contracts: Renewal &amp; Expiry Reminder (OD19)</field>
+        <field name="model_id" ref="contract.model_contract_contract"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_service_contract_renewal()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+        <field name="nextcall" eval="(DateTime.today() + relativedelta(days=1, hour=6, minute=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+    </record>
+
+</odoo>

@@ -45,6 +45,16 @@
                             string="Reset to Draft"
                             class="btn-secondary"
                             invisible="state != 'closed'"/>
+                    <button name="action_create_next_billing_invoice"
+                            type="object"
+                            string="Create Next Installment Invoice"
+                            class="btn-primary"
+                            invisible="not billing_line_ids"/>
+                    <button name="action_recognize_revenue"
+                            type="object"
+                            string="Recognize Revenue"
+                            class="btn-primary"
+                            invisible="not revenue_line_ids"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved,active,closed"/>
                 </header>
                 <sheet>
@@ -64,6 +74,19 @@
                             <field name="consumed_amount" readonly="1"/>
                             <field name="consumed_from_orders" readonly="1"/>
                         </group>
+                        <group string="Billing">
+                            <field name="billing_scheduled_amount" readonly="1"/>
+                            <field name="billing_invoiced_amount" readonly="1"/>
+                            <field name="billing_remaining_amount" readonly="1"/>
+                        </group>
+                        <group string="Revenue (TFRS 15)">
+                            <field name="revenue_journal_id"/>
+                            <field name="deferred_revenue_account_id"/>
+                            <field name="revenue_account_id"/>
+                            <field name="revenue_total_amount" readonly="1"/>
+                            <field name="revenue_recognized_amount" readonly="1"/>
+                            <field name="revenue_deferred_amount" readonly="1"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Activities">
@@ -80,6 +103,45 @@
                                     <field name="name"/>
                                     <field name="added_limit_amount"/>
                                     <field name="note"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Billing Schedule">
+                            <field name="billing_line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="line_type"/>
+                                    <field name="percent"/>
+                                    <field name="amount"/>
+                                    <field name="due_date"/>
+                                    <field name="progress_percent"/>
+                                    <field name="sale_order_id"/>
+                                    <field name="state"/>
+                                    <field name="invoice_id" readonly="1"/>
+                                    <button name="action_create_invoice"
+                                            type="object"
+                                            string="Create Invoice"
+                                            invisible="state == 'invoiced'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Revenue Schedule">
+                            <field name="revenue_line_ids">
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="name"/>
+                                    <field name="recognition_method"/>
+                                    <field name="percent"/>
+                                    <field name="total_amount"/>
+                                    <field name="progress_percent"/>
+                                    <field name="recognized_amount" readonly="1"/>
+                                    <field name="remaining_amount" readonly="1"/>
+                                    <field name="state"/>
+                                    <button name="action_recognize"
+                                            type="object"
+                                            string="Recognize Revenue"
+                                            invisible="state == 'recognized'"/>
                                 </list>
                             </field>
                         </page>

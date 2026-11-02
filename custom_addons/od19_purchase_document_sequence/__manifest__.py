@@ -25,4 +25,5 @@ Each department can have its own Purchase Request and Purchase Order sequence
     "installable": True,
     "application": False,
     "auto_install": False,
+    "icon": "/od19_purchase_document_sequence/static/description/icon.svg",
 }

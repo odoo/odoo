@@ -22,4 +22,5 @@
     ],
     "installable": True,
     "application": True,
+    "icon": "/od19_helpdesk_extension/static/description/icon.svg",
 }

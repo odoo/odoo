@@ -43,7 +43,9 @@ registry.category("web_tour.tours").add("od19_purchase_wizards_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-item",
+            // Scope to the `partner_id` field: a bare `.o-autocomplete--dropdown-item`
+            // can match the stale/hidden dropdown of another mounted field.
+            trigger: ".o_field_widget[name='partner_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the vendor from the suggestion list."),
             run: "click",
         },

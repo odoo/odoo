@@ -68,7 +68,25 @@ function Get-PsqlPath {
 }
 
 function Test-Port([int]$Port) {
-    return [bool](Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue)
+    # ตรวจ listening socket ที่ "มี process จริงเป็นเจ้าของ" เท่านั้น
+    # หมายเหตุ 1: หลัง Stop-Process -Force Windows อาจทิ้ง ghost listener (OwningProcess = 0) ไว้ชั่วคราว
+    #             ถ้านับ ghost ด้วยจะทำให้เข้าใจผิดว่าระบบยังรันอยู่ แล้วข้ามการ start → ระบบล่มเงียบ
+    # หมายเหตุ 2: Get-NetTCPConnection -LocalPort อาจมองไม่เห็น listener บน [::] (dual-stack) จึง fallback netstat
+    $real = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue |
+            Where-Object { $_.OwningProcess -and $_.OwningProcess -ne 0 }
+    if ($real) { return $true }
+    $hit = netstat -ano | Select-String -Pattern ":$Port\s" | Select-String -Pattern "LISTENING" |
+           Where-Object { $_ -notmatch "LISTENING\s+0\s*$" }
+    return [bool]$hit
+}
+
+function Test-Http([string]$Url, [int]$TimeoutSec = 5) {
+    # ตัวชี้วัดสุขภาพที่เชื่อถือได้จริง: มีอะไร "ตอบ HTTP 200" อยู่หรือไม่
+    try {
+        return ((Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec $TimeoutSec).StatusCode -eq 200)
+    } catch {
+        return $false
+    }
 }
 
 Write-Host "========================================" -ForegroundColor Cyan
@@ -115,7 +133,22 @@ foreach ($port in @(8069, $httpPort, $geventPort) | Select-Object -Unique) {
         }
 }
 
-# 1c. หยุด PostgreSQL service อื่นทั้งหมด (เช่น เวอร์ชัน 15 ของระบบเดิม)
+# 1c. ปิด nginx ที่ค้างอยู่ทั้งหมด ก่อนเริ่มใหม่ในขั้นตอนที่ 4 (กัน process สะสม)
+#     nginx worker สืบทอด listening socket จาก master ถ้าฆ่าไม่ครบ port 80 จะยังค้าง
+Get-Process nginx -ErrorAction SilentlyContinue | ForEach-Object {
+    Write-Host "  kill nginx process PID $($_.Id)" -ForegroundColor DarkYellow
+    Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue
+}
+# รอจน nginx หายทั้งหมดจริง (สูงสุด 10 วินาที) ก่อนปล่อยให้ขั้นตอนถัดไปทำงาน
+for ($i = 0; $i -lt 10; $i++) {
+    if (-not (Get-Process nginx -ErrorAction SilentlyContinue)) { break }
+    Start-Sleep -Seconds 1
+}
+$nginxLeft = Get-Process nginx -ErrorAction SilentlyContinue
+if ($nginxLeft) { Write-Host "  เตือน: ยังมี nginx ค้างอยู่ (PID $(($nginxLeft.Id) -join ', '))" -ForegroundColor Yellow }
+Start-Sleep -Seconds 2
+
+# 1d. หยุด PostgreSQL service อื่นทั้งหมด (เช่น เวอร์ชัน 15 ของระบบเดิม)
 Get-Service -Name "postgresql*" -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne $PgService -and $_.Status -eq "Running" } |
     ForEach-Object {
@@ -124,6 +157,27 @@ Get-Service -Name "postgresql*" -ErrorAction SilentlyContinue |
     }
 
 Start-Sleep -Seconds 2
+
+# 1e. หมุน log เก่า (ทำได้เฉพาะตอนนี้ เพราะ Odoo หยุดแล้ว)
+#     บน Windows Odoo ใช้ logging.FileHandler จึงถือไฟล์ log เปิดไว้ตลอดเวลา
+#     การ rename ไฟล์ขณะ Odoo รันจะล้มเหลว (file in use) จึงต้องหมุนตอนเริ่มระบบ
+$LogDir      = Join-Path $Root "logs"
+$LogRetainDays = 30
+if (Test-Path -LiteralPath $OdooLog) {
+    $logItem = Get-Item -LiteralPath $OdooLog -ErrorAction SilentlyContinue
+    if ($logItem -and $logItem.Length -gt 0) {
+        if (-not (Test-Path -LiteralPath $LogDir)) { New-Item -ItemType Directory -Path $LogDir -Force | Out-Null }
+        $archive = Join-Path $LogDir ("odoo_server_{0}.log" -f (Get-Date -Format "yyyyMMdd_HHmmss"))
+        Move-Item -LiteralPath $OdooLog -Destination $archive -Force
+        Write-Host ("  หมุน log เก่า ({0:N0} KB) -> {1}" -f ($logItem.Length / 1KB), $archive) -ForegroundColor DarkYellow
+        Get-ChildItem -LiteralPath $LogDir -Filter "odoo_server_*.log" -ErrorAction SilentlyContinue |
+            Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-$LogRetainDays) } |
+            ForEach-Object {
+                Write-Host "  ลบ log เก่าเกิน $LogRetainDays วัน: $($_.Name)" -ForegroundColor DarkGray
+                Remove-Item -LiteralPath $_.FullName -Force -ErrorAction SilentlyContinue
+            }
+    }
+}
 
 # ==========================================================================
 # 2. ตรวจสอบ / เริ่ม PostgreSQL + ตัด session ของฐานข้อมูลอื่น
@@ -162,7 +216,8 @@ if ($psql) {
 # ==========================================================================
 Write-Step 3 "เริ่ม Odoo (port $httpPort)"
 
-if (Test-Port $httpPort) {
+# ตัดสินจาก HTTP จริง (port อย่างเดียวเชื่อถือไม่ได้ เพราะอาจเป็น ghost listener ที่ PID = 0)
+if (Test-Http "http://127.0.0.1:$httpPort/web/login") {
     Write-Host "  Odoo รันอยู่แล้วที่ port $httpPort" -ForegroundColor Green
 } else {
     Write-Host "  กำลังเริ่ม Odoo..." -ForegroundColor Yellow
@@ -177,7 +232,7 @@ if (Test-Port $httpPort) {
     while ($elapsed -lt $timeout) {
         Start-Sleep -Seconds 3
         $elapsed += 3
-        if (Test-Port $httpPort) { $started = $true; break }
+        if (Test-Http "http://127.0.0.1:$httpPort/web/login" 10) { $started = $true; break }
     }
     if ($started) {
         Write-Host "  Odoo: Started (port $httpPort) ภายใน $elapsed วินาที" -ForegroundColor Green
@@ -192,20 +247,37 @@ if (Test-Port $httpPort) {
 # ==========================================================================
 Write-Step 4 "เริ่ม Nginx (port 80)"
 
-if (Test-Port 80) {
-    Write-Host "  Nginx รันอยู่แล้วที่ port 80" -ForegroundColor Green
-} elseif (-not (Test-Path -LiteralPath (Join-Path $NginxDir "nginx.exe"))) {
+# ตัดสินจาก "process nginx" เป็นหลัก (port 80 อย่างเดียวเชื่อถือไม่ได้ เพราะ listener อาจอยู่บน [::])
+$nginxExe  = Join-Path $NginxDir "nginx.exe"
+$nginxProc = @(Get-Process nginx -ErrorAction SilentlyContinue)
+
+if ($nginxProc.Count -gt 0) {
+    Write-Host "  Nginx รันอยู่แล้ว ($($nginxProc.Count) process, port 80)" -ForegroundColor Green
+} elseif (-not (Test-Path -LiteralPath $nginxExe)) {
     Write-Host "  ไม่พบ Nginx ที่ $NginxDir - ข้ามขั้นตอนนี้" -ForegroundColor Yellow
 } else {
     Write-Host "  กำลังเริ่ม Nginx..." -ForegroundColor Yellow
     # start แบบ detached (ไม่ตายเมื่อปิดหน้าต่าง console)
     Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{
-        CommandLine      = "`"$NginxDir\nginx.exe`""
+        CommandLine      = "`"$nginxExe`""
         CurrentDirectory = $NginxDir
     } | Out-Null
-    Start-Sleep -Seconds 3
-    if (Test-Port 80) { Write-Host "  Nginx: Started (port 80)" -ForegroundColor Green }
-    else { Write-Host "  Nginx: start ไม่สำเร็จ" -ForegroundColor Red; $exitCode = 1 }
+    # รอจน nginx ทำงานจริง (มี process + เปิด port 80) สูงสุด 15 วินาที
+    $nginxOk = $false
+    for ($i = 0; $i -lt 5; $i++) {
+        Start-Sleep -Seconds 3
+        if ((Get-Process nginx -ErrorAction SilentlyContinue) -and (Test-Port 80)) { $nginxOk = $true; break }
+    }
+    if ($nginxOk) {
+        Write-Host "  Nginx: Started (port 80)" -ForegroundColor Green
+    } else {
+        # รายงาน process ที่ยังจับ port 80 อยู่ เพื่อช่วยวินิจฉัย socket ค้าง
+        $holder = (Get-NetTCPConnection -LocalPort 80 -State Listen -ErrorAction SilentlyContinue |
+                   Select-Object -ExpandProperty OwningProcess -Unique) -join ', '
+        if (-not $holder) { $holder = "(ไม่พบ process จับ port)" }
+        Write-Host "  Nginx: start ไม่สำเร็จ (port 80 ถูกจับโดย PID $holder)" -ForegroundColor Red
+        $exitCode = 1
+    }
 }
 
 # ==========================================================================

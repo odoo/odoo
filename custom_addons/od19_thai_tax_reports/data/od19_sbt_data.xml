@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ภาษีธุรกิจเฉพาะ (Specific Business Tax — SBT) ตามประมวลรัษฎากร มาตรา 91/2
+        ใช้กับธุรกิจเฉพาะ ได้แก่ การธนาคาร การเงิน, ประกันชีวิต, รับจำนำ,
+        ขายอสังหาริมทรัพย์ และธุรกิจหลักทรัพย์ เป็นต้น
+
+        อัตรา SBT = 3.0% ของรายรับ และภาษีธุรกิจเฉพาะส่วนท้องถิ่นอีก 10% ของ
+        SBT (เทียบเท่า 0.3% ของรายรับ) รวมทั้งสิ้น 3.3% ของรายรับ
+
+        ภาษีทั้งสองตัวอยู่ในกลุ่มภาษี ``tax_group_sbt`` เพื่อให้นำส่งรายเดือน
+        ด้วยแบบ ภ.ธ.40 (รายงาน ``od19_thai_tax_reports.sbt_pp40_register``)
+    -->
+    <record id="tax_group_sbt" model="account.tax.group">
+        <field name="name">ภาษีธุรกิจเฉพาะ (SBT) / ภ.ธ.40</field>
+        <field name="country_id" ref="base.th"/>
+    </record>
+
+    <record id="tax_sbt_specific" model="account.tax">
+        <field name="name">ภาษีธุรกิจเฉพาะ 3% (SBT)</field>
+        <field name="description">ภาษีธุรกิจเฉพาะ ตามมาตรา 91/2 อัตรา 3%</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">3.0</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_sbt"/>
+    </record>
+
+    <record id="tax_sbt_local" model="account.tax">
+        <field name="name">ภาษีธุรกิจเฉพาะส่วนท้องถิ่น (Local Tax 0.3%)</field>
+        <field name="description">ภาษีส่วนท้องถิ่น 10% ของ SBT (เทียบเท่า 0.3% ของรายรับ)</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0.3</field>
+        <field name="type_tax_use">sale</field>
+        <field name="tax_group_id" ref="tax_group_sbt"/>
+    </record>
+</odoo>

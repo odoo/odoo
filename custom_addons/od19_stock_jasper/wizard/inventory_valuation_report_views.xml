@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        F-IV-003 Inventory Valuation (มูลค่าคงเหลือ).
+
+        Inherits the shared wizard layout and is reached from
+        Inventory > Reporting > Stock Reports (J-Report OD15).
+    -->
+    <record id="view_inventory_valuation_report" model="ir.ui.view">
+        <field name="name">inventory.valuation.report</field>
+        <field name="model">inventory.valuation.report</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="od19_reporting_jasper.view_jasper_report_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='parameters']" position="replace">
+                <group name="parameters" invisible="state != 'input'">
+                    <field name="p_language" required="1" default_focus="1"/>
+                    <field name="date_type" required="1"/>
+                    <field name="date_format" required="1"/>
+                    <field name="date" required="1"/>
+                    <field name="company_id"/>
+                    <field name="p_Product" widget="many2many_tags"/>
+                    <field name="p_Location" widget="many2many_tags"/>
+                    <field name="p_Lot" widget="many2many_tags"/>
+                    <field name="p_EName"/>
+                    <field name="p_ESignature"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_inventory_valuation_report" model="ir.actions.act_window">
+        <field name="name">(J-Report OD15) Inventory Valuation</field>
+        <field name="res_model">inventory.valuation.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_inventory_valuation_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_inventory_valuation_report"
+        name="(J-Report OD15) Inventory Valuation"
+        parent="menu_stock_report_od15"
+        action="action_inventory_valuation_report"
+        sequence="90"
+    />
+
+</odoo>

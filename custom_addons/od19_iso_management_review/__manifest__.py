@@ -15,4 +15,5 @@
     "installable": True,
     "application": True,
     "auto_install": False,
+    "icon": "/od19_iso_management_review/static/description/icon.svg",
 }

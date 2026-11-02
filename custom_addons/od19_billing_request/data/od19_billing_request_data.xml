@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="evidence_type_delivery_note" model="od19.billing.evidence.type">
+        <field name="name">delivery_note</field>
+        <field name="trigger_kind">delivery</field>
+        <field name="required_for_billing" eval="False"/>
+    </record>
+    <record id="evidence_type_customer_po" model="od19.billing.evidence.type">
+        <field name="name">customer_po</field>
+        <field name="trigger_kind">other</field>
+        <field name="required_for_billing" eval="False"/>
+    </record>
+    <record id="evidence_type_service_report" model="od19.billing.evidence.type">
+        <field name="name">service_report</field>
+        <field name="trigger_kind">service</field>
+        <field name="required_for_billing" eval="False"/>
+    </record>
+    <record id="evidence_type_vendor_tax_invoice" model="od19.billing.evidence.type">
+        <field name="name">vendor_tax_invoice</field>
+        <field name="trigger_kind">other</field>
+        <field name="required_for_billing" eval="False"/>
+        <field name="requires_original" eval="True"/>
+    </record>
+    <record id="evidence_type_vendor_invoice" model="od19.billing.evidence.type">
+        <field name="name">vendor_invoice</field>
+        <field name="trigger_kind">other</field>
+        <field name="required_for_billing" eval="False"/>
+        <field name="requires_original" eval="True"/>
+    </record>
+</odoo>

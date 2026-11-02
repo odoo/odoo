@@ -9,6 +9,7 @@
     "depends": [
         "account",
         "od19_partner_thai_fields",
+        "od19_accounting_features",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -17,4 +18,5 @@
     ],
     "installable": True,
     "application": False,
+    "icon": "/od19_accounting_dncn/static/description/icon.svg",
 }

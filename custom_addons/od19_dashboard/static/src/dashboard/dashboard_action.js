@@ -59,7 +59,7 @@ export class DashboardAction extends Component {
                 currency: {},
                 grid: { min_w: 2, max_w: 12, min_h: 1, max_h: 6 },
             },
-            dateRange: null,
+            dateRange: "",
             editMode: false,
             builder: { open: false, config: null },
             draft: { open: false, name: "", audience: "management", default_date_range: "last_30_days" },
@@ -106,11 +106,10 @@ export class DashboardAction extends Component {
         this.state.loading = true;
         const data = await this.orm.call("od19.dashboard", "get_dashboard_data", [
             this.state.dashboardId,
-            this.state.dateRange,
+            this.state.dateRange || null,
         ]);
         this.state.dashboard = data.dashboard;
         this.state.widgets = this._decorate(data.widgets);
-        this.state.dateRange = data.meta.date_range;
         this.state.editMode = false;
         this.state.loading = false;
     }
@@ -118,7 +117,7 @@ export class DashboardAction extends Component {
     async _reloadWidgets() {
         const data = await this.orm.call("od19.dashboard", "get_dashboard_data", [
             this.state.dashboardId,
-            this.state.dateRange,
+            this.state.dateRange || null,
         ]);
         this.state.dashboard = data.dashboard;
         this.state.widgets = this._decorate(data.widgets);
@@ -137,7 +136,7 @@ export class DashboardAction extends Component {
             return;
         }
         this.state.dashboardId = id;
-        this.state.dateRange = null;
+        this.state.dateRange = "";
         await this._loadDashboard();
     }
 
@@ -316,7 +315,7 @@ export class DashboardAction extends Component {
             this.state.draft.open = false;
             this.state.dashboards = await this.orm.call("od19.dashboard", "get_user_dashboards", []);
             this.state.dashboardId = id[0];
-            this.state.dateRange = null;
+            this.state.dateRange = "";
             await this._loadDashboard();
             this.state.editMode = true;
         } catch (error) {
@@ -334,7 +333,7 @@ export class DashboardAction extends Component {
             ]);
             this.state.dashboards = await this.orm.call("od19.dashboard", "get_user_dashboards", []);
             this.state.dashboardId = newId;
-            this.state.dateRange = null;
+            this.state.dateRange = "";
             await this._loadDashboard();
             this.state.editMode = true;
         } catch (error) {

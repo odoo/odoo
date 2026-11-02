@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <template id="sales_retention_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page"
+                         style="font-family:'Sarabun','Noto Sans Thai','Tahoma',sans-serif;font-size:12px;color:#333333;">
+
+                        <!-- ===== Title ===== -->
+                        <div class="row mb-3">
+                            <div class="col-8">
+                                <div style="font-size:11px;color:#666666;">
+                                    <span>อ้างอิงสัญญา : </span>
+                                    <span t-out="doc.contract_id.name"/>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <div style="font-size:20px;font-weight:bold;color:#9E2424;">
+                                    ใบสำคัญรับเงินประกันผลงาน
+                                </div>
+                                <div style="font-size:12px;letter-spacing:1px;color:#666666;">
+                                    RETENTION RECEIPT
+                                </div>
+                                <div style="font-size:11px;color:#666666;">
+                                    <span t-out="doc.name"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== Customer / document info ===== -->
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <table class="table table-sm table-bordered" style="font-size:11px;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:35%;color:#666666;">ลูกค้า / Customer</td>
+                                            <td><span t-out="doc.partner_id.name"/></td>
+                                        </tr>
+                                        <tr t-if="doc.partner_id.vat">
+                                            <td style="color:#666666;">เลขประจำตัวผู้เสียภาษี</td>
+                                            <td><span t-out="doc.partner_id.vat"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm table-bordered" style="font-size:11px;">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:40%;color:#666666;">ใบกำกับภาษีอ้างอิง</td>
+                                            <td><span t-out="doc.invoice_id.name or '-'"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#666666;">วันที่ใบกำกับ</td>
+                                            <td><span t-field="doc.invoice_date" t-options='{"widget": "date"}'/></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#666666;">กำหนดคืนเงินประกัน</td>
+                                            <td><span t-field="doc.release_date" t-options='{"widget": "date"}'/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ===== Amount block ===== -->
+                        <table class="table table-sm table-bordered mb-3" style="font-size:12px;">
+                            <thead>
+                                <tr style="background-color:#fafafa;">
+                                    <th style="text-align:left;">รายการ / Description</th>
+                                    <th style="text-align:right;width:22%;">จำนวนเงิน / Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>มูลค่างวดงาน (ก่อน VAT)</td>
+                                    <td style="text-align:right;">
+                                        <span t-field="doc.base_amount"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        หัก เงินประกันผลงาน
+                                        (<span t-out="doc.retention_rate"/>%)
+                                    </td>
+                                    <td style="text-align:right;">
+                                        <span t-field="doc.retention_amount"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ยอดใบกำกับภาษีเต็มจำนวน (รวม VAT)</td>
+                                    <td style="text-align:right;">
+                                        <span t-field="doc.invoice_amount_total"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p style="font-size:11px;color:#666666;">
+                            เอกสารฉบับนี้เป็นหลักฐานการรับ/กันเงินประกันผลงาน
+                            ตามหนังสือตอบข้อหารือเลขที่ กค 0706/พ.789
+                            โดยได้ออกใบกำกับภาษีเต็มจำนวนและแยกยอดเงินประกันไว้ที่บัญชีลูกหนี้เงินประกันผลงาน
+                        </p>
+
+                        <!-- ===== Signature blocks ===== -->
+                        <div class="row" style="margin-top:48px;font-size:11px;text-align:center;">
+                            <div class="col-4">
+                                <div style="border-top:1px solid #999999;margin:0 12px;padding-top:4px;">
+                                    ผู้จัดทำ / Prepared
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="border-top:1px solid #999999;margin:0 12px;padding-top:4px;">
+                                    ผู้ตรวจสอบ / Checked
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div style="border-top:1px solid #999999;margin:0 12px;padding-top:4px;">
+                                    ผู้อนุมัติ / Approved
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_od19_sales_retention" model="ir.actions.report">
+        <field name="name">ใบสำคัญรับเงินประกันผลงาน / Retention Receipt</field>
+        <field name="model">od19.sales.retention</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_sales_retention.sales_retention_document</field>
+        <field name="report_file">od19_sales_retention.sales_retention_document</field>
+        <field name="print_report_name">'Retention Receipt - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_od19_sales_retention"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

@@ -14,4 +14,5 @@
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
+    "icon": "/od19_stock_valuation_adjustment/static/description/icon.svg",
 }

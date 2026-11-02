@@ -92,3 +92,58 @@ class TestDNCN(TransactionCase):
         self.assertEqual(remaster.parent_id, invoice)
         self.assertEqual(len(remaster.invoice_line_ids), 1)
         self.assertEqual(remaster.invoice_line_ids.price_unit, 100)
+
+    def _create_credit_note(self, invoice, price_unit=100):
+        return self.env["account.move"].create({
+            "move_type": "out_refund",
+            "partner_id": self.partner.id,
+            "journal_id": self.journal.id,
+            "dncn": "cn",
+            "parent_id": invoice.id,
+            "reversed_entry_id": invoice.id,
+            "reason_id": self.reason.id,
+            "invoice_line_ids": [(0, 0, {
+                "product_id": self.product.id,
+                "quantity": 1,
+                "price_unit": price_unit,
+            })],
+        })
+
+    def test_credit_note_reconciles_with_parent(self):
+        invoice = self._create_invoice()
+        invoice.action_post()
+        cn = self._create_credit_note(invoice)
+
+        cn.action_post()
+
+        receivable = self.partner.property_account_receivable_id
+        lines = (invoice.line_ids + cn.line_ids).filtered(
+            lambda line: line.account_id == receivable
+        )
+        self.assertEqual(len(lines), 2)
+        self.assertTrue(all(lines.mapped("reconciled")))
+        self.assertEqual(len(lines.mapped("full_reconcile_id")), 1)
+        self.assertEqual(sum(lines.mapped("amount_residual")), 0.0)
+
+    def test_debit_note_does_not_settle_parent(self):
+        invoice = self._create_invoice()
+        invoice.action_post()
+        dn = self.env["account.move"].create({
+            "move_type": "out_invoice",
+            "partner_id": self.partner.id,
+            "journal_id": self.journal.id,
+            "dncn": "dn",
+            "parent_id": invoice.id,
+            "reason_id": self.reason.id,
+            "invoice_line_ids": [(0, 0, {
+                "product_id": self.product.id,
+                "quantity": 1,
+                "price_unit": 50,
+            })],
+        })
+
+        dn.action_post()
+
+        receivable = self.partner.property_account_receivable_id
+        dn_line = dn.line_ids.filtered(lambda line: line.account_id == receivable)
+        self.assertFalse(dn_line.reconciled)

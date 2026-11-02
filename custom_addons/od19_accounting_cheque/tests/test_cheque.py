@@ -194,3 +194,112 @@ class TestCheque(TransactionCase):
         cheque.action_confirm()
         cheque.action_cancel()
         self.assertEqual(cheque.state, "cancelled")
+
+    def _create_reconcile_account(self, name, code, account_type):
+        return self.env["account.account"].create(
+            {"name": name, "code": code, "account_type": account_type}
+        )
+
+    def _create_open_invoice(self, partner, amount):
+        invoice = self.env["account.move"].create(
+            {
+                "move_type": "out_invoice",
+                "partner_id": partner.id,
+                "invoice_date": "2024-01-10",
+                "invoice_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "Service",
+                            "quantity": 1.0,
+                            "price_unit": amount,
+                            "account_id": self._create_reconcile_account(
+                                "Test Income", "611001", "income"
+                            ).id,
+                        },
+                    )
+                ],
+            }
+        )
+        invoice.action_post()
+        return invoice
+
+    def _create_open_bill(self, partner, amount):
+        bill = self.env["account.move"].create(
+            {
+                "move_type": "in_invoice",
+                "partner_id": partner.id,
+                "invoice_date": "2024-01-10",
+                "invoice_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "Service",
+                            "quantity": 1.0,
+                            "price_unit": amount,
+                            "account_id": self._create_reconcile_account(
+                                "Test Expense", "511001", "expense"
+                            ).id,
+                        },
+                    )
+                ],
+            }
+        )
+        bill.action_post()
+        return bill
+
+    def _create_customer_cheque(self, amount, name):
+        return self.env["account.cheque"].create(
+            {
+                "cheque_type": "customer",
+                "partner_id": self.customer.id,
+                "bank_id": self.bank.id,
+                "journal_id": self.bank_journal.id,
+                "amount": amount,
+                "cheque_date": "2024-01-15",
+                "due_date": "2024-02-15",
+                "name": name,
+            }
+        )
+
+    def test_action_reconcile_customer_cheque_with_invoice(self):
+        invoice = self._create_open_invoice(self.customer, 100000.0)
+        cheque = self._create_customer_cheque(100000.0, "CHQR01")
+        cheque.action_confirm()
+
+        cheque.action_reconcile()
+
+        ar_line = invoice.line_ids.filtered(
+            lambda line: line.account_id
+            == self.customer.property_account_receivable_id
+        )
+        self.assertTrue(ar_line.reconciled)
+        self.assertEqual(ar_line.amount_residual, 0.0)
+
+    def test_action_reconcile_supplier_cheque_with_bill(self):
+        bill = self._create_open_bill(self.supplier, 50000.0)
+        cheque = self.env["account.cheque"].create(
+            {
+                "cheque_type": "supplier",
+                "partner_id": self.supplier.id,
+                "bank_id": self.bank.id,
+                "journal_id": self.bank_journal.id,
+                "amount": 50000.0,
+                "cheque_date": "2024-01-15",
+                "due_date": "2024-02-15",
+                "name": "CHQR02",
+            }
+        )
+        cheque.action_confirm()
+        cheque.action_to_pay()
+
+        cheque.action_reconcile()
+
+        ap_line = bill.line_ids.filtered(
+            lambda line: line.account_id
+            == self.supplier.property_account_payable_id
+        )
+        self.assertTrue(ap_line.reconciled)
+        self.assertEqual(ap_line.amount_residual, 0.0)

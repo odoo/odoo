@@ -19,4 +19,5 @@
     ],
     "installable": True,
     "license": "LGPL-3",
+    "icon": "/od19_sales_oca_bridge_workflow/static/description/icon.svg",
 }

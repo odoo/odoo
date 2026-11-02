@@ -50,7 +50,7 @@ registry.category("web_tour.tours").add("od19_hr_expense_enhanced_tour", {
             run: "click",
         },
         {
-            trigger: ".o-autocomplete--dropdown-menu:not(.o_loading) .o-autocomplete--dropdown-item:first-child",
+            trigger: ".o_field_widget[name='product_id'] .o-autocomplete--dropdown-menu a.dropdown-item:not(.o_loading)",
             content: _t("Pick the first available expense category."),
             run: "click",
         },
@@ -117,19 +117,23 @@ registry.category("web_tour.tours").add("od19_hr_expense_enhanced_tour", {
             content: markup(_t("<b>Return Cash</b> records the return and closes the cash advance.")),
             run: "click",
         },
+        // Recording the cash return raises an "Invalid Operation" dialog when
+        // no journal is configured. It opens asynchronously right after the
+        // click above, so wait for either outcome first (a wait step is never
+        // blocked by a modal), then close the dialog only if it appeared.
+        {
+            trigger: ".o_error_dialog, .o_dialog .modal-footer .btn-secondary",
+        },
+        {
+            isActive: [".o_error_dialog"],
+            trigger: ".o_error_dialog .modal-footer .o-default-button",
+            content: markup(_t("Close the warning dialog.")),
+            tooltipPosition: "left",
+            run: "click",
+        },
         {
             trigger: "footer button[special='cancel']",
             content: _t("Cancel here to keep the demo data unchanged."),
-            run: "click",
-        },
-        // Recording the cash return raises an "Invalid Operation" dialog when
-        // no journal is configured. Close it so the delegation steps below are
-        // not blocked by a lingering modal (gated on the happy path).
-        {
-            isActive: [".o_error_dialog"],
-            trigger: ".o_error_dialog button:contains('Close'), .o_dialog button:contains('Close'), .o_dialog .btn-close",
-            content: markup(_t("Close the warning dialog.")),
-            tooltipPosition: "left",
             run: "click",
         },
         {

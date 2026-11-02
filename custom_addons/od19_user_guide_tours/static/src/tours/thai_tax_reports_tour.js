@@ -55,25 +55,34 @@ registry.category("web_tour.tours").add("od19_thai_tax_reports_tour", {
             tooltipPosition: "left",
             run: "click",
         },
-        // Printing may leave an error dialog and/or the "Configure your
-        // document layout" configurator open, which blocks the navbar. Close
-        // whichever appears (gated so the happy path is not affected).
+        // Printing a register opens a dialog asynchronously: the
+        // "Configure your document layout" configurator when no layout has
+        // been saved yet, or an "Invalid Operation" warning when the period
+        // has no data. Target a *visible* element: the `.o_dialog` wrapper has
+        // no box of its own, so a `visible:true` query never matches it (that
+        // is why the previous `:has()`-on-`.o_dialog` trigger never fired).
+        // A step without run is never blocked by a modal, so it can safely
+        // wait for the dialog, and the guarded close below is evaluated only
+        // once the dialog is rendered.
         {
-            isActive: [".o_error_dialog"],
-            trigger: ".o_error_dialog button:contains('Close'), .o_error_dialog .btn-close, .o_error_dialog .btn-primary",
-            content: markup(_t("Close the warning dialog.")),
+            trigger: "button[name='document_layout_save'], .o_error_dialog .o-default-button, .o_dialog .modal-title",
+            timeout: 30000,
+        },
+        {
+            isActive: [".o_dialog .modal-header .btn-close"],
+            trigger: ".o_dialog .modal-header .btn-close",
+            content: markup(_t("Close the warning / document layout dialog.")),
             tooltipPosition: "left",
             run: "click",
         },
         {
-            isActive: [".o_dialog:has(.o_document_layout)"],
-            trigger: ".o_dialog .modal-header .btn-close, .o_dialog footer button[special='cancel'], .o_dialog .o_form_button_cancel",
-            content: markup(_t("Close the document layout configurator without saving.")),
-            tooltipPosition: "left",
-            run: "click",
-        },
-        {
-            trigger: ".o_form_view:not(:has(.modal)), .o_list_view:not(:has(.modal))",
+            // `action_print()` hands the browser a report action: when no
+            // document layout is saved yet Odoo first shows the "Configure your
+            // document layout" dialog, and once it is closed the report is
+            // streamed and the action manager is left EMPTY — there is no
+            // form/list/kanban to wait for. Wait for the app navbar, which is
+            // always mounted, so the tour can carry on to the next register.
+            trigger: ".o_menu_sections, .o_control_panel, .o_action_manager",
         },
 
         // --- VAT Purchase Register ---
@@ -103,25 +112,34 @@ registry.category("web_tour.tours").add("od19_thai_tax_reports_tour", {
             tooltipPosition: "left",
             run: "click",
         },
-        // Printing may leave an error dialog and/or the "Configure your
-        // document layout" configurator open, which blocks the navbar. Close
-        // whichever appears (gated so the happy path is not affected).
+        // Printing a register opens a dialog asynchronously: the
+        // "Configure your document layout" configurator when no layout has
+        // been saved yet, or an "Invalid Operation" warning when the period
+        // has no data. Target a *visible* element: the `.o_dialog` wrapper has
+        // no box of its own, so a `visible:true` query never matches it (that
+        // is why the previous `:has()`-on-`.o_dialog` trigger never fired).
+        // A step without run is never blocked by a modal, so it can safely
+        // wait for the dialog, and the guarded close below is evaluated only
+        // once the dialog is rendered.
         {
-            isActive: [".o_error_dialog"],
-            trigger: ".o_error_dialog button:contains('Close'), .o_error_dialog .btn-close, .o_error_dialog .btn-primary",
-            content: markup(_t("Close the warning dialog.")),
+            trigger: "button[name='document_layout_save'], .o_error_dialog .o-default-button, .o_dialog .modal-title",
+            timeout: 30000,
+        },
+        {
+            isActive: [".o_dialog .modal-header .btn-close"],
+            trigger: ".o_dialog .modal-header .btn-close",
+            content: markup(_t("Close the warning / document layout dialog.")),
             tooltipPosition: "left",
             run: "click",
         },
         {
-            isActive: [".o_dialog:has(.o_document_layout)"],
-            trigger: ".o_dialog .modal-header .btn-close, .o_dialog footer button[special='cancel'], .o_dialog .o_form_button_cancel",
-            content: markup(_t("Close the document layout configurator without saving.")),
-            tooltipPosition: "left",
-            run: "click",
-        },
-        {
-            trigger: ".o_form_view:not(:has(.modal)), .o_list_view:not(:has(.modal))",
+            // `action_print()` hands the browser a report action: when no
+            // document layout is saved yet Odoo first shows the "Configure your
+            // document layout" dialog, and once it is closed the report is
+            // streamed and the action manager is left EMPTY — there is no
+            // form/list/kanban to wait for. Wait for the app navbar, which is
+            // always mounted, so the tour can carry on to the next register.
+            trigger: ".o_menu_sections, .o_control_panel, .o_action_manager",
         },
 
         // --- WHT Register ---
@@ -151,29 +169,42 @@ registry.category("web_tour.tours").add("od19_thai_tax_reports_tour", {
             tooltipPosition: "left",
             run: "click",
         },
-        // Printing may leave an error dialog and/or the "Configure your
-        // document layout" configurator open, which blocks the navbar. Close
-        // whichever appears (gated so the happy path is not affected).
+        // Printing a register opens a dialog asynchronously: the
+        // "Configure your document layout" configurator when no layout has
+        // been saved yet, or an "Invalid Operation" warning when the period
+        // has no data. Target a *visible* element: the `.o_dialog` wrapper has
+        // no box of its own, so a `visible:true` query never matches it (that
+        // is why the previous `:has()`-on-`.o_dialog` trigger never fired).
+        // A step without run is never blocked by a modal, so it can safely
+        // wait for the dialog, and the guarded close below is evaluated only
+        // once the dialog is rendered.
         {
-            isActive: [".o_error_dialog"],
-            trigger: ".o_error_dialog button:contains('Close'), .o_error_dialog .btn-close, .o_error_dialog .btn-primary",
-            content: markup(_t("Close the warning dialog.")),
+            trigger: "button[name='document_layout_save'], .o_error_dialog .o-default-button, .o_dialog .modal-title",
+            timeout: 30000,
+        },
+        {
+            isActive: [".o_dialog .modal-header .btn-close"],
+            trigger: ".o_dialog .modal-header .btn-close",
+            content: markup(_t("Close the warning / document layout dialog.")),
             tooltipPosition: "left",
             run: "click",
         },
         {
-            isActive: [".o_dialog:has(.o_document_layout)"],
-            trigger: ".o_dialog .modal-header .btn-close, .o_dialog footer button[special='cancel'], .o_dialog .o_form_button_cancel",
-            content: markup(_t("Close the document layout configurator without saving.")),
-            tooltipPosition: "left",
-            run: "click",
-        },
-        {
-            trigger: ".o_form_view:not(:has(.modal)), .o_list_view:not(:has(.modal))",
+            // `action_print()` hands the browser a report action: when no
+            // document layout is saved yet Odoo first shows the "Configure your
+            // document layout" dialog, and once it is closed the report is
+            // streamed and the action manager is left EMPTY — there is no
+            // form/list/kanban to wait for. Wait for the app navbar, which is
+            // always mounted, so the tour can carry on to the next register.
+            trigger: ".o_menu_sections, .o_control_panel, .o_action_manager",
         },
 
         {
-            trigger: ".o_list_renderer",
+            // Same reason as the steps above: after the last register is
+            // printed the action manager is empty, so there is no
+            // form/list/kanban left to click. The app navbar is always mounted
+            // and gives the final click that closes the tour.
+            trigger: ".o_menu_sections, .o_action_manager, .o_control_panel",
             content: markup(_t(
                 "Thai Tax Reports complete! Generate <b>VAT Sales Register</b>, " +
                 "<b>VAT Purchase Register</b>, and <b>WHT Register</b> for statutory compliance. " +
