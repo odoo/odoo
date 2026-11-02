@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
+from odoo.fields import Command
 from odoo.tests import common, Form
 
 @common.tagged('post_install', '-at_install')
@@ -129,7 +130,7 @@ class TestDeliveryCost(common.TransactionCase):
         self.delivery_carrier.write({'free_over': True, 'amount': 100, 'fixed_margin': 10})
         so = self.env['sale.order'].create({
             'partner_id': self.partner_18.id,
-            'order_line': [(0, 0, {
+            'order_line': [Command.create({
                 'product_id': self.product_4.id,
                 'product_uom_qty': 1,
                 'price_unit': 120.00,

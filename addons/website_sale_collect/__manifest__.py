@@ -2,6 +2,7 @@
 
 {
     "name": "Click & Collect",
+    "summary": "Let customers collect their online orders in your stores.",
     "category": "Website/Website",
     "sequence": 2,  # Second in the shipping providers kanban.
     "description": """

@@ -2,6 +2,7 @@
 
 {
     "name": "Delivery Costs",
+    "summary": "Deliver orders with your own drivers.",
     "category": "Sales/Delivery",
     "sequence": 1,  # First in the shipping providers kanban.
     "description": """

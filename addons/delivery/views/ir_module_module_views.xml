@@ -43,15 +43,6 @@
                 <t t-elif="record.name.raw_value == 'website_sale_collect'">Pick up in store</t>
                 <field t-else="" name="shortdesc"/>
             </xpath>
-            <xpath expr="//small/field[@name='summary']" position="replace">
-                <t t-if="record.name.raw_value == 'delivery'">
-                    Deliver orders with your own drivers.
-                </t>
-                <t t-elif="record.name.raw_value == 'website_sale_collect'">
-                    Let customers collect their online orders in your stores.
-                </t>
-                <field t-else="" groups="!base.group_no_one" name="summary"/>
-            </xpath>
             <a id="module_info" position="replace"/>
         </field>
     </record>

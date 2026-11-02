@@ -374,13 +374,8 @@ class TestDeliveryCost(DeliveryCommon):
         self.assertEqual(len(error_lines), 1, "Only 1 line should have an invalid weight")
         self.assertTrue(error_lines.combo_item_id, "The erroneous line should be part of a combo")
 
-    def test_in_house_price_rules_take_precedence(self):
-        """Pricing rules should take precedence over the price of in-house carriers, and the price
-        should be used when no rule matches."""
-        sale_order = self.env["sale.order"].create({
-            "partner_id": self.partner.id,
-            "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 1})],
-        })
+    def test_in_house_price_rule_takes_precedence_over_price(self):
+        """A matching pricing rule should be used instead of the price of the delivery method."""
         self.normal_delivery.price_rule_ids = [
             Command.create({
                 "variable": "weight",
@@ -389,16 +384,34 @@ class TestDeliveryCost(DeliveryCommon):
                 "list_base_price": 3,
             })
         ]
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 1})],
+        })
 
         rate = self.normal_delivery.rate_shipment(sale_order)
         self.assertTrue(rate["success"])
-        self.assertEqual(rate["price"], 3, "The matching rule should be used instead of the price.")
-        self.assertTrue(self.normal_delivery._is_available_for_order(sale_order))
+        self.assertEqual(rate["price"], 3)
 
-        sale_order.order_line.product_uom_qty = 10
+    def test_in_house_price_used_when_no_price_rule_matches(self):
+        """The price of the delivery method should be used when no pricing rule matches, and the
+        method should stay available."""
+        self.normal_delivery.price_rule_ids = [
+            Command.create({
+                "variable": "weight",
+                "operator": "<=",
+                "max_value": 5,
+                "list_base_price": 3,
+            })
+        ]
+        sale_order = self.env["sale.order"].create({
+            "partner_id": self.partner.id,
+            "order_line": [Command.create({"product_id": self.product.id, "product_uom_qty": 10})],
+        })
+
         rate = self.normal_delivery.rate_shipment(sale_order)
         self.assertTrue(rate["success"])
-        self.assertEqual(rate["price"], 10, "No rule matches: the price should be used.")
+        self.assertEqual(rate["price"], 10)
         self.assertTrue(self.normal_delivery._is_available_for_order(sale_order))
 
     def test_in_house_price_rules_free_over(self):
