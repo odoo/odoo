@@ -3137,11 +3137,16 @@ class IrQweb(models.AbstractModel):
 
     def _pregenerate_view_caches(self):
         _logger.runbot('Load template in cache')
-        for view in self.env['ir.ui.view'].search(Domain.AND([Domain('type', '=', 'qweb'), Domain('mode', '=', 'primary')])):
+        for view in self.env['ir.ui.view'].search(self._get_pregenerate_views_domain()):
             try:
                 self._compile(view.key)
             except Exception:  # noqa: BLE001
                 _logger.warning("Failed to pregenerate the template %r (view %s)", view.key, view.id, exc_info=True)
+
+    def _get_pregenerate_views_domain(self):
+        """ Returns the domain of the views to compile in cache. Override it to
+        exclude the templates that are only rendered by the frontend. """
+        return Domain('type', '=', 'qweb') & Domain('mode', '=', 'primary')
 
     def _get_bundles_to_pregenarate(self):
         """
