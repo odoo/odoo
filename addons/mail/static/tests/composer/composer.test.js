@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { pasteText, tripleClick } from "@html_editor/../tests/_helpers/user_actions";
+import { pasteHtml, pasteText, tripleClick } from "@html_editor/../tests/_helpers/user_actions";
 
 import {
     SIZES,
@@ -38,7 +38,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Composer } from "@mail/core/common/composer";
-import { edit, press, queryFirst } from "@odoo/hoot-dom";
+import { edit, press, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
 import { getIndexedDB } from "../mail_test_helpers";
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
@@ -1112,9 +1112,9 @@ test("Can dismiss mail composer with 500+ active_ids", async () => {
     await openFormView("mail.compose.message", composerId, {
         context: { active_ids: [partnerId] },
     });
-    expect(env.dialogData).not.toBeEmpty()
+    expect(env.dialogData).not.toBeEmpty();
     // Dialog is closed without errors
-    await env.dialogData.dismiss()
+    await env.dialogData.dismiss();
 });
 
 test("Uploading multiple files in the composer create multiple temporary attachments", async () => {
@@ -1778,6 +1778,47 @@ test("parse link correctly in html composer", async () => {
     await pasteText(editor, "www.baidu.com");
     await contains(
         `.o-mail-Composer-html.odoo-editor-editable a[target='_blank']:text('www.baidu.com')`
+    );
+});
+
+test.tags("html composer");
+test("pasted code keeps its line breaks and indentation, pasted text its formatting", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    pasteHtml(editor, "<pre>if (a) {\n    b();<br>\tc();<br>}</pre><p>Hello <b>world</b></p>");
+    await waitFor(".o-mail-Composer-html b:text('world')");
+    expect(".o-mail-Composer-html").toHaveInnerHTML(
+        `<div class="o-paragraph">if (a) {<br>&nbsp; &nbsp; b();<br>&nbsp; &nbsp; c();<br>}</div><p>Hello <b>world</b></p>`
+    );
+});
+
+test.tags("html composer");
+test("pasted code copied with its white-space keeps its line breaks", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    pasteHtml(
+        editor,
+        `<span style="white-space: pre-wrap;">const a = 1;</span><span style="white-space: pre-wrap;">\n</span><span style="white-space: pre-wrap;">const b = 2;</span>`
+    );
+    await waitFor(".o-mail-Composer-html :contains('const b = 2;')");
+    expect(".o-mail-Composer-html").toHaveInnerHTML(
+        `<div class="o-paragraph"><span>const a = 1;<br>const b = 2;</span></div>`
     );
 });
 
