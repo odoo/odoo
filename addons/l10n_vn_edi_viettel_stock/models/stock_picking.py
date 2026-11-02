@@ -3,8 +3,9 @@
 import base64
 import uuid
 
-from odoo import _, api, fields, models, modules, SUPERUSER_ID
+from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError
+from odoo.tools import BinaryBytes
 from odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service import SInvoiceService
 
 
@@ -51,20 +52,20 @@ class StockPicking(models.Model):
     )
 
     # File Fields
-    l10n_vn_edi_sinvoice_file_id = fields.Many2one(
-        comodel_name='ir.attachment',
+    l10n_vn_edi_sinvoice_file = fields.Binary(
+        string='SInvoice json File',
         copy=False,
         readonly=True,
         export_string_translation=False,
     )
-    l10n_vn_edi_sinvoice_xml_file_id = fields.Many2one(
-        comodel_name='ir.attachment',
+    l10n_vn_edi_sinvoice_xml_file = fields.Binary(
+        string='SInvoice xml File',
         copy=False,
         readonly=True,
         export_string_translation=False,
     )
-    l10n_vn_edi_sinvoice_pdf_file_id = fields.Many2one(
-        comodel_name='ir.attachment',
+    l10n_vn_edi_sinvoice_pdf_file = fields.Binary(
+        string='SInvoice pdf File',
         copy=False,
         readonly=True,
         export_string_translation=False,
@@ -377,7 +378,7 @@ class StockPicking(models.Model):
                     xml_error = _('XML file not yet available from Viettel.')
 
                 if xml_data:
-                    xml_data['res_field'] = 'l10n_vn_edi_sinvoice_xml_file_id'
+                    xml_data['res_field'] = 'l10n_vn_edi_sinvoice_xml_file'
 
             pdf_file_data, pdf_error = sinvoice.get_invoice_file(template_code, invoice_no, 'PDF')
             if not pdf_error and pdf_file_data.get('fileToBytes'):
@@ -385,29 +386,22 @@ class StockPicking(models.Model):
                     'name': pdf_file_data['fileName'],
                     'mimetype': 'application/pdf',
                     'raw': base64.b64decode(pdf_file_data['fileToBytes']),
-                    'res_field': 'l10n_vn_edi_sinvoice_pdf_file_id',
+                    'res_field': 'l10n_vn_edi_sinvoice_pdf_file',
                 }
 
-        attachments_data = []
+        attachment_ids = []
         for file, err in [(xml_data, xml_error), (pdf_data, pdf_error)]:
             if err or not file:
                 continue
-            attachments_data.append({
-                'name': file['name'],
-                'raw': file['raw'],
-                'mimetype': file['mimetype'],
-                'res_model': self._name,
-                'res_id': self.id,
-                'res_field': file['res_field'],
-            })
+            self[file['res_field']] = BinaryBytes(file['raw'], filename=file['name'])
+            attachment_ids.append(self[file['res_field']].attachment_id)
 
-        if attachments_data:
-            attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_data)
-            for att in attachments:
-                self[att.res_field] = att.id
+        if attachment_ids:
+            if sinvoice_file := self.l10n_vn_edi_sinvoice_file:
+                attachment_ids.append(sinvoice_file.attachment_id)
             self.message_post(
                 body=_('Transfer note sent to SInvoice'),
-                attachment_ids=attachments.ids + self.l10n_vn_edi_sinvoice_file_id.ids,
+                attachment_ids=attachment_ids,
             )
 
         if xml_error or pdf_error:

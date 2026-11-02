@@ -326,9 +326,9 @@ class TestVNEDIStock(TransactionCase):
         self.assertTrue(picking.l10n_vn_edi_is_sent)
         self.assertEqual(picking.l10n_vn_edi_invoice_number, 'K24NTU01')
         self.assertEqual(picking.l10n_vn_edi_reservation_code, 'SEC456')
-        self.assertTrue(picking.l10n_vn_edi_sinvoice_file_id)
-        self.assertTrue(picking.l10n_vn_edi_sinvoice_xml_file_id)
-        self.assertTrue(picking.l10n_vn_edi_sinvoice_pdf_file_id)
+        self.assertTrue(picking.l10n_vn_edi_sinvoice_file)
+        self.assertTrue(picking.l10n_vn_edi_sinvoice_xml_file)
+        self.assertTrue(picking.l10n_vn_edi_sinvoice_pdf_file)
 
     def test_send_transfer_note_api_error(self):
         """API errors raise UserError and do not mutate picking state."""
