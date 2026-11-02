@@ -1,4 +1,4 @@
-@mixin o_hb_select_wrapper {
+.o_hb_selectMenu_wrapper {
     --border-color: var(--o-hb-border-color);
 
     /* TODO: the following rules essentially overrides utility classes
@@ -81,7 +81,7 @@
     }
 }
 
-@mixin o_hb_select_dropdown {
+.o_hb_selectMenu_dropdown {
     --SelectMenu-padding: 0;
 
     /* Besides the horizontal padding ($o-hb-row-padding-left + map-get($spacers, 2)),
@@ -132,19 +132,10 @@
     }
 
     .o_select_menu_item {
-        --dropdown-item-padding-y: 6px;
         margin: 0 !important;
-        line-height: 1.7;
     }
 
     .dropdown-item.o_we_m2o_search_more {
         color: var(--o-we-fg-lighter);
     }
-}
-
-.o_hb_searchSelect_wrapper {
-    @include o_hb_select_wrapper;
-}
-.o_hb_searchSelect_dropdown {
-    @include o_hb_select_dropdown;
 }
