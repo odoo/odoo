@@ -568,6 +568,8 @@ class AccountMove(models.Model):
             invoice_date_due = get_value(invoice_node, '{*}Platnosc/{*}TerminPlatnosci/{*}Termin')
             invoice_number = get_value(invoice_node, '{*}P_2')
             currency_code = get_value(invoice_node, '{*}KodWaluty')
+            invoice_type = get_value(invoice_node, '{*}RodzajFaktury') or ''
+            amount_total = float(get_value(invoice_node, '{*}P_15') or 0.0)
             move_line_nodes = invoice_node.findall("{*}FaWiersz")
 
             lines = []
@@ -606,6 +608,8 @@ class AccountMove(models.Model):
                 'invoice_date_due': invoice_date_due,
                 'invoice_number': invoice_number,
                 'currency_code': currency_code,
+                # a correction invoice decreasing the amount is a credit note
+                'is_refund': invoice_type.startswith('KOR') and amount_total < 0,
                 'lines': lines,
             }
 
@@ -641,8 +645,9 @@ class AccountMove(models.Model):
 
             fiscal_position = self.env['account.fiscal.position']._get_fiscal_position(partner)
 
+            sign = -1 if data['is_refund'] else 1
             move_vals = {
-                'move_type': 'in_invoice',
+                'move_type': 'in_refund' if data['is_refund'] else 'in_invoice',
                 'partner_id': partner.id,
                 'invoice_date': data['invoice_date'],
                 'invoice_date_due': data['invoice_date_due'],
@@ -662,7 +667,7 @@ class AccountMove(models.Model):
                     Command.create(
                         {
                             'name': line['name'],
-                            'quantity': line['quantity'],
+                            'quantity': sign * line['quantity'],
                             'price_unit': line['price_unit'],
                             'tax_ids': [Command.set(mapped_tax.ids)],
                         }
@@ -705,7 +710,7 @@ class AccountMove(models.Model):
 
         last_processed_move = self.search([
             ('l10n_pl_edi_number', '!=', False),
-            ('move_type', '=', 'in_invoice'),
+            ('move_type', 'in', ('in_invoice', 'in_refund')),
             ('invoice_date', '!=', False),
             *self._check_company_domain(self.env.company),
         ], order='invoice_date DESC', limit=1)
@@ -753,7 +758,7 @@ class AccountMove(models.Model):
 
         already_processed = set(self.env['account.move'].search([
             ('l10n_pl_edi_number', 'in', invoice_numbers),
-            ('move_type', '=', 'in_invoice'),
+            ('move_type', 'in', ('in_invoice', 'in_refund')),
             *self._check_company_domain(self.env.company),
         ]).mapped('l10n_pl_edi_number'))
 

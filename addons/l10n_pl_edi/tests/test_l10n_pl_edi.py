@@ -845,6 +845,16 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertTrue(bills.filtered(lambda b: b.l10n_pl_edi_status == 'fetch_failed'))
         self.assertTrue(bills.filtered(lambda b: b.l10n_pl_edi_status == 'fetched'))
 
+    def test_import_correction_invoice_as_credit_note(self):
+        """ A correction invoice (KOR) decreasing the amount is imported as a
+        vendor credit note with positive quantities. """
+        with tools.file_open('l10n_pl_edi/tests/export_xmls/standerd_fa3_credit_note.xml', mode='rb') as fd:
+            move_vals = self.env['account.move'].l10n_pl_edi_get_ksef_bill_vals_from_xml(fd.read())
+        refund = self.env['account.move'].create(move_vals)
+        self.assertEqual(refund.move_type, 'in_refund')
+        self.assertRecordValues(refund.invoice_line_ids, [{'quantity': 1.0, 'price_unit': 1000.0}])
+        self.assertEqual(refund.amount_total, 1230.0)
+
     def test_import_invoice_with_net_and_gross_unit_price(self):
         self._assert_import_invoice('invoice_with_net_and_gross_unit_price.xml', [
             {
