@@ -103,3 +103,72 @@ class TestBillingRequestPull(TransactionCase):
         removed = request._od19_pull_remove(so)
         self.assertEqual(removed, 1)
         self.assertFalse(request.line_ids)
+
+    def test_wizard_line_res_model_is_line_model(self):
+        so = self._confirmed_so()
+        request = self.env["od19.billing.request"].create({"direction": "ar"})
+        request.origin_ref = so
+        wizard = self.env["od19.document.pull.wizard"].create(
+            {
+                "res_model": "od19.billing.request",
+                "res_id": request.id,
+                "source_ref": "sale.order,%s" % so.id,
+            }
+        )
+        wizard._onchange_source_ref()
+        self.assertEqual(wizard.line_ids.res_model, "sale.order.line")
+
+    def test_duplicate_pull_is_excluded(self):
+        so = self._confirmed_so()
+        request = self.env["od19.billing.request"].create({"direction": "ar"})
+        request.origin_ref = so
+        request._od19_pull_apply(so, so.order_line)
+        self.assertFalse(request._od19_pull_candidate_lines(so))
+
+    def test_select_mode_pulls_only_selected(self):
+        so = self.env["sale.order"].sudo().create(
+            {
+                "partner_id": self.customer.id,
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product.id,
+                            "product_uom_qty": 5.0,
+                            "price_unit": 20.0,
+                            "name": self.product.name,
+                        },
+                    ),
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product.id,
+                            "product_uom_qty": 3.0,
+                            "price_unit": 20.0,
+                            "name": self.product.name,
+                        },
+                    ),
+                ],
+            }
+        )
+        so.action_confirm()
+        request = self.env["od19.billing.request"].create({"direction": "ar"})
+        request.origin_ref = so
+        wizard = self.env["od19.document.pull.wizard"].create(
+            {
+                "res_model": "od19.billing.request",
+                "res_id": request.id,
+                "source_ref": "sale.order,%s" % so.id,
+                "mode": "select",
+            }
+        )
+        wizard._onchange_source_ref()
+        self.assertEqual(len(wizard.line_ids), 2)
+        first = wizard.line_ids[0]
+        wizard.line_ids.write({"selected": False})
+        first.selected = True
+        wizard.action_pull()
+        self.assertEqual(len(request.line_ids), 1)
+        self.assertEqual(request.line_ids.sale_line_id, first._od19_get_source_line())

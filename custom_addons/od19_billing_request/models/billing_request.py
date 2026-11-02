@@ -252,13 +252,18 @@ class Od19BillingRequest(models.Model):
 
     def _od19_pull_candidate_lines(self, source):
         self.ensure_one()
+        taken_ids = self._od19_pull_bound_lines(source).mapped("origin_line_id")
         if source._name in ("sale.order", "purchase.order"):
             return source.order_line.filtered(
-                lambda line: line.product_id and line.qty_to_invoice > 0
+                lambda line: line.product_id
+                and line.qty_to_invoice > 0
+                and line.id not in taken_ids
             )
         if source._name == "stock.picking":
             return source.move_ids.filtered(
-                lambda move: move.product_id and move.quantity > 0
+                lambda move: move.product_id
+                and move.quantity > 0
+                and move.id not in taken_ids
             )
         return self.env["od19.billing.request.line"].browse()
 
@@ -266,7 +271,7 @@ class Od19BillingRequest(models.Model):
         self.ensure_one()
         if source._name in ("sale.order", "purchase.order"):
             return {
-                "res_model": source._name,
+                "res_model": line._name,
                 "res_id": line.id,
                 "source_name": source.display_name,
                 "product_id": line.product_id.id,
@@ -278,7 +283,7 @@ class Od19BillingRequest(models.Model):
         sale_line = line.sale_line_id
         price = sale_line.price_unit if sale_line else (line.price_unit or 0.0)
         return {
-            "res_model": source._name,
+            "res_model": line._name,
             "res_id": line.id,
             "source_name": source.display_name,
             "product_id": line.product_id.id,
