@@ -28,7 +28,7 @@ class AccountMoveSend(models.AbstractModel):
 
         if (
             not move.l10n_es_tbai_post_document_id.xml_attachment_id
-            and 'es_tbai' in extra_edis
+            and extra_edis and 'es_tbai' in extra_edis
         ):
             filename = move._l10n_es_tbai_get_attachment_name()
             results.append({
