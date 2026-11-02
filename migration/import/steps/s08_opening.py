@@ -68,6 +68,18 @@ def _partner(env, legacy_id):
     return env['res.partner'].browse(pid)
 
 
+def _partner_by_vat(env, vat):
+    """หา res.partner ที่นำเข้าแล้วจากเลขภาษี (ใช้เมื่อระบบเดิมไม่ได้ผูกคู่ค้าไว้).
+
+    ตัดค่า placeholder ของระบบเดิมออก (ว่าง/อักขระซ้ำทั้งหมด เช่น '0000000000000')
+    เพื่อไม่ให้จับคู่ผิดราย
+    """
+    vat = (vat or '').strip()
+    if not vat or len(set(vat)) <= 1:
+        return None
+    return env['res.partner'].search([('vat', '=', vat)], limit=1)
+
+
 def _journal(env, code):
     """คืนค่าสมุดรายวันตามรหัส (จำกัดเฉพาะบริษัทปัจจุบัน)."""
     return env['account.journal'].search(
@@ -803,6 +815,7 @@ def _fetch_wht():
     """ใบรับรองหัก ณ ที่จ่ายเดิม (สูงสุด 3 ประเภทเงินได้ต่อใบ)."""
     sql = (
         "SELECT w.id, w.name, w.name_seq, w.pay_date, w.partner_id, w.state, "
+        "       w.payee_name, w.payee_tax_id, "
         "       w.tax_type, w.tax_condition, w.tax_condition2, w.tax_condition3, "
         "       w.pay_amount1, w.wht_amount1, "
         "       w.pay_amount2, w.wht_amount2, "
@@ -838,7 +851,11 @@ def _opening_wht(env, stats):
             continue
         partner = _partner(env, row['partner_id'])
         if not partner:
-            common.log("คำเตือน: ไม่พบผู้รับเงินสำหรับ WHT เดิม id=%s — ข้าม" % row['id'])
+            # ระบบเดิมบางใบไม่ได้ผูก partner_id ไว้ แต่มีชื่อ/เลขภาษีของผู้รับเงิน
+            partner = _partner_by_vat(env, row.get('payee_tax_id'))
+        if not partner:
+            common.log("คำเตือน: ไม่พบผู้รับเงินสำหรับ WHT เดิม id=%s (%s) — ข้าม"
+                       % (row['id'], (row.get('payee_name') or '').strip()))
             stats.error += 1
             continue
 

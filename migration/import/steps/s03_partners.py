@@ -109,15 +109,15 @@ def _fetch_partners():
         "LEFT JOIN res_country c ON c.id = p.country_id "
         "LEFT JOIN account_payment_term pt ON pt.id = %(pay_term)s "
         "LEFT JOIN account_payment_term ps ON ps.id = %(supp_term)s "
-        "WHERE p.active = true "
+        "WHERE (p.active = true "
         "  AND (COALESCE(p.customer_rank, 0) > 0 OR COALESCE(p.supplier_rank, 0) > 0 "
         "       OR p.id IN (SELECT partner_id FROM project_project WHERE partner_id IS NOT NULL) "
         # คู่ค้าที่มียอดลูกหนี้/เจ้าหนี้ค้างใน GL ต้องนำเข้าด้วย มิฉะนั้นยอดยกมา AR/AP จะขาดคู่ค้า
         "       OR p.id IN (SELECT DISTINCT partner_id FROM account_move_line "
-        "                   WHERE partner_id IS NOT NULL) "
+        "                   WHERE partner_id IS NOT NULL)) "
         # คู่ค้าที่ถูกอ้างถึงในทะเบียนย่อยภาษีหัก ณ ที่จ่าย (ระบบเดิมไม่ได้ตั้ง supplier_rank)
-        # ต้องนำเข้าด้วย มิฉะนั้นใบรับรองหัก ณ ที่จ่ายจะขาดผู้รับเงิน
-        "       OR p.id IN (SELECT partner_id FROM dtr_wht WHERE partner_id IS NOT NULL)) "
+        # ต้องนำเข้าทุกสถานะ (รวม inactive) มิฉะนั้นใบรับรองหัก ณ ที่จ่ายจะขาดผู้รับเงิน
+        "  OR p.id IN (SELECT partner_id FROM dtr_wht WHERE partner_id IS NOT NULL)) "
         "  AND p.id NOT IN (SELECT partner_id FROM res_company WHERE partner_id IS NOT NULL)"
         % {'select': select, 'pay_term': pay_term, 'supp_term': supp_term}
     )
