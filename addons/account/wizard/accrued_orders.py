@@ -223,34 +223,35 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         mixed_currencies = len(orders.currency_id) > 1
         if mixed_currencies and not self.env.context.get('accrual_allow_mixed_currencies'):
             raise UserError(_('Cannot create an accrual entry with orders in different currencies.'))
-        orders_with_entries = []
+        orders_with_entries = orders.browse()
         order_lines_with_entries = lines.browse()
         total_balance = 0.0
-        for order, product_lines in lines.grouped('order_id').items():
-            if len(orders) == 1 and product_lines and self.amount and order.order_line:
-                total_balance = self.amount
-                order_line = product_lines[0]
-                product = order_line.product_id
-                accounts = product.with_company(order.company_id).product_tmpl_id.get_product_accounts(fiscal_pos=order.fiscal_position_id)
-                if is_purchase and product.valuation == 'real_time':
-                    account = accounts['stock_valuation']
-                else:
-                    account = accounts['expense'] if is_purchase else accounts['income']
-                distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
-                values = self._get_aml_vals(is_purchase, order, self.amount, 0, account.id, label=_('Manual entry'), analytic_distribution=distribution)
-                move_lines.append(Command.create(values))
+        if len(orders) == 1 and lines and self.amount:
+            total_balance = self.amount
+            order_line = lines[0]
+            product = order_line.product_id
+            accounts = product.with_company(orders.company_id).product_tmpl_id.get_product_accounts(fiscal_pos=orders.fiscal_position_id)
+            if is_purchase and product.valuation == 'real_time':
+                account = accounts['stock_valuation']
             else:
-                accrual_entry_date = self.env.context.get('accrual_entry_date')
-                accrual_entry_date = fields.Date.from_string(accrual_entry_date) if accrual_entry_date else self.date
-                order_lines = self._get_accrual_lines(order, lines, accrual_entry_date)
-                order_lines_with_entries |= order_lines
-                main_vals_list, main_counterpart_vals_list = self._get_accrual_main_line_vals(order_lines, accrual_entry_date)
-                cogs_vals_list, cogs_counterpart_vals_list = self._get_accrual_pending_cogs_vals(order_lines, accrual_entry_date)
-                for vals in main_vals_list + cogs_vals_list + main_counterpart_vals_list + cogs_counterpart_vals_list:
-                    move_lines.append(Command.create(vals))
+                account = accounts['expense'] if is_purchase else accounts['income']
+            distribution = order_line.analytic_distribution if order_line.analytic_distribution else {}
+            values = self._get_aml_vals(is_purchase, orders, self.amount, 0, account.id, label=_('Manual entry'), analytic_distribution=distribution)
+            move_lines.append(Command.create(values))
+        else:
+            accrual_entry_date = self.env.context.get('accrual_entry_date')
+            accrual_entry_date = fields.Date.from_string(accrual_entry_date) if accrual_entry_date else self.date
+            order_lines = self._get_accrual_lines(orders, lines, accrual_entry_date)
+            order_lines_with_entries |= order_lines
+            orders_with_entries |= order_lines.order_id
+            main_vals_list, main_counterpart_vals_list = self._get_accrual_main_line_vals(order_lines, accrual_entry_date)
+            cogs_vals_list, cogs_counterpart_vals_list = self._get_accrual_pending_cogs_vals(order_lines, accrual_entry_date)
+            for vals in main_vals_list + cogs_vals_list + main_counterpart_vals_list + cogs_counterpart_vals_list:
+                move_lines.append(Command.create(vals))
 
         # Manual amount case: a single globalized counterpart on the manually chosen account.
         if not self.company_id.currency_id.is_zero(total_balance):
+            orders_with_entries |= orders
             analytic_distribution = {}
             total = sum(order.amount_total for order in orders)
             for line in orders.order_line:
