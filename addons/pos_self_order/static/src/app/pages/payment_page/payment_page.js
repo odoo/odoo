@@ -78,9 +78,7 @@ export class PaymentPage extends Component {
     }
 
     get paymentMethods() {
-        return this.selfOrder.models["pos.payment.method"].filter(
-            (pm) => pm.type !== "cash" || pm.payment_provider
-        );
+        return this.selfOrder.paymentMethods;
     }
 
     get selectedPaymentMethod() {
