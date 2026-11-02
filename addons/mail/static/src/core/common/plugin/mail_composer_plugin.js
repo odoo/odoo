@@ -78,16 +78,23 @@ export class MailComposerPlugin extends Plugin {
         if (sanitizedFragment.childNodes.length === 0) {
             return false;
         }
-        const removeStyle = (node) => {
+        const removeStyle = (node, keepLineBreaks = false) => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                if (keepLineBreaks) {
+                    node.replaceWith(...splitLines(node.textContent));
+                }
+                return;
+            }
             if (node.nodeType === Node.ELEMENT_NODE) {
                 const tagName = node.nodeName.toUpperCase();
                 if (tagName === "BR") {
                     return;
                 }
                 if (!ALLOWED_TAGS.includes(tagName)) {
-                    node.replaceWith(document.createTextNode(node.textContent));
+                    node.replaceWith(...getTextLines(node, keepLineBreaks));
                     return;
                 }
+                keepLineBreaks ||= keepsLineBreaks(node);
                 node.removeAttribute("style");
                 if (node.hasAttribute("class")) {
                     const preservedClasses = [...node.classList].filter((className) =>
@@ -100,10 +107,10 @@ export class MailComposerPlugin extends Plugin {
                     }
                 }
                 // Recursively sanitize child nodes
-                [...node.childNodes].forEach(removeStyle);
+                [...node.childNodes].forEach((child) => removeStyle(child, keepLineBreaks));
             }
         };
-        [...sanitizedFragment.childNodes].forEach(removeStyle);
+        [...sanitizedFragment.childNodes].forEach((node) => removeStyle(node));
         flattenStructuralDivWrappers(sanitizedFragment);
         this.dependencies.dom.insert(sanitizedFragment);
         this.dependencies.history.commit();
@@ -133,4 +140,54 @@ function flattenStructuralDivWrappers(root) {
             }
         }
     }
+}
+
+/**
+ * The text of the node, like `textContent`, with its kept line breaks as `<br>`.
+ *
+ * @param {Node} node
+ * @param {boolean} keepLineBreaks whether the node is inside an element that keeps them
+ */
+function getTextLines(node, keepLineBreaks) {
+    if (node.nodeType === Node.TEXT_NODE) {
+        return keepLineBreaks ? splitLines(node.textContent) : [node.textContent];
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+        return [];
+    }
+    if (node.nodeName === "BR") {
+        return [node];
+    }
+    keepLineBreaks ||= keepsLineBreaks(node);
+    return [...node.childNodes].flatMap((child) => getTextLines(child, keepLineBreaks));
+}
+
+/**
+ * Whether the line breaks of the element's text are displayed: in a `<pre>`, or
+ * with the `white-space` that browsers inline on copied code.
+ *
+ * @param {Element} el
+ */
+function keepsLineBreaks(el) {
+    const whiteSpace = el.style?.whiteSpace;
+    return el.nodeName === "PRE" || (!!whiteSpace && !["normal", "nowrap"].includes(whiteSpace));
+}
+
+/**
+ * The lines of the text between `<br>`, keeping its runs of spaces and tabs as alternating nbsp.
+ *
+ * @param {string} text
+ */
+function splitLines(text) {
+    return text
+        .split(/\r\n|\r|\n/)
+        .map((line) =>
+            line
+                .replace(/\t/g, "    ")
+                .replace(/ {2,}/g, (spaces) =>
+                    spaces.replace(/ /g, (space, index) => (index % 2 ? space : "\u00A0"))
+                )
+        )
+        .flatMap((line, index) => (index ? [document.createElement("br"), line] : [line]))
+        .filter(Boolean);
 }
