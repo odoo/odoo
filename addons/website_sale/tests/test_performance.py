@@ -434,12 +434,6 @@ class TestWebsiteSalePerformancePreventZeroPriceSale(TestWebsiteSalePerformanceW
         super().setUpClass()
         cls.website.write({"prevent_sale": True, "prevent_sale_for": "zero_price"})
 
-    def _get_shop_page_queries(self):
-        res = super()._get_shop_page_queries()
-        # The pricelist rules are applied again to check whether each product has a zero price
-        res["product_pricelist_item"] += 3
-        return res
-
     def test_shop_page_generation(self):
         select_queries = self._get_shop_page_queries()
         self._check_url_hot_query(

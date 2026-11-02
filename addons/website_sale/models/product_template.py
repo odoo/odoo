@@ -1739,20 +1739,23 @@ class ProductTemplate(models.Model):
             return request.pricelist.with_context(self.env.context)
         return pricelist
 
-    def _website_show_quick_add(self, product=None):
+    def _website_show_quick_add(self, product=None, price=None):
+        """Return whether the "Add to cart" button can be shown for the product.
+
+        :param product.product product: The variant to check instead of the template, if any.
+        :param float price: The displayed price, in the website currency, if already computed. It
+            avoids computing the price again to check whether the product has a zero price.
+        :rtype: bool
+        """
         self.ensure_one()
         website = self.env.website
         product_or_template = product or self
+        is_zero_price = None if price is None else website.currency_id.is_zero(price)
         return (
             product_or_template._is_purchasable()
             and product_or_template._is_published()
             and bool(product_or_template._get_available_uoms())
-            and (
-                not website.prevent_sale
-                or not website._prevent_product_sale(
-                    product_or_template, not product_or_template._get_contextual_price()
-                )
-            )
+            and not website._prevent_product_sale(product_or_template, is_zero_price)
             and not product_or_template._is_sold_out()
         )
 
