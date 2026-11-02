@@ -927,6 +927,7 @@ test("shown sidebar list stays while the right-click menu of an item is open", a
     await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
     await advanceTime(PEEK_DELAY);
     await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('General')):count(1)");
     await rightClick(".o-mail-MessagingMenuItem:has(:text('General'))");
     await waitFor(".o-mail-MessagingMenuItem[data-right-clicking]:count(1)");
     await waitFor(".o-discuss-dropdownMenu:count(1)");
@@ -974,6 +975,7 @@ test("shown sidebar list stays while searching in it, until a conversation is op
     await hover(".o-mail-DiscussContent");
     await advanceTime(PEEK_CLOSE_DELAY);
     await waitFor(".o-mail-MessagingMenu-container.o-peek:count(1)");
+    await waitFor(".o-mail-NotificationItem:has(:text('General')):count(1)");
     await hover(".o-mail-NotificationItem:has(:text('General'))");
     await click(".o-mail-NotificationItem:has(:text('General'))");
     await waitFor(".o-mail-DiscussContent-threadName:value(General):count(1)");
@@ -1101,6 +1103,7 @@ test("clicking a conversation of the sidebar closes its preview and shows none w
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('General')):count(1)");
     await hover(".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-NotificationItem");
     await advanceTime(PEEK_DELAY);
     await waitFor(".o-mail-ThreadPreview:count(1)");
@@ -1138,6 +1141,7 @@ test("tapping a conversation of the sidebar shows no preview", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('General')):count(1)");
     const channelItem = ".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-NotificationItem";
     mockTouch(true);
     await hover(channelItem);
