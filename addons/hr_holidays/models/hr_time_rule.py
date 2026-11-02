@@ -119,20 +119,26 @@ class HrTimeRule(models.Model):
         hours_per_day = employee.resource_calendar_id.hours_per_day or 8.0
         return hours * self.leave_compensation_rate / hours_per_day
 
-    def _find_time_rule_allocation(self, allocation_type, employee):
-        """Return the allocation of `allocation_type` credited by time rules, for `employee`.
+    def _find_time_rule_allocations(self, allocation_type, employee_ids):
+        """Return the allocation of `allocation_type` credited by time rules, for each of `employee_ids`.
 
         Time-rule allocations are always open-ended (date_to=False) so they don't
         collide with accrual or fixed-period allocations. If several match, the last created wins.
 
-        :return: the ``hr.leave.allocation``, empty when the employee has none
+        :param list employee_ids: ids of the ``hr.employee``
+        :return: {employee: hr.leave.allocation}, only for the employees having one
         """
-        return self.env['hr.leave.allocation'].sudo().search([
-            ('employee_id', '=', employee.id),
+        allocations = self.env['hr.leave.allocation'].sudo().search([
+            ('employee_id', 'in', employee_ids),
             ('work_entry_type_id', '=', allocation_type.id),
             ('state', '=', 'validate'),
             ('date_to', '=', False),
-        ], limit=1)
+        ], order='create_date desc, id desc')
+        # grouped() keeps the search order: the first allocation of each employee is the last created
+        return {
+            employee: employee_allocations[:1]
+            for employee, employee_allocations in allocations.grouped('employee_id').items()
+        }
 
     def _apply_allocation_credits(self, excess_alloc, deficit_alloc):
         """Credit (or deduct) the excess (or missing) hours of rules to allocations, and log it.
@@ -162,8 +168,11 @@ class HrTimeRule(models.Model):
         allocation_vals_list = []
         keys_of_allocations_to_create = []
         for allocation_type, days_to_add_by_employee in days_to_add_by_type.items():
+            existing_allocation_by_employee = self._find_time_rule_allocations(
+                allocation_type, [employee.id for employee in days_to_add_by_employee],
+            )
             for employee, days_to_add in days_to_add_by_employee.items():
-                allocation = self._find_time_rule_allocation(allocation_type, employee)
+                allocation = existing_allocation_by_employee.get(employee)
                 if allocation:
                     allocation.number_of_days += days_to_add
                     allocation_by_key[employee, allocation_type] = allocation
@@ -190,8 +199,11 @@ class HrTimeRule(models.Model):
         # deduct the days from the validated allocation only, never below 0; searched after the
         # creation above, as a new allocation may already be validated
         for allocation_type, days_to_remove_by_employee in days_to_remove_by_type.items():
+            allocation_to_deduct_by_employee = self._find_time_rule_allocations(
+                allocation_type, [employee.id for employee in days_to_remove_by_employee],
+            )
             for employee, days_to_remove in days_to_remove_by_employee.items():
-                allocation = self._find_time_rule_allocation(allocation_type, employee)
+                allocation = allocation_to_deduct_by_employee.get(employee)
                 if allocation:
                     allocation.number_of_days = max(0, allocation.number_of_days - days_to_remove)
                     allocation_by_key.setdefault((employee, allocation_type), allocation)
@@ -236,8 +248,11 @@ class HrTimeRule(models.Model):
         # their validated allocation (or any day when the employee has none)
         overdrawn_keys = set()
         for allocation_type, days_to_remove_by_employee in days_to_remove_by_type.items():
+            allocation_by_employee = self._find_time_rule_allocations(
+                allocation_type, [employee.id for employee in days_to_remove_by_employee],
+            )
             for employee, days_to_remove in days_to_remove_by_employee.items():
-                allocation = self._find_time_rule_allocation(allocation_type, employee)
+                allocation = allocation_by_employee.get(employee)
                 available_days = allocation.number_of_days if allocation else 0.0
                 if days_to_remove > available_days:
                     overdrawn_keys.add((employee, allocation_type))

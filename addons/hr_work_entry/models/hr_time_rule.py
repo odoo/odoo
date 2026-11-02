@@ -397,15 +397,10 @@ class HrTimeRule(models.Model):
         WorkEntryType = self.env['hr.work.entry.type']
         country_by_rule = {rule: rule.country_id or rule.company_id.country_id for rule in self}
         country_ids = list({country.id for country in country_by_rule.values() if country})
-        # the countries having localized work entry types
-        country_ids_with_work_entry_types = {
-            country.id
-            for country, in WorkEntryType._read_group([('country_id', 'in', country_ids)], groupby=['country_id'])
-        }
-        generic_work_entry_types = WorkEntryType.search([('country_id', '=', False)])
         work_entry_types_by_country_id = WorkEntryType.search(
-            [('country_id', 'in', list(country_ids_with_work_entry_types))],
+            [('country_id', 'in', [*country_ids, False])],
         ).grouped(lambda work_entry_type: work_entry_type.country_id.id)
+        generic_work_entry_types = work_entry_types_by_country_id.get(False, WorkEntryType)
         for rule in self:
             country = country_by_rule[rule]
             rule.country_work_entry_type_ids = work_entry_types_by_country_id.get(country.id, generic_work_entry_types)
