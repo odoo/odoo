@@ -123,6 +123,9 @@ class Od19BillingRequest(models.Model):
     )
 
     reject_reason = fields.Text(string="Reject Reason / เหตุผลที่ตีกลับ")
+    line_ids = fields.One2many(
+        "od19.billing.request.line", "request_id", string="Lines / รายการ"
+    )
 
     # ------------------------------------------------------------------
     # Compute
