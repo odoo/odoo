@@ -1092,6 +1092,16 @@ QUnit.module('convert_inline', {}, function () {
         $styleSheet.remove();
     });
 
+    QUnit.test('remove empty font elements', async function (assert) {
+        const editable = document.createElement('div');
+        editable.innerHTML = '<p><a href="#"><font class="text-o-color-2" style="display: inline-block;">BOOK NOW</font>' +
+            '<font style="background-color: rgba(255, 0, 0, 0.6); display: inline-block;" class="text-o-color-4"></font></a></p>';
+        convertInline.removeEmptyFonts(editable);
+        assert.strictEqual(editable.innerHTML,
+            '<p><a href="#"><font class="text-o-color-2" style="display: inline-block;">BOOK NOW</font></a></p>',
+            "Should remove the empty font element only");
+    });
+
     QUnit.test('Create mso properly', async function (assert) {
         assert.strictEqual(convertInline.createMso('<div>abcde</div>').nodeValue,
             '[if mso]><div>abcde</div><![endif]',
