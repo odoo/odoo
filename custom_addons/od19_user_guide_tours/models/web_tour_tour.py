@@ -38,6 +38,7 @@ OD19_GUIDE_APP_TOURS = [
     # from /odoo?tour=<tour_name>.
     ("od19_document_sign.menu_od19_document_sign_root", "od19_signing_tour"),
     ("od19_helpdesk_extension.menu_internal_helpdesk", "od19_internal_helpdesk_tour"),
+    ("od19_billing_request.menu_od19_billing_request_root", "od19_billing_request_tour"),
     ("stock_request.menu_stock_request_root", "od19_goods_issue_tour"),
     ("website.menu_website_configuration", "od19_recruitment_tour"),
     ("spreadsheet_dashboard.spreadsheet_dashboard_menu_root", "od19_dashboard_tour"),

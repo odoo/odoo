@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'User Guide Tours',
-    'version': '19.0.1.5.0',
+    'version': '19.0.1.6.0',
     'category': 'Tools/User Guide',
     'summary': 'Interactive guided tours for all OD19 business modules',
     'description': """
@@ -102,6 +102,7 @@ Tours can be started from:
         'od19_accounting_doubtful_debt',
         'od19_sales_retention',
         'od19_purchase_jasper',
+        'od19_billing_request',
     ],
     'data': [
         'data/tour_data.xml',
@@ -185,6 +186,7 @@ Tours can be started from:
             'od19_user_guide_tours/static/src/tours/sales_services_tour.js',
             'od19_user_guide_tours/static/src/tours/service_card_tour.js',
             'od19_user_guide_tours/static/src/tours/petty_cash_tour.js',
+            'od19_user_guide_tours/static/src/tours/billing_request_tour.js',
         ],
     },
     'icon': '/od19_user_guide_tours/static/description/icon.svg',

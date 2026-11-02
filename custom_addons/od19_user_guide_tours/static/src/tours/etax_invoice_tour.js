@@ -120,12 +120,50 @@ registry.category("web_tour.tours").add("od19_etax_invoice_tour", {
             trigger: ".o_list_renderer, .o_form_view, .o_kanban_view",
         },
 
+        // --- Import Purchase e-Tax (vendor e-tax XML -> vendor bill) ---
+        {
+            trigger: navSection("e-Tax Invoice"),
+            content: markup(_t("Reopen the <b>e-Tax Invoice</b> menu.")),
+            tooltipPosition: "bottom",
+            run: "click",
+        },
+        {
+            trigger: navItem("Import Purchase e-Tax"),
+            content: markup(_t(
+                "Open <b>Import Purchase e-Tax</b> to read the e-tax XML received from a supplier " +
+                "and create the matching vendor bill."
+            )),
+            tooltipPosition: "bottom",
+            run: "click",
+        },
+        {
+            trigger: ".o_dialog .o_field_widget[name='xml_file']",
+            timeout: 20000,
+            content: markup(_t(
+                "Upload the vendor's <b>e-Tax XML</b>, then click <b>Parse XML</b>: the document " +
+                "header, the parties and the invoice lines are extracted automatically."
+            )),
+            tooltipPosition: "bottom",
+            run: "click",
+        },
+        {
+            trigger: ".o_dialog footer button[special='cancel']",
+            content: markup(_t(
+                "Once parsed, review the <b>Vendor Document</b> and <b>Parties</b>, then click " +
+                "<b>Create Vendor Bill</b> to post the purchase into Accounting. Close the wizard " +
+                "for now."
+            )),
+            tooltipPosition: "top",
+            run: "click",
+        },
+
         {
             trigger: ".o_list_renderer, .o_kanban_view, .o_form_view",
             content: markup(_t(
                 "e-Tax complete! Prepare the document from a posted invoice → " +
                 "<b>Generate XML</b> → <b>Sign</b> → <b>Generate PDF</b> → " +
-                "<b>Submit to RD</b>. Track the filings from <b>RD Submissions</b>."
+                "<b>Submit to RD</b>. Incoming supplier e-tax files are turned into vendor bills " +
+                "with <b>Import Purchase e-Tax</b>. Track the filings from <b>RD Submissions</b>."
             )),
             run: "click",
         },

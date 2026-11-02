@@ -19,14 +19,14 @@ registry.category("web_tour.tours").add("od19_sales_project_context_tour", {
             markup(_t("Let's link a <b>sales order</b> to its <b>project</b>."))
         ),
 
-        // --- Projects entry in the Sales navbar ---
+        // --- Sale Projects entry in the Sales navbar ---
         {
-            trigger: navSection("Projects"),
-            content: markup(_t("Open the <b>Projects</b> menu (Sales ▸ Projects).")),
+            trigger: navSection("Sale Projects"),
+            content: markup(_t("Open the <b>Sale Projects</b> menu (Sales ▸ Sale Projects).")),
             tooltipPosition: "bottom",
             run: "click",
         },
-        waitForAction("Projects"),
+        waitForAction("Sale Projects"),
         {
             trigger: ".o_list_renderer",
             content: markup(_t(

@@ -1,14 +1,14 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { stepUtils, navSection, navItem } from "@od19_user_guide_tours/tours/tour_utils";
+import { stepUtils, navSection, navItem, waitForAction } from "@od19_user_guide_tours/tours/tour_utils";
 import { markup } from "@odoo/owl";
 
 /**
  * OD19 Misc Features Tour
  *
  * Walks the user through:
- *  1. Runtime Guard - environment / version health check
- *  2. Repeat Customer Enhanced - repeat-business analysis report
+ *  1. Runtime Guard (Settings > Misc Features) - environment / version health check
+ *  2. Repeat Customer Enhanced (Sales > Reporting) - repeat-business analysis report
  */
 registry.category("web_tour.tours").add("od19_misc_features_tour", {
     url: "/odoo",
@@ -65,21 +65,27 @@ registry.category("web_tour.tours").add("od19_misc_features_tour", {
             run: "click",
         },
 
-        // --- Repeat Customer Enhanced (Settings > Misc Features) ---
+        // --- Repeat Customer Enhanced (Sales > Reporting) ---
+        // The report moved from Settings > Misc Features to Sales > Reporting when
+        // the OD19 menus were consolidated (od19_misc_features/views/
+        // repeat_customer_report_views.xml: parent = sale.menu_sale_report).
+        ...stepUtils.goToAppSteps(
+            "sale.sale_menu_root",
+            markup(_t("Now let's open the <b>Repeat Customer Enhanced</b> report in the Sales app."))
+        ),
         {
-            trigger: navSection("Misc Features"),
-            content: markup(_t("Re-open the <b>Misc Features</b> menu.")),
+            trigger: navSection("Reporting"),
+            content: markup(_t("Open the <b>Reporting</b> menu.")),
             tooltipPosition: "bottom",
             run: "click",
         },
         {
             trigger: navItem("Repeat Customer Enhanced"),
-            content: markup(_t(
-                "Open <b>Repeat Customer Enhanced</b> to analyse repeat business."
-            )),
+            content: markup(_t("Open <b>Repeat Customer Enhanced</b> to analyse repeat business.")),
             tooltipPosition: "bottom",
             run: "click",
         },
+        waitForAction("Repeat Customer Enhanced"),
         {
             trigger: ".o_list_renderer",
             content: markup(_t(
