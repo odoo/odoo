@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from odoo.tests.common import TransactionCase, new_test_user
 from odoo.tests import tagged, Form
 from odoo.exceptions import AccessError
+from odoo import Command
 from odoo.tools import mute_logger
 
 
@@ -373,15 +374,16 @@ class TestAccessRights(TransactionCase):
             'interval': 'minutes',
         })
 
-        with Form(self.env['calendar.event'].with_user(self.john)) as event_form:
-            event_form.name = 'yearly Team Meeting'
-            event_form.start = datetime(2024, 1, 15, 9, 0)
-            event_form.stop = datetime(2024, 1, 15, 10, 0)
-            event_form.recurrency = True
-            event_form.rrule_type_ui = 'yearly'
-            event_form.alarm_ids.add(alarm)
-            event_form.partner_ids.add(self.john.partner_id)
-            recurring_event = event_form.save()
+        recurring_event = self.env['calendar.event'].with_user(self.john).create({
+            'name': 'yearly Team Meeting',
+            'start': datetime(2024, 1, 15, 9, 0),
+            'stop': datetime(2024, 1, 15, 10, 0),
+            'recurrency': True,
+            'rrule_type': 'yearly',
+            'interval': 1,
+            'alarm_ids': [Command.link(alarm.id)],
+            'partner_ids': [Command.link(self.john.partner_id.id)],
+        })
 
         self.assertTrue(recurring_event.recurrence_id, "Recurrence should be created")
 

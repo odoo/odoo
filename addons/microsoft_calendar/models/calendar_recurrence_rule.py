@@ -97,8 +97,8 @@ class CalendarRecurrence(models.Model):
         current_rrule = self.rrule
         original_dtstart = self.dtstart
         current_parsed_rrule = self._rrule_parse(current_rrule, original_dtstart)
-        # event_tz is written on event in Microsoft but on recurrence in Odoo
-        vals['event_tz'] = microsoft_event.start.get('timeZone')
+        # recurrence_tz is written on event in Microsoft but on recurrence in Odoo
+        vals['recurrence_tz'] = microsoft_event.start.get('timeZone')
         super()._write_from_microsoft(microsoft_event, vals)
         new_event_values = self.env["calendar.event"]._microsoft_to_odoo_values(microsoft_event)
         # Edge case:  if the base event was deleted manually in 'self_only' update, skip applying recurrence.
