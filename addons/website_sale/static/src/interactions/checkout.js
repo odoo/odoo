@@ -311,6 +311,15 @@ export class Checkout extends Interaction {
             amountTax.replaceWith(...tempDiv.children);
         }
         amountTotal.forEach(total => setElementContent(total, result.amount_total));
+        const productsTable = targetEl.querySelector('.o_cart_products_table');
+        if (productsTable && result['website_sale.cart_summary_content']) {
+            const newProductsTable = createElementWithContent(
+                'div', result['website_sale.cart_summary_content']
+            ).querySelector('.o_cart_products_table');
+            if (newProductsTable) {
+                productsTable.replaceWith(newProductsTable);
+            }
+        }
     }
 
     /**
@@ -472,6 +481,7 @@ export class Checkout extends Interaction {
             'amount_untaxed',
             'amount_tax_lines',
             'amount_total',
+            'website_sale.cart_summary_content',
         ];
         for (const key of amountKeys) {
             if (values[key]) {
