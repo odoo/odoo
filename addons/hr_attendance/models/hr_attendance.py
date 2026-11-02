@@ -758,7 +758,7 @@ class HrAttendance(models.Model):
 
         :rtype: dict
         """
-        return rule._get_output_attendance_vals(self.employee_id, start_utc, stop_utc, self, premium_pay_category_ids=premium_pay_category_ids)
+        return rule._get_output_attendance_vals(self, start_utc, stop_utc, premium_pay_category_ids=premium_pay_category_ids)
 
     def _get_time_rule_remainder_vals(self, start_utc, stop_utc):
         """Return the values of a remainder attendance: ``employee_id``, ``check_in``,

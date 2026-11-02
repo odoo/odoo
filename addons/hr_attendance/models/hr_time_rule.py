@@ -18,13 +18,13 @@ class HrTimeRule(models.Model):
             result = result.filtered('resource_calendar_id')
         return result
 
-    def _get_output_attendance_vals(self, employee, check_in, check_out, source_attendance=None, premium_pay_category_ids=frozenset()):
-        """Return the creation values of an output attendance of the rule.
+    def _get_output_attendance_vals(self, source_attendance, check_in, check_out, premium_pay_category_ids=frozenset()):
+        """Return the creation values of an output attendance of the rule, for the employee of
+        ``source_attendance``.
 
-        :param employee: ``hr.employee``
+        :param source_attendance: the source ``hr.attendance``
         :param datetime check_in: naive UTC
         :param datetime check_out: naive UTC
-        :param source_attendance: the source ``hr.attendance``
         :param frozenset premium_pay_category_ids: premium pay ids, used by overrides (``hr_payroll``)
         :return: ``employee_id``, ``work_entry_type_id`` (the rule's output type),
             ``check_in``, ``check_out``, ``source_attendance_id`` and ``time_rule_id``
@@ -32,11 +32,11 @@ class HrTimeRule(models.Model):
         """
         self.ensure_one()
         return {
-            'employee_id': employee.id,
+            'employee_id': source_attendance.employee_id.id,
             'work_entry_type_id': self.work_entry_type_id.id,
             'check_in': check_in,
             'check_out': check_out,
-            'source_attendance_id': source_attendance.id if source_attendance else False,
+            'source_attendance_id': source_attendance.id,
             'time_rule_id': self.id,
         }
 

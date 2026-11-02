@@ -67,33 +67,33 @@ class HrTimeRule(models.Model):
             )
         return merged_intervals
 
-    def _get_output_leave_vals(self, employee, rule, date_from, date_to, source_leave, premium_pay_category_ids=frozenset()):
-        """Return the creation values of a validated time off output by ``rule``.
+    def _get_output_leave_vals(self, source_leave, date_from, date_to, premium_pay_category_ids=frozenset()):
+        """Return the creation values of a validated time off output by the rule.
 
         The output has the rule's type, ``time_rule_id``, the given span and is linked to
-        ``source_leave``.
+        ``source_leave``, whose employee it gets.
 
-        :param employee: ``hr.employee``
-        :param rule: ``hr.time.rule`` producing the output
+        :param source_leave: source ``hr.leave``
         :param datetime date_from: start, naive UTC
         :param datetime date_to: end, naive UTC
-        :param source_leave: source ``hr.leave``
         :param frozenset premium_pay_category_ids: premium pay ids, used by overrides (``hr_payroll``)
         :rtype: dict
         """
+        self.ensure_one()
+        employee = source_leave.employee_id
         timezone = ZoneInfo(employee._get_tz())
         local_date_from = utc_to_local(date_from, timezone)
         local_date_to = utc_to_local(date_to, timezone)
         return {
             'employee_id': employee.id,
-            'work_entry_type_id': rule.work_entry_type_id.id,
+            'work_entry_type_id': self.work_entry_type_id.id,
             'date_from': date_from,
             'date_to': date_to,
             'request_date_from': local_date_from.date(),
             'request_date_to': local_date_to.date(),
             'request_hour_from': local_date_from.hour + local_date_from.minute / 60,
             'request_hour_to': local_date_to.hour + local_date_to.minute / 60,
-            'time_rule_id': rule.id,
+            'time_rule_id': self.id,
             'source_leave_id': source_leave.id,
             'resource_calendar_id': source_leave.resource_calendar_id.id,
             'state': 'validate',

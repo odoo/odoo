@@ -1942,7 +1942,7 @@ class HrLeave(models.Model):
 
         :rtype: dict
         """
-        return rule._get_output_leave_vals(self.employee_id, rule, start_utc, stop_utc, self, premium_pay_category_ids=premium_pay_category_ids)
+        return rule._get_output_leave_vals(self, start_utc, stop_utc, premium_pay_category_ids=premium_pay_category_ids)
 
     def _get_time_rule_remainder_vals(self, start_utc, stop_utc):
         """Return the creation values of a remainder: a validated time off linked to the source.
