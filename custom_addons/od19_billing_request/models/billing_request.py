@@ -1,6 +1,7 @@
 # Copyright 2026 TRAE
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class Od19BillingRequest(models.Model):
@@ -126,6 +127,12 @@ class Od19BillingRequest(models.Model):
     line_ids = fields.One2many(
         "od19.billing.request.line", "request_id", string="Lines / รายการ"
     )
+    evidence_ids = fields.One2many(
+        "od19.billing.evidence", "billing_request_id", string="Evidence / หลักฐาน"
+    )
+    evidence_ok = fields.Boolean(
+        string="Evidence Ready", compute="_compute_evidence_ok"
+    )
 
     # ------------------------------------------------------------------
     # Compute
@@ -178,6 +185,11 @@ class Od19BillingRequest(models.Model):
             if not mode or mode == "default":
                 mode = request.company_id.od19_ar_billing_mode_default or "direct"
             request.ar_billing_mode = mode
+
+    @api.depends("evidence_ids.is_verified")
+    def _compute_evidence_ok(self):
+        for request in self:
+            request.evidence_ok = bool(request.evidence_ids.filtered("is_verified"))
 
     # ------------------------------------------------------------------
     # Sequence
@@ -380,3 +392,74 @@ class Od19BillingRequest(models.Model):
             }
             for line in self._od19_pull_bound_lines(source)
         ]
+
+    # ------------------------------------------------------------------
+    # Flow
+    # ------------------------------------------------------------------
+    def action_submit(self):
+        for request in self:
+            if request.state != "draft":
+                raise UserError(
+                    _("Only a draft request can be submitted (state: %s).")
+                    % request.state
+                )
+            if not request.line_ids:
+                raise UserError(_("Add at least one line before submitting."))
+            request._od19_check_evidence_before_submit()
+            request.state = "submitted"
+            request._od19_notify_accounting()
+        return True
+
+    def action_reject(self):
+        for request in self:
+            if request.state != "submitted":
+                raise UserError(_("Only a submitted request can be rejected."))
+            request.state = "rejected"
+        return True
+
+    def action_reset_draft(self):
+        for request in self:
+            if request.state not in ("rejected", "cancelled"):
+                raise UserError(_("Only rejected/cancelled requests can be reset."))
+            request.reject_reason = False
+            request.state = "draft"
+        return True
+
+    def action_cancel(self):
+        for request in self:
+            if request.state == "invoiced":
+                raise UserError(_("An invoiced request cannot be cancelled."))
+            request.state = "cancelled"
+        return True
+
+    def _od19_check_evidence_before_submit(self):
+        self.ensure_one()
+        if self.direction == "ar" and self.company_id.od19_ar_require_evidence:
+            if not self.evidence_ok:
+                raise UserError(
+                    _(
+                        "AR requires at least one verified evidence "
+                        "(delivery note / customer PO / service report) "
+                        "before submitting."
+                    )
+                )
+        return True
+
+    def _od19_notify_accounting(self):
+        self.ensure_one()
+        group = self.env.ref(
+            "od19_billing_request.group_od19_billing_accounting", raise_if_not_found=False
+        )
+        if not group:
+            return
+        for user in group.user_ids:
+            self.activity_schedule(
+                "mail.mail_activity_data_todo",
+                date_deadline=fields.Date.context_today(self),
+                summary=_("Billing Request %s awaiting billing") % self.name,
+                note=_(
+                    "คำขอเปิดบิล %(name)s (%(direction)s) รอการออกบิลโดยบัญชี"
+                )
+                % {"name": self.name, "direction": self.direction.upper()},
+                user_id=user.id,
+            )
