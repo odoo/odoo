@@ -65,7 +65,8 @@ class ApplicantGetRefuseReason(models.TransientModel):
     def _compute_duplicate_applicant_ids_domain(self):
         for wizard in self:
             domain = (
-                self.applicant_ids._get_similar_applicants_domain()
+                # the talents are not applications: refusing an applicant must not archive them
+                self.applicant_ids._get_similar_applicants_domain(ignore_talent=True)
                 & Domain('id', 'not in', self.applicant_ids.ids)
                 & Domain('application_status', 'not in', ['hired', 'refused', 'archived'])
             )
