@@ -158,7 +158,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         else:
             vals = super()._get_partner_party_vals(partner, role)
 
-            partner = partner.commercial_partner_id
+            partner = partner._get_peppol_invoice_partner() if role == 'customer' else partner.commercial_partner_id
             vals.update({
                 'endpoint_id': partner.peppol_endpoint,
                 'endpoint_id_attrs': {'schemeID': partner.peppol_eas},
@@ -573,6 +573,15 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'document_node': document_node,
         }
         self._ubl_add_accounting_supplier_party_node(sub_vals)
+
+    def _ubl_add_accounting_customer_party_endpoint_id_node(self, vals):
+        super()._ubl_add_accounting_customer_party_endpoint_id_node(vals)
+        partner = vals['party_vals']['partner']
+        if partner._is_peppol_invoice_contact() and partner.peppol_eas and partner.peppol_endpoint:
+            vals['party_node']['cbc:EndpointID'] = {
+                '_text': partner.peppol_endpoint,
+                'schemeID': partner.peppol_eas,
+            }
 
     def _add_invoice_accounting_customer_party_nodes(self, document_node, vals):
         # OVERRIDE

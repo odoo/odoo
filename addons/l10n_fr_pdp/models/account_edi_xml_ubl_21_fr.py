@@ -49,7 +49,8 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
             commercial_partner = partner.commercial_partner_id
-            if commercial_partner.peppol_eas != '0225' or not commercial_partner.peppol_endpoint:
+            invoice_partner = partner._get_peppol_invoice_partner() if partner_type == 'customer' else commercial_partner
+            if invoice_partner.peppol_eas != '0225' or not invoice_partner.peppol_endpoint:
                 constraints[f"ubl_21_fr_{partner_type}_pdp_identifier_required"] = self.env._("The following partner's French e-invoicing identifier is missing: %s", commercial_partner.display_name)
             id_type, id_value = commercial_partner._l10n_fr_pdp_get_base_identifier()
             if not id_type or not id_value:
@@ -249,10 +250,11 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         )
 
     def _import_ubl_retrieve_customer_search_plan(self, collected_values):
-        return [
+        search_plan = [
             self.env['res.partner']._import_retrieve_customer_from_siret,
             *super()._import_ubl_retrieve_customer_search_plan(collected_values),
         ]
+        return sorted(search_plan, key=lambda method: method.__name__ != '_import_retrieve_customer_from_eas_endpoint')
 
     def _import_ubl_invoice_add_prepaid_amount(self, collected_values):
         # imported invoice is a final invoice following downpayments.

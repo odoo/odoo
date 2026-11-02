@@ -4,6 +4,7 @@ from stdnum.fr import siret
 
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
+from odoo.osv import expression
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING, DEPRECATED_PEPPOL_EAS
 from odoo.addons.account.models.company import PEPPOL_DEFAULT_COUNTRIES
 
@@ -135,6 +136,12 @@ class ResPartner(models.Model):
     )
     available_peppol_eas = fields.Json(compute='_compute_available_peppol_eas')
 
+    @api.onchange('parent_id', 'type')
+    def _onchange_peppol_invoice_contact(self):
+        if self._is_peppol_invoice_contact():
+            self.peppol_eas = self.commercial_partner_id.peppol_eas
+            self.peppol_endpoint = self.commercial_partner_id.peppol_endpoint
+
     @api.constrains('peppol_endpoint')
     def _check_peppol_fields(self):
         for partner in self:
@@ -197,6 +204,11 @@ class ResPartner(models.Model):
         suggested_format = self.commercial_partner_id._get_suggested_ubl_cii_edi_format()
         return suggested_format if suggested_format in self.env['res.partner']._get_peppol_formats() else 'ubl_bis3'
 
+    def _get_peppol_invoice_partner(self):
+        """Return the electronic invoice recipients, keeping legal entities separate."""
+        invoice_contacts = self.filtered(lambda partner: partner._is_peppol_invoice_contact())
+        return invoice_contacts | (self - invoice_contacts).commercial_partner_id
+
     def _get_peppol_edi_format(self):
         self.ensure_one()
         return self.invoice_edi_format or self._get_suggested_peppol_edi_format()
@@ -243,10 +255,26 @@ class ResPartner(models.Model):
 
         return value
 
-    @api.depends('peppol_eas')
+    def _is_peppol_invoice_contact(self):
+        self.ensure_one()
+        parent_country = self.commercial_partner_id.country_id
+        country = self.country_id or parent_country
+        return bool(
+            self.type == 'invoice' and self.parent_id and not self.is_company
+            and (country.code == 'FR' or (country and parent_country and country != parent_country))
+        )
+
+    @api.depends('peppol_eas', 'type', 'is_company', 'parent_id', 'country_id', 'commercial_partner_id.country_id')
     def _compute_peppol_endpoint(self):
         """ If the EAS changes and a valid endpoint is available, set it. Otherwise, keep the existing value."""
         for partner in self:
+            if partner._is_peppol_invoice_contact():
+                # Copy the initial address without overwriting a contact's own routing.
+                partner.peppol_endpoint = partner.peppol_endpoint or (
+                    partner.commercial_partner_id.peppol_endpoint
+                    if partner.peppol_eas == partner.commercial_partner_id.peppol_eas else False
+                )
+                continue
             partner.peppol_endpoint = partner.peppol_endpoint
             country_code = partner._deduce_country_code()
             if country_code in EAS_MAPPING:
@@ -255,13 +283,18 @@ class ResPartner(models.Model):
                 if field and value and not partner._build_error_peppol_endpoint(partner.peppol_eas, value):
                     partner.peppol_endpoint = value
 
-    @api.depends(lambda self: self._peppol_eas_endpoint_depends())
+    @api.depends(lambda self: self._peppol_eas_endpoint_depends() + [
+        'type', 'is_company', 'parent_id', 'country_id', 'commercial_partner_id.country_id',
+    ])
     def _compute_peppol_eas(self):
         """
         If the country_code changes, recompute the EAS only if there is a country_code, it exists in the
         EAS_MAPPING, and the current EAS is not consistent with the new country_code.
         """
         for partner in self:
+            if partner._is_peppol_invoice_contact():
+                partner.peppol_eas = partner.peppol_eas or partner.commercial_partner_id.peppol_eas
+                continue
             partner.peppol_eas = partner.peppol_eas
             country_code = partner._deduce_country_code()
             if country_code in EAS_MAPPING:
@@ -283,10 +316,17 @@ class ResPartner(models.Model):
                     partner.peppol_eas = new_eas
 
     @api.depends_context('company')
-    @api.depends('company_id', 'peppol_eas')
+    @api.depends('company_id', 'peppol_eas', 'type', 'is_company', 'parent_id', 'country_id', 'commercial_partner_id.country_id')
     def _compute_available_peppol_eas(self):
         # TO OVERRIDE
         for partner in self:
+            if (
+                partner.type == 'invoice' and partner.parent_id and not partner.is_company
+                and not partner._is_peppol_invoice_contact()
+            ):
+                # These billing contacts must use their company's electronic address.
+                partner.available_peppol_eas = []
+                continue
             partner.available_peppol_eas = [
                 eas for eas in dict(partner._fields['peppol_eas'].selection)
                 if eas not in DEPRECATED_PEPPOL_EAS or eas == partner.peppol_eas
@@ -326,8 +366,17 @@ class ResPartner(models.Model):
         if not peppol_eas or not peppol_endpoint:
             return
 
-        return {
-            'criteria': [{
-                'domain': [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)],
-            }],
-        }
+        domain = [('peppol_eas', '=', peppol_eas), ('peppol_endpoint', '=', peppol_endpoint)]
+
+        def search_endpoint(criteria):
+            partners = self.search(expression.AND([criteria['static_domain'], domain]))
+            partners = partners.filtered(lambda partner: partner._get_peppol_invoice_partner() == partner)
+            if len(partners) == 1:
+                return partners
+            commercial_partners = partners.commercial_partner_id
+            # A shared endpoint cannot distinguish the company's invoice contacts.
+            if len(commercial_partners) == 1:
+                return commercial_partners.filtered_domain(criteria['static_domain'])
+            return self.browse()
+
+        return {'criteria': [{'search_method': search_endpoint, 'cache_key': str(domain)}]}

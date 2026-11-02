@@ -16,6 +16,21 @@
                        class="o_field_peppol_eas_selection"/>
                 <field name="peppol_endpoint" nolabel="1"/>
             </xpath>
+            <xpath expr="//page[@name='accounting_disabled']" position="inside">
+                <group string="Electronic Invoicing" invisible="type != 'invoice' or is_company or not parent_id or not available_peppol_eas">
+                    <field name="available_peppol_eas" invisible="1"/>
+                    <field name="peppol_eas" widget="filterable_selection" options="{'whitelist_fname': 'available_peppol_eas'}"/>
+                    <field name="peppol_endpoint"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='comment']" position="before">
+                <group string="Electronic Invoicing" invisible="type != 'invoice' or is_company or not parent_id or not available_peppol_eas"
+                       groups="account.group_account_invoice,account.group_account_readonly">
+                    <field name="available_peppol_eas" invisible="1"/>
+                    <field name="peppol_eas" widget="filterable_selection" options="{'whitelist_fname': 'available_peppol_eas'}"/>
+                    <field name="peppol_endpoint"/>
+                </group>
+            </xpath>
         </field>
     </record>
 </odoo>

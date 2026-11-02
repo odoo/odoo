@@ -2597,8 +2597,8 @@ class AccountEdiUBL(models.AbstractModel):
     def _import_ubl_retrieve_customer_search_plan(self, collected_values):
         ResPartner = self.env['res.partner']
         return [
-            ResPartner._import_retrieve_customer_from_vat,
             ResPartner._import_retrieve_customer_from_eas_endpoint,
+            ResPartner._import_retrieve_customer_from_vat,
             ResPartner._import_retrieve_customer_from_bank_account_number,
             ResPartner._import_retrieve_customer_from_email,
             ResPartner._import_retrieve_customer_from_phone,

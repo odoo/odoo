@@ -82,7 +82,7 @@ class AccountMoveSend(models.AbstractModel):
     def _get_alerts(self, moves, moves_data):
         # EXTENDS 'account'
         def peppol_partner(moves):
-            return moves.partner_id.commercial_partner_id
+            return moves.partner_id.mapped(lambda partner: partner._get_peppol_invoice_partner())
 
         def filter_peppol_state(moves, states):
             return peppol_partner(moves.filtered(
@@ -219,7 +219,7 @@ class AccountMoveSend(models.AbstractModel):
     def _is_applicable_to_move(self, method, move, **move_data):
         # EXTENDS 'account'
         if method == 'peppol':
-            partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
+            partner = move.partner_id._get_peppol_invoice_partner().with_company(move.company_id)
             invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
 
             partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
@@ -268,7 +268,7 @@ class AccountMoveSend(models.AbstractModel):
         invoices_data_peppol_per_edi_user = {}
         to_lock_peppol_invoices = self.env['account.move']
         for invoice, invoice_data in invoices_data.items():
-            partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
+            partner = invoice.partner_id._get_peppol_invoice_partner().with_company(invoice.company_id)
             if 'peppol' in invoice_data['sending_methods']:
                 network_name = invoice.company_id._get_einvoicing_network_name()
                 if not partner.peppol_eas or not partner.peppol_endpoint:
