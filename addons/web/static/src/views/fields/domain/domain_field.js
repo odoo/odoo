@@ -26,11 +26,13 @@ export class DomainField extends Component {
         resModel: { type: String, optional: true },
         isFoldable: { type: Boolean, optional: true },
         allowExpressions: { type: Boolean, optional: true },
+        countLimit: { type: Number, optional: true },
     };
     static defaultProps = {
         editInDialog: false,
         isFoldable: false,
         allowExpressions: false,
+        countLimit: 10000,
     };
 
     setup() {
@@ -44,6 +46,7 @@ export class DomainField extends Component {
         this.state = useState({
             isValid: null,
             recordCount: null,
+            hasLimitedCount: null,
             folded: this.props.isFoldable,
             facets: [],
         });
@@ -193,24 +196,32 @@ export class DomainField extends Component {
 
         const domain = this.getEvaluatedDomain(props);
         if (domain.isInvalid) {
-            this.updateState({ isValid: false, recordCount: 0 });
+            this.updateState({ isValid: false, recordCount: 0, hasLimitedCount: false });
             return;
         }
 
         let recordCount;
+        let hasLimitedCount = false;
         const context = this.getContext(props);
+        let limit;
+        if (props.countLimit !== Number.MAX_SAFE_INTEGER) {
+            limit = props.countLimit + 1;
+        }
         try {
-            recordCount = await this.orm.silent.searchCount(resModel, domain, { context });
+            recordCount = await this.orm.silent.searchCount(resModel, domain, { context, limit });
         } catch (error) {
             if (error.data?.name === "builtins.KeyError" && error.data.message === resModel) {
                 // we don't want to support invalid models
                 throw new Error(`Invalid model: ${resModel}`);
             }
-            this.updateState({ isValid: false, recordCount: 0 });
+            this.updateState({ isValid: false, recordCount: 0, hasLimitedCount: false });
             return;
         }
-
-        this.updateState({ isValid: true, recordCount });
+        if (limit && recordCount >= limit) {
+            hasLimitedCount = true;
+            recordCount = props.countLimit;
+        }
+        this.updateState({ isValid: true, recordCount, hasLimitedCount });
     }
 
     onButtonClick() {
@@ -280,6 +291,7 @@ export class DomainField extends Component {
         Object.assign(this.state, {
             isValid: "isValid" in params ? params.isValid : null,
             recordCount: "recordCount" in params ? params.recordCount : null,
+            hasLimitedCount: "hasLimitedCount" in params ? params.hasLimitedCount : null,
         });
     }
 }
@@ -310,6 +322,11 @@ export const domainField = {
             name: "model",
             type: "string",
         },
+        {
+            label: _t("Count Limit"),
+            name: "count_limit",
+            type: "number",
+        },
     ],
     supportedTypes: ["char"],
     isEmpty: () => false,
@@ -319,6 +336,7 @@ export const domainField = {
             isFoldable: options.foldable,
             allowExpressions: options.allow_expressions,
             resModel: options.model,
+            countLimit: options.count_limit,
             context: dynamicInfo.context,
         };
     },
