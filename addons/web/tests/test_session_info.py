@@ -118,3 +118,22 @@ class TestSessionInfo(common.HttpCase):
         response = self.url_open("/web/session/modules", data=self.payload, headers=self.headers)
         data = response.json()
         self.assertTrue(isinstance(data['result'], list))
+
+    def test_session_info_numbering_system(self):
+        """ The numbering system is only forced for the language of the user it is set for """
+        self.user.lang = 'ar_001'
+        self.env['res.users.settings']._find_or_create_for_user(self.user)
+        self.authenticate(self.user.login, self.user_password)
+
+        def get_numbering_system():
+            response = self.url_open("/web/session/get_session_info", data=self.payload, headers=self.headers)
+            self.assertEqual(response.status_code, 200)
+            return response.json()["result"]["numbering_system"]
+
+        self.assertFalse(get_numbering_system())
+
+        self.env['ir.config_parameter'].set_param('web.numbering_system_fr_FR', 'latn')
+        self.assertFalse(get_numbering_system())
+
+        self.env['ir.config_parameter'].set_param('web.numbering_system_ar_001', ' latn ')
+        self.assertEqual(get_numbering_system(), 'latn')
