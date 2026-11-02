@@ -1200,20 +1200,23 @@ class Website(models.Model):
     def _get_snippet_defaults(self, snippet):
         return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})
 
-    def _prevent_product_sale(self, product_or_template, is_zero_price_product):
+    def _prevent_product_sale(self, product_or_template, is_zero_price_product=None):
         """Return whether selling the provided product online should be prevented, depending on
         price and categories.
 
         :param product.product|product.template product_or_template: The product to check.
-        :param boolean is_zero_price_product: Whether the product price is zero or not.
+        :param bool is_zero_price_product: Whether the product price is zero or not. If not
+            provided, it is computed from the contextual price, only when prevent zero price is on.
         :return: Whether selling the product online should be prevented.
-        :rtype: boolean
+        :rtype: bool
         """
         if not self.prevent_sale:
             return False
 
         # If the sale of zero-priced products should be prevented.
         if self.prevent_sale_for == "zero_price":
+            if is_zero_price_product is None:
+                is_zero_price_product = not product_or_template._get_contextual_price()
             return is_zero_price_product
 
         # If the sale of products in specific categories should be prevented.

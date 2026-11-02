@@ -108,7 +108,7 @@ class ProductProduct(models.Model):
     def _delete_extra(self):
         yield from super()._delete_extra()
 
-        if 'website_sale' in self.env.registry.uninstalling_modules:
+        if "website_sale" in self.env.registry.uninstalling_modules:
             return
         # delete variant images
         for product in self:
@@ -160,9 +160,9 @@ class ProductProduct(models.Model):
             combination=self.product_template_attribute_value_ids, product_id=self.id, **kwargs
         )
 
-    def _website_show_quick_add(self):
+    def _website_show_quick_add(self, is_zero_price=None):
         self.ensure_one()
-        return self.product_tmpl_id._website_show_quick_add(self)
+        return self.product_tmpl_id._website_show_quick_add(self, is_zero_price=is_zero_price)
 
     def _is_add_to_cart_allowed(self) -> bool:
         """Determine whether the current user is permitted to buy the product."""
@@ -175,10 +175,7 @@ class ProductProduct(models.Model):
             website.has_ecommerce_access()
             and self._is_purchasable()
             and self._is_published()
-            and (
-                not website.prevent_sale
-                or not website._prevent_product_sale(self, not self._get_contextual_price())
-            )
+            and not website._prevent_product_sale(self)
         )
 
     def _is_published(self) -> bool:
@@ -540,7 +537,10 @@ class ProductProduct(models.Model):
                 or website.company_id.email_formatted
             )
             email_template.with_user(website.salesperson_id).sudo().with_context(
-                customer_name=partner.name, lang=partner.lang, website_id=website.id, product_price=product_price,
+                customer_name=partner.name,
+                lang=partner.lang,
+                website_id=website.id,
+                product_price=product_price,
             ).send_mail(
                 product.id,
                 force_send=True,

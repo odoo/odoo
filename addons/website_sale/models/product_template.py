@@ -1666,7 +1666,13 @@ class ProductTemplate(models.Model):
             return request.pricelist.with_context(self.env.context)
         return pricelist
 
-    def _website_show_quick_add(self, product=None):
+    def _website_show_quick_add(self, product=None, is_zero_price=None):
+        """Return whether the "Add to cart" button can be shown for the product.
+
+        :param product.product product: The variant to check instead of the template, if any.
+        :param bool is_zero_price: Whether the product price is zero.
+        :rtype: bool
+        """
         self.ensure_one()
         website = self.env.website
         product_or_template = product or self
@@ -1674,12 +1680,7 @@ class ProductTemplate(models.Model):
             product_or_template._is_purchasable()
             and product_or_template._is_published()
             and bool(product_or_template._get_available_uoms())
-            and (
-                not website.prevent_sale
-                or not website._prevent_product_sale(
-                    product_or_template, not product_or_template._get_contextual_price()
-                )
-            )
+            and not website._prevent_product_sale(product_or_template, is_zero_price)
             and not product_or_template._is_sold_out()
         )
 

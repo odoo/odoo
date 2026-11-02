@@ -233,7 +233,9 @@
     <t name="buttons_container">
         <div class="o_wsale_product_action_row">
             <t
-                t-if="product._website_show_quick_add()"
+                t-if="product._website_show_quick_add(
+                    is_zero_price=not template_price_vals['price_reduce'] if template_price_vals else None
+                )"
                 t-call="website_sale.product_tile_element_visibility"
                 visible_element_class.f="o_wsale_products_opt_has_cta"
             >

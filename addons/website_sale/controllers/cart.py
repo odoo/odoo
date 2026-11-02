@@ -138,7 +138,8 @@ class Cart(PaymentPortal):
 
         def check_selected_combo_items(combo_product, linked_products):
             combo_item_products = [
-                linked_product for linked_product in linked_products or []
+                linked_product
+                for linked_product in linked_products or []
                 if (
                     linked_product.get("combo_item_id")
                     and linked_product.get("parent_product_template_id")
@@ -146,17 +147,22 @@ class Cart(PaymentPortal):
                 )
             ]
             combos_sudo = combo_product.sudo().product_tmpl_id.combo_ids
-            selected_combos_sudo = request.env['product.combo.item'].sudo().browse([
-                combo_item['combo_item_id'] for combo_item in combo_item_products
-            ]).combo_id
-            if (
-                len(combo_item_products) != len(combos_sudo)
-                or set(selected_combos_sudo.ids) != set(combos_sudo.ids)
+            selected_combos_sudo = (
+                request
+                .env["product.combo.item"]
+                .sudo()
+                .browse([combo_item["combo_item_id"] for combo_item in combo_item_products])
+                .combo_id
+            )
+            if len(combo_item_products) != len(combos_sudo) or set(selected_combos_sudo.ids) != set(
+                combos_sudo.ids
             ):
-                raise UserError(self.env._(
-                    "The number of selected combo items must match the number of available"
-                    " combo choices."
-                ))
+                raise UserError(
+                    self.env._(
+                        "The number of selected combo items must match the number of available"
+                        " combo choices."
+                    )
+                )
 
         if product.sudo().type == "combo":
             check_selected_combo_items(product, linked_products)
@@ -292,7 +298,7 @@ class Cart(PaymentPortal):
             "currency": order_sudo.currency_id.name,
         }
 
-    def _get_product_user_error(self, product):
+    def _get_product_user_error(self, _product):
         return self.env._("The given product does not exist therefore it cannot be added to cart.")
 
     @route(
@@ -369,7 +375,8 @@ class Cart(PaymentPortal):
         :params dict kwargs: additional parameters given to _cart_update_line_quantity calls.
         """
         if order_sudo := request.cart:
-            order_sudo._check_not_partially_paid()  # Prevent modifying the cart if it's partially paid
+            # Prevent modifying the cart if it's partially paid
+            order_sudo._check_not_partially_paid()
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
 
         # This method must be only called from the cart page BUT in some advanced logic
@@ -487,12 +494,11 @@ class Cart(PaymentPortal):
             if (
                 line_sudo.linked_line_id.product_type == "combo"
                 or not line_sudo._is_sellable()
-                or (
-                    self.env.website.prevent_sale
-                    and self.env.website._prevent_product_sale(
-                        line_sudo.product_id,
-                        line_sudo.product_id._get_combination_info_variant()["price"] == 0,
-                    )
+                or self.env.website._prevent_product_sale(
+                    line_sudo.product_id,
+                    # Avoid the price computation if not needed.
+                    self.env.website.prevent_sale_for == "zero_price"
+                    and line_sudo.product_id._get_combination_info_variant()["price"] == 0,
                 )
             ):
                 continue
