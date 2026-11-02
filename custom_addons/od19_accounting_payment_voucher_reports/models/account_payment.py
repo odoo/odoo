@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command, _, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 
 # Sequence code used to draw the Thai document number shown on the
@@ -8,6 +8,9 @@ VOUCHER_SEQUENCE_BY_PAYMENT_TYPE = {
     "outbound": "account.voucher.vendor.payment",
     "inbound": "account.voucher.customer.payment",
 }
+
+# Move types that a payment can settle and that carry untaxed / VAT totals.
+SOURCE_BILL_MOVE_TYPES = ("in_invoice", "in_refund", "out_invoice", "out_refund")
 
 # Prepare -> Approve -> Pay. The number is drawn once at the "prepare" step so
 # the voucher printed in draft already carries the final document number.
@@ -94,6 +97,213 @@ class AccountPayment(models.Model):
         readonly=True,
         tracking=True,
     )
+
+    # ------------------------------------------------------------------
+    # Retrospective look-up helpers (register, back-link and reports).
+    # Everything below is derived, never stored, so no ledger data is
+    # duplicated on the payment.
+    # ------------------------------------------------------------------
+    od19_source_move_ids = fields.Many2many(
+        comodel_name="account.move",
+        relation="od19_payment_source_move_rel",
+        column1="payment_id",
+        column2="move_id",
+        string="เอกสารต้นทาง / Source documents",
+        compute="_compute_od19_source_move_ids",
+        help="ใบแจ้งหนี้/ใบตั้งหนี้ที่รายการจ่ายนี้ชำระ รวมรายการที่พักไว้ "
+        "ตอนเตรียมจ่ายซึ่งยังไม่ถูกตัดจ่ายจนกว่าจะ Post",
+    )
+    od19_payee_display = fields.Char(
+        string="จ่ายให้/รับจาก / Paid to",
+        compute="_compute_od19_payee_display",
+    )
+    od19_direction_label = fields.Char(
+        string="ทิศทาง / Direction",
+        compute="_compute_od19_direction_label",
+    )
+    od19_bill_untaxed_amount = fields.Monetary(
+        string="ยอดก่อนภาษี / Untaxed",
+        currency_field="currency_id",
+        compute="_compute_od19_bill_amounts",
+    )
+    od19_bill_tax_amount = fields.Monetary(
+        string="ภาษีมูลค่าเพิ่ม / VAT",
+        currency_field="currency_id",
+        compute="_compute_od19_bill_amounts",
+    )
+    od19_bill_total_amount = fields.Monetary(
+        string="ยอดรวมเอกสารต้นทาง / Source total",
+        currency_field="currency_id",
+        compute="_compute_od19_bill_amounts",
+    )
+    od19_due_date = fields.Date(
+        string="วันครบกำหนด / Due date",
+        compute="_compute_od19_source_info",
+    )
+    od19_source_reference = fields.Char(
+        string="เอกสารอ้างอิง / Source reference",
+        compute="_compute_od19_source_info",
+    )
+    od19_payment_term_name = fields.Char(
+        string="เงื่อนไขชำระ / Payment terms",
+        compute="_compute_od19_source_info",
+    )
+    od19_salesperson_id = fields.Many2one(
+        comodel_name="res.users",
+        string="พนักงานขาย / Salesperson",
+        compute="_compute_od19_source_info",
+    )
+    od19_job_no = fields.Char(
+        string="เลขที่งาน / Job No.",
+        compute="_compute_od19_job_no",
+    )
+    # Cheque details are surfaced through guarded fields so the report does
+    # not need a hard dependency on the cheque module.
+    od19_cheque_number = fields.Char(
+        string="เลขที่เช็ค / Cheque No.",
+        compute="_compute_od19_cheque_info",
+    )
+    od19_cheque_bank = fields.Char(
+        string="ธนาคาร / Bank",
+        compute="_compute_od19_cheque_info",
+    )
+    od19_cheque_bank_branch = fields.Char(
+        string="สาขา / Branch",
+        compute="_compute_od19_cheque_info",
+    )
+    od19_cheque_date = fields.Date(
+        string="วันที่เช็ค / Cheque date",
+        compute="_compute_od19_cheque_info",
+    )
+
+    # ------------------------------------------------------------------
+    # Computes
+    # ------------------------------------------------------------------
+    @api.depends(
+        "od19_pending_reconcile_line_ids",
+        "invoice_ids",
+        "reconciled_invoice_ids",
+        "reconciled_bill_ids",
+    )
+    def _compute_od19_source_move_ids(self):
+        for payment in self:
+            payment.od19_source_move_ids = (
+                payment.od19_pending_reconcile_line_ids.move_id
+                | payment.invoice_ids
+                | payment.reconciled_invoice_ids
+                | payment.reconciled_bill_ids
+            )
+
+    @api.depends("od19_payee_id", "partner_id")
+    def _compute_od19_payee_display(self):
+        for payment in self:
+            payee = payment.od19_payee_id or payment.partner_id
+            payment.od19_payee_display = payee.display_name or ""
+
+    @api.depends("payment_type")
+    def _compute_od19_direction_label(self):
+        for payment in self:
+            if payment.payment_type == "outbound":
+                payment.od19_direction_label = _("จ่ายให้ / Paid to")
+            else:
+                payment.od19_direction_label = _("รับชำระจาก / Received from")
+
+    @api.depends(
+        "od19_pending_reconcile_line_ids",
+        "invoice_ids",
+        "reconciled_invoice_ids",
+        "reconciled_bill_ids",
+    )
+    def _compute_od19_bill_amounts(self):
+        for payment in self:
+            bills = payment.od19_source_move_ids.filtered(
+                lambda move: move.move_type in SOURCE_BILL_MOVE_TYPES
+            )
+            payment.od19_bill_untaxed_amount = sum(
+                bills.mapped("amount_untaxed")
+            )
+            payment.od19_bill_tax_amount = sum(bills.mapped("amount_tax"))
+            payment.od19_bill_total_amount = sum(bills.mapped("amount_total"))
+
+    @api.depends(
+        "od19_pending_reconcile_line_ids",
+        "invoice_ids",
+        "reconciled_invoice_ids",
+        "reconciled_bill_ids",
+    )
+    def _compute_od19_source_info(self):
+        for payment in self:
+            moves = payment.od19_source_move_ids
+            due_dates = [due for due in moves.mapped("invoice_date_due") if due]
+            payment.od19_due_date = min(due_dates) if due_dates else False
+            first_move = moves[:1]
+            payment.od19_source_reference = first_move.invoice_origin or ""
+            payment.od19_payment_term_name = (
+                first_move.invoice_payment_term_id.name or ""
+            )
+            payment.od19_salesperson_id = first_move.invoice_user_id or False
+
+    @api.depends(
+        "od19_pending_reconcile_line_ids",
+        "invoice_ids",
+        "reconciled_invoice_ids",
+        "reconciled_bill_ids",
+    )
+    def _compute_od19_job_no(self):
+        for payment in self:
+            payment.od19_job_no = payment._od19_find_job_no()
+
+    def _od19_find_job_no(self):
+        """Best-effort Job No. from the analytic account of the source bill.
+
+        ``project.project`` is optional here: the report module must keep
+        working on a database where the project modules are not installed.
+        """
+        self.ensure_one()
+        if "project.project" not in self.env:
+            return ""
+        for line in self.od19_source_move_ids.line_ids:
+            analytic_ids = [
+                int(key)
+                for key in (line.analytic_distribution or {})
+                if str(key).isdigit()
+            ]
+            if not analytic_ids:
+                continue
+            project = self.env["project.project"].search(
+                [("account_id", "in", analytic_ids)], limit=1
+            )
+            if project.job_no:
+                return project.job_no
+        return ""
+
+    def _od19_get_source_bills(self):
+        """Source invoices/bills only, for the voucher report line table."""
+        self.ensure_one()
+        return self.od19_source_move_ids.filtered(
+            lambda move: move.move_type in SOURCE_BILL_MOVE_TYPES
+        )
+
+    def _od19_prepare_state_label(self):
+        self.ensure_one()
+        return dict(PREPARE_STATE_SELECTION).get(
+            self.od19_prepare_state, self.od19_prepare_state or ""
+        )
+
+    def _od19_state_label(self):
+        self.ensure_one()
+        return dict(self._fields["state"].selection).get(self.state, self.state or "")
+
+    def _compute_od19_cheque_info(self):
+        """Cheque details, read through ``getattr`` to stay module-agnostic."""
+        for payment in self:
+            cheque = getattr(payment, "cheque_paid_id", False) or getattr(
+                payment, "cheque_id", False
+            )
+            payment.od19_cheque_number = cheque.name or ""
+            payment.od19_cheque_bank = cheque.bank_id.name or ""
+            payment.od19_cheque_bank_branch = cheque.bank_branch or ""
+            payment.od19_cheque_date = cheque.cheque_date or False
 
     def _od19_voucher_sequence_code(self):
         self.ensure_one()

@@ -70,4 +70,150 @@
         </field>
     </record>
 
+    <!-- ============================================================
+         ทะเบียนใบสำคัญจ่าย/รับ (Voucher Register)
+         แสดงเอกสารทุกสถานะ: ร่าง -> เตรียมจ่าย -> อนุมัติ -> จ่ายแล้ว / ยกเลิก
+         ค่าเริ่มต้นของเมนูจะกรองเฉพาะรายการที่ยังไม่จ่าย (work queue)
+         ============================================================ -->
+    <record id="view_od19_payment_voucher_search" model="ir.ui.view">
+        <field name="name">account.payment.voucher.search</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <search string="ค้นหาใบสำคัญจ่าย/รับ">
+                <field name="od19_voucher_no"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="memo"/>
+                <field name="payment_reference"/>
+                <field name="date"/>
+                <field name="amount"/>
+                <separator/>
+                <filter name="filter_not_paid" string="ยังไม่จ่าย / Outstanding"
+                        domain="[('state', 'not in', ('paid', 'canceled', 'rejected'))]"/>
+                <separator/>
+                <filter name="filter_prepare_draft" string="ร่าง (ยังไม่เตรียม)"
+                        domain="[('od19_prepare_state', '=', 'draft')]"/>
+                <filter name="filter_prepared" string="เตรียมจ่ายแล้ว"
+                        domain="[('od19_prepare_state', '=', 'prepared')]"/>
+                <filter name="filter_approved" string="อนุมัติแล้ว"
+                        domain="[('od19_prepare_state', '=', 'approved')]"/>
+                <filter name="filter_override" string="ข้ามการอนุมัติ"
+                        domain="[('od19_approval_override', '=', True)]"/>
+                <separator/>
+                <filter name="filter_canceled" string="ยกเลิกแล้ว"
+                        domain="[('state', '=', 'canceled')]"/>
+                <separator/>
+                <filter name="filter_my_prepared" string="ที่ฉันจัดทำ"
+                        domain="[('od19_prepared_by', '=', uid)]"/>
+                <filter name="filter_my_approved" string="ที่ฉันอนุมัติ"
+                        domain="[('od19_approved_by', '=', uid)]"/>
+                <filter name="group_prepare_state" string="ขั้นเตรียมจ่าย"
+                        domain="[]" context="{'group_by': 'od19_prepare_state'}"/>
+                <filter name="group_state" string="สถานะจ่าย"
+                        domain="[]" context="{'group_by': 'state'}"/>
+                <filter name="group_partner" string="คู่ค้า"
+                        domain="[]" context="{'group_by': 'partner_id'}"/>
+                <filter name="group_journal" string="ช่องทางจ่าย"
+                        domain="[]" context="{'group_by': 'journal_id'}"/>
+                <filter name="group_prepared_by" string="ผู้จัดทำ"
+                        domain="[]" context="{'group_by': 'od19_prepared_by'}"/>
+                <filter name="group_approved_by" string="ผู้อนุมัติ"
+                        domain="[]" context="{'group_by': 'od19_approved_by'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_od19_payment_voucher_tree" model="ir.ui.view">
+        <field name="name">account.payment.voucher.list</field>
+        <field name="model">account.payment</field>
+        <field name="arch" type="xml">
+            <list string="ใบสำคัญจ่าย/รับ" sample="1"
+                  decoration-muted="state == 'canceled'"
+                  decoration-success="od19_prepare_state == 'approved'"
+                  decoration-info="od19_prepare_state == 'prepared'">
+                <header>
+                    <button name="%(action_report_payment_voucher_register)d"
+                            type="action"
+                            string="พิมพ์ทะเบียน / Print Register"
+                            class="btn-primary"/>
+                </header>
+                <field name="company_currency_id" column_invisible="True"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="company_id" groups="base.group_multi_company" column_invisible="True"/>
+                <field name="amount_company_currency_signed" widget="monetary"
+                       string="จำนวนเงิน / Amount" sum="รวมทั้งสิ้น"/>
+                <field name="od19_voucher_no" string="เลขที่ใบสำคัญ"/>
+                <field name="date" string="วันที่"/>
+                <field name="partner_id" string="คู่ค้า"/>
+                <field name="od19_payee_display" string="จ่ายให้/รับจาก" optional="show"/>
+                <field name="journal_id" string="ช่องทาง"/>
+                <field name="od19_prepare_state" string="ขั้นเตรียมจ่าย" widget="badge"
+                       decoration-warning="od19_prepare_state == 'draft'"
+                       decoration-info="od19_prepare_state == 'prepared'"
+                       decoration-success="od19_prepare_state == 'approved'"/>
+                <field name="state" string="สถานะจ่าย" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'in_process'"
+                       decoration-success="state == 'paid'"
+                       decoration-muted="state == 'canceled'"/>
+                <field name="od19_prepared_by" string="ผู้จัดทำ" optional="show"/>
+                <field name="od19_prepared_date" string="วันที่จัดทำ" optional="hide"/>
+                <field name="od19_approved_by" string="ผู้อนุมัติ" optional="show"/>
+                <field name="od19_approved_date" string="วันที่อนุมัติ" optional="hide"/>
+                <field name="od19_approval_override" string="ข้ามอนุมัติ"
+                       widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- เมนู Vendors: ใบสำคัญจ่าย (จ่ายผู้ขาย) -->
+    <record id="action_od19_payment_vouchers" model="ir.actions.act_window">
+        <field name="name">Prepare Payment / ใบสำคัญจ่าย</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('payment_type', '=', 'outbound')]</field>
+        <field name="context">{'search_default_filter_not_paid': 1,
+            'default_payment_type': 'outbound', 'default_partner_type': 'supplier'}</field>
+        <field name="search_view_id" ref="view_od19_payment_voucher_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">ยังไม่มีใบสำคัญจ่าย</p>
+            <p>
+                สร้างรายการจ่ายได้จากใบตั้งหนี้ผู้ขาย (Vendor Bill) ด้วยปุ่ม
+                <b>Register Payment</b> แล้วเลือก <b>เตรียมจ่าย (Prepare Payment)</b>
+                เพื่อเข้าสู่ขั้นตอน เตรียมจ่าย -> อนุมัติ -> จ่าย
+            </p>
+        </field>
+    </record>
+
+    <!-- เมนู Customers: ใบสำคัญรับเงิน (รับชำระจากลูกค้า) -->
+    <record id="action_od19_receipt_vouchers" model="ir.actions.act_window">
+        <field name="name">Prepare Receipt / ใบสำคัญรับเงิน</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('payment_type', '=', 'inbound')]</field>
+        <field name="context">{'search_default_filter_not_paid': 1,
+            'default_payment_type': 'inbound', 'default_partner_type': 'customer'}</field>
+        <field name="search_view_id" ref="view_od19_payment_voucher_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">ยังไม่มีใบสำคัญรับเงิน</p>
+            <p>
+                สร้างรายการรับชำระได้จากใบแจ้งหนี้ลูกค้า (Customer Invoice) ด้วยปุ่ม
+                <b>Register Payment</b>
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_od19_prepare_payment"
+              name="Prepare Payment"
+              parent="account.menu_finance_payables"
+              action="action_od19_payment_vouchers"
+              sequence="18"
+              groups="account.group_account_invoice,account.group_account_readonly"/>
+    <menuitem id="menu_od19_prepare_receipt"
+              name="Prepare Receipt"
+              parent="account.menu_finance_receivables"
+              action="action_od19_receipt_vouchers"
+              sequence="14"
+              groups="account.group_account_invoice,account.group_account_readonly"/>
+
 </odoo>

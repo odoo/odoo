@@ -2,3 +2,4 @@
 from . import test_ap_block_and_group_payments
 from . import test_payable_control_gate
 from . import test_payment_voucher
+from . import test_payment_voucher_lookup

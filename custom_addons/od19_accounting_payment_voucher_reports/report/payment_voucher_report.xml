@@ -3,112 +3,230 @@
 <!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
 
+    <!-- Shared look & feel for the Thai voucher / receipt forms.
+         Green theme = ใบสำคัญจ่าย (PV), Orange theme = ใบสำคัญรับเงิน (RV).
+         Thai font comes from od19_thai_font_support. -->
+    <template id="od19_voucher_report_style">
+        <style>
+            .od19-doc { font-family:'Sarabun','Noto Sans Thai','Tahoma',sans-serif; font-size:13px; color:#1f2d3d; }
+            .od19-band { padding:8px 14px; border-radius:6px; color:#fff; text-align:center; }
+            .od19-band h3 { margin:0; font-size:20px; font-weight:700; color:#fff; letter-spacing:.5px; }
+            .od19-band .od19-en { font-size:11px; letter-spacing:2px; opacity:.9; text-transform:uppercase; }
+            .od19-pv .od19-band { background:#1E7A46; }
+            .od19-rv .od19-band { background:#D97706; }
+            .od19-box { border:1px solid #d0d7de; border-radius:6px; padding:8px 12px; }
+            .od19-lbl { color:#5a6672; font-size:11px; text-transform:uppercase; letter-spacing:.4px; }
+            .od19-val { font-weight:600; }
+            .od19-tbl { width:100%; border-collapse:collapse; }
+            .od19-tbl th, .od19-tbl td { border:1px solid #cfd8dc; padding:5px 7px; }
+            .od19-tbl thead th { font-size:11px; text-transform:uppercase; letter-spacing:.3px; }
+            .od19-pv .od19-tbl thead th { background:#e7f3ec; }
+            .od19-rv .od19-tbl thead th { background:#fdf0df; }
+            .od19-tbl tfoot td { font-weight:700; background:#f6f8fa; }
+            .od19-words { border:1px dashed #b0bec5; border-radius:6px; padding:7px 12px; background:#fbfcfd; }
+            .od19-sign { border-top:1px dotted #6b7785; margin-top:52px; padding-top:5px; text-align:center; font-size:12px; }
+            .od19-sign .od19-sign-name { min-height:16px; color:#333; }
+            .od19-watermark { position:absolute; top:36%; left:0; right:0; text-align:center; font-size:96px; font-weight:800; color:rgba(158,36,36,.12); transform:rotate(-24deg); }
+        </style>
+    </template>
+
     <!-- ============================================================
          ใบสำคัญจ่าย (Payment Voucher) - one document per supplier payment.
-         Thai font comes from od19_thai_font_support.
          ============================================================ -->
     <template id="payment_voucher_document">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="payment">
                 <t t-call="web.external_layout">
-                    <div class="page" style="font-family:'Sarabun','Noto Sans Thai','Tahoma',sans-serif;">
-                        <div t-if="not payment.od19_voucher_no"
-                             style="position:absolute;top:38%;left:0;right:0;text-align:center;font-size:90px;font-weight:bold;color:rgba(158,36,36,0.12);transform:rotate(-25deg);">
-                            ร่าง / DRAFT
-                        </div>
-                        <h2 class="text-center">ใบสำคัญจ่าย</h2>
-                        <h4 class="text-center">PAYMENT VOUCHER</h4>
+                    <t t-call="od19_accounting_payment_voucher_reports.od19_voucher_report_style"/>
+                    <t t-set="bills" t-value="payment._od19_get_source_bills()"/>
+                    <div class="page od19-doc od19-pv">
+                        <div t-if="not payment.od19_voucher_no" class="od19-watermark">ร่าง / DRAFT</div>
 
-                        <div class="row mt-3">
+                        <div class="od19-band mb-3">
+                            <h3>ใบสำคัญจ่าย</h3>
+                            <div class="od19-en">Payment Voucher</div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-7">
-                                <div>
-                                    <strong>จ่ายให้ / Pay to: </strong>
-                                    <span t-field="payment.partner_id.name"/>
-                                </div>
-                                <div t-if="payment.partner_id.street" t-field="payment.partner_id.street"/>
-                                <div t-if="payment.partner_id.vat">
-                                    <strong>เลขประจำตัวผู้เสียภาษี / Tax ID: </strong>
-                                    <span t-field="payment.partner_id.vat"/>
+                                <div class="od19-box">
+                                    <div class="od19-lbl">จ่ายให้ / Pay to</div>
+                                    <div class="od19-val" t-field="payment.od19_payee_display"/>
+                                    <div t-if="payment.partner_id.street" t-field="payment.partner_id.street"/>
+                                    <div t-if="payment.partner_id.city or payment.partner_id.zip">
+                                        <span t-field="payment.partner_id.city"/>
+                                        <span t-field="payment.partner_id.zip"/>
+                                    </div>
+                                    <div t-if="payment.partner_id.vat">
+                                        <span class="od19-lbl">เลขประจำตัวผู้เสียภาษี / Tax ID:</span>
+                                        <span t-field="payment.partner_id.vat"/>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-5 text-right">
-                                <div>
-                                    <strong>เลขที่ / Voucher No: </strong>
-                                    <span t-esc="payment.od19_voucher_no or payment.name or '—'"/>
-                                </div>
-                                <div>
-                                    <strong>วันที่ / Date: </strong>
-                                    <span t-field="payment.date"/>
-                                </div>
-                                <div t-if="payment.journal_id">
-                                    <strong>ช่องทาง / Method: </strong>
-                                    <span t-field="payment.journal_id.name"/>
+                            <div class="col-5">
+                                <div class="od19-box">
+                                    <div>
+                                        <span class="od19-lbl">เลขที่ / No.:</span>
+                                        <span class="od19-val" t-esc="payment.od19_voucher_no or payment.name or '—'"/>
+                                    </div>
+                                    <div>
+                                        <span class="od19-lbl">วันที่ / Date:</span>
+                                        <span class="od19-val" t-field="payment.date"/>
+                                    </div>
+                                    <div t-if="payment.journal_id">
+                                        <span class="od19-lbl">ช่องทาง / Method:</span>
+                                        <span t-field="payment.journal_id.name"/>
+                                    </div>
+                                    <div t-if="payment.od19_payment_term_name">
+                                        <span class="od19-lbl">เงื่อนไข / Terms:</span>
+                                        <span t-field="payment.od19_payment_term_name"/>
+                                    </div>
+                                    <div t-if="payment.od19_due_date">
+                                        <span class="od19-lbl">ครบกำหนด / Due:</span>
+                                        <span t-field="payment.od19_due_date"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <table class="table table-sm table-bordered mt-4">
-                            <thead class="thead-light">
+                        <table class="od19-tbl mt-3">
+                            <thead>
                                 <tr>
-                                    <th class="text-center" style="width:8%">ลำดับ</th>
-                                    <th>รายการ / Description</th>
-                                    <th class="text-right" style="width:22%">จำนวนเงิน / Amount</th>
+                                    <th style="width:6%" class="text-center">ลำดับ</th>
+                                    <th style="width:20%">เลขที่บิล / Bill</th>
+                                    <th style="width:12%" class="text-center">วันที่ / Date</th>
+                                    <th>อ้างอิง / Reference</th>
+                                    <th style="width:14%" class="text-right">ก่อนภาษี / Untaxed</th>
+                                    <th style="width:10%" class="text-right">VAT</th>
+                                    <th style="width:15%" class="text-right">รวม / Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <t t-if="bills">
+                                    <t t-set="idx" t-value="0"/>
+                                    <tr t-foreach="bills" t-as="bill">
+                                        <t t-set="idx" t-value="idx + 1"/>
+                                        <td class="text-center" t-esc="idx"/>
+                                        <td><span t-field="bill.name"/></td>
+                                        <td class="text-center"><span t-field="bill.invoice_date"/></td>
+                                        <td t-esc="bill.invoice_origin or bill.payment_reference or ''"/>
+                                        <td class="text-right">
+                                            <span t-field="bill.amount_untaxed"
+                                                  t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="bill.amount_tax"
+                                                  t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="bill.amount_total"
+                                                  t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr t-if="not bills">
                                     <td class="text-center">1</td>
-                                    <td>
-                                        <span>ชำระเงินให้ </span>
-                                        <span t-field="payment.partner_id.name"/>
-                                        <t t-if="payment.memo">
-                                            <span> — </span>
-                                            <span t-field="payment.memo"/>
-                                        </t>
-                                        <t t-if="payment.payment_reference">
-                                            <span> (</span>
-                                            <span t-field="payment.payment_reference"/>
-                                            <span>)</span>
-                                        </t>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="payment.amount"
-                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
-                                    </td>
-                                </tr>
-                                <tr class="font-weight-bold">
-                                    <td colspan="2" class="text-right">รวมทั้งสิ้น / Total</td>
+                                    <td t-esc="payment.payment_reference or payment.memo or ''"/>
+                                    <td class="text-center"><span t-field="payment.date"/></td>
+                                    <td/>
+                                    <td class="text-right">—</td>
+                                    <td class="text-right">—</td>
                                     <td class="text-right">
                                         <span t-field="payment.amount"
                                               t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
                                     </td>
                                 </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-right">รวมทั้งสิ้น / Grand Total</td>
+                                    <td class="text-right">
+                                        <span t-field="payment.od19_bill_untaxed_amount"
+                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="payment.od19_bill_tax_amount"
+                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="payment.amount"
+                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
 
                         <div class="row mt-2">
-                            <div class="col-12">
-                                <strong>จำนวนเงิน (ตัวอักษร): </strong>
-                                <span t-esc="payment.currency_id.with_context(lang='th_TH').amount_to_text(payment.amount)"/>
+                            <div class="col-7">
+                                <div t-if="payment.od19_cheque_number" class="od19-box">
+                                    <span class="od19-lbl">เช็ค / Cheque:</span>
+                                    <span class="od19-val" t-field="payment.od19_cheque_number"/>
+                                    <span> — </span>
+                                    <span t-field="payment.od19_cheque_bank"/>
+                                    <t t-if="payment.od19_cheque_bank_branch">
+                                        <span> (</span><span t-field="payment.od19_cheque_bank_branch"/><span>)</span>
+                                    </t>
+                                    <t t-if="payment.od19_cheque_date">
+                                        <span> · ลงวันที่ </span><span t-field="payment.od19_cheque_date"/>
+                                    </t>
+                                </div>
+                                <div t-if="payment.od19_job_no" class="od19-box mt-2">
+                                    <span class="od19-lbl">เลขที่งาน / Job No.:</span>
+                                    <span class="od19-val" t-field="payment.od19_job_no"/>
+                                    <t t-if="payment.od19_salesperson_id">
+                                        <span> · </span>
+                                        <span class="od19-lbl">พนักงานขาย:</span>
+                                        <span t-field="payment.od19_salesperson_id"/>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="od19-box text-right">
+                                    <div class="od19-lbl">ยอดจ่ายสุทธิ / Net Payable</div>
+                                    <div style="font-size:20px; font-weight:700;">
+                                        <span t-field="payment.amount"
+                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row mt-5">
-                            <div class="col-3 text-center">
-                                <div>______________________</div>
-                                <div>ผู้จัดทำ / Prepared by</div>
+                        <div class="od19-words mt-3">
+                            <span class="od19-lbl">จำนวนเงิน (ตัวอักษร) / Amount in words:</span>
+                            <span class="od19-val" t-esc="payment.currency_id.with_context(lang='th_TH').amount_to_text(payment.amount)"/>
+                        </div>
+
+                        <div t-if="payment.od19_approval_override" class="mt-2" style="font-size:11px; color:#8a1c1c;">
+                            หมายเหตุ: ข้ามการอนุมัติโดย <span t-field="payment.od19_override_by"/> —
+                            เหตุผล: <span t-field="payment.od19_override_reason"/>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-3">
+                                <div class="od19-sign">
+                                    <div class="od19-sign-name" t-field="payment.od19_prepared_by"/>
+                                    <div>ผู้จัดทำ / Prepared by</div>
+                                    <div style="font-size:10px;color:#6b7785;" t-field="payment.od19_prepared_date"/>
+                                </div>
                             </div>
-                            <div class="col-3 text-center">
-                                <div>______________________</div>
-                                <div>ผู้อนุมัติ / Approved by</div>
+                            <div class="col-3">
+                                <div class="od19-sign">
+                                    <div class="od19-sign-name" t-field="payment.od19_approved_by"/>
+                                    <div>ผู้อนุมัติ / Approved by</div>
+                                    <div style="font-size:10px;color:#6b7785;" t-field="payment.od19_approved_date"/>
+                                </div>
                             </div>
-                            <div class="col-3 text-center">
-                                <div>______________________</div>
-                                <div>ผู้จ่ายเงิน / Paid by</div>
+                            <div class="col-3">
+                                <div class="od19-sign">
+                                    <div class="od19-sign-name"/>
+                                    <div>ผู้จ่ายเงิน / Paid by</div>
+                                </div>
                             </div>
-                            <div class="col-3 text-center">
-                                <div>______________________</div>
-                                <div>ผู้รับเงิน / Received by</div>
+                            <div class="col-3">
+                                <div class="od19-sign">
+                                    <div class="od19-sign-name"/>
+                                    <div>ผู้รับเงิน / Received by</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -136,96 +254,166 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="payment">
                 <t t-call="web.external_layout">
-                    <div class="page" style="font-family:'Sarabun','Noto Sans Thai','Tahoma',sans-serif;">
-                        <div t-if="not payment.od19_voucher_no"
-                             style="position:absolute;top:38%;left:0;right:0;text-align:center;font-size:90px;font-weight:bold;color:rgba(158,36,36,0.12);transform:rotate(-25deg);">
-                            ร่าง / DRAFT
-                        </div>
-                        <h2 class="text-center">ใบสำคัญรับเงิน</h2>
-                        <h4 class="text-center">PAYMENT RECEIPT</h4>
+                    <t t-call="od19_accounting_payment_voucher_reports.od19_voucher_report_style"/>
+                    <t t-set="bills" t-value="payment._od19_get_source_bills()"/>
+                    <div class="page od19-doc od19-rv">
+                        <div t-if="not payment.od19_voucher_no" class="od19-watermark">ร่าง / DRAFT</div>
 
-                        <div class="row mt-3">
+                        <div class="od19-band mb-3">
+                            <h3>ใบสำคัญรับเงิน</h3>
+                            <div class="od19-en">Payment Receipt</div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-7">
-                                <div>
-                                    <strong>รับเงินจาก / Received from: </strong>
-                                    <span t-field="payment.partner_id.name"/>
-                                </div>
-                                <div t-if="payment.partner_id.street" t-field="payment.partner_id.street"/>
-                                <div t-if="payment.partner_id.vat">
-                                    <strong>เลขประจำตัวผู้เสียภาษี / Tax ID: </strong>
-                                    <span t-field="payment.partner_id.vat"/>
+                                <div class="od19-box">
+                                    <div class="od19-lbl">รับเงินจาก / Received from</div>
+                                    <div class="od19-val" t-field="payment.od19_payee_display"/>
+                                    <div t-if="payment.partner_id.street" t-field="payment.partner_id.street"/>
+                                    <div t-if="payment.partner_id.city or payment.partner_id.zip">
+                                        <span t-field="payment.partner_id.city"/>
+                                        <span t-field="payment.partner_id.zip"/>
+                                    </div>
+                                    <div t-if="payment.partner_id.vat">
+                                        <span class="od19-lbl">เลขประจำตัวผู้เสียภาษี / Tax ID:</span>
+                                        <span t-field="payment.partner_id.vat"/>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-5 text-right">
-                                <div>
-                                    <strong>เลขที่ / Receipt No: </strong>
-                                    <span t-esc="payment.od19_voucher_no or payment.name or '—'"/>
-                                </div>
-                                <div>
-                                    <strong>วันที่ / Date: </strong>
-                                    <span t-field="payment.date"/>
-                                </div>
-                                <div t-if="payment.journal_id">
-                                    <strong>ช่องทาง / Method: </strong>
-                                    <span t-field="payment.journal_id.name"/>
+                            <div class="col-5">
+                                <div class="od19-box">
+                                    <div>
+                                        <span class="od19-lbl">เลขที่ / No.:</span>
+                                        <span class="od19-val" t-esc="payment.od19_voucher_no or payment.name or '—'"/>
+                                    </div>
+                                    <div>
+                                        <span class="od19-lbl">วันที่ / Date:</span>
+                                        <span class="od19-val" t-field="payment.date"/>
+                                    </div>
+                                    <div t-if="payment.journal_id">
+                                        <span class="od19-lbl">ช่องทาง / Method:</span>
+                                        <span t-field="payment.journal_id.name"/>
+                                    </div>
+                                    <div t-if="payment.od19_payment_term_name">
+                                        <span class="od19-lbl">เงื่อนไข / Terms:</span>
+                                        <span t-field="payment.od19_payment_term_name"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <table class="table table-sm table-bordered mt-4">
-                            <thead class="thead-light">
+                        <table class="od19-tbl mt-3">
+                            <thead>
                                 <tr>
-                                    <th class="text-center" style="width:8%">ลำดับ</th>
-                                    <th>รายการ / Description</th>
-                                    <th class="text-right" style="width:22%">จำนวนเงิน / Amount</th>
+                                    <th style="width:6%" class="text-center">ลำดับ</th>
+                                    <th style="width:20%">เลขที่ใบแจ้งหนี้ / Invoice</th>
+                                    <th style="width:12%" class="text-center">วันที่ / Date</th>
+                                    <th>อ้างอิง / Reference</th>
+                                    <th style="width:14%" class="text-right">ก่อนภาษี / Untaxed</th>
+                                    <th style="width:10%" class="text-right">VAT</th>
+                                    <th style="width:15%" class="text-right">รวม / Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <t t-if="bills">
+                                    <t t-set="idx" t-value="0"/>
+                                    <tr t-foreach="bills" t-as="bill">
+                                        <t t-set="idx" t-value="idx + 1"/>
+                                        <td class="text-center" t-esc="idx"/>
+                                        <td><span t-field="bill.name"/></td>
+                                        <td class="text-center"><span t-field="bill.invoice_date"/></td>
+                                        <td t-esc="bill.invoice_origin or bill.payment_reference or ''"/>
+                                        <td class="text-right">
+                                            <span t-field="bill.amount_untaxed"
+                                                  t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="bill.amount_tax"
+                                                  t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="bill.amount_total"
+                                                  t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr t-if="not bills">
                                     <td class="text-center">1</td>
-                                    <td>
-                                        <span>รับชำระเงินจาก </span>
-                                        <span t-field="payment.partner_id.name"/>
-                                        <t t-if="payment.memo">
-                                            <span> — </span>
-                                            <span t-field="payment.memo"/>
-                                        </t>
-                                        <t t-if="payment.payment_reference">
-                                            <span> (</span>
-                                            <span t-field="payment.payment_reference"/>
-                                            <span>)</span>
-                                        </t>
-                                    </td>
-                                    <td class="text-right">
-                                        <span t-field="payment.amount"
-                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
-                                    </td>
-                                </tr>
-                                <tr class="font-weight-bold">
-                                    <td colspan="2" class="text-right">รวมทั้งสิ้น / Total</td>
+                                    <td t-esc="payment.payment_reference or payment.memo or ''"/>
+                                    <td class="text-center"><span t-field="payment.date"/></td>
+                                    <td/>
+                                    <td class="text-right">—</td>
+                                    <td class="text-right">—</td>
                                     <td class="text-right">
                                         <span t-field="payment.amount"
                                               t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
                                     </td>
                                 </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-right">รวมทั้งสิ้น / Grand Total</td>
+                                    <td class="text-right">
+                                        <span t-field="payment.od19_bill_untaxed_amount"
+                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="payment.od19_bill_tax_amount"
+                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="payment.amount"
+                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
 
                         <div class="row mt-2">
-                            <div class="col-12">
-                                <strong>จำนวนเงิน (ตัวอักษร): </strong>
-                                <span t-esc="payment.currency_id.with_context(lang='th_TH').amount_to_text(payment.amount)"/>
+                            <div class="col-7">
+                                <div t-if="payment.od19_cheque_number" class="od19-box">
+                                    <span class="od19-lbl">เช็ค / Cheque:</span>
+                                    <span class="od19-val" t-field="payment.od19_cheque_number"/>
+                                    <span> — </span>
+                                    <span t-field="payment.od19_cheque_bank"/>
+                                    <t t-if="payment.od19_cheque_date">
+                                        <span> · ลงวันที่ </span><span t-field="payment.od19_cheque_date"/>
+                                    </t>
+                                </div>
+                                <div t-if="payment.od19_job_no" class="od19-box mt-2">
+                                    <span class="od19-lbl">เลขที่งาน / Job No.:</span>
+                                    <span class="od19-val" t-field="payment.od19_job_no"/>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="od19-box text-right">
+                                    <div class="od19-lbl">ยอดรับชำระสุทธิ / Net Received</div>
+                                    <div style="font-size:20px; font-weight:700;">
+                                        <span t-field="payment.amount"
+                                              t-options='{"widget": "monetary", "display_currency": payment.currency_id}'/>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row mt-5">
-                            <div class="col-6 text-center">
-                                <div>______________________</div>
-                                <div>ผู้รับเงิน / Received by</div>
+                        <div class="od19-words mt-3">
+                            <span class="od19-lbl">จำนวนเงิน (ตัวอักษร) / Amount in words:</span>
+                            <span class="od19-val" t-esc="payment.currency_id.with_context(lang='th_TH').amount_to_text(payment.amount)"/>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <div class="od19-sign">
+                                    <div class="od19-sign-name"/>
+                                    <div>ผู้รับเงิน / Received by</div>
+                                </div>
                             </div>
-                            <div class="col-6 text-center">
-                                <div>______________________</div>
-                                <div>ผู้ออกใบสำคัญ / Issued by</div>
+                            <div class="col-6">
+                                <div class="od19-sign">
+                                    <div class="od19-sign-name" t-field="payment.od19_prepared_by"/>
+                                    <div>ผู้ออกใบสำคัญ / Issued by</div>
+                                    <div style="font-size:10px;color:#6b7785;" t-field="payment.od19_prepared_date"/>
+                                </div>
                             </div>
                         </div>
                     </div>

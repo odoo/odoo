@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <!-- ============================================================
+         ทะเบียนใบสำคัญจ่าย/รับ (Payment Voucher Register)
+         พิมพ์เป็นตารางรายการเดียวตามผลการกรองบนหน้าจอ (work queue)
+         ============================================================ -->
+    <template id="payment_voucher_register_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-call="od19_accounting_payment_voucher_reports.od19_voucher_report_style"/>
+                <t t-set="company_currency" t-value="docs[:1].company_currency_id or res_company.currency_id"/>
+                <div class="page od19-doc">
+                    <div class="od19-band mb-3" style="background:#37474f;">
+                        <h3>ทะเบียนใบสำคัญจ่าย / รับเงิน</h3>
+                        <div class="od19-en">Payment Voucher Register</div>
+                    </div>
+
+                    <div class="row mb-2" style="font-size:12px;">
+                        <div class="col-6">
+                            <span class="od19-lbl">บริษัท / Company:</span>
+                            <span class="od19-val" t-field="res_company.name"/>
+                        </div>
+                        <div class="col-6 text-right">
+                            <span class="od19-lbl">พิมพ์เมื่อ / Printed on:</span>
+                            <span t-out="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %H:%M')"/>
+                        </div>
+                    </div>
+
+                    <table class="od19-tbl">
+                        <thead>
+                            <tr>
+                                <th style="width:4%" class="text-center">#</th>
+                                <th style="width:12%">เลขที่ใบสำคัญ</th>
+                                <th style="width:8%" class="text-center">วันที่</th>
+                                <th style="width:14%">คู่ค้า</th>
+                                <th style="width:14%">จ่ายให้/รับจาก</th>
+                                <th style="width:10%">ช่องทาง</th>
+                                <th style="width:11%" class="text-right">จำนวนเงิน</th>
+                                <th style="width:9%">ขั้นเตรียมจ่าย</th>
+                                <th style="width:8%">สถานะจ่าย</th>
+                                <th style="width:10%">ผู้จัดทำ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="idx" t-value="0"/>
+                            <tr t-foreach="docs" t-as="payment">
+                                <t t-set="idx" t-value="idx + 1"/>
+                                <td class="text-center" t-esc="idx"/>
+                                <td t-esc="payment.od19_voucher_no or payment.name or '—'"/>
+                                <td class="text-center"><span t-field="payment.date"/></td>
+                                <td><span t-field="payment.partner_id"/></td>
+                                <td t-esc="payment.od19_payee_display"/>
+                                <td><span t-field="payment.journal_id"/></td>
+                                <td class="text-right">
+                                    <span t-field="payment.amount_company_currency_signed"
+                                          t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                                </td>
+                                <td t-esc="payment._od19_prepare_state_label()"/>
+                                <td t-esc="payment._od19_state_label()"/>
+                                <td><span t-field="payment.od19_prepared_by"/></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="text-right">รวมทั้งสิ้น / Grand Total</td>
+                                <td class="text-right">
+                                    <span t-out="sum(docs.mapped('amount_company_currency_signed'))"
+                                          t-options='{"widget": "monetary", "display_currency": company_currency}'/>
+                                </td>
+                                <td colspan="3"/>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div class="row mt-4">
+                        <div class="col-4">
+                            <div class="od19-sign">
+                                <div class="od19-sign-name"/>
+                                <div>ผู้จัดทำ / Prepared by</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="od19-sign">
+                                <div class="od19-sign-name"/>
+                                <div>ผู้ตรวจสอบ / Checked by</div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="od19-sign">
+                                <div class="od19-sign-name"/>
+                                <div>ผู้อนุมัติ / Approved by</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_payment_voucher_register" model="ir.actions.report">
+        <field name="name">ทะเบียนใบสำคัญจ่าย/รับ / Payment Voucher Register</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">od19_accounting_payment_voucher_reports.payment_voucher_register_document</field>
+        <field name="report_file">od19_accounting_payment_voucher_reports.payment_voucher_register_document</field>
+        <field name="print_report_name">'Payment Voucher Register'</field>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>
