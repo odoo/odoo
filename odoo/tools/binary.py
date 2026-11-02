@@ -62,15 +62,22 @@ class BinaryValue(Buffer):
 
 class BinaryBytes(BinaryValue):
     """Static binary value."""
-    __slots__ = ('__data',)
+    __slots__ = ('__data', '__mimetype')
 
     def __init__(self, data: Buffer):
         # force bytes
         self.__data = bytes(data)
+        self.__mimetype = None
 
     @property
     def content(self):
         return self.__data
+
+    @property
+    def mimetype(self):
+        if self.__mimetype is None:
+            self.__mimetype = super().mimetype
+        return self.__mimetype
 
     def __bool__(self):
         return bool(self.__data)
