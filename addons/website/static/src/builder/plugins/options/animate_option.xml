@@ -80,7 +80,7 @@
             <span class="mx-2">to</span>
             <BuilderNumberInput unit="'%'" dataAttributeAction="'scrollZoneEnd'" action="'forceAnimation'" />
         </BuilderRow>
-        <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt') and !this.state.hasSharedTiming">
+        <BuilderContext t-if="this.isActiveItem('animation_on_appearance_opt') and !this.state.hasSharedTiming" preview="false">
             <!-- Start After -->
             <BuilderRow label.translate="Start After" level="1">
                 <BuilderNumberInput styleAction="'animation-delay'" action="'forceAnimation'" unit="'s'" min="0" step="0.1" />

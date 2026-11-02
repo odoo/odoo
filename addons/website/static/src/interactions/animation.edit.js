@@ -3,6 +3,19 @@ import { registry } from "@web/core/registry";
 
 const AnimationEdit = (I) =>
     class extends I {
+        // Overriding to keep "on appearance" animations reset in edit mode:
+        // they are meant to play once on page load, not on every re-render.
+        getIsResetting() {
+            return !this.isAnimateOnScroll || super.getIsResetting();
+        }
+
+        startAnimation() {
+            if (!this.isAnimateOnScroll) {
+                return;
+            }
+            super.startAnimation();
+        }
+
         destroy() {
             // We remove the "o_animate_preview" class here because it is added
             // when an animation is selected in the options, and the "Animation"
@@ -10,6 +23,11 @@ const AnimationEdit = (I) =>
             // it here because otherwise it is added back when exiting edit
             // mode.
             this.el.classList.remove("o_animate_preview");
+            // An inline "animation-name" ("dummy"/"dummy-none") only ever
+            // restarts an animation, it is never a value to keep. The
+            // interaction just restored it as initial state: drop it before
+            // it gets saved with the element.
+            this.el.style.removeProperty("animation-name");
         }
     };
 
