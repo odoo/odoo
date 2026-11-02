@@ -17,6 +17,37 @@ _WANTED_COLUMNS = [
     'tax_name', 'branch_code', 'tax_branch_code', 'name_en', 'fax',
 ]
 
+# ค่า VAT ที่เป็น placeholder ของระบบเดิม (ไม่ใช่เลขภาษีจริง) — ต้องตัดทิ้ง
+_VAT_PLACEHOLDERS = {'-', '--', '---', '0', '00', '000', '.', 'n/a', 'na', 'none', 'null'}
+
+
+def _clean_vat(raw):
+    """ทำความสะอาดค่า VAT จากระบบเดิม.
+
+    คืนค่า False เมื่อเป็นค่าว่าง/placeholder/อักขระซ้ำทั้งหมด (เช่น '0000000000000')
+    เพื่อไม่ให้ Odoo (base_vat) ปฏิเสธการบันทึก ส่วนค่าอื่นคงไว้ตามเดิม
+    """
+    vat = (raw or '').strip()
+    if not vat:
+        return False
+    if vat.lower() in _VAT_PLACEHOLDERS:
+        return False
+    if len(set(vat)) == 1:
+        return False
+    return vat
+
+
+def _clean_branch_code(raw, fallback=None):
+    """ทำความสะอาดรหัสสาขา (branch_code) ให้เป็นเลข 5 หลักตามที่ Odoo กำหนด.
+
+    * ตัวเลขไม่ครบ 5 หลัก -> เติม 0 ข้างหน้า (เช่น '0001' -> '00001')
+    * ค่าที่ไม่ใช่ตัวเลข (เช่น '-') -> ตัดทิ้ง (False) เพื่อไม่ให้ Odoo ปฏิเสธการบันทึก
+    """
+    code = str(raw if raw not in (None, '') else (fallback or '')).strip()
+    if not code or not code.isdigit():
+        return False
+    return code.zfill(5)[:5]
+
 
 def run(stats):
     common.log("s03_partners: เริ่มนำเข้าคู่ค้า")
@@ -38,7 +69,10 @@ def run(stats):
         if not vals:
             stats.skipped += 1
             continue
-        _rec, action = common.upsert('res.partner', row['id'], vals)
+        # ปิดการตรวจ VAT ของ Odoo ชั่วคราว: เลขภาษีจากระบบเดิมบางรายไม่ผ่าน checksum
+        # (พิมพ์ผิด/ไม่ครบหลัก) — คงค่าไว้ตามจริงเพื่อให้แก้ที่ต้นทางภายหลัง
+        _rec, action = common.upsert('res.partner', row['id'], vals,
+                                     context={'no_vat_validation': True})
         stats.bump(action)
 
     common.log("s03_partners: เสร็จสิ้น")
@@ -76,7 +110,14 @@ def _fetch_partners():
         "LEFT JOIN account_payment_term pt ON pt.id = %(pay_term)s "
         "LEFT JOIN account_payment_term ps ON ps.id = %(supp_term)s "
         "WHERE p.active = true "
-        "  AND (COALESCE(p.customer_rank, 0) > 0 OR COALESCE(p.supplier_rank, 0) > 0) "
+        "  AND (COALESCE(p.customer_rank, 0) > 0 OR COALESCE(p.supplier_rank, 0) > 0 "
+        "       OR p.id IN (SELECT partner_id FROM project_project WHERE partner_id IS NOT NULL) "
+        # คู่ค้าที่มียอดลูกหนี้/เจ้าหนี้ค้างใน GL ต้องนำเข้าด้วย มิฉะนั้นยอดยกมา AR/AP จะขาดคู่ค้า
+        "       OR p.id IN (SELECT DISTINCT partner_id FROM account_move_line "
+        "                   WHERE partner_id IS NOT NULL) "
+        # คู่ค้าที่ถูกอ้างถึงในทะเบียนย่อยภาษีหัก ณ ที่จ่าย (ระบบเดิมไม่ได้ตั้ง supplier_rank)
+        # ต้องนำเข้าด้วย มิฉะนั้นใบรับรองหัก ณ ที่จ่ายจะขาดผู้รับเงิน
+        "       OR p.id IN (SELECT partner_id FROM dtr_wht WHERE partner_id IS NOT NULL)) "
         "  AND p.id NOT IN (SELECT partner_id FROM res_company WHERE partner_id IS NOT NULL)"
         % {'select': select, 'pay_term': pay_term, 'supp_term': supp_term}
     )
@@ -129,7 +170,7 @@ def _to_vals(row, country_ids, terms, partner_fields, has_thai_fields):
         'street2': row.get('street2') or False,
         'city': row.get('city') or False,
         'zip': row.get('zip') or False,
-        'vat': row.get('vat') or False,
+        'vat': _clean_vat(row.get('vat')),
         'customer_rank': 1 if (row.get('customer_rank') or 0) > 0 else 0,
         'supplier_rank': 1 if (row.get('supplier_rank') or 0) > 0 else 0,
     }
@@ -155,11 +196,11 @@ def _to_vals(row, country_ids, terms, partner_fields, has_thai_fields):
     # ฟิลด์ไทย (เฉพาะเมื่อมีจริงใน Odoo 19)
     if has_thai_fields:
         tax_name = row.get('tax_name') or name
-        branch_code = row.get('branch_code') or row.get('tax_branch_code')
         if tax_name:
             vals['tax_name'] = tax_name
+        branch_code = _clean_branch_code(row.get('branch_code'), row.get('tax_branch_code'))
         if branch_code:
-            vals['branch_code'] = str(branch_code)[:5]
+            vals['branch_code'] = branch_code
 
     # ฟิลด์เสริม (ใส่เฉพาะเมื่อมีจริง)
     if 'fax' in partner_fields and row.get('fax'):

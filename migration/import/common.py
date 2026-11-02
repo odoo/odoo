@@ -9,8 +9,10 @@
     * คอมเมนต์/ข้อความ log ทั้งหมดเป็นภาษาไทย
 """
 import os
+import re
 import sys
 import csv
+import hashlib
 import datetime
 import logging
 
@@ -112,9 +114,24 @@ class Stats:
 # --------------------------------------------------------------------------
 # External ID / upsert
 # --------------------------------------------------------------------------
+# ฟิลด์ name ของ ir.model.data ห้ามมีช่องว่าง/อักขระพิเศษ
+_SAFE_ID = re.compile(r'^[0-9A-Za-z_]+$')
+_SLUG = re.compile(r'[^0-9A-Za-z_]+')
+
+
 def get_xmlid(model, legacy_id):
-    """สร้าง External ID รูปแบบ __import15__.<model>.<legacy_id>."""
-    return '%s.%s.%s' % (MODULE_PREFIX, model.replace('.', '_'), legacy_id)
+    """สร้าง External ID รูปแบบ __import15__.<model>.<legacy_id>.
+
+    ค่าอ้างอิงของเดิมที่เป็นตัวเลข/ตัวอักษรล้วนจะคงรูปเดิมไว้ (เพื่อความเข้ากันได้
+    กับข้อมูลที่นำเข้าไปแล้ว) ส่วนค่าที่มีช่องว่าง/อักขระพิเศษจะถูกแปลงเป็น slug
+    แล้วต่อท้ายด้วย hash สั้น ๆ เพื่อกันการชนกัน (เช่น m² กับ m³)
+    """
+    key = str(legacy_id)
+    if not _SAFE_ID.match(key):
+        digest = hashlib.md5(key.encode('utf-8')).hexdigest()[:8]
+        slug = _SLUG.sub('_', key).strip('_') or 'x'
+        key = '%s_%s' % (slug, digest)
+    return '%s.%s.%s' % (MODULE_PREFIX, model.replace('.', '_'), key)
 
 
 def _changed_values(model, rec, vals):
@@ -139,11 +156,12 @@ def _changed_values(model, rec, vals):
     return changed
 
 
-def upsert(model, legacy_id, vals):
+def upsert(model, legacy_id, vals, context=None):
     """สร้างหรืออัปเดต record โดยอ้างอิง External ID (รันซ้ำได้ไม่เกิดข้อมูลซ้ำ)
 
     คืนค่า (record, action) โดย action เป็น 'created' หรือ 'updated'
     ในโหมด dry-run จะไม่เขียนข้อมูล และคืนค่า (None, 'skipped')
+    context: dict ของ context เพิ่มเติม เช่น {'no_vat_validation': True}
     """
     xmlid = get_xmlid(model, legacy_id)
     if DRY_RUN:
@@ -153,6 +171,8 @@ def upsert(model, legacy_id, vals):
     env = odoo_env()
     imd = env['ir.model.data']
     Model = env[model]
+    if context:
+        Model = Model.with_context(**context)
 
     existing_id = imd._xmlid_to_res_id(xmlid, raise_if_not_found=False)
     if existing_id:

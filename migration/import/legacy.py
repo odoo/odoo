@@ -7,7 +7,11 @@
 
 ค่าการเชื่อมต่ออ่านจาก environment variable:
     OD15_HOST, OD15_PORT, OD15_DB, OD15_USER, OD15_PASSWORD
-(ค่า host/port/db มีค่าเริ่มต้นให้ ถ้าไม่ตั้ง)
+(ค่า host/port/db/user มีค่าเริ่มต้นให้ ถ้าไม่ตั้ง)
+
+หมายเหตุ: คลัสเตอร์ PostgreSQL ของโปรเจกต์นี้มี role เดียวคือ `odoo`
+จึงตั้งเป็นค่าเริ่มต้นของ user ส่วนรหัสผ่านไม่เก็บไว้ในโค้ดเลย — ปล่อยให้
+libpq หยิบจากไฟล์ .pgpass ของผู้ใช้เอง (ถ้าตั้ง OD15_PASSWORD จะใช้ค่านั้นแทน)
 """
 import os
 import logging
@@ -18,11 +22,13 @@ import psycopg2.extras
 
 _logger = logging.getLogger('migration.legacy')
 
-# ค่าเริ่มต้นที่สมเหตุสมผลสำหรับ host/port/db (ส่วน user/password ต้องตั้งเอง)
+# ค่าเริ่มต้นที่สมเหตุสมผลสำหรับ host/port/db/user
+# (รหัสผ่านจงใจไม่ใส่ค่าเริ่มต้น — ใช้ .pgpass ของผู้ใช้)
 _DEFAULTS = {
     'host': 'localhost',
     'port': '5432',
     'dbname': 'od15_stage',
+    'user': 'odoo',
 }
 
 
@@ -32,7 +38,7 @@ def connection_params():
         'host': os.environ.get('OD15_HOST', _DEFAULTS['host']),
         'port': os.environ.get('OD15_PORT', _DEFAULTS['port']),
         'dbname': os.environ.get('OD15_DB', _DEFAULTS['dbname']),
-        'user': os.environ.get('OD15_USER'),
+        'user': os.environ.get('OD15_USER') or _DEFAULTS['user'],
         'password': os.environ.get('OD15_PASSWORD'),
     }
 

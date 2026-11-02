@@ -2,8 +2,9 @@
 """ล้างข้อมูลทดสอบ (seed) ออกจากฐานข้อมูล Odoo 19 ก่อนทำ ETL
 
 หลักการ:
-    * ลบเฉพาะ record ที่มี External ID ของชุด seed (__seed19__) และชุดนำเข้าเดิม
-      (__import15__) เท่านั้น จึงไม่แตะข้อมูลจากโมดูลมาตรฐาน/OCA
+    * ลบ record ที่มี External ID ของชุด seed (__seed19__) และชุดนำเข้าเดิม
+      (__import15__) รวมถึง "ผลพลอยได้" ของข้อมูล seed ที่ไม่มี External ID
+      ของตัวเอง (ดูรายการใน SWEEP_MODELS) จึงไม่แตะข้อมูลจากโมดูลมาตรฐาน/OCA
     * เก็บไว้: ผู้ใช้ (login/รหัสผ่าน), กลุ่มสิทธิ์, บริษัท, สกุลเงิน, ผังบัญชี,
       ภาษี, สมุดรายวัน, เงื่อนไขชำระ, โมดูลที่ติดตั้ง และโครงสร้าง ir.* ทั้งหมด
     * ทำงานผ่าน ORM เท่านั้น (ไม่ใช้ SQL ตรง) และรันซ้ำได้อย่างปลอดภัย
@@ -49,6 +50,7 @@ PROTECTED_MODELS = {
 # โมเดลธุรกรรมที่เป็น "ผลพลอยได้" ของข้อมูล seed (ไม่มี External ID ของตัวเอง)
 # เช่น ใบรับ/ใบจ่ายสินค้า, การเคลื่อนไหวสต็อก, log การใช้รถ, สัญญาขายที่ระบบสร้างให้
 # ต้องลบก่อน record แม่ (partner/vehicle/product/order/project) จึงจะลบได้
+# ลำดับในลิสต์ = ลำดับที่พยายามลบ (ลูกก่อนพ่อ) และวนซ้ำหลายรอบจนไม่เหลือ
 SWEEP_MODELS = [
     'fleet.vehicle.assignation.log',
     'fleet.vehicle.odometer',
@@ -60,6 +62,29 @@ SWEEP_MODELS = [
     'stock.lot',
     'stock.quant',
     'od19.sales.contract',
+    # ตารางของโมดูล custom ที่อ้างอิงคู่ค้า/แผนก
+    'od19.service.card',
+    'od19.warranty.claim',
+    'od19.iso.customer.satisfaction',
+    'od19.iso.supplier.evaluation',
+    'od19.iso.audit',
+    # เอกสารซื้อ/ขาย + การเงิน
+    'purchase.order.line',
+    'purchase.order',
+    'sale.order.line',
+    'sale.order',
+    'account.payment',
+    'account.move',
+    # ใบเบิกค่าใช้จ่าย (อ้างอิงพนักงาน/สินค้า)
+    'hr.expense',
+    # โครงการ (สินค้า/พนักงาน/แผนกของระบบไม่ลบ — record ของ seed ถูกลบด้วย External ID แล้ว)
+    'project.task',
+    'project.project',
+    # รถ (ลบหลังเอกสารที่อ้างถึง)
+    'fleet.vehicle',
+    'fleet.vehicle.model',
+    # คู่ค้าทดสอบ (ยกเว้นคู่ค้าของบริษัท/ผู้ใช้ที่ถูกป้องกันไว้ใน _sweep_models)
+    'res.partner',
 ]
 
 
@@ -96,17 +121,25 @@ def _prepare_unlink(rec, model):
             rec.button_draft()
         elif model == 'sale.order' and rec.state not in ('draft', 'cancel'):
             rec.action_cancel()
-        elif model == 'purchase.order' and rec.state not in ('draft', 'cancel'):
+        elif model == 'purchase.order' and rec.state != 'cancel':
+            # Odoo 19 บังคับให้ purchase.order ต้องอยู่สถานะ cancel เท่านั้นจึงจะลบได้
+            # (draft ลบไม่ได้ ต่างจาก sale.order ที่ลบได้ทั้ง draft และ cancel)
             rec.button_cancel()
         elif model == 'account.payment' and rec.state != 'draft':
             rec.action_draft()
+        elif model == 'hr.expense' and rec.state != 'draft':
+            # Odoo ห้ามลบใบเบิกที่ approved/posted — ต้องกลับเป็น draft ก่อน
+            if hasattr(rec, 'action_reset_expense_to_draft'):
+                rec.action_reset_expense_to_draft()
+            else:
+                rec.write({'state': 'draft'})
     except Exception as exc:
         lines = str(exc).strip().splitlines()
         return (lines[0] if lines else exc.__class__.__name__)[:220]
     return None
 
 
-def _sweep_models(env, errors):
+def _sweep_models(env, errors, protected_partners=None):
     """ลบข้อมูลธุรกรรมผลพลอยได้ทั้งหมด (ทำซ้ำจนไม่เหลือ) — คืนจำนวนที่ลบได้."""
     total = 0
     for attempt in range(1, MAX_PASSES + 1):
@@ -115,9 +148,13 @@ def _sweep_models(env, errors):
             if model not in env:
                 continue
             recs = env[model].sudo().search([])
+            if model == 'res.partner' and protected_partners:
+                # ห้ามลบคู่ค้าของบริษัท/ผู้ใช้ (ผูกกับ login)
+                recs = recs - env['res.partner'].sudo().browse(list(protected_partners))
             for rec in recs:
                 try:
                     with env.cr.savepoint():
+                        _prepare_unlink(rec, model)
                         rec.unlink()
                     removed += 1
                 except Exception as exc:
@@ -193,7 +230,7 @@ def main():
     errors = {}
     # ลบผลพลอยได้ก่อน (stock move/picking, log รถ, สัญญาที่ระบบสร้าง) เพื่อปลดล็อก record แม่
     if PHASE in ('all', 'sweep'):
-        _sweep_models(env, errors)
+        _sweep_models(env, errors, protected_partners)
 
     if PHASE == 'sweep':
         log("โหมด sweep — จบการทำงาน")
