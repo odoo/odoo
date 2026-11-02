@@ -12,7 +12,7 @@ class WebsocketController(Controller):
     @route('/websocket', type="http", auth="public", cors='*', websocket=True)
     def websocket(self, version=None):
         """
-        Handle the websocket handshake, upgrade the connection if successfull.
+        Handle the websocket handshake, upgrade the connection if successful.
 
         :param version: The version of the WebSocket worker that tries to
             connect. Connections with an outdated version will result in the

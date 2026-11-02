@@ -449,7 +449,7 @@ class Websocket:
             frame.payload = frame.payload.encode('utf-8')
         elif frame.opcode is Opcode.TEXT and not isinstance(frame.payload, Buffer):
             # Only encode what's not been encoded by the caller already, this way, the
-            # dispatcher can encode the payload once, to avoid repeating the work accross
+            # dispatcher can encode the payload once, to avoid repeating the work across
             # all subscribed websockets.
             frame.payload = orjson.dumps(frame.payload)
         else:
@@ -594,7 +594,7 @@ class Websocket:
         This method is a simple rate limiter designed not to allow
         more than one request by `RL_DELAY` seconds. `RL_BURST` specify
         how many requests can be made in excess of the given rate at the
-        begining. When requests are received too fast, raises the
+        beginning. When requests are received too fast, raises the
         `RateLimitExceededException`.
         """
         now = time.time()
@@ -825,7 +825,7 @@ class WebsocketConnectionHandler:
     @classmethod
     def open_connection(cls, request, version):
         """
-        Open a websocket connection if the handshake is successfull.
+        Open a websocket connection if the handshake is successful.
         :return: Response indicating the server performed a connection
         upgrade.
         :raise: UpgradeRequired if there is no intersection between the
