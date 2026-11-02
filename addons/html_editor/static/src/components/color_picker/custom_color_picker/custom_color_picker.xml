@@ -17,7 +17,7 @@
             <div t-ref="this.colorSliderRef" class="o_color_slider position-relative" t-on-pointerdown="this.onPointerDownSlider">
                 <div t-ref="this.colorSliderPointerRef" class="o_slider_pointer" tabindex="0" t-on-keydown="this.onSliderKeydown" role="slider" aria-label="Hue" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="360"/>
             </div>
-            <div t-ref="this.opacitySliderRef" class="o_opacity_slider position-relative" t-if="!this.props.noTransparency" t-on-pointerdown="this.onPointerDownOpacitySlider">
+            <div t-ref="this.opacitySliderRef" class="o_preview_alpha_background o_opacity_slider position-relative" t-if="!this.props.noTransparency" t-on-pointerdown="this.onPointerDownOpacitySlider">
                 <div t-ref="this.opacitySliderPointerRef" class="o_opacity_pointer" tabindex="0" t-on-keydown="this.onOpacitySliderKeydown" role="slider" aria-label="Opacity" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100"/>
             </div>
         </div>

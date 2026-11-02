@@ -7,7 +7,7 @@
             <t t-set-slot="fixedButton">
                 <div class="d-flex">
                     <div class="btn my-2 w-100"
-                        t-attf-class="o_hb_button_style_preview btn-{{this.state.currentButtonType}} pe-none {{this.state.hasAlpha[this.state.currentButtonType] ? 'o_hb_has_alpha' : ''}}"
+                        t-attf-class="o_preview_alpha_background o_hb_button_style_preview btn-{{this.state.currentButtonType}} pe-none {{this.state.hasAlpha[this.state.currentButtonType] ? 'o_hb_has_alpha' : ''}}"
                         t-att-style="this.state.buttonStyles[this.state.currentButtonType]"
                         t-out="this.state.currentButtonTypeData.label"
                     />
@@ -17,7 +17,7 @@
                 <BuilderSelectItem actionValue="opt.type" preview="opt.type !== 'custom'">
                     <div class="d-flex gap-2">
                         <div class="btn my-2" aria-hidden="true"
-                            t-attf-class="o_hb_button_style_preview btn-{{opt.type}} pe-none {{this.state.hasAlpha[opt.type] ? 'o_hb_has_alpha' : ''}}"
+                            t-attf-class="o_preview_alpha_background o_hb_button_style_preview btn-{{opt.type}} pe-none {{this.state.hasAlpha[opt.type] ? 'o_hb_has_alpha' : ''}}"
                             t-att-style="this.state.buttonStyles[opt.type]">
                             Aa
                         </div>
