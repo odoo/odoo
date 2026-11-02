@@ -10,7 +10,7 @@ import psycopg2
 import pytz
 
 from odoo import api, Command, fields, models
-from odoo.tools import OrderedSet, is_list_of
+from odoo.tools import OrderedSet, clean_context, is_list_of
 from odoo.tools.translate import _, code_translations, LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -581,7 +581,7 @@ class IrFieldsConverter(models.AbstractModel):
                 if name_create_enabled_fields.get(field.name):
                     try:
                         with self.env.cr.savepoint():
-                            id, _name = RelatedModel.name_create(name=value)
+                            id, _name = RelatedModel.with_context(clean_context(self.env.context)).name_create(name=value)
                     except (Exception, psycopg2.IntegrityError):
                         error_msg = _("Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
         else:
