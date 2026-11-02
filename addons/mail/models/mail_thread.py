@@ -1580,7 +1580,11 @@ class MailThread(models.AbstractModel):
         #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
         #   type="text/html"
         if message.get_content_maintype() == 'text':
-            body = message.get_content()
+            try:
+                body = message.get_content()
+            except LookupError:
+                payload = message.get_payload(decode=True)
+                body = payload.decode("utf-8", errors="replace") if payload else ""
             if message.get_content_type() == 'text/plain':
                 # text/plain -> <pre/>
                 body = append_content_to_html('', body, preserve=True)
