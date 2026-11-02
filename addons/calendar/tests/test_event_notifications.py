@@ -9,7 +9,8 @@ from odoo import fields
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
-from odoo.addons.mail.tests.common import MailCase
+from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
+from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE  # noqa: OLS03003
 
 
 class CalendarMailCommon(MailCase, CronMixinCase):
@@ -46,6 +47,11 @@ class CalendarMailCommon(MailCase, CronMixinCase):
         )
         cls.user_admin = cls.env.ref('base.user_admin')
         cls.user_root = cls.env.ref('base.user_root')
+        cls.event_follower = cls.env['res.partner'].create([{
+            'name': 'event Follower',
+            'email': 'follower@test.lan',
+            'phone': '+32 81 212 220'
+        }])
 
         cls.customers = cls.env['res.partner'].create([
             {
@@ -59,6 +65,13 @@ class CalendarMailCommon(MailCase, CronMixinCase):
                 'name': 'Alias Email',
             },
         ])
+        cls.portal_user = mail_new_test_user(
+            cls.env,
+            name='Portal',
+            login='portal',
+            email='portal@example.com',
+            groups='base.group_portal',
+        )
 
 
 @tagged('post_install', '-at_install', 'mail_flow')
@@ -144,9 +157,10 @@ class TestEventNotifications(CalendarMailCommon):
     @freeze_time('2018')  # class event has hardcoded dates
     def test_message_invite(self):
         self.env['ir.config_parameter'].sudo().set_param('mail.mail_force_send_limit', None)
+        self.event.message_subscribe(partner_ids=self.event_follower.ids)
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.partner_ids = self.partner
 
@@ -154,12 +168,37 @@ class TestEventNotifications(CalendarMailCommon):
         email_partner = self.env['res.partner'].create({'name': 'bob invitee', 'email': 'bob.invitee@test.lan'})
         with self.mock_mail_gateway(mail_unlink_sent=False):
             self.event.partner_ids += email_partner
-        self.assertMailMail(email_partner, 'sent', author=self.env.ref('base.partner_root'))
+        bob_invite = self.assertMailMail(email_partner, 'sent', author=self.env.ref('base.partner_root')).mail_message_id
+
+        # Verify the follower was notified for the reply of invitee
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.format_and_process(
+                MAIL_TEMPLATE,
+                email_partner.email_formatted,   # email_from
+                self.user.email_formatted,       # to
+                subject=f'Re: {bob_invite.subject}',
+                extra=f'References: {bob_invite.message_id}',
+                target_model='mail.message',
+                target_field='subject',
+            )
+        reply_msg = self.event.message_ids[0]
+        follower_notifictaion = reply_msg.notification_ids.filtered(lambda n: n.res_partner_id == self.event_follower)
+        self.assertTrue(follower_notifictaion, 'Follower should be notified when invitee replies to invitation')
+
+        # portal user can't read the invite message
+        portal_partner = self.portal_user.partner_id
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            self.event.partner_ids += portal_partner
+        portal_invite = self.assertMailMail(portal_partner, 'sent', author=self.env.ref('base.partner_root')).mail_message_id
+
+        readable = (bob_invite + portal_invite).with_user(self.portal_user)._filtered_access('read')
+        self.assertIn(portal_invite, readable)  # portal_user can read own invitation mail
+        self.assertNotIn(bob_invite, readable)  # portal_user can't read other attendee invitation mail
 
     def test_message_invite_allday(self):
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.env['calendar.event'].with_context(mail_create_nolog=True).create([{
                 'name': 'Meeting',
@@ -210,7 +249,7 @@ class TestEventNotifications(CalendarMailCommon):
         "Invitation to Presentation of the new Calendar"
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.start = fields.Datetime.now() + relativedelta(days=1)
 
@@ -226,7 +265,7 @@ class TestEventNotifications(CalendarMailCommon):
 
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.start = fields.Datetime.now() + relativedelta(days=1)
 
@@ -239,7 +278,7 @@ class TestEventNotifications(CalendarMailCommon):
         self.event.partner_ids = self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.start_date += relativedelta(days=-1)
 
@@ -282,7 +321,7 @@ class TestEventNotifications(CalendarMailCommon):
         self.event.partner_ids -= self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
             'message_type': 'user_notification',
-            'subtype': 'mail.mt_note',
+            'subtype': 'mail.mt_comment',
         }):
             self.event.write({
                 'start': self.event.start - relativedelta(days=1),

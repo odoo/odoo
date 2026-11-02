@@ -203,6 +203,7 @@ class CalendarAttendee(models.Model):
                     email_layout_xmlid='mail.mail_notification_light',
                     attachment_ids=attachment_ids,
                     force_send=False,
+                    subtype_xmlid='mail.mt_comment',
                 )
         # batch sending at the end
         if force_send and len(notified_attendees) < force_send_limit:
