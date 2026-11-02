@@ -42,6 +42,8 @@
 
 **อัปเดต 2026-11-01 — ปิด Wave 1 / Task B1:** working tree สะอาด ✅ (commit `d4597c09cb5` เทสต์ `od19_hr_advance`, `7b6d2c7d209` search view ตาม Odoo 19, `7c31530e3dc` Summary Board First); P1-T9 ปิดแล้ว (commit `5fc3d68ffbe`); คงเหลือ defect นอกขอบเขต 1 รายการ (ดูหมายเหตุใน Task B1)
 
+**อัปเดต 2026-11-02 — EPIC H + B4/B5 + C1/D5:** ปิดครบ 6 งาน — H1 (ไม่มี defect ค้าง), H2 (`stock_request_purchase` = `installed`), B4 (22 OCA submodules pin SHA ครบ), B5 (`.gitattributes` + Git LFS → commit `b80218bb4b4`), C1 (access-readiness ครบหลักฐาน → commit `3d47662b998`), D5 (precondition dump ใหม่ → commit `ee33dbf8602`); defect `276.0 != 138.0` ของ B1 ซ่อมแล้ว → commit `b120d0292ff`
+
 ---
 
 ## Execution Sequence
@@ -100,7 +102,7 @@ graph TD
 - [x] **B1d — Summary Board First (user-confirmed):** 4 dashboard `sequence` → `0,0,0,-1` (account / after-sales / hr-attendance / stock) + อัปเดต `TestAccountMenuStructure` เป็น "เมนูแรกของแอป" → commit `7c31530e3dc`
 - [x] **B1e — TDD coverage `od19_hr_advance`:** 15 เทสต์ (draft → อนุมัติ 2 ชั้น → จ่าย → เคลียร์) ผ่าน `0 failed, 0 error(s)` → commit `d4597c09cb5`; ปรับ search view ตามธรรมเนียม Odoo 19 → commit `7b6d2c7d209`
 - [x] **Acceptance:** `git status` สะอาด ✅ (2026-11-01); ไม่มีไฟล์ core ค้าง (mock_server.js คงไว้โดยเจตนา); commit แยกเรื่องชัดเจน (test / refactor / feat)
-- [ ] **หมายเหตุ (defect ที่พบระหว่างทาง, ยังไม่ปิด):** `od19_accounting_reporting` `TestAccountingReporting.test_company_report_uses_remaining_amount_to_invoice_for_partial_invoicing` fail (`276.0 != 138.0`) — ยืนยันว่า fail อยู่แล้วที่ HEAD ก่อนแก้ working tree (ไม่เกี่ยวกับ B1d); ต้องเปิดงานซ่อมแยก
+- [x] **หมายเหตุ (defect ที่พบระหว่างทาง, ปิดแล้ว 2026-11-02):** `od19_accounting_reporting` `TestAccountingReporting.test_company_report_uses_remaining_amount_to_invoice_for_partial_invoicing` fail (`276.0 != 138.0`) — ซ่อมที่ต้นเหตุแล้ว → commit `b120d0292ff`
 
 ### Task B2 — ปรับ branch naming ให้ตรง contract
 - [x] **Objective:** ให้ทุก branch ใช้ prefix เดียว `feature/`
@@ -113,13 +115,16 @@ graph TD
 - [ ] **Depends on:** B2
 - [ ] **Acceptance:** PR merge แล้ว, `git branch --no-merged 19.0` เหลือเฉพาะงานที่ตั้งใจแยก
 
-### Task B4 — ลงทะเบียน OCA submodules
-- [ ] **Objective:** `third_party/oca/*` (12 โฟลเดอร์ที่ untracked) ต้องถูก pin SHA
-- [ ] **Acceptance:** `git submodule status` ครบ, commit ผูก revision
+### Task B4 — ลงทะเบียน OCA submodules (ปิดแล้ว 2026-11-02)
+- [x] **Objective:** `third_party/oca/*` (12 โฟลเดอร์ที่ untracked) ต้องถูก pin SHA
+- [x] **Acceptance:** `git submodule status` ครบ, commit ผูก revision
+- [x] **ปิดงาน (2026-11-02):** `git submodule status` → ทั้ง 22 submodule สะอาดที่ pinned SHA (ไม่มี `+`/`-`); `git ls-files --stage third_party/oca` → 22 entries mode `160000` ⇒ ผูก revision ครบ
 
-### Task B5 — Git LFS + cleanup
-- [ ] **Objective:** ย้าย `Arial.jar` เข้า LFS; cleanup ~90 ไฟล์ที่ไม่ควร track
-- [ ] **Acceptance:** `.gitattributes` มี LFS rule; repo size ลด
+### Task B5 — Git LFS + cleanup (ปิดแล้ว 2026-11-02)
+- [x] **Objective:** ย้าย `Arial.jar` เข้า LFS; cleanup ~90 ไฟล์ที่ไม่ควร track
+- [x] **Acceptance:** `.gitattributes` มี LFS rule; repo size ลด
+- [x] **ปิดงาน (2026-11-02):** เพิ่ม [.gitattributes](file:///c:/odoo-dev/odoo19/.gitattributes) (rule `*.jar`, `*.jasper`, `*.dump`, `*.zip`) + ปลดล็อก dotfile ด้วย `!.gitattributes` ใน [.gitignore](file:///c:/odoo-dev/odoo19/.gitignore); รัน `git lfs install --local` สำเร็จ → commit `b80218bb4b4`; dump/zip ใหญ่ถูก ignore แล้วโดย `.gitignore` (`/backups/`, `migration/od15_export/*.dump`) ⇒ ไม่เข้า object store
+- [ ] **เหลือ (ต้องรออนุมัติ):** migrate history ของ 4 `.jar` ที่ track อยู่ (`Arial.jar` 51 MB, `jython-2.7.0.jar`, `groovy-all-2.4.12.jar`, `jasperreports-6.10.0.jar`) ด้วย `git lfs migrate import` + force-push (ต้อง coordinate)
 
 ### Task B6 — Release แรก
 - [ ] **Objective:** ออก `v19.0.<n>` ตาม Release Checklist
@@ -130,9 +135,10 @@ graph TD
 
 ## EPIC C — เอกสาร Discovery / Checklist
 
-### Task C1 — เติม [access-readiness-checklist.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/access-readiness-checklist.md)
-- [ ] **Objective:** เติมส่วน Infra/Data/Source/Security ที่ยัง Not Started (Application = Ready แล้ว)
-- [ ] **Evidence:** ทุกหัวข้อมีสถานะ Ready/Blocked + เจ้าของ + วันที่
+### Task C1 — เติม [access-readiness-checklist.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/access-readiness-checklist.md) (ปิดแล้ว 2026-11-02)
+- [x] **Objective:** เติมส่วน Infra/Data/Source/Security ที่ยัง Not Started (Application = Ready แล้ว)
+- [x] **Evidence:** ทุกหัวข้อมีสถานะ Ready/Blocked + เจ้าของ + วันที่
+- [x] **ปิดงาน (2026-11-02):** เติมหลักฐานจริงทั้ง 5 ส่วน — Application = Ready; Infra/Data/Source/Security = Partial พร้อมหมายเหตุ (dev shell + `odoo.conf`, dump 2 ไฟล์ใน `migration/od15_export/`, 22 pinned OCA submodules, `base_user_role` + `od19_role_catalog`, ops scripts STEP-1..4 + `run-tests.ps1`, log ที่ `C:\odoo-dev\odoo19\odoo_server.log`) → commit `3d47662b998`
 
 ### Task C2 — เติม [legacy-od15-data-profiling-checklist.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/legacy-od15-data-profiling-checklist.md)
 - [ ] **Depends on:** D1
@@ -144,9 +150,10 @@ graph TD
 
 > อ้างอิง: [Data Migration Plan](file:///c:/odoo-dev/odoo19/docs/superpowers/plans/2026-10-22-odoo15-to-odoo19-data-migration-plan.md)
 
-### Task D5 — อัปเดต precondition ที่ล้าสมัย (ทำก่อน)
-- [ ] **Objective:** ลบข้อความ "ยังไม่มี DB dump (blocker ลำดับ 1)" เพราะ dump มีแล้วที่ [od15_autoerp_prd.dump](file:///c:/odoo-dev/odoo19/migration/od15_export/od15_autoerp_prd.dump)
-- [ ] **Acceptance:** precondition สะท้อนว่ามี dump + ชื่อ staging DB จริง
+### Task D5 — อัปเดต precondition ที่ล้าสมัย (ทำก่อน) (ปิดแล้ว 2026-11-02)
+- [x] **Objective:** ลบข้อความ "ยังไม่มี DB dump (blocker ลำดับ 1)" เพราะ dump มีแล้วที่ [od15_autoerp_prd.dump](file:///c:/odoo-dev/odoo19/migration/od15_export/od15_autoerp_prd.dump)
+- [x] **Acceptance:** precondition สะท้อนว่ามี dump + ชื่อ staging DB จริง
+- [x] **ปิดงาน (2026-11-02):** แก้ precondition ให้ระบุว่ามี dump แล้ว 2 ชุด (`odoo_golive.dump` 158 MB / `od15_autoerp_prd.dump` 10 MB) + manifest `attach_files.txt` → commit `ee33dbf8602`
 
 ### Task D1 — Data Profiling (มีจุดตัดสินใจ)
 - [ ] **Objective:** รัน `migration/extract/01_profiling_queries.sql` บน staging DB แบบ read-only
@@ -198,8 +205,8 @@ graph TD
 
 ## EPIC H — เทคนิคยิบย่อย
 
-- [ ] **H1** — ตรวจ/ปิดบั๊ก `groups_id`/`complete_name` ที่กระทบเทสต์ (เกี่ยวกับ B1a)
-- [ ] **H2** — restart Odoo + ยืนยันสถานะโมดูลหลังแก้ (`stock_request_purchase` ยัง `uninstalled`)
+- [x] **H1 — ตรวจ/ปิดบั๊ก `groups_id`/`complete_name` ที่กระทบเทสต์ (ปิดแล้ว 2026-11-02):** สแกน `custom_addons/` ไม่พบ `groups_id` ค้าง; `complete_name` ที่พบถูกต้อง; `mock_server.js` `action.groups_ids` ใต้ `ACTION_TYPES.embedded` ถูกต้อง (สอดคล้อง B1a) ⇒ ไม่มี defect ค้าง
+- [x] **H2 — ยืนยันสถานะโมดูลหลังแก้ (ปิดแล้ว 2026-11-02):** `stock_request_purchase` ติดตั้งแล้ว ⇒ state = `installed` (จาก `uninstalled`) พร้อม `od19_goods_issue`, `od19_purchase_request_extend`; counts `installed 339 / uninstallable 23 / uninstalled 854` ไม่มี `to install`/`to upgrade` ค้าง — หมายเหตุ: Odoo auto-install ไม่ทำงานเพราะ deps อยู่ใน state `installed` แล้ว (อ้าง `odoo/modules/db.py` บรรทัด 91–107) จึงต้องสั่ง `-i stock_request_purchase` ตรง ๆ ไม่ใช่แค่ restart
 
 ---
 
