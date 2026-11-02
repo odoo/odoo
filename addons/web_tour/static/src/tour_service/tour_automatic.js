@@ -77,6 +77,7 @@ export class TourAutomatic {
                             }, 20000);
                         }
                         await step.doAction();
+                        step.element = null;
                         if (this.debugMode) {
                             console.log(trigger);
                             if (step.skipped) {
