@@ -53,7 +53,7 @@ class TestStockMoveLine(TestStockCommon):
 
     def test_pick_from_1(self):
         """ test quant display_name """
-        self.assertEqual(self.quant.display_name, 'BWH/Stock/Shelf 1 - Lot 1 - Pack A - The Owner')
+        self.assertEqual(self.quant.display_name, 'BWH/Stock/Shelf 1 - Pack A - Lot 1 - The Owner')
 
     def test_pick_from_2(self):
         """ Create a move line from a quant"""
