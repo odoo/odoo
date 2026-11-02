@@ -471,7 +471,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'need_sync': False,
             'base_event_id': base_event.id,
             'calendar_event_ids': [(4, base_event.id)],
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         recurrence._apply_recurrence()
         for event in recurrence.calendar_event_ids:
@@ -954,7 +954,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         }
         self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent([values]), self.env.user.primary_calendar_id)
         recurrence = self.env['calendar.recurrence'].search([('google_id', '=', values.get('id'))])
-        self.assertEqual(recurrence.event_tz, 'Pacific/Auckland', "The Google event Timezone should be saved on the recurrency")
+        self.assertEqual(recurrence.recurrence_tz, 'Pacific/Auckland', "The Google event Timezone should be saved on the recurrency")
         self.assertGoogleAPINotCalled()
 
     @patch_api
@@ -1578,7 +1578,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'name': 'coucou',
             'start': datetime(2021, 2, 15, 7, 0, 0),
             'stop': datetime(2021, 2, 15, 9, 0, 0),
-            'event_tz': 'Europe/Brussels',
+            'recurrence_tz': 'Europe/Brussels',
             'need_sync': False,
             'partner_ids': [(6, 0, [other_user.partner_id.id])]
         })
@@ -2705,7 +2705,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'updated': self.now,
         }]
         recurrence = self.env['calendar.recurrence']._sync_google2odoo(GoogleEvent(values), self.env.user.primary_calendar_id)
-        self.assertEqual(recurrence.event_tz, 'America/Argentina/Buenos_Aires')
+        self.assertEqual(recurrence.recurrence_tz, 'America/Argentina/Buenos_Aires')
         # Local cutoff is Oct 25 -> last valid Thursday is Oct 19
         self.assertEqual(recurrence.until, date(2023, 10, 25), "until must be the local date, not the UTC date")
         event_starts = recurrence.calendar_event_ids.mapped('start')

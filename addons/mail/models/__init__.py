@@ -19,6 +19,9 @@ from . import mail_thread_main_attachment
 from . import mail_thread_subject_suggested
 from . import mail_tracking_duration_mixin
 from . import template_reset_mixin
+from . import recurrence_utils
+from . import recurrence_rule_mixin
+from . import recurrence_instance_mixin
 
 # mail models
 from . import fetchmail

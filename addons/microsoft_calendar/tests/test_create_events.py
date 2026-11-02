@@ -187,7 +187,7 @@ class TestCreateEvents(TestCommon):
 
         mock_insert.assert_not_called()
         self.assertEqual(record.name, "recurring_event")
-        self.assertEqual(recurrence.name, "Every 2 Days for 7 events")
+        self.assertEqual(recurrence.name, "Every 2 Days for 7 occurrences")
         self.assertEqual(len(recurrence.calendar_event_ids), 7)
 
         # >>> second phase: sync with organizer outlook calendar

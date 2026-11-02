@@ -47,7 +47,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'interval': 1,
             'end_type': 'count',
             'count': 3,
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         self.assertEqual(detached_events, self.event, "It should be detached from the recurrence")
         self.assertFalse(self.event.recurrence_id, "It should be detached from the recurrence")
@@ -67,7 +67,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'tue': True,
             'end_type': 'count',
             'count': 2,
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         events = recurrence.calendar_event_ids
@@ -86,7 +86,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'tue': True,
             'end_type': 'count',
             'count': 2,
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         events = recurrence.calendar_event_ids
@@ -103,7 +103,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'interval': 2,
             'end_type': 'end_date',
             'until': datetime(2019, 11, 15),
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         events = recurrence.calendar_event_ids
@@ -121,7 +121,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'day': 27,
             'end_type': 'count',
             'count': 3,
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         events = recurrence.calendar_event_ids
@@ -140,7 +140,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'day': 31,
             'end_type': 'count',
             'count': 3,
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         events = recurrence.calendar_event_ids
@@ -164,7 +164,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'weekday': 'TUE',
             'end_type': 'end_date',
             'until': date(2020, 3, 27),
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         events = recurrence.calendar_event_ids
@@ -185,7 +185,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'byday': '-1',
             'end_type': 'end_date',
             'until': date(2020, 1, 15),
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         events = recurrence.calendar_event_ids
@@ -201,7 +201,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'rrule_type': 'yearly',
             'end_type': 'count',
             'count': 2,
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
         })
         events = self.event.recurrence_id.calendar_event_ids
         self.assertEqual(len(events), 2, "It should have 3 events in the recurrence")
@@ -220,7 +220,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'mon': True,
             'end_type': 'count',
             'count': '2',
-            'event_tz': 'America/New_York',  # DST change on 2002/10/27
+            'recurrence_tz': 'America/New_York',  # DST change on 2002/10/27
         })
         recurrence = self.env['calendar.recurrence'].search([('base_event_id', '=', self.event.id)])
         self.assertEventDates(recurrence.calendar_event_ids, [
@@ -242,7 +242,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'sun': True,
             'end_type': 'count',
             'count': '2',
-            'event_tz': 'America/New_York'  # DST change on 2002/4/7
+            'recurrence_tz': 'America/New_York'  # DST change on 2002/4/7
         })
         events = self.event.recurrence_id.calendar_event_ids
         self.assertEqual(events.mapped('duration'), [1, 1])
@@ -265,7 +265,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'sun': True,
             'end_type': 'count',
             'count': '2',
-            'event_tz': 'America/New_York'  # DST change on 2002/4/7
+            'recurrence_tz': 'America/New_York'  # DST change on 2002/4/7
         })
         events = self.event.recurrence_id.calendar_event_ids
         self.assertEqual(events.mapped('duration'), [1, 1])
@@ -288,7 +288,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'mon': True,
             'end_type': 'count',
             'count': 2,
-            'event_tz': 'Europe/Brussels'  # DST change on 2020/3/23
+            'recurrence_tz': 'Europe/Brussels'  # DST change on 2020/3/23
         })
         events = self.event.recurrence_id.calendar_event_ids
         self.assertEventDates(events, [
@@ -339,7 +339,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'count': 2, # To have the base event and the unique recurrence event
             'month_by': 'date',
             'day': 27,
-            'event_tz': timezone,
+            'recurrence_tz': timezone,
         })
 
         # What we expect:
@@ -376,7 +376,7 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             'interval': 1,
             'end_type': 'count',
             'count': 2,
-            'event_tz': 'UTC',
+            'recurrence_tz': 'UTC',
             'allday': True,
         }).recurrence_id
         events = recurrence.calendar_event_ids
@@ -430,7 +430,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             'interval': 1,
             'end_type': 'count',
             'count': 3,
-            'event_tz': 'Etc/GMT-4',
+            'recurrence_tz': 'Etc/GMT-4',
         })
         cls.recurrence = event.recurrence_id
         cls.events = event.recurrence_id.calendar_event_ids.sorted('start')
@@ -694,7 +694,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             'interval': 1,
             'end_type': 'count',
             'count': 3,
-            'event_tz': 'Etc/GMT-4',
+            'recurrence_tz': 'Etc/GMT-4',
             'allday': True,
         }).recurrence_id
         events = recurrence.calendar_event_ids.sorted('start')
@@ -792,7 +792,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
             'interval': 1,
             'end_type': 'count',
             'count': 3,
-            'event_tz': 'Etc/GMT-4',
+            'recurrence_tz': 'Etc/GMT-4',
         })
         # Tuesday datetime(2019, 10, 22, 1, 0) - Archived
         # Wednesday datetime(2019, 10, 23, 1, 0)
@@ -847,7 +847,7 @@ class TestUpdateMultiDayWeeklyRecurrentEvents(TestRecurrentEvents):
             'interval': 1,
             'end_type': 'count',
             'count': 3,
-            'event_tz': 'Etc/GMT-4',
+            'recurrence_tz': 'Etc/GMT-4',
         })
         cls.recurrence = event.recurrence_id
         cls.events = event.recurrence_id.calendar_event_ids.sorted('start')
@@ -924,7 +924,7 @@ class TestUpdateMonthlyByDay(TestRecurrentEvents):
             'month_by': 'day',
             'weekday': 'TUE',
             'byday': '3',
-            'event_tz': 'Etc/GMT-4',
+            'recurrence_tz': 'Etc/GMT-4',
         })
         cls.recurrence = event.recurrence_id
         cls.events = event.recurrence_id.calendar_event_ids.sorted('start')
@@ -964,7 +964,7 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
             'count': 3,
             'month_by': 'date',
             'day': 22,
-            'event_tz': 'Etc/GMT-4',
+            'recurrence_tz': 'Etc/GMT-4',
         })
         cls.recurrence = event.recurrence_id
         cls.events = event.recurrence_id.calendar_event_ids.sorted('start')
@@ -1001,59 +1001,62 @@ class TestUpdateMonthlyByDate(TestRecurrentEvents):
         ])
 
     def test_recurring_ui_options_daily(self):
-        with Form(self.env['calendar.event']) as calendar_form:
-            calendar_form.name = 'test recurrence daily'
-            calendar_form.recurrency = True
-            calendar_form.rrule_type_ui = 'daily'
-            calendar_form.end_type = 'count'
-            calendar_form.count = 2
-            calendar_form.start = datetime(2019, 6, 23, 16)
-            calendar_form.stop = datetime(2019, 6, 23, 17)
-            event = calendar_form.save()
-            self.assertEventDates(event.recurrence_id.calendar_event_ids, [
-                (datetime(2019, 6, 23, 16), datetime(2019, 6, 23, 17)),
-                (datetime(2019, 6, 24, 16, 0), datetime(2019, 6, 24, 17)),
-            ])
-            self.assertEqual(event.rrule_type_ui, 'daily')
-            self.assertEqual(event.count, 2)
+        event = self.env['calendar.event'].create({
+            'name': 'test recurrence daily',
+            'recurrency': True,
+            'rrule_type': 'daily',
+            'interval': 1,
+            'end_type': 'count',
+            'count': 2,
+            'start': datetime(2019, 6, 23, 16),
+            'stop': datetime(2019, 6, 23, 17),
+        })
+        self.assertEventDates(event.recurrence_id.calendar_event_ids, [
+            (datetime(2019, 6, 23, 16), datetime(2019, 6, 23, 17)),
+            (datetime(2019, 6, 24, 16, 0), datetime(2019, 6, 24, 17)),
+        ])
+        self.assertEqual(event.rrule_type_ui, 'daily')
+        self.assertEqual(event.count, 2)
 
     def test_recurring_ui_options_monthly(self):
-        with Form(self.env['calendar.event']) as calendar_form:
-            calendar_form.name = 'test recurrence monthly'
-            calendar_form.recurrency = True
-            calendar_form.rrule_type_ui = 'monthly'
-            calendar_form.end_type = 'count'
-            calendar_form.count = 2
-            calendar_form.start = datetime(2019, 6, 11, 16)
-            calendar_form.stop = datetime(2019, 6, 11, 17)
-            calendar_form.day = 11
-            event = calendar_form.save()
-            self.assertEventDates(event.recurrence_id.calendar_event_ids, [
-                (datetime(2019, 6, 11, 16), datetime(2019, 6, 11, 17)),
-                (datetime(2019, 7, 11, 16), datetime(2019, 7, 11, 17)),
-            ])
-            self.assertEqual(event.rrule_type_ui, 'monthly')
-            self.assertEqual(event.count, 2)
+        event = self.env['calendar.event'].create({
+            'name': 'test recurrence monthly',
+            'recurrency': True,
+            'rrule_type': 'monthly',
+            'interval': 1,
+            'month_by': 'date',
+            'end_type': 'count',
+            'count': 2,
+            'start': datetime(2019, 6, 11, 16),
+            'stop': datetime(2019, 6, 11, 17),
+            'day': 11,
+        })
+        self.assertEventDates(event.recurrence_id.calendar_event_ids, [
+            (datetime(2019, 6, 11, 16), datetime(2019, 6, 11, 17)),
+            (datetime(2019, 7, 11, 16), datetime(2019, 7, 11, 17)),
+        ])
+        self.assertEqual(event.rrule_type_ui, 'monthly')
+        self.assertEqual(event.count, 2)
 
     def test_recurring_ui_options_yearly(self):
-        with Form(self.env['calendar.event']) as calendar_form:
-            calendar_form.name = 'test recurrence yearly'
-            calendar_form.recurrency = True
-            calendar_form.rrule_type_ui = 'yearly'
-            calendar_form.end_type = 'count'
-            calendar_form.count = 2
-            calendar_form.start = datetime(2019, 6, 11, 16)
-            calendar_form.stop = datetime(2019, 6, 11, 17)
-            event = calendar_form.save()
-            self.assertEventDates(event.recurrence_id.calendar_event_ids, [
-                (datetime(2019, 6, 11, 16), datetime(2019, 6, 11, 17)),
-                (datetime(2020, 6, 11, 16), datetime(2020, 6, 11, 17)),
-            ])
-            # set to custom because a yearly recurrence, becomes a monthly recurrence every 12 months
-            self.assertEqual(event.rrule_type_ui, 'yearly')
-            self.assertEqual(event.count, 2)
-            self.assertEqual(event.interval, 1)
-            self.assertEqual(event.rrule_type, 'yearly')
+        event = self.env['calendar.event'].create({
+            'name': 'test recurrence yearly',
+            'recurrency': True,
+            'rrule_type': 'yearly',
+            'interval': 1,
+            'end_type': 'count',
+            'count': 2,
+            'start': datetime(2019, 6, 11, 16),
+            'stop': datetime(2019, 6, 11, 17),
+        })
+        self.assertEventDates(event.recurrence_id.calendar_event_ids, [
+            (datetime(2019, 6, 11, 16), datetime(2019, 6, 11, 17)),
+            (datetime(2020, 6, 11, 16), datetime(2020, 6, 11, 17)),
+        ])
+        self.assertEqual(event.rrule_type_ui, 'yearly')
+        self.assertEqual(event.count, 2)
+        self.assertEqual(event.interval, 1)
+        self.assertEqual(event.rrule_type, 'yearly')
 
     def test_attendees_state_after_update(self):
         """ Ensure that after the organizer updates a recurrence, the attendees state will be pending and current user accepted. """
