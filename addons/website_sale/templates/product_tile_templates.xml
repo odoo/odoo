@@ -56,11 +56,12 @@
                 <t t-else="">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="product_price" aria-label="Price information">
-                        <t t-set="hide_price" t-value="(
-                            not template_price_vals['price_reduce']
-                            and website.prevent_sale
-                            and website._prevent_product_sale(product, True)
-                        )"/>
+                        <t
+                            t-set="hide_price"
+                            t-value="website._hide_product_price(
+                                product, not template_price_vals['price_reduce']
+                            )"
+                        />
                         <t t-if="not hide_price">
                             <span
                                 class="mb-0 fw-bold"
