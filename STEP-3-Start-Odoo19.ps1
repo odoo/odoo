@@ -1,10 +1,10 @@
-﻿<#
+<#
 .SYNOPSIS
     STEP-3 : Start Odoo 19 + Nginx + Cloudflare DDNS (สคริปต์ start ตัวเดียวของโปรเจกต์)
 
 .DESCRIPTION
     รวมสคริปต์ start ทั้งหมดไว้ที่เดียว (แทน start_odoo.ps1 และ start-odoo19.bat ที่ยกเลิกไปแล้ว)
-    ก่อนเริ่มระบบจะเคลียร์ทุก process / service / database session ที่ "ไม่ใช่" odoo19_pdev
+    ก่อนเริ่มระบบจะเคลียร์ทุก process / service / database session ที่ "ไม่ตรง" รูปแบบ odoo19_p*
     เพราะ Odoo server หรือ connection ที่ค้างอยู่บนฐานข้อมูลอื่นเป็นสาเหตุหลักที่ทำให้เครื่องค้าง
 
     ขั้นตอน:
@@ -31,7 +31,7 @@ $ErrorActionPreference = "Continue"   # ทำงานกับ service/process
 
 # ===================== ค่าคงที่ของโปรเจกต์ =====================
 $Root       = $PSScriptRoot
-$TargetDb   = "odoo19_pdev"                        # ฐานข้อมูลเดียวที่อนุญาตให้ใช้
+$TargetDb   = "^odoo19_p"                          # รูปแบบ DB ที่อนุญาต (regex: ขึ้นต้นด้วย odoo19_p)
 $PgService  = "postgresql-x64-16"                  # PostgreSQL service เดียวที่เก็บไว้
 $Config     = Join-Path $Root "odoo.conf"
 $OdooLog    = Join-Path $Root "odoo_server.log"
@@ -91,7 +91,7 @@ function Test-Http([string]$Url, [int]$TimeoutSec = 5) {
 
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "  STEP-3 : Start Odoo 19" -ForegroundColor Cyan
-Write-Host "  Database : $TargetDb" -ForegroundColor Cyan
+Write-Host "  Database : $TargetDb (pattern)" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
 if (-not (Test-Path -LiteralPath $Python))  { Write-Host "[ERROR] ไม่พบ python ของ venv19: $Python" -ForegroundColor Red; if (-not $NoPause) { Read-Host "`nกด Enter เพื่อปิด" }; exit 1 }
@@ -203,7 +203,7 @@ $psql = Get-PsqlPath
 if ($psql) {
     $env:PGPASSWORD = $dbPass
     $sql = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity " +
-           "WHERE datname IS NOT NULL AND datname <> '$TargetDb' AND pid <> pg_backend_pid();"
+           "WHERE datname IS NOT NULL AND datname !~ '$TargetDb' AND pid <> pg_backend_pid();"
     & $psql -U $dbUser -h localhost -d postgres -t -c $sql 2>$null | Out-Null
     Remove-Item Env:\PGPASSWORD -ErrorAction SilentlyContinue
     Write-Host "  ตัด session ของฐานข้อมูลอื่นแล้ว (เหลือเฉพาะ $TargetDb)" -ForegroundColor Green
