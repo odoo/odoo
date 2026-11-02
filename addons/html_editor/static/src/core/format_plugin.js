@@ -202,7 +202,7 @@ export class FormatPlugin extends Plugin {
             /^(\s|\n)+$/.test(node.nodeValue) && !isFormatted(node, { editable: this.editable });
         const targetedTextNodes = targetedNodes.filter(
             (node) =>
-                isTextNode(node) &&
+                (isTextNode(node) || node.nodeName === "T") &&
                 !isZwnbsp(node) &&
                 !isEmptyTextNode(node) &&
                 !isNonFormattedWhiteSpaces(node) &&
@@ -278,7 +278,7 @@ export class FormatPlugin extends Plugin {
 
         const cursor = this.dependencies.selection.preserveSelection();
 
-        const selectedTextNodes = /** @type { Text[] } **/ (
+        let selectedTextNodes = /** @type { Node[] } **/ (
             this.dependencies.selection.getTargetedNodes().filter((n) => {
                 if (!this.dependencies.selection.areNodeContentsFullySelected(n)) {
                     return false;
@@ -301,6 +301,10 @@ export class FormatPlugin extends Plugin {
                 return isRelevantTextNode || isFakeBr || followsBr;
             })
         );
+
+        for (const processor of this.getResource("targeted_nodes_processors")) {
+            selectedTextNodes = processor(selectedTextNodes);
+        }
 
         const textNodesToFormat = selectedTextNodes.filter(
             (n) => this.checkPredicates("is_formattable_node_predicates", n) ?? true
