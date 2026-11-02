@@ -28,7 +28,7 @@
     }
 }
 .o_shape_bubble_1 {
-    top: -870px;
+    top: -909px;
     right: -450px;
 }
 
@@ -80,10 +80,6 @@
     [name="company_address_list"] {
         margin-bottom: 0;
         line-height: $line-height-sm;
-
-        p {
-            margin-bottom: 0;
-        }
     }
 }
 
@@ -97,8 +93,8 @@
     }
 }
 
-.o_layout_dual_footer {
-    .o_dual_shape_1 {
-        top: 22mm;
-    }
+.o_layout_dual_footer .o_dual_shapes {
+    height: 22 * $o-report-printed-mm;
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
 }

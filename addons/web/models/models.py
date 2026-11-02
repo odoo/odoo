@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 
 import babel
 import babel.dates
+import lxml.html
 import psycopg2
 
 from odoo import api, models
@@ -2474,6 +2475,17 @@ class ResCompany(models.Model):
         data = self._get_asset_style_raw()
         if data.content != asset_attachment.raw.content:
             asset_attachment.raw = data
+
+    @api.model
+    def _get_report_line_count(self, html):
+        """Count the non-empty lines an html block prints: each line break and
+        block element starts a new line."""
+        root = lxml.html.fragment_fromstring(' '.join(html.split()), create_parent='div')
+        for node in root.iter('br', 'address', 'blockquote', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'p', 'pre', 'tr'):
+            node.tail = '\n' + (node.tail or '')
+            if node.tag != 'br':
+                node.text = '\n' + (node.text or '')
+        return len([line for line in root.text_content().splitlines() if line.strip()])
 
 
 class RecordSnapshot(dict):
