@@ -24,6 +24,8 @@ def patch_lxml():
         orig_document_fromstring = lxml.html.document_fromstring
 
         def _wrap_text_node(html):
+            if not html:
+                return html
             if isinstance(html, bytes):
                 if not RE_STARTS_WITH_TAG_BYTES.match(html):
                     return b"<p>%s</p>" % html.lstrip()
