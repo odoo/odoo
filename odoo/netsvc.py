@@ -75,8 +75,11 @@ def init_logger():
     # reportlab does a bunch of bytes/str mixing in a hashmap
     warnings.filterwarnings('ignore', category=BytesWarning, module='reportlab.platypus.paraparser')
 
-    # need to be adapted later but too muchwork for this pr.
-    warnings.filterwarnings('ignore', r'^datetime.datetime.utcnow\(\) is deprecated and scheduled for removal in a future version.*', category=DeprecationWarning)
+    # fixed in openpyxl 3.1.3 (trixie, resolute)
+    warnings.filterwarnings(
+        'ignore', r'^datetime.datetime.utcnow\(\) is deprecated and scheduled for removal in a future version.*',
+        category=DeprecationWarning, module="openpyxl"
+    )
 
     # pkg_ressouce is used in google-auth < 1.23.0 (removed in https://github.com/googleapis/google-auth-library-python/pull/596)
     # unfortunately, in ubuntu jammy and noble, the google-auth version is 1.5.1

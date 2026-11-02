@@ -193,7 +193,7 @@ class MailMail(models.Model):
         months_limit = self.env['ir.config_parameter'].sudo().get_int("mass_mailing.cancelled_mails_months_limit", 6)
         if months_limit <= 0:
             return
-        history_deadline = datetime.datetime.utcnow() - relativedelta(months=months_limit)  # 6 months history will be kept
+        history_deadline = fields.Datetime.now() - relativedelta(months=months_limit)  # 6 months history will be kept
         canceled_mails = self.with_context(active_test=False).search([('state', '=', 'cancel'), ('write_date', '<=', history_deadline)], order="id asc", limit=10000)
         # about linked mail_message: 'is_notification' is in charge of choosing to
         # delete the mail.message or not, see MailMail.unlink()
@@ -240,7 +240,7 @@ class MailMail(models.Model):
                 ('state', '=', 'outgoing'),
                 '|',
                    ('scheduled_date', '=', False),
-                   ('scheduled_date', '<=', datetime.datetime.utcnow()),
+                   ('scheduled_date', '<=', fields.Datetime.now()),
         ]
         if 'filters' in self.env.context:
             domain.extend(self.env.context['filters'])
@@ -343,7 +343,7 @@ class MailMail(models.Model):
         if isinstance(scheduled_datetime, datetime.datetime):
             parsed_datetime = scheduled_datetime
         elif isinstance(scheduled_datetime, datetime.date):
-            parsed_datetime = datetime.combine(scheduled_datetime, datetime.time.min)
+            parsed_datetime = datetime.datetime.combine(scheduled_datetime, datetime.time.min)
         else:
             try:
                 parsed_datetime = parse(scheduled_datetime, yearfirst=True)
