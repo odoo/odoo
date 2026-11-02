@@ -183,3 +183,14 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             'base_amount': price_vals['price_amount'],  # Pre-discount amount
         }]
         return price_vals
+
+    def _get_invoice_line_vals(self, line, line_id, taxes_vals):
+        # EXTENDS account.edi.xml.ubl_bis3
+        vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
+        price_vals = vals['price_vals']
+        # For negative unit prices, ubl_bis3 inverts the sign of the net price (BT-146), turning it into
+        # a plain float: restore the 6 decimals rounding and align the gross price (BT-148) on it (BR-28).
+        price_vals['price_amount'] = FloatFmt(price_vals['price_amount'], min_dp=1, max_dp=6)
+        for allowance_charge_vals in price_vals['allowance_charge_vals_list']:
+            allowance_charge_vals['base_amount'] = price_vals['price_amount']
+        return vals
