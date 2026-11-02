@@ -363,7 +363,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="partner_name" options="{'no_create_edit': True}" placeholder="e.g. John Doe"/>
+                    <field name="partner_name" options="{'no_create_edit': True}" required="1" placeholder="e.g. John Doe"/>
                     <field name="job_id" options="{'no_open': True}"/>
                     <field name="company_id" invisible="1"/>
                 </group>
