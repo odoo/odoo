@@ -5394,17 +5394,63 @@ test(`calendar create record with default properties`, async () => {
     expect(`.modal [name='properties']`).toHaveText("Hello");
 });
 
-test(`calendar show past events with background blur`, async () => {
-    mockDate("2016-12-14 09:00:00");
+for (const scale of ["day", "week", "month"]) {
+    test(`calendar past events remain as readable as ongoing and future events in ${scale} view`, async () => {
+        mockDate("2016-12-13 12:00:00", 0);
+        Event._records = [
+            {
+                id: 1,
+                name: "Past event",
+                start: "2016-12-13 09:00:00",
+                stop: "2016-12-13 10:00:00",
+            },
+            {
+                id: 2,
+                name: "Ongoing event",
+                start: "2016-12-13 11:00:00",
+                stop: "2016-12-13 13:00:00",
+            },
+            {
+                id: 3,
+                name: "Future event",
+                start: "2016-12-13 14:00:00",
+                stop: "2016-12-13 15:00:00",
+            },
+            {
+                id: 4,
+                name: "Past all-day event",
+                start: "2016-12-12 00:00:00",
+                stop: "2016-12-12 00:00:00",
+                is_all_day: true,
+            },
+            {
+                id: 5,
+                name: "Current all-day event",
+                start: "2016-12-13 00:00:00",
+                stop: "2016-12-13 00:00:00",
+                is_all_day: true,
+            },
+            {
+                id: 6,
+                name: "Future all-day event",
+                start: "2016-12-14 00:00:00",
+                stop: "2016-12-14 00:00:00",
+                is_all_day: true,
+            },
+        ];
 
-    await mountView({
-        resModel: "event",
-        type: "calendar",
-        arch: `<calendar date_start="start" mode="week"/>`,
+        await mountView({
+            resModel: "event",
+            type: "calendar",
+            arch: `<calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="${scale}"/>`,
+        });
+        expect(".o_event").toHaveCount(scale === "day" ? 4 : 6);
+        expect(".o_event.o_past_event").toHaveCount(0);
+        for (const event of queryAll(".o_event")) {
+            expect(getComputedStyle(event, "::after").content).toBe("none");
+        }
     });
-    expect(`.o_event`).toHaveCount(5);
-    expect(`.o_calendar_event.o_past_event`).toHaveCount(4);
-});
+}
 
 test.tags("desktop");
 test(`calendar sidepanel can be collapsed/expanded`, async () => {

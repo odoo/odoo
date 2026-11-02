@@ -44,18 +44,6 @@ export class ResourceCalendarAttendanceCalendarCommonRenderer extends CalendarCo
     /**
      * @override
      */
-    eventClassNames({ el, event }) {
-        const classes = super.eventClassNames(...arguments);
-        const pastEventClass = classes.indexOf("o_past_event");
-        if (pastEventClass != -1 && luxon.DateTime.now() <= event.end) {
-            classes.splice(pastEventClass, 1);
-        }
-        return classes;
-    }
-
-    /**
-     * @override
-     */
     onEventDragStart(info) {
         this.popover.close();
         if (info.event.allDay) {
