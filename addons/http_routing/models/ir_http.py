@@ -497,6 +497,11 @@ class IrHttp(models.AbstractModel):
                     if request.lang != request.env['ir.http']._get_default_lang():
                         path = f'/{request.lang.url_code}{path}'
                     redirect = request.redirect_query(path, request.httprequest.args, code=301)
+                    # The target slug depends on the record's current name:
+                    # it changes if the record is renamed. A browser must
+                    # not cache it, or it could keep "redirecting" to a now
+                    # outdated slug (which 301s back here), looping forever.
+                    redirect.headers['Cache-Control'] = 'no-store'
                     werkzeug.exceptions.abort(redirect)
 
     @classmethod
