@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_product_search" name="Product Search">
+        <div class="s_product_search my-2" data-snippet="s_product_search">
+            <div class="s_product_search_content d-flex gap-2 flex-column min-w-0">
+                <div class="s_product_search_search_row d-flex flex-column gap-2">
+                    <div class="s_product_search_search min-w-0">
+                        <label class="s_product_search_field_label form-label mb-1 d-empty-none"/>
+                        <div class="position-relative">
+                            <input type="text" class="s_product_search_input form-control pe-5" placeholder="Search..."/>
+                            <i class="oi position-absolute top-50 end-0 translate-middle-y me-3 text-muted pe-none" data-icon="search" role="img"/>
+                        </div>
+                    </div>
+                    <div class="s_product_search_tags_wrap d-flex flex-column gap-2 min-w-0">
+                        <label class="s_product_search_field_label form-label mb-1 d-empty-none"/>
+                        <div class="s_product_search_filters s_product_search_tags d-flex flex-column gap-2">
+                            <div class="dropdown s_product_search_filter_group" data-filter-key="tags">
+                                <button
+                                    type="button"
+                                    class="s_product_search_filter_btn form-select overflow-hidden d-flex justify-content-between align-items-center gap-2"
+                                    data-bs-toggle="dropdown"
+                                    data-bs-display="static"
+                                    data-bs-auto-close="outside"
+                                    aria-expanded="false"
+                                >
+                                    <span class="s_product_search_filter_label flex-shrink-0">Tags</span>
+                                    <span class="s_product_search_filter_selected text-truncate"/>
+                                </button>
+                                <div class="dropdown-menu s_product_search_filter_menu overflow-y-auto p-2 w-100"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="s_product_search_price_range d-flex flex-column gap-2">
+                    <div class="s_product_search_min_price_wrap min-w-0">
+                        <label class="s_product_search_field_label form-label mb-1 d-empty-none">Minimum price</label>
+                        <input type="number" min="0" step="0.01" class="s_product_search_min_price form-control" placeholder="$2000.00"/>
+                    </div>
+                    <div class="s_product_search_max_price_wrap min-w-0">
+                        <label class="s_product_search_field_label form-label mb-1 d-empty-none">Maximum price</label>
+                        <input type="number" min="0" step="0.01" class="s_product_search_max_price form-control" placeholder="$100,000.00"/>
+                    </div>
+                </div>
+                <div class="s_product_search_filters s_product_search_attributes d-flex flex-column gap-2"/>
+                <button class="s_product_search_btn btn btn-primary flex-shrink-0">Search</button>
+            </div>
+        </div>
+    </template>
+
+</odoo>

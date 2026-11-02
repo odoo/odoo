@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website_sale.s_product_search.attribute_filter">
+    <div
+        class="s_product_search_attribute_filter s_product_search_filter_group dropdown min-w-0"
+        t-att-data-attribute-id="attribute.id"
+        t-att-data-filter-key="'attribute_' + attribute.id"
+    >
+        <button
+            type="button"
+            class="s_product_search_filter_btn form-select overflow-hidden d-flex justify-content-between align-items-center gap-2"
+            data-bs-toggle="dropdown"
+            data-bs-display="static"
+            data-bs-auto-close="outside"
+            aria-expanded="false"
+        >
+            <span class="s_product_search_filter_label flex-shrink-0" t-out="attribute.name"/>
+            <span class="s_product_search_filter_selected text-truncate"/>
+        </button>
+        <div class="dropdown-menu s_product_search_filter_menu overflow-y-auto p-2 w-100"/>
+    </div>
+</t>
+
+<t t-name="website_sale.s_product_search.filter_items">
+    <div t-foreach="items" t-as="item" t-key="item.id" class="form-check d-flex align-items-center gap-2 mb-2">
+        <input
+            type="checkbox"
+            class="form-check-input s_product_search_filter_checkbox mt-0"
+            t-att-value="item.id"
+            t-attf-id="s_product_search_filter_#{key}_#{item.id}"
+        />
+        <label
+            class="form-check-label flex-grow-1"
+            t-attf-for="s_product_search_filter_#{key}_#{item.id}"
+            t-out="item.name"
+        />
+        <i
+            t-if="displayType === 'color'"
+            class="css_attribute_color flex-shrink-0"
+            t-attf-style="background: #{item.image ? ('url(/web/image/product.attribute.value/' + item.id + '/image); background-size: cover') : (item.html_color || item.name)}"
+        />
+        <div
+            t-elif="displayType === 'image'"
+            t-attf-class="css_attribute_image size_small flex-shrink-0 rounded #{item.image ? '' : 'transparent'}"
+        >
+            <div
+                t-if="item.image"
+                class="o_bg_img_center w-100 h-100 rounded-1"
+                t-attf-style="background-image: url(/web/image/product.attribute.value/#{item.id}/image); background-size: cover"
+            />
+        </div>
+    </div>
+</t>
+
+</templates>

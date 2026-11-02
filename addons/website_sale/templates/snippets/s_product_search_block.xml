@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_search_block" name="Search a Product">
+    <section class="s_product_search_block pt80 pb80">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 pt16 pb16">
+                    <h2>Search a product</h2>
+                    <p>Help your visitors quickly find what they are looking for by filtering products by name, tags, price and more.</p>
+                </div>
+                <div class="col-lg-6 offset-lg-1 pt16 pb16">
+                    <t t-call="website_sale.s_product_search"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>
