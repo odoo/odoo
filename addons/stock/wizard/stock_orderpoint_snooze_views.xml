@@ -7,8 +7,10 @@
             <form string="Snooze">
                 <group>
                     <field name="orderpoint_ids" invisible="1"/> <!-- Required in view to reach the server: read by action_snooze() to write snoozed_until -->
-                    <field name="predefined_date" widget="radio"/>
-                    <field name="snoozed_until" readonly="predefined_date != 'custom'" force_save="1"/>
+                    <field name="predefined_date" widget="radio" class="o_snooze_predefined_date_radio"/>
+                    <label for="snoozed_until" class="fw-bold"/>
+                    <field name="snoozed_until" nolabel="1" readonly="predefined_date != 'custom'" force_save="1"/>
+                    <field name="reason"/>
                 </group>
                 <footer>
                     <button string="Snooze" name="action_snooze" type="object" class="btn-primary" data-hotkey="q"/>

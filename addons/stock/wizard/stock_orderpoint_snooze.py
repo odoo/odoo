@@ -16,7 +16,8 @@ class StockOrderpointSnooze(models.TransientModel):
         ('month', '1 Month'),
         ('custom', 'Custom')
     ], string='Snooze for', default='day')
-    snoozed_until = fields.Date('Snooze Date')
+    snoozed_until = fields.Date('End Date')
+    reason = fields.Char('Reason')
 
     @api.onchange('predefined_date')
     def _onchange_predefined_date(self):
@@ -30,5 +31,6 @@ class StockOrderpointSnooze(models.TransientModel):
 
     def action_snooze(self):
         self.orderpoint_ids.write({
-            'snoozed_until': self.snoozed_until
+            'snoozed_until': self.snoozed_until,
+            'snooze_reason': self.reason,
         })
