@@ -2639,3 +2639,22 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             self.assertEqual(leave.number_of_days, 5)
             self.assertEqual(allocation.virtual_remaining_leaves, 5,
                 'A validated future leave should already reduce the allocation remaining balance')
+
+    def test_update_leave_dates_with_string_values(self):
+        """
+        Updating the leave period with string datetime values should correctly determine the requested dates.
+        """
+        leave = self.env['hr.leave'].create({
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': date(2026, 11, 3),
+            'request_date_to': date(2026, 11, 3),
+        })
+
+        leave.write({
+            'date_from': '2026-11-09 23:30:00',
+            'date_to': '2026-11-10 16:00:00',
+        })
+        self.assertEqual(leave.request_date_from, date(2026, 11, 10))
+        self.assertEqual(leave.request_date_to, date(2026, 11, 10))
