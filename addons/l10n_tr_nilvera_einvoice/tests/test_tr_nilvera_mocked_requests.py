@@ -143,6 +143,13 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
         )
         self.assertEqual(note, 'YALNIZ : ÜÇBINDOKUZYÜZSEKSENDOKUZ TRY OTUZÜÇ KURUS')
 
+    def test_amount_in_words_ignores_sign(self):
+        note_model = self.env["account.edi.xml.ubl.tr"]
+        try_currency = self.env.ref("base.TRY")
+        note = note_model._l10n_tr_get_amount_integer_partn_text_note(-158.40, try_currency)
+        self.assertEqual(note, note_model._l10n_tr_get_amount_integer_partn_text_note(158.40, try_currency))
+        self.assertNotIn("EKSI", note)
+
     @patch_nilvera_request
     def test_which_service_to_call(self):
         _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
