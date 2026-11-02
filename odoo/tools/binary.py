@@ -73,13 +73,14 @@ class BinaryValue(Buffer):
 
 class BinaryBytes(BinaryValue):
     """Static binary value."""
-    __slots__ = ('__checksum', '__data', '__filename')
+    __slots__ = ('__checksum', '__data', '__filename', '__mimetype')
 
     def __init__(self, data: Buffer, filename: str = ''):
         # force bytes
         self.__data = bytes(data)
         self.__filename = str(filename or '')
         self.__checksum = None
+        self.__mimetype = None
 
     @property
     def content(self):
@@ -94,6 +95,12 @@ class BinaryBytes(BinaryValue):
         if self.__checksum is None:
             self.__checksum = super().checksum
         return self.__checksum
+
+    @property
+    def mimetype(self):
+        if self.__mimetype is None:
+            self.__mimetype = super().mimetype
+        return self.__mimetype
 
     def __bool__(self):
         return bool(self.__data)
