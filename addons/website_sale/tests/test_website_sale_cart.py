@@ -203,6 +203,39 @@ class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
             self.assertEqual(sale_order.cart_quantity, 0.0)
             self.assertEqual(sale_order.order_line, SaleOrderLine)
 
+    def test_add_to_cart_fractional_linked_product_qty(self):
+        """Check that adding linked products to the cart truncates their quantity like the main
+        product's, so that a linked product can't be bought for a fraction of its price."""
+        optional_product_1, optional_product_2 = self.env['product.product'].create([{
+            'name': name,
+            'list_price': 500.0,
+            'website_published': True,
+        } for name in ("Optional Product 1", "Optional Product 2")])
+        self.product.optional_product_ids = [
+            Command.link(optional_product_1.product_tmpl_id.id),
+            Command.link(optional_product_2.product_tmpl_id.id),
+        ]
+        website = self.website.with_user(self.user_portal)
+
+        with MockRequest(website.env, website=website) as request:
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.product.product_tmpl_id.id,
+                product_id=self.product.id,
+                quantity=1,
+                linked_products=[{
+                    'product_id': prod.id,
+                    'product_template_id': prod.product_tmpl_id.id,
+                    'parent_product_template_id': self.product.product_tmpl_id.id,
+                    'quantity': quantity,
+                    'product_custom_attribute_values': [],
+                    'no_variant_attribute_value_ids': [],
+                } for prod, quantity in ((optional_product_1, 0.99), (optional_product_2, 1.99))],
+            )
+            self.assertRecordValues(request.cart.order_line, [
+                {'product_id': self.product.id, 'product_uom_qty': 1.0},
+                {'product_id': optional_product_2.id, 'product_uom_qty': 1.0},
+            ])
+
     def test_unpublished_accessory_product_visibility(self):
         # Check if unpublished product is shown to public user
         accessory_product = self.env['product.product'].create({
