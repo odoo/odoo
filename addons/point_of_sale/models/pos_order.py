@@ -1084,7 +1084,7 @@ class PosOrder(models.Model):
         for payment_id in self.payment_ids:
             is_split_transaction = payment_id.payment_method_id.split_transactions
             if is_split_transaction:
-                reversed_move_receivable_account_id = self.partner_id.property_account_receivable_id
+                reversed_move_receivable_account_id = self.partner_id.with_company(self.company_id).property_account_receivable_id
             else:
                 reversed_move_receivable_account_id = payment_id.payment_method_id.receivable_account_id or self.company_id.account_default_pos_receivable_account_id
 

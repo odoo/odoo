@@ -3488,3 +3488,26 @@ class TestPointOfSaleFlow(CommonPosTest):
 
         self.assertEqual(order.picking_ids.state, 'done')
         self.assertFalse(order.picking_ids.message_ids.filtered(lambda m: m.subtype_id == self.env.ref('mail.mt_comment')))
+
+    def test_pos_invoice_in_multiple_active_company(self):
+        company_a = self.env.company
+        company_b = self.setup_other_company(name='Company B')['company']
+        partner_a = self.env['res.partner'].create([{'name': 'Partner A'}])
+
+        order_1, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': partner_a.id,
+            },
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 20},
+            ],
+        })
+
+        self.assertEqual(order_1.state, 'paid', 'Order should be in paid state.')
+        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+        order_1.with_context(allowed_company_ids=[company_b.id, company_a.id]).action_pos_order_invoice()
+        payment_term_line = order_1.account_move.line_ids.filtered(lambda l: l.display_type == "payment_term")
+        self.assertEqual(payment_term_line.account_id.id, partner_a.property_account_receivable_id.id)
