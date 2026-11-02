@@ -85,6 +85,19 @@ class TestFlexibleResourceCalendar(TransactionCase):
         self.assertAlmostEqual(hours, 38.0, 2)
         self.assertAlmostEqual(hours_per_week[resource.id][2025, 31], 38.0, 2)
 
+        # flexible resource with only hours per week set (no hours per day):
+        # must be capped by hours_per_week / 7 per day, not treated as fully flexible
+        resource.hours_per_week = 35.0
+        resource.hours_per_day = 0.0
+        self.assertFalse(resource._is_fully_flexible())
+        start_dt = datetime(2025, 7, 28, tzinfo=UTC)
+        end_dt = datetime(2025, 8, 4, tzinfo=UTC)
+        work_intervals, hours_per_day, hours_per_week = resource._get_flexible_resource_valid_work_intervals(start_dt, end_dt)
+        hours = resource._get_flexible_resource_work_hours(work_intervals[resource.id], hours_per_day[resource.id], hours_per_week[resource.id])
+        self.assertEqual(hours_per_day[resource.id][date(2025, 7, 28)], 5.0)
+        self.assertEqual(hours_per_week[resource.id][2025, 31], 35.0)
+        self.assertEqual(hours, 35.0)
+
     def test_flexible_resource_work_intervals(self):
         start_dt = datetime(2025, 7, 28).astimezone(UTC)
         end_dt = datetime(2025, 8, 3, 17, 0).astimezone(UTC)
