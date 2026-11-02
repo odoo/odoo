@@ -2938,7 +2938,7 @@ class HrEmployee(models.Model):
         return relativedelta(target_date, self.birthday).years if self.birthday else 0
 
     def _get_versions_with_contract_overlap_with_period(self, date_from, date_to):
-        """Return the versions in effect, and in contract, at least one day of ``[date_from, date_to]``.
+        """Return the active versions in effect, and in contract, at least one day of ``[date_from, date_to]``.
 
         Within a contract, a version is effective from its ``date_version``
         (the first version from the contract start) until the day before the
@@ -2953,6 +2953,7 @@ class HrEmployee(models.Model):
         :rtype: hr.version
         """
         candidate_versions = self.version_ids.filtered_domain([
+            ('active', '=', True),
             ('contract_date_start', '!=', False), ('contract_date_start', '<=', date_to),
             '|', ('contract_date_end', '>=', date_from), ('contract_date_end', '=', False),
         ])
