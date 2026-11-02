@@ -2443,6 +2443,7 @@ class APIKeys(models.Model):
         self._check_expiration_date(expiration_date)
         # no need to clear the LRU when *adding* a key, only when removing
         k = binascii.hexlify(os.urandom(API_KEY_SIZE)).decode()
+        self.env.user.invalidate_recordset(['api_key_ids'])
         self.env.cr.execute("""
         INSERT INTO {table} (name, user_id, scope, expiration_date, key, index)
         VALUES (%s, %s, %s, %s, %s, %s)
