@@ -154,15 +154,16 @@ class PosPaymentMethod(models.Model):
             payment = self.env['pos.payment'].search([('viva_com_session_id', '=', data.get('sessionId'))], limit=1)
             transactions = payment._viva_com_verify_transactions(data.get('transactionId')) if payment else []
             mismatch = next((t for t in transactions if t['status'] == 'mismatch'), None)
-            if any(t['status'] == 'valid' for t in transactions):
+            if not payment or any(t['status'] == 'valid' for t in transactions):
                 data.update({'pos_session_id': pos_session_id, 'data_webhook': data_webhook})
                 self._send_notification(data)
             elif mismatch:
                 payment.write({'payment_status': 'error'})
+                notification = {}
                 if mismatch['currency']:
                     currency = self.env['res.currency'].search([('iso_numeric', '=', mismatch['currency'])], limit=1)
                     notification = {'currency_ask': payment.currency_id.full_name, 'currency_paid': currency.full_name or mismatch['currency']}
-                if mismatch['amount']:
+                elif mismatch['amount']:
                     notification = {'amount_ask': payment.amount, 'amount_paid': mismatch['amount']}
                 self._send_notification({
                     'pos_session_id': pos_session_id,
@@ -226,7 +227,7 @@ class PosPaymentMethod(models.Model):
         payment = self.env['pos.payment'].search([('viva_com_session_id', '=', session_id)], limit=1)
         transactions = payment._viva_com_verify_transactions(data.get('transactionId')) if payment else []
         mismatch = next((t for t in transactions if t['status'] == 'mismatch'), None)
-        if any(t['status'] == 'valid' for t in transactions):
+        if not payment or any(t['status'] == 'valid' for t in transactions):
             return data
         if mismatch:
             if mismatch['currency']:
