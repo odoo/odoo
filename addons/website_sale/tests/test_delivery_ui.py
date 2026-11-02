@@ -73,3 +73,47 @@ class TestUi(odoo.tests.HttpCase):
         })
 
         self.start_tour("/", 'check_free_delivery', login="admin")
+
+    def test_line_price_updated_on_delivery_address_change(self):
+        self.env["website"].get_current_website().show_line_subtotals_tax_selection = "tax_included"
+        address = {
+            "city": "Brussels", "zip": "1000", "phone": "+32 555 55 55 55",
+            "email": "admin@yourcompany.example.com",
+        }
+        admin_partner = self.env.ref("base.partner_admin")
+        admin_partner.write({
+            **address, "street": "Domestic Street", "country_id": self.env.ref("base.be").id,
+        })
+        self.env["res.partner"].create({
+            **address,
+            "name": "Foreign Address",
+            "type": "delivery",
+            "parent_id": admin_partner.id,
+            "street": "Foreign Street",
+            "country_id": self.env.ref("base.fr").id,
+        })
+        fpos = self.env["account.fiscal.position"].create({
+            "name": "FR",
+            "auto_apply": True,
+            "country_id": self.env.ref("base.fr").id,
+        })
+        tax_21, tax_20 = self.env["account.tax"].create([
+            {"name": "Tax 21%", "amount": 21},
+            {"name": "Tax 20%", "amount": 20, "fiscal_position_ids": fpos.ids},
+        ])
+        tax_20.original_tax_ids = tax_21
+        self.env["product.product"].create({
+            "name": "Fiscal Product",
+            "list_price": 100,
+            "taxes_id": tax_21.ids,
+            "is_published": True,
+        })
+        self.env["delivery.carrier"].create({
+            "name": "Free Delivery",
+            "fixed_price": 0,
+            "product_id": self.env["product.product"].create({
+                "name": "Free Delivery", "type": "service", "sale_ok": False,
+            }).id,
+            "is_published": True,
+        })
+        self.start_tour("/", "website_sale_line_price_after_delivery_address_change", login="admin")

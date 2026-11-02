@@ -2,6 +2,7 @@ import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
+import { formatFloat } from '@web/core/utils/numbers';
 import {
     LocationSelectorDialog
 } from '@delivery/js/location_selector/location_selector_dialog/location_selector_dialog';
@@ -377,6 +378,14 @@ export class Checkout extends Interaction {
         amountUntaxed.innerHTML = result.amount_untaxed;
         amountTax.innerHTML = result.amount_tax;
         amountTotal.forEach(total => total.innerHTML = result.amount_total);
+        const linePrices = targetEl.querySelectorAll(
+            'td[name="website_sale_cart_summary_line_price"] .oe_currency_value'
+        );
+        if (linePrices.length === result.line_prices?.length) {
+            linePrices.forEach((el, i) => el.textContent = formatFloat(
+                result.line_prices[i], { digits: [false, result.currency_precision] }
+            ));
+        }
     }
 
     /**

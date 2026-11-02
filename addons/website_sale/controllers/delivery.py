@@ -84,6 +84,11 @@ class Delivery(WebsiteSale):
             'amount_total': Monetary.value_to_html(
                 order.amount_total, {'display_currency': currency}
             ),
+            'line_prices': [
+                currency.round(line._get_cart_display_price())
+                for line in order.website_order_line
+            ],
+            'currency_precision': currency.decimal_places,
         }
 
     @route('/shop/get_delivery_rate', type='jsonrpc', auth='public', methods=['POST'], website=True)
