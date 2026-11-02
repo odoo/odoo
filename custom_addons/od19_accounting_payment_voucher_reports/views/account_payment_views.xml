@@ -168,7 +168,7 @@
 
     <!-- เมนู Vendors: ใบสำคัญจ่าย (จ่ายผู้ขาย) -->
     <record id="action_od19_payment_vouchers" model="ir.actions.act_window">
-        <field name="name">Prepare Payment / ใบสำคัญจ่าย</field>
+        <field name="name">Payment Vouchers / ใบสำคัญจ่าย</field>
         <field name="res_model">account.payment</field>
         <field name="view_mode">list,form</field>
         <field name="domain">[('payment_type', '=', 'outbound')]</field>
@@ -204,7 +204,7 @@
     </record>
 
     <menuitem id="menu_od19_prepare_payment"
-              name="Prepare Payment"
+              name="Payment Vouchers / ใบสำคัญจ่าย"
               parent="account.menu_finance_payables"
               action="action_od19_payment_vouchers"
               sequence="18"

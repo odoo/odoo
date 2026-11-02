@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <!-- Vendor side: the OCA "Billing" document is the OD15 "Prepare Payments".
+         Rename the action/menu and gate the menu behind the dedicated group. -->
+    <record id="account_billing.action_supplier_billing" model="ir.actions.act_window">
+        <field name="name">Prepare Payments</field>
+    </record>
+    <record id="account_billing.menu_action_supplier_billing" model="ir.ui.menu">
+        <field name="name">Prepare Payments</field>
+        <field name="sequence">19</field>
+        <field name="group_ids" eval="[Command.link(ref('group_od19_prepayment'))]"/>
+    </record>
+
+</odoo>

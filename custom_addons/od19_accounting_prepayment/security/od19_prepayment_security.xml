@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <!-- Dedicated privilege so the "Prepare Payments" group is shown as its own
+         block on the user form, next to the existing "Payables Control Gate". -->
+    <record id="res_groups_privilege_od19_prepayment" model="res.groups.privilege">
+        <field name="name">Payables Preparation</field>
+        <field name="category_id" ref="base.module_category_accounting"/>
+        <field name="sequence">75</field>
+    </record>
+
+    <!-- Access group gating the "Prepare Payments" menu / the vendor billing
+         document.  Members inherit the standard invoicing rights and the group
+         is granted to administrators and to every accounting manager. -->
+    <record id="group_od19_prepayment" model="res.groups">
+        <field name="name">Prepare Payments</field>
+        <field name="comment">Allows grouping vendor bills into "Prepare Payments"
+            documents and validating them before payment.</field>
+        <field name="privilege_id" ref="res_groups_privilege_od19_prepayment"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user')), Command.link(ref('account.group_account_invoice'))]"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('account.group_account_manager')), Command.link(ref('base.group_system'))]"/>
+    </record>
+
+</odoo>

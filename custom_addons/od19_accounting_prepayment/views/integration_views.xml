@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2026 OD19 -->
+<!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Vendor Bill  ->  Prepare Payments                                 -->
+    <!-- ================================================================ -->
+    <record id="view_move_form_od19_prepayment" model="ir.ui.view">
+        <field name="name">account.move.form.od19.prepayment</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_od19_open_prepayments"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-list-alt"
+                        groups="account.group_account_invoice"
+                        invisible="not od19_prepayment_count">
+                    <field name="od19_prepayment_count" widget="statinfo"
+                           string="Prepare Payments"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Purchase Order  ->  Prepare Payments                              -->
+    <!-- ================================================================ -->
+    <record id="purchase_order_form_od19_prepayment" model="ir.ui.view">
+        <field name="name">purchase.order.form.od19.prepayment</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_od19_open_prepayments"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-list-alt"
+                        groups="account.group_account_invoice"
+                        invisible="not od19_prepayment_count">
+                    <field name="od19_prepayment_count" widget="statinfo"
+                           string="Prepare Payments"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Payment (voucher)  ->  Prepare Payments                           -->
+    <!-- ================================================================ -->
+    <record id="view_account_payment_form_od19_prepayment" model="ir.ui.view">
+        <field name="name">account.payment.form.od19.prepayment</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_od19_open_prepayments"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-list-alt"
+                        groups="account.group_account_invoice"
+                        invisible="not od19_prepayment_count">
+                    <field name="od19_prepayment_count" widget="statinfo"
+                           string="Prepare Payments"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
