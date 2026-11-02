@@ -47,6 +47,7 @@ class HrEmployeeSkill(models.Model):
     def open_hr_employee_skill_modal(self):
         return {
             'type': 'ir.actions.act_window',
+            'name': self.env._('Certification'),
             'res_model': 'hr.employee.skill',
             'res_id': self.id if self else False,
             'target': 'new',
