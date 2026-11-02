@@ -156,7 +156,7 @@ class ProjectTask(models.Model):
         ('1', 'Medium priority'),
         ('2', 'High priority'),
         ('3', 'Urgent'),
-    ], default='0', index=True, string="Priority", tracking=2)
+    ], default='0', index=True, string="Priority", tracking=2, required=True)
     sequence = fields.Integer(string='Sequence', default=10, export_string_translation=False)
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
        store=True, readonly=False, ondelete='restrict', tracking=6, index=True,
