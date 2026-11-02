@@ -106,6 +106,11 @@ const TRANSLATION_PLUGINS = [
     },
 ];
 
+// On a reload action, the old builder is unmounted and the new one is mounted
+// in the same tick, and the new one has to be able to cancel the history
+// cleanup of the old one.
+let pendingHistoryCleanup = false;
+
 export class WebsiteBuilder extends Component {
     static template = "website.WebsiteBuilder";
     static components = { Builder };
@@ -134,18 +139,18 @@ export class WebsiteBuilder extends Component {
             }
             this.websiteEditService?.clearRpcCache();
             this.isGuardActive = true;
-            this.pendingHistoryCleanup = false;
+            pendingHistoryCleanup = false;
             this.pushHistoryState();
         });
         onWillUnmount(() => {
             // If the guard entry is still on top (e.g. save path).
             if (this.isGuardActive) {
-                this.pendingHistoryCleanup = true;
+                pendingHistoryCleanup = true;
                 Promise.resolve().then(() => {
-                    if (!this.pendingHistoryCleanup) {
+                    if (!pendingHistoryCleanup) {
                         return;
                     }
-                    this.pendingHistoryCleanup = false;
+                    pendingHistoryCleanup = false;
                     if (history.state?.skipRouteChange) {
                         router.skipLoad = true;
                         history.back();
