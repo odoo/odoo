@@ -1,6 +1,13 @@
+import { CircleInlineAction } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
 import { patch } from "@web/core/utils/patch";
 import { useVoiceRecorder, VoiceRecorderAction } from "./voice_recorder";
+
+class QuickVoiceStartInlineAction extends CircleInlineAction {
+    get classObj() {
+        return { ...super.classObj, "o-sendMessageActive o-text-white shadow-sm": true };
+    }
+}
 
 patch(Composer, {
     components: { ...Composer.components },
@@ -19,7 +26,23 @@ patch(Composer.prototype, {
         if (params.action.id === "voice-recording") {
             return VoiceRecorderAction;
         }
+        if (params.action.id === "voice-start" && params.inline && this.showQuickVoiceStart) {
+            return QuickVoiceStartInlineAction;
+        }
         return super.getActionComponent(params);
+    },
+    get showQuickVoiceStart() {
+        const composer = this.props.composer;
+        return Boolean(
+            composer.targetThread?.channel &&
+                this.voiceRecorder &&
+                !this.voiceRecorder.recording &&
+                !composer.voiceAttachment &&
+                this.isEmpty
+        );
+    },
+    get isSendButtonHidden() {
+        return this.showQuickVoiceStart || super.isSendButtonHidden;
     },
     get isSendButtonDisabled() {
         return this.voiceRecorder?.recording || super.isSendButtonDisabled;
