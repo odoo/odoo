@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
+from odoo.addons.payment.tests.common import PaymentCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
@@ -244,7 +245,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
+class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon, PaymentCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -559,3 +560,76 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         order.action_quotation_send()
         order.with_context(access_token=order.access_token, user=public_user).action_confirm()
         self.assertEqual(loyalty_card.points, 1)
+
+    def test_confirm_order_with_gift_card_after_failed_tx(self):
+        """ Tests workflow: submitting a failed payment, and then paying for
+            order in full with gift card(s) from website. Sale order should be confirmed
+        """
+        test_product, gift_card = self.env["product.product"].create([
+            {
+            "name": "test service",
+            "list_price": 50,
+            "type": "service",
+            "taxes_id": [],
+            }, {
+            "name": "TEST - Gift Card",
+            "list_price": 50,
+            "type": "service",
+            }
+        ])
+
+        gift_card_program = self.env["loyalty.program"].create({
+            "name": "Gift Cards",
+            "program_type": "gift_card",
+            "applies_on": "future",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {
+                "reward_point_amount": 1,
+                "reward_point_mode": "money",
+                "reward_point_split": True,
+                "product_ids": gift_card,
+            })],
+            'reward_ids': [(0, 0, {
+                "reward_type": "discount",
+                "discount_mode": "per_point",
+                "discount": 1,
+                "discount_applicability": "order",
+                "required_points": 1,
+                "description": "PAY WITH GIFT CARD",
+            })],
+        })
+
+        # Create a gift card to be used
+        self.env['loyalty.card'].create({
+            "program_id": gift_card_program.id,
+            "points": 50,
+            "code": "GIFT_CARD",
+        })
+
+        admin_partner = self.env.ref("base.user_admin").partner_id
+        sale_order = self.env["sale.order"].create({
+            "partner_id": admin_partner.id,
+            "order_line": [
+                (0, 0, {
+                    "product_id": test_product.id,
+                    "product_uom_qty": 1,
+                })
+            ]
+        })
+
+        # Failed payment transaction to attach to sale order
+        self._create_transaction("direct", state="error", partner_id=admin_partner.id, sale_order_ids=[sale_order.id])
+
+        # Apply the gift card to the order
+        self._apply_promo_code(sale_order, "GIFT_CARD")
+        self.assertEqual(sale_order.amount_total, 0)
+
+        self.authenticate("admin", "admin")
+        with MockRequest(self.env, website=self.env.ref("website.default_website")) as request:
+            request.session["sale_order_id"] = sale_order.id
+            request.session["sale_last_order_id"] = sale_order.id
+
+            WebsiteSale().shop_payment_validate()
+
+        # the sale order should be confirmed since order was paid in full
+        self.assertEqual(sale_order.state, "sale")
