@@ -370,6 +370,21 @@ class StockQuant(models.Model):
             quants_to_apply.filtered(lambda q: not q.is_outdated).action_apply_inventory()
         return quants
 
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        if not self.env.context.get('order_quants_by_location_package'):
+            return super().name_search(name=name, domain=domain, operator=operator, limit=limit)
+        domain = Domain(domain or Domain.TRUE)
+        if name:
+            domain &= Domain('display_name', operator, name)
+        quants = self.search_fetch(
+            domain,
+            ['display_name'],
+            order='location_id asc, package_id asc NULLS FIRST',
+            limit=limit,
+        )
+        return [(quant.id, quant.display_name) for quant in quants]
+
     def _load_records_create(self, values):
         """ Add default location if import file did not fill it, and keep one quant
         per line only when importing quants directly"""
@@ -631,10 +646,10 @@ class StockQuant(models.Model):
                     record.display_name = ''
                     continue
                 name = [record.location_id.display_name]
-                if record.lot_id:
-                    name.append(record.lot_id.display_name)
                 if record.package_id:
                     name.append(record.package_id.display_name)
+                if record.lot_id:
+                    name.append(record.lot_id.display_name)
                 if record.owner_id:
                     name.append(record.owner_id.name)
                 record.display_name = ' - '.join(name)
