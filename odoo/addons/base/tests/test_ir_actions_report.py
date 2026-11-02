@@ -522,7 +522,7 @@ class TestReportsRendering(TestReportsRenderingCommon):
         self.assertEqual(pages_contents, expected_pages_contents)
 
     def test_pdf_render_page_overflow(self):
-        nb_lines = 80
+        nb_lines = 100
 
         page_content = f'''
             <div class="page">

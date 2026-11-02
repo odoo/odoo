@@ -33,7 +33,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 _logger = logging.getLogger(__name__)
 
 # margin top, header spacing and margin bottom of the A4 and US Letter paperformats
-DEFAULT_PAPERFORMAT_MARGINS = (52, 52, 32)
+DEFAULT_PAPERFORMAT_MARGINS = (40, 40, 22)
 
 
 class IrActionsReport(models.Model):
