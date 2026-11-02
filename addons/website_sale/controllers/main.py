@@ -1821,7 +1821,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo.amount_total and not tx_sudo:
             return request.redirect(SHOP_PATH)
 
-        if not order_sudo.amount_total and not tx_sudo and order_sudo.state == "draft":
+        if not order_sudo.amount_total and order_sudo.state == "draft":
             # Customer didn't go through /shop/payment/transaction since there is nothing to pay,
             # confirm the order if it is valid.
             if redirect := self.env["website.checkout.step"].validate_checkout_progress(
