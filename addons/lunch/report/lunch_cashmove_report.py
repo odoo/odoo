@@ -45,7 +45,7 @@ class LunchCashmoveReport(models.Model):
                 FROM lunch_order lol
                 JOIN lunch_product lp ON lp.id = lol.product_id
                 WHERE
-                    lol.state in ('ordered', 'confirmed')
+                    lol.state in ('ordered', 'sent', 'confirmed')
                     AND lol.active = True
             );
         """, SQL.identifier(self._table), 'Order: %s x %s %s'))
