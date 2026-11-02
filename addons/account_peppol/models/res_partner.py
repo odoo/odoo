@@ -295,7 +295,7 @@ class ResPartner(models.Model):
             edi_format: self.env['res.partner']._get_edi_builder(edi_format)._get_customization_id(process_type=process_type)
             for edi_format in self.env['res.partner']._get_peppol_formats()
         }
-        format_str = ",".join(formats.values())
+        format_str = ",".join([f for f in formats.values() if f])
         participant_info = self._peppol_lookup_participant_formats_accepted(edi_identification, format_str)
 
         if participant_info is None:
