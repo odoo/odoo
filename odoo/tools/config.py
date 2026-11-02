@@ -1214,7 +1214,7 @@ class configmanager:
         except OSError as exc:
             # can't set a server secret: fallback on the admin_passwd salt
             if crypt_context.identify(self['admin_passwd']) == 'pbkdf2_sha512':
-                self._log(logging.INFO, "Can't save the server secret, fallback on %s salt.", self.options_index['admin_passwd'], exc_info=exc)
+                self._log(logging.INFO, "Can't save the server secret, fallback on %s salt.", self.options_index['admin_passwd'])
                 return pbkdf2_sha512.from_string(self['admin_passwd']).salt  # 128 bits: good enough
 
             # no admin_passwd or no salt: generate a new secret
