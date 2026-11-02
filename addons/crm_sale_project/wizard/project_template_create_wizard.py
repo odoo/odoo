@@ -38,6 +38,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
             project = self._create_project_from_template()
         else:
             values = {
+                'name': self.name,
                 'partner_id': self.partner_id.id,
                 'company_id': lead.company_id.id,
             }
