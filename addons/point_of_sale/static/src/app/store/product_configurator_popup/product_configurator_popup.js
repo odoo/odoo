@@ -140,9 +140,11 @@ export class ProductConfiguratorPopup extends Component {
         this.state = useState({
             product: this.props.product,
             payload: this.env.attribute_components,
+            renderTick: 0,
         });
         useRefListener(this.inputArea, "touchend", this.computeProductProduct.bind(this));
         useRefListener(this.inputArea, "click", this.computeProductProduct.bind(this));
+        useRefListener(this.inputArea, "input", this.computeProductProduct.bind(this));
     }
     computePayload() {
         const attribute_custom_values = [];
@@ -191,6 +193,21 @@ export class ProductConfiguratorPopup extends Component {
         }
 
         this.state.product = product;
+        this.state.renderTick++;
+    }
+    get displayName() {
+        const { attribute_value_ids, attribute_custom_values } = this.computePayload();
+        const values = attribute_value_ids
+            .map((id) => this.pos.data.models["product.template.attribute.value"].get(id))
+            .filter((value) => value?.attribute_id.create_variant === "no_variant")
+            .map((value) => {
+                const customValue = attribute_custom_values[value.id];
+                return value.is_custom && customValue
+                    ? `${value.attribute_id.name}: ${value.name}: ${customValue}`
+                    : value.name;
+            });
+        const name = this.state.product.productDisplayName;
+        return values.length ? `${name} (${values.join(", ")})` : name;
     }
     get imageUrl() {
         const product = this.props.product;

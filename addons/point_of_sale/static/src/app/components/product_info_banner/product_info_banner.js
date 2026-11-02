@@ -13,6 +13,7 @@ export class ProductInfoBanner extends Component {
     static props = {
         product: Object,
         info: { type: Object, optional: true },
+        displayName: { type: String, optional: true },
     };
 
     setup() {
