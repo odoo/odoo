@@ -1,5 +1,6 @@
 import { describe, test, expect } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { findComponent, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { ProductInterface } from "@pos_self_order/app/components/product_interface/product_interface";
 import { ProductPage } from "@pos_self_order/app/pages/product_page/product_page";
 import { setupSelfPosEnv } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
@@ -163,6 +164,28 @@ describe("getProductPrice with variants", () => {
         await Utils.selectNthAttributeValue(2, "Packaging");
         expect(comp.getProductPrice()).toBe(115);
     });
+});
+
+test("product image follows the selected variant", async () => {
+    const store = await setupSelfPosEnv();
+    const productTemplate = store.models["product.template"].get(101);
+    const comp = await mountWithCleanup(ProductPage, { props: { productTemplate } });
+    const productInterface = findComponent(comp, (c) => c instanceof ProductInterface);
+
+    await Utils.selectNthAttributeValue(2);
+    expect(productInterface.getImageUrl()).toMatch(/product\.product\/102\//);
+
+    await Utils.selectNthAttributeValue(1);
+    expect(productInterface.getImageUrl()).toMatch(/product\.product\/101\//);
+});
+
+test("product image falls back to the template without variants", async () => {
+    const store = await setupSelfPosEnv();
+    const productTemplate = store.models["product.template"].get(5);
+    const comp = await mountWithCleanup(ProductPage, { props: { productTemplate } });
+    const productInterface = findComponent(comp, (c) => c instanceof ProductInterface);
+
+    expect(productInterface.getImageUrl()).toMatch(/product\.template\/5\//);
 });
 
 test("isAddToCartEnabled", async () => {
