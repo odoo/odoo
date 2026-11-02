@@ -1736,6 +1736,12 @@
                     <separator/>
                     <!-- not_paid & partial -->
                     <filter name="open" string="To pay" domain="[('state', '!=', 'cancel'), ('payment_state', 'in', ('not_paid', 'partial')), ('move_type', '!=', 'entry')]"/>
+                    <!-- in payment -->
+                    <filter name="payment" string="In payment" domain="[
+                        ('state', '!=', 'cancel'),
+                        ('payment_state', 'in', ('in_payment')),
+                        ('move_type', '!=', 'entry')
+                        ]"/>
                     <!-- overdue -->
                     <filter name="late" string="Overdue" domain="[
                         ('invoice_date_due', '&lt;', 'today'),
