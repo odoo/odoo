@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.tests import Command, Form, tagged
 
@@ -14,7 +12,7 @@ class TestDDT(TestSaleCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data['company'].write({
-                        'vat':"IT12345670017",
+                        'vat': "IT12345670017",
                         'l10n_it_codice_fiscale': '01234560157',
                         'l10n_it_tax_system': 'RF01',
                         'street': 'Via Giovanni Maria Platina 66',
