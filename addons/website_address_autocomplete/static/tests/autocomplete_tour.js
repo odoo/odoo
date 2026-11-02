@@ -1,14 +1,24 @@
 
 import { registry } from "@web/core/registry";
-import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
-
+// No website_sale import: this module does not depend on it.
 registry.category("web_tour.tours").add('autocomplete_tour', {
     steps: () => [
-        ...tourUtils.addToCart({ productName: "A test product", expectUnloadPage: true }),
-        tourUtils.goToCart(),
-        tourUtils.goToCheckout(),
-        { // Actual test
+        {
+            content: "Add the product to the cart",
+            trigger: '.js_product button[name="add_to_cart"]',
+            run: "click",
+        }, {
+            content: "Go to cart",
+            trigger: "a sup.my_cart_quantity:text(1)",
+            run: "click",
+            expectUnloadPage: true,
+        }, {
+            content: "Checkout your order",
+            trigger: 'a[href^="/shop/checkout"]',
+            run: "click",
+            expectUnloadPage: true,
+        }, { // Actual test
             content: 'Input in Street & Number field',
             trigger: 'input[name="street"]',
             run: "edit This is a test",

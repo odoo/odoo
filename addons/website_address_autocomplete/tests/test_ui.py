@@ -45,4 +45,4 @@ class TestUI(HttpCase):
                                      'google_place_id': MOCK_GOOGLE_ID
                                  } for x in range(5)]}):
             self.env.ref('base.default_website').google_places_api_key = MOCK_API_KEY
-            self.start_tour('/shop', 'autocomplete_tour')
+            self.start_tour(self.product.website_url, 'autocomplete_tour')
