@@ -177,7 +177,7 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
                 ResCompanyUpdateDialog,
                 {
                     resId: companyId,
-                    onRecordSaved: (state) => {
+                    onRecordSaved: async (state) => {
                         const mediaList = this.platforms.map((platform) => [
                             platform,
                             state[platform],
@@ -191,6 +191,7 @@ class MassMailingSocialMediaOptionPlugin extends Plugin {
                             elements.push(this.renderSocialMediaLink(platform, href));
                         }
                         snippetEl.querySelector(LINKS_CONTAINER_SELECTOR).append(...elements);
+                        await this.config.snippetModel.reload();
                     },
                 },
                 {
