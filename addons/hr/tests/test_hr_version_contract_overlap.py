@@ -66,3 +66,15 @@ class TestHrVersionContractOverlap(TestHrCommon):
         self.assert_versions(date(2026, 1, 1), date(2026, 1, 31), v1)
         self.assert_versions(date(2026, 4, 1), date(2026, 4, 30), v2)
         self.assert_versions(date(2026, 1, 1), date(2026, 4, 30), v1 | v2)
+
+    def test_archived_version_ignored(self):
+        # an archived amendment does not end the previous version, even without active_test (as during a
+        # recomputation).
+        v1 = self.employee.version_id
+        v1.write({'date_version': date(2026, 1, 1), 'contract_date_start': date(2026, 1, 1)})
+        v2 = self.add_version(date(2026, 3, 1), date(2026, 1, 1))
+        self.add_version(date(2026, 3, 15), date(2026, 1, 1)).action_archive()
+        for active_test in (True, False):
+            versions = self.employee.with_context(active_test=active_test)._get_versions_with_contract_overlap_with_period(
+                date(2026, 4, 1), date(2026, 4, 30))
+            self.assertEqual(versions, v2, f"active_test={active_test}")
