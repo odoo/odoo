@@ -51,6 +51,29 @@ class TestL10nFrPdpXml(TestPdpMessagesCommon):
         self._send_patched(invoice)
         self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_rounding")
 
+    def test_export_negative_price_unit(self):
+        """
+        [BR-28] The Item gross price (BT-148) shall NOT be negative.
+        A line with a negative unit price is exported with a negated quantity and a positive net price (BT-146),
+        the gross price must follow the same sign inversion and the net price must keep at most 6 decimals.
+        """
+        invoice = self._create_french_invoice(invoice_line_ids=[
+            Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1.0,
+                'price_unit': 100.0,
+            }),
+            Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1.0,
+                'price_unit': -60.0,
+                'discount': 33.33,
+            }),
+        ])
+        invoice.action_post()
+        self._send_patched(invoice)
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_invoice_negative_price_unit")
+
     def test_export_credit_note_partner_fr(self):
         invoice = self._create_french_invoice()
 
