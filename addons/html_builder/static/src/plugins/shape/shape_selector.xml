@@ -20,7 +20,7 @@
                         <ImgGroup>
                             <t t-foreach="Object.entries(subgroup[1].shapes)" t-as="shape" t-key="shape_index">
                                 <div t-att-class="this.props.buttonWrapperClassName" t-on-click="this.props.onClose" t-if="!shape[1].isTechnical">
-                                    <BuilderButton type="''" action="this.props.shapeActionId" actionValue="shape[0]">
+                                    <BuilderButton type="''" className="'o_preview_alpha_background'" action="this.props.shapeActionId" actionValue="shape[0]">
                                         <div t-att-class="this.props.imgThroughDiv ? 'o_we_shape_btn_content' : ''">
                                             <t t-if="this.props.imgThroughDiv">
                                                 <div class="o_we_shape" t-att-class="this.getShapeClass(shape[0])" t-att-style="this.props.getShapeStyle(shape[0])"/>

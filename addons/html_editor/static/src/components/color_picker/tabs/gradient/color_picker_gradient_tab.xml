@@ -6,14 +6,14 @@
         t-on-mouseout="this.props.onColorPointerOut" t-on-focusin="this.props.onFocusin" t-on-focusout="this.props.onFocusout">
         <t t-set="gradientsWithOpacity" t-value="this.DEFAULT_GRADIENT_COLORS.map((gradient) => this.applyOpacityToGradient(gradient, this.props.defaultOpacity))" />
         <t t-foreach="gradientsWithOpacity" t-as="gradient" t-key="gradient">
-            <button class="w-100 m-0 o_color_button o_color_picker_button o_gradient_color_button btn p-0"
+            <button class="w-100 m-0 o_color_button o_preview_alpha_background o_color_picker_button o_gradient_color_button btn p-0"
                 t-att-class="{'selected': currentGradient?.includes(gradient)}"
                 t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
         </t>
     </div>
     <div class="px-2">
         <button t-ref="this.customGradientButton" t-attf-style="{{ currentGradient ? `background-image: ${currentGradient}` : '' }};"
-            class="w-50 btn mb-2 o_custom_gradient_button o_color_picker_button"
+            class="w-50 btn mb-2 o_custom_gradient_button o_preview_alpha_background o_color_picker_button"
             t-att-class="{'selected': currentGradient and !gradientsWithOpacity.includes(currentGradient)}"
             t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">
             Custom

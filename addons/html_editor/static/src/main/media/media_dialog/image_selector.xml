@@ -9,7 +9,7 @@
             'position-fixed': !this.state.loaded,
          }">
         <RemoveButton t-if="this.props.isRemovable" model="this.props.model" remove="() => this.remove()"/>
-        <div class="o_we_media_dialog_img_wrapper" t-att-class="{ 'bg-light': this.props.unselectable }">
+        <div class="o_preview_alpha_background o_we_media_dialog_img_wrapper" t-att-class="{ 'bg-light': this.props.unselectable }">
              <t t-set="unselectable_attachment_title">You can not use this image in a field</t>
              <img t-ref="this.image" class="o_we_attachment_highlight img img-fluid w-100" t-att-class="{ 'opacity-25': this.props.unselectable}" t-att-src="this.props.src" t-att-alt="this.props.altDescription" loading="lazy" t-att-title="this.props.unselectable ? unselectable_attachment_title : this.props.title" t-on-load="this.onImageLoaded"/>
              <a t-if="this.props.author" class="o_we_media_author position-absolute start-0 bottom-0 end-0 text-truncate text-center text-primary fs-6 bg-white-50" t-att-href="this.props.authorLink" target="_blank" t-out="this.props.author"/>
