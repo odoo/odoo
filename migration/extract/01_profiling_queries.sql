@@ -38,6 +38,9 @@
 --   - account_move_line ไม่มีคอลัมน์ account_type/internal_type ที่เก็บจริง
 --     (มีเฉพาะ related แบบไม่ store) จึงต้อง JOIN ไปที่ account_account
 --   - account_move.line.full_reconcile_id และ amount_residual มีจริง
+--   - product_product / product_template ไม่มีคอลัมน์ standard_price ตรง ๆ
+--     เพราะเป็นฟิลด์ company_dependent เก็บค่าใน ir_property
+--     (res_id = 'product.product,<id>', type = 'float')
 -- =====================================================================
 
 
@@ -255,10 +258,15 @@ ORDER BY product_count DESC, u.name;
 
 -- [3.6] สินค้าคงคลัง (storable) ที่ราคาต้นทุน = 0
 --       เกณฑ์ผ่าน: สินค้าที่มีสต็อกคงเหลือต้องมี standard_price > 0
-SELECT pp.id, pt.name AS product_name, pp.default_code, pp.standard_price
+--       หมายเหตุ: Odoo 15 เก็บ standard_price เป็น company_dependent
+--                 ใน ir_property (res_id = 'product.product,<id>') จึงต้อง JOIN
+SELECT pp.id, pt.name AS product_name, pp.default_code,
+       COALESCE(ip.value_float, 0) AS standard_price
 FROM product_product pp
 JOIN product_template pt ON pt.id = pp.product_tmpl_id
-WHERE pp.standard_price = 0
+LEFT JOIN ir_property ip ON ip.name = 'standard_price'
+     AND ip.res_id = 'product.product,' || pp.id
+WHERE COALESCE(ip.value_float, 0) = 0
   AND pt.type = 'product'
 ORDER BY pt.name;
 
