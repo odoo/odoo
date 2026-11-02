@@ -3032,13 +3032,14 @@
                         </div>
                     </div>
                     <div class="mb-3">
+                        <input type="hidden" name="url" t-att-value="path" />
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                         <div class="input-group">
-                            <input type="hidden" name="url" t-att-value="path" />
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                             <input type="password" id="password" class="form-control" required="required" name="visibility_password" />
-                          <button class="btn border border-start-0 o_show_password" type="button">
-                            <i class="oi" data-icon="visibility" role="img" aria-label="Show Password"></i>
-                          </button>
+                            <div class="visually-hidden" aria-live="polite"></div>
+                            <button class="btn border border-start-0 o_show_password" type="button" aria-controls="password" aria-label="Show password">
+                                <i class="oi" data-icon="visibility" role="img" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
                     <button type="submit" class="h4 btn btn-primary">Access to this page</button>

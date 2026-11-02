@@ -513,9 +513,10 @@
                             <input type="password" t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
                                    id="current" name="old"
                                    autocomplete="current-password" required="required"/>
-                            <button class="btn border border-start-0 o_show_password rounded-end" type="button">
-                                <i class="oi" data-icon="visibility"/>
+                            <button class="btn border border-start-0 o_show_password rounded-end" type="button" aria-controls="current" aria-label="Show password">
+                                <i class="oi" data-icon="visibility" role="img" aria-hidden="true"/>
                             </button>
+                            <div class="visually-hidden" aria-live="polite"></div>
                             <div class="invalid-feedback">
                                 <t t-out="get_error(errors, 'password.old')"/>
                             </div>
@@ -528,9 +529,10 @@
                                 t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
                                 id="new" name="new1"
                                 autocomplete="new-password" required="required"/>
-                            <button type="button" class="btn border border-start-0 o_show_password rounded-end">
-                                <i class="oi" data-icon="visibility"/>
+                            <button type="button" class="btn border border-start-0 o_show_password rounded-end" aria-controls="new" aria-label="Show password">
+                                <i class="oi" data-icon="visibility" role="img" aria-hidden="true"/>
                             </button>
+                            <div class="visually-hidden" aria-live="polite"></div>
                             <div class="invalid-feedback">
                                 <t t-out="get_error(errors, 'password.new1')"/>
                             </div>
@@ -542,9 +544,10 @@
                             <input type="password" t-attf-class="form-control {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
                                 id="new2" name="new2"
                                 autocomplete="new-password" required="required"/>
-                            <button type="button" class="btn border border-start-0 o_show_password rounded-end">
-                                <i class="oi" data-icon="visibility"/>
+                            <button type="button" class="btn border border-start-0 o_show_password rounded-end" aria-controls="new2" aria-label="Show password">
+                                <i class="oi" data-icon="visibility" role="img" aria-hidden="true"/>
                             </button>
+                            <div class="visually-hidden" aria-live="polite"></div>
                             <div class="invalid-feedback">
                                 <t t-out="get_error(errors, 'password.new2')"/>
                             </div>
