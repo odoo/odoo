@@ -210,20 +210,22 @@ class Module(models.Model):
                             )
                     module.description_html = _apply_description_images(doc)
             except FileNotFoundError:
-                overrides = {
-                    'embed_stylesheet': False,
-                    'doctitle_xform': False,
-                    'output_encoding': 'unicode',
-                    'xml_declaration': False,
-                    'file_insertion_enabled': False,
-                }
-                raw_description = module.description or ''
+                with open(os.devnull, 'w') as warning_stream:
+                    overrides = {
+                        'embed_stylesheet': False,
+                        'doctitle_xform': False,
+                        'output_encoding': 'unicode',
+                        'warning_stream': warning_stream,
+                        'xml_declaration': False,
+                        'file_insertion_enabled': False,
+                    }
+                    raw_description = module.description or ''
 
-                try:
-                    output = publish_string(source=raw_description, settings_overrides=overrides, writer=MyWriter())
-                except Exception as e:  # noqa: BLE001
-                    _logger.warning("Failed to render module description for %s: %s. Falling back to raw description.", module.name, e)
-                    output = Markup('<pre><code>%s</code></pre>') % raw_description
+                    try:
+                        output = publish_string(source=raw_description, settings_overrides=overrides, writer=MyWriter())
+                    except Exception as e:  # noqa: BLE001
+                        _logger.warning("Failed to render module description for %s: %s. Falling back to raw description.", module.name, e)
+                        output = Markup('<pre><code>%s</code></pre>') % raw_description
 
                 module.description_html = _apply_description_images(output)
 
