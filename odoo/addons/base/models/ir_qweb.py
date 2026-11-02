@@ -1130,7 +1130,7 @@ class IrQweb(models.AbstractModel):
                 views += view
             self.env['ir.cache']._set__('qweb', ir_cache_key,
                     (code, options, def_name, compiled),
-                    lambda: views._get_inheriting_views().ids, self._get_template_cache_sql(),
+                    views._get_inheriting_views().ids, self._get_template_cache_sql(),
                 )
         return self.__load_code(code, options, def_name, compiled)
 

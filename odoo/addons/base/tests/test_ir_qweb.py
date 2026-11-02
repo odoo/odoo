@@ -2843,7 +2843,7 @@ class TestQWebCodeCache(TransactionCase):
         def check_forged(generated, **values):
             with self.env.cr.savepoint(flush=False) as savepoint:
                 forge(**values)
-                with self.assertLogs('odoo.addons.base.models.ir_cache', 'WARNING'):
+                with self.assertLogs('odoo.addons.base.models.ir_cache', 'INFO'):
                     self.render(self.caller, '<div><span>callee</span></div>', generated=generated)
                 savepoint.rollback()
 
@@ -2855,11 +2855,11 @@ class TestQWebCodeCache(TransactionCase):
         # a row whose hash does not match its source is not even read
         with self.env.cr.savepoint(flush=False) as savepoint:
             forge(hash='x', data=evil)
-            with self.assertNoLogs('odoo.addons.base.models.ir_cache', 'WARNING'):
+            with self.assertNoLogs('odoo.addons.base.models.ir_cache', 'INFO'):
                 self.render(self.caller, '<div><span>callee</span></div>', generated=self.callee)
             savepoint.rollback()
         # the row itself modified, not a copy
-        with self.assertLogs('odoo.addons.base.models.ir_cache', 'WARNING'):
+        with self.assertLogs('odoo.addons.base.models.ir_cache', 'INFO'):
             self.env.cr.execute(SQL("UPDATE ir_cache SET control = %s WHERE id = %s", json.dumps(row['control'] + row['control']), row['id']))
             self.render(self.caller, '<div><span>callee</span></div>', generated=self.callee)
 

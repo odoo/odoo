@@ -6,7 +6,7 @@ import logging
 import marshal
 import sys
 import typing
-from collections.abc import Callable, Collection
+from collections.abc import Collection
 
 from odoo import api, fields, models, release
 from odoo.tools import SQL, config
@@ -141,49 +141,71 @@ class IrCache(models.Model):
             else:
                 result[key] = marshal.loads(data)
         if invalid and kind != 'ir.cache' and self._check_secret():
-            _logger.warning("ir.cache: invalid signature of the %s entries %r, ignored", kind, invalid)
+            _logger.info("ir.cache: invalid signature of the %s entries %r, ignored", kind, invalid)
         return result
 
     @api.model
-    def _set__(self, kind: str, key: str, value, control: Callable | None=None, hash: SQL | str = ''):
+    def _set__(self, kind: str, key: str, value, control: list | tuple | dict | None = None, hash: SQL | str = ''):
         """ Add a signed entry for ``value``, with ``hash``, or the hash
         computed by the expression ``hash`` from ``control``. This must be
         done in the transaction that produced ``value``: when the transaction
         is rolled back, the entry is either rolled back too, or does not match
-        its source anymore. Nothing is stored with a read-only cursor.
+        its source anymore. With a read-only cursor, the entry is stored by a
+        new cursor after the commit.
 
         :param str kind: the type of the entry, e.g. ``'qweb'``
         :param str key: the key of the entry
         :param value: any value supported by :mod:`marshal`, e.g. code objects
-        :param Callable control: returns the data identifying the source of
-            the entry (stored as JSON), e.g. view ids; only called when the
-            entry is stored; requires ``hash`` as ``SQL``
+        :param control: the data identifying the source of the entry, any
+            value supported by :mod:`json`, e.g. view ids; the expression
+            ``hash`` computes the hash from it, so it requires ``hash`` as
+            ``SQL``
         :param hash: either the SQL expression computing the hash of the
             source of the entry from ``control``, or the hash itself as a
             string; with the default, the entry is stored with an empty hash
             and never invalidated
         """
-        if self.env.cr.readonly:  # TODO: remove this code so that the cache can be used by read-only controllers
-            return
         secret = _get_ir_cache_secret(self.env)
 
-        control_data = None
         if bool(control):
             assert isinstance(hash, SQL)
-            control_data = control()
-        control_json = json.dumps(control_data)
+        control_json = json.dumps(control, sort_keys=True)
 
         hash_value = hash
         if isinstance(hash, SQL):
             [[hash_value]] = self.env.execute_query(SQL("SELECT %s FROM (SELECT %s::jsonb AS control) entry", hash, control_json))
 
         data = marshal.dumps(value)
-        message = b'\0'.join([kind.encode(), key.encode(), json.dumps(control_data, sort_keys=True).encode(), hash_value.encode(), data])  # same as in `_get`
+        message = b'\0'.join([kind.encode(), key.encode(), control_json.encode(), hash_value.encode(), data])  # same as in `_get`
+
         query = SQL("""
             INSERT INTO ir_cache (create_date, kind, key, control, hash, data, signature)
             VALUES (NOW() AT TIME ZONE 'UTC', %s, %s, %s, %s, %s, %s)
         """, kind, key, control_json, hash_value, data, hmac_lib.digest(secret, message, 'sha256'))
-        self.env.cr.execute(query)
+
+        if not self.env.cr.readonly:
+            self.env.cr.execute(query)
+            return
+
+        # A read-only cursor can not write: insert the entries with a new
+        # cursor after the commit. The hash is the one of the source seen by
+        # the transaction that produced the value: if the source changed in the
+        # meantime, the entry is simply not used.
+        queries = self.env.cr.postcommit.data.setdefault('ir.cache.queries', [])
+        if not queries:
+            registry = self.env.registry
+
+            @self.env.cr.postcommit.add
+            def insert_entries():
+                try:
+                    with registry.cursor() as cr:
+                        for query in queries:
+                            cr.execute(query)
+                except Exception:  # noqa: BLE001
+                    # the response is already computed, the entries are only a cache
+                    _logger.info("ir.cache: failed to store %s entries", len(queries), exc_info=True)
+
+        queries.append(query)
 
     @api.model
     def _gc_cache(self):
