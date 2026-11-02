@@ -11,8 +11,7 @@ import { RelativePublishTime } from "./relative_publish_time";
 const websiteSystrayRegistry = registry.category("website_systray");
 
 /**
- * Checks SEO data and notifies if either the page title or description is not
- * set.
+ * Checks SEO data and notifies if the page description is not set.
  *
  * @param {Object} seo_data - The SEO data to check.
  * @param {Component} OptimizeSEODialog - Dialog to be displayed
@@ -20,28 +19,20 @@ const websiteSystrayRegistry = registry.category("website_systray");
  * notifications and dialog.
  */
 export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
-    if (seo_data) {
-        let message;
-        if (!seo_data.website_meta_title) {
-            message = _t("Page title not set.");
-        } else if (!seo_data.website_meta_description) {
-            message = _t("Page description not set.");
-        }
-        if (message) {
-            const closeNotification = services.notification.add(message, {
-                type: "warning",
-                sticky: false,
-                buttons: [
-                    {
-                        name: _t("Optimize SEO"),
-                        onClick: () => {
-                            services.dialog.add(OptimizeSEODialog);
-                            closeNotification();
-                        },
+    if (seo_data && !seo_data.website_meta_description) {
+        const closeNotification = services.notification.add(_t("Page description not set."), {
+            type: "warning",
+            sticky: false,
+            buttons: [
+                {
+                    name: _t("Optimize SEO"),
+                    onClick: () => {
+                        services.dialog.add(OptimizeSEODialog);
+                        closeNotification();
                     },
-                ],
-            });
-        }
+                },
+            ],
+        });
     }
 }
 

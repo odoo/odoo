@@ -1789,6 +1789,7 @@ class Website(Home):
                 - `website_is_published` (bool, optional): Page publication status (for website pages).
                 - `website_indexed` (bool, optional): Whether the page is indexed (for website pages).
                 - `website_id` (int, optional): ID of the related website (for website pages).
+                - `url` (str, optional): URL of the page (for website pages).
                 - `website_meta_title` (str): Title for SEO.
                 - `website_meta_description` (str): Description for SEO.
                 - `website_meta_keywords` (str): Keywords for SEO.
@@ -1838,7 +1839,7 @@ class Website(Home):
         # Basic field values
         base_fields = ['website_meta_og_img']
         if res_model == "website.page":
-            base_fields.extend(['website_indexed', 'website_id'])
+            base_fields.extend(['website_indexed', 'website_id', 'url'])
         res.update(record.read(base_fields)[0])
 
         # Translatable fields

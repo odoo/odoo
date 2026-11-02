@@ -12,6 +12,12 @@
         padding: var(--modal-padding);
     }
 
+    /* The group owns the radius: children inherit it, and input-group squares */
+    /* the inner corners, so the URL parts read as a single field. */
+    .o_seo_url_group > * {
+        border-radius: inherit;
+    }
+
     #language-box {
         padding-right: 25px;
         background-color: white;

@@ -372,6 +372,14 @@ class WebsitePage(models.Model):
             'view_id': self.env.ref('website.view_view_form_extend').id,
         }
 
+    def action_optimize_seo(self):
+        """ Open the page in the website preview, with the SEO optimizer on
+        top of it: the optimizer checks the rendered page. """
+        self.ensure_one()
+        action = self.env['website'].get_client_action(self.url, website_id=self.website_id.id)
+        action['params']['optimize_seo'] = True
+        return action
+
     def open_website_url(self):
         default_website = self.env.ref('base.default_website', raise_if_not_found=False)
         current_website = self.env.website or self.env.website.browse(self.env.context.get('host_id'))

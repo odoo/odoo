@@ -83,7 +83,17 @@
                 Translation may differ from original content. Click on "Edit/Translate" to see most recent changes.
             </p>
         </div>
-        <h5 id="seo_images_check" class="mb-2">
+        <h5 id="seo_headings_check" class="mb-2">
+            Headings
+            <i class="oi oi-sm align-top text-muted" data-icon="help" role="img" data-tooltip-position="right" data-tooltip="Headings outline your page for search engines and screen readers. Use a single H1 for the page title, then H2, H3... without skipping a level."/>
+        </h5>
+        <p t-if="!this.seoContext.headingIssues.length"><i class="oi d-inline-flex rounded-circle me-2 p-1 bg-success-subtle text-success-emphasis" data-icon="check" role="img" aria-hidden="true"/>Headings are well structured</p>
+        <ul t-else="" class="o_seo_headings_issues list-unstyled">
+            <li t-foreach="this.seoContext.headingIssues" t-as="issue" t-key="issue" class="mb-2">
+                <i class="oi d-inline-flex rounded-circle me-2 p-1 bg-warning-subtle text-warning-emphasis" data-icon="warning" role="img" aria-hidden="true"/><t t-out="issue"/>
+            </li>
+        </ul>
+        <h5 id="seo_images_check" class="mt-4 mb-2">
             Images Optimization
             <i class="oi oi-sm align-top text-muted" data-icon="help" role="img" data-tooltip-position="right" data-tooltip="The alt attribute is used to describe the image, optimizing both accessibility and SEO. If you select this option, the image will be hidden from screen readers and not considered for your SEO."/>
         </h5>
@@ -229,6 +239,17 @@
                 <span>Images Descriptions</span>
                 <span class="visually-hidden">All images are optimized</span>
             </div>
+            <div t-if="this.seoContext.headingIssues.length" class="alert alert-warning d-flex align-items-center gap-2 mb-0 py-1 px-2 small">
+                <i class="oi oi-sm" data-icon="warning" role="img" aria-hidden="true"/>
+                <span>Headings</span>
+                <span class="visually-hidden">The headings structure can be improved</span>
+                <a href="#seo_headings_check" class="alert-link text-decoration-underline">View</a>
+            </div>
+            <div t-else="" class="alert alert-success d-flex align-items-center gap-2 mb-0 py-1 px-2 small">
+                <i class="oi oi-sm" data-icon="check" role="img" aria-hidden="true"/>
+                <span>Headings</span>
+                <span class="visually-hidden">Headings are well structured</span>
+            </div>
             <t t-if="this.seoContext.checkedLinks">
                 <div t-if="this.seoContext.brokenLinks.length" class="alert alert-danger d-flex align-items-center gap-2 mb-0 py-1 px-2 small">
                     <i class="oi oi-sm" data-icon="warning" role="img" aria-hidden="true"/>
@@ -276,11 +297,31 @@
                     <label class="h5" for="website_seo_name">
                         Custom Url <i class="oi oi-sm align-top text-muted" data-icon="help" role="img" data-tooltip-position="right" t-att-data-tooltip="this.props.seoNameHelp"/>
                     </label>
-                    <div class="d-flex gap-1 align-items-baseline">
-                        <span class="seo_name_pre border rounded px-2 py-1 bg-100 text-nowrap" t-out="this.seoNamePre"/>
-                        <input id="website_seo_name" type="text" class="form-control rounded" t-att-placeholder="this.props.seoNameDefault"
+                    <div class="o_seo_url_group input-group rounded">
+                        <span class="seo_name_pre input-group-text bg-100" t-out="this.seoNamePre"/>
+                        <input id="website_seo_name" type="text" class="form-control" t-att-placeholder="this.props.seoNameDefault"
                                t-on-input="this._updateInputValue" t-att-value="this.seoContext.seoName"/>
-                        <span class="seo_name_post border rounded px-2 py-1 bg-100 text-nowrap" title="Unalterable unique identifier" t-out="this.seoNamePost"/>
+                        <span class="seo_name_post input-group-text bg-100" title="Unalterable unique identifier" t-out="this.seoNamePost"/>
+                    </div>
+                </div>
+                <div t-if="this.props.canEditPageUrl">
+                    <label class="h5" for="website_page_url">Custom Url</label>
+                    <div class="o_seo_url_group input-group rounded">
+                        <span class="input-group-text bg-100" t-out="this.origin"/>
+                        <input id="website_page_url" type="text" class="form-control" t-model.proxy="this.seoContext.pageUrl" t-att-placeholder="this.props.pageUrl"/>
+                    </div>
+                    <div t-if="this.isPageUrlChanged()" class="o_seo_redirect d-flex flex-column gap-2 mt-2">
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <div class="form-check form-switch mb-0">
+                                <input id="website_redirect_old_url" class="form-check-input" type="checkbox" t-model.proxy="this.seoContext.redirectOldUrl"/>
+                                <label class="form-check-label" for="website_redirect_old_url">Redirect Old URL</label>
+                            </div>
+                            <select t-if="this.seoContext.redirectOldUrl" class="form-select w-auto" aria-label="Redirection type" t-model.proxy="this.seoContext.redirectType">
+                                <option value="301">301 Moved permanently</option>
+                                <option value="302">302 Moved temporarily</option>
+                            </select>
+                        </div>
+                        <PageDependencies resIds="[this.props.pageId]" resModel="'website.page'" mode="'popover'"/>
                     </div>
                 </div>
             </div>
@@ -311,9 +352,12 @@
         <TitleDescription canEditDescription="this.canEditDescription"
             canEditSeo="this.canEditSeo"
             canEditUrl="this.canEditUrl"
+            canEditPageUrl="this.canEditPageUrl"
             canEditTitle="this.canEditTitle"
             seoNameHelp="this.seoNameHelp"
             seoNameDefault="this.seoNameDefault"
+            pageId="this.object.id"
+            pageUrl="this.data.url"
             isIndexed="this.isIndexed"
             defaultTitle="this.defaultTitle"
             previewDescription="this.previewDescription"
@@ -335,7 +379,7 @@
         <div t-if="this.canEditSeo" class="row gy-4 mt-4 border-top">
             <div class="col-12">
                 <h2 class="mb-0">Content checks</h2>
-                <p class="mt-1 mb-0 text-muted">Describe your images and fix broken links to improve accessibility and SEO</p>
+                <p class="mt-1 mb-0 text-muted">Structure your headings, describe your images and fix broken links to improve accessibility and SEO</p>
             </div>
             <div class="col-12">
                 <SeoChecks isDefaultLang="this.isDefaultLang"/>

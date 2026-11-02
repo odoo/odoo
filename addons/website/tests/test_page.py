@@ -271,6 +271,12 @@ class TestPage(common.TransactionCase):
         self.assertEqual(action.get('type'), 'ir.actions.act_url',
             "Page on non-default website with domain should redirect to real domain")
 
+    def test_action_optimize_seo(self):
+        action = self.page_1.action_optimize_seo()
+        self.assertEqual(action['tag'], 'website_preview')
+        self.assertEqual(action['params']['path'], '/page_1')
+        self.assertTrue(action['params']['optimize_seo'], "The SEO optimizer should open with the page")
+
     def test_copy_password_protected_view(self):
         """ Tests that the duplication of a password-protected view also copies
         the password. Tests that it works for designers, who cannot read the

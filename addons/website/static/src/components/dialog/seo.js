@@ -11,6 +11,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { getMimetype } from "@html_editor/utils/image";
 import { WebsiteDialog } from "./dialog";
+import { PageDependencies } from "./page_properties";
 import {
     Component,
     onMounted,
@@ -35,12 +36,16 @@ export const seoContext = proxy({
     keywords: [],
     title: "",
     seoName: "",
+    pageUrl: "",
+    redirectOldUrl: false,
+    redirectType: "301",
     metaImage: "",
     defaultTitle: "",
     hasNoImageWarning: true,
     updatedAlts: [],
     brokenLinks: [],
     checkedLinks: false,
+    headingIssues: [],
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -190,6 +195,56 @@ const getSeo = async (self, onlyKeywords = false) => {
         self.seoContext.description = extractDescription();
     }
 };
+
+/**
+ * Check the headings of the given content against the axe "heading-order"
+ * rule: a single <h1>, and heading levels which never skip a level when going
+ * deeper (e.g. "h1 > h2 > h3 > h3 > h2" is valid, "h1 > h3 > h2" is not).
+ *
+ * @param {HTMLElement} contentEl
+ * @returns {string[]} the issues found, empty if the headings are valid
+ */
+function getHeadingIssues(contentEl) {
+    const levels = [...contentEl.querySelectorAll("h1, h2, h3, h4, h5, h6")]
+        .filter((headingEl) => isVisible(headingEl))
+        .map((headingEl) => parseInt(headingEl.tagName[1]));
+    const issues = [];
+    const h1Count = levels.filter((level) => level === 1).length;
+    if (!h1Count) {
+        issues.push(_t("H1 tag is missing"));
+    } else if (h1Count > 1) {
+        issues.push(_t("One and only one H1 tag should be present in your page"));
+    }
+    // Without <h1>, the missing level is already reported: start the check as
+    // if it was there, so that a page starting with an <h2> is not reported
+    // twice.
+    let previousLevel = h1Count ? 0 : 1;
+    for (const level of levels) {
+        if (level > previousLevel + 1) {
+            issues.push(_t("Heading elements should appear in a sequentially-descending order"));
+            break;
+        }
+        previousLevel = level;
+    }
+    return issues;
+}
+
+/**
+ * Replace the page URL at the end of the path of the given URL, keeping its
+ * language prefix (e.g. "/fr/contact" becomes "/fr/new-contact").
+ *
+ * @param {string} url
+ * @param {string} oldPageUrl
+ * @param {string} newPageUrl
+ * @returns {string}
+ */
+function replacePageUrl(url, oldPageUrl, newPageUrl) {
+    const urlObj = new URL(url);
+    if (urlObj.pathname.endsWith(oldPageUrl)) {
+        urlObj.pathname = urlObj.pathname.slice(0, -oldPageUrl.length) + newPageUrl;
+    }
+    return urlObj.href;
+}
 
 /**
  * Render the given page with `edit_translations`, which marks the terms whose
@@ -605,15 +660,19 @@ export class TitleDescription extends Component {
         canEditSeo: t.boolean(),
         canEditDescription: t.boolean(),
         canEditUrl: t.boolean(),
+        canEditPageUrl: t.boolean(),
         canEditTitle: t.boolean(),
         seoNameHelp: t.string(),
         seoNameDefault: t.string().optional(),
+        pageId: t.number().optional(),
+        pageUrl: t.string().optional(),
         isIndexed: t.boolean(),
         defaultTitle: t.string(),
         previewDescription: t.string(),
         url: t.string(),
     });
     static components = {
+        PageDependencies,
         SEOPreview,
     };
     autofocusRef = signal.ref();
@@ -627,6 +686,7 @@ export class TitleDescription extends Component {
             language: this.getLanguage(),
         });
         this.previousSeoName = this.seoContext.seoName;
+        this.origin = new URL(this.props.url).origin;
 
         this.maxRecommendedDescriptionSize = 160;
         this.minRecommendedDescriptionSize = 50;
@@ -673,6 +733,9 @@ export class TitleDescription extends Component {
     }
 
     get url() {
+        if (this.props.canEditPageUrl) {
+            return replacePageUrl(this.props.url, this.props.pageUrl, this.seoContext.pageUrl);
+        }
         if (this.seoContext.seoName) {
             return this.props.url.replace(this.seoNameUrl, this.seoContext.seoName);
         }
@@ -709,6 +772,11 @@ export class TitleDescription extends Component {
         return pyToJsLocale(
             this.website.pageDocument.documentElement.getAttribute("lang") || "en-US"
         );
+    }
+
+    isPageUrlChanged() {
+        const pageUrl = this.seoContext.pageUrl.trim();
+        return !!pageUrl && pageUrl !== this.props.pageUrl;
     }
 
     //--------------------------------------------------------------------------
@@ -1014,6 +1082,8 @@ export class OptimizeSEODialog extends Component {
         this.contentClass = "oe_seo_configuration";
         seoContext.hasNoImageWarning = true;
         seoContext.checkedLinks = false;
+        seoContext.redirectOldUrl = false;
+        seoContext.redirectType = "301";
 
         onWillStart(async () => {
             // Wait for the preview iframe because this dialog reads directly
@@ -1052,6 +1122,10 @@ export class OptimizeSEODialog extends Component {
             if (this.canEditUrl) {
                 this.seoNameDefault = this.data.seo_name_default;
             }
+            // The URL of a page is fully customizable, like in its properties.
+            this.canEditPageUrl =
+                this.canEditSeo && this.object.model === "website.page" && this.website.isDesigner;
+            seoContext.pageUrl = this.data.url || "";
 
             const storedDescription = this.canEditDescription
                 ? this.data.website_meta_description
@@ -1064,6 +1138,9 @@ export class OptimizeSEODialog extends Component {
             this.defaultTitle = this.getMeta({ name: "default_title" }) || "";
             seoContext.defaultTitle = this.defaultTitle;
             this.url = path;
+            seoContext.headingIssues = getHeadingIssues(
+                this.pageDocumentElement.querySelector("#wrap") || this.website.pageDocument.body
+            );
 
             seoContext.metaImage =
                 this.data.website_meta_og_img || this.getMeta({ property: "og:image" });
@@ -1227,11 +1304,49 @@ export class OptimizeSEODialog extends Component {
 
         await Promise.all(rpcCalls);
 
-        this.website.goToWebsite({
-            path: this.url.replace(
-                this.previousSeoName || this.seoNameDefault,
-                seoContext.seoName || this.seoNameDefault
-            ),
+        let path = this.url.replace(
+            this.previousSeoName || this.seoNameDefault,
+            seoContext.seoName || this.seoNameDefault
+        );
+        const pageUrl = seoContext.pageUrl.trim();
+        if (this.canEditPageUrl && pageUrl && pageUrl !== this.data.url) {
+            const newPageUrl = await this.updatePageUrl(pageUrl, {
+                lang: currentLang,
+                website_id: this.website.currentWebsite.id,
+            });
+            path = replacePageUrl(this.url, this.data.url, newPageUrl);
+        }
+        this.website.goToWebsite({ path });
+    }
+
+    /**
+     * Update the URL of the page through its properties, which also create the
+     * redirection from the old URL if requested.
+     *
+     * @param {string} pageUrl
+     * @param {Object} context
+     * @returns {Promise<string>} the new URL of the page, as normalized by the
+     *     server
+     */
+    async updatePageUrl(pageUrl, context) {
+        const [propertiesId] = await this.orm.create(
+            "website.page.properties",
+            [{ target_model_id: this.object.id, website_id: this.website.currentWebsite.id }],
+            { context }
+        );
+        await this.orm.write(
+            "website.page.properties",
+            [propertiesId],
+            {
+                url: pageUrl,
+                redirect_old_url: seoContext.redirectOldUrl,
+                redirect_type: seoContext.redirectType,
+            },
+            { context }
+        );
+        const [{ url }] = await this.orm.read("website.page", [this.object.id], ["url"], {
+            context,
         });
+        return url;
     }
 }

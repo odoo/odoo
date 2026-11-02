@@ -925,6 +925,37 @@ class TestUi(HttpCaseWithWebsiteUser):
             login="admin",
         )
 
+    def test_website_optimize_seo_headings_and_url(self):
+        view = self.env["ir.ui.view"].create({
+            "name": "SEO Headings Page",
+            "type": "qweb",
+            "arch": """
+                <t t-name="website.seo_headings_page">
+                    <t t-call="website.layout">
+                        <div id="wrap"><h1>Title</h1><h3>Skipped level</h3><h2>Section</h2></div>
+                    </t>
+                </t>
+            """,
+        })
+        page = self.env["website.page"].create({
+            "name": "SEO Headings Page",
+            "url": "/seo-headings",
+            "view_id": view.id,
+            "website_id": self.env.ref("base.default_website").id,
+            "is_published": True,
+        })
+        self.start_tour(
+            self.env["website"].get_client_action_url("/seo-headings"),
+            "website_optimize_seo_headings_and_url",
+            login="admin",
+        )
+        self.assertEqual(page.url, "/seo-headings-new")
+        self.assertTrue(self.env["website.rewrite"].search([
+            ("url_from", "=", "/seo-headings"),
+            ("url_to", "=", "/seo-headings-new"),
+            ("redirect_type", "=", "301"),
+        ]), "The old URL should be redirected to the new one")
+
     @mute_logger("odoo.http")
     def test_website_replace_remove_image(self):
         self.start_tour(self.env['website'].get_client_action_url("/", True), "website_replace_remove_image", login="admin")

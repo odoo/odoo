@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import api, fields, models
 
 
@@ -17,6 +19,11 @@ class WebsitePagePropertiesBase(models.TransientModel):
     is_published = fields.Boolean(compute='_compute_is_published', inverse='_inverse_is_published')
     published_date = fields.Datetime(compute='_compute_published_date', inverse='_inverse_published_date', readonly=False)
     publish_on = fields.Datetime(compute='_compute_publish_on', inverse='_inverse_publish_on', readonly=False)
+    can_edit_seo_name = fields.Boolean(compute='_compute_can_edit_seo_name')
+    seo_name = fields.Char(
+        compute='_compute_seo_name', inverse='_inverse_seo_name', readonly=False,
+        help="This value will be escaped to be compliant with all major browsers and used in url. "
+             "Keep it empty to use the default name of the record.")
 
     def action_unschedule(self):
         for record in self:
@@ -74,6 +81,28 @@ class WebsitePagePropertiesBase(models.TransientModel):
                 target.publish_on = record.publish_on
                 if record.publish_on:
                     target.is_published = False
+
+    @api.depends('target_model_id', 'url')
+    def _compute_can_edit_seo_name(self):
+        for record in self:
+            target = record.target_model_id
+            # As in the SEO optimizer, the URL is only customizable if it
+            # contains the slug of the record (e.g. "/blog/news-1/my-post-2").
+            record.can_edit_seo_name = bool(
+                target
+                and target._name not in ('website.page', 'ir.ui.view')
+                and 'seo_name' in target._fields
+                and re.search(rf'-{target.id}(?:[/?#]|$)', record.url or '')
+            )
+
+    @api.depends('can_edit_seo_name')
+    def _compute_seo_name(self):
+        for record in self:
+            record.seo_name = record.can_edit_seo_name and record.target_model_id.seo_name
+
+    def _inverse_seo_name(self):
+        for record in self.filtered('can_edit_seo_name'):
+            record.target_model_id.seo_name = self.env['ir.http']._slugify(record.seo_name or '') or False
 
     @api.depends('url', 'website_id')
     def _compute_menu_ids(self):
