@@ -463,3 +463,67 @@ class Od19BillingRequest(models.Model):
                 % {"name": self.name, "direction": self.direction.upper()},
                 user_id=user.id,
             )
+
+    # ------------------------------------------------------------------
+    # Create target document
+    # ------------------------------------------------------------------
+    def action_create_invoice(self):
+        self.ensure_one()
+        if self.state != "submitted":
+            raise UserError(
+                _("Only a submitted request can be billed (state: %s).") % self.state
+            )
+        if self.target_move_id:
+            raise UserError(_("This request already has a target document."))
+        if not self.line_ids:
+            raise UserError(_("Add at least one line before creating the document."))
+        if not self.partner_id:
+            raise UserError(_("Please set the partner before creating the document."))
+        self._od19_check_before_create_document()
+        move = self._od19_build_move()
+        self.write({"target_move_id": move.id, "state": "invoiced"})
+        self._od19_link_target_lines(move)
+        return move
+
+    def _od19_check_before_create_document(self):
+        self.ensure_one()
+        return True
+
+    def _od19_build_move(self):
+        self.ensure_one()
+        line_commands = []
+        for line in self.line_ids.sorted("sequence"):
+            vals = {
+                "product_id": line.product_id.id,
+                "name": line.name or line.product_id.display_name,
+                "quantity": line.quantity,
+                "price_unit": line.price_unit,
+                "discount": line.discount,
+            }
+            if line.product_uom_id:
+                vals["product_uom_id"] = line.product_uom_id.id
+            if line.tax_ids:
+                vals["tax_ids"] = [(6, 0, line.tax_ids.ids)]
+            if line.sale_line_id:
+                vals["sale_line_ids"] = [(6, 0, [line.sale_line_id.id])]
+            if line.purchase_line_id:
+                vals["purchase_line_id"] = line.purchase_line_id.id
+            line_commands.append((0, 0, vals))
+        move_vals = {
+            "move_type": self.move_type,
+            "partner_id": self.partner_id.id,
+            "invoice_date": fields.Date.context_today(self),
+            "invoice_origin": self.name,
+            "ref": self.name,
+            "invoice_line_ids": line_commands,
+        }
+        return self.env["account.move"].create(move_vals)
+
+    def _od19_link_target_lines(self, move):
+        self.ensure_one()
+        move_lines = move.invoice_line_ids.sorted(lambda line: line.id)
+        request_lines = self.line_ids.sorted("sequence")
+        if len(move_lines) != len(request_lines):
+            return
+        for request_line, move_line in zip(request_lines, move_lines):
+            request_line.target_line_id = move_line
