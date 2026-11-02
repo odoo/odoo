@@ -1,10 +1,32 @@
-import { useState } from "@web/owl2/utils";
-import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { Component, onMounted, status, useComponent } from "@odoo/owl";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
+import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useState } from "@web/owl2/utils";
+
+function useDelayedFocus(inputRef) {
+    const component = useComponent();
+    onMounted(async () => {
+        const input = inputRef.el;
+        const dialogContent = input.closest(".modal-content");
+        // The click toggles the dropdown: don't open it automatically if the
+        // user already interacted with the input during the animation.
+        let interacted = false;
+        const onInteraction = () => (interacted = true);
+        input.addEventListener("pointerdown", onInteraction);
+        input.addEventListener("keydown", onInteraction);
+        await Promise.allSettled(
+            dialogContent.getAnimations().map((animation) => animation.finished)
+        );
+        input.removeEventListener("pointerdown", onInteraction);
+        input.removeEventListener("keydown", onInteraction);
+        if (status(component) !== "destroyed" && !interacted) {
+            input.click();
+        }
+    });
+}
 
 export class SelectLotPopup extends Component {
     static template = "pos_stock.SelectLotPopup";
@@ -36,9 +58,7 @@ export class SelectLotPopup extends Component {
         useAutoFocusToLast();
         this.notification = useService("notification");
         this.inputRef = useChildRef();
-        onMounted(() => {
-            this.inputRef.el.click();
-        });
+        useDelayedFocus(this.inputRef);
     }
     _nextId() {
         return this._id++;
