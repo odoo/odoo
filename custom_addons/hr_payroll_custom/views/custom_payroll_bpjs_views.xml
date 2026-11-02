@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_custom_payroll_bpjs_form" model="ir.ui.view">
+        <field name="name">custom.payroll.bpjs.form</field>
+        <field name="model">custom.payroll.bpjs</field>
+        <field name="arch" type="xml">
+            <form string="BPJS">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="BPJS Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Information">
+                            <field name="jenis"/>
+                            <field name="persen" widget="percentage"/>
+                            <field name="nominal" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Settings">
+                            <field name="status_aktif"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Calculation Info" col="1">
+                        <div class="text-muted">
+                            <p><strong>Cara perhitungan nilai BPJS saat payslip dibuat:</strong></p>
+                            <ul>
+                                <li>Jika <strong>Percentage &gt; 0</strong>: nilai = Percentage x Gaji Pokok karyawan</li>
+                                <li>Jika <strong>Percentage = 0</strong>: nilai = Amount (flat)</li>
+                                <li>Nilai dihitung &amp; disimpan sekali saat payslip dibuat (final / tidak berubah)</li>
+                            </ul>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_custom_payroll_bpjs_list" model="ir.ui.view">
+        <field name="name">custom.payroll.bpjs.list</field>
+        <field name="model">custom.payroll.bpjs</field>
+        <field name="arch" type="xml">
+            <list string="BPJS">
+                <field name="name"/>
+                <field name="jenis"/>
+                <field name="persen" widget="percentage"/>
+                <field name="nominal" widget="monetary"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="status_aktif"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_custom_payroll_bpjs_search" model="ir.ui.view">
+        <field name="name">custom.payroll.bpjs.search</field>
+        <field name="model">custom.payroll.bpjs</field>
+        <field name="arch" type="xml">
+            <search string="BPJS">
+                <field name="name"/>
+                <field name="jenis"/>
+                <filter name="filter_active" string="Active" domain="[('status_aktif', '=', True)]"/>
+                <filter name="filter_inactive" string="Inactive" domain="[('status_aktif', '=', False)]"/>
+                <group>
+                    <filter name="group_jenis" string="Type" context="{'group_by': 'jenis'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_custom_payroll_bpjs" model="ir.actions.act_window">
+        <field name="name">BPJS</field>
+        <field name="res_model">custom.payroll.bpjs</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_custom_payroll_bpjs_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first BPJS configuration.
+            </p>
+        </field>
+    </record>
+</odoo>

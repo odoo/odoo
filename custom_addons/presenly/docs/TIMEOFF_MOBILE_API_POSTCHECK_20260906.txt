@@ -1,0 +1,97 @@
+PRESENLY TIME OFF MOBILE API AND APPROVAL LEVELING — ROLLOUT POST-CHECK
+Date: 2026-09-06
+Database: odoo
+Module: presenly 19.0.13.0.0
+
+PURPOSE
+- Fixed the Time Off mobile controller to follow the same JSON-RPC contract as
+  the Attendance controller: data is read from `params`, not the raw envelope.
+- Confirmed and tested that Presenly approval leveling decides the approval
+  journey, and native `_action_validate` runs only at the final level.
+- Added HTTP integration tests for the Time Off API.
+- Added a dedicated mobile Time Off API document.
+
+CONTROLLER FIX (controllers/leave.py)
+- `_payload(params)` now validates the JSON-RPC `params` object.
+- Mutation endpoints accept `**params`.
+- `reject` accepts path `leave_id` plus `reason` from `params`.
+- Added `readonly=True` to read-only JSON-RPC endpoints.
+- Added `POST /api/presenly/v1/leaves/list` because JSON-RPC dispatch is
+  POST-oriented and the legacy `GET /leaves` route had ambiguous semantics.
+- Kept legacy `GET /leaves` as a thin compatibility alias to `/leaves/list`.
+- Submission still uses `action_presenly_submit()`.
+- Approval routes remain resolved by Presenly Approval Routes.
+
+MIGRATION GUARD FIX
+- `hr.attendance._presenly_mobile_create` was blocking the idempotent
+  native-structure migration because backfill used `attendance.write()`.
+- Added private `_presenly_migration_write()` for the narrow backfill fields.
+- Migration now skips Work Location backfill for WFA attendance (WFA has no
+  Work Location by design).
+- No business data changed.
+
+APPROVAL LEVELING VERIFICATION
+- Leveling is governed by `presenly.approval.rule._get_rules()`.
+- Steps execute by Order; location-specific steps override company-wide steps
+  with the same Order.
+- `action_presenly_submit()` snapshots levels/approvers into Approval Journey.
+- `action_presenly_approve()` advances one level at a time.
+- Native `_action_validate` is called only when `completed` is True (final
+  level); intermediate approvals only advance `current_step_id`.
+
+HTTP TESTS (tests/test_api_leave.py)
+- Added `TestPresenlyLeaveApi`.
+- Covers:
+  - `/leave/types`
+  - create + submit `/leaves`
+  - own list `/leaves/list`
+  - approver queue `/leaves/approval`
+  - final approve `/leaves/<id>/approve`
+  - reject requires `reason`
+  - reject path sets native state `refuse` and Presenly `rejected`
+- Verified final approval sets native `hr.leave.state == validate` and
+  Presenly `approval_state == approved`.
+
+DOCUMENTATION
+- New: custom_addons/presenly/docs/MOBILE_TIMEOFF_API.md
+  - Concept, endpoints, JSON-RPC format, types, create/submit, list, approval
+    queue, approve, reject, leveling explanation, validations, idempotency,
+    full flow, and implementation checklist.
+- Updated: custom_addons/presenly/docs/MOBILE_API.md
+  - Cross-link to MOBILE_TIMEOFF_API.md.
+
+DATA PRESERVATION
+Business fingerprint before and after rollout is identical:
+- Attendance: 3 records; ID sum 7.
+- Evidence: 9 records; ID sum 45.
+- Referenced selfie attachments: 6; ID sum 1019.
+- Approval routes: 2; ID sum 3.
+- Permission requests: 0.
+- Time Off requests: 0.
+- Approval journeys: 0.
+
+TESTING
+- Isolated clone: odoo_presenly_leave_api_test_20260906_120000.
+- Final result: 41 test cases / 53 test stats.
+- Failures: 0.
+- Errors: 0.
+- Clone database and filestore were removed.
+
+STATIC VALIDATION
+- Python compilation: passed.
+- XML parsing: 18 files passed.
+- git diff --check: passed.
+
+BACKUP
+- backups/presenly-migration/odoo-before-leave-api-fix-20260906-120000.dump
+- Backup retained after clone cleanup.
+
+ROLLOUT
+- Before: presenly 19.0.12.1.0.
+- After: presenly 19.0.13.0.0.
+- Main server PID: 18316.
+- http://127.0.0.1:8069/web/login returned HTTP 200.
+- Upgrade and active server logs contain no ERROR, CRITICAL, or traceback.
+
+NO COMMIT
+- No Git commit was created.

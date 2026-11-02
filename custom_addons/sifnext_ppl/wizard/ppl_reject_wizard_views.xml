@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sifnext_ppl_reject_wizard_form" model="ir.ui.view">
+        <field name="name">sifnext.ppl.reject.wizard.form</field>
+        <field name="model">sifnext.ppl.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tolak PPL">
+                <p class="text-muted">
+                    PPL akan dikembalikan ke status Draft agar pengaju dapat melakukan revisi.
+                </p>
+                <group>
+                    <field name="ppl_id" invisible="1"/>
+                    <field name="reason" placeholder="Contoh: Lampiran kurang lengkap, mohon perbaiki nilai COA..."/>
+                </group>
+                <footer>
+                    <button name="action_confirm_reject" string="Kembalikan ke Draft" type="object" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sifnext_ppl_reject_wizard" model="ir.actions.act_window">
+        <field name="name">Alasan Revisi / Penolakan</field>
+        <field name="res_model">sifnext.ppl.reject.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

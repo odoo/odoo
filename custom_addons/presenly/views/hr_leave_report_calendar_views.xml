@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_leave_report_calendar_form_presenly" model="ir.ui.view">
+        <field name="name">hr.leave.report.calendar.form.presenly</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_report_calendar_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Hide native approve/refuse buttons on the calendar popup. -->
+            <xpath expr="//footer/button[@name='action_approve']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//footer/button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- Replace with Presenly single-path actions driven by leave_id. -->
+            <xpath expr="//footer" position="inside">
+                <field name="presenly_can_approve" invisible="1"/>
+                <field name="presenly_can_reject" invisible="1"/>
+                <field name="presenly_approval_state" invisible="1"/>
+                <field name="presenly_approval_progress" invisible="1"/>
+                <button name="action_presenly_approve" string="Approve Current Level"
+                        type="object" class="btn-primary" close="1"
+                        invisible="not presenly_can_approve"/>
+                <button name="action_presenly_open_reject_wizard" string="Reject"
+                        type="object" class="btn-secondary"
+                        invisible="not presenly_can_reject"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
