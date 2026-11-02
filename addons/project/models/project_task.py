@@ -164,6 +164,7 @@ class ProjectTask(models.Model):
        store=True, readonly=False, ondelete='restrict', tracking=6, index=True,
        default=_get_default_stage_id, group_expand='_read_group_stage_ids',
        domain="[('project_ids', '=', project_id)]")
+    stage_name = fields.Char(related='stage_id.name')
     tag_ids = fields.Many2many('project.tags', string='Tags')
 
     state = fields.Selection([
