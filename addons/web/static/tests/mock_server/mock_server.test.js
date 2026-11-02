@@ -634,10 +634,10 @@ test("performRPC: formatted_read_group, group by date", async () => {
     });
 
     expect(result.map((x) => x["date:week"])).toEqual([
-        ["2016-04-11", "W15 2016"],
-        ["2016-10-24", "W43 2016"],
-        ["2016-12-12", "W50 2016"],
-        ["2019-12-30", "W01 2020"],
+        ["2016-04-11", "#15, Apr 11 → Apr 17, 2016"],
+        ["2016-10-24", "#43, Oct 24 → Oct 30, 2016"],
+        ["2016-12-12", "#50, Dec 12 → Dec 18, 2016"],
+        ["2019-12-30", "#1, Dec 30 → Jan 5"],
     ]);
     expect(result.map((x) => x.__count)).toEqual([1, 1, 3, 1]);
     expect(result.map((x) => x.__extra_domain)).toEqual([
@@ -914,10 +914,10 @@ test("performRPC: formatted_read_group, group by datetime", async () => {
     });
 
     expect(result.map((x) => x["datetime:week"])).toEqual([
-        ["2016-04-10 23:00:00", "W15 2016"],
-        ["2016-10-23 23:00:00", "W43 2016"],
-        ["2016-12-11 23:00:00", "W50 2016"],
-        ["2019-12-29 23:00:00", "W01 2020"],
+        ["2016-04-10 23:00:00", "#15, Apr 11 → Apr 17, 2016"],
+        ["2016-10-23 23:00:00", "#43, Oct 24 → Oct 30, 2016"],
+        ["2016-12-11 23:00:00", "#50, Dec 12 → Dec 18, 2016"],
+        ["2019-12-29 23:00:00", "#1, Dec 30 → Jan 5"],
     ]);
     expect(result.map((x) => x.__count)).toEqual([1, 1, 3, 1]);
     expect(result.map((x) => x.__extra_domain)).toEqual([

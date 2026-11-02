@@ -1385,6 +1385,21 @@ class Base(models.AbstractModel):
 
         return result
 
+    def _web_read_group_week_label(self, week_start, locale):
+        """ Return the label of the week group starting at ``week_start``,
+        e.g. "#45, Nov 2 → Nov 8". The year is only displayed when the week
+        does not start in the current year, e.g. "#45, Nov 2 → Nov 8, 2027".
+        """
+        babel_locale = babel.Locale.parse(locale)
+        # Use of Babel's 'w'/'Y' formatting is inconsistent (e.g. Jan 1, 2023 in en_US
+        # can produce W1 2022). The date skeletons below use the calendar year 'y'.
+        _year, week = date_utils.weeknumber(babel_locale, week_start)
+        week_end = date_utils.weekend(babel_locale, week_start)
+        end_format = "MMMd" if week_start.year == Date.context_today(self).year else "yMMMd"
+        start_label = babel.dates.format_skeleton("MMMd", week_start, locale=locale)
+        end_label = babel.dates.format_skeleton(end_format, week_end, locale=locale)
+        return f"#{week}, {start_label} → {end_label}"
+
     def _web_read_group_groupby_formatter(self, groupby_spec, values):
         """ Return a formatter method that returns value/label and the domain that the group
         value represent """
@@ -1459,11 +1474,8 @@ class Base(models.AbstractModel):
                     # special case weeks because babel is broken *and*
                     # ubuntu reverted a change so it's also inconsistent
                     if granularity == 'week':
-                        year, week = date_utils.weeknumber(
-                            babel.Locale.parse(locale),
-                            value,  # provide date or datetime without UTC conversion
-                        )
-                        label = f"W{week} {year:04}"
+                        # provide date or datetime without UTC conversion
+                        label = self._web_read_group_week_label(value, locale)
 
                     additional_domain = (
                         Domain(field_name, '>=', range_start.strftime(fmt))
@@ -1569,11 +1581,15 @@ class Base(models.AbstractModel):
                     start = date_utils.start_of(value, func)
                 end = start + interval
 
-                label = babel.dates.format_date(
-                    value,
-                    format=READ_GROUP_DISPLAY_FORMAT[func],
-                    locale=get_lang(self.env).code,
-                )
+                locale = get_lang(self.env).code
+                if func == 'week':
+                    label = self._web_read_group_week_label(value, locale)
+                else:
+                    label = babel.dates.format_date(
+                        value,
+                        format=READ_GROUP_DISPLAY_FORMAT[func],
+                        locale=locale,
+                    )
                 return (value.strftime(fmt), label), Domain(fullname, '>=', start.strftime(fmt)) & Domain(fullname, '<', end.strftime(fmt))
 
             return formatter_property_datetime

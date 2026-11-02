@@ -2062,6 +2062,17 @@ export class Model extends Array {
                                 case "week": {
                                     startDate = parseDateTime(value, { format: "WW kkkk" });
                                     endDate = startDate.plus({ weeks: 1 });
+                                    // Mimic the server label (e.g. "#45, Nov 2 → Nov 8"): the
+                                    // year is only displayed if the week doesn't start in the
+                                    // current year.
+                                    const lastDay = endDate.minus({ days: 1 });
+                                    const lastDayFormat =
+                                        startDate.year === luxon.DateTime.local().year
+                                            ? "MMM d"
+                                            : "MMM d, yyyy";
+                                    group[groupbySpec] = `#${startDate.weekNumber}, ${startDate.toFormat(
+                                        "MMM d"
+                                    )} → ${lastDay.toFormat(lastDayFormat)}`;
                                     break;
                                 }
                                 case "quarter": {

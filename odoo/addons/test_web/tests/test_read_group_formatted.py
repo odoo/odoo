@@ -2,6 +2,7 @@ from datetime import datetime, time, UTC
 from zoneinfo import ZoneInfo
 
 import babel
+from freezegun import freeze_time
 
 from odoo.tests import tagged, common, new_test_user
 from odoo import Command, fields
@@ -379,22 +380,22 @@ class TestFormattedReadGroup(common.TransactionCase):
                 {
                     '__count': 2,
                     '__extra_domain': ['&', ('date', '>=', '2022-01-23'), ('date', '<', '2022-01-30')],
-                    'date:week': ('2022-01-23', 'W5 2022'),
+                    'date:week': ('2022-01-23', '#5, Jan 23 → Jan 29, 2022'),
                 },
                 {
                     '__count': 3,
                     '__extra_domain': ['&', ('date', '>=', '2022-01-30'), ('date', '<', '2022-02-06')],
-                    'date:week': ('2022-01-30', 'W6 2022'),
+                    'date:week': ('2022-01-30', '#6, Jan 30 → Feb 5, 2022'),
                 },
                 {
                     '__count': 1,
                     '__extra_domain': ['&', ('date', '>=', '2022-05-29'), ('date', '<', '2022-06-05')],
-                    'date:week': ('2022-05-29', 'W23 2022'),
+                    'date:week': ('2022-05-29', '#23, May 29 → Jun 4, 2022'),
                 },
                 {
                     '__count': 1,
                     '__extra_domain': ['&', ('date', '>=', '2023-01-29'), ('date', '<', '2023-02-05')],
-                    'date:week': ('2023-01-29', 'W5 2023'),
+                    'date:week': ('2023-01-29', '#5, Jan 29 → Feb 4, 2023'),
                 },
                 {'__count': 1, '__extra_domain': [('date', '=', False)], 'date:week': False},
             ]
@@ -764,86 +765,86 @@ class TestFormattedReadGroup(common.TransactionCase):
         excepted_results = {
             'fr_BE': [  # same as ISO
                 {
-                    'date:week': ('2021-12-27', 'W52 2021'),
+                    'date:week': ('2021-12-27', '#52, 27 déc. → 2 janv. 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2021-12-27'), ('date', '<', '2022-01-03')],
                     '__count': 2,
                 },
                 {
-                    'date:week': ('2022-01-03', 'W1 2022'),
+                    'date:week': ('2022-01-03', '#1, 3 janv. → 9 janv. 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-01-03'), ('date', '<', '2022-01-10')],
                     '__count': 1,
                 },
                 {
-                    'date:week': ('2022-05-23', 'W21 2022'),
+                    'date:week': ('2022-05-23', '#21, 23 mai → 29 mai 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-05-23'), ('date', '<', '2022-05-30')],
                     '__count': 3,
                 },
                 {
-                    'date:week': ('2022-05-30', 'W22 2022'),
+                    'date:week': ('2022-05-30', '#22, 30 mai → 5 juin 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-05-30'), ('date', '<', '2022-06-06')],
                     '__count': 1,
                 },
                 {
-                    'date:week': ('2022-06-13', 'W24 2022'),
+                    'date:week': ('2022-06-13', '#24, 13 juin → 19 juin 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-06-13'), ('date', '<', '2022-06-20')],
                     '__count': 2,
                 },
                 {
-                    'date:week': ('2022-06-20', 'W25 2022'),
+                    'date:week': ('2022-06-20', '#25, 20 juin → 26 juin 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-06-20'), ('date', '<', '2022-06-27')],
                     '__count': 1,
                 },
             ],
             'ar_SY': [  # non-iso, start of week = sat
                 {
-                    'date:week': ('2022-01-01', 'W1 2022'),
+                    'date:week': ('2022-01-01', '#1, 1 كانون الثاني → 7 كانون الثاني 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-01-01'), ('date', '<', '2022-01-08')],
                     '__count': 3,
                 },
                 {
-                    'date:week': ('2022-05-21', 'W21 2022'),
+                    'date:week': ('2022-05-21', '#21, 21 أيار → 27 أيار 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-05-21'), ('date', '<', '2022-05-28')],
                     '__count': 1,
                 },
                 {
-                    'date:week': ('2022-05-28', 'W22 2022'),
+                    'date:week': ('2022-05-28', '#22, 28 أيار → 3 حزيران 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-05-28'), ('date', '<', '2022-06-04')],
                     '__count': 3,
                 },
                 {
-                    'date:week': ('2022-06-18', 'W25 2022'),
+                    'date:week': ('2022-06-18', '#25, 18 حزيران → 24 حزيران 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-06-18'), ('date', '<', '2022-06-25')],
                     '__count': 3,
                 },
             ],
             'en_US': [   # non-iso, start of week = sun
                 {
-                    'date:week': ('2021-12-26', 'W1 2022'),
+                    'date:week': ('2021-12-26', '#1, Dec 26 → Jan 1, 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2021-12-26'), ('date', '<', '2022-01-02')],
                     '__count': 1,
                 },
                 {
-                    'date:week': ('2022-01-02', 'W2 2022'),
+                    'date:week': ('2022-01-02', '#2, Jan 2 → Jan 8, 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-01-02'), ('date', '<', '2022-01-09')],
                     '__count': 2,
                 },
                 {
-                    'date:week': ('2022-05-22', 'W22 2022'),
+                    'date:week': ('2022-05-22', '#22, May 22 → May 28, 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-05-22'), ('date', '<', '2022-05-29')],
                     '__count': 2,
                 },
                 {
-                    'date:week': ('2022-05-29', 'W23 2022'),
+                    'date:week': ('2022-05-29', '#23, May 29 → Jun 4, 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-05-29'), ('date', '<', '2022-06-05')],
                     '__count': 2,
                 },
                 {
-                    'date:week': ('2022-06-12', 'W25 2022'),
+                    'date:week': ('2022-06-12', '#25, Jun 12 → Jun 18, 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-06-12'), ('date', '<', '2022-06-19')],
                     '__count': 1,
                 },
                 {
-                    'date:week': ('2022-06-19', 'W26 2022'),
+                    'date:week': ('2022-06-19', '#26, Jun 19 → Jun 25, 2022'),
                     '__extra_domain': ['&', ('date', '>=', '2022-06-19'), ('date', '<', '2022-06-26')],
                     '__count': 2,
                 },
@@ -898,6 +899,25 @@ class TestFormattedReadGroup(common.TransactionCase):
                     groupby=['date:iso_week_number'],
                 )
                 self.assertEqual(groups, excepted)
+
+    @freeze_time('2021-06-15')
+    def test_groupby_date_week_label_current_year(self):
+        Model = self.env['test_read_group.fill_temporal'].with_context(lang='en_US', tz='UTC')
+        Model.create([
+            {'date': '2021-05-30', 'datetime': '2021-05-30 10:00:00'},
+            # week starting in the current year, ending in the next one
+            {'date': '2021-12-28', 'datetime': '2021-12-28 10:00:00'},
+            {'date': '2022-01-05', 'datetime': '2022-01-05 10:00:00'},
+        ])
+        expected_labels = [
+            '#23, May 30 → Jun 5',
+            '#1, Dec 26 → Jan 1',
+            '#2, Jan 2 → Jan 8, 2022',
+        ]
+        for groupby in ('date:week', 'datetime:week'):
+            with self.subTest(groupby=groupby):
+                groups = Model.formatted_read_group([], [groupby], ['__count'])
+                self.assertEqual([group[groupby][1] for group in groups], expected_labels)
 
     def test_groupby_date_part_number(self):
         '''Test grouping by date part number (ex. month_number gives 1 for January)'''
