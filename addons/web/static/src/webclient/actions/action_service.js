@@ -1564,7 +1564,8 @@ export function makeActionManager(env, router = _router) {
             throw new InvalidButtonParamsError("Missing type for doActionButton request");
         }
         if (!isEmbeddedAction && action.embedded_action_ids?.length) {
-            const embeddedActionsKey = `${action.id}+${params.resId || ""}`;
+            const activeId = action.context?.active_id || params.resId;
+            const embeddedActionsKey = `${action.id}+${activeId || ""}`;
             const embeddedActionsOrder =
                 user.settings.embedded_actions_config_ids?.[embeddedActionsKey]
                     ?.embedded_actions_order;
@@ -1588,8 +1589,10 @@ export function makeActionManager(env, router = _router) {
                 const context = {
                     ...action.context,
                     ...(embeddedAction.context ? makeContext([embeddedAction.context]) : {}),
-                    active_id: params.resId,
-                    active_model: params.resModel,
+                    active_id: activeId,
+                    active_model: action.context?.active_id
+                        ? action.context.active_model || embeddedAction.parent_res_model
+                        : params.resModel,
                     current_embedded_action_id: embeddedActionId,
                     parent_action_embedded_actions: embeddedActions,
                     parent_action_id: action.id,
@@ -1600,7 +1603,7 @@ export function makeActionManager(env, router = _router) {
                             embeddedAction.python_method ||
                             embeddedAction.action_id[0] ||
                             embeddedAction.action_id,
-                        resId: params.resId,
+                        resId: activeId,
                         context,
                         type: embeddedAction.python_method ? "object" : "action",
                         resModel: embeddedAction.parent_res_model,
