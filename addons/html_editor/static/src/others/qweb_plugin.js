@@ -40,6 +40,7 @@ export class QWebPlugin extends Plugin {
         unremovable_node_predicates: (node) =>
             node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
         unsplittable_node_predicates: isUnsplittableQWebElement,
+        targeted_nodes_processors: this.expandQWebBranchGroups.bind(this),
     };
 
     setup() {
@@ -64,6 +65,35 @@ export class QWebPlugin extends Plugin {
             }
         }
         return true;
+    }
+
+    expandQWebBranchGroups(nodes) {
+        const isBranch = (node, ...attrs) =>
+            node && isElement(node) && attrs.some((attr) => node.hasAttribute(attr));
+        const result = new Set();
+        for (let node of nodes) {
+            if (!isBranch(node, "t-if", "t-elif", "t-else")) {
+                result.add(node);
+                continue;
+            }
+            // go back to the first `t-if`
+            while (
+                !node.hasAttribute("t-if") &&
+                isBranch(node.previousElementSibling, "t-if", "t-elif")
+            ) {
+                node = node.previousElementSibling;
+            }
+            // add all the related conditional nodes.
+            result.add(node);
+            while (
+                !node.hasAttribute("t-else") &&
+                isBranch(node.nextElementSibling, "t-elif", "t-else")
+            ) {
+                node = node.nextElementSibling;
+                result.add(node);
+            }
+        }
+        return [...result];
     }
 
     isValidTargetForDomListener(ev) {
