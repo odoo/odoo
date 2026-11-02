@@ -625,7 +625,9 @@ class HrEmployee(models.Model):
         others. Requests starting after ``target_date`` while an accrual allocation runs are not
         deducted but rechecked against the future accrual. The amounts are in the
         ``unit_of_measure`` of each type. Requests listed in the context key
-        ``ignored_leave_ids`` are ignored.
+        ``ignored_leave_ids`` are ignored. Requests of other types can be deducted from the
+        allocations of a type, see
+        :meth:`~odoo.addons.hr_holidays.models.hr_work_entry_type.HrWorkEntryType._get_allocation_work_entry_type_per_leave_type`.
 
         :param work_entry_types: ``hr.work.entry.type`` records to consider
         :param datetime.date target_date: date of the balance, today by default; the accrual
@@ -655,8 +657,9 @@ class HrEmployee(models.Model):
         :rtype: tuple
         """
         employees = self or self._get_contextual_employee()
+        allocation_type_per_leave_type = work_entry_types._get_allocation_work_entry_type_per_leave_type()
         leaves_domain = [
-            ('work_entry_type_id', 'in', work_entry_types.ids),
+            ('work_entry_type_id', 'in', [leave_type.id for leave_type in allocation_type_per_leave_type]),
             ('employee_id', 'in', employees.ids),
             ('state', 'in', ['confirm', 'validate1', 'validate']),
         ]
@@ -673,7 +676,7 @@ class HrEmployee(models.Model):
         leaves = self.env['hr.leave'].search(leaves_domain)
         leaves_per_employee_type = defaultdict(lambda: defaultdict(lambda: self.env['hr.leave']))
         for leave in leaves:
-            leaves_per_employee_type[leave.employee_id][leave.work_entry_type_id] |= leave
+            leaves_per_employee_type[leave.employee_id][allocation_type_per_leave_type[leave.work_entry_type_id]] |= leave
 
         allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
             ('employee_id', 'in', employees.ids),
