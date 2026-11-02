@@ -3007,7 +3007,7 @@ class HrLeave(models.Model):
             remaining_days -= nbr_days
 
             if use_worked_days:
-                if half_days:
+                if half_days or current_leave.request_date_from_period == 'pm':
                     new_request_date_to, new_request_date_to_period = current_leave._get_request_date_to_with_period(nbr_days, work_intervals)
                 else:
                     new_request_date_to = current_leave._get_request_date_to(nbr_days, days_data)
@@ -3085,14 +3085,20 @@ class HrLeave(models.Model):
         :return: ``(date, 'am' or 'pm')``, ``False`` if not reached
         """
         self.ensure_one()
+        date_from = self.date_from.replace(tzinfo=UTC)
         for interval in work_intervals:
             if interval[1].date() < self.request_date_from:
                 continue
+            if interval[1] <= date_from:
+                continue
+            if interval[0] < date_from:
+                interval = (date_from, interval[1], interval[2])
+            is_first_afternoon = self.request_date_from_period == 'pm' and interval[1].date() == self.request_date_from
             interval_days = self.resource_calendar_id._get_attendance_intervals_days_data([interval])['days']
             if number_of_days < interval_days:
                 return (interval[1].date(), 'am')
             if number_of_days == interval_days:
-                if float_compare(number_of_days, 0.5, precision_digits=2) == 0:
+                if float_compare(number_of_days, 0.5, precision_digits=2) == 0 and not is_first_afternoon:
                     last_day_morning_hours = self.employee_id._get_hours_for_date(interval[0].date(), day_period='morning')
                     last_day_morning = last_day_morning_hours[1] - last_day_morning_hours[0]
                     return (interval[1].date(), 'am') if interval[2].day_period != 'afternoon' and last_day_morning else (interval[1].date(), 'pm')
