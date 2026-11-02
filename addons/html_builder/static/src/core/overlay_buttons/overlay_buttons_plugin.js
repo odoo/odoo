@@ -54,7 +54,8 @@ export class OverlayButtonsPlugin extends Plugin {
                         const iframeRect = this.iframe.getBoundingClientRect();
                         if (this.target && position.top < iframeRect.top) {
                             const targetRect = this.target.getBoundingClientRect();
-                            const newTop = iframeRect.top + targetRect.bottom + 1;
+                            const scale = iframeRect.height / this.iframe.offsetHeight || 1;
+                            const newTop = iframeRect.top + targetRect.bottom * scale + 1;
                             position.top = newTop;
                             overlayEl.style.top = `${newTop}px`;
                         }
