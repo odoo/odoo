@@ -1,12 +1,5 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import {
-    Component,
-    onMounted,
-    onWillUnmount,
-    signal,
-    t,
-    useProps,
-} from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, signal, t, useProps } from "@odoo/owl";
 import { render } from "@web/owl2/utils";
 
 const { registries, constants, hooks } = spreadsheet;
@@ -30,7 +23,6 @@ export class MobileFigureContainer extends Component {
         const { stores } = useSpreadsheetProviders({
             model: this.props.spreadsheetModel,
             spreadsheetRef: this.figureContainer,
-            getPopoverContainerRect: () => this.getGridRect(),
         });
         const onUpdate = () => render(this, true);
         const resizeObserver = new ResizeObserver(() => {
@@ -44,17 +36,6 @@ export class MobileFigureContainer extends Component {
             resizeObserver.disconnect();
             stores.off("store-updated", this, onUpdate);
         });
-    }
-
-    getGridRect() {
-        return (
-            this.figureContainer()?.getBoundingClientRect() || {
-                top: 0,
-                left: 0,
-                width: 0,
-                height: 0,
-            }
-        );
     }
 
     get style() {
