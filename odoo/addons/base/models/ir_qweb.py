@@ -3111,6 +3111,9 @@ class IrQweb(models.AbstractModel):
 
         Current version only generate assets without extra, not taking care of rtl.
         """
+        self.env['ir.cache']._gc_cache()
+        self._pregenerate_view_caches()
+
         _logger.runbot('Pregenerating assets bundles')
 
         js_bundles, css_bundles, bin_bundles = self._get_bundles_to_pregenarate()
@@ -3131,6 +3134,14 @@ class IrQweb(models.AbstractModel):
             links += self._get_asset_bundle(bundle, css=True, js=False).css()
         _logger.info('CSS Assets bundles generated in %s seconds', time.time()-start)
         return links
+
+    def _pregenerate_view_caches(self):
+        _logger.runbot('Load template in cache')
+        for view in self.env['ir.ui.view'].search(Domain.AND([Domain('type', '=', 'qweb'), Domain('mode', '=', 'primary')])):
+            try:
+                self._compile(view.key)
+            except Exception:  # noqa: BLE001
+                _logger.warning("Failed to pregenerate the template %r (view %s)", view.key, view.id, exc_info=True)
 
     def _get_bundles_to_pregenarate(self):
         """
