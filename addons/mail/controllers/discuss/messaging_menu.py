@@ -91,6 +91,43 @@ class DiscussMessagingMenuController(WebclientController):
             return self.env["discuss.channel"]._get_meeting_ongoing_domain()
         return
 
+    def _get_menu_tab_view_domain(self, tab_id, filter_ids=None, channel_ids=None):
+        """`tab_id`'s domain, narrowed by `filter_ids` and to `channel_ids` when given: the
+        channels a search shows, which matches their displayed name rather than `name`."""
+        domain = self._get_menu_tab_full_domain(tab_id, filter_ids)
+        if channel_ids is not None:
+            domain &= Domain("id", "in", channel_ids)
+        return domain
+
+    def _get_menu_unread_channels(self, tab_id, filter_ids=None, channel_ids=None):
+        """Channels with unread messages among the ones of `tab_id` shown with `filter_ids`,
+        and among `channel_ids` when given."""
+        # sudo: discuss.channel.member - only the user's own members, for performance: the
+        # channels are then searched with their access rules.
+        unread_channel_ids = self.env["discuss.channel.member"].sudo().search_fetch(
+            [("is_self", "=", True), ("is_unread", "=", True)],
+        ).channel_id.ids
+        return self.env["discuss.channel"].search(
+            self._get_menu_tab_view_domain(tab_id, filter_ids, channel_ids)
+            & Domain("id", "in", unread_channel_ids),
+        )
+
+    def _get_menu_needaction_channels(self, tab_id, filter_ids=None, channel_ids=None):
+        """Channels with needactions among the ones of `tab_id` shown with `filter_ids`, and
+        among `channel_ids` when given."""
+        groups = self.env["mail.message"]._read_group(
+            [
+                ("model", "=", "discuss.channel"),
+                ("message_type", "!=", "user_notification"),
+                ("needaction", "=", True),
+            ],
+            ["res_id"],
+        )
+        return self.env["discuss.channel"].search(
+            self._get_menu_tab_view_domain(tab_id, filter_ids, channel_ids)
+            & Domain("id", "in", [res_id for [res_id] in groups]),
+        )
+
     def store_messaging_menu_initialize_counters(
         self,
         store: Store,
@@ -167,6 +204,39 @@ class DiscussMessagingMenuController(WebclientController):
         store.resolve_data_request(
             lambda res: res.many("channels", [], value=channels),
         )
+
+    @store_handler(
+        "/mail/messaging_menu/discuss.channel/mark_all_as_read",
+        audience="everyone",
+        readonly=False,
+    )
+    def store_messaging_menu_discuss_channel_mark_all_as_read(
+        self,
+        store: Store,
+        tab_id,
+        filter_ids=None,
+        channel_ids=None,
+    ):
+        channels = self._get_menu_unread_channels(tab_id, filter_ids, channel_ids)
+        channels.self_member_id._mark_channels_as_read()
+        store.resolve_data_request(lambda res: res.many("channels", [], value=channels))
+
+    @store_handler(
+        "/mail/messaging_menu/discuss.channel/set_needaction_done",
+        readonly=False,
+    )
+    def store_messaging_menu_discuss_channel_set_needaction_done(
+        self,
+        store: Store,
+        tab_id,
+        filter_ids=None,
+        channel_ids=None,
+    ):
+        channels = self._get_menu_needaction_channels(tab_id, filter_ids, channel_ids)
+        self.env["mail.message"].search(
+            channels._get_message_domain() & Domain("needaction", "=", True),
+        ).set_message_done()
+        store.resolve_data_request(lambda res: res.many("channels", [], value=channels))
 
     @store_handler("/mail/messaging_menu/get_most_popular_channels", audience="everyone")
     def store_messaging_menu_get_most_popular_channels(self, store: Store):

@@ -52,6 +52,14 @@ const messagingMenuPatch = {
     get isEmpty() {
         return super.isEmpty && !this.channels().length;
     },
+    /** @override */
+    getListDomain() {
+        const domain = super.getListDomain();
+        if (domain.searchTerm && this.state().activeTab.recordType === "discuss.channel") {
+            domain.searchResults = this.channels();
+        }
+        return domain;
+    },
     /** @param {import("models").DiscussChannel} channel */
     async onClickChannel(channel) {
         this.onOpenConversation();

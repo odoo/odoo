@@ -13,6 +13,7 @@ export class DiscussChannelMember extends models.ServerModel {
     is_self = fields.Boolean({ compute: "_compute_is_self" });
     unpin_dt = fields.Datetime({ string: "Unpin date" });
     message_unread_counter = fields.Integer({ default: 0 });
+    is_unread = fields.Boolean({ compute: "_compute_is_unread" });
     last_interest_dt = fields.Datetime({
         default: () => serializeDateTime(today().minus({ seconds: 1 })),
     });
@@ -135,6 +136,12 @@ export class DiscussChannelMember extends models.ServerModel {
             member.is_self = member.partner_id
                 ? member.partner_id === partner?.id
                 : member.guest_id === guest?.id;
+        }
+    }
+
+    _compute_is_unread() {
+        for (const member of this) {
+            member.is_unread = member.message_unread_counter > 0;
         }
     }
 

@@ -64,6 +64,21 @@
     }
 }
 
+.o-mail-MessagingMenu-moreActions {
+    --btn-color: var(--o-gray-500);
+    /* Tinted with the text color, so it shows on any surface, light or dark. */
+    --btn-bg: color-mix(in srgb, var(--o-bs-body-color) 6%, transparent);
+    --btn-border-width: 0;
+    --btn-hover-color: var(--o-bs-body-color);
+    --btn-hover-bg: var(--o-component-active-bg);
+    --btn-active-color: var(--btn-hover-color);
+    --btn-active-bg: var(--btn-hover-bg);
+
+    width: 2rem;
+    height: 2rem;
+    font-size: 1.25rem;
+}
+
 .o-mail-MessagingMenu-searchRow {
     /* Keep the quick-action toggle button on its plain primary color while its */
     /* dropdown is open, instead of Bootstrap's pale ".show" active shade. */
