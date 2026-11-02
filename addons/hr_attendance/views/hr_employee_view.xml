@@ -136,7 +136,19 @@
         </field>
     </record>
 
-    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="hr_attendance.menu_hr_attendance_overview" action="hr_employee_attendance_action_kanban" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
+    <record id="action_attendance_employee_view_access" model="ir.actions.server">
+        <field name="name">Employees</field>
+        <field name="model_id" ref="model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">
+if env.user.has_group('hr.group_hr_user'):
+    action = env['ir.actions.actions']._for_xml_id('hr.open_view_employee_list_my')
+else:
+    action = env['ir.actions.actions']._for_xml_id('hr.hr_employee_public_action')
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="hr_attendance.menu_hr_attendance_overview" action="action_attendance_employee_view_access" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
 
     <record id="view_employee_tree_inherit_leave" model="ir.ui.view">
         <field name="name">hr.employee.list.leave</field>

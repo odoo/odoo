@@ -103,15 +103,15 @@ class TestAttendanceManager(TransactionCase):
         self.assertFalse(officer.has_group('hr.group_hr_user'))
 
         menu = self.env.ref('hr_attendance.menu_hr_attendance_employee')
-        action = menu.action
+        action = menu.action.with_user(officer).run()
 
         self.assertEqual(
-            action.res_model, 'hr.employee.public',
+            action['res_model'], 'hr.employee.public',
             "The Attendance 'Employees' menu must point to the public/safe employees action",
         )
 
         kanban_fields = ['name', 'avatar_128', 'job_id', 'work_location_id', 'attendance_state']
         try:
-            self.env[action.res_model].with_user(officer).search_read([], kanban_fields)
+            self.env[action['res_model']].with_user(officer).search_read([], kanban_fields)
         except AccessError:
             self.fail("Attendance officer without Employees app access could not open the Employees menu")
