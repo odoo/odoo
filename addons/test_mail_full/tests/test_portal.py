@@ -447,12 +447,13 @@ class TestPortalFlow(MailCommon, HttpCase):
 
     def test_redirect_to_user_lang_page(self):
         """Check that users are redirected to a page in their language or in the backend if they have access."""
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.env['res.lang']._activate_lang('es_ES')
+        lang_fr = self.env['res.lang']._activate_lang('fr_FR')
+        lang_es = self.env['res.lang']._activate_lang('es_ES')
         # _get_frontend is patched to test the behavior without website installed
         get_frontend_installed_langs = self.env['res.lang'].with_context(web_force_installed_langs=True)._get_frontend
         with patch.object(self.env['res.lang'].__class__, '_get_frontend', get_frontend_installed_langs):
-            lang_url_prefix_list = [('en_US', ''), ('fr_FR', '/fr'), ('es_ES', '/es')]
+            # Using url_code: it's short/full code depending on active lang (e.g. "fr_FR" if fr_BE was active before)
+            lang_url_prefix_list = [('en_US', ''), ('fr_FR', f'/{lang_fr.url_code}'), ('es_ES', f'/{lang_es.url_code}')]
             # Not logged: redirect to the portal page in the customer language.
             for lang_code, expected_url_prefix in lang_url_prefix_list:
                 self.customer.lang = lang_code

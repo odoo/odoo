@@ -473,6 +473,8 @@ class TestRedirectPortal(HttpCase):
         else:
             raise AssertionError('Record access URL not found')
         cls.website = cls.env.ref('base.default_website')
+        # Other active variants of the tested languages would change the nearest language
+        cls.website.language_ids = cls.env.ref('base.lang_en')
 
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_customer_access_not_logged_language_redirection(self):
@@ -480,32 +482,32 @@ class TestRedirectPortal(HttpCase):
         self._setup_website_customer_lang('en_US')
         res = self.url_open(self.record_access_url)
         self.assertEqual(url_parse(res.url).path, f'/my/website_test_portal/{self.record_portal.id}')
-        self.opener.cookies.clear()
 
-        for lang_code, expected_url_prefix in (('fr_FR', '/fr'), ('es_ES', '/es')):
+        for lang_code in ('fr_FR', 'es_ES'):
             with self.subTest(lang_code=lang_code):
                 lang = self._setup_website_customer_lang(lang_code)
                 # Language not enabled in the current website: no redirection to customer language to avoid 404
                 self.website.language_ids -= lang
+                self.opener.cookies.clear()
                 res = self.url_open(self.record_access_url)
                 self.assertEqual(url_parse(res.url).path, f'/my/website_test_portal/{self.record_portal.id}')
-                self.opener.cookies.clear()
                 # Language enabled in the current website: redirection to customer language
                 self.website.language_ids += lang
-                res = self.url_open(self.record_access_url)
-                self.assertEqual(url_parse(res.url).path,
-                                 f'{expected_url_prefix}/my/website_test_portal/{self.record_portal.id}')
                 self.opener.cookies.clear()
+                res = self.url_open(self.record_access_url)
+                # Using url_code: it's short/full depending on active lang (e.g. "fr_FR" if fr_BE was active before)
+                self.assertEqual(url_parse(res.url).path,
+                                 f'/{lang.url_code}/my/website_test_portal/{self.record_portal.id}')
 
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_customer_access_not_logged_nearest_language_redirection(self):
         """Check redirection to nearest site language if customer's language isn't enabled (fr_BE -> fr_FR)."""
-        self._setup_website_customer_lang('fr_FR')
+        lang_fr = self._setup_website_customer_lang('fr_FR')
         lang_fr_be = self._setup_website_customer_lang('fr_BE')
         self.website.language_ids -= lang_fr_be
         res = self.url_open(self.record_access_url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(url_parse(res.url).path, f'/fr/my/website_test_portal/{self.record_portal.id}')
+        self.assertEqual(url_parse(res.url).path, f'/{lang_fr.url_code}/my/website_test_portal/{self.record_portal.id}')
 
     def _setup_website_customer_lang(self, lang_code):
         """ Activate language for the website and set it to the customer. """
