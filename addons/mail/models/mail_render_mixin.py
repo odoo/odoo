@@ -175,8 +175,13 @@ class MailRenderMixin(models.AbstractModel):
                 _sub_relative2absolute.base_url = self.env["ir.config_parameter"].sudo().get_str("web.base.url")
             return match.group(1) + urls.urljoin(_sub_relative2absolute.base_url, match.group(2))
 
+        def _sub_relative2absolute_srcset(match):
+            srcset = re.sub(r"(^|,\s*)(\/[^,\s]*)", _sub_relative2absolute, match.group(2))
+            return match.group(1) + srcset
+
         _sub_relative2absolute.base_url = base_url
         html = re.sub(r"""(<(?:img|v:fill|v:image)(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
+        html = re.sub(r"""(<(?:img)(?=\s)[^>]*\ssrcset=")([^"]+)""", _sub_relative2absolute_srcset, html)
         html = re.sub(r"""(<a(?=\s)[^>]*\shref=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(r"""(<[\w-]+(?=\s)[^>]*\sbackground=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(re.compile(
