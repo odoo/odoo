@@ -773,6 +773,9 @@ export class PosOrder extends PosOrderAccounting {
             changes.categoryCount[category.id].count += delta;
         };
 
+        const allDecreaseQtyLineUuids = this.lines
+            .map((line) => line.uiState.decreaseLineUuid)
+            .filter(Boolean);
         for (const orderline of this.lines) {
             const product = orderline.product_id;
             const category = product.pos_categ_ids.find((c) =>
@@ -788,7 +791,20 @@ export class PosOrder extends PosOrderAccounting {
                 continue;
             }
 
-            const quantityDiff = orderline.qty - orderline.prepQty;
+            let quantityDiff = orderline.qty - orderline.prepQty;
+            // When `disallowLineQuantityChange` is enabled, a reduced quantity creates a new line. In the preparation display, it should be treated as a
+            // cancellation of the original line. We use `decreaseLineUuid` to link both lines and account for the quantity difference.
+            // The negative line is skipped since its reduction is already accounted for.
+            if (orderline.uiState.decreaseLineUuid) {
+                const decreaseLine = this.lines.find(
+                    (line) => line.uuid === orderline.uiState.decreaseLineUuid
+                );
+                quantityDiff += decreaseLine?.qty ?? 0;
+            }
+
+            if (allDecreaseQtyLineUuids.includes(orderline.uuid)) {
+                continue;
+            }
             if (quantityDiff !== 0) {
                 changes[quantityDiff > 0 ? "addedQuantity" : "removedQuantity"].push(
                     this.dataMaker(orderline, quantityDiff)
