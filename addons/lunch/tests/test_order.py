@@ -83,3 +83,22 @@ class TestOrder(TestsCommon):
         self.assertTrue(order2.active)
         self.assertEqual(order1.quantity, 1)
         self.assertEqual(order2.quantity, 1)
+
+    def test_wallet_balance_keeps_sent_orders(self):
+        order = self.env['lunch.order'].create({
+            'product_id': self.product_pizza.id,
+            'user_id': self.env.user.id,
+            'lunch_location_id': self.location_office_1.id,
+            'quantity': 1,
+        })
+        Cashmove = self.env['lunch.cashmove']
+        balance = Cashmove.get_wallet_balance(self.env.user, include_config=False)
+        order.action_order()
+        ordered_balance = Cashmove.get_wallet_balance(self.env.user, include_config=False)
+        self.assertAlmostEqual(ordered_balance, balance - order.price)
+        order.action_send()
+        self.env.flush_all()
+        self.assertAlmostEqual(Cashmove.get_wallet_balance(self.env.user, include_config=False), ordered_balance)
+        order.action_confirm()
+        self.env.flush_all()
+        self.assertAlmostEqual(Cashmove.get_wallet_balance(self.env.user, include_config=False), ordered_balance)
