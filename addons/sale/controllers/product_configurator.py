@@ -167,8 +167,12 @@ class SaleProductConfiguratorController(Controller):
         combination = request.env["product.template.attribute.value"].browse(ptav_ids)
         product = product_template._get_variant_for_combination(combination)
 
+        product_or_template = product or product_template
+        if product_uom not in product_or_template._get_available_uoms():
+            product_uom = product_or_template._get_main_uom()
+
         values = self._get_basic_product_information(
-            product or product_template,
+            product_or_template,
             pricelist,
             combination,
             quantity=quantity or 0.0,
