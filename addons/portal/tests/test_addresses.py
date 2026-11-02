@@ -251,6 +251,32 @@ class TestPortalAddresses(BaseCommon, HttpCase):
         res = self._submit_address_values(address_values)
         self.assertIn("MA_ICE", res["invalid_fields"])
 
+    def test_additional_identifiers_uncompany_is_preserved_on_unchanged_value(self):
+        """An unchanged company additional identifier must survive the address
+        write-back and not be dropped (issue #299760)."""
+        self.authenticate(self.account_a.login, self.account_a.login)
+        csrf_token = self.csrf_token()
+        # Give the child address its own MA_ICE equal to the submitted value.
+        self.account_a.partner_id.write({'additional_identifiers': {'MA_ICE': '001561191000066'}})
+        res = self._submit_address_values({
+            **self.default_address_values,
+            "MA_ICE": "001561191000066",
+            "csrf_token": csrf_token,
+            "partner_id": self.account_a.partner_id.id,
+        })
+        # No crash, address saved.
+        self.assertEqual(res, {"redirectUrl": "/my/addresses"})
+        # The unchanged identifier survives the write-back; before the fix the
+        # validation loop popped it out of the dict, so the write dropped it.
+        persisted = (
+            self.env['res.partner'].sudo().browse(self.account_a.partner_id.id)
+            .additional_identifiers or {}
+        )
+        self.assertTrue(
+            persisted and 'MA_ICE' in persisted,
+            msg=f"MA_ICE was dropped on write-back: {persisted}",
+        )
+
     def test_company_name_update(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
         csrf_token = self.csrf_token()
