@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_od19_billing_request_root"
+              name="Billing Requests / คำขอเปิดบิล"
+              web_icon="od19_billing_request,static/description/icon.svg"
+              groups="od19_billing_request.group_od19_billing_requester,od19_billing_request.group_od19_billing_accounting"
+              sequence="60"/>
+
+    <menuitem id="menu_od19_billing_request_all"
+              name="All Requests / คำขอทั้งหมด"
+              parent="menu_od19_billing_request_root"
+              action="action_od19_billing_request"
+              sequence="10"/>
+
+    <menuitem id="menu_od19_billing_request_queue"
+              name="Billing Queue / คิวรอออกบิล"
+              parent="menu_od19_billing_request_root"
+              action="action_od19_billing_request_queue"
+              groups="od19_billing_request.group_od19_billing_accounting"
+              sequence="20"/>
+</odoo>

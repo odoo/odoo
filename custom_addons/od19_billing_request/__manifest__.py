@@ -21,6 +21,8 @@
         "security/od19_billing_request_security.xml",
         "security/ir.model.access.csv",
         "data/od19_billing_request_data.xml",
+        "views/billing_request_views.xml",
+        "views/billing_request_menus.xml",
     ],
     "installable": True,
     "application": False,

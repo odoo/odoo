@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============ FORM ============ -->
+    <record id="view_od19_billing_request_form" model="ir.ui.view">
+        <field name="name">od19.billing.request.form</field>
+        <field name="model">od19.billing.request</field>
+        <field name="arch" type="xml">
+            <form string="Billing Request">
+                <header>
+                    <button name="action_submit" type="object" string="Submit / ส่งให้บัญชี"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_create_invoice" type="object"
+                            string="Create Invoice/Bill / ออกบิล" class="btn-primary"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_reject" type="object" string="Reject / ตีกลับ"
+                            invisible="state != 'submitted'"/>
+                    <button name="action_reset_draft" type="object" string="Reset to Draft"
+                            invisible="state not in ('rejected', 'cancelled')"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state in ('invoiced', 'cancelled')"/>
+                    <button name="od19_action_open_pull_wizard" type="object"
+                            string="Pull Lines / ดึงรายการ" invisible="state != 'draft'"/>
+                    <button name="od19_action_open_remove_wizard" type="object"
+                            string="Manage Source / จัดการต้นทาง" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,invoiced"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="direction" readonly="state != 'draft'"/>
+                            <field name="date_request"/>
+                            <field name="requested_by_id" readonly="1"/>
+                            <field name="department_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="origin_ref" readonly="state != 'draft'"
+                                   options="{'no_create': True}"/>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="ar_billing_mode" invisible="direction != 'ar'"/>
+                            <field name="move_type" invisible="1"/>
+                            <field name="target_move_id" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lines / รายการ" name="lines">
+                            <field name="line_ids" readonly="state == 'invoiced'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount"/>
+                                    <field name="qty_ordered" readonly="1"/>
+                                    <field name="qty_already_requested" readonly="1"/>
+                                    <field name="remaining_to_bill" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Evidence / หลักฐาน" name="evidence">
+                            <field name="evidence_ok" invisible="1"/>
+                            <field name="evidence_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="evidence_type_id"/>
+                                    <field name="is_verified"/>
+                                    <field name="attachment_count"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="AP Original / ต้นฉบับจริง" name="ap_original"
+                              invisible="direction != 'ap'">
+                            <group>
+                                <field name="original_received"/>
+                                <field name="original_received_date"/>
+                                <field name="original_received_by_id"/>
+                            </group>
+                        </page>
+                        <page string="Other Info / ข้อมูลอื่น" name="other">
+                            <field name="reject_reason" invisible="state != 'rejected'"/>
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============ LIST ============ -->
+    <record id="view_od19_billing_request_list" model="ir.ui.view">
+        <field name="name">od19.billing.request.list</field>
+        <field name="model">od19.billing.request</field>
+        <field name="arch" type="xml">
+            <list string="Billing Requests" decoration-muted="state in ('cancelled','rejected')">
+                <field name="name"/>
+                <field name="direction"/>
+                <field name="date_request"/>
+                <field name="partner_id"/>
+                <field name="requested_by_id"/>
+                <field name="origin_ref"/>
+                <field name="state"/>
+                <field name="target_move_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============ KANBAN ============ -->
+    <record id="view_od19_billing_request_kanban" model="ir.ui.view">
+        <field name="name">od19.billing.request.kanban</field>
+        <field name="model">od19.billing.request</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="direction"/>
+                <field name="partner_id"/>
+                <field name="date_request"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="o_kanban_record_title"><field name="name"/></div>
+                        <div><field name="partner_id"/></div>
+                        <div><field name="direction"/></div>
+                        <div><field name="date_request"/></div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============ SEARCH ============ -->
+    <record id="view_od19_billing_request_search" model="ir.ui.view">
+        <field name="name">od19.billing.request.search</field>
+        <field name="model">od19.billing.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="requested_by_id"/>
+                <filter name="filter_ar" string="AR" domain="[('direction','=','ar')]"/>
+                <filter name="filter_ap" string="AP" domain="[('direction','=','ap')]"/>
+                <filter name="filter_submitted" string="Submitted"
+                        domain="[('state','=','submitted')]"/>
+                <group>
+                    <filter name="group_direction" string="Direction" context="{'group_by':'direction'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============ ACTIONS ============ -->
+    <record id="action_od19_billing_request" model="ir.actions.act_window">
+        <field name="name">Billing Requests / คำขอเปิดบิล</field>
+        <field name="res_model">od19.billing.request</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_od19_billing_request_search"/>
+    </record>
+
+    <record id="action_od19_billing_request_queue" model="ir.actions.act_window">
+        <field name="name">Billing Queue / คิวรอออกบิล</field>
+        <field name="res_model">od19.billing.request</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('state', '=', 'submitted')]</field>
+        <field name="context">{'search_default_group_direction': 1}</field>
+        <field name="search_view_id" ref="view_od19_billing_request_search"/>
+    </record>
+</odoo>
