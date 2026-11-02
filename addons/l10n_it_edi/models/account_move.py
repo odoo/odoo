@@ -1764,6 +1764,20 @@ class AccountMove(models.Model):
                     self.partner_id.l10n_it_codice_fiscale = partner_info.get('codice_fiscale', False)
                     message_to_log.extend(logs)
 
+            if (
+                partner_role == 'buyer'
+                and (customer := self.partner_id.commercial_partner_id)
+                and not self._l10n_it_edi_document_type_mapping().get(document_type, {}).get('self_invoice')
+            ):
+                if (
+                    not customer.l10n_it_pa_index
+                    and len(destination_code or '') in (6, 7)
+                    and destination_code.upper() not in ('0000000', 'XXXXXXX')
+                ):
+                    customer.l10n_it_pa_index = destination_code
+                if not customer.l10n_it_pec_email and (destination_pec := get_text(tree, '//PECDestinatario')):
+                    customer.l10n_it_pec_email = destination_pec
+
             # Document Number -----------------------------------
             if number := get_text(tree, './/DatiGeneraliDocumento//Numero'):
                 self.ref = number

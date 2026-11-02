@@ -1161,3 +1161,40 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
             "A FatturaPA seller with no VAT number must not match any existing partner "
             "(including partners with '/' as a placeholder VAT). A new partner should be created.",
         )
+
+    def test_import_customer_invoice_destination_code_and_pec(self):
+        """ Customer's Destination Code (SDI) and PEC are automatically populated
+        when importing an issued customer invoice, but placeholders are ignored,
+        existing values are never overwritten, and reverse charge self-invoices
+        do not update the partner.
+        """
+        customer = self.italian_partner_a
+        customer.write({'l10n_it_pa_index': False, 'l10n_it_pec_email': False})
+
+        # 1. Fill empty SDI and PEC on customer invoice import
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaHeader/DatiTrasmissione/CodiceDestinatario" position="replace">
+                <CodiceDestinatario>ABC1234</CodiceDestinatario>
+                <PECDestinatario>customer@pec.it</PECDestinatario>
+            </xpath>
+            <xpath expr="//CessionarioCommittente/DatiAnagrafici/CodiceFiscale" position="replace">
+                <CodiceFiscale>93026890017</CodiceFiscale>
+            </xpath>
+        """
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{'partner_id': customer.id}], applied_xml, move_type='out_invoice')
+        self.assertEqual(customer.l10n_it_pa_index, 'ABC1234')
+        self.assertEqual(customer.l10n_it_pec_email, 'customer@pec.it')
+
+        # 2. Existing values are never overwritten
+        applied_xml_new_vals = """
+            <xpath expr="//FatturaElettronicaHeader/DatiTrasmissione/CodiceDestinatario" position="replace">
+                <CodiceDestinatario>NEW7890</CodiceDestinatario>
+                <PECDestinatario>new@pec.it</PECDestinatario>
+            </xpath>
+            <xpath expr="//CessionarioCommittente/DatiAnagrafici/CodiceFiscale" position="replace">
+                <CodiceFiscale>93026890017</CodiceFiscale>
+            </xpath>
+        """
+        self._assert_import_invoice('IT01234567890_FPR01.xml', [{'partner_id': customer.id}], applied_xml_new_vals, move_type='out_invoice')
+        self.assertEqual(customer.l10n_it_pa_index, 'ABC1234')
+        self.assertEqual(customer.l10n_it_pec_email, 'customer@pec.it')
