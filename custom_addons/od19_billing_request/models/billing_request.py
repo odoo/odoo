@@ -469,6 +469,13 @@ class Od19BillingRequest(models.Model):
     # ------------------------------------------------------------------
     def action_create_invoice(self):
         self.ensure_one()
+        # Row-level lock so two concurrent callers on the same request cannot
+        # both create an invoice (rule: 1 request = 1 origin = 1 bill).
+        self.env.cr.execute(
+            "SELECT id FROM od19_billing_request WHERE id = %s FOR UPDATE",
+            (self.id,),
+        )
+        self.invalidate_recordset(["state", "target_move_id"])
         if self.state != "submitted":
             raise UserError(
                 _("Only a submitted request can be billed (state: %s).") % self.state
@@ -481,8 +488,10 @@ class Od19BillingRequest(models.Model):
             raise UserError(_("Please set the partner before creating the document."))
         self._od19_check_before_create_document()
         move = self._od19_build_move()
-        self.write({"target_move_id": move.id, "state": "invoiced"})
+        # Link target lines *before* flagging the request as invoiced so a
+        # mismatch aborts the transaction instead of leaving a half-linked bill.
         self._od19_link_target_lines(move)
+        self.write({"target_move_id": move.id, "state": "invoiced"})
         return move
 
     def _od19_check_before_create_document(self):
@@ -527,6 +536,8 @@ class Od19BillingRequest(models.Model):
         move_vals = {
             "move_type": self.move_type,
             "partner_id": self.partner_id.id,
+            "company_id": self.company_id.id,
+            "currency_id": self.currency_id.id,
             "invoice_date": fields.Date.context_today(self),
             "invoice_origin": self.name,
             "ref": self.name,
@@ -539,6 +550,12 @@ class Od19BillingRequest(models.Model):
         move_lines = move.invoice_line_ids.sorted(lambda line: line.id)
         request_lines = self.line_ids.sorted("sequence")
         if len(move_lines) != len(request_lines):
-            return
+            raise UserError(
+                _(
+                    "Created document has %(move)s line(s) but the request has "
+                    "%(request)s line(s); aborting to keep traceability."
+                )
+                % {"move": len(move_lines), "request": len(request_lines)}
+            )
         for request_line, move_line in zip(request_lines, move_lines):
             request_line.target_line_id = move_line
