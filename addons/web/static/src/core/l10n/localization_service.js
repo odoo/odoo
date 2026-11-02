@@ -107,10 +107,14 @@ export const localizationService = {
 
         const locale = user.lang || browser.navigator.language;
         Settings.defaultLocale = locale;
-        for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
-            if (re.test(locale)) {
-                Settings.defaultNumberingSystem = numberingSystem;
-                break;
+        if (session.numbering_system) {
+            Settings.defaultNumberingSystem = session.numbering_system;
+        } else {
+            for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
+                if (re.test(locale)) {
+                    Settings.defaultNumberingSystem = numberingSystem;
+                    break;
+                }
             }
         }
         localization.code = jsToPyLocale(locale);
