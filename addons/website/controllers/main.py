@@ -754,6 +754,31 @@ class Website(Home):
                 final_html = final_html.replace(shape_url, updated_shape_url)
         return final_html
 
+    def _apply_configurator_preview_dark_css(self, final_html, preview_url):
+        preview_doc = html.document_fromstring(final_html)
+        preview_doctype = preview_doc.getroottree().docinfo.doctype
+        adapt_dark_palette_content(preview_doc)
+        final_html = etree.tostring(
+            preview_doc,
+            encoding='unicode',
+            method='html',
+            doctype=preview_doctype or None,
+        )
+        dark_css_path = preview_url.rsplit('/', 1)[0] + '/preview_dark.css'
+        try:
+            with tools.file_open(dark_css_path.lstrip('/'), 'rb') as file:
+                dark_css = file.read().decode('utf-8')
+        except FileNotFoundError:
+            return final_html
+        head_end_match = re.search(r'</head>', final_html, flags=re.IGNORECASE)
+        if not head_end_match:
+            return final_html
+        return (
+            final_html[:head_end_match.start()]
+            + f'<style>{dark_css}</style>'
+            + final_html[head_end_match.start():]
+        )
+
     def _get_configurator_preview_contrast_color(self, background_color):
         """Pick a readable text color for a preview background color.
 
@@ -795,7 +820,7 @@ class Website(Home):
                 text_variables.append(f'--o-cc{color_combination}-text:{text_color};')
         return ''.join(text_variables)
 
-    def _get_configurator_preview_overrides(self, palette, final_html, is_dark=False):
+    def _get_configurator_preview_overrides(self, palette, final_html):
         """Return the CSS variables injected into static configurator previews.
 
         The selected palette overrides the preview's base colors. Text colors
@@ -806,7 +831,6 @@ class Website(Home):
             ``o-color-1`` to ``o-color-5``
         :param str final_html: static preview HTML used to read the original
             color-combination backgrounds
-        :param bool is_dark: whether the selected palette uses a dark base
         :return: style tag containing the configurator preview CSS variables
         :rtype: str
         """
@@ -817,6 +841,7 @@ class Website(Home):
         }
         root_variables = ''.join(
             f'--o-color-{index}: {color};'
+            f'--o-color-{index}-rgb: {", ".join(map(str, hex_to_rgb(color)))};'
             for index, color in enumerate(palette, start=1)
             if color
         )
@@ -832,47 +857,12 @@ class Website(Home):
                     f'.bg-{color_name}'
                     f'{{--color:{text_color};color:{text_color};}}'
                 )
-        dark_mode_overrides = ''
-        if is_dark:
-            root_variables += (
-                '--body-bg:var(--o-color-4);'
-                '--body-color:var(--o-color-5);'
-            )
-            dark_mode_overrides = (
-                '#wrapwrap>main,#wrapwrap.o_footer_effect_enable>main{'
-                'background-color:var(--o-color-4);'
-                'color:var(--o-color-5);'
-                '}'
-            )
-            for area_name, area_selector in (
-                ('menu', '#wrapwrap header .navbar'),
-                ('footer', '#wrapwrap footer'),
-            ):
-                background_match = re.search(
-                    rf'--{area_name}\s*:\s*'
-                    r'(?:var\(--(o-color-[1-5])\)|(#[0-9a-fA-F]{6}))\s*;',
-                    final_html,
-                )
-                if not background_match:
-                    continue
-                color_name, color_value = background_match.groups()
-                background_color = palette_map.get(color_name) if color_name else color_value
-                if not background_color:
-                    continue
-                text_color = self._get_configurator_preview_contrast_color(background_color)
-                dark_mode_overrides += (
-                    f'{area_selector},'
-                    f'{area_selector} :is('
-                    'h1,h2,h3,h4,h5,h6,a:not(.btn),.btn-link,.text-muted'
-                    f'){{color:{text_color}!important;}}'
-                )
         # Chrome may show thin gaps between sections in scaled iframes. The
         # `.o_we_shape` and `section` rules overlap them to hide those gaps.
         return (
             '<style id="o_configurator_theme_preview_overrides">'
             f':root{{{root_variables}}}'
             f'{background_color_overrides}'
-            f'{dark_mode_overrides}'
             '.o_we_shape{top:-2px;bottom:-2px;}'
             'section{margin-top:-2px;}'
             '</style>'
@@ -945,20 +935,11 @@ class Website(Home):
         final_html = self._apply_configurator_preview_shape_colors(final_html, palette_map)
         final_html = self._apply_configurator_preview_images(final_html, theme_name, images_map)
         if is_dark_color_palette:
-            preview_doc = html.document_fromstring(final_html)
-            preview_doctype = preview_doc.getroottree().docinfo.doctype
-            adapt_dark_palette_content(preview_doc)
-            final_html = etree.tostring(
-                preview_doc,
-                encoding='unicode',
-                method='html',
-                doctype=preview_doctype or None,
-            )
+            final_html = self._apply_configurator_preview_dark_css(final_html, preview_url)
         # Add palette variables to make static previews reflect the current configurator selection.
         preview_overrides = self._get_configurator_preview_overrides(
             palette,
             final_html,
-            is_dark=is_dark_color_palette,
         )
         final_html = self._inject_configurator_preview_overrides(
             final_html,
