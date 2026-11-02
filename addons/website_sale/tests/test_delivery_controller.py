@@ -125,3 +125,23 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
             order._recompute_cart()
 
         self.assertEqual(order.amount_delivery, 10.0)
+
+    def test_order_summary_values_render_line_prices(self):
+        self.website.show_line_subtotals_tax_selection = "tax_included"
+        fiscal_position = self.env["account.fiscal.position"].create({"name": "Foreign"})
+        tax_21, tax_20 = self.env["account.tax"].create([
+            {"name": "Tax 21%", "amount": 21},
+            {"name": "Tax 20%", "amount": 20, "fiscal_position_ids": fiscal_position.ids},
+        ])
+        tax_20.original_tax_ids = tax_21
+        product = self._create_product(list_price=100.0, taxes_id=tax_21.ids)
+        order = self._create_so(order_line=[Command.create({"product_id": product.id})])
+        order.fiscal_position_id = fiscal_position
+        order._recompute_taxes()
+
+        with MockRequest(self.env, website=self.website, sale_order_id=order.id):
+            summary_content = self.Controller._order_summary_values(order)[
+                "website_sale.cart_summary_content"
+            ]
+
+        self.assertIn("120.00", summary_content)

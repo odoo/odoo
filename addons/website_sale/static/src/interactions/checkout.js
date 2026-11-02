@@ -377,6 +377,15 @@ export class Checkout extends Interaction {
         amountUntaxed.innerHTML = result.amount_untaxed;
         amountTax.innerHTML = result.amount_tax;
         amountTotal.forEach(total => total.innerHTML = result.amount_total);
+        const productsTable = targetEl.querySelector('.o_cart_products_table');
+        if (productsTable && result['website_sale.cart_summary_content']) {
+            const newProductsTable = new DOMParser().parseFromString(
+                result['website_sale.cart_summary_content'], 'text/html'
+            ).querySelector('.o_cart_products_table');
+            if (newProductsTable) {
+                productsTable.parentNode.replaceChild(newProductsTable, productsTable);
+            }
+        }
     }
 
     /**
