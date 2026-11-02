@@ -3,25 +3,9 @@
 <!-- License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
 
-    <!-- Test entry point for the two native sale order print forms.
-         The list opens sale orders in every state so both the classic and the
-         modern variant can be checked before the layout is frozen. -->
-    <record id="action_od19_sale_order_print_test" model="ir.actions.act_window">
-        <field name="name">รายงานพิมพ์ใบสั่งขาย (ทดสอบ) / Sale Order Print (Test)</field>
-        <field name="res_model">sale.order</field>
-        <field name="view_mode">list,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                ยังไม่มีใบสั่งขายสำหรับทดสอบรายงาน / No sale order to print yet.
-            </p>
-        </field>
-    </record>
-
-    <menuitem id="menu_od19_sale_order_print_test"
-              name="รายงานพิมพ์ใบสั่งขาย (ทดสอบ)"
-              parent="sale.menu_sale_report"
-              action="action_od19_sale_order_print_test"
-              groups="base.group_system"
-              sequence="95"/>
+    <!-- The two native sale order print forms (classic / modern) are exposed
+         through the standard Print menu of sale.order; see
+         report/sale_order_report.xml (binding_model_id = sale.model_sale_order).
+         The former test menu under Sales > Reporting has been removed. -->
 
 </odoo>
