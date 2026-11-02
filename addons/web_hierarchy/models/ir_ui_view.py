@@ -18,6 +18,7 @@ HIERARCHY_VALID_ATTRIBUTES = {
     'default_order',
     'avatar_field',
     'label',
+    'limit'
 }
 
 
