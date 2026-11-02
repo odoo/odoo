@@ -363,3 +363,43 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
         self.assertEqual(leave.number_of_hours, 0)
         self.assertEqual(leave.date_from, datetime(2019, 9, 3, 6, 0, 0))
         self.assertEqual(leave.date_to, datetime(2019, 9, 3, 10, 0, 0))
+
+    def test_hour_leave_hours_recomputed_when_dates_change(self):
+        self.work_entry_type.write({'request_unit': 'hour', 'unit_of_measure': 'hour'})
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Variable Hours',
+            'attendance_ids': [
+                Command.clear(),
+                Command.create({
+                    'dayofweek': '0',
+                    'hour_from': 7.5,
+                    'hour_to': 12,
+                }),
+                Command.create({
+                    'dayofweek': '0',
+                    'hour_from': 13,
+                    'hour_to': 16.5,
+                }),
+                Command.create({
+                    'dayofweek': '4',
+                    'hour_from': 7.5,
+                    'hour_to': 13.25,
+                }),
+            ],
+        })
+        employee = self.employee_emp
+        employee.resource_calendar_id = calendar
+
+        with Form(self.env['hr.leave'].with_context(default_employee_id=employee.id)) as leave_form:
+            leave_form.work_entry_type_id = self.work_entry_type
+            leave_form.request_date_from = date(2025, 1, 3)
+            leave_form.request_date_to = date(2025, 1, 3)
+
+            self.assertEqual(leave_form.request_hour_from, 7.5)
+            self.assertEqual(leave_form.request_hour_to, 13.25)
+
+            leave_form.request_date_to = date(2025, 1, 6)
+            leave_form.request_date_from = date(2025, 1, 6)
+
+            self.assertEqual(leave_form.request_hour_from, 7.5)
+            self.assertEqual(leave_form.request_hour_to, 16.5)
