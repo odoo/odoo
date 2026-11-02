@@ -3,6 +3,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 
 export class PaymentStripe extends PaymentInterface {
     setup() {
@@ -153,11 +154,13 @@ export class PaymentStripe extends PaymentInterface {
             return false;
         }
         line.set_payment_status("waitingCard");
+        const config = this.pos.config;
         const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret, {
             config_override: {
                 enable_customer_cancellation: true,
-                // Odoo does not record a tip chosen on the reader, so Stripe would charge it unseen
-                skip_tipping: true,
+                skip_tipping:
+                    config.set_tip_after_payment ||
+                    !(config.iface_tipproduct && config.tip_product_id),
             },
         });
         if (collectPaymentMethod.error) {
@@ -176,6 +179,7 @@ export class PaymentStripe extends PaymentInterface {
                 return false;
             } else if (processPayment.paymentIntent) {
                 line.set_payment_status("waitingCapture");
+                await this.addTerminalTip(line, processPayment.paymentIntent);
 
                 const [captured_card_type, captured_transaction_id] =
                     this._getCapturedCardAndTransactionId(processPayment);
@@ -192,6 +196,21 @@ export class PaymentStripe extends PaymentInterface {
                 line.set_payment_status("done");
                 return true;
             }
+        }
+    }
+
+    async addTerminalTip(line, paymentIntent) {
+        const tip = paymentIntent.amount_details?.tip?.amount;
+        if (tip > 0) {
+            const currency = line.pos_order_id.currency;
+            const tipProduct = this.pos.config.tip_product_id;
+            const existingTip = line.pos_order_id.lines.find(
+                (orderLine) => orderLine.product_id.id === tipProduct.id
+            );
+            await this.pos.set_tip(
+                (existingTip?.price_unit ?? 0) + roundCurrency(tip * currency.rounding, currency)
+            );
+            line.set_amount(paymentIntent.amount * currency.rounding);
         }
     }
 
