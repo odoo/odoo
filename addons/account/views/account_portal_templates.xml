@@ -235,13 +235,35 @@
                 <t t-set="field_info" t-value="env[required_field.model]._fields[required_field.name]"/>
                 <t t-set="default_value" t-value="extra_field_values.get(field_prefix + required_field.name) or field_info.default and field_info.default(required_field.model)"/>
                 <t t-if="required_field.ttype == 'selection'">
-                    <label class="col-form-label" t-att-for="field_prefix + required_field.name"><t t-out="required_field.field_description"/></label>
-                    <select class="form-select" t-att-name="field_prefix + required_field.name" required="required">
-                        <option t-att-selected="not default_value" disabled="disabled" value=""><t t-out="'Select the %s ...' % required_field.field_description.lower()"/></option>
-                        <t t-foreach="required_field.selection_ids" t-as="selection">
-                            <option t-att-selected="default_value and default_value == selection.value" t-att-value="selection.value"><t t-out="selection.name"/></option>
-                        </t>
-                    </select>
+                    <div class="form-floating">
+                        <select
+                            class="form-select"
+                            t-att-name="field_prefix + required_field.name"
+                            required="required"
+                        >
+                            <option
+                                t-att-selected="not default_value"
+                                disabled="disabled"
+                                value=""
+                            >
+                                <t t-out="'Select the %s ...' % required_field.field_description.lower()"/>
+                            </option>
+                            <t t-foreach="required_field.selection_ids" t-as="selection">
+                                <option
+                                    t-att-selected="default_value and default_value == selection.value"
+                                    t-att-value="selection.value"
+                                >
+                                    <t t-out="selection.name"/>
+                                </option>
+                            </t>
+                        </select>
+                        <label
+                            class="col-form-label"
+                            t-att-for="field_prefix + required_field.name"
+                        >
+                            <t t-out="required_field.field_description"/>
+                        </label>
+                    </div>
                 </t>
             </div>
         </t>
@@ -259,18 +281,23 @@
                     <div class="o_additional_identifier_field mb-2"
                          t-att-data-identifier-key="identifier_key"
                          t-attf-style="#{'' if identifier_value else 'display: none;'}">
-                        <label class="col-form-label fw-normal label-optional" t-attf-for="o_additional_identifier_{{identifier_key}}"
-                               t-out="meta['label']"/>
                         <div class="input-group">
-                            <input
-                                type="text"
-                                class="form-control"
-                                t-attf-id="o_additional_identifier_{{identifier_key}}"
-                                t-attf-name="{{identifier_key}}"
-                                t-att-value="identifier_value"
-                                t-att-placeholder="meta.get('placeholder')"
-                                t-att-aria-describedby="('o_additional_identifier_%s_help' % identifier_key) if meta.get('help') else None"
-                            />
+                            <div class="form-floating">
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    t-attf-id="o_additional_identifier_{{identifier_key}}"
+                                    t-attf-name="{{identifier_key}}"
+                                    t-att-value="identifier_value"
+                                    t-att-placeholder="meta.get('placeholder') or ' '"
+                                    t-att-aria-describedby="('o_additional_identifier_%s_help' % identifier_key) if meta.get('help') else None"
+                                />
+                                <label
+                                    class="col-form-label fw-normal label-optional"
+                                    t-attf-for="o_additional_identifier_{{identifier_key}}"
+                                    t-out="meta['label']"
+                                />
+                            </div>
                             <button type="button" class="btn btn-outline-secondary o_remove_identifier"
                                     title="Remove" aria-label="Remove">
                                 <i class="oi" data-icon="delete"/>
@@ -311,33 +338,37 @@
                 </div>
             </t>
             <div t-if="len(invoice_sending_methods) > 1" class="col-lg-6">
-                <label class="col-form-label label-optional" for="invoice_sending_method">
-                    Receive invoices
-                </label>
-                <select name="invoice_sending_method" class="form-select">
-                    <option
-                        t-foreach="invoice_sending_methods"
-                        t-as="method"
-                        t-att-value="method"
-                        t-att-selected="partner_sudo.invoice_sending_method == method"
-                        t-out="method_value"
-                    />
-                </select>
+                <div class="form-floating">
+                    <select name="invoice_sending_method" class="form-select">
+                        <option
+                            t-foreach="invoice_sending_methods"
+                            t-as="method"
+                            t-att-value="method"
+                            t-att-selected="partner_sudo.invoice_sending_method == method"
+                            t-out="method_value"
+                        />
+                    </select>
+                    <label class="col-form-label label-optional" for="invoice_sending_method">
+                        Receive invoices
+                    </label>
+                </div>
             </div>
             <div t-if="invoice_edi_formats" class="col-lg-6">
-                <label class="col-form-label label-optional" for="invoice_edi_format">
-                    Electronic format
-                </label>
-                <select name="invoice_edi_format" class="form-select">
-                    <option value=""/>
-                    <option
-                        t-foreach="invoice_edi_formats"
-                        t-as="format"
-                        t-att-value="format"
-                        t-att-selected="partner_sudo.invoice_edi_format == format"
-                        t-out="format_value"
-                    />
-                </select>
+                <div class="form-floating">
+                    <select name="invoice_edi_format" class="form-select">
+                        <option value=""/>
+                        <option
+                            t-foreach="invoice_edi_formats"
+                            t-as="format"
+                            t-att-value="format"
+                            t-att-selected="partner_sudo.invoice_edi_format == format"
+                            t-out="format_value"
+                        />
+                    </select>
+                    <label class="col-form-label label-optional" for="invoice_edi_format">
+                        Electronic format
+                    </label>
+                </div>
             </div>
         </div>
     </template>
