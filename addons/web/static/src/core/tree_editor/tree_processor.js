@@ -397,8 +397,8 @@ export const treeProcessorService = {
             const fieldDefs = {};
             for (const path of paths) {
                 promises.push(
-                    fieldService.loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                        fieldDefs[path] = fieldDef;
+                    fieldService.loadFieldInfo(resModel, path).then(({ fieldDef, resModel: fieldModel }) => {
+                        fieldDefs[path] = fieldDef ? { ...fieldDef, model: fieldModel } : fieldDef;
                     })
                 );
             }
