@@ -49,6 +49,7 @@ class PaymentProvider(models.Model):
     authorize_webhook_id = fields.Char(
         string="Authorize Webhook ID",
         help="The ID of the webhook created in Authorize.net.",
+        required_if_provider="authorize",
         copy=False,
         groups="base.group_system",
     )

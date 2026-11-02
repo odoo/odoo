@@ -72,12 +72,14 @@ class RazorpayController(Controller):
             "razorpay_refresh_token": response_content["refresh_token"],
             "razorpay_access_token": response_content["access_token"],
             "razorpay_access_token_expiry": expires_in,
-            # Set the provider live.
-            "is_live": True,
-            "is_published": True,
         })
         try:
             provider.action_razorpay_create_webhook()
+            provider.write({
+                # Set the provider live.
+                "is_live": True,
+                "is_published": True,
+            })
         except ValidationError as error:
             _logger.warning(error)
         return request.redirect(redirect_url)
