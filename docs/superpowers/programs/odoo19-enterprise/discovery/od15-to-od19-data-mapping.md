@@ -94,10 +94,10 @@
 | `country_id` | `country_id` | map ด้วย `res_country.code` | ✅ |
 | `property_payment_term_id` | `property_payment_term_id` | map ชื่อผ่าน `payment_term_map.csv` | ✅ |
 | `property_supplier_payment_term_id` | `property_supplier_payment_term_id` | map ชื่อผ่าน `payment_term_map.csv` | ✅ |
-| `tax_name` | `tax_name` *(ตรวจสอบ)* | ย้ายตรง; fallback = `name` (ต้องมี `od19_partner_thai_fields`) | ✅ |
-| `branch_code` | `branch_code` / `tax_branch_code` *(ตรวจสอบ)* | ตัดเป็น 5 หลัก; สำนักงานใหญ่ = `00000` | ✅ |
-| `name_en` / `address_en` / `fax` | `name_en` / … / `fax` *(ตรวจสอบ)* | ย้ายตรง (เฉพาะเมื่อฟิลด์มีจริง) | 🟡 |
-| `od19_amphoe` / `od19_subdistrict` | ที่อยู่แยกตำบล/อำเภอ OD15 *(ตรวจสอบ)* | ย้ายตรงถ้ามีใน OD15 | 🟡 |
+| `tax_name` | `tax_name` (ยืนยันจาก `od15_stage`) | ย้ายตรง; fallback = `name` (ต้องมี `od19_partner_thai_fields`) | ✅ |
+| `branch_code` | `branch_code` (OD15 ไม่มี `tax_branch_code`) | ตัดเป็น 5 หลัก; สำนักงานใหญ่ = `00000` | ✅ |
+| `name_en` / `address_en` / `fax` | `fax` เท่านั้น (OD15 ไม่มี `name_en` / `address_en`) | ย้าย `fax` ตรง; ชื่อ/ที่อยู่ EN เติมภายหลัง (ว่างได้) | 🟡 |
+| `od19_amphoe` / `od19_subdistrict` | `district` (อำเภอ/เขต) / `sub_district` (ตำบล/แขวง) | ย้ายตรง; OD15 มีเพิ่ม `province` / `postal_code` / `house_no` / `village_no` / `village_name` / `alley_lane` / `road` / `building_*` | ✅ |
 
 > แหล่ง OD15: `dtr_partner_master`, `dtr_company`, `autoinfo_*` (แผนก/พนักงาน); Tag หมวดลูกค้า/ผู้ขายผ่าน `partner_category_map.csv`
 > ⚠️ ห้ามนำเข้าบริษัทภายใน (มี `WHERE p.id NOT IN (SELECT partner_id FROM res_company)`) และเฉพาะ `active=true` ที่มี rank > 0
@@ -117,7 +117,9 @@
 | `taxes_id` / `supplier_taxes_id` | `taxes_id` / `supplier_taxes_id` | map ผ่าน `tax_map.csv` | ✅ |
 | `route_ids` | (routes OD15) | map ให้ตรง (MTO/Buy/Make) | 🟡 |
 | `seller_ids` (supplier info) | `product_supplierinfo` | นำเข้าผู้ขาย+ราคา | 🟡 |
-| ฟิลด์เสริมจาก `od19_inventory_execution_control` / `od19_service_card` / `od19_service_warranty` | *(ตรวจสอบซอร์ส OD15)* | ตรวจฟิลด์จริงของโมดูลก่อนเขียน | 🟡 |
+| `od19_tracking_required` (`od19_inventory_execution_control`) | (computed) | derived จาก `tracking`/`cost_method` (ต้นทางนโยบาย FIFO ของ `dtr_stock_fifo`) — ไม่ต้องย้ายค่าตรง | ✅ |
+| `service_interval` (`od19_service_card`) | (ไม่มีฟิลด์ต้นทาง) | OD15 `product_template` ไม่มี field ช่วงบริการ → ตั้ง default `0` | 🟡 |
+| `warranty_duration` / `warranty_type` (`od19_service_warranty`) | `dtr_warranty_list.warranty_time` (Warranty Period หน่วย "เดือน", ผูกด้วย `product_tmpl_id`) | แปลงเดือน → `warranty_type='months'`, `warranty_duration=warranty_time` | 🟡 |
 
 > แหล่ง OD15: `dtr_product_master`, `dtr_product_category`, `dtr_stock`, `dtr_stock_fifo`
 
@@ -334,8 +336,8 @@
 
 ## 7. Definition of Done (ต่อเอนทิตี)
 
-- [ ] ระบุตาราง/คอลัมน์ OD15 จริงจาก `od15_stage` (แทนที่ทุกช่อง *(ตรวจสอบ)*)
-- [ ] เติม CSV mapping ด้วยแถวข้อมูลจริง (ลบแถว `EXAMPLE`)
+- [x] ระบุตาราง/คอลัมน์ OD15 จริงจาก `od15_stage` (แทนที่ทุกช่อง *(ตรวจสอบ)*)
+- [x] เติม CSV mapping ด้วยแถวข้อมูลจริง (ลบแถว `EXAMPLE`)
 - [ ] เขียน logic ใน step ที่เกี่ยวข้องด้วย `common.upsert()` + External ID
 - [ ] รัน `MIG_DRY_RUN=1` ผ่าน → ตรวจ log ว่าไม่มี error
 - [ ] รันจริง → ตรวจ `created/updated/skipped` และรันซ้ำ (idempotent, ไม่สร้างซ้ำ)
