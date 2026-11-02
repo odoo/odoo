@@ -141,8 +141,20 @@
         <field name="country_id" ref="base.be"/>
     </record>
 
+    <record id="hr_work_entry.l10n_be_work_entry_type_birth" model="hr.work.entry.type">
+        <field name="requires_allocation">True</field>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="employee_requests">True</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <!-- Set when splitting the Leave for Birth (000.05) requests, see l10n_be_hr_payroll -->
     <record id="hr_work_entry.l10n_be_work_entry_type_paternity_company" model="hr.work.entry.type">
         <field name="requires_allocation">False</field>
+        <field name="time_off_selectable">False</field>
         <field name="leave_validation_type">no_validation</field>
         <field name="request_unit">half_day</field>
         <field name="unit_of_measure">day</field>
@@ -151,11 +163,11 @@
     </record>
 
     <record id="hr_work_entry.l10n_be_work_entry_type_paternity_legal" model="hr.work.entry.type">
-        <field name="requires_allocation">True</field>
+        <field name="requires_allocation">False</field>
+        <field name="time_off_selectable">False</field>
         <field name="leave_validation_type">no_validation</field>
-        <field name="request_unit">day</field>
+        <field name="request_unit">half_day</field>
         <field name="unit_of_measure">day</field>
-        <field name="employee_requests">True</field>
         <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
     </record>
 

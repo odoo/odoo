@@ -702,6 +702,15 @@
         <field name="amount_rate">0.0</field>
     </record>
 
+    <record id="l10n_be_work_entry_type_birth" model="hr.work.entry.type">
+        <field name="name">Leave for Birth</field>
+        <field name="code">000.05</field>
+        <field name="color">5</field>
+        <field name="display_code">BIR</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+
     <record id="l10n_be_work_entry_type_paternity_company" model="hr.work.entry.type">
         <field name="name">Leave for Birth (days 1-3)</field>
         <field name="code">007.05</field>
