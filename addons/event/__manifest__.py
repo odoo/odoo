@@ -57,7 +57,7 @@ Key Features
     'assets': {
         'web.assets_backend': [
             'event/static/src/client_action/**/*',
-            'event/static/src/scss/event.scss',
+            'event/static/src/scss/event.css',
             'event/static/src/event_state_selection_field/*',
             'event/static/src/icon_selection_field/icon_selection_field.js',
             'event/static/src/icon_selection_field/icon_selection_field.xml',

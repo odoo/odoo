@@ -20,19 +20,19 @@
         color: var(--o-we-fg-light);
         font-size: var(--o-we-font-size-lg);
 
-        &_actionable {
-            &:hover, &:focus {
-                color: var(--o-we-fg-lighter);
-                background-color: unset;
-            }
-        }
-
         .o_hb_option_container_toggler {
             font-size: 1.2em;
         }
 
         + * .oi {
             line-height: revert;
+        }
+    }
+
+    .o_hb_options_container_label_actionable {
+        &:hover, &:focus {
+            color: var(--o-we-fg-lighter);
+            background-color: unset;
         }
     }
 
