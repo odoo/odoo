@@ -45,11 +45,11 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertEqual(error, "Offline: DNS failure")
         self.assertEqual(invoice.l10n_cn_edi_state, 'not_sent')
         self.assertFalse(invoice.l10n_cn_edi_document_ids)
-        self.assertNotIn('issue_invoice', [method for method, _args in self.client.calls])
+        self.assertNotIn('issue', [method for method, _args in self.client.calls])
 
     def test_issue_records_the_fapiao(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {
+        self.responses['issue'] = {
             'state': 'issued',
             'fapiao_no': '24442000000071309399',
             'fapiao_date': datetime(2026, 9, 23, 2, 0),
@@ -70,13 +70,13 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
             'fapiao_date': datetime(2026, 9, 23, 2, 0),
             'qr_code': 'qr-payload',
         }])
-        values = self.client.calls[-1][1][0]
-        self.assertEqual(values['serial_no'], doc.serial_no)
-        self.assertEqual(values['buyer_name'], self.partner_a.name)
+        payload = self.client.calls[-1][1][0]
+        self.assertEqual(payload['fpqqlsh'], doc.serial_no)
+        self.assertEqual(payload['payerName'], self.partner_a.name)
 
     def test_issue_keeps_what_was_sent_on_the_invoice(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {'state': 'sent'}
+        self.responses['issue'] = {'state': 'sent'}
 
         self._issue(invoice)
 
@@ -87,48 +87,32 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
             'res_id': invoice.id,
         }])
         sent = json.loads(doc.sent_data_id.raw.content)
-        self.assertEqual(sent['serial_no'], doc.serial_no)
-        self.assertEqual(sent['amount_total'], invoice.amount_total)
-
-    def test_issue_amount_mismatch_keeps_issued_and_warns(self):
-        invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {
-            'state': 'issued',
-            'fapiao_no': '24442000000071309399',
-            'amount_total': 10.0,
-            'amount_untaxed': 8.85,
-            'amount_tax': 1.15,
-        }
-
-        self.assertIsNone(self._issue(invoice))
-
-        self.assertEqual(invoice.l10n_cn_edi_state, 'issued')
-        self.assertEqual(invoice.l10n_cn_edi_fapiao_no, '24442000000071309399')
-        self.assertIn('amount mismatch', ''.join(invoice.message_ids.mapped('body')))
+        self.assertEqual(sent['fpqqlsh'], doc.serial_no)
+        self.assertEqual(sent['invoiceAmount'], f"{invoice.amount_total:.2f}")
 
     def test_issue_retry_reuses_the_serial_number(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = UserError("Timeout")
+        self.responses['issue'] = UserError("Timeout")
         self._issue(invoice)
         first_serial = self._fapiao(invoice).serial_no
 
-        self.responses['issue_invoice'] = {'state': 'sent'}
+        self.responses['issue'] = {'state': 'sent'}
         self._issue(invoice)
 
         self.assertEqual(invoice.l10n_cn_edi_state, 'sent')
-        self.assertEqual(self.client.calls[-1][1][0]['serial_no'], first_serial)
+        self.assertEqual(self.client.calls[-1][1][0]['fpqqlsh'], first_serial)
 
     def test_issue_serial_is_stored_before_network_submission(self):
         invoice = self._create_posted_invoice()
         stored_serials = []
-        self.responses['issue_invoice'] = lambda: stored_serials.append(self._fapiao(invoice).serial_no) or {'state': 'sent'}
+        self.responses['issue'] = lambda: stored_serials.append(self._fapiao(invoice).serial_no) or {'state': 'sent'}
 
         self._issue(invoice)
 
-        issue_values = [args[0] for method, args in self.client.calls if method == 'issue_invoice'][-1]
-        self.assertTrue(issue_values['serial_no'])
-        self.assertEqual(stored_serials, [issue_values['serial_no']])
-        self.assertLessEqual(len(issue_values['serial_no']), 20)
+        serial = [args[0] for method, args in self.client.calls if method == 'issue'][-1]['fpqqlsh']
+        self.assertTrue(serial)
+        self.assertEqual(stored_serials, [serial])
+        self.assertLessEqual(len(serial), 20)
 
     def test_serial_is_deterministic(self):
         invoice = self._create_posted_invoice()
@@ -143,16 +127,16 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         broken.invoice_line_ids.l10n_cn_tax_category_id = False
         broken.action_post()
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
 
         errors = self.env['account.move.send']._l10n_cn_edi_issue_invoices(broken + invoice)
 
-        self.assertEqual(errors, {broken: f"Missing Tax Category Code on line: {broken.invoice_line_ids.name}"})
+        self.assertEqual(errors, {broken: f"Missing Tax Category Code on line: {broken.invoice_line_ids.product_id.name}"})
         self.assertEqual((broken + invoice).mapped('l10n_cn_edi_state'), ['not_sent', 'issued'])
 
     def test_issue_failure_is_recorded(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {'state': 'failed', 'error': "Buyer tax number is invalid"}
+        self.responses['issue'] = {'state': 'failed', 'error': "Buyer tax number is invalid"}
 
         self.assertEqual(self._issue(invoice), "Buyer tax number is invalid")
         self.assertEqual(invoice.l10n_cn_edi_state, 'failed')
@@ -160,7 +144,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
     def test_batch_is_submitted_before_waiting_once(self):
         invoices = self._create_posted_invoice() + self._create_posted_invoice()
         self.client.result_delays = (3, 5)
-        self.responses['issue_invoice'] = {'state': 'sent'}
+        self.responses['issue'] = {'state': 'sent'}
         self.responses['query_invoice'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
 
         errors = self.env['account.move.send']._l10n_cn_edi_issue_invoices(invoices)
@@ -168,14 +152,14 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertFalse(errors)
         self.assertEqual(
             [method for method, _args in self.client.calls],
-            ['ensure_ready', 'get_session_state', 'issue_invoice', 'issue_invoice', 'wait', 'query_invoice', 'query_invoice'],
+            ['ensure_ready', 'get_session_state', 'issue', 'issue', 'wait', 'query_invoice', 'query_invoice'],
         )
         self.assertEqual(invoices.mapped('l10n_cn_edi_state'), ['issued', 'issued'])
 
     def test_still_pending_fapiao_is_left_to_the_cron(self):
         invoice = self._create_posted_invoice()
         self.client.result_delays = (3, 5)
-        self.responses['issue_invoice'] = {'state': 'sent'}
+        self.responses['issue'] = {'state': 'sent'}
         self.responses['query_invoice'] = {'state': 'sent'}
 
         self.assertIsNone(self._issue(invoice))
@@ -186,24 +170,24 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_only_a_dead_order_gets_a_new_serial(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {'state': 'failed', 'error': "Unknown order"}
+        self.responses['issue'] = {'state': 'failed', 'error': "Unknown order"}
         self._issue(invoice)
         first = self._fapiao(invoice)
         self.assertEqual(first.state, 'failed')
 
-        self.responses['issue_invoice'] = {'state': 'failed', 'error': "Buyer tax number is invalid", 'new_serial': True}
+        self.responses['issue'] = {'state': 'failed', 'error': "Buyer tax number is invalid", 'new_serial': True}
         self._issue(invoice)
         self.assertEqual(self._fapiao(invoice), first)
         self.assertEqual(first.state, 'cancelled')
 
-        self.responses['issue_invoice'] = UserError("offline")
+        self.responses['issue'] = UserError("offline")
         self._issue(invoice)
         self.assertNotEqual(self._fapiao(invoice), first)
         self.assertNotEqual(self._fapiao(invoice).serial_no, first.serial_no)
 
     def test_unanswered_submission_is_locked_and_polled_with_the_same_serial(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = L10nCnEdiProviderUnreachable("Read timed out")
+        self.responses['issue'] = L10nCnEdiProviderUnreachable("Read timed out")
 
         self.assertIsNone(self._issue(invoice))
 
@@ -221,7 +205,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_refused_submission_leaves_the_invoice_retryable(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = UserError("Invalid credentials")
+        self.responses['issue'] = UserError("Invalid credentials")
 
         self.assertEqual(self._issue(invoice), "Invalid credentials")
         self.assertEqual(invoice.l10n_cn_edi_state, 'not_sent')
@@ -230,7 +214,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
     def test_cron_gives_a_fresh_submission_time_to_show_up(self):
         invoice = self._create_posted_invoice()
         self.client.result_delays = (3, 5)
-        self.responses['issue_invoice'] = {'state': 'sent'}
+        self.responses['issue'] = {'state': 'sent'}
         self.responses['query_invoice'] = {'state': 'sent'}
         cron = self.env.ref('l10n_cn_edi_yunshui.ir_cron_l10n_cn_edi_poll_invoices')
 
@@ -313,7 +297,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_send_print_stops_on_pending_fapiao(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {'state': 'sent'}
+        self.responses['issue'] = {'state': 'sent'}
         self.responses['query_invoice'] = {'state': 'sent'}
 
         invoices_data = {invoice: {'extra_edis': {'cn_edi'}}}
@@ -335,7 +319,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         send_model._call_web_service_before_invoice_pdf_render(invoices_data)
 
         self.assertTrue(invoices_data[invoice]['error']['retry'])
-        self.assertNotIn('issue_invoice', [method for method, _args in self.client.calls])
+        self.assertNotIn('issue', [method for method, _args in self.client.calls])
 
     def test_lapsed_session_does_not_hold_an_invoice_sent_meanwhile(self):
         invoices = self._create_posted_invoice() + self._create_posted_invoice()
@@ -361,10 +345,8 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         })
         lines = invoice._l10n_cn_edi_prepare_lines()
 
-        self.assertEqual([line['nature'] for line in lines], ['2', '1', '2', '1'])
-        self.assertEqual([line['line_no'] for line in lines], [1, 2, 3, 4])
-        self.assertAlmostEqual(lines[1]['amount_untaxed'], -60.0)
-        self.assertAlmostEqual(lines[3]['amount_untaxed'], -180.0)
+        self.assertEqual([line['rowType'] for line in lines], ['2', '1', '2', '1'])
+        self.assertEqual([line['amount'] for line in lines], ['600.00', '-60.00', '1800.00', '-180.00'])
 
     def test_global_discount_over_categories_of_the_same_rate(self):
         other_category = self.env['l10n_cn_edi.tax.category'].sudo().create({'name': 'Other', 'code': '1010101020000000000'})
@@ -381,8 +363,8 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
         lines = invoice._l10n_cn_edi_prepare_lines()
 
-        self.assertEqual([line['amount_untaxed'] for line in lines], [100.0, -10.0, 300.0, -30.0])
-        self.assertEqual(lines[2]['tax_category_code'], '1010101020000000000')
+        self.assertEqual([line['amount'] for line in lines], ['113.00', '-11.30', '339.00', '-33.90'])
+        self.assertEqual(lines[2]['itemNo'], '1010101020000000000')
 
     def test_global_discount_of_another_tax_is_rejected(self):
         extra_tax = self.env['account.tax'].create({
@@ -481,7 +463,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
             invoice.invalidate_recordset(['l10n_cn_edi_date_warning'])
             self.assertIn("Invoice Date is not today", invoice.l10n_cn_edi_date_warning)
 
-            self.responses['issue_invoice'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
+            self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
             self._issue(invoice)
 
             self.assertFalse(invoice.l10n_cn_edi_date_warning)
@@ -501,31 +483,20 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_red_fapiao_sends_the_chosen_reason(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'), reason='02')
-        self.responses['issue_direct_red'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
 
         credit_note.action_l10n_cn_edi_request_red_form()
 
-        values = self.client.calls[-1][1][0]
-        self.assertEqual(values['reason'], '02')
-        self.assertEqual(values['original_fapiao_no'], '24442000000071309399')
-        self.assertTrue(all(line['amount_untaxed'] < 0 for line in values['lines']))
+        self.assertEqual(self.client.calls[-1][1][0], {
+            'fpqqlsh': self._fapiao(credit_note).serial_no,
+            'nsrsbh': self.company_data['company'].vat,
+            'invoiceKind': '82',
+            'invoiceType': '2',
+            'originInvoiceNo': '24442000000071309399',
+            'redReason': '02',
+            'deliverType': '0',
+        })
         self.assertEqual(credit_note.l10n_cn_edi_red_form_reason, '02')
-
-    def test_red_fapiao_names_the_buyer_of_the_original_fapiao(self):
-        self.partner_a.vat = '91310115MA1K394204'
-        contact = self.env['res.partner'].create({'name': 'Buyer Contact', 'parent_id': self.partner_a.id, 'email': 'contact@example.com'})
-        invoice = self.init_invoice('out_invoice', partner=contact, products=self.product_a, taxes=self.tax_sale_a)
-        invoice.action_post()
-        invoice.l10n_cn_edi_fapiao_no = '24442000000071309399'
-        credit_note = self._reverse(invoice)
-        self.responses['issue_direct_red'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
-
-        credit_note.action_l10n_cn_edi_request_red_form()
-
-        values = self.client.calls[-1][1][0]
-        self.assertEqual(values['buyer_name'], self.partner_a.name)
-        self.assertEqual(values['buyer_tax_no'], '91310115MA1K394204')
-        self.assertEqual(values['buyer_email'], 'contact@example.com')
 
     def test_only_a_full_reversal_gets_a_red_fapiao(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
@@ -533,7 +504,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
         with self.assertRaisesRegex(UserError, "whole fapiao"):
             credit_note.action_l10n_cn_edi_request_red_form()
-        self.assertNotIn('issue_direct_red', [method for method, _args in self.client.calls])
+        self.assertNotIn('issue', [method for method, _args in self.client.calls])
 
     def test_credit_note_opens_without_a_provider(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
@@ -549,14 +520,14 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_direct_red_is_a_fapiao_document(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue_direct_red'] = {'state': 'sent'}
+        self.responses['issue'] = {'state': 'sent'}
         self.responses['query_invoice'] = {'state': 'sent'}
 
         credit_note.action_l10n_cn_edi_request_red_form()
 
         self.assertRecordValues(credit_note.l10n_cn_edi_document_ids, [{'kind': 'fapiao', 'state': 'sent'}])
         self.assertEqual(credit_note.l10n_cn_edi_state, 'sent')
-        self.assertIn('issue_direct_red', [method for method, _args in self.client.calls])
+        self.assertIn('issue', [method for method, _args in self.client.calls])
 
         self.responses['query_invoice'] = {
             'state': 'issued',
@@ -571,7 +542,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_direct_red_failure_uses_invoice_failure_state(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue_direct_red'] = {'state': 'failed', 'error': 'Yunshui refused direct red'}
+        self.responses['issue'] = {'state': 'failed', 'error': 'Yunshui refused direct red'}
 
         credit_note.action_l10n_cn_edi_request_red_form()
 
@@ -584,14 +555,14 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         credit_note._compute_hide_post_button()
         self.assertTrue(credit_note.hide_post_button)
 
-        self.responses['issue_direct_red'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
         credit_note.action_l10n_cn_edi_request_red_form()
         credit_note._compute_hide_post_button()
         self.assertFalse(credit_note.hide_post_button)
 
     def test_credit_note_with_its_red_fapiao_posts(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue_direct_red'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
         credit_note.action_l10n_cn_edi_request_red_form()
 
         credit_note.action_post()
@@ -610,7 +581,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_direct_red_unanswered_request_waits_for_the_cron(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue_direct_red'] = L10nCnEdiProviderUnreachable("Connection reset")
+        self.responses['issue'] = L10nCnEdiProviderUnreachable("Connection reset")
 
         credit_note.action_l10n_cn_edi_request_red_form()
 
@@ -620,7 +591,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_direct_red_refused_request_changes_nothing(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue_direct_red'] = UserError("Invalid credentials")
+        self.responses['issue'] = UserError("Invalid credentials")
 
         action = credit_note.action_l10n_cn_edi_request_red_form()
 
@@ -629,7 +600,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_direct_red_uses_stable_serial(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue_direct_red'] = {'state': 'failed', 'error': 'temporary'}
+        self.responses['issue'] = {'state': 'failed', 'error': 'temporary'}
 
         credit_note.action_l10n_cn_edi_request_red_form()
         serial_1 = self._fapiao(credit_note).serial_no
@@ -775,16 +746,16 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_red_fapiao_request_requires_accounting_role(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue_direct_red'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
 
         with self.assertRaises(AccessError):
             credit_note.with_user(self._create_user('account.group_account_readonly')).action_l10n_cn_edi_request_red_form()
-        self.assertNotIn('issue_direct_red', [method for method, _args in self.client.calls])
+        self.assertNotIn('issue', [method for method, _args in self.client.calls])
 
     def test_billing_user_can_issue_and_reverse_a_fapiao(self):
         user = self._create_user('account.group_account_invoice')
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {'state': 'issued', 'fapiao_no': '24442000000071309399', 'pdf': b'%PDF'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399', 'pdf': b'%PDF'}
 
         self.create_send_and_print(invoice, as_user=user).action_send_and_print()
 
@@ -797,7 +768,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertEqual(self._fapiao(invoice).ofd_id.raw.content, b'OFD')
 
         credit_note = self._reverse(invoice.with_user(user))
-        self.responses['issue_direct_red'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
 
         credit_note.action_l10n_cn_edi_request_red_form()
 
@@ -888,7 +859,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertRecordValues(second, [{'l10n_cn_edi_fapiao_no': False, 'l10n_cn_edi_red_form_required': True}])
         with self.assertRaisesRegex(UserError, 'customer raised Red Form rf-9'):
             second.action_l10n_cn_edi_request_red_form()
-        self.assertNotIn('issue_direct_red', [method for method, _args in self.client.calls])
+        self.assertNotIn('issue', [method for method, _args in self.client.calls])
 
     def test_no_red_form_while_the_customer_s_is_pending(self):
         invoice = self._create_posted_invoice(fapiao_no='24442000000071309399')
@@ -908,7 +879,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
     def test_issued_credit_note_must_keep_the_red_amount(self):
         invoice = self._create_posted_invoice(fapiao_no='24442000000071309399')
         credit_note = self._reverse(invoice)
-        self.responses['issue_direct_red'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
         credit_note.action_l10n_cn_edi_request_red_form()
         # Changed behind the edit guard's back.
         self.env.flush_all()
@@ -944,7 +915,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_fetching_files_again_only_adds_the_missing_ones(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {'state': 'issued', 'fapiao_no': '24442000000071309399', 'pdf': b'%PDF first'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399', 'pdf': b'%PDF first'}
         self._issue(invoice)
         not_issued = self._create_posted_invoice()
         self.responses['query_invoice'] = {'state': 'issued', 'pdf': b'%PDF again', 'ofd': b'OFD'}
@@ -959,7 +930,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_fetching_files_that_are_not_there_is_logged(self):
         invoice = self._create_posted_invoice()
-        self.responses['issue_invoice'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
         self._issue(invoice)
         self.responses['query_invoice'] = {'state': 'issued'}
 

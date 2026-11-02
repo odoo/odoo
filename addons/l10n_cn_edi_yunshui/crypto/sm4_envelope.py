@@ -24,7 +24,7 @@ zipCode layering (encrypt -> datagram):
   1: base64( gzip( hex(sm4(json)) ) )                  (hex placement assumed)
   2: base64( hex(sm4( base64( gzip(json) ) )) )        (hex placement assumed)
   Requests go out as zipCode 0, the only layering verified against the gateway; 1 and 2 are
-  still decoded.
+  still decoded, the platform compressing its responses over 10k (1.1).
 """
 import base64
 import gzip
@@ -228,25 +228,3 @@ def verify_and_decrypt(response, identity_code, platform_code):
         return json.loads(_parse_datagram(response['datagram'], key, response['zipCode']))
     except (ValueError, zlib.error) as e:
         raise MalformedEnvelope(f'unreadable datagram: {e}') from e
-
-
-def build_response(interface_code, datagram, identity_code, platform_code,
-                   timestamp=None, zip_code='0', code='1000', msg=''):
-    """Build a signed outer response envelope (used by the mock server + callback tests)."""
-    ts = timestamp or now_timestamp()
-    key = derive_sm4_key(identity_code, platform_code, ts)
-    access_token = make_access_token(platform_code, '0' * 18, ts)  # tax_no not meaningful on response
-    json_str = json.dumps(datagram, ensure_ascii=False, separators=(',', ':'))
-    datagram_b64 = _build_datagram(json_str, key, zip_code)
-    signature = sign(interface_code, zip_code, ENCRYPT_CODE, access_token, datagram_b64, SIGNTYPE, key)
-    return {
-        'code': code,
-        'msg': msg,
-        'interfaceCode': interface_code,
-        'zipCode': zip_code,
-        'encryptCode': ENCRYPT_CODE,
-        'access_token': access_token,
-        'datagram': datagram_b64,
-        'signtype': SIGNTYPE,
-        'signature': signature,
-    }

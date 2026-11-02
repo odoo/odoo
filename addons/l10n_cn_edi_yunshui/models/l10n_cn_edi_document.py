@@ -108,10 +108,10 @@ class L10nCnEdiDocument(models.Model):
     # Sending
     # ------------------------------------------------------------------
 
-    def _l10n_cn_edi_attach_sent_data(self, values):
+    def _l10n_cn_edi_attach_sent_data(self, payload):
         """Keep on the move the content about to be submitted under this document's serial number."""
         self.ensure_one()
-        raw = json.dumps(values, ensure_ascii=False, indent=2, default=str).encode()
+        raw = json.dumps(payload, ensure_ascii=False, indent=2).encode()
         if self.sent_data_id:
             self.sent_data_id.raw = raw
             return
@@ -182,8 +182,6 @@ class L10nCnEdiDocument(models.Model):
                 body=self.env._("E-Fapiao issued successfully. Invoice No: %(fapiao)s", fapiao=result.get('fapiao_no')),
                 attachment_ids=self._l10n_cn_edi_attach_fapiao_files(result).ids,
             )
-            if warning := move._l10n_cn_edi_build_totals_warning(result):
-                move.message_post(body=warning)
             return None
         if result.get('state') == 'sent':
             if self.state != 'sent':
