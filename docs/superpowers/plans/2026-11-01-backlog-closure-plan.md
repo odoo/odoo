@@ -42,7 +42,7 @@
 
 **อัปเดต 2026-11-01 — ปิด Wave 1 / Task B1:** working tree สะอาด ✅ (commit `d4597c09cb5` เทสต์ `od19_hr_advance`, `7b6d2c7d209` search view ตาม Odoo 19, `7c31530e3dc` Summary Board First); P1-T9 ปิดแล้ว (commit `5fc3d68ffbe`); คงเหลือ defect นอกขอบเขต 1 รายการ (ดูหมายเหตุใน Task B1)
 
-**อัปเดต 2026-11-02 — EPIC H + B4/B5 + C1/D5:** ปิดครบ 6 งาน — H1 (ไม่มี defect ค้าง), H2 (`stock_request_purchase` = `installed`), B4 (22 OCA submodules pin SHA ครบ), B5 (`.gitattributes` + Git LFS → commit `b80218bb4b4`), C1 (access-readiness ครบหลักฐาน → commit `3d47662b998`), D5 (precondition dump ใหม่ → commit `ee33dbf8602`); defect `276.0 != 138.0` ของ B1 ซ่อมแล้ว → commit `b120d0292ff`
+**อัปเดต 2026-11-02 — EPIC H + B3/B4/B5 + C1/D5:** ปิดครบ 7 งาน — H1 (ไม่มี defect ค้าง), H2 (`stock_request_purchase` = `installed`), B3 (ทุก feature branch merge เข้า `19.0` แล้ว), B4 (22 OCA submodules pin SHA ครบ), B5 (`.gitattributes` + Git LFS → commit `b80218bb4b4`), C1 (access-readiness ครบหลักฐาน → commit `3d47662b998`), D5 (precondition dump ใหม่ → commit `ee33dbf8602`); defect `276.0 != 138.0` ของ B1 ซ่อมแล้ว → commit `b120d0292ff`
 
 ---
 
@@ -110,10 +110,11 @@ graph TD
 - [x] **Steps (local — ปิดแล้ว 2026-11-01):** rename 6 branch แล้ว → `feature/od19-wave2b-vat-compliance`, `feature/od19-wave3-corporate-income-tax`, `feature/od19-document-pull`, `feature/od19-employee-shortcut-menu`, `feature/wave1-accounting-operational-closure`, `feature/wave1-sales-contract-core`; `git branch` เหลือ `19.0` main + `feature/*` (+ `backup/wave3-pre-rewrite` เก็บเป็น backup โดยเจตนา)
 - [ ] **คงเหลือ (ต้อง push — รอผู้ใช้อนุมัติ):** remote 3 ตัวยังชื่อเดิม `origin/feat/od19-wave2b-vat-compliance`, `origin/feat/od19-wave3-corporate-income-tax`, `origin/feat/od19-employee-shortcut-menu` → ต้อง rename บน origin จึงจะครบ Evidence (`git branch -a`)
 
-### Task B3 — Merge Wave 3 เข้า 19.0
-- [ ] **Objective:** รวม `feature/od19-wave3-corporate-income-tax` เข้า `19.0` ผ่าน PR
-- [ ] **Depends on:** B2
-- [ ] **Acceptance:** PR merge แล้ว, `git branch --no-merged 19.0` เหลือเฉพาะงานที่ตั้งใจแยก
+### Task B3 — Merge Wave 3 เข้า 19.0 (ปิดแล้ว 2026-11-02)
+- [x] **Objective:** รวม `feature/od19-wave3-corporate-income-tax` เข้า `19.0` ผ่าน PR
+- [x] **Depends on:** B2
+- [x] **Acceptance:** PR merge แล้ว, `git branch --no-merged 19.0` เหลือเฉพาะงานที่ตั้งใจแยก
+- [x] **ปิดงาน (2026-11-02):** `git merge-base --is-ancestor` ยืนยันว่าทุก feature branch (wave3, wave2b-vat, employee-shortcut-menu, document-pull, wave1-*, menu-consolidation, dashboard-formula-status-rules) เป็น ancestor ของ `19.0` แล้ว; `git branch --no-merged 19.0` เหลือเฉพาะ `backup/wave3-pre-rewrite` (สำรองโดยเจตนา)
 
 ### Task B4 — ลงทะเบียน OCA submodules (ปิดแล้ว 2026-11-02)
 - [x] **Objective:** `third_party/oca/*` (12 โฟลเดอร์ที่ untracked) ต้องถูก pin SHA
