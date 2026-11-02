@@ -202,6 +202,11 @@ class StockMove(models.Model):
     show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
     scrap_reason_tag_ids = fields.Many2many('stock.scrap.reason.tag', string='Scrap Reason')
     should_replenish_scrapped = fields.Boolean('Should Replenish')
+    product_abc_category = fields.Selection(
+        string='ABC Category',
+        related='product_id.abc_report_category',
+        compute_sudo=True,
+    )
 
     _product_location_index = models.Index("(product_id, location_id, location_dest_id, company_id, state)")
 
