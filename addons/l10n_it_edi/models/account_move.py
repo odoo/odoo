@@ -357,6 +357,9 @@ class AccountMove(models.Model):
             # from products, while in Italian EDI, taxes are generally explicited in the XML file
             # while the product may not be labelled exactly the same as in the database.
             def decoder(invoice, file_data, new=False):
+                if invoice.invoice_line_ids:
+                    return invoice._reason_cannot_decode_has_invoice_lines()
+
                 self.with_context(disable_onchange_name_predictive=['all'])._l10n_it_edi_import_invoice(invoice, file_data, new)
             return {
                 'priority': 20,
