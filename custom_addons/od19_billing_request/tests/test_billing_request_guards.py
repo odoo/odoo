@@ -72,3 +72,13 @@ class TestBillingRequestGuards(TransactionCase):
     def test_zero_quantity_is_blocked(self):
         with self.assertRaises(ValidationError):
             self._request_with(0.0)
+
+    def test_externally_invoiced_line_is_blocked(self):
+        # Invoice the SO line directly in Odoo (outside this module) for the
+        # full ordered qty, then a billing request must be blocked.
+        self.so._create_invoices()
+        self.so.invoice_ids.action_post()
+        self.sale_line.invalidate_recordset(["qty_invoiced"])
+        self.assertAlmostEqual(self.sale_line.qty_invoiced, 10.0)
+        with self.assertRaises(ValidationError):
+            self._request_with(1.0)

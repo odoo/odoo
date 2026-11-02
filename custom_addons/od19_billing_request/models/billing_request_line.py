@@ -98,23 +98,43 @@ class Od19BillingRequestLine(models.Model):
                 line.qty_ordered - line.qty_already_requested - line.quantity, 0.0
             )
 
+    def _od19_other_request_lines(self):
+        """บรรทัดอื่น ๆ ที่อ้างต้นทางบรรทัดเดียวกัน (ไม่นับตัวเอง)."""
+        self.ensure_one()
+        if self.sale_line_id:
+            domain_field, value = "sale_line_id", self.sale_line_id.id
+        elif self.purchase_line_id:
+            domain_field, value = "purchase_line_id", self.purchase_line_id.id
+        elif self.stock_move_id:
+            domain_field, value = "stock_move_id", self.stock_move_id.id
+        else:
+            return self.browse()
+        return self.env["od19.billing.request.line"].search(
+            [
+                ("id", "!=", self.id),
+                ("request_id.state", "in", ("draft", "submitted", "invoiced")),
+                (domain_field, "=", value),
+            ]
+        )
+
     def _od19_qty_already_requested(self):
         """ผลรวม quantity ของบรรทัดอื่นที่อ้างต้นทางบรรทัดเดียวกัน (ไม่นับตัวเอง)."""
+        return sum(self._od19_other_request_lines().mapped("quantity"))
+
+    def _od19_qty_invoiced_external(self):
+        """ยอดที่ถูก invoice ไปแล้ว "นอกโมดูล" บนบรรทัดต้นทาง.
+
+        ``qty_invoiced`` ของ SO/PO line นับใบกำกับที่ post แล้วทั้งหมด ซึ่งรวม
+        คำขอของโมดูลที่ state = ``invoiced`` ด้วย จึงต้องหัก ``module_invoiced``
+        ออกก่อนเพื่อไม่ให้นับซ้ำ.
+        """
         self.ensure_one()
-        domain = [
-            ("id", "!=", self.id),
-            ("request_id.state", "in", ("draft", "submitted", "invoiced")),
-        ]
-        if self.sale_line_id:
-            domain.append(("sale_line_id", "=", self.sale_line_id.id))
-        elif self.purchase_line_id:
-            domain.append(("purchase_line_id", "=", self.purchase_line_id.id))
-        elif self.stock_move_id:
-            domain.append(("stock_move_id", "=", self.stock_move_id.id))
-        else:
-            return 0.0
-        others = self.env["od19.billing.request.line"].search(domain)
-        return sum(others.mapped("quantity"))
+        module_invoiced = sum(
+            self._od19_other_request_lines()
+            .filtered(lambda line: line.request_id.state == "invoiced")
+            .mapped("quantity")
+        )
+        return max(self.qty_invoiced - module_invoiced, 0.0)
 
     @api.constrains("quantity")
     def _check_quantity_positive(self):
@@ -129,9 +149,13 @@ class Od19BillingRequestLine(models.Model):
         for line in self:
             if not (line.sale_line_id or line.purchase_line_id or line.stock_move_id):
                 continue
-            # Threshold is the qty still billable *before* this line is counted,
-            # i.e. ordered minus what other requests already reserved.
-            available = line.qty_ordered - line.qty_already_requested
+            # Threshold = qty still billable *before* this line, minus anything
+            # already invoiced outside this module.
+            available = (
+                line.qty_ordered
+                - line.qty_already_requested
+                - line._od19_qty_invoiced_external()
+            )
             if line.quantity > available + 1e-6:
                 raise ValidationError(
                     _(
