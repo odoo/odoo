@@ -178,6 +178,10 @@ class Cart(PaymentPortal):
 
         if linked_products and values['line_id']:
             for product_data in linked_products:
+                # Do not allow float values in ecommerce by default
+                product_data['quantity'] = (
+                    product_data['quantity'] and int(product_data['quantity'])
+                ) or 1
                 product_sudo = request.env['product.product'].sudo().browse(
                     product_data['product_id']
                 ).exists()
