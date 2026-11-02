@@ -5,11 +5,30 @@ export class Dailymotion extends AbstractThirdPartyVideo {
     static id = "dailymotion";
     static name = "Dailymotion";
     static urlMatcher =
-        /^(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|hub\/.*#video=)|geo\.dailymotion\.com\/player\.html\?video=|dai\.ly\/)(?<id>[A-Za-z0-9]{6,7})(?:[-_][-_a-z]*)?(?:[?&=](?:[0-9a-z]+))*$/i;
+        /^(https?:\/\/)(www\.)?(dailymotion\.com\/(embed\/video\/|embed\/|video\/|playlist\/|hub\/.*#video=)|geo\.dailymotion\.com\/player(?:\/(?<player>[A-Za-z0-9]+))?\.html\?(?:video|playlist)=|dai\.ly\/)(?<id>[A-Za-z0-9]{6,7})(?:[-_][-_a-z]*)?(?:[?&=](?:[0-9a-z]+))*$/i;
 
     static optionsConfig = {
         startFrom: { default: 0, type: Number, params: ["startTime"] },
+        isVertical: { default: false, type: Boolean },
+        playlist: { default: "", type: String, params: ["playlist"] },
     };
+    /**
+     * @override
+     * @param {URL} url
+     * @param {RegExpExecArray} urlMatch
+     */
+    static getCustomUrlOptions(url, urlMatch) {
+        const isPlaylist =
+            url.pathname.startsWith("/playlist/") ||
+            urlMatch.groups.id === url.searchParams.get("playlist");
+        return {
+            isPlaylist,
+            // The custom player of an embed url, e.g. "player/playerId.html".
+            playerId: urlMatch.groups.player || "",
+            // The id of a pure playlist is already the playlist.
+            ...(isPlaylist && { playlist: "" }),
+        };
+    }
     /**
      * Returns the embed url for a dailymotion video.
      *
@@ -19,7 +38,9 @@ export class Dailymotion extends AbstractThirdPartyVideo {
      */
     static getEmbedUrl(videoId, options = {}) {
         const params = encodeOptionsToParams(options, Dailymotion.optionsConfig);
-        return `https://geo.dailymotion.com/player.html?video=${videoId}${
+        const source = options.isPlaylist ? "playlist" : "video";
+        const player = options.playerId ? `/${options.playerId}` : "";
+        return `https://geo.dailymotion.com/player${player}.html?${source}=${videoId}${
             params ? "&" + params : ""
         }`;
     }
@@ -27,10 +48,11 @@ export class Dailymotion extends AbstractThirdPartyVideo {
      * Returns the url for the thumbnail image of the video.
      *
      * @param {string} videoId
+     * @param {Object} options
      * @return {string} url
      */
-    static getThumbnailUrl(videoId) {
-        return `https://www.dailymotion.com/thumbnail/video/${videoId}`;
+    static getThumbnailUrl(videoId, options = {}) {
+        return options.isPlaylist ? "" : `https://www.dailymotion.com/thumbnail/video/${videoId}`;
     }
 
     /**
@@ -47,6 +69,10 @@ export class Dailymotion extends AbstractThirdPartyVideo {
         extra: "https://www.dailymotion.com/video/x2jvvep_hakan-yukur-klip_sport",
         embed: "https://geo.dailymotion.com/player.html?video=x7svr6t",
         minified: "dai.ly/x7svr6t",
+        playlist: "https://www.dailymotion.com/playlist/plylist",
+        embedPlaylist: "https://geo.dailymotion.com/player.html?playlist=plylist",
+        videoInPlaylist: "https://geo.dailymotion.com/player.html?video=x7svr6t&playlist=plylist",
+        embedCustomPlayer: "https://geo.dailymotion.com/player/playerId.html?video=x7svr6t",
         params: "https://www.dailymotion.com/video/x7svr6t?startTime=62",
         embedParams: "https://geo.dailymotion.com/player.html?video=x7svr6t&startTime=62",
         // This is the old embed url of dailymotion,

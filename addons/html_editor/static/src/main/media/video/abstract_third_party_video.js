@@ -90,10 +90,11 @@ export class AbstractThirdPartyVideo {
      */
     static getVideoUrlData(urlMatch, forcedOptions = {}) {
         const baseUrl = new URL(urlMatch[0]);
-        const videoId = urlMatch.groups.id;
+        // A pure playlist url (e.g. YouTube) has no video id.
+        const videoId = urlMatch.groups.id || "";
         const options = {
             ...getUrlOptions(baseUrl, this.optionsConfig || {}),
-            ...(this?.getCustomUrlOptions?.(baseUrl) || {}),
+            ...(this?.getCustomUrlOptions?.(baseUrl, urlMatch) || {}),
             ...forcedOptions,
         };
         // always mute video when autoplay is enabled
@@ -107,7 +108,7 @@ export class AbstractThirdPartyVideo {
             videoId,
             embedUrl: this.getEmbedUrl(videoId, options),
             // thumbnailUrl can be a promise in some cases (see vimeo)
-            thumbnailUrl: this.getThumbnailUrl?.(videoId) || "",
+            thumbnailUrl: this.getThumbnailUrl?.(videoId, options) || "",
             options,
         };
     }
