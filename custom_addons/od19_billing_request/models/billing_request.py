@@ -210,3 +210,168 @@ class Od19BillingRequest(models.Model):
                     direction
                 ).next_by_id()
         return super().create(vals_list)
+
+    # ------------------------------------------------------------------
+    # Document pull contract (od19.document.pull.mixin)
+    # ------------------------------------------------------------------
+    def _od19_pull_editable_states(self):
+        return ("draft",)
+
+    def _od19_pull_source_specs(self):
+        self.ensure_one()
+        partner_domain = (
+            [("partner_id", "=", self.partner_id.id)] if self.partner_id else []
+        )
+        if self.direction == "ap":
+            return [
+                {
+                    "model": "purchase.order",
+                    "label": _("Purchase Order / ใบสั่งซื้อ"),
+                    "domain": partner_domain + [("state", "in", ("purchase", "done"))],
+                },
+                {
+                    "model": "stock.picking",
+                    "label": _("Receipt / ใบรับของ"),
+                    "domain": partner_domain
+                    + [("picking_type_code", "=", "incoming"), ("state", "=", "done")],
+                },
+            ]
+        return [
+            {
+                "model": "sale.order",
+                "label": _("Sale Order / ใบสั่งขาย"),
+                "domain": partner_domain + [("state", "=", "sale")],
+            },
+            {
+                "model": "stock.picking",
+                "label": _("Delivery / ใบส่งของ"),
+                "domain": partner_domain
+                + [("picking_type_code", "=", "outgoing"), ("state", "=", "done")],
+            },
+        ]
+
+    def _od19_pull_candidate_lines(self, source):
+        self.ensure_one()
+        if source._name in ("sale.order", "purchase.order"):
+            return source.order_line.filtered(
+                lambda line: line.product_id and line.qty_to_invoice > 0
+            )
+        if source._name == "stock.picking":
+            return source.move_ids.filtered(
+                lambda move: move.product_id and move.quantity > 0
+            )
+        return self.env["od19.billing.request.line"].browse()
+
+    def _od19_pull_line_info(self, source, line):
+        self.ensure_one()
+        if source._name in ("sale.order", "purchase.order"):
+            return {
+                "res_model": source._name,
+                "res_id": line.id,
+                "source_name": source.display_name,
+                "product_id": line.product_id.id,
+                "name": line.name,
+                "qty_to_pull": line.qty_to_invoice,
+                "price_unit": line.price_unit,
+                "product_uom_id": line.product_uom_id.id,
+            }
+        sale_line = line.sale_line_id
+        price = sale_line.price_unit if sale_line else (line.price_unit or 0.0)
+        return {
+            "res_model": source._name,
+            "res_id": line.id,
+            "source_name": source.display_name,
+            "product_id": line.product_id.id,
+            "name": line.description_picking or line.product_id.display_name,
+            "qty_to_pull": line.quantity,
+            "price_unit": price,
+            "product_uom_id": line.product_uom.id,
+        }
+
+    def _od19_pull_apply(self, source, lines):
+        self.ensure_one()
+        count = 0
+        if not self.origin_ref:
+            self.origin_ref = source
+        for src_line in lines:
+            info = self._od19_pull_line_info(source, src_line)
+            vals = {
+                "request_id": self.id,
+                "product_id": info["product_id"],
+                "name": info["name"],
+                "quantity": info["qty_to_pull"],
+                "price_unit": info["price_unit"],
+                "product_uom_id": info["product_uom_id"],
+                "origin_line_model": source._name,
+                "origin_line_id": src_line.id,
+            }
+            if source._name == "sale.order":
+                vals["sale_line_id"] = src_line.id
+            elif source._name == "purchase.order":
+                vals["purchase_line_id"] = src_line.id
+            else:  # stock.picking
+                vals["stock_move_id"] = src_line.id
+                if src_line.sale_line_id:
+                    vals["sale_line_id"] = src_line.sale_line_id.id
+                if src_line.purchase_line_id:
+                    vals["purchase_line_id"] = src_line.purchase_line_id.id
+            self.env["od19.billing.request.line"].create(vals)
+            count += 1
+        return count
+
+    def _od19_pull_origin_line_ids(self, source):
+        self.ensure_one()
+        if source._name in ("sale.order", "purchase.order"):
+            return source.order_line.ids
+        return source.move_ids.ids
+
+    def _od19_pull_bound_lines(self, source):
+        self.ensure_one()
+        ids = self._od19_pull_origin_line_ids(source)
+        return self.line_ids.filtered(
+            lambda line: line.origin_line_model == source._name
+            and line.origin_line_id in ids
+        )
+
+    def _od19_pull_remove(self, source):
+        self.ensure_one()
+        lines = self._od19_pull_bound_lines(source)
+        count = len(lines)
+        lines.unlink()
+        return count
+
+    def _od19_pull_bound_sources(self):
+        self.ensure_one()
+        result = []
+        line_models = {
+            "sale.order": "sale.order.line",
+            "purchase.order": "purchase.order.line",
+            "stock.picking": "stock.move",
+        }
+        for model, line_model in line_models.items():
+            model_lines = self.line_ids.filtered(
+                lambda line: line.origin_line_model == model
+            )
+            if not model_lines:
+                continue
+            records = self.env[line_model].browse(
+                model_lines.mapped("origin_line_id")
+            )
+            if model in ("sale.order", "purchase.order"):
+                for order in records.mapped("order_id"):
+                    result.append((order, len(self._od19_pull_bound_lines(order))))
+            else:
+                for picking in records.mapped("picking_id"):
+                    result.append((picking, len(self._od19_pull_bound_lines(picking))))
+        return result
+
+    def _od19_pull_preview_lines(self, source):
+        self.ensure_one()
+        return [
+            {
+                "name": line.name,
+                "product_id": line.product_id.id,
+                "quantity": line.quantity,
+            }
+            for line in self._od19_pull_bound_lines(source)
+        ]
