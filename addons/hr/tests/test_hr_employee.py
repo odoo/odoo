@@ -441,6 +441,19 @@ class TestHrEmployee(TestHrCommon):
                 employee_form.barcode = invalid_barcode
                 employee_form.save()
 
+    def test_badge_unique_per_company(self):
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        self.env['hr.employee'].create({'name': 'Badge Employee', 'barcode': 'BADGE42'})
+        employee_other = self.env['hr.employee'].create({
+            'name': 'Badge Employee',
+            'barcode': 'BADGE42',
+            'company_id': other_company.id,
+        })
+        self.assertEqual(employee_other.barcode, 'BADGE42')
+
+        with mute_logger('odoo.sql_db'), self.assertRaises(UniqueViolation), self.cr.savepoint():
+            self.env['hr.employee'].create({'name': 'Other Employee', 'barcode': 'BADGE42'})
+
     def test_is_flexible(self):
         employee = self.env['hr.employee'].create({
             'name': 'Employee',

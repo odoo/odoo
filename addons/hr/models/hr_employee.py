@@ -183,7 +183,7 @@ class HrEmployeePrivate(models.Model):
     message_attachment_count = fields.Integer(groups="hr.group_hr_user")
 
     _sql_constraints = [
-        ('barcode_uniq', 'unique (barcode)', "The Badge ID must be unique, this one is already assigned to another employee."),
+        ('barcode_uniq', 'unique (barcode, company_id)', "The Badge ID must be unique, this one is already assigned to another employee."),
         ('user_uniq', 'unique (user_id, company_id)', "A user cannot be linked to multiple employees in the same company.")
     ]
 
