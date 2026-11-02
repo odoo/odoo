@@ -401,7 +401,10 @@
                     <field name="location_id" string="Source Location" groups="stock.group_stock_multi_locations"/>
                     <field name="location_dest_id" string="Scrap Location" groups="stock.group_stock_multi_locations"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="state"/>
+                    <field name="state" widget="badge"
+                        decoration-muted="state == 'draft'"
+                        decoration-info="state == 'assigned'"
+                        decoration-success="state == 'done'"/>
                 </list>
             </field>
         </record>
