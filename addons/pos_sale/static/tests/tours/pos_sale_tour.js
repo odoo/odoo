@@ -819,3 +819,44 @@ registry.category("web_tour.tours").add("test_full_down_payment_so_still_listed"
             },
         ].flat(),
 });
+
+const settleSaleOrderByName = (name) => [
+    ...ProductScreen.clickControlButton("Quotation/Order"),
+    {
+        content: `Select the sale order ${name}`,
+        trigger: `.modal .o_data_row td:contains('${name}')`,
+        run: "click",
+    },
+    {
+        content: "Settle the order",
+        trigger: ".selection-item:contains('Settle the order')",
+        run: "click",
+    },
+];
+
+registry.category("web_tour.tours").add("test_zero_and_negative_so_listed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            settleSaleOrderByName("Negative SO"),
+            ProductScreen.totalAmountIs("-10.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            settleSaleOrderByName("Return SO"),
+            ProductScreen.totalAmountIs("-10.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            settleSaleOrderByName("Zero SO"),
+            ProductScreen.totalAmountIs("0.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            // The settled sale orders are no longer listed
+            PosSale.checkOrdersListEmpty(),
+        ].flat(),
+});
