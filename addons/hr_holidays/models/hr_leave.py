@@ -392,10 +392,10 @@ class HolidaysRequest(models.Model):
 
     @api.depends('leave_type_request_unit', 'number_of_days')
     def _compute_leave_type_increases_duration(self):
-        durations = self._get_durations(check_leave_type=False)
+        day_leaves = self.filtered(lambda l: l.leave_type_request_unit == 'day')
+        durations = day_leaves._get_durations(check_leave_type=False)
         for leave in self:
-            days = durations[leave.id][0]
-            leave.leave_type_increases_duration = leave.leave_type_request_unit == 'day' and days < leave.number_of_days
+            leave.leave_type_increases_duration = leave in day_leaves and durations[leave.id][0] < leave.number_of_days
 
     def _get_durations(self, check_leave_type=True, resource_calendar=None):
         """
@@ -411,6 +411,14 @@ class HolidaysRequest(models.Model):
             if not leave.date_from or not leave.date_to:
                 continue
             employees_by_dates_calendar[(leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, resource_calendar or leave.resource_calendar_id)] += leave.employee_id
+        # Employees on a fixed calendar are computed below, once per (include_public_holidays_in_duration,
+        # calendar, month) instead of once per key.
+        batched = {}
+        for key, employees in employees_by_dates_calendar.items():
+            if key[3] and not key[3].flexible_hours and (to_batch := employees.filtered(lambda e: not e.is_flexible and not e.is_fully_flexible)):
+                batched[key] = to_batch
+                employees_by_dates_calendar[key] -= to_batch
+        employees_by_dates_calendar = {key: employees for key, employees in employees_by_dates_calendar.items() if employees}
         # We force the company in the domain as we are more than likely in a compute_sudo
         domain = [('time_type', '=', 'leave'),
                   ('company_id', 'in', self.env.companies.ids + self.env.context.get('allowed_company_ids', [])),
@@ -427,6 +435,26 @@ class HolidaysRequest(models.Model):
             (date_from, date_to, include_public_holidays_in_duration, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
             for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
         }
+        keys_by_month = defaultdict(list)
+        for key in batched:
+            keys_by_month[key[2], key[3], key[0].year, key[0].month].append(key)
+        for (include_public_holidays_in_duration, calendar, _year, _month), keys in keys_by_month.items():
+            all_intervals = calendar._work_intervals_batch(
+                min(k[0] for k in keys).replace(tzinfo=UTC), max(k[1] for k in keys).replace(tzinfo=UTC),
+                self.env['hr.employee'].concat(*(batched[k] for k in keys)).resource_id,
+                domain=domain, compute_leaves=not include_public_holidays_in_duration)
+            for key in keys:
+                for employee in batched[key]:
+                    # Cut this key's window out, in the employee's tz like _attendance_intervals_batch does.
+                    tz = timezone(employee.resource_id.tz or calendar.tz)
+                    intervals = all_intervals[employee.resource_id.id] & Intervals([(
+                        key[0].replace(tzinfo=UTC).astimezone(tz), key[1].replace(tzinfo=UTC).astimezone(tz),
+                        self.env['resource.calendar.attendance'])])
+                    per_day = defaultdict(float)
+                    for start, stop, _meta in intervals:
+                        per_day[start.date()] += (stop - start).total_seconds() / 3600
+                    work_time_per_day_mapped.setdefault(key, {})[employee.id] = sorted(per_day.items())
+                    work_days_data_mapped.setdefault(key, {})[employee.id] = calendar._get_attendance_intervals_days_data(intervals)
         for leave in self:
             calendar = resource_calendar or leave.resource_calendar_id
             if not leave.date_from or not leave.date_to or (not calendar and not leave.employee_id):
