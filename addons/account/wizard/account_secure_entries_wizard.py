@@ -88,7 +88,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
         res = []
         for *__, chain_moves in self.env['account.move'].sudo()._read_group(
             domain=self._get_unhashed_moves_in_hashed_period_domain(company_id, hash_date, [('state', '=', 'posted')]),
-            groupby=['journal_id', 'sequence_prefix'],
+            groupby=['journal_id', 'sequence_format'],
             aggregates=['id:recordset']
         ):
             chain_info = chain_moves._get_chain_info(force_hash=True)
@@ -190,7 +190,7 @@ class AccountSecureEntriesWizard(models.TransientModel):
                     OR_domains.append([
                         *self.env['account.move']._check_company_domain(wizard.company_id),
                         ('journal_id', '=', last_move.journal_id.id),
-                        ('sequence_prefix', '=', last_move.sequence_prefix),
+                        ('sequence_format', '=', last_move.sequence_format),
                         ('sequence_number', '<=', last_move.sequence_number),
                         ('sequence_number', '>=', first_move.sequence_number),
                     ])

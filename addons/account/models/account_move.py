@@ -18,6 +18,7 @@ from textwrap import shorten
 
 from odoo import api, fields, models, _, SUPERUSER_ID, modules
 from odoo.addons.account.tools import format_structured_reference_iso
+from odoo.addons.account.models.sequence_mixin import SEQ_PLACEHOLDER
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.fields import Command, Domain
 from odoo.tools.misc import clean_context
@@ -45,7 +46,7 @@ from odoo.tools.safe_eval import safe_eval
 _logger = logging.getLogger(__name__)
 
 
-MAX_HASH_VERSION = 4
+MAX_HASH_VERSION = 5
 
 PAYMENT_STATE_SELECTION = [
         ('not_paid', 'Not Paid'),
@@ -1014,7 +1015,7 @@ class AccountMove(models.Model):
 
         self._inverse_name()
 
-    @api.depends('date', 'journal_id', 'move_type', 'name', 'posted_before', 'sequence_number', 'sequence_prefix', 'state')
+    @api.depends('date', 'journal_id', 'move_type', 'name', 'posted_before', 'sequence_format', 'sequence_number', 'state')
     def _compute_name_placeholder(self):
         for move in self:
             if (not move.name or move.name == '/') and move.date and not move._get_last_sequence():
@@ -4091,7 +4092,7 @@ class AccountMove(models.Model):
                     raise UserError(_('The Journal Entry sequence is not conform to the current format. Only the Accountant can change it.'))
                 move.journal_id.sequence_override_regex = False
 
-        if {'sequence_prefix', 'sequence_number', 'journal_id', 'name'} & vals.keys():
+        if {'sequence_format', 'sequence_number', 'journal_id', 'name'} & vals.keys():
             self._update_sequence_made_gap(invalidate_current=True)
 
         stolen_moves = self.browse(set(move for move in self._stolen_move(vals)))
@@ -4376,7 +4377,7 @@ class AccountMove(models.Model):
                 anti_regex = None
 
             if anti_regex and not self.journal_id.sequence_override_regex and not self.env.context.get('no_anti_regex'):
-                condition = SQL("%s AND sequence_prefix !~ %s", condition, anti_regex)
+                condition = SQL("%s AND split_part(sequence_format, %s, 1) !~ %s", condition, SEQ_PLACEHOLDER, anti_regex)
 
         if self.journal_id.refund_sequence:
             if self.is_refund():
@@ -4724,7 +4725,7 @@ class AccountMove(models.Model):
         hash_version = self.env.context.get('hash_version', MAX_HASH_VERSION)
         if hash_version == 1:
             return ['date', 'journal_id', 'company_id']
-        elif hash_version in (2, 3, 4):
+        elif hash_version in (2, 3, 4, 5):
             return ['name', 'date', 'journal_id', 'company_id']
         raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
@@ -4767,7 +4768,7 @@ class AccountMove(models.Model):
             self.env['res.groups']._activate_group_account_secured()
 
     def _get_chain_info(self, force_hash=False, include_pre_last_hash=False, early_stop=False):
-        """All records in `self` must belong to the same journal and sequence_prefix
+        """All records in `self` must belong to the same journal and sequence_format
         """
         if not self:
             return False
@@ -4779,7 +4780,7 @@ class AccountMove(models.Model):
             .search_fetch(
                 domain=[('id', 'in', self.ids)],
                 field_names=[
-                    'sequence_prefix',
+                    'sequence_format',
                     'sequence_number',
                     'journal_id',
                     # Pre-emptive fetching for `_is_move_restricted`
@@ -4796,7 +4797,7 @@ class AccountMove(models.Model):
 
         common_domain = [
             ('journal_id', '=', journal.id),
-            ('sequence_prefix', '=', last_move_in_chain.sequence_prefix),
+            ('sequence_format', '=', last_move_in_chain.sequence_format),
         ]
 
         sequence_number_reset = last_move_in_chain._deduce_sequence_number_reset(last_move_in_chain.name)
@@ -4874,7 +4875,7 @@ class AccountMove(models.Model):
         """
         res = []
         for journal, journal_moves in self.grouped('journal_id').items():
-            for chain_moves in journal_moves.grouped('sequence_prefix').values():
+            for chain_moves in journal_moves.grouped('sequence_format').values():
                 chain_info = chain_moves._get_chain_info(
                     force_hash=force_hash, include_pre_last_hash=include_pre_last_hash, early_stop=early_stop
                 )
@@ -4891,7 +4892,7 @@ class AccountMove(models.Model):
                 if raise_if_no_document and 'no_document' in chain_info['warnings']:
                     raise UserError(_(
                         "This move could not be locked either because "
-                        "some move with the same sequence prefix has a higher number. You may need to resequence it."
+                        "some move with the same sequence format has a higher number. You may need to resequence it."
                     ))
                 if raise_if_gap and 'gap' in chain_info['warnings']:
                     raise UserError(_(
@@ -6432,19 +6433,6 @@ class AccountMove(models.Model):
     def _set_next_made_sequence_gap(self, made_gap: bool):
         self._update_sequence_made_gap(invalidate_current=made_gap)
 
-    def _get_sequence_suffix(self):
-        """
-        Return this move's sequence suffix (the part of `name` right after the
-        number), or '' if it doesn't have a real sequence assigned yet.
-
-        Avoids calling `_get_sequence_format_param` on an unset/placeholder sequence
-        (e.g. '/'), which some localizations treat as an unexpected format.
-        """
-        self.ensure_one()
-        if not self.name or self.name == '/':
-            return ''
-        return self._get_sequence_format_param(self.name)[1].get('suffix', '')
-
     def _update_sequence_made_gap(self, invalidate_current=False):
         """Update the field made_sequence_gap on the current, next and previous moves.
 
@@ -6484,20 +6472,15 @@ class AccountMove(models.Model):
             # bypassing record rules here is safe.
             return self.sudo().browse(ids).with_prefetch(all_ids)
 
-        def _escape_like(value):
-            return value.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
-
         sequence_mixin_cache = self._get_sequence_cache()
-        self.env['account.move'].flush_model(['name', 'sequence_prefix', 'sequence_number', 'journal_id'])
-        suffix_pairs = [(move.id, _escape_like(move._get_sequence_suffix())) for move in moves_to_update]
+        self.env['account.move'].flush_model(['name', 'sequence_format', 'sequence_number', 'journal_id'])
         made_gap_data = self.env.execute_query(SQL("""
             SELECT ARRAY(
                             SELECT other.id
                               FROM account_move other
                              WHERE other.journal_id = move.journal_id
-                               AND other.sequence_prefix = move.sequence_prefix
+                               AND other.sequence_format = move.sequence_format
                                AND other.sequence_number < move.sequence_number
-                               AND other.name LIKE '%%' || other.sequence_number || ms.suffix
                           ORDER BY other.sequence_number DESC
                              LIMIT 2
                    ),
@@ -6506,16 +6489,14 @@ class AccountMove(models.Model):
                             SELECT other.id
                               FROM account_move other
                              WHERE other.journal_id = move.journal_id
-                               AND other.sequence_prefix = move.sequence_prefix
+                               AND other.sequence_format = move.sequence_format
                                AND other.sequence_number > move.sequence_number
-                               AND other.name LIKE '%%' || other.sequence_number || ms.suffix
                           ORDER BY other.sequence_number ASC
                              LIMIT 2
                    )
               FROM account_move move
-              JOIN (VALUES %(suffix_pairs)s) AS ms(move_id, suffix) ON ms.move_id = move.id
              WHERE move.id = ANY(%(move_ids)s)
-        """, suffix_pairs=SQL(", ").join(suffix_pairs), move_ids=moves_to_update.ids))
+        """, move_ids=moves_to_update.ids))
         all_ids = tuple({id_ for row in made_gap_data for ids in row for id_ in (ids if isinstance(ids, list) else [ids])})
         for previous_ids, current_id, next_ids in made_gap_data:
             move_p1, move_p2 = browse(previous_ids) if len(previous_ids) == 2 else (browse(previous_ids), browse())

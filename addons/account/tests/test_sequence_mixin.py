@@ -635,6 +635,28 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         bill_copy_3.action_post()
         self.assertMoveName(bill_copy_3, 'BILL/24-25/04/0001')
 
+    def test_sequence_format_with_suffix(self):
+        """The suffix is part of the sequence: a sequence continues within its own format."""
+        moves = (
+            self.create_move(name='MISC/00001', post=True)
+            + self.create_move(name='MISC/00005A', post=True)
+            + self.create_move(name='MISC/00002', post=True)
+        )
+        self.assertRecordValues(moves, [
+            {'sequence_format': 'MISC/<seq>', 'sequence_prefix': 'MISC/', 'sequence_number': 1},
+            {'sequence_format': 'MISC/<seq>A', 'sequence_prefix': 'MISC/', 'sequence_number': 5},
+            {'sequence_format': 'MISC/<seq>', 'sequence_prefix': 'MISC/', 'sequence_number': 2},
+        ])
+        # The highest number with the same prefix is in another format
+        new_move = self.create_move(post=True)
+        self.assertEqual(new_move.name, 'MISC/00003')
+
+        self.create_move(name='M_SC/00001', post=True)
+        self.assertEqual(
+            self.env['account.move'].search([('journal_id', '=', new_move.journal_id.id), ('sequence_prefix', '=', 'MISC/')]),
+            (moves + new_move).sorted(),
+        )
+
     def test_sequence_get_more_specific(self):
         """There is the ability to change the format (i.e. from yearly to montlhy)."""
         # Start with a continuous sequence

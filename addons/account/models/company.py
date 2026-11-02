@@ -12,6 +12,7 @@ from odoo.tools.misc import format_date
 
 from odoo.addons.account.models.account_move import MAX_HASH_VERSION
 from odoo.addons.account.models.product import ACCOUNT_DOMAIN
+from odoo.addons.account.models.sequence_mixin import SEQ_PLACEHOLDER
 from odoo.addons.base.models.res_partner import _ref_vat
 from odoo.addons.base.models.res_company import company_default_for
 from odoo.fields import Domain
@@ -1166,19 +1167,21 @@ class ResCompany(models.Model):
                     ('journal_id', '=', journal.id),
                     ('inalterable_hash', '!=', False),
                 ],
-                order="secure_sequence_number ASC NULLS LAST, sequence_prefix, sequence_number ASC",
+                order="secure_sequence_number ASC NULLS LAST, sequence_number ASC",
             )
-            prefix2result = defaultdict(lambda: {
+            # The hash chains: the whole journal (`None`) with a `secure_sequence_number` (before v4), the sequence
+            # prefix until v4, and the sequence format since v5. Only the formats are reported, as they contain
+            # `<seq>`, while the prefixes don't.
+            chains = defaultdict(lambda: {
                 'first_move': self.env['account.move'],
                 'last_move': self.env['account.move'],
                 'corrupted_move': self.env['account.move'],
             })
-            last_move = self.env['account.move']
             self.env.execute_query(SQL("DECLARE hashed_moves CURSOR FOR %s", query.select()))
             while move_ids := self.env.execute_query(SQL("FETCH %s FROM hashed_moves", INTEGRITY_HASH_BATCH_SIZE)):
                 self.env.invalidate_all()
                 moves = self.env['account.move'].browse(move_id[0] for move_id in move_ids)
-                if not moves and not last_move:
+                if not moves and not chains:
                     results.append({
                         'journal_name': journal.name,
                         'restricted_by_hash_table': restricted_by_hash_table_flag,
@@ -1189,30 +1192,53 @@ class ResCompany(models.Model):
 
                 current_hash_version = 1
                 for move in moves:
-                    prefix_result = prefix2result[move.sequence_prefix]
-                    if prefix_result['corrupted_move']:
-                        continue
-                    previous_move = prefix_result['last_move'] if not move.secure_sequence_number else last_move
-                    previous_hash = previous_move.inalterable_hash or ""
-                    computed_hash = move.with_context(hash_version=current_hash_version)._calculate_hashes(previous_hash)[move]
-                    while move.inalterable_hash != computed_hash and current_hash_version < MAX_HASH_VERSION:
-                        current_hash_version += 1
-                        computed_hash = move.with_context(hash_version=current_hash_version)._calculate_hashes(previous_hash)[move]
-                    if move.inalterable_hash != computed_hash:
-                        prefix_result['corrupted_move'] = move
-                        continue
-                    if not prefix_result['first_move']:
-                        prefix_result['first_move'] = move
-                    prefix_result['last_move'] = move
-                    last_move = move
+                    format_chain = chains[move.sequence_format]
+                    # Since v4, the hash version is stored in the hash: `$<version>$<hash>`
+                    stored_hash_version = move.inalterable_hash.startswith('$') and move.inalterable_hash.split('$')[1]
+                    stored_hash_version = int(stored_hash_version) if stored_hash_version and stored_hash_version.isdigit() else None
+                    is_legacy = not stored_hash_version or stored_hash_version < 5
+                    if not stored_hash_version:
+                        # Until v3, the moves are chained on the whole journal, by `secure_sequence_number`
+                        previous_chain = chains[None]
+                    elif stored_hash_version == 4:
+                        # In v4, the chains are split by sequence prefix
+                        previous_chain = chains[move.sequence_prefix]
+                    else:
+                        # Since v5, the chains are split by sequence format instead of prefix
+                        previous_chain = format_chain
+                    if not format_chain['corrupted_move']:
+                        previous_hash = previous_chain['last_move'].inalterable_hash or ""
+                        if stored_hash_version:
+                            computed_hash = (
+                                4 <= stored_hash_version <= MAX_HASH_VERSION
+                                and move.with_context(hash_version=stored_hash_version)._calculate_hashes(previous_hash)[move]
+                            )
+                        else:
+                            computed_hash = move.with_context(hash_version=current_hash_version)._calculate_hashes(previous_hash)[move]
+                            while move.inalterable_hash != computed_hash and current_hash_version < 3:
+                                current_hash_version += 1
+                                computed_hash = move.with_context(hash_version=current_hash_version)._calculate_hashes(previous_hash)[move]
+                        if move.inalterable_hash != computed_hash:
+                            format_chain['corrupted_move'] = move
+                        elif not format_chain['first_move']:
+                            format_chain['first_move'] = move
+                    # The next move is chained with the stored hash, even if this one is corrupted. Keep following
+                    # the chains so that a legacy chain spanning several formats doesn't corrupt the other formats.
+                    chains[None]['last_move'] = move
+                    format_chain['last_move'] = move
+                    if is_legacy:
+                        chains[move.sequence_prefix]['last_move'] = move
 
             self.env.execute_query(SQL("CLOSE hashed_moves"))
 
-            for prefix, prefix_result in prefix2result.items():
-                if corrupted_move := prefix_result['corrupted_move']:
+            for sequence_format, format_chain in chains.items():
+                if sequence_format is None or SEQ_PLACEHOLDER not in sequence_format:
+                    continue
+                journal_name = f"{journal.name} ({sequence_format.replace(SEQ_PLACEHOLDER, '...')})"
+                if corrupted_move := format_chain['corrupted_move']:
                     results.append({
                         'restricted_by_hash_table': restricted_by_hash_table_flag,
-                        'journal_name': f"{journal.name} ({prefix}...)",
+                        'journal_name': journal_name,
                         'status': 'corrupted',
                         'msg_cover': _(
                             "Corrupted data on journal entry with id %(id)s (%(name)s).",
@@ -1223,15 +1249,15 @@ class ResCompany(models.Model):
                 else:
                     results.append({
                         'restricted_by_hash_table': restricted_by_hash_table_flag,
-                        'journal_name': f"{journal.name} ({prefix}...)",
+                        'journal_name': journal_name,
                         'status': 'verified',
                         'msg_cover': _("Entries are correctly hashed"),
-                        'first_move_name': prefix_result['first_move'].name,
-                        'first_hash': prefix_result['first_move'].inalterable_hash,
-                        'first_move_date': format_date(self.env, prefix_result['first_move'].date),
-                        'last_move_name': prefix_result['last_move'].name,
-                        'last_hash': prefix_result['last_move'].inalterable_hash,
-                        'last_move_date': format_date(self.env, prefix_result['last_move'].date),
+                        'first_move_name': format_chain['first_move'].name,
+                        'first_hash': format_chain['first_move'].inalterable_hash,
+                        'first_move_date': format_date(self.env, format_chain['first_move'].date),
+                        'last_move_name': format_chain['last_move'].name,
+                        'last_hash': format_chain['last_move'].inalterable_hash,
+                        'last_move_date': format_date(self.env, format_chain['last_move'].date),
                     })
 
         return {

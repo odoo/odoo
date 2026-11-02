@@ -333,7 +333,7 @@ class AccountJournal(models.Model):
             journal.json_activity_data = json.dumps({'activities': activities[journal.id]})
 
     def _query_has_sequence_holes(self):
-        self.env['account.move'].flush_model(['journal_id', 'date', 'sequence_prefix', 'made_sequence_gap'])
+        self.env['account.move'].flush_model(['journal_id', 'date', 'sequence_format', 'made_sequence_gap'])
         # A branch company is locked when the parent is locked.
         # Parent companies of the journal company can not add moves to the journal.
         # Thus it is good enough to consider all moves in the journal after the journal company lockdate.
@@ -349,13 +349,13 @@ class AccountJournal(models.Model):
             queries.append(SQL(
                 """
                     SELECT move.journal_id,
-                           move.sequence_prefix
+                           move.sequence_format
                       FROM account_move move
                      WHERE move.journal_id = ANY(%(journal_ids)s)
                        AND move.company_id = ANY(%(company_ids)s)
                        AND move.made_sequence_gap IS TRUE
                        AND move.date > %(lock_date)s
-                  GROUP BY move.journal_id, move.sequence_prefix
+                  GROUP BY move.journal_id, move.sequence_format
                 """,
                 journal_ids=journals.ids,
                 company_ids=companies.ids,
@@ -1347,7 +1347,7 @@ class AccountJournal(models.Model):
             'view_mode': 'list,form',
             'domain': domain,
             'context': {
-                'search_default_group_by_sequence_prefix': 1,
+                'search_default_group_by_sequence_format': 1,
                 'search_default_irregular_sequences': 1,
                 'expand': 1,
             }
@@ -1358,8 +1358,8 @@ class AccountJournal(models.Model):
         domain = Domain(self.env['account.move']._check_company_domain(self.env.companies))
         domain &= Domain.OR(
             Domain('journal_id', '=', journal_id)
-            & Domain('sequence_prefix', '=', prefix)
-            for journal_id, prefix in has_sequence_holes
+            & Domain('sequence_format', '=', sequence_format)
+            for journal_id, sequence_format in has_sequence_holes
         )
         action = self._show_sequence_holes(domain)
         action['context'] = {**self._get_move_action_context(), **action['context']}

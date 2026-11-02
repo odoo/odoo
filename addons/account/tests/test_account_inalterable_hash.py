@@ -587,7 +587,7 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
             {'partner': self.partner_a, 'date': '2024-01-02', 'amounts': [1000, 2000]},
             {'partner': self.partner_b, 'date': '2024-01-01', 'amounts': [1000, 2000]},
             {'partner': self.partner_b, 'date': '2024-01-03', 'amounts': [1000, 2000]},
-        ])  # Default hash version is 4
+        ], hash_version=4)
 
         # Don't ever allow to hash moves_v3_pre_restrict_mode
         moves_v3_pre_restrict_mode[-1]._hash_moves(raise_if_no_document=False)  # Shouldn't raise
@@ -842,10 +842,8 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         self.assertEqual(wizard.move_to_hash_ids, moves_v4)
 
     def test_hash_chain_year_in_suffix_sequence_reset(self):
-        """
-        With the year in the suffix (e.g. F0001/2026), `sequence_prefix` is the
-        same for every year while the numbering restarts each year. The 2026 chain
-        must not be compared with the (higher) numbers of the 2025 one.
+        """With the year in the suffix (e.g. F0001/2026), the numbering restarts each year with the same prefix.
+        Each year is its own sequence format, so the 2026 chain doesn't follow the (higher) numbers of 2025.
         """
         journal = self.company_data['default_journal_sale']
         journal.restrict_mode_hash_table = True
@@ -854,16 +852,59 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         def post(date, name):
             move = self.init_invoice('out_invoice', self.partner_a, date, amounts=[1000], post=False)
             move.name = name
-            with self._skip_hash_moves():
-                move.action_post()
+            move.action_post()
             return move
 
         moves_2025 = post('2025-12-30', 'F0010/2025') | post('2025-12-31', 'F0011/2025')
-        moves_2025._hash_moves()
         moves_2026 = post('2026-01-02', 'F0001/2026') | post('2026-01-03', 'F0002/2026')
+        moves = moves_2025 | moves_2026
 
-        self.assertEqual((moves_2025 | moves_2026).mapped('sequence_prefix'), ['F'] * 4)
+        self.assertEqual(moves.mapped('sequence_format'), ['F<seq>/2025'] * 2 + ['F<seq>/2026'] * 2)
+        self.assertTrue(all(moves.mapped('inalterable_hash')))
+        self.assertEqual(moves_2026[0].inalterable_hash, moves_2026[0]._calculate_hashes('')[moves_2026[0]])
+        self._verify_integrity(moves, "Entries are correctly hashed", moves_2025[0], moves_2025[-1], prefix='(F.../2025)')
+        self._verify_integrity(moves, "Entries are correctly hashed", moves_2026[0], moves_2026[-1], prefix='(F.../2026)')
 
-        moves_2026._hash_moves()  # raised "no_document" before the fix
-        self.assertTrue(all(moves_2026.mapped('inalterable_hash')))
-        self.assertNotEqual(moves_2026[0].inalterable_hash, moves_2025[-1].inalterable_hash)
+    def test_account_move_hash_versioning_v4_to_v5(self):
+        """Until v4, the chains were split by sequence prefix, mixing the suffixes. Since v5, they are split by
+        sequence format. The integrity report must handle both.
+        """
+        self.company_data['default_journal_sale'].restrict_mode_hash_table = True
+        moves_v4 = self.env['account.move']
+        last_hash = ""
+        for name in ('INV/2024/00001', 'INV/2024/00002A', 'INV/2024/00003'):
+            move = self.init_invoice("out_invoice", self.partner_a, "2024-01-01", amounts=[1000], post=False)
+            move.name = name
+            with self._skip_hash_moves():
+                move.action_post()
+            move.inalterable_hash = move.with_context(hash_version=4)._calculate_hashes(last_hash)[move]
+            last_hash = move.inalterable_hash
+            moves_v4 |= move
+
+        move_no_suffix = self.init_invoice("out_invoice", self.partner_a, "2024-01-01", amounts=[1000], post=True)
+        move_a = self.init_invoice("out_invoice", self.partner_a, "2024-01-01", amounts=[1000], post=False)
+        move_a.name = 'INV/2024/00003A'
+        move_a.action_post()
+        moves_v5 = move_no_suffix | move_a
+
+        self.assertRecordValues(moves_v4 | moves_v5, [
+            {'name': 'INV/2024/00001', 'sequence_format': 'INV/2024/<seq>'},
+            {'name': 'INV/2024/00002A', 'sequence_format': 'INV/2024/<seq>A'},
+            {'name': 'INV/2024/00003', 'sequence_format': 'INV/2024/<seq>'},
+            {'name': 'INV/2024/00004', 'sequence_format': 'INV/2024/<seq>'},
+            {'name': 'INV/2024/00003A', 'sequence_format': 'INV/2024/<seq>A'},
+        ])
+        self.assertTrue(all(move.inalterable_hash.startswith('$4$') for move in moves_v4))
+        self.assertTrue(all(move.inalterable_hash.startswith('$5$') for move in moves_v5))
+        # The v5 moves are chained with the last move of the same format
+        self.assertEqual(move_a.inalterable_hash, move_a._calculate_hashes(moves_v4[1].inalterable_hash)[move_a])
+        self.assertEqual(move_no_suffix.inalterable_hash, move_no_suffix._calculate_hashes(moves_v4[2].inalterable_hash)[move_no_suffix])
+
+        moves = moves_v4 | moves_v5
+        self._verify_integrity(moves, "Entries are correctly hashed", moves_v4[0], move_no_suffix, prefix='(INV/2024/...)')
+        self._verify_integrity(moves, "Entries are correctly hashed", moves_v4[1], move_a, prefix='(INV/2024/...A)')
+
+        # The no-suffix moves are still verified, as they are chained with the stored hash of the corrupted move
+        Model.write(moves_v4[1], {'date': fields.Date.from_string('2024-11-07')})
+        self._verify_integrity(moves, f'Corrupted data on journal entry with id {moves_v4[1].id}.*', prefix='(INV/2024/...A)')
+        self._verify_integrity(moves, "Entries are correctly hashed", moves_v4[0], move_no_suffix, prefix='(INV/2024/...)')
