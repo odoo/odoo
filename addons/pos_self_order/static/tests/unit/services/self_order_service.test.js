@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, mockDate, test } from "@odoo/hoot";
 import { MockServer, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { location } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 import {
     addComboProduct,
@@ -1008,6 +1009,49 @@ test("resetCategorySelection", async () => {
     expect(store.currentCategory.id).toBe(ctg2.id);
     await store.confirmOrder();
     expect(store.currentCategory.id).toBe(ctg1.id);
+});
+
+describe("confirmOrder redirection", () => {
+    const getNavigatedRoute = async (store) => {
+        let route;
+        patch(store.router, {
+            navigate(routeName) {
+                route = routeName;
+            },
+        });
+        await getFilledSelfOrder(store);
+        await store.confirmOrder();
+        return route;
+    };
+
+    test("no payment method redirects to confirmation page", async () => {
+        const store = await setupSelfPosEnv();
+        expect(store.hasPaymentMethod()).toBe(false);
+        expect(await getNavigatedRoute(store)).toBe("confirmation");
+    });
+
+    test("cash method without provider redirects to confirmation page", async () => {
+        const store = await setupSelfPosEnv();
+        store.models["pos.payment.method"].create({
+            name: "Cash",
+            type: "cash",
+            payment_provider: false,
+        });
+        expect(store.hasPaymentMethod()).toBe(false);
+        expect(await getNavigatedRoute(store)).toBe("confirmation");
+    });
+
+    test("only a cash machine redirects to payment page", async () => {
+        const store = await setupSelfPosEnv();
+        store.models["pos.payment.method"].create({
+            name: "CashMachine",
+            type: "cash",
+            payment_provider: "mock_cash_machine",
+            payment_method_type: "cash_machine",
+        });
+        expect(store.hasPaymentMethod()).toBe(true);
+        expect(await getNavigatedRoute(store)).toBe("payment");
+    });
 });
 
 describe("printOrderChanges", () => {

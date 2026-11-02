@@ -447,11 +447,13 @@ export class SelfOrder extends Reactive {
         this.currentCategory = this.availableCategories[0];
     }
 
-    hasPaymentMethod() {
-        return (
-            this.config.self_ordering_mode === "kiosk" &&
-            this.models["pos.payment.method"].filter((pm) => pm.type !== "cash").length > 0
+    get paymentMethods() {
+        return this.models["pos.payment.method"].filter(
+            (pm) => pm.type !== "cash" || pm.payment_provider
         );
+    }
+    hasPaymentMethod() {
+        return this.config.self_ordering_mode === "kiosk" && this.paymentMethods.length > 0;
     }
 
     async confirmOrder() {
