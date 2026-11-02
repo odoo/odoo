@@ -105,7 +105,7 @@ export class PaymentVivaCom extends PaymentInterface {
         };
 
         try {
-            await this.pos.syncAllOrders({ orders: [order], throw: true });
+            await this.pos.syncAllOrders?.({ orders: [order], throw: true });
         } catch {
             this._show_error(
                 _t(
