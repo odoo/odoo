@@ -2443,6 +2443,7 @@ class APIKeys(models.Model):
         RETURNING id
         """.format(table=self._table),
         [name, self.env.user.id, scope, expiration_date or None, KEY_CRYPT_CONTEXT.hash(k), k[:INDEX_SIZE]])
+        self.env.user.invalidate_recordset(['api_key_ids'])
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         _logger.info("%s generated: scope: <%s> for '%s' (#%s) from %s",
