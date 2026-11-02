@@ -137,6 +137,29 @@ class PosPaymentMethod(models.Model):
             _logger.warning("Failed to retrieve Viva.com transactions %s: %s", transaction_id, e)
             return []
 
+    def _viva_com_find_payment(self, session_id):
+        """
+        Return the payment line of the given Viva.com session.
+        """
+        self.ensure_one()
+        payment = self.env['pos.payment'].search([('viva_com_session_id', '=', session_id)], limit=1)
+        if payment:
+            return payment
+        # The frontend builds the session id as "<order uuid> - <random uuid>".
+        order = self.env['pos.order'].search([
+            ('uuid', '=', session_id.partition(' - ')[0]),
+            ('state', '=', 'draft'),
+            ('config_id', 'in', self.config_ids.ids),
+        ], limit=1)
+        if not order:
+            return payment
+        return self.env['pos.payment'].new({
+            'pos_order_id': order.id,
+            'payment_method_id': self.id,
+            'amount': order.amount_total - order.amount_paid,
+            'viva_com_session_id': session_id,
+        })
+
     def _retrieve_session_id(self, data_webhook):
         # Send a request to confirm the status of the sesions_id
         # Need wait to the status of sesions_id is updated setted in session headers; code 202
@@ -151,14 +174,14 @@ class PosPaymentMethod(models.Model):
         data = self._call_viva_com(endpoint, 'get')
 
         if data.get('success'):
-            payment = self.env['pos.payment'].search([('viva_com_session_id', '=', data.get('sessionId'))], limit=1)
+            payment = self._viva_com_find_payment(data.get('sessionId'))
             transactions = payment._viva_com_verify_transactions(data.get('transactionId')) if payment else []
             mismatch = next((t for t in transactions if t['status'] == 'mismatch'), None)
             if any(t['status'] == 'valid' for t in transactions):
                 data.update({'pos_session_id': pos_session_id, 'data_webhook': data_webhook})
                 self._send_notification(data)
             elif mismatch:
-                payment.write({'payment_status': 'error'})
+                payment.filtered('id').write({'payment_status': 'error'})
                 if mismatch['currency']:
                     currency = self.env['res.currency'].search([('iso_numeric', '=', mismatch['currency'])], limit=1)
                     notification = {'currency_ask': payment.currency_id.full_name, 'currency_paid': currency.full_name or mismatch['currency']}
@@ -223,7 +246,7 @@ class PosPaymentMethod(models.Model):
         data = self._call_viva_com(endpoint, 'get', should_retry=False)
         if not data.get('success'):
             return data
-        payment = self.env['pos.payment'].search([('viva_com_session_id', '=', session_id)], limit=1)
+        payment = self._viva_com_find_payment(session_id)
         transactions = payment._viva_com_verify_transactions(data.get('transactionId')) if payment else []
         mismatch = next((t for t in transactions if t['status'] == 'mismatch'), None)
         if any(t['status'] == 'valid' for t in transactions):
