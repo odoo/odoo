@@ -32,6 +32,9 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 _logger = logging.getLogger(__name__)
 
+# margin top, header spacing and margin bottom of the A4 and US Letter paperformats
+DEFAULT_PAPERFORMAT_MARGINS = (52, 52, 32)
+
 
 class IrActionsReport(models.Model):
     _name = 'ir.actions.report'
@@ -253,12 +256,7 @@ class IrActionsReport(models.Model):
             body = ''.join(lxml.html.tostring(c, encoding='unicode') for c in body_parent.getchildren())
             bodies.append(body)
 
-        # Get paperformat arguments set in the root html tag. They are prioritized over
-        # paperformat-record arguments.
-        specific_paperformat_args = {}
-        for attribute in root.items():
-            if attribute[0].startswith('data-report-'):
-                specific_paperformat_args[attribute[0]] = attribute[1]
+        specific_paperformat_args = self._get_specific_paperformat_args(header_node, root)
 
         header = self.env['ir.qweb']._render(layout.id, {
             'subst': True,
@@ -276,6 +274,26 @@ class IrActionsReport(models.Model):
         }) if len(footer_node) else None
 
         return bodies, res_ids, header, footer, specific_paperformat_args
+
+    def _get_specific_paperformat_args(self, headers, root):
+        '''Get the margins set on the headers by the external layout, and the paperformat arguments
+        set on the root html tag. They are prioritized over paperformat-record arguments.
+
+        The headers only replace the default margins of the paperformat, so margins that were
+        customized are kept. Documents printed together share their margins, so the largest one
+        from the headers is kept, and the root html tag wins over all of them.
+        '''
+        specific_paperformat_args = {}
+        paperformat = self.get_paperformat()
+        if (paperformat.margin_top, paperformat.header_spacing, paperformat.margin_bottom) == DEFAULT_PAPERFORMAT_MARGINS:
+            for header in headers:
+                for name in ('data-report-margin-top', 'data-report-header-spacing', 'data-report-margin-bottom'):
+                    if value := header.get(name):
+                        specific_paperformat_args[name] = max(value, specific_paperformat_args.get(name, value), key=float)
+        for name, value in root.items():
+            if name.startswith('data-report-'):
+                specific_paperformat_args[name] = value
+        return specific_paperformat_args
 
     @api.model
     def _get_report_from_name(self, report_name):
