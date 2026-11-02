@@ -15,6 +15,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Macro } from "@web/core/macro";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { TourAutomatic } from "@web_tour/js/tour_automatic/tour_automatic";
 
 describe.current.tags("desktop");
 
@@ -686,4 +687,46 @@ test("Tour redirect to given url", async () => {
     await odoo.startTour("tour_redirect", { mode: "auto", url: "/odoo" });
     await waitForMacro();
     expect(browser.location.pathname).toBe("/odoo");
+});
+
+test("automatic tour does not keep the elements of the steps it ran", async () => {
+    let tour;
+    patchWithCleanup(TourAutomatic.prototype, {
+        start() {
+            tour = this;
+            super.start(...arguments);
+        },
+    });
+    class Root extends Component {
+        static components = {};
+        static template = xml/*html*/ `
+            <t>
+                <button class="button0">Button 0</button>
+                <button class="button1">Button 1</button>
+            </t>
+        `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Root);
+    tourRegistry.add("tour_without_elements", {
+        steps: () => [
+            {
+                trigger: ".button0",
+                run() {
+                    expect.step("button0");
+                },
+            },
+            {
+                trigger: ".button1",
+                run() {
+                    expect.step("button1");
+                },
+            },
+        ],
+    });
+    await odoo.startTour("tour_without_elements", { mode: "auto" });
+    await waitForMacro();
+    expect.verifySteps(["button0", "button1"]);
+    expect(tour.steps.map((step) => step.element)).toEqual([null, null]);
 });
