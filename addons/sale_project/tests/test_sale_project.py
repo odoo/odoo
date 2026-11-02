@@ -732,7 +732,6 @@ class TestSaleProject(TestSaleProjectCommon):
             - New
             - In Progress
             - Done
-            - Cancelled
         """
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
@@ -756,7 +755,7 @@ class TestSaleProject(TestSaleProjectCommon):
             'product_uom_qty': 10,
             'price_unit': product.list_price,
         })
-        names = ['New', 'In Progress', 'Done', 'Cancelled']
+        names = ['New', 'In Progress', 'Done']
         project = sale_order_line._timesheet_create_project()
         self.assertEqual(names, project.type_ids.mapped('name'), "The project stages' name should be equal to: %s" % names)
 
