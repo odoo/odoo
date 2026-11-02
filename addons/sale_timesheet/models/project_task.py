@@ -57,18 +57,17 @@ class ProjectTask(models.Model):
     def _search_remaining_hours_so(self, operator, value):
         return [('sale_line_id.remaining_hours', operator, value)]
 
+    # TODO remove me in master
     def _inverse_partner_id(self):
         super()._inverse_partner_id()
-        for task in self:
-            if task.allow_billable and not task.sale_line_id:
-                task.sale_line_id = task.sudo()._get_last_sol_of_customer()
+        pass
 
     @api.depends('sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         super()._compute_sale_line()
         for task in self:
             if task.allow_billable and not task.sale_line_id:
-                task.sale_line_id = task._get_last_sol_of_customer()
+                task.sale_line_id = task.sudo()._get_last_sol_of_customer()
 
     @api.depends('project_id.sale_line_employee_ids')
     def _compute_is_project_map_empty(self):
