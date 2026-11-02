@@ -61,3 +61,17 @@
 .o_sale_dashboard {
     background-color: $o-control-panel-background-color;
 }
+
+.o_content:has(> .o_website_sale_dashboard + .o_renderer > .o_view_nocontent) {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: minmax(0, 1fr);
+
+    > .o_renderer > .o_view_nocontent {
+        grid-area: 2 / 1;
+    }
+
+    > .o_list_renderer {
+        min-height: min-content;
+    }
+}
