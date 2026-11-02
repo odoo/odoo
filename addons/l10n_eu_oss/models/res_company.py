@@ -136,8 +136,8 @@ class Company(models.Model):
             and (oss_account_if_exists :=
                 self.env['account.account'].with_company(self).search([
                     ('company_ids', '=', self.id),
-                    ('code', '=', EU_ACCOUNT_MAP[self.chart_template])
-                ])
+                    ('code', '=like', EU_ACCOUNT_MAP[self.chart_template])
+                ], limit=1, order='code asc')
             )
         ):
             oss_account = oss_account_if_exists
