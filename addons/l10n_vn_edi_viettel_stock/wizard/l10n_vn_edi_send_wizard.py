@@ -2,8 +2,9 @@
 
 import json
 
-from odoo import _, fields, models, SUPERUSER_ID
+from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import BinaryBytes
 
 
 class L10nVnEdiViettelStockSendWizard(models.TransientModel):
@@ -34,15 +35,10 @@ class L10nVnEdiViettelStockSendWizard(models.TransientModel):
         json_data = picking._l10n_vn_edi_generate_transfer_note_json(self.template_field_ids)
 
         # Store the JSON file as an attachment on the picking
-        attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create({
-            'name': f'{picking.name.replace("/", "_")}_sinvoice.json',
-            'raw': json.dumps(json_data, ensure_ascii=False).encode('utf-8'),
-            'mimetype': 'application/json',
-            'res_model': picking._name,
-            'res_id': picking.id,
-            'res_field': 'l10n_vn_edi_sinvoice_file_id',
-        })
-        picking.l10n_vn_edi_sinvoice_file_id = attachment
+        picking.l10n_vn_edi_sinvoice_file = BinaryBytes(
+            json.dumps(json_data, ensure_ascii=False).encode('utf-8'),
+            filename=f'{picking.name.replace("/", "_")}_sinvoice.json',
+        )
 
         # Send to SInvoice
         errors = picking._l10n_vn_edi_send_transfer_note(json_data)
