@@ -123,9 +123,27 @@ export class HistoryPlugin extends Plugin {
             ],
         }),
         shortcuts: [
-            { hotkey: "control+z", commandId: "historyUndo", global: true },
-            { hotkey: "control+y", commandId: "historyRedo", global: true },
-            { hotkey: "control+shift+z", commandId: "historyRedo", global: true },
+            {
+                category: _t("General"),
+                label: _t("Undo"),
+                hotkey: "control+z",
+                commandId: "historyUndo",
+                global: true,
+            },
+            {
+                category: _t("General"),
+                label: _t("Redo"),
+                hotkey: "control+y",
+                commandId: "historyRedo",
+                global: true,
+            },
+            {
+                category: _t("General"),
+                label: _t("Redo"),
+                hotkey: "control+shift+z",
+                commandId: "historyRedo",
+                global: true,
+            },
         ],
         history_commit_data_properties: [
             "authorTimestamp",

@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { Plugin, isValidTargetForDomListener } from "../plugin";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
 import { omit } from "@web/core/utils/objects";
@@ -49,18 +50,21 @@ export class ShortCutPlugin extends Plugin {
         ],
         shorthands: [
             {
+                label: _t("Right Arrow"),
                 literals: ["->"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2192" }, //→
                 inline: true,
             },
             {
+                label: _t("Left Arrow"),
                 literals: ["<-"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2190" }, //←
                 inline: true,
             },
             {
+                label: _t("Rightwards Arrow"),
                 literals: ["=>"],
                 commandId: "replaceSymbol",
                 commandParams: { symbol: "\u2B95" }, //⮕
@@ -97,6 +101,9 @@ export class ShortCutPlugin extends Plugin {
             hotkeyService.registerIframe({ contentWindow: this.window });
         }
         for (const shortcut of this.getResource("shortcuts")) {
+            if (!shortcut.commandId) {
+                continue;
+            }
             const command = this.dependencies.userCommand.getCommand(shortcut.commandId);
             this.addShortcut(
                 shortcut.hotkey,
@@ -156,7 +163,12 @@ export class ShortCutPlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
-        if (!(this.checkPredicates("are_shorthands_available_predicates", selection.anchorNode) ?? true)) {
+        if (
+            !(
+                this.checkPredicates("are_shorthands_available_predicates", selection.anchorNode) ??
+                true
+            )
+        ) {
             return;
         }
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);

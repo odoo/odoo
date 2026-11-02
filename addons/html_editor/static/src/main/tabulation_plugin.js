@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { splitTextNode } from "@html_editor/utils/dom";
@@ -64,8 +65,13 @@ export class TabulationPlugin extends Plugin {
             },
         ],
         shortcuts: [
-            { hotkey: "tab", commandId: "tab" },
-            { hotkey: "shift+tab", commandId: "shiftTab" },
+            { category: _t("Tabulation"), label: _t("Tab"), hotkey: "tab", commandId: "tab" },
+            {
+                category: _t("Tabulation"),
+                label: _t("Shift Tab"),
+                hotkey: "shift+tab",
+                commandId: "shiftTab",
+            },
         ],
         content_not_editable_providers: (rootEl) => selectElements(rootEl, ".oe-tabs"),
         contenteditable_to_remove_selector: "span.oe-tabs",

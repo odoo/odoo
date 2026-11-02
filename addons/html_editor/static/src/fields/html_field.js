@@ -473,6 +473,9 @@ export const htmlField = {
         if ("debounceHints" in options) {
             editorConfig.debounceHints = Boolean(options.debounceHints);
         }
+        if ("accessibilityDialog" in options) {
+            editorConfig.accessibilityDialog = Boolean(options.accessibilityDialog);
+        }
         if ("allowWhiteboard" in options) {
             editorConfig.allowWhiteboard = Boolean(options.allowWhiteboard);
         }

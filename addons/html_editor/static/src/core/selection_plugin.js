@@ -1,3 +1,4 @@
+import { _t } from "@web/core/l10n/translation";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     getDeepestEditablePosition,
@@ -250,7 +251,14 @@ export class SelectionPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
-        shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
+        shortcuts: [
+            {
+                category: _t("General"),
+                label: _t("Select All"),
+                hotkey: "control+a",
+                commandId: "selectAll",
+            },
+        ],
         history_commit_data_properties: ["activeElementId", "selection", "selectionAfter"],
 
         on_will_reset_history_handlers: () => {
