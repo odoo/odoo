@@ -1984,7 +1984,7 @@ class AccountMoveLine(models.Model):
         :param aml_values: The values of account.move.line to consider.
         :param counterpart_currency: The currency of the opposite line this line will be reconciled with.
         :param shadowed_aml_values: A mapping aml -> dictionary to replace some original aml values to something else.
-                                    This is usefull if you want to preview the reconciliation before doing some changes
+                                    This is useful if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         :param other_aml_values:    The other aml values to be reconciled with the current one.
         :return: A mapping currency -> dictionary containing:
@@ -2063,7 +2063,7 @@ class AccountMoveLine(models.Model):
         :param debit_values:  The values of account.move.line to consider for a debit line.
         :param credit_values: The values of account.move.line to consider for a credit line.
         :param shadowed_aml_values: A mapping aml -> dictionary to replace some original aml values to something else.
-                                    This is usefull if you want to preview the reconciliation before doing some changes
+                                    This is useful if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         :return: A dictionary:
             * debit_values:     None if the line has nothing left to reconcile.
@@ -2371,7 +2371,7 @@ class AccountMoveLine(models.Model):
 
         :param values_list: A list of dictionaries, one for each aml.
         :param shadowed_aml_values: A mapping aml -> dictionary to replace some original aml values to something else.
-                                    This is usefull if you want to preview the reconciliation before doing some changes
+                                    This is useful if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         :return: a tuple of
             1) list of vals for partial reconciliation creation,
@@ -2438,7 +2438,7 @@ class AccountMoveLine(models.Model):
         :param plan: The plan to know which lines to reconcile in which order.
         :param amls_values_map: A mapping aml => amount_residual/amount_residual_currency
         :param shadowed_aml_values: A mapping aml -> dictionary to replace some original aml values to something else.
-                                    This is usefull if you want to preview the reconciliation before doing some changes
+                                    This is useful if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         :return: A list of all results returned by the '_prepare_reconciliation_amls' method.
         """
@@ -2474,7 +2474,7 @@ class AccountMoveLine(models.Model):
     def _check_amls_exigibility_for_reconciliation(self, shadowed_aml_values=None):
         """ Ensure the current journal items are eligible to be reconciled together.
         :param shadowed_aml_values: A mapping aml -> dictionary to replace some original aml values to something else.
-                                    This is usefull if you want to preview the reconciliation before doing some changes
+                                    This is useful if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         """
         if not self:
@@ -2518,7 +2518,7 @@ class AccountMoveLine(models.Model):
 
         :param reconciliation_plan: A list of reconciliation to perform.
         :param shadowed_aml_values: A mapping aml -> dictionary to replace some original aml values to something else.
-                                    This is usefull if you want to preview the reconciliation before doing some changes
+                                    This is useful if you want to preview the reconciliation before doing some changes
                                     on amls like changing a date or an account.
         :return: A list of dictionaries containing:
             * amls: A recordset.
