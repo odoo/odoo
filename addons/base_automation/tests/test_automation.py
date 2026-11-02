@@ -33,7 +33,7 @@ class TestAutomation(TransactionCaseWithUserDemo):
             "base_automation_id": automation.id,
             "state": "object_write",
             "update_path": "active",
-            "update_boolean_value": "false",
+            "update_boolean_value": False,
             "model_id": model.id,
         })
         automation.write({"action_server_ids": [Command.link(action.id)]})
@@ -62,7 +62,7 @@ class TestAutomation(TransactionCaseWithUserDemo):
             "model_id": model.id,
             "state": "object_write",
             "update_path": "active",
-            "update_boolean_value": "false",
+            "update_boolean_value": False,
         })
         action.flush_recordset()
         automation.write({"action_server_ids": [Command.link(action.id)]})
