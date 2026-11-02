@@ -487,6 +487,21 @@ class Od19BillingRequest(models.Model):
 
     def _od19_check_before_create_document(self):
         self.ensure_one()
+        if self.direction == "ap":
+            if self.company_id.od19_ap_require_original and not self.original_received:
+                raise UserError(
+                    _(
+                        "ยังไม่ได้รับต้นฉบับเอกสาร — กรุณาระบุ 'รับต้นฉบับจริงแล้ว' "
+                        "ก่อนออกบิล"
+                    )
+                )
+            if not self.evidence_ok:
+                raise UserError(
+                    _(
+                        "AP requires at least one verified evidence "
+                        "(vendor tax invoice / invoice) before creating the bill."
+                    )
+                )
         return True
 
     def _od19_build_move(self):
