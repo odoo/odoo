@@ -48,7 +48,7 @@ imStatusDataRegistry.add(
         iconClass: {
             online: "oi-filled",
             away: "",
-            busy: "",
+            busy: "oi-filled",
             offline: "",
             default: "",
         },
