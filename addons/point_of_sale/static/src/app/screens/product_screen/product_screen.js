@@ -307,7 +307,7 @@ export class ProductScreen extends Component {
             vals.qty = (vals.qty || 1) * packaging[productBarcode.code].qty;
         }
 
-        await this.pos.addLineToCurrentOrder(vals, { code: lotBarcode });
+        await this.pos.addLineToCurrentOrder(vals, { code: lotBarcode }, product.needToConfigure());
         this.numberBuffer.reset();
     }
     displayAllControlPopup() {
