@@ -1011,3 +1011,29 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         cogs_lines = bill.line_ids.filtered(lambda l: l.display_type == 'cogs')
         self.assertRecordValues(cogs_lines, [{'tax_ids': []} for _ in cogs_lines])
+
+    def test_on_time_rate_with_return_to_vendor(self):
+        """ A return to the vendor is not a delivery and must not raise the rate above 100%. """
+        po = self.env['purchase.order'].create(self.po_vals)
+        po.order_line.write({'product_qty': 2})
+        po.button_confirm()
+
+        picking = po.picking_ids[0]
+        picking.move_line_ids.quantity = 2.0
+        picking.move_ids.picked = True
+        picking.button_validate()
+        self.assertEqual(po.partner_id.on_time_rate, 100.0)
+
+        return_form = Form(self.env['stock.return.picking'].with_context(
+            active_ids=picking.ids, active_id=picking.id, active_model='stock.picking',
+        ))
+        return_picking = return_form.save()
+        return_picking.product_return_moves.quantity = 1.0
+        return_action = return_picking.action_create_returns()
+        returned = self.env['stock.picking'].browse(return_action['res_id'])
+        returned.move_ids.quantity = 1.0
+        returned.move_ids.picked = True
+        returned.button_validate()
+
+        po.partner_id.invalidate_recordset(['on_time_rate'])
+        self.assertEqual(po.partner_id.on_time_rate, 100.0)
