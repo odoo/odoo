@@ -130,7 +130,7 @@ class TestHrEdiFlowsMocked(TestL10nHrEdiCommon, TestAccountMoveSendCommon, Patch
             expected_invoice_xml = f.read()
 
         with patch(
-            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant', return_value=None
+            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant_formats_accepted', return_value=None
         ), self.assertRequests([
             (
                 # Request 1: Send invoice
@@ -200,7 +200,7 @@ class TestHrEdiFlowsMocked(TestL10nHrEdiCommon, TestAccountMoveSendCommon, Patch
             expected_invoice_xml = f.read()
 
         with patch(
-            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant', return_value=None
+            'odoo.addons.account_peppol.models.res_partner.ResPartner._peppol_lookup_participant_formats_accepted', return_value=None
         ), self.assertRaisesRegex(UserError, r"MER service returned an error: Username '12513': Korisničko ime i lozinka nisu ispravni\.\. Trace ID: 4f701362-96cc-49c6-a297-854e740ad719\."):
             with self.assertRequests([
                 (
