@@ -11,6 +11,7 @@ import { assignDefined, closeStream } from "@mail/utils/common/misc";
 import { markup, proxy, toRaw, usePlugin } from "@odoo/owl";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { DialogPlugin } from "@web/core/dialog/dialog_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
@@ -536,7 +537,7 @@ export class Rtc extends Record {
         this.SFU_CLIENT_STATE = undefined;
         /** @type {() => Promise<void>} */
         this.closeCallPermissionDialog = undefined;
-        /** @type {Services["dialog"]} */
+        /** @type {DialogPlugin} */
         this.dialog = undefined;
         /** @type {MailFullscreenPlugin} */
         this.fullscreen = undefined;
@@ -556,9 +557,7 @@ export class Rtc extends Record {
     }
 
     start() {
-        const services = this.store.env.services;
         this.notification = this.store.notification;
-        this.dialog = services.dialog;
         this.soundEffects = this.store.soundEffects;
         if (this._broadcastChannel) {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
@@ -2948,12 +2947,7 @@ export class Rtc extends Record {
 Rtc.register();
 
 export const rtcService = {
-    dependencies: [
-        "bus_service",
-        "discuss.pip_service",
-        "mail.store",
-        "presence",
-    ],
+    dependencies: ["bus_service", "discuss.pip_service", "mail.store", "presence"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
@@ -2990,6 +2984,7 @@ export const rtcService = {
             },
             { immediate: true, initialRun: false }
         );
+        rtc.dialog = usePlugin(DialogPlugin);
         rtc.fullscreen = usePlugin(MailFullscreenPlugin);
         rtc.onChange(
             () => [rtc.fullscreen.id()],
