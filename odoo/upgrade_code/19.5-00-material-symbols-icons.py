@@ -132,6 +132,7 @@ FA_MODIFIER_RE = re.compile(
     )),
 )
 OI_SIGNAL_RE = re.compile(r'(?<![\w-])oi(?:-\w+)?(?![\w-])')
+LABEL_FOR_RE = re.compile(r'<label\b(?:[^>"\']|"[^"]*"|\'[^\']*\')*?\sfor\s*=')
 
 
 def _replace(tag: str, match: re.Match, text: str) -> str:
@@ -288,6 +289,9 @@ def _rewrite_tags(content: str) -> str:
     """Rewrite the icon classes of every opening tag in ``content``."""
     def rewrite(match: re.Match) -> str:
         tag = match.group(0)
+        if LABEL_FOR_RE.match(tag):
+            # a form view compiles <label for> to FormLabel, which drops data-icon: left for a manual pass
+            return tag
         tag = _rewrite_class_attr(tag)
         tag = _rewrite_t_att_class(tag)
         tag = _rewrite_t_attf_class(tag)
@@ -551,6 +555,8 @@ if __name__ == '__main__':
     test(transform_xml, '<i class="fa fa-star fa-1x"/>', '<i class="oi oi-filled" data-icon="star"/>')
     test(transform_xml, '<i class="oi oi-archive"/>', '<i class="oi" data-icon="archive"/>')
     test(transform_xml, '<i class="fa-user"/>', '<i class="fa-user"/>')
+    test(transform_xml, '<label for="a" class="o_light_label fa fa-lg fa-building-o"/>', '<label for="a" class="o_light_label fa fa-lg fa-building-o"/>')
+    test(transform_xml, '<label class="fa fa-user"/>', '<label class="oi oi-filled" data-icon="person"/>')
     test(transform_xml, '<span class="fa fa-lg" t-att-class="x ? \'fa-eye\' : \'fa-eye-slash\'"/>', '<span class="oi oi-lg" t-att-data-icon="x ? \'visibility\' : \'visibility_off\'"/>')
     test(transform_xml, '<i t-attf-class="fa fa-fw #{x ? \'fa-lock\' : \'fa-unlock\'}"/>', '<i t-attf-class="oi oi-fw #{x ? \'\' : \'\'}" t-attf-data-icon="#{x ? \'lock\' : \'lock_open\'}"/>')
     test(transform_xml, '<i t-attf-class="fa fa-user #{cls}"/>', '<i t-attf-class="oi oi-filled #{cls}" data-icon="person"/>')
