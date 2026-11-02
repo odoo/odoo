@@ -186,9 +186,9 @@ export class BuilderList extends Component {
             })),
             onSelect: (record) => this.addItem(record),
             onInput: this.props.realTimeSearchOnInput,
-            class: "o_hb_selectMany2X_wrapper min-w-0",
+            class: "o_hb_selectMenu_wrapper o_hb_selectMany2X_wrapper min-w-0",
             menuClass:
-                "o_hb_select_dropdown o_hb_selectMany2X_dropdown" +
+                "o_hb_select_dropdown o_hb_selectMenu_dropdown o_hb_selectMany2X_dropdown" +
                 (this.props.fullWidthDropdown ? " o_hb_full_width_dropdown" : ""),
             togglerClass: "o_hb_selectMany2X_toggle btn-secondary",
             disabled: !this.props.realTimeSearchOnInput && !excludedRecords.length,
