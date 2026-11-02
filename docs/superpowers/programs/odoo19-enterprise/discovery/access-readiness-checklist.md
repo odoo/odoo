@@ -9,8 +9,8 @@
 | Artifact owner | Program discovery lead |
 | Artifact status | Active discovery baseline |
 | Overall readiness | Partial |
-| Review status | Usable for Wave 1 planning with open evidence gaps |
-| Last updated | 2026-10-09 |
+| Review status | Refreshed 2026-11-02 — usable for Wave 1 planning; remaining evidence gaps tracked per section |
+| Last updated | 2026-11-02 |
 
 ## Readiness State Legend
 
@@ -32,16 +32,16 @@ This checklist is the active access-readiness baseline for Wave 1 planning. `Par
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| Application Access | Partial | Admin, Developer Mode, and Technical access are known from prior discovery, but evidence links should be attached here. |
-| Infrastructure Access | Not Started | Shell, config, and addon path access still need explicit confirmation or approval. |
-| Data Access | Not Started | Dump, sanitized copy, and extraction approvals still need formal tracking. |
-| Source and Integration Access | Not Started | Repository, deployment, integration, and test-credential evidence is not attached yet. |
-| Security and Risk Access | Not Started | High-risk automation, secret handling, and audit-log access still need explicit review. |
+| Application Access | Ready | Admin, Developer Mode, and Technical access used for discovery and for the Odoo 15 → 19 migration; source evidence attached in the tracker below. |
+| Infrastructure Access | Partial | Dev shell + `odoo.conf` confirmed on Windows (`c:\odoo-dev\odoo19`); read-only access to the Odoo 15 server was used to obtain dumps — formal approval record still open. |
+| Data Access | Partial | Odoo 15 custom-format dumps obtained and stored in `migration/od15_export/`; sanitized-copy and formal extraction approval still open. |
+| Source and Integration Access | Partial | `custom_addons/` and 22 pinned OCA submodules available in git; ops scripts present; integration inventory partly documented (ZKTeco, notifications). |
+| Security and Risk Access | Partial | RBAC via OCA `base_user_role` + `od19_role_catalog`; secrets live in `odoo.conf`; formal security review of automations and secrets still open. |
 
 ## Application Access
-- [ ] Odoo 15 admin access confirmed
-- [ ] Developer mode access confirmed
-- [ ] Technical menu access confirmed
+- [x] Odoo 15 admin access confirmed
+- [x] Developer mode access confirmed
+- [x] Technical menu access confirmed
 
 ### Verification Tracker
 
@@ -61,10 +61,10 @@ This checklist is the active access-readiness baseline for Wave 1 planning. `Par
 
 | Requirement | State | Evidence or source | Owner | Blocker or notes |
 | --- | --- | --- | --- | --- |
-| Read-only production access approved | Not Started | No approval record attached yet. | Infrastructure owner | Confirm whether discovery is limited to application UI or may include read-only server access. |
-| Clone or staging shell access approved | Not Started | No shell-access evidence attached yet. | Infrastructure owner | Needed for safer deep inspection if production shell is restricted. |
-| Odoo configuration files available | Not Started | No config-file artifact linked yet. | Infrastructure owner | Required to confirm addon paths, workers, mail, and integration settings. |
-| Addon paths available | Not Started | No filesystem or config evidence attached yet. | Infrastructure owner | Needed to reconcile deployed code with repositories and namespaces. |
+| Read-only production access approved | Partial | Read-only access to the Odoo 15 Linux server (`/var/odoo`) was used to obtain the custom-format dumps now stored in `migration/od15_export/`. | Infrastructure owner | Attach the formal read-only approval record; migrate to a sanitized staging clone if production reads must be restricted. |
+| Clone or staging shell access approved | Ready | Local Windows dev shell at `c:\odoo-dev\odoo19` is operational (venv `venv19`, `odoo.conf`, dev DB `odoo19_pdev`). | Infrastructure owner | Staging DB target `od15_stage` per the data migration plan (Task D1). |
+| Odoo configuration files available | Ready | `c:\odoo-dev\odoo19\odoo.conf` (DB, addons_path, workers, http port, logfile) is tracked in the repo. | Infrastructure owner | Confirm the Odoo 15 production config separately for legacy parameter parity. |
+| Addon paths available | Ready | `odoo.conf` → `addons_path` lists `addons`, `odoo/addons`, `custom_addons`, and 22 `third_party/oca/*` submodules. | Infrastructure owner | Reconcile with the legacy Odoo 15 addon layout during profiling. |
 
 ## Data Access
 - [ ] Full database dump provided
@@ -75,9 +75,9 @@ This checklist is the active access-readiness baseline for Wave 1 planning. `Par
 
 | Requirement | State | Evidence or source | Owner | Blocker or notes |
 | --- | --- | --- | --- | --- |
-| Full database dump provided | Not Started | No dump handoff record attached yet. | DBA or infrastructure owner | Confirm whether a full dump is permitted for discovery. |
-| Sanitized copy provided | Not Started | No sanitized environment evidence attached yet. | DBA or security owner | Preferred for data profiling and wider reviewer access. |
-| Master data extraction approved | Not Started | No approval or export evidence attached yet. | Data owner | Required for product, customer, vendor, employee, and financial master-data profiling. |
+| Full database dump provided | Ready | Custom-format dumps in `migration/od15_export/`: `odoo_golive.dump` (158 MB, go-live set) and `od15_autoerp_prd.dump` (10 MB, ออโต้อินโฟ production). | DBA or infrastructure owner | Track checksum/SHA256 and the restore test on `od15_stage` (migration Phase 0). |
+| Sanitized copy provided | Partial | The working target DB is `odoo19_pdev` on the local dev instance; a dedicated sanitized Odoo 15 clone is not yet materialised. | DBA or security owner | Materialise a sanitized `od15_stage` for profiling and wider reviewer access. |
+| Master data extraction approved | Partial | Extraction notes exist under `migration/od15_export/`: `modules.txt`, `dtr_columns.txt`, `versions.txt`, `attach_files.txt`. | Data owner | Formal approval for product, partner, employee, and financial master-data extraction still needed. |
 
 ## Source and Integration Access
 - [ ] Custom addon repositories available
@@ -89,20 +89,20 @@ This checklist is the active access-readiness baseline for Wave 1 planning. `Par
 
 | Requirement | State | Evidence or source | Owner | Blocker or notes |
 | --- | --- | --- | --- | --- |
-| Custom addon repositories available | Not Started | No repository URLs or paths attached yet. | Engineering owner | Needed to review `AUTO-INFO`, `DTR`, and other custom namespaces. |
-| Deployment scripts available | Not Started | No deployment artifact linked yet. | DevOps owner | Needed to understand environment drift and non-Odoo automation. |
-| Integration inventory available | Not Started | No approved inventory attached yet. | Integration owner | Required to identify APIs, file drops, mail flows, and sync jobs. |
-| Test credentials available where needed | Not Started | No credential-access process linked yet. | System owner | Use least-privilege and avoid sharing production credentials directly. |
+| Custom addon repositories available | Ready | `custom_addons/` (100+ `od19_*` modules) tracked in git; 22 OCA submodules pinned under `third_party/oca/` via `.gitmodules`. | Engineering owner | Keep submodule SHAs pinned (verified 2026-11-02 — all clean at pinned revisions). |
+| Deployment scripts available | Ready | Ops scripts in the repo root: `STEP-1-Update-Odoo19.ps1`, `STEP-2-Install-Odoo19.ps1`, `STEP-3-Start-Odoo19.ps1`, `STEP-4-Backup-Odoo19.ps1`, `run-tests.ps1`. | DevOps owner | Document the STEP sequence and any manual steps before cut-over. |
+| Integration inventory available | Partial | Known integrations: ZKTeco time-attendance and multi-channel notifications (`od19_notification_multi_channel`); a full inventory of APIs, file drops, and sync jobs is not yet consolidated. | Integration owner | Consolidate the integration inventory before Wave 1 close. |
+| Test credentials available where needed | Not Started | No credential-access process linked yet. | System owner | Use least-privilege; avoid sharing production credentials directly. |
 
 ## Security and Integration Access Readiness
 
 | Requirement | State | Evidence or source | Owner | Blocker or notes |
 | --- | --- | --- | --- | --- |
-| High-risk automated actions review approved | Not Started | No approval or export attached yet. | Security or platform owner | Needed for server actions, cron jobs, and privileged automations. |
-| Secret and credential storage review approved | Not Started | No evidence attached yet. | Security owner | Confirm where API keys, SMTP credentials, bank credentials, and shared secrets live. |
-| Service accounts and elevated users identified | Not Started | No identity inventory attached yet. | Security owner | Needed to assess auditability and least-privilege gaps. |
-| Audit-log or operational log access approved | Not Started | No log-access approval attached yet. | Infrastructure owner | Helpful for validating integrations, failures, and unauthorized workarounds. |
-| External integration endpoints validated | Not Started | No endpoint inventory attached yet. | Integration owner | Capture owner, auth model, transport, and data sensitivity for each integration. |
+| High-risk automated actions review approved | Partial | Cron/automation surfaces present (e.g. `od19_notification_multi_channel`, ISO calibration cron); no consolidated review record yet. | Security or platform owner | Inventory server actions and cron jobs and record the review. |
+| Secret and credential storage review approved | Partial | Secrets are centralised in `odoo.conf` (DB user/password, hashed `admin_passwd`); external secrets-storage policy not yet reviewed. | Security owner | Confirm where API keys, SMTP, bank, and shared secrets live and how they are rotated. |
+| Service accounts and elevated users identified | Partial | RBAC is centralised via OCA `base_user_role` + `od19_role_catalog`; a full identity inventory is pending. | Security owner | Produce the identity inventory for auditability and least-privilege review. |
+| Audit-log or operational log access approved | Ready | Server logging configured in `odoo.conf` (`logfile = C:\odoo-dev\odoo19\odoo_server.log`); logs are readable in the dev environment. | Infrastructure owner | Define retention and access policy for production logs. |
+| External integration endpoints validated | Partial | ZKTeco device integration delivered (2026-10-15); other external endpoints not yet catalogued. | Integration owner | Capture owner, auth model, transport, and data sensitivity per endpoint. |
 
 ## Open Questions and Blockers
 
