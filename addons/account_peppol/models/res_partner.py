@@ -278,7 +278,15 @@ class ResPartner(models.Model):
             edi_format: self.env['res.partner']._get_edi_builder(edi_format)._get_customization_id(process_type=process_type)
             for edi_format in self.env['res.partner']._get_peppol_formats()
         }
+<<<<<<< d71d1a0c407654317711bc40eab786f834327bad
         format_str = ",".join(formats.values())
+||||||| cea744bb72199a0d20d5f46b340cabb19df56fdb
+        format_str = ",".join(formats.values())
+        participant_info = self._peppol_lookup_participant_formats_accepted(edi_identification, format_str)
+=======
+        format_str = ",".join([f for f in formats.values() if f])
+        participant_info = self._peppol_lookup_participant_formats_accepted(edi_identification, format_str)
+>>>>>>> abcd0dacbdf4f1191639daba0952b9bf2c0b416f
 
         participant_info = self._peppol_lookup_participant_formats_accepted(edi_identification, format_str)
         if participant_info is None:
