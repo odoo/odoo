@@ -73,7 +73,6 @@ class ProjectProject(models.Model):
                 (self.env._('New'), False),
                 (self.env._('In Progress'), False),
                 (self.env._('Done'), False),
-                (self.env._('Cancelled'), True),
             ], start=1)
         ]
 
