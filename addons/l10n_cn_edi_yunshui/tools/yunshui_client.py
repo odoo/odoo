@@ -6,7 +6,6 @@ import uuid
 from base64 import b64decode
 from binascii import Error as BinasciiError
 from datetime import datetime
-from decimal import Decimal, InvalidOperation
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
@@ -32,13 +31,11 @@ DOWNLOAD_INVOICE = 'ele.invoice.download'
 QUERY_RED_FORM = 'ele.hzqrd.query'
 
 INVOICE_KIND = {'01': '81', '02': '82'}
-RED_REASONS = {'01': '01', '02': '02', '03': '03', '04': '04'}
 PENDING = '1002'
 ISSUED = '1000'
 NEEDS_LOGIN = {'1101': 'login', '1102': 'verify'}
 RELOGIN = '3203'
 SESSION_CODES = {*NEEDS_LOGIN, RELOGIN}
-TAX_RATES = {'0', '0.01', '0.03', '0.04', '0.05', '0.06', '0.09', '0.11', '0.13', '0.17'}
 SHANGHAI_TZ = ZoneInfo('Asia/Shanghai')
 UTC_TZ = ZoneInfo('UTC')
 MAX_RESPONSE_BYTES = 20 * 1024 * 1024
@@ -97,8 +94,9 @@ class YunshuiClient:
         }
         self._call(QUERY_RESULT, payload)
 
-    def issue_invoice(self, values):
-        code, message = self._submit(self._prepare_simple_issue_payload(values), values['invoice_type_code'])
+    def issue(self, payload):
+        """Submit a simpleInvoiceIssue ``payload`` (2.1.2), blue or red."""
+        code, message = self._submit(payload)
         if code is None:
             return message
         if code == ISSUED:
@@ -112,33 +110,10 @@ class YunshuiClient:
             ),
         }
 
-    def issue_direct_red(self, values):
-        payload = {
-            'fpqqlsh': values['serial_no'],
-            'nsrsbh': self.tax_no,
-            'invoiceType': '2',
-            'originInvoiceNo': values['original_fapiao_no'],
-            'redReason': RED_REASONS[values['reason']],
-            'invoiceKind': INVOICE_KIND[values['original_invoice_type_code']],
-            'deliverType': '0',
-        }
-        code, message = self._submit(payload, values['original_invoice_type_code'])
-        if code is None:
-            return message
-        if code == ISSUED:
-            return {'state': 'sent'}
-        return {
-            'state': 'failed',
-            'error': self.company.env._(
-                "Yunshui refused the red invoice (%(code)s): %(message)s",
-                code=code,
-                message=message,
-            ),
-        }
-
     def query_invoice(self, document, just_submitted=False):
-        code, response = self._query_code(document.serial_no, document.move_id.l10n_cn_edi_invoice_type_code)
-        if result := self._query_outcome(document, code, response, just_submitted):
+        invoice_kind = INVOICE_KIND[document.move_id.l10n_cn_edi_invoice_type_code]
+        code, response = self._query_code(document.serial_no, invoice_kind)
+        if result := self._query_outcome(document, invoice_kind, code, response, just_submitted):
             return result
         return {
             'state': 'failed',
@@ -191,13 +166,13 @@ class YunshuiClient:
             raise UserError(result.get('message') or self.company.env._("Yunshui login failed."))
         return result
 
-    def _submit(self, payload, invoice_type_code):
+    def _submit(self, payload):
         """Send ``payload`` to simpleInvoiceIssue: ``(code, message)``, or ``(None, result)`` once reconciled."""
         try:
             response = self._call(SIMPLE_ISSUE, payload)
         except YunshuiProviderError as e:
             if e.code == '9994':
-                return None, self._reconcile_existing_order(payload['fpqqlsh'], invoice_type_code)
+                return None, self._reconcile_existing_order(payload['fpqqlsh'], payload['invoiceKind'])
             code, message = e.code, e.msg
         else:
             code, message = str(response.get('code') or ''), response.get('message') or ''
@@ -210,27 +185,26 @@ class YunshuiClient:
         if code in SESSION_CODES:
             raise UserError(self._login_error(code, message))
 
-    def _query_result(self, serial_no, invoice_type_code):
+    def _query_result(self, serial_no, invoice_kind):
         return self._call(QUERY_RESULT, {
             'fpqqlsh': serial_no,
             'nsrsbh': self.tax_no,
-            'invoiceKind': INVOICE_KIND[invoice_type_code],
+            'invoiceKind': invoice_kind,
         })
 
-    def _query_code(self, serial_no, invoice_type_code):
+    def _query_code(self, serial_no, invoice_kind):
         """queryResult's code and response, the session codes being read off the outer envelope too."""
         try:
-            response = self._query_result(serial_no, invoice_type_code)
+            response = self._query_result(serial_no, invoice_kind)
         except YunshuiProviderError as e:
             if e.code not in SESSION_CODES:
                 raise
             response = {'code': e.code, 'message': e.msg}
         return str(response.get('code') or ''), response
 
-    def _query_outcome(self, document, code, response, just_submitted):
+    def _query_outcome(self, document, invoice_kind, code, response, just_submitted):
         """Return the result of a queryResult code that isn't a definitive failure, else None."""
         if code == ISSUED:
-            invoice_kind = INVOICE_KIND[document.move_id.l10n_cn_edi_invoice_type_code]
             result = self._issued_result(response, serial_no=document.serial_no, invoice_kind=invoice_kind)
             if document.move_id.move_type == 'out_refund':
                 result.update(self._red_form_of(document.serial_no, invoice_kind))
@@ -253,76 +227,6 @@ class YunshuiClient:
             _logger.warning("Yunshui: could not read the red form of %s for company %s: %s", serial_no, self.company.vat, e)
             return {}
         return {'red_form_uuid': response.get('uuid'), 'red_form_number': response.get('hzfpxxqrdbh')}
-
-    def _prepare_simple_issue_payload(self, values):
-        for line in values['lines']:
-            if line.get('vat_special_policy') or line.get('reduced_tax_code'):
-                raise UserError(self.company.env._(
-                    "Yunshui simple issuance does not support special VAT treatment for line %(line)s (%(name)s).",
-                    line=line['line_no'],
-                    name=line['name'],
-                ))
-        payload = {
-            'fpqqlsh': values['serial_no'],
-            'nsrsbh': self.tax_no,
-            'invoiceKind': INVOICE_KIND[values['invoice_type_code']],
-            'invoiceType': '1',
-            'businessType': '0' if values['buyer_is_natural_person'] else '1',
-            'invoiceAmount': f"{values['amount_total']:.2f}",
-            'payerName': values['buyer_name'],
-            'deliverType': '0',
-            'bz': values['remark'],
-            'invoiceItems': [self._prepare_simple_line(line) for line in values['lines']],
-        }
-        if self.company.l10n_cn_edi_drawer:
-            payload['invoicer'] = self.company.l10n_cn_edi_drawer
-        if values['buyer_tax_no']:
-            payload['payerRegisterNo'] = values['buyer_tax_no']
-        if values['buyer_address']:
-            payload['payerAddress'] = values['buyer_address']
-        if values['buyer_phone']:
-            payload['payerPhone'] = values['buyer_phone']
-        if values['buyer_address'] or values['buyer_phone']:
-            payload['sfzsgmfdzdh'] = 'Y'
-        if values['buyer_bank_name']:
-            payload['payerBank'] = values['buyer_bank_name']
-        if values['buyer_bank_account']:
-            payload['payerBankaccount'] = values['buyer_bank_account']
-        if values['buyer_bank_name'] or values['buyer_bank_account']:
-            payload['sfzsgmfyhzh'] = 'Y'
-        return payload
-
-    def _prepare_simple_line(self, line):
-        self._validate_line_values(line)
-        detail = {
-            'rowType': line['nature'],
-            'itemName': line['name'],
-            'amount': f"{line['amount_total']:.2f}",
-            'taxRate': _format_rate(line['tax_rate']),
-            'itemNo': line['tax_category_code'],
-        }
-        if line['quantity']:
-            detail['quantity'] = _format_quantity(line['quantity'])
-        if line['uom']:
-            detail['unit'] = line['uom']
-        if line.get('free_tax_mark'):
-            detail['zeroRateFlag'] = line['free_tax_mark']
-        return detail
-
-    def _validate_line_values(self, line):
-        if _decimal_places(line['quantity']) > 13:
-            raise UserError(self.company.env._(
-                "Yunshui quantity supports at most 13 decimal places (line %(line)s: %(name)s).",
-                line=line['line_no'],
-                name=line['name'],
-            ))
-        if _format_rate(line['tax_rate']) not in TAX_RATES:
-            raise UserError(self.company.env._(
-                "Yunshui does not accept a %(rate)s%% tax rate (line %(line)s: %(name)s).",
-                rate=round(line['tax_rate'] * 100, 2),
-                line=line['line_no'],
-                name=line['name'],
-            ))
 
     def _issued_result(self, response, serial_no=None, invoice_kind=None):
         fapiao_no = response.get('fphm')
@@ -370,13 +274,6 @@ class YunshuiClient:
             return content
         if content:
             _logger.warning("Yunshui: ignored malformed %s blob from invoice.download for company %s", kind, self.company.vat)
-        if kind != 'pdf':
-            return None
-        content = self._download(response.get('pdfUrl'))
-        if content and self._is_expected_file(kind, content):
-            return content
-        if content:
-            _logger.warning("Yunshui: ignored malformed %s blob from invoice.download URL for company %s", kind, self.company.vat)
         return None
 
     def _decode_base64_file(self, value):
@@ -472,9 +369,9 @@ class YunshuiClient:
                 message=e.msg,
             )) from e
 
-    def _reconcile_existing_order(self, serial_no, invoice_type_code):
+    def _reconcile_existing_order(self, serial_no, invoice_kind):
         try:
-            result = self._query_result(serial_no, invoice_type_code)
+            result = self._query_result(serial_no, invoice_kind)
         except YunshuiProviderError as e:
             return {
                 'state': 'failed',
@@ -512,22 +409,6 @@ class YunshuiClient:
             "Yunshui requires tax-bureau login: %(message)s",
             message=message,
         )
-
-
-def _format_rate(number):
-    return f"{number:.8f}".rstrip('0').rstrip('.')
-
-
-def _format_quantity(number):
-    return f"{number:.13f}".rstrip('0').rstrip('.')
-
-
-def _decimal_places(number):
-    try:
-        decimal = Decimal(str(number)).normalize()
-    except (InvalidOperation, ValueError, TypeError):
-        return 0
-    return max(-int(decimal.as_tuple().exponent), 0)
 
 
 def _load_response(body):

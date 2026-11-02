@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import requests
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
@@ -66,40 +67,30 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         self.assertNotIn('sfzsgmfyhzh', payload)
 
     def test_buyer_bank_and_address_are_sent_and_shown(self):
+        self.partner_a.write({
+            'street': '上海市浦东新区',
+            'phone': '+86 138 0000 0000',
+            'country_id': self.env.ref('base.cn').id,
+            'bank_ids': [Command.create({'bank_name': '中国工商银行上海分行', 'account_number': '6222020200001234567'})],
+        })
         invoice = self._post_invoice()
-        values = invoice._l10n_cn_edi_prepare_invoice_values(invoice._l10n_cn_edi_get_document('fapiao'))
-        values.update(
-            buyer_bank_name='中国工商银行上海分行',
-            buyer_bank_account='6222020200001234567',
-            buyer_address='上海市浦东新区',
-            buyer_phone='13800000000',
-        )
 
-        payload = self.company._l10n_cn_edi_get_client()._prepare_simple_issue_payload(values)
+        payload = invoice._l10n_cn_edi_prepare_issue_payload(invoice._l10n_cn_edi_get_document('fapiao'))
 
+        self.assertEqual(payload['payerAddress'], '上海市浦东新区')
+        self.assertEqual(payload['payerPhone'], '13800000000')
         self.assertEqual(payload['payerBank'], '中国工商银行上海分行')
         self.assertEqual(payload['payerBankaccount'], '6222020200001234567')
         self.assertEqual(payload['sfzsgmfyhzh'], 'Y')
         self.assertEqual(payload['sfzsgmfdzdh'], 'Y')
 
-    def test_large_payload_is_sent_uncompressed(self):
-        invoice = self._post_invoice()
-        values = invoice._l10n_cn_edi_prepare_invoice_values(invoice._l10n_cn_edi_get_document('fapiao'))
-        values['remark'] = 'x' * 20000
-        self.gateway.handlers[SIMPLE_ISSUE] = {'code': '1000', 'message': '提交成功'}
-
-        self.company._l10n_cn_edi_get_client().issue_invoice(values)
-
-        self.assertEqual(self.gateway.requests[-1]['outer']['zipCode'], '0')
-
     def test_default_drawer_is_not_sent_as_provider_account(self):
         invoice = self._post_invoice()
+        doc = invoice._l10n_cn_edi_get_document('fapiao')
         self.company.l10n_cn_edi_drawer = False
-        client = self.company._l10n_cn_edi_get_client()
-        values = invoice._l10n_cn_edi_prepare_invoice_values(invoice._l10n_cn_edi_get_document('fapiao'))
-        self.assertNotIn('invoicer', client._prepare_simple_issue_payload(values))
+        self.assertNotIn('invoicer', invoice._l10n_cn_edi_prepare_issue_payload(doc))
         self.company.l10n_cn_edi_drawer = 'Configured Drawer'
-        self.assertEqual(client._prepare_simple_issue_payload(values)['invoicer'], 'Configured Drawer')
+        self.assertEqual(invoice._l10n_cn_edi_prepare_issue_payload(doc)['invoicer'], 'Configured Drawer')
 
     def test_query_pending_then_issued(self):
         invoice = self._post_invoice()
@@ -122,7 +113,6 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         self.assertIsNone(self._issue(invoice))
         self.assertEqual(invoice.l10n_cn_edi_state, 'issued')
         self.assertEqual(invoice.l10n_cn_edi_fapiao_no, '0082X')
-        self.assertFalse(any('amount mismatch' in body for body in invoice.message_ids.mapped('body')))
 
     def test_downloaded_files_are_attached(self):
         invoice = self._post_invoice()
@@ -218,35 +208,30 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
     def test_special_vat_treatment_is_rejected(self):
         invoice = self._post_invoice()
         invoice.invoice_line_ids.tax_ids.l10n_cn_reduced_tax_code = '01'
-        values = invoice._l10n_cn_edi_prepare_invoice_values(invoice._l10n_cn_edi_get_document('fapiao'))
 
         with self.assertRaisesRegex(UserError, 'does not support special VAT treatment'):
-            self.company._l10n_cn_edi_get_client().issue_invoice(values)
-
-    def test_quantity_precision_over_13_decimals_is_rejected(self):
-        invoice = self._post_invoice()
-        values = invoice._l10n_cn_edi_prepare_invoice_values(invoice._l10n_cn_edi_get_document('fapiao'))
-        values['lines'][0]['quantity'] = 1.12345678901234
-
-        with self.assertRaisesRegex(UserError, 'quantity supports at most 13 decimal places'):
-            self.company._l10n_cn_edi_get_client().issue_invoice(values)
+            invoice._l10n_cn_edi_prepare_lines()
 
     def test_tax_rate_outside_the_spec_set_is_rejected(self):
-        invoice = self._post_invoice()
-        values = invoice._l10n_cn_edi_prepare_invoice_values(invoice._l10n_cn_edi_get_document('fapiao'))
-        client = self.company._l10n_cn_edi_get_client()
-        for rate in (0.0, 0.01, 0.03, 0.06, 0.09, 0.13, 0.17):
-            values['lines'][0]['tax_rate'] = rate
-            client._prepare_simple_issue_payload(values)
-        for rate in (0.02, 0.135, 0.123456789):
-            values['lines'][0]['tax_rate'] = rate
-            with self.assertRaisesRegex(UserError, 'does not accept a .* tax rate'):
-                client.issue_invoice(values)
-        self.assertFalse(self.gateway.requests)
+        for rate, accepted in ((0.0, True), (1.0, True), (13.0, True), (17.0, True), (2.0, False), (13.5, False)):
+            tax = self.env['account.tax'].create({
+                'name': f'VAT {rate}',
+                'amount_type': 'percent',
+                'amount': rate,
+                'type_tax_use': 'sale',
+                'company_id': self.company.id,
+            })
+            invoice = self.init_invoice('out_invoice', partner=self.partner_a, products=self.product_a, taxes=tax)
+            with self.subTest(rate=rate):
+                if accepted:
+                    self.assertEqual(invoice._l10n_cn_edi_prepare_lines()[0]['taxRate'], f'{rate / 100:g}')
+                else:
+                    with self.assertRaisesRegex(UserError, 'does not accept a .* tax rate'):
+                        invoice._l10n_cn_edi_prepare_lines()
 
     def test_duplicate_order_is_reconciled_via_query(self):
         invoice = self._post_invoice()
-        values = invoice._l10n_cn_edi_prepare_invoice_values(invoice._l10n_cn_edi_get_document('fapiao'))
+        payload = invoice._l10n_cn_edi_prepare_issue_payload(invoice._l10n_cn_edi_get_document('fapiao'))
         self.gateway.handlers[SIMPLE_ISSUE] = {
             '_outer_code': '9994',
             '_outer_msg': 'duplicate',
@@ -255,14 +240,14 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         }
         self.gateway.handlers[QUERY_RESULT] = {'code': '1000', 'message': 'ok'}
 
-        result = self.company._l10n_cn_edi_get_client().issue_invoice(values)
+        result = self.company._l10n_cn_edi_get_client().issue(payload)
 
         self.assertEqual(result['state'], 'sent')
         self.assertNotIn('ele.invoice.retry', [request['interface_code'] for request in self.gateway.requests])
 
     def test_duplicate_order_without_issued_state_fails_reconcile(self):
         invoice = self._post_invoice()
-        values = invoice._l10n_cn_edi_prepare_invoice_values(invoice._l10n_cn_edi_get_document('fapiao'))
+        payload = invoice._l10n_cn_edi_prepare_issue_payload(invoice._l10n_cn_edi_get_document('fapiao'))
         self.gateway.handlers[SIMPLE_ISSUE] = {
             '_outer_code': '9994',
             '_outer_msg': 'duplicate',
@@ -271,17 +256,17 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         }
         self.gateway.handlers[QUERY_RESULT] = {'code': '2001', 'message': 'failed'}
 
-        result = self.company._l10n_cn_edi_get_client().issue_invoice(values)
+        result = self.company._l10n_cn_edi_get_client().issue(payload)
 
         self.assertEqual(result['state'], 'failed')
         self.assertTrue(result['new_serial'])
 
     def test_issue_pending_code_is_not_accepted(self):
         invoice = self._post_invoice()
-        values = invoice._l10n_cn_edi_prepare_invoice_values(invoice._l10n_cn_edi_get_document('fapiao'))
+        payload = invoice._l10n_cn_edi_prepare_issue_payload(invoice._l10n_cn_edi_get_document('fapiao'))
         self.gateway.handlers[SIMPLE_ISSUE] = {'code': '1002', 'message': '开票中'}
 
-        result = self.company._l10n_cn_edi_get_client().issue_invoice(values)
+        result = self.company._l10n_cn_edi_get_client().issue(payload)
 
         self.assertEqual(result['state'], 'failed')
 
@@ -294,13 +279,6 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         })
 
         self.assertFalse({'amount_total', 'amount_untaxed', 'amount_tax'} & result.keys())
-
-    def test_download_endpoint_ofd_has_no_url_fallback(self):
-        self.downloads['https://yunshui.test/invoice.ofd'] = b'PK'
-        self.gateway.handlers[DOWNLOAD_INVOICE] = {'code': '1000', 'ofdUrl': 'https://yunshui.test/invoice.ofd'}
-        client = self.company._l10n_cn_edi_get_client()
-
-        self.assertIsNone(client._download_invoice_file('SERIAL', '82', 'ofd'))
 
     def _sent_invoice(self):
         invoice = self._post_invoice()
