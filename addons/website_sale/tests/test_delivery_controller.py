@@ -163,3 +163,23 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, WebsiteSaleCommon):
                 available_days[0],
                 "A date that is no longer offered is reset to the earliest one",
             )
+
+    def test_order_summary_values_render_line_prices(self):
+        self.website.sudo().show_line_subtotals_tax_selection = "tax_included"
+        fiscal_position = self.env["account.fiscal.position"].sudo().create({"name": "Foreign"})
+        tax_21, tax_20 = self.env["account.tax"].sudo().create([
+            {"name": "Tax 21%", "amount": 21},
+            {"name": "Tax 20%", "amount": 20, "fiscal_position_ids": fiscal_position.ids},
+        ])
+        tax_20.original_tax_ids = tax_21
+        product = self._create_product(list_price=100.0, taxes_id=tax_21.ids)
+        order = self._create_so(order_line=[Command.create({"product_id": product.id})])
+        order.fiscal_position_id = fiscal_position
+        order._recompute_taxes()
+
+        with self.mock_request(sale_order_id=order.id):
+            summary_content = self.Controller._order_summary_values(order)[
+                "website_sale.cart_summary_content"
+            ]
+
+        self.assertIn("120.00", summary_content)
