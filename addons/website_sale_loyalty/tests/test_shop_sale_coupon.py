@@ -7,9 +7,22 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
+<<<<<<< 503998e479441946907f005e8a51ccdf72d959e6
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
+||||||| 8d6cd5bd90a60f2788f4461fdeb722c60cba1dcd
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
+    TestSaleProductAttributeValueCommon,
+)
+from odoo.addons.website.tools import MockRequest
+=======
+from odoo.addons.payment.tests.common import PaymentCommon
+from odoo.addons.sale.tests.test_sale_product_attribute_value_config import (
+    TestSaleProductAttributeValueCommon,
+)
+from odoo.addons.website.tools import MockRequest
+>>>>>>> d5e45093c0a4ad5dd6542b4046f98efed7f04e2b
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 
 
@@ -244,7 +257,13 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
 
 
 @tagged('post_install', '-at_install')
+<<<<<<< 503998e479441946907f005e8a51ccdf72d959e6
 class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
+||||||| 8d6cd5bd90a60f2788f4461fdeb722c60cba1dcd
+class TestWebsiteSaleCoupon(HttpCase):
+=======
+class TestWebsiteSaleCoupon(HttpCase, PaymentCommon):
+>>>>>>> d5e45093c0a4ad5dd6542b4046f98efed7f04e2b
 
     @classmethod
     def setUpClass(cls):
@@ -559,3 +578,76 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         order.action_quotation_send()
         order.with_context(access_token=order.access_token, user=public_user).action_confirm()
         self.assertEqual(loyalty_card.points, 1)
+
+    def test_confirm_order_with_gift_card_after_failed_tx(self):
+        """ Tests workflow: submitting a failed payment, and then paying for
+            order in full with gift card(s) from website. Sale order should be confirmed
+        """
+        test_product, gift_card = self.env["product.product"].create([
+            {
+            "name": "test service",
+            "list_price": 50,
+            "type": "service",
+            "taxes_id": [],
+            }, {
+            "name": "TEST - Gift Card",
+            "list_price": 50,
+            "type": "service",
+            }
+        ])
+
+        gift_card_program = self.env["loyalty.program"].create({
+            "name": "Gift Cards",
+            "program_type": "gift_card",
+            "applies_on": "future",
+            "trigger": "auto",
+            "rule_ids": [(0, 0, {
+                "reward_point_amount": 1,
+                "reward_point_mode": "money",
+                "reward_point_split": True,
+                "product_ids": gift_card,
+            })],
+            'reward_ids': [(0, 0, {
+                "reward_type": "discount",
+                "discount_mode": "per_point",
+                "discount": 1,
+                "discount_applicability": "order",
+                "required_points": 1,
+                "description": "PAY WITH GIFT CARD",
+            })],
+        })
+
+        # Create a gift card to be used
+        self.env['loyalty.card'].create({
+            "program_id": gift_card_program.id,
+            "points": 50,
+            "code": "GIFT_CARD",
+        })
+
+        admin_partner = self.env.ref("base.user_admin").partner_id
+        sale_order = self.env["sale.order"].create({
+            "partner_id": admin_partner.id,
+            "order_line": [
+                (0, 0, {
+                    "product_id": test_product.id,
+                    "product_uom_qty": 1,
+                })
+            ]
+        })
+
+        # Failed payment transaction to attach to sale order
+        self._create_transaction("direct", state="error", partner_id=admin_partner.id, sale_order_ids=[sale_order.id])
+
+        # Apply the gift card to the order
+        self._apply_promo_code(sale_order, "GIFT_CARD")
+        self.assertEqual(sale_order.amount_total, 0)
+
+        self.authenticate("admin", "admin")
+        with MockRequest(self.env, website=self.env.ref("website.default_website")) as request:
+            request.session["sale_order_id"] = sale_order.id
+            request.session["sale_last_order_id"] = sale_order.id
+
+            WebsiteSale().shop_payment_validate()
+
+        # the sale order should be confirmed since order was paid in full
+        self.assertEqual(sale_order.state, "sale")
