@@ -830,6 +830,65 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         self.assertEqual(analytic_account.purchase_order_count, 1)
         self.assertEqual(analytic_account.action_view_purchase_orders()['domain'], [['id', 'in', purchase_order.ids]])
 
+    def test_invoice_line_name_partner_specific_code_not_duplicated(self):
+        """Preserve an existing description containing a vendor-specific product code."""
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_order.product_tmpl_id.id,
+            'product_code': 'CUSTOM-CODE',
+        })
+        po = self.init_purchase(partner=self.partner_a, confirm=True, products=[self.product_order])
+        # Existing descriptions may still contain the product name and code.
+        po.order_line.name = po.order_line._get_product_display_name()
+        self.assertIn('CUSTOM-CODE', po.order_line.name)
+        po.order_line.qty_received = 1
+
+        bill = self.env['account.move'].browse(po.action_create_invoice()['res_id'])
+        self.assertEqual(
+            bill.invoice_line_ids.name, po.order_line.name,
+            "Billing shouldn't duplicate the product name when the order line "
+            "already used a vendor-specific product code",
+        )
+
+    def test_invoice_line_name_standard_code_not_duplicated(self):
+        """A purchase order line created before the vendor has their own
+        product code keeps the standard product name. Billing must not
+        prepend the vendor-specific name added afterwards.
+        """
+        po = self.init_purchase(partner=self.partner_a, confirm=True, products=[self.product_order])
+        po.order_line.name = self.product_order.display_name
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_order.product_tmpl_id.id,
+            'product_code': 'CUSTOM-CODE',
+        })
+        self.assertNotIn('CUSTOM-CODE', po.order_line.name)
+        po.order_line.qty_received = 1
+
+        bill = self.env['account.move'].browse(po.action_create_invoice()['res_id'])
+        self.assertEqual(bill.invoice_line_ids.name, po.order_line.name)
+
+    def test_invoice_line_name_expired_vendor_code_not_duplicated(self):
+        """Preserve an existing description using the selected seller's product code."""
+        self.env['product.supplierinfo'].create([{
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_order.product_tmpl_id.id,
+            'product_code': 'OLD',
+            'date_end': fields.Date.today() - timedelta(days=10),
+        }, {
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_order.product_tmpl_id.id,
+            'product_code': 'NEW',
+        }])
+        po = self.init_purchase(partner=self.partner_a, confirm=True, products=[self.product_order])
+        po.order_line.name = po.order_line._get_product_display_name()
+        self.assertIn('[NEW]', po.order_line.name)
+        self.assertNotIn('[OLD]', po.order_line.name)
+        po.order_line.qty_received = 1
+
+        bill = self.env['account.move'].browse(po.action_create_invoice()['res_id'])
+        self.assertEqual(bill.invoice_line_ids.name, po.order_line.name)
+
 
 @tagged('post_install', '-at_install')
 class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
