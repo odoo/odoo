@@ -281,7 +281,7 @@
             <t t-if="information_block">
                 <t t-set="colclass" t-value="'col-5' + ('' if custom_layout_address else ' offset-1')"/>
                 <t t-set="information_block_content">
-                    <div name="information_block" class="col-6">
+                    <div name="information_block" t-att-class="'col-6' + (' offset-1' if custom_layout_address else '')">
                         <t t-out="information_block or None">
                             <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 opacity-75 text-muted text-center">
                                 <strong>Information block</strong>
