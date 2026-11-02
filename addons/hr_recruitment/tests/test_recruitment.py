@@ -337,6 +337,28 @@ class TestRecruitment(MailCase, TransactionCase):
             app_2
         )
 
+    def test_applicant_refuse_duplicates_keeps_talent(self):
+        refuse_reason = self.env['hr.applicant.refuse.reason'].create([{'name': 'Fired'}])
+        pool = self.env['hr.talent.pool'].create({'name': 'Developers'})
+        talent = self.env['hr.applicant'].create({
+            'partner_name': 'Cameron Ellis',
+            'email_from': 'cameron.ellis@example.com',
+            'talent_pool_ids': [Command.set(pool.ids)],
+        })
+        applicant, duplicate = self.env['hr.applicant'].create([{
+            'partner_name': 'Cameron Ellis',
+            'email_from': 'cameron.ellis@example.com',
+        } for _i in range(2)])
+        wizard = self.env['applicant.get.refuse.reason'].create({
+            'refuse_reason_id': refuse_reason.id,
+            'applicant_ids': [applicant.id],
+            'duplicates': True,
+        })
+        self.assertEqual(wizard.duplicate_applicant_ids, duplicate)
+        wizard.action_refuse_reason_apply()
+        self.assertTrue(talent.active)
+        self.assertFalse(duplicate.active)
+
     def test_applicant_refuse_single_editable_body(self):
         officer = self.env['res.users'].create({
             'name': 'Refuse Officer',
