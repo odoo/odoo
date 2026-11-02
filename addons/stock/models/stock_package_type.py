@@ -121,6 +121,14 @@ class StockPackageType(models.Model):
                 self.env['ir.sequence'].browse(list(seq_to_todo_ids)).sudo().write(seq_vals)
         return super().write(vals)
 
+    def _get_volume(self):
+        """ Volume of one package of this type, in the unit of the product volumes (m³ or ft³). """
+        self.ensure_one()
+        volume = self.packaging_length * self.width * self.height
+        if self.env['product.template']._get_length_uom_id_from_ir_config_parameter() == self.env.ref('uom.product_uom_millimeter'):
+            volume /= 1000.0 ** 3
+        return volume
+
     def _get_next_name_by_sequence(self):
         if len(self) == 1 and self.sequence_id:
             return self.sequence_id.next_by_id()

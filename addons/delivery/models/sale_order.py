@@ -210,7 +210,7 @@ class SaleOrder(models.Model):
                 and ol.product_uom_qty > 0
             )
         ):
-            weight += order_line.product_qty * order_line.product_id.weight
+            weight += order_line._get_shipping_weight_and_volume()[0]
         return weight
 
     def _update_order_line_info(self, *args, **kwargs):

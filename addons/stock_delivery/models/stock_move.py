@@ -27,12 +27,10 @@ class StockMove(models.Model):
                 """),
     )
 
-    @api.depends('product_id', 'quantity', 'uom_id')
+    @api.depends('product_id', 'quantity', 'uom_id', 'packaging_uom_id')
     def _compute_weight(self):
-        moves_with_weight = self.filtered(lambda moves: moves.product_id.weight > 0.00)
-        for move in moves_with_weight:
-            move.weight = (move.quantity * move.product_id.weight)
-        (self - moves_with_weight).weight = 0
+        for move in self:
+            move.weight = move.product_id and move.product_id._get_shipping_weight_and_volume(move.quantity, move.uom_id, move.packaging_uom_id)[0]
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()

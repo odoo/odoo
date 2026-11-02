@@ -251,7 +251,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         weight = 0.0
         for move in self.move_ids:
-            weight += move.product_qty * move.product_id.weight
+            weight += move.product_id._get_shipping_weight_and_volume(move.product_uom_qty, move.uom_id, move.packaging_uom_id)[0]
         return weight
 
     def _should_generate_commercial_invoice(self):

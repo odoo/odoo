@@ -391,15 +391,11 @@ class StockPicking(models.Model):
         picking_weights = defaultdict(float)
         res_groups = self.env['stock.move.line']._read_group(
             [('picking_id', 'in', self.ids), ('product_id', '!=', False), ('result_package_id', '=', False)],
-            ['picking_id', 'product_id', 'uom_id', 'quantity'],
+            ['picking_id', 'product_id', 'uom_id', 'move_id.packaging_uom_id', 'quantity'],
             ['__count'],
         )
-        for picking, product, uom_id, quantity, count in res_groups:
-            picking_weights[picking.id] += (
-                count
-                * uom_id._compute_quantity(quantity, product.uom_id)
-                * product.weight
-            )
+        for picking, product, uom_id, packaging_uom, quantity, count in res_groups:
+            picking_weights[picking.id] += count * product._get_shipping_weight_and_volume(quantity, uom_id, packaging_uom)[0]
         for picking in self:
             picking.weight_bulk = picking_weights[picking.id]
 
@@ -445,7 +441,7 @@ class StockPicking(models.Model):
         for picking in self:
             volume = 0
             for move in picking.move_ids:
-                volume += move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id) * move.product_id.volume
+                volume += move.product_id._get_shipping_weight_and_volume(move.quantity, move.uom_id, move.packaging_uom_id)[1]
             picking.shipping_volume = volume
 
     @api.depends('move_ids.date_deadline', 'move_ids.state', 'move_type')
