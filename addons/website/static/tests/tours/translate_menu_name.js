@@ -21,8 +21,9 @@ registry.category("web_tour.tours").add("translate_menu_name", {
         },
         clickOnExtraMenuItem({}, true),
         {
-            content: "translate the menu entry",
-            trigger: ':iframe a[href="/englishURL"] span',
+            content:
+                "translate the menu entry (the link must not be draggable, to place the caret in it on Firefox)",
+            trigger: ':iframe a[href="/englishURL"][draggable="false"] span',
             run: "editor value pa-GB",
         },
         ...clickOnSave(),
