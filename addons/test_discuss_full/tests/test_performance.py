@@ -136,7 +136,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_unread
     #       - fetch res_groups (group_ids)
     #       - fetch im_livechat_channel
-    #   23: store add message:
+    #   24: store add message:
     #       - search mail_message_reaction
     #       - search mail_message (_filter_accessible_from_query)
     #       - search mail_message (_filter_accessible_from_query, ordered)
@@ -157,11 +157,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch partner (author)
     #       - search user (author)
     #       - fetch user (author)
+    #       - search res_role_res_users_rel (author role_ids)
     #       - fetch discuss_call_history
     #       - search_fetch mail_call_artifact (_compute_recording_media)
     #       - search mail_message_schedule (last message of the needaction message)
     #   1: select the current db snapshot
-    _query_count_messaging_menu_channels = 74
+    _query_count_messaging_menu_channels = 75
     # Queries for _query_count_init_messaging_with_chat_hub (in order):
     #   2: _search_is_member (for current user, first occurrence)
     #       - fetch res_users
@@ -202,7 +203,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_groups (group_public_id)
     #       - _compute_message_unread
     #   1: search discuss_channel (last message of every channel of the request, _get_last_messages)
-    #   22: store add message:
+    #   23: store add message:
     #       - search mail_message_reaction
     #       - search mail_message (_filter_accessible_from_query)
     #       - search mail_message (_filter_accessible_from_query, ordered)
@@ -223,10 +224,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_partner (OdooBot, author of the call message)
     #       - search res_users (OdooBot partner.user_ids)
     #       - fetch res_users (OdooBot)
+    #       - search res_role_res_users_rel (author role_ids)
     #       - fetch discuss_call_history
     #       - search mail_call_artifact
     #   1: select the current db snapshot
-    _query_count_init_messaging_with_chat_hub = 56
+    _query_count_init_messaging_with_chat_hub = 57
     # Queries for _query_count_page_load (in order):
     #   2: _search_is_member (for current user, first occurrence)
     #       - fetch res_users
@@ -286,7 +288,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search discuss_channel_res_groups_rel (group_ids)
     #       - fetch res_groups (group_public_id)
     #       - _compute_message_unread
-    #   21: store add message:
+    #   22: store add message:
     #       - search mail_message_reaction
     #       - search mail_message (_filter_accessible_from_query)
     #       - search mail_message (_filter_accessible_from_query, ordered)
@@ -306,10 +308,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_partner (OdooBot, author of the call message)
     #       - search res_users (OdooBot partner.user_ids)
     #       - fetch res_users (OdooBot)
+    #       - search res_role_res_users_rel (author role_ids)
     #       - fetch discuss_call_history
     #       - search mail_call_artifact
     #   1: select the current db snapshot
-    _query_count_page_load = 70
+    _query_count_page_load = 71
     # Queries for _query_count_open_channel (in order):
     #   1: fetch res_users (current user)
     #   1: search discuss_channel JOIN member (_search_is_member, first occurrence)
@@ -340,7 +343,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search hr_leave (_compute_leave_status)
     #       - read group resource_calendar_leaves (_compute_leave_status)
     #       - fetch res_users (_read_format)
-    #   17: store add message:
+    #   20: store add message:
     #       - search mail_message_reaction
     #       - search mail_message (_filter_accessible_from_query)
     #       - fetch mail_message
@@ -356,11 +359,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search mail_notification
     #       - fetch mail_notification
     #       - search rating_rating
+    #       - search res_role_res_users_rel (author role_ids)
     #       - fetch res_partner (reactions)
     #       - fetch mail_message_subtype
+    #       - search res_users (author partner.user_ids)
+    #       - search res_role_res_users_rel (author role_ids)
     #   1: select the current db snapshot
     #   1: insert bus_bus (mail.message/mark_as_read)
-    _query_count_open_channel = 43
+    _query_count_open_channel = 46
     # Queries for _query_count_open_chatter (in order):
     #   6: /mail/thread/messages:
     #       - search res_partner (_get_thread_with_access)
@@ -392,7 +398,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch mail_alias_domain
     #       - search mail_alias
     #       - search res_users (partner.user_ids)
-    #   15: store add message:
+    #   16: store add message:
     #       - search mail_message_reaction
     #       - search mail_message_schedule
     #       - search mail_message_res_partner_bookmarked_rel
@@ -407,9 +413,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch res_partner (author)
     #       - search res_users (author)
     #       - fetch res_users (author)
+    #       - search res_role_res_users_rel (author role_ids)
     #       - fetch mail_message_subtype
     #   1: select the current db snapshot
-    _query_count_open_chatter = 42
+    _query_count_open_chatter = 43
 
     def setUp(self):
         super().setUp()
@@ -1056,8 +1063,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(self.user_root),
             ),
             "res.users": self._filter_users_fields(
-                self._res_for_user(self.users[0]),
-                self._res_for_user(self.users[2]),
+                self._res_for_user(self.users[0], also_author=True),
+                self._res_for_user(self.users[2], also_author=True),
                 self._res_for_user(self.users[15]),
                 self._res_for_user(self.user_root),
             ),
@@ -1183,6 +1190,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "is_company": False,
                     "main_user_id": user_0.id,
                     "name": "Ernest Employee",
+                    "user_ids": user_0.ids,
                     "write_date": fields.Datetime.to_string(partner_0.write_date),
                 },
                 {
@@ -1193,8 +1201,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 },
             ),
             "res.users": self._filter_users_fields(
-                *(self._res_for_user(user) for user in other_users),
-                {"id": user_0.id, "partner_id": partner_0.id, "share": False},
+                *(
+                    self._res_for_user(user, also_author=user == self.users[2])
+                    for user in other_users
+                ),
+                {"id": user_0.id, "partner_id": partner_0.id, "role_ids": [], "share": False},
             ),
         }
 
@@ -1305,12 +1316,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "is_company": False,
                     "main_user_id": self.users[3].id,
                     "name": "test3",
+                    "user_ids": self.users[3].ids,
                     "write_date": fields.Datetime.to_string(partner_3.write_date),
                 },
                 self._expected_result_for_persona(self.user_root),
             ),
             "res.users": self._filter_users_fields(
-                {"id": self.users[3].id, "partner_id": partner_3.id, "share": False},
+                {"id": self.users[3].id, "partner_id": partner_3.id, "role_ids": [], "share": False},
                 self._res_for_user(self.user_root),
             ),
         }
@@ -1427,13 +1439,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(self.user_root),
             ),
             "res.users": self._filter_users_fields(
-                self._res_for_user(self.users[0]),
-                self._res_for_user(self.users[2]),
+                self._res_for_user(self.users[0], also_author=True),
+                self._res_for_user(self.users[2], also_author=True),
                 self._res_for_user(self.users[14]),
                 self._res_for_user(self.users[15]),
                 self._res_for_user(self.users[3]),
                 self._res_for_user(self.users[12]),
-                self._res_for_user(self.users[1], also_livechat=True),
+                self._res_for_user(self.users[1], also_livechat=True, also_author=True),
                 self._res_for_user(self.user_root),
             ),
             "hr.employee": [
@@ -2761,6 +2773,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "OdooBot",
+                "user_ids": [],
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if guest:
@@ -2816,10 +2829,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {**common_data, "display_name": "Visitor Ernest Employee"}
         return {}
 
-    def _res_for_user(self, user, only_inviting=False, also_livechat=False):
+    def _res_for_user(self, user, only_inviting=False, also_livechat=False, also_author=False):
         partner = user.partner_id
         if user == self.users[0]:
-            return {
+            res = {
                 "all_employee_ids": user.employee_ids.ids,
                 "active": True,
                 "id": user.id,
@@ -2829,6 +2842,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "partner_id": partner.id,
                 "share": False,
             }
+            if also_author:
+                res["role_ids"] = []
+            return res
         if user == self.users[1]:
             res = {
                 "all_employee_ids": user.employee_ids.ids,
@@ -2841,6 +2857,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
             if also_livechat:
                 res["offline_since"] = False
+            if also_author:
+                res["role_ids"] = []
             return res
         if user == self.users[2]:
             if only_inviting:
@@ -2852,7 +2870,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "should_display_in_call_im_status": False,
                     "partner_id": partner.id,
                 }
-            return {
+            res = {
                 "active": True,
                 "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
@@ -2862,6 +2880,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "partner_id": partner.id,
                 "share": False,
             }
+            if also_author:
+                res["role_ids"] = []
+            return res
         if user in (self.users[3], self.users[4], self.users[8]):
             return {
                 "active": True,
