@@ -678,19 +678,6 @@ $o-bg-shapes: (
     @return add-extra-shape-colors-mapping($module, $shape-name, 'footer', $mapping, $shapes);
 }
 
-%o-hb-input-base {
-    border: var(--o-we-sidebar-content-field-border-width) solid var(--o-we-sidebar-content-field-border-color);
-    border-radius: var(--o-we-sidebar-content-field-border-radius);
-    background-color: var(--o-hb-field-input-bg, var(--o-we-sidebar-content-field-input-bg));
-    padding: 0.15rem var(--o-we-sidebar-content-field-clickable-spacing);
-    color: inherit;
-
-    &:focus, &:focus-within {
-        border-color: var(--o-hb-input-active-border, var(--o-we-sidebar-content-field-input-border-color));
-        color: var(--o-hb-row-color-active, var(--o-we-fg-lighter));
-    }
-}
-
 $-editor-messages-margin-x: 2%;
 
 @mixin o-editor-messages {
