@@ -72,15 +72,22 @@ class HrExpense(models.Model):
             split_value['sale_order_id'] = self.sale_order_id.id
         return vals
 
+    def _sale_expense_ensure_analytic_distribution(self):
+        """ Give an analytic distribution to the expenses to reinvoice that don't have one yet.
+        """
+        expenses = self.filtered(lambda expense: expense.sale_order_id and not expense.analytic_distribution)
+        analytic_accounts = self.env['account.analytic.account'].create([
+            expense.sale_order_id._prepare_analytic_account_data() for expense in expenses
+        ])
+        for expense, analytic_account in zip(expenses, analytic_accounts):
+            expense.analytic_distribution = {analytic_account.id: 100}
+
     def _do_approve(self):
         # EXTENDS hr_expense
         # When posting expense, we need the analytic entries to be generated, because reinvoicing uses analytic accounts.
         # We then ensure the proper analytic acocunt is given in the distribution and if not,
         # we create an account and set the distribution to it.
-        for expense in self:
-            if expense.sale_order_id and not expense.analytic_distribution:
-                analytic_account = self.env['account.analytic.account'].create(expense.sale_order_id._prepare_analytic_account_data())
-                expense.analytic_distribution = {analytic_account.id: 100}
+        self._sale_expense_ensure_analytic_distribution()
         return super()._do_approve()
 
     def action_open_sale_order(self):
