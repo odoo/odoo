@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
-from odoo.tests import tagged
+from odoo.tests import Form
 
 from odoo.exceptions import AccessError, UserError
 import time
@@ -195,6 +195,27 @@ class TestAccessRightsEmployeeManager(TestAllocationRights):
         allocation = self.request_allocation(self.user_employee.id, values)
         with self.assertRaises(UserError):
             allocation.action_approve()
+
+    def test_manager_edit_validity_period(self):
+        """ Only officers and the employee's time off approver can edit the validity period """
+        for user, employee, can_edit in [
+            (self.user_hruser, self.managed_employee, True),  # officer
+            (self.user_employee, self.managed_employee, True),  # time off approver of the employee
+            (self.user_employee, self.employee_emp, False),  # time off approver, but own request
+        ]:
+            with self.subTest(user=user.name, employee=employee.name):
+                allocation = self.request_allocation(self.user_hruser.id, {
+                    'employee_id': employee.id,
+                    'work_entry_type_id': self.lt_validation_manager.id,
+                })
+                new_date_to = allocation.date_to.replace(month=6, day=30)
+                with Form(allocation.with_user(user), 'hr_holidays.hr_leave_allocation_view_form_manager') as allocation_form:
+                    if can_edit:
+                        allocation_form.date_to = new_date_to
+                    else:
+                        with self.assertRaises(AssertionError):
+                            allocation_form.date_to = new_date_to
+                self.assertEqual(allocation.date_to == new_date_to, can_edit)
 
 
 class TestAccessRightsHolidayUser(TestAllocationRights):
