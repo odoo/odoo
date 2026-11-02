@@ -2441,6 +2441,39 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
 
+    def test_settle_so_again_after_new_line(self):
+        """Lines already settled in the PoS must not be loaded again when the
+        sale order is settled a second time after a new line was added."""
+        service, goods, new_service = self.env['product.product'].create([{
+            'name': name,
+            'available_in_pos': True,
+            'type': product_type,
+            'is_storable': product_type == 'consu',
+            'lst_price': price,
+            'taxes_id': [],
+        } for name, product_type, price in [
+            ('Settled Service', 'service', 10.0),
+            ('Settled Goods', 'consu', 20.0),
+            ('New Service', 'service', 5.0),
+        ]])
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'order_line': [
+                Command.create({'product_id': service.id, 'product_uom_qty': 1, 'price_unit': 10.0}),
+                Command.create({'product_id': goods.id, 'product_uom_qty': 1, 'price_unit': 20.0}),
+            ],
+        })
+        sale_order.action_confirm()
+
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_settle_so_again_after_new_line_1', login="accountman")
+        self.assertEqual(sale_order.order_line.mapped('qty_invoiced'), [1.0, 1.0])
+
+        sale_order.order_line = [Command.create({'product_id': new_service.id, 'product_uom_qty': 1, 'price_unit': 5.0})]
+        self.start_pos_tour('test_settle_so_again_after_new_line_2', login="accountman")
+        self.assertEqual(sale_order.order_line.mapped('qty_invoiced'), [1.0, 1.0, 1.0])
+        self.assertEqual(sale_order.order_line[1].qty_delivered, 1.0)
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosSaleAccount(TestPoSCommon):
