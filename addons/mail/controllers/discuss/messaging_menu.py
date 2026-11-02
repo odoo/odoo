@@ -168,6 +168,53 @@ class DiscussMessagingMenuController(WebclientController):
             lambda res: res.attr("is_fully_loaded", len(channels) < limit),
         )
 
+    @store_handler(
+        "/mail/messaging_menu/discuss.channel/mark_all_as_read",
+        audience="everyone",
+        readonly=False,
+    )
+    def store_messaging_menu_discuss_channel_mark_all_as_read(self, store: Store, tab_id):
+        # sudo: discuss.channel.member - only the user's own members, for performance: the
+        # channels are then searched with their access rules.
+        unread_channel_ids = self.env["discuss.channel.member"].sudo().search_fetch(
+            [("is_self", "=", True), ("is_unread", "=", True)],
+        ).channel_id.ids
+        channels = self.env["discuss.channel"].search(
+            self._get_menu_tab_full_domain(tab_id) & Domain("id", "in", unread_channel_ids),
+        )
+        members = channels.self_member_id
+        # Reading the channels is showing up: their invitations are no longer pending.
+        members.filtered("invitation_sent_dt").invitation_sent_dt = False
+        last_message_by_channel_id = channels._get_last_messages().grouped("res_id")
+        for member in members:
+            if last_message := last_message_by_channel_id.get(member.channel_id.id):
+                member._set_last_seen_message(last_message)
+                # Mark as read only moves forward.
+                member._set_new_message_separator(
+                    max(member.new_message_separator, last_message.id + 1),
+                )
+
+    @store_handler(
+        "/mail/messaging_menu/discuss.channel/set_needaction_done",
+        readonly=False,
+    )
+    def store_messaging_menu_discuss_channel_set_needaction_done(self, store: Store, tab_id):
+        groups = self.env["mail.message"]._read_group(
+            [
+                ("model", "=", "discuss.channel"),
+                ("message_type", "!=", "user_notification"),
+                ("needaction", "=", True),
+            ],
+            ["res_id"],
+        )
+        channels = self.env["discuss.channel"].search(
+            self._get_menu_tab_full_domain(tab_id)
+            & Domain("id", "in", [res_id for [res_id] in groups]),
+        )
+        self.env["mail.message"].search(
+            channels._get_message_domain() & Domain("needaction", "=", True),
+        ).set_message_done()
+
     @store_handler("/mail/messaging_menu/get_most_popular_channels", audience="everyone")
     def store_messaging_menu_get_most_popular_channels(self, store: Store):
         results = self.env["discuss.channel.member"]._read_group(
