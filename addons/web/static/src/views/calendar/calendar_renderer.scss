@@ -254,6 +254,15 @@
             --o-cw-bg: #{$o-calendar-today-background-color};
             --o-cw-color: #{$o-calendar-today-color};
 
+            .fc-scrollgrid-section-header,
+            .fc-scrollgrid-section-body:not(.fc-scrollgrid-section-liquid) {
+                .fc-scroller[style*="scroll"] {
+                    // Keep FullCalendar's forced gutter without painting an empty scrollbar.
+                    overflow-y: hidden !important;
+                    scrollbar-gutter: stable;
+                }
+            }
+
             .fc-scrollgrid-section-body {
                 &:not(.fc-scrollgrid-section-liquid) .fc-scroller-harness {
                     background-color: $o-view-background-color;
