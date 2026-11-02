@@ -327,12 +327,7 @@ class ChatbotScriptStep(models.Model):
             except UserError:
                 raise ValidationError(self.env._("'%s' is not a valid phone number.", user_text_answer))
 
-        if self.step_type in [
-            "question_email",
-            "question_phone",
-            "free_input_single",
-            "free_input_multi",
-        ]:
+        if self.step_type in ["question_email", "question_phone"]:
             chatbot_message = self.env['chatbot.message'].search([
                 ('discuss_channel_id', '=', discuss_channel.id),
                 ('script_step_id', '=', self.id),
