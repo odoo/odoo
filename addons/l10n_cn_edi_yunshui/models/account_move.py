@@ -11,7 +11,10 @@ from .l10n_cn_edi_document import (
     RED_FORM_REASONS,
     SUBMISSION_GRACE,
 )
-from odoo.addons.l10n_cn_edi_yunshui.tools import L10nCnEdiProviderUnreachable
+from odoo.addons.l10n_cn_edi_yunshui.tools import (
+    INVOICE_KIND,
+    L10nCnEdiProviderUnreachable,
+)
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 
 INVOICE_TYPE_CODES = [
@@ -31,6 +34,7 @@ _logger = logging.getLogger(__name__)
 
 # The bureau's 发票行性质 (line nature).
 LINE_NORMAL, LINE_DISCOUNT, LINE_DISCOUNTED = '0', '1', '2'
+TAX_RATES = {'0', '0.01', '0.03', '0.04', '0.05', '0.06', '0.09', '0.11', '0.13', '0.17'}
 
 
 class AccountMove(models.Model):
@@ -402,10 +406,19 @@ class AccountMove(models.Model):
         """Issue the red fapiao of this credit note directly, without a red form."""
         self.ensure_one()
         doc = self._l10n_cn_edi_get_document('fapiao')
-        values = self._l10n_cn_edi_prepare_red_form_values(original_move, doc)
-        doc._l10n_cn_edi_attach_sent_data(values)
+        # A full red (2.1.2): Yunshui takes the buyer and the lines from the original fapiao.
+        payload = {
+            'fpqqlsh': doc.serial_no,
+            'nsrsbh': self.company_id.vat,
+            'invoiceKind': INVOICE_KIND[original_move.l10n_cn_edi_invoice_type_code],
+            'invoiceType': '2',
+            'originInvoiceNo': original_move.l10n_cn_edi_fapiao_no,
+            'redReason': self.l10n_cn_edi_red_form_reason,
+            'deliverType': '0',
+        }
+        doc._l10n_cn_edi_attach_sent_data(payload)
         try:
-            result = client.issue_direct_red(values)
+            result = client.issue(payload)
         except L10nCnEdiProviderUnreachable as e:
             doc._l10n_cn_edi_set_unreachable(client, e)
             return None
@@ -480,9 +493,9 @@ class AccountMove(models.Model):
             return None
         doc = self._l10n_cn_edi_get_document('fapiao')
         try:
-            values = self._l10n_cn_edi_prepare_invoice_values(doc)
-            doc._l10n_cn_edi_attach_sent_data(values)
-            result = client.issue_invoice(values)
+            payload = self._l10n_cn_edi_prepare_issue_payload(doc)
+            doc._l10n_cn_edi_attach_sent_data(payload)
+            result = client.issue(payload)
         except L10nCnEdiProviderUnreachable as e:
             doc._l10n_cn_edi_set_unreachable(client, e)
             return None
@@ -512,22 +525,6 @@ class AccountMove(models.Model):
                 if error := doc._l10n_cn_edi_apply_fapiao_result(result, client):
                     errors[doc.move_id] = error
         return errors
-
-    def _l10n_cn_edi_build_totals_warning(self, result):
-        """Warn when the provider issued other amounts than the move's, e.g. content edited under a reused serial."""
-        self.ensure_one()
-        amounts = self._l10n_cn_edi_amounts()
-        if not any(
-            result.get(key) is not None and self.currency_id.compare_amounts(abs(result[key]), abs(amount))
-            for key, amount in amounts.items()
-        ):
-            return False
-        return self.env._(
-            "E-Fapiao amount mismatch: the provider issued %(provider)s (untaxed/tax/total), Odoo has %(odoo)s. "
-            "Please review this document manually.",
-            provider=" / ".join(str(abs(result[key])) if result.get(key) is not None else "-" for key in amounts),
-            odoo=" / ".join(str(abs(amount)) for amount in amounts.values()),
-        )
 
     def _l10n_cn_edi_issued_document(self):
         """Return the document of the fapiao Odoo issued for this move, if any."""
@@ -641,64 +638,64 @@ class AccountMove(models.Model):
     # Fapiao content
     # ------------------------------------------------------------------
 
-    def _l10n_cn_edi_amounts(self):
+    def _l10n_cn_edi_prepare_issue_payload(self, document):
+        """Return the simpleInvoiceIssue payload (2.1.2) of this invoice's fapiao, sent with ``document``."""
         self.ensure_one()
-        return {
-            'amount_untaxed': round(sum(self._l10n_cn_edi_product_lines().mapped('price_subtotal')), 2),
-            'amount_tax': round(self.amount_tax, 2),
-            'amount_total': round(self.amount_total, 2),
-        }
-
-    def _l10n_cn_edi_prepare_invoice_values(self, document):
-        """Return the content of this invoice's fapiao, sent with ``document``."""
-        self.ensure_one()
+        # The buyer is the legal entity; the address and phone are the invoiced contact's.
+        buyer = self.commercial_partner_id
         partner = self.partner_id
         remark = str(self.narration) if self.narration else ''
-        buyer_phone = False
+        payload = {
+            'fpqqlsh': document.serial_no,
+            'nsrsbh': self.company_id.vat,
+            'invoiceKind': INVOICE_KIND[self.l10n_cn_edi_invoice_type_code],
+            'invoiceType': '1',
+            'businessType': '1' if buyer.vat else '0',
+            'invoiceAmount': f"{self.amount_total:.2f}",
+            'payerName': buyer.name or '',
+            'deliverType': '0',
+            'invoiceItems': self._l10n_cn_edi_prepare_lines(),
+        }
+        if self.company_id.l10n_cn_edi_drawer:
+            payload['invoicer'] = self.company_id.l10n_cn_edi_drawer
+        if buyer.vat:
+            payload['payerRegisterNo'] = buyer.vat
+        if address := ' '.join(filter(None, [partner.street, partner.street2, partner.city])):
+            payload['payerAddress'] = address
         if partner.phone:
-            formatted_phone = phone_format(
+            phone = phone_format(
                 partner.phone,
                 partner.country_id.code,
                 partner.country_id.phone_code,
                 force_format='E164',
                 raise_exception=False,
             ) or ''
-            if formatted_phone.startswith('+86'):
-                buyer_phone = formatted_phone[3:]
+            if phone.startswith('+86'):
+                payload['payerPhone'] = phone[3:]
             else:
                 # The fapiao only has room for a mainland number; keep the others readable in the remark.
                 remark = f"{remark} | Phone: {partner.phone}".strip(' |')
+        if 'payerAddress' in payload or 'payerPhone' in payload:
+            payload['sfzsgmfdzdh'] = 'Y'
         bank = self.l10n_cn_buyer_bank_id
-        return {
-            'serial_no': document.serial_no,
-            'invoice_type_code': self.l10n_cn_edi_invoice_type_code,
-            # The buyer is the legal entity; the address and phone are the invoiced contact's.
-            'buyer_name': self.commercial_partner_id.name or '',
-            'buyer_tax_no': self.commercial_partner_id.vat or '',
-            'buyer_is_natural_person': not self.commercial_partner_id.vat,
-            'buyer_address': ' '.join(filter(None, [partner.street, partner.street2, partner.city])),
-            'buyer_phone': buyer_phone,
-            'buyer_email': partner.email or '',
-            # The fapiao prints bank and account on one line (开户行及账号).
-            'buyer_bank': f"{bank.bank_name or ''} {bank.account_number or ''}".strip(),
-            # For providers that take them apart.
-            'buyer_bank_name': bank.bank_name or '',
-            'buyer_bank_account': bank.account_number or '',
-            'drawer': self.company_id.l10n_cn_edi_drawer or self.env.user.name,
-            'remark': remark,
-            **self._l10n_cn_edi_amounts(),
-            'lines': self._l10n_cn_edi_prepare_lines(),
-        }
+        if bank.bank_name:
+            payload['payerBank'] = bank.bank_name
+        if bank.account_number:
+            payload['payerBankaccount'] = bank.account_number
+        if bank.bank_name or bank.account_number:
+            payload['sfzsgmfyhzh'] = 'Y'
+        payload['bz'] = remark
+        return payload
 
     def _l10n_cn_edi_product_lines(self):
         return self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
 
     def _l10n_cn_edi_prepare_lines(self):
         """
-        Fapiao lines, with negative lines spread proportionally over the others as discount lines.
+        The fapiao's items, with negative lines spread proportionally over the others as discount lines.
 
-        The bureau has no negative line: a discount is a 折扣行 (nature '1') right after the
-        被折扣行 (nature '2') it reduces.
+        The bureau has no negative line: a discount is a 折扣行 (rowType '1') right after the
+        被折扣行 (rowType '2') it reduces. Amounts include the tax.
         """
         product_lines = self._l10n_cn_edi_product_lines()
         for line in product_lines:
@@ -718,13 +715,26 @@ class AccountMove(models.Model):
         total_discount_tax = sum(line.price_total - line.price_subtotal for line in negative_lines)
         total_positive = sum(positive_lines.mapped('price_subtotal'))
         remaining_discount, remaining_discount_tax = total_discount, total_discount_tax
-        lines = []
+        items = []
         for index, line in enumerate(positive_lines):
+            name = (line.name or line.product_id.name or '').replace('\n', ' ')[:100]
             if not line.l10n_cn_tax_category_id:
-                raise UserError(self.env._("Missing Tax Category Code on line: %(line)s", line=line.name))
+                raise UserError(self.env._("Missing Tax Category Code on line: %(line)s", line=name))
+            tax = line.tax_ids
+            if tax.l10n_cn_vat_special_policy or tax.l10n_cn_reduced_tax_code:
+                raise UserError(self.env._(
+                    "Yunshui simple issuance does not support special VAT treatment (line %(line)s).",
+                    line=name,
+                ))
+            rate = f"{abs(tax.amount) / 100.0:.8f}".rstrip('0').rstrip('.')
+            if rate not in TAX_RATES:
+                raise UserError(self.env._(
+                    "Yunshui does not accept a %(rate)s%% tax rate (line %(line)s).",
+                    rate=abs(tax.amount),
+                    line=name,
+                ))
             amount = round(line.price_subtotal, 2)
-            tax = round(line.price_total - line.price_subtotal, 2)
-            tax_record = line.tax_ids
+            amount_tax = round(line.price_total - line.price_subtotal, 2)
             discount, discount_tax = 0.0, 0.0
             if total_discount < 0 and total_positive > 0:
                 if index == len(positive_lines) - 1:
@@ -740,93 +750,24 @@ class AccountMove(models.Model):
                         "100% line discounts are not supported for e-Fapiao. Use an explicit negative line instead.",
                     ))
                 factor = line.discount / 100.0
-                gross, gross_tax = round(amount / (1.0 - factor), 2), round(tax / (1.0 - factor), 2)
+                gross, gross_tax = round(amount / (1.0 - factor), 2), round(amount_tax / (1.0 - factor), 2)
                 discount += amount - gross
-                discount_tax += tax - gross_tax
-                amount, tax = gross, gross_tax
-            is_discounted = discount < 0
-            line_values = {
-                'price_include': tax_record.price_include,
-                'line_no': len(lines) + 1,
-                'nature': LINE_DISCOUNTED if is_discounted else LINE_NORMAL,
-                'name': (line.name or line.product_id.name or '').replace('\n', ' ')[:100],
-                'tax_category_code': line.l10n_cn_tax_category_id.code,
-                'tax_rate': abs(tax_record.amount) / 100.0,
-                'amount_untaxed': amount,
-                'amount_tax': tax,
-                'amount_total': round(amount + tax, 2),
-                'quantity': line.quantity or False,
-                'unit_price': round(amount / line.quantity, 8) if line.quantity else round(line.price_unit, 8),
-                'uom': line.product_uom_id.name or '',
-                'vat_special_policy': tax_record.l10n_cn_vat_special_policy or False,
-                'free_tax_mark': tax_record.l10n_cn_free_tax_mark or False,
-                'reduced_tax_code': tax_record.l10n_cn_reduced_tax_code or False,
+                discount_tax += amount_tax - gross_tax
+                amount, amount_tax = gross, gross_tax
+            item = {
+                'itemName': name,
+                'taxRate': rate,
+                'itemNo': line.l10n_cn_tax_category_id.code,
             }
-            lines.append(line_values)
+            if tax.l10n_cn_free_tax_mark:
+                item['zeroRateFlag'] = tax.l10n_cn_free_tax_mark
+            is_discounted = discount < 0
+            row = {**item, 'rowType': LINE_DISCOUNTED if is_discounted else LINE_NORMAL, 'amount': f"{amount + amount_tax:.2f}"}
+            if line.quantity:
+                row['quantity'] = f"{line.quantity:.13f}".rstrip('0').rstrip('.')
+            if line.product_uom_id.name:
+                row['unit'] = line.product_uom_id.name
+            items.append(row)
             if is_discounted:
-                lines.append({
-                    **line_values,
-                    'line_no': len(lines) + 1,
-                    'nature': LINE_DISCOUNT,
-                    'amount_untaxed': round(discount, 2),
-                    'amount_tax': round(discount_tax, 2),
-                    'amount_total': round(discount + discount_tax, 2),
-                    'quantity': False,
-                    'unit_price': False,
-                    'uom': '',
-                })
-        return lines
-
-    # ------------------------------------------------------------------
-    # Red forms
-    # ------------------------------------------------------------------
-
-    def _l10n_cn_edi_prepare_red_form_values(self, original_move, document):
-        """Return the content of this credit note's red fapiao, sent with ``document``."""
-        self.ensure_one()
-        amounts = self._l10n_cn_edi_amounts()
-        original_amounts = original_move._l10n_cn_edi_amounts()
-        return {
-            'serial_no': document.serial_no,
-            'reason': self.l10n_cn_edi_red_form_reason,
-            'seller_name': self.company_id.name,
-            # Same buyer as the original fapiao: the legal entity, not the invoiced contact.
-            'buyer_name': self.commercial_partner_id.name or '',
-            'buyer_tax_no': self.commercial_partner_id.vat or '',
-            'buyer_email': self.partner_id.email or '',
-            'original_fapiao_no': original_move.l10n_cn_edi_fapiao_no,
-            'original_fapiao_date': original_move.l10n_cn_edi_fapiao_date or original_move.invoice_date,
-            'original_invoice_type_code': original_move.l10n_cn_edi_invoice_type_code,
-            'original_amount_untaxed': original_amounts['amount_untaxed'],
-            'original_amount_tax': original_amounts['amount_tax'],
-            'amount_untaxed': -abs(amounts['amount_untaxed']),
-            'amount_tax': -abs(amounts['amount_tax']),
-            'lines': self._l10n_cn_edi_prepare_red_form_lines(),
-        }
-
-    def _l10n_cn_edi_prepare_red_form_lines(self):
-        """
-        Red form lines: discounts netted into the line they reduce, every amount negative.
-
-        ``original_line_no`` points at the line of the original fapiao being credited, which
-        assumes the credit note keeps the original invoice's line order.
-        """
-        red_lines = []
-        for line in self._l10n_cn_edi_prepare_lines():
-            if line['nature'] == LINE_DISCOUNT:
-                parent = red_lines[-1]
-                parent['amount_untaxed'] = round(parent['amount_untaxed'] + line['amount_untaxed'], 2)
-                parent['amount_tax'] = round(parent['amount_tax'] + line['amount_tax'], 2)
-                parent['amount_total'] = round(parent['amount_total'] + line['amount_total'], 2)
-                if parent.get('quantity'):
-                    parent['unit_price'] = round(parent['amount_untaxed'] / parent['quantity'], 8)
-                parent['nature'] = LINE_NORMAL
-                continue
-            red_lines.append({**line, 'original_line_no': line['line_no']})
-        for line in red_lines:
-            line['amount_untaxed'] = -abs(line['amount_untaxed'])
-            line['amount_tax'] = -abs(line['amount_tax'])
-            line['amount_total'] = -abs(line['amount_total'])
-            if line['quantity']:
-                line['quantity'] = -abs(line['quantity'])
-        return red_lines
+                items.append({**item, 'rowType': LINE_DISCOUNT, 'amount': f"{discount + discount_tax:.2f}"})
+        return items

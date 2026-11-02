@@ -7,6 +7,7 @@ from unittest.mock import patch
 from odoo.tests import BaseCase, tagged
 
 from odoo.addons.l10n_cn_edi_yunshui.crypto import sm4_envelope as env
+from odoo.addons.l10n_cn_edi_yunshui.tests.common import build_response
 
 IDENTITY = 'b1492023dcd5368e'  # 授权码 (16-char)
 PLATFORM = '101000'  # 组织编码 (6-digit)
@@ -16,7 +17,7 @@ TS = '20231014180655'
 
 def _signed_response(datagram, zip_code='0'):
     """Return a response correctly signed over an arbitrary datagram."""
-    response = env.build_response('x', {}, IDENTITY, PLATFORM, timestamp=TS, zip_code=zip_code)
+    response = build_response('x', {}, IDENTITY, PLATFORM, timestamp=TS, zip_code=zip_code)
     response['datagram'] = datagram
     key = env.derive_sm4_key(IDENTITY, PLATFORM, TS)
     response['signature'] = env.sign(*(response[field] for field in env.SIGNED_FIELDS), key)
@@ -90,7 +91,7 @@ class TestSm4Envelope(BaseCase):
         payload = {'fpqqlsh': 'ABC123', '备注': '中文'}
         for zip_code in ('0', '1', '2'):
             with self.subTest(zip_code=zip_code):
-                response = env.build_response('x', payload, IDENTITY, PLATFORM, timestamp=TS, zip_code=zip_code)
+                response = build_response('x', payload, IDENTITY, PLATFORM, timestamp=TS, zip_code=zip_code)
                 self.assertEqual(env.verify_and_decrypt(response, IDENTITY, PLATFORM), payload)
 
     def test_large_payload_is_still_sent_uncompressed(self):
@@ -101,12 +102,12 @@ class TestSm4Envelope(BaseCase):
 
     def test_response_signature_is_ignored(self):
         """Responses echo the request's signature, which Yunshui says to ignore."""
-        response = env.build_response('x', {'a': 1}, IDENTITY, PLATFORM, timestamp=TS)
+        response = build_response('x', {'a': 1}, IDENTITY, PLATFORM, timestamp=TS)
         response['signature'] = 'BAD'
         self.assertEqual(env.verify_and_decrypt(response, IDENTITY, PLATFORM), {'a': 1})
 
     def test_outer_code_failure_raises(self):
-        response = env.build_response('x', {}, IDENTITY, PLATFORM, timestamp=TS, code='9994', msg='fpqqlsh duplicate')
+        response = build_response('x', {}, IDENTITY, PLATFORM, timestamp=TS, code='9994', msg='fpqqlsh duplicate')
         with self.assertRaises(env.YunshuiProtocolError) as error:
             env.verify_and_decrypt(response, IDENTITY, PLATFORM)
         self.assertEqual(error.exception.code, '9994')
@@ -123,9 +124,9 @@ class TestSm4Envelope(BaseCase):
     def test_unreadable_envelopes_are_malformed(self):
         missing = {}
         for field in ('access_token', 'datagram', 'zipCode'):
-            missing[field] = env.build_response('x', {'a': 1}, IDENTITY, PLATFORM, timestamp=TS)
+            missing[field] = build_response('x', {'a': 1}, IDENTITY, PLATFORM, timestamp=TS)
             del missing[field][field]
-        bad_token = env.build_response('x', {'a': 1}, IDENTITY, PLATFORM, timestamp=TS)
+        bad_token = build_response('x', {'a': 1}, IDENTITY, PLATFORM, timestamp=TS)
         bad_token['access_token'] = 'abc'
         raw_ciphertext = env.sm4_encrypt(b'{"a":1}', env.derive_sm4_key(IDENTITY, PLATFORM, TS))
         truncated_gzip = gzip.compress(_encrypted_hex(b'{"a":1}'))[:-12]
@@ -150,13 +151,13 @@ class TestSm4Envelope(BaseCase):
 
     def test_decompression_is_capped(self):
         for zip_code in ('1', '2'):
-            response = env.build_response('x', {'blob': 'x' * 4096}, IDENTITY, PLATFORM, timestamp=TS, zip_code=zip_code)
+            response = build_response('x', {'blob': 'x' * 4096}, IDENTITY, PLATFORM, timestamp=TS, zip_code=zip_code)
             with self.subTest(zip_code=zip_code), patch.object(env, 'MAX_DECOMPRESSED_BYTES', 1024), \
                     self.assertRaisesRegex(env.MalformedEnvelope, 'too large'):
                 env.verify_and_decrypt(response, IDENTITY, PLATFORM)
 
     def test_success_returns_inner_dict(self):
-        response = env.build_response(
+        response = build_response(
             'ele.encrypt.queryResult', {'code': '1002', 'message': '开票中'}, IDENTITY, PLATFORM, timestamp=TS,
         )
         self.assertEqual(env.verify_and_decrypt(response, IDENTITY, PLATFORM), {'code': '1002', 'message': '开票中'})

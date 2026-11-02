@@ -13,6 +13,14 @@ from odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client import YunshuiClient
 HOST = 'https://llys.51fapiao.cn/openapi'
 
 
+def build_response(interface_code, datagram, identity_code, platform_code, timestamp=None, zip_code='0', code='1000', msg=''):
+    """A response envelope as the gateway sends it: built like a request, with the outer verdict."""
+    request = sm4_envelope.build_request(
+        interface_code, datagram, identity_code, platform_code, '0' * 18, timestamp=timestamp, zip_code=zip_code,
+    )
+    return dict(request, code=code, msg=msg)
+
+
 class MockResponse:
 
     def __init__(self, body=None, status=200, content=b''):
@@ -73,7 +81,7 @@ class MockYunshuiGateway:
         if isinstance(response_inner, dict):
             outer_code = str(response_inner.pop('_outer_code', outer_code))
             outer_msg = response_inner.pop('_outer_msg', outer_msg)
-        response_outer = sm4_envelope.build_response(
+        response_outer = build_response(
             interface_code,
             response_inner,
             self.identity_code,
@@ -173,11 +181,8 @@ class FakeClient:
     def get_session_state(self):
         return self._answer('get_session_state') or 'ok'
 
-    def issue_invoice(self, values):
-        return self._answer('issue_invoice', values)
-
-    def issue_direct_red(self, values):
-        return self._answer('issue_direct_red', values)
+    def issue(self, payload):
+        return self._answer('issue', payload)
 
     def wait(self, seconds):
         self.calls.append(('wait', (seconds,)))
