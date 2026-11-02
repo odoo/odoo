@@ -3622,6 +3622,22 @@ input[value*="data-oe-translation-source-sha"] {
     transition-timing-function: ease-out;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    /* Replace motion (slide, bounce, rotate, zoom, ...) by a plain fade. The
+       animation still runs so that "animationend" fires and the animation
+       interaction completes its lifecycle. Two classes of specificity, defined
+       after the animation rules, override ".o_anim_xxx.o_anim_from_yyy" while
+       the inline "animation-name" used by the JS reset still wins. */
+    .o_animate:not(.o_animate_on_scroll, .o_anim_fade_out) {
+        animation-name: o_anim_fade_in;
+    }
+    /* Scroll-driven animations are scrubbed with the scroll position: show
+       their end state instead. */
+    .o_animate.o_animate_on_scroll {
+        animation: none;
+    }
+}
+
 /* Compatibility <= 13.0 */
 .o_anim_dur500 {
     animation-duration: 500ms;
