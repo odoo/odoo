@@ -18,7 +18,7 @@
     .o_list_button > .o_btn_cancel_registration {
         color: var(--danger);
         &:hover {
-            color: darken($danger, $link-shade-percentage);
+            color: hsl(from var(--danger) h s calc(l - var(--o-bs-link-shade-percentage)));
         }
     }
 }
