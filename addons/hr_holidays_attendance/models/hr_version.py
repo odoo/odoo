@@ -95,7 +95,7 @@ class HrVersion(models.Model):
                 ci = leave.date_from.replace(tzinfo=UTC)
                 co = leave.date_to.replace(tzinfo=UTC)
                 time_on_raw[rid].append((ci, co, dummy))
-                wt_iv_by_rid[rid].append((ci, co, leave.work_entry_type_id))
+                wt_iv_by_rid[rid].append((ci, co, self._get_leave_type_against_attendances(leave)))
 
         for version in self:
             tz = ZoneInfo(version._get_tz())
@@ -127,10 +127,10 @@ class HrVersion(models.Model):
                     att_by_range[check_in, work_check_out] = att
 
             # priority-resolve attendance against wt-leave intervals (lower sequence wins)
-            leave_types = {wet for _, _, wet in wt_iv_by_rid.get(rid, [])}
-            combined = raw_att + wt_iv_by_rid.get(rid, [])
+            wt_intervals = wt_iv_by_rid.get(rid, [])
+            combined = raw_att + wt_intervals
             for seg_start, seg_stop, wet in self._resolve_attendance_intervals(combined):
-                if wet in leave_types:
+                if any(ci <= seg_start and co >= seg_stop and leave_wet == wet for ci, co, leave_wet in wt_intervals):
                     # wt-leave won; so we skip and let base handle it
                     continue
                 # attendance won: look up the source record (dict miss on split sub-segments,
@@ -168,6 +168,10 @@ class HrVersion(models.Model):
         ))._get_version_work_entries_values(date_start, date_stop)
 
         return base_vals + attendance_vals
+
+    def _get_leave_type_against_attendances(self, leave):
+        """Return the time type whose sequence ``leave`` competes with against the attendances."""
+        return leave.work_entry_type_id
 
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
         """Also remove the days with an attendance (context ``knocked_day_intervals``)."""
