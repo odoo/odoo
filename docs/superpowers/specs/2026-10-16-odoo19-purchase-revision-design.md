@@ -3,7 +3,7 @@
 ## Control Metadata
 - Child spec ID: W1-PURCHASE-REVISION
 - Wave: Wave 1 (Commercial and financial core)
-- Status: In review — design approved 2026-10-16; document review pending
+- Status: Approved / Implemented (2026-11-02) — `od19_purchase_revision` installed on `odoo19_pdev`; 13 tests pass (`0 failed, 0 error(s)`)
 - Owner: Procurement domain lead
 - Reviewer: Technical supervisor
 - Approvers: Business owner; Technical supervisor
@@ -18,6 +18,7 @@
 - 2026-10-16: ผู้ใช้ยืนยัน — ขอบเขตเฟสนี้เฉพาะ Purchase Order
 - 2026-10-16: ผู้ใช้ยืนยัน — กลุ่มสิทธิ์ที่ใช้คือ `Purchase Director` (`od19_purchase_procurement_core.group_purchase_director`)
 - 2026-10-16: ผู้ใช้ยืนยัน — ต้องการพิมพ์เลข Revision ในใบ PO (ทำแยกจาก ISO footer)
+- 2026-11-02: Implementation verified — module `od19_purchase_revision` = `installed` on `odoo19_pdev`; `--test-enable` reports 13 tests, `0 failed, 0 error(s)` (Revision chain, `/R00` suffix, director-only access, superseded read-only guard, and printed revision)
 
 ## Discovery Evidence
 - Current-state references:
