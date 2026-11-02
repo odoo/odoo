@@ -24,10 +24,21 @@ export async function executeButtonCallback(el, fct) {
     }
 
     disableButtons();
+
+    const observer = new MutationObserver(() => {
+        const newBtns = [...el.querySelectorAll("button:not([disabled])")];
+        for (const btn of newBtns) {
+            btn.setAttribute("disabled", "1");
+        }
+        btns.push(...newBtns);
+    });
+    observer.observe(el, { childList: true, subtree: true });
+
     let res;
     try {
         res = await fct();
     } finally {
+        observer.disconnect();
         enableButtons();
     }
     return res;

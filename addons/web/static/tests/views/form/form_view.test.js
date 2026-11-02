@@ -13495,3 +13495,49 @@ test(`cached onchange - don't loose changes`, async () => {
     expect(`.o_last_breadcrumb_item`).toHaveText("New");
     expect.verifySteps(["onchange", "onchange"]);
 });
+
+test(`buttons rendered while an action is running are disabled until it is resolved`, async () => {
+    const deferred = new Deferred();
+    mockService("action", {
+        async doActionButton() {
+            await deferred;
+        },
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <header>
+                    <button name="post" string="Confirm" type="object"/>
+                </header>
+                <sheet>
+                    <notebook>
+                        <page string="First">
+                            <button name="some_method" string="Do it" type="object"/>
+                        </page>
+                        <page string="Second">
+                            <field name="foo"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        `,
+        resId: 1,
+    });
+    expect(`.o_notebook button[name=some_method]:not(:disabled)`).toHaveCount(1);
+
+    await contains(`.o_form_statusbar button[name=post]`).click();
+    await animationFrame();
+    expect(`.o_notebook button[name=some_method]:disabled`).toHaveCount(1);
+
+    // coming back to the page renders its button again: it must stay disabled while the action runs
+    await contains(`.o_notebook .nav-link:eq(1)`).click();
+    await contains(`.o_notebook .nav-link:eq(0)`).click();
+    expect(`.o_notebook button[name=some_method]:disabled`).toHaveCount(1);
+
+    deferred.resolve();
+    await animationFrame();
+    expect(`.o_notebook button[name=some_method]:not(:disabled)`).toHaveCount(1);
+});
