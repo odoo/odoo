@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.OptionsContainer">
     <div t-if="this.options().length"
-        class="o_hb_options_container mb-1" t-ref="this.rootRef" t-att-data-container-title="this.title">
+        class="o_input_number_no_arrows o_hb_options_container mb-1" t-ref="this.rootRef" t-att-data-container-title="this.title">
         <div class="o_hb_options_container_header d-flex align-items-center justify-content-between">
             <t
                 t-tag="this.props.toggleFold ? 'button' : 'div'"
