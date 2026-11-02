@@ -2078,6 +2078,47 @@ test("parse link correctly in html composer", async () => {
 });
 
 test.tags("html composer");
+test("pasted code keeps its line breaks and indentation, pasted text its formatting", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    pasteHtml(editor, "<pre>if (a) {\n    b();<br>\tc();<br>}</pre><p>Hello <b>world</b></p>");
+    await waitFor(".o-mail-Composer-html b:text('world')");
+    expect(".o-mail-Composer-html").toHaveInnerHTML(
+        `<div class="o-paragraph">if (a) {<br>&nbsp; &nbsp; b();<br>&nbsp; &nbsp; c();<br>}</div><p>Hello <b>world</b></p>`
+    );
+});
+
+test.tags("html composer");
+test("pasted code copied with its white-space keeps its line breaks", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    pasteHtml(
+        editor,
+        `<span style="white-space: pre-wrap;">const a = 1;</span><span style="white-space: pre-wrap;">\n</span><span style="white-space: pre-wrap;">const b = 2;</span>`
+    );
+    await waitFor(".o-mail-Composer-html :contains('const b = 2;')");
+    expect(".o-mail-Composer-html").toHaveInnerHTML(
+        `<div class="o-paragraph"><span>const a = 1;<br>const b = 2;</span></div>`
+    );
+});
+
+test.tags("html composer");
 test("mention insertion adds FEFF markers for safe cursor placement", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
