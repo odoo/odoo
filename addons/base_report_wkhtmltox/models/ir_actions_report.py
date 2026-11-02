@@ -212,12 +212,7 @@ class IrActionsReport(models.Model):
             body = ''.join(lxml.html.tostring(c, encoding='unicode') for c in body_parent.getchildren())
             bodies.append(body)
 
-        # Get paperformat arguments set in the root html tag. They are prioritized over
-        # paperformat-record arguments.
-        specific_paperformat_args = {}
-        for attribute in root.items():
-            if attribute[0].startswith('data-report-'):
-                specific_paperformat_args[attribute[0]] = attribute[1]
+        specific_paperformat_args = self._get_specific_paperformat_args(header_node, root)
 
         header = self.env['ir.qweb']._render(layout.id, {
             'subst': True,
