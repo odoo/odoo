@@ -101,6 +101,21 @@ class TestMailGroupMessage(TestMailListCommon):
         self.assertEqual(len(mails), len(self.test_group.member_ids) - 1)
         self.assertNotIn(self.test_group_member_1.email, mails.mapped('email_to'), 'Should not have send the email to the original author')
 
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_email_reply_to_group(self):
+        """ Test that the reply-to of group messages is the bare group email,
+        without the author name, as replying reaches the whole group. """
+        self.test_group.write({'moderation': False})
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                GROUP_TEMPLATE, self.email_from_unknown,
+                self.test_group.alias_id.display_name,
+                subject='Test subject', target_model='mail.group')
+
+        message = self.env['mail.group.message'].search([('subject', '=', 'Test subject')])
+        self.assertEqual(message.mail_message_id.reply_to, 'test.mail.group@test.mycompany.com')
+
     @mute_logger('odoo.addons.base.models.ir_access')
     def test_mail_group_message_security_groups(self):
         user_group = self.env.ref('base.group_partner_manager')

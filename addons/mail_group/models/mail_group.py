@@ -277,6 +277,14 @@ class MailGroup(models.Model):
         """Add the method to make the mail gateway flow work with this model."""
         return
 
+    def _notify_get_reply_to(self, default=None, author_id=False):
+        """ Use the bare group email as reply-to, without the author name: replying
+        reaches every member of the group, not only the author. """
+        reply_to = super()._notify_get_reply_to(default=default, author_id=author_id)
+        for group in self.sudo().filtered('alias_email'):
+            reply_to[group.id] = group.alias_email
+        return reply_to
+
     def message_post(self, body='', subject=None, email_from=None, author_id=None, **kwargs):
         """ Custom posting process. This model does not inherit from ``mail.thread``
         but uses the mail gateway so few methods should be defined.
