@@ -36,7 +36,7 @@
                     class="d-flex w-75 w-md-50 m-auto gap-1"
                 >
                     <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
-                    <select name="trigger_product_id" class="form-select">
+                    <select name="trigger_product_id" class="form-select" t-on-focusin.stop="">
                         <t
                             t-foreach="props.program.trigger_products"
                             t-as="product"
