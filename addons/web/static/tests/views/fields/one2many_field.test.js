@@ -8611,6 +8611,46 @@ test("one2many with several pages, onchange return command update on unknown rec
     await clickSave();
 });
 
+test.tags("desktop");
+test("one2many with several pages sorted on a column, onchange updates a record of another page", async () => {
+    Turtle._records.push({ id: 4, turtle_foo: "zoe" });
+    Partner._records[0].turtles = [1, 2, 3, 4];
+    Partner._onChanges = {
+        foo: function (obj) {
+            obj.turtles = [[1, 4, { turtle_foo: "zoe updated" }]];
+        },
+    };
+    onRpc("web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].turtles).toEqual([[1, 4, { turtle_foo: "zoe updated" }]]);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="foo"/>
+                <field name="turtles">
+                    <list editable="bottom" limit="2">
+                        <field name="turtle_description" column_invisible="1"/>
+                        <field name="turtle_foo" invisible="turtle_description"/>
+                    </list>
+                </field>
+            </form>`,
+        resId: 1,
+    });
+
+    // sorting loads the records that were never displayed with the sorted column only
+    await contains("table thead [data-name='turtle_foo'].o_column_sortable").click();
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "kawa"]);
+
+    await contains(".o_field_widget[name=foo] input").edit("new foo");
+    expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["blip", "kawa"]);
+
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
+
 test("new record, with one2many with more default values than limit", async () => {
     await mountView({
         type: "form",
