@@ -64,17 +64,6 @@
             </field>
         </record>
 
-        <record id="account_journal_view_form_inherit_hr_expense" model="ir.ui.view">
-            <field name="name">account.journal.form.inherit.hr.expense</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="account.view_account_journal_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='type']" position="attributes">
-                    <attribute name="readonly">context.get('from_expense_employee_journal')</attribute>
-                </xpath>
-            </field>
-        </record>
-
         <record id="action_hr_expense_configuration" model="ir.actions.act_window">
             <field name="name">Settings</field>
             <field name="res_model">res.config.settings</field>

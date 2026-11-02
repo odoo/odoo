@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_expense_account_journal" model="account.journal">
+            <field name="name">Expense</field>
+            <field name="code">EXP</field>
+            <field name="type">purchase</field>
+            <!-- avoid being selected as default journal -->
+            <field name="sequence">99</field>
+            <field name="alias_name">purchase_expense</field>
+        </record>
+    </data>
+</odoo>

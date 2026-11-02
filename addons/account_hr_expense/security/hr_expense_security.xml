@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="res.groups.privilege" id="res_groups_privilege_expenses">
+        <field name="name">Expenses</field>
+        <field name="sequence">12</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
+    <record id="group_hr_expense_team_approver" model="res.groups">
+        <field name="name">Team Approver</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="res_groups_privilege_expenses"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_hr_expense_user" model="res.groups">
+        <field name="name">All Approver</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="res_groups_privilege_expenses"/>
+        <field name="implied_ids" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
+    </record>
+
+    <record id="group_hr_expense_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="sequence">30</field>
+        <field name="privilege_id" ref="res_groups_privilege_expenses"/>
+        <field name="implied_ids" eval="[(4, ref('hr_expense.group_hr_expense_user'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

@@ -24,8 +24,6 @@
                                 }"
                             />
                             <field name="employee_id" widget="many2one_avatar_user"/>
-                            <field name="tax_ids" widget="many2many_tags"/>
-                            <field name="tax_amount_currency" string="Tax"/>
                             <field name="analytic_distribution"
                                 string="Analytic"
                                 widget="analytic_distribution"
@@ -43,7 +41,6 @@
                             <span class="mx-1" invisible="split_possible">/</span>
                             <field name="total_amount_currency_original" widget='monetary' nolabel="1" invisible="split_possible"/>
                         </div>
-                        <field name="tax_amount_currency" widget='monetary' string="Taxes"/>
                     </group>
                     <field name="split_possible" invisible="1"/>
                     <footer>
