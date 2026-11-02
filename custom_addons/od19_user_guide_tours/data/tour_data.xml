@@ -446,4 +446,66 @@
         <field name="url">/odoo</field>
         <field name="custom">True</field>
     </record>
+
+    <!--
+        Modules installed / updated later (service contracts, doubtful debt,
+        sales retention, customer credit gate, purchase Jasper reports and the
+        accounting clearing wizards). These guides live inside an existing
+        application and are reachable from User Guide > Interactive Tours or
+        from /odoo?tour=<name>.
+    -->
+    <record id="tour_od19_service_contract" model="web_tour.tour">
+        <field name="name">od19_service_contract_tour</field>
+        <field name="sequence">221</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_doubtful_debt" model="web_tour.tour">
+        <field name="name">od19_doubtful_debt_tour</field>
+        <field name="sequence">222</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_sales_retention" model="web_tour.tour">
+        <field name="name">od19_sales_retention_tour</field>
+        <field name="sequence">223</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_credit_gate" model="web_tour.tour">
+        <field name="name">od19_credit_gate_tour</field>
+        <field name="sequence">224</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_purchase_jasper" model="web_tour.tour">
+        <field name="name">od19_purchase_jasper_tour</field>
+        <field name="sequence">225</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_accounting_clearing" model="web_tour.tour">
+        <field name="name">od19_accounting_clearing_tour</field>
+        <field name="sequence">226</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_sales_services" model="web_tour.tour">
+        <field name="name">od19_sales_services_tour</field>
+        <field name="sequence">227</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_service_card" model="web_tour.tour">
+        <field name="name">od19_service_card_tour</field>
+        <field name="sequence">228</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
+    <record id="tour_od19_petty_cash" model="web_tour.tour">
+        <field name="name">od19_petty_cash_tour</field>
+        <field name="sequence">229</field>
+        <field name="url">/odoo</field>
+        <field name="custom">True</field>
+    </record>
 </odoo>

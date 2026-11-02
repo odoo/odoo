@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'User Guide Tours',
-    'version': '19.0.1.3.0',
+    'version': '19.0.1.5.0',
     'category': 'Tools/User Guide',
     'summary': 'Interactive guided tours for all OD19 business modules',
     'description': """
@@ -98,6 +98,10 @@ Tours can be started from:
         'od19_document_pull',
         'od19_stock_jasper',
         'od19_apps_filter',
+        'od19_service_contract',
+        'od19_accounting_doubtful_debt',
+        'od19_sales_retention',
+        'od19_purchase_jasper',
     ],
     'data': [
         'data/tour_data.xml',
@@ -172,6 +176,15 @@ Tours can be started from:
             'od19_user_guide_tours/static/src/tours/document_pull_tour.js',
             'od19_user_guide_tours/static/src/tours/stock_jasper_tour.js',
             'od19_user_guide_tours/static/src/tours/apps_filter_tour.js',
+            'od19_user_guide_tours/static/src/tours/service_contract_tour.js',
+            'od19_user_guide_tours/static/src/tours/doubtful_debt_tour.js',
+            'od19_user_guide_tours/static/src/tours/sales_retention_tour.js',
+            'od19_user_guide_tours/static/src/tours/credit_gate_tour.js',
+            'od19_user_guide_tours/static/src/tours/purchase_jasper_tour.js',
+            'od19_user_guide_tours/static/src/tours/accounting_clearing_tour.js',
+            'od19_user_guide_tours/static/src/tours/sales_services_tour.js',
+            'od19_user_guide_tours/static/src/tours/service_card_tour.js',
+            'od19_user_guide_tours/static/src/tours/petty_cash_tour.js',
         ],
     },
     'icon': '/od19_user_guide_tours/static/description/icon.svg',
