@@ -13,8 +13,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { describe, test } from "@odoo/hoot";
-import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { click as hootClick, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 import { defineLivechatModels } from "./livechat_test_helpers";
@@ -430,4 +430,52 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
     await focus(".o-mail-Composer-html");
     triggerHotkey("Tab");
     await contains(".o-mail-NotificationItem.o-active", { text: "Visitor 11" });
+});
+
+test.tags("focus required");
+test("click away after posting moves focus out of composer with unread livechat", async () => {
+    const pyEnv = await startServer();
+    const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
+    const channelIds = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+            name: "Livechat 1",
+        },
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    message_unread_counter: 1,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+            name: "Livechat 2",
+        },
+    ]);
+    pyEnv["mail.message"].create({
+        author_guest_id: guestId_2,
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: channelIds[1],
+    });
+    await start();
+    await openDiscuss(channelIds[0]);
+    await waitFor(".o-mail-Composer [o-we-hint-text='Tab to next live chat']:count(1)");
+    await insertTextInComposer(".o-mail-Composer", "Hi there");
+    await press("Enter");
+    await waitFor(".o-mail-Message:has(:text('Hi there')):count(1)");
+    await waitFor(".o-mail-Composer-html:focus:count(1)");
+    await hootClick(".o-mail-Thread");
+    await waitFor(".o-mail-Thread:focus:count(1)");
+    expect(".o-mail-Composer-html:focus").toHaveCount(0);
 });

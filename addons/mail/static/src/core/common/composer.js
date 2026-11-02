@@ -40,6 +40,7 @@ import {
     shallowEqual,
     signal,
     t,
+    untrack,
     useApp,
     useListener,
     useOnChange,
@@ -410,10 +411,16 @@ export class Composer extends Component {
                 if (!this.editor?.editable) {
                     return;
                 }
-                setElementContent(this.editor.editable, composerHtml);
-                this.editor.processThrough("html_compatibility_processors", this.editor.editable);
-                this.editor.shared.mail_composer.setCursorEnd();
-                this.editor.shared.history.commit();
+                // only the content syncs the editor, not what the editor reads
+                untrack(() => {
+                    setElementContent(this.editor.editable, composerHtml);
+                    this.editor.processThrough(
+                        "html_compatibility_processors",
+                        this.editor.editable
+                    );
+                    this.editor.shared.mail_composer.setCursorEnd();
+                    this.editor.shared.history.commit();
+                });
             })
         );
     }
