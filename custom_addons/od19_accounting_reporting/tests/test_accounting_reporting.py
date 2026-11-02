@@ -25,6 +25,12 @@ class TestAccountingReporting(AccountTestInvoicingCommon):
         cls.company_data_2 = cls.setup_other_company()
         cls.company_2 = cls.company_data_2["company"]
         cls.foreign_currency = cls.setup_other_currency("USD")
+        cls.foreign_currency_pricelist = cls.env["product.pricelist"].create(
+            {
+                "name": "Reporting USD Pricelist",
+                "currency_id": cls.foreign_currency.id,
+            }
+        )
         cls.customer = cls.env["res.partner"].create(
             {
                 "name": "Reporting Customer",
@@ -60,6 +66,16 @@ class TestAccountingReporting(AccountTestInvoicingCommon):
                 "purchase_ok": True,
                 "list_price": 120.0,
                 "standard_price": 80.0,
+            }
+        )
+        # Sale orders and their invoices inherit the customer's pricelist, and
+        # OCA's "account_invoice_pricelist" re-prices any line whose quantity is
+        # edited. Keep that pricelist in the product's own currency so editing
+        # the quantity does not convert the catalogue price.
+        cls.customer.property_product_pricelist = cls.env["product.pricelist"].create(
+            {
+                "name": "Reporting Pricelist",
+                "currency_id": cls.product.currency_id.id,
             }
         )
         cls.evidence_type = cls.env["od19.billing.evidence.type"].create(
@@ -407,6 +423,7 @@ class TestAccountingReporting(AccountTestInvoicingCommon):
             move_type="out_invoice",
             partner_id=self.customer,
             currency_id=self.foreign_currency,
+            pricelist_id=self.foreign_currency_pricelist.id,
             post=True,
             invoice_line_ids=[
                 self._prepare_invoice_line(product_id=self.product, price_unit=100.0)
