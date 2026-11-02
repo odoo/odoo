@@ -1146,6 +1146,7 @@ export function useRightClickMenu(
     });
     const shouldRender = signal(false);
     let pendingPosition;
+    let openedTarget;
     const openAt = (el, { left, top }) => {
         Object.assign(el.style, { left, top });
         dropdownState.open();
@@ -1173,17 +1174,20 @@ export function useRightClickMenu(
         },
         /**
          * @param {Event} ev
+         * @param {any} [target] What is right-clicked, when the root element has several targets:
+         *   the right-click on another one than the menu is closing for opens the menu again.
          * @returns {Boolean} whether the open of right-click menu happens or not.
          */
-        open(ev) {
+        open(ev, target) {
             if (
                 !rootRef() ||
                 dropdownState.isOpen ||
-                isOngoingClose ||
+                (isOngoingClose && target === openedTarget) ||
                 !document.getSelection()?.isCollapsed // some text selected
             ) {
                 return false;
             }
+            openedTarget = target;
             rootRef().dataset.rightClicking = true;
             const position = { left: ev.clientX + "px", top: ev.clientY + "px" };
             if (anchor()) {

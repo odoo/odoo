@@ -18,6 +18,7 @@ import {
     MENU_TABS,
     MessagingMenu,
 } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
+import { MessagingMenuTab } from "@mail/core/public_web/messaging_menu/messaging_menu_tab_model";
 import { fields } from "@mail/model/export";
 import { messagingMenuHelpers } from "@mail/../tests/mock_server/controllers/discuss/messaging_menu";
 
@@ -580,6 +581,270 @@ test("channel tab counter: initial unread count combines with loaded channels st
     await waitFor(
         ".o-mail-MessagingMenu-tab:has(:text('Channels')) .o-mail-MessagingMenu-tabCounter:text(1):count(1)"
     );
+});
+
+test("mark all conversations of a tab as read, loaded or not, once confirmed", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const [alphaId, betaId, chatId] = pyEnv["discuss.channel"].create([
+        {
+            name: "Alpha",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, message_unread_counter: 1 }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        },
+        {
+            name: "Beta",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, message_unread_counter: 1 }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        },
+        {
+            channel_type: "chat",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, message_unread_counter: 1 }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        },
+    ]);
+    pyEnv["mail.message"].create(
+        [alphaId, betaId, chatId].map((res_id) => ({
+            author_id: partnerId,
+            body: "msg",
+            model: "discuss.channel",
+            res_id,
+        }))
+    );
+    await start();
+    await openMessagingMenu();
+    const channelsCounter =
+        ".o-mail-MessagingMenu-tab:has(:text('Channels')) .o-mail-MessagingMenu-tabCounter";
+    const chatsCounter =
+        ".o-mail-MessagingMenu-tab:has(:text('Chats')) .o-mail-MessagingMenu-tabCounter";
+    await waitFor(`${channelsCounter}:text(2):count(1)`);
+    await waitFor(`${chatsCounter}:text(1):count(1)`);
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHANNEL}']`);
+    await click(".o-dropdown-item:text('Mark all read')");
+    await waitFor(`.modal-body:text('Everything in "Channels" will be marked as read.'):count(1)`);
+    await click(".modal-footer button:text(Discard)");
+    await waitForNone(".modal");
+    await waitFor(`${channelsCounter}:text(2):count(1)`);
+    await animationFrame();
+    await waitFor(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHANNEL}']:count(1)`);
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHANNEL}']`);
+    await click(".o-dropdown-item:text('Mark all read')");
+    await click(".modal-footer button:text('Mark all read')");
+    await waitForNone(".modal");
+    await waitForNone(channelsCounter);
+    await waitFor(`${chatsCounter}:text(1):count(1)`);
+    await waitFor(".o-mail-MessagingMenu:count(1)");
+});
+
+test("mark all conversations of a tab as read clears needactions of messages not loaded", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Alpha",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, is_pinned: true }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    const messageIds = pyEnv["mail.message"].create(
+        ["old", "new"].map((body) => ({
+            author_id: partnerId,
+            body,
+            model: "discuss.channel",
+            needaction: true,
+            res_id: channelId,
+        }))
+    );
+    pyEnv["mail.notification"].create(
+        messageIds.map((mail_message_id) => ({
+            mail_message_id,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        }))
+    );
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await waitFor(".o-mail-MessagingMenuItem:has(:text('Alpha')):count(1)");
+    const channelsCounter =
+        ".o-mail-MessagingMenu-tab:has(:text('Channels')) .o-mail-MessagingMenu-tabCounter";
+    await waitFor(`${channelsCounter}:text(1):count(1)`);
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHANNEL}']`);
+    await click(".o-dropdown-item:text('Mark all read')");
+    await click(".modal-footer button:text('Mark all read')");
+    await waitForNone(channelsCounter);
+    expect(getService("mail.store")["discuss.channel"].get(channelId).needactionCounter).toBe(0);
+});
+
+test("mark all conversations of a tab as read removes the channels shown for their needactions", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelIds = pyEnv["discuss.channel"].create(
+        ["Alpha", "Beta", "Gamma"].map((name) => ({
+            name,
+            channel_member_ids: [
+                Command.create({
+                    last_interest_dt: "2021-01-01 10:00:00",
+                    partner_id: serverState.partnerId,
+                    unpin_dt: "2021-01-01 12:00:00",
+                }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            last_interest_dt: "2021-01-01 10:00:00",
+        }))
+    );
+    const messageIds = pyEnv["mail.message"].create(
+        channelIds.flatMap((res_id) =>
+            ["old", "new"].map((body) => ({
+                author_id: partnerId,
+                body,
+                model: "discuss.channel",
+                needaction: true,
+                res_id,
+            }))
+        )
+    );
+    pyEnv["mail.notification"].create(
+        messageIds.map((mail_message_id) => ({
+            mail_message_id,
+            notification_status: "sent",
+            notification_type: "inbox",
+            res_partner_id: serverState.partnerId,
+        }))
+    );
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await waitFor(".o-mail-MessagingMenuItem:count(3)");
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHANNEL}']`);
+    await click(".o-dropdown-item:text('Mark all read')");
+    await click(".modal-footer button:text('Mark all read')");
+    await waitForNone(".o-mail-MessagingMenuItem");
+    const store = getService("mail.store");
+    expect(channelIds.map((id) => store["discuss.channel"].get(id).needactionCounter)).toEqual([
+        0, 0, 0,
+    ]);
+});
+
+test("mark all notifications as read from the context menu of their tab", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "msg",
+        model: "res.partner",
+        needaction: true,
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: serverState.partnerId,
+    });
+    await start();
+    await openMessagingMenu();
+    const notificationsCounter =
+        ".o-mail-MessagingMenu-tab:has(:text('Notifications')) .o-mail-MessagingMenu-tabCounter";
+    await waitFor(`${notificationsCounter}:text(1):count(1)`);
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.NOTIFICATION}']`);
+    await click(".o-dropdown-item:text('Mark all read')");
+    await click(".modal-footer button:text('Mark all read')");
+    await waitForNone(notificationsCounter);
+});
+
+test("tab without read state has no context menu", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello",
+        bookmarked_partner_ids: [serverState.partnerId],
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openMessagingMenu();
+    await waitFor(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.BOOKMARK}']:count(1)`);
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.BOOKMARK}']`);
+    await animationFrame();
+    await waitForNone(".o-dropdown-item:text('Mark all read')");
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHANNEL}']`);
+    await waitFor(".o-dropdown-item:text('Mark all read'):count(1)");
+});
+
+test("unread filter shows its empty state once a partly loaded tab is marked as read", async () => {
+    patch(MessagingMenuTab, { LOAD_MORE_LIMIT: 1 });
+    // The mock server does not compute `is_unread`: all channels are unread here.
+    patch(messagingMenuHelpers, {
+        _get_menu_tab_filter_domain(env, tab_id, filter_id) {
+            if (filter_id === "channel_unread") {
+                return [];
+            }
+            return super._get_menu_tab_filter_domain(env, tab_id, filter_id);
+        },
+    });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    const channelIds = pyEnv["discuss.channel"].create(
+        ["Alpha", "Beta", "Gamma"].map((name) => ({
+            name,
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId, message_unread_counter: 1 }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        }))
+    );
+    pyEnv["mail.message"].create(
+        channelIds.map((res_id) => ({
+            author_id: partnerId,
+            body: "msg",
+            model: "discuss.channel",
+            res_id,
+        }))
+    );
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await contains("button:text(Unread):count(1)").click();
+    await waitFor("button.o-active:text(Unread):count(1)");
+    await waitFor(".o-mail-MessagingMenuItem");
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHANNEL}']`);
+    await click(".o-dropdown-item:text('Mark all read')");
+    await click(".modal-footer button:text('Mark all read')");
+    await waitForNone(".o-mail-MessagingMenuItem");
+    await waitFor(
+        ".o-mail-MessagingMenuEmpty:text('No conversation matches this filter.'):count(1)"
+    );
+});
+
+test("right-clicking another tab moves the context menu to that tab", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["discuss.channel"].create({
+        name: "Alpha",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    await start();
+    await openMessagingMenu();
+    await waitFor(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHAT}']:count(1)`);
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHAT}']`);
+    await waitFor(".o-dropdown-item:text('Mark all read'):count(1)");
+    await rightClick(`.o-mail-MessagingMenu-tab[data-id='${MENU_TABS.CHANNEL}']`);
+    await animationFrame();
+    await waitFor(".o-dropdown-item:text('Mark all read'):count(1)");
+    await click(".o-dropdown-item:text('Mark all read')");
+    await waitFor(`.modal-body:text('Everything in "Channels" will be marked as read.'):count(1)`);
 });
 
 test("message tab counter: initial unread count decrements after marking loaded message as read", async () => {

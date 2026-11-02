@@ -137,6 +137,28 @@ class DiscussMessagingMenuController(WebclientController):
             lambda res: res.attr("is_fully_loaded", len(channels) < limit),
         )
 
+    @store_handler(
+        "/mail/messaging_menu/discuss.channel/mark_all_as_read",
+        audience="everyone",
+        readonly=False,
+    )
+    def store_messaging_menu_discuss_channel_mark_all_as_read(self, store: Store, tab_id):
+        is_internal = self.env.user._is_internal()
+        unread_domain = Domain("self_member_id.is_unread", "=", True)
+        if is_internal:
+            unread_domain |= Domain("message_needaction", "=", True)
+        channels = self.env["discuss.channel"].search(
+            self._get_menu_tab_full_domain(tab_id) & unread_domain,
+        )
+        last_message_by_channel_id = channels._get_last_messages().grouped("res_id")
+        for member in channels.self_member_id:
+            if last_message := last_message_by_channel_id.get(member.channel_id.id):
+                member._mark_as_read(last_message.id)
+        if is_internal:
+            self.env["mail.message"].search(
+                channels._get_message_domain() & Domain("needaction", "=", True),
+            ).set_message_done()
+
     @store_handler("/mail/messaging_menu/get_most_popular_channels", audience="everyone")
     def store_messaging_menu_get_most_popular_channels(self, store: Store):
         results = self.env["discuss.channel.member"]._read_group(

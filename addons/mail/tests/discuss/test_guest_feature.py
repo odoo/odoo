@@ -33,6 +33,31 @@ class TestGuestFeature(MailCommon, HttpCase):
         )
         self.assertEqual(guest_member.seen_message_id, channel.message_ids[0])
 
+    def test_mark_all_conversations_of_messaging_menu_tab_as_read_as_guest(self):
+        guest = self.env["mail.guest"].create({"name": "Guest"})
+        partner = self.env["res.partner"].create({"name": "John"})
+        channel = self.env["discuss.channel"]._create_channel(group_id=None, name="General")
+        channel._add_members(guests=guest, partners=partner)
+        channel.message_post(
+            body="Hello World!", message_type="comment", subtype_xmlid="mail.mt_comment"
+        )
+        guest_member = channel.channel_member_ids.filtered(lambda m: m.guest_id == guest)
+        self.assertEqual(guest_member.message_unread_counter, 1)
+        self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [
+                    [
+                        "/mail/messaging_menu/discuss.channel/mark_all_as_read",
+                        {"tab_id": "channel"},
+                    ],
+                ],
+            },
+            cookies={guest._cookie_name: guest._format_auth_cookie()},
+        )
+        self.env.invalidate_all()
+        self.assertEqual(guest_member.message_unread_counter, 0)
+
 
 class TestGuestFeatureWebsocket(WebsocketCase, MailCommon):
     def test_subscribe_to_guest_channel(self):

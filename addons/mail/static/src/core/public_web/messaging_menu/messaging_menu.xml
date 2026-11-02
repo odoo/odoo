@@ -149,6 +149,7 @@
             <span class="o-mail-MessagingMenu-tabLabel o-xsmaller text-center lh-1 mt-1" t-out="tab.label"/>
             <span t-if="this.getTabCounter(tab)" t-attf-class="badge o-discuss-badge rounded-pill position-absolute o-mail-MessagingMenu-tabCounter overflow-visible d-inline-block {{ tab.important ? '' : 'o-muted' }}" t-out="this.getTabCounter(tab)"/>
         </button>
+        <MessagingMenuTabContextMenu t-if="this.tabContextMenu.shouldRender" t-props="this.tabContextMenu.menuProps"/>
     </nav>
 </t>
 

@@ -1556,6 +1556,56 @@ class TestChannelInternals(MailCommon, HttpCase):
         meeting.with_user(self.user_employee).write({"default_display_mode": False})
         self.assertFalse(meeting.default_display_mode)
 
+    def test_mark_all_conversations_of_messaging_menu_tab_as_read(self):
+        read_channel, alpha, beta = self.env["discuss.channel"].create(
+            [{"name": name, "channel_type": "channel"} for name in ("Read", "Alpha", "Beta")]
+        )
+        channels = read_channel | alpha | beta
+        channels._add_members(users=self.user_employee | self.user_admin)
+        chat = (
+            self.env["discuss.channel"]
+            .with_user(self.user_admin)
+            ._get_or_create_chat(self.partner_employee.ids)
+        )
+        for channel in alpha | beta | chat:
+            channel.with_user(self.user_admin).message_post(
+                body="Hello",
+                message_type="comment",
+                partner_ids=self.partner_employee.ids,
+                subtype_xmlid="mail.mt_comment",
+            )
+        member_by_channel = {
+            channel: channel.channel_member_ids.filtered(
+                lambda m: m.partner_id == self.partner_employee,
+            )
+            for channel in channels | chat
+        }
+        self.assertEqual(member_by_channel[alpha].message_unread_counter, 1)
+        self.assertEqual(member_by_channel[beta].message_unread_counter, 1)
+        self.assertEqual(member_by_channel[chat].message_unread_counter, 1)
+        self.assertEqual(alpha.with_user(self.user_employee).message_needaction_counter, 1)
+
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        self.make_jsonrpc_request(
+            "/mail/store",
+            {
+                "fetch_params": [
+                    [
+                        "/mail/messaging_menu/discuss.channel/mark_all_as_read",
+                        {"tab_id": "channel"},
+                    ],
+                ],
+            },
+        )
+
+        self.env.invalidate_all()
+        self.assertEqual(member_by_channel[alpha].message_unread_counter, 0)
+        self.assertEqual(member_by_channel[beta].message_unread_counter, 0)
+        self.assertEqual(alpha.with_user(self.user_employee).message_needaction_counter, 0)
+        self.assertEqual(beta.with_user(self.user_employee).message_needaction_counter, 0)
+        self.assertEqual(member_by_channel[chat].message_unread_counter, 1)
+        self.assertEqual(chat.with_user(self.user_employee).message_needaction_counter, 1)
+
     @users("employee")
     def test_chat_is_kept_when_its_correspondent_is_deleted(self):
         partner = self.env["res.partner"].sudo().create({"name": "Gone Correspondent"})

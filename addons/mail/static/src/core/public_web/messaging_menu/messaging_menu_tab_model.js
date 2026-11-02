@@ -197,9 +197,19 @@ export class MessagingMenuTab extends Record {
         return !this.hidden && (!this.hideWhenZeroCounter || this.counter > 0);
     }
 
+    /** Whether the content of this tab has a read state, which `markAllAsRead` clears. */
+    get canMarkAllAsRead() {
+        return this.eq(this.store.messagingMenu.notificationTab);
+    }
+
     /** The filter selected by default when this tab is opened, if any. */
     get defaultFilter() {
         return this.filters.find((f) => f.isDefault);
+    }
+
+    /** Marks all the content of this tab as read, whether it is loaded or not. */
+    async markAllAsRead() {
+        return this.store.markNeedactionMessagesAsRead();
     }
 
     /** Filters in the order they are shown, right after the "All" one. */
