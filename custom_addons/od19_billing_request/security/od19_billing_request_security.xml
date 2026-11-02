@@ -39,4 +39,18 @@
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('group_od19_billing_accounting'))]"/>
     </record>
+
+    <record id="rule_od19_billing_request_line_requester" model="ir.rule">
+        <field name="name">Billing Request Line: own request / บรรทัดของคำขอตัวเอง</field>
+        <field name="model_id" ref="model_od19_billing_request_line"/>
+        <field name="domain_force">[('request_id.requested_by_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_od19_billing_requester'))]"/>
+    </record>
+
+    <record id="rule_od19_billing_request_line_accounting" model="ir.rule">
+        <field name="name">Billing Request Line: all / ทั้งหมด</field>
+        <field name="model_id" ref="model_od19_billing_request_line"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_od19_billing_accounting'))]"/>
+    </record>
 </odoo>
