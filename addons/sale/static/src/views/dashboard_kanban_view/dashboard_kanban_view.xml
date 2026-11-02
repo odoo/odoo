@@ -3,5 +3,8 @@
         <xpath expr="//div[hasclass('o_kanban_renderer')]" position="before">
             <Dashboard/>
         </xpath>
+        <xpath expr="//div[hasclass('o_kanban_renderer')]" position="attributes">
+            <attribute name="t-attf-class" add="{{ this.showNoContentHelper ? 'o_sale_dashboard_nocontent' : '' }}" separator=" "/>
+        </xpath>
     </t>
 </templates>

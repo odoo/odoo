@@ -61,3 +61,25 @@
 .o_sale_dashboard {
     background-color: $o-control-panel-background-color;
 }
+
+.o_sale_dashboard_list_view, .o_sale_dashboard_kanban_view {
+    > .o_content {
+        display: flex;
+        flex-direction: column;
+
+        > .o_renderer {
+            flex: none;
+
+            &.o_sale_dashboard_nocontent {
+                position: relative;
+                flex: 1 1 0;
+                min-height: 0;
+            }
+        }
+    }
+}
+
+.o_sale_dashboard_list_view .o_view_nocontent {
+    // keep the list table header visible
+    padding-top: map-get($spacers, 5);
+}
