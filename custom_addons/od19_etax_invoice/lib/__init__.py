@@ -5,6 +5,7 @@ from . import namespaces
 from . import formats
 from . import xml_builder
 from . import validator
+from . import xml_parser
 from . import signer
 from . import qr
 from . import pdf_embed

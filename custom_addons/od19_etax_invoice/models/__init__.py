@@ -3,6 +3,7 @@
 
 from . import etax_certificate
 from . import etax_document
+from . import etax_import
 from . import etax_submission
 from . import res_company
 from . import res_partner

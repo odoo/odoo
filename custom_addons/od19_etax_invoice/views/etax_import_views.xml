@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_od19_etax_import_form" model="ir.ui.view">
+        <field name="name">od19.etax.import.form</field>
+        <field name="model">od19.etax.import</field>
+        <field name="arch" type="xml">
+            <form string="Import Purchase e-Tax Invoice">
+                <header>
+                    <button name="action_parse" type="object"
+                            string="Parse XML" class="btn-primary"
+                            invisible="state == 'parsed'"/>
+                    <button name="action_import" type="object"
+                            string="Create Vendor Bill" class="btn-primary"
+                            invisible="state != 'parsed' or move_id"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,parsed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="xml_file" filename="xml_filename"
+                                   readonly="state == 'parsed'"/>
+                            <field name="xml_filename" invisible="1"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"
+                                   readonly="state == 'parsed'"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <group invisible="state != 'parsed'">
+                        <group string="Vendor Document">
+                            <field name="document_type"/>
+                            <field name="document_name"/>
+                            <field name="document_reference"/>
+                            <field name="issue_date"/>
+                        </group>
+                        <group string="Parties">
+                            <field name="seller_name"/>
+                            <field name="partner_vat"/>
+                            <field name="buyer_name"/>
+                            <field name="buyer_vat"/>
+                            <field name="od19_buyer_is_own_company"/>
+                        </group>
+                    </group>
+                    <group invisible="state != 'parsed'">
+                        <group string="Vendor Bill">
+                            <field name="partner_id"
+                                   options="{'no_create': True}"/>
+                            <field name="journal_id"
+                                   options="{'no_create': True}"/>
+                            <field name="ref"/>
+                            <field name="invoice_date"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <field name="line_ids" invisible="state != 'parsed'">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="product_code"/>
+                            <field name="product_id" options="{'no_create': True}"/>
+                            <field name="quantity"/>
+                            <field name="price_unit"/>
+                            <field name="tax_rate"/>
+                            <field name="price_subtotal"/>
+                            <field name="tax_amount"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                    <group invisible="state != 'parsed'" class="oe_subtotal_footer">
+                        <field name="amount_untaxed"/>
+                        <field name="amount_tax"/>
+                        <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                    </group>
+                    <field name="move_id" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_import" type="object"
+                            string="Create Vendor Bill" class="btn-primary"
+                            invisible="state != 'parsed' or move_id"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_od19_etax_import" model="ir.actions.act_window">
+        <field name="name">Import Purchase e-Tax Invoice</field>
+        <field name="res_model">od19.etax.import</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_od19_etax_import_form"/>
+    </record>
+
+</odoo>
