@@ -72,7 +72,7 @@ class ProductCatalogMixin(models.AbstractModel):
         self = self.with_company(self.company_id)  # noqa: PLW0642
 
         data = {
-            'name': self.name,
+            'name': self.display_name,
             'sections': self._get_sections(child_field),
         }
         if self._show_prices():
