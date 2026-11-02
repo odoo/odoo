@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { parseJSON } from "@website/js/utils";
 import { loadBundle } from "@web/core/assets";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import weUtils from "@web_editor/js/common/utils";
@@ -22,7 +23,11 @@ const ChartWidget = publicWidget.Widget.extend({
      */
     start: function () {
         // Convert Theme colors to css color
-        const data = JSON.parse(this.el.dataset.data);
+        const data = parseJSON(this.el.dataset.data);
+        if (!data) {
+            // Missing or malformed chart data: do not render the chart.
+            return this._super.apply(this, arguments);
+        }
         data.datasets.forEach(el => {
             if (Array.isArray(el.backgroundColor)) {
                 el.backgroundColor = el.backgroundColor.map(el => this._convertToCssColor(el));
