@@ -224,6 +224,38 @@ class TestPosDataLoading(CommonPosTest):
         self.assertNotIn(config_id, to_remove,
             "Active record should not appear in to_remove")
 
+    def test_load_data_archived_product_with_orderline(self):
+        archived_product = self.env['product.product'].create({
+            'name': 'Archived Flow Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'active': False,
+        })
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{'product_id': archived_product.id, 'qty': 1}],
+        })
+        session = self._get_session()
+        records_by_model = {
+            'product.product': archived_product,
+            'product.template': archived_product.product_tmpl_id,
+        }
+
+        data = session.load_data()
+        self.assertIn(order.lines.id, [line['id'] for line in data['pos.order.line']['records']])
+        for model, record in records_by_model.items():
+            self.assertIn(record.id, [r['id'] for r in data[model]['records']])
+
+        cached_data = session.load_data({
+            'models': list(records_by_model),
+            'records': {
+                model: {str(record.id): int(record.write_date.timestamp())}
+                for model, record in records_by_model.items()
+            },
+        })
+        for model, record in records_by_model.items():
+            self.assertNotIn(record.id, [r['id'] for r in cached_data[model]['records']])
+            self.assertNotIn(record.id, cached_data[model].get('to_remove', []))
+
     # -------------------------------------------------------------------------
     # filter_local_data
     # -------------------------------------------------------------------------
