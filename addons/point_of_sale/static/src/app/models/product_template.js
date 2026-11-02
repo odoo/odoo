@@ -130,6 +130,7 @@ export class ProductTemplate extends ProductTemplateAccounting {
         return this.active && this.available_in_pos;
     }
 
+    // TODO: Remove in master
     get showProductImageInSelf() {
         const config = this.models["pos.config"].getFirst();
         return config.self_ordering_mode === "kiosk" || this.image_128;
