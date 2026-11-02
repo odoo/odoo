@@ -20,6 +20,7 @@ import { PEEK_CLOSE_DELAY, PEEK_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, mockTouch, test, waitFor } from "@odoo/hoot";
 import {
     animationFrame,
+    freezeTime,
     hover,
     leave,
     manuallyDispatchProgrammaticEvent,
@@ -867,6 +868,7 @@ test("shown sidebar list changes to a hovered tab once the pointer rests on it, 
     await waitFor(
         ".o-mail-MessagingMenu-container.o-peek .o-mail-MessagingMenu-tab.o-peeked[data-id='chat']:count(1)"
     );
+    freezeTime();
     await hover(".o-mail-MessagingMenu-tab[data-id='channel']");
     await hover(".o-mail-MessagingMenu-tab[data-id='meeting']");
     await advanceTime(PEEK_TAB_DELAY - 1);
