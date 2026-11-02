@@ -1,0 +1,10 @@
+# Git LFS — large binary artifacts.
+# JasperStarter bundles third-party JARs (e.g. Arial.jar ~51 MB) and Odoo 15
+# dumps/archives are heavy binaries that must not live in the main object store.
+# New blobs matching these patterns are stored via Git LFS.
+# NOTE: migrating already-tracked history requires a coordinated
+# `git lfs migrate import` + force-push (see Task B5 of the backlog closure plan).
+*.jar    filter=lfs diff=lfs merge=lfs -text
+*.jasper filter=lfs diff=lfs merge=lfs -text
+*.dump   filter=lfs diff=lfs merge=lfs -text
+*.zip    filter=lfs diff=lfs merge=lfs -text
