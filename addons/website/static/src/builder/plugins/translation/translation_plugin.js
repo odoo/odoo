@@ -116,6 +116,16 @@ export class TranslationPlugin extends Plugin {
             }
         }
 
+        // On Firefox, the caret cannot be placed inside the editable content
+        // of a non-editable link, as the browser waits for a possible drag of
+        // the link instead.
+        for (const editableEl of this.editableEls) {
+            const linkEl = editableEl.parentElement.closest("a[href]");
+            if (linkEl && !linkEl.isContentEditable && !linkEl.hasAttribute("draggable")) {
+                linkEl.setAttribute("draggable", "false");
+            }
+        }
+
         // We don't want the BS dropdown to close when clicking in a element to
         // translate.
         const menuEls = this.websiteService.pageDocument.querySelectorAll(".dropdown-menu");
@@ -383,6 +393,9 @@ export class TranslationPlugin extends Plugin {
     cleanForSave({ root }) {
         root.querySelectorAll(".o_savable_attribute").forEach((el) => {
             el.classList.remove("o_savable_attribute");
+        });
+        root.querySelectorAll("a[href][draggable='false']").forEach((el) => {
+            el.removeAttribute("draggable");
         });
         if (root.dataset.oeTranslationSaveSha) {
             root.dataset.oeTranslationSourceSha = root.dataset.oeTranslationSaveSha;
