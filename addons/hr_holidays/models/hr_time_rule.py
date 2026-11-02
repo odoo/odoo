@@ -39,32 +39,23 @@ class HrTimeRule(models.Model):
     )
 
     def _resolve_output_intervals(self, intervals):
-        """Resolve the output intervals, then merge consecutive slices with the same merge key.
-
-        See :meth:`_get_output_leave_merge_key`.
+        """Resolve the output intervals, then merge the consecutive slices having the same rule
+        and premium pays, so that differently paid hours stay in distinct time offs.
 
         :rtype: list
         """
         merged_intervals = []
-        previous_merge_key = None
         for interval in super()._resolve_output_intervals(intervals):
-            merge_key = interval.classifying_rule._get_output_leave_merge_key(
-                premium_pay_category_ids=interval.premium_pay_category_ids,
-            )
             extends_previous_interval = (
                 merged_intervals
                 and merged_intervals[-1].end == interval.start
-                and merge_key == previous_merge_key
+                and merged_intervals[-1].classifying_rule == interval.classifying_rule
+                and merged_intervals[-1].premium_pay_category_ids == interval.premium_pay_category_ids
             )
-            if not extends_previous_interval:
+            if extends_previous_interval:
+                merged_intervals[-1] = merged_intervals[-1]._replace(end=interval.end)
+            else:
                 merged_intervals.append(interval)
-                previous_merge_key = merge_key
-                continue
-            previous_interval = merged_intervals[-1]
-            merged_intervals[-1] = previous_interval._replace(
-                end=interval.end,
-                premium_pay_category_ids=previous_interval.premium_pay_category_ids | interval.premium_pay_category_ids,
-            )
         return merged_intervals
 
     def _get_output_leave_vals(self, source_leave, date_from, date_to, premium_pay_category_ids=frozenset()):
@@ -98,13 +89,6 @@ class HrTimeRule(models.Model):
             'resource_calendar_id': source_leave.resource_calendar_id.id,
             'state': 'validate',
         }
-
-    def _get_output_leave_merge_key(self, premium_pay_category_ids=frozenset()):
-        """Return the hashable key deciding when consecutive excess slices make one time off.
-
-        Override to add discriminators (e.g. the premium pays in Belgium). Default: the rule.
-        """
-        return self
 
     # ------------------------------------------------------------
     # Allocation credits
