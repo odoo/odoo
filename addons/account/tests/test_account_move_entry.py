@@ -1684,3 +1684,20 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         line = invoice.invoice_line_ids.filtered(lambda l: l.product_id == self.product_a)[:1]
         self.assertEqual(line.label, "product_a\nBouteille d'eau")
+
+    def test_manual_entry_cannot_be_moved_to_bank_or_sale_journal(self):
+        """ The ORM (and therefore the AI) must not bypass suitable_journal_ids: a manual entry only takes general journals. """
+        misc_journal = self.company_data['default_journal_misc']
+        entry = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': misc_journal.id,
+            'date': fields.Date.from_string('2024-01-01'),
+            'line_ids': [
+                Command.create({'account_id': self.company_data['default_account_revenue'].id, 'debit': 0.0, 'credit': 100.0}),
+                Command.create({'account_id': self.company_data['default_account_expense'].id, 'debit': 100.0, 'credit': 0.0}),
+            ],
+        })
+        for journal in (self.company_data['default_journal_bank'], self.company_data['default_journal_sale']):
+            with self.subTest(journal_type=journal.type), self.assertRaises(UserError), self.cr.savepoint():
+                entry.journal_id = journal
+            self.assertEqual(entry.journal_id, misc_journal)
