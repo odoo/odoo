@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
 
 from odoo import _, models
 from odoo.tools import float_round
@@ -19,6 +20,7 @@ class PosOrderReceipt(models.AbstractModel):
         barcodes) so the frontend and backend receipts match.
         """
         data = super().order_receipt_generate_data(basic_receipt)
+<<<<<<< b9823b8a6ed7f33c4450ac6dbe2dabed3ca6a6e7
         loyalties = []
         histories = self.env['loyalty.history'].search([
             ('order_model', '=', 'pos.order'),
@@ -62,3 +64,78 @@ class PosOrderReceipt(models.AbstractModel):
             })
         data['extra_data']['new_coupons'] = new_coupons
         return data
+||||||| ba2d10f169b8c26d04c5b9fdd491673dc0005768
+        loyalties, new_coupons = [], []
+        histories = self.env['loyalty.history'].search([('order_id', '=', self.id), ('order_model', '=', 'pos.order')])
+        for history in histories:
+            program_type = history.card_id.program_id.program_type
+            if program_type == 'loyalty':
+                for field, label in [('issued', _('Won:')), ('used', _('Spent:'))]:
+                    amount = history[field]
+                    if amount > 0:
+                        loyalties.append({
+                            'name': history.card_id.program_id.portal_point_name,
+                            'type': label,
+                            'points': float_round(amount, 2),
+                        })
+
+                loyalties.append({
+                    'name': history.card_id.program_id.portal_point_name,
+                    'type': _('Balance:'),
+                    'points': float_round(history.card_id.points, 2),
+                })
+
+            elif program_type == 'next_order_coupons':
+                new_coupons.append({
+                    'name': history.card_id.program_id.name,
+                    'code': history.card_id.code,
+                    'expiration_date': history.card_id.expiration_date,
+                    'barcode_base64': image_data_uri(self.env['ir.actions.report'].barcode('Code128', history.card_id.code, quiet=False)),
+                })
+
+        data['extra_data']['loyalties'] = loyalties
+        data['extra_data']['new_coupons'] = new_coupons
+
+        return data
+=======
+        loyalty_data = self._get_loyalty_data([self.id]).get(self.id, {})
+
+        data['extra_data']['loyalties'] = loyalty_data.get('loyalties', [])
+        data['extra_data']['new_coupons'] = loyalty_data.get('new_coupons', [])
+        return data
+
+    def _get_loyalty_data(self, order_ids):
+        loyalty_data = defaultdict(lambda: {'loyalties': [], 'new_coupons': []})
+        histories = self.env['loyalty.history'].search([('order_id', 'in', order_ids), ('order_model', '=', 'pos.order')])
+
+        for history in histories:
+            card = history.card_id
+            program = card.program_id
+            order_data = loyalty_data[history.order_id]
+
+            if program.program_type == 'loyalty':
+                for field, label in [('issued', _('Won:')), ('used', _('Spent:'))]:
+                    amount = history[field]
+                    if amount > 0:
+                        order_data['loyalties'].append({
+                            'name': program.portal_point_name,
+                            'type': label,
+                            'points': float_round(amount, 2),
+                        })
+
+                order_data['loyalties'].append({
+                    'name': program.portal_point_name,
+                    'type': _('Balance:'),
+                    'points': float_round(card.points, 2),
+                })
+
+            elif program.program_type == 'next_order_coupons':
+                order_data['new_coupons'].append({
+                    'program_name': program.name,
+                    'code': card.code,
+                    'expiration_date': card.expiration_date,
+                    'barcode_base64': image_data_uri(self.env['ir.actions.report'].barcode('Code128', card.code, quiet=False)),
+                })
+
+        return loyalty_data
+>>>>>>> 1d4b494756ee63a4a1d786ff0c78cb9c618aa0af

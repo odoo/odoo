@@ -2,9 +2,17 @@
 
 from collections import defaultdict
 
+<<<<<<< b9823b8a6ed7f33c4450ac6dbe2dabed3ca6a6e7
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare
+||||||| ba2d10f169b8c26d04c5b9fdd491673dc0005768
+from odoo import _, models
+from odoo.tools import BinaryBytes, float_compare
+=======
+from odoo import _, models, api
+from odoo.tools import BinaryBytes, float_compare
+>>>>>>> 1d4b494756ee63a4a1d786ff0c78cb9c618aa0af
 from odoo.tools.image import image_data_uri
 
 
@@ -263,6 +271,7 @@ class PosOrder(models.Model):
     def _get_mail_attachments(self, name, ticket, basic_ticket):
         """Attach the gift card report (code/barcode PDF) to the emailed receipt.
 
+<<<<<<< b9823b8a6ed7f33c4450ac6dbe2dabed3ca6a6e7
         Gift cards sold on this order are printed through their program's
         ``pos_report_print_id`` and appended to the receipt email.
         """
@@ -272,6 +281,49 @@ class PosOrder(models.Model):
         )
         if not gift_card_programs:
             return attachments
+||||||| ba2d10f169b8c26d04c5b9fdd491673dc0005768
+    def _check_existing_loyalty_cards(self, coupon_data):
+        coupon_key_to_modify = []
+        for coupon_id, coupon_vals in coupon_data.items():
+            partner_id = coupon_vals.get('partner_id', False)
+            if partner_id:
+                existing_coupon_for_program = self.env['loyalty.card'].search(
+                    [('partner_id', '=', partner_id), ('program_type', 'in', ['loyalty', 'ewallet']), ('program_id', '=', coupon_vals['program_id'])])
+                if existing_coupon_for_program:
+                    coupon_vals['coupon_id'] = existing_coupon_for_program[0].id
+                    coupon_key_to_modify.append([coupon_id, existing_coupon_for_program[0].id])
+        for old_key, new_key in coupon_key_to_modify:
+            coupon_data[new_key] = coupon_data.pop(old_key)
+=======
+    @api.model
+    def read_pos_orders(self, domain=False):
+        data = super().read_pos_orders(domain)
+        order_ids = [order['id'] for order in data['pos.order']]
+        loyalty_data = self._get_loyalty_data(order_ids)
+
+        if not loyalty_data:
+            return data
+
+        for order in data['pos.order']:
+            order_data = loyalty_data.get(order['id'], {})
+            order['loyalties'] = order_data.get('loyalties', [])
+            order['new_coupon_info'] = order_data.get('new_coupons', [])
+
+        return data
+
+    def _check_existing_loyalty_cards(self, coupon_data):
+        coupon_key_to_modify = []
+        for coupon_id, coupon_vals in coupon_data.items():
+            partner_id = coupon_vals.get('partner_id', False)
+            if partner_id:
+                existing_coupon_for_program = self.env['loyalty.card'].search(
+                    [('partner_id', '=', partner_id), ('program_type', 'in', ['loyalty', 'ewallet']), ('program_id', '=', coupon_vals['program_id'])])
+                if existing_coupon_for_program:
+                    coupon_vals['coupon_id'] = existing_coupon_for_program[0].id
+                    coupon_key_to_modify.append([coupon_id, existing_coupon_for_program[0].id])
+        for old_key, new_key in coupon_key_to_modify:
+            coupon_data[new_key] = coupon_data.pop(old_key)
+>>>>>>> 1d4b494756ee63a4a1d786ff0c78cb9c618aa0af
 
         gift_cards = self.env['loyalty.card'].search([
             ('source_pos_order_id', '=', self.id),
