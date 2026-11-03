@@ -67,6 +67,13 @@ export class MosaicStrategyPlugin extends Plugin {
         return defaultEmailNodeArguments;
     }
 
+    /**
+     * TODO EGGMAIL
+     * currently does not work for base mosaic layout, but was already broken
+     * before, need to debug
+     * none of the mosaic strategy plugin currently work => need debug for both
+     * s_comparisons_strategy_plugin and s_masonry_block_strategy_plugin
+     */
     analyzeElementLayout(defaultEmailNodeArguments, { referenceNode, parentEmailNode }) {
         const { layout, analysis } = defaultEmailNodeArguments;
         if (
@@ -94,7 +101,6 @@ export class MosaicStrategyPlugin extends Plugin {
                 skippingContainerDescendantProviders: cellsProviders,
             });
             analysis.facts.isMosaicContainer = true;
-            analysis.facts.cellsProviders = cellsProviders;
             layout.pluginIds.add(MosaicStrategyPlugin.id);
         }
         if (responsiveSubtree.root === referenceNode) {
