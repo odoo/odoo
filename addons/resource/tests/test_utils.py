@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import time
+
 from dateutil.relativedelta import relativedelta
 
 from odoo.fields import Datetime
@@ -100,3 +102,7 @@ class TestExpression(TransactionCase):
             self.assertTrue(res.id, 'The resource was successfully created')
             self.assertEqual(res.date_from, Datetime.to_string(date_from))
             self.assertEqual(res.date_to, Datetime.to_string(date_to))
+
+    def test_float_to_time_round_minutes(self):
+        self.assertEqual(utils.float_to_time(16.9959), time(17, 0))
+        self.assertEqual(utils.float_to_time(23.9999), time.max)

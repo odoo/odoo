@@ -8,6 +8,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.tests import common
 
+from odoo.addons.lunch.models.lunch_supplier import float_to_time
 from odoo.addons.lunch.tests.common import TestsCommon
 
 
@@ -276,3 +277,10 @@ env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
             'supplier_id': self.supplier_pizza_inn.id,
         })
         self.assertTrue(order.available_on_date)
+
+    def test_float_to_time_round_minutes(self):
+        self.assertEqual(float_to_time(11.999), time(12, 0))
+        self.assertEqual(float_to_time(11.999, 'pm'), time.max)
+        # the cron of the supplier is computed without error
+        self.supplier_pizza_inn.write({'send_by': 'mail', 'automatic_email_time': 11.999})
+        self.assertTrue(self.supplier_pizza_inn.cron_id)
