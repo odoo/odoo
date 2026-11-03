@@ -613,7 +613,13 @@ form: module.record_id""" % (xml_id,)
                     file=rec.getroottree().docinfo.URL,
                     viewline=rec.sourceline,
                     context=pprint.pformat(getattr(err, 'context', None) or '-no context-'),
+<<<<<<< 3cc89565f528accff539a295989891ffba6144fe
                     err=err.args[0] if err.args else err,
+||||||| 24a82cb2dad91a4baa99c0da88c39553c519c4a4
+                    err=err.args[0],
+=======
+                    err=str(err),
+>>>>>>> 0eaf7a998cf822ec3799274254934509b93b0db9
                 )
                 _logger.debug(msg, exc_info=True)
                 raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.convert:DEBUG" for complete traceback
