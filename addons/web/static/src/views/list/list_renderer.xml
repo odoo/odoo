@@ -344,7 +344,7 @@
                         </t>
                     </td>
                 </t>
-                <t t-if="column.type === 'column_group'">
+                <t t-if="column.type === 'column_group'" name="column_group_cell">
                     <td t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
                         class="o_data_cell cursor-pointer"
                         t-att-class="this.getCellClass(column, record)"
@@ -354,7 +354,7 @@
                         t-custom-click="(ev, isMiddleClick) => this.onCellClicked(record, column, ev, isMiddleClick)"
                         tabindex="-1">
                         <t t-set="visibleFields" t-value="this.getVisibleColumnGroupFields(column, record)"/>
-                        <t t-foreach="visibleFields" t-as="fieldInfo" t-key="fieldInfo.id">
+                        <t t-foreach="visibleFields" t-as="fieldInfo" t-key="fieldInfo.id" name="column_group_loop">
                             <div class="o_column_group_field" t-att-class="this.getColumnGroupFieldClasses(fieldInfo, record, visibleFields.length > 1)" t-att-data-field-name="fieldInfo.name">
                                 <t t-if="this.canUseFormatter(fieldInfo, record)">
                                     <t t-set="value" t-value="this.getFormattedValue(fieldInfo, record)"/>
