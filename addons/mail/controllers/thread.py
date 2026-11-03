@@ -250,6 +250,9 @@ class ThreadController(StoreController):
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:
             raise NotFound()
+        user, guest = request.env["res.users"]._get_current_persona()
+        if thread_model == "discuss.channel" and not user and not guest:
+            raise NotFound()
         if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
             thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
         # sudo: mail.thread - users can post on accessible threads
