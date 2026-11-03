@@ -339,3 +339,19 @@ class TestMrpMulticompany(common.TransactionCase):
         self.assertFalse(bom_report["docs"][0]["availability_delay"])
         self.assertEqual("unavailable", bom_overview["lines"]["availability_state"])
         self.assertEqual("unavailable", bom_report["docs"][0]["availability_state"])
+
+    def test_kit_of_other_company_does_not_change_qty_available(self):
+        product, component = self.env['product.product'].create([
+            {'name': 'Super product', 'is_storable': True},
+            {'name': 'Component', 'is_storable': True},
+        ])
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location_a, 10)
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'company_id': self.company_b.id,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+        })
+        product = product.with_user(self.user_a).with_context(allowed_company_ids=(self.company_a + self.company_b).ids)
+        self.assertEqual(product.qty_available, 10)
