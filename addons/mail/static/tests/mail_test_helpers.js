@@ -51,6 +51,7 @@ import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 export { SIZES } from "@web/core/ui/ui_utils";
 
+import { MailPopoutPlugin } from "@mail/core/common/mail_popout_plugin";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { Store as StoreService } from "@mail/core/common/store_plugin";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
@@ -449,8 +450,8 @@ export async function start(options) {
     // Note that loading the emojis cannot be called before setting up the env because
     // it depends on translations being loaded.
     await emojiLoader.load();
-    const popoutService = getService("mail.popout");
-    after(() => popoutService.resetAll());
+    const popoutPlugin = getService(MailPopoutPlugin);
+    after(() => popoutPlugin.resetAll());
     return Object.assign(Object.create(getMockEnv()), { target });
 }
 

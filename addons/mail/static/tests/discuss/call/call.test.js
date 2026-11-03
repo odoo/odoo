@@ -36,7 +36,7 @@ import {
 } from "@mail/discuss/call/common/rtc_service";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { Meeting } from "@mail/discuss/call/common/meeting";
-import { POLL_CLOSE_WINDOW_TIMEOUT } from "@mail/core/common/mail_popout_service";
+import { POLL_CLOSE_WINDOW_TIMEOUT } from "@mail/core/common/mail_popout_plugin";
 
 import {
     advanceTime,

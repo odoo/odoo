@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
 import { loadAssets } from "@im_livechat/embed/common/boot_helpers";
-import { mailPopoutService } from "@mail/core/common/mail_popout_service";
+import { MailPopoutPlugin } from "@mail/core/common/mail_popout_plugin";
 
 const popoutPatch = {
     async addAssets(window) {
@@ -20,4 +20,4 @@ const popoutPatch = {
         await loadAssets(window.document.head);
     },
 };
-patch(mailPopoutService, popoutPatch);
+patch(MailPopoutPlugin.prototype, popoutPatch);
