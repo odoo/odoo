@@ -1456,6 +1456,18 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                 self.assertEqual(foo.search([('id', 'in', foo.ids), ('bar_id', 'ilike', 'A')]), foo)
                 self.assertEqual(foo.search([('id', 'in', foo.ids), ('bar_alias', 'ilike', 'A')]), foo)
 
+    def test_25_related_x2many_null(self):
+        # an empty x2many gives a falsy related value, like an empty many2one,
+        # so searching for null must match it
+        Foo = self.env['test_orm.related_foo']
+        foo_empty = Foo.create({'name': 'empty'})
+        foo_a = Foo.create({'name': 'a', 'bar_ids': [Command.create({'name': 'a'})]})
+        self.env['test_orm.related'].create({'name': 'a', 'foo_id': foo_a.id})
+
+        for fname in ('foo_names', 'bar_names'):
+            with self.subTest(fname=fname):
+                self.assertEqual(self._search(Foo, [(fname, '=', False)]), foo_empty)
+
     def test_25_one2many_inverse_related(self):
         left = self.env['test_orm.trigger.left'].create({})
         right = self.env['test_orm.trigger.right'].create({})
