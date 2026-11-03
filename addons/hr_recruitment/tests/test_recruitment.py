@@ -407,6 +407,28 @@ class TestRecruitment(MailCase, TransactionCase):
         self.assertEqual(known_applicant.partner_id, existing_partner)
         self.assertEqual(self.env['res.partner'].search_count([('email', '=', 'laurie.poiret@aol.ru')]), 1)
 
+    def test_template_email_links_applicant_contact(self):
+        """ A template email sent to an applicant without contact (e.g. on a stage change) links the applicant
+        to the contact of the recipient, found from the email whatever its case, or created. """
+        template = self.env.ref('hr_recruitment.email_template_data_applicant_interest')
+        stage = self.env['hr.recruitment.stage'].create({'name': 'Interested', 'template_id': template.id})
+        existing_partner = self.env['res.partner'].create({'name': 'Laurie', 'email': 'laurie.poiret@aol.ru'})
+        new_applicant, known_applicant = self.env['hr.applicant'].create([
+            {'partner_name': 'New Applicant', 'email_from': 'New.Applicant@Example.com'},
+            {'partner_name': 'Laurie Poiret', 'email_from': 'laurie.poiret@aol.ru'},
+        ])
+        known_applicant.partner_id = False
+        self.flush_tracking()
+
+        with self.mock_mail_gateway():
+            (new_applicant | known_applicant).stage_id = stage
+            self.flush_tracking()
+
+        self.assertEqual(new_applicant.partner_id.email_normalized, 'new.applicant@example.com')
+        self.assertEqual(known_applicant.partner_id, existing_partner)
+        self.assertEqual(self.env['res.partner'].search_count([('email_normalized', '=', 'new.applicant@example.com')]), 1)
+        self.assertEqual(self.env['res.partner'].search_count([('email_normalized', '=', 'laurie.poiret@aol.ru')]), 1)
+
     def test_archive_applicant_routing(self):
         app_1, app_2 = self.env['hr.applicant'].create([
             {'partner_name': 'A One', 'email_from': 'a.one@example.com'},
