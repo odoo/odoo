@@ -56,9 +56,20 @@ class StockWarehouseOrderpoint(models.Model):
         """ Extend to add more depends values """
         super()._compute_deadline_date()
 
+    @api.depends('bom_id', 'product_id.bom_ids.produce_delay')
+    def _compute_lead_days(self):
+        boms = self._get_lead_days_boms()
+        return super(StockWarehouseOrderpoint, self.with_context(
+            orderpoint_lead_days_boms=boms,
+            orderpoint_preproduction_rules_cache={},
+        ))._compute_lead_days()
+
     def _get_lead_days_values(self):
         values = super()._get_lead_days_values()
-        if self.bom_id:
+        boms = self.env.context.get('orderpoint_lead_days_boms')
+        if boms is not None:
+            values['bom'] = boms[self.id]
+        elif self.bom_id:
             values['bom'] = self.bom_id
         return values
 
@@ -67,21 +78,50 @@ class StockWarehouseOrderpoint(models.Model):
         """ Extend to add more depends values """
         super()._compute_qty_to_order_computed()
 
-    def _get_matching_boms(self):
-        matching_boms = defaultdict(lambda: self.env['mrp.bom'])
-        orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
-        for orderpoint in self.filtered('product_id'):
-            orderpoints_by_company[orderpoint.company_id.id] |= orderpoint
+    def _get_boms_for_orderpoints(self, orderpoints, **bom_find_kwargs):
+        """Map orderpoints to BoMs, batch-finding those without a selected BoM."""
+        orderpoints_without_bom = orderpoints.filtered(lambda orderpoint: not orderpoint.bom_id)
+        boms = self.env['mrp.bom']._bom_find(
+            orderpoints_without_bom.product_id,
+            bom_type='normal',
+            **bom_find_kwargs,
+        ) if orderpoints_without_bom else {}
+        return {
+            orderpoint.id: orderpoint.bom_id or boms[orderpoint.product_id]
+            for orderpoint in orderpoints
+        }
 
-        for company_id, orderpoints in orderpoints_by_company.items():
-            orderpoints_without_bom = orderpoints.filtered(lambda orderpoint: not orderpoint.bom_id)
-            boms = self.env['mrp.bom']._bom_find(
-                orderpoints_without_bom.product_id,
-                bom_type='normal',
-                company_id=company_id,
-            ) if orderpoints_without_bom else {}
-            for orderpoint in orderpoints:
-                matching_boms[orderpoint.id] = orderpoint.bom_id or boms[orderpoint.product_id]
+    def _get_matching_boms(self):
+        """Map orderpoints to selected or company-matching BoMs."""
+        matching_boms = defaultdict(lambda: self.env['mrp.bom'])
+        orderpoints_by_company = self.filtered('product_id').grouped('company_id')
+        for company, orderpoints in orderpoints_by_company.items():
+            matching_boms.update(self._get_boms_for_orderpoints(
+                orderpoints,
+                company_id=company.id,
+            ))
+        return matching_boms
+
+    def _get_lead_days_boms(self):
+        """Map manufacturing orderpoints to BoMs matching their operation type."""
+        def get_manufacture_rule_key(orderpoint):
+            manufacture_rule = orderpoint.rule_ids.filtered(lambda rule: rule.action == 'manufacture')
+            if not manufacture_rule:
+                return False
+            manufacture_rule.ensure_one()
+            return manufacture_rule.company_id, manufacture_rule.picking_type_id
+
+        matching_boms = defaultdict(lambda: self.env['mrp.bom'])
+        orderpoints_by_rule = self.filtered('product_id').grouped(get_manufacture_rule_key)
+        for rule_key, orderpoints in orderpoints_by_rule.items():
+            if not rule_key:
+                continue
+            company, picking_type = rule_key
+            matching_boms.update(self._get_boms_for_orderpoints(
+                orderpoints,
+                picking_type=picking_type,
+                company_id=company.id,
+            ))
         return matching_boms
 
     def _compute_allowed_replenishment_uom_ids(self):
