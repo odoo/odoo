@@ -518,12 +518,12 @@
             <t t-out="0"/>
         </t>
         <div t-attf-class="footer o_company_#{company.id}_layout pt-1 {{report_type != 'pdf' and 'position-relative mt-auto mx-n5'}}">
-            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed start-0'}} w-100" preserveAspectRatio="none" t-att-height="report_type == 'pdf' and '180'" viewBox="0 0 1000 180" fill="none">
+            <svg xmlns="http://www.w3.org/2000/svg" t-attf-class="{{report_type == 'pdf' and 'position-fixed' or 'position-absolute'}} start-0 w-100" preserveAspectRatio="none" height="180" viewBox="0 0 1000 180" fill="none">
                 <path d="M427.731 19.757C686.904 51.3469 898.971 38.039 1000 27.6922V180H0V8.20934C66.363 -0.991089 198.347 -8.20218 427.731 19.757Z" t-att-fill="company.secondary_color" fill-opacity=".1"/>
             </svg>
             <t
                 t-call="web.external_layout_footer_content"
-                footer_content_classes="(report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5 ' or '') + 'pt-4'"
+                footer_content_classes="(report_type != 'pdf' and 'mx-5 ' or '') + 'pt-4'"
             />
         </div>
     </template>
@@ -582,7 +582,7 @@
             <t
                 t-call="web.external_layout_footer_content"
                 is_centered_footer="True"
-                footer_content_classes="(report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5' or '') + ' pt-2 text-center'"
+                footer_content_classes="(report_type != 'pdf' and 'position-absolute end-0 start-0 top-0 mx-5' or '') + ' pt-2 text-center'"
             />
         </div>
     </template>
