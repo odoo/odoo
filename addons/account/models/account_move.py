@@ -3051,6 +3051,22 @@ class AccountMove(models.Model):
             if move.statement_id and move.journal_id.type not in {'bank', 'cash', 'credit'}:
                 raise ValidationError(self.env._("Bank statements must be linked to a journal of type Bank, Cash or Credit."))
 
+    @api.constrains('journal_id', 'suitable_journal_ids')
+    def _check_journal_id_suitability(self):
+        """
+        Ensure that the selected journal is valid for the current move type.
+        This enforces the UI domain at the backend level, preventing invalid
+        data insertion via API, RPC, or AI agents.
+        """
+        for move in self:
+            if move.journal_id and move.suitable_journal_ids:
+                if move.journal_id not in move.suitable_journal_ids:
+                    raise ValidationError(_(
+                        "The selected journal (%(journal_name)s) is not suitable for this journal entry. "
+                        "Please choose one of the allowed journals.",
+                        journal_name=move.journal_id.name
+                    ))
+
     # -------------------------------------------------------------------------
     # CATALOG
     # -------------------------------------------------------------------------
