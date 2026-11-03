@@ -15,7 +15,7 @@
                     <tbody t-foreach="extra_data['new_coupons']" t-as="coupon">
                         <tr>
                             <td class="text-start text-top pt-3">
-                                <div class="pb-1" t-out="coupon['name']"/>
+                                <div class="pb-1" t-out="coupon['program_name']"/>
                                 <div class="pb-1"> Until: <t t-if="coupon.get('expiration_date')" t-out="coupon['expiration_date']"/><t t-else="">no expiration</t></div>
                             </td>
                             <td class="text-end pt-3">
