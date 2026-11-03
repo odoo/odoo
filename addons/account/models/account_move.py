@@ -4016,6 +4016,22 @@ class AccountMove(models.Model):
             return True
         self._sanitize_vals(vals)
         self._check_user_access([vals])
+        if vals.get('journal_id') and self.env['account.journal'].browse(vals['journal_id']).type in ('bank', 'cash'):
+            # Moving an existing manual entry onto a bank/cash journal is not allowed through the UI (suitable_journal_ids),
+            # so it must not be possible through the ORM either (API, AI). Creations by the system (payments, statements,
+            # POS, ...) are not concerned.
+            manual_entries = self.filtered(lambda m: (
+                m.move_type == 'entry'
+                and m.journal_id.type not in ('bank', 'cash')
+                and not m.origin_payment_id
+                and not m.statement_line_id
+                and not m.reversed_entry_id
+            ))
+            if manual_entries and not self.env.context.get('is_payment') and not self.env.context.get('is_statement_line'):
+                raise ValidationError(self.env._(
+                    "You cannot manually assign a bank or cash journal to a journal entry. "
+                    "These journals are exclusively reserved for payments and bank statements."
+                ))
 
         unmodifiable_fields = [
             'line_ids', 'invoice_line_ids',
