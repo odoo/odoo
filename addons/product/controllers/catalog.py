@@ -17,13 +17,9 @@ class ProductCatalogController(Controller):
             {
                 product.id: {
                     'price': float,
-                    'uomDisplayName': string,
-                    'uomId': int,
-                    'productUomFactor': float (optional),
-                    'sellerUomFactor': float (optional),
+                    'uomId': int (optional),
                     'quantity': float (optional)
-                    'productType': string,
-                    'productUomDisplayName': string (optional),
+                    'productUomId': int (optional),
                     'readOnly': bool (optional),
                 }
             }
