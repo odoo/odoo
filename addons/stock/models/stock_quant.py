@@ -25,12 +25,12 @@ class StockQuant(models.Model):
     _rec_names_search = ('location_id', 'lot_id', 'package_id', 'owner_id')
 
     def _domain_location_id(self):
-        if self.env.user.has_group('stock.group_stock_user'):
+        if self._is_inventory_user():
             return "[('usage', 'in', ['internal', 'transit'])] if context.get('inventory_mode') else []"
         return "[]"
 
     def _domain_lot_id(self):
-        if self.env.user.has_group('stock.group_stock_user'):
+        if self._is_inventory_user():
             return ("[] if not context.get('inventory_mode') else"
                 " [('product_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.product' else"
                 " [('product_id.product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
@@ -116,7 +116,7 @@ class StockQuant(models.Model):
     is_outdated = fields.Boolean('Quantity has been moved since last count', compute='_compute_is_outdated', search='_search_is_outdated')
     user_id = fields.Many2one(
         'res.users', 'Assigned To', help="User assigned to do product count.",
-        domain=lambda self: [('all_group_ids', 'in', self.env.ref('stock.group_stock_user').id)])
+        domain=lambda self: [('all_group_ids', 'in', self._get_inventory_user_groups().ids)])
 
     @api.depends('quantity', 'reserved_quantity')
     def _compute_available_quantity(self):
@@ -1273,7 +1273,16 @@ class StockQuant(models.Model):
         "inventory session", meaning a mode where we need to create the stock.move
         record necessary to be consistent with the `inventory_quantity` field.
         """
-        return self.env.context.get('inventory_mode') and self.env.user.has_group('stock.group_stock_user')
+        return self.env.context.get('inventory_mode') and self._is_inventory_user()
+
+    @api.model
+    def _get_inventory_user_groups(self):
+        """ Users of these groups count inventory and can be assigned counts. """
+        return self.env.ref('stock.group_stock_user')
+
+    @api.model
+    def _is_inventory_user(self):
+        return bool(self.env.user.all_group_ids & self._get_inventory_user_groups())
 
     @api.model
     def _get_inventory_fields_create(self):
