@@ -761,7 +761,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         project.task_ids = [Command.create({
             'name': 'Recurrent Task',
             'recurring_task': True,
-            'repeat_type': 'forever',
+            'end_type': 'forever',
         })]
         self.env['project.share.wizard'].create({
             'res_model': 'project.project',
@@ -772,6 +772,8 @@ class TestProjectSharing(TestProjectSharingCommon):
         })
         task = project.task_ids[0]
         self.env.invalidate_all()
+        recurrence_values = task.with_user(portal_user).read(['rrule_type', 'interval', 'end_type', 'rrule_type_ui'])[0]
+        self.assertEqual(recurrence_values['end_type'], 'forever', "The portal user should be able to read the recurrence of the task.")
         task.with_user(portal_user).write({'state': '1_done'})
         self.assertEqual(task.state, '1_done', "The portal user with edit rights should be able to mark the task as done.")
         next_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
