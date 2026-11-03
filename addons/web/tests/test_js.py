@@ -195,7 +195,8 @@ class HootSuite(HootCommon):
 
 class CrossModuleHoot(HootCommon, odoo.tests.CrossModule):
     def browser_js(self, *args, **kwargs):
-        super().browser_js(*args, console_hook=self._record_hoot_stats, **kwargs)
+        # stat_name=None: time is already split per module via _record_hoot_stats
+        super().browser_js(*args, console_hook=self._record_hoot_stats, stat_name=None, **kwargs)
 
     def _record_hoot_stats(self, message):
         match = RE_HOOT_ROOT_SUITE_ENDED.search(message)
