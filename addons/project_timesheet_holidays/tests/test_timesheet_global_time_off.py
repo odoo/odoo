@@ -114,7 +114,8 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         Check timesheet generation is limited to the company of the public holiday in a multi-company
         environment with a shared working schedule between companies.
         """
-        self.test_company.resource_calendar_id.write({'company_id': False})
+        self.test_company.resource_calendar_id = self.test_company.resource_calendar_id.copy({'company_id': False})
+        (self.full_time_employee | self.full_time_employee_2).resource_calendar_id = self.test_company.resource_calendar_id
         self.env['hr.employee'].create({
             'name': 'Employee Company 2',
             'company_id': self.test_company_2.id,
@@ -583,7 +584,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         """ Test that public holidays are included in the global working schedule (company should be False)
             when a global time off is created.
         """
-        self.part_time_calendar.company_id = False
+        self.part_time_employee.resource_calendar_id = self.part_time_employee.resource_calendar_id.copy({'company_id': False})
         self.env['resource.calendar.leaves'].with_company(self.part_time_employee.company_id).create({
             'name': 'Public Holiday',
             'date_from': datetime(2021, 1, 4, 0, 0, 0),
