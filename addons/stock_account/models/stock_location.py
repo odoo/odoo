@@ -9,7 +9,7 @@ class StockLocation(models.Model):
     _inherit = "stock.location"
 
     valuation_account_id = fields.Many2one(
-        'account.account', 'Stock Valuation Account',
+        'account.account', 'Stock Valuation Account 3',
         domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))],
         help="Expense account used to re-qualify products removed from stock and sent to this location")
     is_valued = fields.Boolean('Is valued inside the company', compute="_compute_is_valued", search="_search_is_valued")
