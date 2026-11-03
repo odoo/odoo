@@ -46,7 +46,13 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"];
+    static dependencies = [
+        "builderActions",
+        "domObserver",
+        "savePlugin",
+        "edit_interaction",
+        "websiteBridge",
+    ];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
@@ -1088,9 +1094,11 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
                     reloadBundles: false,
                 }
             );
-            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+            const variables = {
                 [gradientColor]: isColorCombination ? nullValue : gradientValue || nullValue,
-            }); // reloads bundles
+                ...this.getAdditionalVariables({ value }),
+            };
+            await this.dependencies.customizeWebsite.customizeWebsiteVariables(variables); // reloads bundles
         } else {
             await this.dependencies.customizeWebsite.customizeWebsiteColors(
                 { [color]: value },
@@ -1101,6 +1109,10 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
         await Promise.allSettled(
             this.getResource("on_website_color_updated_handlers").map((handler) => handler([color]))
         );
+    }
+
+    getAdditionalVariables() {
+        return {};
     }
 }
 
