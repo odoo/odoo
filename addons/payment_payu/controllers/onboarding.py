@@ -69,8 +69,12 @@ class PayUOnboardingController(Controller):
             )
         except ValidationError as error:
             return request.render(
-                "payment_payu.authorization_error",
-                {"error_message": str(error), "provider_url": redirect_url},
+                "payment.authorization_error",
+                qcontext={
+                    "provider_name": "PayU",
+                    "error_message": str(error),
+                    "provider_form_route": redirect_url,
+                },
             )
         credentials = credentials_response.get("data", {}).get("credentials", {})
         provider.write({
