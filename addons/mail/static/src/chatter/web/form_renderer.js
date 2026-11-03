@@ -1,7 +1,8 @@
 import { AttachmentView } from "@mail/core/common/attachment_view";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
+import { MailPopoutPlugin } from "@mail/core/common/mail_popout_plugin";
 
-import { signal, types } from "@odoo/owl";
+import { signal, types, usePlugin } from "@odoo/owl";
 
 import { SIZES } from "@web/core/ui/ui_utils";
 import { useService } from "@web/core/utils/hooks";
@@ -22,7 +23,7 @@ patch(FormRenderer.prototype, {
             });
         }
         this.uiService = useService("ui");
-        this.mailPopoutService = useService("mail.popout");
+        this.mailPopout = usePlugin(MailPopoutPlugin);
     },
     /**
      * @returns {boolean}
@@ -43,7 +44,7 @@ patch(FormRenderer.prototype, {
         const xxl = this.uiService.size >= SIZES.XXL;
         const hasFile = this.hasFile();
         const hasChatter = !!this.mailStore;
-        const hasExternalWindow = !!this.mailPopoutService.externalWindow;
+        const hasExternalWindow = !!this.mailPopout.externalWindow;
         if (hasExternalWindow && hasFile && hasAttachmentContainer) {
             if (xxl) {
                 return "EXTERNAL_COMBO_XXL"; // chatter on the side, attachment in separate tab

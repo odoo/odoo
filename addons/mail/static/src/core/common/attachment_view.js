@@ -1,3 +1,4 @@
+import { MailPopoutPlugin } from "@mail/core/common/mail_popout_plugin";
 import { propStatic, usePropsPlus } from "@mail/utils/common/hooks";
 
 import { Component, onMounted, onWillUnmount, signal, t, useOnChange, usePlugin } from "@odoo/owl";
@@ -81,7 +82,7 @@ export class PopoutAttachmentView extends AbstractAttachmentView {
  */
 export function usePopoutAttachment({ thread }) {
     const uiService = usePlugin(UIPlugin);
-    const mailPopoutService = useService("mail.popout");
+    const mailPopout = usePlugin(MailPopoutPlugin);
     const notification = usePlugin(NotificationPlugin);
 
     function attachmentViewParentElementClassList() {
@@ -113,7 +114,7 @@ export function usePopoutAttachment({ thread }) {
         if (isMobileOS()) {
             return notification.add(_t("Pop out is not supported on mobile."), { type: "warning" });
         }
-        mailPopoutService.addHooks(
+        mailPopout.addHooks(
             () => {
                 hideAttachmentView();
                 uiService.bus.trigger("resize");
@@ -123,18 +124,18 @@ export function usePopoutAttachment({ thread }) {
                 uiService.bus.trigger("resize");
             }
         );
-        mailPopoutService.popout(PopoutAttachmentView, { thread });
+        mailPopout.popout(PopoutAttachmentView, { thread });
     }
 
     function updatePopout() {
-        if (mailPopoutService.externalWindow) {
+        if (mailPopout.externalWindow) {
             hideAttachmentView();
-            mailPopoutService.popout(PopoutAttachmentView, { thread });
+            mailPopout.popout(PopoutAttachmentView, { thread });
         }
     }
 
     function resetPopout() {
-        mailPopoutService.reset();
+        mailPopout.reset();
     }
 
     onMounted(() => updatePopout());
