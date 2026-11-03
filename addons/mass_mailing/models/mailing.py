@@ -1109,13 +1109,35 @@ class MassMailing(models.Model):
             if not mailing_res_ids:
                 raise UserError(_('There are no recipients selected.'))
 
+            attachments = mailing.attachment_ids
+            body = mailing._prepend_preview(mailing.body_html or '', mailing.preview)
+            if attachments:
+                estimated_email_size_bytes = self.env['mail.mail']._estimate_email_size(
+                    {}, body, attachments.sudo().mapped('file_size')
+                )
+                max_email_size_bytes = (
+                    mailing.mail_server_id or self.env['ir.mail_server']
+                ).sudo()._get_max_email_size() * 1024 * 1024
+                if estimated_email_size_bytes > max_email_size_bytes:
+                    attachments.sudo().generate_access_token()
+                    attachments_links = self.env['ir.qweb']._render(
+                        'mail.mail_attachment_links',
+                        {'attachments': attachments.sudo()},
+                    )
+                    body = tools.mail.append_content_to_html(
+                        body,
+                        attachments_links,
+                        plaintext=False,
+                    )
+                    attachments = self.env['ir.attachment']
+
             composer_values = {
                 'auto_delete': not mailing.keep_archives,
                 # email-mode: keep original message for routing
                 'auto_delete_keep_log': mailing.reply_to_mode == 'update',
                 'author_id': author_id,
-                'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing._prepend_preview(mailing.body_html or '', mailing.preview),
+                'attachment_ids': [(4, attachment.id) for attachment in attachments],
+                'body': body,
                 'composition_mode': 'mass_mail',
                 'email_from': mailing.email_from,
                 'mail_server_id': mailing.mail_server_id.id,
