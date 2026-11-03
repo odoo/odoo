@@ -2,8 +2,8 @@
 from unittest.mock import patch
 
 from odoo import Command, fields
-from odoo.exceptions import UserError
-from odoo.tests import Form, freeze_time
+from odoo.exceptions import AccessError, UserError
+from odoo.tests import Form, freeze_time, new_test_user
 from odoo.tools import mute_logger
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -423,6 +423,24 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             })
 
         self.assertTrue(tax_pos.is_used)
+
+    def test_tax_computation_change_blocked_when_open_pos_session(self):
+        self.main_company.write({'tax_calculation_rounding_method': 'round_per_line', 'account_price_include': 'tax_excluded'})
+        self.open_pos_session()
+
+        user = new_test_user(self.env, login='pos_company_read_only', company_id=self.main_company.id)
+        self.assertFalse(self.main_company.with_user(user).has_access('write'))
+        with self.assertRaises(AccessError):
+            self.main_company.with_user(user).write({'tax_calculation_rounding_method': 'round_globally'})
+
+        for vals in ({'tax_calculation_rounding_method': 'round_globally'}, {'account_price_include': 'tax_included'}):
+            with self.assertRaisesRegex(UserError, "point of sale sessions are open"):
+                self.main_company.write(vals)
+        self.main_company.write({'tax_calculation_rounding_method': 'round_per_line', 'account_price_include': 'tax_excluded'})
+
+        self.close_session()
+        self.main_company.tax_calculation_rounding_method = 'round_globally'
+        self.assertEqual(self.main_company.tax_calculation_rounding_method, 'round_globally')
 
     def test_classic_order(self):
         session = self.open_pos_session()

@@ -1,5 +1,5 @@
 from odoo import api, models, fields, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 
 
@@ -41,6 +41,22 @@ class ResCompany(models.Model):
             'point_of_sale_ticket_unique_code', 'point_of_sale_ticket_portal_url_display_mode', 'street', 'city', 'zip',
             'account_fiscal_country_id', 'street2',
         ]
+
+    def write(self, vals):
+        tax_fields = {'tax_calculation_rounding_method', 'account_price_include'} & vals.keys()
+        if tax_fields:
+            self.check_access('write')
+            companies = self.filtered(lambda c: any(c[fname] != vals[fname] for fname in tax_fields))
+            open_sessions = companies and self.env['pos.session'].sudo().search([
+                ('config_id.company_id', 'in', companies.ids),
+                ('state', '!=', 'closed'),
+            ])
+            if open_sessions:
+                raise UserError(_(
+                    "You cannot change how taxes are computed while point of sale sessions are open. "
+                    "Please close them first: %s", ', '.join(open_sessions.mapped('name'))
+                ))
+        return super().write(vals)
 
     @api.constrains('fiscalyear_lock_date', 'tax_lock_date', 'sale_lock_date', 'hard_lock_date')
     def validate_lock_dates(self):
