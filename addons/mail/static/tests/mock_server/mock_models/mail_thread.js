@@ -603,6 +603,8 @@ export class MailThread extends models.ServerModel {
         const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").MailScheduledMessage} */
         const MailScheduledMessage = this.env["mail.scheduled.message"];
+        /** @type {import("mock_models").MailMessage} */
+        const MailMessage = this.env["mail.message"];
 
         if (!fields) {
             fields = [];
@@ -696,6 +698,18 @@ export class MailThread extends models.ServerModel {
                     (message) => message.model === this._name && message.res_id === thread.id
                 )
             );
+        }
+        if (request_list.includes("userNotifications")) {
+            const user_notification_ids = MailMessage.search([
+                ["res_id", "=", thread.id],
+                ["res_model", "=", this._name],
+                ["message_type", "=", "user_notification"],
+                ["needaction", "=", true],
+            ]);
+            res["userNotifications"] = mailDataHelpers.Store.many(
+                MailMessage.browse(user_notification_ids)
+            );
+            MailMessage.set_message_done(user_notification_ids);
         }
         store._add_record_fields(this.env[this._name].browse(thread.id), res, true);
     }
