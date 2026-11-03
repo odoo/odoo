@@ -17,7 +17,7 @@ class WatchedFileHandler(logging.handlers.WatchedFileHandler):
 def patch_module():
     logging.RUNBOT = RUNBOT
     logging.addLevelName(RUNBOT, "RUNBOT")
-    logging._levelToName[RUNBOT] = "INFO"  # displayed as info in log
+    logging._levelToName[RUNBOT] = "NOTE"  # display in log
     logging.Logger.runbot = \
         lambda self, msg, *args, **kwargs: self.log(RUNBOT, msg, *args, **kwargs)
     logging.handlers.WatchedFileHandler = WatchedFileHandler
