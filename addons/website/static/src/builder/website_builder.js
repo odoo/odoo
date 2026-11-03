@@ -172,13 +172,18 @@ export class WebsiteBuilder extends Component {
                 ),
                 confirmLabel: _t("Discard changes"),
                 cancelLabel: _t("Keep editing"),
-                confirm: () => this.props.builderProps.closeEditor(),
+                confirm: () => this.discardChanges(),
                 cancel: () => {},
             });
         } else {
             this.props.builderProps.closeEditor();
         }
         this.reloadAfterTimeout();
+    }
+
+    async discardChanges() {
+        await Promise.all(this.editor.getResource("discard_handlers").map((handler) => handler()));
+        await this.props.builderProps.closeEditor();
     }
 
     onBeforeUnload(event) {
@@ -210,7 +215,7 @@ export class WebsiteBuilder extends Component {
             });
             if (shouldCloseEditor) {
                 this.isGuardActive = false;
-                this.props.builderProps.closeEditor();
+                await this.discardChanges();
             } else {
                 this.pushHistoryState();
             }
