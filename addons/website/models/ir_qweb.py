@@ -1,12 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 import re
 
 from collections import OrderedDict
+from urllib.parse import urlsplit, urlunsplit
 
 from odoo import models
 from odoo.http import request
 from odoo.addons.website.tools import add_form_signature
 
+_logger = logging.getLogger(__name__)
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 re_translate_span = re.compile(r'<span.+?data-oe-translation-source-sha.+?>(.+?)</span>')
@@ -98,6 +101,8 @@ class IrQweb(models.AbstractModel):
 
             # Adapt background-image URL in the same way as image src.
             atts = self._adapt_style_background_image(atts, self.env['ir.http']._url_for)
+            if tagName == 'a' and request.is_frontend:
+                atts = self._move_href_query_to_data(atts)
 
         if not website.cdn_activated:
             return atts
@@ -111,6 +116,27 @@ class IrQweb(models.AbstractModel):
                 atts[data_name] = website.get_cdn_url(atts[data_name])
         atts = self._adapt_style_background_image(atts, website.get_cdn_url)
 
+        return atts
+
+    def _move_href_query_to_data(self, atts):
+        """ Move the query string of a ``href`` into a
+        ``data-href-query`` attribute, the full URL being rebuilt in JS on page
+        load. This keeps crawlers that do not execute javascript from following
+        every combination of query parameters (filters, sorting, ...).
+        """
+        href = atts.get('href')
+        if not href or 'data-href-query' in atts:
+            return atts
+        try:
+            url = urlsplit(href)
+        except ValueError:
+            return atts
+        if not url.query or url.scheme or url.hostname:
+            # don't rewrite absolute URLs or special schemes like mailto: or tel:
+            return atts
+        atts['href'] = urlunsplit(url._replace(query=''))
+        atts['data-href-query'] = url.query
+        _logger.warning("Moved query string of href %r to data-href-query", href)
         return atts
 
     def _adapt_style_background_image(self, atts, url_adapter):
