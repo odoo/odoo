@@ -90,3 +90,14 @@ export function getActiveHotkey(ev) {
 
     return hotkey.join("+");
 }
+
+/**
+ * @param {EventTarget} target
+ */
+export function isEditableTarget(target) {
+    return (
+        target instanceof HTMLElement &&
+        (/input|textarea/i.test(target.tagName) || target.isContentEditable) &&
+        !target.matches("input[type=checkbox], input[type=radio]")
+    );
+}

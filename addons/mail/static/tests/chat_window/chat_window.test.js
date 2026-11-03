@@ -24,8 +24,12 @@ import {
     waitStoreFetch,
     MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
-import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
-import { describe, expect, test, waitFor, waitForNone } from "@odoo/hoot";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+    setSelectionInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
+import { describe, expect, press, test, waitFor, waitForNone } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import {
     Command,
@@ -79,6 +83,53 @@ test('chat window: post message on channel with "CTRL-Enter" keyboard shortcut f
     await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Test");
     triggerHotkey("control+Enter");
     await waitFor(".o-mail-Message:count(1)");
+});
+
+for (const htmlEnabled of [false, true]) {
+    test(`chat window: undo and redo in the composer (html: ${htmlEnabled})`, async () => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        setupChatHub({ opened: [channelId] });
+        await start();
+        if (htmlEnabled) {
+            getService("mail.composer").setHtmlComposer();
+        }
+        await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Hello");
+        await press(["control", "z"]);
+        await containsTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "");
+        await press(["control", "y"]);
+        await containsTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Hello");
+    });
+}
+
+test.tags("html composer");
+test("chat window: format the composer text with a hotkey", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    setupChatHub({ opened: [channelId] });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Hello");
+    await setSelectionInComposer(".o-mail-ChatWindow .o-mail-Composer", { start: 0, end: 5 });
+    await press(["control", "5"]);
+    await waitFor(".o-mail-ChatWindow .o-mail-Composer-html s:text('Hello'):count(1)");
+});
+
+test("chat window: alt hotkeys in the composer leave the form record as is", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Alice" },
+        { name: "Bob" },
+    ]);
+    setupChatHub({ opened: [channelId] });
+    await start();
+    await openFormView("res.partner", partnerId_1, { resIds: [partnerId_1, partnerId_2] });
+    await insertTextInComposer(".o-mail-ChatWindow .o-mail-Composer", "Hello");
+    await press(["alt", "n"]);
+    await press("Enter");
+    await waitFor(".o-mail-ChatWindow .o-mail-Message-body:text('Hello'):count(1)");
+    await waitFor(".o_pager_value:text('1')");
 });
 
 test("load messages from opening chat window from messaging menu", async () => {
