@@ -1373,7 +1373,10 @@ class AccountEdiUBL(models.AbstractModel):
             return
 
         vat = commercial_partner.vat
-        if commercial_partner == vals['company'].partner_id:
+        if (
+            self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note')
+            and commercial_partner == vals['company'].partner_id
+        ):
             fiscal_position = vals['invoice'].fiscal_position_id
             if fiscal_position.foreign_vat:
                 vat = fiscal_position.foreign_vat
