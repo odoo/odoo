@@ -276,6 +276,11 @@ class AccountMoveSend(models.AbstractModel):
             doc_type_code_attrs = " ".join(f'{name}="{value}"' for name, value in doc_type_code_vals['attrs'].items())
             doc_type_node = f"<cbc:DocumentTypeCode {doc_type_code_attrs}>{doc_type_code_vals['value']}</cbc:DocumentTypeCode>"
 
+        document_description = edi_model._get_document_description()
+        document_description_node = ""
+        if document_description:
+            document_description_node = f"<cbc:DocumentDescription>{document_description_node}</cbc:DocumentDescription>"
+
         attachments_to_embed = [
             {
                 'filename': attachment.name,
@@ -293,6 +298,7 @@ class AccountMoveSend(models.AbstractModel):
             'mimetype': pdf_values['mimetype'],
             'xmlns': f'xmlns="urn:oasis:names:specification:ubl:schema:xsd:{xmlns_move_type}-2"',
             'document_type_node': doc_type_node,
+            'document_description_node': document_description_node
         })
 
         for attachment_values in attachments_to_embed:
@@ -305,6 +311,7 @@ class AccountMoveSend(models.AbstractModel):
                     xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                     <cbc:ID>{escape(attachment_values["filename"])}</cbc:ID>
                     {attachment_values.get("document_type_node", "")}
+                    {attachment_values.get("document_description_node", "")}
                     <cac:Attachment>
                         <cbc:EmbeddedDocumentBinaryObject
                             mimeCode={quoteattr(attachment_values["mimetype"])}

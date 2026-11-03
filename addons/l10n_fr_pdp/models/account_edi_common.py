@@ -59,3 +59,6 @@ class AccountEdiCommon(models.AbstractModel):
 
         profile_id = f"{profile_scope}{profile_number}"
         return profile_id
+
+    def _get_document_description(self):
+        return None
