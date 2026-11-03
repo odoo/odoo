@@ -30,7 +30,7 @@
                 <field name="remaining_hours" widget="timesheet_uom" sum="Time Remaining" optional="hide" decoration-danger="progress &gt;= 1" decoration-warning="progress &gt;= 0.8 and progress &lt; 1" column_invisible="not parent.allow_timesheets or not parent.show_portal_timesheets" invisible="not allow_timesheets or not show_portal_timesheets"/>
                 <field name="progress" widget="project_task_progressbar" optional="hide" decoration-danger="progress > 1" options="{'overflow_class': 'bg-danger'}" column_invisible="not parent.allow_timesheets or not parent.show_portal_timesheets" invisible="not allow_timesheets or not show_portal_timesheets"/>
             </xpath>
-            <xpath expr="//div[@name='repeat_intervals']" position="after">
+            <xpath expr="//widget[@name='recurrence_config']" position="after">
                 <field name="encode_uom_in_days" invisible="1"/> <!-- drives invisible of the label, the Time Remaining label and 1 more -->
                 <field name="subtask_count" invisible="1"/> <!-- drives invisible of the text, the action_project_sharing_open_subtasks button -->
                 <label for="allocated_hours" invisible="not allow_timesheets or not show_portal_timesheets"/>
