@@ -12,4 +12,11 @@
         <field name="channel_id" ref="im_livechat.im_livechat_channel_data"/>
     </record>
 
+    <!-- Redirect to a website page rather than a hand-typed URL -->
+
+    <record id="im_livechat.chatbot_script_welcome_step_dispatch_answer_documentation" model="chatbot.script.answer">
+        <field name="redirect_link" eval="False"/>
+        <field name="redirect_record_ref" eval="'website.page,%d' % ref('website.homepage_page')"/>
+    </record>
+
 </data></odoo>
