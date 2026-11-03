@@ -22,10 +22,17 @@ class ProjectProject(models.Model):
 
     def action_view_lead(self):
         self.ensure_one()
-        return {
+        action = {
             'type': 'ir.actions.act_window',
             'res_model': 'crm.lead',
-            'view_mode': 'form',
+            'views': [(False, 'form')],
             'res_id': self.lead_id.id,
             'context': {'create': False},
         }
+        if self.env.context.get('from_embedded_action'):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'crm_sale_project_top_menu_opportunity',
+                'params': {'action': action},
+            }
+        return action
