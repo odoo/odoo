@@ -104,6 +104,44 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.assertEqual(po.order_line.price_unit, bo.line_ids.price_unit, 'The blanket order unit price should still be copied to purchase order')
         self.assertEqual(po.state, "purchase")
 
+    def test_blanket_order_pricelist_last_po_line_fallback(self):
+        """ A blanket order pricelist does not block the last PO line fallback of a
+        regular RFQ, and orders made under a blanket order are not used for that fallback. """
+        bo = self.env['purchase.requisition'].create({
+            'vendor_id': self.res_partner_1.id,
+            'requisition_type': 'blanket_order',
+            'line_ids': [Command.create({
+                'product_id': self.product_09.id,
+                'product_qty': 5.0,
+                'price_unit': 21.0,
+            })],
+        })
+        bo.action_confirm()
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'order_line': [Command.create({
+                'product_id': self.product_09.id,
+                'product_qty': 1.0,
+                'price_unit': 30.0,
+            })],
+        })
+        po.button_confirm()
+
+        po_bo = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'requisition_id': bo.id,
+            'order_line': [Command.create({'product_id': self.product_09.id})],
+        })
+        self.assertEqual(po_bo.order_line.price_unit, 21.0)
+        po_bo.button_confirm()
+
+        rfq = self.env['purchase.order'].create({
+            'partner_id': self.res_partner_1.id,
+            'order_line': [Command.create({'product_id': self.product_09.id})],
+        })
+        self.assertEqual(rfq.order_line.price_unit, 30.0)
+
     def test_06_purchase_requisition(self):
         """ Create a blanket order for a product and a vendor already linked via
         a supplier info"""

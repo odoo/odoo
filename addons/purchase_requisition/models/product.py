@@ -20,3 +20,6 @@ class ProductProduct(models.Model):
             return sellers.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id == params['order_id'].requisition_id)
         else:
             return sellers
+
+    def _get_last_po_line_extra_domain(self):
+        return super()._get_last_po_line_extra_domain() + [('requisition_id', '=', False)]
