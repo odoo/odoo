@@ -3790,6 +3790,30 @@ class TestMrpOrder(TestMrpCommon):
         mo.picking_type_id = picking_type_1
         self.assertEqual(mo.name, "BWH/PT1/00002")
 
+    def test_onchange_picking_type_and_delete_component(self):
+        """
+        Test changing the picking type while deleting a component line
+        in the same write operation should not raise any error.
+        """
+        picking_type_1 = self.env['stock.picking.type'].create({
+            'name': 'new_picking_type_1',
+            'code': 'mrp_operation',
+            'sequence_code': 'PT1',
+            'default_location_src_id': self.stock_location_14.id,
+            'default_location_dest_id': self.stock_location_14.id,
+            'warehouse_id': self.warehouse_1.id,
+        })
+        mo, _, _, _, _ = self.generate_mo()
+        component = mo.move_raw_ids[0]
+        mo.write({
+            'move_raw_ids': [Command.delete(component.id)],
+            'picking_type_id': picking_type_1.id,
+        })
+        self.assertRecordValues(mo.move_raw_ids, [{
+            'picking_type_id': picking_type_1.id,
+            'location_id': self.stock_location_14.id,
+        }])
+
     def test_onchange_bom_ids_and_picking_type(self):
         warehouse01 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse02, warehouse03 = self.env['stock.warehouse'].create([
