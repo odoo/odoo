@@ -1450,6 +1450,19 @@ class StockQuant(TransactionCase):
             'product_id': self.product.id,
         }])
 
+    def test_check_serial_number_negative_customer_quant(self):
+        """ A negative quant of a SN in a customer location does not mean the SN is there. """
+        customer_location = self.env.ref('stock.stock_location_customers')
+        lot = self.env['stock.lot'].create({'name': 'SN1', 'product_id': self.product_serial.id})
+        Quant = self.env['stock.quant']
+        Quant._update_available_quantity(self.product_serial, customer_location, -1.0, lot_id=lot)
+        message, _recommended_location = Quant._check_serial_number(self.product_serial, lot, self.env.company)
+        self.assertFalse(message)
+
+        Quant._update_available_quantity(self.product_serial, customer_location, 2.0, lot_id=lot)
+        message, _recommended_location = Quant._check_serial_number(self.product_serial, lot, self.env.company)
+        self.assertIn(customer_location.display_name, message)
+
     def test_action_done_quants_cache_scope(self):
         """ The quants cache built by '_action_done' holds the lots, packages
         and owners of the validated move lines and nothing else. The strict
