@@ -95,7 +95,7 @@ class IrActionsServer(models.Model):
         related=False, compute='_compute_activity_type_id', search=False,
         readonly=False, store=True,
         ondelete='restrict')
-    activity_summary = fields.Char('Summary', readonly=False, store=True)
+    activity_summary = fields.Char('Summary', related=False, readonly=False, store=True)
     activity_note = fields.Html('Note', readonly=False, store=True)
     # Next Activity: common
     activity_date_deadline_range = fields.Integer(
