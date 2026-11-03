@@ -703,6 +703,7 @@ pivotRegistry.add("ODOO", {
         ...granularities,
         "hour",
         "hour_number",
+        "minute",
         "minute_number",
         "second_number",
     ],
