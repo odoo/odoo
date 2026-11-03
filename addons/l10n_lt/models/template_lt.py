@@ -12,6 +12,15 @@ class AccountChartTemplate(models.AbstractModel):
             'code_digits': '6',
         }
 
+    def _get_account_parent_xmlid(self, code_prefix, template_code):
+        if template_code == 'lt':
+            return {
+                '271': 'lt_coa_group_27',
+                '272': 'lt_coa_group_27',
+                '273': 'lt_coa_group_27',
+            }.get(code_prefix)
+        return super()._get_account_parent_xmlid(code_prefix, template_code)
+
     @template('lt', 'res.company')
     def _get_lt_res_company(self):
         return {
