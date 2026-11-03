@@ -5,6 +5,7 @@ import {
     selectionField,
     selectionFieldProps,
 } from "@web/views/fields/selection/selection_field";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * The purpose of this field is to be able to define some values which should not be
@@ -52,17 +53,17 @@ export const filterableSelectionField = {
     component: FilterableSelectionField,
     supportedOptions: [
         {
-            label: "Whitelisted Values",
+            label: _t("Whitelisted Values"),
             name: "whitelisted_values",
             type: "string",
         },
         {
-            label: "Blacklisted Values",
+            label: _t("Blacklisted Values"),
             name: "blacklisted_values",
             type: "string",
         },
         {
-            label: "Whitelisted field name",
+            label: _t("Whitelisted field name"),
             name: "whitelist_fname",
             type: "string",
         },
