@@ -26,6 +26,7 @@ class L10nTWITestEdiPosOrderUI(L10nTWITestEdiPosOrder, TestPointOfSaleHttpCommon
             "/GetIssue": {
                 "RtnCode": 1,
                 "RtnMsg": "Success",
+                "IIS_Number": "AB11100099",
                 "IIS_Sales_Amount": self.basic_invoice.amount_total,
                 "IIS_Invalid_Status": "0",
                 "IIS_Issue_Status": "1",
@@ -53,7 +54,8 @@ class L10nTWITestEdiPosOrderUI(L10nTWITestEdiPosOrder, TestPointOfSaleHttpCommon
             self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'l10n_tw_edi_ecpay_pos.ecpay_check_love_code_tour', login="accountman")
 
     def test_03_ecpay_check_print_invoice_tour(self):
-        """Test default print invoice"""
+        """Test all receipts print through the browser without a receipt printer"""
+        self.main_pos_config.receipt_printer_ids = False
         with patch(CALL_API_POS, new=self.mock_ecpay_api), patch(CALL_API_METHOD, new=self.mock_ecpay_api):
             self.main_pos_config.open_ui()
             self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'l10n_tw_edi_ecpay_pos.ecpay_check_print_invoice_tour', login="accountman")
