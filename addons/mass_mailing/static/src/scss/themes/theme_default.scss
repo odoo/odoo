@@ -57,8 +57,29 @@ div.col:not([align]) {
     box-sizing: border-box;
 
     .container > div.row {
-        margin-left: 0;
-        margin-right: 0;
+        margin-left: calc(16px - var(--gutter-x) * .5);
+        margin-right: calc(16px - var(--gutter-x) * .5);
+
+        &:not([class*="gx-"]):not([class*="g-"]) {
+            --gutter-x: 16px;
+        }
+    }
+
+    .card-body {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    @media (max-width: 767.98px) {
+        .container > div.row {
+            margin-left: 16px;
+            margin-right: 16px;
+
+            > .col, > [class*="col-"] {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+        }
     }
 
     a:not(.btn), .btn.btn-link {
