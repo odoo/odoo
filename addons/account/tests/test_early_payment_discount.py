@@ -1310,3 +1310,32 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                     out_invoice_1.line_ids.sorted('balance'),
                     expected_invoice_lines,
                 )
+
+    def test_epd_cash_basis_entries_dated_on_payment(self):
+        self.env.company.tax_exigibility = True
+        tax = self.percent_tax(10.0, tax_exigibility='on_payment', cash_basis_transition_account_id=self.env['account.account'].create({
+            'code': 'cash.basis.transition',
+            'name': 'cash_basis_transition',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        }).id)
+        self.early_pay_10_percents_10_days.early_pay_discount_computation = 'included'
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-28',
+            'date': '2019-01-28',
+            'invoice_line_ids': [Command.create({'name': 'line', 'price_unit': 2000.0, 'tax_ids': [Command.set(tax.ids)]})],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        invoice.action_post()
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': '2019-02-04',
+        })._create_payments()
+
+        # Both cash basis entries, the invoice's and the one of the discount lines of the payment, are dated on the payment.
+        caba_moves = self.env['account.move'].search([('tax_cash_basis_origin_move_id', 'in', (invoice + payment.move_id).ids)])
+        self.assertRecordValues(caba_moves.sorted('amount_total'), [
+            {'tax_cash_basis_origin_move_id': payment.move_id.id, 'date': fields.Date.from_string('2019-02-04')},
+            {'tax_cash_basis_origin_move_id': invoice.id, 'date': fields.Date.from_string('2019-02-04')},
+        ])
