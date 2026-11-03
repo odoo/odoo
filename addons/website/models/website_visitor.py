@@ -251,7 +251,7 @@ class WebsiteVisitor(models.Model):
                 page_id=force_track_values.get('page_id'),
             )
 
-        [result] = self.env.execute_query(query)
+        [result] = self.env.execute_query(query, log_exceptions=False)
         return result
 
     def _get_visitor_from_request(self, force_create=False, force_track_values=None):
@@ -366,7 +366,7 @@ class WebsiteVisitor(models.Model):
                 FOR NO KEY UPDATE SKIP LOCKED
             )
         """
-        self.env.cr.execute(query, (timezone, self.id))
+        self.env.cr.execute(query, (timezone, self.id), log_exceptions=False)
 
     def _update_visitor_last_visit(self):
         date_now = datetime.now()
