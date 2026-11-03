@@ -41,6 +41,6 @@ class TestDiscussAttachmentController(TestAttachmentControllerCommon):
                 (self.user_demo, True),
                 (self.user_employee, True),
                 (self.user_portal, True),
-                (self.user_public, True),
+                (self.user_public, False),
             ),
         )

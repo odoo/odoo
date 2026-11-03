@@ -54,6 +54,9 @@ class AttachmentController(http.Controller):
             raise NotFound()
         if thread_model == "discuss.channel" and not thread.allow_public_upload and not request.env.user._is_internal():
             raise AccessError(_("You are not allowed to upload attachments on this channel."))
+        partner, guest = request.env["res.partner"]._get_current_persona()
+        if thread_model == "discuss.channel" and not partner and not guest:
+            raise NotFound()
         vals = {
             "name": ufile.filename,
             "raw": ufile.read(),
