@@ -68,7 +68,6 @@ class MailActivityMixin(models.AbstractModel):
     activity_type_id = fields.Many2one(
         'mail.activity.type', 'Next Activity Type',
         related='activity_ids.activity_type_id', readonly=False,
-        search='_search_activity_type_id',
         groups="base.group_user")
     activity_type_icon = fields.Char('Activity Type Icon', related='activity_ids.icon')
     activity_date_deadline = fields.Date(
@@ -83,7 +82,6 @@ class MailActivityMixin(models.AbstractModel):
     activity_summary = fields.Char(
         'Next Activity Summary',
         related='activity_ids.summary', readonly=False,
-        search='_search_activity_summary',
         groups="base.group_user",)
     activity_exception_decoration = fields.Selection([
         ('warning', 'Alert'),
@@ -241,24 +239,6 @@ class MailActivityMixin(models.AbstractModel):
                 operand = values
         # basic case
         return domain | Domain('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])
-
-    @api.model
-    def _search_activity_type_id(self, operator, operand):
-        if operator in Domain.NEGATIVE_OPERATORS:
-            return NotImplemented
-        domain = Domain('activity_ids.activity_type_id', operator, operand)
-        if operator == 'in' and False in operand:  # relation may be falsy
-            domain |= Domain('activity_ids', '=', False)
-        return domain
-
-    @api.model
-    def _search_activity_summary(self, operator, operand):
-        if operator in Domain.NEGATIVE_OPERATORS:
-            return NotImplemented
-        domain = Domain('activity_ids.summary', operator, operand)
-        if operator == 'in' and False in operand:  # relation may be falsy
-            domain |= Domain('activity_ids', '=', False)
-        return domain
 
     @api.depends('activity_ids.date_deadline', 'activity_ids.user_id')
     @api.depends_context('uid')
