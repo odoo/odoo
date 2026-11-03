@@ -307,7 +307,14 @@ class ForumForum(models.Model):
         res = super().write(vals)
         if 'active' in vals:
             # archiving/unarchiving a forum does it on its posts, too
-            self.env['forum.post'].with_context(active_test=False).search([('forum_id', 'in', self.ids)]).write({'active': vals['active']})
+            domain = Domain('forum_id', 'in', self.ids)
+            if vals['active']:
+                # posts marked as offensive must stay archived
+                domain &= (
+                    Domain('state', '!=', 'offensive')
+                    & Domain('parent_id', 'not any', Domain('state', '=', 'offensive'))
+                )
+            self.env['forum.post'].with_context(active_test=False).search(domain).write({'active': vals['active']})
 
         if 'active' in vals or 'website_id' in vals:
             self.env['website'].sudo()._update_forum_count()
