@@ -70,13 +70,16 @@ class AccountMoveSend(models.TransientModel):
         for invoice, invoice_data in invoices_data.items():
             if invoice_data.get('l10n_ro_edi_send') and not invoice.l10n_ro_edi_state:
                 build_errors = None
-                if invoice_data.get('ubl_cii_xml_attachment_values'):
+                # The SPV only accepts the CIUS-RO format: the XML generated for another format
+                # (e.g. Peppol BIS 3 for a foreign customer) can't be reused and is rebuilt.
+                is_ciusro = invoice.partner_id.commercial_partner_id.ubl_cii_format == 'ciusro'
+                if is_ciusro and invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_data = invoice_data['ubl_cii_xml_attachment_values']['raw']
                 elif invoice.l10n_ro_edi_document_ids:
                     # If a document is on the invoice but the invoice's l10n_ro_edi_state is False,
                     # this means that the previously sent XML are invalid and have to be rebuilt
                     xml_data, build_errors = self.env['account.edi.xml.ubl_ro']._export_invoice(invoice)
-                elif invoice.ubl_cii_xml_id:
+                elif is_ciusro and invoice.ubl_cii_xml_id:
                     xml_data = invoice.ubl_cii_xml_id.raw
                 else:
                     xml_data, build_errors = self.env['account.edi.xml.ubl_ro']._export_invoice(invoice)
