@@ -210,7 +210,8 @@ export class DomPlugin extends Plugin {
             container.replaceChildren(...childNodes(nodeToUnwrap));
         } else if (container.childElementCount > 1) {
             const isSelectionAtStart =
-                firstLeaf(block) === selection.anchorNode && selection.anchorOffset === 0;
+                firstLeaf(block) === firstLeaf(selection.anchorNode) &&
+                selection.anchorOffset === 0;
             const isSelectionAtEnd =
                 lastLeaf(block) === selection.focusNode &&
                 selection.focusOffset === nodeSize(selection.focusNode);
