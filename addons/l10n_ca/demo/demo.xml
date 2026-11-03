@@ -31,8 +31,16 @@
     <record id="demo_ca_company_bank" model="res.partner.bank">
         <field name="partner_id" ref="base.partner_demo_company_ca"/>
         <field name="company_id" ref="base.demo_company_ca"/>
-        <field name="account_number">123456789</field>
-        <field name="bank_name">TD Canada Trust</field>
+        <field name="account_number">987654321</field>
+        <field name="clearing_number">000410152</field>
+        <field name="bank_bic">TDOMCATTXXX</field>
+        <field name="bank_name">Toronto-Dominion Bank (TD Bank)</field>
+        <field name="street">66 Wellington Street West</field>
+        <field name="street2">TD Centre</field>
+        <field name="city">Toronto</field>
+        <field name="state_id" ref="base.state_ca_on"/>
+        <field name="zip">M5K 1A2</field>
+        <field name="country_id" ref="base.ca"/>
         <field name="allow_out_payment">True</field>
     </record>
 
@@ -45,12 +53,21 @@
         <field name="zip">M5C 2W1</field>
         <field name="phone">+1 416-111-1111</field>
         <field name="email">maple-leaf@example.com</field>
+        <field name="vat">123456782</field>
+        <field name="l10n_ca_pst">1234-5678</field>
     </record>
 
     <record id="bank_account_ca_customer" model="res.partner.bank">
         <field name="partner_id" ref="partner_demo_ca_customer"/>
-        <field name="account_number">987654321</field>
+        <field name="account_number">000126985517</field>
+        <field name="clearing_number">000312345</field>
+        <field name="bank_bic">ROYCCAT2XXX</field>
         <field name="bank_name">Royal Bank of Canada</field>
+        <field name="street">180 Wellington Street West</field>
+        <field name="city">Toronto</field>
+        <field name="state_id" ref="base.state_ca_on"/>
+        <field name="zip">M5J 1J1</field>
+        <field name="country_id" ref="base.ca"/>
         <field name="allow_out_payment">True</field>
     </record>
 
