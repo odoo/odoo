@@ -176,11 +176,7 @@ var JavaScriptHighlightRules = function (options) {
                 regex: '"(?=.)',
                 next: "qqstring"
             }, {
-                token: "constant.numeric", // hexadecimal, octal and binary
-                regex: /0(?:[xX][0-9a-fA-F]+|[oO][0-7]+|[bB][01]+)\b/
-            }, {
-                token: "constant.numeric", // decimal integers and floats
-                regex: /(?:\d\d*(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+\b)?/
+                include: "numeric_constants"
             }, {
                 token: [
                     "entity.name.function", "text", "keyword.operator", "text", "storage.type",
@@ -387,11 +383,7 @@ var JavaScriptHighlightRules = function (options) {
                 token: "constant.language",
                 regex: "null|Infinity|NaN|undefined"
             }, {
-                token: "constant.numeric", // hexadecimal, octal and binary
-                regex: /0(?:[xX][0-9a-fA-F]+|[oO][0-7]+|[bB][01]+)\b/
-            }, {
-                token: "constant.numeric", // decimal integers and floats
-                regex: /(?:\d\d*(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+\b)?/
+                include: "numeric_constants"
             }, {
                 token: "punctuation.operator",
                 regex: ",",
@@ -459,6 +451,15 @@ var JavaScriptHighlightRules = function (options) {
             }, {
                 defaultToken: "string"
             }
+        ],
+        "numeric_constants": [
+            {
+                token: "constant.numeric", // hexadecimal, octal and binary
+                regex: /0(?:[xX][0-9a-fA-F_]+|[oO][0-7_]+|[bB][01_]+)\b/
+            }, {
+                token: "constant.numeric", // decimal integers and floats
+                regex: /(?:\d[\d_]*(?:\.[\d_]*)?|\.\d[\d_]*)(?:[eE][+-]?\d+\b)?/
+            },
         ]
     };
     if (!options || !options.noES6) {
@@ -961,7 +962,8 @@ function is(token, type) {
         }
         var tags = session.getMatchingTags({ row: row, column: 0 });
         if (tags) {
-            return new Range(tags.openTag.end.row, tags.openTag.end.column, tags.closeTag.start.row, tags.closeTag.start.column);
+            var startRow = tags.openTag.start.row;
+            return new Range(startRow, session.getLine(startRow).length, tags.closeTag.start.row, tags.closeTag.start.column);
         }
     };
 }).call(FoldMode.prototype);

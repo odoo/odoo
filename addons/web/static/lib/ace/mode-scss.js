@@ -714,8 +714,9 @@ exports.CssCompletions = CssCompletions;
 
 });
 
-define("ace/mode/scss",["require","exports","module","ace/lib/oop","ace/mode/text","ace/mode/scss_highlight_rules","ace/mode/matching_brace_outdent","ace/mode/behaviour/css","ace/mode/folding/cstyle","ace/mode/css_completions"], function(require, exports, module){"use strict";
+define("ace/mode/scss",["require","exports","module","ace/lib/oop","ace/worker/worker_client","ace/mode/text","ace/mode/scss_highlight_rules","ace/mode/matching_brace_outdent","ace/mode/behaviour/css","ace/mode/folding/cstyle","ace/mode/css_completions"], function(require, exports, module){"use strict";
 var oop = require("../lib/oop");
+var WorkerClient = require("../worker/worker_client").WorkerClient;
 var TextMode = require("./text").Mode;
 var ScssHighlightRules = require("./scss_highlight_rules").ScssHighlightRules;
 var MatchingBraceOutdent = require("./matching_brace_outdent").MatchingBraceOutdent;
@@ -753,6 +754,18 @@ oop.inherits(Mode, TextMode);
     };
     this.getCompletions = function (state, session, pos, prefix) {
         return this.$completer.getCompletions(state, session, pos, prefix);
+    };
+    this.createWorker = function (session) {
+        var worker = new WorkerClient(["ace"], "ace/mode/css_worker", "Worker");
+        worker.attachToDocument(session.getDocument());
+        worker.call("setOptions", [{ mode: "scss" }]);
+        worker.on("annotate", function (e) {
+            session.setAnnotations(e.data);
+        });
+        worker.on("terminate", function () {
+            session.clearAnnotations();
+        });
+        return worker;
     };
     this.$id = "ace/mode/scss";
 }).call(Mode.prototype);

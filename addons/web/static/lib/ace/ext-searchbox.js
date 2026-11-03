@@ -319,7 +319,7 @@ $searchBarKb.bindKeys({
             sb.replaceAll();
         sb.findAll();
     },
-    "Tab": function (sb) {
+    "Tab|Shift-Tab": function (sb) {
         (sb.activeInput == sb.replaceInput ? sb.searchInput : sb.replaceInput).focus();
     }
 });

@@ -428,7 +428,8 @@ function is(token, type) {
         }
         var tags = session.getMatchingTags({ row: row, column: 0 });
         if (tags) {
-            return new Range(tags.openTag.end.row, tags.openTag.end.column, tags.closeTag.start.row, tags.closeTag.start.column);
+            var startRow = tags.openTag.start.row;
+            return new Range(startRow, session.getLine(startRow).length, tags.closeTag.start.row, tags.closeTag.start.column);
         }
     };
 }).call(FoldMode.prototype);
