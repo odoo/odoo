@@ -24,7 +24,7 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
                 (self.user_admin, True),
                 (self.user_employee, True),
                 (self.user_portal, True),
-                (self.user_public, True),
+                (self.user_public, False),
             ),
         )
 
@@ -180,28 +180,19 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
         """Test the ownership token of an attachment posted by the public user is not sent on the
         bus, as all the visitors share the public user."""
         channel = self.env["discuss.channel"].create({"group_public_id": None, "name": "Public"})
-        self._authenticate_pseudo_user(self.user_public)
         IrAttachment = self.env["ir.attachment"].with_user(self.user_public).sudo()
         attachment = IrAttachment.create(
             {"name": "Posted", "res_id": 0, "res_model": "mail.compose.message"},
         )
         with self.mock_bus():
-            self.make_jsonrpc_request(
-                "/mail/message/post",
-                {
-                    "post_data": {
-                        "attachment_ids": attachment.ids,
-                        "attachment_tokens": [attachment._get_ownership_token()],
-                        "body": "Posted",
-                        "message_type": "comment",
-                    },
-                    "thread_id": channel.id,
-                    "thread_model": "discuss.channel",
-                },
+            channel.with_user(self.user_public).sudo().message_post(
+                attachment_ids=attachment.ids,
+                body="Posted",
+                message_type="comment",
             )
-            self.assertEqual(channel.message_ids.author_id, self.user_public.partner_id)
-            self.assertEqual(channel.message_ids.attachment_ids, attachment)
-            self.assertNotIn("ownership_token", "".join(self._new_bus_notifs.mapped("message")))
+        self.assertEqual(channel.message_ids.author_id, self.user_public.partner_id)
+        self.assertEqual(channel.message_ids.attachment_ids, attachment)
+        self.assertNotIn("ownership_token", "".join(self._new_bus_notifs.mapped("message")))
 
     def test_first_page_access_of_mail_attachment_pdf(self):
         """Test accessing the first page of a PDF that is encrypted(test_AES.pdf) or has invalid encoding(test_unicode.pdf)."""
