@@ -67,6 +67,7 @@ class SaleProductConfiguratorController(Controller):
                     .browse(ptav_ids)
                     .filtered(lambda ptav: ptav.product_tmpl_id.id == product_template_id)
                 )
+            if combination:
                 # Set missing attributes (unsaved no_variant attributes, or new attribute on
                 # existing product)
                 unconfigured_ptals = (
