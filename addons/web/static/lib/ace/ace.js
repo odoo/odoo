@@ -460,6 +460,11 @@ exports.delayedCall = function (fcn, defaultTimeout) {
     };
     return _self;
 };
+exports.sleep = function (ms) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, ms);
+    });
+};
 exports.supportsLookbehind = function () {
     try {
         new RegExp('(?<=.)');
@@ -709,6 +714,37 @@ function importCssString(cssText, id, target) {
 exports.importCssString = importCssString;
 exports.importCssStylsheet = function (uri, doc) {
     exports.buildDom(["link", { rel: "stylesheet", href: uri }], exports.getDocumentHead(doc));
+};
+exports.$fixPositionBug = function (el) {
+    var rect = el.getBoundingClientRect();
+    if (el.style.left) {
+        var target = parseFloat(el.style.left);
+        var result = +rect.left;
+        if (Math.abs(target - result) > 1) {
+            el.style.left = 2 * target - result + "px";
+        }
+    }
+    if (el.style.right) {
+        var target = parseFloat(el.style.right);
+        var result = window.innerWidth - rect.right;
+        if (Math.abs(target - result) > 1) {
+            el.style.right = 2 * target - result + "px";
+        }
+    }
+    if (el.style.top) {
+        var target = parseFloat(el.style.top);
+        var result = +rect.top;
+        if (Math.abs(target - result) > 1) {
+            el.style.top = 2 * target - result + "px";
+        }
+    }
+    if (el.style.bottom) {
+        var target = parseFloat(el.style.bottom);
+        var result = window.innerHeight - rect.bottom;
+        if (Math.abs(target - result) > 1) {
+            el.style.bottom = 2 * target - result + "px";
+        }
+    }
 };
 exports.scrollbarWidth = function (doc) {
     var inner = exports.createElement("ace_inner");
@@ -1320,7 +1356,7 @@ var reportErrorIfPathIsNotConfigured = function () {
         reportErrorIfPathIsNotConfigured = function () { };
     }
 };
-exports.version = "1.43.3";
+exports.version = "1.45.2";
 
 });
 
@@ -2869,7 +2905,7 @@ var DefaultHandlers = /** @class */ (function () {
                 anchor = this.$clickSelection.start;
             }
             else {
-                var orientedRange = calcRangeOrientation(this.$clickSelection, cursor);
+                var orientedRange = calcRangeOrientation(this.$clickSelection, cursor, editor.session);
                 cursor = orientedRange.cursor;
                 anchor = orientedRange.anchor;
             }
@@ -2900,7 +2936,7 @@ var DefaultHandlers = /** @class */ (function () {
                 anchor = range.start;
             }
             else {
-                var orientedRange = calcRangeOrientation(this.$clickSelection, cursor);
+                var orientedRange = calcRangeOrientation(this.$clickSelection, cursor, editor.session);
                 cursor = orientedRange.cursor;
                 anchor = orientedRange.anchor;
             }
@@ -3014,11 +3050,11 @@ exports.DefaultHandlers = DefaultHandlers;
 function calcDistance(ax, ay, bx, by) {
     return Math.sqrt(Math.pow(bx - ax, 2) + Math.pow(by - ay, 2));
 }
-function calcRangeOrientation(range, cursor) {
+function calcRangeOrientation(range, cursor, session) {
     if (range.start.row == range.end.row)
         var cmp = 2 * cursor.column - range.start.column - range.end.column;
     else if (range.start.row == range.end.row - 1 && !range.start.column && !range.end.column)
-        var cmp = cursor.column - 4;
+        var cmp = 3 * cursor.column - 2 * session.getLine(range.start.row).length;
     else
         var cmp = 2 * cursor.row - range.start.row - range.end.row;
     if (cmp < 0)
@@ -3026,6 +3062,72 @@ function calcRangeOrientation(range, cursor) {
     else
         return { cursor: range.end, anchor: range.start };
 }
+
+});
+
+define("ace/mouse/mouse_event",["require","exports","module","ace/lib/event","ace/lib/useragent"], function(require, exports, module){"use strict";
+var event = require("../lib/event");
+var useragent = require("../lib/useragent");
+var MouseEvent = /** @class */ (function () {
+    function MouseEvent(domEvent, editor) { this.speed; this.wheelX; this.wheelY;
+        this.domEvent = domEvent;
+        this.editor = editor;
+        this.x = this.clientX = domEvent.clientX;
+        this.y = this.clientY = domEvent.clientY;
+        this.$pos = null;
+        this.$inSelection = null;
+        this.propagationStopped = false;
+        this.defaultPrevented = false;
+    }
+    MouseEvent.prototype.stopPropagation = function () {
+        event.stopPropagation(this.domEvent);
+        this.propagationStopped = true;
+    };
+    MouseEvent.prototype.preventDefault = function () {
+        event.preventDefault(this.domEvent);
+        this.defaultPrevented = true;
+    };
+    MouseEvent.prototype.stop = function () {
+        this.stopPropagation();
+        this.preventDefault();
+    };
+    MouseEvent.prototype.getDocumentPosition = function () {
+        if (this.$pos)
+            return this.$pos;
+        this.$pos = this.editor.renderer.screenToTextCoordinates(this.clientX, this.clientY);
+        return this.$pos;
+    };
+    MouseEvent.prototype.getGutterRow = function () {
+        var documentRow = this.getDocumentPosition().row;
+        var screenRow = this.editor.session.documentToScreenRow(documentRow, 0);
+        var screenTopRow = this.editor.session.documentToScreenRow(this.editor.renderer.$gutterLayer.$lines.get(0).row, 0);
+        return screenRow - screenTopRow;
+    };
+    MouseEvent.prototype.inSelection = function () {
+        if (this.$inSelection !== null)
+            return this.$inSelection;
+        var editor = this.editor;
+        var selectionRange = editor.getSelectionRange();
+        if (selectionRange.isEmpty())
+            this.$inSelection = false;
+        else {
+            var pos = this.getDocumentPosition();
+            this.$inSelection = selectionRange.contains(pos.row, pos.column);
+        }
+        return this.$inSelection;
+    };
+    MouseEvent.prototype.getButton = function () {
+        return event.getButton(this.domEvent);
+    };
+    MouseEvent.prototype.getShiftKey = function () {
+        return this.domEvent.shiftKey;
+    };
+    MouseEvent.prototype.getAccelKey = function () {
+        return useragent.isMac ? this.domEvent.metaKey : this.domEvent.ctrlKey;
+    };
+    return MouseEvent;
+}());
+exports.MouseEvent = MouseEvent;
 
 });
 
@@ -3095,17 +3197,27 @@ var Tooltip = /** @class */ (function () {
         this.getElement().innerHTML = html;
     };
     Tooltip.prototype.setPosition = function (x, y) {
-        var el = this.getElement();
-        var rootRect = el.offsetParent && el.offsetParent.getBoundingClientRect();
-        el.style.left = x - (rootRect ? rootRect.left : 0) + "px";
-        el.style.top = y - (rootRect ? rootRect.top : 0) + "px";
+        this.getElement().style.left = x + "px";
+        this.getElement().style.top = y + "px";
     };
     Tooltip.prototype.setClassName = function (className) {
         dom.addCssClass(this.getElement(), className);
     };
     Tooltip.prototype.setTheme = function (theme) {
-        this.$element.className = CLASSNAME + " " +
-            (theme.isDark ? "ace_dark " : "") + (theme.cssClass || "");
+        if (this.theme) {
+            this.theme.isDark && dom.removeCssClass(this.getElement(), "ace_dark");
+            this.theme.cssClass && dom.removeCssClass(this.getElement(), this.theme.cssClass);
+        }
+        if (theme.isDark) {
+            dom.addCssClass(this.getElement(), "ace_dark");
+        }
+        if (theme.cssClass) {
+            dom.addCssClass(this.getElement(), theme.cssClass);
+        }
+        this.theme = {
+            isDark: theme.isDark,
+            cssClass: theme.cssClass
+        };
     };
     Tooltip.prototype.show = function (text, x, y) {
         if (text != null)
@@ -3232,12 +3344,18 @@ var HoverTooltip = /** @class */ (function (_super) {
     HoverTooltip.prototype.addToEditor = function (editor) {
         editor.on("mousemove", this.onMouseMove);
         editor.on("mousedown", this.hide);
-        editor.renderer.getMouseEventTarget().addEventListener("mouseout", this.onMouseOut, true);
+        var target = editor.renderer.getMouseEventTarget();
+        if (target && typeof target.removeEventListener === "function") {
+            target.addEventListener("mouseout", this.onMouseOut, true);
+        }
     };
     HoverTooltip.prototype.removeFromEditor = function (editor) {
         editor.off("mousemove", this.onMouseMove);
         editor.off("mousedown", this.hide);
-        editor.renderer.getMouseEventTarget().removeEventListener("mouseout", this.onMouseOut, true);
+        var target = editor.renderer.getMouseEventTarget();
+        if (target && typeof target.removeEventListener === "function") {
+            target.removeEventListener("mouseout", this.onMouseOut, true);
+        }
         if (this.timeout) {
             clearTimeout(this.timeout);
             this.timeout = null;
@@ -3292,7 +3410,6 @@ var HoverTooltip = /** @class */ (function (_super) {
         this.$gatherData = value;
     };
     HoverTooltip.prototype.showForRange = function (editor, range, domNode, startingEvent) {
-        var MARGIN = 10;
         if (startingEvent && startingEvent != this.lastEvent)
             return;
         if (this.isOpen && document.activeElement == this.getElement())
@@ -3304,7 +3421,6 @@ var HoverTooltip = /** @class */ (function (_super) {
             this.setTheme(renderer.theme);
         }
         this.isOpen = true;
-        this.addMarker(range, editor.session);
         this.range = Range.fromPoints(range.start, range.end);
         var position = renderer.textToScreenCoordinates(range.start.row, range.start.column);
         var rect = renderer.scroller.getBoundingClientRect();
@@ -3315,17 +3431,27 @@ var HoverTooltip = /** @class */ (function (_super) {
         element.appendChild(domNode);
         element.style.maxHeight = "";
         element.style.display = "block";
-        var labelHeight = element.clientHeight;
-        var labelWidth = element.clientWidth;
-        var spaceBelow = window.innerHeight - position.pageY - renderer.lineHeight;
-        var isAbove = true;
-        if (position.pageY - labelHeight < 0 && position.pageY < spaceBelow) {
-            isAbove = false;
-        }
-        element.style.maxHeight = (isAbove ? position.pageY : spaceBelow) - MARGIN + "px";
-        element.style.top = isAbove ? "" : position.pageY + renderer.lineHeight + "px";
-        element.style.bottom = isAbove ? window.innerHeight - position.pageY + "px" : "";
-        element.style.left = Math.min(position.pageX, window.innerWidth - labelWidth - MARGIN) + "px";
+        this.$setPosition(editor, position, true, range);
+        dom.$fixPositionBug(element);
+    };
+    HoverTooltip.prototype.$setPosition = function (editor, position, withMarker, range) {
+        var MARGIN = 10;
+        withMarker && this.addMarker(range, editor.session);
+        var renderer = editor.renderer;
+        var element = this.getElement();
+        var labelHeight = element.offsetHeight;
+        var labelWidth = element.offsetWidth;
+        var anchorTop = position.pageY;
+        var anchorLeft = position.pageX;
+        var spaceBelow = window.innerHeight - anchorTop - renderer.lineHeight;
+        var isAbove = this.$shouldPlaceAbove(labelHeight, anchorTop, spaceBelow - MARGIN);
+        element.style.maxHeight = (isAbove ? anchorTop : spaceBelow) - MARGIN + "px";
+        element.style.top = isAbove ? "" : anchorTop + renderer.lineHeight + "px";
+        element.style.bottom = isAbove ? window.innerHeight - anchorTop + "px" : "";
+        element.style.left = Math.min(anchorLeft, window.innerWidth - labelWidth - MARGIN) + "px";
+    };
+    HoverTooltip.prototype.$shouldPlaceAbove = function (labelHeight, anchorTop, spaceBelow) {
+        return !(anchorTop - labelHeight < 0 && anchorTop < spaceBelow);
     };
     HoverTooltip.prototype.addMarker = function (range, session) {
         if (this.marker) {
@@ -3335,6 +3461,11 @@ var HoverTooltip = /** @class */ (function (_super) {
         this.marker = session && session.addMarker(range, "ace_highlight-marker", "text");
     };
     HoverTooltip.prototype.hide = function (e) {
+        if (e && this.$fromKeyboard && e.type == "keydown") {
+            if (e.code == "Escape") {
+                return;
+            }
+        }
         if (!e && document.activeElement == this.getElement())
             return;
         if (e && e.target && (e.type != "keydown" || e.ctrlKey || e.metaKey) && this.$element.contains(e.target))
@@ -3345,6 +3476,7 @@ var HoverTooltip = /** @class */ (function (_super) {
         this.timeout = null;
         this.addMarker(null);
         if (this.isOpen) {
+            this.$fromKeyboard = false;
             this.$removeCloseEvents();
             this.getElement().style.display = "none";
             this.isOpen = false;
@@ -3382,7 +3514,7 @@ exports.HoverTooltip = HoverTooltip;
 
 });
 
-define("ace/mouse/default_gutter_handler",["require","exports","module","ace/lib/dom","ace/lib/event","ace/tooltip","ace/config"], function(require, exports, module){"use strict";
+define("ace/mouse/default_gutter_handler",["require","exports","module","ace/lib/dom","ace/mouse/mouse_event","ace/tooltip","ace/config","ace/range"], function(require, exports, module){"use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -3410,17 +3542,19 @@ var __values = (this && this.__values) || function(o) {
     throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 var dom = require("../lib/dom");
-var event = require("../lib/event");
-var Tooltip = require("../tooltip").Tooltip;
+var MouseEvent = require("./mouse_event").MouseEvent;
+var HoverTooltip = require("../tooltip").HoverTooltip;
 var nls = require("../config").nls;
-var GUTTER_TOOLTIP_LEFT_OFFSET = 5;
-var GUTTER_TOOLTIP_TOP_OFFSET = 3;
-exports.GUTTER_TOOLTIP_LEFT_OFFSET = GUTTER_TOOLTIP_LEFT_OFFSET;
-exports.GUTTER_TOOLTIP_TOP_OFFSET = GUTTER_TOOLTIP_TOP_OFFSET;
+var Range = require("../range").Range;
 function GutterHandler(mouseHandler) {
     var editor = mouseHandler.editor;
     var gutter = editor.renderer.$gutterLayer;
-    var tooltip = new GutterTooltip(editor, true);
+    mouseHandler.$tooltip = new GutterTooltip(editor);
+    mouseHandler.$tooltip.addToEditor(editor);
+    mouseHandler.$tooltip.setDataProvider(function (e, editor) {
+        var row = e.getDocumentPosition().row;
+        mouseHandler.$tooltip.showTooltip(row);
+    });
     mouseHandler.editor.setDefaultHandler("guttermousedown", function (e) {
         if (!editor.isFocused() || e.getButton() != 0)
             return;
@@ -3442,87 +3576,11 @@ function GutterHandler(mouseHandler) {
         mouseHandler.captureMouse(e);
         return e.preventDefault();
     });
-    var tooltipTimeout, mouseEvent;
-    function showTooltip() {
-        var row = mouseEvent.getDocumentPosition().row;
-        var maxRow = editor.session.getLength();
-        if (row == maxRow) {
-            var screenRow = editor.renderer.pixelToScreenCoordinates(0, mouseEvent.y).row;
-            var pos = mouseEvent.$pos;
-            if (screenRow > editor.session.documentToScreenRow(pos.row, pos.column))
-                return hideTooltip();
-        }
-        tooltip.showTooltip(row);
-        if (!tooltip.isOpen)
-            return;
-        editor.on("mousewheel", hideTooltip);
-        editor.on("changeSession", hideTooltip);
-        window.addEventListener("keydown", hideTooltip, true);
-        if (mouseHandler.$tooltipFollowsMouse) {
-            moveTooltip(mouseEvent);
-        }
-        else {
-            var gutterRow = mouseEvent.getGutterRow();
-            var gutterCell = gutter.$lines.get(gutterRow);
-            if (gutterCell) {
-                var gutterElement = gutterCell.element.querySelector(".ace_gutter_annotation");
-                var rect = gutterElement.getBoundingClientRect();
-                var style = tooltip.getElement().style;
-                style.left = (rect.right - GUTTER_TOOLTIP_LEFT_OFFSET) + "px";
-                style.top = (rect.bottom - GUTTER_TOOLTIP_TOP_OFFSET) + "px";
-            }
-            else {
-                moveTooltip(mouseEvent);
-            }
-        }
-    }
-    function hideTooltip(e) {
-        if (e && e.type === "keydown" && (e.ctrlKey || e.metaKey))
-            return;
-        if (e && e.type === "mouseout" && (!e.relatedTarget || tooltip.getElement().contains(e.relatedTarget)))
-            return;
-        if (tooltipTimeout)
-            tooltipTimeout = clearTimeout(tooltipTimeout);
-        if (tooltip.isOpen) {
-            tooltip.hideTooltip();
-            editor.off("mousewheel", hideTooltip);
-            editor.off("changeSession", hideTooltip);
-            window.removeEventListener("keydown", hideTooltip, true);
-        }
-    }
-    function moveTooltip(e) {
-        tooltip.setPosition(e.x, e.y);
-    }
-    mouseHandler.editor.setDefaultHandler("guttermousemove", function (e) {
-        var target = e.domEvent.target || e.domEvent.srcElement;
-        if (dom.hasCssClass(target, "ace_fold-widget") || dom.hasCssClass(target, "ace_custom-widget"))
-            return hideTooltip();
-        if (tooltip.isOpen && mouseHandler.$tooltipFollowsMouse)
-            moveTooltip(e);
-        mouseEvent = e;
-        if (tooltipTimeout)
-            return;
-        tooltipTimeout = setTimeout(function () {
-            tooltipTimeout = null;
-            if (mouseEvent && !mouseHandler.isMousePressed)
-                showTooltip();
-        }, 50);
-    });
-    event.addListener(editor.renderer.$gutter, "mouseout", function (e) {
-        mouseEvent = null;
-        if (!tooltip.isOpen)
-            return;
-        tooltipTimeout = setTimeout(function () {
-            tooltipTimeout = null;
-            hideTooltip(e);
-        }, 50);
-    }, editor);
 }
 exports.GutterHandler = GutterHandler;
 var GutterTooltip = /** @class */ (function (_super) {
     __extends(GutterTooltip, _super);
-    function GutterTooltip(editor, isHover) {
-        if (isHover === void 0) { isHover = false; }
+    function GutterTooltip(editor) {
         var _this = _super.call(this, editor.container) || this;
         _this.id = "gt" + (++GutterTooltip.$uid);
         _this.editor = editor;
@@ -3531,35 +3589,37 @@ var GutterTooltip = /** @class */ (function (_super) {
         el.setAttribute("role", "tooltip");
         el.setAttribute("id", _this.id);
         el.style.pointerEvents = "auto";
-        if (isHover) {
-            _this.onMouseOut = _this.onMouseOut.bind(_this);
-            el.addEventListener("mouseout", _this.onMouseOut);
-        }
+        _this.idleTime = 50;
+        _this.onDomMouseMove = _this.onDomMouseMove.bind(_this);
+        _this.onDomMouseOut = _this.onDomMouseOut.bind(_this);
+        _this.setClassName("ace_gutter-tooltip");
         return _this;
     }
-    GutterTooltip.prototype.onMouseOut = function (e) {
-        if (!this.isOpen)
-            return;
-        if (!e.relatedTarget || this.getElement().contains(e.relatedTarget))
-            return;
-        if (e && e.currentTarget.contains(e.relatedTarget))
-            return;
-        this.hideTooltip();
+    GutterTooltip.prototype.onDomMouseMove = function (domEvent) {
+        var aceEvent = new MouseEvent(domEvent, this.editor);
+        this.onMouseMove(aceEvent, this.editor);
     };
-    GutterTooltip.prototype.setPosition = function (x, y) {
-        var windowWidth = window.innerWidth || document.documentElement.clientWidth;
-        var windowHeight = window.innerHeight || document.documentElement.clientHeight;
-        var width = this.getWidth();
-        var height = this.getHeight();
-        x += 15;
-        y += 15;
-        if (x + width > windowWidth) {
-            x -= (x + width) - windowWidth;
+    GutterTooltip.prototype.onDomMouseOut = function (domEvent) {
+        var aceEvent = new MouseEvent(domEvent, this.editor);
+        this.onMouseOut(aceEvent);
+    };
+    GutterTooltip.prototype.addToEditor = function (editor) {
+        var gutter = editor.renderer.$gutter;
+        gutter.addEventListener("mousemove", this.onDomMouseMove);
+        gutter.addEventListener("mouseout", this.onDomMouseOut);
+        _super.prototype.addToEditor.call(this, editor);
+    };
+    GutterTooltip.prototype.removeFromEditor = function (editor) {
+        var gutter = editor.renderer.$gutter;
+        gutter.removeEventListener("mousemove", this.onDomMouseMove);
+        gutter.removeEventListener("mouseout", this.onDomMouseOut);
+        _super.prototype.removeFromEditor.call(this, editor);
+    };
+    GutterTooltip.prototype.destroy = function () {
+        if (this.editor) {
+            this.removeFromEditor(this.editor);
         }
-        if (y + height > windowHeight) {
-            y -= 20 + height;
-        }
-        Tooltip.prototype.setPosition.call(this, x, y);
+        _super.prototype.destroy.call(this);
     };
     Object.defineProperty(GutterTooltip, "annotationLabels", {
         get: function () {
@@ -3625,7 +3685,7 @@ var GutterTooltip = /** @class */ (function (_super) {
             }
         }
         if (annotation.displayText.length === 0)
-            return this.hideTooltip();
+            return this.hide();
         var annotationMessages = { error: [], security: [], warning: [], info: [], hint: [] };
         var iconClassName = gutter.$useSvgGutterIcons ? "ace_icon_svg" : "ace_icon";
         for (var i = 0; i < annotation.displayText.length; i++) {
@@ -3640,25 +3700,41 @@ var GutterTooltip = /** @class */ (function (_super) {
             lineElement.appendChild(dom.createElement("br"));
             annotationMessages[annotation.type[i].replace("_fold", "")].push(lineElement);
         }
-        var tooltipElement = this.getElement();
-        dom.removeChildren(tooltipElement);
+        var tooltipElement = dom.createElement("span");
         annotationMessages.error.forEach(function (el) { return tooltipElement.appendChild(el); });
         annotationMessages.security.forEach(function (el) { return tooltipElement.appendChild(el); });
         annotationMessages.warning.forEach(function (el) { return tooltipElement.appendChild(el); });
         annotationMessages.info.forEach(function (el) { return tooltipElement.appendChild(el); });
         annotationMessages.hint.forEach(function (el) { return tooltipElement.appendChild(el); });
         tooltipElement.setAttribute("aria-live", "polite");
-        if (!this.isOpen) {
-            this.setTheme(this.editor.renderer.theme);
-            this.setClassName("ace_gutter-tooltip");
-        }
         var annotationNode = this.$findLinkedAnnotationNode(row);
         if (annotationNode) {
             annotationNode.setAttribute("aria-describedby", this.id);
         }
-        this.show();
+        var range = Range.fromPoints({ row: row, column: 0 }, { row: row, column: 0 });
+        this.showForRange(this.editor, range, tooltipElement);
         this.visibleTooltipRow = row;
         this.editor._signal("showGutterTooltip", this);
+    };
+    GutterTooltip.prototype.$setPosition = function (editor, _ignoredPosition, _withMarker, range) {
+        var gutterCell = this.$findCellByRow(range.start.row);
+        if (!gutterCell)
+            return;
+        var el = gutterCell && gutterCell.element;
+        var anchorEl = el && (el.querySelector(".ace_gutter_annotation"));
+        if (!anchorEl)
+            return;
+        var r = anchorEl.getBoundingClientRect();
+        if (!r)
+            return;
+        var position = {
+            pageX: r.right,
+            pageY: r.top
+        };
+        return _super.prototype.$setPosition.call(this, editor, position, false, range);
+    };
+    GutterTooltip.prototype.$shouldPlaceAbove = function (labelHeight, anchorTop, spaceBelow) {
+        return spaceBelow < labelHeight;
     };
     GutterTooltip.prototype.$findLinkedAnnotationNode = function (row) {
         var cell = this.$findCellByRow(row);
@@ -3672,12 +3748,11 @@ var GutterTooltip = /** @class */ (function (_super) {
     GutterTooltip.prototype.$findCellByRow = function (row) {
         return this.editor.renderer.$gutterLayer.$lines.cells.find(function (el) { return el.row === row; });
     };
-    GutterTooltip.prototype.hideTooltip = function () {
+    GutterTooltip.prototype.hide = function (e) {
         if (!this.isOpen) {
             return;
         }
         this.$element.removeAttribute("aria-live");
-        this.hide();
         if (this.visibleTooltipRow != undefined) {
             var annotationNode = this.$findLinkedAnnotationNode(this.visibleTooltipRow);
             if (annotationNode) {
@@ -3686,6 +3761,7 @@ var GutterTooltip = /** @class */ (function (_super) {
         }
         this.visibleTooltipRow = undefined;
         this.editor._signal("hideGutterTooltip", this);
+        _super.prototype.hide.call(this, e);
     };
     GutterTooltip.annotationsToSummaryString = function (annotations) {
         var e_1, _a;
@@ -3709,76 +3785,16 @@ var GutterTooltip = /** @class */ (function (_super) {
         }
         return summary.join(", ");
     };
+    GutterTooltip.prototype.isOutsideOfText = function (e) {
+        var editor = e.editor;
+        var rect = editor.renderer.$gutter.getBoundingClientRect();
+        return !(e.clientX >= rect.left && e.clientX <= rect.right &&
+            e.clientY >= rect.top && e.clientY <= rect.bottom);
+    };
     return GutterTooltip;
-}(Tooltip));
+}(HoverTooltip));
 GutterTooltip.$uid = 0;
 exports.GutterTooltip = GutterTooltip;
-
-});
-
-define("ace/mouse/mouse_event",["require","exports","module","ace/lib/event","ace/lib/useragent"], function(require, exports, module){"use strict";
-var event = require("../lib/event");
-var useragent = require("../lib/useragent");
-var MouseEvent = /** @class */ (function () {
-    function MouseEvent(domEvent, editor) { this.speed; this.wheelX; this.wheelY;
-        this.domEvent = domEvent;
-        this.editor = editor;
-        this.x = this.clientX = domEvent.clientX;
-        this.y = this.clientY = domEvent.clientY;
-        this.$pos = null;
-        this.$inSelection = null;
-        this.propagationStopped = false;
-        this.defaultPrevented = false;
-    }
-    MouseEvent.prototype.stopPropagation = function () {
-        event.stopPropagation(this.domEvent);
-        this.propagationStopped = true;
-    };
-    MouseEvent.prototype.preventDefault = function () {
-        event.preventDefault(this.domEvent);
-        this.defaultPrevented = true;
-    };
-    MouseEvent.prototype.stop = function () {
-        this.stopPropagation();
-        this.preventDefault();
-    };
-    MouseEvent.prototype.getDocumentPosition = function () {
-        if (this.$pos)
-            return this.$pos;
-        this.$pos = this.editor.renderer.screenToTextCoordinates(this.clientX, this.clientY);
-        return this.$pos;
-    };
-    MouseEvent.prototype.getGutterRow = function () {
-        var documentRow = this.getDocumentPosition().row;
-        var screenRow = this.editor.session.documentToScreenRow(documentRow, 0);
-        var screenTopRow = this.editor.session.documentToScreenRow(this.editor.renderer.$gutterLayer.$lines.get(0).row, 0);
-        return screenRow - screenTopRow;
-    };
-    MouseEvent.prototype.inSelection = function () {
-        if (this.$inSelection !== null)
-            return this.$inSelection;
-        var editor = this.editor;
-        var selectionRange = editor.getSelectionRange();
-        if (selectionRange.isEmpty())
-            this.$inSelection = false;
-        else {
-            var pos = this.getDocumentPosition();
-            this.$inSelection = selectionRange.contains(pos.row, pos.column);
-        }
-        return this.$inSelection;
-    };
-    MouseEvent.prototype.getButton = function () {
-        return event.getButton(this.domEvent);
-    };
-    MouseEvent.prototype.getShiftKey = function () {
-        return this.domEvent.shiftKey;
-    };
-    MouseEvent.prototype.getAccelKey = function () {
-        return useragent.isMac ? this.domEvent.metaKey : this.domEvent.ctrlKey;
-    };
-    return MouseEvent;
-}());
-exports.MouseEvent = MouseEvent;
 
 });
 
@@ -4187,22 +4203,22 @@ exports.addTouchListeners = function (el, editor) {
         contextMenu = dom.buildDom(["div",
             {
                 class: "ace_mobile-menu",
-                ontouchstart: function (e) {
-                    mode = "menu";
-                    e.stopPropagation();
-                    e.preventDefault();
-                    editor.textInput.focus();
-                },
-                ontouchend: function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    handleClick(e);
-                },
                 onclick: handleClick
             },
             ["span"],
             ["span", { class: "ace_mobile-button", action: "more" }, "..."]
         ], editor.container);
+        contextMenu.addEventListener("touchstart", function (e) {
+            mode = "menu";
+            e.stopPropagation();
+            e.preventDefault();
+            editor.textInput.focus();
+        });
+        contextMenu.addEventListener("touchend", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            handleClick(e);
+        });
     }
     function showContextMenu() {
         if (!editor.getOption("enableMobileMenu")) {
@@ -4487,14 +4503,15 @@ var MouseHandler = /** @class */ (function () {
             var character = editor.renderer.screenToTextCoordinates(e.x, e.y);
             var range = editor.session.selection.getRange();
             var renderer = editor.renderer;
+            if (renderer.scroller.style.cursor == "crosshair")
+                return;
             if (!range.isEmpty() && range.insideStart(character.row, character.column)) {
                 renderer.setCursorStyle("default");
             }
             else {
                 renderer.setCursorStyle("");
             }
-        }, //@ts-expect-error TODO: seems mistyping - should be boolean
-        editor);
+        });
     }
     MouseHandler.prototype.onMouseEvent = function (name, e) {
         if (!this.editor.session)
@@ -4593,6 +4610,8 @@ var MouseHandler = /** @class */ (function () {
     MouseHandler.prototype.destroy = function () {
         if (this.releaseMouse)
             this.releaseMouse();
+        if (this.$tooltip)
+            this.$tooltip.destroy();
     };
     return MouseHandler;
 }());
@@ -4602,7 +4621,6 @@ config.defineOptions(MouseHandler.prototype, "mouseHandler", {
     dragDelay: { initialValue: (useragent.isMac ? 150 : 0) },
     dragEnabled: { initialValue: true },
     focusTimeout: { initialValue: 0 },
-    tooltipFollowsMouse: { initialValue: true }
 });
 exports.MouseHandler = MouseHandler;
 
@@ -5114,12 +5132,7 @@ var BidiHandler = /** @class */ (function () {
     BidiHandler.prototype.isBidiRow = function (screenRow, docRow, splitIndex) {
         if (!this.seenBidi)
             return false;
-        if (screenRow !== this.currentRow) {
-            this.currentRow = screenRow;
-            this.updateRowLine(docRow, splitIndex);
-            this.updateBidiMap();
-        }
-        return this.bidiMap.bidiLevels;
+        return true;
     };
     BidiHandler.prototype.onChange = function (delta) {
         if (!this.seenBidi) {
@@ -5160,72 +5173,7 @@ var BidiHandler = /** @class */ (function () {
         }
         return splitIndex;
     };
-    BidiHandler.prototype.updateRowLine = function (docRow, splitIndex) {
-        if (docRow === undefined)
-            docRow = this.getDocumentRow();
-        var isLastRow = (docRow === this.session.getLength() - 1), endOfLine = isLastRow ? this.EOF : this.EOL;
-        this.wrapIndent = 0;
-        this.line = this.session.getLine(docRow);
-        this.isRtlDir = this.$isRtl || this.line.charAt(0) === this.RLE;
-        if (this.session.$useWrapMode) {
-            var splits = this.session.$wrapData[docRow];
-            if (splits) {
-                if (splitIndex === undefined)
-                    splitIndex = this.getSplitIndex();
-                if (splitIndex > 0 && splits.length) {
-                    this.wrapIndent = splits.indent;
-                    this.wrapOffset = this.wrapIndent * this.charWidths[bidiUtil.L];
-                    this.line = (splitIndex < splits.length) ?
-                        this.line.substring(splits[splitIndex - 1], splits[splitIndex]) :
-                        this.line.substring(splits[splits.length - 1]);
-                }
-                else {
-                    this.line = this.line.substring(0, splits[splitIndex]);
-                }
-                if (splitIndex == splits.length) {
-                    this.line += (this.showInvisibles) ? endOfLine : bidiUtil.DOT;
-                }
-            }
-        }
-        else {
-            this.line += this.showInvisibles ? endOfLine : bidiUtil.DOT;
-        }
-        var session = this.session, shift = 0, size;
-        this.line = this.line.replace(/\t|[\u1100-\u2029, \u202F-\uFFE6]/g, function (ch, i) {
-            if (ch === '\t' || session.isFullWidth(ch.charCodeAt(0))) {
-                size = (ch === '\t') ? session.getScreenTabSize(i + shift) : 2;
-                shift += size - 1;
-                return lang.stringRepeat(bidiUtil.DOT, size);
-            }
-            return ch;
-        });
-        if (this.isRtlDir) {
-            this.fontMetrics.$main.textContent = (this.line.charAt(this.line.length - 1) == bidiUtil.DOT) ? this.line.substr(0, this.line.length - 1) : this.line;
-            this.rtlLineOffset = this.contentWidth - this.fontMetrics.$main.getBoundingClientRect().width;
-        }
-    };
-    BidiHandler.prototype.updateBidiMap = function () {
-        var textCharTypes = [];
-        if (bidiUtil.hasBidiCharacters(this.line, textCharTypes) || this.isRtlDir) {
-            this.bidiMap = bidiUtil.doBidiReorder(this.line, textCharTypes, this.isRtlDir);
-        }
-        else {
-            this.bidiMap = {};
-        }
-    };
     BidiHandler.prototype.markAsDirty = function () {
-        this.currentRow = null;
-    };
-    BidiHandler.prototype.updateCharacterWidths = function (fontMetrics) {
-        if (this.characterWidth === fontMetrics.$characterSize.width)
-            return;
-        this.fontMetrics = fontMetrics;
-        var characterWidth = this.characterWidth = fontMetrics.$characterSize.width;
-        var bidiCharWidth = fontMetrics.$measureCharWidth("\u05d4");
-        this.charWidths[bidiUtil.L] = this.charWidths[bidiUtil.EN] = this.charWidths[bidiUtil.ON_R] = characterWidth;
-        this.charWidths[bidiUtil.R] = this.charWidths[bidiUtil.AN] = bidiCharWidth;
-        this.charWidths[bidiUtil.R_H] = bidiCharWidth * 0.45;
-        this.charWidths[bidiUtil.B] = this.charWidths[bidiUtil.RLE] = 0;
         this.currentRow = null;
     };
     BidiHandler.prototype.setShowInvisibles = function (showInvisibles) {
@@ -5254,87 +5202,6 @@ var BidiHandler = /** @class */ (function () {
             else if (isRtlDir && editor.session.getLine(row).charAt(0) !== editor.session.$bidiHandler.RLE)
                 editor.session.doc.insert({ column: 0, row: row }, editor.session.$bidiHandler.RLE);
         }
-    };
-    BidiHandler.prototype.getPosLeft = function (col) {
-        col -= this.wrapIndent;
-        var leftBoundary = (this.line.charAt(0) === this.RLE) ? 1 : 0;
-        var logicalIdx = (col > leftBoundary) ? (this.session.getOverwrite() ? col : col - 1) : leftBoundary;
-        var visualIdx = bidiUtil.getVisualFromLogicalIdx(logicalIdx, this.bidiMap), levels = this.bidiMap.bidiLevels, left = 0;
-        if (!this.session.getOverwrite() && col <= leftBoundary && levels[visualIdx] % 2 !== 0)
-            visualIdx++;
-        for (var i = 0; i < visualIdx; i++) {
-            left += this.charWidths[levels[i]];
-        }
-        if (!this.session.getOverwrite() && (col > leftBoundary) && (levels[visualIdx] % 2 === 0))
-            left += this.charWidths[levels[visualIdx]];
-        if (this.wrapIndent)
-            left += this.isRtlDir ? (-1 * this.wrapOffset) : this.wrapOffset;
-        if (this.isRtlDir)
-            left += this.rtlLineOffset;
-        return left;
-    };
-    BidiHandler.prototype.getSelections = function (startCol, endCol) {
-        var map = this.bidiMap, levels = map.bidiLevels, level, selections = [], offset = 0, selColMin = Math.min(startCol, endCol) - this.wrapIndent, selColMax = Math.max(startCol, endCol) - this.wrapIndent, isSelected = false, isSelectedPrev = false, selectionStart = 0;
-        if (this.wrapIndent)
-            offset += this.isRtlDir ? (-1 * this.wrapOffset) : this.wrapOffset;
-        for (var logIdx, visIdx = 0; visIdx < levels.length; visIdx++) {
-            logIdx = map.logicalFromVisual[visIdx];
-            level = levels[visIdx];
-            isSelected = (logIdx >= selColMin) && (logIdx < selColMax);
-            if (isSelected && !isSelectedPrev) {
-                selectionStart = offset;
-            }
-            else if (!isSelected && isSelectedPrev) {
-                selections.push({ left: selectionStart, width: offset - selectionStart });
-            }
-            offset += this.charWidths[level];
-            isSelectedPrev = isSelected;
-        }
-        if (isSelected && (visIdx === levels.length)) {
-            selections.push({ left: selectionStart, width: offset - selectionStart });
-        }
-        if (this.isRtlDir) {
-            for (var i = 0; i < selections.length; i++) {
-                selections[i].left += this.rtlLineOffset;
-            }
-        }
-        return selections;
-    };
-    BidiHandler.prototype.offsetToCol = function (posX) {
-        if (this.isRtlDir)
-            posX -= this.rtlLineOffset;
-        var logicalIdx = 0, posX = Math.max(posX, 0), offset = 0, visualIdx = 0, levels = this.bidiMap.bidiLevels, charWidth = this.charWidths[levels[visualIdx]];
-        if (this.wrapIndent)
-            posX -= this.isRtlDir ? (-1 * this.wrapOffset) : this.wrapOffset;
-        while (posX > offset + charWidth / 2) {
-            offset += charWidth;
-            if (visualIdx === levels.length - 1) {
-                charWidth = 0;
-                break;
-            }
-            charWidth = this.charWidths[levels[++visualIdx]];
-        }
-        if (visualIdx > 0 && (levels[visualIdx - 1] % 2 !== 0) && (levels[visualIdx] % 2 === 0)) {
-            if (posX < offset)
-                visualIdx--;
-            logicalIdx = this.bidiMap.logicalFromVisual[visualIdx];
-        }
-        else if (visualIdx > 0 && (levels[visualIdx - 1] % 2 === 0) && (levels[visualIdx] % 2 !== 0)) {
-            logicalIdx = 1 + ((posX > offset) ? this.bidiMap.logicalFromVisual[visualIdx]
-                : this.bidiMap.logicalFromVisual[visualIdx - 1]);
-        }
-        else if ((this.isRtlDir && visualIdx === levels.length - 1 && charWidth === 0 && (levels[visualIdx - 1] % 2 === 0))
-            || (!this.isRtlDir && visualIdx === 0 && (levels[visualIdx] % 2 !== 0))) {
-            logicalIdx = 1 + this.bidiMap.logicalFromVisual[visualIdx];
-        }
-        else {
-            if (visualIdx > 0 && (levels[visualIdx - 1] % 2 !== 0) && charWidth !== 0)
-                visualIdx--;
-            logicalIdx = this.bidiMap.logicalFromVisual[visualIdx];
-        }
-        if (logicalIdx === 0 && this.isRtlDir)
-            logicalIdx++;
-        return (logicalIdx + this.wrapIndent);
     };
     return BidiHandler;
 }());
@@ -5767,15 +5634,13 @@ var Selection = /** @class */ (function () {
     Selection.prototype.moveCursorBy = function (rows, chars) {
         var screenPos = this.session.documentToScreenPosition(this.lead.row, this.lead.column);
         var offsetX;
+        var fontMetrics = this.session.$fontMetrics;
+        var useFontMetrics = chars === 0 && rows !== 0 && fontMetrics;
         if (chars === 0) {
-            if (rows !== 0) {
-                if (this.session.$bidiHandler.isBidiRow(screenPos.row, this.lead.row)) {
-                    offsetX = this.session.$bidiHandler.getPosLeft(screenPos.column);
-                    screenPos.column = Math.round(offsetX / this.session.$bidiHandler.charWidths[0]);
-                }
-                else {
-                    offsetX = screenPos.column * this.session.$bidiHandler.charWidths[0];
-                }
+            if (useFontMetrics && this.$desiredColumn == null) {
+                offsetX = fontMetrics.textWidth(screenPos.row, screenPos.column);
+                if (isFinite(offsetX))
+                    this.$desiredColumn = offsetX / fontMetrics.config.characterWidth;
             }
             if (this.$desiredColumn)
                 screenPos.column = this.$desiredColumn;
@@ -5789,9 +5654,13 @@ var Selection = /** @class */ (function () {
             else if (rows > 0)
                 rows += widget.rowCount - (widget.rowsAbove || 0);
         }
-        var docPos = this.session.screenToDocumentPosition(screenPos.row + rows, screenPos.column, offsetX);
-        if (rows !== 0 && chars === 0 && docPos.row === this.lead.row && docPos.column === this.lead.column) {
+        var targetScreenRow = screenPos.row + rows;
+        if (useFontMetrics && this.$desiredColumn != null) {
+            offsetX = this.$desiredColumn * fontMetrics.config.characterWidth;
+            var blockCursor = fontMetrics.renderer && fontMetrics.renderer.$blockCursor;
+            screenPos.column = fontMetrics.$pixelToColumn(targetScreenRow, screenPos.column, offsetX, blockCursor, true);
         }
+        var docPos = this.session.screenToDocumentPosition(targetScreenRow, screenPos.column);
         this.moveCursorTo(docPos.row, docPos.column + chars, chars === 0);
     };
     Selection.prototype.moveCursorToPosition = function (position) {
@@ -6061,6 +5930,37 @@ var Tokenizer = /** @class */ (function () {
             });
             if (lastCapture.end != null && /^\)*$/.test(src.substr(lastCapture.end)))
                 src = src.substring(0, lastCapture.start) + src.substr(lastCapture.end);
+        }
+        var leadingLookbehind;
+        while ((leadingLookbehind = /^(?:\((?:\?:)?)*\(\?<[=!]/.exec(src))) {
+            var start = leadingLookbehind[0].length - 4;
+            var end = -1;
+            var depth = 0;
+            var inClass = false;
+            var re = /\\.|[\[\]()]/g;
+            re.lastIndex = start;
+            var m;
+            while ((m = re.exec(src))) {
+                var ch = m[0];
+                if (ch.length > 1)
+                    continue;
+                if (inClass) {
+                    inClass = ch != "]";
+                }
+                else if (ch == "[") {
+                    inClass = true;
+                }
+                else if (ch == "(") {
+                    depth++;
+                }
+                else if (ch == ")" && --depth == 0) {
+                    end = m.index + 1;
+                    break;
+                }
+            }
+            if (end == -1)
+                break;
+            src = src.substring(0, start) + src.substr(end);
         }
         if (src.charAt(0) != "^")
             src = "^" + src;
@@ -8286,9 +8186,11 @@ var SearchHighlight = /** @class */ (function () {
         var renderedMarkerRanges = {};
         var _search = session.$editor && session.$editor.$search;
         var mtSearch = _search && _search.$isMultilineSearch(session.$editor.getLastSearchOptions());
+        var docLen = session.getValue().length;
+        var cacheInvalid = docLen != this.docLen;
         for (var i = start; i <= end; i++) {
             var ranges = this.cache[i];
-            if (ranges == null || session.getValue().length != this.docLen) {
+            if (ranges == null || cacheInvalid) {
                 if (mtSearch) {
                     ranges = [];
                     var match = _search.$multiLineForward(session, this.regExp, i, end);
@@ -8322,7 +8224,7 @@ var SearchHighlight = /** @class */ (function () {
                 markerLayer.drawSingleLineMarker(html, rangeToAddMarkerTo, this.clazz, config);
             }
         }
-        this.docLen = session.getValue().length;
+        this.docLen = docLen;
     };
     return SearchHighlight;
 }());
@@ -8506,8 +8408,10 @@ var UndoManager = /** @class */ (function () {
     };
     UndoManager.prototype.fromJSON = function (json) {
         this.reset();
-        this.$undoStack = json.$undoStack;
-        this.$redoStack = json.$redoStack;
+        if (!json)
+            return;
+        this.$undoStack = json.$undoStack || [];
+        this.$redoStack = json.$redoStack || [];
     };
     UndoManager.prototype.$prettyPrint = function (delta) {
         if (delta)
@@ -10629,10 +10533,12 @@ var EditSession = /** @class */ (function () {
         if (typeof session == "string")
             session = JSON.parse(session);
         var undoManager = new UndoManager();
-        undoManager.$undoStack = session.history.undo;
-        undoManager.$redoStack = session.history.redo;
-        undoManager.mark = session.history.mark;
-        undoManager.$rev = session.history.rev;
+        if (session.history) {
+            undoManager.$undoStack = session.history.$undoStack || [];
+            undoManager.$redoStack = session.history.$redoStack || [];
+            undoManager.mark = session.history.mark || 0;
+            undoManager.$rev = session.history.rev || 0;
+        }
         var editSession = new EditSession(session.value);
         session.folds.forEach(function (fold) {
             editSession.addFold("...", Range.fromPoints(fold.start, fold.end));
@@ -11676,9 +11582,6 @@ var EditSession = /** @class */ (function () {
             if (c == 9) {
                 screenColumn += this.getScreenTabSize(screenColumn);
             }
-            else if (c >= 0x1100 && isFullWidth(c)) {
-                screenColumn += 2;
-            }
             else {
                 screenColumn += 1;
             }
@@ -11744,7 +11647,7 @@ var EditSession = /** @class */ (function () {
     EditSession.prototype.screenToDocumentColumn = function (screenRow, screenColumn) {
         return this.screenToDocumentPosition(screenRow, screenColumn).column;
     };
-    EditSession.prototype.screenToDocumentPosition = function (screenRow, screenColumn, offsetX) {
+    EditSession.prototype.screenToDocumentPosition = function (screenRow, screenColumn) {
         if (screenRow < 0)
             return { row: 0, column: 0 };
         var line;
@@ -11812,8 +11715,6 @@ var EditSession = /** @class */ (function () {
                 }
             }
         }
-        if (offsetX !== undefined && this.$bidiHandler.isBidiRow(row + splitIndex, docRow, splitIndex))
-            screenColumn = this.$bidiHandler.offsetToCol(offsetX);
         docColumn += this.$getStringScreenWidth(line, screenColumn - wrapIndent)[1];
         if (this.$useWrapMode && docColumn >= column)
             docColumn = column - 1;
@@ -13847,9 +13748,8 @@ for (var i = 1; i < 9; i++) {
 
 });
 
-define("ace/keyboard/gutter_handler",["require","exports","module","ace/lib/keys","ace/mouse/default_gutter_handler"], function(require, exports, module){"use strict";
+define("ace/keyboard/gutter_handler",["require","exports","module","ace/lib/keys"], function(require, exports, module){"use strict";
 var keys = require('../lib/keys');
-var GutterTooltip = require("../mouse/default_gutter_handler").GutterTooltip;
 var GutterKeyboardHandler = /** @class */ (function () {
     function GutterKeyboardHandler(editor) {
         this.editor = editor;
@@ -13858,7 +13758,7 @@ var GutterKeyboardHandler = /** @class */ (function () {
         this.lines = editor.renderer.$gutterLayer.$lines;
         this.activeRowIndex = null;
         this.activeLane = null;
-        this.annotationTooltip = new GutterTooltip(this.editor);
+        this.annotationTooltip = this.editor.$mouseHandler.$tooltip;
     }
     GutterKeyboardHandler.prototype.addListener = function () {
         this.element.addEventListener("keydown", this.$onGutterKeyDown.bind(this));
@@ -13874,7 +13774,7 @@ var GutterKeyboardHandler = /** @class */ (function () {
         if (this.annotationTooltip.isOpen) {
             e.preventDefault();
             if (e.keyCode === keys["escape"])
-                this.annotationTooltip.hideTooltip();
+                this.annotationTooltip.hide();
             return;
         }
         if (e.target === this.element) {
@@ -13993,12 +13893,8 @@ var GutterKeyboardHandler = /** @class */ (function () {
                     }
                     return;
                 case "annotation":
-                    var gutterElement = this.lines.cells[this.activeRowIndex].element.childNodes[2];
-                    var rect = gutterElement.getBoundingClientRect();
-                    var style = this.annotationTooltip.getElement().style;
-                    style.left = rect.right + "px";
-                    style.top = rect.bottom + "px";
                     this.annotationTooltip.showTooltip(this.$rowIndexToRow(this.activeRowIndex));
+                    this.annotationTooltip.$fromKeyboard = true;
                     break;
             }
             return;
@@ -14017,7 +13913,7 @@ var GutterKeyboardHandler = /** @class */ (function () {
             }
         }
         if (this.annotationTooltip.isOpen)
-            this.annotationTooltip.hideTooltip();
+            this.annotationTooltip.hide();
         return;
     };
     GutterKeyboardHandler.prototype.$isFoldWidgetVisible = function (index) {
@@ -14469,6 +14365,7 @@ var Editor = /** @class */ (function () {
             this.session.off("startOperation", this.$onStartOperation);
             this.session.off("endOperation", this.$onEndOperation);
             var selection = this.session.getSelection();
+            this.session.$fontMetrics = null;
             selection.off("changeCursor", this.$onCursorChange);
             selection.off("changeSelection", this.$onSelectionChange);
         }
@@ -14477,6 +14374,7 @@ var Editor = /** @class */ (function () {
             this.$onDocumentChange = this.onDocumentChange.bind(this);
             session.on("change", this.$onDocumentChange);
             this.renderer.setSession(session);
+            session.$fontMetrics = this.renderer.$fontMetrics;
             this.$onChangeMode = this.onChangeMode.bind(this);
             session.on("changeMode", this.$onChangeMode);
             this.$onTokenizerUpdate = this.onTokenizerUpdate.bind(this);
@@ -14970,7 +14868,7 @@ var Editor = /** @class */ (function () {
             }
             this.selection.setRange(r);
             if (!text && !r.isEmpty())
-                this.remove();
+                this.execCommand(composition.extendLeft ? "backspace" : "del");
         }
         if (text || !this.selection.isEmpty())
             this.insert(text, true);
@@ -16004,6 +15902,18 @@ var Editor = /** @class */ (function () {
             module.prompt(editor, message, options, callback);
         });
     };
+    Object.defineProperty(Editor.prototype, "hoverTooltip", {
+        get: function () {
+            return this.$hoverTooltip || (this.$hoverTooltip = new HoverTooltip(this.container));
+        },
+        set: function (value) {
+            if (this.$hoverTooltip)
+                this.$hoverTooltip.destroy();
+            this.$hoverTooltip = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return Editor;
 }());
 Editor.$uid = 0;
@@ -16075,9 +15985,6 @@ config.defineOptions(Editor.prototype, "editor", {
                         shouldShow = true;
                     }
                     if (shouldShow) {
-                        if (!_this.hoverTooltip) {
-                            _this.hoverTooltip = new HoverTooltip();
-                        }
                         var domNode = dom.createElement("div");
                         domNode.textContent = nls("editor.tooltip.disable-editing", "Editing is disabled");
                         if (!_this.hoverTooltip.isOpen) {
@@ -16099,10 +16006,6 @@ config.defineOptions(Editor.prototype, "editor", {
                 event.removeListener(textArea, "keydown", this.$readOnlyCallback);
                 this.commands.off("exec", this.$readOnlyCallback);
                 this.commands.off("commandUnavailable", this.$readOnlyCallback);
-                if (this.hoverTooltip) {
-                    this.hoverTooltip.destroy();
-                    this.hoverTooltip = null;
-                }
             }
         },
         initialValue: false
@@ -16305,7 +16208,6 @@ config.defineOptions(Editor.prototype, "editor", {
     dragDelay: "$mouseHandler",
     dragEnabled: "$mouseHandler",
     focusTimeout: "$mouseHandler",
-    tooltipFollowsMouse: "$mouseHandler",
     firstLineNumber: "session",
     overwrite: "session",
     newLineMode: "session",
@@ -16367,6 +16269,24 @@ var Lines = /** @class */ (function () {
         var screenPage = Math.floor(screenTop / this.canvasHeight);
         var lineTop = session.documentToScreenRow(row, 0) * config.lineHeight;
         return lineTop - (screenPage * this.canvasHeight);
+    };
+    Lines.prototype.$getCellByScreenRow = function (screenRow, config) {
+        var screenTop = config.firstRowScreen * config.lineHeight;
+        var screenPage = Math.floor(screenTop / this.canvasHeight);
+        var lineTop = screenRow * config.lineHeight - (screenPage * this.canvasHeight);
+        for (var i = this.cells.length - 1; i >= 0; i--) {
+            var cell = this.cells[i];
+            var top = parseInt(cell.element.style.top);
+            var height = parseInt(cell.element.style.height);
+            if (top <= lineTop) {
+                if (top + height < lineTop) {
+                    return null;
+                }
+                var offset = lineTop - top;
+                return { cell: cell, offset: offset };
+            }
+        }
+        return null;
     };
     Lines.prototype.computeLineHeight = function (row, config, session) {
         return config.lineHeight * session.getRowLineCount(row);
@@ -16457,6 +16377,7 @@ var Lines = require("./lines").Lines;
 var nls = require("../config").nls;
 var Gutter = /** @class */ (function () {
     function Gutter(parentEl) {
+        this.$showCursorMarker = null;
         this.element = dom.createElement("div");
         this.element.className = "ace_layer ace_gutter-layer";
         parentEl.appendChild(this.element);
@@ -16578,6 +16499,8 @@ var Gutter = /** @class */ (function () {
         }
         this._signal("afterRender");
         this.$updateGutterWidth(config);
+        if (this.$showCursorMarker && this.$highlightGutterLine)
+            this.$updateCursorMarker();
     };
     Gutter.prototype.$updateGutterWidth = function (config) {
         var session = this.session;
@@ -16606,6 +16529,8 @@ var Gutter = /** @class */ (function () {
         this.$cursorRow = position.row;
     };
     Gutter.prototype.updateLineHighlight = function () {
+        if (this.$showCursorMarker)
+            this.$updateCursorMarker();
         if (!this.$highlightGutterLine)
             return;
         var row = this.session.selection.cursor.row;
@@ -16631,6 +16556,26 @@ var Gutter = /** @class */ (function () {
                 break;
             }
         }
+    };
+    Gutter.prototype.$updateCursorMarker = function () {
+        if (!this.session)
+            return;
+        var session = this.session;
+        if (!this.$highlightElement) {
+            this.$highlightElement = dom.createElement("div");
+            this.$highlightElement.className = "ace_gutter-cursor";
+            this.$highlightElement.style.pointerEvents = "none";
+            this.element.appendChild(this.$highlightElement);
+        }
+        var pos = session.selection.cursor;
+        var config = this.config;
+        var lines = this.$lines;
+        var screenTop = config.firstRowScreen * config.lineHeight;
+        var screenPage = Math.floor(screenTop / lines.canvasHeight);
+        var lineTop = session.documentToScreenRow(pos) * config.lineHeight;
+        var top = lineTop - (screenPage * lines.canvasHeight);
+        dom.setStyle(this.$highlightElement.style, "height", config.lineHeight + "px");
+        dom.setStyle(this.$highlightElement.style, "top", top + "px");
     };
     Gutter.prototype.scrollLines = function (config) {
         var oldConfig = this.config;
@@ -16875,6 +16820,10 @@ var Gutter = /** @class */ (function () {
     };
     Gutter.prototype.setHighlightGutterLine = function (highlightGutterLine) {
         this.$highlightGutterLine = highlightGutterLine;
+        if (!highlightGutterLine && this.$highlightElement) {
+            this.$highlightElement.remove();
+            this.$highlightElement = null;
+        }
     };
     Gutter.prototype.setShowLineNumbers = function (show) {
         this.$renderer = !show && {
@@ -16916,8 +16865,24 @@ var Gutter = /** @class */ (function () {
     };
     Gutter.prototype.$getGutterCell = function (row) {
         var cells = this.$lines.cells;
-        var visibileRow = this.session.documentToScreenRow(row, 0);
-        return cells[row - this.config.firstRowScreen - (row - visibileRow)];
+        var min = 0;
+        var max = cells.length - 1;
+        if (row < cells[0].row || row > cells[max].row)
+            return;
+        while (min <= max) {
+            var mid = Math.floor((min + max) / 2);
+            var cell = cells[mid];
+            if (cell.row > row) {
+                max = mid - 1;
+            }
+            else if (cell.row < row) {
+                min = mid + 1;
+            }
+            else {
+                return cell;
+            }
+        }
+        return cell;
     };
     Gutter.prototype.$addCustomWidget = function (row, _a, cell) {
         var className = _a.className, label = _a.label, title = _a.title, callbacks = _a.callbacks;
@@ -16980,7 +16945,7 @@ var Gutter = /** @class */ (function () {
 }());
 Gutter.prototype.$fixedWidth = false;
 Gutter.prototype.$highlightGutterLine = true;
-Gutter.prototype.$renderer = "";
+Gutter.prototype.$renderer = undefined;
 Gutter.prototype.$showLineNumbers = true;
 Gutter.prototype.$showFoldWidgets = true;
 oop.implement(Gutter.prototype, EventEmitter);
@@ -17034,6 +16999,7 @@ var Marker = /** @class */ (function () {
         if (!config)
             return;
         this.config = config;
+        this.element.style.display = "none";
         this.i = 0;
         var html;
         for (var key in this.markers) {
@@ -17048,7 +17014,7 @@ var Marker = /** @class */ (function () {
             range = range.toScreenRange(this.session);
             if (marker.renderer) {
                 var top = this.$getTop(range.start.row, config);
-                var left = this.$padding + range.start.column * config.characterWidth;
+                var left = this.$padding + config.fontMetrics.textWidth(range.start.row, range.start.column);
                 marker.renderer(html, range, left, top, config);
             }
             else if (marker.type == "fullLine") {
@@ -17071,6 +17037,7 @@ var Marker = /** @class */ (function () {
             while (this.i < this.element.childElementCount)
                 this.element.removeChild(this.element.lastChild);
         }
+        this.element.style.display = "";
     };
     Marker.prototype.$getTop = function (row, layerConfig) {
         return (row - layerConfig.firstRowScreen) * layerConfig.lineHeight;
@@ -17099,12 +17066,12 @@ var Marker = /** @class */ (function () {
         var padding = this.$padding;
         var height = config.lineHeight;
         var top = this.$getTop(range.start.row, config);
-        var left = padding + range.start.column * config.characterWidth;
+        var left = padding + config.fontMetrics.textWidth(range.start.row, range.start.column);
         extraStyle = extraStyle || "";
         if (this.session.$bidiHandler.isBidiRow(range.start.row)) {
             var range1 = range.clone();
             range1.end.row = range1.start.row;
-            range1.end.column = this.session.getLine(range1.start.row).length;
+            range1.end.column = Number.MAX_VALUE;
             this.drawBidiSingleLineMarker(stringBuilder, range1, clazz + " ace_br1 ace_start", config, null, extraStyle);
         }
         else {
@@ -17118,7 +17085,7 @@ var Marker = /** @class */ (function () {
         }
         else {
             top = this.$getTop(range.end.row, config);
-            var width = range.end.column * config.characterWidth;
+            var width = config.fontMetrics.textWidth(range.end.row, range.end.column);
             this.elt(clazz + " ace_br12", "height:" + height + "px;" +
                 "width:" + width + "px;" +
                 "top:" + top + "px;" +
@@ -17138,22 +17105,22 @@ var Marker = /** @class */ (function () {
         if (this.session.$bidiHandler.isBidiRow(range.start.row))
             return this.drawBidiSingleLineMarker(stringBuilder, range, clazz, config, extraLength, extraStyle);
         var height = config.lineHeight;
-        var width = (range.end.column + (extraLength || 0) - range.start.column) * config.characterWidth;
+        var right = config.fontMetrics.textWidth(range.start.row, range.end.column) + (extraLength || 0) * config.characterWidth;
         var top = this.$getTop(range.start.row, config);
-        var left = this.$padding + range.start.column * config.characterWidth;
+        var left = config.fontMetrics.textWidth(range.start.row, range.start.column);
         this.elt(clazz, "height:" + height + "px;" +
-            "width:" + width + "px;" +
+            "width:" + (right - left) + "px;" +
             "top:" + top + "px;" +
-            "left:" + left + "px;" + (extraStyle || ""));
+            "left:" + (this.$padding + left) + "px;" + (extraStyle || ""));
     };
     Marker.prototype.drawBidiSingleLineMarker = function (stringBuilder, range, clazz, config, extraLength, extraStyle) {
         var height = config.lineHeight, top = this.$getTop(range.start.row, config), padding = this.$padding;
-        var selections = this.session.$bidiHandler.getSelections(range.start.column, range.end.column);
-        selections.forEach(function (selection) {
+        var rects = this.config.fontMetrics.getRects(range.start, range.end);
+        rects.forEach(function (rect) {
             this.elt(clazz, "height:" + height + "px;" +
-                "width:" + (selection.width + (extraLength || 0)) + "px;" +
+                "width:" + (rect.width + (extraLength || 0)) + "px;" +
                 "top:" + top + "px;" +
-                "left:" + (padding + selection.left) + "px;" + (extraStyle || ""));
+                "left:" + (padding + rect.left) + "px;" + (extraStyle || ""));
         }, this);
     };
     Marker.prototype.drawFullLineMarker = function (stringBuilder, range, clazz, config, extraStyle) {
@@ -17435,7 +17402,7 @@ var Text = /** @class */ (function () {
     };
     Text.prototype.$renderToken = function (parent, screenColumn, token, value) {
         var self = this;
-        var re = /(\t)|( +)|([\x00-\x1f\x80-\xa0\xad\u1680\u180E\u2000-\u200f\u2028\u2029\u202F\u205F\uFEFF\uFFF9-\uFFFC\u2066\u2067\u2068\u202A\u202B\u202D\u202E\u202C\u2069\u2060\u2061\u2062\u2063\u2064\u206A\u206B\u206B\u206C\u206D\u206E\u206F]+)|(\u3000)|([\u1100-\u115F\u11A3-\u11A7\u11FA-\u11FF\u2329-\u232A\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u2FF0-\u2FFB\u3001-\u303E\u3041-\u3096\u3099-\u30FF\u3105-\u312D\u3131-\u318E\u3190-\u31BA\u31C0-\u31E3\u31F0-\u321E\u3220-\u3247\u3250-\u32FE\u3300-\u4DBF\u4E00-\uA48C\uA490-\uA4C6\uA960-\uA97C\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFAFF\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE66\uFE68-\uFE6B\uFF01-\uFF60\uFFE0-\uFFE6]|[\uD800-\uDBFF][\uDC00-\uDFFF])/g;
+        var re = /(\t)|( +)|([\x00-\x1f\x80-\xa0\xad\u1680\u180E\u2000-\u200C\u200E\u200f\u2028\u2029\u202F\u205F\uFEFF\uFFF9-\uFFFC\u2066\u2067\u2068\u202A\u202B\u202D\u202E\u202C\u2069\u2060\u2061\u2062\u2063\u2064\u206A\u206B\u206B\u206C\u206D\u206E\u206F]+)|(\u3000+)/g;
         var valueFragment = this.dom.createFragment(this.element);
         var m;
         var i = 0;
@@ -17444,7 +17411,6 @@ var Text = /** @class */ (function () {
             var simpleSpace = m[2];
             var controlCharacter = m[3];
             var cjkSpace = m[4];
-            var cjk = m[5];
             if (!self.showSpaces && simpleSpace)
                 continue;
             var before = i != m.index ? value.slice(i, m.index) : "";
@@ -17477,23 +17443,26 @@ var Text = /** @class */ (function () {
                 valueFragment.appendChild(span);
             }
             else if (cjkSpace) {
-                screenColumn += 1;
-                var span = this.dom.createElement("span");
-                span.style.width = (self.config.characterWidth * 2) + "px";
-                span.className = self.showSpaces ? "ace_cjk ace_invisible ace_invisible_space" : "ace_cjk";
-                span.textContent = self.showSpaces ? self.SPACE_CHAR : cjkSpace;
-                valueFragment.appendChild(span);
-            }
-            else if (cjk) {
-                screenColumn += 1;
-                var span = this.dom.createElement("span");
-                span.style.width = (self.config.characterWidth * 2) + "px";
-                span.className = "ace_cjk";
-                span.textContent = cjk;
-                valueFragment.appendChild(span);
+                if (self.showSpaces) {
+                    var span = this.dom.createElement("span");
+                    span.className = "ace_invisible ace_invisible_space";
+                    span.textContent = lang.stringRepeat(self.CJK_SPACE_CHAR, cjkSpace.length);
+                    valueFragment.appendChild(span);
+                }
+                else {
+                    valueFragment.appendChild(this.dom.createTextNode(cjkSpace, this.element));
+                }
             }
         }
-        valueFragment.appendChild(this.dom.createTextNode(i ? value.slice(i) : value, this.element));
+        var trimmedValue = i ? value.slice(i) : value;
+        if (trimmedValue.length > 256) {
+            for (var j = 0; j < trimmedValue.length;) {
+                valueFragment.appendChild(this.dom.createTextNode(trimmedValue.slice(j, j += 256), this.element));
+            }
+        }
+        else {
+            valueFragment.appendChild(this.dom.createTextNode(trimmedValue, this.element));
+        }
         if (!isTextToken(token.type)) {
             var classes = "ace_" + token.type.replace(/\./g, " ace_");
             var span = this.dom.createElement("span");
@@ -17525,7 +17494,9 @@ var Text = /** @class */ (function () {
         }
         else if (value[0] == "\t") {
             for (var i = 0; i < cols; i++) {
-                parent.appendChild(this.$tabStrings["\t"].cloneNode(true));
+                var tabSpan = this.$tabStrings["\t"].cloneNode(true);
+                tabSpan["charCount"] = 1;
+                parent.appendChild(tabSpan);
             }
             this.$highlightIndentGuide();
             return value.substr(cols);
@@ -17812,6 +17783,7 @@ Text.prototype.EOL_CHAR_CRLF = "\xa4";
 Text.prototype.EOL_CHAR = Text.prototype.EOL_CHAR_LF;
 Text.prototype.TAB_CHAR = "\u2014"; //"\u21E5";
 Text.prototype.SPACE_CHAR = "\xB7";
+Text.prototype.CJK_SPACE_CHAR = "\u30FB";
 Text.prototype.$padding = 0;
 Text.prototype.MAX_LINE_LENGTH = 10000;
 Text.prototype.showInvisibles = false;
@@ -17954,16 +17926,16 @@ var Cursor = /** @class */ (function () {
     };
     Cursor.prototype.getPixelPosition = function (position, onScreen) {
         if (!this.config || !this.session)
-            return { left: 0, top: 0 };
+            return { left: 0, top: 0, width: 0 };
         if (!position)
             position = this.session.selection.getCursor();
         var pos = this.session.documentToScreenPosition(position);
-        var cursorLeft = this.$padding + (this.session.$bidiHandler.isBidiRow(pos.row, position.row)
-            ? this.session.$bidiHandler.getPosLeft(pos.column)
-            : pos.column * this.config.characterWidth);
+        var textWidth = this.config.fontMetrics.textWidth(pos.row, pos.column);
+        var cursorLeft = this.$padding + textWidth;
         var cursorTop = (pos.row - (onScreen ? this.config.firstRowScreen : 0)) *
             this.config.lineHeight;
-        return { left: cursorLeft, top: cursorTop };
+        var cursorWidth = this.config.fontMetrics.textWidth(pos.row, pos.column + 1) - textWidth;
+        return { left: cursorLeft, top: cursorTop, width: Math.abs(cursorWidth) || this.config.characterWidth };
     };
     Cursor.prototype.isCursorInView = function (pixelPos, config) {
         return pixelPos.top >= 0 && pixelPos.top < config.maxHeight;
@@ -17990,7 +17962,7 @@ var Cursor = /** @class */ (function () {
                 else {
                     dom.setStyle(style, "display", "block");
                     dom.translate(element, pixelPos.left, pixelPos.top);
-                    dom.setStyle(style, "width", Math.round(config.characterWidth) + "px");
+                    dom.setStyle(style, "width", Math.round(pixelPos.width) + "px");
                     dom.setStyle(style, "height", config.lineHeight + "px");
                 }
             }
@@ -18051,6 +18023,7 @@ var Scrollbar = /** @class */ (function () {
     function Scrollbar(parent, classSuffix) {
         this.element = dom.createElement("div");
         this.element.className = "ace_scrollbar ace_scrollbar" + classSuffix;
+        this.element.tabIndex = -1;
         this.inner = dom.createElement("div");
         this.inner.className = "ace_scrollbar-inner";
         this.inner.textContent = "\xa0";
@@ -18450,17 +18423,36 @@ exports.RenderLoop = RenderLoop;
 
 });
 
-define("ace/layer/font_metrics",["require","exports","module","ace/lib/oop","ace/lib/dom","ace/lib/lang","ace/lib/event","ace/lib/useragent","ace/lib/event_emitter"], function(require, exports, module){var oop = require("../lib/oop");
+define("ace/layer/font_metrics",["require","exports","module","ace/lib/oop","ace/lib/dom","ace/lib/lang","ace/lib/event","ace/lib/event_emitter"], function(require, exports, module){var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var oop = require("../lib/oop");
 var dom = require("../lib/dom");
 var lang = require("../lib/lang");
 var event = require("../lib/event");
-var useragent = require("../lib/useragent");
 var EventEmitter = require("../lib/event_emitter").EventEmitter;
 var CHAR_COUNT = 512;
 var USE_OBSERVER = typeof ResizeObserver == "function";
 var L = 200;
 var FontMetrics = /** @class */ (function () {
-    function FontMetrics(parentEl) {
+    function FontMetrics(parentEl, textLayer, renderer) {
+        this.config = { characterWidth: 1 };
+        this.$characterSize = { width: 0, height: 0 };
+        this.textLayer = textLayer;
+        this.renderer = renderer;
         this.el = dom.createElement("div");
         this.$setMeasureNodeStyles(this.el.style, true);
         this.$main = dom.createElement("div");
@@ -18471,11 +18463,12 @@ var FontMetrics = /** @class */ (function () {
         this.el.appendChild(this.$measureNode);
         parentEl.appendChild(this.el);
         this.$measureNode.textContent = lang.stringRepeat("X", CHAR_COUNT);
-        this.$characterSize = { width: 0, height: 0 };
         if (USE_OBSERVER)
             this.$addObserver();
         else
             this.checkForSizeChanges();
+        this.textLayer.$setFontMetrics(this);
+        this.$scratchRange = document.createRange();
     }
     FontMetrics.prototype.$setMeasureNodeStyles = function (style, isRoot) {
         style.width = style.height = "auto";
@@ -18483,12 +18476,7 @@ var FontMetrics = /** @class */ (function () {
         style.visibility = "hidden";
         style.position = "absolute";
         style.whiteSpace = "pre";
-        if (useragent.isIE < 8) {
-            style["font-family"] = "inherit";
-        }
-        else {
-            style.font = "inherit";
-        }
+        style.font = "inherit";
         style.overflow = isRoot ? "hidden" : "visible";
     };
     FontMetrics.prototype.checkForSizeChanges = function (size) {
@@ -18550,6 +18538,12 @@ var FontMetrics = /** @class */ (function () {
         }
         return w;
     };
+    FontMetrics.prototype.getTextWidth = function (text) {
+        if (!text)
+            return 0;
+        this.$main.textContent = text;
+        return this.$main.clientWidth;
+    };
     FontMetrics.prototype.destroy = function () {
         clearInterval(this.$pollSizeChangesTimer);
         if (this.$observer)
@@ -18557,34 +18551,18 @@ var FontMetrics = /** @class */ (function () {
         if (this.el && this.el.parentNode)
             this.el.parentNode.removeChild(this.el);
     };
-    FontMetrics.prototype.$getZoom = function (element) {
-        if (!element || !element.parentElement)
-            return 1;
-        return (Number(window.getComputedStyle(element)["zoom"]) || 1) * this.$getZoom(element.parentElement);
-    };
     FontMetrics.prototype.$initTransformMeasureNodes = function () {
-        var t = function (t, l) {
+        var t = function (l, t) {
             return ["div", {
-                    style: "position: absolute;top:" + t + "px;left:" + l + "px;"
+                    style: "position: absolute;left:" + l + "px;top:" + t + "px;"
                 }];
         };
         this.els = dom.buildDom([t(0, 0), t(L, 0), t(0, L), t(L, L)], this.el);
     };
-    FontMetrics.prototype.transformCoordinates = function (clientPos, elPos) {
-        if (clientPos) {
-            var zoom = this.$getZoom(this.el);
-            clientPos = mul(1 / zoom, clientPos);
+    FontMetrics.prototype.getTransform = function () {
+        if (this.config.$transformData) {
+            return this.config.$transformData;
         }
-        function solve(l1, l2, r) {
-            var det = l1[1] * l2[0] - l1[0] * l2[1];
-            return [
-                (-l2[1] * r[0] + l2[0] * r[1]) / det,
-                (+l1[1] * r[0] - l1[0] * r[1]) / det
-            ];
-        }
-        function sub(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
-        function add(a, b) { return [a[0] + b[0], a[1] + b[1]]; }
-        function mul(a, b) { return [a * b[0], a * b[1]]; }
         if (!this.els)
             this.$initTransformMeasureNodes();
         function p(el) {
@@ -18596,23 +18574,400 @@ var FontMetrics = /** @class */ (function () {
         var c = p(this.els[2]);
         var d = p(this.els[3]);
         var h = solve(sub(d, b), sub(d, c), sub(add(b, c), add(d, a)));
-        var m1 = mul(1 + h[0], sub(b, a));
-        var m2 = mul(1 + h[1], sub(c, a));
+        var m1 = mul((1 + h[0]) / L, sub(b, a));
+        var m2 = mul((1 + h[1]) / L, sub(c, a));
+        var M = [
+            m1[0], m2[0], 0,
+            m1[1], m2[1], 0,
+            h[0] / L, h[1] / L, 1
+        ];
+        var detM = 1 / (M[0] * M[4] - M[3] * M[1]);
+        var MInv = [
+            M[4] * detM, -M[1] * detM, 0,
+            -M[3] * detM, M[0] * detM, 0,
+            (M[3] * M[7] - M[4] * M[6]) * detM, (M[1] * M[6] - M[0] * M[7]) * detM, 1
+        ];
+        this.config.$transformData = {
+            M: M,
+            MInv: MInv,
+            t: a
+        };
+        return this.config.$transformData;
+    };
+    FontMetrics.prototype.transformCoordinates = function (clientPos, elPos) {
+        if (!this.config.$transformData)
+            this.getTransform();
+        var tr = this.config.$transformData;
         if (elPos) {
-            var x = elPos;
-            var k = h[0] * x[0] / L + h[1] * x[1] / L + 1;
-            var ut = add(mul(x[0], m1), mul(x[1], m2));
-            return add(mul(1 / k / L, ut), a);
+            return add(project(tr.M, elPos[0], elPos[1]), tr.t);
         }
-        var u = sub(clientPos, a);
-        var f = solve(sub(m1, mul(h[0], u)), sub(m2, mul(h[1], u)), u);
-        return mul(L, f);
+        return project(tr.MInv, clientPos[0] - tr.t[0], clientPos[1] - tr.t[1]);
+    };
+    FontMetrics.prototype.recoverRect = function (transform, bbox) {
+        var M = transform.M;
+        var isAffine = Math.abs(M[6]) < 1e-10 && Math.abs(M[7]) < 1e-10;
+        var left = bbox.left, top = bbox.top, Wt = bbox.width, Ht = bbox.height;
+        left -= transform.t[0];
+        top -= transform.t[1];
+        if (isAffine) {
+            var _a = __read(M, 6), m00 = _a[0], m01 = _a[1], m02 = _a[2], m10 = _a[3], m11 = _a[4], m12 = _a[5];
+            var absM = [Math.abs(m00), Math.abs(m01), Math.abs(m10), Math.abs(m11)];
+            var delta = absM[0] * absM[3] - absM[2] * absM[1];
+            var w = void 0, h = void 0;
+            if (Math.abs(delta) < 1e-10) {
+                h = this.config && this.config.lineHeight || 0;
+                w = (Wt - absM[1] * h) / absM[0];
+            }
+            else {
+                w = (absM[3] * Wt - absM[1] * Ht) / delta;
+                h = (-absM[2] * Wt + absM[0] * Ht) / delta;
+            }
+            var detM = m00 * m11 - m01 * m10;
+            var ctx = left + Wt / 2 - m02;
+            var cty = top + Ht / 2 - m12;
+            var cx = (m11 * ctx - m01 * cty) / detM;
+            var cy = (-m10 * ctx + m00 * cty) / detM;
+            return { left: cx - w / 2, top: cy - h / 2, width: w, height: h, right: cx + w / 2, bottom: cy + h / 2 };
+        }
+        return recoverRect(transform, bbox);
+    };
+    FontMetrics.prototype.$findElementForScreenRow = function (screenRow) {
+        var textLayer = this.textLayer;
+        if (!this.config)
+            return null; // not initialized yet
+        var data = textLayer.$lines.$getCellByScreenRow(screenRow, this.config);
+        var lineElement = data && data.cell.element;
+        if (lineElement && textLayer.$useLineGroups()) {
+            var index = Math.floor(data.offset / this.config.lineHeight);
+            lineElement = lineElement.children[Math.max(index, 0)];
+        }
+        return lineElement;
+    };
+    FontMetrics.prototype.textWidth = function (screenRow, screenColumn) {
+        var lineElement = this.$findElementForScreenRow(screenRow);
+        if (!lineElement || !document.createRange) {
+            return screenColumn * this.config.characterWidth;
+        }
+        return this.$measureLineToColumn(lineElement, screenColumn);
+    };
+    FontMetrics.prototype.$measureLineToColumn = function (lineElement, screenColumn) {
+        var textLayer = this.textLayer;
+        try {
+            var position = this.$findColumnPosition(lineElement, screenColumn);
+            if (!position) {
+                return screenColumn * this.config.characterWidth;
+            }
+            this.$scratchRange.setStart(position.node, position.offset);
+            this.$scratchRange.setEnd(position.node, position.offset);
+            var rangeRect = this.$scratchRange.getBoundingClientRect();
+            if (this.renderer.$hasCssTransforms) {
+                var tr = this.getTransform();
+                var transformed = this.recoverRect(tr, rangeRect);
+                var leftOffset = this.renderer.gutterWidth + this.renderer.margin.left + this.renderer.$padding - this.renderer.scrollLeft;
+                return transformed.left - leftOffset + position.overflow * this.config.characterWidth;
+            }
+            var rect = textLayer.element.getBoundingClientRect();
+            return rangeRect.left - rect.left + position.overflow * this.config.characterWidth;
+        }
+        catch (e) {
+            console.error("Error measuring text width:", e);
+            return screenColumn * this.config.characterWidth;
+        }
+    };
+    FontMetrics.prototype.$findColumnPosition = function (lineElement, screenColumn) {
+        var walker = document.createTreeWalker(lineElement, NodeFilter.SHOW_TEXT, null);
+        var currentColumn = 0;
+        var node, lastNode;
+        while (node = walker.nextNode()) {
+            var nodeText = node.nodeValue;
+            var nodeLength = nodeText.length;
+            if (currentColumn + nodeLength >= screenColumn) {
+                return {
+                    node: node,
+                    offset: screenColumn - currentColumn,
+                    overflow: 0
+                };
+            }
+            currentColumn += nodeLength;
+            lastNode = node;
+        }
+        return lastNode && {
+            node: lastNode,
+            offset: lastNode.nodeValue.length,
+            overflow: screenColumn - currentColumn,
+        };
+    };
+    FontMetrics.prototype.$pixelToColumn = function (screenRow, screenColumnMonospace, x, blockCursor, isTextWidthCoordinate) {
+        var _this = this;
+        var scratchRange = this.$scratchRange;
+        var lineElement = this.$findElementForScreenRow(screenRow);
+        if (!lineElement || screenColumnMonospace < 0)
+            return screenColumnMonospace;
+        var hasCssTransform = this.renderer.$hasCssTransforms;
+        var tr = hasCssTransform && this.getTransform();
+        if (isTextWidthCoordinate) {
+            if (!hasCssTransform) {
+                x += this.textLayer.element.getBoundingClientRect().left;
+            }
+            else {
+                x += this.renderer.gutterWidth + this.renderer.margin.left + this.renderer.$padding - this.renderer.scrollLeft;
+            }
+        }
+        var screenColumn = 0;
+        var getRects = function (node) {
+            var rects = [];
+            if (node.nodeType === Node.TEXT_NODE) {
+                scratchRange.setStart(node, 0);
+                scratchRange.setEnd(node, node.nodeValue.length);
+                rects = Array.from(scratchRange.getClientRects());
+            }
+            else if (node.nodeType === Node.ELEMENT_NODE) {
+                rects = Array.from(node.getClientRects());
+            }
+            if (hasCssTransform) {
+                var fixedRects = [];
+                for (var i = 0; i < rects.length; i++) {
+                    var rect = rects[i];
+                    fixedRects.push(_this.recoverRect(tr, rect));
+                }
+                rects = fixedRects;
+            }
+            return rects;
+        };
+        var self = this;
+        function search(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                var textLength = node.nodeValue.length;
+                var maxDistance = Number.MAX_VALUE;
+                var index = -1;
+                var lastSignedDistance = undefined;
+                var value = node.nodeValue;
+                for (var j = 0; j <= textLength; j++) {
+                    scratchRange.setStart(node, j);
+                    scratchRange.setEnd(node, j);
+                    if (j > 0 && j < textLength && /[\uDC00-\uDFFF]/.test(value.charAt(j)) &&
+                        /[\uD800-\uDBFF]/.test(value.charAt(j - 1))) {
+                        continue;
+                    }
+                    var rect = /** @type {ReturnType<FontMetrics['recoverRect']>}*/ (scratchRange.getBoundingClientRect());
+                    if (hasCssTransform) {
+                        rect = self.recoverRect(tr, rect);
+                    }
+                    var signedDistance = x - rect.left;
+                    var d = Math.abs(signedDistance);
+                    if (d < maxDistance) {
+                        index = j;
+                        maxDistance = d;
+                        lastSignedDistance = signedDistance;
+                    }
+                }
+                if (blockCursor) {
+                    if (lastSignedDistance < 0) {
+                        index = Math.max(0, index - 1);
+                    }
+                }
+                return screenColumn = screenColumn + index;
+            }
+            else if (node.nodeType === Node.ELEMENT_NODE) {
+                var childNodes = node.childNodes;
+                for (var i = 0; i < childNodes.length; i++) {
+                    var child = childNodes[i];
+                    var rects = getRects(child);
+                    for (var j = 0; j < rects.length; j++) {
+                        var rect = rects[j];
+                        if (rect.left <= x && x <= rect.left + rect.width) {
+                            search(child);
+                            return screenColumn;
+                        }
+                    }
+                    screenColumn += child.nodeType === Node.TEXT_NODE ? child.nodeValue.length : child.textContent.length;
+                }
+            }
+        }
+        search(lineElement);
+        return screenColumn;
+    };
+    FontMetrics.prototype.getRects = function (startScreenPos, endScreenPos) {
+        var row = startScreenPos.row;
+        var textLayer = this.textLayer;
+        var lineElement = this.$findElementForScreenRow(row);
+        if (lineElement) {
+            try {
+                var p1 = this.$findColumnPosition(lineElement, startScreenPos.column);
+                var p2 = this.$findColumnPosition(lineElement, endScreenPos.column);
+                if (p1 && p2) {
+                    this.$scratchRange.setStart(p1.node, p1.offset);
+                    this.$scratchRange.setEnd(p2.node, p2.offset);
+                    var rangeRects = this.$scratchRange.getClientRects();
+                    var hasCssTransform = this.renderer && this.renderer.$hasCssTransforms;
+                    if (hasCssTransform) {
+                        var tr = this.getTransform();
+                        var rects = [];
+                        for (var i = 0; i < rangeRects.length; i++) {
+                            var rangeRect = this.recoverRect(tr, rangeRects[i]);
+                            rangeRect.right = rangeRect.left + rangeRect.width;
+                            rects.push(rangeRect);
+                        }
+                        var leftOffset = this.renderer.gutterWidth + this.renderer.margin.left + this.renderer.$padding - this.renderer.scrollLeft;
+                        var merged = mergeTouchingRects(rects).map(function (r) {
+                            return {
+                                left: r.left - leftOffset,
+                                width: r.right - r.left,
+                            };
+                        });
+                        return merged;
+                    }
+                    var rect = textLayer.element.getBoundingClientRect();
+                    var merged = mergeTouchingRects(rangeRects).map(function (r) {
+                        return {
+                            left: r.left - rect.left,
+                            width: r.right - r.left,
+                        };
+                    });
+                    return merged;
+                }
+            }
+            catch (e) {
+                console.error("Error measuring text width:", e);
+            }
+        }
+        return [{
+                left: startScreenPos.column * this.config.characterWidth,
+                width: (endScreenPos.column - startScreenPos.column) * this.config.characterWidth,
+            }];
     };
     return FontMetrics;
 }());
-FontMetrics.prototype.$characterSize = { width: 0, height: 0 };
+function mergeTouchingRects(rects) {
+    var merged = [];
+    for (var i = 0; i < rects.length; i++) {
+        var rect = rects[i];
+        var found = false;
+        for (var j = 0; j < merged.length; j++) {
+            var m = merged[j];
+            if ((m.left <= rect.left && rect.left <= m.right) ||
+                (m.left <= rect.right && rect.right <= m.right) ||
+                (rect.left <= m.left && m.right <= rect.right)) {
+                m.left = Math.min(m.left, rect.left);
+                m.right = Math.max(m.right, rect.right);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            merged.push({
+                left: rect.left,
+                right: rect.right,
+                top: rect.top,
+                height: rect.height,
+            });
+        }
+    }
+    return merged;
+}
+function solve(l1, l2, r) {
+    var det = l1[1] * l2[0] - l1[0] * l2[1];
+    return [
+        (-l2[1] * r[0] + l2[0] * r[1]) / det,
+        (+l1[1] * r[0] - l1[0] * r[1]) / det
+    ];
+}
+function sub(a, b) { return [a[0] - b[0], a[1] - b[1]]; }
+function add(a, b) { return [a[0] + b[0], a[1] + b[1]]; }
+function mul(a, b) { return [a * b[0], a * b[1]]; }
 oop.implement(FontMetrics.prototype, EventEmitter);
 exports.FontMetrics = FontMetrics;
+function recoverRect(transform, bbox) {
+    var left = bbox.left, top = bbox.top, width = bbox.width, height = bbox.height;
+    var M = transform.M;
+    left -= transform.t[0];
+    top -= transform.t[1];
+    bbox = { left: left, top: top, width: width, height: height };
+    var targets = [top, left + width, top + height, left]; // minY, maxX, maxY, minX
+    var isYAxis = [true, false, true, false]; // minY=Y, maxX=X, maxY=Y, minX=X
+    var corners = [
+        [0, 0], [1, 0], [1, 1], [0, 1]
+    ];
+    var result = null;
+    var mainMappings = [27, 57, 23, 53, 43, 9, 10, 11, 14, 37, 31, 56, 40, 41, 47];
+    for (var i = -mainMappings.length; i < 256; i++) {
+        var index = i < 0 ? mainMappings[mainMappings.length + i] : i;
+        var mappingIdx = [
+            (index >> 0) & 3,
+            (index >> 2) & 3,
+            (index >> 4) & 3,
+            (index >> 6) & 3
+        ];
+        var mapping = mappingIdx.map(function (idx) { return corners[idx]; });
+        var rows = mapping.map(function (c, j) {
+            var _a = __read(c, 2), dx = _a[0], dy = _a[1];
+            var target = targets[j];
+            var m = isYAxis[j] ? M.slice(3, 6) : M.slice(0, 3);
+            var mp = M.slice(6, 9);
+            var ax = m[0] - target * mp[0];
+            var ay = m[1] - target * mp[1];
+            return [ax, ay, dx * ax, dy * ay, target * mp[2] - m[2]];
+        });
+        var res = solve4x4(rows);
+        var result;
+        if (res) {
+            var _a = __read(res, 4), x0 = _a[0], y0 = _a[1], w = _a[2], h = _a[3];
+            if (w < 0) {
+                x0 += w;
+                w = -w;
+            }
+            if (h < 0) {
+                y0 += h;
+                h = -h;
+            }
+            if (validateSolution(M, x0, y0, w, h, bbox)) {
+                result = { left: x0, top: y0, width: w, height: h, right: x0 + w, bottom: y0 + h, mappingIdx: i };
+                break;
+            }
+        }
+    }
+    if (!result)
+        console.warn("No valid mapping found in 256 combinations.");
+    return result;
+}
+var project = function (m, px, py) {
+    var k = m[6] * px + m[7] * py + m[8];
+    return [(m[0] * px + m[1] * py + m[2]) / k, (m[3] * px + m[4] * py + m[5]) / k];
+};
+function validateSolution(M, x, y, w, h, targetBbox) {
+    var pts = [
+        [x, y], [x + w, y], [x + w, y + h], [x, y + h]
+    ];
+    return pts.every(function (p) {
+        var mapped = project(M, p[0], p[1]);
+        return targetBbox.left - 0.5 <= mapped[0] && mapped[0] <= targetBbox.left + targetBbox.width + 0.5
+            && targetBbox.top - 0.5 <= mapped[1] && mapped[1] <= targetBbox.top + targetBbox.height + 0.5;
+    });
+}
+function solve4x4(m) {
+    var _a;
+    var n = 4;
+    for (var i = 0; i < n; i++) {
+        var max = i;
+        for (var j = i + 1; j < n; j++)
+            if (Math.abs(m[j][i]) > Math.abs(m[max][i]))
+                max = j;
+        _a = __read([m[max], m[i]], 2), m[i] = _a[0], m[max] = _a[1];
+        var p = m[i][i];
+        if (Math.abs(p) < 1e-10)
+            return null;
+        for (var j = i; j <= n; j++)
+            m[i][j] /= p;
+        for (var k = 0; k < n; k++) {
+            if (k !== i) {
+                var f = m[k][i];
+                for (var j = i; j <= n; j++)
+                    m[k][j] -= f * m[i][j];
+            }
+        }
+    }
+    return m.map(function (row) { return row[n]; });
+}
 
 });
 
@@ -18627,7 +18982,7 @@ for (var i = 1; i < 16; i++) {
 }
 styles.join("\\n")
 */
-module.exports = "\n.ace_br1 {border-top-left-radius    : 3px;}\n.ace_br2 {border-top-right-radius   : 3px;}\n.ace_br3 {border-top-left-radius    : 3px; border-top-right-radius:    3px;}\n.ace_br4 {border-bottom-right-radius: 3px;}\n.ace_br5 {border-top-left-radius    : 3px; border-bottom-right-radius: 3px;}\n.ace_br6 {border-top-right-radius   : 3px; border-bottom-right-radius: 3px;}\n.ace_br7 {border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px;}\n.ace_br8 {border-bottom-left-radius : 3px;}\n.ace_br9 {border-top-left-radius    : 3px; border-bottom-left-radius:  3px;}\n.ace_br10{border-top-right-radius   : 3px; border-bottom-left-radius:  3px;}\n.ace_br11{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-left-radius:  3px;}\n.ace_br12{border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}\n.ace_br13{border-top-left-radius    : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}\n.ace_br14{border-top-right-radius   : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}\n.ace_br15{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;}\n\n\n.ace_editor {\n    position: relative;\n    overflow: hidden;\n    padding: 0;\n    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace;\n    direction: ltr;\n    text-align: left;\n    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n    forced-color-adjust: none;\n}\n\n.ace_scroller {\n    position: absolute;\n    overflow: hidden;\n    top: 0;\n    bottom: 0;\n    background-color: inherit;\n    -ms-user-select: none;\n    -moz-user-select: none;\n    -webkit-user-select: none;\n    user-select: none;\n    cursor: text;\n}\n\n.ace_content {\n    position: absolute;\n    box-sizing: border-box;\n    min-width: 100%;\n    contain: style size layout;\n    font-variant-ligatures: no-common-ligatures;\n}\n.ace_invisible {\n    font-variant-ligatures: none;\n}\n\n.ace_keyboard-focus:focus {\n    box-shadow: inset 0 0 0 2px #5E9ED6;\n    outline: none;\n}\n\n.ace_dragging .ace_scroller:before{\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    content: '';\n    background: rgba(250, 250, 250, 0.01);\n    z-index: 1000;\n}\n.ace_dragging.ace_dark .ace_scroller:before{\n    background: rgba(0, 0, 0, 0.01);\n}\n\n.ace_gutter {\n    position: absolute;\n    overflow : hidden;\n    width: auto;\n    top: 0;\n    bottom: 0;\n    left: 0;\n    cursor: default;\n    z-index: 4;\n    -ms-user-select: none;\n    -moz-user-select: none;\n    -webkit-user-select: none;\n    user-select: none;\n    contain: style size layout;\n}\n\n.ace_gutter-active-line {\n    position: absolute;\n    left: 0;\n    right: 0;\n}\n\n.ace_scroller.ace_scroll-left:after {\n    content: \"\";\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    box-shadow: 17px 0 16px -16px rgba(0, 0, 0, 0.4) inset;\n    pointer-events: none;\n}\n\n.ace_gutter-cell, .ace_gutter-cell_svg-icons {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    padding-left: 19px;\n    padding-right: 6px;\n    background-repeat: no-repeat;\n}\n\n.ace_gutter-cell_svg-icons .ace_gutter_annotation {\n    margin-left: -14px;\n    float: left;\n}\n\n.ace_gutter-cell .ace_gutter_annotation {\n    margin-left: -19px;\n    float: left;\n}\n\n.ace_gutter-cell.ace_error, .ace_icon.ace_error, .ace_icon.ace_error_fold, .ace_gutter-cell.ace_security, .ace_icon.ace_security, .ace_icon.ace_security_fold {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABOFBMVEX/////////QRswFAb/Ui4wFAYwFAYwFAaWGAfDRymzOSH/PxswFAb/SiUwFAYwFAbUPRvjQiDllog5HhHdRybsTi3/Tyv9Tir+Syj/UC3////XurebMBIwFAb/RSHbPx/gUzfdwL3kzMivKBAwFAbbvbnhPx66NhowFAYwFAaZJg8wFAaxKBDZurf/RB6mMxb/SCMwFAYwFAbxQB3+RB4wFAb/Qhy4Oh+4QifbNRcwFAYwFAYwFAb/QRzdNhgwFAYwFAbav7v/Uy7oaE68MBK5LxLewr/r2NXewLswFAaxJw4wFAbkPRy2PyYwFAaxKhLm1tMwFAazPiQwFAaUGAb/QBrfOx3bvrv/VC/maE4wFAbRPBq6MRO8Qynew8Dp2tjfwb0wFAbx6eju5+by6uns4uH9/f36+vr/GkHjAAAAYnRSTlMAGt+64rnWu/bo8eAA4InH3+DwoN7j4eLi4xP99Nfg4+b+/u9B/eDs1MD1mO7+4PHg2MXa347g7vDizMLN4eG+Pv7i5evs/v79yu7S3/DV7/498Yv24eH+4ufQ3Ozu/v7+y13sRqwAAADLSURBVHjaZc/XDsFgGIBhtDrshlitmk2IrbHFqL2pvXf/+78DPokj7+Fz9qpU/9UXJIlhmPaTaQ6QPaz0mm+5gwkgovcV6GZzd5JtCQwgsxoHOvJO15kleRLAnMgHFIESUEPmawB9ngmelTtipwwfASilxOLyiV5UVUyVAfbG0cCPHig+GBkzAENHS0AstVF6bacZIOzgLmxsHbt2OecNgJC83JERmePUYq8ARGkJx6XtFsdddBQgZE2nPR6CICZhawjA4Fb/chv+399kfR+MMMDGOQAAAABJRU5ErkJggg==\");\n    background-repeat: no-repeat;\n    background-position: 2px center;\n}\n\n.ace_gutter-cell.ace_warning, .ace_icon.ace_warning, .ace_icon.ace_warning_fold {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAmVBMVEX///8AAAD///8AAAAAAABPSzb/5sAAAAB/blH/73z/ulkAAAAAAAD85pkAAAAAAAACAgP/vGz/rkDerGbGrV7/pkQICAf////e0IsAAAD/oED/qTvhrnUAAAD/yHD/njcAAADuv2r/nz//oTj/p064oGf/zHAAAAA9Nir/tFIAAAD/tlTiuWf/tkIAAACynXEAAAAAAAAtIRW7zBpBAAAAM3RSTlMAABR1m7RXO8Ln31Z36zT+neXe5OzooRDfn+TZ4p3h2hTf4t3k3ucyrN1K5+Xaks52Sfs9CXgrAAAAjklEQVR42o3PbQ+CIBQFYEwboPhSYgoYunIqqLn6/z8uYdH8Vmdnu9vz4WwXgN/xTPRD2+sgOcZjsge/whXZgUaYYvT8QnuJaUrjrHUQreGczuEafQCO/SJTufTbroWsPgsllVhq3wJEk2jUSzX3CUEDJC84707djRc5MTAQxoLgupWRwW6UB5fS++NV8AbOZgnsC7BpEAAAAABJRU5ErkJggg==\");\n    background-repeat: no-repeat;\n    background-position: 2px center;\n}\n\n.ace_gutter-cell.ace_info, .ace_icon.ace_info, .ace_gutter-cell.ace_hint, .ace_icon.ace_hint {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAAAAAA6mKC9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAJ0Uk5TAAB2k804AAAAPklEQVQY02NgIB68QuO3tiLznjAwpKTgNyDbMegwisCHZUETUZV0ZqOquBpXj2rtnpSJT1AEnnRmL2OgGgAAIKkRQap2htgAAAAASUVORK5CYII=\");\n    background-repeat: no-repeat;\n    background-position: 2px center;\n}\n\n.ace_dark .ace_gutter-cell.ace_info, .ace_dark .ace_icon.ace_info, .ace_dark .ace_gutter-cell.ace_hint, .ace_dark .ace_icon.ace_hint {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAJFBMVEUAAAChoaGAgIAqKiq+vr6tra1ZWVmUlJSbm5s8PDxubm56enrdgzg3AAAAAXRSTlMAQObYZgAAAClJREFUeNpjYMAPdsMYHegyJZFQBlsUlMFVCWUYKkAZMxZAGdxlDMQBAG+TBP4B6RyJAAAAAElFTkSuQmCC\");\n}\n\n.ace_icon_svg.ace_error {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAxNiI+CjxnIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJyZWQiIHNoYXBlLXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIj4KPGNpcmNsZSBmaWxsPSJub25lIiBjeD0iOCIgY3k9IjgiIHI9IjciIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPGxpbmUgeDE9IjExIiB5MT0iNSIgeDI9IjUiIHkyPSIxMSIvPgo8bGluZSB4MT0iMTEiIHkxPSIxMSIgeDI9IjUiIHkyPSI1Ii8+CjwvZz4KPC9zdmc+\");\n    background-color: crimson;\n}\n.ace_icon_svg.ace_security {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iZGFya29yYW5nZSIgZmlsbD0ibm9uZSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iPgogICAgICAgIDxwYXRoIGNsYXNzPSJzdHJva2UtbGluZWpvaW4tcm91bmQiIGQ9Ik04IDE0LjgzMDdDOCAxNC44MzA3IDIgMTIuOTA0NyAyIDguMDg5OTJWMy4yNjU0OEM1LjMxIDMuMjY1NDggNy45ODk5OSAxLjM0OTE4IDcuOTg5OTkgMS4zNDkxOEM3Ljk4OTk5IDEuMzQ5MTggMTAuNjkgMy4yNjU0OCAxNCAzLjI2NTQ4VjguMDg5OTJDMTQgMTIuOTA0NyA4IDE0LjgzMDcgOCAxNC44MzA3WiIvPgogICAgICAgIDxwYXRoIGQ9Ik0yIDguMDg5OTJWMy4yNjU0OEM1LjMxIDMuMjY1NDggNy45ODk5OSAxLjM0OTE4IDcuOTg5OTkgMS4zNDkxOCIvPgogICAgICAgIDxwYXRoIGQ9Ik0xMy45OSA4LjA4OTkyVjMuMjY1NDhDMTAuNjggMy4yNjU0OCA4IDEuMzQ5MTggOCAxLjM0OTE4Ii8+CiAgICAgICAgPHBhdGggY2xhc3M9InN0cm9rZS1saW5lam9pbi1yb3VuZCIgZD0iTTggNFY5Ii8+CiAgICAgICAgPHBhdGggY2xhc3M9InN0cm9rZS1saW5lam9pbi1yb3VuZCIgZD0iTTggMTBWMTIiLz4KICAgIDwvZz4KPC9zdmc+\");\n    background-color: crimson;\n}\n.ace_icon_svg.ace_warning {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAxNiI+CjxnIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJkYXJrb3JhbmdlIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiI+Cjxwb2x5Z29uIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGZpbGw9Im5vbmUiIHBvaW50cz0iOCAxIDE1IDE1IDEgMTUgOCAxIi8+CjxyZWN0IHg9IjgiIHk9IjEyIiB3aWR0aD0iMC4wMSIgaGVpZ2h0PSIwLjAxIi8+CjxsaW5lIHgxPSI4IiB5MT0iNiIgeDI9IjgiIHkyPSIxMCIvPgo8L2c+Cjwvc3ZnPg==\");\n    background-color: darkorange;\n}\n.ace_icon_svg.ace_info {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAxNiI+CjxnIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJibHVlIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiI+CjxjaXJjbGUgZmlsbD0ibm9uZSIgY3g9IjgiIGN5PSI4IiByPSI3IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjxwb2x5bGluZSBwb2ludHM9IjggMTEgOCA4Ii8+Cjxwb2x5bGluZSBwb2ludHM9IjkgOCA2IDgiLz4KPGxpbmUgeDE9IjEwIiB5MT0iMTEiIHgyPSI2IiB5Mj0iMTEiLz4KPHJlY3QgeD0iOCIgeT0iNSIgd2lkdGg9IjAuMDEiIGhlaWdodD0iMC4wMSIvPgo8L2c+Cjwvc3ZnPg==\");\n    background-color: royalblue;\n}\n.ace_icon_svg.ace_hint {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0ic2lsdmVyIiBmaWxsPSJub25lIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiI+CiAgICAgICAgPHBhdGggY2xhc3M9InN0cm9rZS1saW5lam9pbi1yb3VuZCIgZD0iTTYgMTRIMTAiLz4KICAgICAgICA8cGF0aCBkPSJNOCAxMUg5QzkgOS40NzAwMiAxMiA4LjU0MDAyIDEyIDUuNzYwMDJDMTIuMDIgNC40MDAwMiAxMS4zOSAzLjM2MDAyIDEwLjQzIDIuNjcwMDJDOSAxLjY0MDAyIDcuMDAwMDEgMS42NDAwMiA1LjU3MDAxIDIuNjcwMDJDNC42MTAwMSAzLjM2MDAyIDMuOTggNC40MDAwMiA0IDUuNzYwMDJDNCA4LjU0MDAyIDcuMDAwMDEgOS40NzAwMiA3LjAwMDAxIDExSDhaIi8+CiAgICA8L2c+Cjwvc3ZnPg==\");\n    background-color: silver;\n}\n\n.ace_icon_svg.ace_error_fold {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAxNiIgZmlsbD0ibm9uZSI+CiAgPHBhdGggZD0ibSAxOC45Mjk4NTEsNy44Mjk4MDc2IGMgMC4xNDYzNTMsNi4zMzc0NjA0IC02LjMyMzE0Nyw3Ljc3Nzg0NDQgLTcuNDc3OTEyLDcuNzc3ODQ0NCAtMi4xMDcyNzI2LC0wLjEyODc1IDUuMTE3Njc4LDAuMzU2MjQ5IDUuMDUxNjk4LC03Ljg3MDA2MTggLTAuNjA0NjcyLC04LjAwMzk3MzQ5IC03LjA3NzI3MDYsLTcuNTYzMTE4OSAtNC44NTczLC03LjQzMDM5NTU2IDEuNjA2LC0wLjExNTE0MjI1IDYuODk3NDg1LDEuMjYyNTQ1OTYgNy4yODM1MTQsNy41MjI2MTI5NiB6IiBmaWxsPSJjcmltc29uIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0ibSA4LjExNDc1NjIsMi4wNTI5ODI4IGMgMy4zNDkxNjk4LDAgNi4wNjQxMzI4LDIuNjc2ODYyNyA2LjA2NDEzMjgsNS45Nzg5NTMgMCwzLjMwMjExMjIgLTIuNzE0OTYzLDUuOTc4OTIwMiAtNi4wNjQxMzI4LDUuOTc4OTIwMiAtMy4zNDkxNDczLDAgLTYuMDY0MTc3MiwtMi42NzY4MDggLTYuMDY0MTc3MiwtNS45Nzg5MjAyIDAuMDA1MzksLTMuMjk5ODg2MSAyLjcxNzI2NTYsLTUuOTczNjQwOCA2LjA2NDE3NzIsLTUuOTc4OTUzIHogbSAwLC0xLjczNTgyNzE5IGMgLTQuMzIxNDgzNiwwIC03LjgyNDc0MDM4LDMuNDU0MDE4NDkgLTcuODI0NzQwMzgsNy43MTQ3ODAxOSAwLDQuMjYwNzI4MiAzLjUwMzI1Njc4LDcuNzE0NzQ1MiA3LjgyNDc0MDM4LDcuNzE0NzQ1MiA0LjMyMTQ0OTgsMCA3LjgyNDY5OTgsLTMuNDU0MDE3IDcuODI0Njk5OCwtNy43MTQ3NDUyIDAsLTIuMDQ2MDkxNCAtMC44MjQzOTIsLTQuMDA4MzY3MiAtMi4yOTE3NTYsLTUuNDU1MTc0NiBDIDEyLjE4MDIyNSwxLjEyOTk2NDggMTAuMTkwMDEzLDAuMzE3MTU1NjEgOC4xMTQ3NTYyLDAuMzE3MTU1NjEgWiBNIDYuOTM3NDU2Myw4LjI0MDU5ODUgNC42NzE4Njg1LDEwLjQ4NTg1MiA2LjAwODY4MTQsMTEuODc2NzI4IDguMzE3MDAzNSw5LjYwMDc5MTEgMTAuNjI1MzM3LDExLjg3NjcyOCAxMS45NjIxMzgsMTAuNDg1ODUyIDkuNjk2NTUwOCw4LjI0MDU5ODUgMTEuOTYyMTM4LDYuMDA2ODA2NiAxMC41NzMyNDYsNC42Mzc0MzM1IDguMzE3MDAzNSw2Ljg3MzQyOTcgNi4wNjA3NjA3LDQuNjM3NDMzNSA0LjY3MTg2ODUsNi4wMDY4MDY2IFoiIGZpbGw9ImNyaW1zb24iIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=\");\n    background-color: crimson;\n}\n.ace_icon_svg.ace_security_fold {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTcgMTQiIGZpbGw9Im5vbmUiPgogICAgPHBhdGggZD0iTTEwLjAwMDEgMTMuNjk5MkMxMC4wMDAxIDEzLjY5OTIgMTEuOTI0MSAxMy40NzYzIDEzIDEyLjY5OTJDMTQuNDEzOSAxMS42NzgxIDE2IDEwLjUgMTYuMTI1MSA2LjgxMTI2VjIuNTg5ODdDMTYuMTI1MSAyLjU0NzY4IDE2LjEyMjEgMi41MDYxOSAxNi4xMTY0IDIuNDY1NTlWMS43MTQ4NUgxNS4yNDE0TDE1LjIzMDcgMS43MTQ4NEwxNC42MjUxIDEuNjk5MjJWNi44MTEyM0MxNC42MjUxIDguNTEwNjEgMTQuNjI1MSA5LjQ2NDYxIDEyLjc4MjQgMTEuNzIxQzEyLjE1ODYgMTIuNDg0OCAxMC4wMDAxIDEzLjY5OTIgMTAuMDAwMSAxMy42OTkyWiIgZmlsbD0iY3JpbXNvbiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTcuMzM2MDkgMC4zNjc0NzVDNy4wMzIxNCAwLjE1MjY1MiA2LjYyNTQ4IDAuMTUzNjE0IDYuMzIyNTMgMC4zNjk5OTdMNi4zMDg2OSAwLjM3OTU1NEM2LjI5NTUzIDAuMzg4NTg4IDYuMjczODggMC40MDMyNjYgNi4yNDQxNyAwLjQyMjc4OUM2LjE4NDcxIDAuNDYxODYgNi4wOTMyMSAwLjUyMDE3MSA1Ljk3MzEzIDAuNTkxMzczQzUuNzMyNTEgMC43MzQwNTkgNS4zNzk5IDAuOTI2ODY0IDQuOTQyNzkgMS4xMjAwOUM0LjA2MTQ0IDEuNTA5NyAyLjg3NTQxIDEuODgzNzcgMS41ODk4NCAxLjg4Mzc3SDAuNzE0ODQ0VjIuNzU4NzdWNi45ODAxNUMwLjcxNDg0NCA5LjQ5Mzc0IDIuMjg4NjYgMTEuMTk3MyAzLjcwMjU0IDEyLjIxODVDNC40MTg0NSAxMi43MzU1IDUuMTI4NzQgMTMuMTA1MyA1LjY1NzMzIDEzLjM0NTdDNS45MjI4NCAxMy40NjY0IDYuMTQ1NjYgMTMuNTU1OSA2LjMwNDY1IDEzLjYxNjFDNi4zODQyMyAxMy42NDYyIDYuNDQ4MDUgMTMuNjY5IDYuNDkzNDkgMTMuNjg0OEM2LjUxNjIyIDEzLjY5MjcgNi41MzQzOCAxMy42OTg5IDYuNTQ3NjQgMTMuNzAzM0w2LjU2MzgyIDEzLjcwODdMNi41NjkwOCAxMy43MTA0TDYuNTcwOTkgMTMuNzExTDYuODM5ODQgMTMuNzUzM0w2LjU3MjQyIDEzLjcxMTVDNi43NDYzMyAxMy43NjczIDYuOTMzMzUgMTMuNzY3MyA3LjEwNzI3IDEzLjcxMTVMNy4xMDg3IDEzLjcxMUw3LjExMDYxIDEzLjcxMDRMNy4xMTU4NyAxMy43MDg3TDcuMTMyMDUgMTMuNzAzM0M3LjE0NTMxIDEzLjY5ODkgNy4xNjM0NiAxMy42OTI3IDcuMTg2MTkgMTMuNjg0OEM3LjIzMTY0IDEzLjY2OSA3LjI5NTQ2IDEzLjY0NjIgNy4zNzUwMyAxMy42MTYxQzcuNTM0MDMgMTMuNTU1OSA3Ljc1Njg1IDEzLjQ2NjQgOC4wMjIzNiAxMy4zNDU3QzguNTUwOTUgMTMuMTA1MyA5LjI2MTIzIDEyLjczNTUgOS45NzcxNSAxMi4yMTg1QzExLjM5MSAxMS4xOTczIDEyLjk2NDggOS40OTM3NyAxMi45NjQ4IDYuOTgwMThWMi43NTg4QzEyLjk2NDggMi43MTY2IDEyLjk2MTkgMi42NzUxMSAxMi45NTYxIDIuNjM0NTFWMS44ODM3N0gxMi4wODExQzEyLjA3NzUgMS44ODM3NyAxMi4wNzQgMS44ODM3NyAxMi4wNzA0IDEuODgzNzdDMTAuNzk3OSAxLjg4MDA0IDkuNjE5NjIgMS41MTEwMiA4LjczODk0IDEuMTI0ODZDOC43MzUzNCAxLjEyMzI3IDguNzMxNzQgMS4xMjE2OCA4LjcyODE0IDEuMTIwMDlDOC4yOTEwMyAwLjkyNjg2NCA3LjkzODQyIDAuNzM0MDU5IDcuNjk3NzkgMC41OTEzNzNDNy41Nzc3MiAwLjUyMDE3MSA3LjQ4NjIyIDAuNDYxODYgNy40MjY3NiAwLjQyMjc4OUM3LjM5NzA1IDAuNDAzMjY2IDcuMzc1MzkgMC4zODg1ODggNy4zNjIyNCAwLjM3OTU1NEw3LjM0ODk2IDAuMzcwMzVDNy4zNDg5NiAwLjM3MDM1IDcuMzQ4NDcgMC4zNzAwMiA3LjM0NTYzIDAuMzc0MDU0TDcuMzM3NzkgMC4zNjg2NTlMNy4zMzYwOSAwLjM2NzQ3NVpNOC4wMzQ3MSAyLjcyNjkxQzguODYwNCAzLjA5MDYzIDkuOTYwNjYgMy40NjMwOSAxMS4yMDYxIDMuNTg5MDdWNi45ODAxNUgxMS4yMTQ4QzExLjIxNDggOC42Nzk1MyAxMC4xNjM3IDkuOTI1MDcgOC45NTI1NCAxMC43OTk4QzguMzU1OTUgMTEuMjMwNiA3Ljc1Mzc0IDExLjU0NTQgNy4yOTc5NiAxMS43NTI3QzcuMTE2NzEgMTEuODM1MSA2Ljk2MDYyIDExLjg5OTYgNi44Mzk4NCAxMS45NDY5QzYuNzE5MDYgMTEuODk5NiA2LjU2Mjk3IDExLjgzNTEgNi4zODE3MyAxMS43NTI3QzUuOTI1OTUgMTEuNTQ1NCA1LjMyMzczIDExLjIzMDYgNC43MjcxNSAxMC43OTk4QzMuNTE2MDMgOS45MjUwNyAyLjQ2NDg0IDguNjc5NTUgMi40NjQ4NCA2Ljk4MDE4VjMuNTg5MDlDMy43MTczOCAzLjQ2MjM5IDQuODIzMDggMy4wODYzOSA1LjY1MDMzIDIuNzIwNzFDNi4xNDIyOCAyLjUwMzI0IDYuNTQ0ODUgMi4yODUzNyA2LjgzMjU0IDIuMTE2MjRDNy4xMjE4MSAyLjI4NTM1IDcuNTI3IDIuNTAzNTIgOC4wMjE5NiAyLjcyMTMxQzguMDI2MiAyLjcyMzE3IDguMDMwNDUgMi43MjUwNCA4LjAzNDcxIDIuNzI2OTFaTTUuOTY0ODQgMy40MDE0N1Y3Ljc3NjQ3SDcuNzE0ODRWMy40MDE0N0g1Ljk2NDg0Wk01Ljk2NDg0IDEwLjQwMTVWOC42NTE0N0g3LjcxNDg0VjEwLjQwMTVINS45NjQ4NFoiIGZpbGw9ImNyaW1zb24iIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=\");\n    background-color: crimson;\n}\n.ace_icon_svg.ace_warning_fold {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyMCAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xNC43NzY5IDE0LjczMzdMOC42NTE5MiAyLjQ4MzY5QzguMzI5NDYgMS44Mzg3NyA3LjQwOTEzIDEuODM4NzcgNy4wODY2NyAyLjQ4MzY5TDAuOTYxNjY5IDE0LjczMzdDMC42NzA3NzUgMTUuMzE1NSAxLjA5MzgzIDE2IDEuNzQ0MjkgMTZIMTMuOTk0M0MxNC42NDQ4IDE2IDE1LjA2NzggMTUuMzE1NSAxNC43NzY5IDE0LjczMzdaTTMuMTYwMDcgMTQuMjVMNy44NjkyOSA0LjgzMTU2TDEyLjU3ODUgMTQuMjVIMy4xNjAwN1pNOC43NDQyOSAxMS42MjVWMTMuMzc1SDYuOTk0MjlWMTEuNjI1SDguNzQ0MjlaTTYuOTk0MjkgMTAuNzVWNy4yNUg4Ljc0NDI5VjEwLjc1SDYuOTk0MjlaIiBmaWxsPSIjRUM3MjExIi8+CjxwYXRoIGQ9Ik0xMS4xOTkxIDIuOTUyMzhDMTAuODgwOSAyLjMxNDY3IDEwLjM1MzcgMS44MDUyNiA5LjcwNTUgMS41MDlMMTEuMDQxIDEuMDY5NzhDMTEuNjg4MyAwLjk0OTgxNCAxMi4zMzcgMS4yNzI2MyAxMi42MzE3IDEuODYxNDFMMTcuNjEzNiAxMS44MTYxQzE4LjM1MjcgMTMuMjkyOSAxNy41OTM4IDE1LjA4MDQgMTYuMDE4IDE1LjU3NDVDMTYuNDA0NCAxNC40NTA3IDE2LjMyMzEgMTMuMjE4OCAxNS43OTI0IDEyLjE1NTVMMTEuMTk5MSAyLjk1MjM4WiIgZmlsbD0iI0VDNzIxMSIvPgo8L3N2Zz4=\");\n    background-color: darkorange;\n}\n\n.ace_scrollbar {\n    contain: strict;\n    position: absolute;\n    right: 0;\n    bottom: 0;\n    z-index: 6;\n}\n\n.ace_scrollbar-inner {\n    position: absolute;\n    cursor: text;\n    left: 0;\n    top: 0;\n}\n\n.ace_scrollbar-v{\n    overflow-x: hidden;\n    overflow-y: scroll;\n    top: 0;\n}\n\n.ace_scrollbar-h {\n    overflow-x: scroll;\n    overflow-y: hidden;\n    left: 0;\n}\n\n.ace_print-margin {\n    position: absolute;\n    height: 100%;\n}\n\n.ace_text-input {\n    position: absolute;\n    z-index: 0;\n    width: 0.5em;\n    height: 1em;\n    opacity: 0;\n    background: transparent;\n    -moz-appearance: none;\n    appearance: none;\n    border: none;\n    resize: none;\n    outline: none;\n    overflow: hidden;\n    font: inherit;\n    padding: 0 1px;\n    margin: 0 -1px;\n    contain: strict;\n    -ms-user-select: text;\n    -moz-user-select: text;\n    -webkit-user-select: text;\n    user-select: text;\n    /*with `pre-line` chrome inserts &nbsp; instead of space*/\n    white-space: pre!important;\n}\n.ace_text-input.ace_composition {\n    background: transparent;\n    color: inherit;\n    z-index: 1000;\n    opacity: 1;\n}\n.ace_composition_placeholder { color: transparent }\n.ace_composition_marker { \n    border-bottom: 1px solid;\n    position: absolute;\n    border-radius: 0;\n    margin-top: 1px;\n}\n\n[ace_nocontext=true] {\n    transform: none!important;\n    filter: none!important;\n    clip-path: none!important;\n    mask : none!important;\n    contain: none!important;\n    perspective: none!important;\n    mix-blend-mode: initial!important;\n    z-index: auto;\n}\n\n.ace_layer {\n    z-index: 1;\n    position: absolute;\n    overflow: hidden;\n    /* workaround for chrome bug https://github.com/ajaxorg/ace/issues/2312*/\n    word-wrap: normal;\n    white-space: pre;\n    height: 100%;\n    width: 100%;\n    box-sizing: border-box;\n    /* setting pointer-events: auto; on node under the mouse, which changes\n        during scroll, will break mouse wheel scrolling in Safari */\n    pointer-events: none;\n}\n\n.ace_gutter-layer {\n    position: relative;\n    width: auto;\n    text-align: right;\n    pointer-events: auto;\n    height: 1000000px;\n    contain: style size layout;\n}\n\n.ace_text-layer {\n    font: inherit !important;\n    position: absolute;\n    height: 1000000px;\n    width: 1000000px;\n    contain: style size layout;\n}\n\n.ace_text-layer > .ace_line, .ace_text-layer > .ace_line_group {\n    contain: style size layout;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n}\n\n.ace_hidpi .ace_text-layer,\n.ace_hidpi .ace_gutter-layer,\n.ace_hidpi .ace_content,\n.ace_hidpi .ace_gutter {\n    contain: strict;\n}\n.ace_hidpi .ace_text-layer > .ace_line, \n.ace_hidpi .ace_text-layer > .ace_line_group {\n    contain: strict;\n}\n\n.ace_cjk {\n    display: inline-block;\n    text-align: center;\n}\n\n.ace_cursor-layer {\n    z-index: 4;\n}\n\n.ace_cursor {\n    z-index: 4;\n    position: absolute;\n    box-sizing: border-box;\n    border-left: 2px solid;\n    /* workaround for smooth cursor repaintng whole screen in chrome */\n    transform: translatez(0);\n}\n\n.ace_multiselect .ace_cursor {\n    border-left-width: 1px;\n}\n\n.ace_slim-cursors .ace_cursor {\n    border-left-width: 1px;\n}\n\n.ace_overwrite-cursors .ace_cursor {\n    border-left-width: 0;\n    border-bottom: 1px solid;\n}\n\n.ace_hidden-cursors .ace_cursor {\n    opacity: 0.2;\n}\n\n.ace_hasPlaceholder .ace_hidden-cursors .ace_cursor {\n    opacity: 0;\n}\n\n.ace_smooth-blinking .ace_cursor {\n    transition: opacity 0.18s;\n}\n\n.ace_animate-blinking .ace_cursor {\n    animation-duration: 1000ms;\n    animation-timing-function: step-end;\n    animation-name: blink-ace-animate;\n    animation-iteration-count: infinite;\n}\n\n.ace_animate-blinking.ace_smooth-blinking .ace_cursor {\n    animation-duration: 1000ms;\n    animation-timing-function: ease-in-out;\n    animation-name: blink-ace-animate-smooth;\n}\n    \n@keyframes blink-ace-animate {\n    from, to { opacity: 1; }\n    60% { opacity: 0; }\n}\n\n@keyframes blink-ace-animate-smooth {\n    from, to { opacity: 1; }\n    45% { opacity: 1; }\n    60% { opacity: 0; }\n    85% { opacity: 0; }\n}\n\n.ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {\n    position: absolute;\n    z-index: 3;\n}\n\n.ace_marker-layer .ace_selection {\n    position: absolute;\n    z-index: 5;\n}\n\n.ace_marker-layer .ace_bracket {\n    position: absolute;\n    z-index: 6;\n}\n\n.ace_marker-layer .ace_error_bracket {\n    position: absolute;\n    border-bottom: 1px solid #DE5555;\n    border-radius: 0;\n}\n\n.ace_marker-layer .ace_active-line {\n    position: absolute;\n    z-index: 2;\n}\n\n.ace_marker-layer .ace_selected-word {\n    position: absolute;\n    z-index: 4;\n    box-sizing: border-box;\n}\n\n.ace_line .ace_fold {\n    box-sizing: border-box;\n\n    display: inline-block;\n    height: 11px;\n    margin-top: -2px;\n    vertical-align: middle;\n\n    background-image:\n        url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAJCAYAAADU6McMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJpJREFUeNpi/P//PwOlgAXGYGRklAVSokD8GmjwY1wasKljQpYACtpCFeADcHVQfQyMQAwzwAZI3wJKvCLkfKBaMSClBlR7BOQikCFGQEErIH0VqkabiGCAqwUadAzZJRxQr/0gwiXIal8zQQPnNVTgJ1TdawL0T5gBIP1MUJNhBv2HKoQHHjqNrA4WO4zY0glyNKLT2KIfIMAAQsdgGiXvgnYAAAAASUVORK5CYII=\"),\n        url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA3CAYAAADNNiA5AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAACJJREFUeNpi+P//fxgTAwPDBxDxD078RSX+YeEyDFMCIMAAI3INmXiwf2YAAAAASUVORK5CYII=\");\n    background-repeat: no-repeat, repeat-x;\n    background-position: center center, top left;\n    color: transparent;\n\n    border: 1px solid black;\n    border-radius: 2px;\n\n    cursor: pointer;\n    pointer-events: auto;\n}\n\n.ace_dark .ace_fold {\n}\n\n.ace_fold:hover{\n    background-image:\n        url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAJCAYAAADU6McMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJpJREFUeNpi/P//PwOlgAXGYGRklAVSokD8GmjwY1wasKljQpYACtpCFeADcHVQfQyMQAwzwAZI3wJKvCLkfKBaMSClBlR7BOQikCFGQEErIH0VqkabiGCAqwUadAzZJRxQr/0gwiXIal8zQQPnNVTgJ1TdawL0T5gBIP1MUJNhBv2HKoQHHjqNrA4WO4zY0glyNKLT2KIfIMAAQsdgGiXvgnYAAAAASUVORK5CYII=\"),\n        url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA3CAYAAADNNiA5AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAACBJREFUeNpi+P//fz4TAwPDZxDxD5X4i5fLMEwJgAADAEPVDbjNw87ZAAAAAElFTkSuQmCC\");\n}\n\n.ace_tooltip {\n    background-color: #f5f5f5;\n    border: 1px solid gray;\n    border-radius: 1px;\n    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);\n    color: black;\n    padding: 3px 4px;\n    position: absolute;\n    z-index: 999999;\n    box-sizing: border-box;\n    cursor: default;\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    line-height: normal;\n    font-style: normal;\n    font-weight: normal;\n    letter-spacing: normal;\n    pointer-events: none;\n    overflow: auto;\n    max-width: min(33em, 66vw);\n    overscroll-behavior: contain;\n}\n.ace_tooltip pre {\n    white-space: pre-wrap;\n}\n\n.ace_tooltip.ace_dark {\n    background-color: #636363;\n    color: #fff;\n}\n\n.ace_tooltip:focus {\n    outline: 1px solid #5E9ED6;\n}\n\n.ace_icon {\n    display: inline-block;\n    width: 18px;\n    vertical-align: top;\n}\n\n.ace_icon_svg {\n    display: inline-block;\n    width: 12px;\n    vertical-align: top;\n    -webkit-mask-repeat: no-repeat;\n    -webkit-mask-size: 12px;\n    -webkit-mask-position: center;\n}\n\n.ace_folding-enabled > .ace_gutter-cell, .ace_folding-enabled > .ace_gutter-cell_svg-icons {\n    padding-right: 13px;\n}\n\n.ace_fold-widget, .ace_custom-widget {\n    box-sizing: border-box;\n\n    margin: 0 -12px 0 1px;\n    display: none;\n    width: 11px;\n    vertical-align: top;\n\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAANElEQVR42mWKsQ0AMAzC8ixLlrzQjzmBiEjp0A6WwBCSPgKAXoLkqSot7nN3yMwR7pZ32NzpKkVoDBUxKAAAAABJRU5ErkJggg==\");\n    background-repeat: no-repeat;\n    background-position: center;\n\n    border-radius: 3px;\n    \n    border: 1px solid transparent;\n    cursor: pointer;\n    pointer-events: auto;\n}\n\n.ace_custom-widget {\n    background: none;\n}\n\n.ace_folding-enabled .ace_fold-widget {\n    display: inline-block;   \n}\n\n.ace_fold-widget.ace_end {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAANElEQVR42m3HwQkAMAhD0YzsRchFKI7sAikeWkrxwScEB0nh5e7KTPWimZki4tYfVbX+MNl4pyZXejUO1QAAAABJRU5ErkJggg==\");\n}\n\n.ace_fold-widget.ace_closed {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAGCAYAAAAG5SQMAAAAOUlEQVR42jXKwQkAMAgDwKwqKD4EwQ26sSOkVWjgIIHAzPiCgaqiqnJHZnKICBERHN194O5b9vbLuAVRL+l0YWnZAAAAAElFTkSuQmCCXA==\");\n}\n\n.ace_fold-widget:hover {\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    background-color: rgba(255, 255, 255, 0.2);\n    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);\n}\n\n.ace_fold-widget:active {\n    border: 1px solid rgba(0, 0, 0, 0.4);\n    background-color: rgba(0, 0, 0, 0.05);\n    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);\n}\n/**\n * Dark version for fold widgets\n */\n.ace_dark .ace_fold-widget {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHklEQVQIW2P4//8/AzoGEQ7oGCaLLAhWiSwB146BAQCSTPYocqT0AAAAAElFTkSuQmCC\");\n}\n.ace_dark .ace_fold-widget.ace_end {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH0lEQVQIW2P4//8/AxQ7wNjIAjDMgC4AxjCVKBirIAAF0kz2rlhxpAAAAABJRU5ErkJggg==\");\n}\n.ace_dark .ace_fold-widget.ace_closed {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAFCAYAAACAcVaiAAAAHElEQVQIW2P4//+/AxAzgDADlOOAznHAKgPWAwARji8UIDTfQQAAAABJRU5ErkJggg==\");\n}\n.ace_dark .ace_fold-widget:hover {\n    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);\n    background-color: rgba(255, 255, 255, 0.1);\n}\n.ace_dark .ace_fold-widget:active {\n    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);\n}\n\n.ace_inline_button {\n    border: 1px solid lightgray;\n    display: inline-block;\n    margin: -1px 8px;\n    padding: 0 5px;\n    pointer-events: auto;\n    cursor: pointer;\n}\n.ace_inline_button:hover {\n    border-color: gray;\n    background: rgba(200,200,200,0.2);\n    display: inline-block;\n    pointer-events: auto;\n}\n\n.ace_fold-widget.ace_invalid {\n    background-color: #FFB4B4;\n    border-color: #DE5555;\n}\n\n.ace_fade-fold-widgets .ace_fold-widget {\n    transition: opacity 0.4s ease 0.05s;\n    opacity: 0;\n}\n\n.ace_fade-fold-widgets:hover .ace_fold-widget {\n    transition: opacity 0.05s ease 0.05s;\n    opacity:1;\n}\n\n.ace_underline {\n    text-decoration: underline;\n}\n\n.ace_bold {\n    font-weight: bold;\n}\n\n.ace_nobold .ace_bold {\n    font-weight: normal;\n}\n\n.ace_italic {\n    font-style: italic;\n}\n\n\n.ace_error-marker {\n    background-color: rgba(255, 0, 0,0.2);\n    position: absolute;\n    z-index: 9;\n}\n\n.ace_highlight-marker {\n    background-color: rgba(255, 255, 0,0.2);\n    position: absolute;\n    z-index: 8;\n}\n\n.ace_mobile-menu {\n    position: absolute;\n    line-height: 1.5;\n    border-radius: 4px;\n    -ms-user-select: none;\n    -moz-user-select: none;\n    -webkit-user-select: none;\n    user-select: none;\n    background: white;\n    box-shadow: 1px 3px 2px grey;\n    border: 1px solid #dcdcdc;\n    color: black;\n}\n.ace_dark > .ace_mobile-menu {\n    background: #333;\n    color: #ccc;\n    box-shadow: 1px 3px 2px grey;\n    border: 1px solid #444;\n\n}\n.ace_mobile-button {\n    padding: 2px;\n    cursor: pointer;\n    overflow: hidden;\n}\n.ace_mobile-button:hover {\n    background-color: #eee;\n    opacity:1;\n}\n.ace_mobile-button:active {\n    background-color: #ddd;\n}\n\n.ace_placeholder {\n    position: relative;\n    font-family: arial;\n    transform: scale(0.9);\n    transform-origin: left;\n    white-space: pre;\n    opacity: 0.7;\n    margin: 0 10px;\n    z-index: 1;\n}\n\n.ace_ghost_text {\n    opacity: 0.5;\n    font-style: italic;\n}\n\n.ace_ghost_text_container > div {\n    white-space: pre;\n}\n\n.ghost_text_line_wrapped::after {\n    content: \"\u21A9\";\n    position: absolute;\n}\n\n.ace_lineWidgetContainer.ace_ghost_text {\n    margin: 0px 4px\n}\n\n.ace_screenreader-only {\n    position:absolute;\n    left:-10000px;\n    top:auto;\n    width:1px;\n    height:1px;\n    overflow:hidden;\n}\n\n.ace_hidden_token {\n    display: none;\n}";
+module.exports = "\n.ace_br1 {border-top-left-radius    : 3px;}\n.ace_br2 {border-top-right-radius   : 3px;}\n.ace_br3 {border-top-left-radius    : 3px; border-top-right-radius:    3px;}\n.ace_br4 {border-bottom-right-radius: 3px;}\n.ace_br5 {border-top-left-radius    : 3px; border-bottom-right-radius: 3px;}\n.ace_br6 {border-top-right-radius   : 3px; border-bottom-right-radius: 3px;}\n.ace_br7 {border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px;}\n.ace_br8 {border-bottom-left-radius : 3px;}\n.ace_br9 {border-top-left-radius    : 3px; border-bottom-left-radius:  3px;}\n.ace_br10{border-top-right-radius   : 3px; border-bottom-left-radius:  3px;}\n.ace_br11{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-left-radius:  3px;}\n.ace_br12{border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}\n.ace_br13{border-top-left-radius    : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}\n.ace_br14{border-top-right-radius   : 3px; border-bottom-right-radius: 3px; border-bottom-left-radius:  3px;}\n.ace_br15{border-top-left-radius    : 3px; border-top-right-radius:    3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px;}\n\n\n.ace_editor {\n    position: relative;\n    overflow: hidden;\n    padding: 0;\n    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'Source Code Pro', 'source-code-pro', monospace;\n    direction: ltr;\n    text-align: left;\n    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n    forced-color-adjust: none;\n}\n\n.ace_scroller {\n    position: absolute;\n    overflow: hidden;\n    top: 0;\n    bottom: 0;\n    background-color: inherit;\n    -ms-user-select: none;\n    -moz-user-select: none;\n    -webkit-user-select: none;\n    user-select: none;\n    cursor: text;\n}\n\n.ace_content {\n    position: absolute;\n    box-sizing: border-box;\n    min-width: 100%;\n    contain: style size layout;\n    font-variant-ligatures: no-common-ligatures;\n}\n.ace_invisible {\n    font-variant-ligatures: none;\n}\n\n.ace_keyboard-focus:focus {\n    box-shadow: inset 0 0 0 2px #5E9ED6;\n    outline: none;\n}\n\n.ace_dragging .ace_scroller:before{\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    content: '';\n    background: rgba(250, 250, 250, 0.01);\n    z-index: 1000;\n}\n.ace_dragging.ace_dark .ace_scroller:before{\n    background: rgba(0, 0, 0, 0.01);\n}\n\n.ace_gutter {\n    position: absolute;\n    overflow : hidden;\n    width: auto;\n    top: 0;\n    bottom: 0;\n    left: 0;\n    cursor: default;\n    z-index: 4;\n    -ms-user-select: none;\n    -moz-user-select: none;\n    -webkit-user-select: none;\n    user-select: none;\n    contain: style size layout;\n}\n\n.ace_gutter-active-line {\n    position: absolute;\n    left: 0;\n    right: 0;\n}\n\n.ace_scroller.ace_scroll-left:after {\n    content: \"\";\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n    box-shadow: 17px 0 16px -16px rgba(0, 0, 0, 0.4) inset;\n    pointer-events: none;\n}\n\n.ace_gutter-cell, .ace_gutter-cell_svg-icons {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    padding-left: 19px;\n    padding-right: 6px;\n    background-repeat: no-repeat;\n}\n\n.ace_gutter-cell_svg-icons .ace_gutter_annotation {\n    margin-left: -14px;\n    float: left;\n}\n\n.ace_gutter-cell .ace_gutter_annotation {\n    margin-left: -19px;\n    float: left;\n}\n\n.ace_gutter-cell.ace_error, .ace_icon.ace_error, .ace_icon.ace_error_fold, .ace_gutter-cell.ace_security, .ace_icon.ace_security, .ace_icon.ace_security_fold {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAABOFBMVEX/////////QRswFAb/Ui4wFAYwFAYwFAaWGAfDRymzOSH/PxswFAb/SiUwFAYwFAbUPRvjQiDllog5HhHdRybsTi3/Tyv9Tir+Syj/UC3////XurebMBIwFAb/RSHbPx/gUzfdwL3kzMivKBAwFAbbvbnhPx66NhowFAYwFAaZJg8wFAaxKBDZurf/RB6mMxb/SCMwFAYwFAbxQB3+RB4wFAb/Qhy4Oh+4QifbNRcwFAYwFAYwFAb/QRzdNhgwFAYwFAbav7v/Uy7oaE68MBK5LxLewr/r2NXewLswFAaxJw4wFAbkPRy2PyYwFAaxKhLm1tMwFAazPiQwFAaUGAb/QBrfOx3bvrv/VC/maE4wFAbRPBq6MRO8Qynew8Dp2tjfwb0wFAbx6eju5+by6uns4uH9/f36+vr/GkHjAAAAYnRSTlMAGt+64rnWu/bo8eAA4InH3+DwoN7j4eLi4xP99Nfg4+b+/u9B/eDs1MD1mO7+4PHg2MXa347g7vDizMLN4eG+Pv7i5evs/v79yu7S3/DV7/498Yv24eH+4ufQ3Ozu/v7+y13sRqwAAADLSURBVHjaZc/XDsFgGIBhtDrshlitmk2IrbHFqL2pvXf/+78DPokj7+Fz9qpU/9UXJIlhmPaTaQ6QPaz0mm+5gwkgovcV6GZzd5JtCQwgsxoHOvJO15kleRLAnMgHFIESUEPmawB9ngmelTtipwwfASilxOLyiV5UVUyVAfbG0cCPHig+GBkzAENHS0AstVF6bacZIOzgLmxsHbt2OecNgJC83JERmePUYq8ARGkJx6XtFsdddBQgZE2nPR6CICZhawjA4Fb/chv+399kfR+MMMDGOQAAAABJRU5ErkJggg==\");\n    background-repeat: no-repeat;\n    background-position: 2px center;\n}\n\n.ace_gutter-cell.ace_warning, .ace_icon.ace_warning, .ace_icon.ace_warning_fold {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAmVBMVEX///8AAAD///8AAAAAAABPSzb/5sAAAAB/blH/73z/ulkAAAAAAAD85pkAAAAAAAACAgP/vGz/rkDerGbGrV7/pkQICAf////e0IsAAAD/oED/qTvhrnUAAAD/yHD/njcAAADuv2r/nz//oTj/p064oGf/zHAAAAA9Nir/tFIAAAD/tlTiuWf/tkIAAACynXEAAAAAAAAtIRW7zBpBAAAAM3RSTlMAABR1m7RXO8Ln31Z36zT+neXe5OzooRDfn+TZ4p3h2hTf4t3k3ucyrN1K5+Xaks52Sfs9CXgrAAAAjklEQVR42o3PbQ+CIBQFYEwboPhSYgoYunIqqLn6/z8uYdH8Vmdnu9vz4WwXgN/xTPRD2+sgOcZjsge/whXZgUaYYvT8QnuJaUrjrHUQreGczuEafQCO/SJTufTbroWsPgsllVhq3wJEk2jUSzX3CUEDJC84707djRc5MTAQxoLgupWRwW6UB5fS++NV8AbOZgnsC7BpEAAAAABJRU5ErkJggg==\");\n    background-repeat: no-repeat;\n    background-position: 2px center;\n}\n\n.ace_gutter-cell.ace_info, .ace_icon.ace_info, .ace_gutter-cell.ace_hint, .ace_icon.ace_hint {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAAAAAA6mKC9AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAJ0Uk5TAAB2k804AAAAPklEQVQY02NgIB68QuO3tiLznjAwpKTgNyDbMegwisCHZUETUZV0ZqOquBpXj2rtnpSJT1AEnnRmL2OgGgAAIKkRQap2htgAAAAASUVORK5CYII=\");\n    background-repeat: no-repeat;\n    background-position: 2px center;\n}\n\n.ace_dark .ace_gutter-cell.ace_info, .ace_dark .ace_icon.ace_info, .ace_dark .ace_gutter-cell.ace_hint, .ace_dark .ace_icon.ace_hint {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAAJFBMVEUAAAChoaGAgIAqKiq+vr6tra1ZWVmUlJSbm5s8PDxubm56enrdgzg3AAAAAXRSTlMAQObYZgAAAClJREFUeNpjYMAPdsMYHegyJZFQBlsUlMFVCWUYKkAZMxZAGdxlDMQBAG+TBP4B6RyJAAAAAElFTkSuQmCC\");\n}\n\n.ace_icon_svg.ace_error {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAxNiI+CjxnIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJyZWQiIHNoYXBlLXJlbmRlcmluZz0iZ2VvbWV0cmljUHJlY2lzaW9uIj4KPGNpcmNsZSBmaWxsPSJub25lIiBjeD0iOCIgY3k9IjgiIHI9IjciIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPGxpbmUgeDE9IjExIiB5MT0iNSIgeDI9IjUiIHkyPSIxMSIvPgo8bGluZSB4MT0iMTEiIHkxPSIxMSIgeDI9IjUiIHkyPSI1Ii8+CjwvZz4KPC9zdmc+\");\n    background-color: crimson;\n}\n.ace_icon_svg.ace_security {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0iZGFya29yYW5nZSIgZmlsbD0ibm9uZSIgc2hhcGUtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iPgogICAgICAgIDxwYXRoIGNsYXNzPSJzdHJva2UtbGluZWpvaW4tcm91bmQiIGQ9Ik04IDE0LjgzMDdDOCAxNC44MzA3IDIgMTIuOTA0NyAyIDguMDg5OTJWMy4yNjU0OEM1LjMxIDMuMjY1NDggNy45ODk5OSAxLjM0OTE4IDcuOTg5OTkgMS4zNDkxOEM3Ljk4OTk5IDEuMzQ5MTggMTAuNjkgMy4yNjU0OCAxNCAzLjI2NTQ4VjguMDg5OTJDMTQgMTIuOTA0NyA4IDE0LjgzMDcgOCAxNC44MzA3WiIvPgogICAgICAgIDxwYXRoIGQ9Ik0yIDguMDg5OTJWMy4yNjU0OEM1LjMxIDMuMjY1NDggNy45ODk5OSAxLjM0OTE4IDcuOTg5OTkgMS4zNDkxOCIvPgogICAgICAgIDxwYXRoIGQ9Ik0xMy45OSA4LjA4OTkyVjMuMjY1NDhDMTAuNjggMy4yNjU0OCA4IDEuMzQ5MTggOCAxLjM0OTE4Ii8+CiAgICAgICAgPHBhdGggY2xhc3M9InN0cm9rZS1saW5lam9pbi1yb3VuZCIgZD0iTTggNFY5Ii8+CiAgICAgICAgPHBhdGggY2xhc3M9InN0cm9rZS1saW5lam9pbi1yb3VuZCIgZD0iTTggMTBWMTIiLz4KICAgIDwvZz4KPC9zdmc+\");\n    background-color: crimson;\n}\n.ace_icon_svg.ace_warning {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAxNiI+CjxnIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJkYXJrb3JhbmdlIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiI+Cjxwb2x5Z29uIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGZpbGw9Im5vbmUiIHBvaW50cz0iOCAxIDE1IDE1IDEgMTUgOCAxIi8+CjxyZWN0IHg9IjgiIHk9IjEyIiB3aWR0aD0iMC4wMSIgaGVpZ2h0PSIwLjAxIi8+CjxsaW5lIHgxPSI4IiB5MT0iNiIgeDI9IjgiIHkyPSIxMCIvPgo8L2c+Cjwvc3ZnPg==\");\n    background-color: darkorange;\n}\n.ace_icon_svg.ace_info {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAxNiI+CjxnIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlPSJibHVlIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiI+CjxjaXJjbGUgZmlsbD0ibm9uZSIgY3g9IjgiIGN5PSI4IiByPSI3IiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjxwb2x5bGluZSBwb2ludHM9IjggMTEgOCA4Ii8+Cjxwb2x5bGluZSBwb2ludHM9IjkgOCA2IDgiLz4KPGxpbmUgeDE9IjEwIiB5MT0iMTEiIHgyPSI2IiB5Mj0iMTEiLz4KPHJlY3QgeD0iOCIgeT0iNSIgd2lkdGg9IjAuMDEiIGhlaWdodD0iMC4wMSIvPgo8L2c+Cjwvc3ZnPg==\");\n    background-color: royalblue;\n}\n.ace_icon_svg.ace_hint {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjAgMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgICA8ZyBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZT0ic2lsdmVyIiBmaWxsPSJub25lIiBzaGFwZS1yZW5kZXJpbmc9Imdlb21ldHJpY1ByZWNpc2lvbiI+CiAgICAgICAgPHBhdGggY2xhc3M9InN0cm9rZS1saW5lam9pbi1yb3VuZCIgZD0iTTYgMTRIMTAiLz4KICAgICAgICA8cGF0aCBkPSJNOCAxMUg5QzkgOS40NzAwMiAxMiA4LjU0MDAyIDEyIDUuNzYwMDJDMTIuMDIgNC40MDAwMiAxMS4zOSAzLjM2MDAyIDEwLjQzIDIuNjcwMDJDOSAxLjY0MDAyIDcuMDAwMDEgMS42NDAwMiA1LjU3MDAxIDIuNjcwMDJDNC42MTAwMSAzLjM2MDAyIDMuOTggNC40MDAwMiA0IDUuNzYwMDJDNCA4LjU0MDAyIDcuMDAwMDEgOS40NzAwMiA3LjAwMDAxIDExSDhaIi8+CiAgICA8L2c+Cjwvc3ZnPg==\");\n    background-color: silver;\n}\n\n.ace_icon_svg.ace_error_fold {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMCAxNiIgZmlsbD0ibm9uZSI+CiAgPHBhdGggZD0ibSAxOC45Mjk4NTEsNy44Mjk4MDc2IGMgMC4xNDYzNTMsNi4zMzc0NjA0IC02LjMyMzE0Nyw3Ljc3Nzg0NDQgLTcuNDc3OTEyLDcuNzc3ODQ0NCAtMi4xMDcyNzI2LC0wLjEyODc1IDUuMTE3Njc4LDAuMzU2MjQ5IDUuMDUxNjk4LC03Ljg3MDA2MTggLTAuNjA0NjcyLC04LjAwMzk3MzQ5IC03LjA3NzI3MDYsLTcuNTYzMTE4OSAtNC44NTczLC03LjQzMDM5NTU2IDEuNjA2LC0wLjExNTE0MjI1IDYuODk3NDg1LDEuMjYyNTQ1OTYgNy4yODM1MTQsNy41MjI2MTI5NiB6IiBmaWxsPSJjcmltc29uIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0ibSA4LjExNDc1NjIsMi4wNTI5ODI4IGMgMy4zNDkxNjk4LDAgNi4wNjQxMzI4LDIuNjc2ODYyNyA2LjA2NDEzMjgsNS45Nzg5NTMgMCwzLjMwMjExMjIgLTIuNzE0OTYzLDUuOTc4OTIwMiAtNi4wNjQxMzI4LDUuOTc4OTIwMiAtMy4zNDkxNDczLDAgLTYuMDY0MTc3MiwtMi42NzY4MDggLTYuMDY0MTc3MiwtNS45Nzg5MjAyIDAuMDA1MzksLTMuMjk5ODg2MSAyLjcxNzI2NTYsLTUuOTczNjQwOCA2LjA2NDE3NzIsLTUuOTc4OTUzIHogbSAwLC0xLjczNTgyNzE5IGMgLTQuMzIxNDgzNiwwIC03LjgyNDc0MDM4LDMuNDU0MDE4NDkgLTcuODI0NzQwMzgsNy43MTQ3ODAxOSAwLDQuMjYwNzI4MiAzLjUwMzI1Njc4LDcuNzE0NzQ1MiA3LjgyNDc0MDM4LDcuNzE0NzQ1MiA0LjMyMTQ0OTgsMCA3LjgyNDY5OTgsLTMuNDU0MDE3IDcuODI0Njk5OCwtNy43MTQ3NDUyIDAsLTIuMDQ2MDkxNCAtMC44MjQzOTIsLTQuMDA4MzY3MiAtMi4yOTE3NTYsLTUuNDU1MTc0NiBDIDEyLjE4MDIyNSwxLjEyOTk2NDggMTAuMTkwMDEzLDAuMzE3MTU1NjEgOC4xMTQ3NTYyLDAuMzE3MTU1NjEgWiBNIDYuOTM3NDU2Myw4LjI0MDU5ODUgNC42NzE4Njg1LDEwLjQ4NTg1MiA2LjAwODY4MTQsMTEuODc2NzI4IDguMzE3MDAzNSw5LjYwMDc5MTEgMTAuNjI1MzM3LDExLjg3NjcyOCAxMS45NjIxMzgsMTAuNDg1ODUyIDkuNjk2NTUwOCw4LjI0MDU5ODUgMTEuOTYyMTM4LDYuMDA2ODA2NiAxMC41NzMyNDYsNC42Mzc0MzM1IDguMzE3MDAzNSw2Ljg3MzQyOTcgNi4wNjA3NjA3LDQuNjM3NDMzNSA0LjY3MTg2ODUsNi4wMDY4MDY2IFoiIGZpbGw9ImNyaW1zb24iIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=\");\n    background-color: crimson;\n}\n.ace_icon_svg.ace_security_fold {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTcgMTQiIGZpbGw9Im5vbmUiPgogICAgPHBhdGggZD0iTTEwLjAwMDEgMTMuNjk5MkMxMC4wMDAxIDEzLjY5OTIgMTEuOTI0MSAxMy40NzYzIDEzIDEyLjY5OTJDMTQuNDEzOSAxMS42NzgxIDE2IDEwLjUgMTYuMTI1MSA2LjgxMTI2VjIuNTg5ODdDMTYuMTI1MSAyLjU0NzY4IDE2LjEyMjEgMi41MDYxOSAxNi4xMTY0IDIuNDY1NTlWMS43MTQ4NUgxNS4yNDE0TDE1LjIzMDcgMS43MTQ4NEwxNC42MjUxIDEuNjk5MjJWNi44MTEyM0MxNC42MjUxIDguNTEwNjEgMTQuNjI1MSA5LjQ2NDYxIDEyLjc4MjQgMTEuNzIxQzEyLjE1ODYgMTIuNDg0OCAxMC4wMDAxIDEzLjY5OTIgMTAuMDAwMSAxMy42OTkyWiIgZmlsbD0iY3JpbXNvbiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgICA8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTcuMzM2MDkgMC4zNjc0NzVDNy4wMzIxNCAwLjE1MjY1MiA2LjYyNTQ4IDAuMTUzNjE0IDYuMzIyNTMgMC4zNjk5OTdMNi4zMDg2OSAwLjM3OTU1NEM2LjI5NTUzIDAuMzg4NTg4IDYuMjczODggMC40MDMyNjYgNi4yNDQxNyAwLjQyMjc4OUM2LjE4NDcxIDAuNDYxODYgNi4wOTMyMSAwLjUyMDE3MSA1Ljk3MzEzIDAuNTkxMzczQzUuNzMyNTEgMC43MzQwNTkgNS4zNzk5IDAuOTI2ODY0IDQuOTQyNzkgMS4xMjAwOUM0LjA2MTQ0IDEuNTA5NyAyLjg3NTQxIDEuODgzNzcgMS41ODk4NCAxLjg4Mzc3SDAuNzE0ODQ0VjIuNzU4NzdWNi45ODAxNUMwLjcxNDg0NCA5LjQ5Mzc0IDIuMjg4NjYgMTEuMTk3MyAzLjcwMjU0IDEyLjIxODVDNC40MTg0NSAxMi43MzU1IDUuMTI4NzQgMTMuMTA1MyA1LjY1NzMzIDEzLjM0NTdDNS45MjI4NCAxMy40NjY0IDYuMTQ1NjYgMTMuNTU1OSA2LjMwNDY1IDEzLjYxNjFDNi4zODQyMyAxMy42NDYyIDYuNDQ4MDUgMTMuNjY5IDYuNDkzNDkgMTMuNjg0OEM2LjUxNjIyIDEzLjY5MjcgNi41MzQzOCAxMy42OTg5IDYuNTQ3NjQgMTMuNzAzM0w2LjU2MzgyIDEzLjcwODdMNi41NjkwOCAxMy43MTA0TDYuNTcwOTkgMTMuNzExTDYuODM5ODQgMTMuNzUzM0w2LjU3MjQyIDEzLjcxMTVDNi43NDYzMyAxMy43NjczIDYuOTMzMzUgMTMuNzY3MyA3LjEwNzI3IDEzLjcxMTVMNy4xMDg3IDEzLjcxMUw3LjExMDYxIDEzLjcxMDRMNy4xMTU4NyAxMy43MDg3TDcuMTMyMDUgMTMuNzAzM0M3LjE0NTMxIDEzLjY5ODkgNy4xNjM0NiAxMy42OTI3IDcuMTg2MTkgMTMuNjg0OEM3LjIzMTY0IDEzLjY2OSA3LjI5NTQ2IDEzLjY0NjIgNy4zNzUwMyAxMy42MTYxQzcuNTM0MDMgMTMuNTU1OSA3Ljc1Njg1IDEzLjQ2NjQgOC4wMjIzNiAxMy4zNDU3QzguNTUwOTUgMTMuMTA1MyA5LjI2MTIzIDEyLjczNTUgOS45NzcxNSAxMi4yMTg1QzExLjM5MSAxMS4xOTczIDEyLjk2NDggOS40OTM3NyAxMi45NjQ4IDYuOTgwMThWMi43NTg4QzEyLjk2NDggMi43MTY2IDEyLjk2MTkgMi42NzUxMSAxMi45NTYxIDIuNjM0NTFWMS44ODM3N0gxMi4wODExQzEyLjA3NzUgMS44ODM3NyAxMi4wNzQgMS44ODM3NyAxMi4wNzA0IDEuODgzNzdDMTAuNzk3OSAxLjg4MDA0IDkuNjE5NjIgMS41MTEwMiA4LjczODk0IDEuMTI0ODZDOC43MzUzNCAxLjEyMzI3IDguNzMxNzQgMS4xMjE2OCA4LjcyODE0IDEuMTIwMDlDOC4yOTEwMyAwLjkyNjg2NCA3LjkzODQyIDAuNzM0MDU5IDcuNjk3NzkgMC41OTEzNzNDNy41Nzc3MiAwLjUyMDE3MSA3LjQ4NjIyIDAuNDYxODYgNy40MjY3NiAwLjQyMjc4OUM3LjM5NzA1IDAuNDAzMjY2IDcuMzc1MzkgMC4zODg1ODggNy4zNjIyNCAwLjM3OTU1NEw3LjM0ODk2IDAuMzcwMzVDNy4zNDg5NiAwLjM3MDM1IDcuMzQ4NDcgMC4zNzAwMiA3LjM0NTYzIDAuMzc0MDU0TDcuMzM3NzkgMC4zNjg2NTlMNy4zMzYwOSAwLjM2NzQ3NVpNOC4wMzQ3MSAyLjcyNjkxQzguODYwNCAzLjA5MDYzIDkuOTYwNjYgMy40NjMwOSAxMS4yMDYxIDMuNTg5MDdWNi45ODAxNUgxMS4yMTQ4QzExLjIxNDggOC42Nzk1MyAxMC4xNjM3IDkuOTI1MDcgOC45NTI1NCAxMC43OTk4QzguMzU1OTUgMTEuMjMwNiA3Ljc1Mzc0IDExLjU0NTQgNy4yOTc5NiAxMS43NTI3QzcuMTE2NzEgMTEuODM1MSA2Ljk2MDYyIDExLjg5OTYgNi44Mzk4NCAxMS45NDY5QzYuNzE5MDYgMTEuODk5NiA2LjU2Mjk3IDExLjgzNTEgNi4zODE3MyAxMS43NTI3QzUuOTI1OTUgMTEuNTQ1NCA1LjMyMzczIDExLjIzMDYgNC43MjcxNSAxMC43OTk4QzMuNTE2MDMgOS45MjUwNyAyLjQ2NDg0IDguNjc5NTUgMi40NjQ4NCA2Ljk4MDE4VjMuNTg5MDlDMy43MTczOCAzLjQ2MjM5IDQuODIzMDggMy4wODYzOSA1LjY1MDMzIDIuNzIwNzFDNi4xNDIyOCAyLjUwMzI0IDYuNTQ0ODUgMi4yODUzNyA2LjgzMjU0IDIuMTE2MjRDNy4xMjE4MSAyLjI4NTM1IDcuNTI3IDIuNTAzNTIgOC4wMjE5NiAyLjcyMTMxQzguMDI2MiAyLjcyMzE3IDguMDMwNDUgMi43MjUwNCA4LjAzNDcxIDIuNzI2OTFaTTUuOTY0ODQgMy40MDE0N1Y3Ljc3NjQ3SDcuNzE0ODRWMy40MDE0N0g1Ljk2NDg0Wk01Ljk2NDg0IDEwLjQwMTVWOC42NTE0N0g3LjcxNDg0VjEwLjQwMTVINS45NjQ4NFoiIGZpbGw9ImNyaW1zb24iIHN0cm9rZS13aWR0aD0iMiIvPgo8L3N2Zz4=\");\n    background-color: crimson;\n}\n.ace_icon_svg.ace_warning_fold {\n    -webkit-mask-image: url(\"data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAyMCAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xNC43NzY5IDE0LjczMzdMOC42NTE5MiAyLjQ4MzY5QzguMzI5NDYgMS44Mzg3NyA3LjQwOTEzIDEuODM4NzcgNy4wODY2NyAyLjQ4MzY5TDAuOTYxNjY5IDE0LjczMzdDMC42NzA3NzUgMTUuMzE1NSAxLjA5MzgzIDE2IDEuNzQ0MjkgMTZIMTMuOTk0M0MxNC42NDQ4IDE2IDE1LjA2NzggMTUuMzE1NSAxNC43NzY5IDE0LjczMzdaTTMuMTYwMDcgMTQuMjVMNy44NjkyOSA0LjgzMTU2TDEyLjU3ODUgMTQuMjVIMy4xNjAwN1pNOC43NDQyOSAxMS42MjVWMTMuMzc1SDYuOTk0MjlWMTEuNjI1SDguNzQ0MjlaTTYuOTk0MjkgMTAuNzVWNy4yNUg4Ljc0NDI5VjEwLjc1SDYuOTk0MjlaIiBmaWxsPSIjRUM3MjExIi8+CjxwYXRoIGQ9Ik0xMS4xOTkxIDIuOTUyMzhDMTAuODgwOSAyLjMxNDY3IDEwLjM1MzcgMS44MDUyNiA5LjcwNTUgMS41MDlMMTEuMDQxIDEuMDY5NzhDMTEuNjg4MyAwLjk0OTgxNCAxMi4zMzcgMS4yNzI2MyAxMi42MzE3IDEuODYxNDFMMTcuNjEzNiAxMS44MTYxQzE4LjM1MjcgMTMuMjkyOSAxNy41OTM4IDE1LjA4MDQgMTYuMDE4IDE1LjU3NDVDMTYuNDA0NCAxNC40NTA3IDE2LjMyMzEgMTMuMjE4OCAxNS43OTI0IDEyLjE1NTVMMTEuMTk5MSAyLjk1MjM4WiIgZmlsbD0iI0VDNzIxMSIvPgo8L3N2Zz4=\");\n    background-color: darkorange;\n}\n\n.ace_scrollbar {\n    contain: strict;\n    position: absolute;\n    right: 0;\n    bottom: 0;\n    z-index: 6;\n}\n\n.ace_scrollbar-inner {\n    position: absolute;\n    cursor: text;\n    left: 0;\n    top: 0;\n}\n\n.ace_scrollbar-v{\n    overflow-x: hidden;\n    overflow-y: scroll;\n    top: 0;\n}\n\n.ace_scrollbar-h {\n    overflow-x: scroll;\n    overflow-y: hidden;\n    left: 0;\n}\n\n.ace_print-margin {\n    position: absolute;\n    height: 100%;\n}\n\n.ace_text-input {\n    position: absolute;\n    z-index: 0;\n    width: 0.5em;\n    height: 1em;\n    opacity: 0;\n    background: transparent;\n    -moz-appearance: none;\n    appearance: none;\n    border: none;\n    resize: none;\n    outline: none;\n    overflow: hidden;\n    font: inherit;\n    padding: 0 1px;\n    margin: 0 -1px;\n    contain: strict;\n    -ms-user-select: text;\n    -moz-user-select: text;\n    -webkit-user-select: text;\n    user-select: text;\n    /*with `pre-line` chrome inserts &nbsp; instead of space*/\n    white-space: pre!important;\n}\n.ace_text-input.ace_composition {\n    background: transparent;\n    color: inherit;\n    z-index: 1000;\n    opacity: 1;\n}\n.ace_composition_placeholder { color: transparent }\n.ace_composition_marker { \n    border-bottom: 1px solid;\n    position: absolute;\n    border-radius: 0;\n    margin-top: 1px;\n}\n\n[ace_nocontext=true] {\n    transform: none!important;\n    filter: none!important;\n    clip-path: none!important;\n    mask : none!important;\n    contain: none!important;\n    perspective: none!important;\n    mix-blend-mode: initial!important;\n    z-index: auto;\n}\n\n.ace_layer {\n    z-index: 1;\n    position: absolute;\n    overflow: hidden;\n    /* workaround for chrome bug https://github.com/ajaxorg/ace/issues/2312*/\n    word-wrap: normal;\n    white-space: pre;\n    height: 100%;\n    width: 100%;\n    box-sizing: border-box;\n    /* setting pointer-events: auto; on node under the mouse, which changes\n        during scroll, will break mouse wheel scrolling in Safari */\n    pointer-events: none;\n}\n\n.ace_gutter-layer {\n    position: relative;\n    width: auto;\n    text-align: right;\n    pointer-events: auto;\n    height: 1000000px;\n    contain: style size layout;\n}\n\n.ace_text-layer {\n    font: inherit !important;\n    position: absolute;\n    height: 1000000px;\n    width: 1000000px;\n    contain: style size layout;\n}\n\n.ace_text-layer > .ace_line, .ace_text-layer > .ace_line_group {\n    contain: style size layout;\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n}\n\n.ace_hidpi .ace_text-layer,\n.ace_hidpi .ace_gutter-layer,\n.ace_hidpi .ace_content,\n.ace_hidpi .ace_gutter {\n    contain: strict;\n}\n.ace_hidpi .ace_text-layer > .ace_line, \n.ace_hidpi .ace_text-layer > .ace_line_group {\n    contain: strict;\n}\n\n.ace_cjk {\n    display: inline-block;\n    text-align: center;\n}\n\n.ace_cursor-layer {\n    z-index: 4;\n}\n\n.ace_cursor {\n    z-index: 4;\n    position: absolute;\n    box-sizing: border-box;\n    border-left: 2px solid;\n    /* workaround for smooth cursor repaintng whole screen in chrome */\n    transform: translatez(0);\n}\n\n.ace_multiselect .ace_cursor {\n    border-left-width: 1px;\n}\n\n.ace_slim-cursors .ace_cursor {\n    border-left-width: 1px;\n}\n\n.ace_overwrite-cursors .ace_cursor {\n    border-left-width: 0;\n    border-bottom: 1px solid;\n}\n\n.ace_hidden-cursors .ace_cursor {\n    opacity: 0.2;\n}\n\n.ace_hasPlaceholder .ace_hidden-cursors .ace_cursor {\n    opacity: 0;\n}\n\n.ace_smooth-blinking .ace_cursor {\n    transition: opacity 0.18s;\n}\n\n.ace_animate-blinking .ace_cursor {\n    animation-duration: 1000ms;\n    animation-timing-function: step-end;\n    animation-name: blink-ace-animate;\n    animation-iteration-count: infinite;\n}\n\n.ace_animate-blinking.ace_smooth-blinking .ace_cursor {\n    animation-duration: 1000ms;\n    animation-timing-function: ease-in-out;\n    animation-name: blink-ace-animate-smooth;\n}\n    \n@keyframes blink-ace-animate {\n    from, to { opacity: 1; }\n    60% { opacity: 0; }\n}\n\n@keyframes blink-ace-animate-smooth {\n    from, to { opacity: 1; }\n    45% { opacity: 1; }\n    60% { opacity: 0; }\n    85% { opacity: 0; }\n}\n\n.ace_marker-layer .ace_step, .ace_marker-layer .ace_stack {\n    position: absolute;\n    z-index: 3;\n}\n\n.ace_marker-layer .ace_selection {\n    position: absolute;\n    z-index: 5;\n}\n\n.ace_marker-layer .ace_bracket {\n    position: absolute;\n    z-index: 6;\n}\n\n.ace_marker-layer .ace_error_bracket {\n    position: absolute;\n    border-bottom: 1px solid #DE5555;\n    border-radius: 0;\n}\n\n.ace_marker-layer .ace_active-line {\n    position: absolute;\n    z-index: 2;\n}\n\n.ace_marker-layer .ace_selected-word {\n    position: absolute;\n    z-index: 4;\n    box-sizing: border-box;\n}\n\n.ace_line .ace_fold {\n    box-sizing: border-box;\n\n    display: inline-block;\n    height: 11px;\n    margin-top: -2px;\n    vertical-align: middle;\n\n    background-image:\n        url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAJCAYAAADU6McMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJpJREFUeNpi/P//PwOlgAXGYGRklAVSokD8GmjwY1wasKljQpYACtpCFeADcHVQfQyMQAwzwAZI3wJKvCLkfKBaMSClBlR7BOQikCFGQEErIH0VqkabiGCAqwUadAzZJRxQr/0gwiXIal8zQQPnNVTgJ1TdawL0T5gBIP1MUJNhBv2HKoQHHjqNrA4WO4zY0glyNKLT2KIfIMAAQsdgGiXvgnYAAAAASUVORK5CYII=\"),\n        url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA3CAYAAADNNiA5AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAACJJREFUeNpi+P//fxgTAwPDBxDxD078RSX+YeEyDFMCIMAAI3INmXiwf2YAAAAASUVORK5CYII=\");\n    background-repeat: no-repeat, repeat-x;\n    background-position: center center, top left;\n    color: transparent;\n\n    border: 1px solid black;\n    border-radius: 2px;\n\n    cursor: pointer;\n    pointer-events: auto;\n}\n\n.ace_dark .ace_fold {\n}\n\n.ace_fold:hover{\n    background-image:\n        url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAJCAYAAADU6McMAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJpJREFUeNpi/P//PwOlgAXGYGRklAVSokD8GmjwY1wasKljQpYACtpCFeADcHVQfQyMQAwzwAZI3wJKvCLkfKBaMSClBlR7BOQikCFGQEErIH0VqkabiGCAqwUadAzZJRxQr/0gwiXIal8zQQPnNVTgJ1TdawL0T5gBIP1MUJNhBv2HKoQHHjqNrA4WO4zY0glyNKLT2KIfIMAAQsdgGiXvgnYAAAAASUVORK5CYII=\"),\n        url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA3CAYAAADNNiA5AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAACBJREFUeNpi+P//fz4TAwPDZxDxD5X4i5fLMEwJgAADAEPVDbjNw87ZAAAAAElFTkSuQmCC\");\n}\n\n.ace_tooltip {\n    background-color: #f5f5f5;\n    border: 1px solid gray;\n    border-radius: 1px;\n    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);\n    color: black;\n    padding: 3px 4px;\n    position: fixed;\n    z-index: 999999;\n    box-sizing: border-box;\n    cursor: default;\n    white-space: pre-wrap;\n    word-wrap: break-word;\n    line-height: normal;\n    font-style: normal;\n    font-weight: normal;\n    letter-spacing: normal;\n    pointer-events: none;\n    overflow: auto;\n    max-width: min(33em, 66vw);\n    overscroll-behavior: contain;\n}\n.ace_tooltip pre {\n    white-space: pre-wrap;\n}\n\n.ace_tooltip.ace_dark {\n    background-color: #636363;\n    color: #fff;\n}\n\n.ace_tooltip:focus {\n    outline: 1px solid #5E9ED6;\n}\n\n.ace_icon {\n    display: inline-block;\n    width: 18px;\n    vertical-align: top;\n}\n\n.ace_icon_svg {\n    display: inline-block;\n    width: 12px;\n    vertical-align: top;\n    -webkit-mask-repeat: no-repeat;\n    -webkit-mask-size: 12px;\n    -webkit-mask-position: center;\n}\n\n.ace_folding-enabled > .ace_gutter-cell, .ace_folding-enabled > .ace_gutter-cell_svg-icons {\n    padding-right: 13px;\n}\n\n.ace_fold-widget, .ace_custom-widget {\n    box-sizing: border-box;\n\n    margin: 0 -12px 0 1px;\n    display: none;\n    width: 11px;\n    vertical-align: top;\n\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAANElEQVR42mWKsQ0AMAzC8ixLlrzQjzmBiEjp0A6WwBCSPgKAXoLkqSot7nN3yMwR7pZ32NzpKkVoDBUxKAAAAABJRU5ErkJggg==\");\n    background-repeat: no-repeat;\n    background-position: center;\n\n    border-radius: 3px;\n    \n    border: 1px solid transparent;\n    cursor: pointer;\n    pointer-events: auto;\n}\n\n.ace_custom-widget {\n    background: none;\n}\n\n.ace_folding-enabled .ace_fold-widget {\n    display: inline-block;   \n}\n\n.ace_fold-widget.ace_end {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAANElEQVR42m3HwQkAMAhD0YzsRchFKI7sAikeWkrxwScEB0nh5e7KTPWimZki4tYfVbX+MNl4pyZXejUO1QAAAABJRU5ErkJggg==\");\n}\n\n.ace_fold-widget.ace_closed {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAGCAYAAAAG5SQMAAAAOUlEQVR42jXKwQkAMAgDwKwqKD4EwQ26sSOkVWjgIIHAzPiCgaqiqnJHZnKICBERHN194O5b9vbLuAVRL+l0YWnZAAAAAElFTkSuQmCCXA==\");\n}\n\n.ace_fold-widget:hover {\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    background-color: rgba(255, 255, 255, 0.2);\n    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);\n}\n\n.ace_fold-widget:active {\n    border: 1px solid rgba(0, 0, 0, 0.4);\n    background-color: rgba(0, 0, 0, 0.05);\n    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);\n}\n/**\n * Dark version for fold widgets\n */\n.ace_dark .ace_fold-widget {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHklEQVQIW2P4//8/AzoGEQ7oGCaLLAhWiSwB146BAQCSTPYocqT0AAAAAElFTkSuQmCC\");\n}\n.ace_dark .ace_fold-widget.ace_end {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAH0lEQVQIW2P4//8/AxQ7wNjIAjDMgC4AxjCVKBirIAAF0kz2rlhxpAAAAABJRU5ErkJggg==\");\n}\n.ace_dark .ace_fold-widget.ace_closed {\n    background-image: url(\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAAFCAYAAACAcVaiAAAAHElEQVQIW2P4//+/AxAzgDADlOOAznHAKgPWAwARji8UIDTfQQAAAABJRU5ErkJggg==\");\n}\n.ace_dark .ace_fold-widget:hover {\n    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);\n    background-color: rgba(255, 255, 255, 0.1);\n}\n.ace_dark .ace_fold-widget:active {\n    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);\n}\n\n.ace_inline_button {\n    border: 1px solid lightgray;\n    display: inline-block;\n    margin: -1px 8px;\n    padding: 0 5px;\n    pointer-events: auto;\n    cursor: pointer;\n}\n.ace_inline_button:hover {\n    border-color: gray;\n    background: rgba(200,200,200,0.2);\n    display: inline-block;\n    pointer-events: auto;\n}\n\n.ace_fold-widget.ace_invalid {\n    background-color: #FFB4B4;\n    border-color: #DE5555;\n}\n\n.ace_fade-fold-widgets .ace_fold-widget {\n    transition: opacity 0.4s ease 0.05s;\n    opacity: 0;\n}\n\n.ace_fade-fold-widgets:hover .ace_fold-widget {\n    transition: opacity 0.05s ease 0.05s;\n    opacity:1;\n}\n\n.ace_underline {\n    text-decoration: underline;\n}\n\n.ace_bold {\n    font-weight: bold;\n}\n\n.ace_nobold .ace_bold {\n    font-weight: normal;\n}\n\n.ace_italic {\n    font-style: italic;\n}\n\n\n.ace_error-marker {\n    background-color: rgba(255, 0, 0,0.2);\n    position: absolute;\n    z-index: 9;\n}\n\n.ace_highlight-marker {\n    background-color: rgba(255, 255, 0,0.2);\n    position: absolute;\n    z-index: 8;\n}\n\n.ace_mobile-menu {\n    position: absolute;\n    line-height: 1.5;\n    border-radius: 4px;\n    -ms-user-select: none;\n    -moz-user-select: none;\n    -webkit-user-select: none;\n    user-select: none;\n    background: white;\n    box-shadow: 1px 3px 2px grey;\n    border: 1px solid #dcdcdc;\n    color: black;\n}\n.ace_dark > .ace_mobile-menu {\n    background: #333;\n    color: #ccc;\n    box-shadow: 1px 3px 2px grey;\n    border: 1px solid #444;\n\n}\n.ace_mobile-button {\n    padding: 2px;\n    cursor: pointer;\n    overflow: hidden;\n}\n.ace_mobile-button:hover {\n    background-color: #eee;\n    opacity:1;\n}\n.ace_mobile-button:active {\n    background-color: #ddd;\n}\n\n.ace_placeholder {\n    position: relative;\n    font-family: arial;\n    transform: scale(0.9);\n    transform-origin: left;\n    white-space: pre;\n    opacity: 0.7;\n    margin: 0 10px;\n    z-index: 1;\n}\n\n.ace_ghost_text {\n    opacity: 0.5;\n    font-style: italic;\n}\n\n.ace_ghost_text_container > div {\n    white-space: pre;\n}\n\n.ghost_text_line_wrapped::after {\n    content: \"\u21A9\";\n    position: absolute;\n}\n\n.ace_lineWidgetContainer.ace_ghost_text {\n    margin: 0px 4px\n}\n\n.ace_screenreader-only {\n    position:absolute;\n    left:-10000px;\n    top:auto;\n    width:1px;\n    height:1px;\n    overflow:hidden;\n}\n\n.ace_hidden_token {\n    display: none;\n}";
 
 });
 
@@ -18827,8 +19182,7 @@ var VirtualRenderer = /** @class */ (function () {
             row: 0,
             column: 0
         };
-        this.$fontMetrics = new FontMetrics(this.container);
-        this.$textLayer.$setFontMetrics(this.$fontMetrics);
+        this.$fontMetrics = new FontMetrics(this.container, this.$textLayer, this);
         this.$textLayer.on("changeCharacterSize", function (e) {
             _self.updateCharacterSize();
             _self.onResize(true, _self.gutterWidth, _self.$size.width, _self.$size.height);
@@ -18849,12 +19203,14 @@ var VirtualRenderer = /** @class */ (function () {
             lastRow: 0,
             lineHeight: 0,
             characterWidth: 0,
+            fontMetrics: this.$fontMetrics,
             minHeight: 1,
             maxHeight: 1,
             offset: 0,
             height: 1,
             gutterOffset: 1
         };
+        this.$fontMetrics.config = this.layerConfig;
         this.scrollMargin = {
             left: 0,
             right: 0,
@@ -19175,7 +19531,7 @@ var VirtualRenderer = /** @class */ (function () {
         else {
             if (composition.useTextareaForIME) {
                 var val = this.textarea.value;
-                w = this.characterWidth * (this.session.$getStringScreenWidth(val)[0]);
+                w = this.$fontMetrics.getTextWidth(val) + 1;
             }
             else {
                 posTop += this.lineHeight + 2;
@@ -19290,8 +19646,6 @@ var VirtualRenderer = /** @class */ (function () {
             this.$textLayer.checkForSizeChanges();
         }
         this._signal("beforeRender", changes);
-        if (this.session && this.session.$bidiHandler)
-            this.session.$bidiHandler.updateCharacterWidths(this.$fontMetrics);
         var config = this.layerConfig;
         if (changes & this.CHANGE_FULL ||
             changes & this.CHANGE_SIZE ||
@@ -19309,17 +19663,9 @@ var VirtualRenderer = /** @class */ (function () {
                 }
             }
             config = this.layerConfig;
-            this.$updateScrollBarV();
-            if (changes & this.CHANGE_H_SCROLL)
-                this.$updateScrollBarH();
-            dom.translate(this.content, -this.scrollLeft, -config.offset);
-            var width = config.width + 2 * this.$padding + "px";
-            var height = config.minHeight + "px";
-            dom.setStyle(this.content.style, "width", width);
-            dom.setStyle(this.content.style, "height", height);
         }
         if (changes & this.CHANGE_H_SCROLL) {
-            dom.translate(this.content, -this.scrollLeft, -config.offset);
+            this.$updateContentTransformAndSize(config, changes);
             this.scroller.className = this.scrollLeft <= 0 ? "ace_scroller " : "ace_scroller ace_scroll-left ";
             if (this.enableKeyboardAccessibility)
                 this.scroller.className += this.keyboardFocusClassName;
@@ -19335,6 +19681,7 @@ var VirtualRenderer = /** @class */ (function () {
             this.$markerBack.update(config);
             this.$markerFront.update(config);
             this.$cursorLayer.update(config);
+            this.$updateContentTransformAndSize(config, changes);
             this.$moveTextAreaToCursor();
             this._signal("afterRender", changes);
             return;
@@ -19357,6 +19704,7 @@ var VirtualRenderer = /** @class */ (function () {
             this.$markerBack.update(config);
             this.$markerFront.update(config);
             this.$cursorLayer.update(config);
+            this.$updateContentTransformAndSize(config, changes);
             this.$moveTextAreaToCursor();
             this._signal("afterRender", changes);
             return;
@@ -19369,6 +19717,7 @@ var VirtualRenderer = /** @class */ (function () {
             if (this.$customScrollbar) {
                 this.$scrollDecorator.$updateDecorators(config);
             }
+            this.$updateContentTransformAndSize(config, changes);
         }
         else if (changes & this.CHANGE_LINES) {
             if (this.$updateLines() || (changes & this.CHANGE_GUTTER) && this.$showGutter)
@@ -19376,6 +19725,7 @@ var VirtualRenderer = /** @class */ (function () {
             if (this.$customScrollbar) {
                 this.$scrollDecorator.$updateDecorators(config);
             }
+            this.$updateContentTransformAndSize(config, changes);
         }
         else if (changes & this.CHANGE_TEXT || changes & this.CHANGE_GUTTER) {
             if (this.$showGutter)
@@ -19426,6 +19776,44 @@ var VirtualRenderer = /** @class */ (function () {
             this._signal("autosize");
         }
     };
+    VirtualRenderer.prototype.$updateContentTransformAndSize = function (config, changes) {
+        var sm = this.scrollMargin;
+        if (this.session && !this.session.getUseWrapMode()) {
+            var longestRendered = this.$getLongestRenderedLine();
+            if (config.width < longestRendered) {
+                config.width = longestRendered;
+            }
+        }
+        if (this.session) {
+            this.session.setScrollLeft(Math.max(-sm.left, Math.min(this.scrollLeft, config.width + 2 * this.$padding - this.$size.scrollerWidth + sm.right)));
+        }
+        dom.translate(this.content, -this.scrollLeft, -config.offset);
+        var width = config.width + 2 * this.$padding + "px";
+        var height = config.minHeight + "px";
+        dom.setStyle(this.content.style, "width", width);
+        dom.setStyle(this.content.style, "height", height);
+        this.$updateScrollBarV();
+        if (changes & this.CHANGE_H_SCROLL)
+            this.$updateScrollBarH();
+    };
+    VirtualRenderer.prototype.$getLongestRenderedLine = function () {
+        var max = 0;
+        var transform = this.$hasCssTransforms && this.$fontMetrics.getTransform();
+        var cells = this.$textLayer.$lines.cells;
+        for (var i = 0; i < cells.length; i++) {
+            var lineElement = cells[i].element;
+            this.$fontMetrics.$scratchRange.setStart(lineElement, 0);
+            this.$fontMetrics.$scratchRange.setEnd(lineElement, lineElement.childNodes.length);
+            var rect = /** @type {ReturnType<FontMetrics['recoverRect']>}*/ (this.$fontMetrics.$scratchRange.getBoundingClientRect());
+            if (this.$hasCssTransforms) {
+                rect = this.$fontMetrics.recoverRect(transform, rect) || rect;
+            }
+            var w = rect.width;
+            if (w > max)
+                max = w;
+        }
+        return max;
+    };
     VirtualRenderer.prototype.$computeLayerConfig = function () {
         var session = this.session;
         var size = this.$size;
@@ -19452,7 +19840,6 @@ var VirtualRenderer = /** @class */ (function () {
         maxHeight += scrollPastEnd;
         var sm = this.scrollMargin;
         this.session.setScrollTop(Math.max(-sm.top, Math.min(this.scrollTop, maxHeight - size.scrollerHeight + sm.bottom)));
-        this.session.setScrollLeft(Math.max(-sm.left, Math.min(this.scrollLeft, longestLine + 2 * this.$padding - size.scrollerWidth + sm.right)));
         var vScroll = !hideScrollbars && (this.$vScrollBarAlwaysVisible ||
             size.scrollerHeight - maxHeight + scrollPastEnd < 0 || this.scrollTop > sm.top);
         var vScrollChanged = vScrollBefore !== vScroll;
@@ -19498,12 +19885,14 @@ var VirtualRenderer = /** @class */ (function () {
             lastRow: lastRow,
             lineHeight: lineHeight,
             characterWidth: this.characterWidth,
+            fontMetrics: this.$fontMetrics,
             minHeight: minHeight,
             maxHeight: maxHeight,
             offset: offset,
             gutterOffset: lineHeight ? Math.max(0, Math.ceil((offset + size.height - size.scrollerHeight) / lineHeight)) : 0,
             height: this.$size.scrollerHeight
         };
+        this.$fontMetrics.config = this.layerConfig;
         if (this.session.$bidiHandler)
             this.session.$bidiHandler.setContentWidth(longestLine - this.$padding);
         return changes;
@@ -19742,44 +20131,40 @@ var VirtualRenderer = /** @class */ (function () {
     VirtualRenderer.prototype.pixelToScreenCoordinates = function (x, y) {
         var canvasPos;
         if (this.$hasCssTransforms) {
-            canvasPos = { top: 0, left: 0 };
+            canvasPos = { top: this.margin.top, left: this.gutterWidth + this.margin.left };
             var p = this.$fontMetrics.transformCoordinates([x, y]);
-            x = p[1] - this.gutterWidth - this.margin.left;
-            y = p[0];
+            x = p[0];
+            y = p[1];
         }
         else {
             canvasPos = this.scroller.getBoundingClientRect();
         }
         var offsetX = x + this.scrollLeft - canvasPos.left - this.$padding;
         var offset = offsetX / this.characterWidth;
-        var row = Math.floor((y + this.scrollTop - canvasPos.top) / this.lineHeight);
+        var row = (y + this.scrollTop - canvasPos.top) / this.lineHeight;
         var col = this.$blockCursor ? Math.floor(offset) : Math.round(offset);
+        col = this.$fontMetrics.$pixelToColumn(row, col, x, this.$blockCursor);
         return { row: row, column: col, side: offset - col > 0 ? 1 : -1, offsetX: offsetX };
     };
     VirtualRenderer.prototype.screenToTextCoordinates = function (x, y) {
-        var canvasPos;
-        if (this.$hasCssTransforms) {
-            canvasPos = { top: 0, left: 0 };
-            var p = this.$fontMetrics.transformCoordinates([x, y]);
-            x = p[1] - this.gutterWidth - this.margin.left;
-            y = p[0];
-        }
-        else {
-            canvasPos = this.scroller.getBoundingClientRect();
-        }
-        var offsetX = x + this.scrollLeft - canvasPos.left - this.$padding;
-        var offset = offsetX / this.characterWidth;
-        var col = this.$blockCursor ? Math.floor(offset) : Math.round(offset);
-        var row = Math.floor((y + this.scrollTop - canvasPos.top) / this.lineHeight);
-        return this.session.screenToDocumentPosition(row, Math.max(col, 0), offsetX);
+        var screenPos = this.pixelToScreenCoordinates(x, y);
+        return this.session.screenToDocumentPosition(screenPos.row, Math.max(screenPos.column, 0));
     };
     VirtualRenderer.prototype.textToScreenCoordinates = function (row, column) {
-        var canvasPos = this.scroller.getBoundingClientRect();
         var pos = this.session.documentToScreenPosition(row, column);
-        var x = this.$padding + (this.session.$bidiHandler.isBidiRow(pos.row, row)
-            ? this.session.$bidiHandler.getPosLeft(pos.column)
-            : Math.round(pos.column * this.characterWidth));
+        var x = this.$padding + this.$fontMetrics.textWidth(pos.row, pos.column);
         var y = pos.row * this.lineHeight;
+        if (this.$hasCssTransforms) {
+            var pagePos = this.$fontMetrics.transformCoordinates(null, [
+                this.gutterWidth + this.margin.left + x - this.scrollLeft,
+                this.margin.top + y - this.scrollTop
+            ]);
+            return {
+                pageX: pagePos[0],
+                pageY: pagePos[1]
+            };
+        }
+        var canvasPos = this.scroller.getBoundingClientRect();
         return {
             pageX: canvasPos.left + x - this.scrollLeft,
             pageY: canvasPos.top + y - this.scrollTop
@@ -19994,6 +20379,15 @@ var VirtualRenderer = /** @class */ (function () {
                 : "padding" in (_self.theme || {}) ? 4 : _self.$padding;
             if (_self.$padding && padding != _self.$padding)
                 _self.setPadding(padding);
+            if (_self.$gutterLayer) {
+                var showGutterCursor = module["$showGutterCursorMarker"];
+                if (showGutterCursor && !_self.$gutterLayer.$showCursorMarker) {
+                    _self.$gutterLayer.$showCursorMarker = "theme";
+                }
+                else if (!showGutterCursor && _self.$gutterLayer.$showCursorMarker == "theme") {
+                    _self.$gutterLayer.$showCursorMarker = null;
+                }
+            }
             _self.$theme = module.cssClass;
             _self.theme = module;
             dom.addCssClass(_self.container, module.cssClass);
@@ -20787,7 +21181,7 @@ function onMouseDown(e) {
         var rectSel = [];
         var blockSelect = function () {
             var newCursor = editor.renderer.pixelToScreenCoordinates(mouseX, mouseY);
-            var cursor = session.screenToDocumentPosition(newCursor.row, newCursor.column, newCursor.offsetX);
+            var cursor = session.screenToDocumentPosition(newCursor.row, newCursor.column);
             if (isSamePoint(screenCursor, newCursor) && isSamePoint(cursor, selection.lead))
                 return;
             screenCursor = newCursor;
@@ -21033,7 +21427,8 @@ var EditSession = require("./edit_session").EditSession;
         }
         for (var i = removed.length; i--;) {
             var index = this.ranges.indexOf(removed[i]);
-            this.ranges.splice(index, 1);
+            if (index != -1)
+                this.ranges.splice(index, 1);
         }
         this._signal("removeRange", { ranges: removed });
         if (this.rangeCount === 0 && this.inMultiSelectMode) {
@@ -21107,14 +21502,10 @@ var EditSession = require("./edit_session").EditSession;
         if (xBackwards) {
             var startColumn = screenCursor.column;
             var endColumn = screenAnchor.column;
-            var startOffsetX = screenCursor.offsetX;
-            var endOffsetX = screenAnchor.offsetX;
         }
         else {
             var startColumn = screenAnchor.column;
             var endColumn = screenCursor.column;
-            var startOffsetX = screenAnchor.offsetX;
-            var endOffsetX = screenCursor.offsetX;
         }
         var yBackwards = screenCursor.row < screenAnchor.row;
         if (yBackwards) {
@@ -21133,7 +21524,7 @@ var EditSession = require("./edit_session").EditSession;
             includeEmptyLines = true;
         var docEnd;
         for (var row = startRow; row <= endRow; row++) {
-            var range = Range.fromPoints(this.session.screenToDocumentPosition(row, startColumn, startOffsetX), this.session.screenToDocumentPosition(row, endColumn, endOffsetX));
+            var range = Range.fromPoints(this.session.screenToDocumentPosition(row, startColumn), this.session.screenToDocumentPosition(row, endColumn));
             if (range.isEmpty()) {
                 if (docEnd && isSamePoint(range.end, docEnd))
                     break;
@@ -21270,32 +21661,36 @@ var Editor = require("./editor").Editor;
         selection._eventRegistry = {};
         var tmpSel = new Selection(session);
         this.inVirtualSelectionMode = true;
-        for (var i = ranges.length; i--;) {
-            if ($byLines) {
-                while (i > 0 && ranges[i].start.row == ranges[i - 1].end.row)
-                    i--;
+        try {
+            for (var i = ranges.length; i--;) {
+                if ($byLines) {
+                    while (i > 0 && ranges[i].start.row == ranges[i - 1].end.row)
+                        i--;
+                }
+                tmpSel.fromOrientedRange(ranges[i]);
+                tmpSel.index = i;
+                this.selection = session.selection = tmpSel;
+                var cmdResult = cmd.exec ? cmd.exec(this, args || {}) : cmd(this, args || {});
+                if (!result && cmdResult !== undefined)
+                    result = cmdResult;
+                tmpSel.toOrientedRange(ranges[i]);
             }
-            tmpSel.fromOrientedRange(ranges[i]);
-            tmpSel.index = i;
-            this.selection = session.selection = tmpSel;
-            var cmdResult = cmd.exec ? cmd.exec(this, args || {}) : cmd(this, args || {});
-            if (!result && cmdResult !== undefined)
-                result = cmdResult;
-            tmpSel.toOrientedRange(ranges[i]);
+            tmpSel.detach();
         }
-        tmpSel.detach();
-        this.selection = session.selection = selection;
-        this.inVirtualSelectionMode = false;
-        selection._eventRegistry = reg;
-        selection.mergeOverlappingRanges();
-        if (selection.ranges[0])
-            selection.fromOrientedRange(selection.ranges[0]);
-        var anim = this.renderer.$scrollAnimation;
-        this.onCursorChange();
-        this.onSelectionChange();
-        if (anim && anim.from == anim.to)
-            this.renderer.animateScrolling(anim.from);
-        return result;
+        finally {
+            this.selection = session.selection = selection;
+            this.inVirtualSelectionMode = false;
+            selection._eventRegistry = reg;
+            selection.mergeOverlappingRanges();
+            if (selection.ranges[0])
+                selection.fromOrientedRange(selection.ranges[0]);
+            var anim = this.renderer.$scrollAnimation;
+            this.onCursorChange();
+            this.onSelectionChange();
+            if (anim && anim.from == anim.to)
+                this.renderer.animateScrolling(anim.from);
+            return result;
+        }
     };
     this.exitMultiSelectMode = function () {
         if (!this.inMultiSelectMode || this.inVirtualSelectionMode)
@@ -21323,6 +21718,8 @@ var Editor = require("./editor").Editor;
     this.$checkMultiselectChange = function (e, anchor) {
         if (this.inMultiSelectMode && !this.inVirtualSelectionMode) {
             var range = this.multiSelect.ranges[0];
+            if (!range)
+                return;
             if (this.multiSelect.isEmpty() && anchor == this.multiSelect.anchor)
                 return;
             var pos = anchor == this.multiSelect.anchor
