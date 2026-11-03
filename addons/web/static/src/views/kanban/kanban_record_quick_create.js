@@ -185,6 +185,10 @@ export class KanbanQuickCreateController extends Component {
     }
 
     async beforeUnload(ev) {
+        if (!this.model.root) {
+            // the listener is active before the first load: nothing to save yet
+            return;
+        }
         if (this.useNameCreate) {
             const name = this.model.root.data.display_name;
             if (name) {
@@ -199,7 +203,17 @@ export class KanbanQuickCreateController extends Component {
     }
 
     beforeVisibilityChange() {
+<<<<<<< 5e0f89be03981011d6bf1409bc73f284e73bb7f4
         if (document.visibilityState === "hidden" && !this.dialogService.hasOpenDialogs) {
+||||||| 9456c22a085f6084dd84dda2483ab148d6f82227
+        if (document.visibilityState === "hidden" && this.formInDialog === 0) {
+=======
+        if (!this.model.root) {
+            // the listener is active before the first load: nothing to save yet
+            return;
+        }
+        if (document.visibilityState === "hidden" && this.formInDialog === 0) {
+>>>>>>> f18e17b3f43e19c3497d6aba3aaf9a8b447fe07b
             return this.validate("close");
         }
     }
