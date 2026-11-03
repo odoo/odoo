@@ -4009,3 +4009,28 @@ test("Auto save on hiding tab (invalid)", async () => {
     expect(".o_kanban_group:eq(1) .o_kanban_quick_create").toHaveCount(1);
     expect(".o_kanban_quick_create .o_field_widget[name=date]").toHaveClass("o_field_invalid");
 });
+
+test("hiding tab or unloading while the quick create is loading", async () => {
+    const onchangeDeferred = Promise.withResolvers();
+    onRpc("partner", "onchange", () => onchangeDeferred.promise);
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban on_create="quick_create">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["bar"],
+    });
+    await createKanbanRecord();
+    // the quick create record is not loaded yet
+    await hideTab();
+    await unload();
+    onchangeDeferred.resolve();
+    await animationFrame();
+    expect(".o_kanban_quick_create").toHaveCount(1);
+});
