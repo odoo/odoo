@@ -19,6 +19,7 @@ registry.category("web_tour.tours").add("OnlinePaymentWithMultiTables", {
             ProductScreen.orderBtnIsPresent(),
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickOrderButton(),
+            FloorScreen.clickTable("2"),
             ProductScreen.orderlinesHaveNoChange(),
             ProductScreen.clickPayButton(),
             PaymentScreen.totalIs("2.20"),

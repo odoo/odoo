@@ -43,7 +43,7 @@ patch(ProductScreen.prototype, {
         if (!this.uiState.clicked) {
             this.uiState.clicked = true;
             try {
-                await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+                await this.pos.submitOrder(this.currentOrder);
                 this.pos.addPendingOrder([this.currentOrder.id]);
             } finally {
                 this.uiState.clicked = false;

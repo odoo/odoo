@@ -1708,28 +1708,40 @@ export class PosStore extends Reactive {
             return this.sendOrderInPreparation(order, cancelled);
         }
 
-        const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
-        const rawchange = data.last_order_preparation_change || "{}";
-        const lastChanges = JSON.parse(rawchange);
-        const lastServerDate = DateTime.fromSQL(lastChanges.metadata?.serverDate).toUTC();
-        const lastLocalDate = DateTime.fromSQL(
-            order.last_order_preparation_change?.metadata?.serverDate
-        ).toUTC();
+        try {
+            this.syncingOrders.add(order.uuid);
+            const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
+            const rawchange = data.last_order_preparation_change || "{}";
+            const lastChanges = JSON.parse(rawchange);
+            const lastServerDate = DateTime.fromSQL(lastChanges.metadata?.serverDate).toUTC();
+            const lastLocalDate = DateTime.fromSQL(
+                order.last_order_preparation_change?.metadata?.serverDate
+            ).toUTC();
 
-        if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Order Outdated"),
-                body: _t(
-                    "The order has been modified on another device. If you have modified existing " +
-                        "order lines, check that your changes have not been overwritten.\n\n" +
-                        "The order will be sent to the server with the last changes made on this device."
-                ),
-            });
+            if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Order Outdated"),
+                    body: _t(
+                        "The order has been modified on another device. If you have modified existing " +
+                            "order lines, check that your changes have not been overwritten.\n\n" +
+                            "The order will be sent to the server with the last changes made on this device."
+                    ),
+                });
 
-            // Update before syncing otherwise it will overwrite the last change
-            order.last_order_preparation_change = lastChanges;
-            await this.syncAllOrders({ orders: [order] });
-            return;
+                // Update before syncing otherwise it will overwrite the last change
+                order.last_order_preparation_change = lastChanges;
+                this.syncingOrders.delete(order.uuid);
+                await this.syncAllOrders({ orders: [order] });
+                return;
+            }
+        } catch (e) {
+            if (e instanceof ConnectionLostError) {
+                // print prep receipt even Offline
+                await this.sendOrderInPreparation(order, cancelled);
+            }
+            throw e;
+        } finally {
+            this.syncingOrders.delete(order.uuid);
         }
 
         return this.sendOrderInPreparation(order, cancelled);
@@ -1737,27 +1749,34 @@ export class PosStore extends Reactive {
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, cancelled = false) {
         let isPrinted = false;
-        if (this.printers_category_ids_set.size) {
-            try {
-                const orderChange = changesToOrder(
-                    order,
-                    false,
-                    this.orderPreparationCategories,
-                    cancelled
-                );
-                isPrinted = await this.printChanges(order, orderChange);
-            } catch (e) {
-                console.info("Failed in printing the changes in the order", e);
+        try {
+            this.syncingOrders.add(order.uuid);
+            if (this.printers_category_ids_set.size) {
+                try {
+                    const orderChange = changesToOrder(
+                        order,
+                        false,
+                        this.orderPreparationCategories,
+                        cancelled
+                    );
+                    isPrinted = await this.printChanges(order, orderChange);
+                } catch (e) {
+                    console.info("Failed in printing the changes in the order", e);
+                }
             }
+
+            order.updateLastOrderChange();
+        } finally {
+            this.syncingOrders.delete(order.uuid);
         }
 
-        order.updateLastOrderChange();
         // Ensure that other devices are aware of the changes
         // Otherwise several devices can print the same changes
         // We need to check if a preparation display is configured to avoid unnecessary sync
         if (isPrinted && !this.config["<-pos_preparation_display.display.pos_config_ids"]?.length) {
             await this.syncAllOrders({ orders: [order] });
         }
+        return isPrinted;
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         // Always display a "ConnectionLostError" when the user tries to send an order to the kitchen while offline

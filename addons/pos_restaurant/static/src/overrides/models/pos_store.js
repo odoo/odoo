@@ -2,6 +2,7 @@ import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
 
 patch(PosStore.prototype, {
     /**
@@ -72,7 +73,10 @@ patch(PosStore.prototype, {
         }
     },
     get categoryCount() {
-        const orderChanges = this.getOrderChanges();
+        return this.getCategoryCount();
+    },
+    getCategoryCount(order = this.get_order()) {
+        const orderChanges = this.getOrderChanges(false, order);
         const linesChanges = orderChanges.orderlines;
 
         const categories = Object.values(linesChanges).reduce((acc, curr) => {
@@ -141,6 +145,42 @@ patch(PosStore.prototype, {
         if (!this.config.module_pos_restaurant) {
             return super.addOrderIfEmpty(...arguments);
         }
+    },
+    async submitOrder(order) {
+        this.sendOrderInPreparationUpdateLastChange(order);
+        this.showScreen("FloorScreen");
+    },
+    isOrderSyncing(order, notify = true) {
+        const isSyncing = !!order && this.syncingOrders.has(order?.uuid);
+        if (isSyncing && notify) {
+            this.notification.add(
+                _t("This order is currently syncing, please wait a moment before loading it."),
+                {
+                    type: "warning",
+                    sticky: false,
+                }
+            );
+        }
+        return isSyncing;
+    },
+    //@override
+    async sendOrderInPreparation(order, cancelled = false) {
+        let categoryCount = [];
+        if (!cancelled) {
+            categoryCount = this.getCategoryCount(order);
+        }
+        const result = await super.sendOrderInPreparation(order, cancelled);
+
+        if (result && this.config.module_pos_restaurant && categoryCount.length) {
+            const categorySummary = formatList(
+                categoryCount.map((cat) => `${cat.count} ${cat.name}`)
+            );
+            this.notification.add(_t("%s, sent to the kitchen", categorySummary), {
+                type: "success",
+                sticky: false,
+            });
+        }
+        return result;
     },
     //@override
     async afterProcessServerData() {
@@ -219,6 +259,9 @@ patch(PosStore.prototype, {
         }
     },
     async setTableFromUi(table, orderUuid = null) {
+        if (this.isOrderSyncing(table.getOrder())) {
+            return;
+        }
         try {
             this.tableSyncing = true;
             if (table.parent_id) {

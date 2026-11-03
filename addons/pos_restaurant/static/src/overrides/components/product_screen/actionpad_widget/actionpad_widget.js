@@ -40,7 +40,7 @@ patch(ActionpadWidget.prototype, {
         if (!this.uiState.clicked) {
             this.uiState.clicked = true;
             try {
-                await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+                await this.pos.submitOrder(this.currentOrder);
             } finally {
                 this.uiState.clicked = false;
             }
