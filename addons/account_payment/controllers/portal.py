@@ -51,13 +51,27 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         return values
 
     @http.route(['/my/invoices/overdue'], type='http', auth='public', methods=['GET'], website=True, sitemap=False)
-    def portal_my_overdue_invoices(self, access_token=None, **kw):
-        try:
-            request.env['account.move'].check_access('read')
-        except (AccessError, MissingError):
-            return request.redirect('/my')
+    def portal_my_overdue_invoices(self, access_token=None, partner_id=None, company_ids=None, **kw):
+        if access_token:
+            if (
+                partner_id and (partner_id := request.env['res.partner'].sudo().browse(int(partner_id)))
+                and company_ids and (company_ids := tuple(int(company_id) for company_id in company_ids.split(',')))
+                and access_token == partner_id.with_context(allowed_company_ids=company_ids)._get_overdue_invoices_token()
+            ):
+                current_partner_id = partner_id.id
+            else:
+                return request.render("account_payment.portal_overdue_invoices_invalid_token", {'page_name': 'overdue_invoices'})
+        else:
+            try:
+                request.env['account.move'].check_access('read')
+                current_partner_id = request.env.user.partner_id.id
+            except (AccessError, MissingError):
+                return request.redirect('/my')
 
-        overdue_invoices = request.env['account.move'].search(self._get_overdue_invoices_domain())
+        overdue_invoices_domain = self._get_overdue_invoices_domain(current_partner_id)
+        if company_ids:
+            overdue_invoices_domain.append(('company_id', 'in', company_ids))
+        overdue_invoices = request.env['account.move'].sudo().search(overdue_invoices_domain)
 
         values = self._overdue_invoices_get_page_view_values(overdue_invoices, **kw)
         return request.render("account_payment.portal_overdue_invoices_page", values) if 'payment' in values else request.redirect('/my/invoices')
@@ -75,8 +89,6 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
 
         if any(invoice.partner_id != partner for invoice in overdue_invoices):
             raise ValidationError(_("Overdue invoices should share the same partner."))
-        if any(invoice.company_id != company for invoice in overdue_invoices):
-            raise ValidationError(_("Overdue invoices should share the same company."))
         if any(invoice.currency_id != currency for invoice in overdue_invoices):
             raise ValidationError(_("Overdue invoices should share the same currency."))
 
@@ -91,6 +103,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
                 'currency': currency,
             },
             'amount': total_amount,
+            'overdue_invoice_ids': ','.join(map(str, overdue_invoices.ids)),
         })
 
         common_view_values = self._get_common_page_view_values(
