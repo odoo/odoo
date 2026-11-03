@@ -1,5 +1,6 @@
 import { Domain } from "@web/core/domain";
 import { logPosMessage } from "./pretty_console_log";
+import { debounce } from "@web/core/utils/timing";
 
 const CONSOLE_COLOR = "#b56be3";
 /**
@@ -23,6 +24,7 @@ export default class DevicesSynchronisation {
         this.staticModels = new Set(staticModels);
         this.pos = posStore;
         this.models = posStore.models;
+        this.debounceReadDataFromServer = debounce(this.readDataFromServer.bind(this), 300);
         this.inSync = false;
         this.nextSync = null;
 
@@ -85,7 +87,7 @@ export default class DevicesSynchronisation {
             this.processDeletedRecords(deleted_record_ids);
         }
 
-        return await this.readDataFromServer();
+        return this.debounceReadDataFromServer();
     }
 
     /**
