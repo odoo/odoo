@@ -739,6 +739,7 @@ export async function toInline($editable, options) {
         el.style.height = getComputedStyle(el).height;
     }
 
+    removeEmptyFonts(editable);
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     await svgToPng($editable);
@@ -840,6 +841,18 @@ function flattenBackgroundImages(editable) {
             // contain an image in the form of a long base64 string.
             backgroundImage.removeAttribute('data-bg-src');
         }
+    }
+}
+/**
+ * Remove the empty font elements the editor can leave behind (e.g. after
+ * applying a color then retyping the text). They are invisible in the editor
+ * but they have a size in email clients, where their background color shows.
+ *
+ * @param {Element} editable
+ */
+function removeEmptyFonts(editable) {
+    for (const font of editable.querySelectorAll('font:empty')) {
+        font.remove();
     }
 }
 /**
@@ -1965,6 +1978,7 @@ export default {
     listGroupToTable: listGroupToTable,
     normalizeColors: normalizeColors,
     normalizeRem: normalizeRem,
+    removeEmptyFonts: removeEmptyFonts,
     toInline: toInline,
     createMso: _createMso,
     splitSelectors: splitSelectors,
