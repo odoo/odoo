@@ -134,6 +134,8 @@ class Home(Controller):
             try:
                 credential = {key: value for key, value in request.params.items() if key in CREDENTIAL_PARAMS and value}
                 credential.setdefault('type', 'password')
+                if 'login' in credential:
+                    credential['login'] = credential['login'].strip()
                 if request.env['res.users']._should_captcha_login(credential):
                     request.env['ir.http']._verify_request_recaptcha_token('login')
                 auth_info = authenticate(request.session, request.env, credential)
