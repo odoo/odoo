@@ -58,8 +58,7 @@ class TestSaleStockLeadTime(TestSaleStockCommon, ValuationReconciliationTestComm
         warehouse = self.warehouse_3_steps_pull
 
         # Set delay on pull rule
-        for pull_rule in warehouse.delivery_route_id.rule_ids:
-            pull_rule.write({'delay': 2})
+        warehouse.delivery_route_id.rule_ids.write({'delay': 2})
 
         # Create sale order of product_1
         order = self.env['sale.order'].create({
