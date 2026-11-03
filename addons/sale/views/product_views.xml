@@ -137,7 +137,7 @@
         <field name="res_model">product.template</field>
         <field name="path">products</field>
         <field name="view_ids" eval="[Command.clear(),
-            Command.create({'view_mode': 'kanban'}),
+            Command.create({'view_mode': 'kanban', 'view_id': ref('account.product_template_kanban_view_sellable_inherit')}),
             Command.create({'view_mode': 'list', 'view_id': ref('account.product_template_list_view_sellable_inherit')}),
             Command.create({'view_mode': 'form'}),
             Command.create({'view_mode': 'activity'})]"/>
