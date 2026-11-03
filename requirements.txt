@@ -24,7 +24,7 @@ lxml==5.4.0; python_version >= '3.13' and python_version < '3.14'  # (Trixie)
 lxml==6.0.2; python_version >= '3.14'  # (Resolute)
 lxml-html-clean; python_version >= '3.12' # (Noble - removed from lxml, unpinned for futur security patches)
 MarkupSafe==2.1.5 ; python_version >= '3.12'  # (Noble) Mostly to have a wheel package
-num2words==0.5.13 ; python_version >= '3.12' 
+num2words==0.5.13 ; python_version >= '3.12'
 ofxparse==0.21
 openpyxl==3.1.2 ; python_version >= '3.12'
 passlib==1.7.4 # min version = 1.7.2 (Focal with security backports)
@@ -33,8 +33,9 @@ Pillow==11.1.0 ; python_version >= '3.13' and python_version < '3.14'  # (Trixie
 Pillow==12.1.1 ; python_version >= '3.14'  # (Resolute)
 polib==1.1.1
 psutil==5.9.8 ; python_version >= '3.12' # (Noble) Mostly to have a wheel package
-psycopg2==2.9.9 ; python_version >= '3.12' and python_version < '3.13' # (Noble)
-psycopg2==2.9.10 ; python_version >= '3.13' # (Trixie)
+psycopg2==2.9.9;         python_version >= '3.12' and python_version < '3.13' and sys_platform != 'win32' # (Noble)
+psycopg2==2.9.10;        python_version >= '3.13'                             and sys_platform != 'win32' # (Trixie)
+psycopg2-binary==2.9.12; python_version >= '3.12'                             and sys_platform == 'win32'
 pyopenssl==24.1.0 ; python_version >= '3.12' # (Noble) min 23.2.0, pinned for compatibility with cryptography==42.0.8 and security patches
 PyPDF2==2.12.1 ; python_version < '3.13' # (Noble and below)
 PyPDF==5.4.0 ; python_version >= '3.13' # (Trixie)
@@ -47,10 +48,10 @@ python-stdnum==1.19 ; python_version >= '3.11' and python_version < '3.14'
 python-stdnum==2.2 ; python_version >= '3.14'  # (Resolute)
 pyusb==1.2.1
 qrcode==7.4.2 ; python_version >= '3.11'
-reportlab==4.1.0 ; python_version >= '3.12' # (Noble) Mostly to have a wheel package
+reportlab==4.1.0 ; python_version >= '3.12' and sys_platform != 'win32' # (Noble) Mostly to have a wheel package
+reportlab==5.0.0 ; python_version >= '3.12' and sys_platform == 'win32' #
 requests==2.31.0 ; python_version >= '3.11' # (Noble)
 rjsmin==1.2.0 ; python_version >= '3.11'
-rl-renderPM==4.0.3 ; sys_platform == 'win32' and python_version >= '3.12'  # Needed by reportlab 4.1.0 but included in deb package
 tzdata; sys_platform == 'win32'  # no version pinning to keep it updated, assume *nix have tzdata (it's a dep of python on debian, fedora, and arch)
 urllib3==2.0.7  ; python_version >= '3.12'  # (Noble) Compatibility with cryptography
 vobject==0.9.6.1 ; python_version < '3.14'
