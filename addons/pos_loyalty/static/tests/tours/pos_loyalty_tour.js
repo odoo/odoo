@@ -8,7 +8,6 @@ import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_li
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
-import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
 import { registry } from "@web/core/registry";
 import { scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
@@ -48,7 +47,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour1", {
             PosLoyalty.removeRewardLine("90% on the cheapest product"),
             PosLoyalty.orderTotalIs("45.90"),
             PosLoyalty.enterCode("invalid_code"),
-            Notification.has("invalid_code"),
+            Dialog.cancel({ title: "Enter Code" }),
             PosLoyalty.enterCode("1234"),
             PosLoyalty.finalizeOrder("Cash", "50"),
 

@@ -5,7 +5,6 @@ import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { deserializeDateTime, serializeDate } from "@web/core/l10n/dates";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { debounce } from "@bus/workers/bus_worker_utils";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
@@ -37,6 +36,7 @@ export class ManageGiftCardPopup extends Component {
             inputValue: this.props.startingValue,
             amountValue: this.props.line.prices.total_included.toString(),
             error: false,
+            errorMessage: false,
             amountError: false,
             expirationDate: luxon.DateTime.now().plus({ year: 1 }),
         });
@@ -59,27 +59,37 @@ export class ManageGiftCardPopup extends Component {
     }
 
     async checkGiftCard() {
+        this.state.errorMessage = "";
         if (this.pos.data.network.offline) {
             this.state.lockGiftCardFields = false;
             this.state.loading = false;
             return true;
         }
+        const code = this.state.inputValue.trim();
+        const duplicate = this.pos
+            .getOrder()
+            .getOrderlines()
+            .some(
+                (other) => other.id !== this.props.line.id && other.gift_card_vals?.code === code
+            );
+        if (duplicate) {
+            this.state.errorMessage = _t("A coupon/loyalty card must have a unique code.");
+            this.state.error = true;
+            this.state.loading = false;
+            return false;
+        }
+
         try {
-            const code = this.state.inputValue.trim();
             const result = await this.pos.data.call("loyalty.card", "get_card_status", [
                 code,
                 this.pos.config.id,
             ]);
 
             if (!result.status) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Invalid Gift Card Code"),
-                    body: _t(
-                        "The code is invalid. Ensure that the spelling is right or if the gift card exists."
-                    ),
-                });
+                this.state.errorMessage = _t(
+                    "The code is invalid. Ensure that the spelling is right or if the gift card exists."
+                );
                 this.state.error = true;
-                this.state.inputValue = "";
                 return false;
             }
 

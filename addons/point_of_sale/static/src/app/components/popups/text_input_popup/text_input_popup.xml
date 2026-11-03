@@ -3,6 +3,7 @@
 
     <t t-name="point_of_sale.TextInputPopup">
         <Dialog size="this.props.size" title="this.props.title" bodyClass="'py-0'">
+            <div t-if="this.state.errorMessage" t-out="this.state.errorMessage" class="alert alert-danger mb-1" role="alert" />
             <t t-foreach="this.props.buttons" t-as="button" t-key="button_index" id="buttons">
                 <button t-on-click="() => this.buttonClick(button)"
                     type="button"
@@ -11,7 +12,7 @@
                     <t t-out="button.label"/>
                 </button>
             </t>
-            <textarea t-att-rows="this.props.rows" class="form-control form-control-lg mx-auto" type="text" t-model.proxy="this.state.inputValue" t-ref="this.inputRef" t-att-placeholder="this.props.placeholder" t-on-keydown="this.onKeydown" t-on-paste="this.onPaste" />
+            <textarea t-att-rows="this.props.rows" class="form-control form-control-lg mx-auto" t-att-class="{'border border-danger': this.state.errorMessage}" type="text" t-model.proxy="this.state.inputValue" t-ref="this.inputRef" t-att-placeholder="this.props.placeholder" t-on-keydown="this.onKeydown" t-on-paste="this.onPaste" />
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-att-disabled="!this.state.inputValue.trim()" t-on-click="this.confirm">Apply</button>
                 <button class="btn btn-secondary" t-on-click="this.close">Discard</button>

@@ -12,22 +12,28 @@ export class TextInputPopup extends Component {
         placeholder: t.string().optional(""),
         rows: t.number().optional(1),
         removeNewLines: t.boolean().optional(),
+        inputValidationFunc: t.function().optional(),
         getPayload: t.function(),
         close: t.function(),
     });
 
     inputRef = signal.ref();
     setup() {
-        this.state = proxy({ inputValue: this.props.startingValue });
+        this.state = proxy({ inputValue: this.props.startingValue, errorMessage: "" });
         onMounted(this.onMounted);
     }
     onMounted() {
         this.inputRef()?.focus();
         this.inputRef()?.select();
     }
-    confirm() {
-        this.props.getPayload(this.state.inputValue);
-        this.props.close();
+    async confirm() {
+        if (this.props.inputValidationFunc) {
+            this.state.errorMessage = await this.props.inputValidationFunc(this.state.inputValue);
+        }
+        if (!this.state.errorMessage) {
+            this.props.getPayload(this.state.inputValue);
+            this.props.close();
+        }
     }
 
     close() {
@@ -47,6 +53,7 @@ export class TextInputPopup extends Component {
     }
 
     onKeydown(ev) {
+        this.state.errorMessage = "";
         if (this.props.rows === 1 && ev.key.toUpperCase() === "ENTER") {
             ev.preventDefault();
             if (this.state.inputValue.trim()) {

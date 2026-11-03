@@ -2,6 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_loyalty.ManageGiftCardPopup">
         <Dialog title="this.props.title" size="'md'">
+            <div t-if="this.state.errorMessage" t-out="this.state.errorMessage" class="alert alert-danger mb-1" role="alert" />
             <div class="position-relative">
                 <input id="code"
                     t-att-rows="this.props.rows"

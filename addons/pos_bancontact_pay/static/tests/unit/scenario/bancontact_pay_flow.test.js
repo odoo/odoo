@@ -382,7 +382,7 @@ test("bancontact_pay_failed_to_cancel_payment_error_422: the cancellation can be
     await Utils.clickCancelButton();
     expect(await Utils.dialogBody()).toInclude("The customer is currently completing the payment");
     // 'Force Cancel' is the dialog's cancel button.
-    await Utils.cancelDialog();
+    await Utils.cancelDialog("Force Cancel");
     expect(Utils.actionState()).toBe("retry");
     expect(order.payment_ids[0].bancontact_id).toBeEmpty();
 

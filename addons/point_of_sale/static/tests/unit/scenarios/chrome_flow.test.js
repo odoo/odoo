@@ -62,7 +62,7 @@ test("FloatingOrderTour: floating orders preserve product quantities", async () 
     await press("9");
     await animationFrame();
     await advanceTime(200);
-    await Utils.cancelDialog();
+    await Utils.closeDialog();
     await waitFor(".product-screen");
     expect(order2.lines[0].qty).toBe(2);
     const numberBuffer = getService(PosNumberBufferPlugin);
