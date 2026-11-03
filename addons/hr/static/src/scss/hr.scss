@@ -25,6 +25,15 @@
     }
 }
 
+.o_hr_employee_kanban_view {
+    .o_card_record {
+        .o_record_main {
+            margin-left: var(--Card-padding-h);
+        }
+    }
+
+}
+
 .hr_tags {
     margin-right: 20%;
 }
@@ -101,31 +110,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-
-    .o_field_hr_presence_status, .o_field_hr_presence_status_private {
-        --o-hr-presence-badge-size: var(--o-bs-spacer);
-
-        position: absolute;
-        top: 0;
-        left: auto;
-        bottom: auto;
-        right: 0;
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transform: translate(50%, -50%);
-        width: var(--o-hr-presence-badge-size);
-        height: var(--o-hr-presence-badge-size);
-        border-radius: 50%;
-        background-color: var(--o-view-background-color);
-
-        span {
-            width: var(--o-hr-presence-badge-size);
-            height: var(--o-hr-presence-badge-size);
-            line-height: var(--o-hr-presence-badge-size);
-        }
-    }
 }
 
 .o_hr_skill_type_form {
