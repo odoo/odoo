@@ -1,5 +1,6 @@
 import { Domain } from "@web/core/domain";
 import { logPosMessage } from "./pretty_console_log";
+import { debounce } from "@web/core/utils/timing";
 
 const CONSOLE_COLOR = "#b56be3";
 /**
@@ -23,6 +24,7 @@ export default class DevicesSynchronisation {
         this.staticModels = new Set(staticModels);
         this.pos = posStore;
         this.models = posStore.models;
+        this.debounceReadDataFromServer = debounce(this.readDataFromServer.bind(this), 300);
 
         // Connect websocket to receive synchronisation notification
         this.pos.data.connectWebSocket("SYNCHRONISATION", this.collect.bind(this));
@@ -81,7 +83,7 @@ export default class DevicesSynchronisation {
             this.processStaticRecords(static_records);
         }
 
-        return await this.readDataFromServer();
+        return this.debounceReadDataFromServer();
     }
 
     /**
