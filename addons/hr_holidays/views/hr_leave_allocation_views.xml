@@ -317,7 +317,7 @@
                 </header>
                 <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_employee" readonly="state in ['refuse', 'validate']"/>
                 <field name="department_id" optional="hide" readonly="state not in ['confirm']"/>
-                <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']"/>
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']" options="{'no_open': true}"/>
                 <field name="name" string="Title" optional="hide"/>
                 <field name="duration_display" string="Amount"/>
                 <field name="date_from" string="Validity Start" optional="hide"/>
@@ -440,7 +440,7 @@
                                             </div>
                                             <div class="col-2 o_hr_holidays_name">
                                                 <div class="o_hr_holidays_card">
-                                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold me-1"/>
+                                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold me-1" options="{'no_open': true}"/>
                                                     <div class="text-muted" t-if="record.accrual_plan_id.raw_value">
                                                         <field name="accrual_plan_id"/>
                                                     </div>
@@ -492,7 +492,7 @@
                             <main class="d-flex flex-column lh-sm">
                                 <field class="fw-bold" name="employee_id"/>
                                 <div class="content d-flex flex-column">
-                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="text-muted"/>
+                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="text-muted" options="{'no_open': true}"/>
                                     <div class="text-muted">(<field name="duration_display"/>)</div>
                                 </div>
                             </main>
