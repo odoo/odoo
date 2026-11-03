@@ -335,7 +335,7 @@ class Users(models.Model):
         for model_name, activities_by_record in activities_by_record_by_model_name.items():
             res_ids = [r.id for r in activities_by_record]
             Model = self.env[model_name].with_context(**self.env.context)
-            has_model_access_right = self.env[model_name].has_access('read')
+            has_model_access_right = self.env[model_name].has_access('read') and self.env[model_name]._has_model_formview_access()
             # also filters out non existing records (db cascade)
             existing = Model.browse(res_ids).exists()
             if has_model_access_right:

@@ -599,7 +599,8 @@ class MailActivity(models.Model):
         """ Opens the related record based on the model and ID, or activity if user has no
          access to the related record."""
         self.ensure_one()
-        if not self.env[self.res_model].browse(self.res_id).has_access('read'):
+        if not (self.env[self.res_model].browse(self.res_id).has_access('read')
+                and self.env[self.res_model]._has_model_formview_access()):
             return {
                 'res_id': self.id,
                 'res_model': 'mail.activity',
