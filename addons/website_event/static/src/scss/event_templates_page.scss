@@ -36,7 +36,7 @@
     /* Custom utility classes to be applied on day numbers and to
        be used in conjunction with `small` side-content. */
     .o_wevent_day_header_number {
-        font-size: 2em + ($line-height-base - 1);
+        font-size: calc(2em + (var(--body-line-height) - 1) * 1em);
     }
 
     .o_wevent_add_to_ical i {
