@@ -28,6 +28,24 @@ generic.RectangleObject.getHeight = lambda self: self.height
 
 
 class PdfReader(_Reader):
+    def cache_indirect_object(self, generation, idnum, obj):
+        if isinstance(obj, generic.IndirectObject):
+            if self.strict:
+                raise errors.PdfReadError(f"Object {idnum} {generation} is an indirect reference.")
+            self.resolved_objects[generation, idnum] = obj
+            return obj
+        return super().cache_indirect_object(generation, idnum, obj)
+
+    def get_object(self, indirect_reference):
+        obj = super().get_object(indirect_reference)
+        seen = set()
+        while isinstance(obj, generic.IndirectObject) and obj.pdf is self:
+            if (obj.idnum, obj.generation) in seen or len(seen) >= 10:
+                return generic.NullObject()  # reference loop
+            seen.add((obj.idnum, obj.generation))
+            obj = super().get_object(obj)
+        return obj
+
     @property
     def isEncrypted(self):
         return self.is_encrypted
