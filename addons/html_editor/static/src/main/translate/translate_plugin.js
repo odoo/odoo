@@ -93,10 +93,10 @@ export class TranslatePlugin extends Plugin {
         dialogParams.baseContainer = this.dependencies.baseContainer.getDefaultNodeName();
         // collapse to end
         const sanitize = this.dependencies.sanitize.sanitize;
-        const originalText = selection.toString() || "";
+        const fragment = selection.cloneContents();
         this.dependencies.dialog.addDialog(TranslateDialog, {
             ...dialogParams,
-            originalText,
+            fragment,
             sanitize,
             document: this.document,
         });
