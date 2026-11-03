@@ -600,9 +600,8 @@ class PdpFlow(models.Model):
             ('company_id', '=', company.id),
             ('state', '=', 'ready'),
             '|',
-            ('initial_flow_id', '!=', None),
-            ('due_period_start', '>=', today),
-            ('due_period_end', '<=', today),
+            ('initial_flow_id', '!=', False),
+            ('due_period_start', '<=', today),
         ])
         for flow in sudo_ready_flows:
             try:
