@@ -3,7 +3,7 @@ import { Spreadsheet, Model, stores, owlPlugins } from "@odoo/o-spreadsheet";
 import { Component, t, useProps, providePlugins } from "@odoo/owl";
 
 const { useStoreProvider, useStore, ViewportsStore, ModelStore } = stores;
-const { ModelPlugin, ZoomPlugin } = owlPlugins;
+const { ModelPlugin, ZoomPlugin, RendererPlugin } = owlPlugins;
 
 /**
  * Component wrapping the <Spreadsheet> component from o-spreadsheet
@@ -23,7 +23,7 @@ export class SpreadsheetComponent extends Component {
     }
     setup() {
         useSpreadsheetNotificationPlugin();
-        providePlugins([ModelPlugin], { model: this.model });
+        providePlugins([ModelPlugin, RendererPlugin], { model: this.model });
 
         if (this.props.registerStoreProvider) {
             providePlugins([ZoomPlugin]);
