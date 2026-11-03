@@ -6,7 +6,7 @@ from random import randint
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_compare
+from odoo.tools import OrderedSet, float_compare
 from odoo.tools.misc import format_date, unique
 
 MAP_REPAIR_TO_PICKING_LOCATIONS = {
@@ -412,7 +412,7 @@ class RepairOrder(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        moves_to_reassign = self.env['stock.move']
+        repair_ids_to_reassign = OrderedSet()
         if vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
             for repair in self:
@@ -420,7 +420,7 @@ class RepairOrder(models.Model):
                     continue
                 if picking_type != repair.picking_type_id:
                     repair.name = picking_type.sequence_id.next_by_id()
-                    moves_to_reassign |= repair.move_ids
+                    repair_ids_to_reassign.add(repair.id)
         res = super().write(vals)
         if 'product_id' in vals and self.tracking == 'serial':
             self.write({'product_qty': 1.0})
@@ -433,7 +433,12 @@ class RepairOrder(models.Model):
                 (repair.move_id + repair.move_ids).filtered(lambda m: m.state not in ('done', 'cancel')).write({'date': repair.schedule_date})
             if 'under_warranty' in vals:
                 repair._update_sale_order_line_price()
+<<<<<<< 80e7b5bfdf433e71bd9924000197709a28c86c59
                 repair._update_invoice_line_price()
+||||||| ae8dedf7aab998740f9f13dfdaa2cad69e378cc5
+=======
+        moves_to_reassign = self.browse(repair_ids_to_reassign).move_ids
+>>>>>>> 2f28c614f1bed9784acff5379cd586aaf10db60f
         if moves_to_reassign:
             moves_to_reassign._do_unreserve()
             moves_to_reassign = moves_to_reassign._filtered_for_assign()
