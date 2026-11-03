@@ -134,12 +134,11 @@ export const saleProductMixin = () => ({
                         product_id: { id: data.product_id, display_name: data.product_name },
                     });
                     this._openComboConfigurator({edit: false, data: data});
+                } 
+                else if (data.mode === 'matrix' && this._useGridConfigurator()) {
+                    this._openGridConfigurator(true);
                 } else if (data.has_optional_products) {
-                    if (data.mode === 'matrix' && this._useGridConfigurator()) {
-                        this._openGridConfigurator();
-                    } else {
-                        this._openProductConfigurator({ data: data });
-                    }
+                    this._openProductConfigurator({ data: data });
                 } else {
                     await this.props.record.update({
                         product_id: { id: data.product_id, display_name: data.product_name },

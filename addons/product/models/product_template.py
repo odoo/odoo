@@ -963,23 +963,21 @@ class ProductTemplate(models.Model):
                 code_prefix = f'[{template.default_code}] '
                 template.display_name = f'{code_prefix}{template.name}'
 
-    @api.model
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
         if self.env.context.get('search_product_product', bool(value)):
             if operator in Domain.NEGATIVE_OPERATORS:
-                domain = Domain.AND([domain, [('product_variant_ids', operator, value)]])
+                domain = Domain.AND([
+                    domain,
+                    [('product_variant_ids', operator, value)]
+                ])
             else:
-                barcode_values = list(value) if operator == 'in' else [value]
-                query = SQL(
-                    """((%s) UNION ALL (%s) UNION ALL (
-                        SELECT id FROM product_template WHERE barcode = ANY(%s)
-                    ))""",
-                    self._search(domain).select(),
-                    self._search([("product_variant_ids", operator, value)]).select(),
-                    barcode_values,
-                )
-                domain = [('id', 'in', query)]
+                barcode_operator = 'in' if operator == 'in' else '='
+                domain = Domain.OR([
+                    domain,
+                    [('product_variant_ids', operator, value)],
+                    [('barcode', barcode_operator, value)],
+                ])
         return domain
 
     @api.model
