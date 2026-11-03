@@ -98,7 +98,9 @@ class PaymentProvider(models.Model):
         if self.code != 'toss_payments':
             return super()._build_request_headers(method, endpoint, payload, **kwargs)
 
-        return {'Idempotency-Key': f'{payload.get("orderId")}:{payload.get("paymentKey")}'}
+        if method == 'POST':
+            return {'Idempotency-Key': f'{payload.get("orderId")}:{payload.get("paymentKey")}'}
+        return {}
 
     def _build_request_auth(self, **kwargs):
         """Override of `payment` to build the request Auth."""

@@ -49,3 +49,12 @@ class TestPaymentTransaction(TossPaymentsCommon):
         tx = self._create_transaction('direct')
         tx._apply_updates(self.payment_result_data)
         self.assertEqual(tx.state, 'done')
+
+    def test_apply_updates_leaves_incomplete_payment_in_draft(self):
+        """Test that the transaction state is not updated when the payment data indicate a
+        payment that is not confirmed nor expired yet."""
+        tx = self._create_transaction('direct')
+        for status in ('READY', 'IN_PROGRESS'):
+            with self.subTest(status=status):
+                tx._apply_updates(dict(self.payment_result_data, status=status))
+                self.assertEqual(tx.state, 'draft')

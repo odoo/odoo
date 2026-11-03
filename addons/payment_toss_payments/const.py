@@ -27,6 +27,7 @@ PAYMENT_METHODS_MAPPING = {'card': 'CARD', 'bank_transfer': 'TRANSFER', 'mobile'
 PAYMENT_STATUS_MAPPING = {'done': 'DONE', 'canceled': 'EXPIRED', 'error': 'ABORTED'}
 
 # Event statuses to skip secret key verification
+# No longer used; will be dropped in master.
 VERIFICATION_EXEMPT_STATUSES = {'EXPIRED', 'ABORTED'}
 
 # Events that are handled by the webhook.
