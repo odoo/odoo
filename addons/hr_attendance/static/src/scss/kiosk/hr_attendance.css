@@ -32,7 +32,7 @@
 .o_hr_attendance_kiosk_company_image {
     max-height: 10vh;
     @media (min-width: 576px) {
-        max-height: 7 vh;
+        max-height: 7vh;
     }
 }
 
@@ -93,12 +93,10 @@
 }
 /* Shared with web client and login screen */
 .o_attendance_background{
-    background: {
-        size: cover;
-        attachment: fixed;
-        color: var(--homeMenu-bg-color, var(--o-gray-200));
-        image: var(--homeMenu-bg-image, url("/hr_attendance/static/img/background-light.svg"));
-    }
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: var(--homeMenu-bg-color, var(--o-gray-200));
+    background-image: var(--homeMenu-bg-image, url("/hr_attendance/static/img/background-light.svg"));
 }
 
 .o_hr_attendance_kiosk_body {
