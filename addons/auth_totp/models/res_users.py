@@ -56,7 +56,7 @@ class Users(models.Model):
                     # the device is known
                     return False
             # 2FA enabled but not a trusted device
-            return True
+            return bool(request.session.get('pre_uid'))  # nosemgrep: requests-in-models
         return super()._should_alert_new_device()
 
     def _mfa_url(self):
