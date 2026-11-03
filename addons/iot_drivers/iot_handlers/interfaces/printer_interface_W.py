@@ -18,7 +18,7 @@ class PrinterInterface(Interface):
     def get_devices(self):
         printer_devices = {}
         with win32print_lock:
-            printers = win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL)
+            printers = win32print.EnumPrinters(win32print.PRINTER_ENUM_LOCAL | win32print.PRINTER_ENUM_CONNECTIONS)
 
             for printer in printers:
                 identifier = printer[2]
