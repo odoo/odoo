@@ -1,9 +1,31 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useComponent, useState, status } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useAutoFocusToLast } from "@point_of_sale/app/hooks/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+
+function useDelayedFocus(inputRef) {
+    const component = useComponent();
+    onMounted(async () => {
+        const input = inputRef.el;
+        const dialogContent = input.closest(".modal-content");
+        // The click toggles the dropdown: don't open it automatically if the
+        // user already interacted with the input during the animation.
+        let interacted = false;
+        const onInteraction = () => (interacted = true);
+        input.addEventListener("pointerdown", onInteraction);
+        input.addEventListener("keydown", onInteraction);
+        await Promise.allSettled(
+            dialogContent.getAnimations().map((animation) => animation.finished)
+        );
+        input.removeEventListener("pointerdown", onInteraction);
+        input.removeEventListener("keydown", onInteraction);
+        if (status(component) !== "destroyed" && !interacted) {
+            input.click();
+        }
+    });
+}
 
 export class SelectLotPopup extends Component {
     static template = "point_of_sale.SelectLotPopup";
@@ -35,9 +57,7 @@ export class SelectLotPopup extends Component {
         useAutoFocusToLast();
         this.notification = useService("notification");
         this.inputRef = useChildRef();
-        onMounted(() => {
-            this.inputRef.el.click();
-        });
+        useDelayedFocus(this.inputRef);
     }
     _nextId() {
         return this._id++;
