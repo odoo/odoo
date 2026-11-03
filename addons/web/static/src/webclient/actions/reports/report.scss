@@ -45,7 +45,24 @@ body {
 
 .o_body_html {
     .header {
-        min-height: 52mm + $o-default-report-margins;
+        min-height: 40 * $o-report-printed-mm;
+        max-height: 40 * $o-report-printed-mm;
+
+        @each $margin-top in 44, 48 {
+            &[data-report-margin-top="#{$margin-top}"] {
+                min-height: $margin-top * $o-report-printed-mm;
+                max-height: $margin-top * $o-report-printed-mm;
+            }
+        }
+
+        ~ .footer {
+            height: 22 * $o-report-printed-mm;
+            overflow: hidden;
+        }
+
+        &[data-report-margin-bottom="23"] ~ .footer {
+            height: 23 * $o-report-printed-mm;
+        }
     }
 
     .o_footer_content {
