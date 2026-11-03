@@ -1058,10 +1058,14 @@ export function isElementOverlappingAnyFloatingImage(element) {
     const elRect = element.getBoundingClientRect();
     const document = element.ownerDocument;
 
-    const images = document.querySelectorAll("img.float-start");
-    for (const img of images) {
-        const imgRect = img.getBoundingClientRect();
-        if (isOverlapping(imgRect, elRect)) {
+    // A wrapped image with a caption also floats its figure, which covers the caption.
+    const floatingElements = document.querySelectorAll("img.float-start, figure.float-start");
+    for (const floatingElement of floatingElements) {
+        if (floatingElement.contains(element)) {
+            continue;
+        }
+        const floatingElementRect = floatingElement.getBoundingClientRect();
+        if (isOverlapping(floatingElementRect, elRect)) {
             return true; // Overlaps at least one
         }
     }

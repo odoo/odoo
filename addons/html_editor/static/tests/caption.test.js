@@ -1458,6 +1458,34 @@ test("should toggle caption on an image with display:block (add and remove capti
     );
 });
 
+test("figure should follow the wrap and size of its captioned image", async () => {
+    await setupEditorWithEmbeddedCaption(`
+        <figure>
+            <img class="img-fluid test-image" src="${base64Img}">
+            <figcaption>Hello</figcaption>
+        </figure>
+    `);
+    await click("img");
+    await waitFor(".o-we-toolbar");
+    await click(".o-we-toolbar button[title='Set image alignment']");
+    await animationFrame();
+    await click(".o-we-toolbar-dropdown .btn[title='Wrap text']");
+    await animationFrame();
+    expect("figure").toHaveClass("float-start");
+
+    await click(".o-we-toolbar [name='image_size'] .dropdown-toggle");
+    await animationFrame();
+    await click(".image_size_selector .dropdown-item:contains('50%')");
+    expect(queryOne("figure").style.width).toBe("50%");
+
+    await click(".o-we-toolbar button[title='Set image alignment']");
+    await animationFrame();
+    await click(".o-we-toolbar-dropdown .btn[title='Inline']");
+    await animationFrame();
+    expect("figure").not.toHaveClass("float-start");
+    expect(queryOne("figure").style.width).toBe("");
+});
+
 test.tags("focus required");
 test("should select whole editable on 'ctrl+a' when image with caption is selected", async () => {
     const captionId = 1;
