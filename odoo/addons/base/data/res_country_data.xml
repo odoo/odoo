@@ -683,6 +683,7 @@
             <field name="currency_id" ref="HUF" />
             <field eval="36" name="phone_code" />
             <field name="vat_label">VAT</field>
+            <field eval="'%(zip)s %(city)s, %(street)s\n%(street2)s\n%(country_name)s'" name="address_format" />
         </record>
         <record id="id" model="res.country">
             <field name="name">Indonesia</field>

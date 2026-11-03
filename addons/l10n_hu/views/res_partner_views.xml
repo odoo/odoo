@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hu_partner_address_form" model="ir.ui.view">
+        <field name="name">hu.partner.form.address</field>
+        <field name="model">res.partner</field>
+        <field name="priority" eval="900"/>
+        <field name="arch" type="xml">
+            <form>
+                <div class="o_address_format">
+                    <field name="zip" placeholder="Zip" class="o_address_zip"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="city_id" placeholder="City" class="o_address_city"
+                           domain="[('country_id', '=', country_id)]"
+                           invisible="not country_enforce_cities"
+                           context="{'default_country_id': country_id, 'default_zipcode': zip}"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="city" placeholder="City" class="o_address_city"
+                           invisible="country_enforce_cities and (city_id or city in ('', False))"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="street" placeholder="Street" class="o_address_street"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="street2" placeholder="Street 2..." class="o_address_street"
+                           readonly="type == 'contact' and parent_id"/>
+                    <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                           readonly="type == 'contact' and parent_id"/>
+                </div>
+            </form>
+        </field>
+    </record>
+</odoo>
