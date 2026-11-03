@@ -6,7 +6,7 @@
         primaryTitle.translate="Create"
         primaryClick="() => this.addPage()"
         close="props.close">
-        <div class="row gy-4">
+        <div class="row gy-4" t-if="!!state.sectionsArch">
             <label class="col-form-label col-md-3">
                 Page Title
             </label>
