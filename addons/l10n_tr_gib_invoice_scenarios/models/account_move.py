@@ -54,6 +54,9 @@ class AccountMove(models.Model):
         copy=False,
     )
 
+    def _l10n_tr_nilvera_get_sent(self):
+        return self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type in {"out_invoice", "in_invoice"} and move.l10n_tr_nilvera_send_status not in {"not_sent", "error", "commercial_rejected"})
+
     def _l10n_tr_nilvera_check_reset_to_draft(self):
         for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type in {"out_invoice", "in_invoice"}):
             if move.l10n_tr_nilvera_send_status == "error":

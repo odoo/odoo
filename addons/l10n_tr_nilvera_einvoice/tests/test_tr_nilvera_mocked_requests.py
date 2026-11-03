@@ -270,6 +270,21 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
             "The invoice status couldn't be retrieved from Nilvera.",
         )
 
+    def test_cancel_succeeded_invoice(self):
+        _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
+        invoice.l10n_tr_nilvera_send_status = "succeed"
+
+        self.assertFalse(invoice.show_reset_to_draft_button)
+        invoice.with_context(l10n_tr_nilvera_force_cancel=True).button_cancel()
+        self.assertEqual(invoice.state, "cancel")
+        self.assertFalse(invoice.show_reset_to_draft_button)
+
+    def test_sent_invoice_cannot_be_reset_to_draft(self):
+        _, invoice = self._generate_invoice_xml(self.einvoice_partner, include_invoice=True)
+        invoice.l10n_tr_nilvera_send_status = "succeed"
+        with self.assertRaisesRegex(UserError, "reset to draft an entry that has been sent"):
+            invoice.button_draft()
+
     @freeze_time('2025-03-05')
     @patch_nilvera_request
     def test_fetching_einvoices(self, mocked_request):
