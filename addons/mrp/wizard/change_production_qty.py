@@ -40,7 +40,11 @@ class ChangeProductionQty(models.TransientModel):
             qty = (new_qty - old_qty) * move.unit_factor
             modification[move] = (move.product_uom_qty + qty, move.product_uom_qty)
             if self._need_quantity_propagation(move, qty):
-                push_moves |= move.copy({'product_uom_qty': qty})
+                new_move = move.copy({'product_uom_qty': qty})
+                if not move.location_final_id:
+                    # moves created before location_final_id was set would not be merged with their copy
+                    move.location_final_id = new_move.location_final_id
+                push_moves |= new_move
             else:
                 move.write({'product_uom_qty': move.product_uom_qty + qty})
 

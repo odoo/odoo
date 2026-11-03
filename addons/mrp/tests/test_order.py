@@ -3294,6 +3294,27 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertFalse(mo.move_raw_ids.move_line_ids)
 
+    def test_qty_update_finished_move_without_final_location(self):
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+        mo.action_confirm()
+        finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == mo.product_id)
+        dest_move = self.env['stock.move'].create({
+            'name': 'Delivery',
+            'product_id': mo.product_id.id,
+            'product_uom_qty': mo.product_qty,
+            'product_uom': mo.product_uom_id.id,
+            'location_id': mo.location_dest_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        finished_move.write({'move_dest_ids': [Command.link(dest_move.id)], 'location_final_id': False})
+
+        self.env['change.production.qty'].create({'mo_id': mo.id, 'product_qty': mo.product_qty * 3}).change_prod_qty()
+        finished_moves = mo.move_finished_ids.filtered(lambda m: m.product_id == mo.product_id and m.state not in ('done', 'cancel'))
+        self.assertEqual(len(finished_moves), 1)
+        self.assertEqual(finished_moves.product_uom_qty, mo.product_qty)
+
     def test_source_and_child_mo(self):
         """
         Suppose three manufactured products A, B and C. C is a component of B
