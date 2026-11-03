@@ -613,31 +613,6 @@ export class Store extends BaseStore {
     }
 
     /**
-     * Renders the links to known messages of this database with the name of their thread.
-     *
-     * @param {Iterable<HTMLAnchorElement>} linkEls
-     */
-    renderMessageLinks(linkEls) {
-        for (const linkEl of linkEls) {
-            if (!linkEl.getAttribute("href")?.startsWith(getOrigin())) {
-                continue;
-            }
-            const message = this["mail.message"].get(Number(linkEl.dataset.oeId));
-            const threadName = message?.thread?.displayName;
-            if (
-                !threadName ||
-                // up to date, as the composer renders its links on every update
-                (linkEl.classList.contains("o_message_redirect_transformed") &&
-                    linkEl.textContent.replaceAll("\uFEFF", "") === threadName)
-            ) {
-                continue;
-            }
-            linkEl.classList.add("o_message_redirect_transformed");
-            linkEl.replaceChildren(renderToElement("mail.Message.messageLink", { message }));
-        }
-    }
-
-    /**
      * Texts that mention the given partner in a message posted on the given thread.
      *
      * @param {import("models").ResPartner} partner
