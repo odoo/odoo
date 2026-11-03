@@ -1,6 +1,5 @@
-from odoo import fields
+from odoo import fields, Command
 from odoo.exceptions import UserError
-from odoo.tests import tagged
 
 from odoo.addons.website_forum.tests.common import KARMA, TestForumCommon
 
@@ -89,6 +88,61 @@ class TestForumPost(TestForumCommon):
         })
         with self.assertRaises(UserError):
             answer.parent_id = self.post
+
+    def test_validate_flagged_post_with_offensive_answer(self):
+        Post = self.env['forum.post']
+        self.forum.mode = 'questions'
+        # keep enough karma to answer after the offensive penalty
+        self.user_employee.karma = KARMA['ans'] - KARMA['gen_ans_flag']
+        self.user_portal.karma = KARMA['flag']
+        self.user_employee_2.karma = KARMA['moderate']
+
+        offensive_answer = Post.with_user(self.user_employee).create({
+            'name': "A0",
+            'forum_id': self.forum.id,
+            'parent_id': self.post.id,
+        })
+        offensive_answer.with_user(self.user_employee_2)._mark_as_offensive(
+            self.env.ref('website_forum.reason_8').id)
+        self.assertFalse(offensive_answer.active)
+
+        # The user can answer again since the offensive answer is archived
+        answer = Post.with_user(self.user_employee).create({
+            'name': "A1",
+            'forum_id': self.forum.id,
+            'parent_id': self.post.id,
+        })
+        answer.with_user(self.user_admin).is_correct = True
+
+        self.post.with_user(self.user_portal)._flag()
+        self.assertEqual(self.post.state, 'flagged')
+
+        # Marking the question as legitimate must not restore the offensive answer
+        self.post.with_user(self.user_employee_2).validate()
+        self.assertEqual(self.post.state, 'active')
+        self.assertTrue(answer.active)
+        self.assertFalse(offensive_answer.active)
+        self.assertEqual(offensive_answer.state, 'offensive')
+
+        offensive_question = Post.create({
+            'name': "Q1",
+            'forum_id': self.forum.id,
+            'child_ids': [Command.create({'name': "A2", 'forum_id': self.forum.id})]
+        })
+        offensive_question_answer = offensive_question.child_ids
+        offensive_question.with_user(self.user_employee_2)._mark_as_offensive(
+            self.env.ref('website_forum.reason_8').id)
+        self.assertFalse(offensive_question_answer.active)
+
+        # Unarchiving the forum must restore neither offensive posts nor the
+        # answers of offensive questions
+        self.forum.active = False
+        self.forum.active = True
+        self.assertTrue(self.post.active)
+        self.assertTrue(answer.active)
+        self.assertFalse(offensive_answer.active)
+        self.assertFalse(offensive_question.active)
+        self.assertFalse(offensive_question_answer.active)
 
     def test_add_seo_rels_to_new_posts_created_by_users(self):
         self.user_employee.karma = KARMA['post']
