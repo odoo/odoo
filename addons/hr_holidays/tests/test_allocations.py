@@ -252,6 +252,7 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(employee_allocation.number_of_days, 1.0)
 
     def test_allowed_change_allocation(self):
+        self.leave_type_paid.leave_validation_type = 'hr'
         allocation = self.env['hr.leave.allocation'].create({
             'name': 'Initial Allocation',
             'holiday_status_id': self.leave_type_paid.id,
@@ -274,6 +275,130 @@ class TestAllocations(TestHrHolidaysCommon):
 
         with self.assertRaises(ValidationError):
             allocation.write({'number_of_days_display': 2, 'number_of_days': 2})
+
+        pending_leave = self.env['hr.leave'].create({
+            'name': 'Pending Leave Request',
+            'holiday_status_id': self.leave_type_paid.id,
+            'request_date_from': date(2024, 1, 15),
+            'request_date_to': date(2024, 1, 19),
+            'employee_id': self.employee.id,
+        })
+        self.assertEqual(pending_leave.state, 'confirm', "The leave request should be pending approval.")
+        with self.assertRaises(ValidationError):
+            allocation.write({'number_of_days_display': 8, 'number_of_days': 8})
+
+    def test_change_allocation_date_to(self):
+        """ Test that an allocation end date cannot leave approved or pending requests uncovered. """
+        self.leave_type_paid.leave_validation_type = 'hr'
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Allocation',
+            'holiday_status_id': self.leave_type_paid.id,
+            'number_of_days': 20,
+            'employee_id': self.employee.id,
+            'date_from': date(2024, 1, 1),
+            'date_to': date(2024, 1, 30),
+        })
+        allocation.action_validate()
+
+        allocation.write({'date_to': date(2024, 1, 31)})
+        self.assertEqual(allocation.date_to, date(2024, 1, 31), "The allocation end date should be extended.")
+
+        leave_request = self.env['hr.leave'].create({
+            'name': 'Leave Request',
+            'holiday_status_id': self.leave_type_paid.id,
+            'request_date_from': date(2024, 1, 5),
+            'request_date_to': date(2024, 1, 10),
+            'employee_id': self.employee.id,
+        })
+        leave_request.action_approve()
+
+        allocation.write({'date_to': date(2024, 1, 10)})
+        self.assertEqual(
+            allocation.date_to, date(2024, 1, 10), "The allocation should end on the approved leave's last day.")
+
+        with self.assertRaises(ValidationError):
+            allocation.write({'date_to': date(2024, 1, 9)})
+        self.assertEqual(allocation.date_to, date(2024, 1, 10), "The invalid end date change should be rolled back.")
+
+        allocation.write({'date_to': date(2024, 1, 31)})
+        pending_leave = self.env['hr.leave'].create({
+            'name': 'Pending Leave Request',
+            'holiday_status_id': self.leave_type_paid.id,
+            'request_date_from': date(2024, 1, 12),
+            'request_date_to': date(2024, 1, 12),
+            'employee_id': self.employee.id,
+        })
+        self.assertEqual(pending_leave.state, 'confirm', "The leave request should be pending approval.")
+        with self.assertRaises(ValidationError):
+            allocation.write({'date_to': date(2024, 1, 11)})
+
+        self.env['hr.leave.allocation'].create({
+            'name': 'Covering Allocation',
+            'holiday_status_id': self.leave_type_paid.id,
+            'number_of_days': 20,
+            'employee_id': self.employee.id,
+            'date_from': date(2024, 1, 1),
+            'date_to': date(2024, 12, 31),
+        }).action_validate()
+        allocation.write({'date_to': date(2024, 1, 4)})
+        self.assertEqual(
+            allocation.date_to, date(2024, 1, 4),
+            "The allocation should be reducible when another allocation covers the leaves.")
+
+    @freeze_time('2024-01-05')
+    def test_change_accrual_allocation_date_to(self):
+        """ Test that an accrual allocation end date cannot leave approved or pending requests uncovered. """
+        self.leave_type_paid.leave_validation_type = 'hr'
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Daily Accrual Plan',
+            'accrued_gain_time': 'end',
+            'level_ids': [(0, 0, {
+                'added_value': 1,
+                'added_value_type': 'day',
+                'frequency': 'daily',
+            })],
+        })
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Accrual Allocation',
+            'holiday_status_id': self.leave_type_paid.id,
+            'number_of_days': 0,
+            'employee_id': self.employee_emp.id,
+            'date_from': date(2024, 1, 1),
+            'allocation_type': 'accrual',
+            'accrual_plan_id': accrual_plan.id,
+        })
+        allocation.action_validate()
+
+        allocation.write({'date_to': date(2024, 1, 20)})
+        self.assertEqual(allocation.date_to, date(2024, 1, 20), "The accrual allocation should accept an end date.")
+
+        leave_request = self.env['hr.leave'].create({
+            'name': 'Leave Request',
+            'holiday_status_id': self.leave_type_paid.id,
+            'request_date_from': date(2024, 1, 10),
+            'request_date_to': date(2024, 1, 10),
+            'employee_id': self.employee_emp.id,
+        })
+        leave_request.action_approve()
+
+        allocation.write({'date_to': date(2024, 1, 11)})
+        self.assertEqual(
+            allocation.date_to, date(2024, 1, 11),
+            "The allocation should retain enough accruals for the approved leave.")
+        with self.assertRaises(ValidationError):
+            allocation.write({'date_to': date(2024, 1, 8)})
+
+        allocation.write({'date_to': date(2024, 1, 20)})
+        pending_leave = self.env['hr.leave'].create({
+            'name': 'Pending Leave Request',
+            'holiday_status_id': self.leave_type_paid.id,
+            'request_date_from': date(2024, 1, 12),
+            'request_date_to': date(2024, 1, 12),
+            'employee_id': self.employee_emp.id,
+        })
+        self.assertEqual(pending_leave.state, 'confirm', "The leave request should be pending approval.")
+        with self.assertRaises(ValidationError):
+            allocation.write({'date_to': date(2024, 1, 11)})
 
     def test_disallowed_change_allocation_with_overlapping_allocations(self):
         # Creating the first allocation
