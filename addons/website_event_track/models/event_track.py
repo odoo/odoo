@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+from collections import defaultdict
 from datetime import timedelta, UTC
 from random import randint
 from textwrap import shorten
@@ -11,7 +12,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
-from odoo.fields import Domain
+from odoo.fields import Command, Domain
 from odoo.tools.mail import email_normalize, html_to_inner_content, is_html_empty
 from odoo.tools.translate import _, html_translate
 
@@ -40,8 +41,13 @@ class EventTrack(models.Model):
     _primary_email = 'contact_email'
 
     @api.model
-    def _get_default_stage_id(self):
-        return self.env['event.track.stage'].search([], limit=1).id
+    def _read_group_stage_ids(self, stages, domain):
+        """ Display the stages of the event in context, and the stages holding
+        tracks, instead of every stage of every event. """
+        search_domain = Domain('id', 'in', stages.ids)
+        if event_id := self.env.context.get('default_event_id'):
+            search_domain |= Domain('event_ids', 'in', [event_id])
+        return stages.search(search_domain, order=stages._order)
 
     # description
     name = fields.Char('Title', required=True, translate=True)
@@ -59,8 +65,9 @@ class EventTrack(models.Model):
     # management
     stage_id = fields.Many2one(
         'event.track.stage', string='Stage', ondelete='restrict',
-        index=True, copy=False, default=_get_default_stage_id,
-        group_expand='_read_group_expand_full',  # Always display all stages
+        compute='_compute_stage_id', precompute=True, readonly=False, store=True,
+        index=True, copy=False, domain="[('event_ids', 'in', event_id)]",
+        group_expand='_read_group_stage_ids',
         required=True, tracking=True)
     legend_blocked = fields.Char(related='stage_id.legend_blocked',
         string='Kanban Blocked Explanation', readonly=True)
@@ -183,6 +190,21 @@ class EventTrack(models.Model):
                 track.website_url = '/event/%s/track/%s' % (self.env['ir.http']._slug(track.event_id), self.env['ir.http']._slug(track))
 
     # STAGES
+
+    @api.depends('event_id')
+    def _compute_stage_id(self):
+        default_stage = None
+        for track in self:
+            if track.stage_id and track.stage_id in track.event_id.track_stage_ids:
+                continue
+            stage = track.event_id._get_default_track_stage() if track.event_id else False
+            if not stage:
+                # event without stages: fall back on the default ones, the
+                # stage is linked to the event at create / write
+                if default_stage is None:
+                    default_stage = self.env['event.event']._get_default_track_stages()[:1]
+                stage = default_stage
+            track.stage_id = stage
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
@@ -472,6 +494,7 @@ class EventTrack(models.Model):
                 **post_values,
             )
             track._synchronize_with_stage(track.stage_id)
+        tracks._set_stage_on_event_from_track()
 
         return tracks
 
@@ -484,7 +507,26 @@ class EventTrack(models.Model):
             stage = self.env['event.track.stage'].browse(vals['stage_id'])
             self._synchronize_with_stage(stage)
         res = super().write(vals)
+        if 'stage_id' in vals or 'event_id' in vals:
+            self._set_stage_on_event_from_track()
         return res
+
+    def _set_stage_on_event_from_track(self):
+        """ Link the stage of the tracks to their event when missing, e.g. when
+        a stage is given explicitly (import, data, RPC) instead of being chosen
+        among the event stages. """
+        stage_ids_per_event = {
+            event: (tracks.stage_id - event.track_stage_ids).ids
+            for event, tracks in self.filtered('stage_id').grouped('event_id').items()
+        }
+        event_ids_per_stage_ids = defaultdict(list)
+        for event, stage_ids in stage_ids_per_event.items():
+            if stage_ids:
+                event_ids_per_stage_ids[frozenset(stage_ids)].append(event.id)
+        for stage_ids, event_ids in event_ids_per_stage_ids.items():
+            self.env['event.event'].browse(event_ids).write({
+                'track_stage_ids': [Command.link(stage_id) for stage_id in stage_ids],
+            })
 
     def _synchronize_with_stage(self, stage):
         if stage.is_fully_accessible:

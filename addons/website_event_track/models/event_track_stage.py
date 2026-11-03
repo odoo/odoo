@@ -9,8 +9,21 @@ class EventTrackStage(models.Model):
     _description = 'Event Track Stage'
     _order = 'sequence, id'
 
+    def _get_default_event_ids(self):
+        default_event_id = self.env.context.get('default_event_id')
+        return [default_event_id] if default_event_id else None
+
     name = fields.Char(string='Stage Name', required=True, translate=True)
     sequence = fields.Integer(string='Sequence', default=1)
+    event_ids = fields.Many2many(
+        'event.event', 'event_track_stage_event_rel', 'stage_id', 'event_id',
+        string='Events', default=lambda self: self._get_default_event_ids(),
+        help="Events in which this stage is available for tracks. A stage can be shared "
+             "among several events following the same workflow.")
+    event_type_ids = fields.Many2many(
+        'event.type', 'event_track_stage_event_type_rel', 'stage_id', 'event_type_id',
+        string='Event Templates',
+        help="Events created from these templates get this stage by default.")
     mail_template_id = fields.Many2one(
         'mail.template', string='Email Template',
         domain=[('model', '=', 'event.track')],
@@ -46,3 +59,11 @@ class EventTrackStage(models.Model):
         for record in self:
             if record.is_cancel or not record.is_visible_in_agenda:
                 record.is_fully_accessible = False
+
+    @api.constrains('event_ids')
+    def _check_event_ids(self):
+        """ Writing this side of the relation does not trigger the constraint
+        on event.event: check the events having tracks in these stages. """
+        events = self.env['event.track'].with_context(active_test=False).search(
+            [('stage_id', 'in', self.ids)]).event_id
+        events._check_track_stage_ids()

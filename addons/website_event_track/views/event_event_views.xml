@@ -30,6 +30,9 @@
                     <label for="website_track_proposal" string="Allow Track Proposals" />
                 </span>
             </xpath>
+            <field name="tag_ids" position="after">
+                <field name="track_stage_ids" widget="many2many_tags" groups="base.group_no_one"/>
+            </field>
             <field name="badge_image" position="after">
                 <field name="location_display_background"/>
                 <field name="location_display_upcoming_track_count"/>
