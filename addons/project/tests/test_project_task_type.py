@@ -94,6 +94,7 @@ class TestProjectTaskTypeSecurity(TestProjectCommon):
     @mute_logger("odoo.models.unlink")
     def setUpClass(cls):
         super().setUpClass()
+        cls.project_goats.allowed_internal_user_ids |= cls.user_projectmanager
         (cls.stage_project, cls.stage_manager, cls.stage_user, cls.stage_employee, cls.stage_portal) = cls.env[
             "project.task.type"
         ].create(
