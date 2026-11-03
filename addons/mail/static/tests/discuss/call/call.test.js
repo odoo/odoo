@@ -36,7 +36,6 @@ import {
 } from "@mail/discuss/call/common/rtc_service";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
 import { Meeting } from "@mail/discuss/call/common/meeting";
-import { POLL_CLOSE_WINDOW_TIMEOUT } from "@mail/core/common/mail_popout_plugin";
 
 import {
     advanceTime,
@@ -1261,7 +1260,6 @@ test("Leaving the call with mic warning in PiP, then rejoining, generates no err
 test("Closing PiP natively with mic warning, leaving, then rejoining, generates no error", async () => {
     const { popoutWindow } = await startCallWithMicWarningInPip();
     popoutWindow.close(); // the browser's close button: skips closePip()
-    await advanceTime(POLL_CLOSE_WINDOW_TIMEOUT);
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Disconnect')");
     await waitForNone(".o-discuss-Call");
