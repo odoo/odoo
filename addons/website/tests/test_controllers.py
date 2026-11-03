@@ -292,3 +292,58 @@ class TestControllers(tests.HttpCase):
         res_login = self.url_open('/web/login')
         self.assertEqual(res_login.status_code, 200)
         self.assertNotIn('meta name="robots" content="noindex', res_login.text)
+
+    def test_update_broken_links_multi_lang(self):
+        website = self.env.ref('base.default_website')
+        langs = self.env['res.lang']
+        for code in ('fr_FR', 'nl_NL', 'de_DE'):
+            langs += self.env['res.lang']._activate_lang(code)
+        website.language_ids = self.env.ref('base.lang_en') + langs
+        website.default_lang_id = self.env.ref('base.lang_en')
+        view = self.env['ir.ui.view'].create({
+            'name': 'Broken Link Test View',
+            'type': 'qweb',
+            'website_id': website.id,
+            'arch_db': '<t t-name="test"><div><p>Hello <a href="/old">my link</a> world</p></div></t>',
+        })
+        view.update_field_translations('arch_db', {
+            'fr_FR': {'Hello': 'Bonjour', 'my link': 'mon lien', 'world': 'monde'},
+            'nl_NL': {'Hello': 'Hallo', 'my link': 'mijn link', 'world': 'wereld'},
+            'de_DE': {'Hello': 'Hallo', 'my link': 'mein Link', 'world': 'Welt'},
+        })
+
+        def update_broken_link(lang, new_link):
+            self.make_jsonrpc_request('/website/update_broken_links', {
+                'links': [{
+                    'oldLink': '/old',
+                    'newLink': new_link,
+                    'remove': False,
+                    'res_model': 'ir.ui.view',
+                    'res_id': view.id,
+                    'field': 'arch',
+                }],
+                'lang': lang,
+            })
+            self.env.invalidate_all()
+            return dict(view._get_stored_translations('arch_db'))
+
+        # delayed translations: other languages still show their old text
+        view.with_context(lang='en_US', delay_translations=True).arch_db = \
+            '<t t-name="test"><div><p>Hi <a href="/old">my link</a> world</p></div></t>'
+
+        self.authenticate('admin', 'admin')
+        # each language has its own link: fixing it in a language must neither
+        # touch nor delay a new translation for the other languages, but it
+        # fixes the delayed translation of that language
+        update_broken_link('fr_FR', '/new-fr')
+        update_broken_link('nl_NL', '/new-nl')
+        translations = update_broken_link('de_DE', '/new-de')
+        self.assertEqual(translations, {
+            'en_US': '<t t-name="test"><div><p>Hi <a href="/old">my link</a> world</p></div></t>',
+            'fr_FR': '<t t-name="test"><div><p>Bonjour <a href="/new-fr">mon lien</a> monde</p></div></t>',
+            '_fr_FR': '<t t-name="test"><div><p>Hi <a href="/new-fr">mon lien</a> monde</p></div></t>',
+            'nl_NL': '<t t-name="test"><div><p>Hallo <a href="/new-nl">mijn link</a> wereld</p></div></t>',
+            '_nl_NL': '<t t-name="test"><div><p>Hi <a href="/new-nl">mijn link</a> wereld</p></div></t>',
+            'de_DE': '<t t-name="test"><div><p>Hallo <a href="/new-de">mein Link</a> Welt</p></div></t>',
+            '_de_DE': '<t t-name="test"><div><p>Hi <a href="/new-de">mein Link</a> Welt</p></div></t>',
+        })

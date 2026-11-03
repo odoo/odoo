@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+from collections import defaultdict
 import colorsys
 import datetime
 import logging
@@ -1743,28 +1744,84 @@ class Website(Home):
     def _get_image_id(model, model_id, field, index):
         return f"{model}-{model_id}-{field}-{index}"
 
+    def _matches_link(self, href, old_link):
+        if not href or not old_link:
+            return False
+        return href == old_link or href.rstrip('/') == old_link.rstrip('/')
+
+    def _modify_tree_links(self, tree, links):
+        modified = False
+        for a in tree.xpath('.//a'):
+            href = a.get('href')
+            if not href:
+                continue
+            for link in links:
+                if self._matches_link(href, link['oldLink']):
+                    if link.get('remove'):
+                        a.drop_tag()
+                    else:
+                        a.set('href', markup_escape(link['newLink']))
+                    modified = True
+                    break
+        return modified
+
+    def _modify_html_links(self, value, links):
+        tree = html.fromstring(str(value))
+        if self._modify_tree_links(tree, links):
+            return html.tostring(tree, encoding='unicode', method='html')
+        return None
+
+    def _modify_record_html(self, record, field_name, links):
+        field = record._fields[field_name]
+        if not callable(field.translate):
+            if new_html := self._modify_html_links(record[field_name], links):
+                record.write({field_name: new_html})
+            return
+
+        # Links may differ per language: writing the value in the current
+        # language would resynchronize the other languages from it (or store
+        # it as their delayed translation), so only the values of the current
+        # language are replaced in the stored translations.
+        translations = record._get_stored_translations(field_name)
+        if not translations:
+            return
+        lang = record.env.lang or 'en_US'
+        keys = [lang]
+        if dict.get(translations, f'_{lang}') is not None:
+            # also fix the delayed translation of the current language,
+            # otherwise the broken link comes back once it is validated
+            keys.append(f'_{lang}')
+        modified = False
+        for key in keys:
+            if new_html := self._modify_html_links(translations[key], links):
+                translations[key] = field.convert_to_cache(new_html, record)
+                modified = True
+        if modified:
+            record.write({field_name: translations})
+
     @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
-    def update_broken_links(self, links):
+    def update_broken_links(self, links, lang=None):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
+
+        website = self.env.website
+        default_lang = website.default_lang_id.code
+        valid_lang_codes = website.language_ids.mapped('code')
+        current_lang = lang if lang in valid_lang_codes else default_lang
+
+        # Group links by (res_model, res_id, field)
+        links_by_record = defaultdict(list)
         for link in links:
-            record = request.env[link['res_model']].browse(link['res_id'])
-            if not record.has_access('write'):
+            field_name = 'arch_db' if link.get('field') == 'arch' else (link.get('field') or 'arch_db')
+            links_by_record[link['res_model'], link['res_id'], field_name].append(link)
+
+        for (res_model, res_id, field_name), record_links in links_by_record.items():
+            record = request.env[res_model].browse(res_id)
+            if not record.exists() or not record.has_access('write'):
                 continue
-            link['field'] = 'arch_db' if link['field'] == 'arch' else link['field']
-            tree = html.fromstring(str(record[link['field']]))
-            modified = False
-            for element in tree.xpath('//a'):
-                href = element.get('href')
-                if href and (link['oldLink'] == href or link['oldLink'] == href + '/'):
-                    if link['remove']:
-                        element.drop_tag()
-                    else:
-                        element.set('href', markup_escape(link['newLink']))
-                    modified = True
-            if modified:
-                new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.with_context(delay_translations=self._get_delay_translations()).write({link['field']: new_html_content})
+            if not record._fields.get(field_name):
+                continue
+            self._modify_record_html(record.with_context(lang=current_lang), field_name, record_links)
 
     @http.route(['/website/get_seo_data'], type='jsonrpc', auth="user", website=True, readonly=True)
     def get_seo_data(self, res_id, res_model):
