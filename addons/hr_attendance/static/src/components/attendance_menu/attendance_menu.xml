@@ -7,7 +7,7 @@
                   beforeOpen.bind="this.beforeDropdownOpen"
                   menuClass="'p-0'"
                   state="this.dropdown">
-            <button>
+            <button t-ref="this.reminderButtonRef">
                 <i class="oi oi-filled"
                    data-icon="circle"
                    t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
