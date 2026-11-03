@@ -33,6 +33,24 @@
                         type="object"
                         groups="account.group_account_invoice"
                         invisible="not l10n_hu_edi_state"/>
+                <button string="Edit Details"
+                        name="l10n_hu_edi_action_edit_details"
+                        type="object"
+                        groups="account.group_account_manager"
+                        invisible="state != 'posted' or l10n_hu_edi_edit_mode or l10n_hu_edi_state in (False, 'rejected', 'cancelled')"/>
+                <button string="Done Editing"
+                        name="l10n_hu_edi_action_done_editing"
+                        type="object"
+                        class="btn-primary"
+                        groups="account.group_account_manager"
+                        invisible="not l10n_hu_edi_edit_mode"/>
+            </xpath>
+
+            <xpath expr="//field[@name='invoice_line_ids']" position="attributes">
+                <attribute name="readonly">state != 'draft' and not l10n_hu_edi_edit_mode</attribute>
+            </xpath>
+            <xpath expr="//page[@id='aml_tab']/field[@name='line_ids']" position="attributes">
+                <attribute name="readonly">state != 'draft' and not l10n_hu_edi_edit_mode</attribute>
             </xpath>
 
             <xpath expr="//sheet" position="before">
