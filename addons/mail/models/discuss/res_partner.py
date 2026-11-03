@@ -22,6 +22,8 @@ class ResPartner(models.Model):
     is_in_call = fields.Boolean(compute="_compute_is_in_call", groups="base.group_system")
     rtc_session_ids = fields.One2many("discuss.channel.rtc.session", "partner_id")
 
+    _internal_active_idx = models.Index("(active) WHERE partner_share IS NOT TRUE")
+
     @api.depends("rtc_session_ids")
     def _compute_is_in_call(self):
         for partner in self:
@@ -119,7 +121,9 @@ class ResPartner(models.Model):
             ],
         )
         if not with_portal_users:
-            domain &= Domain("user_ids.share", "=", False)
+            # Same as "user_ids.share = False" but the planner starts from res_partner_internal_active_idx
+            # instead of walking the partners by name.
+            domain &= Domain("partner_share", "=", False)
         if channel:
             domain &= Domain("channel_ids", "not in", channel.id)
             if channel.group_public_id:
