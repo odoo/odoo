@@ -561,3 +561,27 @@ class TestRegistryRLock(BaseCase):
         for i in range(5):
             self.assertEqual(lock.count, 5 - i)
             lock.release()
+
+
+@tagged('at_install', '-post_install')
+class TestForbidClassSetattr(TransactionCase):
+
+    @classmethod
+    def setrecord(cls, record='record'):
+        cls.record = 'record'
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.setrecord()
+
+    def test_cannot_set_class(self):
+        self.assertEqual(self.record, 'record')
+        self.record = 'new_ok'
+        self.assertEqual(self.record, 'new_ok')
+        self.assertEqual(type(self).record, 'record')
+
+        with self.assertRaises(Exception):
+            self.setrecord('new_ko')
+
+        self.assertEqual(type(self).record, 'record')

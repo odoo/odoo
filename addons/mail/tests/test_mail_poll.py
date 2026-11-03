@@ -162,7 +162,7 @@ class TestMailPoll(MailCommon, HttpCase):
 
     def test_notify_by_web_push_prepare_payload(self):
         self.authenticate(self.user_employee.login, self.user_employee.login)
-        with self.mock_datetime_and_now("2026-09-10 12:00:00"):
+        with self.mock_datetime_and_now("2026-09-10 12:00:00") as frozen_datetime_mock:
             poll_id = self.make_jsonrpc_request(
                 "/mail/poll/create",
                 {
@@ -196,7 +196,7 @@ class TestMailPoll(MailCommon, HttpCase):
                 },
             )
             no_winner_poll = self.env["mail.poll"].browse(no_winner_poll_id)
-            self.frozen_datetime_mock.tick(timedelta(minutes=10))
+            frozen_datetime_mock.tick(timedelta(minutes=10))
             self.env["mail.poll"]._end_expired_polls()
         payload = self.env["discuss.channel"]._notify_by_web_push_prepare_payload(
             poll.end_message_id,
