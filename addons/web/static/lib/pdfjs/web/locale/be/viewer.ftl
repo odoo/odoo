@@ -153,6 +153,28 @@ pdfjs-document-properties-linearized = Хуткі прагляд у Інтэрн
 pdfjs-document-properties-linearized-yes = Так
 pdfjs-document-properties-linearized-no = Не
 pdfjs-document-properties-close-button = Закрыць
+pdfjs-digital-signature-properties-view-certificate = Паказаць сертыфікат
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Прычына: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Адзнака часу: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] Дадатковы подпіс ({ $count })
+        [few] Дадатковыя подпісы ({ $count })
+       *[many] Дадатковыя подпісы ({ $count })
+    }
 
 ## Print
 
@@ -166,23 +188,6 @@ pdfjs-printing-not-ready = Увага: PDF не сцягнуты цалкам д
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Паказаць/схаваць бакавую панэль
-pdfjs-toggle-sidebar-notification-button =
-    .title = Паказаць/схаваць бакавую панэль (дакумент мае змест/укладанні/пласты)
-pdfjs-toggle-sidebar-button-label = Паказаць/схаваць бакавую панэль
-pdfjs-document-outline-button =
-    .title = Паказаць структуру дакумента (двайная пстрычка, каб разгарнуць /згарнуць усе элементы)
-pdfjs-document-outline-button-label = Структура дакумента
-pdfjs-attachments-button =
-    .title = Паказаць далучэнні
-pdfjs-attachments-button-label = Далучэнні
-pdfjs-layers-button =
-    .title = Паказаць пласты (націсніце двойчы, каб скінуць усе пласты да прадвызначанага стану)
-pdfjs-layers-button-label = Пласты
-pdfjs-thumbs-button =
-    .title = Паказ мініяцюр
-pdfjs-thumbs-button-label = Мініяцюры
 pdfjs-current-outline-item-button =
     .title = Знайсці бягучы элемент структуры
 pdfjs-current-outline-item-button-label = Бягучы элемент структуры
@@ -195,18 +200,23 @@ pdfjs-additional-layers = Дадатковыя пласты
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Старонка { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Мініяцюра старонкі { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Выбраць старонку { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Старонка { $page } з { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Шукаць
     .placeholder = Шукаць у дакуменце…
+    .title = Шукаць
 pdfjs-find-previous-button =
     .title = Знайсці папярэдні выпадак выразу
 pdfjs-find-previous-button-label = Папярэдні
@@ -303,16 +313,16 @@ pdfjs-editor-highlight-button =
     .title = Вылучэнне
 pdfjs-editor-highlight-button-label = Вылучэнне
 pdfjs-highlight-floating-button1 =
-    .title = Падфарбаваць
     .aria-label = Падфарбаваць
+    .title = Падфарбаваць
 pdfjs-highlight-floating-button-label = Падфарбаваць
 pdfjs-comment-floating-button =
-    .title = Каментаваць
     .aria-label = Каментаваць
+    .title = Каментаваць
 pdfjs-comment-floating-button-label = Каментаваць
 pdfjs-editor-comment-button =
-    .title = Каментарый
     .aria-label = Каментарый
+    .title = Каментарый
 pdfjs-editor-comment-button-label = Каментарый
 pdfjs-editor-signature-button =
     .title = Дадаць подпіс
@@ -386,8 +396,8 @@ pdfjs-editor-comments-sidebar-title =
        *[many] Каментарыі
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Закрыць бакавую панэль
     .aria-label = Закрыць бакавую панэль
+    .title = Закрыць бакавую панэль
 pdfjs-editor-comments-sidebar-close-button-label = Закрыць бакавую панэль
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Бачыце штосьці вартае ўвагі? Вылучыце і пакіньце каментарый.
@@ -510,13 +520,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Налады альтэрнаты�
 pdfjs-editor-alt-text-settings-automatic-title = Аўтаматычны тэкст для атрыбута alt
 pdfjs-editor-alt-text-settings-create-model-button-label = Ствараць тэкст для атрыбута alt аўтаматычна
 pdfjs-editor-alt-text-settings-create-model-description = Прапануе апісанні, каб дапамагчы людзям, якія не бачаць выяву, ці калі выява не загружаецца.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Мадэль ШІ для тэксту для атрыбута alt ({ $totalSize } МБ)
-pdfjs-editor-alt-text-settings-ai-model-description = Працуе лакальна на вашай прыладзе, таму вашы звесткі застаюцца прыватнымі. Патрабуецца для аўтаматычнага альтэрнатыўнага тэксту.
-pdfjs-editor-alt-text-settings-delete-model-button = Выдаліць
-pdfjs-editor-alt-text-settings-download-model-button = Сцягнуць
-pdfjs-editor-alt-text-settings-downloading-model-button = Сцягванне…
 pdfjs-editor-alt-text-settings-editor-title = Рэдактар тэксту для атрыбута alt
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Адразу паказваць рэдактар тэксту для атрыбута alt пры даданні выявы
 pdfjs-editor-alt-text-settings-show-dialog-description = Дапамагае пераканацца, што ўсе вашы выявы маюць альтэрнатыўны тэкст.
@@ -537,6 +540,7 @@ pdfjs-editor-undo-bar-message-freetext = Тэкст выдалены
 pdfjs-editor-undo-bar-message-ink = Малюнак выдалены
 pdfjs-editor-undo-bar-message-stamp = Відарыс выдалены
 pdfjs-editor-undo-bar-message-signature = Подпіс выдалены
+pdfjs-editor-undo-bar-message-comment = Каментарый выдалены
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -622,18 +626,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = Дзеянні
-pdfjs-editor-edit-comment-actions-button =
-    .title = Дзеянні
-pdfjs-editor-edit-comment-close-button-label = Закрыць
-pdfjs-editor-edit-comment-close-button =
-    .title = Закрыць
-pdfjs-editor-edit-comment-actions-edit-button-label = Праўка
-pdfjs-editor-edit-comment-actions-delete-button-label = Выдаліць
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Увядзіце свой каментарый
-pdfjs-editor-edit-comment-manager-cancel-button = Скасаваць
-pdfjs-editor-edit-comment-manager-save-button = Захаваць
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = Змяніць каментарый
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = Абнавіць
@@ -646,8 +638,174 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Скасаваць
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = Змяніць каментарый
+pdfjs-editor-add-comment-button =
+    .title = Дадаць каментарый
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Паказаць/схаваць бакавую панэль (дакумент мае мініяцюры/змест/далучэнні/пласты)
+pdfjs-toggle-views-manager-button1-label = Кіраванне старонкамі
+pdfjs-views-manager-sidebar =
+    .aria-label = Бакавая панэль
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Змена памеру бакавой панэлі
+pdfjs-views-manager-view-selector-button =
+    .title = Выгляд
+pdfjs-views-manager-view-selector-button-label = Выгляд
+pdfjs-views-manager-pages-title = Старонкі
+pdfjs-views-manager-outlines-title1 = Структура дакумента
+    .title = Структура дакумента (націсніце двойчы, каб разгарнуць/згарнуць усе элементы)
+pdfjs-views-manager-attachments-title = Далучэнні
+pdfjs-views-manager-layers-title1 = Пласты
+    .title = Пласты (націсніце двойчы каб скінуць у прадвызначаны стан)
+pdfjs-views-manager-pages-option-label = Старонкі
+pdfjs-views-manager-outlines-option-label = Структура дакумента
+pdfjs-views-manager-attachments-option-label = Далучэнні
+pdfjs-views-manager-layers-option-label = Пласты
+pdfjs-views-manager-add-file-button =
+    .title = Дадаць файл
+pdfjs-views-manager-add-file-button-label = Дадаць файл
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] Вылучана { $count }
+        [few] Вылучаны { $count }
+       *[many] Вылучана { $count }
+    }
+pdfjs-views-manager-pages-status-none-action-label = Выбраць старонкі
+pdfjs-views-manager-pages-status-action-button-label = Кіраваць
+pdfjs-views-manager-pages-status-copy-button-label = Капіяваць
+pdfjs-views-manager-pages-status-cut-button-label = Выразаць
+pdfjs-views-manager-pages-status-delete-button-label = Выдаліць
+pdfjs-views-manager-pages-status-export-selected-button-label = Экспартаваць выбранае…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] Выразана { $count } старонка
+        [few] Выразана { $count } старонкі
+       *[many] Выразана { $count } старонак
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] Скапіравана { $count } старонка
+        [few] Скапіравана { $count } старонкі
+       *[many] Скапіравана { $count } старонак
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] Выдалена { $count } старонка
+        [few] Выдалена { $count } старонкі
+       *[many] Выдалена { $count } старонак
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Рыхтуецца ваш файл…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Зацягваецца файл…
+pdfjs-views-manager-status-warning-cut-label = Не ўдалося выразаць. Абнавіце старонку і паспрабуйце зноў.
+pdfjs-views-manager-status-warning-copy-label = Не ўдалося скапіяваць. Абнавіце старонку і паспрабуйце зноў.
+pdfjs-views-manager-status-warning-delete-label = Не ўдалося выдаліць. Абнавіце старонку і паспрабуйце зноў.
+pdfjs-views-manager-status-warning-save-label = Не ўдалося захаваць. Абнавіце старонку і паспрабуйце зноў.
+pdfjs-views-manager-status-undo-button-label = Адмяніць
+pdfjs-views-manager-status-done-button-label = Гатова
+pdfjs-views-manager-status-close-button =
+    .title = Закрыць
+pdfjs-views-manager-status-close-button-label = Закрыць
+pdfjs-views-manager-paste-button-label = Уставіць
+pdfjs-views-manager-paste-button-before =
+    .title = Уставіць перад першай старонкай
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Уставіць пасля старонкі { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = НОВАЕ
+pdfjs-views-manager-waiting-for-file = Зацягваецца файл…
+pdfjs-toggle-views-manager-button1 =
+    .title = Кіраванне старонкамі
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = Уласцівасці лічбавага подпісу
+    .title = Уласцівасці лічбавага подпісу
+pdfjs-digital-signature-properties-button-label = Уласцівасці лічбавага подпісу
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = Дакумент быў падпісаны сапраўдным лічбавым подпісам
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] Дакумент падпісаны, але { $count } лічбавы подпіс не ўдалося праверыць
+        [few] Дакумент падпісаны, але { $count } лічбавыя подпісы не ўдалося праверыць
+       *[many] Дакумент падпісаны, але { $count } лічбавых подпісаў не ўдалося праверыць
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] Дакумент падпісаны { $count } недавераным сертыфікатам
+        [few] Дакумент падпісаны { $count } недаверанымі сертыфікатамі
+       *[many] Дакумент падпісаны { $count } недаверанымі сертыфікатамі
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] Дакумент падпісаны { $count } пратэрмінаваным сертыфікатам
+        [few] Дакумент падпісаны { $count } пратэрмінаванымі сертыфікатамі
+       *[many] Дакумент падпісаны { $count } пратэрмінаванымі сертыфікатамі
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] Дакумент мае { $count } нядзейсны лічбавы подпіс
+        [few] Дакумент мае { $count } нядзейсныя лічбавыя подпісы
+       *[many] Дакумент мае { $count } нядзейсных лічбавых подпісаў
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] Дакумент падпісаны { $count } адкліканым сертыфікатам
+        [few] Дакумент падпісаны { $count } адкліканымі сертыфікатамі
+       *[many] Дакумент падпісаны { $count } адкліканымі сертыфікатамі
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Статус: Подпіс правераны
+pdfjs-digital-signature-properties-status-invalid = Статус: Подпіс нядзейсны
+pdfjs-digital-signature-properties-status-unknown = Статус: Немагчыма праверыць (не падтрымліваецца)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Сертыфікат: Давераны ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Сертыфікат: Недаступны
+pdfjs-digital-signature-properties-certificate-untrusted = Сертыфікат: Недавераны
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Сертыфікат: Невядомы выдавец ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Сертыфікат: Самападпісаны ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Сертыфікат: Недавераны выдавец ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Сертыфікат: Пратэрмінаваны
+pdfjs-digital-signature-properties-certificate-expired-with-date = Сертыфікат: Пратэрмінаваны ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Сертыфікат: Адкліканы
 
 ## Main menu for adding/removing signatures
 

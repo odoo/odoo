@@ -129,16 +129,6 @@ pdfjs-printing-not-ready = අවවාදයයි: මුද්‍රණයට
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-document-outline-button-label = ලේඛනයේ වටසන
-pdfjs-attachments-button =
-    .title = ඇමුණුම් පෙන්වන්න
-pdfjs-attachments-button-label = ඇමුණුම්
-pdfjs-layers-button =
-    .title = ස්තර පෙන්වන්න (සියළු ස්තර පෙරනිමි තත්‍වයට යළි සැකසීමට දෙවරක් ඔබන්න)
-pdfjs-layers-button-label = ස්තර
-pdfjs-thumbs-button =
-    .title = සිඟිති රූ පෙන්වන්න
-pdfjs-thumbs-button-label = සිඟිති රූ
 pdfjs-findbar-button =
     .title = ලේඛනයෙහි සොයන්න
 pdfjs-findbar-button-label = සොයන්න
@@ -148,18 +138,14 @@ pdfjs-additional-layers = අතිරේක ස්තර
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = පිටුව { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = පිටුවේ සිඟිත රූව { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = සොයන්න
     .placeholder = ලේඛනයේ සොයන්න…
+    .title = සොයන්න
 pdfjs-find-previous-button =
     .title = මෙම වැකිකඩ කලින් යෙදුණු ස්ථානය සොයන්න
 pdfjs-find-previous-button-label = කලින්

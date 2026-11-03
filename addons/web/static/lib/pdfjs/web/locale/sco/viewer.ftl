@@ -140,23 +140,6 @@ pdfjs-printing-not-ready = Tak tent: The PDF isnae richt loadit fur prentin.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Toggle Sidebaur
-pdfjs-toggle-sidebar-notification-button =
-    .title = Toggle Sidebaur (document conteens ootline/attachments/layers)
-pdfjs-toggle-sidebar-button-label = Toggle Sidebaur
-pdfjs-document-outline-button =
-    .title = Kythe Document Ootline (double-click fur tae oot-fauld/in-fauld aw items)
-pdfjs-document-outline-button-label = Document Ootline
-pdfjs-attachments-button =
-    .title = Kythe Attachments
-pdfjs-attachments-button-label = Attachments
-pdfjs-layers-button =
-    .title = Kythe Layers (double-click fur tae reset aw layers tae the staunart state)
-pdfjs-layers-button-label = Layers
-pdfjs-thumbs-button =
-    .title = Kythe Thumbnails
-pdfjs-thumbs-button-label = Thumbnails
 pdfjs-current-outline-item-button =
     .title = Find Current Ootline Item
 pdfjs-current-outline-item-button-label = Current Ootline Item
@@ -169,18 +152,14 @@ pdfjs-additional-layers = Mair Layers
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Page { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Thumbnail o Page { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Find
     .placeholder = Find in document…
+    .title = Find
 pdfjs-find-previous-button =
     .title = Airt oot the last time this phrase occurred
 pdfjs-find-previous-button-label = Previous

@@ -119,18 +119,6 @@ pdfjs-printing-not-ready = Ciko: PDF pe ocane weng me agoya.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Lok gintic ma inget
-pdfjs-toggle-sidebar-button-label = Lok gintic ma inget
-pdfjs-document-outline-button =
-    .title = Nyut Wiyewiye me Gin acoya (dii-kiryo me yaro/kano jami weng)
-pdfjs-document-outline-button-label = Pek pa gin acoya
-pdfjs-attachments-button =
-    .title = Nyut twec
-pdfjs-attachments-button-label = Twec
-pdfjs-thumbs-button =
-    .title = Nyut cal
-pdfjs-thumbs-button-label = Cal
 pdfjs-findbar-button =
     .title = Nong iye gin acoya
 pdfjs-findbar-button-label = Nong
@@ -139,18 +127,14 @@ pdfjs-findbar-button-label = Nong
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Pot buk { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Cal me pot buk { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Nong
     .placeholder = Nong i dokumen…
+    .title = Nong
 pdfjs-find-previous-button =
     .title = Nong timme pa lok mukato
 pdfjs-find-previous-button-label = Mukato

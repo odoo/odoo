@@ -153,6 +153,27 @@ pdfjs-document-properties-linearized = Gyors webes nézet:
 pdfjs-document-properties-linearized-yes = Igen
 pdfjs-document-properties-linearized-no = Nem
 pdfjs-document-properties-close-button = Bezárás
+pdfjs-digital-signature-properties-view-certificate = Tanúsítvány megtekintése
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Ok: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Időbélyeg: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] Részaláírás ({ $count })
+       *[other] Részaláírások ({ $count })
+    }
 
 ## Print
 
@@ -166,23 +187,6 @@ pdfjs-printing-not-ready = Figyelmeztetés: A PDF nincs teljesen betöltve a nyo
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Oldalsáv be/ki
-pdfjs-toggle-sidebar-notification-button =
-    .title = Oldalsáv be/ki (a dokumentum vázlatot/mellékleteket/rétegeket tartalmaz)
-pdfjs-toggle-sidebar-button-label = Oldalsáv be/ki
-pdfjs-document-outline-button =
-    .title = Dokumentum megjelenítése online (dupla kattintás minden elem kinyitásához/összecsukásához)
-pdfjs-document-outline-button-label = Dokumentumvázlat
-pdfjs-attachments-button =
-    .title = Mellékletek megjelenítése
-pdfjs-attachments-button-label = Van melléklet
-pdfjs-layers-button =
-    .title = Rétegek megjelenítése (dupla kattintás az összes réteg alapértelmezett állapotra visszaállításához)
-pdfjs-layers-button-label = Rétegek
-pdfjs-thumbs-button =
-    .title = Bélyegképek megjelenítése
-pdfjs-thumbs-button-label = Bélyegképek
 pdfjs-current-outline-item-button =
     .title = Jelenlegi vázlatelem megkeresése
 pdfjs-current-outline-item-button-label = Jelenlegi vázlatelem
@@ -195,18 +199,23 @@ pdfjs-additional-layers = További rétegek
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = { $page }. oldal
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page }. oldal bélyegképe
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = { $page }. oldal kiválasztása
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = { $page }. / { $total } oldal
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Keresés
     .placeholder = Keresés a dokumentumban…
+    .title = Keresés
 pdfjs-find-previous-button =
     .title = A kifejezés előző előfordulásának keresése
 pdfjs-find-previous-button-label = Előző
@@ -301,16 +310,16 @@ pdfjs-editor-highlight-button =
     .title = Kiemelés
 pdfjs-editor-highlight-button-label = Kiemelés
 pdfjs-highlight-floating-button1 =
-    .title = Kiemelés
     .aria-label = Kiemelés
+    .title = Kiemelés
 pdfjs-highlight-floating-button-label = Kiemelés
 pdfjs-comment-floating-button =
-    .title = Megjegyzés
     .aria-label = Megjegyzés
+    .title = Megjegyzés
 pdfjs-comment-floating-button-label = Megjegyzés
 pdfjs-editor-comment-button =
-    .title = Megjegyzés
     .aria-label = Megjegyzés
+    .title = Megjegyzés
 pdfjs-editor-comment-button-label = Megjegyzés
 pdfjs-editor-signature-button =
     .title = Aláírás hozzáadása
@@ -383,8 +392,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Megjegyzések
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Oldalsáv bezárása
     .aria-label = Oldalsáv bezárása
+    .title = Oldalsáv bezárása
 pdfjs-editor-comments-sidebar-close-button-label = Oldalsáv bezárása
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Lát valami figyelemre méltót? Jelölje ki és írjon megjegyzést.
@@ -507,13 +516,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Kép alternatív szövegének beá
 pdfjs-editor-alt-text-settings-automatic-title = Automatikus alternatív szöveg
 pdfjs-editor-alt-text-settings-create-model-button-label = Alternatív szöveg automatikus létrehozása
 pdfjs-editor-alt-text-settings-create-model-description = Leírásokat javasol, hogy segítsen azoknak, akik nem látják a képet, vagy arra az esetre, ha a kép nem tölt be.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Alternatív szöveg MI modellje ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Helyben fut az eszközén, így az adatai privátok maradnak. Az automatikus alternatív szövegekhez szükséges.
-pdfjs-editor-alt-text-settings-delete-model-button = Törlés
-pdfjs-editor-alt-text-settings-download-model-button = Letöltés
-pdfjs-editor-alt-text-settings-downloading-model-button = Letöltés…
 pdfjs-editor-alt-text-settings-editor-title = Alternatív szöveg szerkesztője
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Az alternatív szöveg szerkesztőjének azonnali megjelenítése egy kép hozzáadásakor
 pdfjs-editor-alt-text-settings-show-dialog-description = Segít elérni, hogy az összes képén legyen alternatív szöveg.
@@ -534,12 +536,13 @@ pdfjs-editor-undo-bar-message-freetext = Szöveg eltávolítva
 pdfjs-editor-undo-bar-message-ink = Rajz eltávolítva
 pdfjs-editor-undo-bar-message-stamp = Kép eltávolítva
 pdfjs-editor-undo-bar-message-signature = Aláírás eltávolítva
+pdfjs-editor-undo-bar-message-comment = Megjegyzés eltávolítva
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
     { $count ->
-        [one] { $count } kommentár eltávolítva
-       *[other] { $count } kommentár eltávolítva
+        [one] { $count } megjegyzés eltávolítva
+       *[other] { $count } megjegyzés eltávolítva
     }
 pdfjs-editor-undo-bar-undo-button =
     .title = Visszavonás
@@ -618,18 +621,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = Műveletek
-pdfjs-editor-edit-comment-actions-button =
-    .title = Műveletek
-pdfjs-editor-edit-comment-close-button-label = Bezárás
-pdfjs-editor-edit-comment-close-button =
-    .title = Bezárás
-pdfjs-editor-edit-comment-actions-edit-button-label = Szerkesztés
-pdfjs-editor-edit-comment-actions-delete-button-label = Törlés
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Írja be a megjegyzését
-pdfjs-editor-edit-comment-manager-cancel-button = Mégse
-pdfjs-editor-edit-comment-manager-save-button = Mentés
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = Megjegyzés szerkesztése
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = Frissítés
@@ -642,10 +633,165 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Mégse
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = Megjegyzés szerkesztése
 pdfjs-editor-add-comment-button =
     .title = Megjegyzés hozzáadása
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Oldalsáv be/ki (a dokumentum bélyegképeket/vázlatot/mellékleteket/rétegeket tartalmaz)
+pdfjs-toggle-views-manager-button1-label = Oldalak kezelése
+pdfjs-views-manager-sidebar =
+    .aria-label = Oldalsáv
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Oldalsáv-átméretező
+pdfjs-views-manager-view-selector-button =
+    .title = Nézetek
+pdfjs-views-manager-view-selector-button-label = Nézetek
+pdfjs-views-manager-pages-title = Oldalak
+pdfjs-views-manager-outlines-title1 = Dokumentumvázlat
+    .title = Dokumentumvázlat (dupla kattintás az összes elem kinyitásához/becsukásához)
+pdfjs-views-manager-attachments-title = Mellékletek
+pdfjs-views-manager-layers-title1 = Rétegek
+    .title = Rétegek (dupla kattintás az összes réteg eredeti állapotba való visszaállításához)
+pdfjs-views-manager-pages-option-label = Oldalak
+pdfjs-views-manager-outlines-option-label = Dokumentumvázlat
+pdfjs-views-manager-attachments-option-label = Mellékletek
+pdfjs-views-manager-layers-option-label = Rétegek
+pdfjs-views-manager-add-file-button =
+    .title = Fájl hozzáadása
+pdfjs-views-manager-add-file-button-label = Fájl hozzáadása
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } kiválasztva
+       *[other] { $count } kiválasztva
+    }
+pdfjs-views-manager-pages-status-none-action-label = Oldalak kiválasztása
+pdfjs-views-manager-pages-status-action-button-label = Kezelés
+pdfjs-views-manager-pages-status-copy-button-label = Másolás
+pdfjs-views-manager-pages-status-cut-button-label = Kivágás
+pdfjs-views-manager-pages-status-delete-button-label = Törlés
+pdfjs-views-manager-pages-status-export-selected-button-label = Kiválasztottak exportálása…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 oldal kivágva
+       *[other] { $count } oldal kivágva
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 oldal másolva
+       *[other] { $count } oldal másolva
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 oldal törölve
+       *[other] { $count } oldal törölve
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = A fájl előkészítése…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Fájl feltöltése…
+pdfjs-views-manager-status-warning-cut-label = Nem sikerült kivágni. Frissítse az oldalt, és próbálja újra.
+pdfjs-views-manager-status-warning-copy-label = Nem sikerült másolni. Frissítse az oldalt, és próbálja újra.
+pdfjs-views-manager-status-warning-delete-label = Nem sikerült törölni. Frissítse az oldalt, és próbálja újra.
+pdfjs-views-manager-status-warning-save-label = Nem sikerült menteni. Frissítse az oldalt, és próbálja újra.
+pdfjs-views-manager-status-undo-button-label = Visszavonás
+pdfjs-views-manager-status-done-button-label = Kész
+pdfjs-views-manager-status-close-button =
+    .title = Bezárás
+pdfjs-views-manager-status-close-button-label = Bezárás
+pdfjs-views-manager-paste-button-label = Beillesztés
+pdfjs-views-manager-paste-button-before =
+    .title = Beillesztés az első oldal elé
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Beillesztés a(z) { $page }. oldal után
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = ÚJ
+pdfjs-views-manager-waiting-for-file = Fájl feltöltése…
+pdfjs-toggle-views-manager-button1 =
+    .title = Oldalak kezelése
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = Digitális aláírás tulajdonságai
+    .title = Digitális aláírás tulajdonságai
+pdfjs-digital-signature-properties-button-label = Digitális aláírás tulajdonságai
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = A dokumentum érvényes digitális aláírással lett aláírva
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] A dokumentum alá van írva, de { $count } digitális aláírás nem ellenőrizhető
+       *[other] A dokumentum alá van írva, de { $count } digitális aláírás nem ellenőrizhető
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] A dokumentum { $count } nem megbízható tanúsítvánnyal van aláírva
+       *[other] A dokumentum { $count } nem megbízható tanúsítvánnyal van aláírva
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] A dokumentum { $count } lejárt tanúsítvánnyal van aláírva
+       *[other] A dokumentum { $count } lejárt tanúsítvánnyal van aláírva
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] A dokumentum { $count } érvénytelen aláírással rendelkezik
+       *[other] A dokumentum { $count } érvénytelen aláírással rendelkezik
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] A dokumentum { $count } visszavont tanúsítvánnyal van aláírva
+       *[other] A dokumentum { $count } visszavont tanúsítvánnyal van aláírva
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Állapot: az aláírás ellenőrizve
+pdfjs-digital-signature-properties-status-invalid = Állapot: az aláírás érvénytelen
+pdfjs-digital-signature-properties-status-unknown = Állapot: nem ellenőrizhető (nem támogatott)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Tanúsítvány: megbízható ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Tanúsítvány: nem érhető el
+pdfjs-digital-signature-properties-certificate-untrusted = Tanúsítvány: nem megbízható
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Tanúsítvány: ismeretlen kibocsátó ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Tanúsítvány: önaláírt ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Tanúsítvány: nem megbízható kibocsátó ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Tanúsítvány: lejárt
+pdfjs-digital-signature-properties-certificate-expired-with-date = Tanúsítvány: lejárt ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Tanúsítvány: visszavonva
 
 ## Main menu for adding/removing signatures
 

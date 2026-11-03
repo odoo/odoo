@@ -101,16 +101,6 @@ pdfjs-printing-not-ready = ಎಚ್ಚರಿಕೆ: PDF ಕಡತವು ಮು�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = ಬದಿಪಟ್ಟಿಯನ್ನು ಹೊರಳಿಸು
-pdfjs-toggle-sidebar-button-label = ಬದಿಪಟ್ಟಿಯನ್ನು ಹೊರಳಿಸು
-pdfjs-document-outline-button-label = ದಸ್ತಾವೇಜಿನ ಹೊರರೇಖೆ
-pdfjs-attachments-button =
-    .title = ಲಗತ್ತುಗಳನ್ನು ತೋರಿಸು
-pdfjs-attachments-button-label = ಲಗತ್ತುಗಳು
-pdfjs-thumbs-button =
-    .title = ಚಿಕ್ಕಚಿತ್ರದಂತೆ ತೋರಿಸು
-pdfjs-thumbs-button-label = ಚಿಕ್ಕಚಿತ್ರಗಳು
 pdfjs-findbar-button =
     .title = ದಸ್ತಾವೇಜಿನಲ್ಲಿ ಹುಡುಕು
 pdfjs-findbar-button-label = ಹುಡುಕು
@@ -119,18 +109,14 @@ pdfjs-findbar-button-label = ಹುಡುಕು
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = ಪುಟ { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = ಪುಟವನ್ನು ಚಿಕ್ಕಚಿತ್ರದಂತೆ ತೋರಿಸು { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = ಹುಡುಕು
     .placeholder = ದಸ್ತಾವೇಜಿನಲ್ಲಿ ಹುಡುಕು…
+    .title = ಹುಡುಕು
 pdfjs-find-previous-button =
     .title = ವಾಕ್ಯದ ಹಿಂದಿನ ಇರುವಿಕೆಯನ್ನು ಹುಡುಕು
 pdfjs-find-previous-button-label = ಹಿಂದಿನ

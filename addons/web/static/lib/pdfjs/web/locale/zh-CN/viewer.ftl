@@ -153,6 +153,19 @@ pdfjs-document-properties-linearized = 快速 Web 视图：
 pdfjs-document-properties-linearized-yes = 是
 pdfjs-document-properties-linearized-no = 否
 pdfjs-document-properties-close-button = 关闭
+pdfjs-digital-signature-properties-view-certificate = 查看证书
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = 原因：{ $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = 时间戳：{ DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
 
 ## Print
 
@@ -166,23 +179,6 @@ pdfjs-printing-not-ready = 警告：此 PDF 未完成加载，无法打印。
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = 切换侧栏
-pdfjs-toggle-sidebar-notification-button =
-    .title = 切换侧栏（文档所含的大纲/附件/图层）
-pdfjs-toggle-sidebar-button-label = 切换侧栏
-pdfjs-document-outline-button =
-    .title = 显示文档大纲（双击展开/折叠所有项）
-pdfjs-document-outline-button-label = 文档大纲
-pdfjs-attachments-button =
-    .title = 显示附件
-pdfjs-attachments-button-label = 附件
-pdfjs-layers-button =
-    .title = 显示图层（双击即可将所有图层重置为默认状态）
-pdfjs-layers-button-label = 图层
-pdfjs-thumbs-button =
-    .title = 显示缩略图
-pdfjs-thumbs-button-label = 缩略图
 pdfjs-current-outline-item-button =
     .title = 查找当前大纲项目
 pdfjs-current-outline-item-button-label = 当前大纲项目
@@ -195,18 +191,23 @@ pdfjs-additional-layers = 其他图层
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = 第 { $page } 页
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = 页面 { $page } 的缩略图
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = 选择第 { $page } 页
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = 第 { $page } / { $total } 页
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = 查找
     .placeholder = 在文档中查找…
+    .title = 查找
 pdfjs-find-previous-button =
     .title = 查找词语上一次出现的位置
 pdfjs-find-previous-button-label = 上一页
@@ -293,16 +294,16 @@ pdfjs-editor-highlight-button =
     .title = 高亮
 pdfjs-editor-highlight-button-label = 高亮
 pdfjs-highlight-floating-button1 =
-    .title = 高亮
     .aria-label = 高亮
+    .title = 高亮
 pdfjs-highlight-floating-button-label = 高亮
 pdfjs-comment-floating-button =
-    .title = 批注
     .aria-label = 批注
+    .title = 批注
 pdfjs-comment-floating-button-label = 批注
 pdfjs-editor-comment-button =
-    .title = 批注
     .aria-label = 批注
+    .title = 批注
 pdfjs-editor-comment-button-label = 批注
 pdfjs-editor-signature-button =
     .title = 添加签名
@@ -371,8 +372,8 @@ pdfjs-free-text2 =
 #   $count (Number) - the number of comments.
 pdfjs-editor-comments-sidebar-title = 批注
 pdfjs-editor-comments-sidebar-close-button =
-    .title = 关闭侧栏
     .aria-label = 关闭侧栏
+    .title = 关闭侧栏
 pdfjs-editor-comments-sidebar-close-button-label = 关闭侧栏
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = 发现值得注意的地方？可为其添加高亮并批注。
@@ -495,13 +496,6 @@ pdfjs-editor-alt-text-settings-dialog-label = 图像替换文字设置
 pdfjs-editor-alt-text-settings-automatic-title = 自动创建替换文字
 pdfjs-editor-alt-text-settings-create-model-button-label = 自动创建替换文字
 pdfjs-editor-alt-text-settings-create-model-description = 向无法看到或加载图像的用户提供描述。
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = 提供替换文字的 AI 模型（{ $totalSize } MB）
-pdfjs-editor-alt-text-settings-ai-model-description = 在您的设备本地运行，可使数据保持私密。自动创建替换文字需要使用此模型。
-pdfjs-editor-alt-text-settings-delete-model-button = 删除
-pdfjs-editor-alt-text-settings-download-model-button = 下载
-pdfjs-editor-alt-text-settings-downloading-model-button = 正在下载…
 pdfjs-editor-alt-text-settings-editor-title = 替换文字编辑器
 pdfjs-editor-alt-text-settings-show-dialog-button-label = 添加图像后立即显示替换文字编辑器
 pdfjs-editor-alt-text-settings-show-dialog-description = 帮助确保所有图像均拥有替换文字。
@@ -522,6 +516,7 @@ pdfjs-editor-undo-bar-message-freetext = 已移除文本
 pdfjs-editor-undo-bar-message-ink = 已移除绘图
 pdfjs-editor-undo-bar-message-stamp = 已移除图像
 pdfjs-editor-undo-bar-message-signature = 签名已移除
+pdfjs-editor-undo-bar-message-comment = 已移除批注
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple = 已移除 { $count } 条注释
@@ -602,18 +597,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = 操作
-pdfjs-editor-edit-comment-actions-button =
-    .title = 操作
-pdfjs-editor-edit-comment-close-button-label = 关闭
-pdfjs-editor-edit-comment-close-button =
-    .title = 关闭
-pdfjs-editor-edit-comment-actions-edit-button-label = 编辑
-pdfjs-editor-edit-comment-actions-delete-button-label = 删除
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = 输入批注
-pdfjs-editor-edit-comment-manager-cancel-button = 取消
-pdfjs-editor-edit-comment-manager-save-button = 保存
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = 编辑批注
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = 更新
@@ -626,8 +609,114 @@ pdfjs-editor-edit-comment-dialog-cancel-button = 取消
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = 编辑批注
+pdfjs-editor-add-comment-button =
+    .title = 添加批注
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = 打开/关闭侧栏（文档所含的缩略图/大纲/附件/图层）
+pdfjs-toggle-views-manager-button1-label = 管理页面
+pdfjs-views-manager-sidebar =
+    .aria-label = 侧栏
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = 调整侧栏大小
+pdfjs-views-manager-view-selector-button =
+    .title = 视图
+pdfjs-views-manager-view-selector-button-label = 视图
+pdfjs-views-manager-pages-title = 页面
+pdfjs-views-manager-outlines-title1 = 文档大纲
+    .title = 文档大纲（双击可展开/折叠所有项目）
+pdfjs-views-manager-attachments-title = 附件
+pdfjs-views-manager-layers-title1 = 图层
+    .title = 图层（双击可将所有图层重置为默认状态）
+pdfjs-views-manager-pages-option-label = 页面
+pdfjs-views-manager-outlines-option-label = 文档大纲
+pdfjs-views-manager-attachments-option-label = 附件
+pdfjs-views-manager-layers-option-label = 图层
+pdfjs-views-manager-add-file-button =
+    .title = 添加文件
+pdfjs-views-manager-add-file-button-label = 添加文件
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label = 已选择 { $count } 页
+pdfjs-views-manager-pages-status-none-action-label = 选择页面
+pdfjs-views-manager-pages-status-action-button-label = 管理
+pdfjs-views-manager-pages-status-copy-button-label = 复制
+pdfjs-views-manager-pages-status-cut-button-label = 剪切
+pdfjs-views-manager-pages-status-delete-button-label = 删除
+pdfjs-views-manager-pages-status-export-selected-button-label = 导出选中的页面…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label = 已剪切 { $count } 页
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label = 已复制 { $count } 页
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label = 已删除 { $count } 页
+pdfjs-views-manager-pages-status-waiting-ready-label = 正在准备文件…
+pdfjs-views-manager-pages-status-waiting-uploading-label = 正在上传文件…
+pdfjs-views-manager-status-warning-cut-label = 无法剪切，请刷新页面并重试。
+pdfjs-views-manager-status-warning-copy-label = 无法复制，请刷新页面并重试。
+pdfjs-views-manager-status-warning-delete-label = 无法删除，请刷新页面并重试。
+pdfjs-views-manager-status-warning-save-label = 无法保存，请刷新页面并重试。
+pdfjs-views-manager-status-undo-button-label = 撤销
+pdfjs-views-manager-status-done-button-label = 完成
+pdfjs-views-manager-status-close-button =
+    .title = 关闭
+pdfjs-views-manager-status-close-button-label = 关闭
+pdfjs-views-manager-paste-button-label = 粘贴
+pdfjs-views-manager-paste-button-before =
+    .title = 粘贴在第一页之前
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = 粘贴在第 { $page } 页之后
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = 新
+pdfjs-views-manager-waiting-for-file = 正在上传文件…
+pdfjs-toggle-views-manager-button1 =
+    .title = 管理页面
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = 数字签名属性
+    .title = 数字签名属性
+pdfjs-digital-signature-properties-button-label = 数字签名属性
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = 状态：签名已验证
+pdfjs-digital-signature-properties-status-invalid = 状态：签名无效
+pdfjs-digital-signature-properties-status-unknown = 状态：无法验证（不支持）
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = 证书：受信任（{ $issuer }）
+pdfjs-digital-signature-properties-certificate-unknown = 证书：不可用
+pdfjs-digital-signature-properties-certificate-untrusted = 证书：不可信
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = 证书：颁发者未知（{ $issuer }）
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = 证书：自签名（{ $issuer }）
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = 证书: 颁发者不可信（{ $issuer }）
+pdfjs-digital-signature-properties-certificate-expired = 证书: 已过期
+pdfjs-digital-signature-properties-certificate-expired-with-date = 证书：已过期（{ DATETIME($dateObj, dateStyle: "medium") }）
+pdfjs-digital-signature-properties-certificate-revoked = 证书：已吊销
 
 ## Main menu for adding/removing signatures
 

@@ -145,19 +145,6 @@ pdfjs-printing-not-ready = മുന്നറിയിപ്പു്: അച്
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = അണിവക്കം ടോഗിൾ ചെയ്യുക
-pdfjs-toggle-sidebar-button-label = അണിവക്കം ടോഗിൾ ചെയ്യുക
-pdfjs-document-outline-button =
-    .title = ഡോക്യുമെന്റിന്റെ ബാഹ്യരേഖ കാണിക്കുക (എല്ലാ ഇനങ്ങളും വിപുലീകരിക്കാനും ചുരുക്കാനും ഇരട്ട ക്ലിക്കുചെയ്യുക)
-pdfjs-document-outline-button-label = രേഖയുടെ ഔട്ട്ലൈന്‍
-pdfjs-attachments-button =
-    .title = അറ്റാച്മെന്റുകള്‍ കാണിയ്ക്കുക
-pdfjs-attachments-button-label = അറ്റാച്മെന്റുകള്‍
-pdfjs-layers-button-label = പാളികൾ
-pdfjs-thumbs-button =
-    .title = തംബ്നെയിലുകള്‍ കാണിയ്ക്കുക
-pdfjs-thumbs-button-label = തംബ്നെയിലുകള്‍
 pdfjs-findbar-button =
     .title = രേഖയില്‍ കണ്ടുപിടിയ്ക്കുക
 pdfjs-findbar-button-label = കണ്ടെത്തുക
@@ -167,18 +154,14 @@ pdfjs-additional-layers = കൂടാത്ത പാളികൾ
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = താള്‍ { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page } താളിനുള്ള തംബ്നെയില്‍
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = കണ്ടെത്തുക
     .placeholder = ഡോക്യുമെന്റില്‍ കണ്ടെത്തുക…
+    .title = കണ്ടെത്തുക
 pdfjs-find-previous-button =
     .title = വാചകം ഇതിനു മുന്‍പ്‌ ആവര്‍ത്തിച്ചത്‌ കണ്ടെത്തുക
 pdfjs-find-previous-button-label = മുമ്പു്
@@ -268,8 +251,8 @@ pdfjs-editor-highlight-button =
     .title = അടയാളപ്പെടുക
 pdfjs-editor-highlight-button-label = അടയാളപ്പെടുക
 pdfjs-highlight-floating-button1 =
-    .title = അടയാളപ്പെടുക
     .aria-label = അടയാളപ്പെടുക
+    .title = അടയാളപ്പെടുക
 pdfjs-highlight-floating-button-label = അടയാളപ്പെടുക
 pdfjs-editor-signature-button =
     .title = പുതിയ ഒപ്പു് ചേൎക്കുക
@@ -309,6 +292,10 @@ pdfjs-editor-signature-add-signature-button-label = പുതിയ ഒപ്പ
 #   $description (String) - a string describing/labeling the signature.
 pdfjs-editor-add-saved-signature-button =
     .title = കരുതിവച്ച ഒപ്പു് : { $description }
+pdfjs-editor-comments-sidebar-close-button =
+    .aria-label = അണിവക്കം അടയ്ക്കുക
+    .title = അണിവക്കം അടയ്ക്കുക
+pdfjs-editor-comments-sidebar-close-button-label = അണിവക്കം അടയ്ക്കുക
 
 ## Alt-text dialog
 
@@ -394,9 +381,6 @@ pdfjs-image-alt-text-settings-button-label = ചിത്ര മറുയെഴ�
 pdfjs-editor-alt-text-settings-dialog-label = ചിത്ര മറുയെഴുത്തു് ക്രമീകരണങ്ങൾ
 pdfjs-editor-alt-text-settings-automatic-title = യാന്ത്രിക മറുയെഴുത്തു്
 pdfjs-editor-alt-text-settings-create-model-button-label = തന്നെതാനെ മറുയെഴുത്തു് ഉണ്ടാക്കുക
-pdfjs-editor-alt-text-settings-delete-model-button = മായ്ക്കുക
-pdfjs-editor-alt-text-settings-download-model-button = ഇറക്കിവയ്ക്കുക
-pdfjs-editor-alt-text-settings-downloading-model-button = ഇറക്കിവയ്ക്കുന്നു
 pdfjs-editor-alt-text-settings-show-dialog-description = താങ്ങളുടെ എല്ലാ പടങ്ങളിലും മറുയെഴുത്തുണ്ടെന്നു് തീൎച്ചപ്പെടുത്താൻ തുണയ്ക്കുന്നു.
 pdfjs-editor-alt-text-settings-close-button = അടയ്ക്കുക
 
@@ -474,6 +458,21 @@ pdfjs-editor-add-signature-error-close-button = അടയ്ക്കുക
 pdfjs-editor-add-signature-cancel-button = റദ്ദാക്കുക
 pdfjs-editor-add-signature-add-button = ചേൎക്കുക
 pdfjs-editor-edit-signature-update-button = പുതുക്കുക
+
+##  Edit a comment dialog
+
+pdfjs-editor-edit-comment-dialog-cancel-button = റദ്ദാക്കുക
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-views-manager-status-close-button =
+    .title = അടയ്ക്കുക
+pdfjs-views-manager-status-close-button-label = അടയ്ക്കുക
 
 ## Main menu for adding/removing signatures
 

@@ -153,6 +153,29 @@ pdfjs-document-properties-linearized = Rychlé zobrazování z webu:
 pdfjs-document-properties-linearized-yes = Ano
 pdfjs-document-properties-linearized-no = Ne
 pdfjs-document-properties-close-button = Zavřít
+pdfjs-digital-signature-properties-view-certificate = Zobrazit certifikát
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Důvod: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Časové razítko: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] Podpis ({ $count })
+        [few] Podpisy ({ $count })
+        [many] Podpisy ({ $count })
+       *[other] Podpisy ({ $count })
+    }
 
 ## Print
 
@@ -166,23 +189,6 @@ pdfjs-printing-not-ready = Upozornění: Dokument PDF není kompletně načten.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Postranní lišta
-pdfjs-toggle-sidebar-notification-button =
-    .title = Přepnout postranní lištu (dokument obsahuje osnovu/přílohy/vrstvy)
-pdfjs-toggle-sidebar-button-label = Postranní lišta
-pdfjs-document-outline-button =
-    .title = Zobrazí osnovu dokumentu (poklepání přepne zobrazení všech položek)
-pdfjs-document-outline-button-label = Osnova dokumentu
-pdfjs-attachments-button =
-    .title = Zobrazí přílohy
-pdfjs-attachments-button-label = Přílohy
-pdfjs-layers-button =
-    .title = Zobrazit vrstvy (poklepáním obnovíte všechny vrstvy do výchozího stavu)
-pdfjs-layers-button-label = Vrstvy
-pdfjs-thumbs-button =
-    .title = Zobrazí náhledy
-pdfjs-thumbs-button-label = Náhledy
 pdfjs-current-outline-item-button =
     .title = Najít aktuální položku v osnově
 pdfjs-current-outline-item-button-label = Aktuální položka v osnově
@@ -195,18 +201,23 @@ pdfjs-additional-layers = Další vrstvy
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Strana { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Náhled strany { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Vybrat stranu { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Strana { $page } z { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Najít
     .placeholder = Najít v dokumentu…
+    .title = Najít
 pdfjs-find-previous-button =
     .title = Najde předchozí výskyt hledaného textu
 pdfjs-find-previous-button-label = Předchozí
@@ -305,16 +316,16 @@ pdfjs-editor-highlight-button =
     .title = Zvýraznění
 pdfjs-editor-highlight-button-label = Zvýraznění
 pdfjs-highlight-floating-button1 =
-    .title = Zvýraznit
     .aria-label = Zvýraznit
+    .title = Zvýraznit
 pdfjs-highlight-floating-button-label = Zvýraznit
 pdfjs-comment-floating-button =
-    .title = Komentář
     .aria-label = Komentář
+    .title = Komentář
 pdfjs-comment-floating-button-label = Komentář
 pdfjs-editor-comment-button =
-    .title = Komentář
     .aria-label = Komentář
+    .title = Komentář
 pdfjs-editor-comment-button-label = Komentář
 pdfjs-editor-signature-button =
     .title = Přidat podpis
@@ -389,8 +400,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Komentáře
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Zavřít postranní lištu
     .aria-label = Zavřít postranní lištu
+    .title = Zavřít postranní lištu
 pdfjs-editor-comments-sidebar-close-button-label = Zavřít postranní lištu
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Vidíte něco pozoruhodného? Zvýrazněte to a zanechte komentář.
@@ -513,13 +524,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Nastavení alternativního textu o
 pdfjs-editor-alt-text-settings-automatic-title = Automatický alternativní text
 pdfjs-editor-alt-text-settings-create-model-button-label = Vytvořit alternativní text automaticky
 pdfjs-editor-alt-text-settings-create-model-description = Navrhuje popisy, které pomohou lidem, kteří nevidí obrázek nebo když se obrázek nenačte.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Model AI pro alternativní text ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Běží lokálně na vašem zařízení, takže vaše data zůstávají v bezpečí. Vyžadováno pro automatický alternativní text.
-pdfjs-editor-alt-text-settings-delete-model-button = Smazat
-pdfjs-editor-alt-text-settings-download-model-button = Stáhnout
-pdfjs-editor-alt-text-settings-downloading-model-button = Probíhá stahování...
 pdfjs-editor-alt-text-settings-editor-title = Editor alternativního textu
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Při přidávání obrázku hned zobrazit editor alternativního textu
 pdfjs-editor-alt-text-settings-show-dialog-description = Pomůže vám zajistit, aby všechny vaše obrázky obsahovaly alternativní text.
@@ -540,6 +544,7 @@ pdfjs-editor-undo-bar-message-freetext = Text odstraněn
 pdfjs-editor-undo-bar-message-ink = Kresba odstraněna
 pdfjs-editor-undo-bar-message-stamp = Obrázek odebrán
 pdfjs-editor-undo-bar-message-signature = Podpis odebrán
+pdfjs-editor-undo-bar-message-comment = Komentář odebrán
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -564,8 +569,8 @@ pdfjs-editor-add-signature-dialog-title = Přidat podpis
 ## Tab names
 
 # Type is a verb (you can type your name as signature)
-pdfjs-editor-add-signature-type-button = Typ
-    .title = Typ
+pdfjs-editor-add-signature-type-button = Psát
+    .title = Psát
 # Draw is a verb (you can draw your signature)
 pdfjs-editor-add-signature-draw-button = Kreslit
     .title = Kreslit
@@ -583,11 +588,11 @@ pdfjs-editor-add-signature-draw-thickness-range-label = Tloušťka
 #   $thickness (Number) - the thickness (in pixels) of the line used to draw a signature.
 pdfjs-editor-add-signature-draw-thickness-range =
     .title = Tloušťka kresby: { $thickness }
-pdfjs-editor-add-signature-image-placeholder = Pro nahrání přetáhněte soubor sem
+pdfjs-editor-add-signature-image-placeholder = Přetáhněte sem soubor, který chcete nahrát
 pdfjs-editor-add-signature-image-browse-link =
     { PLATFORM() ->
-        [macos] Nebo vyberte soubory s obrázky
-       *[other] Nebo vyberte soubory s obrázky
+        [macos] Nebo vyberte soubory obrazu
+       *[other] Nebo vyberte soubory obrazu
     }
 
 ## Controls
@@ -600,7 +605,7 @@ pdfjs-editor-add-signature-clear-button-label = Vymazání podpisu
 pdfjs-editor-add-signature-clear-button =
     .title = Vymazání podpisu
 pdfjs-editor-add-signature-save-checkbox = Uložit podpis
-pdfjs-editor-add-signature-save-warning-message = Dosáhli jste limitu 5 uložených podpisů. Odstraňte jeden a uložte další.
+pdfjs-editor-add-signature-save-warning-message = Dosáhli jste limitu 5 uložených podpisů. Chcete-li uložit další, jeden odstraňte.
 pdfjs-editor-add-signature-image-upload-error-title = Obrázek se nepodařilo nahrát
 pdfjs-editor-add-signature-image-upload-error-description = Zkontrolujte připojení k síti nebo zkuste jiný obrázek.
 pdfjs-editor-add-signature-image-no-data-error-title = Nelze převést tento obrázek na podpis
@@ -626,18 +631,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = Akce
-pdfjs-editor-edit-comment-actions-button =
-    .title = Akce
-pdfjs-editor-edit-comment-close-button-label = Zavřít
-pdfjs-editor-edit-comment-close-button =
-    .title = Zavřít
-pdfjs-editor-edit-comment-actions-edit-button-label = Upravit
-pdfjs-editor-edit-comment-actions-delete-button-label = Smazat
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Zadejte komentář
-pdfjs-editor-edit-comment-manager-cancel-button = Zrušit
-pdfjs-editor-edit-comment-manager-save-button = Uložit
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = Upravit komentář
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = Aktualizovat
@@ -650,8 +643,183 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Zrušit
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = Upravit komentář
+pdfjs-editor-add-comment-button =
+    .title = Přidání komentáře
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Přepnout postranní lištu (dokument obsahuje náhledy/osnovu/přílohy/vrstvy)
+pdfjs-toggle-views-manager-button1-label = Spravovat strany
+pdfjs-views-manager-sidebar =
+    .aria-label = Postranní lišta
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Změna velikosti v postranní liště
+pdfjs-views-manager-view-selector-button =
+    .title = Zobrazení
+pdfjs-views-manager-view-selector-button-label = Zobrazení
+pdfjs-views-manager-pages-title = Stránky
+pdfjs-views-manager-outlines-title1 = Osnova dokumentu
+    .title = Osnova dokumentu (dvojité klepnutí rozbalí/sbalí všechny položky)
+pdfjs-views-manager-attachments-title = Přílohy
+pdfjs-views-manager-layers-title1 = Vrstvy
+    .title = Vrstvy (dvojité klepnutí obnoví všechny vrstvy do výchozího stavu)
+pdfjs-views-manager-pages-option-label = Stránky
+pdfjs-views-manager-outlines-option-label = Osnova dokumentu
+pdfjs-views-manager-attachments-option-label = Přílohy
+pdfjs-views-manager-layers-option-label = Vrstvy
+pdfjs-views-manager-add-file-button =
+    .title = Přidat soubor
+pdfjs-views-manager-add-file-button-label = Přidat soubor
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } vybrána
+        [few] { $count } vybrány
+        [many] { $count } vybráno
+       *[other] { $count } vybráno
+    }
+pdfjs-views-manager-pages-status-none-action-label = Výběr stránek
+pdfjs-views-manager-pages-status-action-button-label = Správa
+pdfjs-views-manager-pages-status-copy-button-label = Kopírovat
+pdfjs-views-manager-pages-status-cut-button-label = Vyjmout
+pdfjs-views-manager-pages-status-delete-button-label = Smazat
+pdfjs-views-manager-pages-status-export-selected-button-label = Exportovat vybrané…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 stránka vyjmuta
+        [few] { $count } stránky vyjmuty
+        [many] { $count } stránek vyjmuto
+       *[other] { $count } stránek vyjmuto
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 stránka zkopírována
+        [few] { $count } stránky zkopírovány
+        [many] { $count } stránek zkopírováno
+       *[other] { $count } stránek zkopírováno
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 stránka smazána
+        [few] { $count } stránky smazány
+        [many] { $count } stránek smazáno
+       *[other] { $count } stránek smazáno
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Příprava vašeho souboru…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Nahrávání souboru…
+pdfjs-views-manager-status-warning-cut-label = Nelze vyjmout. Obnovte stránku a zkuste to znovu.
+pdfjs-views-manager-status-warning-copy-label = Kopírování se nezdařilo. Obnovte stránku a zkuste to znovu.
+pdfjs-views-manager-status-warning-delete-label = Smazání se nezdařilo. Obnovte stránku a zkuste to znovu.
+pdfjs-views-manager-status-warning-save-label = Nepodařilo se uložit. Obnovte stránku a zkuste to znovu.
+pdfjs-views-manager-status-undo-button-label = Zpět
+pdfjs-views-manager-status-done-button-label = Hotovo
+pdfjs-views-manager-status-close-button =
+    .title = Zavřít
+pdfjs-views-manager-status-close-button-label = Zavřít
+pdfjs-views-manager-paste-button-label = Vložit
+pdfjs-views-manager-paste-button-before =
+    .title = Vloží před první stránku
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Vložit za stránku { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = NOVÉ
+pdfjs-views-manager-waiting-for-file = Nahrávání souboru…
+pdfjs-toggle-views-manager-button1 =
+    .title = Spravovat strany
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = Vlastnosti digitálního podpisu
+    .title = Vlastnosti digitálního podpisu
+pdfjs-digital-signature-properties-button-label = Vlastnosti digitálního podpisu
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = Dokument byl podepsán platným digitálním podpisem
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] Dokument je podepsán, ale { $count } elektronický podpis se nepodařilo ověřit
+        [few] Dokument je podepsán, ale { $count } elektronické podpisy se nepodařilo ověřit
+        [many] Dokument je podepsán, ale { $count } elektronických podpisů se nepodařilo ověřit
+       *[other] Dokument je podepsán, ale { $count } elektronických podpisů se nepodařilo ověřit
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] Dokument podepsaný { $count } certifikátem, který není důvěryhodný
+        [few] Dokument podepsaný { $count } certifikáty, které nejsou důvěryhodné
+        [many] Dokument podepsaný { $count } certifikáty, které nejsou důvěryhodné
+       *[other] Dokument podepsaný { $count } certifikáty, které nejsou důvěryhodné
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] Dokument je podepsaný { $count } prošlým certifikátem
+        [few] Dokument je podepsaný { $count } prošlými certifikáty
+        [many] Dokument je podepsaný { $count } prošlými certifikáty
+       *[other] Dokument je podepsaný { $count } prošlými certifikáty
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] Dokument má { $count } neplatný elektronický podpis
+        [few] Dokument má { $count } neplatné elektronické podpisy
+        [many] Dokument má { $count } neplatných elektronických podpisů
+       *[other] Dokument má { $count } neplatných elektronických podpisů
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] Dokument je podepsaný { $count } zneplatněným certifikátem
+        [few] Dokument je podepsaný { $count } zneplatněnými certifikáty
+        [many] Dokument je podepsaný { $count } zneplatněnými certifikáty
+       *[other] Dokument je podepsaný { $count } zneplatněnými certifikáty
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Stav: Podpis ověřen
+pdfjs-digital-signature-properties-status-invalid = Stav: Podpis je neplatný
+pdfjs-digital-signature-properties-status-unknown = Stav: Nelze ověřit (nepodporováno)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Certifikát: Důvěryhodný ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Certifikát: nedostupný
+pdfjs-digital-signature-properties-certificate-untrusted = Certifikát: nedůvěryhodný
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Certifikát: Neznámý vydavatel ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Certifikát: Self-signed ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Certifikát: Nedůvěryhodný vydavatel ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Certifikát: vypršel
+pdfjs-digital-signature-properties-certificate-expired-with-date = Certifikát: Vypršel ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Certifikát: zneplatněn
 
 ## Main menu for adding/removing signatures
 

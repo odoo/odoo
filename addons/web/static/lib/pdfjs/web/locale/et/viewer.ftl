@@ -143,23 +143,6 @@ pdfjs-printing-not-ready = Hoiatus: PDF pole printimiseks täielikult laaditud.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Näita külgriba
-pdfjs-toggle-sidebar-notification-button =
-    .title = Näita külgriba (dokument sisaldab sisukorda/manuseid/kihte)
-pdfjs-toggle-sidebar-button-label = Näita külgriba
-pdfjs-document-outline-button =
-    .title = Näita sisukorda (kõigi punktide laiendamiseks/ahendamiseks topeltklõpsa)
-pdfjs-document-outline-button-label = Näita sisukorda
-pdfjs-attachments-button =
-    .title = Näita manuseid
-pdfjs-attachments-button-label = Manused
-pdfjs-layers-button =
-    .title = Näita kihte (kõikide kihtide vaikeolekusse lähtestamiseks topeltklõpsa)
-pdfjs-layers-button-label = Kihid
-pdfjs-thumbs-button =
-    .title = Näita pisipilte
-pdfjs-thumbs-button-label = Pisipildid
 pdfjs-current-outline-item-button =
     .title = Otsi üles praegune kontuuriüksus
 pdfjs-current-outline-item-button-label = Praegune kontuuriüksus
@@ -172,18 +155,14 @@ pdfjs-additional-layers = Täiendavad kihid
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = { $page }. lehekülg
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page }. lehekülje pisipilt
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Otsi
     .placeholder = Otsi dokumendist…
+    .title = Otsi
 pdfjs-find-previous-button =
     .title = Otsi fraasi eelmine esinemiskoht
 pdfjs-find-previous-button-label = Eelmine
@@ -240,7 +219,3 @@ pdfjs-password-invalid = Vigane parool. Palun proovi uuesti.
 pdfjs-password-ok-button = Sobib
 pdfjs-password-cancel-button = Loobu
 pdfjs-web-fonts-disabled = Veebifondid on keelatud: PDFiga kaasatud fonte pole võimalik kasutada.
-
-## Image alt-text settings
-
-pdfjs-editor-alt-text-settings-delete-model-button = Kustuta

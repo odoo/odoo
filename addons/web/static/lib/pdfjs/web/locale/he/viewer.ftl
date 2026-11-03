@@ -153,6 +153,27 @@ pdfjs-document-properties-linearized = תצוגת דף מהירה:
 pdfjs-document-properties-linearized-yes = כן
 pdfjs-document-properties-linearized-no = לא
 pdfjs-document-properties-close-button = סגירה
+pdfjs-digital-signature-properties-view-certificate = הצגת אישור
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = סיבה: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = חותמת זמן: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] חתימת משנה ({ $count })
+       *[other] חתימות משנה ({ $count })
+    }
 
 ## Print
 
@@ -166,23 +187,6 @@ pdfjs-printing-not-ready = אזהרה: מסמך ה־PDF לא נטען לחלוט
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = הצגה/הסתרה של סרגל הצד
-pdfjs-toggle-sidebar-notification-button =
-    .title = החלפת תצוגת סרגל צד (מסמך שמכיל תוכן עניינים/קבצים מצורפים/שכבות)
-pdfjs-toggle-sidebar-button-label = הצגה/הסתרה של סרגל הצד
-pdfjs-document-outline-button =
-    .title = הצגת תוכן העניינים של המסמך (לחיצה כפולה כדי להרחיב או לצמצם את כל הפריטים)
-pdfjs-document-outline-button-label = תוכן העניינים של המסמך
-pdfjs-attachments-button =
-    .title = הצגת צרופות
-pdfjs-attachments-button-label = צרופות
-pdfjs-layers-button =
-    .title = הצגת שכבות (יש ללחוץ לחיצה כפולה כדי לאפס את כל השכבות למצב ברירת המחדל)
-pdfjs-layers-button-label = שכבות
-pdfjs-thumbs-button =
-    .title = הצגת תצוגה מקדימה
-pdfjs-thumbs-button-label = תצוגה מקדימה
 pdfjs-current-outline-item-button =
     .title = מציאת פריט תוכן העניינים הנוכחי
 pdfjs-current-outline-item-button-label = פריט תוכן העניינים הנוכחי
@@ -195,18 +199,23 @@ pdfjs-additional-layers = שכבות נוספות
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = עמוד { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = תצוגה מקדימה של עמוד { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = בחירת עמוד { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = עמוד { $page } מתוך { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = חיפוש
     .placeholder = חיפוש במסמך…
+    .title = חיפוש
 pdfjs-find-previous-button =
     .title = מציאת המופע הקודם של הביטוי
 pdfjs-find-previous-button-label = קודם
@@ -301,16 +310,16 @@ pdfjs-editor-highlight-button =
     .title = סימון
 pdfjs-editor-highlight-button-label = סימון
 pdfjs-highlight-floating-button1 =
-    .title = סימון
     .aria-label = סימון
+    .title = סימון
 pdfjs-highlight-floating-button-label = סימון
 pdfjs-comment-floating-button =
-    .title = הערה
     .aria-label = הערה
+    .title = הערה
 pdfjs-comment-floating-button-label = הערה
 pdfjs-editor-comment-button =
-    .title = הערה
     .aria-label = הערה
+    .title = הערה
 pdfjs-editor-comment-button-label = הערה
 pdfjs-editor-signature-button =
     .title = הוספת חתימה
@@ -383,8 +392,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] הערות
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = סגירת סרגל הצד
     .aria-label = סגירת סרגל הצד
+    .title = סגירת סרגל הצד
 pdfjs-editor-comments-sidebar-close-button-label = סגירת סרגל הצד
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = ראית משהו ראוי לציון? ניתן לסמן אותו ולהשאיר הערה.
@@ -507,13 +516,6 @@ pdfjs-editor-alt-text-settings-dialog-label = הגדרות טקסט חלופי �
 pdfjs-editor-alt-text-settings-automatic-title = טקסט חלופי אוטומטי
 pdfjs-editor-alt-text-settings-create-model-button-label = יצירת טקסט חלופי באופן אוטומטי
 pdfjs-editor-alt-text-settings-create-model-description = הצעת תיאורים כדי לסייע לאנשים שאינם יכולים לראות את התמונה או כאשר התמונה אינה נטענת.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = מודל AI לטקסט חלופי ({ $totalSize } מ״ב)
-pdfjs-editor-alt-text-settings-ai-model-description = פועל באופן מקומי במכשיר שלך כך שהנתונים שלך נשארים פרטיים. נדרש עבור טקסט חלופי אוטומטי.
-pdfjs-editor-alt-text-settings-delete-model-button = מחיקה
-pdfjs-editor-alt-text-settings-download-model-button = הורדה
-pdfjs-editor-alt-text-settings-downloading-model-button = בהורדה…
 pdfjs-editor-alt-text-settings-editor-title = עורך טקסט חלופי
 pdfjs-editor-alt-text-settings-show-dialog-button-label = הצגת עורך טקסט חלופי מיד בעת הוספת תמונה
 pdfjs-editor-alt-text-settings-show-dialog-description = מסייע לך לוודא שלכל התמונות שלך יש טקסט חלופי.
@@ -534,6 +536,7 @@ pdfjs-editor-undo-bar-message-freetext = הטקסט הוסר
 pdfjs-editor-undo-bar-message-ink = הציור הוסר
 pdfjs-editor-undo-bar-message-stamp = התמונה הוסרה
 pdfjs-editor-undo-bar-message-signature = החתימה הוסרה
+pdfjs-editor-undo-bar-message-comment = ההערה הוסרה
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -618,18 +621,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = פעולות
-pdfjs-editor-edit-comment-actions-button =
-    .title = פעולות
-pdfjs-editor-edit-comment-close-button-label = סגירה
-pdfjs-editor-edit-comment-close-button =
-    .title = סגירה
-pdfjs-editor-edit-comment-actions-edit-button-label = עריכה
-pdfjs-editor-edit-comment-actions-delete-button-label = מחיקה
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = נא להכניס את ההערה שלך
-pdfjs-editor-edit-comment-manager-cancel-button = ביטול
-pdfjs-editor-edit-comment-manager-save-button = שמירה
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = עריכת הערה
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = עדכון
@@ -642,10 +633,165 @@ pdfjs-editor-edit-comment-dialog-cancel-button = ביטול
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = עריכת הערה
 pdfjs-editor-add-comment-button =
     .title = הוספת הערה
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = החלפת תצוגת סרגל צד (מסמך שמכיל תמונות ממוזערות/תוכן עניינים/קבצים מצורפים/שכבות)
+pdfjs-toggle-views-manager-button1-label = ניהול עמודים
+pdfjs-views-manager-sidebar =
+    .aria-label = סרגל צד
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = שינוי גודל סרגל הצד
+pdfjs-views-manager-view-selector-button =
+    .title = תצוגות
+pdfjs-views-manager-view-selector-button-label = תצוגות
+pdfjs-views-manager-pages-title = עמודים
+pdfjs-views-manager-outlines-title1 = תוכן העניינים של המסמך
+    .title = הצגת תוכן העניינים של המסמך (יש ללחוץ לחיצה כפולה כדי להרחיב או לצמצם את כל הפריטים)
+pdfjs-views-manager-attachments-title = קבצים מצורפים
+pdfjs-views-manager-layers-title1 = שכבות
+    .title = הצגת שכבות (יש ללחוץ לחיצה כפולה כדי לאפס את כל השכבות למצב ברירת המחדל)
+pdfjs-views-manager-pages-option-label = עמודים
+pdfjs-views-manager-outlines-option-label = תוכן העניינים של המסמך
+pdfjs-views-manager-attachments-option-label = קבצים מצורפים
+pdfjs-views-manager-layers-option-label = שכבות
+pdfjs-views-manager-add-file-button =
+    .title = הוספת קובץ
+pdfjs-views-manager-add-file-button-label = הוספת קובץ
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] אחד נבחר
+       *[other] { $count } נבחרו
+    }
+pdfjs-views-manager-pages-status-none-action-label = בחירת עמודים
+pdfjs-views-manager-pages-status-action-button-label = ניהול
+pdfjs-views-manager-pages-status-copy-button-label = העתקה
+pdfjs-views-manager-pages-status-cut-button-label = גזירה
+pdfjs-views-manager-pages-status-delete-button-label = מחיקה
+pdfjs-views-manager-pages-status-export-selected-button-label = ייצוא הפריטים שנבחרו…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] עמוד אחד נגזר
+       *[other] { $count } עמודים נגזרו
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] עמוד אחד הועתק
+       *[other] { $count } עמודים הועתקו
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] עמוד אחד נמחק
+       *[other] { $count } עמודים נמחקו
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = בתהליך הכנת הקובץ שלך…
+pdfjs-views-manager-pages-status-waiting-uploading-label = בתהליך העלאת הקובץ…
+pdfjs-views-manager-status-warning-cut-label = לא ניתן היה לגזור. נא לרענן את הדף ולנסות שוב.
+pdfjs-views-manager-status-warning-copy-label = לא ניתן היה להעתיק. נא לרענן את הדף ולנסות שוב.
+pdfjs-views-manager-status-warning-delete-label = לא ניתן היה למחוק. נא לרענן את הדף ולנסות שוב.
+pdfjs-views-manager-status-warning-save-label = לא ניתן היה לשמור. נא לרענן את הדף ולנסות שוב.
+pdfjs-views-manager-status-undo-button-label = ביטול פעולה
+pdfjs-views-manager-status-done-button-label = סיום
+pdfjs-views-manager-status-close-button =
+    .title = סגירה
+pdfjs-views-manager-status-close-button-label = סגירה
+pdfjs-views-manager-paste-button-label = הדבקה
+pdfjs-views-manager-paste-button-before =
+    .title = להדביק לפני העמוד הראשון
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = להדביק אחרי עמוד { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = חדש
+pdfjs-views-manager-waiting-for-file = בתהליך העלאת הקובץ…
+pdfjs-toggle-views-manager-button1 =
+    .title = ניהול עמודים
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = מאפייני חתימה דיגיטלית
+    .title = מאפייני חתימה דיגיטלית
+pdfjs-digital-signature-properties-button-label = מאפייני חתימה דיגיטלית
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = המסמך נחתם בחתימה דיגיטלית תקפה
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] המסמך חתום אך לא ניתן היה לאמת חתימה דיגיטלית אחת
+       *[other] המסמך חתום אך לא ניתן היה לאמת { $count } חתימות דיגיטליות
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] המסמך חתום עם אישור אחד שאינו מהימן
+       *[other] המסמך חתום עם { $count } אישורים שאינם מהימנים
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] המסמך חתום עם אישור אחד שפג תוקפו
+       *[other] המסמך חתום עם { $count } אישורים שפג תוקפם
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] למסמך יש חתימה דיגיטלית אחת שאינה תקינה
+       *[other] למסמך יש { $count } חתימות דיגיטליות שאינן תקינות
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] המסמך חתום עם אישור אחד שנשלל
+       *[other] המסמך חתום עם { $count } אישורים שנשללו
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = מצב: החתימה מאומתת
+pdfjs-digital-signature-properties-status-invalid = מצב: החתימה לא תקינה
+pdfjs-digital-signature-properties-status-unknown = מצב: לא ניתן לאמת (לא נתמך)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = אישור אבטחה: מהימן ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = אישור אבטחה: לא זמין
+pdfjs-digital-signature-properties-certificate-untrusted = אישור אבטחה: לא מהימן
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = אישור אבטחה: מנפיק לא ידוע ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = אישור אבטחה: נחתם עצמית ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = אישור אבטחה: מנפיק לא מהימן ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = אישור אבטחה: פג תוקפו
+pdfjs-digital-signature-properties-certificate-expired-with-date = אישור אבטחה: פג תוקפו ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = אישור אבטחה: נשלל
 
 ## Main menu for adding/removing signatures
 

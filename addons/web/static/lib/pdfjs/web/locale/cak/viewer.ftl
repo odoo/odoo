@@ -147,23 +147,6 @@ pdfjs-printing-not-ready = Rutzijol k'ayewal: Ri PDF man xusamajij ta ronojel ri
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Tijal ri ajxikin kajtz'ik
-pdfjs-toggle-sidebar-notification-button =
-    .title = Tik'ex ri ajxikin yuqkajtz'ik (ri wuj eruk'wan taq ruchi'/taqo/kuchuj)
-pdfjs-toggle-sidebar-button-label = Tijal ri ajxikin kajtz'ik
-pdfjs-document-outline-button =
-    .title = Tik'ut pe ruch'akulal wuj (kamul-pitz'oj richin nirik'/nich'utinirisäx ronojel ruch'akulal)
-pdfjs-document-outline-button-label = Ruch'akulal wuj
-pdfjs-attachments-button =
-    .title = Kek'ut pe ri taq taqoj
-pdfjs-attachments-button-label = Taq taqoj
-pdfjs-layers-button =
-    .title = Kek'ut taq Kuchuj (ka'i'-pitz' richin yetzolïx ronojel ri taq kuchuj e k'o wi)
-pdfjs-layers-button-label = Taq kuchuj
-pdfjs-thumbs-button =
-    .title = Kek'ut pe taq ch'utiq
-pdfjs-thumbs-button-label = Koköj
 pdfjs-current-outline-item-button =
     .title = Kekanöx  Taq Ch'akulal Kik'wan Chib'äl
 pdfjs-current-outline-item-button-label = Taq Ch'akulal Kik'wan Chib'äl
@@ -176,18 +159,14 @@ pdfjs-additional-layers = Tz'aqat ta Kuchuj
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Ruxaq { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Ruch'utinirisaxik ruxaq { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Tikanöx
     .placeholder = Tikanöx pa wuj…
+    .title = Tikanöx
 pdfjs-find-previous-button =
     .title = Tib'an b'enam pa ri jun kan q'aptzij xilitäj
 pdfjs-find-previous-button-label = Jun kan

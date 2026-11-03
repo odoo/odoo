@@ -166,23 +166,6 @@ pdfjs-printing-not-ready = Upozorenje: PDF nije u potpunosti učitan za štampan
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Uključi/isključi bočnu traku
-pdfjs-toggle-sidebar-notification-button =
-    .title = Uključi/isključi bočnu traku (dokument sadrži obris/priloge/slojeve)
-pdfjs-toggle-sidebar-button-label = Uključi/isključi bočnu traku
-pdfjs-document-outline-button =
-    .title = Prikaži outline dokumenta (dvoklik za skupljanje/širenje svih stavki)
-pdfjs-document-outline-button-label = Konture dokumenta
-pdfjs-attachments-button =
-    .title = Prikaži priloge
-pdfjs-attachments-button-label = Prilozi
-pdfjs-layers-button =
-    .title = Prikaži slojeve (dvostruki klik da biste vratili sve slojeve na zadano stanje)
-pdfjs-layers-button-label = Slojevi
-pdfjs-thumbs-button =
-    .title = Prikaži thumbnailove
-pdfjs-thumbs-button-label = Thumbnailovi
 pdfjs-current-outline-item-button =
     .title = Pronađi trenutnu stavku strukture
 pdfjs-current-outline-item-button-label = Trenutna stavka strukture
@@ -195,18 +178,14 @@ pdfjs-additional-layers = Dodatni slojevi
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Strana { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Thumbnail strane { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Pronađi
     .placeholder = Pronađi u dokumentu…
+    .title = Pronađi
 pdfjs-find-previous-button =
     .title = Pronađi prethodno pojavljivanje fraze
 pdfjs-find-previous-button-label = Prethodno
@@ -299,8 +278,8 @@ pdfjs-editor-highlight-button =
     .title = Istaknite
 pdfjs-editor-highlight-button-label = Istaknite
 pdfjs-highlight-floating-button1 =
-    .title = Istaknite
     .aria-label = Istaknite
+    .title = Istaknite
 pdfjs-highlight-floating-button-label = Istaknite
 pdfjs-editor-signature-button =
     .title = Dodaj potpis
@@ -482,13 +461,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Postavke alternativnog teksta slik
 pdfjs-editor-alt-text-settings-automatic-title = Automatski alternativni tekst
 pdfjs-editor-alt-text-settings-create-model-button-label = Automatski kreiraj alternativni tekst
 pdfjs-editor-alt-text-settings-create-model-description = Predlaže opise kako bi pomogao ljudima koji ne vide sliku ili kada se slika ne učitava.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Alternativni tekst AI model ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Radi lokalno na vašem uređaju tako da vaši podaci ostaju privatni. Potrebno za automatski alternativni tekst.
-pdfjs-editor-alt-text-settings-delete-model-button = Izbriši
-pdfjs-editor-alt-text-settings-download-model-button = Preuzmi
-pdfjs-editor-alt-text-settings-downloading-model-button = Preuzimam…
 pdfjs-editor-alt-text-settings-editor-title = Uređivač alternativnog teksta
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Odmah prikaži uređivač alternativnog teksta prilikom dodavanja slike
 pdfjs-editor-alt-text-settings-show-dialog-description = Pomaže vam da osigurate da sve vaše slike imaju alternativni tekst.
@@ -572,26 +544,6 @@ pdfjs-editor-add-signature-error-close-button = Zatvori
 pdfjs-editor-add-signature-cancel-button = Otkaži
 pdfjs-editor-add-signature-add-button = Dodaj
 pdfjs-editor-edit-signature-update-button = Ažuriraj
-
-##  Edit a comment dialog
-
-pdfjs-editor-edit-comment-actions-button-label = Radnje
-pdfjs-editor-edit-comment-actions-button =
-    .title = Radnje
-pdfjs-editor-edit-comment-close-button-label = Zatvori
-pdfjs-editor-edit-comment-close-button =
-    .title = Zatvori
-pdfjs-editor-edit-comment-actions-edit-button-label = Uredi
-pdfjs-editor-edit-comment-actions-delete-button-label = Izbriši
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Unesite svoj komentar
-pdfjs-editor-edit-comment-manager-cancel-button = Otkaži
-pdfjs-editor-edit-comment-manager-save-button = Sačuvaj
-
-## Edit a comment button in the editor toolbar
-
-pdfjs-editor-edit-comment-button =
-    .title = Uredi komentar
 
 ## Main menu for adding/removing signatures
 

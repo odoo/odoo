@@ -64,11 +64,11 @@ pdfjs-cursor-hand-tool-button =
     .title = Aktivēt rokas rīku
 pdfjs-cursor-hand-tool-button-label = Rokas rīks
 pdfjs-scroll-vertical-button =
-    .title = Izmantot vertikālo ritināšanu
-pdfjs-scroll-vertical-button-label = Vertikālā ritināšana
+    .title = Izmantot statenisko ritināšanu
+pdfjs-scroll-vertical-button-label = Stateniskā ritināšana
 pdfjs-scroll-horizontal-button =
-    .title = Izmantot horizontālo ritināšanu
-pdfjs-scroll-horizontal-button-label = Horizontālā ritināšana
+    .title = Izmantot līmenisko ritināšanu
+pdfjs-scroll-horizontal-button-label = Līmeniskā ritināšana
 pdfjs-scroll-wrapped-button =
     .title = Izmantot apkļauto ritināšanu
 pdfjs-scroll-wrapped-button-label = Apkļautā ritināšana
@@ -87,7 +87,7 @@ pdfjs-spread-even-button-label = Pāra izpletumi
 pdfjs-document-properties-button =
     .title = Dokumenta iestatījumi…
 pdfjs-document-properties-button-label = Dokumenta iestatījumi…
-pdfjs-document-properties-file-name = Faila nosaukums:
+pdfjs-document-properties-file-name = Datnes nosaukums:
 pdfjs-document-properties-file-size = Faila izmērs:
 pdfjs-document-properties-title = Nosaukums:
 pdfjs-document-properties-author = Autors:
@@ -127,6 +127,7 @@ pdfjs-document-properties-linearized = Ātrā tīmekļa skats:
 pdfjs-document-properties-linearized-yes = Jā
 pdfjs-document-properties-linearized-no = Nē
 pdfjs-document-properties-close-button = Aizvērt
+pdfjs-digital-signature-properties-view-certificate = Apskatīt sertifikātu
 
 ## Print
 
@@ -140,18 +141,6 @@ pdfjs-printing-not-ready = Uzmanību: PDF nav pilnībā ielādēts drukāšanai.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Pārslēgt sānu joslu
-pdfjs-toggle-sidebar-button-label = Pārslēgt sānu joslu
-pdfjs-document-outline-button =
-    .title = Rādīt dokumenta struktūru (veiciet dubultklikšķi lai izvērstu/sakļautu visus vienumus)
-pdfjs-document-outline-button-label = Dokumenta saturs
-pdfjs-attachments-button =
-    .title = Rādīt pielikumus
-pdfjs-attachments-button-label = Pielikumi
-pdfjs-thumbs-button =
-    .title = Parādīt sīktēlus
-pdfjs-thumbs-button-label = Sīktēli
 pdfjs-findbar-button =
     .title = Meklēt dokumentā
 pdfjs-findbar-button-label = Meklēt
@@ -160,30 +149,27 @@ pdfjs-findbar-button-label = Meklēt
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Lapa { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Lapas { $page } sīktēls
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Meklēt
     .placeholder = Meklēt dokumentā…
+    .title = Meklēt
 pdfjs-find-previous-button =
     .title = Atrast iepriekšējo
 pdfjs-find-previous-button-label = Iepriekšējā
 pdfjs-find-next-button =
     .title = Atrast nākamo
 pdfjs-find-next-button-label = Nākamā
-pdfjs-find-highlight-checkbox = Iekrāsot visas
-pdfjs-find-match-case-checkbox-label = Lielo, mazo burtu jutīgs
+pdfjs-find-highlight-checkbox = Izcelt visus
+pdfjs-find-match-case-checkbox-label = Lielo un mazo burtu atbilstība
+pdfjs-find-match-diacritics-checkbox-label = Diakritisko zīmju atbilstība
 pdfjs-find-entire-word-checkbox-label = Veselus vārdus
 pdfjs-find-reached-top = Sasniegts dokumenta sākums, turpinām no beigām
 pdfjs-find-reached-bottom = Sasniegtas dokumenta beigas, turpinām no sākuma
-pdfjs-find-not-found = Frāze nav atrasta
+pdfjs-find-not-found = Vārdkopa nav atrasta
 
 ## Predefined zoom values
 
@@ -198,8 +184,8 @@ pdfjs-page-scale-percent = { $scale }%
 ## Loading indicator messages
 
 pdfjs-loading-error = Ielādējot PDF notika kļūda.
-pdfjs-invalid-file-error = Nederīgs vai bojāts PDF fails.
-pdfjs-missing-file-error = PDF fails nav atrasts.
+pdfjs-invalid-file-error = Nederīga vai bojāt PDF datne.
+pdfjs-missing-file-error = PDF datne nav atrasta.
 pdfjs-unexpected-response-error = Negaidīa servera atbilde.
 pdfjs-rendering-error = Attēlojot lapu radās kļūda
 
@@ -220,3 +206,64 @@ pdfjs-password-invalid = Nepareiza parole, mēģiniet vēlreiz.
 pdfjs-password-ok-button = Labi
 pdfjs-password-cancel-button = Atcelt
 pdfjs-web-fonts-disabled = Tīmekļa fonti nav aktivizēti: Nevar iegult PDF fontus.
+
+## Editing
+
+pdfjs-editor-stamp-button =
+    .title = Pievienot vai labot attēlus
+pdfjs-editor-stamp-button-label = Pievienot vai labot attēlus
+pdfjs-editor-signature-button =
+    .title = Pievienot parakstu
+pdfjs-editor-signature-button-label = Pievienot parakstu
+
+##
+
+pdfjs-editor-stamp-add-image-button =
+    .title = Pievienot attēlu
+pdfjs-editor-stamp-add-image-button-label = Pievienot attēlu
+pdfjs-editor-signature-add-signature-button =
+    .title = Pievienot jaunu parakstu
+pdfjs-editor-signature-add-signature-button-label = Pievienot jaunu parakstu
+
+## Alt-text dialog
+
+pdfjs-editor-alt-text-add-description-label = Pievienot aprakstu
+
+## New alt-text dialog
+## Group note for entire feature: Alternative text (alt text) helps when people can't see the image. This feature includes a tool to create alt text automatically using an AI model that works locally on the user's device to preserve privacy.
+
+pdfjs-editor-new-alt-text-disclaimer-learn-more-url = Uzzināt vairāk
+
+## Add a signature dialog
+
+pdfjs-editor-add-signature-dialog-title = Pievienot parakstu
+
+## Controls
+
+pdfjs-editor-add-signature-image-upload-error-description = Jāpŗabauda savienojums ar internetu vai jāmēģina cits attēls.
+
+## Dialog buttons
+
+pdfjs-editor-add-signature-add-button = Pievienot
+
+##  Edit a comment dialog
+
+# No existing comment
+pdfjs-editor-edit-comment-dialog-title-when-adding = Pievienot piebildi
+pdfjs-editor-edit-comment-dialog-save-button-when-adding = Pievienot
+
+## Edit a comment button in the editor toolbar
+
+pdfjs-editor-add-comment-button =
+    .title = Pievienot piebildi
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-views-manager-add-file-button =
+    .title = Pievienot datni
+pdfjs-views-manager-add-file-button-label = Pievienot datni

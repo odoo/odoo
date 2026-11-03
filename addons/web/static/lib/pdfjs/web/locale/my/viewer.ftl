@@ -92,18 +92,6 @@ pdfjs-printing-not-ready = သတိပေးချက်: ယခု PDF ဖိ�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = ဘေးတန်းဖွင့်ပိတ်
-pdfjs-toggle-sidebar-button-label = ဖွင့်ပိတ် ဆလိုက်ဒါ
-pdfjs-document-outline-button =
-    .title = စာတမ်းအကျဉ်းချုပ်ကို ပြပါ (စာရင်းအားလုံးကို ချုံ့/ချဲ့ရန် ကလစ်နှစ်ချက်နှိပ်ပါ)
-pdfjs-document-outline-button-label = စာတမ်းအကျဉ်းချုပ်
-pdfjs-attachments-button =
-    .title = တွဲချက်များ ပြပါ
-pdfjs-attachments-button-label = တွဲထားချက်များ
-pdfjs-thumbs-button =
-    .title = ပုံရိပ်ငယ်များကို ပြပါ
-pdfjs-thumbs-button-label = ပုံရိပ်ငယ်များ
 pdfjs-findbar-button =
     .title = Find in Document
 pdfjs-findbar-button-label = ရှာဖွေပါ
@@ -112,18 +100,14 @@ pdfjs-findbar-button-label = ရှာဖွေပါ
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = စာမျက်နှာ { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = စာမျက်နှာရဲ့ ပုံရိပ်ငယ် { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = ရှာဖွေပါ
     .placeholder = စာတမ်းထဲတွင် ရှာဖွေရန်…
+    .title = ရှာဖွေပါ
 pdfjs-find-previous-button =
     .title = စကားစုရဲ့ အရင် ​ဖြစ်ပွားမှုကို ရှာဖွေပါ
 pdfjs-find-previous-button-label = နောက်သို့

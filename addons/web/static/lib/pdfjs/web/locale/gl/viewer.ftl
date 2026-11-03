@@ -166,23 +166,6 @@ pdfjs-printing-not-ready = Aviso: O PDF non se cargou completamente para imprimi
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Amosar/agochar a barra lateral
-pdfjs-toggle-sidebar-notification-button =
-    .title = Alternar barra lateral (o documento contén esquema/anexos/capas)
-pdfjs-toggle-sidebar-button-label = Amosar/agochar a barra lateral
-pdfjs-document-outline-button =
-    .title = Amosar a estrutura do documento (dobre clic para expandir/contraer todos os elementos)
-pdfjs-document-outline-button-label = Estrutura do documento
-pdfjs-attachments-button =
-    .title = Amosar anexos
-pdfjs-attachments-button-label = Anexos
-pdfjs-layers-button =
-    .title = Mostrar capas (prema dúas veces para restaurar todas as capas o estado predeterminado)
-pdfjs-layers-button-label = Capas
-pdfjs-thumbs-button =
-    .title = Amosar miniaturas
-pdfjs-thumbs-button-label = Miniaturas
 pdfjs-current-outline-item-button =
     .title = Atopar o elemento delimitado actualmente
 pdfjs-current-outline-item-button-label = Elemento delimitado actualmente
@@ -195,18 +178,14 @@ pdfjs-additional-layers = Capas adicionais
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Páxina { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatura da páxina { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Atopar
     .placeholder = Atopar no documento…
+    .title = Atopar
 pdfjs-find-previous-button =
     .title = Atopar a anterior aparición da frase
 pdfjs-find-previous-button-label = Anterior
@@ -297,8 +276,8 @@ pdfjs-editor-highlight-button =
     .title = Destacar
 pdfjs-editor-highlight-button-label = Destacar
 pdfjs-highlight-floating-button1 =
-    .title = Destacar
     .aria-label = Destacar
+    .title = Destacar
 pdfjs-highlight-floating-button-label = Destacar
 pdfjs-editor-signature-button =
     .title = Engadir sinatura
@@ -480,13 +459,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Configuración do texto alternativ
 pdfjs-editor-alt-text-settings-automatic-title = Texto alternativo automático
 pdfjs-editor-alt-text-settings-create-model-button-label = Crear texto alternativo automaticamente
 pdfjs-editor-alt-text-settings-create-model-description = Suxire descricións para axudar ás persoas que non poden ver a imaxe ou cando a imaxe non se carga.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Modelo de IA de texto alternativo ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Funciona localmente no teu dispositivo para que os teus datos se manteñan privados. Necesario para o texto alternativo automático.
-pdfjs-editor-alt-text-settings-delete-model-button = Eliminar
-pdfjs-editor-alt-text-settings-download-model-button = Descargar
-pdfjs-editor-alt-text-settings-downloading-model-button = Descargando…
 pdfjs-editor-alt-text-settings-editor-title = Editor de texto alternativo
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mostrar o editor de texto alternativo inmediatamente ao engadir unha imaxe
 pdfjs-editor-alt-text-settings-show-dialog-description = Axúdache a asegurarte de que todas as túas imaxes teñan texto alternativo.

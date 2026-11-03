@@ -166,23 +166,6 @@ pdfjs-printing-not-ready = Диққат: Файли «PDF» барои чопк�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Фаъол кардани навори ҷонибӣ
-pdfjs-toggle-sidebar-notification-button =
-    .title = Фаъол кардани навори ҷонибӣ (ҳуҷҷат дорои сохтор/замимаҳо/қабатҳо мебошад)
-pdfjs-toggle-sidebar-button-label = Фаъол кардани навори ҷонибӣ
-pdfjs-document-outline-button =
-    .title = Намоиш додани сохтори ҳуҷҷат (барои баркушодан/пеҷондани ҳамаи унсурҳо дубора зер кунед)
-pdfjs-document-outline-button-label = Сохтори ҳуҷҷат
-pdfjs-attachments-button =
-    .title = Намоиш додани замимаҳо
-pdfjs-attachments-button-label = Замимаҳо
-pdfjs-layers-button =
-    .title = Намоиш додани қабатҳо (барои барқарор кардани ҳамаи қабатҳо ба вазъияти пешфарз дубора зер кунед)
-pdfjs-layers-button-label = Қабатҳо
-pdfjs-thumbs-button =
-    .title = Намоиш додани тасвирчаҳо
-pdfjs-thumbs-button-label = Тасвирчаҳо
 pdfjs-current-outline-item-button =
     .title = Ёфтани унсури сохтори ҷорӣ
 pdfjs-current-outline-item-button-label = Унсури сохтори ҷорӣ
@@ -195,18 +178,23 @@ pdfjs-additional-layers = Қабатҳои иловагӣ
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Саҳифаи { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Тасвирчаи саҳифаи { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Интихоби саҳифаи { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Саҳифаи { $page } аз { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Ёфтан
     .placeholder = Ёфтан дар ҳуҷҷат…
+    .title = Ёфтан
 pdfjs-find-previous-button =
     .title = Ҷустуҷӯи мавриди қаблии ибораи пешниҳодшуда
 pdfjs-find-previous-button-label = Қаблӣ
@@ -301,16 +289,16 @@ pdfjs-editor-highlight-button =
     .title = Ҷудокунӣ
 pdfjs-editor-highlight-button-label = Ҷудокунӣ
 pdfjs-highlight-floating-button1 =
-    .title = Ҷудокунӣ
     .aria-label = Ҷудокунӣ
+    .title = Ҷудокунӣ
 pdfjs-highlight-floating-button-label = Ҷудокунӣ
 pdfjs-comment-floating-button =
-    .title = Шарҳ
     .aria-label = Шарҳ
+    .title = Шарҳ
 pdfjs-comment-floating-button-label = Шарҳ
 pdfjs-editor-comment-button =
-    .title = Шарҳ
     .aria-label = Шарҳ
+    .title = Шарҳ
 pdfjs-editor-comment-button-label = Шарҳ
 pdfjs-editor-signature-button =
     .title = Илова кардани имзо
@@ -383,8 +371,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Шарҳҳо
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Пӯшидани навори ҷонибӣ
     .aria-label = Пӯшидани навори ҷонибӣ
+    .title = Пӯшидани навори ҷонибӣ
 pdfjs-editor-comments-sidebar-close-button-label = Пӯшидани навори ҷонибӣ
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Чизи диққатангезро мушоҳида кардед? Онро қайд кунед ва ба он шарҳ гузоред.
@@ -507,13 +495,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Танзимоти матни ил
 pdfjs-editor-alt-text-settings-automatic-title = Матни иловагии худкор
 pdfjs-editor-alt-text-settings-create-model-button-label = Ба таври худкор эҷод кардани матни иловагӣ
 pdfjs-editor-alt-text-settings-create-model-description = Ин имкон барои расонидани кумак ба одамоне, ки аксҳоро дида наметавонанд ё вақте ки аксҳо кушода намешаванд, тавсифи аксҳоро пешниҳод мекунад.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Модели зеҳни сунъӣ «AI» барои матни ивазкунанда ({ $totalSize } МБ)
-pdfjs-editor-alt-text-settings-ai-model-description = Дар дастгоҳи шумо ба таври маҳаллӣ кор мекунад, бинобар ин махфияти маълумоти шахсии шумо нигоҳ дошта мешавад. Барои матни ивазкунандаи худкор лозим аст.
-pdfjs-editor-alt-text-settings-delete-model-button = Нест кардан
-pdfjs-editor-alt-text-settings-download-model-button = Боргирӣ кардан
-pdfjs-editor-alt-text-settings-downloading-model-button = Дар ҳоли боргирӣ…
 pdfjs-editor-alt-text-settings-editor-title = Муҳаррири матни иловагӣ
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Дарҳол нишон додани муҳаррири матни ивазкунанда ҳангоми иловакунии тасвир
 pdfjs-editor-alt-text-settings-show-dialog-description = Ба шумо кумак мекунад, ки боварӣ ҳосил кунед, ки ҳамаи тасвирҳои шумо дорои матни ивазкунанда мебошанд.
@@ -534,6 +515,7 @@ pdfjs-editor-undo-bar-message-freetext = Матн тоза карда шуд
 pdfjs-editor-undo-bar-message-ink = Расм тоза карда шуд
 pdfjs-editor-undo-bar-message-stamp = Тасвир тоза карда шуд
 pdfjs-editor-undo-bar-message-signature = Имзо тоза карда шуд
+pdfjs-editor-undo-bar-message-comment = Шарҳ тоза карда шуд
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -618,18 +600,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = Амалҳо
-pdfjs-editor-edit-comment-actions-button =
-    .title = Амалҳо
-pdfjs-editor-edit-comment-close-button-label = Пӯшидан
-pdfjs-editor-edit-comment-close-button =
-    .title = Пӯшидан
-pdfjs-editor-edit-comment-actions-edit-button-label = Таҳрир кардан
-pdfjs-editor-edit-comment-actions-delete-button-label = Нест кардан
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Шарҳи худро ворид кунед
-pdfjs-editor-edit-comment-manager-cancel-button = Бекор кардан
-pdfjs-editor-edit-comment-manager-save-button = Нигоҳ доштан
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = Таҳрир кардани шарҳ
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = Навсозӣ кардан
@@ -642,8 +612,91 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Бекор кардан
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = Таҳрир кардани шарҳ
+pdfjs-editor-add-comment-button =
+    .title = Илова кардани шарҳ
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Фаъол кардани навори ҷонибӣ (ҳуҷҷат дорои тасвирчаҳо/сохтор/замимаҳо/қабатҳо мебошад)
+pdfjs-toggle-views-manager-button1-label = Идоракунии саҳифаҳо
+pdfjs-views-manager-sidebar =
+    .aria-label = Навори ҷонибӣ
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Тағйири андозаи навори ҷонибӣ
+pdfjs-views-manager-view-selector-button =
+    .title = Намудҳо
+pdfjs-views-manager-view-selector-button-label = Намудҳо
+pdfjs-views-manager-pages-title = Саҳифаҳо
+pdfjs-views-manager-attachments-title = Замимаҳо
+pdfjs-views-manager-pages-option-label = Саҳифаҳо
+pdfjs-views-manager-outlines-option-label = Сохтори ҳуҷҷат
+pdfjs-views-manager-attachments-option-label = Замимаҳо
+pdfjs-views-manager-layers-option-label = Қабатҳо
+pdfjs-views-manager-add-file-button =
+    .title = Илова кардани файл
+pdfjs-views-manager-add-file-button-label = Илова кардани файл
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } интихоб шуд
+       *[other] { $count } интихоб шуданд
+    }
+pdfjs-views-manager-pages-status-none-action-label = Саҳифаҳоро интихоб намоед
+pdfjs-views-manager-pages-status-action-button-label = Идора кардан
+pdfjs-views-manager-pages-status-copy-button-label = Нусха бардоштан
+pdfjs-views-manager-pages-status-cut-button-label = Буридан
+pdfjs-views-manager-pages-status-delete-button-label = Нест кардан
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 саҳифа бурида шуд
+       *[other] { $count } саҳифа бурида шуданд
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 саҳифа нусха бардошта шуд
+       *[other] { $count } саҳифа нусха бардошта шуданд
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 саҳифа нест карда шуд
+       *[other] { $count } саҳифа нест карда шуданд
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Файли шумо омода мешавад…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Дар ҳоли боркунии файл…
+pdfjs-views-manager-status-warning-cut-label = Бурида нашуд. Саҳифаро навсозӣ кунед ва аз нав кӯшиш намоед.
+pdfjs-views-manager-status-warning-copy-label = Нусха бардошта нашуд. Саҳифаро навсозӣ кунед ва аз нав кӯшиш намоед.
+pdfjs-views-manager-status-warning-delete-label = Нест карда нашуд. Саҳифаро навсозӣ кунед ва аз нав кӯшиш намоед.
+pdfjs-views-manager-status-warning-save-label = Нигоҳ дошта нашуд. Саҳифаро навсозӣ кунед ва аз нав кӯшиш намоед.
+pdfjs-views-manager-status-undo-button-label = Бекор кардан
+pdfjs-views-manager-status-done-button-label = Тайёр
+pdfjs-views-manager-status-close-button =
+    .title = Пӯшидан
+pdfjs-views-manager-status-close-button-label = Пӯшидан
+pdfjs-views-manager-paste-button-label = Гузоштан
+pdfjs-views-manager-paste-button-before =
+    .title = Гузоштан пеш аз саҳифаи аввалин
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Гузоштан пас аз саҳифаи { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = НАВ
+pdfjs-toggle-views-manager-button1 =
+    .title = Идоракунии саҳифаҳо
 
 ## Main menu for adding/removing signatures
 

@@ -92,18 +92,6 @@ pdfjs-printing-not-ready = Yaamar: PDF ši zunbu ka timme karyan še.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Kanjari ceraw zuu
-pdfjs-toggle-sidebar-button-label = Kanjari ceraw zuu
-pdfjs-document-outline-button =
-    .title = Takaddaa korfur alhaaloo cebe (naagu cee hinka ka haya-izey kul hayandi/kankamandi)
-pdfjs-document-outline-button-label = Takadda filla-boŋ
-pdfjs-attachments-button =
-    .title = Hangarey cebe
-pdfjs-attachments-button-label = Hangarey
-pdfjs-thumbs-button =
-    .title = Kabeboy biyey cebe
-pdfjs-thumbs-button-label = Kabeboy biyey
 pdfjs-findbar-button =
     .title = Ceeci takaddaa ra
 pdfjs-findbar-button-label = Ceeci
@@ -112,18 +100,14 @@ pdfjs-findbar-button-label = Ceeci
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = { $page } moo
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Kabeboy bii { $page } moo še
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Ceeci
     .placeholder = Ceeci takaddaa ra…
+    .title = Ceeci
 pdfjs-find-previous-button =
     .title = Kalimaɲaŋoo bangayri bisantaa ceeci
 pdfjs-find-previous-button-label = Bisante

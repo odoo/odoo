@@ -140,23 +140,6 @@ pdfjs-printing-not-ready = Pozōr: Tyn PDF niy ma za tela zaladowany do durku.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Przełōncz posek na rancie
-pdfjs-toggle-sidebar-notification-button =
-    .title = Przełōncz posek na rancie (dokumynt mo struktura/przidowki/warstwy)
-pdfjs-toggle-sidebar-button-label = Przełōncz posek na rancie
-pdfjs-document-outline-button =
-    .title = Pokoż struktura dokumyntu (tuplowane klikniyncie rozszyrzo/swijo wszyskie elymynta)
-pdfjs-document-outline-button-label = Struktura dokumyntu
-pdfjs-attachments-button =
-    .title = Pokoż przidowki
-pdfjs-attachments-button-label = Przidowki
-pdfjs-layers-button =
-    .title = Pokoż warstwy (tuplowane klikniyncie resetuje wszyskie warstwy do bazowego stanu)
-pdfjs-layers-button-label = Warstwy
-pdfjs-thumbs-button =
-    .title = Pokoż miniatury
-pdfjs-thumbs-button-label = Miniatury
 pdfjs-findbar-button =
     .title = Znojdź w dokumyncie
 pdfjs-findbar-button-label = Znojdź
@@ -166,18 +149,14 @@ pdfjs-additional-layers = Nadbytnie warstwy
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Strōna { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatura strōny { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Znojdź
     .placeholder = Znojdź w dokumyncie…
+    .title = Znojdź
 pdfjs-find-previous-button =
     .title = Znojdź piyrwyjsze pokozanie sie tyj frazy
 pdfjs-find-previous-button-label = Piyrwyjszo

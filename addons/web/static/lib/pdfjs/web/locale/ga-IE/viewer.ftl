@@ -98,18 +98,6 @@ pdfjs-printing-not-ready = Rabhadh: Ní féidir an PDF a phriontáil go dtí go 
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Scoránaigh an Barra Taoibh
-pdfjs-toggle-sidebar-button-label = Scoránaigh an Barra Taoibh
-pdfjs-document-outline-button =
-    .title = Taispeáin Imlíne na Cáipéise (déchliceáil chun chuile rud a leathnú nó a laghdú)
-pdfjs-document-outline-button-label = Creatlach na Cáipéise
-pdfjs-attachments-button =
-    .title = Taispeáin Iatáin
-pdfjs-attachments-button-label = Iatáin
-pdfjs-thumbs-button =
-    .title = Taispeáin Mionsamhlacha
-pdfjs-thumbs-button-label = Mionsamhlacha
 pdfjs-findbar-button =
     .title = Aimsigh sa Cháipéis
 pdfjs-findbar-button-label = Aimsigh
@@ -118,18 +106,14 @@ pdfjs-findbar-button-label = Aimsigh
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Leathanach { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Mionsamhail Leathanaigh { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Aimsigh
     .placeholder = Aimsigh sa cháipéis…
+    .title = Aimsigh
 pdfjs-find-previous-button =
     .title = Aimsigh an sampla roimhe seo den nath seo
 pdfjs-find-previous-button-label = Roimhe seo

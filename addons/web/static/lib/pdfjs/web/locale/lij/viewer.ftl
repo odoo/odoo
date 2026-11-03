@@ -140,18 +140,6 @@ pdfjs-printing-not-ready = Atençion: o PDF o no l'é ancon caregou conpletament
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Ativa/dizativa bara de scianco
-pdfjs-toggle-sidebar-button-label = Ativa/dizativa bara de scianco
-pdfjs-document-outline-button =
-    .title = Fanni vedde o contorno do documento (scicca doggio pe espande/ridue tutti i elementi)
-pdfjs-document-outline-button-label = Contorno do documento
-pdfjs-attachments-button =
-    .title = Fanni vedde alegæ
-pdfjs-attachments-button-label = Alegæ
-pdfjs-thumbs-button =
-    .title = Mostra miniatue
-pdfjs-thumbs-button-label = Miniatue
 pdfjs-findbar-button =
     .title = Treuva into documento
 pdfjs-findbar-button-label = Treuva
@@ -160,18 +148,14 @@ pdfjs-findbar-button-label = Treuva
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Pagina { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatua da pagina { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Treuva
     .placeholder = Treuva into documento…
+    .title = Treuva
 pdfjs-find-previous-button =
     .title = Treuva a ripetiçion precedente do testo da çercâ
 pdfjs-find-previous-button-label = Precedente

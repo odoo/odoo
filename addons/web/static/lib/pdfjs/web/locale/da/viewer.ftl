@@ -166,23 +166,6 @@ pdfjs-printing-not-ready = Advarsel: PDF-filen er ikke fuldt indlæst til udskri
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Slå sidepanel til eller fra
-pdfjs-toggle-sidebar-notification-button =
-    .title = Slå sidepanel til eller fra (dokumentet indeholder disposition/vedhæftede filer/lag)
-pdfjs-toggle-sidebar-button-label = Slå sidepanel til eller fra
-pdfjs-document-outline-button =
-    .title = Vis dokumentets disposition (dobbeltklik for at udvide/sammenfolde alle elementer)
-pdfjs-document-outline-button-label = Dokument-disposition
-pdfjs-attachments-button =
-    .title = Vis vedhæftede filer
-pdfjs-attachments-button-label = Vedhæftede filer
-pdfjs-layers-button =
-    .title = Vis lag (dobbeltklik for at nulstille alle lag til standard-tilstanden)
-pdfjs-layers-button-label = Lag
-pdfjs-thumbs-button =
-    .title = Vis miniaturer
-pdfjs-thumbs-button-label = Miniaturer
 pdfjs-current-outline-item-button =
     .title = Find det aktuelle dispositions-element
 pdfjs-current-outline-item-button-label = Aktuelt dispositions-element
@@ -195,18 +178,23 @@ pdfjs-additional-layers = Yderligere lag
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Side { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniature af side { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Vælg side { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Side { $page } af { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Find
     .placeholder = Find i dokument…
+    .title = Find
 pdfjs-find-previous-button =
     .title = Find den forrige forekomst
 pdfjs-find-previous-button-label = Forrige
@@ -301,16 +289,16 @@ pdfjs-editor-highlight-button =
     .title = Fremhæv
 pdfjs-editor-highlight-button-label = Fremhæv
 pdfjs-highlight-floating-button1 =
-    .title = Fremhæv
     .aria-label = Fremhæv
+    .title = Fremhæv
 pdfjs-highlight-floating-button-label = Fremhæv
 pdfjs-comment-floating-button =
-    .title = Kommenter
     .aria-label = Kommenter
+    .title = Kommenter
 pdfjs-comment-floating-button-label = Kommenter
 pdfjs-editor-comment-button =
-    .title = Kommentar
     .aria-label = Kommentar
+    .title = Kommentar
 pdfjs-editor-comment-button-label = Kommentar
 pdfjs-editor-signature-button =
     .title = Tilføj signatur
@@ -383,8 +371,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Kommentarer
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Luk sidepanelet
     .aria-label = Luk sidepanelet
+    .title = Luk sidepanelet
 pdfjs-editor-comments-sidebar-close-button-label = Luk sidepanelet
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Har du fundet noget interessant? Fremhæv det og gem en kommentar.
@@ -507,13 +495,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Indstillinger for alternativ tekst
 pdfjs-editor-alt-text-settings-automatic-title = Automatisk alternativ tekst
 pdfjs-editor-alt-text-settings-create-model-button-label = Opret alternativ tekst automatisk
 pdfjs-editor-alt-text-settings-create-model-description = Foreslår beskrivelser for at hjælpe folk, der ikke kan se billedet, eller når billedet ikke indlæses.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = AI-model til at oprette alternative tekster ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Kører lokalt på din enhed, så dine data forbliver private. Påkrævet for at anvende automatisk alternativ tekst.
-pdfjs-editor-alt-text-settings-delete-model-button = Slet
-pdfjs-editor-alt-text-settings-download-model-button = Hent
-pdfjs-editor-alt-text-settings-downloading-model-button = Henter…
 pdfjs-editor-alt-text-settings-editor-title = Redigering af alternativ tekst
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Vis redigering af alternativ tekst med det samme, når et billede tilføjes
 pdfjs-editor-alt-text-settings-show-dialog-description = Hjælper dig med at sikre, at alle dine billeder har alternativ tekst.
@@ -534,6 +515,7 @@ pdfjs-editor-undo-bar-message-freetext = Tekst fjernet
 pdfjs-editor-undo-bar-message-ink = Tegning fjernet
 pdfjs-editor-undo-bar-message-stamp = Billede fjernet
 pdfjs-editor-undo-bar-message-signature = Signatur fjernet
+pdfjs-editor-undo-bar-message-comment = Kommentar fjernet
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -618,18 +600,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = Handlinger
-pdfjs-editor-edit-comment-actions-button =
-    .title = Handlinger
-pdfjs-editor-edit-comment-close-button-label = Luk
-pdfjs-editor-edit-comment-close-button =
-    .title = Luk
-pdfjs-editor-edit-comment-actions-edit-button-label = Rediger
-pdfjs-editor-edit-comment-actions-delete-button-label = Slet
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Indtast din kommentar
-pdfjs-editor-edit-comment-manager-cancel-button = Annuller
-pdfjs-editor-edit-comment-manager-save-button = Gem
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = Rediger kommentar
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = Opdater
@@ -642,8 +612,89 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Annuller
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = Rediger kommentar
+pdfjs-editor-add-comment-button =
+    .title = Tilføj kommentar
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Slå sidepanel til eller fra (dokumentet indeholder miniaturer/disposition/vedhæftede filer/lag)
+pdfjs-toggle-views-manager-button1-label = Håndter sider
+pdfjs-views-manager-sidebar =
+    .aria-label = Sidepanel
+pdfjs-views-manager-view-selector-button =
+    .title = Visninger
+pdfjs-views-manager-view-selector-button-label = Visninger
+pdfjs-views-manager-pages-title = Sider
+pdfjs-views-manager-attachments-title = Vedhæftede filer
+pdfjs-views-manager-layers-title1 = Lag
+    .title = Lag (dobbeltklik for at nulstille alle lag til standard-tilstanden)
+pdfjs-views-manager-pages-option-label = Sider
+pdfjs-views-manager-outlines-option-label = Dokument-disposition
+pdfjs-views-manager-attachments-option-label = Vedhæftede filer
+pdfjs-views-manager-layers-option-label = Lag
+pdfjs-views-manager-add-file-button =
+    .title = Tilføj fil
+pdfjs-views-manager-add-file-button-label = Tilføj fil
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } valgt
+       *[other] { $count } valgt
+    }
+pdfjs-views-manager-pages-status-none-action-label = Vælg sider
+pdfjs-views-manager-pages-status-action-button-label = Håndter
+pdfjs-views-manager-pages-status-copy-button-label = Kopier
+pdfjs-views-manager-pages-status-cut-button-label = Klip
+pdfjs-views-manager-pages-status-delete-button-label = Slet
+pdfjs-views-manager-pages-status-export-selected-button-label = Eksporter valgte…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 side klippet
+       *[other] { $count } sider klippet
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 side kopieret
+       *[other] { $count } sider kopieret
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 side slettet
+       *[other] { $count } sider slettet
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Gør din fil klar…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Uploader fil…
+pdfjs-views-manager-status-undo-button-label = Fortryd
+pdfjs-views-manager-status-done-button-label = Færdig
+pdfjs-views-manager-status-close-button =
+    .title = Luk
+pdfjs-views-manager-status-close-button-label = Luk
+pdfjs-views-manager-paste-button-label = Indsæt
+pdfjs-views-manager-paste-button-before =
+    .title = Indsæt før første side
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Indsæt efter side { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = NY
+pdfjs-views-manager-waiting-for-file = Uploader fil…
+pdfjs-toggle-views-manager-button1 =
+    .title = Håndter sider
 
 ## Main menu for adding/removing signatures
 

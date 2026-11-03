@@ -166,23 +166,6 @@ pdfjs-printing-not-ready = Atenzion: il PDF nol è stât cjamât dal dut pe stam
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Ative/Disative sbare laterâl
-pdfjs-toggle-sidebar-notification-button =
-    .title = Ative/Disative sbare laterâl (il document al conten struture/zontis/strâts)
-pdfjs-toggle-sidebar-button-label = Ative/Disative sbare laterâl
-pdfjs-document-outline-button =
-    .title = Mostre la struture dal document (dopli clic par slargjâ/strenzi ducj i elements)
-pdfjs-document-outline-button-label = Struture dal document
-pdfjs-attachments-button =
-    .title = Mostre lis zontis
-pdfjs-attachments-button-label = Zontis
-pdfjs-layers-button =
-    .title = Mostre i strâts (dopli clic par ristabilî ducj i strâts al stât predefinît)
-pdfjs-layers-button-label = Strâts
-pdfjs-thumbs-button =
-    .title = Mostre miniaturis
-pdfjs-thumbs-button-label = Miniaturis
 pdfjs-current-outline-item-button =
     .title = Cjate l'element de struture atuâl
 pdfjs-current-outline-item-button-label = Element de struture atuâl
@@ -195,18 +178,14 @@ pdfjs-additional-layers = Strâts adizionâi
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Pagjine { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniature de pagjine { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Cjate
     .placeholder = Cjate tal document…
+    .title = Cjate
 pdfjs-find-previous-button =
     .title = Cjate il câs precedent dal test
 pdfjs-find-previous-button-label = Precedent
@@ -301,16 +280,16 @@ pdfjs-editor-highlight-button =
     .title = Evidenzie
 pdfjs-editor-highlight-button-label = Evidenzie
 pdfjs-highlight-floating-button1 =
-    .title = Evidenzie
     .aria-label = Evidenzie
+    .title = Evidenzie
 pdfjs-highlight-floating-button-label = Evidenzie
 pdfjs-comment-floating-button =
-    .title = Comente
     .aria-label = Comente
+    .title = Comente
 pdfjs-comment-floating-button-label = Comente
 pdfjs-editor-comment-button =
-    .title = Comente
     .aria-label = Comente
+    .title = Comente
 pdfjs-editor-comment-button-label = Comente
 pdfjs-editor-signature-button =
     .title = Zonte firme
@@ -383,8 +362,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Coments
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Siere la sbare laterâl
     .aria-label = Siere la sbare laterâl
+    .title = Siere la sbare laterâl
 pdfjs-editor-comments-sidebar-close-button-label = Siere la sbare laterâl
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Âstu cjatât alc di interessant? Evidenzilu e lasse un coment.
@@ -507,13 +486,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Impostazions test alternatîf pes 
 pdfjs-editor-alt-text-settings-automatic-title = Test alternatîf automatic
 pdfjs-editor-alt-text-settings-create-model-button-label = Cree test alternatîf in automatic
 pdfjs-editor-alt-text-settings-create-model-description = Al sugjerìs descrizions par judâ lis personis che no rivin a viodi la imagjin o cuant che la imagjin no ven cjariade.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Model IA pal test alternatîf ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Al ven eseguît in locâl sul to dispositîf, cussì che i tiei dâts a restin riservâts. Al è necessari pe gjenerazion automatiche dal test alternatîf.
-pdfjs-editor-alt-text-settings-delete-model-button = Elimine
-pdfjs-editor-alt-text-settings-download-model-button = Discjame
-pdfjs-editor-alt-text-settings-downloading-model-button = Daûr a discjariâ…
 pdfjs-editor-alt-text-settings-editor-title = Modifiche test alternatîf
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mostre l'editôr dal test alternatîf a pene che e ven zontade une imagjin
 pdfjs-editor-alt-text-settings-show-dialog-description = Ti jude a sigurâti che dutis lis tôs imagjins a vedin il test alternatîf.
@@ -618,18 +590,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = Azions
-pdfjs-editor-edit-comment-actions-button =
-    .title = Azions
-pdfjs-editor-edit-comment-close-button-label = Siere
-pdfjs-editor-edit-comment-close-button =
-    .title = Siere
-pdfjs-editor-edit-comment-actions-edit-button-label = Modifiche
-pdfjs-editor-edit-comment-actions-delete-button-label = Elimine
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Inserìs il to coment
-pdfjs-editor-edit-comment-manager-cancel-button = Anule
-pdfjs-editor-edit-comment-manager-save-button = Salve
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = Modifiche coment
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = Inzorne
@@ -642,8 +602,8 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Anule
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = Modifiche coment
+pdfjs-editor-add-comment-button =
+    .title = Zonte coment
 
 ## Main menu for adding/removing signatures
 

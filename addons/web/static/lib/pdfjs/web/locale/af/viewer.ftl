@@ -98,18 +98,6 @@ pdfjs-printing-not-ready = Waarskuwing: Die PDF is nog nie volledig gelaai vir d
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Sypaneel aan/af
-pdfjs-toggle-sidebar-button-label = Sypaneel aan/af
-pdfjs-document-outline-button =
-    .title = Wys dokumentskema (dubbelklik om alle items oop/toe te vou)
-pdfjs-document-outline-button-label = Dokumentoorsig
-pdfjs-attachments-button =
-    .title = Wys aanhegsels
-pdfjs-attachments-button-label = Aanhegsels
-pdfjs-thumbs-button =
-    .title = Wys duimnaels
-pdfjs-thumbs-button-label = Duimnaels
 pdfjs-findbar-button =
     .title = Soek in dokument
 pdfjs-findbar-button-label = Vind
@@ -118,18 +106,14 @@ pdfjs-findbar-button-label = Vind
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Bladsy { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Duimnael van bladsy { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Vind
     .placeholder = Soek in dokument…
+    .title = Vind
 pdfjs-find-previous-button =
     .title = Vind die vorige voorkoms van die frase
 pdfjs-find-previous-button-label = Vorige

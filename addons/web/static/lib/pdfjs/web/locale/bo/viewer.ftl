@@ -140,18 +140,6 @@ pdfjs-printing-not-ready = Warning: The PDF is not fully loaded for printing.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Toggle Sidebar
-pdfjs-toggle-sidebar-button-label = Toggle Sidebar
-pdfjs-document-outline-button =
-    .title = Show Document Outline (double-click to expand/collapse all items)
-pdfjs-document-outline-button-label = Document Outline
-pdfjs-attachments-button =
-    .title = Show Attachments
-pdfjs-attachments-button-label = Attachments
-pdfjs-thumbs-button =
-    .title = Show Thumbnails
-pdfjs-thumbs-button-label = Thumbnails
 pdfjs-findbar-button =
     .title = Find in Document
 pdfjs-findbar-button-label = Find
@@ -160,18 +148,14 @@ pdfjs-findbar-button-label = Find
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Page { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Thumbnail of Page { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Find
     .placeholder = Find in document…
+    .title = Find
 pdfjs-find-previous-button =
     .title = Find the previous occurrence of the phrase
 pdfjs-find-previous-button-label = Previous
