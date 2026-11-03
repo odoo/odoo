@@ -22,7 +22,7 @@ class HrLeaveAccrualPlan(models.Model):
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id',
         export_string_translation=False)
     company_id = fields.Many2one('res.company', string='Company', domain=lambda self: [('id', 'in', self.env.companies.ids)],
-        compute="_compute_company_id", store="True", readonly=False)
+        compute="_compute_company_id", store=True, readonly=False)
     transition_mode = fields.Selection([
         ('immediately', 'Immediately'),
         ('end_of_accrual', "After this accrual's period")],

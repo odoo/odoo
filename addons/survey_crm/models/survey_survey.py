@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class SurveySurvey(models.Model):
     _inherit = 'survey.survey'
 
-    generate_lead = fields.Boolean('Lead Generating', compute='_compute_generate_lead', store="True")
+    generate_lead = fields.Boolean('Lead Generating', compute='_compute_generate_lead', store=True)
     lead_count = fields.Integer('Leads', help='Number of leads created by this survey', compute='_compute_lead_count')
     lead_ids = fields.One2many('crm.lead', 'origin_survey_id')  # Leads created by the survey
     team_id = fields.Many2one(
