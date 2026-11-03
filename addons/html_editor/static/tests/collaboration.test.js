@@ -9,10 +9,7 @@ import {
     SavedCounter,
 } from "@html_editor/../tests/_helpers/embedded_component";
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
-import {
-    getEditableDescendants,
-    StateChangeManager,
-} from "@html_editor/others/embedded_component_utils";
+import { getEditableDescendants } from "@html_editor/others/embedded_component_utils";
 import { parseHTML } from "@html_editor/utils/html";
 import {
     animationFrame,
@@ -1287,13 +1284,17 @@ describe("Collaboration with embedded components", () => {
     });
 
     describe("Embedded state", () => {
-        beforeEach(() => {
-            let id = 1;
-            patchWithCleanup(StateChangeManager.prototype, {
-                generateId: () => id++,
-            });
-        });
-
+        const getLastCommittedStateChanges = (editor, key) =>
+            editor.shared.history
+                .getCommits()
+                .at(-1)
+                .data.embeddedStateChanges.map(({ previous, next }) => {
+                    if (key) {
+                        previous = previous[key];
+                        next = next[key];
+                    }
+                    return `${JSON.stringify(previous)} -> ${JSON.stringify(next)}`;
+                });
         test("A peer change to the embedded state is properly applied for every other collaborator", async () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
@@ -1317,30 +1318,30 @@ describe("Collaboration with embedded components", () => {
             );
             counter1.embeddedState.value = 3;
             await animationFrame();
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "value")).toEqual(["1 -> 3"]);
             mergePeersCommits(peerInfos);
+            expect(counter2.embeddedState).toEqual({ value: 3 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "value")).toEqual(["1 -> 3"]);
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
             await animationFrame();
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
-            expect(counter2.embeddedState).toEqual({
-                value: 3,
-            });
             counter2.embeddedState.value = 5;
             await animationFrame();
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "value")).toEqual(["3 -> 5"]);
             mergePeersCommits(peerInfos);
+            expect(counter1.embeddedState).toEqual({ value: 5 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "value")).toEqual(["3 -> 5"]);
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":5}' data-embedded-state='{"stateChangeId":2,"previous":{"value":3},"next":{"value":5}}' data-oe-protected="true"><span class="counter">Counter:5</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":5}' data-oe-protected="true"><span class="counter">Counter:5</span></span></p>`
             );
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":5}' data-embedded-state='{"stateChangeId":2,"previous":{"value":3},"next":{"value":5}}' data-oe-protected="true"><span class="counter">Counter:5</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":5}' data-oe-protected="true"><span class="counter">Counter:5</span></span></p>`
             );
-            expect(counter1.embeddedState).toEqual({
-                value: 5,
-            });
         });
 
         test("Undo and Redo can overwrite a collaborator changes to the embedded state", async () => {
@@ -1367,64 +1368,86 @@ describe("Collaboration with embedded components", () => {
                 .root.promise;
             counter2.embeddedState.value = 2;
             await animationFrame();
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "value")).toEqual(["1 -> 2"]);
             mergePeersCommits(peerInfos);
+            expect(counter1.embeddedState).toEqual({ value: 2 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "value")).toEqual(["1 -> 2"]);
             await animationFrame();
             counter1.embeddedState.value = 3;
             await animationFrame();
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "value")).toEqual(["2 -> 3"]);
             mergePeersCommits(peerInfos);
+            expect(counter2.embeddedState).toEqual({ value: 3 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "value")).toEqual(["2 -> 3"]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":2,"previous":{"value":2},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":2,"previous":{"value":2},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
             // e2 last commit was to go from 1 to 2. e2 can not undo commit from
             // e1 therefore undo does 3 -> 1
             undo(e2);
             await animationFrame();
+            expect(counter2.embeddedState).toEqual({ value: 1 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "value")).toEqual(["3 -> 1"]);
             mergePeersCommits(peerInfos);
+            expect(counter1.embeddedState).toEqual({ value: 1 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "value")).toEqual(["3 -> 1"]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":1}' data-embedded-state='{"stateChangeId":3,"previous":{"value":3},"next":{"value":1}}' data-oe-protected="true"><span class="counter">Counter:1</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true"><span class="counter">Counter:1</span></span></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":1}' data-embedded-state='{"stateChangeId":3,"previous":{"value":3},"next":{"value":1}}' data-oe-protected="true"><span class="counter">Counter:1</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true"><span class="counter">Counter:1</span></span></p>`
             );
             // e1 last commit was to go from 2 to 3. e1 can not undo commit from
             // e2 therefore undo does 1 -> 2
             undo(e1);
             await animationFrame();
+            expect(counter1.embeddedState).toEqual({ value: 2 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "value")).toEqual(["1 -> 2"]);
             mergePeersCommits(peerInfos);
+            expect(counter2.embeddedState).toEqual({ value: 2 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "value")).toEqual(["1 -> 2"]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":2}' data-embedded-state='{"stateChangeId":4,"previous":{"value":1},"next":{"value":2}}' data-oe-protected="true"><span class="counter">Counter:2</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":2}' data-oe-protected="true"><span class="counter">Counter:2</span></span></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":2}' data-embedded-state='{"stateChangeId":4,"previous":{"value":1},"next":{"value":2}}' data-oe-protected="true"><span class="counter">Counter:2</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":2}' data-oe-protected="true"><span class="counter">Counter:2</span></span></p>`
             );
             // e2 last undo was to go from 3 -> 1. e2 can not redo commit from
             // e1 therefore redo does 2 -> 3
             redo(e2);
             await animationFrame();
+            expect(counter2.embeddedState).toEqual({ value: 3 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "value")).toEqual(["2 -> 3"]);
             mergePeersCommits(peerInfos);
+            expect(counter1.embeddedState).toEqual({ value: 3 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "value")).toEqual(["2 -> 3"]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":5,"previous":{"value":2},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":5,"previous":{"value":2},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
             // e1 last undo was to go from 1 -> 2. redo does 3 -> 1.
             redo(e1);
             await animationFrame();
+            expect(counter1.embeddedState).toEqual({ value: 1 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "value")).toEqual(["3 -> 1"]);
             mergePeersCommits(peerInfos);
+            expect(counter2.embeddedState).toEqual({ value: 1 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "value")).toEqual(["3 -> 1"]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":1}' data-embedded-state='{"stateChangeId":6,"previous":{"value":3},"next":{"value":1}}' data-oe-protected="true"><span class="counter">Counter:1</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true"><span class="counter">Counter:1</span></span></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":1}' data-embedded-state='{"stateChangeId":6,"previous":{"value":3},"next":{"value":1}}' data-oe-protected="true"><span class="counter">Counter:1</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":1}' data-oe-protected="true"><span class="counter">Counter:1</span></span></p>`
             );
         });
 
@@ -1451,57 +1474,104 @@ describe("Collaboration with embedded components", () => {
             );
             obj2.embeddedState.obj["2"] = 2;
             await animationFrame();
+            expect(obj2.embeddedState.obj["2"]).toBe(2);
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "obj")).toEqual([
+                '{"1":1} -> {"1":1,"2":2}',
+            ]);
             mergePeersCommits(peerInfos);
+            expect(obj1.embeddedState.obj["2"]).toBe(2);
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "obj")).toEqual([
+                '{"1":1} -> {"1":1,"2":2}',
+            ]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-embedded-state='{"stateChangeId":1,"previous":{"obj":{"1":1}},"next":{"obj":{"1":1,"2":2}}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-embedded-state='{"stateChangeId":1,"previous":{"obj":{"1":1}},"next":{"obj":{"1":1,"2":2}}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
-            const savepoint = e1.shared.history.makeSavePoint();
+            // Make a savePoint on e1.
+            const savePoint = e1.shared.history.makeSavePoint();
             delete obj2.embeddedState.obj["1"];
             await animationFrame();
+            expect("1" in obj2.embeddedState.obj).toBe(false);
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "obj")).toEqual([
+                '{"1":1,"2":2} -> {"2":2}',
+            ]);
             mergePeersCommits(peerInfos);
+            expect("1" in obj1.embeddedState.obj).toBe(false);
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "obj")).toEqual([
+                '{"1":1,"2":2} -> {"2":2}',
+            ]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1,"2":2}},"next":{"obj":{"2":2}}}' data-oe-protected="true"><div class="obj">2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2}}' data-oe-protected="true"><div class="obj">2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1,"2":2}},"next":{"obj":{"2":2}}}' data-oe-protected="true"><div class="obj">2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2}}' data-oe-protected="true"><div class="obj">2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
             obj1.embeddedState.obj["3"] = 3;
             await animationFrame();
+            expect(obj1.embeddedState.obj["3"]).toBe(3);
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "obj")).toEqual([
+                '{"2":2} -> {"2":2,"3":3}',
+            ]);
             mergePeersCommits(peerInfos);
+            expect(obj2.embeddedState.obj["3"]).toBe(3);
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "obj")).toEqual([
+                '{"2":2} -> {"2":2,"3":3}',
+            ]);
             await animationFrame();
             obj2.embeddedState.obj["4"] = 4;
             await animationFrame();
+            expect(obj2.embeddedState.obj["4"]).toBe(4);
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "obj")).toEqual([
+                '{"2":2,"3":3} -> {"2":2,"3":3,"4":4}',
+            ]);
             mergePeersCommits(peerInfos);
+            expect(obj1.embeddedState.obj["4"]).toBe(4);
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "obj")).toEqual([
+                '{"2":2,"3":3} -> {"2":2,"3":3,"4":4}',
+            ]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2,"3":3,"4":4}}' data-embedded-state='{"stateChangeId":4,"previous":{"obj":{"2":2,"3":3}},"next":{"obj":{"2":2,"3":3,"4":4}}}' data-oe-protected="true"><div class="obj">2_2,3_3,4_4</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2,"3":3,"4":4}}' data-oe-protected="true"><div class="obj">2_2,3_3,4_4</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2,"3":3,"4":4}}' data-embedded-state='{"stateChangeId":4,"previous":{"obj":{"2":2,"3":3}},"next":{"obj":{"2":2,"3":3,"4":4}}}' data-oe-protected="true"><div class="obj">2_2,3_3,4_4</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2,"3":3,"4":4}}' data-oe-protected="true"><div class="obj">2_2,3_3,4_4</div></div><p data-selection-placeholder=""><br></p>`
             );
-            savepoint();
+            savePoint();
+            expect(obj1.embeddedState.obj["4"]).toBe(4);
+            const savePointRestorationChanges = [
+                // Reverting the commits until when the savePoint was made.
+                '{"2":2,"3":3,"4":4} -> {"2":2,"3":3}',
+                '{"2":2,"3":3} -> {"2":2}',
+                '{"2":2} -> {"1":1,"2":2}',
+                // Reapplying the remote commits.
+                '{"1":1,"2":2} -> {"2":2}',
+                '{"2":2} -> {"2":2,"4":4}', // See comment below.
+            ];
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "obj")).toEqual(
+                savePointRestorationChanges
+            );
             await animationFrame();
             mergePeersCommits(peerInfos);
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "obj")).toEqual(
+                savePointRestorationChanges
+            );
             await animationFrame();
             // 3, which was added after makeSavePoint, was removed from obj
             // for every collaborator after the savepoint restoration.
-            // stateChangeId evolves from 4 to 9 because commits 2,3,4 were
-            // reverted, and only commits 2 and 4 were applied again, 3 was
-            // not re-applied since it was done by c1. The last applied state
-            // change is the transition from {2} to {2, 4}, but the commit
-            // generated by the savePoint contains all state changes from
-            // {2, 3, 4} to {2, 4}, and that is why it is applied correctly
-            // for both users.
+            // Commits 2, 3 and 4 were reverted, then only commits 2 and 4
+            // were applied again: commit 3 was not re-applied because it was
+            // made by c1. The restore commit contains the complete sequence
+            // of embedded state changes, so it is applied correctly by both
+            // users.
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2,"4":4}}' data-embedded-state='{"stateChangeId":9,"previous":{"obj":{"2":2}},"next":{"obj":{"2":2,"4":4}}}' data-oe-protected="true"><div class="obj">2_2,4_4</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2,"4":4}}' data-oe-protected="true"><div class="obj">2_2,4_4</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2,"4":4}}' data-embedded-state='{"stateChangeId":9,"previous":{"obj":{"2":2}},"next":{"obj":{"2":2,"4":4}}}' data-oe-protected="true"><div class="obj">2_2,4_4</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2,"4":4}}' data-oe-protected="true"><div class="obj">2_2,4_4</div></div><p data-selection-placeholder=""><br></p>`
             );
         });
 
@@ -1528,21 +1598,32 @@ describe("Collaboration with embedded components", () => {
                 .root.promise;
             counter2.embeddedState.value = 3;
             await animationFrame();
+            expect(counter2.embeddedState).toEqual({ value: 3 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "value")).toEqual(["1 -> 3"]);
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span>[]</p>`
+                `<p>a<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span>[]</p>`
             );
             insert(e1, "bc");
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(`<p>abc[]</p>`);
             mergePeersCommits(peerInfos);
+            let isCounter1Mounted = false;
+            [...peerInfos.c1.plugins.get("embeddedComponents").components][0].root.promise.then(
+                (counter1) => {
+                    isCounter1Mounted = true;
+                    expect(counter1.embeddedState).toEqual({ value: 3 });
+                }
+            );
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "value")).toEqual(["1 -> 3"]);
             await animationFrame();
+            expect(isCounter1Mounted).toBe(true);
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span>[]bc</p>`
+                `<p>a<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span>[]bc</p>`
             );
             // TODO: e1 inserted "bc", yet ends up before "bc" after merging the
             // commits. The selection should never end up before the content
             // inserted by the user.
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span>[]bc</p>`
+                `<p>a<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span>[]bc</p>`
             );
         });
 
@@ -1566,23 +1647,47 @@ describe("Collaboration with embedded components", () => {
             obj2.embeddedState.obj["3"] = 3;
             obj2.embeddedState.obj["4"] = 4;
             await animationFrame();
+            expect(obj1.embeddedState.obj).toEqual({ 1: 1, 2: 2, 3: 4 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "obj")).toEqual([
+                '{"1":1} -> {"1":1,"2":2,"3":4}',
+            ]);
+            expect(obj2.embeddedState.obj).toEqual({ 1: 1, 3: 3, 4: 4 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "obj")).toEqual([
+                '{"1":1} -> {"1":1,"3":3,"4":4}',
+            ]);
             mergePeersCommits(peerInfos);
+            expect(obj1.embeddedState.obj).toEqual({ 1: 1, 2: 2, 3: 3, 4: 4 });
+            expect(obj2.embeddedState.obj).toEqual({ 1: 1, 2: 2, 3: 3, 4: 4 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "obj")).toEqual([
+                '{"1":1} -> {"1":1,"3":3,"4":4}',
+            ]);
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "obj")).toEqual([
+                '{"1":1} -> {"1":1,"3":3,"4":4}',
+            ]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2,"3":3,"4":4}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1}},"next":{"obj":{"1":1,"3":3,"4":4}}}' data-oe-protected="true"><div class="obj">1_1,2_2,3_3,4_4</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2,"3":3,"4":4}}' data-oe-protected="true"><div class="obj">1_1,2_2,3_3,4_4</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2,"3":3,"4":4}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1}},"next":{"obj":{"1":1,"3":3,"4":4}}}' data-oe-protected="true"><div class="obj">1_1,2_2,3_3,4_4</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2,"3":3,"4":4}}' data-oe-protected="true"><div class="obj">1_1,2_2,3_3,4_4</div></div><p data-selection-placeholder=""><br></p>`
             );
             undo(e2);
             await animationFrame();
+            expect(obj2.embeddedState.obj).toEqual({ 1: 1, 2: 2 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "obj")).toEqual([
+                '{"1":1,"2":2,"3":3,"4":4} -> {"1":1,"2":2}',
+            ]);
             mergePeersCommits(peerInfos);
+            expect(obj1.embeddedState.obj).toEqual({ 1: 1, 2: 2 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "obj")).toEqual([
+                '{"1":1,"2":2,"3":3,"4":4} -> {"1":1,"2":2}',
+            ]);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-embedded-state='{"stateChangeId":3,"previous":{"obj":{"1":1,"2":2,"3":3,"4":4}},"next":{"obj":{"1":1,"2":2}}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-embedded-state='{"stateChangeId":3,"previous":{"obj":{"1":1,"2":2,"3":3,"4":4}},"next":{"obj":{"1":1,"2":2}}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
         });
 
@@ -1599,24 +1704,48 @@ describe("Collaboration with embedded components", () => {
             const e2 = peerInfos.c2.editor;
             const obj1 = await [...peerInfos.c1.plugins.get("embeddedComponents").components][0]
                 .root.promise;
-            const obj2 = await [...peerInfos.c2.plugins.get("embeddedComponents").components][0]
-                .root.promise;
+            let obj2 = await [...peerInfos.c2.plugins.get("embeddedComponents").components][0].root
+                .promise;
             obj1.embeddedState.obj["2"] = 2;
             obj2.embeddedState.obj["3"] = 3;
             await animationFrame();
+            expect(obj1.embeddedState.obj).toEqual({ 1: 1, 2: 2 });
+            expect(getLastCommittedStateChanges(peerInfos.c1.editor, "obj")).toEqual([
+                '{"1":1} -> {"1":1,"2":2}',
+            ]);
+            expect(obj2.embeddedState.obj).toEqual({ 1: 1, 3: 3 });
+            expect(getLastCommittedStateChanges(peerInfos.c2.editor, "obj")).toEqual([
+                '{"1":1} -> {"1":1,"3":3}',
+            ]);
             deleteForward(e2);
             mergePeersCommits(peerInfos);
+            expect(obj1.embeddedState.obj).toEqual({ 1: 1, 2: 2, 3: 3 });
+            // Component was destroyed.
+            expect(peerInfos.c2.plugins.get("embeddedComponents").components.size).toBe(0);
             await animationFrame();
             undo(e2);
+            let isObj2Restored = false;
+            const obj2Promise = [...peerInfos.c2.plugins.get("embeddedComponents").components][0]
+                .root.promise;
+            obj2Promise.then((newObj) => {
+                isObj2Restored = true;
+                obj2 = newObj;
+            });
+            // Component was restored but not mounted yet.
+            expect(peerInfos.c2.plugins.get("embeddedComponents").components.size).toBe(1);
             mergePeersCommits(peerInfos);
+            expect(isObj2Restored).toBe(false);
             await animationFrame();
+            expect(isObj2Restored).toBe(true);
             // When commits were merged, both users updated their state with
             // both changes, even if the component was outside of the dom.
+            expect(obj1.embeddedState.obj).toEqual({ 1: 1, 2: 2, 3: 3 });
+            expect(obj2.embeddedState.obj).toEqual({ 1: 1, 2: 2, 3: 3 });
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2,"3":3}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1}},"next":{"obj":{"1":1,"3":3}}}' data-oe-protected="true"><div class="obj">1_1,2_2,3_3</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2,"3":3}}' data-oe-protected="true"><div class="obj">1_1,2_2,3_3</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2,"3":3}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1}},"next":{"obj":{"1":1,"3":3}}}' data-oe-protected="true"><div class="obj">1_1,2_2,3_3</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2,"3":3}}' data-oe-protected="true"><div class="obj">1_1,2_2,3_3</div></div><p data-selection-placeholder=""><br></p>`
             );
         });
 
@@ -1642,16 +1771,16 @@ describe("Collaboration with embedded components", () => {
             await animationFrame();
             // c1 change was not yet shared with c2 since it was pending
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":2}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":2}}' data-oe-protected="true"><span class="counter">Counter:2</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":2}' data-oe-protected="true"><span class="counter">Counter:2</span></span></p>`
             );
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":2,"previous":{"value":2},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
             // share the missing commit with c2
             mergePeersCommits(peerInfos);
             await animationFrame();
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-embedded-state='{"stateChangeId":2,"previous":{"value":2},"next":{"value":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
         });
 
@@ -1681,21 +1810,21 @@ describe("Collaboration with embedded components", () => {
             counter1.embeddedState.name = "newName";
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":1}' data-embedded-state='{"stateChangeId":1,"previous":{"name":"unnamed","value":1},"next":{"name":"newName","value":1}}' data-oe-protected="true"><span class="counter">newName:1</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":1}' data-oe-protected="true"><span class="counter">newName:1</span></span></p>`
             );
             counter2.embeddedState.value = 2;
             mergePeersCommits(peerInfos);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":1}' data-embedded-state='{"stateChangeId":1,"previous":{"name":"unnamed","value":1},"next":{"name":"newName","value":1}}' data-oe-protected="true"><span class="counter">newName:1</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":1}' data-oe-protected="true"><span class="counter">newName:1</span></span></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":2}' data-embedded-state='{"stateChangeId":2,"previous":{"name":"newName","value":1},"next":{"name":"newName","value":2}}' data-oe-protected="true"><span class="counter">newName:2</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":2}' data-oe-protected="true"><span class="counter">newName:2</span></span></p>`
             );
             mergePeersCommits(peerInfos);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":2}' data-embedded-state='{"stateChangeId":2,"previous":{"name":"newName","value":1},"next":{"name":"newName","value":2}}' data-oe-protected="true"><span class="counter">newName:2</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"name":"newName","value":2}' data-oe-protected="true"><span class="counter">newName:2</span></span></p>`
             );
         });
 
@@ -1721,15 +1850,15 @@ describe("Collaboration with embedded components", () => {
             mergePeersCommits(peerInfos);
             await animationFrame();
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":2}' data-embedded-state='{"stateChangeId":1,"previous":{"value":1},"next":{"value":2}}' data-oe-protected="true"><span class="counter">Counter:2</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":2}' data-oe-protected="true"><span class="counter">Counter:2</span></span></p>`
             );
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":4}' data-embedded-state='{"stateChangeId":3,"previous":{"value":2},"next":{"value":4}}' data-oe-protected="true"><span class="counter">Counter:4</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":4}' data-oe-protected="true"><span class="counter">Counter:4</span></span></p>`
             );
             mergePeersCommits(peerInfos);
             await animationFrame();
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":4}' data-embedded-state='{"stateChangeId":3,"previous":{"value":2},"next":{"value":4}}' data-oe-protected="true"><span class="counter">Counter:4</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"value":4}' data-oe-protected="true"><span class="counter">Counter:4</span></span></p>`
             );
         });
 
@@ -1759,10 +1888,10 @@ describe("Collaboration with embedded components", () => {
             mergePeersCommits(peerInfos);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1,"2":2}},"next":{"obj":{"1":1}}}' data-oe-protected="true"><div class="obj">1_1</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1}}' data-oe-protected="true"><div class="obj">1_1</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1,"2":2}},"next":{"obj":{"1":1}}}' data-oe-protected="true"><div class="obj">1_1</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1}}' data-oe-protected="true"><div class="obj">1_1</div></div><p data-selection-placeholder=""><br></p>`
             );
         });
 
@@ -1790,20 +1919,20 @@ describe("Collaboration with embedded components", () => {
             // between previous and next. So if both users made a change going
             // from 1 to 3, the resulting value should be 5.
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"baseValue":5}' data-embedded-state='{"stateChangeId":2,"previous":{"baseValue":1},"next":{"baseValue":3}}' data-oe-protected="true"><span class="counter">Counter:5</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"baseValue":5}' data-oe-protected="true"><span class="counter">Counter:5</span></span></p>`
             );
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"baseValue":5}' data-embedded-state='{"stateChangeId":2,"previous":{"baseValue":1},"next":{"baseValue":3}}' data-oe-protected="true"><span class="counter">Counter:5</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"baseValue":5}' data-oe-protected="true"><span class="counter">Counter:5</span></span></p>`
             );
             undo(e1);
             await animationFrame();
             mergePeersCommits(peerInfos);
             await animationFrame();
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"baseValue":3}' data-embedded-state='{"stateChangeId":3,"previous":{"baseValue":5},"next":{"baseValue":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"baseValue":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"baseValue":3}' data-embedded-state='{"stateChangeId":3,"previous":{"baseValue":5},"next":{"baseValue":3}}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
+                `<p>a[]<span contenteditable="false" data-embedded="counter" data-embedded-props='{"baseValue":3}' data-oe-protected="true"><span class="counter">Counter:3</span></span></p>`
             );
         });
 
@@ -1832,24 +1961,24 @@ describe("Collaboration with embedded components", () => {
             mergePeersCommits(peerInfos);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1}},"next":{"obj":{"1":1,"2":2}}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-embedded-state='{"stateChangeId":2,"previous":{"obj":{"1":1}},"next":{"obj":{"1":1,"2":2}}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":1,"2":2}}' data-oe-protected="true"><div class="obj">1_1,2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
             undo(e1);
             await animationFrame();
             mergePeersCommits(peerInfos);
             await animationFrame();
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2}}' data-embedded-state='{"stateChangeId":3,"previous":{"obj":{"1":1,"2":2}},"next":{"obj":{"2":2}}}' data-oe-protected="true"><div class="obj">2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2}}' data-oe-protected="true"><div class="obj">2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2}}' data-embedded-state='{"stateChangeId":3,"previous":{"obj":{"1":1,"2":2}},"next":{"obj":{"2":2}}}' data-oe-protected="true"><div class="obj">2_2</div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"2":2}}' data-oe-protected="true"><div class="obj">2_2</div></div><p data-selection-placeholder=""><br></p>`
             );
         });
 
-        test("should not sanitize data-embedded-props or data-embedded-state in case they contain specific characters flagged by DOMPurify regex", async () => {
+        test("should not sanitize data-embedded-props in case they contain specific characters flagged by DOMPurify regex", async () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
@@ -1871,7 +2000,7 @@ describe("Collaboration with embedded components", () => {
             mergePeersCommits(peerInfos);
             await animationFrame();
             // evaluate that data-embedded-props was preserved for e2
-            expect(getContent(e1.editable, { sortAttrs: true })).toBe(
+            expect(getContent(e2.editable, { sortAttrs: true })).toBe(
                 `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":"<style"}}' data-oe-protected="true"><div class="obj">1_<style</div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
@@ -1885,12 +2014,13 @@ describe("Collaboration with embedded components", () => {
             await animationFrame();
             mergePeersCommits(peerInfos);
             await animationFrame();
-            // evaluate that data-embedded-state was preserved for e2
+            // Evaluate that the state change and its data-embedded-props
+            // representation were preserved for e2.
             expect(getContent(e1.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":"-->"}}' data-embedded-state='{"stateChangeId":1,"previous":{"obj":{"1":"<style"}},"next":{"obj":{"1":"-->"}}}' data-oe-protected="true"><div class="obj">1_--></div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":"-->"}}' data-oe-protected="true"><div class="obj">1_--></div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(getContent(e2.editable, { sortAttrs: true })).toBe(
-                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":"-->"}}' data-embedded-state='{"stateChangeId":1,"previous":{"obj":{"1":"<style"}},"next":{"obj":{"1":"-->"}}}' data-oe-protected="true"><div class="obj">1_--></div></div><p data-selection-placeholder=""><br></p>`
+                `<p>a[]</p><div contenteditable="false" data-embedded="obj" data-embedded-props='{"obj":{"1":"-->"}}' data-oe-protected="true"><div class="obj">1_--></div></div><p data-selection-placeholder=""><br></p>`
             );
             expect(obj2.embeddedState).toEqual({
                 obj: { 1: "-->" },

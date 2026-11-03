@@ -132,9 +132,6 @@ export const compareHighlightedContent = async (content, expected, phase, editor
         .replaceAll(/"previous":\{[^}]+\}/g, "")
         // Make "next" the actual state
         .replaceAll(/"next":\{([^}]+)\}/g, "$1")
-        // Rename data-embedded-state and data-embedded-props to data-saved so
-        // as not to make a difference between during and after edit.
-        .replaceAll("data-embedded-state", "data-saved")
         // Ignore dataset order
         .replaceAll(
             /(?:"codeWrap":([^,}]+),)?"languageId":"([^"]*)","value":"(([^"]|\n)*)"/g,

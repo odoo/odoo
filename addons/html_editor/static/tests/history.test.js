@@ -925,7 +925,7 @@ describe("unobserved mutations", () => {
             editor.shared.history.undo();
             expect(p.className).toBe("b a");
         });
-        describe("fixClassListMutationsToEnsureNewMutations method", () => {
+        describe("prepareClassListMutationsForCapture method", () => {
             test("should produce mutations in undo commit even with no class change", async () => {
                 const { editor } = await setupEditor(`<p>test</p>`);
                 /** @type {HTMLElement} */
@@ -952,7 +952,7 @@ describe("unobserved mutations", () => {
                         value: false,
                     },
                 ];
-                domObserverPlugin.fixClassListMutationsToEnsureNewMutations(mutations);
+                domObserverPlugin.prepareClassListMutationsForCapture(mutations);
                 expect(p).toHaveClass("x");
             });
             test("should not add class 'x' as state alread matches oldValue", async () => {
@@ -969,7 +969,7 @@ describe("unobserved mutations", () => {
                         value: true,
                     },
                 ];
-                domObserverPlugin.fixClassListMutationsToEnsureNewMutations(mutations);
+                domObserverPlugin.prepareClassListMutationsForCapture(mutations);
                 expect(p).not.toHaveClass("x");
             });
             test("should not add class 'x' as state alread matches first mutation's oldValue", async () => {
@@ -993,7 +993,7 @@ describe("unobserved mutations", () => {
                         value: false,
                     },
                 ];
-                domObserverPlugin.fixClassListMutationsToEnsureNewMutations(mutations);
+                domObserverPlugin.prepareClassListMutationsForCapture(mutations);
                 expect(p).not.toHaveClass("x");
             });
         });
