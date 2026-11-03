@@ -111,6 +111,8 @@ class HrAttendance(models.Model):
     # set to True on surviving output records when their source is modified or deleted
     source_stale = fields.Boolean(default=False, copy=False, export_string_translation=False)
 
+    _check_in_check_out_employee_id = models.Index('(check_in, check_out, employee_id)')
+
     @api.depends('date')
     def _compute_day_of_date(self):
         for record in self:
@@ -725,13 +727,6 @@ class HrAttendance(models.Model):
                 time_to_float(stop - start) / attendance_duration
             ) * attendance.break_duration
         return break_duration
-
-    def init(self):
-        super().init()
-        self.env.cr.execute("""
-            CREATE INDEX IF NOT EXISTS hr_attendance_check_in_check_out_employee_id
-            ON hr_attendance (check_in, check_out, employee_id);
-        """)
 
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         """Apply the time rule results through ``hr.time.rule._apply_attendance_output``."""
