@@ -1,14 +1,19 @@
 /*!
- * Signature Pad v5.1.1 | https://github.com/szimek/signature_pad
- * (c) 2025 Szymon Nowak | Released under the MIT license
+ * Signature Pad v5.1.4 | https://github.com/szimek/signature_pad
+ * (c) 2026 Szymon Nowak | Released under the MIT license
  */
 (function(g,f){if(typeof exports=="object"&&typeof module<"u"){module.exports=f()}else if("function"==typeof define && define.amd){define("SignaturePad",f)}else {g["SignaturePad"]=f()}}(typeof globalThis < "u" ? globalThis : typeof self < "u" ? self : this,function(){var exports={};var __exports=exports;var module={exports};
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __esm = (fn, res) => function __init() {
-  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+var __esm = (fn, res, err) => function __init() {
+  if (err) throw err[0];
+  try {
+    return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+  } catch (e) {
+    throw err = [e], e;
+  }
 };
 var __export = (target, all) => {
   for (var name in all)
@@ -73,6 +78,12 @@ var init_bezier = __esm({
         this.startWidth = startWidth;
         this.endWidth = endWidth;
       }
+      startPoint;
+      control2;
+      control1;
+      endPoint;
+      startWidth;
+      endWidth;
       static fromPoints(points, widths) {
         const c2 = this.calculateControlPoints(points[0], points[1], points[2]).c2;
         const c3 = this.calculateControlPoints(points[1], points[2], points[3]).c1;
@@ -250,6 +261,8 @@ var init_signature_pad = __esm({
         this._handlePointerDown = this._handlePointerDown.bind(this);
         this._handlePointerMove = this._handlePointerMove.bind(this);
         this._handlePointerUp = this._handlePointerUp.bind(this);
+        this._handlePointerCancel = this._handlePointerCancel.bind(this);
+        this._handleTouchCancel = this._handleTouchCancel.bind(this);
         this._ctx = canvas.getContext(
           "2d",
           this.canvasContextOptions
@@ -257,6 +270,7 @@ var init_signature_pad = __esm({
         this.clear();
         this.on();
       }
+      canvas;
       // Public stuff
       dotSize;
       minWidth;
@@ -348,6 +362,7 @@ var init_signature_pad = __esm({
         this.canvas.style.touchAction = "none";
         this.canvas.style.msTouchAction = "none";
         this.canvas.style.userSelect = "none";
+        this.canvas.style.webkitUserSelect = "none";
         const isIOS = /Macintosh/.test(navigator.userAgent) && "ontouchstart" in document;
         if (window.PointerEvent && !isIOS) {
           this._handlePointerEvents();
@@ -362,6 +377,7 @@ var init_signature_pad = __esm({
         this.canvas.style.touchAction = "auto";
         this.canvas.style.msTouchAction = "auto";
         this.canvas.style.userSelect = "auto";
+        this.canvas.style.webkitUserSelect = "auto";
         this.canvas.removeEventListener("pointerdown", this._handlePointerDown);
         this.canvas.removeEventListener("mousedown", this._handleMouseDown);
         this.canvas.removeEventListener("touchstart", this._handleTouchStart);
@@ -382,10 +398,12 @@ var init_signature_pad = __esm({
         const { removeEventListener } = this._getListenerFunctions();
         removeEventListener("pointermove", this._handlePointerMove);
         removeEventListener("pointerup", this._handlePointerUp);
+        removeEventListener("pointercancel", this._handlePointerCancel);
         removeEventListener("mousemove", this._handleMouseMove);
         removeEventListener("mouseup", this._handleMouseUp);
         removeEventListener("touchmove", this._handleTouchMove);
         removeEventListener("touchend", this._handleTouchEnd);
+        removeEventListener("touchcancel", this._handleTouchCancel);
       }
       isEmpty() {
         return this._isEmpty;
@@ -397,7 +415,8 @@ var init_signature_pad = __esm({
         this._fromData(
           pointGroups,
           this._drawCurve.bind(this),
-          this._drawDot.bind(this)
+          this._drawDot.bind(this),
+          this._drawLine.bind(this)
         );
         this._data = this._data.concat(pointGroups);
       }
@@ -480,6 +499,19 @@ var init_signature_pad = __esm({
         }
         this._strokeEnd(this._touchEventToSignatureEvent(event));
       }
+      _handlePointerCancel(event) {
+        if (!this._allowPointerId(event)) {
+          return;
+        }
+        event.preventDefault();
+        this._strokeEnd(this._pointerEventToSignatureEvent(event), false);
+      }
+      _handleTouchCancel(event) {
+        if (event.cancelable) {
+          event.preventDefault();
+        }
+        this._strokeEnd(this._touchEventToSignatureEvent(event), false);
+      }
       _getPointerId(event) {
         return event.persistentDeviceId || event.pointerId;
       }
@@ -546,12 +578,18 @@ var init_signature_pad = __esm({
               passive: false
             });
             addEventListener("touchend", this._handleTouchEnd, { passive: false });
+            addEventListener("touchcancel", this._handleTouchCancel, {
+              passive: false
+            });
             break;
           case "pointerdown":
             addEventListener("pointermove", this._handlePointerMove, {
               passive: false
             });
             addEventListener("pointerup", this._handlePointerUp, {
+              passive: false
+            });
+            addEventListener("pointercancel", this._handlePointerCancel, {
               passive: false
             });
             break;
@@ -715,20 +753,36 @@ var init_signature_pad = __esm({
         ctx.closePath();
         ctx.fill();
       }
+      _getDotSize(options) {
+        return options.dotSize > 0 ? options.dotSize : (options.minWidth + options.maxWidth) / 2;
+      }
       _drawDot(point, options) {
         const ctx = this._ctx;
-        const width = options.dotSize > 0 ? options.dotSize : (options.minWidth + options.maxWidth) / 2;
+        const width = this._getDotSize(options);
         ctx.beginPath();
         this._drawCurveSegment(point.x, point.y, width);
         ctx.closePath();
         ctx.fillStyle = options.penColor;
         ctx.fill();
       }
-      _fromData(pointGroups, drawCurve, drawDot) {
+      _drawLine(startPoint, endPoint, options) {
+        const ctx = this._ctx;
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(startPoint.x, startPoint.y);
+        ctx.lineTo(endPoint.x, endPoint.y);
+        ctx.lineWidth = this._getDotSize(options) * 2;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = options.penColor;
+        ctx.stroke();
+        ctx.restore();
+        this._isEmpty = false;
+      }
+      _fromData(pointGroups, drawCurve, drawDot, drawLine) {
         for (const group of pointGroups) {
           const { points } = group;
           const pointGroupOptions = this._getPointGroupOptions(group);
-          if (points.length > 1) {
+          if (points.length > 2) {
             for (let j = 0; j < points.length; j += 1) {
               const basicPoint = points[j];
               const point = new Point(
@@ -745,13 +799,19 @@ var init_signature_pad = __esm({
                 drawCurve(curve, pointGroupOptions);
               }
             }
+          } else if (points.length === 2) {
+            this._reset(pointGroupOptions);
+            drawLine(points[0], points[1], pointGroupOptions);
           } else {
             this._reset(pointGroupOptions);
             drawDot(points[0], pointGroupOptions);
           }
         }
       }
-      toSVG({ includeBackgroundColor = false, includeDataUrl = false } = {}) {
+      toSVG({
+        includeBackgroundColor = false,
+        includeDataUrl = false
+      } = {}) {
         const pointGroups = this._data;
         const ratio = Math.max(window.devicePixelRatio || 1, 1);
         const minX = 0;
@@ -810,6 +870,20 @@ var init_signature_pad = __esm({
             circle.setAttribute("cy", point.y.toString());
             circle.setAttribute("fill", penColor);
             svg.appendChild(circle);
+          },
+          (startPoint, endPoint, options) => {
+            const line = document.createElement("line");
+            line.setAttribute("x1", startPoint.x.toString());
+            line.setAttribute("y1", startPoint.y.toString());
+            line.setAttribute("x2", endPoint.x.toString());
+            line.setAttribute("y2", endPoint.y.toString());
+            line.setAttribute("stroke", options.penColor);
+            line.setAttribute(
+              "stroke-width",
+              (this._getDotSize(options) * 2).toString()
+            );
+            line.setAttribute("stroke-linecap", "round");
+            svg.appendChild(line);
           }
         );
         return svg.outerHTML;
