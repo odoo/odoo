@@ -336,6 +336,33 @@ class TestBurndownChart(TestBurndownChartCommon):
         del expected_dict[('March %s' % (self.current_year - 1), self.stage_3.id)]
         self.check_read_group_results(self.deleted_domain, expected_dict)
 
+    def test_burndown_chart_hide_stages_from_other_projects(self):
+        """ Stages of the previous project of a task should not be displayed in the burndown chart of its current project. """
+        stage_p1, stage_p2 = self.env['project.task.type'].create([
+            {'name': 'S1', 'sequence': 1},
+            {'name': 'S2', 'sequence': 2},
+        ])
+        project_1, project_2 = self.env['project.project'].create([
+            {'name': 'P1', 'type_ids': [Command.link(stage_p1.id)]},
+            {'name': 'P2', 'type_ids': [Command.link(stage_p2.id)]},
+        ])
+        with self.mock_datetime_and_now(datetime(self.current_year - 1, 1, 5)):
+            task = self.env['project.task'].create({
+                'name': 'Moved Task',
+                'project_id': project_1.id,
+                'stage_id': stage_p1.id,
+            })
+            self.env.cr.flush()
+        with self.mock_datetime_and_now(datetime(self.current_year - 1, 9, 5)):
+            task.write({'project_id': project_2.id, 'stage_id': stage_p2.id})
+            self.env.cr.flush()
+
+        # The task is displayed in S2 from the date it moved to P2, and S1 is not displayed.
+        expected_dict = {(f'September {self.current_year - 1}', stage_p2.id): 1}
+        self.check_read_group_results([('project_id', '=', project_2.id)], expected_dict)
+        # The task is no longer in P1, so nothing is displayed in its burndown chart.
+        self.check_read_group_results([('project_id', '=', project_1.id)], {})
+
     def get_expected_dict(self):
         expected_dict = {
             ('January %s' % (self.current_year - 1), self.stage_1.id): 1,
