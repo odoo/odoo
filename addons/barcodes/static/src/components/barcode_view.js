@@ -19,6 +19,7 @@ export class BarcodeView extends Component {
         inputFocus: t.boolean().optional(false),
         placeholder: t.string().optional(),
         bgClass: t.string().optional("text-bg-800"),
+        cssClass: t.string().optional(),
         delayBetweenScan: t.number().optional()
     });
 
