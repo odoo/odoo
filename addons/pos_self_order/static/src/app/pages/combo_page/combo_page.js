@@ -59,7 +59,7 @@ export class ComboPage extends Component {
     }
 
     get comboItems() {
-        return this.selectedChoice.combo_item_ids.filter(
+        return this.selectedChoice.sortedComboItems.filter(
             (item) => item.product_id.self_order_available
         );
     }
