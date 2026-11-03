@@ -185,6 +185,10 @@ export class KanbanQuickCreateController extends Component {
     }
 
     async beforeUnload(ev) {
+        if (!this.model.root) {
+            // the listener is active before the first load: nothing to save yet
+            return;
+        }
         if (this.useNameCreate) {
             const name = this.model.root.data.display_name;
             if (name) {
@@ -199,6 +203,10 @@ export class KanbanQuickCreateController extends Component {
     }
 
     beforeVisibilityChange() {
+        if (!this.model.root) {
+            // the listener is active before the first load: nothing to save yet
+            return;
+        }
         if (document.visibilityState === "hidden" && !this.dialogService.hasOpenDialogs) {
             return this.validate("close");
         }
