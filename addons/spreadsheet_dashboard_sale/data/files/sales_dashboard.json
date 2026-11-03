@@ -545,14 +545,14 @@
         "D1": "=_t(\"Current\")",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
         "D3:D6": { "R": "+R1" },
-        "D7": "-234",
+        "D7": "=FORMAT.LARGE.NUMBER(B7)",
         "D8": "=FORMAT.LARGE.NUMBER(B8)",
         "E1": "=_t(\"Previous\")",
         "E2": "=FORMAT.LARGE.NUMBER(C2)",
         "E3:E8": { "R": "+R1" }
       },
       "styles": { "A1:E1": 1 },
-      "formats": { "D7": 1 },
+      "formats": {},
       "borders": {},
       "conditionalFormats": [
         {
@@ -1335,7 +1335,7 @@
     "10": {},
     "11": { "textColor": "#434343" }
   },
-  "formats": { "1": "[$$]#,##0[$]", "2": "@", "3": "[$$]#,##0.00", "4": "@* " },
+  "formats": { "2": "@", "3": "[$$]#,##0.00", "4": "@* " },
   "borders": {},
   "revisionId": "START_REVISION",
   "uniqueFigureIds": true,
