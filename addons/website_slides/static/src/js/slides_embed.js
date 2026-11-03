@@ -128,7 +128,7 @@ export class SlidesEmbed extends Interaction {
     }
 
     async willStart() {
-        this.pdf = await globalThis.pdfjsLib.getDocument(this.slideUrl).promise;
+        this.pdf = await globalThis.pdfjsLib.getDocument({ url: this.slideUrl }).promise;
         if (!this.pdf) {
             return;
         }

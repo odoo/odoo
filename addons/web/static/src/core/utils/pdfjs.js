@@ -88,10 +88,10 @@ export async function generatePdfThumbnail(pdfUrl, options = { height: 256, widt
         // Support for blob url
         if (pdfUrl.startsWith("blob:") && !pdfUrl.startsWith("blob:http")) {
             pdfUrl = URL.createObjectURL(pdfUrl);
-            pdf = await globalThis.pdfjsLib.getDocument(pdfUrl).promise;
+            pdf = await globalThis.pdfjsLib.getDocument({ url: pdfUrl }).promise;
             URL.revokeObjectURL(pdfUrl);
         } else {
-            pdf = await globalThis.pdfjsLib.getDocument(pdfUrl).promise;
+            pdf = await globalThis.pdfjsLib.getDocument({ url: pdfUrl }).promise;
         }
     } catch (_error) {
         if (_error.status === 415) {
