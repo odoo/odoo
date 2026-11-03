@@ -7,8 +7,9 @@ from lxml import etree as ET
 from lxml.builder import E
 
 from odoo.tests import common, tagged
-from odoo.tools.convert import _eval_xml, convert_file, xml_import
+from odoo.tools.convert import ParseError, _eval_xml, convert_file, xml_import
 from odoo.tools.misc import file_path
+from odoo.exceptions import ValidationError
 
 Field = E.field
 Value = E.value
@@ -219,6 +220,28 @@ class TestEvalXML(common.TransactionCase):
         for data in call_args[0]:
             self.assertNotIn('usered_ids', data['values'],
                              "Unexpected value in O2M When loading XML with sub records")
+
+    def test_validation_error_without_message(self):
+        """ A ValidationError without args must be reported as a ParseError,
+        not hidden behind an IndexError raised by the error handler. """
+        class EmptyValidationError(ValidationError):
+            def __init__(self):
+                pass
+
+        def _load_records(self, data_list, update=False):
+            raise EmptyValidationError()
+
+        self.patch(self.registry['test_convert.usered'], '_load_records', _load_records)
+
+        xml = ET.fromstring("""
+            <odoo>
+                <record id="test_convert.test_empty_validation_error" model="test_convert.usered">
+                    <field name="name">record</field>
+                </record>
+            </odoo>
+        """.strip())
+        with self.assertRaises(ParseError):
+            xml_import(self.env, 'test_convert', None, 'init').parse(xml)
 
     def test_o2m_sub_records_noupdate(self):
         xml = ET.fromstring("""
