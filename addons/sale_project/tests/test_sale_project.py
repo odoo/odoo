@@ -2244,3 +2244,64 @@ class TestSaleProject(TestSaleProjectCommon):
             'product_uom_qty': 1,
         })
         self.assertFalse(sale_order.project_required, "Project should not be required on SO if product in orderline already has project")
+
+    def test_sale_report_project_resolved_per_sol(self):
+        """
+        Ensure that sale report attributes each sales order line to its respective
+        project when multiple service products on the same SO create tasks in
+        different global projects.
+        """
+        project_a, project_b = self.env['project.project'].create([
+            {'name': 'Project A'},
+            {'name': 'Project B'},
+        ])
+
+        product_a, product_b = self.env['product.product'].create([
+            {
+                'name': 'Service Product A',
+                'type': 'service',
+                'service_tracking': 'task_global_project',
+                'project_id': project_a.id,
+            },
+            {
+                'name': 'Service Product B',
+                'type': 'service',
+                'service_tracking': 'task_global_project',
+                'project_id': project_b.id,
+            },
+        ])
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product_a.id,
+                    'product_uom_qty': 5,
+                    'price_unit': 100,
+                }),
+                Command.create({
+                    'product_id': product_b.id,
+                    'product_uom_qty': 10,
+                    'price_unit': 150,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+
+        # Verify that sol.project_id is indeed empty and tasks are generated in respective projects
+        line_a = sale_order.order_line.filtered(lambda l: l.product_id == product_a)
+        line_b = sale_order.order_line.filtered(lambda l: l.product_id == product_b)
+        self.assertFalse(line_a.project_id)
+        self.assertFalse(line_b.project_id)
+        self.assertEqual(line_a.task_id.project_id, project_a)
+        self.assertEqual(line_b.task_id.project_id, project_b)
+
+        # Verify sale report lines are partitioned into their respective projects
+        report_lines_project_a = self.env['sale.report'].search([('project_id', '=', project_a.id)])
+        report_lines_project_b = self.env['sale.report'].search([('project_id', '=', project_b.id)])
+
+        self.assertEqual(len(report_lines_project_a), 1)
+        self.assertEqual(report_lines_project_a.product_id, product_a)
+
+        self.assertEqual(len(report_lines_project_b), 1)
+        self.assertEqual(report_lines_project_b.product_id, product_b)
