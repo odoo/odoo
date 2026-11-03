@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { click, queryFirst } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -414,4 +414,31 @@ test("switch notebook page after async work", async () => {
     // async work resolved with false, preventing the page change
     const h3Capture5 = queryFirst("h3");
     expect(h3Capture5).toBe(h3Capture3);
+});
+
+test("active page stays visible after switching back and forth before rendering", async () => {
+    class Parent extends Component {
+        static template = xml`<Notebook>
+                <t t-set-slot="page_1" title="'Page 1'" isVisible="true">
+                    <h3>Page 1</h3>
+                </t>
+                <t t-set-slot="page_2" title="'Page 2'" isVisible="true">
+                    <h3>Page 2</h3>
+                </t>
+            </Notebook>`;
+        static components = { Notebook };
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Parent);
+    expect(".tab-pane").toHaveClass("show");
+    expect("h3").toHaveText("Page 1");
+
+    // switch to page 2 and back to page 1 before the notebook is re-rendered
+    await click(".o_notebook_headers .nav-item:nth-child(2) a");
+    await tick();
+    await click(".o_notebook_headers .nav-item:nth-child(1) a");
+    await animationFrame();
+    expect("h3").toHaveText("Page 1");
+    expect(".tab-pane").toHaveClass("show");
 });
