@@ -112,12 +112,26 @@ class StockMove(models.Model):
     @api.depends('bom_line_id')
     def _compute_description_picking(self):
         super()._compute_description_picking()
+        # The "x/y" numbering must reflect every sibling component of the
+        # same Kit instance in the same picking, not just whatever subset of
+        # moves happens to be in `self` when this (non-stored) field gets
+        # (re)computed. Reading it one move at a time - e.g. the delivery
+        # slip report, which reads description_picking per package while
+        # looping package by package - would otherwise make `self` a single
+        # move and collapse the count to "1/1" for every component.
+        all_moves = self.env['stock.move']
+        for picking in self.picking_id:
+            all_moves |= picking.move_ids
+        # Moves without a picking (e.g. not yet linked) fall back to `self`,
+        # matching this method's previous behavior for that case.
+        all_moves |= self.filtered(lambda m: not m.picking_id)
+
         bom_line_description = {}
-        for bom in self.bom_line_id.bom_id:
+        for bom in all_moves.bom_line_id.bom_id:
             if bom.type != 'phantom':
                 continue
             # mapped('id') to keep NewId
-            line_ids = self.bom_line_id.filtered(lambda line: line.bom_id == bom).mapped('id')
+            line_ids = all_moves.bom_line_id.filtered(lambda line: line.bom_id == bom).mapped('id')
             total = len(line_ids)
             for i, line_id in enumerate(line_ids):
                 bom_line_description[line_id] = '%s - %d/%d' % (bom.display_name, i + 1, total)
