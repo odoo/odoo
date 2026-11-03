@@ -131,17 +131,6 @@ pdfjs-printing-not-ready = ئاگاداربە: PDF بە تەواوی بارنە�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = لاتەنیشت پیشاندان/شاردنەوە
-pdfjs-toggle-sidebar-button-label = لاتەنیشت پیشاندان/شاردنەوە
-pdfjs-document-outline-button-label = سنووری چوارچێوە
-pdfjs-attachments-button =
-    .title = پاشکۆکان پیشان بدە
-pdfjs-attachments-button-label = پاشکۆکان
-pdfjs-layers-button-label = چینەکان
-pdfjs-thumbs-button =
-    .title = وێنۆچکە پیشان بدە
-pdfjs-thumbs-button-label = وێنۆچکە
 pdfjs-findbar-button =
     .title = لە بەڵگەنامە بگەرێ
 pdfjs-findbar-button-label = دۆزینەوە
@@ -151,18 +140,14 @@ pdfjs-additional-layers = چینی زیاتر
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = پەڕەی { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = وێنۆچکەی پەڕەی { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = دۆزینەوە
     .placeholder = لە بەڵگەنامە بگەرێ...
+    .title = دۆزینەوە
 pdfjs-find-previous-button =
     .title = هەبوونی پێشوو بدۆزرەوە لە ڕستەکەدا
 pdfjs-find-previous-button-label = پێشوو

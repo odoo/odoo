@@ -143,23 +143,6 @@ pdfjs-printing-not-ready = Dėmesio! PDF failas dar nėra pilnai įkeltas spausd
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Rodyti / slėpti šoninį polangį
-pdfjs-toggle-sidebar-notification-button =
-    .title = Parankinė (dokumentas turi struktūrą / priedų / sluoksnių)
-pdfjs-toggle-sidebar-button-label = Šoninis polangis
-pdfjs-document-outline-button =
-    .title = Rodyti dokumento struktūrą (spustelėkite dukart norėdami išplėsti/suskleisti visus elementus)
-pdfjs-document-outline-button-label = Dokumento struktūra
-pdfjs-attachments-button =
-    .title = Rodyti priedus
-pdfjs-attachments-button-label = Priedai
-pdfjs-layers-button =
-    .title = Rodyti sluoksnius (spustelėkite dukart, norėdami atstatyti visus sluoksnius į numatytąją būseną)
-pdfjs-layers-button-label = Sluoksniai
-pdfjs-thumbs-button =
-    .title = Rodyti puslapių miniatiūras
-pdfjs-thumbs-button-label = Miniatiūros
 pdfjs-current-outline-item-button =
     .title = Rasti dabartinį struktūros elementą
 pdfjs-current-outline-item-button-label = Dabartinis struktūros elementas
@@ -172,18 +155,14 @@ pdfjs-additional-layers = Papildomi sluoksniai
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = { $page } puslapis
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page } puslapio miniatiūra
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Rasti
     .placeholder = Rasti dokumente…
+    .title = Rasti
 pdfjs-find-previous-button =
     .title = Ieškoti ankstesnio frazės egzemplioriaus
 pdfjs-find-previous-button-label = Ankstesnis

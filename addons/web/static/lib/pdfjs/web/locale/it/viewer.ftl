@@ -153,6 +153,27 @@ pdfjs-document-properties-linearized = Visualizzazione web veloce:
 pdfjs-document-properties-linearized-yes = Sì
 pdfjs-document-properties-linearized-no = No
 pdfjs-document-properties-close-button = Chiudi
+pdfjs-digital-signature-properties-view-certificate = Visualizza certificato
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = Motivo: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = Data e ora: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] Firma secondaria ({ $count })
+       *[other] Firme secondarie ({ $count })
+    }
 
 ## Print
 
@@ -166,23 +187,6 @@ pdfjs-printing-not-ready = Attenzione: il PDF non è ancora stato caricato compl
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Attiva/disattiva barra laterale
-pdfjs-toggle-sidebar-notification-button =
-    .title = Attiva/disattiva barra laterale (il documento contiene struttura/allegati/livelli)
-pdfjs-toggle-sidebar-button-label = Attiva/disattiva barra laterale
-pdfjs-document-outline-button =
-    .title = Visualizza la struttura del documento (doppio clic per visualizzare/comprimere tutti gli elementi)
-pdfjs-document-outline-button-label = Struttura documento
-pdfjs-attachments-button =
-    .title = Visualizza allegati
-pdfjs-attachments-button-label = Allegati
-pdfjs-layers-button =
-    .title = Visualizza livelli (doppio clic per ripristinare tutti i livelli allo stato predefinito)
-pdfjs-layers-button-label = Livelli
-pdfjs-thumbs-button =
-    .title = Mostra le miniature
-pdfjs-thumbs-button-label = Miniature
 pdfjs-current-outline-item-button =
     .title = Trova elemento struttura corrente
 pdfjs-current-outline-item-button-label = Elemento struttura corrente
@@ -195,18 +199,23 @@ pdfjs-additional-layers = Livelli aggiuntivi
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Pagina { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatura della pagina { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = Seleziona pagina { $page }
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = Pagina { $page } di { $total }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Trova
     .placeholder = Trova nel documento…
+    .title = Trova
 pdfjs-find-previous-button =
     .title = Trova l’occorrenza precedente del testo da cercare
 pdfjs-find-previous-button-label = Precedente
@@ -231,7 +240,7 @@ pdfjs-find-match-count =
 #   $limit (Number) - the maximum number of matches
 pdfjs-find-match-count-limit =
     { $limit ->
-        [one] Più di una { $limit } corrispondenza
+        [one] Più di { $limit } corrispondenza
        *[other] Più di { $limit } corrispondenze
     }
 pdfjs-find-not-found = Testo non trovato
@@ -290,10 +299,10 @@ pdfjs-editor-color-picker-free-text-input =
     .title = Cambia colore del testo
 pdfjs-editor-free-text-button-label = Testo
 pdfjs-editor-ink-button =
-    .title = Disegno
+    .title = Disegna
 pdfjs-editor-color-picker-ink-input =
     .title = Cambia colore del disegno
-pdfjs-editor-ink-button-label = Disegno
+pdfjs-editor-ink-button-label = Disegna
 pdfjs-editor-stamp-button =
     .title = Aggiungi o rimuovi immagine
 pdfjs-editor-stamp-button-label = Aggiungi o rimuovi immagine
@@ -301,16 +310,16 @@ pdfjs-editor-highlight-button =
     .title = Evidenzia
 pdfjs-editor-highlight-button-label = Evidenzia
 pdfjs-highlight-floating-button1 =
-    .title = Evidenzia
     .aria-label = Evidenzia
+    .title = Evidenzia
 pdfjs-highlight-floating-button-label = Evidenzia
 pdfjs-comment-floating-button =
-    .title = Commenta
     .aria-label = Commenta
+    .title = Commenta
 pdfjs-comment-floating-button-label = Commenta
 pdfjs-editor-comment-button =
-    .title = Commenta
     .aria-label = Commenta
+    .title = Commenta
 pdfjs-editor-comment-button-label = Commenta
 pdfjs-editor-signature-button =
     .title = Aggiungi firma
@@ -383,8 +392,8 @@ pdfjs-editor-comments-sidebar-title =
        *[other] Commenti
     }
 pdfjs-editor-comments-sidebar-close-button =
-    .title = Chiudi la barra laterale
     .aria-label = Chiudi la barra laterale
+    .title = Chiudi la barra laterale
 pdfjs-editor-comments-sidebar-close-button-label = Chiudi la barra laterale
 # Instructional copy to add a comment by selecting text or an annotations.
 pdfjs-editor-comments-sidebar-no-comments1 = Hai notato qualcosa di interessante? Evidenzialo e aggiungi un commento.
@@ -507,13 +516,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Impostazioni testo alternativo per
 pdfjs-editor-alt-text-settings-automatic-title = Testo alternativo automatico
 pdfjs-editor-alt-text-settings-create-model-button-label = Crea testo alternativo automaticamente
 pdfjs-editor-alt-text-settings-create-model-description = Suggerisce una descrizione per le persone che non possono vedere l’immagine, o mostrata quando l’immagine non si carica.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Modello IA per il testo alternativo ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Viene eseguito localmente sul tuo dispositivo in modo che i tuoi dati rimangano riservati. È richiesto per la generazione automatica del testo alternativo.
-pdfjs-editor-alt-text-settings-delete-model-button = Elimina
-pdfjs-editor-alt-text-settings-download-model-button = Scarica
-pdfjs-editor-alt-text-settings-downloading-model-button = Download…
 pdfjs-editor-alt-text-settings-editor-title = Modifica testo alternativo
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Mostra l’editor del testo alternativo non appena si aggiunge un’immagine
 pdfjs-editor-alt-text-settings-show-dialog-description = Ti aiuta ad assicurarti che tutte le tue immagini abbiano il testo alternativo.
@@ -534,6 +536,7 @@ pdfjs-editor-undo-bar-message-freetext = Testo rimosso
 pdfjs-editor-undo-bar-message-ink = Disegno rimosso
 pdfjs-editor-undo-bar-message-stamp = Immagine rimossa
 pdfjs-editor-undo-bar-message-signature = Firma rimossa
+pdfjs-editor-undo-bar-message-comment = Commento rimosso
 # Variables:
 #   $count (Number) - the number of removed annotations.
 pdfjs-editor-undo-bar-message-multiple =
@@ -618,18 +621,6 @@ pdfjs-show-comment-button =
 
 ##  Edit a comment dialog
 
-pdfjs-editor-edit-comment-actions-button-label = Azioni
-pdfjs-editor-edit-comment-actions-button =
-    .title = Azioni
-pdfjs-editor-edit-comment-close-button-label = Chiudi
-pdfjs-editor-edit-comment-close-button =
-    .title = Chiudi
-pdfjs-editor-edit-comment-actions-edit-button-label = Modifica
-pdfjs-editor-edit-comment-actions-delete-button-label = Elimina
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Inserisci il tuo commento
-pdfjs-editor-edit-comment-manager-cancel-button = Annulla
-pdfjs-editor-edit-comment-manager-save-button = Salva
 # An existing comment is edited
 pdfjs-editor-edit-comment-dialog-title-when-editing = Modifica commento
 pdfjs-editor-edit-comment-dialog-save-button-when-editing = Aggiorna
@@ -642,10 +633,165 @@ pdfjs-editor-edit-comment-dialog-cancel-button = Annulla
 
 ## Edit a comment button in the editor toolbar
 
-pdfjs-editor-edit-comment-button =
-    .title = Modifica commento
 pdfjs-editor-add-comment-button =
     .title = Aggiungi commento
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = Attiva/disattiva barra laterale (il documento contiene miniature, struttura, allegati, livelli)
+pdfjs-toggle-views-manager-button1-label = Gestisci pagine
+pdfjs-views-manager-sidebar =
+    .aria-label = Barra laterale
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = Regolatore della larghezza della barra laterale
+pdfjs-views-manager-view-selector-button =
+    .title = Viste
+pdfjs-views-manager-view-selector-button-label = Viste
+pdfjs-views-manager-pages-title = Pagine
+pdfjs-views-manager-outlines-title1 = Struttura del documento
+    .title = Struttura del documento (doppio clic per espandere/comprimere tutti gli elementi)
+pdfjs-views-manager-attachments-title = Allegati
+pdfjs-views-manager-layers-title1 = Livelli
+    .title = Livelli (doppio clic per ripristinare tutti i livelli allo stato predefinito)
+pdfjs-views-manager-pages-option-label = Pagine
+pdfjs-views-manager-outlines-option-label = Struttura del documento
+pdfjs-views-manager-attachments-option-label = Allegati
+pdfjs-views-manager-layers-option-label = Livelli
+pdfjs-views-manager-add-file-button =
+    .title = Aggiungi file
+pdfjs-views-manager-add-file-button-label = Aggiungi file
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } selezionata
+       *[other] { $count } selezionate
+    }
+pdfjs-views-manager-pages-status-none-action-label = Seleziona pagine
+pdfjs-views-manager-pages-status-action-button-label = Gestisci
+pdfjs-views-manager-pages-status-copy-button-label = Copia
+pdfjs-views-manager-pages-status-cut-button-label = Taglia
+pdfjs-views-manager-pages-status-delete-button-label = Elimina
+pdfjs-views-manager-pages-status-export-selected-button-label = Esporta selezionate…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] { $count } pagina tagliata
+       *[other] { $count } pagine tagliate
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] { $count } pagina copiata
+       *[other] { $count } pagine copiate
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] { $count } pagina eliminata
+       *[other] { $count } pagine eliminate
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = Preparazione file…
+pdfjs-views-manager-pages-status-waiting-uploading-label = Caricamento file…
+pdfjs-views-manager-status-warning-cut-label = Taglio non riuscito. Ricarica la pagina e riprova.
+pdfjs-views-manager-status-warning-copy-label = Copia non riuscita. Ricarica la pagina e riprova.
+pdfjs-views-manager-status-warning-delete-label = Eliminazione non riuscita. Ricarica la pagina e riprova.
+pdfjs-views-manager-status-warning-save-label = Salvataggio non riuscito. Ricarica la pagina e prova di nuovo.
+pdfjs-views-manager-status-undo-button-label = Annulla
+pdfjs-views-manager-status-done-button-label = Fatto
+pdfjs-views-manager-status-close-button =
+    .title = Chiudi
+pdfjs-views-manager-status-close-button-label = Chiudi
+pdfjs-views-manager-paste-button-label = Incolla
+pdfjs-views-manager-paste-button-before =
+    .title = Incolla dopo la prima pagina
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = Incolla dopo pagina { $page }
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = NOVITÀ
+pdfjs-views-manager-waiting-for-file = Caricamento file…
+pdfjs-toggle-views-manager-button1 =
+    .title = Gestisci pagine
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = Proprietà firma digitale
+    .title = Proprietà firma digitale
+pdfjs-digital-signature-properties-button-label = Proprietà firma digitale
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = Il documento è stato firmato con una firma digitale valida
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] Il documento è stato firmato ma non è stato possibile verificare { $count } firma digitale
+       *[other] Il documento è stato firmato ma non è stato possibile verificare { $count } firme digitali
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] Documento firmato con { $count } certificato non attendibile
+       *[other] Documento firmato con { $count } certificati non attendibili
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] Documento firmato con { $count } certificato scaduto
+       *[other] Documento firmato con { $count } certificati scaduti
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] Il documento contiene { $count } firma digitale non valida
+       *[other] Il documento contiene { $count } firme digitali non valide
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] Documento firmato con { $count } certificato revocato
+       *[other] Documento firmato con { $count } certificati revocati
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = Stato: firma verificata
+pdfjs-digital-signature-properties-status-invalid = Stato: firma non valida
+pdfjs-digital-signature-properties-status-unknown = Stato: impossibile verificare (non supportato)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = Certificato: affidabile ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = Certificato: non disponibile
+pdfjs-digital-signature-properties-certificate-untrusted = Certificato: non attendibile
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = Certificato: emittente sconosciuto ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = Certificato: autofirmato ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = Certificato: emittente non attendibile ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = Certificato: scaduto
+pdfjs-digital-signature-properties-certificate-expired-with-date = Certificato: scaduto ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = Certificato: revocato
 
 ## Main menu for adding/removing signatures
 

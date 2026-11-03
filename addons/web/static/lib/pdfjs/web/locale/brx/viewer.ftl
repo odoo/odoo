@@ -110,16 +110,6 @@ pdfjs-printing-not-ready = सांग्रांथि: PDF खौ साफ�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = टग्गल साइडबार
-pdfjs-toggle-sidebar-button-label = टग्गल साइडबार
-pdfjs-document-outline-button-label = फोरमान बिलाइ सिमा हांखो
-pdfjs-attachments-button =
-    .title = नांजाब होनायखौ दिन्थि
-pdfjs-attachments-button-label = नांजाब होनाय
-pdfjs-thumbs-button =
-    .title = थामनेइलखौ दिन्थि
-pdfjs-thumbs-button-label = थामनेइल
 pdfjs-findbar-button =
     .title = फोरमान बिलाइआव नागिरना दिहुन
 pdfjs-findbar-button-label = नायगिरना दिहुन
@@ -128,18 +118,14 @@ pdfjs-findbar-button-label = नायगिरना दिहुन
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = बिलाइ { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = बिलाइ { $page } नि थामनेइल
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = नायगिरना दिहुन
     .placeholder = फोरमान बिलाइआव नागिरना दिहुन...
+    .title = नायगिरना दिहुन
 pdfjs-find-previous-button =
     .title = बाथ्रा खोन्दोबनि सिगांनि नुजाथिनायखौ नागिर
 pdfjs-find-previous-button-label = आगोलनि

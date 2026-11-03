@@ -143,23 +143,6 @@ pdfjs-printing-not-ready = Զգուշացում. PDF֊ը ամբողջութեա�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Փոխարկել կողային վահանակը
-pdfjs-toggle-sidebar-notification-button =
-    .title = Փոխանջատել կողմնասիւնը (փաստաթուղթը պարունակում է ուրուագիծ/կցորդներ/շերտեր)
-pdfjs-toggle-sidebar-button-label = Փոխարկել կողային վահանակը
-pdfjs-document-outline-button =
-    .title = Ցուցադրել փաստաթղթի ուրուագիծը (կրկնակի սեղմէք՝ միաւորները ընդարձակելու/կոծկելու համար)
-pdfjs-document-outline-button-label = Փաստաթղթի ուրուագիծ
-pdfjs-attachments-button =
-    .title = Ցուցադրել կցորդները
-pdfjs-attachments-button-label = Կցորդներ
-pdfjs-layers-button =
-    .title = Ցուցադրել շերտերը (կրկնահպել վերակայելու բոլոր շերտերը սկզբնադիր վիճակի)
-pdfjs-layers-button-label = Շերտեր
-pdfjs-thumbs-button =
-    .title = Ցուցադրել մանրապատկերը
-pdfjs-thumbs-button-label = Մանրապատկեր
 pdfjs-current-outline-item-button =
     .title = Գտէք ընթացիկ գծագրման տարրը
 pdfjs-current-outline-item-button-label = Ընթացիկ գծագրման տարր
@@ -172,18 +155,14 @@ pdfjs-additional-layers = Լրացուցիչ շերտեր
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Էջը { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Էջի մանրապատկերը { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Որոնում
     .placeholder = Գտնել փաստաթղթում…
+    .title = Որոնում
 pdfjs-find-previous-button =
     .title = Գտնել արտայայտութեան նախորդ արտայայտութիւնը
 pdfjs-find-previous-button-label = Նախորդը

@@ -120,24 +120,8 @@ pdfjs-print-progress-close-button = Encaboxar
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Alternar la barra llateral
-pdfjs-attachments-button =
-    .title = Amosar los axuntos
-pdfjs-attachments-button-label = Axuntos
-pdfjs-layers-button-label = Capes
-pdfjs-thumbs-button =
-    .title = Amosar les miniatures
-pdfjs-thumbs-button-label = Miniatures
 pdfjs-findbar-button-label = Atopar
 pdfjs-additional-layers = Capes adicionales
-
-## Thumbnails panel item (tooltip and alt text for images)
-
-# Variables:
-#   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Páxina { $page }
 
 ## Find panel button title and messages
 

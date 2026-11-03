@@ -102,7 +102,7 @@ pdfjs-spread-even-button-label = Jafnatöludreifing
 pdfjs-document-properties-button =
     .title = Eiginleikar skjals…
 pdfjs-document-properties-button-label = Eiginleikar skjals…
-pdfjs-document-properties-file-name = Skráarnafn:
+pdfjs-document-properties-file-name = Skráarheiti:
 pdfjs-document-properties-file-size = Skrárstærð:
 # Variables:
 #   $kb (Number) - the PDF file size in kilobytes
@@ -166,23 +166,6 @@ pdfjs-printing-not-ready = Aðvörun: Ekki er búið að hlaða inn allri PDF sk
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Víxla hliðarstiku af/á
-pdfjs-toggle-sidebar-notification-button =
-    .title = Víxla hliðarstiku af/á (skjal inniheldur yfirlit/viðhengi/lög)
-pdfjs-toggle-sidebar-button-label = Víxla hliðarstiku af/á
-pdfjs-document-outline-button =
-    .title = Sýna yfirlit skjals (tvísmelltu til að opna/loka öllum hlutum)
-pdfjs-document-outline-button-label = Efnisskipan skjals
-pdfjs-attachments-button =
-    .title = Sýna viðhengi
-pdfjs-attachments-button-label = Viðhengi
-pdfjs-layers-button =
-    .title = Birta lög (tvísmelltu til að endurstilla öll lög í sjálfgefna stöðu)
-pdfjs-layers-button-label = Lög
-pdfjs-thumbs-button =
-    .title = Sýna smámyndir
-pdfjs-thumbs-button-label = Smámyndir
 pdfjs-current-outline-item-button =
     .title = Finna núverandi atriði efnisskipunar
 pdfjs-current-outline-item-button-label = Núverandi atriði efnisskipunar
@@ -195,18 +178,14 @@ pdfjs-additional-layers = Viðbótarlög
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Síða { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Smámynd af síðu { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Leita
     .placeholder = Leita í skjali…
+    .title = Leita
 pdfjs-find-previous-button =
     .title = Leita að fyrra tilfelli þessara orða
 pdfjs-find-previous-button-label = Fyrri
@@ -297,8 +276,8 @@ pdfjs-editor-highlight-button =
     .title = Áherslulita
 pdfjs-editor-highlight-button-label = Áherslulita
 pdfjs-highlight-floating-button1 =
-    .title = Áherslulita
     .aria-label = Áherslulita
+    .title = Áherslulita
 pdfjs-highlight-floating-button-label = Áherslulita
 pdfjs-editor-signature-button =
     .title = Bæta við undirritun
@@ -462,13 +441,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Stillingar fyrir alt-texta myndar
 pdfjs-editor-alt-text-settings-automatic-title = Sjálfvirkur alt-myndatexti
 pdfjs-editor-alt-text-settings-create-model-button-label = Útbúa alt-myndatexta sjálfvirkt
 pdfjs-editor-alt-text-settings-create-model-description = Stingur upp á lýsingum til að hjálpa fólki sem getur ekki séð myndina eða þegar myndin hleðst ekki inn.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Gervigreindarlíkan alt-myndatexta ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Keyrir staðbundið á tækinu þínu svo gögnin þín haldast undir þinni stjórn. Nauðsynlegt fyrir sjálfvirka alt-myndatexta.
-pdfjs-editor-alt-text-settings-delete-model-button = Eyða
-pdfjs-editor-alt-text-settings-download-model-button = Sækja
-pdfjs-editor-alt-text-settings-downloading-model-button = Sæki…
 pdfjs-editor-alt-text-settings-editor-title = Ritill fyrir alt-myndatexta
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Sýna alt-myndatextaritil strax þegar mynd er bætt við
 pdfjs-editor-alt-text-settings-show-dialog-description = Hjálpar þér að tryggja að allar myndirnar þínar séu með alt-myndatexta.
@@ -556,26 +528,6 @@ pdfjs-editor-add-signature-error-close-button = Loka
 pdfjs-editor-add-signature-cancel-button = Hætta við
 pdfjs-editor-add-signature-add-button = Bæta við
 pdfjs-editor-edit-signature-update-button = Uppfæra
-
-##  Edit a comment dialog
-
-pdfjs-editor-edit-comment-actions-button-label = Aðgerðir
-pdfjs-editor-edit-comment-actions-button =
-    .title = Aðgerðir
-pdfjs-editor-edit-comment-close-button-label = Loka
-pdfjs-editor-edit-comment-close-button =
-    .title = Loka
-pdfjs-editor-edit-comment-actions-edit-button-label = Breyta
-pdfjs-editor-edit-comment-actions-delete-button-label = Eyða
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Settu inn athugasemdina þína
-pdfjs-editor-edit-comment-manager-cancel-button = Hætta við
-pdfjs-editor-edit-comment-manager-save-button = Vista
-
-## Edit a comment button in the editor toolbar
-
-pdfjs-editor-edit-comment-button =
-    .title = Breyta athugasemd
 
 ## Main menu for adding/removing signatures
 

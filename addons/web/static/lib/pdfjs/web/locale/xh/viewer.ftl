@@ -98,18 +98,6 @@ pdfjs-printing-not-ready = Isilumkiso: IPDF ayihlohlwanga ngokupheleleyo ukwenze
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Togola ngebha eseCaleni
-pdfjs-toggle-sidebar-button-label = Togola ngebha eseCaleni
-pdfjs-document-outline-button =
-    .title = Bonisa uLwandlalo loXwebhu (cofa kabini ukuze wandise/diliza zonke izinto)
-pdfjs-document-outline-button-label = Isishwankathelo soxwebhu
-pdfjs-attachments-button =
-    .title = Bonisa iziqhotyoshelwa
-pdfjs-attachments-button-label = Iziqhoboshelo
-pdfjs-thumbs-button =
-    .title = Bonisa ukrobiso kumfanekiso
-pdfjs-thumbs-button-label = Ukrobiso kumfanekiso
 pdfjs-findbar-button =
     .title = Fumana kuXwebhu
 pdfjs-findbar-button-label = Fumana
@@ -118,18 +106,14 @@ pdfjs-findbar-button-label = Fumana
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Iphepha { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Ukrobiso kumfanekiso wephepha { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Fumana
     .placeholder = Fumana kuXwebhu…
+    .title = Fumana
 pdfjs-find-previous-button =
     .title = Fumanisa isenzeko sangaphambili sebinzana lamagama
 pdfjs-find-previous-button-label = Okwangaphambili

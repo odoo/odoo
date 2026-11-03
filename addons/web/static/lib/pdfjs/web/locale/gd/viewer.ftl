@@ -149,23 +149,6 @@ pdfjs-printing-not-ready = Rabhadh: Cha deach am PDF a luchdadh gu tur airson cl
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Toglaich am bàr-taoibh
-pdfjs-toggle-sidebar-notification-button =
-    .title = Toglaich am bàr-taoibh (tha oir-loidhne/ceanglachain/breathan aig an sgrìobhainn)
-pdfjs-toggle-sidebar-button-label = Toglaich am bàr-taoibh
-pdfjs-document-outline-button =
-    .title = Seall oir-loidhne na sgrìobhainn (dèan briogadh dùbailte airson a h-uile nì a leudachadh/a cho-theannadh)
-pdfjs-document-outline-button-label = Oir-loidhne na sgrìobhainne
-pdfjs-attachments-button =
-    .title = Seall na ceanglachain
-pdfjs-attachments-button-label = Ceanglachain
-pdfjs-layers-button =
-    .title = Seall na breathan (dèan briogadh dùbailte airson a h-uile breath ath-shuidheachadh dhan staid bhunaiteach)
-pdfjs-layers-button-label = Breathan
-pdfjs-thumbs-button =
-    .title = Seall na dealbhagan
-pdfjs-thumbs-button-label = Dealbhagan
 pdfjs-current-outline-item-button =
     .title = Lorg nì làithreach na h-oir-loidhne
 pdfjs-current-outline-item-button-label = Nì làithreach na h-oir-loidhne
@@ -178,18 +161,14 @@ pdfjs-additional-layers = Barrachd breathan
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Duilleag a { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Dealbhag duilleag a { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Lorg
     .placeholder = Lorg san sgrìobhainn...
+    .title = Lorg
 pdfjs-find-previous-button =
     .title = Lorg làthair roimhe na h-abairt seo
 pdfjs-find-previous-button-label = Air ais

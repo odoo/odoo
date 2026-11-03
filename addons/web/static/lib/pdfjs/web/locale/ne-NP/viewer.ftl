@@ -119,18 +119,6 @@ pdfjs-printing-not-ready = चेतावनी: PDF मुद्रणका �
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = टगल साइडबार
-pdfjs-toggle-sidebar-button-label = टगल साइडबार
-pdfjs-document-outline-button =
-    .title = कागजातको रूपरेखा देखाउनुहोस् (सबै वस्तुहरू विस्तार/पतन गर्न डबल-क्लिक गर्नुहोस्)
-pdfjs-document-outline-button-label = दस्तावेजको रूपरेखा
-pdfjs-attachments-button =
-    .title = संलग्नहरू देखाउनुहोस्
-pdfjs-attachments-button-label = संलग्नकहरू
-pdfjs-thumbs-button =
-    .title = थम्बनेलहरू देखाउनुहोस्
-pdfjs-thumbs-button-label = थम्बनेलहरू
 pdfjs-findbar-button =
     .title = कागजातमा फेला पार्नुहोस्
 pdfjs-findbar-button-label = फेला पार्नुहोस्
@@ -139,18 +127,14 @@ pdfjs-findbar-button-label = फेला पार्नुहोस्
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = पृष्ठ { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page } पृष्ठको थम्बनेल
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = फेला पार्नुहोस्
     .placeholder = कागजातमा फेला पार्नुहोस्…
+    .title = फेला पार्नुहोस्
 pdfjs-find-previous-button =
     .title = यस वाक्यांशको अघिल्लो घटना फेला पार्नुहोस्
 pdfjs-find-previous-button-label = अघिल्लो

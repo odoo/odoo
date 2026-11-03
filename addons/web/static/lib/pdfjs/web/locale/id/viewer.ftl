@@ -166,23 +166,6 @@ pdfjs-printing-not-ready = Peringatan: Berkas PDF masih belum dimuat secara leng
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Aktif/Nonaktifkan Bilah Samping
-pdfjs-toggle-sidebar-notification-button =
-    .title = Aktif/Nonaktifkan Bilah Samping (dokumen berisi kerangka/lampiran/lapisan)
-pdfjs-toggle-sidebar-button-label = Aktif/Nonaktifkan Bilah Samping
-pdfjs-document-outline-button =
-    .title = Tampilkan Kerangka Dokumen (klik ganda untuk membentangkan/menciutkan semua item)
-pdfjs-document-outline-button-label = Kerangka Dokumen
-pdfjs-attachments-button =
-    .title = Tampilkan Lampiran
-pdfjs-attachments-button-label = Lampiran
-pdfjs-layers-button =
-    .title = Tampilkan Lapisan (klik ganda untuk mengatur ulang semua lapisan ke keadaan baku)
-pdfjs-layers-button-label = Lapisan
-pdfjs-thumbs-button =
-    .title = Tampilkan Miniatur
-pdfjs-thumbs-button-label = Miniatur
 pdfjs-current-outline-item-button =
     .title = Cari Butir Ikhtisar Saat Ini
 pdfjs-current-outline-item-button-label = Butir Ikhtisar Saat Ini
@@ -195,18 +178,14 @@ pdfjs-additional-layers = Lapisan Tambahan
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Laman { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Miniatur Laman { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Temukan
     .placeholder = Temukan di dokumen…
+    .title = Temukan
 pdfjs-find-previous-button =
     .title = Temukan kata sebelumnya
 pdfjs-find-previous-button-label = Sebelumnya
@@ -293,12 +272,12 @@ pdfjs-editor-highlight-button =
     .title = Sorot
 pdfjs-editor-highlight-button-label = Sorot
 pdfjs-highlight-floating-button1 =
-    .title = Sorot
     .aria-label = Sorot
+    .title = Sorot
 pdfjs-highlight-floating-button-label = Sorot
 pdfjs-comment-floating-button =
-    .title = Komentar
     .aria-label = Komentar
+    .title = Komentar
 pdfjs-comment-floating-button-label = Komentar
 pdfjs-editor-signature-button =
     .title = Tambahkan tanda tangan
@@ -480,13 +459,6 @@ pdfjs-editor-alt-text-settings-dialog-label = Pengaturan teks alternatif gambar
 pdfjs-editor-alt-text-settings-automatic-title = Teks alternatif otomatis
 pdfjs-editor-alt-text-settings-create-model-button-label = Buat teks alternatif secara otomatis
 pdfjs-editor-alt-text-settings-create-model-description = Menyarankan deskripsi untuk membantu orang yang tidak dapat melihat gambar atau ketika gambar tidak termuat.
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = Model AI teks alternatif ({ $totalSize } MB)
-pdfjs-editor-alt-text-settings-ai-model-description = Berjalan secara lokal di perangkat Anda sehingga data Anda tetap pribadi. Diperlukan untuk teks alternatif otomatis.
-pdfjs-editor-alt-text-settings-delete-model-button = Hapus
-pdfjs-editor-alt-text-settings-download-model-button = Unduh
-pdfjs-editor-alt-text-settings-downloading-model-button = Mengunduh…
 pdfjs-editor-alt-text-settings-editor-title = Editor teks alternatif
 pdfjs-editor-alt-text-settings-show-dialog-button-label = Tampilkan editor teks alternatif segera saat menambahkan gambar
 pdfjs-editor-alt-text-settings-show-dialog-description = Membantu Anda memastikan semua gambar Anda memiliki teks alternatif.
@@ -573,26 +545,6 @@ pdfjs-editor-add-signature-error-close-button = Tutup
 pdfjs-editor-add-signature-cancel-button = Batal
 pdfjs-editor-add-signature-add-button = Tambah
 pdfjs-editor-edit-signature-update-button = Perbarui
-
-##  Edit a comment dialog
-
-pdfjs-editor-edit-comment-actions-button-label = Aksi
-pdfjs-editor-edit-comment-actions-button =
-    .title = Aksi
-pdfjs-editor-edit-comment-close-button-label = Tutup
-pdfjs-editor-edit-comment-close-button =
-    .title = Tutup
-pdfjs-editor-edit-comment-actions-edit-button-label = Sunting
-pdfjs-editor-edit-comment-actions-delete-button-label = Hapus
-pdfjs-editor-edit-comment-manager-text-input =
-    .placeholder = Masukkan komentar Anda
-pdfjs-editor-edit-comment-manager-cancel-button = Batal
-pdfjs-editor-edit-comment-manager-save-button = Simpan
-
-## Edit a comment button in the editor toolbar
-
-pdfjs-editor-edit-comment-button =
-    .title = Sunting komentar
 
 ## Main menu for adding/removing signatures
 

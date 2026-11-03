@@ -80,25 +80,11 @@ pdfjs-printing-not-ready = Diqqat: PDF fayl chop qilish uchun toʻliq yuklanmadi
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Yon panelni yoqib/oʻchirib qoʻyish
-pdfjs-toggle-sidebar-button-label = Yon panelni yoqib/oʻchirib qoʻyish
-pdfjs-document-outline-button-label = Hujjat tuzilishi
-pdfjs-attachments-button =
-    .title = Ilovalarni ko‘rsatish
-pdfjs-attachments-button-label = Ilovalar
-pdfjs-thumbs-button =
-    .title = Nishonchalarni koʻrsatish
-pdfjs-thumbs-button-label = Nishoncha
 pdfjs-findbar-button =
     .title = Hujjat ichidan topish
 
 ## Thumbnails panel item (tooltip and alt text for images)
 
-# Variables:
-#   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = { $page } sahifa
 # Variables:
 #   $page (Number) - the page number
 pdfjs-thumb-page-canvas =

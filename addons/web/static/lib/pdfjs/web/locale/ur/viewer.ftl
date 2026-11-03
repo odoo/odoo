@@ -133,18 +133,6 @@ pdfjs-printing-not-ready = تنبیہ: PDF چھپائی کے لیے پوری ط�
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = سلائیڈ ٹوگل کریں
-pdfjs-toggle-sidebar-button-label = سلائیڈ ٹوگل کریں
-pdfjs-document-outline-button =
-    .title = دستاویز کی سرخیاں دکھایں (تمام اشیاء وسیع / غائب کرنے کے لیے ڈبل کلک کریں)
-pdfjs-document-outline-button-label = دستاویز آؤٹ لائن
-pdfjs-attachments-button =
-    .title = منسلکات دکھائیں
-pdfjs-attachments-button-label = منسلکات
-pdfjs-thumbs-button =
-    .title = تھمبنیل دکھائیں
-pdfjs-thumbs-button-label = مجمل
 pdfjs-findbar-button =
     .title = دستاویز میں ڈھونڈیں
 pdfjs-findbar-button-label = ڈھونڈیں
@@ -153,18 +141,14 @@ pdfjs-findbar-button-label = ڈھونڈیں
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = صفحہ { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = صفحے کا مجمل { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = ڈھونڈیں
     .placeholder = دستاویز… میں ڈھونڈیں
+    .title = ڈھونڈیں
 pdfjs-find-previous-button =
     .title = فقرے کا پچھلا وقوع ڈھونڈیں
 pdfjs-find-previous-button-label = پچھلا

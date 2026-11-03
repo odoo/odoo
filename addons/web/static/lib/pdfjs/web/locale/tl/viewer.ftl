@@ -140,23 +140,6 @@ pdfjs-printing-not-ready = Babala: Hindi ganap na nabuksan ang PDF para sa pag-p
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Ipakita/Itago ang Sidebar
-pdfjs-toggle-sidebar-notification-button =
-    .title = Ipakita/Itago ang Sidebar (nagtataglay ang dokumento ng balangkas/mga attachment/mga layer)
-pdfjs-toggle-sidebar-button-label = Ipakita/Itago ang Sidebar
-pdfjs-document-outline-button =
-    .title = Ipakita ang Document Outline (mag-double-click para i-expand/collapse ang laman)
-pdfjs-document-outline-button-label = Balangkas ng Dokumento
-pdfjs-attachments-button =
-    .title = Ipakita ang mga Attachment
-pdfjs-attachments-button-label = Mga attachment
-pdfjs-layers-button =
-    .title = Ipakita ang mga Layer (mag-double click para mareset ang lahat ng layer sa orihinal na estado)
-pdfjs-layers-button-label = Mga layer
-pdfjs-thumbs-button =
-    .title = Ipakita ang mga Thumbnail
-pdfjs-thumbs-button-label = Mga thumbnail
 pdfjs-findbar-button =
     .title = Hanapin sa Dokumento
 pdfjs-findbar-button-label = Hanapin
@@ -166,18 +149,14 @@ pdfjs-additional-layers = Mga Karagdagang Layer
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Pahina { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = Thumbnail ng Pahina { $page }
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Hanapin
     .placeholder = Hanapin sa dokumento…
+    .title = Hanapin
 pdfjs-find-previous-button =
     .title = Hanapin ang nakaraang pangyayari ng parirala
 pdfjs-find-previous-button-label = Nakaraan

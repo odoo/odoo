@@ -140,23 +140,6 @@ pdfjs-printing-not-ready = Xəbərdarlıq: PDF çap üçün tam yüklənməyib.
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = Yan Paneli Aç/Bağla
-pdfjs-toggle-sidebar-notification-button =
-    .title = Yan paneli çevir (sənəddə icmal/bağlamalar/laylar mövcuddur)
-pdfjs-toggle-sidebar-button-label = Yan Paneli Aç/Bağla
-pdfjs-document-outline-button =
-    .title = Sənədin eskizini göstər (bütün bəndləri açmaq/yığmaq üçün iki dəfə klikləyin)
-pdfjs-document-outline-button-label = Sənəd strukturu
-pdfjs-attachments-button =
-    .title = Bağlamaları göstər
-pdfjs-attachments-button-label = Bağlamalar
-pdfjs-layers-button =
-    .title = Layları göstər (bütün layları ilkin halına sıfırlamaq üçün iki dəfə klikləyin)
-pdfjs-layers-button-label = Laylar
-pdfjs-thumbs-button =
-    .title = Kiçik şəkilləri göstər
-pdfjs-thumbs-button-label = Kiçik şəkillər
 pdfjs-findbar-button =
     .title = Sənəddə Tap
 pdfjs-findbar-button-label = Tap
@@ -166,18 +149,14 @@ pdfjs-additional-layers = Əlavə laylar
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = Səhifə{ $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = { $page } səhifəsinin kiçik vəziyyəti
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = Tap
     .placeholder = Sənəddə tap…
+    .title = Tap
 pdfjs-find-previous-button =
     .title = Bir öncəki uyğun gələn sözü tapır
 pdfjs-find-previous-button-label = Geri

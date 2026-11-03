@@ -153,6 +153,27 @@ pdfjs-document-properties-linearized = تکھا ویب نظارہ:
 pdfjs-document-properties-linearized-yes = جیا
 pdfjs-document-properties-linearized-no = کو
 pdfjs-document-properties-close-button = بند کرو
+pdfjs-digital-signature-properties-view-certificate = سرٹیفکیٹ ݙیکھو۔
+# Shown beneath an invalid signature card to explain why verification
+# failed. The text comes from NSS (e.g. "Signature integrity has been
+# compromised", "PKCS#7 signature could not be parsed") and is not
+# itself localized — it is the underlying error message produced by
+# the verification backend.
+# Variables:
+#   $reason (String) - error message describing why the signature
+#                      could not be verified.
+pdfjs-digital-signature-properties-reason = وجہ: { $reason }
+# Variables:
+#   $dateObj (Date) - the signing time from the /Sig dict's /M entry.
+pdfjs-digital-signature-properties-timestamp = ٹائم سٹیمپ: { DATETIME($dateObj, dateStyle: "short", timeStyle: "medium") }
+# Variables:
+#   $count (Number) - number of nested sub-signatures (one per earlier
+#                     incremental revision of the document).
+pdfjs-digital-signature-properties-sub-signatures =
+    { $count ->
+        [one] ذیلی دستخط ({ $count })
+       *[other] ذیلی دستخطاں ({ $count })
+    }
 
 ## Print
 
@@ -166,23 +187,6 @@ pdfjs-printing-not-ready = چتاوݨی: PDF چھپائی کیتے پوری طر
 
 ## Tooltips and alt text for side panel toolbar buttons
 
-pdfjs-toggle-sidebar-button =
-    .title = سائیڈ بار ٹوگل کرو
-pdfjs-toggle-sidebar-notification-button =
-    .title = سائیڈ بار ٹوگل کرو (دستاویز وِچ آؤٹ لائن/ منسلکات/ پرتاں شامل ہن)
-pdfjs-toggle-sidebar-button-label = سائیڈ بار ٹوگل کرو
-pdfjs-document-outline-button =
-    .title = دستاویز دا خاکہ ݙکھاؤ (تمام آئٹمز کوں پھیلاوݨ/سنگوڑݨ کیتے ڈبل کلک کرو)
-pdfjs-document-outline-button-label = دستاویز آؤٹ لائن
-pdfjs-attachments-button =
-    .title = نتھیاں ݙکھاؤ
-pdfjs-attachments-button-label = منسلکات
-pdfjs-layers-button =
-    .title = پرتاں ݙکھاؤ (تمام پرتاں کوں ڈیفالٹ حالت وِچ دوبارہ ترتیب ݙیوݨ کیتے ڈبل کلک کرو)
-pdfjs-layers-button-label = پرتاں
-pdfjs-thumbs-button =
-    .title = تھمبنیل ݙکھاؤ
-pdfjs-thumbs-button-label = تھمبنیلز
 pdfjs-current-outline-item-button =
     .title = موجودہ آؤٹ لائن آئٹم لبھو
 pdfjs-current-outline-item-button-label = موجودہ آؤٹ لائن آئٹم
@@ -195,18 +199,23 @@ pdfjs-additional-layers = اضافی پرتاں
 
 # Variables:
 #   $page (Number) - the page number
-pdfjs-thumb-page-title =
-    .title = ورقہ { $page }
-# Variables:
-#   $page (Number) - the page number
 pdfjs-thumb-page-canvas =
     .aria-label = ورقے دا تھمبنیل { $page }
+# Variables:
+#   $page (Number) - the page number
+pdfjs-thumb-page-checkbox1 =
+    .title = صفحہ { $page } منتخب کرو۔
+# Variables:
+#   $page (Number) - the page number
+#   $total (Number) - the number of pages
+pdfjs-thumb-page-title1 =
+    .title = صفحہ { $page } از { $total }۔
 
 ## Find panel button title and messages
 
 pdfjs-find-input =
-    .title = لبھو
     .placeholder = دستاویز وِچ لبھو …
+    .title = لبھو
 pdfjs-find-previous-button =
     .title = فقرے دا پچھلا واقعہ لبھو
 pdfjs-find-previous-button-label = پچھلا
@@ -286,9 +295,13 @@ pdfjs-web-fonts-disabled = ویب فونٹس غیر فعال ہن: ایمبیڈ�
 
 pdfjs-editor-free-text-button =
     .title = متن
+pdfjs-editor-color-picker-free-text-input =
+    .title = متن دا رنگ بدلو۔
 pdfjs-editor-free-text-button-label = متن
 pdfjs-editor-ink-button =
     .title = چھکو
+pdfjs-editor-color-picker-ink-input =
+    .title = ڈرائنگ دا رنگ بدلو۔
 pdfjs-editor-ink-button-label = چھکو
 pdfjs-editor-stamp-button =
     .title = تصویراں کوں شامل کرو یا ترمیم کرو
@@ -297,9 +310,36 @@ pdfjs-editor-highlight-button =
     .title = نمایاں کرو
 pdfjs-editor-highlight-button-label = نمایاں کرو
 pdfjs-highlight-floating-button1 =
-    .title = نمایاں کرو
     .aria-label = نمایاں کرو
+    .title = نمایاں کرو
 pdfjs-highlight-floating-button-label = نمایاں کرو
+pdfjs-comment-floating-button =
+    .aria-label = تبصرہ۔
+    .title = تبصرہ۔
+pdfjs-comment-floating-button-label = تبصرہ۔
+pdfjs-editor-comment-button =
+    .aria-label = تبصرہ
+    .title = تبصرہ
+pdfjs-editor-comment-button-label = تبصرہ۔
+pdfjs-editor-signature-button =
+    .title = دستخط شامل کرو۔
+pdfjs-editor-signature-button-label = دستخط شامل کرو۔
+
+## Default editor aria labels
+
+# “Highlight” is a noun, the string is used on the editor for highlights.
+pdfjs-editor-highlight-editor =
+    .aria-label = نشابر ایڈیٹر۔
+# “Drawing” is a noun, the string is used on the editor for drawings.
+pdfjs-editor-ink-editor =
+    .aria-label = ڈرائنگ ایڈیٹر۔
+# Used when a signature editor is selected/hovered.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-signature-editor1 =
+    .aria-description = دستخط ایڈیٹر: { $description }۔
+pdfjs-editor-stamp-editor =
+    .aria-label = تصویر ایڈیٹر۔
 
 ## Remove button for the various kind of editor.
 
@@ -311,6 +351,8 @@ pdfjs-editor-remove-stamp-button =
     .title = تصویر ہٹاؤ
 pdfjs-editor-remove-highlight-button =
     .title = نمایاں ہٹاؤ
+pdfjs-editor-remove-signature-button =
+    .title = دستخط ہٹاؤ۔
 
 ##
 
@@ -327,10 +369,41 @@ pdfjs-editor-stamp-add-image-button-label = تصویر شامل کرو
 pdfjs-editor-free-highlight-thickness-input = مُٹاݨ
 pdfjs-editor-free-highlight-thickness-title =
     .title = متن توں ان٘ج ٻئے شئیں کوں نمایاں کرݨ ویلے مُٹاݨ کوں بدلو
+pdfjs-editor-add-signature-container =
+    .aria-label = دستخط کنٹرولز تے محفوظ دستخط۔
+pdfjs-editor-signature-add-signature-button =
+    .title = نواں دستخط شامل کرو۔
+pdfjs-editor-signature-add-signature-button-label = نواں دستخط شامل کرو۔
+# Used on the button to use an already saved signature.
+# Variables:
+#   $description (String) - a string describing/labeling the signature.
+pdfjs-editor-add-saved-signature-button =
+    .title = محفوظ دستخط: { $description }۔
+# .default-content is used as a placeholder in an empty text editor.
+pdfjs-free-text2 =
+    .aria-label = ٹیکسٹ ایڈیٹر
+    .default-content = ٹائپنگ شروع کرو …
+# Used to show how many comments are present in the pdf file.
+# Variables:
+#   $count (Number) - the number of comments.
+pdfjs-editor-comments-sidebar-title =
+    { $count ->
+        [one] تبصرہ
+       *[other] تبصرے
+    }
+pdfjs-editor-comments-sidebar-close-button =
+    .aria-label = سائیڈبار بند کرو۔
+    .title = سائیڈبار بند کرو۔
+pdfjs-editor-comments-sidebar-close-button-label = سائیڈبار بند کرو۔
+# Instructional copy to add a comment by selecting text or an annotations.
+pdfjs-editor-comments-sidebar-no-comments1 = کوئی اہم گلھ نظر آئی؟ اونکوں ہائی لائٹ کرو تے تبصرہ چھوڑو۔
+pdfjs-editor-comments-sidebar-no-comments-link = ٻیا سکھو
 
 ## Alt-text dialog
 
 pdfjs-editor-alt-text-button-label = Alt متن
+pdfjs-editor-alt-text-edit-button =
+    .aria-label = alt متن وِچ ترمیم کرو
 pdfjs-editor-alt-text-dialog-label = ہِک اختیار چُݨو
 pdfjs-editor-alt-text-dialog-description = Alt متن (متبادل متن) اِیں ویلے مَدَت کرین٘دا ہِے جہڑیلے لوک تصویر کوں نِھیں ݙیکھ سڳدے یا جہڑیلے اِیہ لوڈ کائنی تِھین٘دا۔
 pdfjs-editor-alt-text-add-description-label = تفصیل شامل کرو
@@ -443,23 +516,293 @@ pdfjs-editor-alt-text-settings-dialog-label = تصویر آلٹ عبارت تر�
 pdfjs-editor-alt-text-settings-automatic-title = خودکار آلٹ عبارت
 pdfjs-editor-alt-text-settings-create-model-button-label = آلٹ عبارت خودکار بݨاؤ
 pdfjs-editor-alt-text-settings-create-model-description = اُنہاں لوکاں دی مدد کیتے  تفصیل تجویز کرو جہڑے تصویر کائنی ݙیکھ سڳدے یا ڄݙݨ تصویر لوڈ کائبی تھیندی۔
-# Variables:
-#   $totalSize (Number) - the total size (in MB) of the AI model.
-pdfjs-editor-alt-text-settings-download-model-label = آلٹ عبارت اے آئی ماڈل ({ $totalSize } ایم بی)
-pdfjs-editor-alt-text-settings-ai-model-description = تہاݙی ڈیوائس تے مقامی طور تے چلدا ہے تاں جو تہاݙا ڈیٹا نجی رہوے۔ خودکار آلٹ عبارت کیتے ضروری ہے۔
-pdfjs-editor-alt-text-settings-delete-model-button = مٹاؤ
-pdfjs-editor-alt-text-settings-download-model-button = ڈاؤن لوڈ
-pdfjs-editor-alt-text-settings-downloading-model-button = ڈاؤن لوڈ تھیندا پئے …
 pdfjs-editor-alt-text-settings-editor-title = متبادل ٹیکسٹ ایڈیٹر
 pdfjs-editor-alt-text-settings-show-dialog-button-label = تصویر شامل کرݨ ویلے فوری طور تے آلٹ ٹیکسٹ ایڈیٹر ݙکھاؤ
 pdfjs-editor-alt-text-settings-show-dialog-description = ایہ تہاکوں یقینی بݨاوݨ وچ مدد کریندے جو تہاݙیاں ساریاں تصویراں وچ آلٹ عبارت ہے۔
 pdfjs-editor-alt-text-settings-close-button = بند کرو
 
+## Accessibility labels (announced by screen readers) for objects added to the editor.
+
+pdfjs-editor-highlight-added-alert = ہائی لائٹ شامل تھئی
+pdfjs-editor-freetext-added-alert = متن شامل تھیا
+pdfjs-editor-ink-added-alert = ڈرائنگ شامل تھئی
+pdfjs-editor-stamp-added-alert = تصویر شامل تھئی
+pdfjs-editor-signature-added-alert = دستخط شامل تھئی
+
 ## "Annotations removed" bar
 
+pdfjs-editor-undo-bar-message-highlight = ہائی لائٹ مٹائی ڳئی
+pdfjs-editor-undo-bar-message-freetext = متن مٹایا ڳیا
+pdfjs-editor-undo-bar-message-ink = ڈرائنگ مٹائی ڳئی
+pdfjs-editor-undo-bar-message-stamp = تصویر مٹائی ڳئی
+pdfjs-editor-undo-bar-message-signature = دستخط مٹائے ڳئے
+pdfjs-editor-undo-bar-message-comment = تبصرہ مٹایا ڳیا
+# Variables:
+#   $count (Number) - the number of removed annotations.
+pdfjs-editor-undo-bar-message-multiple =
+    { $count ->
+        [one] { $count } تشریح مٹائی ڳئی
+       *[other] { $count } تشریحیں مٹائی ڳئیاں
+    }
 pdfjs-editor-undo-bar-undo-button =
     .title = کیتا اݨ کیتا
 pdfjs-editor-undo-bar-undo-button-label = کیتا اݨ کیتا
 pdfjs-editor-undo-bar-close-button =
     .title = بند کرو
 pdfjs-editor-undo-bar-close-button-label = بند کرو
+
+## Add a signature dialog
+
+pdfjs-editor-add-signature-dialog-label = ایہ مکالمہ صارف کوں PDF دستاویز وِچ شامل کرݨ کیتے دستخط بݨاوݨ دی اجازت ݙیندا ہے۔ صارف ناں وِچ ترمیم کر سڳدا ہے (جیڑھا alt متن دے طور تے وی کم کریندا ہے)، تے اختیاری طور تے دستخط کوں ٻار ٻار ورتݨ کیتے محفوظ کر سڳدا ہے۔
+pdfjs-editor-add-signature-dialog-title = دستخط شامل کرو۔
+
+## Tab names
+
+# Type is a verb (you can type your name as signature)
+pdfjs-editor-add-signature-type-button = ٹائپ کرو
+    .title = ٹائپ کرو
+# Draw is a verb (you can draw your signature)
+pdfjs-editor-add-signature-draw-button = چھکو
+    .title = چھکو
+pdfjs-editor-add-signature-image-button = تصویر
+    .title = تصویر
+
+## Tab panels
+
+pdfjs-editor-add-signature-type-input =
+    .aria-label = اپݨے دستخط ٹائپ کرو
+    .placeholder = اپݨے دستخط ٹائپ کرو
+pdfjs-editor-add-signature-draw-placeholder = اپݨے دستخط ڈراو کرو
+pdfjs-editor-add-signature-draw-thickness-range-label = موٹائی۔
+# Variables:
+#   $thickness (Number) - the thickness (in pixels) of the line used to draw a signature.
+pdfjs-editor-add-signature-draw-thickness-range =
+    .title = ڈرائنگ دی ٹھولھ: { $thickness }
+pdfjs-editor-add-signature-image-placeholder = اپ لوڈ کرݨ کیتے فائل اتھے سٹو
+pdfjs-editor-add-signature-image-browse-link =
+    { PLATFORM() ->
+        [macos] یا تصویر فائلاں چݨو
+       *[other] یا تصویر فائلاں براؤز کرو
+    }
+
+## Controls
+
+pdfjs-editor-add-signature-description-label = تفصیل (alt متن)
+pdfjs-editor-add-signature-description-input =
+    .title = تفصیل (alt متن)
+pdfjs-editor-add-signature-description-default-when-drawing = دستخط
+pdfjs-editor-add-signature-clear-button-label = دستخط صاف کرو
+pdfjs-editor-add-signature-clear-button =
+    .title = دستخط صاف کرو
+pdfjs-editor-add-signature-save-checkbox = دستخط محفوظ کرو
+pdfjs-editor-add-signature-save-warning-message = تساں 5 محفوظ شدہ دستخطاں دی حد تک پُج ڳئے ہو۔ ٻئے محفوظ کرݨ کیتے ہک مٹاو۔
+pdfjs-editor-add-signature-image-upload-error-title = تصویر اپ لوڈ نہ تھئی
+pdfjs-editor-add-signature-image-upload-error-description = اپݨا نیٹ ورک کنکشن چیک کرو یا ٻئی تصویر آزماو۔
+pdfjs-editor-add-signature-image-no-data-error-title = تصویر کوں دستخط اچ تبدیل نہیں کر سڳیا
+pdfjs-editor-add-signature-image-no-data-error-description = ٻئی تصویر اپ لوڈ کرݨ دی کوشش کرو۔
+pdfjs-editor-add-signature-error-close-button = بند کرو
+
+## Dialog buttons
+
+pdfjs-editor-add-signature-cancel-button = منسوخ کرو۔
+pdfjs-editor-add-signature-add-button = شامل کرو
+pdfjs-editor-edit-signature-update-button = اپ ڈیٹ کرو۔
+
+## Comment popup
+
+pdfjs-editor-edit-comment-popup-button-label = تبصرہ ایڈٹ کرو
+pdfjs-editor-edit-comment-popup-button =
+    .title = تبصرہ ایڈٹ کرو
+pdfjs-editor-delete-comment-popup-button-label = تبصرہ مٹاو
+pdfjs-editor-delete-comment-popup-button =
+    .title = تبصرہ مٹاو
+pdfjs-show-comment-button =
+    .title = تبصرہ ݙکھاو
+
+##  Edit a comment dialog
+
+# An existing comment is edited
+pdfjs-editor-edit-comment-dialog-title-when-editing = تبصرہ ایڈٹ کرو
+pdfjs-editor-edit-comment-dialog-save-button-when-editing = اپ ڈیٹ کرو
+# No existing comment
+pdfjs-editor-edit-comment-dialog-title-when-adding = تبصرہ شامل کرو
+pdfjs-editor-edit-comment-dialog-save-button-when-adding = شامل کرو
+pdfjs-editor-edit-comment-dialog-text-input =
+    .placeholder = ٹائپ کرݨ شروع کرو
+pdfjs-editor-edit-comment-dialog-cancel-button = منسوخ
+
+## Edit a comment button in the editor toolbar
+
+pdfjs-editor-add-comment-button =
+    .title = تبصرہ شامل کرو
+
+## The view manager is a sidebar displaying different views:
+##  - thumbnails;
+##  - outline;
+##  - attachments;
+##  - layers.
+## The thumbnails view is used to edit the pdf: remove/insert pages, ...
+
+pdfjs-toggle-views-manager-notification-button =
+    .title = سائیڈ بار ٹوگل کرو (دستاویز اچ تھمب نیلز/آؤٹ لائن/منسلکات/پرتاں شامل ہن)
+pdfjs-toggle-views-manager-button1-label = صفحیاں دا انتظام کرو
+pdfjs-views-manager-sidebar =
+    .aria-label = بغلی بار
+pdfjs-views-manager-sidebar-resizer =
+    .aria-label = سائیڈ بار دا ری سائزر
+pdfjs-views-manager-view-selector-button =
+    .title = نظارے
+pdfjs-views-manager-view-selector-button-label = نظارے
+pdfjs-views-manager-pages-title = ورقے
+pdfjs-views-manager-outlines-title1 = دستاویز دا آؤٹ لائن
+    .title = دستاویز دا آؤٹ لائن (سارے آئٹمز کوں پھیلاؤن یا سمیٹݨ کیتے ڈبل کلک کرو)
+pdfjs-views-manager-attachments-title = منسلکات
+pdfjs-views-manager-layers-title1 = پرتاں
+    .title = پرتاں (سارے پرتاں کوں ڈیفالٹ حالت تے واپس کرݨ کیتے ڈبل کلک کرو)
+pdfjs-views-manager-pages-option-label = ورقے
+pdfjs-views-manager-outlines-option-label = دستاویز دا آؤٹ لائن
+pdfjs-views-manager-attachments-option-label = منسلکات
+pdfjs-views-manager-layers-option-label = پرتاں
+pdfjs-views-manager-add-file-button =
+    .title = فائل شامل کرو
+pdfjs-views-manager-add-file-button-label = فائل شامل کرو
+# Variables:
+#   $count (Number) - the number of selected pages.
+pdfjs-views-manager-pages-status-action-label =
+    { $count ->
+        [one] { $count } منتخب
+       *[other] { $count } منتخب
+    }
+pdfjs-views-manager-pages-status-none-action-label = ورقے منتخب کرو
+pdfjs-views-manager-pages-status-action-button-label = بندوبست کرو
+pdfjs-views-manager-pages-status-copy-button-label = کاپی کرو
+pdfjs-views-manager-pages-status-cut-button-label = کٹ کرو
+pdfjs-views-manager-pages-status-delete-button-label = مٹاو
+pdfjs-views-manager-pages-status-export-selected-button-label = منتخب کوں ایکسپورٹ کرو…
+# Variables:
+#   $count (Number) - the number of selected pages to be cut.
+pdfjs-views-manager-status-undo-cut-label =
+    { $count ->
+        [one] 1 ورقہ کٹیا ڳیا
+       *[other] { $count } ورقے کٹے ڳئے
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be copied.
+pdfjs-views-manager-pages-status-undo-copy-label =
+    { $count ->
+        [one] 1 ورقہ کاپی کیتا ڳیا
+       *[other] { $count } ورقے کاپی کیتے ڳئے
+    }
+# Variables:
+#   $count (Number) - the number of selected pages to be deleted.
+pdfjs-views-manager-pages-status-undo-delete-label =
+    { $count ->
+        [one] 1 ورقہ مٹایا ڳیا
+       *[other] { $count } ورقے مٹائے ڳئے
+    }
+pdfjs-views-manager-pages-status-waiting-ready-label = تہاݙی فائل تیار کیتی پئی اے…
+pdfjs-views-manager-pages-status-waiting-uploading-label = فائل اپ لوڈ تھیندی پئی اے…
+pdfjs-views-manager-status-warning-cut-label = کٹ نئیں سڳیا. ورقہ ریفریش کرو تے دوبارہ کوشش کرو.
+pdfjs-views-manager-status-warning-copy-label = کاپی نئیں سڳیا. ورقہ ریفریش کرو تے دوبارہ کوشش کرو.
+pdfjs-views-manager-status-warning-delete-label = مٹاو نئیں سڳیا. ورقہ ریفریش کرو تے دوبارہ کوشش کرو.
+pdfjs-views-manager-status-warning-save-label = محفوظ نئیں سڳیا. ورقہ ریفریش کرو تے دوبارہ کوشش کرو.
+pdfjs-views-manager-status-undo-button-label = کیتا اݨ کیتا
+pdfjs-views-manager-status-done-button-label = تھی ڳیا
+pdfjs-views-manager-status-close-button =
+    .title = بند کرو
+pdfjs-views-manager-status-close-button-label = بند کرو
+pdfjs-views-manager-paste-button-label = پیسٹ کرو
+pdfjs-views-manager-paste-button-before =
+    .title = پہلے ورقے توں پہلے پیسٹ کرو
+# Variables:
+#   $page (Number) - the page number after which the paste button is.
+pdfjs-views-manager-paste-button-after =
+    .title = ورقے { $page } دے بعد پیسٹ کرو
+# Badge used to promote a new feature in the UI, keep it as short as possible.
+# It's spelled uppercase for English, but it can be translated as usual.
+pdfjs-new-badge-content = نواں
+pdfjs-views-manager-waiting-for-file = فائل اپ لوڈ تھیندی پئی اے…
+pdfjs-toggle-views-manager-button1 =
+    .title = ورقے منیج کرو
+
+## Digital signature properties (signature verification panel)
+
+pdfjs-digital-signature-properties-button =
+    .aria-label = ڈیجیٹل دستخط دیاں خصوصیات
+    .title = ڈیجیٹل دستخط دیاں خصوصیات
+pdfjs-digital-signature-properties-button-label = ڈیجیٹل دستخط دیاں خصوصیات
+
+## Banner shown above the signature list summarising the overall
+## verification state of the document. Each variant is selected by the
+## viewer based on the worst per-signature status; one signature is
+## enough to lower the banner.
+##
+## Variables:
+##   $count (Number) - number of signatures at the worst level.
+
+pdfjs-digital-signature-properties-banner-verified = دستاویز تے درست ڈیجیٹل دستخط کیتے ڳئے ہن
+pdfjs-digital-signature-properties-banner-unknown =
+    { $count ->
+        [one] دستاویز تے دستخط ہن پر { $count } ڈیجیٹل دستخط دی تصدیق نئیں سڳی
+       *[other] دستاویز تے دستخط ہن پر { $count } ڈیجیٹل دستخطاں دی تصدیق نئیں سڳی
+    }
+pdfjs-digital-signature-properties-banner-untrusted =
+    { $count ->
+        [one] دستاویز تے { $count } سرٹیفیکیٹ نال دستخط ہن جیڑھا بھروسے آلا نئیں
+       *[other] دستاویز تے { $count } سرٹیفیکیٹاں نال دستخط ہن جیڑھے بھروسے آلے نئیں
+    }
+pdfjs-digital-signature-properties-banner-expired =
+    { $count ->
+        [one] دستاویز تے { $count } میعاد گزرا سرٹیفیکیٹ نال دستخط ہن
+       *[other] دستاویز تے { $count } میعاد گزرے سرٹیفیکیٹاں نال دستخط ہن
+    }
+pdfjs-digital-signature-properties-banner-invalid =
+    { $count ->
+        [one] دستاویز وچ { $count } غلط ڈیجیٹل دستخط ہے
+       *[other] دستاویز وچ { $count } غلط ڈیجیٹل دستخط ہن
+    }
+pdfjs-digital-signature-properties-banner-revoked =
+    { $count ->
+        [one] دستاویز تے { $count } منسوخ سرٹیفیکیٹ نال دستخط ہن
+       *[other] دستاویز تے { $count } منسوخ سرٹیفیکیٹاں نال دستخط ہن
+    }
+
+## Per-signature status row. Only three distinct strings are needed:
+## the signature crypto either verified (the cert chain may still be
+## untrusted/expired/revoked, but that's surfaced on the cert row
+## below), or it failed, or its sub-format isn't supported.
+
+pdfjs-digital-signature-properties-status-verified = حال: دستخط دی تصدیق تھی ڳئی اے
+pdfjs-digital-signature-properties-status-invalid = حال: دستخط غلط ہے
+pdfjs-digital-signature-properties-status-unknown = حال: تصدیق نئیں تھی سڳی (غیر تعاون یافتہ)
+
+## Per-signature certificate row. The variants with an issuer / date in
+## parentheses embed fully-localized context — no English fall-through.
+##
+## Variables:
+##   $issuer (String) - issuer or subject common name from the cert.
+##   $dateObj (Date)  - notAfter date for the expired-with-date form.
+
+pdfjs-digital-signature-properties-certificate-trusted = سرٹیفیکیٹ: بھروسے آلا ({ $issuer })
+pdfjs-digital-signature-properties-certificate-unknown = سرٹیفیکیٹ: دستیاب نئیں
+pdfjs-digital-signature-properties-certificate-untrusted = سرٹیفیکیٹ: بھروسے آلا نئیں
+pdfjs-digital-signature-properties-certificate-untrusted-unknown-issuer = سرٹیفیکیٹ: نامعلوم جاری کنندہ ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-self-signed = سرٹیفیکیٹ: خود دستخط شدہ ({ $issuer })
+pdfjs-digital-signature-properties-certificate-untrusted-untrusted-issuer = سرٹیفیکیٹ: بھروسے آلا نئیں جاری کنندہ ({ $issuer })
+pdfjs-digital-signature-properties-certificate-expired = سرٹیفیکیٹ: میعاد گزر ڳیا
+pdfjs-digital-signature-properties-certificate-expired-with-date = سرٹیفیکیٹ: میعاد گزر ڳیا ({ DATETIME($dateObj, dateStyle: "medium") })
+pdfjs-digital-signature-properties-certificate-revoked = سرٹیفیکیٹ: منسوخ
+
+## Main menu for adding/removing signatures
+
+pdfjs-editor-delete-signature-button1 =
+    .title = محفوظ شدہ دستخط ہٹاؤ
+pdfjs-editor-delete-signature-button-label1 = محفوظ شدہ دستخط ہٹاؤ
+
+## Editor toolbar
+
+pdfjs-editor-add-signature-edit-button-label = تفصیل ایڈٹ کرو
+
+## Edit signature description dialog
+
+pdfjs-editor-edit-signature-dialog-title = تفصیل ایڈٹ کرو
