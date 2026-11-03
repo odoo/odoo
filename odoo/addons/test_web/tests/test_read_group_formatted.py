@@ -510,7 +510,8 @@ class TestFormattedReadGroup(common.TransactionCase):
             [
                 {'datetime': False, 'value': 13},
                 {'datetime': '1916-08-18 12:30:00', 'value': 1},
-                {'datetime': '1916-08-18 12:50:00', 'value': 3},
+                {'datetime': '1916-08-18 12:50:00', 'value': 2},
+                {'datetime': '1916-08-18 12:50:45', 'value': 1},
                 {'datetime': '1916-08-19 01:30:00', 'value': 7},
                 {'datetime': '1916-10-18 23:30:00', 'value': 5},
             ],
@@ -584,6 +585,22 @@ class TestFormattedReadGroup(common.TransactionCase):
                 },
                 {'__extra_domain': [('datetime', '=', False)], 'datetime:hour': False, 'value:sum': 13},
             ]
+        )
+        self.assertEqual(
+            Model.formatted_read_group([('id', 'in', records.ids)], ['datetime:minute'], ['value:sum']),
+            [
+                {
+                    '__extra_domain': ['&', ('datetime', '>=', start), ('datetime', '<', end)],
+                    'datetime:minute': (start, label),
+                    'value:sum': value,
+                }
+                for start, end, label, value in [
+                    ('1916-08-18 12:30:00', '1916-08-18 12:31:00', '12:30 18 Aug', 1),
+                    ('1916-08-18 12:50:00', '1916-08-18 12:51:00', '12:50 18 Aug', 3),
+                    ('1916-08-19 01:30:00', '1916-08-19 01:31:00', '01:30 19 Aug', 7),
+                    ('1916-10-18 23:30:00', '1916-10-18 23:31:00', '23:30 18 Oct', 5),
+                ]
+            ] + [{'__extra_domain': [('datetime', '=', False)], 'datetime:minute': False, 'value:sum': 13}]
         )
 
         # With 'Europe/Brussels' [+01:00 UTC | +02:00 UTC DST] timezone
