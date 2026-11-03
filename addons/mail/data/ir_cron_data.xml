@@ -93,6 +93,15 @@
             <field name="state">code</field>
         </record>
 
+        <record id="ir_cron_send_im_status_changes" model="ir.cron">
+            <field name="name">Mail: send IM status changes</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="code">model._cron_send_im_status_changes()</field>
+            <field name="state">code</field>
+        </record>
+
         <record id="ir_cron_discuss_channel_sync_last_interest_dt" model="ir.cron">
             <field name="name">Discuss: sync channel last interest</field>
             <field name="interval_number">1</field>

@@ -86,6 +86,9 @@ class IrWebsocket(models.AbstractModel):
         )
         # sudo - res.users: can access users of allowed partners
         channels.extend((user, "presence") for user in allowed_users)
+        if not self.env.user.share:
+            # im_status flags (meeting, off hours, absence) are for internal users only
+            channels.extend((user, "presence_internal") for user in allowed_users)
         channels.extend((guest, "presence") for guest in allowed_guests)
         return super()._build_bus_channel_list(channels)
 

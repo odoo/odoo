@@ -11,6 +11,7 @@ const hrEmployeePatch = {
     setup() {
         super.setup();
         this.leave_date_to = fields.Date();
+        this.is_absent = fields.Attr(false);
     },
     /** @returns {string} */
     get outOfOfficeDateEndText() {
