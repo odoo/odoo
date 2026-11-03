@@ -1400,6 +1400,42 @@ test("PIVOT day are correctly formatted at evaluation", async function () {
     expect(getEvaluatedCell(model, "B3").formattedValue).toBe("10.00");
 });
 
+test("PIVOT hour are correctly formatted at evaluation", async function () {
+    patchWithCleanup(user, { tz: "UTC" });
+    const { model, pivotId } = await createSpreadsheetWithPivot({
+        arch: /* xml */ `
+                <pivot>
+                    <field name="create_date" interval="day" type="row"/>
+                    <field name="probability" type="measure"/>
+                </pivot>`,
+    });
+    updatePivot(model, pivotId, {
+        rows: [{ fieldName: "create_date", granularity: "hour", order: "asc" }],
+    });
+    await animationFrame();
+    const hour = "DATE(2006,1,3)+TIME(11,0,0)";
+    setCellContent(model, "B1", `=PIVOT.HEADER(1, "create_date:hour", ${hour})`);
+    setCellContent(model, "B2", `=PIVOT.VALUE(1, "probability:avg", "create_date:hour", ${hour})`);
+    setCellContent(
+        model,
+        "B3",
+        `=PIVOT.VALUE(1, "probability:avg", "create_date:hour", ${hour}+1/24)`
+    );
+    expect(getEvaluatedCell(model, "B1").format).toBe("dd mmm yyyy hh:mm");
+    expect(getEvaluatedCell(model, "B1").value).toBe(38720 + 11 / 24);
+    expect(getEvaluatedCell(model, "B1").formattedValue).toBe("03 Jan 2006 11:00");
+    expect(getEvaluatedCell(model, "B2").format).toBe("#,##0.00");
+    expect(getEvaluatedCell(model, "B2").value).toBe(95);
+    expect(getEvaluatedCell(model, "B2").formattedValue).toBe("95.00");
+    expect(getEvaluatedCell(model, "B3").value).toBe("");
+    setCellContent(
+        model,
+        "B4",
+        `=PIVOT.VALUE(1, "probability:avg", "create_date:hour", DATE(2016,12,10)+TIME(21,0,0))`
+    );
+    expect(getEvaluatedCell(model, "B4").value).toBe(15);
+});
+
 test("PIVOT day_of_week with same user and spreadsheet week start", async function () {
     const { model, pivotId } = await createSpreadsheetWithPivot({
         arch: /* xml */ `

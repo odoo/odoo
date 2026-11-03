@@ -209,6 +209,17 @@ const odooHourNumberAdapter = {
         return (normalizedValue + step) % 24;
     },
 };
+
+const odooHourAdapter = {
+    normalizeServerValue(groupBy, field, readGroupResult) {
+        const serverValue = getGroupStartingDatetime(field, groupBy, readGroupResult);
+        return toNumber(serverValue.toISODate(), DEFAULT_LOCALE) + serverValue.hour / 24;
+    },
+    increment(normalizedValue, step) {
+        return normalizedValue + step;
+    },
+};
+
 const odooMinuteNumberAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
         return Number(readGroupResult[groupBy]);
@@ -298,6 +309,7 @@ extendSpreadsheetAdapter("month_number", boundedOdooNumberDateAdapter(1, 12));
 extendSpreadsheetAdapter("quarter_number", boundedOdooNumberDateAdapter(1, 4));
 extendSpreadsheetAdapter("day_of_week", odooDayOfWeekAdapter);
 extendSpreadsheetAdapter("hour_number", odooHourNumberAdapter);
+extendSpreadsheetAdapter("hour", odooHourAdapter);
 extendSpreadsheetAdapter("minute_number", odooMinuteNumberAdapter);
 extendSpreadsheetAdapter("second_number", odooSecondNumberAdapter);
 extendSpreadsheetAdapter("month", odooMonthAdapter);
@@ -317,6 +329,12 @@ function getGroupStartingDay(field, groupBy, group) {
     }
     const userTz = user.tz || luxon.Settings.defaultZone.name;
     return DateTime.fromSQL(sqlValue, { zone: "utc" }).setZone(userTz).toISODate();
+}
+
+function getGroupStartingDatetime(field, groupBy, group) {
+    const sqlValue = group[groupBy][0];
+    const userTz = user.tz || luxon.Settings.defaultZone.name;
+    return DateTime.fromSQL(sqlValue, { zone: "utc" }).setZone(userTz);
 }
 
 /**
