@@ -3,13 +3,15 @@
 
 import collections
 import unittest
+from unittest import mock
 
 from lxml import etree as ET
 from lxml.builder import E
 
 import odoo
+from odoo.exceptions import ValidationError
 from odoo.tests import common
-from odoo.tools.convert import convert_file, xml_import, _eval_xml
+from odoo.tools.convert import ParseError, convert_file, xml_import, _eval_xml
 from odoo.tools.misc import file_path
 
 Field = E.field
@@ -314,3 +316,25 @@ class TestEvalXML(common.TransactionCase):
             </parent>""",
             "Evaluating an HTML field should give empty nodes instead of self-closing tags"
         )
+
+    def _parse_with_error(self, error):
+        importer = xml_import(self.env, 'test_convert', None, 'init')
+        doc = ET.fromstring(
+            "<odoo><record id='x' model='res.partner'><field name='name'>f</field></record></odoo>"
+        )
+        with mock.patch.dict(importer._tags, {'record': mock.Mock(side_effect=error)}):
+            with self.assertRaises(ParseError) as cm:
+                importer.parse(doc)
+        return str(cm.exception)
+
+    def test_validation_error_with_message(self):
+        self.assertIn("broken view", self._parse_with_error(ValidationError("broken view")))
+
+    def test_validation_error_without_args(self):
+        class MessagelessError(ValidationError):
+            def __init__(self):
+                Exception.__init__(self)  # no message, so ``args`` is empty
+
+        msg = self._parse_with_error(MessagelessError())
+        self.assertIn("while parsing", msg)
+        self.assertIn("View error context", msg)
