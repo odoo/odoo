@@ -188,7 +188,7 @@ class TestEdiXmls(TestEsEdiCommon):
         partner_passport = self.env['res.partner'].create({
             'name': 'Foreign Partner (Passport)',
             'country_id': self.env.ref('base.us').id,
-            'l10n_es_passport': 'X1234567',
+            'additional_identifiers': {'ES_PASSPORT': 'X1234567'},
         })
         invoice = self._create_invoice_es(
             partner_id=partner_passport.id,

@@ -60,17 +60,32 @@ class L10nESIdTypesTest(TransactionCase):
         cls.partner = cls.env['res.partner'].create({'name': 'ID Types Partner'})
 
     def _set_es_ids(self, passport=False, foreign_id=False, res_cert=False, other_id=False):
-        self.partner.write({
-            'l10n_es_passport': passport,
-            'l10n_es_foreign_id': foreign_id,
-            'l10n_es_res_cert': res_cert,
-            'l10n_es_other_id': other_id,
-        })
+        for identifier_type, value in (
+            ('ES_PASSPORT', passport),
+            ('ES_FOREIGN_ID', foreign_id),
+            ('ES_RES_CERT', res_cert),
+            ('ES_OTHER_ID', other_id),
+        ):
+            self.partner._set_additional_identifier(identifier_type, value)
 
     def test_metadata_registered(self):
         metadata = self.env['res.partner']._get_all_additional_identifiers_metadata()
         for key in ('ES_PASSPORT', 'ES_FOREIGN_ID', 'ES_RES_CERT', 'ES_OTHER_ID'):
             self.assertIn(key, metadata)
+
+    def test_identification_from_additional_identifiers(self):
+        self.assertFalse(self.partner._l10n_es_has_identification())
+        for identifier_type in ('ES_PASSPORT', 'ES_FOREIGN_ID', 'ES_RES_CERT', 'ES_OTHER_ID'):
+            with self.subTest(identifier_type=identifier_type):
+                self.partner._set_additional_identifier(identifier_type, 'DOCUMENT-1')
+                self.assertTrue(self.partner._l10n_es_has_identification())
+                self.partner._set_additional_identifier(identifier_type, False)
+                self.assertFalse(self.partner._l10n_es_has_identification())
+
+    def test_vat_takes_priority_over_foreign_id(self):
+        self.partner.write({'country_id': self.us.id, 'vat': 'US-123456'})
+        self._set_es_ids(foreign_id='FID-1', res_cert='RESCERT-1')
+        self.assertEqual(self.partner._l10n_es_get_additional_identifier_type(), ('04', 'US-123456'))
 
     def test_es_partner_with_vat_uses_nif(self):
         """ Spanish partner with VAT: plain NIF, no IDOtro. """
