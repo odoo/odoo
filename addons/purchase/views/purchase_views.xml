@@ -324,21 +324,19 @@
                                                        groups="analytic.group_analytic_accounting"
                                                        options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
                                             </group>
-                                            <group>
-                                            <notebook colspan="4">
-                                                <page string="Notes" name="notes">
-                                                    <field name="name"/>
-                                                </page>
-                                                <page string="Invoices and Incoming Shipments" name="invoices_incoming_shiptments">
-                                                    <field name="invoice_lines"/>
-                                                </page>
-                                            </notebook>
-                                            </group>
                                         </group>
                                         <label for="name" string="Section Name (eg. Products, Services)" invisible="display_type != 'line_section'"/>
                                         <label for="name" string="Subsection Name" invisible="display_type != 'line_subsection'"/>
                                         <label for="name" string="Note" invisible="display_type != 'line_note'"/>
                                         <field name="name" nolabel="1"  invisible="not display_type"/>
+                                        <notebook invisible="display_type">
+                                            <page string="Notes" name="notes">
+                                                <field name="name"/>
+                                            </page>
+                                            <page string="Invoices and Incoming Shipments" name="invoices_incoming_shiptments">
+                                                <field name="invoice_lines"/>
+                                            </page>
+                                        </notebook>
                                 </form>
                                 <kanban class="o_kanban_mobile">
                                      <field name="display_type"/>
