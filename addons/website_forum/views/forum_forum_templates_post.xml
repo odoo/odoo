@@ -473,7 +473,7 @@
                 label.translate="Validate"
                 inDropdown="True"
                 icon.f="fa-check fa-fw"
-                karma.f="post_id.forum_id.karma_moderate if not post_id.can_moderate else 0"/>
+                karma="post_id.forum_id.karma_moderate if not post_id.can_moderate else 0"/>
         </t>
         <t t-else="">
             <t t-call="website_forum.link_button"
