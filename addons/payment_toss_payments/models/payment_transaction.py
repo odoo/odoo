@@ -54,7 +54,7 @@ class PaymentTransaction(models.Model):
             'partner_name': self.partner_name or "",
             'partner_email': self.partner_email or "",
             'partner_phone': self.partner_phone,
-            'success_url': urljoin(base_url, const.PAYMENT_SUCCESS_RETURN_ROUTE),
+            'success_url': urljoin(base_url, f"{const.PAYMENT_SUCCESS_RETURN_ROUTE}?access_token={payment_utils.generate_access_token(self.reference)}"),
             'fail_url': urljoin(base_url, f"{const.PAYMENT_FAILURE_RETURN_ROUTE}?access_token={payment_utils.generate_access_token(self.reference)}"),
         }
 
@@ -93,6 +93,8 @@ class PaymentTransaction(models.Model):
             self._set_done()
         elif status == const.PAYMENT_STATUS_MAPPING['canceled']:
             self._set_canceled()
+        elif status in ('READY', 'IN_PROGRESS'):
+            pass  # The payment is not completed yet
         elif status in ('CANCELED', 'PARTIAL_CANCELED') and self.state == 'done':
             # Refunds are not implemented but webhook notifications are still sent on manual
             # cancellation on the Toss Payments merchant dashboard.

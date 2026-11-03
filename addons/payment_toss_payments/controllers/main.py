@@ -19,7 +19,7 @@ class TossPaymentsController(http.Controller):
     def _toss_payments_success_return(self, **data):
         """Process the payment data after redirection from successful payment.
 
-        :param dict data: The payment data. Expected keys: orderId, paymentKey, amount.
+        :param dict data: The payment data. Expected keys: access_token, orderId, paymentKey, amount.
         """
         _logger.info("Handling redirection from Toss Payments with data:\n%s", pprint.pformat(data))
         tx_sudo = (
@@ -28,13 +28,18 @@ class TossPaymentsController(http.Controller):
         if not tx_sudo:
             return request.redirect('/payment/status')
 
+        access_token = data.get('access_token')
+        if not access_token or not payment_utils.check_access_token(access_token, tx_sudo.reference):
+            return request.redirect('/payment/status')
+
         # Prevent tampering the amount from the client by validating it before sending the payment
         # confirmation request. The payment data uses `totalAmount` to follow the format of the
         # webhook data.
         tx_sudo._validate_amount({'totalAmount': data.get('amount')})
         if tx_sudo.state != 'error':  # The amount validation succeeded.
+            payload = {key: data[key] for key in ('orderId', 'paymentKey', 'amount')}
             try:
-                payment_data = tx_sudo._send_api_request('POST', '/v1/payments/confirm', json=data)
+                payment_data = tx_sudo._send_api_request('POST', '/v1/payments/confirm', json=payload)
             except ValidationError as e:
                 tx_sudo._set_error(str(e))
             else:
@@ -88,9 +93,30 @@ class TossPaymentsController(http.Controller):
                 ._search_by_reference('toss_payments', payment_data)
             )
             if tx_sudo:
-                self._verify_signature(payment_data, tx_sudo)
-                tx_sudo._process('toss_payments', payment_data)
+                if tx_sudo.toss_payments_payment_secret:
+                    self._verify_signature(payment_data, tx_sudo)
+                else:
+                    # Unconfirmed payments have no secret; fetch their status from Toss Payments
+                    payment_data = self._fetch_payment_data(tx_sudo)
+                if payment_data:
+                    tx_sudo._process('toss_payments', payment_data)
         return request.make_json_response('')
+
+    @staticmethod
+    def _fetch_payment_data(tx_sudo):
+        """Fetch the payment data of the transaction from Toss Payments.
+
+        :param payment.transaction tx_sudo: The sudoed transaction to fetch the payment data of.
+        :return: The payment data, or an empty dict if the request failed.
+        :rtype: dict
+        """
+        try:
+            return tx_sudo._send_api_request('GET', f'/v1/payments/orders/{tx_sudo.reference}')
+        except ValidationError as e:
+            _logger.warning(
+                "Could not fetch the payment data of transaction %s: %s", tx_sudo.reference, e
+            )
+            return {}
 
     @staticmethod
     def _verify_signature(payment_data, tx_sudo):
@@ -101,13 +127,6 @@ class TossPaymentsController(http.Controller):
         :rtype: None
         :raise Forbidden: If the secret keys don't match.
         """
-        # Expired events might not have a secret if we never initiated the payment flow. Also
-        # aborted events have a secret, but our implementation would not capture the secret in the
-        # case of API call validation error (see `_toss_payments_success_return`). In these two
-        # cases, we skip the verification.
-        if payment_data.get('status') in const.VERIFICATION_EXEMPT_STATUSES:
-            return
-
         received_signature = payment_data.get('secret')
         if not received_signature:
             _logger.warning("Received notification with missing signature.")
