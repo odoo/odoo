@@ -22,8 +22,19 @@ class AccountFullReconcile(models.Model):
             return True
 
         moves_to_reverse = self.exchange_move_id
+        # The default `ondelete='set null'` on `account_move_line.full_reconcile_id`
+        # nulls the FK in PostgreSQL when the full reconcile is removed, but
+        # `account_move_line.matching_number` is a plain Char that nobody
+        # recomputes. Mirror the contract of `create()` on the unlink path so
+        # each previously-linked line ends up with the correct value (False, or
+        # 'P<n>' when partial reconciles survive as zombies).
+        amls = self.reconciled_line_ids
 
         res = super().unlink()
+
+        amls = amls.exists()
+        if amls:
+            self.env['account.partial.reconcile']._update_matching_number(amls)
 
         # Reverse all exchange moves at once.
         if moves_to_reverse:
