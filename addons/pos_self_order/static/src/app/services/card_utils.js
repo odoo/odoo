@@ -4,7 +4,7 @@ import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo
 
 export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, qty) {
     if (!comboValues || !comboValues.length) {
-        return selfOrder.getProductDisplayPrice(productTemplate);
+        return selfOrder.getProductDisplayPrice(productTemplate) * qty;
     }
 
     const baseLineValues = getOrderLineValues(
