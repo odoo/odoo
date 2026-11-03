@@ -128,6 +128,21 @@ class TestPeppolParticipant(PeppolConnectorCommon):
             wizard.button_register_peppol_participant()
         self.assertRecordValues(self.env.company, [{'account_peppol_proxy_state': 'not_registered'}])
 
+    def test_register_participant_rejected_error_message_formatting(self):
+        with self._mock_requests([
+            self._mock_can_connect(),
+            self._mock_connect(error_code=201, error_subject='A country is required to register a participant.'),
+            self._mock_lookup_participant(),
+        ]):
+            wizard = self.env['peppol.registration'].create({})
+            self.assertRecordValues(wizard, [{'smp_registration': True}])
+            with self.assertRaisesRegex(
+                UserError,
+                'A country is required to register a participant. [201]'
+                '\nThere was an issue with the Peppol Participant.',
+            ):
+                wizard.button_register_peppol_participant()
+
     def test_config_update_email(self):
         with self._mock_requests([
             self._mock_can_connect(),
