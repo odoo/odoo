@@ -51,7 +51,7 @@
 
             <t t-set="din5008_address_block">
                 <tr t-if="doc and doc._name=='sale.order'">
-                    <t t-set="commercial_partner" t-value="doc.partner_id.commercial_partner_id"/>
+                    <t t-set="commercial_partner" t-value="doc.partner_id"/>
                     <t t-set="invoice_partner" t-value="doc.partner_invoice_id"/>
                     <t t-set="delivery_partner" t-value="doc.partner_shipping_id"/>
 
