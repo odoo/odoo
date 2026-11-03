@@ -780,3 +780,71 @@ class TestL10nEsEdiVerifactuDocument(TestL10nEsEdiVerifactuCommon):
         self.assertEqual(registro['ImporteTotal'], desglose['BaseImponibleOimporteNoSujeto'])
         self.assertNotIn('TipoImpositivo', desglose)
         self.assertNotIn('CuotaRepercutida', desglose)
+
+    def test_switch_to_production_restarts_chain(self):
+        # Allow the user to edit the company without bypassing the access rights on the issuers
+        self.env.user.group_ids += self.env.ref('base.group_erp_manager')
+        # Chain a document in the test environment and mark it as already sent
+        test_invoice = self._create_dummy_invoice(name='INV/2019/00001')
+        test_document = test_invoice._l10n_es_edi_verifactu_create_documents()[test_invoice]
+        test_document.sudo().state = 'accepted'
+        # The whole test runs in one transaction: backdate it so it predates the production chain
+        # (the ORM ignores writes on `create_date`)
+        self.env.cr.execute(
+            "UPDATE l10n_es_edi_verifactu_document SET create_date = create_date - interval '1 day' WHERE id = %s",
+            [test_document.id],
+        )
+        test_document.invalidate_recordset(['create_date'])
+
+        self.company.l10n_es_edi_verifactu_test_environment = False
+
+        invoices = [
+            self._create_dummy_invoice(name=name)
+            for name in ('INV/2019/00002', 'INV/2019/00003')
+        ]
+        first, second = (invoice._l10n_es_edi_verifactu_create_documents()[invoice] for invoice in invoices)
+
+        self.assertEqual(first._get_document_dict()['RegistroAlta']['Encadenamiento'], {'PrimerRegistro': 'S'})
+        previous = second._get_document_dict()['RegistroAlta']['Encadenamiento']['RegistroAnterior']
+        self.assertEqual(previous['NumSerieFactura'], 'INV/2019/00002')
+
+    def test_switch_to_production_blocked_by_pending_docs(self):
+        test_invoice = self._create_dummy_invoice(name='INV/2019/00001')
+        test_invoice._l10n_es_edi_verifactu_create_documents()
+
+        with self.assertRaisesRegex(UserError, "waiting to be sent"):
+            self.company.l10n_es_edi_verifactu_test_environment = False
+
+        self.assertTrue(self.company.l10n_es_edi_verifactu_test_environment)
+
+    def test_switch_to_test_blocked(self):
+        self.env.user.group_ids += self.env.ref('base.group_erp_manager')
+        self.company.l10n_es_edi_verifactu_test_environment = False
+        invoice = self._create_dummy_invoice(name='INV/2019/00001', invoice_date='2024-12-11')
+        invoice._l10n_es_edi_verifactu_create_documents()
+
+        with self.assertRaises(UserError):
+            self.company.l10n_es_edi_verifactu_test_environment = True
+
+        self.assertFalse(self.company.l10n_es_edi_verifactu_test_environment)
+
+    def test_switch_to_test_allowed(self):
+        self.env.user.group_ids += self.env.ref('base.group_erp_manager')
+        self.company.l10n_es_edi_verifactu_test_environment = False
+        self.company.l10n_es_edi_verifactu_test_environment = True
+        self.assertTrue(self.company.l10n_es_edi_verifactu_test_environment)
+
+    def test_settings_warning_only_when_leaving_test(self):
+        # Only administrators open the settings; the test user is not one
+        Settings = self.env['res.config.settings'].sudo()
+        fname = 'l10n_es_edi_verifactu_test_environment'
+        spec = {'company_id': {}, fname: {}}
+        unchecked = {'company_id': self.company.id, fname: False}
+
+        # Saved in test: unchecking the box warns
+        self.assertTrue(Settings.onchange(unchecked, [fname], spec).get('warning'))
+
+        # Already in production: neither opening the form nor the onchange warn
+        self.company.sudo().l10n_es_edi_verifactu_test_environment = False
+        self.assertFalse(Settings.onchange({}, [], spec).get('warning'))
+        self.assertFalse(Settings.onchange(unchecked, [fname], spec).get('warning'))

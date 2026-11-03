@@ -47,10 +47,14 @@ class VerifactuIssuer(models.Model):
 
     def _get_last_document(self):
         self.ensure_one()
-        return self.env['l10n_es_edi_verifactu.document'].search([
+        VerifactuDocument = self.env['l10n_es_edi_verifactu.document']
+        if not self.chain_sequence_id:
+            return VerifactuDocument
+        return VerifactuDocument.search([
             ('chain_index', '!=', False),
             ('company_id', '=', self.company_id.id),
             ('obligado_partner_id', '=', self.obligado_partner_id.id),
+            ('create_date', '>=', self.chain_sequence_id.create_date),
         ], order='chain_index DESC', limit=1)
 
     @api.ondelete(at_uninstall=False)
