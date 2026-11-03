@@ -42,10 +42,10 @@ class TestPartner(slides_common.SlidesCase):
         course_d._action_add_members(child_individual)
 
         self.assertRecordValues(parent_company | child_company | parent_individual | child_individual, [
-            {'slide_channel_company_count': 5},
-            {'slide_channel_company_count': 4},
-            {'slide_channel_company_count': 2},
-            {'slide_channel_company_count': 1},
+            {'slide_channel_count': 5},
+            {'slide_channel_count': 4},
+            {'slide_channel_count': 2},
+            {'slide_channel_count': 1},
         ])
 
         action = parent_company.action_view_courses()

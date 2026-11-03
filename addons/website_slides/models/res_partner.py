@@ -17,11 +17,7 @@ class ResPartner(models.Model):
         search='_search_slide_channel_completed_ids',
         groups="website_slides.group_website_slides_officer")
     slide_channel_count = fields.Integer(
-        'Course Count', compute='_compute_slide_channel_company_count',
-        groups="website_slides.group_website_slides_officer")
-    # TODO: to be removed in master (slide_channel_count has been generalized to descendant channel count)
-    slide_channel_company_count = fields.Integer(
-        'Company Course Count', compute='_compute_slide_channel_company_count',
+        'Course Count', compute='_compute_slide_channel_count',
         groups="website_slides.group_website_slides_officer")
 
     def _compute_slide_channel_values(self):
@@ -54,11 +50,8 @@ class ResPartner(models.Model):
         return [('id', 'in', cp_enrolled.partner_id.ids)]
 
     @api.depends('child_ids')
-    def _compute_slide_channel_company_count(self):
-        # TODO: to be renamed in master (slide_channel_company_count to be removed as
-        # slide_channel_count has been generalized to descendant channel count)
+    def _compute_slide_channel_count(self):
         self.slide_channel_count = 0
-        self.slide_channel_company_count = 0
 
         all_partners = self.with_context(active_test=False).search_fetch(
             [('id', 'child_of', self.ids)], ['parent_id'],
@@ -74,7 +67,6 @@ class ResPartner(models.Model):
             while partner:
                 if partner.id in self_ids:
                     partner.slide_channel_count += count
-                    partner.slide_channel_company_count += count
                 partner = partner.parent_id
 
     def action_view_courses(self):
