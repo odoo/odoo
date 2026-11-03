@@ -27,21 +27,25 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template(template='ar_ri', model='l10n_ar.partner.tax', demo=True)
     def _get_ar_withholding_partner_tax_demo(self):
+        adhoc = self.env.ref('l10n_ar.res_partner_adhoc', raise_if_not_found=False)
+        mipyme = self.env.ref('l10n_ar.res_partner_mipyme', raise_if_not_found=False)
+        if not adhoc or not mipyme:
+            return {}
         return {
             'partner_tax_adhoc_119': {
                 'tax_id': 'ex_tax_withholding_profits_regimen_119_insc',
-                'partner_id': 'l10n_ar.res_partner_adhoc',
+                'partner_id': adhoc.id,
             },
             'partner_tax_adhoc_iibb': {
                 'tax_id': 'ex_tax_withholding_iibb_ba_applied',
-                'partner_id': 'l10n_ar.res_partner_adhoc',
+                'partner_id': adhoc.id,
             },
             'partner_tax_mipyme_78': {
                 'tax_id': 'ex_tax_withholding_profits_regimen_78_insc',
-                'partner_id': 'l10n_ar.res_partner_mipyme',
+                'partner_id': mipyme.id,
             },
             'partner_tax_mipyme_iibb': {
                 'tax_id': 'ex_tax_withholding_iibb_ba_applied',
-                'partner_id': 'l10n_ar.res_partner_mipyme',
+                'partner_id': mipyme.id,
             },
         }
