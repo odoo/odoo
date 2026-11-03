@@ -59,7 +59,7 @@ class HolidaysAllocation(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_overtime_id(self):
-        self.overtime_id.sudo().unlink()
+        self.sudo().overtime_id.unlink()
 
     def action_set_to_confirm(self):
         res = super().action_set_to_confirm()
@@ -68,7 +68,7 @@ class HolidaysAllocation(models.Model):
 
     def action_refuse(self):
         res = super().action_refuse()
-        self.overtime_id.sudo().unlink()
+        self.sudo().overtime_id.unlink()
         return res
 
     def _validate_overtime_and_create_adjustment(self):

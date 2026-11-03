@@ -234,6 +234,34 @@ class TestHolidaysOvertime(TransactionCase):
         alloc.unlink()
         self.assertEqual(self.employee.total_overtime, 16)
 
+    def test_allocation_refuse_by_time_off_approver(self):
+        """The time off approver of the employee, without being a time off
+        officer, can refuse an allocation deducted from the extra hours."""
+        approver_user = new_test_user(self.env, login='approver', groups='base.group_user', company_id=self.company.id)
+        self.env['hr.employee'].create({
+            'name': 'Approver',
+            'user_id': approver_user.id,
+            'company_id': self.company.id,
+        })
+        self.employee.leave_manager_id = approver_user
+        leave_type = self.leave_type_employee_allocation.copy({'allocation_validation_type': 'manager'})
+        self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
+        alloc = self.env['hr.leave.allocation'].create({
+            'name': 'test allocation',
+            'holiday_status_id': leave_type.id,
+            'employee_id': self.employee.id,
+            'number_of_days': 1,
+            'state': 'confirm',
+            'date_from': time.strftime('%Y-1-1'),
+            'date_to': time.strftime('%Y-12-31'),
+        })
+        self.assertEqual(self.employee.total_overtime, 0)
+
+        alloc.with_user(approver_user).with_company(self.company).action_refuse()
+        self.assertEqual(alloc.state, 'refuse')
+        self.assertFalse(alloc.overtime_id)
+        self.assertEqual(self.employee.total_overtime, 8)
+
     def test_allocation_change_leave_type_to_overtime(self):
         """Changing an allocation's leave type to an overtime-deductible type should validate overtime."""
         non_overtime_type = self.env['hr.leave.type'].create({
