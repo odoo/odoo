@@ -2266,9 +2266,48 @@ Please change the quantity done or the rounding precision in your settings.""",
         if not self.env.context.get('bypass_entire_pack'):
             self.picking_id._check_entire_pack()
         StockMove.browse(moves_to_redirect).move_line_ids._apply_putaway_strategy()
+        self._round_up_to_lot_packagings()
 
         if self.env.user.has_group('stock.group_stock_picking_batch'):
             self.move_line_ids._auto_wave()
+
+    def _round_up_to_lot_packagings(self):
+        """ Deliveries of products whose category reserves whole packagings of the lots: round the reserved
+        quantity of every lot up to whole packagings of the lot, the demand stays the ordered quantity.
+        A lot without packaging, or without enough quantity to complete its last packaging, is left as is. """
+        moves = self.filtered(lambda move: (
+            move.picking_code == 'outgoing'
+            and move.state in ('assigned', 'partially_available')
+            and move.product_id.categ_id.packaging_reserve_method == 'lot'
+        ))
+        for move in moves:
+            product_uom = move.product_id.uom_id
+            for line in move.move_line_ids.filtered(lambda ml: ml.lot_id.packaging_uom_id and not ml.picked):
+                packaging = line.lot_id.packaging_uom_id
+                quantity = line.uom_id._compute_quantity(line.quantity, product_uom, round=False)
+                packaging_qty = product_uom._compute_quantity(quantity, packaging, round=False)
+                whole_qty = packaging._compute_quantity(
+                    float_round(packaging_qty, precision_rounding=1.0, rounding_method='UP'), product_uom, round=False)
+                missing = product_uom.round(whole_qty - quantity)
+                if product_uom.compare(missing, 0) <= 0:
+                    continue
+                available = move._get_available_quantity(
+                    line.location_id, lot_id=line.lot_id, package_id=line.package_id, owner_id=line.owner_id, strict=True)
+                if product_uom.compare(available, missing) < 0:
+                    continue
+                move._update_reserved_quantity(
+                    missing, line.location_id, lot_id=line.lot_id, package_id=line.package_id, owner_id=line.owner_id)
+
+    def _set_lot_packagings(self):
+        """ Lots produced or received in a packaging are packed in that packaging. """
+        for move in self:
+            packaging = move.uom_id if move.uom_id != move.product_id.uom_id else move.packaging_uom_id
+            if (
+                move.state != 'done' or not packaging or packaging == move.product_id.uom_id
+                or move.location_id.usage == 'internal' or move.location_dest_id.usage != 'internal'
+            ):
+                continue
+            move.move_line_ids.lot_id.filtered(lambda lot: not lot.packaging_uom_id).packaging_uom_id = packaging
 
     def _action_cancel(self):
         if any(move.state == 'done' and move.location_dest_usage != 'inventory' for move in self):
@@ -2427,6 +2466,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 backorder._check_entire_pack()
         if moves_todo:
             moves_todo._check_quantity()
+            moves_todo._set_lot_packagings()
             moves_todo._action_synch_order()
             moves_todo._inverse_description_picking()   # we want to make sure the current description won't change on done pickings if it is changed on the product
         return moves_todo

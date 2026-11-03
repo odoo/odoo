@@ -967,6 +967,7 @@ class StockMoveLine(models.Model):
             line_key, uom = aggregated_properties['line_key'], aggregated_properties['uom_id']
             quantity = move_line.uom_id._compute_quantity(move_line.quantity, uom)
             packaging_quantity = uom._compute_quantity(quantity, move_line.move_id.packaging_uom_id)
+            lot_packaging = move_line.lot_id.packaging_uom_id
             if line_key not in aggregated_move_lines:
                 qty_ordered = None
                 packaging_qty_ordered = None
@@ -992,12 +993,18 @@ class StockMoveLine(models.Model):
                     'qty_ordered': qty_ordered if qty_ordered is not None else quantity,
                     'packaging_qty_ordered': packaging_qty_ordered if packaging_qty_ordered is not None else packaging_quantity,
                     'product': move_line.product_id,
+                    'lot_packaging_quantities': {},
                 }
             else:
                 aggregated_move_lines[line_key]['qty_ordered'] = uom.round(aggregated_move_lines[line_key]['qty_ordered'] + quantity)
                 aggregated_move_lines[line_key]['packaging_qty_ordered'] = move_line.move_id.packaging_uom_id.round(aggregated_move_lines[line_key]['packaging_qty_ordered'] + packaging_quantity)
                 aggregated_move_lines[line_key]['quantity'] = uom.round(aggregated_move_lines[line_key]['quantity'] + quantity)
                 aggregated_move_lines[line_key]['packaging_quantity'] = move_line.move_id.packaging_uom_id.round(aggregated_move_lines[line_key]['packaging_quantity'] + packaging_quantity)
+            # Lots packed in a packaging are delivered in that packaging: count the packagings of each kind.
+            if lot_packaging and lot_packaging != uom:
+                lot_packaging_quantities = aggregated_move_lines[line_key]['lot_packaging_quantities']
+                lot_packaging_quantities[lot_packaging] = lot_packaging.round(
+                    lot_packaging_quantities.get(lot_packaging, 0.0) + uom._compute_quantity(quantity, lot_packaging, round=False))
 
         # Does the same for empty move line to retrieve the ordered qty. for partially done moves
         # (as they are splitted when the transfer is done and empty moves don't have move lines).
