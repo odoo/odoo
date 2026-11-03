@@ -11,9 +11,7 @@ export class Gif extends Component {
         const { promise: gifSnapshotPromise, resolve: resolveGifSnapshot } =
             Promise.withResolvers();
         const image = document.createElement("img");
-        if (new URL(src).origin !== location.origin) {
-            image.crossOrigin = "anonymous";
-        }
+        image.crossOrigin = "anonymous";
         image.src = src;
         image.onload = () => {
             const canvas = document.createElement("canvas");
@@ -22,6 +20,7 @@ export class Gif extends Component {
             canvas.getContext("2d").drawImage(image, 0, 0, image.width, image.height);
             resolveGifSnapshot(canvas.toDataURL("image/gif"));
         };
+        image.onerror = () => resolveGifSnapshot(null);
         return gifSnapshotPromise;
     });
 
