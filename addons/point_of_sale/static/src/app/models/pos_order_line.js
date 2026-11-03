@@ -412,7 +412,7 @@ export class PosOrderline extends Base {
     }
 
     is_refund() {
-        return this.qty * this.price_unit < 0;
+        return this.qty < 0;
     }
 
     set_unit_price(price) {
