@@ -3,7 +3,7 @@ import { STORE_SYMBOL } from "@point_of_sale/app/models/related_models/utils";
 
 export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, qty) {
     if (!comboValues || !comboValues.length) {
-        return selfOrder.getProductDisplayPrice(productTemplate);
+        return selfOrder.getProductDisplayPrice(productTemplate) * qty;
     }
 
     const baseLineValues = getOrderLineValues(
