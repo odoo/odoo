@@ -3,9 +3,9 @@
 
     <!--
       ============================================================
-      Eerst: de standaardheader van Odoo uitzetten
+      Eerst: de standaardheader en -footer van Odoo uitzetten
       ============================================================
-      Dit MOET bovenaan staan, voor onze eigen header hieronder.
+      Dit MOET bovenaan staan, voor onze eigen header en footer hieronder.
 
       Odoo's header-templates erven allemaal website.layout en vervangen
       hetzelfde element: `//header//nav`. Staat website.template_header_default
@@ -14,6 +14,9 @@
       van Odoo is ouder). Je krijgt dan:
 
         Element '<xpath expr="//header//nav">' cannot be located in parent view
+
+      Voor de footer geldt hetzelfde met `//div[@id='footer']` en
+      website.footer_custom.
 
       De volgorde binnen dit bestand is beslissend, want ir.ui.view valideert
       meteen bij het aanmaken (ir_ui_view.py, create -> _check_xml met
@@ -24,21 +27,41 @@
         <field name="active" eval="False"/>
     </record>
 
+    <record id="website.footer_custom" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- Odoo's standaard scroll-effect maakt de header vast bovenaan zodra je
+         scrolt (header_standard.js zet o_top_fixed_element). Bij B&B scrolt
+         de header gewoon mee weg. Zonder deze klasse matcht geen enkele
+         header-interaction en blijft hij statisch. -->
+    <record id="website.header_visibility_standard" model="ir.ui.view">
+        <field name="active" eval="False"/>
+    </record>
+
+    <!-- De copyrightbalk met "Powered by Odoo" staat niet in het ontwerp.
+         Odoo heeft daar zelf een schakelaar voor; die zetten we aan. -->
+    <record id="website.footer_no_copyright" model="ir.ui.view">
+        <field name="active" eval="True"/>
+    </record>
+
     <!--
       ============================================================
       Lettertypes
       ============================================================
-      Voorlopig via Google Fonts, als benadering van de huisstijl uit de
-      video: een brede, zware schreefloze voor de koppen en een ronde
-      geometrische voor de rest. Zodra je de echte fonts hebt, vervang je
-      deze <link> door de bestanden in static/src/fonts en een @font-face.
+      DM Sans is de broodletter van B&B en gratis via Google Fonts.
+
+      De koppen gebruiken bij B&B "arial" 900 uit hun eigen Adobe Fonts-kit.
+      Die kit is gekoppeld aan hun account en werkt alleen op de domeinen
+      die zij toelaten, dus die laden we hier bewust niet. Zie de uitleg bij
+      $byp-display in byp_website.scss.
     -->
     <template id="byp_fonts" inherit_id="website.layout" name="Build Your Party fonts">
         <xpath expr="//head" position="inside">
             <link rel="preconnect" href="https://fonts.googleapis.com"/>
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
             <link rel="stylesheet"
-                  href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Quicksand:wght@500;700&amp;display=swap"/>
+                  href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&amp;display=swap"/>
         </xpath>
     </template>
 
@@ -46,102 +69,197 @@
       ============================================================
       De navigatiebalk, over de hele site
       ============================================================
-      Odoo levert een handvol header-templates die elk `website.layout`
-      erven en het <nav>-element vervangen (zie website.template_header_default).
-      We voegen er een van onszelf aan toe volgens hetzelfde patroon, en
-      zetten de standaard hieronder uit.
+      Logo links; menu, inloggen en de actieknop rechts. Onder lg (992px; B&amp;B: 960px) klapt alles
+      behalve het logo weg achter de hamburger, in een paneel over het hele
+      scherm (Bootstrap offcanvas), zoals bij B&B.
 
       Het menu komt uit `website.menu_id.child_id`, dus de items blijven
       beheerbaar in het ERP onder Website > Menu's. Alleen de vórm ligt vast
-      in code.
+      in code. We tekenen het twee keer (desktop en paneel), daarom staat de
+      lus in een eigen template.
     -->
+    <template id="byp_menu_items" name="Build Your Party menu items">
+        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+            <li class="nav-item">
+                <a t-att-href="submenu.url"
+                   t-att-class="'nav-link active' if submenu.url == request.httprequest.path else 'nav-link'"
+                   t-att-aria-current="'page' if submenu.url == request.httprequest.path else None"
+                   t-out="submenu.name"/>
+            </li>
+        </t>
+    </template>
+
+    <!--
+      Inloggen, het gebruikersmenu en de taalkiezer.
+
+      Het ontwerp van B&B toont ze niet, maar zonder verdwijnt de
+      inlogmogelijkheid van de hele site. Dat breekt de boekingsflow: wie op
+      "Inloggen om te boeken" klikt komt wel op /web/login, maar ziet daarna
+      nergens dat hij ingelogd is en kan er niet meer uit. Precies het
+      probleem dat we oplossen door de site zelf te hosten.
+
+      De taalkiezer verschijnt vanzelf zodra er meer dan één taal op de
+      website actief staat, en blijft anders onzichtbaar.
+    -->
+    <template id="byp_user_items" name="Build Your Party user items">
+        <t t-call="website.placeholder_header_language_selector">
+            <t t-set="_btn_class" t-value="'nav-link'"/>
+            <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
+        </t>
+        <t t-call="portal.placeholder_user_sign_in">
+            <t t-set="_item_class" t-value="'nav-item'"/>
+            <t t-set="_link_class" t-value="'nav-link'"/>
+        </t>
+        <t t-call="portal.user_dropdown">
+            <t t-set="_user_name" t-value="True"/>
+            <t t-set="_item_class" t-value="'nav-item dropdown'"/>
+            <t t-set="_link_class" t-value="'nav-link border-0'"/>
+            <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
+        </t>
+    </template>
+
     <template id="template_header_byp" inherit_id="website.layout"
               name="Build Your Party header" active="True">
         <xpath expr="//header//nav" position="replace">
 
-            <nav class="navbar o_byp_nav navbar-expand-lg">
-                <!--
-                  Drie kolommen: logo links, menu in het midden, acties
-                  rechts. Het raster staat op `1fr auto 1fr`, dus de
-                  buitenste kolommen zijn per definitie even breed en de
-                  middelste valt exact op het midden van de pagina - hoe
-                  breed het logo of het rechterblok ook is.
+            <!--
+              Drie kolommen vanaf lg: logo, menu, acties. Het raster staat op
+              `1fr auto 1fr` (zie .o_byp_nav_grid), dus de buitenste kolommen
+              zijn even breed en het menu valt exact op het midden van de
+              pagina, zoals bij B&B - hoe breed het logo of het rechterblok
+              ook is. Met flex en space-between centreerde het menu tussen
+              zijn buren en niet op de pagina.
+            -->
+            <nav class="navbar o_byp_nav" aria-label="Main menu">
+                <div class="o_byp_grid o_byp_nav_grid">
 
-                  Met `ms-auto me-auto` (de vorige oplossing) centreerde het
-                  menu tussen zijn buren in plaats van op de pagina, en week
-                  het dus mee met de breedte van die buren.
-                -->
-                <div class="container-fluid px-4 px-lg-5 o_byp_nav_grid">
-
-                    <!-- Merk -->
-                    <a class="navbar-brand o_byp_brand" href="/">
-                        <span t-field="website.logo" t-options="{'widget': 'image', 'class': 'o_byp_logo'}"
-                              t-if="website.logo"/>
-                        <span t-else="" class="o_byp_wordmark">
-                            <span>Build</span><span>Your</span><span>Party</span>
-                        </span>
+                    <a class="navbar-brand p-0 m-0 justify-self-start" href="/">
+                        <img class="o_byp_logo"
+                             src="/byp_website/static/src/img/logo-brown.svg"
+                             alt="Build Your Party"/>
                     </a>
 
-                    <!-- Midden: het menu. Enkel dit klapt in op mobiel. -->
-                    <div class="collapse navbar-collapse o_byp_nav_center" id="byp_nav">
-                        <ul class="navbar-nav o_byp_menu">
-                            <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                                <li class="nav-item">
-                                    <a class="nav-link"
-                                       t-att-href="submenu.url"
-                                       t-att-class="'nav-link active' if submenu.url == request.httprequest.path else 'nav-link'"
-                                       t-out="submenu.name"/>
-                                </li>
-                            </t>
+                    <ul class="navbar-nav flex-row align-items-center gap-2 gap-xl-3 o_byp_menu d-none d-lg-flex">
+                        <t t-call="byp_website.byp_menu_items"/>
+                    </ul>
+
+                    <!-- Tussen 992 en 1200px is het krap (zeker met de
+                         taalkiezer erbij), dus daar zijn de tussenruimtes
+                         kleiner. -->
+                    <div class="d-none d-lg-flex align-items-center justify-content-end gap-3 gap-xl-4">
+                        <ul class="navbar-nav flex-row align-items-center gap-2 gap-xl-3 o_byp_user">
+                            <t t-call="byp_website.byp_user_items"/>
                         </ul>
+                        <!-- De verwijzing naar de tool blijft zoals ze was;
+                             enkel de tekst volgt het ontwerp van B&B. Geen
+                             nieuw tabblad meer zoals bij hen: het is nu
+                             dezelfde site. -->
+                        <a class="o_byp_btn" href="/bouw-je-feest">Build your party</a>
                     </div>
 
-                    <!--
-                      Rechts: aanmelden of het gebruikersmenu, de actieknop,
-                      en op mobiel de hamburger.
-
-                      De video toont hier alleen de knop, maar zonder de twee
-                      t-calls hieronder verdwijnt de inlogmogelijkheid van de
-                      hele site. Dat breekt de boekingsflow: wie op "Inloggen
-                      om te boeken" klikt komt wel op /web/login, maar ziet
-                      daarna nergens dat hij ingelogd is en kan er niet meer
-                      uit.
-
-                      De actieknop staat bewust buiten de inklapbare zone: op
-                      een gsm wil je die zien zonder eerst het menu te openen.
-                    -->
-                    <div class="o_byp_nav_right">
-                        <ul class="navbar-nav align-items-center flex-row gap-3 o_byp_user">
-                            <!-- Taalkiezer. Verschijnt vanzelf zodra er meer
-                                 dan één taal op de website actief staat, en
-                                 blijft anders onzichtbaar. -->
-                            <t t-call="website.placeholder_header_language_selector">
-                                <t t-set="_btn_class" t-value="'nav-link o_byp_signin'"/>
-                                <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
-                            </t>
-                            <t t-call="portal.placeholder_user_sign_in">
-                                <t t-set="_item_class" t-value="'nav-item'"/>
-                                <t t-set="_link_class" t-value="'nav-link o_byp_signin'"/>
-                            </t>
-                            <t t-call="portal.user_dropdown">
-                                <t t-set="_user_name" t-value="True"/>
-                                <t t-set="_item_class" t-value="'nav-item dropdown'"/>
-                                <t t-set="_link_class" t-value="'nav-link o_byp_signin border-0'"/>
-                                <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-end'"/>
-                            </t>
-                        </ul>
-
-                        <a class="btn o_byp_cta" href="/bouw-je-feest">Naar de tool</a>
-
-                        <button class="navbar-toggler o_byp_toggler" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#byp_nav"
-                                aria-controls="byp_nav" aria-expanded="false"
-                                aria-label="Menu">
-                            <span class="fa fa-bars"/>
-                        </button>
-                    </div>
+                    <!-- Mobiel en tablet: de hamburger. -->
+                    <button class="o_byp_toggler d-lg-none" type="button"
+                            data-bs-toggle="offcanvas" data-bs-target="#byp_offcanvas"
+                            aria-controls="byp_offcanvas" aria-label="Menu">
+                        <span/><span/><span/>
+                    </button>
                 </div>
             </nav>
+
+            <!-- Het paneel achter de hamburger. -->
+            <div class="offcanvas offcanvas-end o_byp_offcanvas d-lg-none" tabindex="-1"
+                 id="byp_offcanvas" aria-label="Navigation menu">
+                <div class="offcanvas-header o_byp_grid px-0 py-3">
+                    <a href="/">
+                        <img class="o_byp_logo" style="height: 70px; width: auto;"
+                             src="/byp_website/static/src/img/logo-brown.svg"
+                             alt="Build Your Party"/>
+                    </a>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                            aria-label="Close"/>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav align-items-center gap-3">
+                        <t t-call="byp_website.byp_menu_items"/>
+                    </ul>
+                    <ul class="navbar-nav align-items-center gap-2 o_byp_user">
+                        <t t-call="byp_website.byp_user_items"/>
+                    </ul>
+                    <a class="o_byp_btn" href="/bouw-je-feest">Build your party</a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!--
+      ============================================================
+      De footer, over de hele site
+      ============================================================
+      Rood vlak: wit logo, de sociale media in grote letters, de juridische
+      links, en onderaan de lichtkrant met de slogan.
+
+      Bewust GEEN `oe_structure` (Odoo's eigen footers hebben die wel), om
+      dezelfde reden als de pagina's: alles staat in code en een
+      module-upgrade herstelt het.
+
+      De sociale links wijzen, net als bij B&B, voorlopig naar de pagina's van
+      Creact. Zodra Build Your Party eigen kanalen heeft, pas je ze hier aan.
+    -->
+    <template id="template_footer_byp" inherit_id="website.layout"
+              name="Build Your Party footer" active="True">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="o_byp_footer" t-if="not no_footer">
+                <!-- De tussenruimtes (.o_byp_sp) zijn die van B&B. -->
+                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 78px;"/>
+                <div class="o_byp_grid text-center">
+                    <img class="o_byp_footer_logo"
+                         src="/byp_website/static/src/img/logo-white.svg"
+                         width="188" height="126"
+                         alt="Build Your Party"/>
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 86px;"/>
+                    <h2 class="o_byp_footer_social">
+                        <a href="https://www.facebook.com/people/Creact/100070864295655/"
+                           target="_blank" rel="noopener">Facebook</a><br/>
+                        <a href="https://www.instagram.com/creactbv/"
+                           target="_blank" rel="noopener">Instagram</a>
+                    </h2>
+                </div>
+                <div class="o_byp_sp" style="--sp: 70px; --sp-md: 90px; --sp-xl: 132px;"/>
+
+                <div class="o_byp_grid o_byp_footer_legal">
+                    <p>
+                        <a href="/cookie-policy">Cookie policy</a> |
+                        <a href="/privacy-policy">Privacy policy</a><br/>
+                        Designed by <a href="https://boshandbordon.be" target="_blank" rel="noopener"><strong>Bosh &amp; Bordon</strong></a>
+                    </p>
+                </div>
+                <div class="o_byp_sp" style="--sp: 50px; --sp-xl: 56px;"/>
+
+                <!-- De lichtkrant. De tekst staat twee keer, zodat de lus
+                     naadloos is (zie .o_byp_marquee in de SCSS). Voor een
+                     schermlezer volstaat één keer. -->
+                <div class="o_byp_marquee" aria-hidden="true">
+                    <div class="o_byp_marquee_track">
+                        <t t-foreach="range(8)" t-as="i">
+                            <span>Big party. Sorted.</span>
+                        </t>
+                    </div>
+                </div>
+            </div>
+
+            <!--
+              De zwevende knop rechtsonder, met ernaast een knop naar boven.
+              Staat hier en niet in de pagina's, zodat hij overal verschijnt.
+              B&B laat hem naar /contact wijzen, maar die pagina bestaat bij
+              hen niet (404). "Tijd om te feesten" is een oproep om te
+              beginnen, dus hij wijst naar de tool.
+            -->
+            <div class="o_byp_floating" t-if="not no_footer">
+                <a class="o_byp_btn o_byp_btn_blue" href="/bouw-je-feest">Time to party</a>
+                <a class="o_byp_top" href="#top" aria-label="Back to top">
+                    <span class="fa fa-chevron-up"/>
+                </a>
+            </div>
         </xpath>
     </template>
 

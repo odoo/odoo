@@ -1,277 +1,1130 @@
 // ===========================================================================
 // Build Your Party - huisstijl
 //
-// De kleuren zijn rechtstreeks uit de video gehaald, niet geschat:
-// achtergrond #E83D1F, knop #371516, tekst een warm gebroken wit.
+// Nagebouwd op de proof of concept van Bosh & Bordon (byp.bbstaging4.be).
+// Kleuren, maten en breekpunten komen rechtstreeks uit hun CSS, niet
+// geschat. Hun site draait op WordPress met WPBakery; de opbouw (rijen,
+// kolommen, tussenruimte) zit hier in Bootstrap-klassen in de templates, en
+// in dit bestand staat alleen wat Bootstrap niet uit zichzelf doet.
+//
+// Breekpunten van B&B tegenover Bootstrap:
+//   768px  = md      1200px = xl      1800px = eigen, enkel voor de grid
+//   380px  = eigen, enkel voor de koppen op heel smalle gsm's
 // ===========================================================================
 
-$byp-orange: #E83D1F;
-$byp-dark: #371516;
-$byp-cream: #FFFDF5;
+// Hun vijf merkkleuren, met de namen die B&B zelf gebruikt (.text-red, ...).
+$byp-red: #E73E1F;
+$byp-cream: #FFFEF3;          // "white" bij B&B
+$byp-blue: #5572B6;
+$byp-brown: #4B241D;
+$byp-beige: #F0CDB3;
 
-// Benaderingen van de huisstijlfonts. Archivo Black is breed en zwaar zoals
-// de koppen in de video; Quicksand heeft de ronde uiteinden en de
-// enkelvoudige 'a' van de navigatie en de knop. Vervang deze twee zodra je
-// de echte fonts hebt: dat is de enige plek waar ze staan.
-$byp-display: 'Archivo Black', 'Arial Black', sans-serif;
-$byp-body: 'Quicksand', system-ui, sans-serif;
+// De koppen gebruiken bij B&B "arial" in gewicht 900 via hun eigen Adobe
+// Fonts-kit (use.typekit.net/dtp6kod). Die kit hoort bij hun account en
+// werkt enkel op de domeinen die zij erin toelaten, dus die kunnen we niet
+// overnemen. Arial Black is op Windows en macOS standaard aanwezig en is
+// hetzelfde ontwerp; op Android valt het terug op vet Arial. Zodra we de
+// echte webfont hebben, vervang je enkel deze regel.
+$byp-display: 'Arial Black', 'Arial', sans-serif;
+// DM Sans is gratis (Google Fonts) en wordt in layout.xml geladen.
+$byp-body: 'DM Sans', Arial, Helvetica, sans-serif;
+
+$byp-xs: 380px;               // eigen breekpunt van B&B voor de koppen
+$byp-xxxl: 1800px;            // eigen breekpunt van B&B voor de grid
 
 // ---------------------------------------------------------------------------
-// Navigatiebalk
+// Basis
 // ---------------------------------------------------------------------------
+// #wrapwrap krijgt in Odoo een eigen achtergrond van het thema; die moet mee.
+body,
+#wrapwrap {
+    background-color: $byp-beige;
+    color: $byp-brown;
+}
+
+#wrapwrap {
+    font-family: $byp-body;
+}
+
+// De basisregels voor tekst en koppen. `:where()` geeft #wrapwrap een
+// specificiteit van nul: zonder dat zou `#wrapwrap p` (een id!) elke regel
+// per onderdeel overstemmen, zoals de grote letter van het citaat. Ze winnen
+// nog altijd van Odoo's eigen `p` en `h1`, omdat dit bestand later laadt.
+:where(#wrapwrap) {
+    p,
+    li,
+    .o_byp_text {
+        font-size: 1.125rem;
+        font-weight: 300;
+        line-height: 1;
+
+        @include media-breakpoint-up(xl) {
+            font-size: 1.375rem;
+        }
+    }
+
+    a {
+        color: inherit;
+    }
+
+    // De koppen. Bij B&B zijn h1, h2 en h6 de brede, zware letter in
+    // hoofdletters; h3 is een kleine tussenkop in DM Sans.
+    h1, h2, h3, h4, h5, h6 {
+        color: inherit;
+        margin-bottom: 0;
+    }
+
+    h1,
+    .o_byp_h1 {
+        font-family: $byp-display;
+        font-weight: 900;
+        font-size: 2.25rem;
+        line-height: 1;
+        letter-spacing: -.3125rem;
+        text-transform: uppercase;
+
+        @media (min-width: $byp-xs) { font-size: 2.75rem; }
+        @include media-breakpoint-up(xl) { font-size: 6.25rem; }
+    }
+
+    h2,
+    .o_byp_h2 {
+        font-family: $byp-display;
+        font-weight: 900;
+        font-size: 1.2rem;
+        line-height: 1;
+        letter-spacing: -.175rem;
+        text-transform: uppercase;
+
+        @media (min-width: $byp-xs) { font-size: 1.65rem; }
+        @include media-breakpoint-up(xl) { font-size: 3.5rem; }
+    }
+
+    h3,
+    .o_byp_h3 {
+        font-family: $byp-body;
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.22;
+        text-transform: none;
+        letter-spacing: 0;
+    }
+}
+
+// Op de eigen pagina's hebben alinea's geen marge, zoals bij B&B: de ruimte
+// rond tekst komt uit de .o_byp_sp-blokken. Twee alinea's vlak na elkaar
+// staan 30px uit elkaar. Niet op de toolpagina, die heeft zijn eigen opmaak.
+:where(.o_byp_home, .o_byp_page, .o_byp_footer) {
+    p { margin-bottom: 0; }
+    p + p { margin-top: 30px; }
+}
+
+// De scrollbalk, exact zoals bij B&B: smal, zwart op wit, afgerond.
+// Firefox kent ::-webkit-scrollbar niet en krijgt de standaardvariant
+// daarvan. Die staat bewust in een @supports die enkel Firefox doorlaat:
+// Chrome negeert alle ::-webkit-scrollbar-regels zodra scrollbar-color
+// ergens gezet is. (`selector(::-webkit-scrollbar)` zou netter zijn, maar
+// de libsass-compiler van Odoo kent dat niet.)
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #000;
+    border-radius: 10px;
+}
+
+@supports (-moz-appearance: none) {
+    html {
+        scrollbar-width: thin;
+        scrollbar-color: #000 #fff;
+    }
+}
+
+// Kleurklassen, met dezelfde namen als bij B&B. Bootstrap heeft zelf al
+// `text-white`, maar die is zuiver wit; hier is het hun gebroken wit.
+.o_byp_red    { color: $byp-red !important; }
+.o_byp_cream  { color: $byp-cream !important; }
+.o_byp_blue   { color: $byp-blue !important; }
+.o_byp_brown  { color: $byp-brown !important; }
+
+.o_byp_bg_red   { background-color: $byp-red; color: $byp-cream; }
+.o_byp_bg_blue  { background-color: $byp-blue; color: $byp-cream; }
+.o_byp_bg_brown { background-color: $byp-brown; color: $byp-cream; }
+.o_byp_bg_beige { background-color: $byp-beige; color: $byp-brown; }
+
+// ---------------------------------------------------------------------------
+// Grid
+// ---------------------------------------------------------------------------
+// B&B werkt niet met de vaste containerbreedtes van Bootstrap maar met een
+// percentage van het scherm. Daarom geen .container maar deze twee.
+//
+// Tot 1330px is hun grid 92% breed met 15px binnenmarge links en rechts.
+// Daarboven valt die binnenmarge weg en rekent het 92% van een vlak dat
+// 30px breder is dan het scherm (hun rijen hebben -15px marge); vanaf
+// 1800px is het vast 1720px. Voor 1330px bestaat geen Bootstrap-breekpunt,
+// dus dat wordt xxl (1400px), de dichtste. De paddings die met dat
+// breekpunt mee veranderen gebruiken dezelfde variabele.
+.o_byp_grid {
+    --byp-grid-pad: 15px;
+
+    width: 100%;
+    max-width: 92%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--byp-grid-pad);
+    padding-right: var(--byp-grid-pad);
+
+    @include media-breakpoint-up(xxl) {
+        --byp-grid-pad: 0px;
+        max-width: calc(92% + 27.6px);
+    }
+
+    @media (min-width: $byp-xxxl) { max-width: 1720px; }
+}
+
+.o_byp_grid_sm {
+    width: 100%;
+    max-width: 92%;
+    margin-left: auto;
+    margin-right: auto;
+
+    @include media-breakpoint-up(md) { max-width: 80%; }
+    @include media-breakpoint-up(xxl) { max-width: 750px; }
+}
+
+// Lege tussenruimte. B&B bouwt alle verticale ruimte op met lege blokken
+// (vc_empty_space), gestapeld tot drie per plek: een voor elk scherm, een
+// extra vanaf 768px ("tabonly") en nog een vanaf 1200px ("deskonly"); een
+// "mobonly" telt enkel onder 768px. Dat zijn exact Bootstrap's md en xl.
+// Hier is zo'n stapel één blok met de opgetelde hoogte per breekpunt:
+//   --sp (gsm), --sp-md (vanaf md), --sp-xl (vanaf xl)
+// Een ontbrekende waarde neemt die van het kleinere scherm over. De maten in
+// de templates zijn die van B&B, blok per blok overgenomen.
+.o_byp_sp {
+    height: var(--sp, 0px);
+
+    @include media-breakpoint-up(md) { height: var(--sp-md, var(--sp, 0px)); }
+    @include media-breakpoint-up(xl) { height: var(--sp-xl, var(--sp-md, var(--sp, 0px))); }
+}
+
+// ---------------------------------------------------------------------------
+// Knoppen
+// ---------------------------------------------------------------------------
+// Rechthoekig, met het pijltje rechtsboven. Rood wordt blauw bij hover,
+// blauw wordt rood, bruin wordt blauw: exact zoals button1/2/3 bij B&B.
+// Het pijltje is bij hen een SVG (btn-arrow.svg); hier is het het
+// unicode-teken, zodat het meekleurt en geen bestand nodig heeft.
+.o_byp_btn {
+    --byp-btn-bg: #{$byp-red};
+    --byp-btn-hover: #{$byp-blue};
+
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    padding: 10px 20px;
+    border: 2px solid var(--byp-btn-bg);
+    border-radius: 0;
+    background-color: var(--byp-btn-bg);
+    color: $byp-cream !important;
+    font-family: $byp-body;
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.22;
+    letter-spacing: -.03375rem;
+    text-decoration: none;
+    white-space: nowrap;
+    // Bovenaan uitlijnen, anders telt de regelhoogte eronder mee en is het
+    // blok rond de knop een paar pixels hoger dan de knop zelf.
+    vertical-align: top;
+    transition: background-color .15s ease, border-color .15s ease;
+
+    &::after {
+        content: '\2197';      // ↗
+        font-weight: 400;
+    }
+
+    &:hover,
+    &:focus-visible {
+        --byp-btn-bg: var(--byp-btn-hover);
+        color: $byp-cream;
+    }
+
+    &.o_byp_btn_blue {
+        --byp-btn-bg: #{$byp-blue};
+        --byp-btn-hover: #{$byp-red};
+    }
+
+    &.o_byp_btn_brown {
+        --byp-btn-bg: #{$byp-brown};
+        --byp-btn-hover: #{$byp-blue};
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Header
+// ---------------------------------------------------------------------------
+// Odoo zet zelf een achtergrond op <header> via de thema-instellingen. Die
+// overschrijven we: de header ligt bij B&B gewoon op de beige pagina.
+header#top {
+    background-color: $byp-beige !important;
+    color: $byp-brown !important;
+    box-shadow: none !important;
+}
+
+// Hoogte zoals bij B&B: 14px boven en onder het logo, 18px vanaf het
+// desktopmenu (zij: 960px, hier lg).
 .o_byp_nav {
-    background: $byp-orange;
-    padding: 1.25rem 0;
+    padding: 14px 0;
     font-family: $byp-body;
 
-    // Drie kolommen, waarvan de buitenste twee even breed zijn. Daardoor valt
-    // de middelste exact op het midden van de pagina, onafhankelijk van hoe
-    // breed het logo of het rechterblok is.
+    @include media-breakpoint-up(lg) { padding: 18px 0; }
+
+    // Mobiel: logo links, hamburger rechts. Vanaf lg drie kolommen waarvan
+    // de buitenste even breed zijn, zodat het menu op het midden van de
+    // pagina valt (B&B: menu-midden op 717 van 1440px, dus het midden).
     .o_byp_nav_grid {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .o_byp_nav_center {
-        justify-content: center;
-    }
-
-    .o_byp_nav_right {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
-        gap: 1rem;
+        justify-content: space-between;
+        gap: 1.5rem;
+
+        @include media-breakpoint-up(lg) {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+        }
     }
 
     .o_byp_logo {
-        max-height: 56px;
+        display: block;
+        height: 70px;
         width: auto;
+
+        @include media-breakpoint-up(xl) { height: 90px; }
     }
 
-    // Terugval zolang er geen logobestand geüpload is: het woordmerk in
-    // drie regels, zoals in de video.
-    .o_byp_wordmark {
-        display: inline-flex;
-        flex-direction: column;
-        font-family: $byp-display;
-        font-size: 1.05rem;
-        line-height: .95;
-        letter-spacing: .02em;
-        text-transform: uppercase;
-        color: $byp-cream;
-    }
+    .o_byp_menu .nav-link,
+    .o_byp_user .nav-link {
+        color: $byp-brown;
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.22;
+        letter-spacing: -.03375rem;
+        padding: 0 6px;
+        transition: color .15s ease;
 
-    .o_byp_menu {
-        gap: 2rem;
-
-        .nav-link {
-            color: rgba($byp-cream, .92);
-            font-weight: 500;
-            font-size: 1rem;
-            padding: .25rem 0;
-            transition: color .15s ease;
-
-            &:hover,
-            &:focus-visible {
-                color: $byp-cream;
-            }
-
-            // De actieve pagina krijgt een streepje, zoals "Home" in de video.
-            &.active {
-                color: $byp-cream;
-                font-weight: 700;
-                border-bottom: 2px solid $byp-cream;
-            }
-        }
-    }
-
-    // Aanmelden en het gebruikersmenu. Discreet gehouden: het ontwerp uit de
-    // video toont ze niet, maar zonder deze link kan niemand in- of uitloggen.
-    .o_byp_user .o_byp_signin {
-        color: rgba($byp-cream, .8);
-        font-weight: 500;
-        font-size: .95rem;
-        padding: .25rem 0;
+        // Zoals bij B&B: de huidige pagina rood, hover blauw.
+        &.active { color: $byp-red; }
 
         &:hover,
         &:focus-visible {
-            color: $byp-cream;
+            color: $byp-blue;
         }
     }
 
-    .o_byp_cta {
-        background: $byp-dark;
-        color: $byp-cream;
-        font-family: $byp-body;
-        font-weight: 700;
-        border-radius: 8px;
-        padding: .6rem 1.4rem;
-        white-space: nowrap;
-        transition: transform .12s ease, background-color .12s ease;
+    // De inlog en het gebruikersmenu staan niet in het ontwerp van B&B, maar
+    // zonder kan niemand in- of uitloggen. Iets kleiner, zodat ze het menu
+    // niet overstemmen.
+    .o_byp_user .nav-link {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+}
 
-        &:hover {
-            background: lighten($byp-dark, 6%);
-            color: $byp-cream;
-        }
+// De hamburger: drie streepjes die smaller worden, zoals bij B&B.
+.o_byp_toggler {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    padding: .5rem 0;
+    border: 0;
+    background: transparent;
 
-        &:active {
-            transform: scale(.97);
+    span {
+        display: block;
+        height: 2px;
+        background-color: $byp-brown;
+
+        &:nth-child(1) { width: 34px; }
+        &:nth-child(2) { width: 26px; }
+        &:nth-child(3) { width: 18px; }
+    }
+}
+
+// Het mobiele menu: een paneel over het hele scherm, met de items in het
+// midden. Bootstrap's offcanvas doet het openen, sluiten en de focus.
+// De breedte rechtstreeks en met .offcanvas-end erbij: Bootstrap zet
+// --bs-offcanvas-width zelf op .offcanvas, en die variabele overschrijven
+// bleek niet genoeg.
+.o_byp_offcanvas.offcanvas-end {
+    width: 100vw;
+    max-width: none;
+}
+
+.o_byp_offcanvas {
+    background-color: $byp-beige;
+    color: $byp-brown;
+
+    .offcanvas-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        padding-bottom: 22%;
+        text-align: center;
+    }
+
+    .nav-link {
+        color: $byp-brown;
+        font-size: 1.5rem;
+        font-weight: 600;
+
+        &.active { color: $byp-red; }
+
+        &:hover,
+        &:focus-visible {
+            color: $byp-blue;
         }
     }
 
-    .o_byp_toggler {
-        border: 0;
-        color: $byp-cream;
-        font-size: 1.4rem;
+    .btn-close {
+        opacity: 1;
     }
 }
 
 // ---------------------------------------------------------------------------
-// Hero
+// Hero bovenaan elke pagina
 // ---------------------------------------------------------------------------
+// Drie kolommen 2/8/2 vanaf md: tekst in het midden, mascotte rechts onderaan.
 .o_byp_hero {
-    position: relative;
-    overflow: hidden;              // houdt de wandelende mascotte binnen beeld
-    background: $byp-orange;
-    color: $byp-cream;
-    padding: clamp(3rem, 9vh, 7rem) 1.5rem clamp(4rem, 12vh, 9rem);
     text-align: center;
-}
 
-.o_byp_hero_inner {
-    position: relative;
-    z-index: 2;                    // tekst blijft boven de mascotte
-    max-width: 1100px;
-    margin: 0 auto;
-    pointer-events: none;          // de mascotte eronder blokkeert niets
-}
+    .o_byp_hero_lead {
+        max-width: 400px;
+        margin: 0 auto;
+    }
 
-.o_byp_title {
-    font-family: $byp-display;
-    text-transform: uppercase;
-    // Schaalt mee met het scherm zonder mediaqueries: klein op een gsm,
-    // paginabreed op een desktop.
-    font-size: clamp(2.6rem, 8vw, 6.5rem);
-    line-height: .95;
-    letter-spacing: -.01em;
-    margin: 0 0 clamp(1.5rem, 5vh, 3rem);
-}
+    .o_byp_mascot {
+        display: block;
+        width: 100px;
+        height: auto;
+        margin: 0 auto;
 
-.o_byp_lead {
-    font-family: $byp-body;
-    font-weight: 500;
-    font-size: clamp(1rem, 1.35vw, 1.2rem);
-    line-height: 1.5;
-    max-width: 34ch;
-    margin: 0 auto;
-    color: rgba($byp-cream, .95);
-}
+        @include media-breakpoint-up(md) {
+            width: auto;
+            max-width: 100%;
+            margin: 0;
+        }
+    }
 
-// ---------------------------------------------------------------------------
-// De wandelende mascotte
-// ---------------------------------------------------------------------------
-// Loopt van rechts naar links door de hero en begint opnieuw. Werkt met een
-// stilstaande afbeelding; is je bestand een sprite of een Lottie, dan komt
-// daar nog een stap bij.
-.o_byp_mascot {
-    position: absolute;
-    z-index: 1;
-    bottom: 0;
-    left: 100%;
-    height: clamp(180px, 42vh, 340px);
-    width: auto;
-    animation: byp-walk 14s linear infinite;
+    // "Professionals": de kop is op desktop kleiner, 56px in plaats van 100.
+    &.o_byp_hero_small h1 {
+        @include media-breakpoint-up(xl) { font-size: 3.5rem; }
+    }
 
-    // Wie "verminder beweging" aanstaan heeft, krijgt de mascotte stil in
-    // beeld in plaats van een lopende animatie.
-    @media (prefers-reduced-motion: reduce) {
-        animation: none;
-        left: auto;
-        right: 4vw;
+    // "Over ons": de kop mag tussen 1200 en 1500px 50px buiten zijn kolom
+    // lopen, zodat hij op twee regels blijft (B&B: .over.row-1 h1).
+    &.o_byp_hero_wide h1 {
+        @include media-breakpoint-up(xl) { margin: 0 -50px; }
+        @media (min-width: 1500px) { margin: 0; }
+    }
+
+    // "Over ons": de mascotte in de strandstoel hangt bij B&B deels onder
+    // de tekst, en schuift verder naar links naarmate het scherm breder wordt.
+    .o_byp_mascot_wide {
+        min-width: 200px;
+
+        @include media-breakpoint-up(md) { min-width: 150px; margin-left: -60px; }
+        @include media-breakpoint-up(xl) { margin-left: -150px; margin-bottom: -70px; }
+        @media (min-width: 1500px) { margin-left: -290px; }
     }
 }
 
-@keyframes byp-walk {
-    from { transform: translateX(0); }
-    to   { transform: translateX(calc(-100vw - 100%)); }
+// ---------------------------------------------------------------------------
+// Sectie met een foto als achtergrond
+// ---------------------------------------------------------------------------
+// De foto vult de sectie, de tekst staat linksonder. De hoogte volgt uit
+// de tekst en de .o_byp_sp-blokken eromheen, net als bij B&B.
+//
+// B&B legt er een vignet over (hun overlay.svg) zodat de lichte tekst
+// leesbaar blijft: een zwart verloop van linksonder naar rechtsboven, dat
+// op 85% volledig doorzichtig is. Hun bestand sleept daarnaast een
+// onzichtbare kopie van de foto mee (2,8 MB); static/src/img/overlay.svg is
+// hetzelfde verloop zonder die ballast, op dezelfde manier geplaatst.
+.o_byp_photo {
+    position: relative;
+    background-color: $byp-brown;
+    background-position: right -100px center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: $byp-cream;
+
+    @include media-breakpoint-up(md) { background-position: center; }
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url('/byp_website/static/src/img/overlay.svg') left bottom / cover no-repeat;
+    }
+
+    > * {
+        position: relative;
+    }
+
+    p {
+        max-width: 330px;
+    }
+
+    // "Onze diensten": bredere tekst en een smallere kop (B&B: .dienst.row-2).
+    &.o_byp_photo_wide {
+        h2 {
+            max-width: 250px;
+
+            @include media-breakpoint-up(xl) { max-width: 500px; }
+        }
+
+        p { max-width: 460px; }
+    }
+}
+
+// Een kop die smal blijft tot xl (B&B: .global.row-7 h2).
+.o_byp_title_narrow {
+    max-width: 300px;
+
+    @include media-breakpoint-up(xl) { max-width: 600px; }
 }
 
 // ---------------------------------------------------------------------------
-// Sfeerband onder de hero
+// Foto naast tekst, in een gekleurd blok
 // ---------------------------------------------------------------------------
-// Vervang de achtergrond door je eigen foto zodra die er is:
-//   background-image: url('/byp_website/static/src/img/lichtjes.jpg');
-.o_byp_band {
-    height: clamp(90px, 14vh, 170px);
-    background: $byp-dark center / cover no-repeat;
+// Op mobiel staat de foto boven de tekst, over de volle breedte. Vanaf md
+// vult ze de linkerhelft tot tegen de rand van het scherm.
+// De foto steekt, zoals bij B&B, 56px buiten de grid: op mobiel aan beide
+// kanten (en valt dus net buiten het scherm), vanaf md enkel links. Rechts
+// stopt ze waar de binnenmarge van de grid begint.
+.o_byp_split {
+    overflow: hidden;
+
+    // Op mobiel in de eigen verhouding van de foto, zoals bij B&B; vanaf md
+    // vult ze de kolom, die even hoog is als de tekst ernaast.
+    .o_byp_split_img {
+        display: block;
+        width: calc(100% + 112px);
+        max-width: none;
+        height: auto;
+        margin: 0 -56px;
+
+        @include media-breakpoint-up(md) {
+            width: calc(100% + 56px - var(--byp-grid-pad));
+            height: 100%;
+            margin-right: 0;
+            object-fit: cover;
+        }
+
+        @media (min-width: $byp-xxxl) {
+            mask-image: linear-gradient(to left, #000 80%, transparent 100%);
+        }
+    }
+
+    .o_byp_split_body {
+        @include media-breakpoint-up(md) { padding-left: calc(5% + var(--byp-grid-pad)); }
+
+        h2 { max-width: 600px; }
+        p  { max-width: 600px; }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// "Zo werkt het" (home)
+// ---------------------------------------------------------------------------
+// Het cijfer (::marker) neemt de letter van het <li> over, niet die van de
+// h2 erin. Daarom krijgt het <li> zelf de maten van een h2 en erft de h2
+// die gewoon; zo zijn cijfer en tekst altijd even groot.
+#wrapwrap .o_byp_steps {
+    padding-left: 30px;
+    margin: 30px 0 0;
+
+    li + li { margin-top: 10px; }
+
+    li {
+        font-family: $byp-display;
+        font-weight: 900;
+        font-size: 1.2rem;
+        line-height: 1;
+        letter-spacing: -.175rem;
+        text-transform: uppercase;
+
+        @media (min-width: $byp-xs) { font-size: 1.65rem; }
+        @include media-breakpoint-up(xl) { font-size: 3.5rem; }
+
+        h2 {
+            display: inline;
+            font-size: inherit;
+            letter-spacing: inherit;
+        }
+    }
+}
+
+.o_byp_steps_note {
+    max-width: 250px;
+}
+
+// ---------------------------------------------------------------------------
+// Getuigenis
+// ---------------------------------------------------------------------------
+// Bij B&B is dit een slider met één slide; zonder tweede slide heeft een
+// slider geen zin, dus hier staat het gewoon vast. Foto links, citaat rechts.
+.o_byp_quote {
+    overflow: hidden;
+
+    // Zoals bij B&B: vanaf hun breekpunt van 1330px (hier xxl) is de rij
+    // 15px breder dan het scherm aan elke kant, vanaf 1800px 1720px breed
+    // in het midden. Dat bepaalt de breedte, en dus de hoogte, van de foto.
+    .o_byp_quote_row {
+        @include media-breakpoint-up(xxl) { margin: 0 -15px; }
+
+        @media (min-width: $byp-xxxl) {
+            max-width: 1720px;
+            margin: 0 auto;
+        }
+    }
+
+    // De foto staat in haar eigen verhouding (B&B: 405px hoog bij 510px
+    // breed, 583 bij 733). Is de tekst ernaast hoger, dan vult ze toch het
+    // hele bruine vlak: ze rekt mee en wordt bijgesneden in plaats van
+    // vervormd zoals bij B&B.
+    .o_byp_quote_img {
+        display: block;
+        width: 100%;
+        height: auto;
+
+        @include media-breakpoint-up(md) {
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @media (min-width: $byp-xxxl) {
+            mask-image: linear-gradient(to left, #000 80%, transparent 100%);
+        }
+    }
+
+    .o_byp_quote_body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 300px;
+        padding: 100px 45px 50px;
+
+        @include media-breakpoint-up(xl) { padding: 50px 6% 0; }
+    }
+
+    // Odoo geeft blockquote een grijze lijn links, cursief en eigen
+    // binnenruimte. Niets daarvan staat in het ontwerp.
+    blockquote {
+        position: relative;
+        margin: 0;
+        padding: 20px 0 0;
+        border: 0;
+        font-style: normal;
+
+        // Het aanhalingsteken. Bij B&B een afbeelding (quotes.svg); hier het
+        // teken zelf in de koppenletter, in het rood.
+        &::before {
+            content: '\201C';
+            position: absolute;
+            top: -50px;
+            left: 0;
+            font-family: $byp-display;
+            font-weight: 900;
+            font-size: 6rem;
+            line-height: 1;
+            color: $byp-red;
+
+            @include media-breakpoint-up(xl) { top: -110px; font-size: 11rem; }
+        }
+
+        p {
+            max-width: 420px;
+            margin-bottom: 30px;
+            padding-bottom: 40px;
+            font-size: 1.575rem;
+            font-weight: 600;
+            line-height: 1;
+            color: $byp-cream;
+
+            @include media-breakpoint-up(xl) {
+                max-width: 560px;
+                padding-bottom: 75px;
+                font-size: 2.875rem;
+            }
+        }
+    }
+
+    .o_byp_quote_name {
+        font-family: $byp-body;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: $byp-red;
+
+        @include media-breakpoint-up(xl) { font-size: 1.625rem; }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Veelgestelde vragen
+// ---------------------------------------------------------------------------
+// Bootstrap's accordion, ontdaan van zijn kaders: enkel een bruine lijn
+// onder elke vraag en een plusje dat een minnetje wordt.
+.o_byp_faq {
+    padding-left: 15px;
+    padding-right: 15px;
+
+    .accordion {
+        --bs-accordion-bg: transparent;
+        --bs-accordion-border-width: 0;
+        --bs-accordion-border-radius: 0;
+        --bs-accordion-inner-border-radius: 0;
+        --bs-accordion-btn-focus-box-shadow: none;
+        --bs-accordion-active-bg: transparent;
+        --bs-accordion-active-color: #{$byp-brown};
+        --bs-accordion-color: #{$byp-brown};
+        // B&B's accordion (vc_tta-container) heeft deze marge eronder.
+        margin-bottom: 21.74px;
+    }
+
+    // Odoo's thema zet zelf een rand rond elk item; enkel de onderste blijft.
+    // B&B laat de vragen 2px overlappen (negatieve marges in hun accordion),
+    // dus de lijn telt niet mee in de afstand tot de volgende vraag.
+    .accordion-item {
+        border: 0;
+        border-bottom: 2px solid $byp-brown;
+        border-radius: 0;
+
+        &:not(:last-child) { margin-bottom: -2px; }
+    }
+
+    .accordion-button {
+        padding: 42px 70px 42px 0;
+        background: transparent;
+        color: $byp-brown;
+        font-family: $byp-display;
+        font-size: 1.125rem;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        box-shadow: none;
+
+        @include media-breakpoint-up(xl) { font-size: 1.375rem; }
+
+        // Plus en min, getekend met twee balkjes in plaats van Bootstrap's
+        // pijltje.
+        &::after {
+            content: '+';
+            position: absolute;
+            right: 0;
+            width: auto;
+            height: auto;
+            background: none;
+            font-family: $byp-body;
+            font-size: 1.75rem;
+            font-weight: 400;
+            line-height: 1;
+            transform: none;
+        }
+
+        &:not(.collapsed)::after {
+            content: '\2212';  // −
+        }
+    }
+
+    .accordion-item:first-child .accordion-button {
+        padding-top: 0;
+    }
+
+    .accordion-body {
+        padding: 0 0 40px;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Drie kolommen (waarden op "Over ons", gegevens op "Professionals")
+// ---------------------------------------------------------------------------
+// Een rij met kolommen naast elkaar. Bij B&B lopen zulke rijen over de
+// binnenmarge van de grid heen (-15px), en heeft elke kolom die 15px dan
+// zelf als binnenmarge. Op gsm komt dat op hetzelfde neer, maar naast
+// elkaar maakt het de kolommen smaller, en dus de tekst langer en de
+// mascotte kleiner.
+.o_byp_cols {
+    margin-left: calc(-1 * var(--byp-grid-pad));
+    margin-right: calc(-1 * var(--byp-grid-pad));
+
+    > * {
+        padding-left: var(--byp-grid-pad);
+        padding-right: var(--byp-grid-pad);
+    }
+}
+
+// Kolommen van 28,33% met 5% tussenruimte, zoals bij B&B (.global.row-9).
+.o_byp_three {
+    @include media-breakpoint-up(md) {
+        flex-wrap: nowrap;
+
+        > :nth-child(1) { flex: 0 0 28.3333%; margin-right: 5%; }
+        > :nth-child(2) { flex: 0 0 28.3333%; margin: 0 2.5%; }
+        > :nth-child(3) { flex: 0 0 28.3333%; margin-left: 5%; }
+    }
+
+    // 8% van de sectie, niet van de grid (zie .o_byp_offset_cols).
+    @include media-breakpoint-up(xl) {
+        padding-left: 8cqw;
+        padding-right: 8cqw;
+    }
+
+    @include media-breakpoint-up(xxl) {
+        padding-left: calc(8cqw + 2.4px);
+        padding-right: calc(8cqw + 2.4px);
+    }
+
+    a {
+        text-decoration: none;
+
+        &:hover { color: $byp-blue; }
+    }
+}
+
+// Twee tekstkolommen die op desktop pas na een derde van de breedte
+// beginnen ("Richt je feest helemaal zelf in", "Gebouwd op ervaring"),
+// met 50px tussen de twee.
+// Die 32% is bij B&B een deel van de hele sectie, niet van de grid. Vandaar
+// cqw: de sectie is een container (zie hieronder). Vanaf hun 1330px (hier
+// xxl) rekent het met de sectie plus 30px, zoals de grid.
+.o_byp_home > section,
+.o_byp_page > section {
+    container-type: inline-size;
+}
+
+.o_byp_offset_cols {
+    @include media-breakpoint-up(md) {
+        padding-left: 32cqw;
+
+        > :nth-child(1) { padding-right: calc(25px + var(--byp-grid-pad)); }
+        > :nth-child(2) { padding-left: calc(25px + var(--byp-grid-pad)); }
+    }
+
+    @include media-breakpoint-up(xxl) { padding-left: calc(32cqw + 9.6px); }
+}
+
+// ---------------------------------------------------------------------------
+// Formulier (Professionals)
+// ---------------------------------------------------------------------------
+// Enkel een lijn onderaan, geen kader: zoals de formulieren van B&B.
+.o_byp_form {
+    text-align: left;
+
+    // De velden in twee kolommen vanaf md, met 6% ertussen, en de
+    // afstanden van het formulier van B&B (Contact Form 7). Een grid in
+    // plaats van Bootstrap-kolommen: hun tussenruimte is een percentage.
+    .s_website_form_rows {
+        display: grid;
+        grid-template-columns: 100%;
+        row-gap: 30px;
+
+        @include media-breakpoint-up(md) {
+            grid-template-columns: 1fr 1fr;
+            column-gap: 6%;
+        }
+
+        > .o_byp_form_wide { grid-column: 1 / -1; }
+    }
+
+    // Wat afwijkt van de 30px tussen de rijen.
+    .o_byp_form_message { margin-top: -5px; }
+    .o_byp_form_privacy { margin-top: -2px; }
+    .o_byp_form_send {
+        margin-top: 7px;
+
+        @include media-breakpoint-up(md) { margin-top: -6px; }
+        @include media-breakpoint-up(xl) { margin-top: 20px; }
+
+        .o_byp_btn {
+            @include media-breakpoint-up(xl) { padding: 12px 20px; }
+        }
+    }
+
+    #s_website_form_result:not(:empty) { margin-top: 1rem; }
+
+    .form-control {
+        padding: 5px 0 10px;
+        border: 0;
+        border-bottom: 2px solid $byp-brown;
+        border-radius: 0;
+        background: transparent;
+        color: $byp-brown;
+        font-size: 1.125rem;
+        font-weight: 300;
+        line-height: normal;
+        box-shadow: none !important;
+
+        @include media-breakpoint-up(xl) { font-size: 1.375rem; }
+
+        &::placeholder {
+            color: $byp-brown;
+            opacity: 1;
+        }
+    }
+
+    textarea.form-control {
+        min-height: 55px;
+        padding-top: 25px;
+        font-size: 1rem;
+        line-height: 1;
+        resize: vertical;
+
+        @include media-breakpoint-up(xl) { min-height: 59px; }
+    }
+
+    .form-check-input {
+        width: 1.2rem;
+        height: 1.2rem;
+        border: 2px solid $byp-brown;
+        border-radius: 0;
+        background-color: transparent;
+        box-shadow: none;
+
+        &:checked {
+            background-color: $byp-brown;
+            border-color: $byp-brown;
+        }
+    }
+
+    .form-check-label a {
+        text-decoration: none;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Footer
+// ---------------------------------------------------------------------------
+footer#bottom {
+    background-color: $byp-red !important;
+    color: $byp-cream !important;
+    // De lichtkrant onderaan steekt bewust onder de rand uit.
+    overflow: hidden;
+}
+
+.o_byp_footer {
+    font-family: $byp-body;
+    color: $byp-cream;
+
+    // Odoo zet `o_cc` op <footer>, en die kleurt links met een zwaardere
+    // selector (`.o_cc a:not(.btn)`). Vandaar het id hier.
+    #wrapwrap & a:not(.btn) {
+        color: $byp-cream;
+
+        &:hover { color: $byp-blue; }
+    }
+
+    .o_byp_footer_logo {
+        width: 108px;
+        height: auto;
+
+        @include media-breakpoint-up(xl) { width: 188px; }
+    }
+
+    .o_byp_footer_social a {
+        text-decoration: none;
+
+        &:hover { color: $byp-blue; }
+    }
+
+    .o_byp_footer_legal {
+        text-align: center;
+
+        @include media-breakpoint-up(md) { text-align: left; }
+
+        a {
+            text-decoration: none;
+
+            &:hover { color: $byp-blue; }
+        }
+    }
+}
+
+// De lichtkrant: de slogan die eindeloos van rechts naar links schuift. De
+// tekst staat twee keer na elkaar; de animatie schuift exact één helft op,
+// waardoor de lus naadloos is.
+// De onderkant van de letters valt bewust weg onder de rand van de pagina:
+// een artistieke keuze van B&B (hun .lichtkrant heeft margin-bottom -20px).
+.o_byp_marquee {
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: -20px;
+    color: $byp-brown;
+
+    .o_byp_marquee_track {
+        display: inline-flex;
+        animation: byp-marquee 30s linear infinite;
+    }
+
+    span {
+        flex-shrink: 0;
+        padding-right: 20px;
+        font-family: $byp-display;
+        font-weight: 900;
+        font-size: 3.84rem;
+        line-height: 1;
+        letter-spacing: -.175rem;
+        text-transform: uppercase;
+
+        @include media-breakpoint-up(xl) { font-size: 5.84rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .o_byp_marquee_track { animation: none; }
+    }
+}
+
+@keyframes byp-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+// ---------------------------------------------------------------------------
+// Zwevende knop "Tijd om te feesten"
+// ---------------------------------------------------------------------------
+// Schuift onderaan in beeld zodra de bezoeker wat gescrold heeft (zie
+// byp_floating_cta.js). Op mobiel over de volle breedte, vanaf 600px als
+// knop rechtsonder, zoals bij B&B.
+.o_byp_floating {
+    position: fixed;
+    z-index: 1020;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    padding: 0 4% 5px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(150%);
+    transition: transform .4s ease, opacity .4s ease;
+
+    &.o_byp_visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .o_byp_btn {
+        flex: 1 1 auto;
+        justify-content: center;
+        pointer-events: auto;
+
+        @media (min-width: 600px) { flex: 0 0 auto; }
+    }
+
+    .o_byp_top {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        background-color: $byp-red;
+        color: $byp-cream;
+        text-decoration: none;
+        pointer-events: auto;
+
+        &:hover { background-color: $byp-blue; }
+    }
 }
 
 // ---------------------------------------------------------------------------
 // Toolpagina
 // ---------------------------------------------------------------------------
-.o_byp_tool_intro {
-    background: $byp-orange;
-    color: $byp-cream;
-    padding: clamp(2rem, 6vh, 4rem) 0 clamp(2.5rem, 7vh, 4.5rem);
-    text-align: center;
-}
+// De configurator zelf zit in event_builder en is bewust neutraal gehouden.
+// Hier zetten we hem in de huisstijl, door de variabelen te overschrijven
+// die hij en Bootstrap lezen. Alles blijft binnen .o_byp_tool, zodat de
+// configurator op een andere website zijn eigen kleuren houdt.
+.o_byp_tool {
+    // event_builder.scss leest deze voor het gekozen kaartje en het vinkje.
+    --o-color-1: #{$byp-red};
+    // ... en deze voor de mobiele balk onderaan.
+    --o-body-bg: #{$byp-beige};
 
-.o_byp_tool_title {
-    font-family: $byp-display;
-    text-transform: uppercase;
-    font-size: clamp(2rem, 5vw, 3.6rem);
-    line-height: 1;
-    margin: 0 0 1rem;
-}
+    .s_event_builder {
+        padding-top: clamp(1.5rem, 4vh, 3rem);
+        color: $byp-brown;
+    }
 
-.o_byp_tool_lead {
-    font-family: $byp-body;
-    font-weight: 500;
-    font-size: clamp(.95rem, 1.2vw, 1.1rem);
-    max-width: 44ch;
-    margin: 0 auto;
-    color: rgba($byp-cream, .95);
-}
+    .card {
+        --bs-card-bg: #{$byp-cream};
+        --bs-card-border-color: rgba($byp-brown, .15);
+        --bs-card-color: #{$byp-brown};
+        border-radius: 0;
+    }
 
-// De configurator zelf wat lucht geven onder de gekleurde kop.
-.o_byp_tool .s_event_builder {
-    padding-top: clamp(2rem, 5vh, 3.5rem);
-}
+    .card-img-top { border-radius: 0; }
 
-// ---------------------------------------------------------------------------
-// Mobiel
-// ---------------------------------------------------------------------------
-@include media-breakpoint-down(lg) {
-    .o_byp_nav {
-        // Onder lg valt het raster weg: logo links, acties rechts, en het
-        // menu klapt daaronder open over de volle breedte.
-        .o_byp_nav_grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
+    .text-primary { color: $byp-red !important; }
+    .text-muted   { color: rgba($byp-brown, .7) !important; }
 
-        .o_byp_nav_center {
-            order: 3;
-            flex-basis: 100%;
-        }
+    .btn { border-radius: 0; font-weight: 600; }
 
-        .o_byp_menu {
-            gap: .25rem;
-            padding: 1rem 0;
-        }
+    .btn-primary {
+        --bs-btn-bg: #{$byp-red};
+        --bs-btn-border-color: #{$byp-red};
+        --bs-btn-color: #{$byp-cream};
+        --bs-btn-hover-bg: #{$byp-blue};
+        --bs-btn-hover-border-color: #{$byp-blue};
+        --bs-btn-hover-color: #{$byp-cream};
+        --bs-btn-active-bg: #{$byp-blue};
+        --bs-btn-active-border-color: #{$byp-blue};
+        --bs-btn-disabled-bg: #{$byp-red};
+        --bs-btn-disabled-border-color: #{$byp-red};
+    }
 
-        // De hamburger is enkel hier zichtbaar; op desktop verbergt
-        // Bootstrap hem via navbar-expand-lg.
-        .o_byp_nav_right {
-            gap: .75rem;
+    .btn-secondary,
+    .btn-outline-secondary {
+        --bs-btn-color: #{$byp-brown};
+        --bs-btn-bg: transparent;
+        --bs-btn-border-color: #{$byp-brown};
+        --bs-btn-hover-bg: #{$byp-brown};
+        --bs-btn-hover-border-color: #{$byp-brown};
+        --bs-btn-hover-color: #{$byp-cream};
+        --bs-btn-active-bg: #{$byp-brown};
+        --bs-btn-active-color: #{$byp-cream};
+    }
+
+    .btn-link { color: $byp-red; }
+
+    .form-control,
+    .form-select {
+        border-radius: 0;
+        border-color: rgba($byp-brown, .35);
+        background-color: $byp-cream;
+        color: $byp-brown;
+
+        &:focus {
+            border-color: $byp-red;
+            box-shadow: 0 0 0 .2rem rgba($byp-red, .2);
         }
     }
 
-    .o_byp_mascot {
-        // Op een smal scherm zou de mascotte de tekst overlappen.
-        opacity: .25;
+    .form-check-input:checked {
+        background-color: $byp-red;
+        border-color: $byp-red;
+    }
+
+    // De stapnavigatie plakt bovenaan en heeft een achtergrond nodig, anders
+    // schemeren de kaartjes eronder door.
+    .o_event_builder_nav {
+        background-color: $byp-beige;
     }
 }

@@ -1,9 +1,15 @@
 {
     'name': "Build Your Party - website",
-    'summary': "Huisstijl, navigatiebalk en homepage voor Build Your Party",
+    'summary': "Huisstijl, header, footer en pagina's voor Build Your Party",
     'description': """
-De presentatielaag van de website: kleuren, typografie, een eigen
-navigatiebalk over de hele site, en de homepage.
+De presentatielaag van de website: kleuren, typografie, een eigen header en
+footer over de hele site, en de pagina's Home, Onze diensten, Over ons en
+Professionals. Nagebouwd op de proof of concept van Bosh & Bordon
+(byp.bbstaging4.be), zodat de marketingpagina's en de tool op dezelfde site
+staan en de bezoeker overal ziet dat hij ingelogd is.
+
+Logo's, mascottes en foto's horen in static/src/img, met de bestandsnamen
+die de templates gebruiken.
 
 Bewust een aparte module van `event_builder`. Die laatste is de
 boekingsmotor en moet los te installeren blijven; deze module gaat alleen
@@ -35,6 +41,7 @@ vastgelegde zones, zodat de website-builder er niet in kan.
     'assets': {
         'web.assets_frontend': [
             'byp_website/static/src/scss/byp_website.scss',
+            'byp_website/static/src/js/byp_floating_cta.js',
         ],
     },
 

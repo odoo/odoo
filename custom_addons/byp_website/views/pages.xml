@@ -3,33 +3,144 @@
 
     <!--
       ============================================================
-      Twee voorlopig lege pagina's
+      De pagina's naast de homepage
       ============================================================
-      Ze bestaan zodat de menu-items hieronder ergens naartoe wijzen. De
-      opbouw is dezelfde als de homepage: een gekleurde kop in de huisstijl,
-      en geen `oe_structure`, zodat de website-builder er niet in kan en een
-      deploy de pagina herstelt.
-
-      Wil je hier inhoud op, dan schrijven we die in deze template. Wil je ze
-      liever zelf kunnen vullen zonder deploy, zeg het dan: dan zet ik er
-      bewust één sleepzone in.
+      Nagebouwd op de proof of concept van Bosh & Bordon. Zelfde opbouw als
+      de homepage: de bouwstenen uit homepage.xml (hero, getuigenis, vragen)
+      met eigen inhoud, en geen `oe_structure`, zodat de website-builder er
+      niet in kan en een deploy de pagina herstelt.
     -->
 
-    <template id="page_services" name="Onze diensten">
+    <!-- ========================================================= -->
+    <!-- Onze diensten                                              -->
+    <!-- ========================================================= -->
+    <template id="page_services" name="Our services">
         <t t-call="website.layout">
             <div id="wrap" class="o_byp_page">
-                <section class="o_byp_tool_intro">
-                    <div class="container">
-                        <h1 class="o_byp_tool_title">Onze diensten</h1>
-                        <p class="o_byp_tool_lead">
-                            Van catering tot meubilair en techniek: alles wat je
-                            nodig hebt om er een feest van te maken.
-                        </p>
+
+                <t t-call="byp_website.byp_hero">
+                    <t t-set="title_1">Your party.</t>
+                    <t t-set="title_2">Your choice.</t>
+                    <t t-set="lead">From tents and furniture to food trucks: choose what you need and put your party together easily, your way and within your budget.</t>
+                    <t t-set="mascot" t-value="'frog-mascot-2.svg'"/>
+                    <t t-set="mascot_w" t-value="193"/>
+                    <t t-set="mascot_h" t-value="310"/>
+                </t>
+
+                <!-- Tenten: foto met de kop bovenaan en de uitleg onderaan. -->
+                <section class="o_byp_photo o_byp_photo_wide"
+                         style="background-image: url('/byp_website/static/src/img/de-juiste-setting.jpg');">
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 101px;"/>
+                    <div class="o_byp_grid">
+                        <div class="row g-0 o_byp_cols">
+                            <div class="col-lg-6">
+                                <h2>Start with the right setting.</h2>
+                                <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 27px;"/>
+                                <p>From canopy to party tent</p>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 122px; --sp-xl: 222px;"/>
+                                <p>Choose a tent that suits your location, number of guests and the atmosphere you want. From a compact canopy to a larger party tent with room for tables, a bar and a dance floor.</p>
+                            </div>
+                        </div>
+                        <!-- De lege rechterkolom van B&B: 15px zolang ze onder
+                             de tekst staat, tot lg. -->
+                        <div class="o_byp_sp d-lg-none" style="--sp: 15px; --sp-md: 16px;"/>
+                    </div>
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-xl: 65px;"/>
+                </section>
+
+                <!-- Meubilair -->
+                <section class="o_byp_bg_blue">
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 100px;"/>
+                    <div class="o_byp_grid">
+                        <h2 class="o_byp_title_narrow">Furnish your party entirely yourself</h2>
+                        <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 27px;"/>
+                        <p>From tables to chairs</p>
+                    </div>
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 80px; --sp-xl: 165px;"/>
+                    <div class="o_byp_grid">
+                        <div class="row g-0 o_byp_cols o_byp_offset_cols">
+                            <div class="col-md-6">
+                                <p>From tables and chairs to high tables, lighting, bars and other party furniture: choose what you need to make your venue practical and cosy.</p>
+                                <div class="o_byp_sp" style="--sp: 30px; --sp-md: 0px;"/>
+                            </div>
+                            <div class="col-md-6">
+                                <p>We deliver everything to you. You decide the layout and set everything up the way that suits your party. That way you easily create the right atmosphere, without unnecessary extra costs.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 123px;"/>
+                </section>
+
+                <!-- Foodtrucks -->
+                <section class="o_byp_split o_byp_bg_brown">
+                    <div class="o_byp_grid">
+                        <div class="row g-0">
+                            <div class="col-md-6">
+                                <img class="o_byp_split_img"
+                                     src="/byp_website/static/src/img/smaakmakers.jpg" width="1054" height="950"
+                                     alt="Food truck at a garden party"/>
+                            </div>
+                            <div class="col-md-6 o_byp_split_body">
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 100px;"/>
+                                <h2>Flavour makers for every party</h2>
+                                <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 27px;"/>
+                                <p>From street food to dessert</p>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-xl: 79px;"/>
+                                <p>From burgers and pizza to street food and sweets: choose a food truck that suits your party and your guests. That way you add atmosphere and great food to your event right away, without the hassle.</p>
+                                <p>The food truck comes to your location and takes care of the rest on site. You choose what fits your party and budget, without having to organise full catering yourself.</p>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 143px;"/>
+                            </div>
+                        </div>
                     </div>
                 </section>
-                <section class="container py-5 text-center">
-                    <p class="text-muted">Deze pagina wordt binnenkort ingevuld.</p>
+
+                <t t-call="byp_website.byp_faq">
+                    <t t-set="faq_id" t-value="'byp_faq_services'"/>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="1"/>
+                        <t t-set="question">What kinds of tents can I choose?</t>
+                        You choose from different sizes and layouts, depending on your location, number of guests and type of party.
+                    </t>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="2"/>
+                        <t t-set="question">Can I combine tents and furniture?</t>
+                        Yes. You put together your own package and combine only the parts you need for your party.
+                    </t>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="3"/>
+                        <t t-set="question">Can I rent just furniture?</t>
+                        Absolutely. You don't have to take a full package. Tables, chairs and other party furniture can also be chosen separately.
+                    </t>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="4"/>
+                        <t t-set="question">Which food trucks are available?</t>
+                        The offer varies by date and location. In the tool you can see which food trucks are available and what they offer.
+                    </t>
+                </t>
+
+                <!-- Events op maat: doorverwijzing naar Creact -->
+                <section class="o_byp_split o_byp_bg_blue">
+                    <div class="o_byp_grid">
+                        <div class="row g-0">
+                            <div class="col-md-6">
+                                <img class="o_byp_split_img"
+                                     src="/byp_website/static/src/img/op-maat.jpg" width="1054" height="952"
+                                     alt="Banquet hall set for a large event"/>
+                            </div>
+                            <div class="col-md-6 o_byp_split_body">
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 100px;"/>
+                                <h2>For tailor-made<br/>events</h2>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-xl: 76px;"/>
+                                <p>For larger, more complex or fully supported events, you can turn to Creact.</p>
+                                <p>From concept and planning to full execution: there you get support tailored to your event.</p>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 124px;"/>
+                                <a class="o_byp_btn" href="https://creact.be" target="_blank" rel="noopener">Go to Creact</a>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-xl: 73px;"/>
+                            </div>
+                        </div>
+                    </div>
                 </section>
+
             </div>
         </t>
     </template>
@@ -39,24 +150,99 @@
         <field name="view_id" ref="page_services"/>
         <field name="is_published" eval="True"/>
         <field name="website_indexed" eval="True"/>
-        <field name="website_meta_title">Onze diensten - Build Your Party</field>
+        <field name="website_meta_title">Our services - Build Your Party</field>
+        <field name="website_meta_description">From tents and furniture to food trucks: choose what you need and put your party together easily, your way and within your budget.</field>
     </record>
 
-    <template id="page_about" name="Over ons">
+    <!-- ========================================================= -->
+    <!-- Over ons                                                   -->
+    <!-- ========================================================= -->
+    <template id="page_about" name="About us">
         <t t-call="website.layout">
             <div id="wrap" class="o_byp_page">
-                <section class="o_byp_tool_intro">
-                    <div class="container">
-                        <h1 class="o_byp_tool_title">Over ons</h1>
-                        <p class="o_byp_tool_lead">
-                            Wie we zijn en waarom we feesten organiseren zoals we
-                            dat doen.
-                        </p>
+
+                <t t-call="byp_website.byp_hero">
+                    <t t-set="title_1">More party.</t>
+                    <t t-set="title_2">Less hassle.</t>
+                    <t t-set="lead">Build Your Party makes it easier to pull off a great party yourself. With clear choices, a smart offer and a grip on your budget, you arrange more yourself.</t>
+                    <t t-set="mascot" t-value="'frog-mascot-3.svg'"/>
+                    <t t-set="mascot_w" t-value="310"/>
+                    <t t-set="mascot_h" t-value="292"/>
+                    <t t-set="mascot_class" t-value="'o_byp_mascot_wide'"/>
+                    <t t-set="hero_class" t-value="'o_byp_hero_wide'"/>
+                </t>
+
+                <!-- Drie waarden -->
+                <section class="o_byp_bg_blue">
+                    <div class="o_byp_sp" style="--sp: 70px; --sp-md: 150px; --sp-xl: 254px;"/>
+                    <div class="o_byp_grid">
+                        <div class="row g-0 o_byp_cols o_byp_three">
+                            <div class="col-md-4">
+                                <h2>Simplicity</h2>
+                                <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 24px;"/>
+                                <p>No complicated formulas or endless arranging. You choose what you need and know right away where you stand.</p>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 0px;"/>
+                            </div>
+                            <div class="col-md-4">
+                                <h2>Freedom</h2>
+                                <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 24px;"/>
+                                <p>You decide what your party looks like, what you do yourself and what you spend your budget on.</p>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 0px;"/>
+                            </div>
+                            <div class="col-md-4">
+                                <h2>Smart</h2>
+                                <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 24px;"/>
+                                <p>By choosing smartly and rolling up your sleeves, you get more out of your party budget.</p>
+                            </div>
+                        </div>
                     </div>
+                    <div class="o_byp_sp" style="--sp: 70px; --sp-md: 120px; --sp-xl: 215px;"/>
                 </section>
-                <section class="container py-5 text-center">
-                    <p class="text-muted">Deze pagina wordt binnenkort ingevuld.</p>
+
+                <!-- Het verhaal: ontstaan vanuit Creact. De knop staat op
+                     desktop rechtsboven en op mobiel onderaan, zoals bij B&B. -->
+                <section class="o_byp_bg_beige">
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 100px;"/>
+                    <div class="o_byp_grid">
+                        <div class="row g-0">
+                            <div class="col-md-6">
+                                <h2 class="o_byp_title_narrow">Built on experience</h2>
+                                <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 27px;"/>
+                                <p>Born from Creact</p>
+                            </div>
+                            <div class="col-md-6 text-md-end d-none d-md-block">
+                                <div class="o_byp_sp" style="--sp: 10px;"/>
+                                <a class="o_byp_btn" href="https://creact.be" target="_blank" rel="noopener">Go to Creact</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 80px; --sp-xl: 165px;"/>
+                    <div class="o_byp_grid">
+                        <div class="row g-0 o_byp_cols o_byp_offset_cols">
+                            <div class="col-md-6">
+                                <p>With years of experience in events, Jarne saw how much time and budget is often lost to needless arranging. Build Your Party makes that simpler.</p>
+                                <div class="o_byp_sp" style="--sp: 30px; --sp-md: 0px;"/>
+                            </div>
+                            <div class="col-md-6">
+                                <p>Build Your Party grew out of the knowledge and experience of Creact. For larger or more complex events, Creact remains the partner for custom work.</p>
+                                <div class="d-md-none">
+                                    <div class="o_byp_sp" style="--sp: 50px;"/>
+                                    <a class="o_byp_btn" href="https://creact.be" target="_blank" rel="noopener">Go to Creact</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 70px; --sp-xl: 123px;"/>
                 </section>
+
+                <t t-call="byp_website.byp_quote">
+                    <t t-set="image" t-value="'jarne.jpg'"/>
+                    <t t-set="image_w" t-value="1056"/>
+                    <t t-set="image_h" t-value="840"/>
+                    <t t-set="name">Jarne Vercruysse</t>
+                    <t t-set="quote">A great party doesn't have to be complicated. With the right choices, you get a long way.</t>
+                </t>
+
             </div>
         </t>
     </template>
@@ -66,7 +252,204 @@
         <field name="view_id" ref="page_about"/>
         <field name="is_published" eval="True"/>
         <field name="website_indexed" eval="True"/>
-        <field name="website_meta_title">Over ons - Build Your Party</field>
+        <field name="website_meta_title">About us - Build Your Party</field>
+        <field name="website_meta_description">Build Your Party makes it easier to pull off a great party yourself. With clear choices, a smart offer and a grip on your budget, you arrange more yourself.</field>
+    </record>
+
+    <!-- ========================================================= -->
+    <!-- Professionals                                              -->
+    <!-- ========================================================= -->
+    <!--
+      Het formulier is het standaard websiteformulier van Odoo
+      (website/static/src/snippets/s_website_form), in de opmaak van B&B.
+      Dezelfde motor als /contactus: het verstuurt een mail via mail.mail,
+      met antispam en validatie inbegrepen.
+
+      `email_to` moet een vaste waarde in de template zijn. Odoo ondertekent
+      dat adres bij het compileren (website/tools.py, add_form_signature) en
+      weigert bij verzending elk ander adres. Zo kan niemand het formulier
+      misbruiken om naar willekeurige adressen te mailen.
+
+      De velden zonder vaste plek in mail.mail (voornaam, naam, telefoon,
+      bedrijf) zijn `s_website_form_custom`: Odoo zet ze netjes onder elkaar
+      in de mail.
+    -->
+    <template id="page_professionals" name="Professionals">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_byp_page">
+
+                <t t-call="byp_website.byp_hero">
+                    <t t-set="title_1">Build something</t>
+                    <t t-set="title_2">together?</t>
+                    <t t-set="hero_class" t-value="'o_byp_hero_small'"/>
+                    <t t-set="sp_top" t-value="'--sp: 70px; --sp-md: 33px;'"/>
+                    <t t-set="sp_gap" t-value="'--sp: 50px; --sp-xl: 64px;'"/>
+                    <t t-set="sp_bottom" t-value="'--sp: 50px; --sp-md: 60px; --sp-xl: 85px;'"/>
+
+                    <section class="s_website_form o_byp_form" data-snippet="s_website_form" data-vcss="001">
+                        <form id="byp_professionals_form" action="/website/form/" method="post"
+                              enctype="multipart/form-data"
+                              data-model_name="mail.mail"
+                              data-success-mode="message">
+                            <div class="s_website_form_rows">
+
+                                <div class="s_website_form_field s_website_form_dnone" data-type="char">
+                                    <input type="hidden" class="form-control s_website_form_input"
+                                           name="email_to" value="info@buildyourparty.be"/>
+                                </div>
+                                <div class="s_website_form_field s_website_form_dnone" data-type="char">
+                                    <input type="hidden" class="form-control s_website_form_input"
+                                           name="subject" value="New request via Professionals"/>
+                                </div>
+
+                                <div class="s_website_form_field s_website_form_custom s_website_form_required" data-type="char">
+                                    <label class="visually-hidden s_website_form_label" for="byp_prof_firstname">
+                                        <span class="s_website_form_label_content">First name</span>
+                                    </label>
+                                    <input id="byp_prof_firstname" class="form-control s_website_form_input"
+                                           type="text" name="First name" placeholder="First name" required="1"/>
+                                </div>
+                                <div class="s_website_form_field s_website_form_custom s_website_form_required" data-type="char">
+                                    <label class="visually-hidden s_website_form_label" for="byp_prof_lastname">
+                                        <span class="s_website_form_label_content">Last name</span>
+                                    </label>
+                                    <input id="byp_prof_lastname" class="form-control s_website_form_input"
+                                           type="text" name="Last name" placeholder="Last name" required="1"/>
+                                </div>
+
+                                <div class="s_website_form_field s_website_form_model_required" data-type="email">
+                                    <label class="visually-hidden s_website_form_label" for="byp_prof_email">
+                                        <span class="s_website_form_label_content">Email</span>
+                                    </label>
+                                    <input id="byp_prof_email" class="form-control s_website_form_input"
+                                           type="email" name="email_from" placeholder="Email" required="1"/>
+                                </div>
+                                <div class="s_website_form_field s_website_form_custom s_website_form_required" data-type="tel">
+                                    <label class="visually-hidden s_website_form_label" for="byp_prof_phone">
+                                        <span class="s_website_form_label_content">Phone</span>
+                                    </label>
+                                    <input id="byp_prof_phone" class="form-control s_website_form_input"
+                                           type="tel" name="Phone" placeholder="Phone" required="1"/>
+                                </div>
+
+                                <div class="o_byp_form_wide s_website_form_field s_website_form_custom s_website_form_required" data-type="char">
+                                    <label class="visually-hidden s_website_form_label" for="byp_prof_company">
+                                        <span class="s_website_form_label_content">Company</span>
+                                    </label>
+                                    <input id="byp_prof_company" class="form-control s_website_form_input"
+                                           type="text" name="Company" placeholder="Company" required="1"/>
+                                </div>
+
+                                <div class="o_byp_form_wide o_byp_form_message s_website_form_field s_website_form_custom s_website_form_required" data-type="text">
+                                    <label class="visually-hidden s_website_form_label" for="byp_prof_message">
+                                        <span class="s_website_form_label_content">Message</span>
+                                    </label>
+                                    <textarea id="byp_prof_message" class="form-control s_website_form_input"
+                                              name="Message" placeholder="Message" rows="1" required="1"/>
+                                </div>
+
+                                <div class="o_byp_form_wide o_byp_form_privacy s_website_form_field s_website_form_custom s_website_form_required" data-type="boolean">
+                                    <div class="form-check d-flex align-items-center gap-3 ps-0">
+                                        <input id="byp_prof_privacy" class="form-check-input s_website_form_input m-0"
+                                               type="checkbox" name="Privacy policy accepted" value="Yes" required="1"/>
+                                        <label class="form-check-label s_website_form_label" for="byp_prof_privacy">
+                                            <span class="s_website_form_label_content">I agree to the <a href="/privacy-policy">privacy policy</a></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="o_byp_form_wide o_byp_form_send s_website_form_submit">
+                                    <a href="#" role="button" class="o_byp_btn s_website_form_send">Send message</a>
+                                    <span id="s_website_form_result" class="d-block"/>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- Succesmodus "message": Odoo verbergt het formulier
+                             en toont dit element (form.js, _endMessage). Een
+                             gewone tekst, dus vertaalbaar; een
+                             data-attribuut zou dat niet zijn. -->
+                        <div class="s_website_form_end_message d-none">
+                            <p>Thank you! We will get back to you soon.</p>
+                        </div>
+                    </section>
+                </t>
+
+                <!-- Onze gegevens -->
+                <section class="o_byp_bg_brown">
+                    <div class="o_byp_sp" style="--sp: 70px; --sp-xl: 103px;"/>
+                    <div class="o_byp_grid">
+                        <h3 class="text-center">Our details</h3>
+                    </div>
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 80px; --sp-xl: 128px;"/>
+                    <div class="o_byp_grid">
+                        <div class="row g-0 o_byp_cols o_byp_three">
+                            <div class="col-md-4">
+                                <h2>Contact</h2>
+                                <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 24px;"/>
+                                <p>
+                                    <a href="tel:+32470213465">+32 470 21 34 65</a><br/>
+                                    <a href="mailto:info@buildyourparty.be">info@buildyourparty.be</a>
+                                </p>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 0px;"/>
+                            </div>
+                            <div class="col-md-4">
+                                <h2>Office</h2>
+                                <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 24px;"/>
+                                <p>
+                                    <a href="https://maps.app.goo.gl/xeSA5kAnBbRCJNMe9" target="_blank" rel="noopener">
+                                        Gaversesteenweg 422 bus 001,<br/>9820 Merelbeke-Melle
+                                    </a>
+                                </p>
+                                <div class="o_byp_sp" style="--sp: 50px; --sp-md: 0px;"/>
+                            </div>
+                            <div class="col-md-4">
+                                <h2>Follow us</h2>
+                                <div class="o_byp_sp" style="--sp: 15px; --sp-xl: 24px;"/>
+                                <p>
+                                    <a href="https://www.facebook.com/people/Creact/100070864295655/" target="_blank" rel="noopener">Facebook</a><br/>
+                                    <a href="https://www.instagram.com/creactbv/" target="_blank" rel="noopener">Instagram</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_byp_sp" style="--sp: 70px; --sp-md: 120px; --sp-xl: 215px;"/>
+                </section>
+
+                <t t-call="byp_website.byp_faq">
+                    <t t-set="faq_id" t-value="'byp_faq_prof'"/>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="1"/>
+                        <t t-set="question">Can I become a supplier?</t>
+                        Absolutely. We'd love to hear from companies that add something to the Build Your Party offer. Send us more information about your products, services, region and way of working, and we'll see whether there is a match.
+                    </t>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="2"/>
+                        <t t-set="question">What partners are you looking for?</t>
+                        We're open to a wide range of collaborations within events, such as tents, furniture, catering, food trucks, equipment and additional services.
+                    </t>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="3"/>
+                        <t t-set="question">Do I need to be active across all of Belgium?</t>
+                        Not necessarily. Clearly state the region you're active in, so we can immediately assess where a collaboration is possible.
+                    </t>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="4"/>
+                        <t t-set="question">Can I propose a new product or concept?</t>
+                        Gladly. If you have something that fits the Build Your Party concept, feel free to send it over. We always look at new ideas in terms of the added value for our users.
+                    </t>
+                </t>
+
+            </div>
+        </t>
+    </template>
+
+    <record id="page_professionals_record" model="website.page">
+        <field name="url">/professionals</field>
+        <field name="view_id" ref="page_professionals"/>
+        <field name="is_published" eval="True"/>
+        <field name="website_indexed" eval="True"/>
+        <field name="website_meta_title">Professionals - Build Your Party</field>
+        <field name="website_meta_description">Want to become a supplier or partner of Build Your Party? Get in touch.</field>
     </record>
 
     <!--
@@ -85,6 +468,11 @@
       automatisch gekopieerd naar de eigen menuboom van elke website. Zou je
       hier website_id invullen, dan komt het item alleen op die ene website en
       krijgt een tweede website later niets.
+
+      Het vroegere item "Contact" (naar /contactus) is weg, zoals in het
+      ontwerp van B&B: de contactgegevens staan nu op Professionals. Omdat het
+      record uit dit bestand verdwenen is, ruimt een module-upgrade het op,
+      en website.menu.unlink neemt de kopieën per website mee.
     -->
 
     <record id="menu_home" model="website.menu">
@@ -96,7 +484,7 @@
     </record>
 
     <record id="menu_services" model="website.menu">
-        <field name="name">Onze diensten</field>
+        <field name="name">Our services</field>
         <field name="url">/onze-diensten</field>
         <field name="page_id" ref="byp_website.page_services_record"/>
         <field name="parent_id" ref="website.main_menu"/>
@@ -104,18 +492,17 @@
     </record>
 
     <record id="menu_about" model="website.menu">
-        <field name="name">Over ons</field>
+        <field name="name">About us</field>
         <field name="url">/over-ons</field>
         <field name="page_id" ref="byp_website.page_about_record"/>
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence" type="int">30</field>
     </record>
 
-    <!-- Contact wijst naar de bestaande contactpagina van Odoo. -->
-    <record id="menu_contact" model="website.menu">
-        <field name="name">Contact</field>
-        <field name="url">/contactus</field>
-        <field name="page_id" ref="website.contactus_page"/>
+    <record id="menu_professionals" model="website.menu">
+        <field name="name">Professionals</field>
+        <field name="url">/professionals</field>
+        <field name="page_id" ref="byp_website.page_professionals_record"/>
         <field name="parent_id" ref="website.main_menu"/>
         <field name="sequence" type="int">40</field>
     </record>

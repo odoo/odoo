@@ -3,6 +3,163 @@
 
     <!--
       ============================================================
+      Over de teksten
+      ============================================================
+      Alle teksten in de templates staan in het Engels, de brontaal van Odoo.
+      De andere talen (Nederlands, Frans) komen uit i18n/<taal>.po.
+
+      Odoo vertaalt alleen tekst in de opmaak zelf en een handvol attributen
+      (placeholder, alt, title, aria-label, ...; zie TRANSLATED_ATTRS in
+      odoo/tools/translate.py). Een string in een Python-expressie, zoals
+      `t-value="['Vraag', 'Antwoord']"`, ziet de vertaling nooit. Daarom gaat
+      elke zichtbare tekst hier als inhoud van een t-set of een t-call mee,
+      nooit als t-value.
+
+      Omgekeerd: technische waarden (bestandsnamen, id's, klassen) staan
+      juist WEL als t-value="'...'". Als inhoud van een t-set zou Odoo ze
+      als vertaalbare tekst exporteren, en wie ze dan vertaalt breekt de
+      pagina.
+    -->
+
+    <!--
+      ============================================================
+      Bouwstenen die op meerdere pagina's terugkomen
+      ============================================================
+      De hero bovenaan, de getuigenis en de veelgestelde vragen zien er op
+      elke pagina hetzelfde uit; alleen de inhoud verschilt. Die inhoud geef
+      je mee met t-set, zodat de opmaak maar op één plek staat.
+    -->
+
+    <!--
+      Hero: kop in het midden, mascotte rechts.
+        title_1, title_2 : de twee regels van de kop
+        lead             : de alinea eronder (mag ontbreken)
+        mascot           : bestandsnaam in static/src/img (mag ontbreken)
+        mascot_class     : extra klasse voor de mascotte
+        mascot_w, mascot_h : afmetingen van de SVG (zie byp_quote: zonder
+                           width/height is het lazy geladen beeld eerst
+                           onzichtbaar klein en springt de pagina daarna)
+      Wat er verder nog onder de kop moet (een lead met regelbreuk, het
+      formulier op Professionals), geef je mee als inhoud van de t-call; dat
+      komt in `0`.
+        hero_class       : extra klasse op de sectie
+        sp_top, sp_gap, sp_bottom : de tussenruimtes boven, tussen kop en
+                           tekst, en onder (zie .o_byp_sp); standaard die
+                           van de hero's van B&B
+    -->
+    <template id="byp_hero" name="Build Your Party hero">
+        <section t-att-class="'o_byp_hero %s' % (hero_class or '')">
+            <div class="o_byp_sp" t-att-style="sp_top or '--sp: 70px; --sp-md: 100px; --sp-xl: 126px;'"/>
+            <div class="o_byp_grid">
+                <div class="row g-0 align-items-end o_byp_cols">
+                    <!-- Lege kolommen zijn bij B&B op gsm 15px hoog. -->
+                    <div class="col-md-2">
+                        <div class="o_byp_sp" style="--sp: 15px; --sp-md: 0px;"/>
+                    </div>
+                    <div class="col-md-8">
+                        <h1>
+                            <t t-out="title_1"/><br/><t t-out="title_2"/>
+                        </h1>
+                        <div class="o_byp_sp" t-att-style="sp_gap or '--sp: 50px; --sp-md: 80px; --sp-xl: 102px;'"/>
+                        <p t-if="lead" class="o_byp_hero_lead" t-out="lead"/>
+                        <t t-out="0"/>
+                    </div>
+                    <div class="col-md-2">
+                        <t t-if="mascot">
+                            <div class="o_byp_sp" style="--sp: 50px; --sp-md: 0px;"/>
+                            <img t-att-class="'o_byp_mascot %s' % (mascot_class or '')"
+                                 t-attf-src="/byp_website/static/src/img/{{ mascot }}"
+                                 t-att-width="mascot_w" t-att-height="mascot_h"
+                                 alt="" aria-hidden="true"/>
+                        </t>
+                        <div t-else="" class="o_byp_sp" style="--sp: 15px; --sp-md: 0px;"/>
+                    </div>
+                </div>
+            </div>
+            <div class="o_byp_sp" t-att-style="sp_bottom or '--sp: 50px; --sp-md: 80px; --sp-xl: 133px;'"/>
+        </section>
+    </template>
+
+    <!--
+      Getuigenis: foto links, citaat rechts, op bruin.
+        image, quote, name
+        image_w, image_h : afmetingen van het bestand in pixels
+
+      De afmetingen zijn nodig omdat Odoo elke afbeelding `loading="lazy"`
+      geeft: zonder width/height kent de browser de verhouding pas als de
+      foto geladen is, en is het blok tot dan maar een pixel hoog. Daarna
+      springt de pagina. Met de afmetingen reserveert hij de plek meteen.
+    -->
+    <template id="byp_quote" name="Build Your Party testimonial">
+        <section class="o_byp_quote o_byp_bg_brown">
+            <div class="row g-0 o_byp_quote_row">
+                <div class="col-md-6">
+                    <img class="o_byp_quote_img"
+                         t-attf-src="/byp_website/static/src/img/{{ image }}"
+                         t-att-width="image_w" t-att-height="image_h"
+                         t-att-alt="name"/>
+                </div>
+                <div class="col-md-6 o_byp_quote_body">
+                    <blockquote>
+                        <p t-out="quote"/>
+                    </blockquote>
+                    <p class="o_byp_quote_name" t-out="name"/>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!--
+      Veelgestelde vragen: Bootstrap-accordion.
+        faq_id : uniek per pagina, voor de id's van het accordion
+      De vragen zelf komen als inhoud mee, elk met een t-call naar
+      byp_faq_item. Zo blijven vraag en antwoord gewone, vertaalbare tekst.
+    -->
+    <template id="byp_faq" name="Build Your Party FAQ">
+        <section class="o_byp_faq">
+            <div class="o_byp_sp" style="--sp: 50px; --sp-md: 80px; --sp-xl: 103px;"/>
+            <h3 class="text-center">Frequently asked questions</h3>
+            <div class="o_byp_sp" style="--sp: 40px; --sp-xl: 60px;"/>
+            <div class="o_byp_grid_sm">
+                <div class="accordion" t-att-id="faq_id">
+                    <t t-out="0"/>
+                </div>
+            </div>
+            <div class="o_byp_sp" style="--sp: 50px; --sp-md: 80px; --sp-xl: 138px;"/>
+        </section>
+    </template>
+
+    <!--
+      Eén vraag in het accordion.
+        faq_index : volgnummer; nummer 1 staat open, zoals bij B&B
+        question  : de vraag
+        0         : het antwoord (de inhoud van de t-call)
+    -->
+    <template id="byp_faq_item" name="Build Your Party FAQ item">
+        <t t-set="faq_open" t-value="faq_index == 1"/>
+        <t t-set="faq_target" t-value="'%s_%s' % (faq_id, faq_index)"/>
+        <div class="accordion-item">
+            <h4 class="accordion-header">
+                <button t-att-class="'accordion-button' if faq_open else 'accordion-button collapsed'"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        t-att-data-bs-target="'#' + faq_target"
+                        t-att-aria-expanded="'true' if faq_open else 'false'"
+                        t-att-aria-controls="faq_target"
+                        t-out="question"/>
+            </h4>
+            <div t-att-id="faq_target"
+                 t-att-class="'accordion-collapse collapse show' if faq_open else 'accordion-collapse collapse'"
+                 t-att-data-bs-parent="'#' + faq_id">
+                <div class="accordion-body">
+                    <p class="mb-0"><t t-out="0"/></p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!--
+      ============================================================
       De homepage
       ============================================================
       Bewust GEEN `oe_structure` in deze template. Odoo's documentatie raadt
@@ -22,34 +179,106 @@
             <div id="wrap" class="o_byp_home">
 
                 <!-- ===== Hero ===== -->
-                <section class="o_byp_hero">
-                    <div class="o_byp_hero_inner">
-                        <h1 class="o_byp_title">
-                            Jouw feest?<br/>Zo geregeld.
-                        </h1>
-                        <p class="o_byp_lead">
-                            Kies uit onze partyconcepten en bouw stap voor stap jouw feest.
-                            Snel, eenvoudig en met alles wat je nodig hebt om er iets
-                            goeds van te maken.
-                        </p>
+                <!-- De lead gaat hier als inhoud mee in plaats van via
+                     t-set: het zijn twee regels met een harde regelbreuk, en
+                     t-out zou die <br/> als tekst escapen. -->
+                <t t-call="byp_website.byp_hero">
+                    <t t-set="title_1">Big party.</t>
+                    <t t-set="title_2">Sorted.</t>
+                    <t t-set="mascot" t-value="'frog-mascot.svg'"/>
+                    <t t-set="mascot_w" t-value="201"/>
+                    <t t-set="mascot_h" t-value="399"/>
+                    <p class="o_byp_hero_lead">
+                        Get more party out of your budget.<br/>
+                        Professional equipment, smartly chosen for a party that looks like the professionals did it.
+                    </p>
+                </t>
+
+                <!-- ===== Feestpakket: foto met tekst linksonder ===== -->
+                <section class="o_byp_photo"
+                         style="background-image: url('/byp_website/static/src/img/feestpakket-1.jpg');">
+                    <div class="o_byp_sp" style="--sp: 50px;"/>
+                    <div class="o_byp_grid">
+                        <div class="row g-0 o_byp_cols">
+                            <div class="col-lg-6">
+                                <div class="o_byp_sp" style="--sp: 150px; --sp-md: 200px; --sp-xl: 328px;"/>
+                                <p>Put together your own party package: from tent and furniture to drinks and food. We deliver everything to your door, you set it up.</p>
+                                <div class="o_byp_sp" style="--sp: 19px;"/>
+                                <a class="o_byp_btn" href="/onze-diensten">Extra services</a>
+                            </div>
+                        </div>
+                        <!-- De lege rechterkolom van B&B: 15px zolang ze onder
+                             de tekst staat, tot lg. -->
+                        <div class="o_byp_sp d-lg-none" style="--sp: 15px; --sp-md: 16px;"/>
                     </div>
-
-                    <!--
-                      De mascotte. Loopt van rechts naar links door de hero.
-                      `aria-hidden` omdat het puur decoratief is: een
-                      schermlezer heeft er niets aan.
-
-                      Zolang het echte bestand er niet is, staat hier de
-                      placeholder van Odoo. Vervang het src-pad door je eigen
-                      illustratie en de animatie werkt meteen.
-                    -->
-                    <img class="o_byp_mascot"
-                         src="/web/static/img/placeholder.png"
-                         alt="" aria-hidden="true"/>
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-xl: 58px;"/>
                 </section>
 
-                <!-- ===== Sfeerband onder de hero ===== -->
-                <section class="o_byp_band" aria-hidden="true"/>
+                <!-- ===== Zo werkt het ===== -->
+                <section class="o_byp_bg_red">
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 80px; --sp-xl: 103px;"/>
+                    <div class="o_byp_grid_sm">
+                        <h3 class="text-center">How it works</h3>
+                        <div class="o_byp_sp" style="--sp: 43px;"/>
+                        <ol class="o_byp_steps o_byp_cream">
+                            <li><h2>Build your package</h2></li>
+                            <li><h2>We deliver everything</h2></li>
+                            <li><h2>You set it up</h2></li>
+                            <li><h2>Time to party</h2></li>
+                        </ol>
+                    </div>
+                    <div class="o_byp_sp" style="--sp: 50px; --sp-md: 80px; --sp-xl: 119px;"/>
+                    <!-- Op gsm staat de zin boven de knop, op tablet eronder
+                         en rechts, vanaf lg naast elkaar: knop links, zin
+                         rechts. B&B's kolommen hier zijn "md" in Bootstrap 3,
+                         dus pas vanaf 992px naast elkaar. -->
+                    <div class="o_byp_grid">
+                        <div class="row g-0 flex-column-reverse flex-md-column flex-lg-row">
+                            <div class="col-lg-6">
+                                <a class="o_byp_btn o_byp_btn_brown" href="/bouw-je-feest">Build your party</a>
+                            </div>
+                            <div class="col-lg-6 d-md-flex justify-content-end">
+                                <p class="o_byp_steps_note">Partied out? You clean up, we do the rest</p>
+                                <div class="o_byp_sp" style="--sp: 30px; --sp-md: 0px;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_byp_sp" style="--sp: 44px;"/>
+                </section>
+
+                <!-- ===== Getuigenis ===== -->
+                <t t-call="byp_website.byp_quote">
+                    <t t-set="image" t-value="'testimonial-img.jpg'"/>
+                    <t t-set="image_w" t-value="705"/>
+                    <t t-set="image_h" t-value="561"/>
+                    <t t-set="name">Nicolas &amp; Julie</t>
+                    <t t-set="quote">Everything was crystal clear and ready on time. All we had to do was set up and enjoy.</t>
+                </t>
+
+                <!-- ===== Veelgestelde vragen ===== -->
+                <t t-call="byp_website.byp_faq">
+                    <t t-set="faq_id" t-value="'byp_faq_home'"/>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="1"/>
+                        <t t-set="question">What can I put together myself?</t>
+                        You choose what you need for your party, from tents and furniture to food trucks and extra equipment. That way you put together a package that fits your location, guests and budget.
+                    </t>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="2"/>
+                        <t t-set="question">Do I have to set everything up myself?</t>
+                        Yes, but we keep it simple. Everything is selected so you can easily install it yourself. That way you save on setup costs and get more out of your party budget.
+                    </t>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="3"/>
+                        <t t-set="question">How is everything delivered?</t>
+                        We deliver the equipment you chose to the agreed location at the agreed time. That way you can start setting up at your own pace, whenever it suits you.
+                    </t>
+                    <t t-call="byp_website.byp_faq_item">
+                        <t t-set="faq_index" t-value="4"/>
+                        <t t-set="question">Is Build Your Party suitable for every party?</t>
+                        Build Your Party is ideal for small to medium-sized parties you like to organise yourself. For larger or more complex events that need more guidance, we are happy to refer you to Creact.
+                    </t>
+                </t>
 
             </div>
         </t>
@@ -69,8 +298,8 @@
         <field name="view_id" ref="homepage"/>
         <field name="is_published" eval="True"/>
         <field name="website_indexed" eval="True"/>
-        <field name="website_meta_title">Build Your Party - jouw feest, zo geregeld</field>
-        <field name="website_meta_description">Kies je partyconcept en bouw stap voor stap jouw feest. Direct een prijs, in enkele stappen geboekt.</field>
+        <field name="website_meta_title">Build Your Party - big party, sorted</field>
+        <field name="website_meta_description">Put together your own party package: from tent and furniture to drinks and food. We deliver everything to your door, you set it up.</field>
     </record>
 
 </odoo>

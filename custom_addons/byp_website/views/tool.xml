@@ -19,23 +19,23 @@
 
       Net als de homepage: geen `oe_structure`, dus de website-builder kan er
       niet in en een module-upgrade herstelt de pagina.
+
+      De kleuren van de configurator zelf staan niet hier maar in
+      byp_website.scss, onder `.o_byp_tool`: daar worden de variabelen
+      overschreven die event_builder en Bootstrap lezen. Zo blijft
+      event_builder neutraal en draagt alleen deze pagina de huisstijl.
     -->
-    <template id="tool_page" name="Bouw je feest">
+    <template id="tool_page" name="Build your party">
         <t t-call="website.layout">
             <div id="wrap" class="o_byp_tool">
 
-                <!-- Korte kop in de huisstijl, zodat de pagina niet koud
-                     met een formulier begint. -->
-                <section class="o_byp_tool_intro">
-                    <div class="container">
-                        <h1 class="o_byp_tool_title">Bouw je feest</h1>
-                        <p class="o_byp_tool_lead">
-                            Kies je datum, het aantal gasten en je formule.
-                            De prijs rekent live mee, en je boekt met een
-                            voorschot.
-                        </p>
-                    </div>
-                </section>
+                <!-- Dezelfde kop als op de andere pagina's, zonder mascotte:
+                     de bezoeker moet hier snel aan de slag kunnen. -->
+                <t t-call="byp_website.byp_hero">
+                    <t t-set="title_1">Build your</t>
+                    <t t-set="title_2">party.</t>
+                    <t t-set="lead">Choose your date, the number of guests and your formula. The price updates live, and you book with a deposit.</t>
+                </t>
 
                 <!-- De configurator -->
                 <t t-call="event_builder.s_event_builder"/>
@@ -49,8 +49,8 @@
         <field name="view_id" ref="tool_page"/>
         <field name="is_published" eval="True"/>
         <field name="website_indexed" eval="True"/>
-        <field name="website_meta_title">Bouw je feest - Build Your Party</field>
-        <field name="website_meta_description">Stel je event samen, zie meteen wat het kost en boek met een voorschot.</field>
+        <field name="website_meta_title">Build your party - Build Your Party</field>
+        <field name="website_meta_description">Put your event together, see right away what it costs and book with a deposit.</field>
     </record>
 
 </odoo>
