@@ -2486,6 +2486,33 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.bom_kit_1.write({'type': 'phantom'})
         self.bom_kit_1.unlink()
 
+    def test_remove_kit_bom_not_used_by_sale_order_line(self):
+        """
+        A product has two kit boms and a confirmed sale order line was
+        exploded with the first one: the second one can still be archived,
+        changed or removed.
+        """
+        self.bom_kit_1.sequence = 1
+        bom_kit_2 = self.bom_kit_1.copy()
+        bom_kit_2.sequence = 2
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.kit_1.id,
+                'product_uom_qty': 1.0,
+            })],
+        })
+        so.action_confirm()
+        self.assertEqual(so.order_line.move_ids.bom_line_id.bom_id, self.bom_kit_1)
+
+        bom_kit_2.toggle_active()
+        bom_kit_2.toggle_active()
+        bom_kit_2.write({'type': 'normal'})
+        bom_kit_2.write({'type': 'phantom'})
+        bom_kit_2.unlink()
+        with self.assertRaises(UserError):
+            self.bom_kit_1.unlink()
+
     def test_merge_move_kit_on_adding_new_sol(self):
         """
         Create and confirm an SO for 2 similar kit products.
