@@ -1205,13 +1205,14 @@ class HrApplicant(models.Model):
                     new_partner[0].write({
                         'name': self.partner_name or self.email_from,
                     })
+                # The emails are compared normalized: the email of the applicant may differ in case
                 if new_partner[0].email_normalized:
-                    email_domain = ('email_from', 'in', [new_partner[0].email, new_partner[0].email_normalized])
+                    email_domain = ('email_normalized', '=', new_partner[0].email_normalized)
                 else:
                     email_domain = ('email_from', '=', new_partner[0].email)
-                self.search([
+                (self | self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
-                ]).write({'partner_id': new_partner[0].id})
+                ])).filtered(lambda applicant: not applicant.partner_id).write({'partner_id': new_partner[0].id})
         return super()._message_post_after_hook(message)
 
     def create_employee_from_applicant(self):
