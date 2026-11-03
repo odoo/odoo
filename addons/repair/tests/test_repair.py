@@ -664,6 +664,18 @@ class TestRepair(TestRepairCommon):
         self.assertEqual(repair_order.name, "PT1/00002")
         self.assertEqual(move.reference, "PT1/00002")
 
+    def test_change_picking_type_and_remove_part(self):
+        """Check that a part can be removed from a repair order while changing its
+        operation type."""
+        picking_type_2 = self.stock_warehouse.repair_type_id.copy()
+
+        with Form(self.repair1) as ro_form:
+            ro_form.picking_type_id = picking_type_2
+            ro_form.move_ids.remove(0)
+
+        self.assertEqual(self.repair1.picking_type_id, picking_type_2)
+        self.assertFalse(self.repair1.move_ids)
+
     def test_repair_components_lots_show_in_invoice(self):
         """
         Test that the lots of the components of a repair order are shown in the invoice

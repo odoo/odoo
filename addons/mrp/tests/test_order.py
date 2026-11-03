@@ -3841,6 +3841,24 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.bom_id = bom_wh02
         self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be adapted because of the default value')
 
+    def test_change_bom_with_other_operation_type(self):
+        """Check that switching a saved draft MO to a BoM of another operation type
+        replaces its components."""
+        picking_type_manu_2 = self.picking_type_manu.copy()
+        bom_2 = self.bom_1.copy()
+        bom_2.picking_type_id = picking_type_manu_2
+        mo = self.env['mrp.production'].with_user(self.user_mrp_user).create({
+            'product_id': self.product_4.id,
+            'bom_id': self.bom_1.id,
+        })
+        self.assertEqual(mo.picking_type_id, self.picking_type_manu)
+
+        with Form(mo) as mo_form:
+            mo_form.bom_id = bom_2
+
+        self.assertEqual(mo.picking_type_id, picking_type_manu_2)
+        self.assertRecordValues(mo.move_raw_ids, [{'picking_type_id': picking_type_manu_2.id}, {'picking_type_id': picking_type_manu_2.id}])
+
     def test_workcenter_specific_capacities(self):
         """ Test that the duraction expected is correctly computed when specific capacities are defined on the workcenter.
         """
