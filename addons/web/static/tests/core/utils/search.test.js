@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-import { fuzzyLookup, fuzzyTest } from "@web/core/utils/search";
+import { fuzzyLevenshteinLookup, fuzzyLookup, fuzzyTest } from "@web/core/utils/search";
 
 describe.current.tags("headless");
 
@@ -27,6 +27,25 @@ test("fuzzyLookup", () => {
     ]);
     expect(fuzzyLookup("", data, (d) => d.name)).toEqual([]);
     expect(fuzzyLookup("สมศ", data, (d) => d.name)).toEqual([{ name: "สมศรี จู่โจม" }]);
+});
+
+test("fuzzyLevenshteinLookup", () => {
+    const words = ["café", "cafétéria", "restaurant", "boulangerie"];
+
+    // A word containing the pattern is a perfect match: the word is returned,
+    // not the pattern itself.
+    expect(fuzzyLevenshteinLookup("cafe", words)).toEqual(["café", "cafétéria"]);
+    expect(fuzzyLevenshteinLookup("boulangerie", words)).toEqual(["boulangerie"]);
+
+    // Misspelled words are corrected within the error margin.
+    expect(fuzzyLevenshteinLookup("resturant", words)).toEqual(["restaurant"]);
+    expect(fuzzyLevenshteinLookup("zzzz", words)).toEqual([]);
+
+    // Perfect matches come before corrected ones.
+    expect(fuzzyLevenshteinLookup("restaurant", ["restaurants", "restaurent"])).toEqual([
+        "restaurants",
+        "restaurent",
+    ]);
 });
 
 test("fuzzyTest", () => {
