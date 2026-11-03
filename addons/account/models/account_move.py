@@ -637,6 +637,8 @@ class AccountMove(models.Model):
         store=True,
         readonly=False,
     )
+    unreconciled_paid_amount = fields.Monetary(currency_field='currency_id', compute='_compute_unreconciled_paid_amount')
+    amount_residual_after_payments = fields.Monetary(currency_field='currency_id', compute='_compute_amount_residual_after_payments')
 
     # === Reverse feature fields === #
     reversed_entry_id = fields.Many2one(
@@ -2546,6 +2548,78 @@ class AccountMove(models.Model):
             elif not move.document_tax_mode:
                 company = move.company_id or self.env.company
                 move.document_tax_mode = company.account_price_include
+
+    def _get_unreconciled_paid_payments(self):
+        return self.sudo().reconciled_payment_ids.filtered(
+            lambda p: not p.is_reconciled and not p.is_matched and p.state == 'paid'
+        )
+
+    @api.depends('reconciled_payment_ids',
+                 'reconciled_payment_ids.is_reconciled',
+                 'reconciled_payment_ids.is_matched',
+                 'reconciled_payment_ids.state',
+                 'reconciled_payment_ids.amount',
+                 'reconciled_payment_ids.currency_id',
+                 'reconciled_payment_ids.date',
+                 'currency_id',
+                 'company_id')
+    def _compute_unreconciled_paid_amount(self):
+        for record in self:
+            record.unreconciled_paid_amount = sum(
+                payment.currency_id._convert(
+                    payment.amount,
+                    record.currency_id,
+                    record.company_id,
+                    payment.date
+                )
+                for payment in record._get_unreconciled_paid_payments()
+            )
+
+    def _get_amount_residual_with_epd(self, currency, date):
+        """ Amount left to pay when paying in `currency` on `date`, early payment discount included. """
+        self.ensure_one()
+        if not self._is_eligible_for_early_payment_discount(currency, date):
+            return self.amount_residual
+        term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
+        return -self.direction_sign * sum(term_lines.mapped('discount_amount_currency'))
+
+    @api.depends(
+        'amount_residual',
+        'unreconciled_paid_amount',
+        'invoice_payment_term_id.early_discount',
+        'line_ids.discount_date',
+        'line_ids.discount_amount_currency',
+        'reconciled_payment_ids.currency_id',
+    )
+    def _compute_amount_residual_after_payments(self):
+        """
+        Computes the amount due of the move, including registered payments.
+        This field takes into account the registered payments that are not yet
+        reconciled to compute what is left to pay, as the field 'amount_residual'
+        does not take into account the non-reconciled registered payments.
+        """
+        for record in self:
+            record.amount_residual_after_payments = max(
+                0.0,
+                record.amount_residual - record._get_unreconciled_payment_epd_discount() - record.unreconciled_paid_amount,
+            )
+
+    def _get_unreconciled_payment_epd_discount(self):
+        """
+        Early payment discount of the non-reconciled payments.
+        The discount holds only if a single payment, made before the discount deadline,
+        covers the discounted amount. A payment in several parts loses the discount.
+        """
+        self.ensure_one()
+        if not self.unreconciled_paid_amount:
+            return 0.0
+        payments = self._get_unreconciled_paid_payments()
+        if len(payments) != 1:
+            return 0.0
+        discounted = self._get_amount_residual_with_epd(payments.currency_id, payments.date)
+        if self.currency_id.compare_amounts(self.unreconciled_paid_amount, discounted) < 0:
+            return 0.0
+        return self.amount_residual - discounted
 
     @api.depends('currency_id', 'partner_id.category_id', 'preferred_payment_method_line_id')
     def _compute_invoice_cash_rounding_id(self):
@@ -7476,21 +7550,7 @@ class AccountMove(models.Model):
         term_lines = self.line_ids.filtered(lambda line: line.display_type == 'payment_term')
         if not term_lines:
             return {}
-        unreconciled_paid_amount = sum(
-            payment.currency_id._convert(
-                payment.amount,
-                self.currency_id,
-                self.company_id,
-                payment.date
-            )
-            for payment in self.sudo().reconciled_payment_ids.filtered(
-                lambda p: (
-                    not p.is_reconciled
-                    and not p.is_matched
-                    and p.state == 'paid'
-                )
-            )
-        )
+
         installments = term_lines._get_installments_data()
         not_reconciled_installments = [x for x in installments if not x['reconciled']]
         overdue_installments = [x for x in not_reconciled_installments if x['type'] == 'overdue']
@@ -7542,8 +7602,8 @@ class AccountMove(models.Model):
             })
         else:
             installment_state = None
-            amount_due = self.amount_residual - unreconciled_paid_amount
-            next_amount_to_pay = self.amount_residual - unreconciled_paid_amount
+            amount_due = self.amount_residual_after_payments
+            next_amount_to_pay = self.amount_residual_after_payments
             next_payment_reference = self.name
             next_due_date = self.invoice_date_due
 
@@ -7567,7 +7627,7 @@ class AccountMove(models.Model):
             'due_date': self.invoice_date_due,
             'not_reconciled_installments': not_reconciled_installments,
             'is_last_installment': len(not_reconciled_installments) == 1,
-            'unreconciled_paid_amount': unreconciled_paid_amount,
+            'unreconciled_paid_amount': self.unreconciled_paid_amount,
             **additional_info,
         }
 
