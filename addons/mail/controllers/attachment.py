@@ -68,6 +68,9 @@ class AttachmentController(ThreadController):
         thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
         if not thread:
             raise NotFound()
+        user, guest = request.env["res.users"]._get_current_persona()
+        if thread_model == "discuss.channel" and not user and not guest:
+            raise NotFound()
         vals = {
             "name": ufile.filename,
             "raw": ufile.read(),
