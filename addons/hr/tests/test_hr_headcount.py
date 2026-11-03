@@ -358,6 +358,6 @@ class TestHeadcount(TransactionCase):
             'date_from': date(2021, 6, 1),
         })
         headcount.action_populate()
-        line = headcount.line_ids.filtered(lambda l: l.employee_id == employee)
+        line = headcount.line_ids.filtered(lambda line: line.employee_id == employee)
         self.assertEqual(line.version_id, version_2021)
         self.assertEqual(line.working_rate_ids.mapped('rate'), [40.0])

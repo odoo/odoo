@@ -72,6 +72,7 @@
                 <field name="department_id" widget="many2one"/>
                 <field name="job_id" widget="many2one"/>
                 <field name="wage_on_payroll"/>
+                <field name="currency_id" column_invisible="True"/> <!-- Used for the monetary widget. -->
                 <field name="employee_type" optional="hide"/>
                 <field name="working_rate_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
             </list>
@@ -104,7 +105,7 @@
             <p class="o_view_nocontent_smiling_face">
             No previous headcounts have been found.
             </p><p>
-            An Headcount report will provide you the quantity of running contracts<br/>
+            A headcount report will provide you the quantity of running contracts<br/>
             on a specific period of time, grouped by Department.<br/><br/>
             </p>
         </field>
