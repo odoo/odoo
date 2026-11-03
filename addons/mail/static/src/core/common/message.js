@@ -399,6 +399,23 @@ export class Message extends Component {
         return groupAttachments(this.message.extra_body_attachment_ids);
     }
 
+    /**
+     * Whether the message is made of some text describing a single image, in
+     * which case the image is displayed inside the bubble, above the text.
+     */
+    get hasImageInBubble() {
+        const attachments = this.message.extra_body_attachment_ids;
+        return Boolean(
+            this.message.bubbleColor &&
+                !this.message.is_transient &&
+                !this.message.isBodyEmpty &&
+                !this.message.linkPreviewSquash &&
+                !(this.message.message_type && this.message.message_type.includes("email")) &&
+                attachments.length === 1 &&
+                attachments[0].isImage
+        );
+    }
+
     get showTextVisually() {
         return (
             !this.message.linkPreviewSquash &&

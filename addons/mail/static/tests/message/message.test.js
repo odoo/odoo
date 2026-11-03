@@ -2060,6 +2060,46 @@ test("allow attachment image download on message", async () => {
     await waitFor("button[title='Download']:count(1)");
 });
 
+test("single image with text is displayed inside the bubble, above the text", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const [imageId, image2Id, pdfId] = pyEnv["ir.attachment"].create([
+        { name: "Blah.jpg", mimetype: "image/jpeg" },
+        { name: "Blah2.jpg", mimetype: "image/jpeg" },
+        { name: "Blah.pdf", mimetype: "application/pdf" },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            attachment_ids: [imageId],
+            body: "<p>Single image</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            attachment_ids: [image2Id],
+            body: "",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+        {
+            attachment_ids: [pdfId],
+            body: "<p>Single file</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Message:count(3)");
+    await waitFor(".o-mail-Message-bubbleImage .o-mail-AttachmentImage[alt='Blah.jpg']");
+    await waitFor(".o-mail-Message-bubbleImage + .o-mail-Message-body:text('Single image')");
+    await waitFor(".o-mail-AttachmentImage[alt='Blah.jpg']:count(1)");
+    // image without text and non-image attachment are displayed below the bubble
+    await waitFor(".o-mail-AttachmentImage[alt='Blah2.jpg']");
+    await waitFor(".o-mail-AttachmentContainer[title='Blah.pdf']");
+    await waitFor(".o-mail-Message-bubbleImage:count(1)");
+});
+
 test("Can download all files of a message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
