@@ -19,7 +19,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
-import { useLayoutEffect } from "@web/owl2/utils";
 
 export function getFirstElementOfNode(node) {
     if (!node) {
@@ -181,10 +180,20 @@ export class Dropdown extends Component {
             this.isMounted = false;
         });
 
-        useLayoutEffect(
-            (target) => this.setTargetElement(target),
-            () => [this.target]
-        );
+        let currentTarget;
+        let cleanupTarget;
+        const updateTargetElement = () => {
+            const target = this.target;
+            if (target === currentTarget) {
+                return;
+            }
+            cleanupTarget?.();
+            currentTarget = target;
+            cleanupTarget = this.setTargetElement(target);
+        };
+        onMounted(updateTargetElement);
+        onWillDestroy(() => cleanupTarget?.());
+        useEffect(updateTargetElement);
         useEffect(() => {
             if (this.props.disabled) {
                 this.closePopover();
