@@ -125,12 +125,12 @@
                         <group id="alloc_left_col">
                             <field name="is_name_custom" invisible="1"/> <!-- needed for triggering reasons -->
                             <field name="type_request_unit" invisible="1"/> <!-- drives invisible/readonly of number_of_days_display, number_of_hours and their units -->
-                            <div class="o_td_label" name="validity_label" invisible="not is_manager">
+                            <div class="o_td_label" name="validity_label" invisible="not is_manager or (not accrual_plan_id and state != 'confirm')">
                                 <label for="date_from" string="Validity Period"
                                     invisible="accrual_plan_id or state != 'confirm'"/>
                                 <label for="date_from" string="Start Date" invisible="not accrual_plan_id"/>
                             </div>
-                            <div class="o_row" name="validity" invisible="not is_manager">
+                            <div class="o_row" name="validity" invisible="not is_manager or (not accrual_plan_id and state != 'confirm')">
                                 <field name="date_from" nolabel="1"
                                     readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
                                     invisible="not accrual_plan_id and state != 'confirm'"/>
@@ -210,6 +210,12 @@
                     readonly="state in ['refuse', 'validate']"
                     widget="many2one_avatar_employee"/>
             </field>
+            <div name="validity_label" position="attributes">
+                <attribute name="invisible">not is_manager</attribute>
+            </div>
+            <div name="validity" position="attributes">
+                <attribute name="invisible">not is_manager</attribute>
+            </div>
             <label for="date_from" position="replace">
                 <label for="date_from" string="Validity Period" invisible="accrual_plan_id"/>
             </label>
@@ -318,7 +324,7 @@
                 </header>
                 <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_employee" readonly="state in ['refuse', 'validate']"/>
                 <field name="department_id" optional="hide" readonly="state not in ['confirm']"/>
-                <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']"/>
+                <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']" options="{'no_open': true}"/>
                 <field name="name" string="Title" optional="hide"/>
                 <field name="duration_display" string="Amount"/>
                 <field name="date_from" string="Validity Start" optional="hide"/>
@@ -441,7 +447,7 @@
                                             </div>
                                             <div class="col-2 o_hr_holidays_name">
                                                 <div class="o_hr_holidays_card">
-                                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold me-1"/>
+                                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="fw-bold me-1" options="{'no_open': true}"/>
                                                     <div class="text-muted" t-if="record.accrual_plan_id.raw_value">
                                                         <field name="accrual_plan_id"/>
                                                     </div>
@@ -490,10 +496,10 @@
                                 <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128?unique=' + record.write_date.raw_value"
                                     class="o_image_40_cover float-start rounded" alt="Employee's image"/>
                             </aside>
-                            <main class="d-flex flex-column lh-sm">
+                            <main class="d-flex flex-column flex-grow-1 lh-sm">
                                 <field class="fw-bold" name="employee_id"/>
                                 <div class="content d-flex flex-column">
-                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="text-muted"/>
+                                    <field name="work_entry_type_id" widget="many2one_work_entry_type" class="text-muted" options="{'no_open': true}"/>
                                     <div class="text-muted">(<field name="duration_display"/>)</div>
                                 </div>
                             </main>
