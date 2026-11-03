@@ -360,6 +360,7 @@ test("mark channel as fetched when a new message is loaded and thread is focused
     await start();
     await openDiscuss(channelId);
     await assertSteps(["/discuss/channel/messages"]);
+    await contains(".o-mail-Thread-empty", { text: "The conversation is empty." });
     await click(".o-mail-Composer");
     // simulate receiving a message
     await withUser(userId, () =>
