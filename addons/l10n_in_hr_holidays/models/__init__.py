@@ -4,3 +4,5 @@ from . import hr_leave
 from . import hr_work_entry_type
 from . import hr_employee
 from . import l10n_in_hr_leave_optional_holiday
+from . import resource_calendar_leaves
+from . import hr_version
