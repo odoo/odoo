@@ -9,7 +9,7 @@ class ImLivechatChannelMemberHistory(models.Model):
     _description = "Keep the channel member history"
     _rec_names_search = ("partner_id", "guest_id")
 
-    member_id = fields.Many2one("discuss.channel.member", index="btree_not_null")
+    member_id = fields.Many2one("discuss.channel.member")
     livechat_member_type = fields.Selection(
         [("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
         compute="_compute_member_fields",

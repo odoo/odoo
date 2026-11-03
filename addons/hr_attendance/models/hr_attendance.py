@@ -44,7 +44,7 @@ class HrAttendance(models.Model):
     is_manager = fields.Boolean(compute="_compute_is_manager")
     is_own = fields.Boolean(compute="_compute_is_manager")
     can_edit = fields.Boolean(compute="_compute_can_edit")
-    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True, index=True)
+    check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True)
     check_out = fields.Datetime(string="Check Out", tracking=True)
     date = fields.Date(string="Date", compute='_compute_date', store=True, index=True, precompute=True, required=True)
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
