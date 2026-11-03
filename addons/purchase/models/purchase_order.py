@@ -170,7 +170,6 @@ class PurchaseOrder(models.Model):
         compute="_compute_incoterm_id", store=True, readonly=False,
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
     incoterm_location = fields.Char(string='Incoterm Location', compute='_compute_incoterm_location', store=True, readonly=False)
-    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     user_id = fields.Many2one(
         'res.users', string='Buyer', index=True, tracking=True,
         default=lambda self: self.env.user, check_company=True)
@@ -473,9 +472,6 @@ class PurchaseOrder(models.Model):
                 raise UserError(_('In order to delete a purchase order, you must cancel it first.'))
 
     def copy(self, default=None):
-        ctx = dict(self.env.context)
-        ctx.pop('default_product_id', None)
-        self = self.with_context(ctx)
         new_pos = super().copy(default=default)
         for line in new_pos.order_line:
             if line.product_id:
