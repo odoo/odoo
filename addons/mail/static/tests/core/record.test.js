@@ -843,6 +843,108 @@ test("immediate onChange runs once the write is applied", async () => {
     expect.verifySteps(["General:3"]);
 });
 
+test("an immediate onChange keeps running after a self-write", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        count = 0;
+    }).register(localRegistry);
+    const store = await start();
+    const general = store.Thread.insert("General");
+    general.onChange(
+        () => [general.count],
+        (count) => {
+            expect.step(`count:${count}`);
+            if (count > 5) {
+                general.count = 5;
+            }
+        },
+        { immediate: true, initialRun: false }
+    );
+    general.count = 10;
+    expect.verifySteps(["count:10"]);
+    general.count = 7;
+    expect.verifySteps(["count:7"]);
+});
+
+test("a batched onChange keeps running after a self-write", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        count = 0;
+    }).register(localRegistry);
+    const store = await start();
+    const general = store.Thread.insert("General");
+    general.onChange(
+        () => [general.count],
+        (count) => {
+            expect.step(`count:${count}`);
+            if (count > 5) {
+                general.count = 5;
+            }
+        },
+        { initialRun: false }
+    );
+    general.count = 10;
+    await expect.waitForSteps(["count:10"]);
+    general.count = 7;
+    await expect.waitForSteps(["count:7"]);
+});
+
+test("an onChange keeps running after a self-write then a throw", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        count = 0;
+    }).register(localRegistry);
+    const store = await start();
+    const general = store.Thread.insert("General");
+    general.onChange(
+        () => [general.count],
+        (count) => {
+            expect.step(`count:${count}`);
+            if (count > 5) {
+                general.count = 5;
+                throw new Error("count above 5");
+            }
+        },
+        { immediate: true, initialRun: false }
+    );
+    expect(() => (general.count = 10)).toThrow("count above 5");
+    expect.verifySteps(["count:10"]);
+    expect(() => (general.count = 7)).toThrow("count above 5");
+    expect.verifySteps(["count:7"]);
+});
+
+test("an onChange runs again once its dependencies stop throwing", async () => {
+    (class Thread extends Record {
+        static id = "name";
+        name;
+        count = 0;
+    }).register(localRegistry);
+    const store = await start();
+    const general = store.Thread.insert("General");
+    general.onChange(
+        () => {
+            if (general.count === 5) {
+                throw new Error("count is 5");
+            }
+            return [general.count];
+        },
+        (count) => {
+            expect.step(`count:${count}`);
+            if (count > 5) {
+                general.count = 5;
+            }
+        },
+        { immediate: true, initialRun: false }
+    );
+    general.count = 10;
+    expect.verifySteps(["count:10"]);
+    general.count = 7;
+    expect.verifySteps(["count:7"]);
+});
+
 test("attr that are default [] should be isolated per record", async () => {
     // If the default value is stored and reused for all records,
     // this could lead to mistakenly sharing the default value among records
