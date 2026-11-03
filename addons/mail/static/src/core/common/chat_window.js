@@ -28,7 +28,7 @@ import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useBackButton, useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
+import { getActiveHotkey, isEditableTarget } from "@web/core/hotkeys/hotkey_utils";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class ChatWindow extends Component {
@@ -164,6 +164,14 @@ export class ChatWindow extends Component {
             return;
         }
         if (ev.target.closest(".o-dropdown") || ev.target.closest(".o-dropdown--menu")) {
+            return;
+        }
+        // the hotkeys of an editable reach the hotkey service
+        if (
+            isEditableTarget(ev.target) &&
+            !hotkey.startsWith("alt") &&
+            !["control+k", "escape", "tab"].includes(hotkey)
+        ) {
             return;
         }
         ev.stopPropagation(); // not letting home menu steal my CTRL-C

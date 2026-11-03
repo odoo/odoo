@@ -4,7 +4,7 @@ import { getVisibleElements } from "../utils/ui";
 import { onWillDestroy, Plugin, usePlugin } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
-import { AUTHORIZED_KEYS, getActiveHotkey, MODIFIERS } from "./hotkey_utils";
+import { AUTHORIZED_KEYS, getActiveHotkey, isEditableTarget, MODIFIERS } from "./hotkey_utils";
 
 /**
  * @typedef {(context: { area: HTMLElement, target: EventTarget }) => void} HotkeyCallback
@@ -125,10 +125,7 @@ export class HotkeyPlugin extends Plugin {
 
         // Protect any editable target that does not explicitly accept hotkeys
         // NB: except for ESC, which is always allowed as hotkey in editables.
-        const targetIsEditable =
-            event.target instanceof HTMLElement &&
-            (/input|textarea/i.test(event.target.tagName) || event.target.isContentEditable) &&
-            !event.target.matches("input[type=checkbox], input[type=radio]");
+        const targetIsEditable = isEditableTarget(event.target);
         const shouldProtectEditable =
             targetIsEditable && !event.target.dataset.allowHotkeys && singleKey !== "escape";
 
