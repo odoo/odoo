@@ -2,7 +2,8 @@
 
 from datetime import date
 
-from odoo.tests.common import TransactionCase, tagged
+from odoo import Command
+from odoo.tests.common import TransactionCase, new_test_user, tagged
 
 
 @tagged('headcount')
@@ -157,6 +158,20 @@ class TestHeadcount(TransactionCase):
         headcount.action_populate()
         self.assertEqual(headcount.line_ids.mapped('version_id.company_id'), self.company_be)
         self.assertEqual(headcount.employee_count, 1)
+
+    def test_headcount_lines_multi_company(self):
+        """The lines of a headcount are only visible in the company of the headcount."""
+        headcount = self.env['hr.headcount'].create({
+            'company_id': self.company_us.id,
+            'date_from': date(1900, 1, 1),
+            'date_to': date(2100, 1, 1),
+        })
+        headcount.action_populate()
+        be_user = new_test_user(
+            self.env, login='headcount_be_user', groups='hr.group_hr_user',
+            company_id=self.company_be.id, company_ids=[Command.set(self.company_be.ids)],
+        )
+        self.assertFalse(self.env['hr.headcount.line'].with_user(be_user).search([('headcount_id', '=', headcount.id)]))
 
     def test_headcount_population_large_range(self):
         """Test that the headcount can be populated with a large range of
