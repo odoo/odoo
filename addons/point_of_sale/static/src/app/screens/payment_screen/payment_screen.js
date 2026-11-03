@@ -302,6 +302,8 @@ export class PaymentScreen extends Component {
 
         this.pos.addPendingOrder([this.currentOrder.id]);
         this.currentOrder.state = "paid";
+        // Persisted with the order in IndexedDB until the server acknowledges the payment
+        this.currentOrder.uiState.finalizedNotSynced = true;
 
         this.env.services.ui.block();
         let syncOrderResult;
@@ -330,6 +332,7 @@ export class PaymentScreen extends Component {
                 Promise.reject(error);
             } else if (error instanceof RPCError) {
                 this.currentOrder.state = "draft";
+                this.currentOrder.uiState.finalizedNotSynced = false;
                 handleRPCError(error, this.dialog);
             } else {
                 throw error;
