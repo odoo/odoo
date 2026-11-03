@@ -73,6 +73,6 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
             'payment_result': payment_result,
             'data': {
                 'pos.order': order.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
-                'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
+                'pos.order.line': order.lines.read(order.lines._load_pos_self_data_fields(order.config_id.id), load=False),
             }
         })

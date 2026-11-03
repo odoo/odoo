@@ -64,6 +64,12 @@ class PosOrder(models.Model):
         return [('state', '=', 'draft'), ('session_id', '=', data['pos.session']['data'][0]['id'])]
 
     @api.model
+    def _load_pos_data_fields(self, config_id):
+        # List the fields explicitly instead of returning [] (all fields), so
+        # that overrides adding a field extend the list instead of replacing it.
+        return [name for name, field in self._fields.items() if not field.manual and field.is_accessible(self.env)]
+
+    @api.model
     def _process_order(self, order, existing_order):
         """Create or update an pos.order from a given dictionary.
 
