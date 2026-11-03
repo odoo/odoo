@@ -154,3 +154,21 @@ test("'is_custom' is configurable in combo 'mobile' mode", async () => {
     expect(comp.isNextEnabled()).toBe(false);
     expect(!!comp.hasAttribute(productWithCustomAttr)).toBe(true);
 });
+
+test("getComboPrice takes quantity into account without any combo choice", async () => {
+    const store = await setupSelfPosEnv();
+    const models = store.models;
+    const comboProduct = models["product.template"].get(7);
+    models["product.combo"].get(1).qty_free = 0;
+    models["product.combo"].get(2).qty_free = 0;
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+
+    const unitPrice = store.getProductDisplayPrice(comboProduct);
+    expect(comp.getComboSelection()).toHaveLength(0);
+    expect(comp.getComboPrice()).toBe(unitPrice);
+
+    comp.state.qty = 3;
+    expect(comp.getComboPrice()).toBe(unitPrice * 3);
+});
