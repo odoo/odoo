@@ -297,6 +297,37 @@ class HrApplicant(models.Model):
             if applicant.partner_phone and applicant.partner_phone != applicant.partner_id.phone:
                 applicant.partner_id.phone = applicant.partner_phone
 
+    def _find_or_create_partner(self):
+        """ Link the applicants without contact to one, when the next step needs it (email, meeting,
+        survey, signature, employee): the contact of their email if it exists, else a new one.
+        Setting the email of an applicant doesn't create a contact anymore.
+
+        :return: the contacts of the applicants
+        :rtype: res.partner
+        """
+        for applicant in self.filtered(lambda a: not a.partner_id):
+            if not applicant.partner_name:
+                raise UserError(_("You must define a Contact Name for this applicant."))
+            email_normalized = tools.email_normalize(applicant.email_from or '')
+            if email_normalized:
+                applicant.partner_id = applicant._partner_find_from_emails_single(
+                    [applicant.email_from], no_create=False,
+                    additional_values={
+                        email_normalized: {
+                            'lang': self.env.lang,
+                            'name': applicant.partner_name,
+                            'phone': applicant.partner_phone,
+                        },
+                    },
+                )
+            else:
+                applicant.partner_id = self.env['res.partner'].create({
+                    'name': applicant.partner_name,
+                    'email': applicant.email_from,
+                    'phone': applicant.partner_phone,
+                })
+        return self.partner_id
+
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile")
     def _compute_application_count(self):
         """
@@ -909,15 +940,7 @@ class HrApplicant(models.Model):
             @return: Dictionary value for created Meeting view
         """
         self.ensure_one()
-        if not self.partner_id:
-            if not self.partner_name:
-                raise UserError(_('You must define a Contact Name for this applicant.'))
-            self.partner_id = self.env['res.partner'].create({
-                'name': self.partner_name,
-                'email': self.email_from,
-            })
-
-        partners = self.partner_id | self.department_id.manager_id.user_id.partner_id
+        partners = self._find_or_create_partner() | self.department_id.manager_id.user_id.partner_id
         if self.env.user.has_group('hr_recruitment.group_hr_recruitment_interviewer') and not self.env.user.has_group('hr_recruitment.group_hr_recruitment_user'):
             partners |= self.env.user.partner_id
         else:
@@ -1195,14 +1218,7 @@ class HrApplicant(models.Model):
         """ Create an employee from applicant """
         self.ensure_one()
         self._check_interviewer_access()
-
-        if not self.partner_id:
-            if not self.partner_name:
-                raise UserError(_('Please provide an applicant name.'))
-            self.partner_id = self.env['res.partner'].create({
-                'name': self.partner_name,
-                'email': self.email_from,
-            })
+        self._find_or_create_partner()
 
         action = self.env['ir.actions.act_window']._for_xml_id('hr.open_view_employee_list')
         employee = self.env['hr.employee'].with_context(clean_context(self.env.context)).create(self._get_employee_create_vals())
