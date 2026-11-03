@@ -487,8 +487,19 @@ export class Record {
                         }
                         untrack(() => {
                             cleanup?.();
-                            const result = boundCallback(...values);
-                            cleanup = typeof result === "function" ? result : undefined;
+                            try {
+                                const result = boundCallback(...values);
+                                cleanup = typeof result === "function" ? result : undefined;
+                            } finally {
+                                // Read again, as a stale computed no longer notifies.
+                                if (!record._.scope.isDestroyed()) {
+                                    try {
+                                        void deps();
+                                    } catch {
+                                        // rethrow at the next read
+                                    }
+                                }
+                            }
                         });
                     })
                 );
