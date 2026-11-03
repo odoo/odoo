@@ -2883,3 +2883,28 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         ]).action_archive()
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         self.assertFalse(move_form.show_journal)
+
+    def test_avco_cost_of_a_product_on_several_bill_lines(self):
+        if self.env['ir.module.module'].search([('name', '=', 'stock_account')]).state == 'installed':
+            self.skipTest("stock_account computes the cost from the stock moves")
+        category = self.env['product.category'].create({'name': 'AVCO', 'property_cost_method': 'average'})
+        product = self.env['product.product'].create({
+            'name': 'Widget',
+            'is_storable': True,
+            'categ_id': category.id,
+        })
+        bills = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [
+                Command.create({'product_id': product.id, 'quantity': 10, 'price_unit': price, 'tax_ids': False})
+                for price in prices
+            ],
+        } for prices in ([10, 20], [30])])
+        bills[0].action_post()
+        self.assertEqual(product.standard_price, 15)
+
+        bills[0].button_draft()
+        bills.action_post()
+        self.assertEqual(product.standard_price, 20)
