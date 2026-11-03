@@ -11,6 +11,7 @@ import {
     getTimeUtil,
     generateQRCodeDataUrl,
     getColorScheme,
+    compareProductsByFavoriteAndSequence,
 } from "@point_of_sale/utils";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { location } from "@web/core/browser/browser";
@@ -30,7 +31,7 @@ import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_po
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
 import { user } from "@web/core/user";
-import { localeCompare, normalize } from "@web/core/l10n/utils";
+import { normalize } from "@web/core/l10n/utils";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
@@ -2597,14 +2598,7 @@ export class PosStore extends WithLazyGetterTrap {
         const isSearchByWord = searchWord !== "";
         return isSearchByWord
             ? products.sort((a, b) => b.is_favorite - a.is_favorite)
-            : products.sort((a, b) => {
-                  if (b.is_favorite !== a.is_favorite) {
-                      return b.is_favorite - a.is_favorite;
-                  } else if (a.pos_sequence !== b.pos_sequence) {
-                      return a.pos_sequence - b.pos_sequence;
-                  }
-                  return localeCompare(a.name, b.name);
-              });
+            : products.sort(compareProductsByFavoriteAndSequence);
     }
 
     get productsToDisplay() {

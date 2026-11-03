@@ -4,6 +4,7 @@ import { session } from "@web/session";
 import { cookie } from "@web/core/browser/cookie";
 import { deserializeDateTime, deserializeDate } from "@web/core/l10n/dates";
 import { Time } from "@web/core/l10n/time";
+import { localeCompare } from "@web/core/l10n/utils";
 import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
@@ -53,6 +54,17 @@ export function getMax(entries, { criterion = (x) => x, inverted = false } = {})
 export function getMin(entries, options) {
     return getMax(entries, { ...options, inverted: true });
 }
+
+export function compareProductsByFavoriteAndSequence(a, b) {
+    if (b.is_favorite !== a.is_favorite) {
+        return b.is_favorite - a.is_favorite;
+    }
+    if (a.pos_sequence !== b.pos_sequence) {
+        return a.pos_sequence - b.pos_sequence;
+    }
+    return localeCompare(a.name, b.name);
+}
+
 export function getOnNotified(bus, channel) {
     bus.addChannel(channel);
     return (notif, callback) => bus.subscribe(`${channel}-${notif}`, callback);
