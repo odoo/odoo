@@ -1629,3 +1629,20 @@ class TestPointOfSaleFlow(CommonPosTest):
             ('reconciled', '=', False),
         ])
         self.assertEqual(sum(customer_receivable.mapped('amount_residual')), 10)
+
+    def test_snooze_deletion_notifies_other_devices(self):
+        """ Stopping a snooze should notify other devices """
+        self.pos_config_usd.open_ui()
+        snooze = self.env['pos.snooze'].create({
+            'product_template_id': self.ten_dollars_no_tax.id,
+            'pos_config_id': self.pos_config_usd.id,
+            'start_time': fields.Datetime.now(),
+        })
+
+        # Catch the notification sent to other devices
+        with patch.object(self.env.registry['pos.config'], '_notify') as mock_notify:
+            snooze.unlink()
+
+        # Collect {notification name: message} of every notifications
+        messages = {call.args[0]: call.args[1] for call in mock_notify.call_args_list}
+        self.assertEqual(messages['SYNCHRONISATION'].get('deleted_record_ids'), {'pos.snooze': [snooze.id]})
