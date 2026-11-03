@@ -11,7 +11,7 @@ from odoo import api, tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import date_utils
-from odoo.tests import tagged
+from odoo.tests import Form
 
 from odoo.tools import mute_logger
 
@@ -192,6 +192,34 @@ class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
         }
         self.request_leave(self.user_hrmanager_id, date.today() + relativedelta(days=5), 1, values)
 
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_timeoff_request_without_remaining_allocation(self):
+        """ A simple user can fill a request whose time off type has no remaining allocation """
+        lt_allocation = self.env['hr.work.entry.type'].create({
+            'name': 'Requires Allocation',
+            'code': 'Requires Allocation',
+            'leave_validation_type': 'hr',
+            'requires_allocation': True,
+            'request_unit': 'day',
+            'unit_of_measure': 'day',
+        })
+        allocation = self.env['hr.leave.allocation'].create({
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': lt_allocation.id,
+            'date_from': date.today(),
+            'number_of_days': 1,
+        })
+        allocation.action_approve()
+        leave_day = date_utils.start_of(date.today() + relativedelta(days=30), 'week') + relativedelta(days=1)
+        self.request_leave(self.user_employee_id, leave_day, 1, {
+            'employee_id': self.employee_emp_id,
+            'work_entry_type_id': lt_allocation.id,
+        })
+
+        # The allocation is used up: changing the dates must not read HR-only fields of the employee
+        leave_form = Form(self.env['hr.leave'].with_user(self.user_employee_id))
+        leave_form.work_entry_type_id = lt_allocation
+        leave_form.request_date_from = leave_day + relativedelta(days=1)
 
 @tests.tagged('access_rights', 'access_rights_read')
 class TestAccessRightsRead(TestHrHolidaysAccessRightsCommon):
