@@ -23,7 +23,7 @@ import { ensureTest } from "../main_runner";
  *  url?: string;
  * }} MockResponseInit
  *
- * @typedef {MockMessageChannel
+ * @typedef {MockBroadcastChannel
  *  | MockMessagePort
  *  | MockSharedWorker
  *  | MockWebSocket
@@ -38,6 +38,7 @@ import { ensureTest } from "../main_runner";
 
 const {
     AbortController,
+    Array: { isArray: $isArray },
     Blob,
     document,
     DOMException,
@@ -52,6 +53,7 @@ const {
         create: $create,
         defineProperty: $defineProperty,
         entries: $entries,
+        freeze: $freeze,
     },
     ProgressEvent,
     ReadableStream,
@@ -104,27 +106,20 @@ function dispatchClose(target, eventInit) {
 
 /**
  * @param {EventTarget} target
- * @param {any} data
- * @param {Transferable[] | StructuredSerializeOptions} [transfer]
+ * @param {MessageEventInit & { ports?: MockMessagePort[] }} eventInit
  */
-async function dispatchMessage(target, data, transfer) {
-    const targets = [];
-    if (transfer) {
-        targets.push(...(transfer?.transfer || transfer));
+function dispatchMessage(target, { ports, ...eventInit }) {
+    const event = new MessageEvent("message", eventInit);
+    if (ports) {
+        // Native message events only accept actual message ports
+        $defineProperty(event, "ports", { value: $freeze(ports) });
     }
-    if (!targets.length) {
-        targets.push(target);
-    }
-    const messageEventInit = { data };
-    let dispatched = false;
-    for (const target of targets) {
-        if (isOpen(target)) {
-            dispatched = true;
-            target.dispatchEvent(new MessageEvent("message", messageEventInit));
-        }
-    }
-    if (dispatched) {
-        await nextTask();
+    target.dispatchEvent(event);
+}
+
+function flushMessageTasks() {
+    for (const task of messageTasks.splice(0)) {
+        task();
     }
 }
 
@@ -231,6 +226,36 @@ function parseNetworkDelay(min, max) {
 }
 
 /**
+ * Dispatches a message on the given target in a later task, unless it is closed
+ * by then.
+ *
+ * @param {NetworkInstance} target
+ * @param {MessageEventInit} eventInit
+ */
+function queueMessage(target, eventInit) {
+    queueMessageTask(() => {
+        if (isOpen(target)) {
+            dispatchMessage(target, eventInit);
+        }
+    });
+}
+
+/**
+ * Runs the given callback in a later task, after the ones queued before it. All
+ * mocked messaging (channels, ports, workers and websockets) goes through this
+ * single queue, which keeps their messages in posting order: separate timers may
+ * not run in the order they were started.
+ *
+ * @param {() => any} callback
+ */
+function queueMessageTask(callback) {
+    if (!messageTasks.length) {
+        nextTask().then(flushMessageTasks);
+    }
+    messageTasks.push(callback);
+}
+
+/**
  * @param {Uint8Array<ArrayBuffer> | string} value
  * @returns {Uint8Array<ArrayBuffer>}
  */
@@ -276,6 +301,8 @@ const requestResponseMixin = {
 
 /** @type {Map<string, Set<MockBroadcastChannel>>} */
 const broadcastChannels = new Map();
+/** @type {(() => any)[]} */
+const messageTasks = [];
 /** @type {Set<string>} */
 const objectURLs = new Set();
 /**
@@ -323,10 +350,11 @@ export function cleanupNetwork() {
     }
     pendingFetches.clear();
     for (const serverWs of serverWebSockets) {
-        serverWs.close();
+        dispatchClose(serverWs, {});
     }
     serverWebSockets.clear();
     broadcastChannels.clear();
+    messageTasks.length = 0;
     openInstances.clear();
 
     // Object URLs: revoked to release the blobs they retain
@@ -600,6 +628,8 @@ export class MockBroadcastChannel extends MockEventTarget {
 
         super(...arguments);
 
+        markOpen(this);
+
         this._name = String(name);
         let channels = broadcastChannels.get(this._name);
         if (!channels) {
@@ -611,32 +641,26 @@ export class MockBroadcastChannel extends MockEventTarget {
 
     /** @type {BroadcastChannel["close"]} */
     close() {
+        markClosed(this);
         broadcastChannels.get(this._name)?.delete(this);
     }
 
     /** @type {BroadcastChannel["postMessage"]} */
     postMessage(message) {
-        const channels = broadcastChannels.get(this._name);
-        if (!channels?.has(this)) {
+        if (!isOpen(this)) {
             throw new DOMException(
                 `Failed to execute 'postMessage' on 'BroadcastChannel': Channel is closed`,
                 "InvalidStateError"
             );
         }
         // Like native channels, the message is serialized right away, and only
-        // reaches the channels open at that time (and still open on delivery),
-        // in a later task
+        // reaches the channels open at that time, each with its own copy
         const data = structuredClone(message);
-        const receivers = [...channels];
-        tick().then(() => {
-            for (const receiver of receivers) {
-                if (receiver !== this && broadcastChannels.get(this._name)?.has(receiver)) {
-                    receiver.dispatchEvent(
-                        new MessageEvent("message", { data: structuredClone(data) })
-                    );
-                }
+        for (const receiver of broadcastChannels.get(this._name)) {
+            if (receiver !== this) {
+                queueMessage(receiver, { data: structuredClone(data) });
             }
-        });
+        }
     }
 }
 
@@ -868,67 +892,124 @@ export class MockLocation extends MockEventTarget {
 }
 
 export class MockMessageChannel {
-    /**
-     * @protected
-     */
-    _mutex = Promise.resolve();
-
     constructor() {
-        markOpen(this);
-
-        this.port1 = new MockMessagePort(this);
-        this.port2 = new MockMessagePort(this);
+        this.port1 = new MockMessagePort();
+        this.port2 = new MockMessagePort();
         this.port1._target = this.port2;
         this.port2._target = this.port1;
     }
 }
 
+/**
+ * Like native ports, ports only dispatch the messages they receive once started,
+ * either explicitly or by setting their `onmessage` handler.
+ */
 export class MockMessagePort extends MockEventTarget {
-    static publicListeners = ["error", "message"];
+    static publicListeners = ["error"];
 
     /**
      * @private
-     * @type {MessageChannel}
+     * @type {MessagePort["onmessage"]}
      */
-    _owner;
+    _onmessage = null;
+    /**
+     * Messages received before the port is started, delivered in order after it.
+     * @private
+     * @type {MessageEventInit[]}
+     */
+    _pendingMessages = [];
     /**
      * @private
-     * @type {MockMessagePort}
      */
-    _target = this;
-
+    _started = false;
     /**
-     * @param {MessageChannel} owner
+     * @private
+     * @type {MockMessagePort | null}
      */
-    constructor(owner) {
+    _target = null;
+
+    constructor() {
         super();
 
-        this._owner = owner;
+        markOpen(this);
+    }
+
+    get onmessage() {
+        return this._onmessage;
+    }
+
+    set onmessage(value) {
+        if (this._onmessage) {
+            this.removeEventListener("message", this._onmessage);
+        }
+        this._onmessage = value;
+        if (value) {
+            this.addEventListener("message", value);
+        }
+        this.start();
     }
 
     /** @type {MessagePort["close"]} */
     close() {
-        // Closing a message port also closes its sibling port & parent channel.
-        markClosed(this, this._target, this._owner);
+        // Closing a message port disentangles it from its sibling port
+        markClosed(this, this._target);
+        this._pendingMessages = [];
     }
 
     /** @type {MessagePort["postMessage"]} */
     postMessage(message, transfer) {
-        if (!isOpen(this, this._owner, this._target)) {
+        const ports = [];
+        const transferables = [];
+        for (const object of $isArray(transfer) ? transfer : transfer?.transfer || []) {
+            if (object instanceof MockMessagePort) {
+                ports.push(object);
+            } else {
+                transferables.push(object);
+            }
+        }
+        // Serialized even when closed, as native ports do
+        const data = structuredClone(message, { transfer: transferables });
+        if (!isOpen(this, this._target)) {
             return;
         }
-        if (this._owner._mutex) {
-            this._owner._mutex = this._owner._mutex.then(() =>
-                dispatchMessage(this._target, message, transfer)
-            );
-        } else {
-            dispatchMessage(this._target, message, transfer);
-        }
+        const target = this._target;
+        queueMessageTask(() => target._receiveMessage({ data, ports }));
     }
 
     /** @type {MessagePort["start"]} */
     start() {
-        markOpen(this);
+        if (this._started) {
+            return;
+        }
+        this._started = true;
+        if (this._pendingMessages.length) {
+            queueMessageTask(() => this._flushMessages());
+        }
+    }
+
+    /**
+     * @private
+     */
+    _flushMessages() {
+        while (this._pendingMessages.length && isOpen(this)) {
+            dispatchMessage(this, this._pendingMessages.shift());
+        }
+    }
+
+    /**
+     * @private
+     * @param {MessageEventInit & { ports: MockMessagePort[] }} eventInit
+     */
+    _receiveMessage(eventInit) {
+        if (!isOpen(this)) {
+            return;
+        }
+        // Pending messages are still delivered first once the port is started
+        if (this._started && !this._pendingMessages.length) {
+            dispatchMessage(this, eventInit);
+        } else {
+            this._pendingMessages.push(eventInit);
+        }
     }
 }
 
@@ -1129,7 +1210,7 @@ export class MockWebSocket extends MockEventTarget {
             return;
         }
         this._readyState = WebSocket.CLOSING;
-        tick().then(() => dispatchClose(this, { code, reason }));
+        queueMessageTask(() => dispatchClose(this, { code, reason }));
     }
 
     /** @type {WebSocket["send"]} */
@@ -1138,7 +1219,7 @@ export class MockWebSocket extends MockEventTarget {
             return;
         }
         this._logger.logRequest(() => [data]);
-        dispatchMessage(this._serverWs, data);
+        queueMessage(this._serverWs, { data });
     }
 }
 
@@ -1423,7 +1504,7 @@ export class ServerWebSocket extends MockEventTarget {
 
     /** @type {WebSocket["close"]} */
     close(code, reason) {
-        dispatchClose(this, { code, reason });
+        queueMessageTask(() => dispatchClose(this, { code, reason }));
     }
 
     /** @type {WebSocket["send"]} */
@@ -1432,7 +1513,7 @@ export class ServerWebSocket extends MockEventTarget {
             return;
         }
         this._logger.logResponse(() => [data]);
-        dispatchMessage(this._clientWs, data);
+        queueMessage(this._clientWs, { data });
     }
 }
 

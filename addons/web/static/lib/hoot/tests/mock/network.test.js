@@ -138,6 +138,92 @@ describe(parseUrl(import.meta.url), () => {
         expect(() => sender.postMessage(message)).toThrow(/closed/);
     });
 
+    test("mocked messages are delivered in posting order", async () => {
+        const first = new BroadcastChannel("hoot");
+        const second = new BroadcastChannel("hoot");
+        const { port1, port2 } = new MessageChannel();
+        first.onmessage = (ev) => expect.step(`first:${ev.data}`);
+        second.onmessage = (ev) => {
+            expect.step(`second:${ev.data}`);
+            if (ev.data === "a") {
+                second.postMessage("d");
+            }
+        };
+        port2.onmessage = (ev) => expect.step(`port:${ev.data}`);
+
+        first.postMessage("a");
+        port1.postMessage("b");
+        second.postMessage("c");
+        await tick();
+
+        // Messages posted while delivering are delivered in a later task
+        expect.verifySteps(["second:a", "port:b", "first:c"]);
+
+        await tick();
+
+        expect.verifySteps(["first:d"]);
+    });
+
+    test("message ports send copies of their messages", async () => {
+        const { port1, port2 } = new MessageChannel();
+        const message = { value: 1 };
+        port2.onmessage = (ev) => {
+            expect.step(`message:${ev.data.value}`);
+            expect(ev.data).not.toBe(message);
+        };
+
+        port1.postMessage(message);
+        message.value = 2;
+
+        expect.verifySteps([]);
+
+        await microTick();
+
+        expect.verifySteps([]);
+
+        await tick();
+
+        expect.verifySteps(["message:1"]);
+        expect(() => port1.postMessage(() => {})).toThrow(/could not be cloned/);
+    });
+
+    test("message ports queue messages until started", async () => {
+        const { port1, port2 } = new MessageChannel();
+        port2.addEventListener("message", (ev) => expect.step(ev.data));
+
+        port1.postMessage("a");
+        await tick();
+
+        expect.verifySteps([]);
+
+        port1.postMessage("b");
+        port2.start();
+        port1.postMessage("c");
+        await tick();
+
+        expect.verifySteps(["a", "b", "c"]);
+
+        port2.close();
+        port1.postMessage("d");
+        await tick();
+
+        expect.verifySteps([]);
+    });
+
+    test("message ports transfer ports", async () => {
+        const channel = new MessageChannel();
+        const { port1, port2 } = new MessageChannel();
+        port2.onmessage = (ev) => {
+            expect.step(ev.data);
+            expect(ev.ports).toEqual([channel.port1]);
+        };
+
+        port1.postMessage("transfer", [channel.port1]);
+        await tick();
+
+        expect.verifySteps(["transfer"]);
+    });
+
     // ! WARNING: the following 2 tests need to be run sequentially to work, as they
     // ! attempt to test the in-between-tests broadcast channels cleanup.
     test("broadcast channels are closed between tests: setup", async () => {
