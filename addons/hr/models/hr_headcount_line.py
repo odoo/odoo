@@ -7,7 +7,7 @@ class HrHeadcountLine(models.Model):
     _name = 'hr.headcount.line'
     _description = 'Headcount Line'
 
-    headcount_id = fields.Many2one('hr.headcount', string='headcount_id', required=True, index=True, ondelete='cascade')
+    headcount_id = fields.Many2one('hr.headcount', string='Headcount', required=True, index=True, ondelete='cascade')
     working_rate_ids = fields.Many2many('hr.headcount.working.rate', required=True, string='Working Rate')
     version_id = fields.Many2one('hr.version', string='Employee Record', required=True, index=True, readonly=True)
     department_id = fields.Many2one(related='version_id.department_id', string='Department')
