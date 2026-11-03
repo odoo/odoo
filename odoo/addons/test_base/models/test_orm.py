@@ -2449,3 +2449,24 @@ class TestOrmAttachmentLink(models.Model):
     _description = 'Test ORM Attachment Link'
 
     attachment_id = fields.Many2one('ir.attachment', ondelete='cascade')
+
+
+class TestOrmFlushConstraint(models.Model):
+    _name = _description = 'test_orm.flush.constraint'
+
+    name = fields.Char()
+    state = fields.Selection([('draft', 'Draft'), ('done', 'Done')], default='draft')
+    done_date = fields.Date(compute='_compute_done_date', store=True)
+
+    # the constraint ties `state` to `done_date`, which is computed from it
+    # without to_flush, flushing `name` would write `state` without `done_date`
+    _check_done_date = models.Constraint(
+        "CHECK(state != 'done' OR done_date IS NOT NULL)",
+        "A done record must have a done date.",
+        to_flush=['state', 'done_date'],
+    )
+
+    @api.depends('state')
+    def _compute_done_date(self):
+        for record in self:
+            record.done_date = fields.Date.today() if record.state == 'done' else False

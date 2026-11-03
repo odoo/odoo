@@ -492,6 +492,10 @@ def _setup(model_cls: type[BaseModel], env: Environment):
         if isinstance(cls, models.MetaModel)
         for cons in cls._table_object_definitions
     })
+    for cons in model_cls._table_objects.values():
+        for fname in cons.to_flush:
+            assert fname in model_cls._fields, \
+                f"Invalid field {fname!r} in to_flush of {cons.name!r} on model {model_cls._name!r}"
 
 
 def _check_inherits(model_cls: type[BaseModel]):

@@ -553,6 +553,7 @@ class AccountMoveLine(models.Model):
     _check_amount_currency_balance_sign = models.Constraint(
         "CHECK(\n                display_type IN ('line_section', 'line_subsection', 'line_note')\n                OR (\n                    (balance <= 0 AND amount_currency <= 0)\n                    OR\n                    (balance >= 0 AND amount_currency >= 0)\n                )\n            )",
         'The amount expressed in the secondary currency must be positive when account is debited and negative when account is credited. If the currency is the same as the one from the company, this amount must strictly be equal to the balance.',
+        to_flush=['display_type', 'balance', 'amount_currency'],
     )
     _check_accountable_required_fields = models.Constraint(
         "CHECK(display_type IN ('line_section', 'line_subsection', 'line_note') OR account_id IS NOT NULL)",
@@ -2306,18 +2307,6 @@ class AccountMoveLine(models.Model):
                 self.filtered(lambda l: l.parent_state == 'draft').analytic_line_ids.with_context(skip_analytic_sync=True).unlink()
 
         return result
-
-    def _parse_flush_fnames(self, fnames):
-        if fnames and {'balance', 'amount_currency'} & set(fnames):
-            # flush the amount currency to avoid triggering check_amount_currency_balance_sign
-            fnames = {'balance', 'amount_currency'} | set(fnames)
-        return fnames
-
-    def flush_recordset(self, fnames=None):
-        return super().flush_recordset(self._parse_flush_fnames(fnames))
-
-    def flush_model(self, fnames=None):
-        return super().flush_model(self._parse_flush_fnames(fnames))
 
     def _valid_field_parameter(self, field, name):
         # EXTENDS models
