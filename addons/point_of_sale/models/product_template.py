@@ -75,6 +75,11 @@ class ProductTemplate(models.Model):
             *self.env['product.template']._check_company_domain(config.company_id),
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
+            # A template without active variant can't be sold and makes the PoS crash, unless
+            # its variants are created on the fly (dynamic attributes)
+            '|',
+            ('product_variant_ids', 'any', [('active', '=', True)]),
+            ('attribute_line_ids.attribute_id.create_variant', '=', 'dynamic'),
         ]
         if config.limit_categories:
             domain += [('pos_categ_ids', 'in', config.iface_available_categ_ids.ids)]
