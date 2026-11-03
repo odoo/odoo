@@ -324,11 +324,7 @@ class HrAttendance(models.Model):
             attendance_domain = self._get_overtimes_to_update_domain()
 
         overtime_domain = self._get_overtime_domain_from_attendance_domain(attendance_domain)
-        all_overtime_lines = self.env['hr.attendance.overtime.line'].search(overtime_domain)
-        manual_overtimes = set(all_overtime_lines.filtered(
-            lambda l: l.manual_duration != l.duration or l.status == 'to_approve'
-        ).mapped(lambda l: (l.employee_id.id, l.date)))
-        all_overtime_lines.unlink()
+        self.env['hr.attendance.overtime.line'].search(overtime_domain).unlink()
         all_attendances = (self | self.env['hr.attendance'].search(attendance_domain)).filtered_domain([('check_out', '!=', False)])
         if not all_attendances:
             return
@@ -358,10 +354,7 @@ class HrAttendance(models.Model):
         for ruleset_sudo, ruleset_attendances in attendances_by_ruleset.items():
             attendances_dates = list(chain(*ruleset_attendances._get_dates().values()))
             overtime_vals_list.extend([
-                {
-                    **val,
-                    'status': 'to_approve'
-                } if (val['employee_id'], val['date']) in manual_overtimes else val
+                val
                 for val in ruleset_sudo.rule_ids._generate_overtime_vals_v2(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
                 if (val['employee_id'], val['time_start']) in recomputed_attendances
             ])
