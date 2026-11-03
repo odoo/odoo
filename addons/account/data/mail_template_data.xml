@@ -42,11 +42,16 @@
         </t>
         amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00</span>
         from <t t-out="object.company_id.name or ''">YourCompany</t>.
-        <t t-if="object.payment_state in ('paid', 'in_payment')">
+        <t t-if="object.payment_state == 'paid' or object.payment_state == 'in_payment' and object.currency_id.is_zero(object.amount_residual_after_payments)">
             This invoice is already paid.
         </t>
         <t t-else="">
-            Please remit payment at your earliest convenience.
+            <t t-if="object.payment_state in ('partial', 'in_payment')">
+                Please remit the remaining <strong t-out="format_amount(object.amount_residual_after_payments, object.currency_id)"/> at your earliest convenience.
+            </t>
+            <t t-else="">
+                Please remit payment at your earliest convenience.
+            </t>
             <t t-if="object.payment_reference">
                 <br /><br />
                 Please use the following communication for your payment: <strong t-out="object.payment_reference or ''">INV/2021/05/0005</strong>
@@ -183,8 +188,11 @@
         </t>
         amounting in <span style="font-weight:bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 143,750.00</span>
         from <t t-out="object.company_id.name or ''">YourCompany</t>.
-        <t t-if="object.payment_state in ('paid', 'in_payment')">
+        <t t-if="object.payment_state == 'paid' or object.payment_state == 'in_payment' and object.currency_id.is_zero(object.amount_residual_after_payments)">
             This self-billing invoice has already been paid.
+        </t>
+        <t t-elif="object.payment_state in ('partial', 'in_payment')">
+            Part of the self-billing invoice has already been paid, with a remaining balance of <strong t-out="format_amount(object.amount_residual_after_payments, object.currency_id)"/>.
         </t>
         <br /><br />
         Do not hesitate to contact us if you have any questions.
@@ -465,11 +473,19 @@
                                                                 </div>
                                                             </div>
                                                         </t>
-                                                        <t t-if="object.payment_state in ('paid', 'in_payment')">
+                                                        <t t-if="object.payment_state == 'paid' or object.payment_state == 'in_payment' and object.currency_id.is_zero(object.amount_residual_after_payments)">
                                                             <div style="flex:0 1 180px; min-width:160px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
                                                                 <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Payment Status</div>
                                                                 <div style="margin-top:6px; font-size:15px; color:#2c2431; text-transform:capitalize;">
                                                                     This invoice is already paid
+                                                                </div>
+                                                            </div>
+                                                        </t>
+                                                        <t t-if="object.payment_state == 'partial' or object.payment_state == 'in_payment' and not object.currency_id.is_zero(object.amount_residual_after_payments)">
+                                                            <div style="flex:0 1 180px; min-width:160px; background:#fff; border:1px solid #efe6f3; border-radius:12px; padding:12px 16px;">
+                                                                <div style="font-size:12px; color:#8d7a92; text-transform:uppercase; letter-spacing:0.45px;">Payment Status</div>
+                                                                <div style="margin-top:6px; font-size:15px; color:#2c2431; text-transform:capitalize;">
+                                                                    This invoice is partially paid, remaining <t t-out="format_amount(object.amount_residual_after_payments, object.currency_id)"/>
                                                                 </div>
                                                             </div>
                                                         </t>
