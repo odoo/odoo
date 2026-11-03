@@ -37,7 +37,9 @@ patch(PosOrderline.prototype, {
     },
     /** Qty delta since the last sync for this line, or 0 if unchanged or never synced. */
     getPendingQtyDelta() {
-        const lastSynced = this.order_id?.uiState.lineChanges[this.uuid]?.qty;
+        const lastSynced =
+            this.order_id?.uiState.lineChanges[this.uuid]?.qty ??
+            this.order_id?.uiState.unsentSyncedQty?.[this.uuid];
         return lastSynced !== undefined ? this.qty - lastSynced : 0;
     },
     isLotTracked() {

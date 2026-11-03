@@ -867,6 +867,7 @@ export class SelfOrder extends Reactive {
             }
 
             this.currentOrder.recomputeChanges();
+            this.currentOrder.uiState.unsentSyncedQty = {};
             return this.models["pos.order"].getBy("uuid", uuid);
         } catch (error) {
             const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
@@ -947,6 +948,7 @@ export class SelfOrder extends Reactive {
                 }
 
                 this._reapplyPendingDeltas(openOrder, pendingDeltas);
+                this._restoreUnsentSyncedLines(openOrder);
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
         } catch (error) {
@@ -967,6 +969,22 @@ export class SelfOrder extends Reactive {
             }
         }
         return pendingDeltas;
+    }
+
+    /**
+     * The refresh baselines every synced line, give back their unsent state to the ones made unsent
+     * again (back from the kiosk payment page), keeping the refreshed qty as their last-synced qty.
+     */
+    _restoreUnsentSyncedLines(openOrder) {
+        const { lineChanges, unsentSyncedQty } = openOrder.uiState;
+        for (const uuid of Object.keys(unsentSyncedQty)) {
+            if (lineChanges[uuid]) {
+                unsentSyncedQty[uuid] = lineChanges[uuid].qty;
+                delete lineChanges[uuid];
+            } else {
+                delete unsentSyncedQty[uuid];
+            }
+        }
     }
 
     /** Reapplies pending deltas on top of the refreshed qty, removing lines dropped to 0 or below. */

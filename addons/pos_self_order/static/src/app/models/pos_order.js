@@ -10,6 +10,8 @@ patch(PosOrder.prototype, {
         this.uiState = {
             ...this.uiState,
             lineChanges: this.uiState.lineChanges || {},
+            // Last-synced qty of the synced lines made unsent again, see markLinesUnsent
+            unsentSyncedQty: this.uiState.unsentSyncedQty || {},
         };
     },
     get unsentLines() {
@@ -40,6 +42,16 @@ patch(PosOrder.prototype, {
     },
     get isTakeaway() {
         return this.preset_id?.service_at !== "table" && this.config.use_presets;
+    },
+    /**
+     * Makes the synced lines unsent again (back from the kiosk payment page), keeping their
+     * last-synced qty so that a refresh doesn't overwrite the customer's edits.
+     */
+    markLinesUnsent() {
+        this.uiState.unsentSyncedQty = Object.fromEntries(
+            Object.entries(this.uiState.lineChanges).map(([uuid, change]) => [uuid, change.qty])
+        );
+        this.uiState.lineChanges = {};
     },
     recomputeChanges() {
         const lines = this.lines;

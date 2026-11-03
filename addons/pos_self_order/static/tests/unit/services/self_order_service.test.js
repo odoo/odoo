@@ -243,6 +243,36 @@ describe("_reapplyPendingDeltas", () => {
     });
 });
 
+describe("markLinesUnsent", () => {
+    test("makes the synced lines unsent again and keeps their last-synced qty", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        const line = order.lines[0];
+        const syncedQty = line.qty;
+
+        order.markLinesUnsent();
+
+        expect(order.uiState.lineChanges).toEqual({});
+        expect(Object.keys(order.changes)).toHaveLength(order.lines.length);
+        expect(order.uiState.unsentSyncedQty[line.uuid]).toBe(syncedQty);
+        line.qty = syncedQty + 1;
+        expect(line.getPendingQtyDelta()).toBe(1);
+    });
+
+    test("is reset once the order is sent again", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+
+        order.markLinesUnsent();
+        await store.sendDraftOrderToServer();
+
+        expect(order.uiState.unsentSyncedQty).toEqual({});
+        expect(order.changes).toEqual({});
+    });
+});
+
 describe("_syncedOrderSnapshot", () => {
     test("changes when a synced line's qty changes", async () => {
         const store = await setupSelfPosEnv();
@@ -339,6 +369,27 @@ describe("canProceedToPay", () => {
         expect.verifySteps([]);
     });
 
+    test("returns true and keeps the qty edits made after going back from the payment page", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+        patchWithCleanup(store.notification, {
+            add: () => expect.step("notification"),
+        });
+        const line = order.lines[0];
+        const syncedQty = line.qty;
+
+        order.markLinesUnsent();
+        line.qty = syncedQty + 1;
+
+        expect(await store.canProceedToPay()).toBe(true);
+        expect(line.qty).toBe(syncedQty + 1);
+        expect.verifySteps([]);
+    });
+
     test("returns false and warns when the order changed server-side", async () => {
         const store = await setupSelfPosEnv();
         const order = await getFilledSelfOrder(store);
@@ -407,6 +458,73 @@ describe("canProceedToPay", () => {
 });
 
 describe("getUserDataFromServer", () => {
+    test("keeps the lines made unsent again unsent (back from the kiosk payment page)", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+
+        order.markLinesUnsent();
+        await store.getUserDataFromServer();
+
+        expect(order.uiState.lineChanges).toEqual({});
+        expect(Object.keys(order.changes)).toHaveLength(order.lines.length);
+    });
+
+    test("keeps the qty edits of the lines made unsent again", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+        const line = order.lines[0];
+        const syncedQty = line.qty;
+
+        order.markLinesUnsent();
+        line.qty = syncedQty + 1;
+        await store.getUserDataFromServer();
+
+        expect(line.qty).toBe(syncedQty + 1);
+        expect(order.uiState.lineChanges).toEqual({});
+        expect(order.uiState.unsentSyncedQty[line.uuid]).toBe(syncedQty);
+    });
+
+    test("reapplies the qty edits of the lines made unsent again on top of a server-side change", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+        const line = order.lines[0];
+        const syncedQty = line.qty;
+
+        order.markLinesUnsent();
+        line.qty = syncedQty + 1;
+        MockServer.env["pos.order.line"].write([line.id], { qty: syncedQty + 5 });
+        await store.getUserDataFromServer();
+
+        expect(line.qty).toBe(syncedQty + 6);
+        expect(order.uiState.unsentSyncedQty[line.uuid]).toBe(syncedQty + 5);
+    });
+
+    test("keeps the baseline of the synced lines that had one", async () => {
+        const store = await setupSelfPosEnv();
+        const order = await getFilledSelfOrder(store);
+        await store.sendDraftOrderToServer();
+        onRpc("/pos-self-order/get-user-data/", () =>
+            MockServer.env["pos.order"].read_pos_data([order.id], {}, store.config.id)
+        );
+
+        await store.getUserDataFromServer();
+
+        expect(order.lines.every((l) => order.uiState.lineChanges[l.uuid])).toBe(true);
+        expect(order.changes).toEqual({});
+    });
+
     test("pushOrphanedLines (default): merges another local draft's lines into openOrder and deletes it", async () => {
         const store = await setupSelfPosEnv("kiosk", "counter", "each", {}, true);
         const ownOrder = await getFilledSelfOrder(store);
