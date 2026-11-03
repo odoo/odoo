@@ -5,6 +5,7 @@ import {
 } from "@mail/core/public_web/messaging_menu/messaging_menu_model";
 
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 import { patch } from "@web/core/utils/patch";
 
 /**
@@ -17,7 +18,7 @@ const messagingMenuModelPatch = {
     /** @override */
     extraTabActions(tabId) {
         const actions = super.extraTabActions(...arguments);
-        if (tabId !== MENU_TABS.MEETING) {
+        if (tabId !== MENU_TABS.MEETING || !user.isRegularUser) {
             return actions;
         }
         return [
