@@ -118,8 +118,13 @@ class StockPicking(models.Model):
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
             ('res_field', '=', 'l10n_tr_nilvera_edispatch_xml_file')
-        ])
-        picking_vals = {att.res_id: att for att in attachments}
+        ], order='id desc')
+
+        picking_vals = {}
+        for attachment in attachments:
+            if attachment.res_id not in picking_vals:
+                picking_vals[attachment.res_id] = attachment
+
         for picking in self:
             picking.l10n_tr_nilvera_edispatch_xml_id = picking_vals.get(picking._origin.id, False)
 
