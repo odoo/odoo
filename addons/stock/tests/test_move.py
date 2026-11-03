@@ -7351,3 +7351,31 @@ class StockMove(TransactionCase):
         } for product in (self.product, self.product_lot)])
         self.assertTrue(untracked_move.show_quant)
         self.assertFalse(tracked_move.show_quant)
+
+    def test_increase_quantity_after_putaway(self):
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        self.env['stock.putaway.rule'].create({
+            'product_id': self.product.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': shelf1_location.id,
+        })
+        move = self.env['stock.move'].create({
+            'name': 'test_increase_quantity_after_putaway',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move._action_confirm()
+        self.assertEqual(move.move_line_ids.location_dest_id, shelf1_location)
+
+        move.product_uom_qty = 15.0
+        move._action_assign()
+        self.assertEqual(len(move.move_line_ids), 1)
+        self.assertEqual(move.move_line_ids.quantity, 15.0)
+        self.assertEqual(move.move_line_ids.location_dest_id, shelf1_location)
