@@ -228,6 +228,21 @@ const odooMinuteNumberAdapter = {
         return (normalizedValue + step) % 60;
     },
 };
+
+const odooMinuteAdapter = {
+    normalizeServerValue(groupBy, field, readGroupResult) {
+        const serverValue = getGroupStartingDatetime(field, groupBy, readGroupResult);
+        return (
+            toNumber(serverValue.toISODate(), DEFAULT_LOCALE) +
+            serverValue.hour / 24 +
+            serverValue.minute / (24 * 60)
+        );
+    },
+    increment(normalizedValue, step) {
+        return normalizedValue + step;
+    },
+};
+
 const odooSecondNumberAdapter = {
     normalizeServerValue(groupBy, field, readGroupResult) {
         return Number(readGroupResult[groupBy]);
@@ -311,6 +326,7 @@ extendSpreadsheetAdapter("day_of_week", odooDayOfWeekAdapter);
 extendSpreadsheetAdapter("hour_number", odooHourNumberAdapter);
 extendSpreadsheetAdapter("hour", odooHourAdapter);
 extendSpreadsheetAdapter("minute_number", odooMinuteNumberAdapter);
+extendSpreadsheetAdapter("minute", odooMinuteAdapter);
 extendSpreadsheetAdapter("second_number", odooSecondNumberAdapter);
 extendSpreadsheetAdapter("month", odooMonthAdapter);
 
