@@ -1779,7 +1779,7 @@ class AccountEdiCommon(models.AbstractModel):
 
         if base_amount := allowance_charge.get('base_amount'):
             price_unit = base_amount * charge_indicator_sign * file_document_sign
-            quantity = multiplier_factor_numeric / 100
+            quantity = multiplier_factor_numeric / 100 if multiplier_factor_numeric is not None else 1
         else:
             price_unit = amount * charge_indicator_sign * file_document_sign
             quantity = 1
