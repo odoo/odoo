@@ -13,6 +13,9 @@ from odoo import _, fields, http, tools
 from odoo.http import request, Response
 from odoo.tools import consteq
 
+# clicks that soon after sending come from security scanners
+SCANNER_CLICK_WINDOW = timedelta(seconds=30)
+
 
 class MassMailController(http.Controller):
 
@@ -409,16 +412,35 @@ class MassMailController(http.Controller):
 
     @http.route('/r/<string:code>/m/<int:mailing_trace_id>', type='http', auth="public")
     def full_url_redirect(self, code, mailing_trace_id, **post):
-        request.env['link.tracker.click'].sudo().add_click(
-            code,
-            ip=request.httprequest.remote_addr,
-            country_code=request.geoip.country_code,
-            mailing_trace_id=mailing_trace_id
-        )
+        sent_datetime = request.env['mailing.trace'].sudo().browse(mailing_trace_id).exists().sent_datetime
+        scanner_click = sent_datetime and request.env.cr.now() - sent_datetime < SCANNER_CLICK_WINDOW
+        if not request.env['ir.http'].is_a_bot() and not scanner_click:
+            request.env['link.tracker.click'].sudo().add_click(
+                code,
+                ip=request.httprequest.remote_addr,
+                country_code=request.geoip.country_code,
+                mailing_trace_id=mailing_trace_id,
+                bot_check_pending=True,
+            )
         redirect_url = request.env['link.tracker'].get_url_from_code(code)
         if not redirect_url:
             raise NotFound()
         return request.redirect(redirect_url, code=301, local=False)
+
+    @http.route('/mail/track/<int:mail_id>/<string:token>/link', type='http', auth='public')
+    def track_mail_hidden_link(self, mail_id, token, **post):
+        """ Invisible link of the email, clicked by scanners/bots only. """
+        expected_token = request.env['mail.mail']._generate_mail_recipient_token(mail_id)
+        if not consteq(token, expected_token):
+            raise Unauthorized()
+
+        request.env['mailing.trace'].sudo().search([('mail_mail_id_int', '=', mail_id)]).write({
+            'hidden_link_click_datetime': request.env.cr.now(),
+            'hidden_link_click_ip': request.httprequest.remote_addr,
+        })
+        response = Response()
+        response.mimetype = 'text/html'
+        return response
 
     # ------------------------------------------------------------
     # MAILING MANAGEMENT

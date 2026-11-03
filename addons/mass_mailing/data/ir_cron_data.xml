@@ -12,6 +12,16 @@
             <field name="interval_type">days</field>
             <field name="priority">6</field>
         </record>
+        <!-- Cron that checks held mailing clicks for bots -->
+        <record id="ir_cron_mass_mailing_pending_clicks" model="ir.cron">
+            <field name="name">Mail Marketing: Check Pending Clicks</field>
+            <field name="model_id" ref="model_link_tracker_click"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_pending_clicks()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
         <!-- Cron that processes the a/b testing -->
         <record id="ir_cron_mass_mailing_ab_testing" model="ir.cron">
             <field name="name">Mail Marketing: A/B Testing</field>

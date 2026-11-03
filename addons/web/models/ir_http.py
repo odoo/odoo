@@ -11,9 +11,8 @@ class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     bots = [
-        "bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit",
-        "whatsapp", "trendsmapresolver", "pinterest", "instagram", "xrawler",
-        "google-pagerenderer", "preview", "google-inspectiontool", "googleother",
+        "bot", "crawl", "slurp", "spider", "curl", "wget", "facebookexternalhit", "trendsmapresolver",
+        "xrawler", "google-pagerenderer", "preview", "google-inspectiontool", "googleother",
         "meta-external", "meta-webindexer", "chatgpt-user", "claude-user", "perplexity-user",
     ]
 

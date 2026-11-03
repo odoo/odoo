@@ -117,6 +117,8 @@ class MailingTrace(models.Model):
     # Link tracking
     links_click_ids = fields.One2many('link.tracker.click', 'mailing_trace_id', string='Links click')
     links_click_datetime = fields.Datetime('Clicked On', help='Stores last click datetime in case of multi clicks.')
+    hidden_link_click_datetime = fields.Datetime('Hidden Link Clicked On')
+    hidden_link_click_ip = fields.Char('Hidden Link Clicked From')
 
     _check_res_id_is_set = models.Constraint(
         'CHECK(res_id IS NOT NULL AND res_id !=0 )',
