@@ -3,8 +3,8 @@ import { SaleLabelTextField } from "@sale/js/sale_label_text/sale_label_text";
 import { patch } from "@web/core/utils/patch";
 
 const saleManagementProductMixin = () => ({
-    _getAdditionalDialogProps() {
-        const props = super._getAdditionalDialogProps();
+    _getAdditionalDialogProps(options) {
+        const props = super._getAdditionalDialogProps(options);
 
         const isOptionalLine = this.env.shouldCollapse(this.props.record, "is_optional");
         props.options = {

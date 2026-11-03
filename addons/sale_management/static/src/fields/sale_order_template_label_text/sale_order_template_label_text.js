@@ -78,8 +78,8 @@ patch(SaleOrderTemplateLabelTextField.prototype, {
         return serializeDateTime(today());
     },
 
-    _getAdditionalDialogProps() {
-        const props = super._getAdditionalDialogProps();
+    _getAdditionalDialogProps(options) {
+        const props = super._getAdditionalDialogProps(options);
         const isOptionalLine = this.env.shouldCollapse(this.props.record, "is_optional");
         // A quotation template has no customer/company context, so prices are
         // not relevant here (and the currency would be ambiguous for templates

@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+from odoo import fields
 from odoo.http import Controller, request, route
 
 
@@ -13,7 +14,7 @@ class SaleProductConfiguratorController(Controller):
         self,
         product_template_id,
         quantity,
-        so_date,
+        so_date=None,
         currency_id=None,
         product_uom_id=None,
         company_id=None,
@@ -28,7 +29,8 @@ class SaleProductConfiguratorController(Controller):
         :param int product_template_id: The product for which to seek information, as a
             `product.template` id.
         :param int quantity: The quantity of the product.
-        :param str so_date: The date of the `sale.order`, to compute the price at the right rate.
+        :param str|None so_date: The date of the `sale.order`, to compute the price at the right
+            rate. Defaults to now.
         :param int|None currency_id: The currency of the transaction, as a `res.currency` id.
             Required if `show_price` is True.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
@@ -72,7 +74,7 @@ class SaleProductConfiguratorController(Controller):
                 combination = product_template._get_first_available_combination()
             currency = self.env["res.currency"].browse(currency_id)
             pricelist = self.env["product.pricelist"].browse(pricelist_id)
-            so_date = datetime.fromisoformat(so_date)
+            so_date = datetime.fromisoformat(so_date) if so_date else fields.Datetime.now()
 
             res["products"] = [
                 dict(
@@ -152,8 +154,8 @@ class SaleProductConfiguratorController(Controller):
         self,
         product_template_id,
         ptav_ids,
-        so_date,
         quantity,
+        so_date=None,
         currency_id=None,
         product_uom_id=None,
         company_id=None,
@@ -167,8 +169,9 @@ class SaleProductConfiguratorController(Controller):
             `product.template` id.
         :param list(int) ptav_ids: The combination of the product, as a list of
             `product.template.attribute.value` ids.
-        :param str so_date: The date of the `sale.order`, to compute the price at the right rate.
         :param int quantity: The quantity of the product.
+        :param str|None so_date: The date of the `sale.order`, to compute the price at the right
+            rate. Defaults to now.
         :param int|None currency_id: The currency of the transaction, as a `res.currency` id.
             Required if `show_price` is True.
         :param int|None product_uom_id: The unit of measure of the product, as a `uom.uom` id.
@@ -188,6 +191,7 @@ class SaleProductConfiguratorController(Controller):
         pricelist = self.env["product.pricelist"].browse(pricelist_id)
         product_uom = self.env["uom.uom"].browse(product_uom_id)
         currency = self.env["res.currency"].browse(currency_id)
+        so_date = datetime.fromisoformat(so_date) if so_date else fields.Datetime.now()
         combination = self.env["product.template.attribute.value"].browse(ptav_ids)
         product = product_template._get_variant_for_combination(combination)
 
@@ -198,7 +202,7 @@ class SaleProductConfiguratorController(Controller):
             quantity=quantity or 0.0,
             uom=product_uom,
             currency=currency,
-            date=datetime.fromisoformat(so_date),
+            date=so_date,
             **kwargs,
         )
         # Shouldn't be sent client-side
@@ -217,7 +221,7 @@ class SaleProductConfiguratorController(Controller):
     def sale_product_configurator_get_optional_products(
         self,
         product_template_id,
-        so_date,
+        so_date=None,
         currency_id=None,
         company_id=None,
         pricelist_id=None,
@@ -232,7 +236,8 @@ class SaleProductConfiguratorController(Controller):
             `product.template.attribute.value` ids.
         :param list(int) parent_ptav_ids: The combination of the parent product, as a list of
             `product.template.attribute.value` ids.
-        :param str so_date: The date of the `sale.order`, to compute the price at the right rate.
+        :param str|None so_date: The date of the `sale.order`, to compute the price at the right
+            rate. Defaults to now.
         :param int|None currency_id: The currency of the transaction, as a `res.currency` id.
             Required if `show_price` is True.
         :param int|None company_id: The company to use, as a `res.company` id.
@@ -250,6 +255,7 @@ class SaleProductConfiguratorController(Controller):
         product_template = self._get_product_template(product_template_id)
         currency = self.env["res.currency"].browse(currency_id)
         pricelist = self.env["product.pricelist"].browse(pricelist_id)
+        so_date = datetime.fromisoformat(so_date) if so_date else fields.Datetime.now()
         return [
             dict(
                 **self._get_product_information(
@@ -257,7 +263,7 @@ class SaleProductConfiguratorController(Controller):
                     optional_product_template._get_first_available_combination(),
                     currency,
                     pricelist,
-                    datetime.fromisoformat(so_date),
+                    so_date,
                     **kwargs,
                 ),
                 parent_product_tmpl_id=product_template.id,

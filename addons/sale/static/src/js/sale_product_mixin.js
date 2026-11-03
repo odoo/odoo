@@ -168,9 +168,6 @@ export const saleProductMixin = () => ({
             customPtavs = await getCustomPtavs(this.orm, saleOrderLine);
         }
         const { products, optional_products } = data;
-        const {
-            options: additionalOptions, ...additionalProps
-        } = this._getAdditionalDialogProps();
         this.dialog.add(ProductConfiguratorDialog, {
             productTemplateId: saleOrderLine.product_template_id.id,
             products: products,
@@ -214,8 +211,7 @@ export const saleProductMixin = () => ({
                     this._getOrderLines().delete(this.props.record);
                 }
             },
-            ...additionalProps,
-            options: { ...additionalOptions, ...options },
+            ...this._getAdditionalDialogProps(options),
         });
     },
 
@@ -256,10 +252,11 @@ export const saleProductMixin = () => ({
     /**
      * Hook to append additional props in overriding modules.
      *
+     * @param options {Object} The options to pass to the dialog.
      * @return {Object} The additional props.
      */
-    _getAdditionalDialogProps() {
-        return {};
+    _getAdditionalDialogProps(options) {
+        return { options: options };
     },
 
     /**
