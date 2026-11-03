@@ -723,7 +723,7 @@ class AccountMove(models.Model):
         page_offset = 0
         page_size = 200
         has_more = True
-        invoice_numbers = []
+        invoice_numbers = OrderedSet()
 
         while has_more:
             response = service.query_invoice_metadata(query, page_size, page_offset)
@@ -731,20 +731,21 @@ class AccountMove(models.Model):
                 blocking_error = self._handle_download_bills_from_ksef_error(response['error'])
                 break
 
-            if not response['invoices'] and date_to < tomorrow:
-                # We must keep the time window moving until we find something
+            invoice_numbers.update(invoice['ksefNumber'] for invoice in response['invoices'])
+            has_more = response['hasMore'] or date_to < tomorrow
+
+            if response['hasMore']:
+                page_offset += 1
+            elif date_to < tomorrow:
+                # Exhaust the current window before moving to the next one.
                 date_from = date_to
                 date_to = min(date_from + relativedelta(months=2), tomorrow)
                 query['dateRange']['from'] = date_from.isoformat()
                 query['dateRange']['to'] = date_to.isoformat()
-                continue
-
-            invoice_numbers.extend(invoice['ksefNumber'] for invoice in response['invoices'])
-            has_more = response['hasMore']
-            page_offset += 1
+                page_offset = 0
 
         already_processed = set(self.env['account.move'].search([
-            ('l10n_pl_edi_number', 'in', invoice_numbers),
+            ('l10n_pl_edi_number', 'in', list(invoice_numbers)),
             ('move_type', '=', 'in_invoice'),
             *self._check_company_domain(self.env.company),
         ]).mapped('l10n_pl_edi_number'))

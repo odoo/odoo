@@ -1049,6 +1049,48 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         new_bill = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-NEW-BILL-001')])
         self.assertTrue(new_bill)
 
+    @freeze_time('2026-09-03')
+    def test_l10n_pl_edi_download_bill_populated_windows(self):
+        """Fetch all windows and pages, even after finding an already imported bill."""
+        moves = self.env['account.move'].with_company(self.company)
+        moves.create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2025-10-02',
+            'l10n_pl_edi_number': 'KSEF-OLD-BILL',
+            'l10n_pl_edi_status': 'fetched',
+        })
+        pages = [
+            ('2025-10-02', '2025-12-02', 0, False, []),
+            ('2025-12-02', '2026-02-02', 0, False, []),
+            ('2026-02-02', '2026-04-02', 0, True, ['KSEF-OLD-BILL']),
+            ('2026-02-02', '2026-04-02', 1, False, ['KSEF-BOUNDARY-BILL']),
+            ('2026-04-02', '2026-06-02', 0, False, ['KSEF-BOUNDARY-BILL', 'KSEF-SPRING-BILL']),
+            ('2026-06-02', '2026-08-02', 0, False, []),
+            ('2026-08-02', '2026-09-04', 0, True, ['KSEF-SUMMER-BILL']),
+            ('2026-08-02', '2026-09-04', 1, False, ['KSEF-NEWEST-BILL']),
+        ]
+        expected_pages = iter(pages)
+
+        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+            date_from, date_to, expected_offset, has_more, numbers = next(expected_pages)
+            self.assertEqual(query_criteria['dateRange'], {
+                'from': f'{date_from}T00:00:00',
+                'to': f'{date_to}T00:00:00',
+                'dateType': 'Invoicing',
+            })
+            self.assertEqual(page_offset, expected_offset)
+            return {'hasMore': has_more, 'invoices': [{'ksefNumber': number} for number in numbers]}
+
+        with patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata) as metadata:
+            self.assertFalse(moves._fetch_bills_metadata(KsefApiService(self.company)))
+
+        self.assertEqual(metadata.call_count, len(pages))
+        bills = moves.search([('l10n_pl_edi_status', '=', 'fetch_ready')])
+        self.assertEqual(set(bills.mapped('l10n_pl_edi_number')), {
+            'KSEF-BOUNDARY-BILL', 'KSEF-SPRING-BILL', 'KSEF-SUMMER-BILL', 'KSEF-NEWEST-BILL',
+        })
+        self.assertEqual(len(bills), 4)
+
     def test_ksef_bill_import_dynamic_taxes_and_fiscal_position(self):
         """ Test that importing a KSeF bill maps taxes dynamically using amounts and fiscal positions. """
 
