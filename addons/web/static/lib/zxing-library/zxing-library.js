@@ -23202,7 +23202,8 @@
                   return reader.decode(image, this.hints);
               }
               catch (ex) {
-                  if (ex instanceof ReaderException) {
+                  // Odoo: reader errors (e.g. `NotFoundException`) extend `Exception`, not `ReaderException`
+                  if (ex instanceof Exception) {
                       continue;
                   }
                   // Log non-reader exceptions for debugging but continue trying other readers
