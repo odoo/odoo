@@ -166,6 +166,8 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
     def _prepare_send_refusal_mails(self):
         subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+        # The refusal is sent to the contact of the applicant, the email doesn't create it
+        self.applicant_ids._find_or_create_partner()
         for applicant in self.applicant_ids:
             mail_values = self._prepare_mail_values(applicant)
             if self.template_id:
@@ -261,6 +263,8 @@ class ApplicantRefuseSingle(models.TransientModel):
         """ Post the edited subject and body as is, without rendering them again. """
         self.ensure_one()
         email_from = self.template_id.email_from or self.env.user.email_formatted
+        # The refusal is sent to the contact of the applicant, the email doesn't create it
+        self.applicant_id._find_or_create_partner()
         self.applicant_id.message_post(
             body=self.body or '',
             subject=self.subject,

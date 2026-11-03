@@ -3,7 +3,6 @@
 from datetime import timedelta, datetime
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
 from odoo.fields import Domain
 
 
@@ -61,17 +60,8 @@ class HrApplicant(models.Model):
         applicant_survey_ids = self.env['survey.survey']
 
         # If an applicant does not already have an associated partner, search for it, or create it.
+        self.sudo()._find_or_create_partner()
         for applicant in self:
-            if not applicant.partner_id:
-                if not applicant.partner_name:
-                    raise UserError(self.env._('Please provide an applicant name.'))
-
-                applicant.partner_id = applicant.env['res.partner'].sudo().create({
-                    'name': applicant.partner_name,
-                    'email': applicant.email_from,
-                    'phone': applicant.partner_phone,
-                })
-
             applicant.survey_id.check_validity()
             applicant_partner_ids += applicant.partner_id
             applicant_survey_ids += applicant.survey_id

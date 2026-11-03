@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command, tools
+from odoo import Command
 from odoo.fields import Domain
 from odoo.addons.mail.tests.common import MailCase
 from odoo.tests import tagged, TransactionCase, Form
@@ -385,6 +385,27 @@ class TestRecruitment(MailCase, TransactionCase):
         message = applicant.message_ids[0]
         self.assertIn('object.partner_name kept as-is', message.body)
         self.assertNotIn('Dear Laurie Poiret', message.body)
+        # The applicant had no contact: it is created to send the refusal
+        self.assertEqual(applicant.partner_id.email, 'laurie.poiret@aol.ru')
+        self.assertEqual(message.partner_ids, applicant.partner_id)
+
+    def test_applicant_contact_created_when_needed(self):
+        existing_partner = self.env['res.partner'].create({'name': 'Laurie', 'email': 'laurie.poiret@aol.ru'})
+        new_applicant, known_applicant = self.env['hr.applicant'].create([
+            {'partner_name': 'New Applicant', 'email_from': 'new.applicant@example.com'},
+            {'partner_name': 'Laurie Poiret', 'email_from': 'laurie.poiret@aol.ru'},
+        ])
+        # Setting the email doesn't create a contact, it only links the existing one
+        self.assertFalse(new_applicant.partner_id)
+        self.assertEqual(known_applicant.partner_id, existing_partner)
+
+        # Going further (e.g. scheduling a meeting) creates it, unless the contact of the email exists
+        known_applicant.partner_id = False
+        new_applicant.action_create_meeting()
+        known_applicant.action_create_meeting()
+        self.assertRecordValues(new_applicant.partner_id, [{'name': 'New Applicant', 'email': 'new.applicant@example.com'}])
+        self.assertEqual(known_applicant.partner_id, existing_partner)
+        self.assertEqual(self.env['res.partner'].search_count([('email', '=', 'laurie.poiret@aol.ru')]), 1)
 
     def test_archive_applicant_routing(self):
         app_1, app_2 = self.env['hr.applicant'].create([
@@ -491,13 +512,6 @@ class TestRecruitment(MailCase, TransactionCase):
             'email_from': 'applicant@example.com',
             'partner_phone': '123456789',
         })
-        email_normalized = tools.email_normalize(applicant.email_from or '')
-        applicant.partner_id = applicant._partner_find_from_emails_single(
-            [applicant.email_from], no_create=False,
-            additional_values={
-                email_normalized: {'lang': self.env.lang}
-            },
-        )
         self.assertEqual(applicant.partner_id.email, 'applicant@example.com', "Email should have been set on the partner.")
         self.assertEqual(applicant.partner_id.phone, '123456789', "Phone should have been set on the partner.")
 
