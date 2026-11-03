@@ -2,7 +2,11 @@
 <templates>
 
     <t t-name="stock.StockPickFrom">
-        <Many2One t-props="this.m2oProps"/>
+        <Many2One t-props="this.m2oProps">
+            <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <t t-out="autoCompleteItemScope.label"/> <t t-out="this.quantDropdownQuantity(autoCompleteItemScope.record)"/>
+            </t>
+        </Many2One>
     </t>
 
 </templates>
