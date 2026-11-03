@@ -358,7 +358,7 @@ class TestLoyalty(TransactionCase):
         )
         product = reward.discount_line_product_id
         translations = {"en_US": "Test Discount EN", "fr_FR": "Test Discount FR"}
-        reward.update_field_translations("description", translations)
+        reward._update_field_translations("description", translations)
         product.invalidate_recordset(["name"])
         self.assertEqual(product.with_context(lang="en_US").name, "Test Discount EN")
         self.assertEqual(product.with_context(lang="fr_FR").name, "Test Discount FR")
