@@ -112,6 +112,15 @@
                                      company_dependent="1"
                                      documentation="/applications/finance/fiscal_localizations/india.html#india-gstr">
                                 <field name="l10n_in_gst_efiling_feature" widget="upgrade_boolean"/>
+                                <div class="row mt-2" invisible="not l10n_in_gst_efiling_feature">
+                                    <field name="module_l10n_in_itc04_report" widget="upgrade_boolean" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                                    <div class="col ps-0">
+                                        <label for="module_l10n_in_itc04_report"/>
+                                        <div class="text-muted">
+                                            Enable to access ITC-04 report and it's return filing process.
+                                        </div>
+                                    </div>
+                                </div>
                             </setting>
                             <setting name="india_gstin_status_api_settings"
                                      string="Check GST Number Status"
