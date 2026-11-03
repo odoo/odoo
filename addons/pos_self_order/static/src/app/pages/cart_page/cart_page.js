@@ -305,11 +305,10 @@ export class CartPage extends Component {
             placeholder: _t(
                 "Specify which utensils, napkins, straws, and condiments you want to be included or any special instructions that you want the restaurant to be aware of"
             ),
-            rows: 4,
+            rows: this.ui.isSmall ? 6 : 4,
+            maxLength: 150,
         });
-        if (note !== undefined) {
-            this.state.orderNoteValue = note;
-        }
+        this.state.orderNoteValue = note || "";
     }
 
     get tipPercentages() {
