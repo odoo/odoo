@@ -281,9 +281,19 @@
        * Makes a copy of a array.
        */
       static arraycopy(src, srcPos, dest, destPos, length) {
-          // TODO: better use split or set?
-          while (length--) {
-              dest[destPos++] = src[srcPos++];
+          if (src === dest && srcPos < destPos) {
+              // Copy backwards to avoid writing into indices we're about to read from.
+              destPos += length - 1;
+              srcPos += length - 1;
+              while (length--) {
+                  dest[destPos--] = src[srcPos--];
+              }
+          }
+          else {
+              // TODO: better use split or set?
+              while (length--) {
+                  dest[destPos++] = src[srcPos++];
+              }
           }
       }
       /**
@@ -573,6 +583,8 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common {*/
+  /*import java.util.Arrays;*/
   /**
    * <p>A simple, fast array of bits, represented compactly by an array of ints internally.</p>
    *
@@ -1051,6 +1063,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common {*/
   /*import java.util.HashMap;*/
   /*import java.util.Map;*/
   var CharacterSetValueIdentifiers;
@@ -1228,13 +1241,14 @@
           return new TextDecoder(encodingName).decode(bytes);
       }
       /**
-       * Checks if the decoding method should use the fallback for decoding
-       * once Node TextDecoder doesn't support all encoding formats.
+       * Checks if the decoding method should use the fallback for decoding.
+       * Node.js 18+ supports ISO-8859-1 natively via TextDecoder, so no fallback
+       * is needed for supported Node versions.
        *
        * @param encodingName
        */
       static shouldDecodeOnFallback(encodingName) {
-          return !StringEncoding.isBrowser() && encodingName === 'ISO-8859-1';
+          return false;
       }
       /**
        * Encodes some string into a Uint8Array.
@@ -1288,7 +1302,7 @@
               return decodeURIComponent(s);
           }
           if (characterSet.equals(CharacterSetECI.UnicodeBigUnmarked)) {
-              return String.fromCharCode.apply(null, new Uint16Array(bytes.buffer));
+              return String.fromCharCode.apply(null, Array.from(new Uint16Array(bytes.buffer)));
           }
           throw new UnsupportedOperationException(`Encoding ${this.encodingName(encoding)} not supported by fallback.`);
       }
@@ -1328,6 +1342,9 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common {*/
+  /*import java.nio.charset.Charset;*/
+  /*import java.util.Map;*/
   /**
    * Common string-related functions.
    *
@@ -1659,6 +1676,8 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common {*/
+  /*import java.util.Arrays;*/
   /**
    * <p>Represents a 2D matrix of bits. In function arguments below, and throughout the common
    * module, x is the column position, and y is the row position. The ordering is always x, y.
@@ -1711,7 +1730,7 @@
               throw new IllegalArgumentException('Both dimensions must be greater than 0');
           }
           if (undefined === rowSize || null === rowSize) {
-              rowSize = Math.floor((width + 31) / 32);
+              rowSize = (width + 31) >> 5;
           }
           this.rowSize = rowSize;
           if (undefined === bits || null === bits) {
@@ -1811,7 +1830,7 @@
        * @return value of given bit in matrix
        */
       get(x /*int*/, y /*int*/) {
-          const offset = y * this.rowSize + Math.floor(x / 32);
+          const offset = y * this.rowSize + (x >> 5);
           return ((this.bits[offset] >>> (x & 0x1f)) & 1) !== 0;
       }
       /**
@@ -1821,11 +1840,11 @@
        * @param y The vertical component (i.e. which row)
        */
       set(x /*int*/, y /*int*/) {
-          const offset = y * this.rowSize + Math.floor(x / 32);
+          const offset = y * this.rowSize + (x >> 5);
           this.bits[offset] |= (1 << (x & 0x1f)) & 0xFFFFFFFF;
       }
       unset(x /*int*/, y /*int*/) {
-          const offset = y * this.rowSize + Math.floor(x / 32);
+          const offset = y * this.rowSize + (x >> 5);
           this.bits[offset] &= ~((1 << (x & 0x1f)) & 0xFFFFFFFF);
       }
       /**
@@ -1835,7 +1854,7 @@
        * @param y The vertical component (i.e. which row)
        */
       flip(x /*int*/, y /*int*/) {
-          const offset = y * this.rowSize + Math.floor(x / 32);
+          const offset = y * this.rowSize + (x >> 5);
           this.bits[offset] ^= ((1 << (x & 0x1f)) & 0xFFFFFFFF);
       }
       /**
@@ -1849,7 +1868,7 @@
               || this.rowSize !== mask.getRowSize()) {
               throw new IllegalArgumentException('input matrix dimensions do not match');
           }
-          const rowArray = new BitArray(Math.floor(this.width / 32) + 1);
+          const rowArray = new BitArray((this.width >> 5) + 1);
           const rowSize = this.rowSize;
           const bits = this.bits;
           for (let y = 0, height = this.height; y < height; y++) {
@@ -1864,11 +1883,7 @@
        * Clears all bits (sets to false).
        */
       clear() {
-          const bits = this.bits;
-          const max = bits.length;
-          for (let i = 0; i < max; i++) {
-              bits[i] = 0;
-          }
+          this.bits.fill(0);
       }
       /**
        * <p>Sets a square region of the bit matrix to true.</p>
@@ -1895,7 +1910,7 @@
           for (let y = top; y < bottom; y++) {
               const offset = y * rowSize;
               for (let x = left; x < right; x++) {
-                  bits[offset + Math.floor(x / 32)] |= ((1 << (x & 0x1f)) & 0xFFFFFFFF);
+                  bits[offset + (x >> 5)] |= ((1 << (x & 0x1f)) & 0xFFFFFFFF);
               }
           }
       }
@@ -2145,6 +2160,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common {*/
   /**
    * This Binarizer implementation uses the old ZXing global histogram approach. It is suitable
    * for low-end mobile devices which don't have enough CPU or memory to use a local thresholding
@@ -2247,10 +2263,7 @@
           if (this.luminances.length < luminanceSize) {
               this.luminances = new Uint8ClampedArray(luminanceSize);
           }
-          const buckets = this.buckets;
-          for (let x = 0; x < GlobalHistogramBinarizer.LUMINANCE_BUCKETS; x++) {
-              buckets[x] = 0;
-          }
+          this.buckets.fill(0);
       }
       static estimateBlackPoint(buckets) {
           // Find the tallest peak in the histogram.
@@ -2657,7 +2670,7 @@
       /*@Override*/
       getRow(y /*int*/, row) {
           const sourceRow = this.delegate.getRow(y, row);
-          const width = this.getWidth();
+          const width /*int*/ = this.getWidth();
           for (let i = 0; i < width; i++) {
               sourceRow[i] = /*(byte)*/ (255 - (sourceRow[i] & 0xFF));
           }
@@ -2666,7 +2679,7 @@
       /*@Override*/
       getMatrix() {
           const matrix = this.delegate.getMatrix();
-          const length = this.getWidth() * this.getHeight();
+          const length /*int*/ = this.getWidth() * this.getHeight();
           const invertedMatrix = new Uint8ClampedArray(length);
           for (let i = 0; i < length; i++) {
               invertedMatrix[i] = /*(byte)*/ (255 - (matrix[i] & 0xFF));
@@ -2706,68 +2719,36 @@
    * @deprecated Moving to @zxing/browser
    */
   class HTMLCanvasElementLuminanceSource extends LuminanceSource {
-      constructor(canvas, doAutoInvert = false) {
+      constructor(canvas, doAutoInvert = false, reuseBuffer) {
           super(canvas.width, canvas.height);
           this.canvas = canvas;
           this.tempCanvasElement = null;
-          this.buffer = HTMLCanvasElementLuminanceSource.makeBufferFromCanvasImageData(canvas, doAutoInvert);
+          this.buffer = HTMLCanvasElementLuminanceSource.makeBufferFromCanvasImageData(canvas, doAutoInvert, reuseBuffer);
       }
-      static makeBufferFromCanvasImageData(canvas, doAutoInvert = false) {
+      static makeBufferFromCanvasImageData(canvas, doAutoInvert = false, reuseBuffer) {
           const imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-          return HTMLCanvasElementLuminanceSource.toGrayscaleBuffer(imageData.data, canvas.width, canvas.height, doAutoInvert);
+          return HTMLCanvasElementLuminanceSource.toGrayscaleBuffer(imageData.data, canvas.width, canvas.height, doAutoInvert, reuseBuffer);
       }
-      static toGrayscaleBuffer(imageBuffer, width, height, doAutoInvert = false) {
-          const grayscaleBuffer = new Uint8ClampedArray(width * height);
+      static toGrayscaleBuffer(imageBuffer, width, height, doAutoInvert = false, reuseBuffer) {
+          const size = width * height;
+          const grayscaleBuffer = (reuseBuffer && reuseBuffer.length >= size) ? reuseBuffer : new Uint8ClampedArray(size);
           HTMLCanvasElementLuminanceSource.FRAME_INDEX = !HTMLCanvasElementLuminanceSource.FRAME_INDEX;
-          if (HTMLCanvasElementLuminanceSource.FRAME_INDEX || !doAutoInvert) {
-              for (let i = 0, j = 0, length = imageBuffer.length; i < length; i += 4, j++) {
-                  let gray;
-                  const alpha = imageBuffer[i + 3];
-                  // The color of fully-transparent pixels is irrelevant. They are often, technically, fully-transparent
-                  // black (0 alpha, and then 0 RGB). They are often used, of course as the "white" area in a
-                  // barcode image. Force any such pixel to be white:
-                  if (alpha === 0) {
-                      gray = 0xFF;
-                  }
-                  else {
-                      const pixelR = imageBuffer[i];
-                      const pixelG = imageBuffer[i + 1];
-                      const pixelB = imageBuffer[i + 2];
-                      // .299R + 0.587G + 0.114B (YUV/YIQ for PAL and NTSC),
-                      // (306*R) >> 10 is approximately equal to R*0.299, and so on.
-                      // 0x200 >> 10 is 0.5, it implements rounding.
-                      gray = (306 * pixelR +
-                          601 * pixelG +
-                          117 * pixelB +
-                          0x200) >> 10;
-                  }
-                  grayscaleBuffer[j] = gray;
+          // XOR mask: 0xFF inverts each byte, 0 is identity
+          const invertMask = (!HTMLCanvasElementLuminanceSource.FRAME_INDEX && doAutoInvert) ? 0xFF : 0;
+          for (let i = 0, j = 0, length = imageBuffer.length; i < length; i += 4, j++) {
+              let gray;
+              const alpha = imageBuffer[i + 3];
+              if (alpha === 0) {
+                  gray = 0xFF;
               }
-          }
-          else {
-              for (let i = 0, j = 0, length = imageBuffer.length; i < length; i += 4, j++) {
-                  let gray;
-                  const alpha = imageBuffer[i + 3];
-                  // The color of fully-transparent pixels is irrelevant. They are often, technically, fully-transparent
-                  // black (0 alpha, and then 0 RGB). They are often used, of course as the "white" area in a
-                  // barcode image. Force any such pixel to be white:
-                  if (alpha === 0) {
-                      gray = 0xFF;
-                  }
-                  else {
-                      const pixelR = imageBuffer[i];
-                      const pixelG = imageBuffer[i + 1];
-                      const pixelB = imageBuffer[i + 2];
-                      // .299R + 0.587G + 0.114B (YUV/YIQ for PAL and NTSC),
-                      // (306*R) >> 10 is approximately equal to R*0.299, and so on.
-                      // 0x200 >> 10 is 0.5, it implements rounding.
-                      gray = (306 * pixelR +
-                          601 * pixelG +
-                          117 * pixelB +
-                          0x200) >> 10;
-                  }
-                  grayscaleBuffer[j] = 0xFF - gray;
+              else {
+                  const pixelR = imageBuffer[i];
+                  const pixelG = imageBuffer[i + 1];
+                  const pixelB = imageBuffer[i + 2];
+                  // .299R + 0.587G + 0.114B (YUV/YIQ for PAL and NTSC)
+                  gray = (306 * pixelR + 601 * pixelG + 117 * pixelB + 0x200) >> 10;
               }
+              grayscaleBuffer[j] = gray ^ invertMask;
           }
           return grayscaleBuffer;
       }
@@ -2775,7 +2756,7 @@
           if (y < 0 || y >= this.getHeight()) {
               throw new IllegalArgumentException('Requested row is outside the image: ' + y);
           }
-          const width = this.getWidth();
+          const width /*int*/ = this.getWidth();
           const start = y * width;
           if (row === null) {
               row = this.buffer.slice(start, start + width);
@@ -2785,8 +2766,7 @@
                   row = new Uint8ClampedArray(width);
               }
               // The underlying raster of image consists of bytes with the luminance values
-              // TODO: can avoid set/slice?
-              row.set(this.buffer.slice(start, start + width));
+              row.set(this.buffer.subarray(start, start + width));
           }
           return row;
       }
@@ -2896,30 +2876,6 @@
    */
   class BrowserCodeReader {
       /**
-       * Creates an instance of BrowserCodeReader.
-       * @param {Reader} reader The reader instance to decode the barcode
-       * @param {number} [timeBetweenScansMillis=500] the time delay between subsequent successful decode tries
-       *
-       * @memberOf BrowserCodeReader
-       */
-      constructor(reader, timeBetweenScansMillis = 500, _hints) {
-          this.reader = reader;
-          this.timeBetweenScansMillis = timeBetweenScansMillis;
-          this._hints = _hints;
-          /**
-           * This will break the loop.
-           */
-          this._stopContinuousDecode = false;
-          /**
-           * This will break the loop.
-           */
-          this._stopAsyncDecode = false;
-          /**
-           * Delay time between decode attempts made by the scanner.
-           */
-          this._timeBetweenDecodingAttempts = 0;
-      }
-      /**
        * If navigator is present.
        */
       get hasNavigator() {
@@ -2960,6 +2916,30 @@
        */
       get hints() {
           return this._hints;
+      }
+      /**
+       * Creates an instance of BrowserCodeReader.
+       * @param {Reader} reader The reader instance to decode the barcode
+       * @param {number} [timeBetweenScansMillis=500] the time delay between subsequent successful decode tries
+       *
+       * @memberOf BrowserCodeReader
+       */
+      constructor(reader, timeBetweenScansMillis = 500, _hints) {
+          this.reader = reader;
+          this.timeBetweenScansMillis = timeBetweenScansMillis;
+          this._hints = _hints;
+          /**
+           * This will break the loop.
+           */
+          this._stopContinuousDecode = false;
+          /**
+           * This will break the loop.
+           */
+          this._stopAsyncDecode = false;
+          /**
+           * Delay time between decode attempts made by the scanner.
+           */
+          this._timeBetweenDecodingAttempts = 0;
       }
       /**
        * Lists all the available video input devices.
@@ -3521,6 +3501,9 @@
                       // trying again
                       setTimeout(loop, this._timeBetweenDecodingAttempts);
                   }
+                  else {
+                      console.error('BrowserCodeReader: unexpected error during decode, stopping scan loop:', e);
+                  }
               }
           };
           loop();
@@ -3531,7 +3514,21 @@
       decode(element) {
           // get binary bitmap for decode function
           const binaryBitmap = this.createBinaryBitmap(element);
-          return this.decodeBitmap(binaryBitmap);
+          try {
+              return this.decodeBitmap(binaryBitmap);
+          }
+          catch (e) {
+              if (e instanceof NotFoundException) {
+                  // Retry with GlobalHistogramBinarizer as fallback for images where
+                  // local thresholding fails but a global threshold works better
+                  const canvas = this.getCaptureCanvas(element);
+                  const luminanceSource = new HTMLCanvasElementLuminanceSource(canvas, false);
+                  const globalBinarizer = new GlobalHistogramBinarizer(luminanceSource);
+                  const fallbackBitmap = new BinaryBitmap(globalBinarizer);
+                  return this.decodeBitmap(fallbackBitmap);
+              }
+              throw e;
+          }
       }
       /**
        * Creates a binaryBitmap based in some image source.
@@ -3550,7 +3547,8 @@
               this.drawImageOnCanvas(mediaElement);
           }
           const canvas = this.getCaptureCanvas(mediaElement);
-          const luminanceSource = new HTMLCanvasElementLuminanceSource(canvas, doAutoInvert);
+          const luminanceSource = new HTMLCanvasElementLuminanceSource(canvas, doAutoInvert, this._grayscaleBuffer);
+          this._grayscaleBuffer = luminanceSource.getMatrix();
           const hybridBinarizer = new HybridBinarizer(luminanceSource);
           return new BinaryBitmap(hybridBinarizer);
       }
@@ -3615,7 +3613,13 @@
        * Call the encapsulated readers decode
        */
       decodeBitmap(binaryBitmap) {
-          return this.reader.decode(binaryBitmap, this._hints);
+          try {
+              return this.reader.decode(binaryBitmap, this._hints);
+          }
+          finally {
+              // Readers need to be reset before being reused on another bitmap.
+              this.reader.reset();
+          }
       }
       /**
        * 🖌 Prepares the canvas for capture and scan frames.
@@ -3765,7 +3769,7 @@
    *
    * @author Sean Owen
    */
-  class Result$1 {
+  let Result$1 = class Result {
       // public constructor(private text: string,
       //               Uint8Array rawBytes,
       //               ResultPoconst resultPoints: Int32Array,
@@ -3881,7 +3885,7 @@
       toString() {
           return this.text;
       }
-  }
+  };
 
   /*
    * Direct port to TypeScript of ZXing by Adrian Toșcă
@@ -3943,6 +3947,8 @@
       BarcodeFormat[BarcodeFormat["UPC_E"] = 15] = "UPC_E";
       /** UPC/EAN extension format. Not a stand-alone format. */
       BarcodeFormat[BarcodeFormat["UPC_EAN_EXTENSION"] = 16] = "UPC_EAN_EXTENSION";
+      /** Micro QR Code 2D barcode format. */
+      BarcodeFormat[BarcodeFormat["MICRO_QR_CODE"] = 17] = "MICRO_QR_CODE";
   })(BarcodeFormat || (BarcodeFormat = {}));
   var BarcodeFormat$1 = BarcodeFormat;
 
@@ -4029,6 +4035,11 @@
        * parity is given with it.
        */
       ResultMetadataType[ResultMetadataType["STRUCTURED_APPEND_PARITY"] = 10] = "STRUCTURED_APPEND_PARITY";
+      /**
+       * For some formats, the number of errors corrected during decode.
+       * Maps to a {@link Number}.
+       */
+      ResultMetadataType[ResultMetadataType["ERRORS_CORRECTED"] = 11] = "ERRORS_CORRECTED";
   })(ResultMetadataType || (ResultMetadataType = {}));
   var ResultMetadataType$1 = ResultMetadataType;
 
@@ -4215,6 +4226,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common.reedsolomon {*/
   /**
    * <p>Represents a polynomial whose coefficients are elements of a GF.
    * Instances of this class are immutable.</p>
@@ -4472,6 +4484,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common.reedsolomon {*/
   /**
    * <p>This class contains utility methods for performing mathematical operations over
    * the Galois Fields. Operations use a given primitive polynomial in calculations.</p>
@@ -4610,6 +4623,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common.reedsolomon {*/
   /**
    * <p>Implements Reed-Solomon decoding, as the name implies.</p>
    *
@@ -4646,6 +4660,18 @@
        * @throws ReedSolomonException if decoding fails for any reason
        */
       decode(received, twoS /*int*/) {
+          this.decodeWithECCount(received, twoS);
+      }
+      /**
+       * <p>Decodes given set of received codewords, which include both data and error-correction
+       * codewords, and returns the number of errors corrected.</p>
+       *
+       * @param received data and error-correction codewords
+       * @param twoS number of error-correction codewords available
+       * @return number of errors corrected
+       * @throws ReedSolomonException if decoding fails for any reason
+       */
+      decodeWithECCount(received, twoS /*int*/) {
           const field = this.field;
           const poly = new GenericGFPoly(field, received);
           const syndromeCoefficients = new Int32Array(twoS);
@@ -4658,7 +4684,7 @@
               }
           }
           if (noError) {
-              return;
+              return 0;
           }
           const syndrome = new GenericGFPoly(field, syndromeCoefficients);
           const sigmaOmega = this.runEuclideanAlgorithm(field.buildMonomial(twoS, 1), syndrome, twoS);
@@ -4673,6 +4699,7 @@
               }
               received[position] = GenericGF.addOrSubtract(received[position], errorMagnitudes[i]);
           }
+          return errorLocations.length;
       }
       runEuclideanAlgorithm(a, b, R /*int*/) {
           // Assume a's degree is >= b's
@@ -4756,7 +4783,7 @@
                       // Above should work but fails on some Apple and Linux JDKs due to a Hotspot bug.
                       // Below is a funny-looking workaround from Steven Parkes
                       const term = field.multiply(errorLocations[j], xiInverse);
-                      const termPlus1 = (term & 0x1) === 0 ? term | 1 : term & ~1;
+                      const termPlus1 = (term & 0x1) === 0 ? term | 1 : term & -2;
                       denominator = field.multiply(denominator, termPlus1);
                   }
               }
@@ -4800,14 +4827,14 @@
    *
    * @author David Olivier
    */
-  class Decoder$2 {
+  let Decoder$3 = class Decoder {
       decode(detectorResult) {
           this.ddata = detectorResult;
           let matrix = detectorResult.getBits();
           let rawbits = this.extractBits(matrix);
           let correctedBits = this.correctBits(rawbits);
-          let rawBytes = Decoder$2.convertBoolArrayToByteArray(correctedBits);
-          let result = Decoder$2.getEncodedData(correctedBits);
+          let rawBytes = Decoder.convertBoolArrayToByteArray(correctedBits);
+          let result = Decoder.getEncodedData(correctedBits);
           let decoderResult = new DecoderResult(rawBytes, result, null, null);
           decoderResult.setNumBits(correctedBits.length);
           return decoderResult;
@@ -4832,13 +4859,13 @@
                   if (endIndex - index < 5) {
                       break;
                   }
-                  let length = Decoder$2.readCode(correctedBits, index, 5);
+                  let length = Decoder.readCode(correctedBits, index, 5);
                   index += 5;
                   if (length === 0) {
                       if (endIndex - index < 11) {
                           break;
                       }
-                      length = Decoder$2.readCode(correctedBits, index, 11) + 31;
+                      length = Decoder.readCode(correctedBits, index, 11) + 31;
                       index += 11;
                   }
                   for (let charCount = 0; charCount < length; charCount++) {
@@ -4846,7 +4873,7 @@
                           index = endIndex; // Force outer loop to exit
                           break;
                       }
-                      const code = Decoder$2.readCode(correctedBits, index, 8);
+                      const code = Decoder.readCode(correctedBits, index, 8);
                       result += /*(char)*/ StringUtils.castAsNonUtf8Char(code);
                       index += 8;
                   }
@@ -4858,16 +4885,16 @@
                   if (endIndex - index < size) {
                       break;
                   }
-                  let code = Decoder$2.readCode(correctedBits, index, size);
+                  let code = Decoder.readCode(correctedBits, index, size);
                   index += size;
-                  let str = Decoder$2.getCharacter(shiftTable, code);
+                  let str = Decoder.getCharacter(shiftTable, code);
                   if (str.startsWith('CTRL_')) {
                       // Table changes
                       // ISO/IEC 24778:2008 prescribes ending a shift sequence in the mode from which it was invoked.
                       // That's including when that mode is a shift.
                       // Our test case dlusbs.png for issue #642 exercises that.
                       latchTable = shiftTable; // Latch the current mode, so as to return to Upper after U/S B/S
-                      shiftTable = Decoder$2.getTable(str.charAt(5));
+                      shiftTable = Decoder.getTable(str.charAt(5));
                       if (str.charAt(6) === 'L') {
                           latchTable = shiftTable;
                       }
@@ -4910,15 +4937,15 @@
       static getCharacter(table, code) {
           switch (table) {
               case Table.UPPER:
-                  return Decoder$2.UPPER_TABLE[code];
+                  return Decoder.UPPER_TABLE[code];
               case Table.LOWER:
-                  return Decoder$2.LOWER_TABLE[code];
+                  return Decoder.LOWER_TABLE[code];
               case Table.MIXED:
-                  return Decoder$2.MIXED_TABLE[code];
+                  return Decoder.MIXED_TABLE[code];
               case Table.PUNCT:
-                  return Decoder$2.PUNCT_TABLE[code];
+                  return Decoder.PUNCT_TABLE[code];
               case Table.DIGIT:
-                  return Decoder$2.DIGIT_TABLE[code];
+                  return Decoder.DIGIT_TABLE[code];
               default:
                   // Should not reach here.
                   throw new IllegalStateException('Bad table');
@@ -4957,7 +4984,7 @@
           let offset = rawbits.length % codewordSize;
           let dataWords = new Int32Array(numCodewords);
           for (let i = 0; i < numCodewords; i++, offset += codewordSize) {
-              dataWords[i] = Decoder$2.readCode(rawbits, offset, codewordSize);
+              dataWords[i] = Decoder.readCode(rawbits, offset, codewordSize);
           }
           try {
               let rsDecoder = new ReedSolomonDecoder(gf);
@@ -5071,9 +5098,9 @@
       static readByte(rawbits, startIndex) {
           let n = rawbits.length - startIndex;
           if (n >= 8) {
-              return Decoder$2.readCode(rawbits, startIndex, 8);
+              return Decoder.readCode(rawbits, startIndex, 8);
           }
-          return Decoder$2.readCode(rawbits, startIndex, n) << (8 - n);
+          return Decoder.readCode(rawbits, startIndex, n) << (8 - n);
       }
       /**
        * Packs a bit array into bytes, most significant bit first
@@ -5081,32 +5108,32 @@
       static convertBoolArrayToByteArray(boolArr) {
           let byteArr = new Uint8Array((boolArr.length + 7) / 8);
           for (let i = 0; i < byteArr.length; i++) {
-              byteArr[i] = Decoder$2.readByte(boolArr, 8 * i);
+              byteArr[i] = Decoder.readByte(boolArr, 8 * i);
           }
           return byteArr;
       }
       totalBitsInLayer(layers, compact) {
           return ((compact ? 88 : 112) + 16 * layers) * layers;
       }
-  }
-  Decoder$2.UPPER_TABLE = [
+  };
+  Decoder$3.UPPER_TABLE = [
       'CTRL_PS', ' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
       'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'CTRL_LL', 'CTRL_ML', 'CTRL_DL', 'CTRL_BS'
   ];
-  Decoder$2.LOWER_TABLE = [
+  Decoder$3.LOWER_TABLE = [
       'CTRL_PS', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
       'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'CTRL_US', 'CTRL_ML', 'CTRL_DL', 'CTRL_BS'
   ];
-  Decoder$2.MIXED_TABLE = [
+  Decoder$3.MIXED_TABLE = [
       'CTRL_PS', ' ', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07', '\b', '\t', '\n',
       '\x0b', '\f', '\r', '\x1b', '\x1c', '\x1d', '\x1e', '\x1f', '@', '\\', '^', '_',
       '`', '|', '~', '\x7f', 'CTRL_LL', 'CTRL_UL', 'CTRL_PL', 'CTRL_BS'
   ];
-  Decoder$2.PUNCT_TABLE = [
+  Decoder$3.PUNCT_TABLE = [
       '', '\r', '\r\n', '. ', ', ', ': ', '!', '"', '#', '$', '%', '&', '\'', '(', ')',
       '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '[', ']', '{', '}', 'CTRL_UL'
   ];
-  Decoder$2.DIGIT_TABLE = [
+  Decoder$3.DIGIT_TABLE = [
       'CTRL_PS', ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '.', 'CTRL_UL', 'CTRL_US'
   ];
 
@@ -5220,6 +5247,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing {*/
   /**
    * <p>Encapsulates a point of interest in an image containing a barcode. Typically, this
    * would be the location of a finder pattern or the corner of the barcode, for example.</p>
@@ -5403,6 +5431,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common.detector {*/
   /**
    * <p>
    * Detects a candidate barcode-like rectangular region within an image. It
@@ -5597,8 +5626,8 @@
       }
       getBlackPointOnSegment(aX /*float*/, aY /*float*/, bX /*float*/, bY /*float*/) {
           const dist = MathUtils.round(MathUtils.distance(aX, aY, bX, bY));
-          const xStep = (bX - aX) / dist;
-          const yStep = (bY - aY) / dist;
+          const xStep /*float*/ = (bX - aX) / dist;
+          const yStep /*float*/ = (bY - aY) / dist;
           const image = this.image;
           for (let i = 0; i < dist; i++) {
               const x = MathUtils.round(aX + i * xStep);
@@ -5629,14 +5658,14 @@
           //        x    OR    z
           //   y                    y
           //
-          const yi = y.getX();
-          const yj = y.getY();
-          const zi = z.getX();
-          const zj = z.getY();
-          const xi = x.getX();
-          const xj = x.getY();
-          const ti = t.getX();
-          const tj = t.getY();
+          const yi /*float*/ = y.getX();
+          const yj /*float*/ = y.getY();
+          const zi /*float*/ = z.getX();
+          const zj /*float*/ = z.getY();
+          const xi /*float*/ = x.getX();
+          const xj /*float*/ = x.getY();
+          const ti /*float*/ = t.getX();
+          const tj /*float*/ = t.getY();
           const CORR = WhiteRectangleDetector.CORR;
           if (yi < this.width / 2.0) {
               return [
@@ -5731,8 +5760,8 @@
        * @throws NotFoundException if an endpoint is lies outside the image boundaries
        */
       static checkAndNudgePoints(image, points) {
-          const width = image.getWidth();
-          const height = image.getHeight();
+          const width /*int*/ = image.getWidth();
+          const height /*int*/ = image.getHeight();
           // Check and nudge points from start until we see some that are OK:
           let nudged = true;
           for (let offset = 0; offset < points.length && nudged; offset += 2) {
@@ -5912,6 +5941,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common {*/
   /**
    * @author Sean Owen
    */
@@ -5930,7 +5960,7 @@
           const points = new Float32Array(2 * dimensionX);
           for (let y = 0; y < dimensionY; y++) {
               const max = points.length;
-              const iValue = y + 0.5;
+              const iValue /*float*/ = y + 0.5;
               for (let x = 0; x < max; x += 2) {
                   points[x] = (x / 2) + 0.5;
                   points[x + 1] = iValue;
@@ -5941,7 +5971,7 @@
               GridSampler.checkAndNudgePoints(image, points);
               try {
                   for (let x = 0; x < max; x += 2) {
-                      if (image.get(Math.floor(points[x]), Math.floor(points[x + 1]))) {
+                      if (image.get(points[x] | 0, points[x + 1] | 0)) {
                           // Black(-ish) pixel
                           bits.set(x / 2, y);
                       }
@@ -6000,12 +6030,12 @@
    * limitations under the License.
    */
   class Point {
+      toResultPoint() {
+          return new ResultPoint(this.getX(), this.getY());
+      }
       constructor(x, y) {
           this.x = x;
           this.y = y;
-      }
-      toResultPoint() {
-          return new ResultPoint(this.getX(), this.getY());
       }
       getX() {
           return this.x;
@@ -6021,13 +6051,13 @@
    * @author David Olivier
    * @author Frank Yellin
    */
-  class Detector$3 {
+  let Detector$3 = class Detector {
       constructor(image) {
           this.EXPECTED_CORNER_BITS = new Int32Array([
-              0xee0,
-              0x1dc,
-              0x83b,
-              0x707,
+              0xee0, // 07340  XXX .XX X.. ...
+              0x1dc, // 00734  ... XXX .XX X..
+              0x83b, // 04073  X.. ... XXX .XX
+              0x707, // 03407 .XX X.. ... XXX
           ]);
           this.image = image;
       }
@@ -6074,9 +6104,9 @@
           let length = 2 * this.nbCenterLayers;
           // Get the bits around the bull's eye
           let sides = new Int32Array([
-              this.sampleLine(bullsEyeCorners[0], bullsEyeCorners[1], length),
-              this.sampleLine(bullsEyeCorners[1], bullsEyeCorners[2], length),
-              this.sampleLine(bullsEyeCorners[2], bullsEyeCorners[3], length),
+              this.sampleLine(bullsEyeCorners[0], bullsEyeCorners[1], length), // Right side
+              this.sampleLine(bullsEyeCorners[1], bullsEyeCorners[2], length), // Bottom
+              this.sampleLine(bullsEyeCorners[2], bullsEyeCorners[3], length), // Left side
               this.sampleLine(bullsEyeCorners[3], bullsEyeCorners[0], length) // Top
           ]);
           // bullsEyeCorners[shift] is the corner of the bulls'eye that has three
@@ -6459,7 +6489,7 @@
           }
           return 4 * this.nbLayers + 2 * (Integer.truncDivision((this.nbLayers - 4), 8) + 1) + 15;
       }
-  }
+  };
 
   /*
    * Copyright 2010 ZXing authors
@@ -6500,7 +6530,7 @@
               let detectorResult = detector.detectMirror(false);
               points = detectorResult.getPoints();
               this.reportFoundResultPoints(hints, points);
-              decoderResult = new Decoder$2().decode(detectorResult);
+              decoderResult = new Decoder$3().decode(detectorResult);
           }
           catch (e) {
               exception = e;
@@ -6510,7 +6540,7 @@
                   let detectorResult = detector.detectMirror(true);
                   points = detectorResult.getPoints();
                   this.reportFoundResultPoints(hints, points);
-                  decoderResult = new Decoder$2().decode(detectorResult);
+                  decoderResult = new Decoder$3().decode(detectorResult);
               }
               catch (e) {
                   if (exception != null) {
@@ -6656,7 +6686,7 @@
               maxLines = height; // Look at the whole image, not just the center
           }
           else {
-              maxLines = 15; // 15 rows spaced 1/32 apart is roughly the middle half of the image
+              maxLines = 25; // 25 rows spaced 1/32 apart covers roughly 78% of image height
           }
           const middle = Math.trunc(height / 2);
           for (let x = 0; x < maxLines; x++) {
@@ -6828,6 +6858,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.oned {*/
   /**
    * <p>Decodes Code 128 barcodes.</p>
    *
@@ -7316,6 +7347,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.oned {*/
   /**
    * <p>Decodes Code 39 barcodes. Supports "Full ASCII Code 39" if USE_CODE_39_EXTENDED_MODE is set.</p>
    *
@@ -7596,10 +7628,10 @@
    * with 1s representing "wide" and 0s representing narrow.
    */
   Code39Reader.CHARACTER_ENCODINGS = [
-      0x034, 0x121, 0x061, 0x160, 0x031, 0x130, 0x070, 0x025, 0x124, 0x064,
-      0x109, 0x049, 0x148, 0x019, 0x118, 0x058, 0x00D, 0x10C, 0x04C, 0x01C,
-      0x103, 0x043, 0x142, 0x013, 0x112, 0x052, 0x007, 0x106, 0x046, 0x016,
-      0x181, 0x0C1, 0x1C0, 0x091, 0x190, 0x0D0, 0x085, 0x184, 0x0C4, 0x0A8,
+      0x034, 0x121, 0x061, 0x160, 0x031, 0x130, 0x070, 0x025, 0x124, 0x064, // 0-9
+      0x109, 0x049, 0x148, 0x019, 0x118, 0x058, 0x00D, 0x10C, 0x04C, 0x01C, // A-J
+      0x103, 0x043, 0x142, 0x013, 0x112, 0x052, 0x007, 0x106, 0x046, 0x016, // K-T
+      0x181, 0x0C1, 0x1C0, 0x091, 0x190, 0x0D0, 0x085, 0x184, 0x0C4, 0x0A8, // U-$
       0x0A2, 0x08A, 0x02A // /-%
   ];
   Code39Reader.ASTERISK_ENCODING = 0x094;
@@ -7619,6 +7651,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.oned {*/
   /**
    * <p>Decodes Code 93 barcodes.</p>
    *
@@ -7861,12 +7894,12 @@
    * The 9 least-significant bits of each int correspond to the pattern of wide and narrow.
    */
   Code93Reader.CHARACTER_ENCODINGS = [
-      0x114, 0x148, 0x144, 0x142, 0x128, 0x124, 0x122, 0x150, 0x112, 0x10A,
-      0x1A8, 0x1A4, 0x1A2, 0x194, 0x192, 0x18A, 0x168, 0x164, 0x162, 0x134,
-      0x11A, 0x158, 0x14C, 0x146, 0x12C, 0x116, 0x1B4, 0x1B2, 0x1AC, 0x1A6,
-      0x196, 0x19A, 0x16C, 0x166, 0x136, 0x13A,
-      0x12E, 0x1D4, 0x1D2, 0x1CA, 0x16E, 0x176, 0x1AE,
-      0x126, 0x1DA, 0x1D6, 0x132, 0x15E,
+      0x114, 0x148, 0x144, 0x142, 0x128, 0x124, 0x122, 0x150, 0x112, 0x10A, // 0-9
+      0x1A8, 0x1A4, 0x1A2, 0x194, 0x192, 0x18A, 0x168, 0x164, 0x162, 0x134, // A-J
+      0x11A, 0x158, 0x14C, 0x146, 0x12C, 0x116, 0x1B4, 0x1B2, 0x1AC, 0x1A6, // K-T
+      0x196, 0x19A, 0x16C, 0x166, 0x136, 0x13A, // U-Z
+      0x12E, 0x1D4, 0x1D2, 0x1CA, 0x16E, 0x176, 0x1AE, // - - %
+      0x126, 0x1DA, 0x1D6, 0x132, 0x15E, // Control chars? $-*
   ];
   Code93Reader.ASTERISK_ENCODING = Code93Reader.CHARACTER_ENCODINGS[47];
 
@@ -7885,6 +7918,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.oned {*/
   /**
    * <p>Decodes ITF barcodes.</p>
    *
@@ -8159,25 +8193,25 @@
       }
   }
   ITFReader.PATTERNS = [
-      Int32Array.from([1, 1, 2, 2, 1]),
-      Int32Array.from([2, 1, 1, 1, 2]),
-      Int32Array.from([1, 2, 1, 1, 2]),
-      Int32Array.from([2, 2, 1, 1, 1]),
-      Int32Array.from([1, 1, 2, 1, 2]),
-      Int32Array.from([2, 1, 2, 1, 1]),
-      Int32Array.from([1, 2, 2, 1, 1]),
-      Int32Array.from([1, 1, 1, 2, 2]),
-      Int32Array.from([2, 1, 1, 2, 1]),
-      Int32Array.from([1, 2, 1, 2, 1]),
-      Int32Array.from([1, 1, 3, 3, 1]),
-      Int32Array.from([3, 1, 1, 1, 3]),
-      Int32Array.from([1, 3, 1, 1, 3]),
-      Int32Array.from([3, 3, 1, 1, 1]),
-      Int32Array.from([1, 1, 3, 1, 3]),
-      Int32Array.from([3, 1, 3, 1, 1]),
-      Int32Array.from([1, 3, 3, 1, 1]),
-      Int32Array.from([1, 1, 1, 3, 3]),
-      Int32Array.from([3, 1, 1, 3, 1]),
+      Int32Array.from([1, 1, 2, 2, 1]), // 0
+      Int32Array.from([2, 1, 1, 1, 2]), // 1
+      Int32Array.from([1, 2, 1, 1, 2]), // 2
+      Int32Array.from([2, 2, 1, 1, 1]), // 3
+      Int32Array.from([1, 1, 2, 1, 2]), // 4
+      Int32Array.from([2, 1, 2, 1, 1]), // 5
+      Int32Array.from([1, 2, 2, 1, 1]), // 6
+      Int32Array.from([1, 1, 1, 2, 2]), // 7
+      Int32Array.from([2, 1, 1, 2, 1]), // 8
+      Int32Array.from([1, 2, 1, 2, 1]), // 9
+      Int32Array.from([1, 1, 3, 3, 1]), // 0
+      Int32Array.from([3, 1, 1, 1, 3]), // 1
+      Int32Array.from([1, 3, 1, 1, 3]), // 2
+      Int32Array.from([3, 3, 1, 1, 1]), // 3
+      Int32Array.from([1, 1, 3, 1, 3]), // 4
+      Int32Array.from([3, 1, 3, 1, 1]), // 5
+      Int32Array.from([1, 3, 3, 1, 1]), // 6
+      Int32Array.from([1, 1, 1, 3, 3]), // 7
+      Int32Array.from([3, 1, 1, 3, 1]), // 8
       Int32Array.from([1, 3, 1, 3, 1]) // 9
   ];
   ITFReader.MAX_AVG_VARIANCE = 0.38;
@@ -8192,7 +8226,7 @@
    *!/*/
   ITFReader.START_PATTERN = Int32Array.from([1, 1, 1, 1]);
   ITFReader.END_PATTERN_REVERSED = [
-      Int32Array.from([1, 1, 2]),
+      Int32Array.from([1, 1, 2]), // 2x
       Int32Array.from([1, 1, 3]) // 3x
   ];
 
@@ -8376,16 +8410,16 @@
    * "Odd", or "L" patterns used to encode UPC/EAN digits.
    */
   AbstractUPCEANReader.L_PATTERNS = [
-      Int32Array.from([3, 2, 1, 1]),
-      Int32Array.from([2, 2, 2, 1]),
-      Int32Array.from([2, 1, 2, 2]),
-      Int32Array.from([1, 4, 1, 1]),
-      Int32Array.from([1, 1, 3, 2]),
-      Int32Array.from([1, 2, 3, 1]),
-      Int32Array.from([1, 1, 1, 4]),
-      Int32Array.from([1, 3, 1, 2]),
-      Int32Array.from([1, 2, 1, 3]),
-      Int32Array.from([3, 1, 1, 2]),
+      Int32Array.from([3, 2, 1, 1]), // 0
+      Int32Array.from([2, 2, 2, 1]), // 1
+      Int32Array.from([2, 1, 2, 2]), // 2
+      Int32Array.from([1, 4, 1, 1]), // 3
+      Int32Array.from([1, 1, 3, 2]), // 4
+      Int32Array.from([1, 2, 3, 1]), // 5
+      Int32Array.from([1, 1, 1, 4]), // 6
+      Int32Array.from([1, 3, 1, 2]), // 7
+      Int32Array.from([1, 2, 1, 3]), // 8
+      Int32Array.from([3, 1, 1, 2]), // 9
   ];
 
   /*
@@ -8918,6 +8952,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.oned {*/
   /**
    * Encapsulates functionality and implementation that is common to all families
    * of one-dimensional barcodes.
@@ -9001,7 +9036,7 @@
    *
    * @experimental
    */
-  /* final */ class UPCEReader extends UPCEANReader {
+  class UPCEReader extends UPCEANReader {
       constructor() {
           super();
           this.decodeMiddleCounters = new Int32Array(4);
@@ -9255,6 +9290,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.oned {*/
   /**
    * <p>Decodes CodaBar barcodes. </p>
    *
@@ -9367,8 +9403,8 @@
           this.dataCharacterCounters = new Int32Array(8);
           this.oddRoundingErrors = new Array(4);
           this.evenRoundingErrors = new Array(4);
-          this.oddCounts = new Array(this.dataCharacterCounters.length / 2);
-          this.evenCounts = new Array(this.dataCharacterCounters.length / 2);
+          this.oddCounts = new Array(Math.trunc(this.dataCharacterCounters.length / 2));
+          this.evenCounts = new Array(Math.trunc(this.dataCharacterCounters.length / 2));
       }
       getDecodeFinderCounters() {
           return this.decodeFinderCounters;
@@ -9429,7 +9465,7 @@
       static isFinderPattern(counters) {
           let firstTwoSum = counters[0] + counters[1];
           let sum = firstTwoSum + counters[2] + counters[3];
-          let ratio = firstTwoSum / sum;
+          const ratio = firstTwoSum / sum;
           if (ratio >= AbstractRSSReader.MIN_FINDER_PATTERN_RATIO && ratio <= AbstractRSSReader.MAX_FINDER_PATTERN_RATIO) {
               // passes ratio test in spec, but see if the counts are unreasonable
               let minCounter = Number.MAX_SAFE_INTEGER;
@@ -9449,7 +9485,9 @@
   }
   AbstractRSSReader.MAX_AVG_VARIANCE = 0.2;
   AbstractRSSReader.MAX_INDIVIDUAL_VARIANCE = 0.45;
+  /** Minimum ratio 10:12 (minus 0.5 for variance), from section 7.2.7 of ISO/IEC 24724:2006. */
   AbstractRSSReader.MIN_FINDER_PATTERN_RATIO = 9.5 / 12.0;
+  /** Maximum ratio 12:14 (plus 0.5 for variance), from section 7.2.7 of ISO/IEC 24724:2006. */
   AbstractRSSReader.MAX_FINDER_PATTERN_RATIO = 12.5 / 14.0;
 
   class DataCharacter {
@@ -9478,10 +9516,8 @@
       }
   }
 
-  class FinderPattern$1 {
+  let FinderPattern$1 = class FinderPattern {
       constructor(value, startEnd, start, end, rowNumber) {
-          this.value = value;
-          this.startEnd = startEnd;
           this.value = value;
           this.startEnd = startEnd;
           this.resultPoints = new Array();
@@ -9498,7 +9534,7 @@
           return this.resultPoints;
       }
       equals(o) {
-          if (!(o instanceof FinderPattern$1)) {
+          if (!(o instanceof FinderPattern)) {
               return false;
           }
           const that = o;
@@ -9507,7 +9543,7 @@
       hashCode() {
           return this.value;
       }
-  }
+  };
 
   /**
    * RSS util functions.
@@ -9545,9 +9581,9 @@
           }
           return val;
       }
-      static combins(n, r) {
-          let maxDenom;
-          let minDenom;
+      static combins(n /* int */, r /* int */) {
+          let maxDenom /* int */ = 0;
+          let minDenom /* int */ = 0;
           if (n - r > r) {
               minDenom = r;
               maxDenom = n - r;
@@ -9556,17 +9592,17 @@
               minDenom = n - r;
               maxDenom = r;
           }
-          let val = 1;
-          let j = 1;
+          let val /* int */ = 1;
+          let j /* int */ = 1;
           for (let i = n; i > maxDenom; i--) {
               val *= i;
               if (j <= minDenom) {
-                  val /= j;
+                  val = Math.trunc(val / j);
                   j++;
               }
           }
-          while ((j <= minDenom)) {
-              val /= j;
+          while (j <= minDenom) {
+              val = Math.trunc(val / j);
               j++;
           }
           return val;
@@ -9576,7 +9612,7 @@
   class BitArrayBuilder {
       static buildBitArray(pairs) {
           let charNumber = pairs.length * 2 - 1;
-          if (pairs[pairs.length - 1].getRightChar() == null) {
+          if (pairs[pairs.length - 1].getRightChar() === null) {
               charNumber -= 1;
           }
           let size = 12 * charNumber;
@@ -9591,8 +9627,8 @@
               accPos++;
           }
           for (let i = 1; i < pairs.length; ++i) {
-              let currentPair = pairs[i];
-              let leftValue = currentPair.getLeftChar().getValue();
+              const currentPair = pairs[i];
+              const leftValue = currentPair.getLeftChar().getValue();
               for (let j = 11; j >= 0; --j) {
                   if ((leftValue & (1 << j)) !== 0) {
                       binary.set(accPos);
@@ -9600,7 +9636,7 @@
                   accPos++;
               }
               if (currentPair.getRightChar() !== null) {
-                  let rightValue = currentPair.getRightChar().getValue();
+                  const rightValue = currentPair.getRightChar().getValue();
                   for (let j = 11; j >= 0; --j) {
                       if ((rightValue & (1 << j)) !== 0) {
                           binary.set(accPos);
@@ -9614,20 +9650,55 @@
   }
 
   class BlockParsedResult {
-      constructor(finished, decodedInformation) {
-          if (decodedInformation) {
-              this.decodedInformation = null;
-          }
-          else {
-              this.finished = finished;
-              this.decodedInformation = decodedInformation;
-          }
+      constructor(decodedInformation, finished) {
+          this.decodedInformation = decodedInformation ? decodedInformation : null;
+          this.finished = !!finished;
       }
       getDecodedInformation() {
           return this.decodedInformation;
       }
       isFinished() {
           return this.finished;
+      }
+  }
+
+  var State$1;
+  (function (State) {
+      State[State["NUMERIC"] = 0] = "NUMERIC";
+      State[State["ALPHA"] = 1] = "ALPHA";
+      State[State["ISO_IEC_646"] = 2] = "ISO_IEC_646";
+  })(State$1 || (State$1 = {}));
+  class CurrentParsingState {
+      constructor() {
+          this.position = 0;
+          this.encoding = State$1.NUMERIC;
+      }
+      getPosition() {
+          return this.position;
+      }
+      setPosition(position) {
+          this.position = position;
+      }
+      incrementPosition(delta) {
+          this.position += delta;
+      }
+      isAlpha() {
+          return this.encoding === State$1.ALPHA;
+      }
+      isNumeric() {
+          return this.encoding === State$1.NUMERIC;
+      }
+      isIsoIec646() {
+          return this.encoding === State$1.ISO_IEC_646;
+      }
+      setNumeric() {
+          this.encoding = State$1.NUMERIC;
+      }
+      setAlpha() {
+          this.encoding = State$1.ALPHA;
+      }
+      setIsoIec646() {
+          this.encoding = State$1.ISO_IEC_646;
       }
   }
 
@@ -9652,20 +9723,20 @@
           return this.value === DecodedChar.FNC1;
       }
   }
-  DecodedChar.FNC1 = '$';
+  DecodedChar.FNC1 = '$'; // It's not in Alphanumeric neither in ISO/IEC 646 charset
 
   class DecodedInformation extends DecodedObject {
       constructor(newPosition, newString, remainingValue) {
           super(newPosition);
-          if (remainingValue) {
-              this.remaining = true;
-              this.remainingValue = this.remainingValue;
-          }
-          else {
+          this.newString = newString;
+          if (remainingValue === undefined) {
               this.remaining = false;
               this.remainingValue = 0;
           }
-          this.newString = newString;
+          else {
+              this.remaining = true;
+              this.remainingValue = remainingValue;
+          }
       }
       getNewString() {
           return this.newString;
@@ -9702,63 +9773,49 @@
       isSecondDigitFNC1() {
           return this.secondDigit === DecodedNumeric.FNC1;
       }
-      isAnyFNC1() {
-          return this.firstDigit === DecodedNumeric.FNC1 || this.secondDigit === DecodedNumeric.FNC1;
-      }
   }
   DecodedNumeric.FNC1 = 10;
 
   class FieldParser {
+      static fixed(aiSize, fieldSize) {
+          return (rawInformation) => FieldParser.processFixedAI(aiSize, fieldSize, rawInformation);
+      }
+      static variable(aiSize, fieldSize) {
+          return (rawInformation) => FieldParser.processVariableAI(aiSize, fieldSize, rawInformation);
+      }
       constructor() {
       }
       static parseFieldsInGeneralPurpose(rawInformation) {
           if (!rawInformation) {
               return null;
           }
-          // Processing 2-digit AIs
           if (rawInformation.length < 2) {
               throw new NotFoundException();
           }
-          let firstTwoDigits = rawInformation.substring(0, 2);
-          for (let dataLength of FieldParser.TWO_DIGIT_DATA_LENGTH) {
-              if (dataLength[0] === firstTwoDigits) {
-                  if (dataLength[1] === FieldParser.VARIABLE_LENGTH) {
-                      return FieldParser.processVariableAI(2, dataLength[2], rawInformation);
-                  }
-                  return FieldParser.processFixedAI(2, dataLength[1], rawInformation);
-              }
+          const firstTwoDigits = rawInformation.substring(0, 2);
+          const twoDigitDataProcessor = this.TWO_DIGIT_DATA_LENGTH.get(firstTwoDigits);
+          if (twoDigitDataProcessor) {
+              return twoDigitDataProcessor(rawInformation);
           }
           if (rawInformation.length < 3) {
               throw new NotFoundException();
           }
-          let firstThreeDigits = rawInformation.substring(0, 3);
-          for (let dataLength of FieldParser.THREE_DIGIT_DATA_LENGTH) {
-              if (dataLength[0] === firstThreeDigits) {
-                  if (dataLength[1] === FieldParser.VARIABLE_LENGTH) {
-                      return FieldParser.processVariableAI(3, dataLength[2], rawInformation);
-                  }
-                  return FieldParser.processFixedAI(3, dataLength[1], rawInformation);
-              }
+          const firstThreeDigits = rawInformation.substring(0, 3);
+          const threeDigitDataProcessor = this.THREE_DIGIT_DATA_LENGTH.get(firstThreeDigits);
+          if (threeDigitDataProcessor) {
+              return threeDigitDataProcessor(rawInformation);
           }
-          for (let dataLength of FieldParser.THREE_DIGIT_PLUS_DIGIT_DATA_LENGTH) {
-              if (dataLength[0] === firstThreeDigits) {
-                  if (dataLength[1] === FieldParser.VARIABLE_LENGTH) {
-                      return FieldParser.processVariableAI(4, dataLength[2], rawInformation);
-                  }
-                  return FieldParser.processFixedAI(4, dataLength[1], rawInformation);
-              }
+          const threeDigitPlusDigitDataProcessor = this.THREE_DIGIT_PLUS_DIGIT_DATA_LENGTH.get(firstThreeDigits);
+          if (threeDigitPlusDigitDataProcessor) {
+              return threeDigitPlusDigitDataProcessor(rawInformation);
           }
           if (rawInformation.length < 4) {
               throw new NotFoundException();
           }
-          let firstFourDigits = rawInformation.substring(0, 4);
-          for (let dataLength of FieldParser.FOUR_DIGIT_DATA_LENGTH) {
-              if (dataLength[0] === firstFourDigits) {
-                  if (dataLength[1] === FieldParser.VARIABLE_LENGTH) {
-                      return FieldParser.processVariableAI(4, dataLength[2], rawInformation);
-                  }
-                  return FieldParser.processFixedAI(4, dataLength[1], rawInformation);
-              }
+          const firstFourDigits = rawInformation.substring(0, 4);
+          const fourDigitDataProcessor = this.FOUR_DIGIT_DATA_LENGTH.get(firstFourDigits);
+          if (fourDigitDataProcessor) {
+              return fourDigitDataProcessor(rawInformation);
           }
           throw new NotFoundException();
       }
@@ -9766,18 +9823,18 @@
           if (rawInformation.length < aiSize) {
               throw new NotFoundException();
           }
-          let ai = rawInformation.substring(0, aiSize);
+          const ai = rawInformation.substring(0, aiSize);
           if (rawInformation.length < aiSize + fieldSize) {
               throw new NotFoundException();
           }
-          let field = rawInformation.substring(aiSize, aiSize + fieldSize);
-          let remaining = rawInformation.substring(aiSize + fieldSize);
-          let result = '(' + ai + ')' + field;
-          let parsedAI = FieldParser.parseFieldsInGeneralPurpose(remaining);
-          return parsedAI == null ? result : result + parsedAI;
+          const field = rawInformation.substring(aiSize, aiSize + fieldSize);
+          const remaining = rawInformation.substring(aiSize + fieldSize);
+          const result = '(' + ai + ')' + field;
+          const parsedAI = FieldParser.parseFieldsInGeneralPurpose(remaining);
+          return parsedAI === null ? result : result + parsedAI;
       }
       static processVariableAI(aiSize, variableFieldSize, rawInformation) {
-          let ai = rawInformation.substring(0, aiSize);
+          const ai = rawInformation.substring(0, aiSize);
           let maxSize;
           if (rawInformation.length < aiSize + variableFieldSize) {
               maxSize = rawInformation.length;
@@ -9785,151 +9842,175 @@
           else {
               maxSize = aiSize + variableFieldSize;
           }
-          let field = rawInformation.substring(aiSize, maxSize);
-          let remaining = rawInformation.substring(maxSize);
-          let result = '(' + ai + ')' + field;
-          let parsedAI = FieldParser.parseFieldsInGeneralPurpose(remaining);
-          return parsedAI == null ? result : result + parsedAI;
+          const field = rawInformation.substring(aiSize, maxSize);
+          const remaining = rawInformation.substring(maxSize);
+          const result = '(' + ai + ')' + field;
+          const parsedAI = FieldParser.parseFieldsInGeneralPurpose(remaining);
+          return parsedAI === null ? result : result + parsedAI;
       }
   }
-  FieldParser.VARIABLE_LENGTH = [];
-  FieldParser.TWO_DIGIT_DATA_LENGTH = [
-      ['00', 18],
-      ['01', 14],
-      ['02', 14],
-      ['10', FieldParser.VARIABLE_LENGTH, 20],
-      ['11', 6],
-      ['12', 6],
-      ['13', 6],
-      ['15', 6],
-      ['17', 6],
-      ['20', 2],
-      ['21', FieldParser.VARIABLE_LENGTH, 20],
-      ['22', FieldParser.VARIABLE_LENGTH, 29],
-      ['30', FieldParser.VARIABLE_LENGTH, 8],
-      ['37', FieldParser.VARIABLE_LENGTH, 8],
-      // internal company codes
-      ['90', FieldParser.VARIABLE_LENGTH, 30],
-      ['91', FieldParser.VARIABLE_LENGTH, 30],
-      ['92', FieldParser.VARIABLE_LENGTH, 30],
-      ['93', FieldParser.VARIABLE_LENGTH, 30],
-      ['94', FieldParser.VARIABLE_LENGTH, 30],
-      ['95', FieldParser.VARIABLE_LENGTH, 30],
-      ['96', FieldParser.VARIABLE_LENGTH, 30],
-      ['97', FieldParser.VARIABLE_LENGTH, 3],
-      ['98', FieldParser.VARIABLE_LENGTH, 30],
-      ['99', FieldParser.VARIABLE_LENGTH, 30],
-  ];
-  FieldParser.THREE_DIGIT_DATA_LENGTH = [
-      // Same format as above
-      ['240', FieldParser.VARIABLE_LENGTH, 30],
-      ['241', FieldParser.VARIABLE_LENGTH, 30],
-      ['242', FieldParser.VARIABLE_LENGTH, 6],
-      ['250', FieldParser.VARIABLE_LENGTH, 30],
-      ['251', FieldParser.VARIABLE_LENGTH, 30],
-      ['253', FieldParser.VARIABLE_LENGTH, 17],
-      ['254', FieldParser.VARIABLE_LENGTH, 20],
-      ['400', FieldParser.VARIABLE_LENGTH, 30],
-      ['401', FieldParser.VARIABLE_LENGTH, 30],
-      ['402', 17],
-      ['403', FieldParser.VARIABLE_LENGTH, 30],
-      ['410', 13],
-      ['411', 13],
-      ['412', 13],
-      ['413', 13],
-      ['414', 13],
-      ['420', FieldParser.VARIABLE_LENGTH, 20],
-      ['421', FieldParser.VARIABLE_LENGTH, 15],
-      ['422', 3],
-      ['423', FieldParser.VARIABLE_LENGTH, 15],
-      ['424', 3],
-      ['425', 3],
-      ['426', 3],
-  ];
-  FieldParser.THREE_DIGIT_PLUS_DIGIT_DATA_LENGTH = [
-      // Same format as above
-      ['310', 6],
-      ['311', 6],
-      ['312', 6],
-      ['313', 6],
-      ['314', 6],
-      ['315', 6],
-      ['316', 6],
-      ['320', 6],
-      ['321', 6],
-      ['322', 6],
-      ['323', 6],
-      ['324', 6],
-      ['325', 6],
-      ['326', 6],
-      ['327', 6],
-      ['328', 6],
-      ['329', 6],
-      ['330', 6],
-      ['331', 6],
-      ['332', 6],
-      ['333', 6],
-      ['334', 6],
-      ['335', 6],
-      ['336', 6],
-      ['340', 6],
-      ['341', 6],
-      ['342', 6],
-      ['343', 6],
-      ['344', 6],
-      ['345', 6],
-      ['346', 6],
-      ['347', 6],
-      ['348', 6],
-      ['349', 6],
-      ['350', 6],
-      ['351', 6],
-      ['352', 6],
-      ['353', 6],
-      ['354', 6],
-      ['355', 6],
-      ['356', 6],
-      ['357', 6],
-      ['360', 6],
-      ['361', 6],
-      ['362', 6],
-      ['363', 6],
-      ['364', 6],
-      ['365', 6],
-      ['366', 6],
-      ['367', 6],
-      ['368', 6],
-      ['369', 6],
-      ['390', FieldParser.VARIABLE_LENGTH, 15],
-      ['391', FieldParser.VARIABLE_LENGTH, 18],
-      ['392', FieldParser.VARIABLE_LENGTH, 15],
-      ['393', FieldParser.VARIABLE_LENGTH, 18],
-      ['703', FieldParser.VARIABLE_LENGTH, 30],
-  ];
-  FieldParser.FOUR_DIGIT_DATA_LENGTH = [
-      // Same format as above
-      ['7001', 13],
-      ['7002', FieldParser.VARIABLE_LENGTH, 30],
-      ['7003', 10],
-      ['8001', 14],
-      ['8002', FieldParser.VARIABLE_LENGTH, 20],
-      ['8003', FieldParser.VARIABLE_LENGTH, 30],
-      ['8004', FieldParser.VARIABLE_LENGTH, 30],
-      ['8005', 6],
-      ['8006', 18],
-      ['8007', FieldParser.VARIABLE_LENGTH, 30],
-      ['8008', FieldParser.VARIABLE_LENGTH, 12],
-      ['8018', 18],
-      ['8020', FieldParser.VARIABLE_LENGTH, 25],
-      ['8100', 6],
-      ['8101', 10],
-      ['8102', 2],
-      ['8110', FieldParser.VARIABLE_LENGTH, 70],
-      ['8200', FieldParser.VARIABLE_LENGTH, 70],
-  ];
+  FieldParser.TWO_DIGIT_DATA_LENGTH = (() => {
+      const out = new Map();
+      out.set('00', FieldParser.fixed(2, 18));
+      out.set('01', FieldParser.fixed(2, 14));
+      out.set('02', FieldParser.fixed(2, 14));
+      out.set('10', FieldParser.variable(2, 20));
+      out.set('11', FieldParser.fixed(2, 6));
+      out.set('12', FieldParser.fixed(2, 6));
+      out.set('13', FieldParser.fixed(2, 6));
+      out.set('15', FieldParser.fixed(2, 6));
+      out.set('16', FieldParser.fixed(2, 6));
+      out.set('17', FieldParser.fixed(2, 6));
+      out.set('20', FieldParser.fixed(2, 2));
+      out.set('21', FieldParser.variable(2, 20));
+      out.set('22', FieldParser.variable(2, 29)); // limited to 20 in latest versions of spec
+      out.set('30', FieldParser.variable(2, 8));
+      out.set('37', FieldParser.variable(2, 8));
+      //internal company codes
+      for (let i = 90; i <= 99; i++) {
+          out.set(String(i), FieldParser.variable(2, 30));
+      }
+      return out;
+  })();
+  FieldParser.THREE_DIGIT_DATA_LENGTH = new Map([
+      ['235', FieldParser.variable(3, 28)],
+      ['240', FieldParser.variable(3, 30)],
+      ['241', FieldParser.variable(3, 30)],
+      ['242', FieldParser.variable(3, 6)],
+      ['243', FieldParser.variable(3, 20)],
+      ['250', FieldParser.variable(3, 30)],
+      ['251', FieldParser.variable(3, 30)],
+      ['253', FieldParser.variable(3, 30)],
+      ['254', FieldParser.variable(3, 20)],
+      ['255', FieldParser.variable(3, 25)],
+      ['400', FieldParser.variable(3, 30)],
+      ['401', FieldParser.variable(3, 30)],
+      ['402', FieldParser.fixed(3, 17)],
+      ['403', FieldParser.variable(3, 30)],
+      ['410', FieldParser.fixed(3, 13)],
+      ['411', FieldParser.fixed(3, 13)],
+      ['412', FieldParser.fixed(3, 13)],
+      ['413', FieldParser.fixed(3, 13)],
+      ['414', FieldParser.fixed(3, 13)],
+      ['415', FieldParser.fixed(3, 13)],
+      ['416', FieldParser.fixed(3, 13)],
+      ['417', FieldParser.fixed(3, 13)],
+      ['420', FieldParser.variable(3, 20)],
+      ['421', FieldParser.variable(3, 15)], // limited to 12 in latest versions of spec
+      ['422', FieldParser.fixed(3, 3)],
+      ['423', FieldParser.variable(3, 15)],
+      ['424', FieldParser.fixed(3, 3)],
+      ['425', FieldParser.variable(3, 15)],
+      ['426', FieldParser.fixed(3, 3)],
+      ['427', FieldParser.variable(3, 3)],
+      ['710', FieldParser.variable(3, 20)],
+      ['711', FieldParser.variable(3, 20)],
+      ['712', FieldParser.variable(3, 20)],
+      ['713', FieldParser.variable(3, 20)],
+      ['714', FieldParser.variable(3, 20)],
+      ['715', FieldParser.variable(3, 20)],
+  ]);
+  FieldParser.THREE_DIGIT_PLUS_DIGIT_DATA_LENGTH = (() => {
+      const out = new Map();
+      for (let i = 310; i <= 316; i++) {
+          out.set(String(i), FieldParser.fixed(4, 6));
+      }
+      for (let i = 320; i <= 337; i++) {
+          out.set(String(i), FieldParser.fixed(4, 6));
+      }
+      for (let i = 340; i <= 357; i++) {
+          out.set(String(i), FieldParser.fixed(4, 6));
+      }
+      for (let i = 360; i <= 369; i++) {
+          out.set(String(i), FieldParser.fixed(4, 6));
+      }
+      out.set('390', FieldParser.variable(4, 15));
+      out.set('391', FieldParser.variable(4, 18));
+      out.set('392', FieldParser.variable(4, 15));
+      out.set('393', FieldParser.variable(4, 18));
+      out.set('394', FieldParser.fixed(4, 4));
+      out.set('395', FieldParser.fixed(4, 6));
+      out.set('703', FieldParser.variable(4, 30));
+      out.set('723', FieldParser.variable(4, 30));
+      return out;
+  })();
+  FieldParser.FOUR_DIGIT_DATA_LENGTH = (() => {
+      const out = new Map();
+      out.set('4300', FieldParser.variable(4, 35));
+      out.set('4301', FieldParser.variable(4, 35));
+      out.set('4302', FieldParser.variable(4, 70));
+      out.set('4303', FieldParser.variable(4, 70));
+      out.set('4304', FieldParser.variable(4, 70));
+      out.set('4305', FieldParser.variable(4, 70));
+      out.set('4306', FieldParser.variable(4, 70));
+      out.set('4307', FieldParser.fixed(4, 2));
+      out.set('4308', FieldParser.variable(4, 30));
+      out.set('4309', FieldParser.fixed(4, 20));
+      out.set('4310', FieldParser.variable(4, 35));
+      out.set('4311', FieldParser.variable(4, 35));
+      out.set('4312', FieldParser.variable(4, 70));
+      out.set('4313', FieldParser.variable(4, 70));
+      out.set('4314', FieldParser.variable(4, 70));
+      out.set('4315', FieldParser.variable(4, 70));
+      out.set('4316', FieldParser.variable(4, 70));
+      out.set('4317', FieldParser.fixed(4, 2));
+      out.set('4318', FieldParser.variable(4, 20));
+      out.set('4319', FieldParser.variable(4, 30));
+      out.set('4320', FieldParser.variable(4, 35));
+      out.set('4321', FieldParser.fixed(4, 1));
+      out.set('4322', FieldParser.fixed(4, 1));
+      out.set('4323', FieldParser.fixed(4, 1));
+      out.set('4324', FieldParser.fixed(4, 10));
+      out.set('4325', FieldParser.fixed(4, 10));
+      out.set('4326', FieldParser.fixed(4, 6));
+      out.set('7001', FieldParser.fixed(4, 13));
+      out.set('7002', FieldParser.variable(4, 30));
+      out.set('7003', FieldParser.fixed(4, 10));
+      out.set('7004', FieldParser.variable(4, 4));
+      out.set('7005', FieldParser.variable(4, 12));
+      out.set('7006', FieldParser.fixed(4, 6));
+      out.set('7007', FieldParser.variable(4, 12));
+      out.set('7008', FieldParser.variable(4, 3));
+      out.set('7009', FieldParser.variable(4, 10));
+      out.set('7010', FieldParser.variable(4, 2));
+      out.set('7011', FieldParser.variable(4, 10));
+      out.set('7020', FieldParser.variable(4, 20));
+      out.set('7021', FieldParser.variable(4, 20));
+      out.set('7022', FieldParser.variable(4, 20));
+      out.set('7023', FieldParser.variable(4, 30));
+      out.set('7040', FieldParser.fixed(4, 4));
+      out.set('7240', FieldParser.variable(4, 20));
+      out.set('8001', FieldParser.fixed(4, 14));
+      out.set('8002', FieldParser.variable(4, 20));
+      out.set('8003', FieldParser.variable(4, 30));
+      out.set('8004', FieldParser.variable(4, 30));
+      out.set('8005', FieldParser.fixed(4, 6));
+      out.set('8006', FieldParser.fixed(4, 18));
+      out.set('8007', FieldParser.variable(4, 34));
+      out.set('8008', FieldParser.variable(4, 12));
+      out.set('8009', FieldParser.variable(4, 50));
+      out.set('8010', FieldParser.variable(4, 30));
+      out.set('8011', FieldParser.variable(4, 12));
+      out.set('8012', FieldParser.variable(4, 20));
+      out.set('8013', FieldParser.variable(4, 25));
+      out.set('8017', FieldParser.fixed(4, 18));
+      out.set('8018', FieldParser.fixed(4, 18));
+      out.set('8019', FieldParser.variable(4, 10));
+      out.set('8020', FieldParser.variable(4, 25));
+      out.set('8026', FieldParser.fixed(4, 18));
+      out.set('8100', FieldParser.fixed(4, 6)); // removed from latest versions of spec
+      out.set('8101', FieldParser.fixed(4, 10)); // removed from latest versions of spec
+      out.set('8102', FieldParser.fixed(4, 2)); // removed from latest versions of spec
+      out.set('8110', FieldParser.variable(4, 70));
+      out.set('8111', FieldParser.fixed(4, 4));
+      out.set('8112', FieldParser.variable(4, 70));
+      out.set('8200', FieldParser.variable(4, 70));
+      return out;
+  })();
 
   class GeneralAppIdDecoder {
       constructor(information) {
+          this.current = new CurrentParsingState();
           this.buffer = new StringBuilder();
           this.information = information;
       }
@@ -9937,9 +10018,9 @@
           let currentPosition = initialPosition;
           let remaining = null;
           do {
-              let info = this.decodeGeneralPurposeField(currentPosition, remaining);
-              let parsedFields = FieldParser.parseFieldsInGeneralPurpose(info.getNewString());
-              if (parsedFields != null) {
+              const info = this.decodeGeneralPurposeField(currentPosition, remaining);
+              const parsedFields = FieldParser.parseFieldsInGeneralPurpose(info.getNewString());
+              if (parsedFields !== null) {
                   buff.append(parsedFields);
               }
               if (info.isRemaining()) {
@@ -9970,15 +10051,15 @@
       }
       decodeNumeric(pos) {
           if (pos + 7 > this.information.getSize()) {
-              let numeric = this.extractNumericValueFromBitArray(pos, 4);
+              const numeric = this.extractNumericValueFromBitArray(pos, 4);
               if (numeric === 0) {
                   return new DecodedNumeric(this.information.getSize(), DecodedNumeric.FNC1, DecodedNumeric.FNC1);
               }
               return new DecodedNumeric(this.information.getSize(), numeric - 1, DecodedNumeric.FNC1);
           }
-          let numeric = this.extractNumericValueFromBitArray(pos, 7);
-          let digit1 = (numeric - 8) / 11;
-          let digit2 = (numeric - 8) % 11;
+          const numeric = this.extractNumericValueFromBitArray(pos, 7);
+          const digit1 = Math.trunc((numeric - 8) / 11);
+          const digit2 = (numeric - 8) % 11;
           return new DecodedNumeric(pos + 7, digit1, digit2);
       }
       extractNumericValueFromBitArray(pos, bits) {
@@ -9996,21 +10077,21 @@
       decodeGeneralPurposeField(pos, remaining) {
           // this.buffer.setLength(0);
           this.buffer.setLengthToZero();
-          if (remaining != null) {
+          if (remaining !== null) {
               this.buffer.append(remaining);
           }
           this.current.setPosition(pos);
-          let lastDecoded = this.parseBlocks();
-          if (lastDecoded != null && lastDecoded.isRemaining()) {
+          const lastDecoded = this.parseBlocks();
+          if (lastDecoded !== null && lastDecoded.isRemaining()) {
               return new DecodedInformation(this.current.getPosition(), this.buffer.toString(), lastDecoded.getRemainingValue());
           }
           return new DecodedInformation(this.current.getPosition(), this.buffer.toString());
       }
       parseBlocks() {
-          let isFinished;
+          let isFinished = false;
           let result;
           do {
-              let initialPosition = this.current.getPosition();
+              const initialPosition = this.current.getPosition();
               if (this.current.isAlpha()) {
                   result = this.parseAlphaBlock();
                   isFinished = result.isFinished();
@@ -10023,7 +10104,7 @@
                   result = this.parseNumericBlock();
                   isFinished = result.isFinished();
               }
-              let positionChanged = initialPosition !== this.current.getPosition();
+              const positionChanged = initialPosition !== this.current.getPosition();
               if (!positionChanged && !isFinished) {
                   break;
               }
@@ -10032,7 +10113,7 @@
       }
       parseNumericBlock() {
           while (this.isStillNumeric(this.current.getPosition())) {
-              let numeric = this.decodeNumeric(this.current.getPosition());
+              const numeric = this.decodeNumeric(this.current.getPosition());
               this.current.setPosition(numeric.getNewPosition());
               if (numeric.isFirstDigitFNC1()) {
                   let information;
@@ -10042,28 +10123,28 @@
                   else {
                       information = new DecodedInformation(this.current.getPosition(), this.buffer.toString(), numeric.getSecondDigit());
                   }
-                  return new BlockParsedResult(true, information);
+                  return new BlockParsedResult(information, true);
               }
-              this.buffer.append(numeric.getFirstDigit());
+              this.buffer.append('' + numeric.getFirstDigit());
               if (numeric.isSecondDigitFNC1()) {
-                  let information = new DecodedInformation(this.current.getPosition(), this.buffer.toString());
-                  return new BlockParsedResult(true, information);
+                  const information = new DecodedInformation(this.current.getPosition(), this.buffer.toString());
+                  return new BlockParsedResult(information, true);
               }
-              this.buffer.append(numeric.getSecondDigit());
+              this.buffer.append('' + numeric.getSecondDigit());
           }
           if (this.isNumericToAlphaNumericLatch(this.current.getPosition())) {
               this.current.setAlpha();
               this.current.incrementPosition(4);
           }
-          return new BlockParsedResult(false);
+          return new BlockParsedResult();
       }
       parseIsoIec646Block() {
           while (this.isStillIsoIec646(this.current.getPosition())) {
-              let iso = this.decodeIsoIec646(this.current.getPosition());
+              const iso = this.decodeIsoIec646(this.current.getPosition());
               this.current.setPosition(iso.getNewPosition());
               if (iso.isFNC1()) {
-                  let information = new DecodedInformation(this.current.getPosition(), this.buffer.toString());
-                  return new BlockParsedResult(true, information);
+                  const information = new DecodedInformation(this.current.getPosition(), this.buffer.toString());
+                  return new BlockParsedResult(information, true);
               }
               this.buffer.append(iso.getValue());
           }
@@ -10080,15 +10161,15 @@
               }
               this.current.setAlpha();
           }
-          return new BlockParsedResult(false);
+          return new BlockParsedResult();
       }
       parseAlphaBlock() {
           while (this.isStillAlpha(this.current.getPosition())) {
-              let alpha = this.decodeAlphanumeric(this.current.getPosition());
+              const alpha = this.decodeAlphanumeric(this.current.getPosition());
               this.current.setPosition(alpha.getNewPosition());
               if (alpha.isFNC1()) {
-                  let information = new DecodedInformation(this.current.getPosition(), this.buffer.toString());
-                  return new BlockParsedResult(true, information); // end of the char block
+                  const information = new DecodedInformation(this.current.getPosition(), this.buffer.toString());
+                  return new BlockParsedResult(information, true); // end of the char block
               }
               this.buffer.append(alpha.getValue());
           }
@@ -10105,45 +10186,45 @@
               }
               this.current.setIsoIec646();
           }
-          return new BlockParsedResult(false);
+          return new BlockParsedResult();
       }
       isStillIsoIec646(pos) {
           if (pos + 5 > this.information.getSize()) {
               return false;
           }
-          let fiveBitValue = this.extractNumericValueFromBitArray(pos, 5);
+          const fiveBitValue = this.extractNumericValueFromBitArray(pos, 5);
           if (fiveBitValue >= 5 && fiveBitValue < 16) {
               return true;
           }
           if (pos + 7 > this.information.getSize()) {
               return false;
           }
-          let sevenBitValue = this.extractNumericValueFromBitArray(pos, 7);
+          const sevenBitValue = this.extractNumericValueFromBitArray(pos, 7);
           if (sevenBitValue >= 64 && sevenBitValue < 116) {
               return true;
           }
           if (pos + 8 > this.information.getSize()) {
               return false;
           }
-          let eightBitValue = this.extractNumericValueFromBitArray(pos, 8);
+          const eightBitValue = this.extractNumericValueFromBitArray(pos, 8);
           return eightBitValue >= 232 && eightBitValue < 253;
       }
       decodeIsoIec646(pos) {
-          let fiveBitValue = this.extractNumericValueFromBitArray(pos, 5);
+          const fiveBitValue = this.extractNumericValueFromBitArray(pos, 5);
           if (fiveBitValue === 15) {
               return new DecodedChar(pos + 5, DecodedChar.FNC1);
           }
           if (fiveBitValue >= 5 && fiveBitValue < 15) {
-              return new DecodedChar(pos + 5, ('0' + (fiveBitValue - 5)));
+              return new DecodedChar(pos + 5, String.fromCharCode('0'.charCodeAt(0) + fiveBitValue - 5));
           }
-          let sevenBitValue = this.extractNumericValueFromBitArray(pos, 7);
+          const sevenBitValue = this.extractNumericValueFromBitArray(pos, 7);
           if (sevenBitValue >= 64 && sevenBitValue < 90) {
-              return new DecodedChar(pos + 7, ('' + (sevenBitValue + 1)));
+              return new DecodedChar(pos + 7, String.fromCharCode(sevenBitValue + 1));
           }
           if (sevenBitValue >= 90 && sevenBitValue < 116) {
-              return new DecodedChar(pos + 7, ('' + (sevenBitValue + 7)));
+              return new DecodedChar(pos + 7, String.fromCharCode(sevenBitValue + 7));
           }
-          let eightBitValue = this.extractNumericValueFromBitArray(pos, 8);
+          const eightBitValue = this.extractNumericValueFromBitArray(pos, 8);
           let c;
           switch (eightBitValue) {
               case 232:
@@ -10219,27 +10300,27 @@
               return false;
           }
           // We now check if it's a valid 5-bit value (0..9 and FNC1)
-          let fiveBitValue = this.extractNumericValueFromBitArray(pos, 5);
+          const fiveBitValue = this.extractNumericValueFromBitArray(pos, 5);
           if (fiveBitValue >= 5 && fiveBitValue < 16) {
               return true;
           }
           if (pos + 6 > this.information.getSize()) {
               return false;
           }
-          let sixBitValue = this.extractNumericValueFromBitArray(pos, 6);
+          const sixBitValue = this.extractNumericValueFromBitArray(pos, 6);
           return sixBitValue >= 16 && sixBitValue < 63; // 63 not included
       }
       decodeAlphanumeric(pos) {
-          let fiveBitValue = this.extractNumericValueFromBitArray(pos, 5);
+          const fiveBitValue = this.extractNumericValueFromBitArray(pos, 5);
           if (fiveBitValue === 15) {
               return new DecodedChar(pos + 5, DecodedChar.FNC1);
           }
           if (fiveBitValue >= 5 && fiveBitValue < 15) {
-              return new DecodedChar(pos + 5, ('0' + (fiveBitValue - 5)));
+              return new DecodedChar(pos + 5, String.fromCharCode('0'.charCodeAt(0) + fiveBitValue - 5));
           }
           let sixBitValue = this.extractNumericValueFromBitArray(pos, 6);
           if (sixBitValue >= 32 && sixBitValue < 58) {
-              return new DecodedChar(pos + 6, ('' + (sixBitValue + 33)));
+              return new DecodedChar(pos + 6, String.fromCharCode((sixBitValue + 33)));
           }
           let c;
           switch (sixBitValue) {
@@ -10325,36 +10406,35 @@
       }
       encodeCompressedGtin(buf, currentPos) {
           buf.append('(01)');
-          let initialPosition = buf.length();
+          const initialPosition = buf.length();
           buf.append('9');
           this.encodeCompressedGtinWithoutAI(buf, currentPos, initialPosition);
       }
       encodeCompressedGtinWithoutAI(buf, currentPos, initialBufferPosition) {
           for (let i = 0; i < 4; ++i) {
-              let currentBlock = this.getGeneralDecoder().extractNumericValueFromBitArray(currentPos + 10 * i, 10);
-              if (currentBlock / 100 === 0) {
+              const currentBlock /* int */ = this.getGeneralDecoder().extractNumericValueFromBitArray(currentPos + 10 * i, 10);
+              // Pad with leading zeroes.
+              if (currentBlock < 100) {
                   buf.append('0');
               }
-              if (currentBlock / 10 === 0) {
+              if (currentBlock < 10) {
                   buf.append('0');
               }
-              buf.append(currentBlock);
+              buf.append('' + currentBlock);
           }
           AI01decoder.appendCheckDigit(buf, initialBufferPosition);
       }
       static appendCheckDigit(buf, currentPos) {
           let checkDigit = 0;
           for (let i = 0; i < 13; i++) {
-              // let digit = buf.charAt(i + currentPos) - '0';
-              // To be checked
-              let digit = buf.charAt(i + currentPos).charCodeAt(0) - '0'.charCodeAt(0);
+              const digit = buf.charAt(i + currentPos).charCodeAt(0) - '0'.charCodeAt(0);
               checkDigit += (i & 0x01) === 0 ? 3 * digit : digit;
           }
           checkDigit = 10 - (checkDigit % 10);
           if (checkDigit === 10) {
               checkDigit = 0;
           }
-          buf.append(checkDigit);
+          buf.append('' + checkDigit);
       }
   }
   AI01decoder.GTIN_SIZE = 40;
@@ -10365,11 +10445,11 @@
           super(information);
       }
       parseInformation() {
-          let buff = new StringBuilder();
+          const buff = new StringBuilder();
           buff.append('(01)');
-          let initialGtinPosition = buff.length();
-          let firstGtinDigit = this.getGeneralDecoder().extractNumericValueFromBitArray(AI01AndOtherAIs.HEADER_SIZE, 4);
-          buff.append(firstGtinDigit);
+          const initialGtinPosition = buff.length();
+          const firstGtinDigit = this.getGeneralDecoder().extractNumericValueFromBitArray(AI01AndOtherAIs.HEADER_SIZE, 4);
+          buff.append('' + firstGtinDigit);
           this.encodeCompressedGtinWithoutAI(buff, AI01AndOtherAIs.HEADER_SIZE + 4, initialGtinPosition);
           return this.getGeneralDecoder().decodeAllCodes(buff, AI01AndOtherAIs.HEADER_SIZE + 44);
       }
@@ -10394,15 +10474,16 @@
       encodeCompressedWeight(buf, currentPos, weightSize) {
           let originalWeightNumeric = this.getGeneralDecoder().extractNumericValueFromBitArray(currentPos, weightSize);
           this.addWeightCode(buf, originalWeightNumeric);
-          let weightNumeric = this.checkWeight(originalWeightNumeric);
+          const weightNumeric /* int */ = this.checkWeight(originalWeightNumeric);
           let currentDivisor = 100000;
+          // Pad with leading zeroes.
           for (let i = 0; i < 5; ++i) {
-              if (weightNumeric / currentDivisor === 0) {
+              if (weightNumeric < currentDivisor) {
                   buf.append('0');
               }
-              currentDivisor /= 10;
+              currentDivisor = Math.trunc(currentDivisor / 10);
           }
-          buf.append(weightNumeric);
+          buf.append('' + weightNumeric);
       }
   }
 
@@ -10466,13 +10547,13 @@
           if (this.getInformation().getSize() < AI01392xDecoder.HEADER_SIZE + AI01decoder.GTIN_SIZE) {
               throw new NotFoundException();
           }
-          let buf = new StringBuilder();
+          const buf = new StringBuilder();
           this.encodeCompressedGtin(buf, AI01392xDecoder.HEADER_SIZE);
-          let lastAIdigit = this.getGeneralDecoder().extractNumericValueFromBitArray(AI01392xDecoder.HEADER_SIZE + AI01decoder.GTIN_SIZE, AI01392xDecoder.LAST_DIGIT_SIZE);
+          const lastAIdigit = this.getGeneralDecoder().extractNumericValueFromBitArray(AI01392xDecoder.HEADER_SIZE + AI01decoder.GTIN_SIZE, AI01392xDecoder.LAST_DIGIT_SIZE);
           buf.append('(392');
-          buf.append(lastAIdigit);
+          buf.append('' + lastAIdigit);
           buf.append(')');
-          let decodedInformation = this.getGeneralDecoder().decodeGeneralPurposeField(AI01392xDecoder.HEADER_SIZE + AI01decoder.GTIN_SIZE + AI01392xDecoder.LAST_DIGIT_SIZE, null);
+          const decodedInformation = this.getGeneralDecoder().decodeGeneralPurposeField(AI01392xDecoder.HEADER_SIZE + AI01decoder.GTIN_SIZE + AI01392xDecoder.LAST_DIGIT_SIZE, null);
           buf.append(decodedInformation.getNewString());
           return buf.toString();
       }
@@ -10489,23 +10570,24 @@
               AI01393xDecoder.HEADER_SIZE + AI01decoder.GTIN_SIZE) {
               throw new NotFoundException();
           }
-          let buf = new StringBuilder();
+          const buf = new StringBuilder();
           this.encodeCompressedGtin(buf, AI01393xDecoder.HEADER_SIZE);
-          let lastAIdigit = this.getGeneralDecoder().extractNumericValueFromBitArray(AI01393xDecoder.HEADER_SIZE + AI01decoder.GTIN_SIZE, AI01393xDecoder.LAST_DIGIT_SIZE);
+          const lastAIdigit = this.getGeneralDecoder().extractNumericValueFromBitArray(AI01393xDecoder.HEADER_SIZE + AI01decoder.GTIN_SIZE, AI01393xDecoder.LAST_DIGIT_SIZE);
           buf.append('(393');
-          buf.append(lastAIdigit);
+          buf.append('' + lastAIdigit);
           buf.append(')');
-          let firstThreeDigits = this.getGeneralDecoder().extractNumericValueFromBitArray(AI01393xDecoder.HEADER_SIZE +
+          const firstThreeDigits /* int */ = this.getGeneralDecoder().extractNumericValueFromBitArray(AI01393xDecoder.HEADER_SIZE +
               AI01decoder.GTIN_SIZE +
               AI01393xDecoder.LAST_DIGIT_SIZE, AI01393xDecoder.FIRST_THREE_DIGITS_SIZE);
-          if (firstThreeDigits / 100 === 0) {
+          // Pad with leading zeroes.
+          if (firstThreeDigits < 100) {
               buf.append('0');
           }
-          if (firstThreeDigits / 10 === 0) {
+          if (firstThreeDigits < 10) {
               buf.append('0');
           }
-          buf.append(firstThreeDigits);
-          let generalInformation = this.getGeneralDecoder().decodeGeneralPurposeField(AI01393xDecoder.HEADER_SIZE +
+          buf.append('' + firstThreeDigits);
+          const generalInformation = this.getGeneralDecoder().decodeGeneralPurposeField(AI01393xDecoder.HEADER_SIZE +
               AI01decoder.GTIN_SIZE +
               AI01393xDecoder.LAST_DIGIT_SIZE +
               AI01393xDecoder.FIRST_THREE_DIGITS_SIZE, null);
@@ -10531,7 +10613,7 @@
                   AI013x0x1xDecoder.DATE_SIZE) {
               throw new NotFoundException();
           }
-          let buf = new StringBuilder();
+          const buf = new StringBuilder();
           this.encodeCompressedGtin(buf, AI013x0x1xDecoder.HEADER_SIZE);
           this.encodeCompressedWeight(buf, AI013x0x1xDecoder.HEADER_SIZE + AI013x0x1xDecoder.GTIN_SIZE, AI013x0x1xDecoder.WEIGHT_SIZE);
           this.encodeCompressedDate(buf, AI013x0x1xDecoder.HEADER_SIZE +
@@ -10547,28 +10629,30 @@
           buf.append('(');
           buf.append(this.dateCode);
           buf.append(')');
-          let day = numericDate % 32;
-          numericDate /= 32;
-          let month = (numericDate % 12) + 1;
-          numericDate /= 12;
-          let year = numericDate;
-          if (year / 10 === 0) {
+          const day /* int */ = numericDate % 32;
+          numericDate = Math.trunc(numericDate / 32);
+          const month /* int */ = (numericDate % 12) + 1;
+          numericDate = Math.trunc(numericDate / 12);
+          const year /* int */ = numericDate;
+          // Division of an integer by 10 results in 0.
+          // The checks exist to add a leading 0.
+          if (year < 10) {
               buf.append('0');
           }
-          buf.append(year);
-          if (month / 10 === 0) {
+          buf.append('' + year);
+          if (month < 10) {
               buf.append('0');
           }
-          buf.append(month);
-          if (day / 10 === 0) {
+          buf.append('' + month);
+          if (day < 10) {
               buf.append('0');
           }
-          buf.append(day);
+          buf.append('' + day);
       }
-      addWeightCode(buf, weight) {
+      addWeightCode(buf, weight /* int */) {
           buf.append('(');
           buf.append(this.firstAIdigits);
-          buf.append(weight / 100000);
+          buf.append('' + Math.trunc(weight / 100000));
           buf.append(')');
       }
       checkWeight(weight) {
@@ -10580,89 +10664,79 @@
   AI013x0x1xDecoder.DATE_SIZE = 16;
 
   function createDecoder(information) {
-      try {
-          if (information.get(1)) {
-              return new AI01AndOtherAIs(information);
-          }
-          if (!information.get(2)) {
-              return new AnyAIDecoder(information);
-          }
-          let fourBitEncodationMethod = GeneralAppIdDecoder.extractNumericValueFromBitArray(information, 1, 4);
-          switch (fourBitEncodationMethod) {
-              case 4: return new AI013103decoder(information);
-              case 5: return new AI01320xDecoder(information);
-          }
-          let fiveBitEncodationMethod = GeneralAppIdDecoder.extractNumericValueFromBitArray(information, 1, 5);
-          switch (fiveBitEncodationMethod) {
-              case 12: return new AI01392xDecoder(information);
-              case 13: return new AI01393xDecoder(information);
-          }
-          let sevenBitEncodationMethod = GeneralAppIdDecoder.extractNumericValueFromBitArray(information, 1, 7);
-          switch (sevenBitEncodationMethod) {
-              case 56: return new AI013x0x1xDecoder(information, '310', '11');
-              case 57: return new AI013x0x1xDecoder(information, '320', '11');
-              case 58: return new AI013x0x1xDecoder(information, '310', '13');
-              case 59: return new AI013x0x1xDecoder(information, '320', '13');
-              case 60: return new AI013x0x1xDecoder(information, '310', '15');
-              case 61: return new AI013x0x1xDecoder(information, '320', '15');
-              case 62: return new AI013x0x1xDecoder(information, '310', '17');
-              case 63: return new AI013x0x1xDecoder(information, '320', '17');
-          }
+      if (information.get(1)) {
+          return new AI01AndOtherAIs(information);
       }
-      catch (e) {
-          console.log(e);
-          throw new IllegalStateException('unknown decoder: ' + information);
+      if (!information.get(2)) {
+          return new AnyAIDecoder(information);
       }
+      const fourBitEncodationMethod = GeneralAppIdDecoder.extractNumericValueFromBitArray(information, 1, 4);
+      switch (fourBitEncodationMethod) {
+          case 4: return new AI013103decoder(information);
+          case 5: return new AI01320xDecoder(information);
+      }
+      const fiveBitEncodationMethod = GeneralAppIdDecoder.extractNumericValueFromBitArray(information, 1, 5);
+      switch (fiveBitEncodationMethod) {
+          case 12: return new AI01392xDecoder(information);
+          case 13: return new AI01393xDecoder(information);
+      }
+      const sevenBitEncodationMethod = GeneralAppIdDecoder.extractNumericValueFromBitArray(information, 1, 7);
+      switch (sevenBitEncodationMethod) {
+          case 56: return new AI013x0x1xDecoder(information, '310', '11');
+          case 57: return new AI013x0x1xDecoder(information, '320', '11');
+          case 58: return new AI013x0x1xDecoder(information, '310', '13');
+          case 59: return new AI013x0x1xDecoder(information, '320', '13');
+          case 60: return new AI013x0x1xDecoder(information, '310', '15');
+          case 61: return new AI013x0x1xDecoder(information, '320', '15');
+          case 62: return new AI013x0x1xDecoder(information, '310', '17');
+          case 63: return new AI013x0x1xDecoder(information, '320', '17');
+      }
+      throw new IllegalStateException('unknown decoder: ' + information);
   }
 
   class ExpandedPair {
-      constructor(leftChar, rightChar, finderPatter, mayBeLast) {
-          this.leftchar = leftChar;
-          this.rightchar = rightChar;
-          this.finderpattern = finderPatter;
-          this.maybeLast = mayBeLast;
-      }
-      mayBeLast() {
-          return this.maybeLast;
+      constructor(leftChar, rightChar, finderPatter) {
+          this.leftChar = leftChar;
+          this.rightChar = rightChar;
+          this.finderPattern = finderPatter;
       }
       getLeftChar() {
-          return this.leftchar;
+          return this.leftChar;
       }
       getRightChar() {
-          return this.rightchar;
+          return this.rightChar;
       }
       getFinderPattern() {
-          return this.finderpattern;
+          return this.finderPattern;
       }
       mustBeLast() {
-          return this.rightchar == null;
+          return this.rightChar === null;
       }
       toString() {
-          return '[ ' + this.leftchar + ', ' + this.rightchar + ' : ' + (this.finderpattern == null ? 'null' : this.finderpattern.getValue()) + ' ]';
+          return '[ ' + this.leftChar + ', ' + this.rightChar + ' : ' + (this.finderPattern === null ? 'null' : this.finderPattern.getValue()) + ' ]';
       }
       static equals(o1, o2) {
-          if (!(o1 instanceof ExpandedPair)) {
+          if (o2 === null)
+              return o1 === null;
+          if (!(o2 instanceof ExpandedPair)) {
               return false;
           }
-          return ExpandedPair.equalsOrNull(o1.leftchar, o2.leftchar) &&
-              ExpandedPair.equalsOrNull(o1.rightchar, o2.rightchar) &&
-              ExpandedPair.equalsOrNull(o1.finderpattern, o2.finderpattern);
-      }
-      static equalsOrNull(o1, o2) {
-          return o1 === null ? o2 === null : ExpandedPair.equals(o1, o2);
+          return (o1.leftChar === null ? o2.leftChar === null : o1.leftChar.equals(o2.leftChar)) &&
+              (o1.rightChar === null ? o2.rightChar === null : o1.rightChar.equals(o2.rightChar)) &&
+              (o1.finderPattern === null ? o2.finderPattern === null : o1.finderPattern.equals(o2.finderPattern));
       }
       hashCode() {
-          // return ExpandedPair.hashNotNull(leftChar) ^ hashNotNull(rightChar) ^ hashNotNull(finderPattern);
-          let value = this.leftchar.getValue() ^ this.rightchar.getValue() ^ this.finderpattern.getValue();
-          return value;
+          return ExpandedPair.hashNotNull(this.leftChar) ^ ExpandedPair.hashNotNull(this.rightChar) ^ ExpandedPair.hashNotNull(this.finderPattern);
+      }
+      static hashNotNull(o) {
+          return o === null ? 0 : o.hashCode();
       }
   }
 
   class ExpandedRow {
-      constructor(pairs, rowNumber, wasReversed) {
-          this.pairs = pairs;
+      constructor(pairs, rowNumber) {
+          this.pairs = [...pairs];
           this.rowNumber = rowNumber;
-          this.wasReversed = wasReversed;
       }
       getPairs() {
           return this.pairs;
@@ -10670,14 +10744,9 @@
       getRowNumber() {
           return this.rowNumber;
       }
-      isReversed() {
-          return this.wasReversed;
-      }
-      // check implementation
       isEquivalent(otherPairs) {
-          return this.checkEqualitity(this, otherPairs);
+          return ExpandedRow.listEquals(this.getPairs(), otherPairs);
       }
-      // @Override
       toString() {
           return '{ ' + this.pairs + ' }';
       }
@@ -10685,25 +10754,21 @@
        * Two rows are equal if they contain the same pairs in the same order.
        */
       // @Override
-      // check implementation
-      equals(o1, o2) {
-          if (!(o1 instanceof ExpandedRow)) {
+      static equals(o1, o2) {
+          if (o1 === null)
+              return o2 === null;
+          if (!(o2 instanceof ExpandedRow)) {
               return false;
           }
-          return this.checkEqualitity(o1, o2) && o1.wasReversed === o2.wasReversed;
+          return ExpandedRow.listEquals(o1.pairs, o2.getPairs());
       }
-      checkEqualitity(pair1, pair2) {
-          if (!pair1 || !pair2)
-              return;
-          let result;
-          pair1.forEach((e1, i) => {
-              pair2.forEach(e2 => {
-                  if (e1.getLeftChar().getValue() === e2.getLeftChar().getValue() && e1.getRightChar().getValue() === e2.getRightChar().getValue() && e1.getFinderPatter().getValue() === e2.getFinderPatter().getValue()) {
-                      result = true;
-                  }
-              });
+      static listEquals(pairs1, pairs2) {
+          if (pairs1.length !== pairs2.length)
+              return false;
+          return pairs1.every((pair1, index) => {
+              const pair2 = pairs2[index];
+              return ExpandedPair.equals(pair1, pair2);
           });
-          return result;
       }
   }
 
@@ -10718,22 +10783,21 @@
           super(...arguments);
           this.pairs = new Array(RSSExpandedReader.MAX_PAIRS);
           this.rows = new Array();
-          this.startEnd = [2];
+          this.startEnd = [0, 0];
+          this.startFromEven = false;
       }
       decodeRow(rowNumber, row, hints) {
-          // Rows can start with even pattern in case in prev rows there where odd number of patters.
-          // So lets try twice
-          // this.pairs.clear();
-          this.pairs.length = 0;
+          // Rows can start with even pattern if previous rows had an odd number of patterns, so we try twice.
           this.startFromEven = false;
           try {
               return RSSExpandedReader.constructResult(this.decodeRow2pairs(rowNumber, row));
           }
-          catch (e) {
-              // OK
-              // console.log(e);
+          catch (ex) {
+              if (ex instanceof NotFoundException) ;
+              else {
+                  throw ex;
+              }
           }
-          this.pairs.length = 0;
           this.startFromEven = true;
           return RSSExpandedReader.constructResult(this.decodeRow2pairs(rowNumber, row));
       }
@@ -10743,6 +10807,7 @@
       }
       // Not private for testing
       decodeRow2pairs(rowNumber, row) {
+          this.pairs.length = 0;
           let done = false;
           while (!done) {
               try {
@@ -10750,42 +10815,37 @@
               }
               catch (error) {
                   if (error instanceof NotFoundException) {
-                      if (!this.pairs.length) {
-                          throw new NotFoundException();
+                      if (this.pairs.length === 0) {
+                          throw error;
                       }
                       // exit this loop when retrieveNextPair() fails and throws
                       done = true;
                   }
+                  else {
+                      throw error;
+                  }
               }
           }
           // TODO: verify sequence of finder patterns as in checkPairSequence()
-          if (this.checkChecksum()) {
+          if (this.checkChecksum() && RSSExpandedReader.isValidSequence(this.pairs, true)) {
               return this.pairs;
           }
-          let tryStackedDecode;
-          if (this.rows.length) {
-              tryStackedDecode = true;
-          }
-          else {
-              tryStackedDecode = false;
-          }
-          // let tryStackedDecode = !this.rows.isEmpty();
-          this.storeRow(rowNumber, false); // TODO: deal with reversed rows
+          let tryStackedDecode = this.rows.length > 0;
+          this.storeRow(rowNumber); // TODO: deal with reversed rows
           if (tryStackedDecode) {
               // When the image is 180-rotated, then rows are sorted in wrong direction.
               // Try twice with both the directions.
               let ps = this.checkRowsBoolean(false);
-              if (ps != null) {
+              if (ps !== null) {
                   return ps;
               }
               ps = this.checkRowsBoolean(true);
-              if (ps != null) {
+              if (ps !== null) {
                   return ps;
               }
           }
           throw new NotFoundException();
       }
-      // Need to Verify
       checkRowsBoolean(reverse) {
           // Limit number of rows we are checking
           // We use recursive algorithm with pure complexity and don't want it to take forever
@@ -10796,20 +10856,20 @@
           }
           this.pairs.length = 0;
           if (reverse) {
-              this.rows = this.rows.reverse();
-              // Collections.reverse(this.rows);
+              this.rows.reverse();
           }
           let ps = null;
           try {
               ps = this.checkRows(new Array(), 0);
           }
-          catch (e) {
-              // OK
-              console.log(e);
+          catch (ex) {
+              if (ex instanceof NotFoundException) ;
+              else {
+                  throw ex;
+              }
           }
           if (reverse) {
-              this.rows = this.rows.reverse();
-              // Collections.reverse(this.rows);
+              this.rows.reverse();
           }
           return ps;
       }
@@ -10817,58 +10877,93 @@
       // Recursion is used to implement backtracking
       checkRows(collectedRows, currentRow) {
           for (let i = currentRow; i < this.rows.length; i++) {
-              let row = this.rows[i];
-              this.pairs.length = 0;
-              for (let collectedRow of collectedRows) {
-                  this.pairs.push(collectedRow.getPairs());
+              const row = this.rows[i];
+              this.pairs.push(...row.getPairs());
+              const addSize = row.getPairs().length;
+              if (RSSExpandedReader.isValidSequence(this.pairs, false)) {
+                  if (this.checkChecksum()) {
+                      return this.pairs;
+                  }
+                  collectedRows.push(row);
+                  try {
+                      // Recursion: try to add more rows
+                      return this.checkRows(collectedRows, i + 1);
+                  }
+                  catch (ex) {
+                      if (ex instanceof NotFoundException) {
+                          // We failed, try the next candidate
+                          collectedRows.pop();
+                          this.pairs.splice(this.pairs.length - addSize, addSize);
+                      }
+                      else {
+                          throw ex;
+                      }
+                  }
               }
-              this.pairs.push(row.getPairs());
-              if (!RSSExpandedReader.isValidSequence(this.pairs)) {
-                  continue;
-              }
-              if (this.checkChecksum()) {
-                  return this.pairs;
-              }
-              let rs = new Array(collectedRows);
-              rs.push(row);
-              try {
-                  // Recursion: try to add more rows
-                  return this.checkRows(rs, i + 1);
-              }
-              catch (e) {
-                  // We failed, try the next candidate
-                  console.log(e);
+              else {
+                  this.pairs.splice(this.pairs.length - addSize, addSize);
               }
           }
           throw new NotFoundException();
       }
-      // Whether the pairs form a valid find pattern sequence,
-      // either complete or a prefix
-      static isValidSequence(pairs) {
-          for (let sequence of RSSExpandedReader.FINDER_PATTERN_SEQUENCES) {
-              if (pairs.length > sequence.length) {
-                  continue;
-              }
-              let stop = true;
-              for (let j = 0; j < pairs.length; j++) {
-                  if (pairs[j].getFinderPattern().getValue() !== sequence[j]) {
-                      stop = false;
-                      break;
+      // Whether the pairs form a valid finder pattern sequence, either complete or a prefix
+      static isValidSequence(pairs, complete) {
+          for (const sequence of RSSExpandedReader.FINDER_PATTERN_SEQUENCES) {
+              const sizeOk = (complete ? pairs.length === sequence.length : pairs.length <= sequence.length);
+              if (sizeOk) {
+                  let stop = true;
+                  for (let j = 0; j < pairs.length; j++) {
+                      if (pairs[j].getFinderPattern().getValue() !== sequence[j]) {
+                          stop = false;
+                          break;
+                      }
                   }
-              }
-              if (stop) {
-                  return true;
+                  if (stop) {
+                      return true;
+                  }
               }
           }
           return false;
       }
-      storeRow(rowNumber, wasReversed) {
+      // Whether the pairs, plus another pair of the specified type, would together
+      // form a valid finder pattern sequence, either complete or partial
+      static mayFollow(pairs, value /* int */) {
+          if (pairs.length === 0) {
+              return true;
+          }
+          for (const sequence of this.FINDER_PATTERN_SEQUENCES) {
+              if (pairs.length + 1 <= sequence.length) {
+                  // the proposed sequence (i.e. pairs + value) would fit in this allowed sequence
+                  for (let i = pairs.length; i < sequence.length; i++) {
+                      if (sequence[i] === value) {
+                          // we found our value in this allowed sequence, check to see if the elements preceding it match our existing
+                          // pairs; note our existing pairs may not be a full sequence (e.g. if processing a row in a stacked symbol)
+                          let matched = true;
+                          for (let j = 0; j < pairs.length; j++) {
+                              const allowed = sequence[i - j - 1];
+                              const actual = pairs[pairs.length - j - 1].getFinderPattern().getValue();
+                              if (allowed !== actual) {
+                                  matched = false;
+                                  break;
+                              }
+                          }
+                          if (matched) {
+                              return true;
+                          }
+                      }
+                  }
+              }
+          }
+          // the proposed finder pattern sequence is illegal
+          return false;
+      }
+      storeRow(rowNumber) {
           // Discard if duplicate above or below; otherwise insert in order by row number.
           let insertPos = 0;
           let prevIsSame = false;
           let nextIsSame = false;
           while (insertPos < this.rows.length) {
-              let erow = this.rows[insertPos];
+              const erow = this.rows[insertPos];
               if (erow.getRowNumber() > rowNumber) {
                   nextIsSame = erow.isEquivalent(this.pairs);
                   break;
@@ -10882,60 +10977,41 @@
           // When the row was partially decoded (e.g. 2 pairs found instead of 3),
           // it will prevent us from detecting the barcode.
           // Try to merge partial rows
-          // Check whether the row is part of an allready detected row
+          // Check whether the row is part of an already detected row
           if (RSSExpandedReader.isPartialRow(this.pairs, this.rows)) {
               return;
           }
-          this.rows.push(insertPos, new ExpandedRow(this.pairs, rowNumber, wasReversed));
+          this.rows.splice(insertPos, 0, new ExpandedRow(this.pairs, rowNumber));
           this.removePartialRows(this.pairs, this.rows);
       }
       // Remove all the rows that contains only specified pairs
       removePartialRows(pairs, rows) {
-          // for (Iterator<ExpandedRow> iterator = rows.iterator(); iterator.hasNext();) {
-          //   ExpandedRow r = iterator.next();
-          //   if (r.getPairs().size() == pairs.size()) {
-          //     continue;
-          //   }
-          //   boolean allFound = true;
-          //   for (ExpandedPair p : r.getPairs()) {
-          //     boolean found = false;
-          //     for (ExpandedPair pp : pairs) {
-          //       if (p.equals(pp)) {
-          //         found = true;
-          //         break;
-          //       }
-          //     }
-          //     if (!found) {
-          //       allFound = false;
-          //       break;
-          //     }
-          //   }
-          //   if (allFound) {
-          //     // 'pairs' contains all the pairs from the row 'r'
-          //     iterator.remove();
-          //   }
-          // }
-          for (let row of rows) {
-              if (row.getPairs().length === pairs.length) {
-                  continue;
-              }
-              for (let p of row.getPairs()) {
-                  for (let pp of pairs) {
-                      if (ExpandedPair.equals(p, pp)) {
+          // Iterate backwards to prevent shifting indices.
+          for (let rowsIndex = rows.length - 1; rowsIndex >= 0; rowsIndex--) {
+              const r = rows[rowsIndex];
+              if (r.getPairs().length !== pairs.length) {
+                  let allFound = true;
+                  for (const p of r.getPairs()) {
+                      if (!pairs.some((otherPair) => ExpandedPair.equals(p, otherPair))) {
+                          allFound = false;
                           break;
                       }
+                  }
+                  if (allFound) {
+                      // 'pairs' contains all the pairs from the row 'r'
+                      rows.splice(rowsIndex, 1);
                   }
               }
           }
       }
       // Returns true when one of the rows already contains all the pairs
       static isPartialRow(pairs, rows) {
-          for (let r of rows) {
+          for (const r of rows) {
               let allFound = true;
-              for (let p of pairs) {
+              for (const p of pairs) {
                   let found = false;
-                  for (let pp of r.getPairs()) {
-                      if (p.equals(pp)) {
+                  for (const pp of r.getPairs()) {
+                      if (ExpandedPair.equals(p, pp)) {
                           found = true;
                           break;
                       }
@@ -10958,41 +11034,41 @@
       }
       // Not private for unit testing
       static constructResult(pairs) {
-          let binary = BitArrayBuilder.buildBitArray(pairs);
-          let decoder = createDecoder(binary);
-          let resultingString = decoder.parseInformation();
-          let firstPoints = pairs[0].getFinderPattern().getResultPoints();
-          let lastPoints = pairs[pairs.length - 1]
+          const binary = BitArrayBuilder.buildBitArray(pairs);
+          const decoder = createDecoder(binary);
+          const resultingString = decoder.parseInformation();
+          const firstPoints = pairs[0].getFinderPattern().getResultPoints();
+          const lastPoints = pairs[pairs.length - 1]
               .getFinderPattern()
               .getResultPoints();
-          let points = [firstPoints[0], firstPoints[1], lastPoints[0], lastPoints[1]];
+          const points = [firstPoints[0], firstPoints[1], lastPoints[0], lastPoints[1]];
           return new Result$1(resultingString, null, null, points, BarcodeFormat$1.RSS_EXPANDED, null);
       }
       checkChecksum() {
-          let firstPair = this.pairs.get(0);
-          let checkCharacter = firstPair.getLeftChar();
-          let firstCharacter = firstPair.getRightChar();
+          const firstPair = this.pairs[0];
+          const checkCharacter = firstPair.getLeftChar();
+          const firstCharacter = firstPair.getRightChar();
           if (firstCharacter === null) {
               return false;
           }
           let checksum = firstCharacter.getChecksumPortion();
           let s = 2;
-          for (let i = 1; i < this.pairs.size(); ++i) {
-              let currentPair = this.pairs.get(i);
+          for (let i = 1; i < this.pairs.length; ++i) {
+              const currentPair = this.pairs[i];
               checksum += currentPair.getLeftChar().getChecksumPortion();
               s++;
-              let currentRightChar = currentPair.getRightChar();
-              if (currentRightChar != null) {
+              const currentRightChar = currentPair.getRightChar();
+              if (currentRightChar !== null) {
                   checksum += currentRightChar.getChecksumPortion();
                   s++;
               }
           }
           checksum %= 211;
-          let checkCharacterValue = 211 * (s - 4) + checksum;
+          const checkCharacterValue = 211 * (s - 4) + checksum;
           return checkCharacterValue === checkCharacter.getValue();
       }
       static getNextSecondBar(row, initialPos) {
-          let currentPos;
+          let currentPos = 0;
           if (row.get(initialPos)) {
               currentPos = row.getNextUnset(initialPos);
               currentPos = row.getNextSet(currentPos);
@@ -11009,58 +11085,67 @@
           if (this.startFromEven) {
               isOddPattern = !isOddPattern;
           }
-          let pattern;
+          let pattern = null;
+          let leftChar = null;
           let keepFinding = true;
           let forcedOffset = -1;
           do {
               this.findNextPair(row, previousPairs, forcedOffset);
-              pattern = this.parseFoundFinderPattern(row, rowNumber, isOddPattern);
+              pattern = this.parseFoundFinderPattern(row, rowNumber, isOddPattern, previousPairs);
               if (pattern === null) {
-                  forcedOffset = RSSExpandedReader.getNextSecondBar(row, this.startEnd[0]);
+                  forcedOffset = RSSExpandedReader.getNextSecondBar(row, this.startEnd[0]); // probable false positive, keep looking
               }
               else {
-                  keepFinding = false;
+                  try {
+                      leftChar = this.decodeDataCharacter(row, pattern, isOddPattern, true);
+                      keepFinding = false;
+                  }
+                  catch (ex) {
+                      if (ex instanceof NotFoundException) {
+                          forcedOffset = RSSExpandedReader.getNextSecondBar(row, this.startEnd[0]); // probable false positive, keep looking
+                      }
+                      else {
+                          throw ex;
+                      }
+                  }
               }
           } while (keepFinding);
           // When stacked symbol is split over multiple rows, there's no way to guess if this pair can be last or not.
           // boolean mayBeLast = checkPairSequence(previousPairs, pattern);
-          let leftChar = this.decodeDataCharacter(row, pattern, isOddPattern, true);
-          if (!this.isEmptyPair(previousPairs) &&
-              previousPairs[previousPairs.length - 1].mustBeLast()) {
+          if (previousPairs.length > 0 && previousPairs[previousPairs.length - 1].mustBeLast()) {
               throw new NotFoundException();
           }
-          let rightChar;
+          let rightChar = null;
           try {
               rightChar = this.decodeDataCharacter(row, pattern, isOddPattern, false);
           }
-          catch (e) {
-              rightChar = null;
-              console.log(e);
+          catch (ex) {
+              if (ex instanceof NotFoundException) {
+                  rightChar = null;
+                  // console.log(ex);
+              }
+              else {
+                  throw ex;
+              }
           }
-          return new ExpandedPair(leftChar, rightChar, pattern, true);
-      }
-      isEmptyPair(pairs) {
-          if (pairs.length === 0) {
-              return true;
-          }
-          return false;
+          return new ExpandedPair(leftChar, rightChar, pattern);
       }
       findNextPair(row, previousPairs, forcedOffset) {
-          let counters = this.getDecodeFinderCounters();
+          const counters = this.getDecodeFinderCounters();
           counters[0] = 0;
           counters[1] = 0;
           counters[2] = 0;
           counters[3] = 0;
           let width = row.getSize();
-          let rowOffset;
+          let rowOffset = 0;
           if (forcedOffset >= 0) {
               rowOffset = forcedOffset;
           }
-          else if (this.isEmptyPair(previousPairs)) {
+          else if (previousPairs.length === 0) {
               rowOffset = 0;
           }
           else {
-              let lastPair = previousPairs[previousPairs.length - 1];
+              const lastPair = previousPairs[previousPairs.length - 1];
               rowOffset = lastPair.getFinderPattern().getStartEnd()[1];
           }
           let searchingEvenPair = previousPairs.length % 2 !== 0;
@@ -11111,18 +11196,18 @@
           throw new NotFoundException();
       }
       static reverseCounters(counters) {
-          let length = counters.length;
-          for (let i = 0; i < length / 2; ++i) {
-              let tmp = counters[i];
+          const length = counters.length;
+          for (let i = 0; i < Math.trunc(length / 2); ++i) {
+              const tmp = counters[i];
               counters[i] = counters[length - i - 1];
               counters[length - i - 1] = tmp;
           }
       }
-      parseFoundFinderPattern(row, rowNumber, oddPattern) {
+      parseFoundFinderPattern(row, rowNumber, oddPattern, previousPairs) {
           // Actually we found elements 2-5.
-          let firstCounter;
-          let start;
-          let end;
+          let firstCounter = 0;
+          let start = 0;
+          let end = 0;
           if (oddPattern) {
               // If pattern number is odd, we need to locate element 1 *before* the current block.
               let firstElementStart = this.startEnd[0] - 1;
@@ -11142,21 +11227,43 @@
               firstCounter = end - this.startEnd[1];
           }
           // Make 'counters' hold 1-4
-          let counters = this.getDecodeFinderCounters();
+          const counters = this.getDecodeFinderCounters();
           System.arraycopy(counters, 0, counters, 1, counters.length - 1);
           counters[0] = firstCounter;
-          let value;
+          let value = 0;
           try {
               value = this.parseFinderValue(counters, RSSExpandedReader.FINDER_PATTERNS);
           }
-          catch (e) {
+          catch (ex) {
+              if (ex instanceof NotFoundException) {
+                  return null;
+              }
+              else {
+                  throw ex;
+              }
+          }
+          // Check that the pattern type that we *think* we found can exist as part of a valid sequence of finder patterns.
+          if (!RSSExpandedReader.mayFollow(previousPairs, value)) {
               return null;
           }
-          // return new FinderPattern(value, new int[] { start, end }, start, end, rowNumber});
+          // Check that the finder pattern that we *think* we found is not too far from where we would expect to find it,
+          // given that finder patterns are 15 modules wide and the data characters between them are 17 modules wide.
+          if (previousPairs.length > 0) {
+              const prev = previousPairs[previousPairs.length - 1];
+              const prevStart = prev.getFinderPattern().getStartEnd()[0];
+              const prevEnd = prev.getFinderPattern().getStartEnd()[1];
+              const prevWidth = prevEnd - prevStart;
+              const charWidth /* float */ = (prevWidth / /* float */ RSSExpandedReader.FINDER_PATTERN_MODULES) * RSSExpandedReader.DATA_CHARACTER_MODULES;
+              const minX = prevEnd + (2 * charWidth * (1 - RSSExpandedReader.MAX_FINDER_PATTERN_DISTANCE_VARIANCE));
+              const maxX = prevEnd + (2 * charWidth * (1 + RSSExpandedReader.MAX_FINDER_PATTERN_DISTANCE_VARIANCE));
+              if (start < minX || start > maxX) {
+                  return null;
+              }
+          }
           return new FinderPattern$1(value, [start, end], start, end, rowNumber);
       }
       decodeDataCharacter(row, pattern, isOddPattern, leftChar) {
-          let counters = this.getDataCharacterCounters();
+          const counters = this.getDataCharacterCounters();
           for (let x = 0; x < counters.length; x++) {
               counters[x] = 0;
           }
@@ -11167,26 +11274,25 @@
               RSSExpandedReader.recordPattern(row, pattern.getStartEnd()[1], counters);
               // reverse it
               for (let i = 0, j = counters.length - 1; i < j; i++, j--) {
-                  let temp = counters[i];
+                  const temp = counters[i];
                   counters[i] = counters[j];
                   counters[j] = temp;
               }
           } // counters[] has the pixels of the module
           let numModules = 17; // left and right data characters have all the same length
-          let elementWidth = MathUtils.sum(new Int32Array(counters)) / numModules;
+          let elementWidth /* float */ = MathUtils.sum(new Int32Array(counters)) / numModules;
           // Sanity check: element width for pattern and the character should match
-          let expectedElementWidth = (pattern.getStartEnd()[1] - pattern.getStartEnd()[0]) / 15.0;
-          if (Math.abs(elementWidth - expectedElementWidth) / expectedElementWidth >
-              0.3) {
+          let expectedElementWidth /* float */ = (pattern.getStartEnd()[1] - pattern.getStartEnd()[0]) / 15.0;
+          if (Math.abs(elementWidth - expectedElementWidth) / expectedElementWidth > 0.3) {
               throw new NotFoundException();
           }
-          let oddCounts = this.getOddCounts();
-          let evenCounts = this.getEvenCounts();
-          let oddRoundingErrors = this.getOddRoundingErrors();
-          let evenRoundingErrors = this.getEvenRoundingErrors();
+          const oddCounts = this.getOddCounts();
+          const evenCounts = this.getEvenCounts();
+          const oddRoundingErrors = this.getOddRoundingErrors();
+          const evenRoundingErrors = this.getEvenRoundingErrors();
           for (let i = 0; i < counters.length; i++) {
-              let value = (1.0 * counters[i]) / elementWidth;
-              let count = value + 0.5; // Round
+              const value /* float */ = (1.0 * counters[i]) / elementWidth;
+              let count = Math.trunc(value + 0.5); // Round
               if (count < 1) {
                   if (value < 0.3) {
                       throw new NotFoundException();
@@ -11199,7 +11305,7 @@
                   }
                   count = 8;
               }
-              let offset = i / 2;
+              const offset /* int */ = Math.trunc(i / 2);
               if ((i & 0x01) === 0) {
                   oddCounts[offset] = count;
                   oddRoundingErrors[offset] = value - count;
@@ -11215,41 +11321,39 @@
           let oddChecksumPortion = 0;
           for (let i = oddCounts.length - 1; i >= 0; i--) {
               if (RSSExpandedReader.isNotA1left(pattern, isOddPattern, leftChar)) {
-                  let weight = RSSExpandedReader.WEIGHTS[weightRowNumber][2 * i];
+                  const weight = RSSExpandedReader.WEIGHTS[weightRowNumber][2 * i];
                   oddChecksumPortion += oddCounts[i] * weight;
               }
               oddSum += oddCounts[i];
           }
           let evenChecksumPortion = 0;
-          // int evenSum = 0;
           for (let i = evenCounts.length - 1; i >= 0; i--) {
               if (RSSExpandedReader.isNotA1left(pattern, isOddPattern, leftChar)) {
-                  let weight = RSSExpandedReader.WEIGHTS[weightRowNumber][2 * i + 1];
+                  const weight = RSSExpandedReader.WEIGHTS[weightRowNumber][2 * i + 1];
                   evenChecksumPortion += evenCounts[i] * weight;
               }
-              // evenSum += evenCounts[i];
           }
           let checksumPortion = oddChecksumPortion + evenChecksumPortion;
           if ((oddSum & 0x01) !== 0 || oddSum > 13 || oddSum < 4) {
               throw new NotFoundException();
           }
-          let group = (13 - oddSum) / 2;
-          let oddWidest = RSSExpandedReader.SYMBOL_WIDEST[group];
-          let evenWidest = 9 - oddWidest;
-          let vOdd = RSSUtils.getRSSvalue(oddCounts, oddWidest, true);
-          let vEven = RSSUtils.getRSSvalue(evenCounts, evenWidest, false);
-          let tEven = RSSExpandedReader.EVEN_TOTAL_SUBSET[group];
-          let gSum = RSSExpandedReader.GSUM[group];
-          let value = vOdd * tEven + vEven + gSum;
+          const group /* int */ = Math.trunc((13 - oddSum) / 2);
+          const oddWidest = RSSExpandedReader.SYMBOL_WIDEST[group];
+          const evenWidest = 9 - oddWidest;
+          const vOdd = RSSUtils.getRSSvalue(oddCounts, oddWidest, true);
+          const vEven = RSSUtils.getRSSvalue(evenCounts, evenWidest, false);
+          const tEven = RSSExpandedReader.EVEN_TOTAL_SUBSET[group];
+          const gSum = RSSExpandedReader.GSUM[group];
+          const value = vOdd * tEven + vEven + gSum;
           return new DataCharacter(value, checksumPortion);
       }
       static isNotA1left(pattern, isOddPattern, leftChar) {
           // A1: pattern.getValue is 0 (A), and it's an oddPattern, and it is a left char
           return !(pattern.getValue() === 0 && isOddPattern && leftChar);
       }
-      adjustOddEvenCounts(numModules) {
-          let oddSum = MathUtils.sum(new Int32Array(this.getOddCounts()));
-          let evenSum = MathUtils.sum(new Int32Array(this.getEvenCounts()));
+      adjustOddEvenCounts(numModules /* int */) {
+          const oddSum = MathUtils.sum(new Int32Array(this.getOddCounts()));
+          const evenSum = MathUtils.sum(new Int32Array(this.getEvenCounts()));
           let incrementOdd = false;
           let decrementOdd = false;
           if (oddSum > 13) {
@@ -11346,12 +11450,12 @@
   RSSExpandedReader.EVEN_TOTAL_SUBSET = [4, 20, 52, 104, 204];
   RSSExpandedReader.GSUM = [0, 348, 1388, 2948, 3988];
   RSSExpandedReader.FINDER_PATTERNS = [
-      Int32Array.from([1, 8, 4, 1]),
-      Int32Array.from([3, 6, 4, 1]),
-      Int32Array.from([3, 4, 6, 1]),
-      Int32Array.from([3, 2, 8, 1]),
-      Int32Array.from([2, 6, 5, 1]),
-      Int32Array.from([2, 2, 9, 1]),
+      Int32Array.from([1, 8, 4, 1]), // A
+      Int32Array.from([3, 6, 4, 1]), // B
+      Int32Array.from([3, 4, 6, 1]), // C
+      Int32Array.from([3, 2, 8, 1]), // D
+      Int32Array.from([2, 6, 5, 1]), // E
+      Int32Array.from([2, 2, 9, 1]), // F
   ];
   RSSExpandedReader.WEIGHTS = [
       [1, 3, 9, 27, 81, 32, 96, 77],
@@ -11469,6 +11573,9 @@
       ],
   ];
   RSSExpandedReader.MAX_PAIRS = 11;
+  RSSExpandedReader.FINDER_PATTERN_MODULES = 15;
+  RSSExpandedReader.DATA_CHARACTER_MODULES = 17;
+  RSSExpandedReader.MAX_FINDER_PATTERN_DISTANCE_VARIANCE = 0.1;
 
   class Pair extends DataCharacter {
       constructor(value, checksumPortion, finderPattern) {
@@ -11512,7 +11619,7 @@
           throw new NotFoundException();
       }
       static addOrTally(possiblePairs, pair) {
-          if (pair == null) {
+          if (pair === null) {
               return;
           }
           let found = false;
@@ -11532,16 +11639,16 @@
           this.possibleRightPairs.length = 0;
       }
       static constructResult(leftPair, rightPair) {
-          let symbolValue = 4537077 * leftPair.getValue() + rightPair.getValue();
-          let text = new String(symbolValue).toString();
-          let buffer = new StringBuilder();
+          const symbolValue = 4537077 * leftPair.getValue() + rightPair.getValue();
+          const text = String(symbolValue);
+          const buffer = new StringBuilder();
           for (let i = 13 - text.length; i > 0; i--) {
               buffer.append('0');
           }
           buffer.append(text);
           let checkDigit = 0;
           for (let i = 0; i < 13; i++) {
-              let digit = buffer.charAt(i).charCodeAt(0) - '0'.charCodeAt(0);
+              const digit = buffer.charAt(i).charCodeAt(0) - '0'.charCodeAt(0);
               checkDigit += ((i & 0x01) === 0) ? 3 * digit : digit;
           }
           checkDigit = 10 - (checkDigit % 10);
@@ -11549,12 +11656,12 @@
               checkDigit = 0;
           }
           buffer.append(checkDigit.toString());
-          let leftPoints = leftPair.getFinderPattern().getResultPoints();
-          let rightPoints = rightPair.getFinderPattern().getResultPoints();
+          const leftPoints = leftPair.getFinderPattern().getResultPoints();
+          const rightPoints = rightPair.getFinderPattern().getResultPoints();
           return new Result$1(buffer.toString(), null, 0, [leftPoints[0], leftPoints[1], rightPoints[0], rightPoints[1]], BarcodeFormat$1.RSS_14, new Date().getTime());
       }
       static checkChecksum(leftPair, rightPair) {
-          let checkValue = (leftPair.getChecksumPortion() + 16 * rightPair.getChecksumPortion()) % 79;
+          const checkValue = (leftPair.getChecksumPortion() + 16 * rightPair.getChecksumPortion()) % 79;
           let targetCheckValue = 9 * leftPair.getFinderPattern().getValue() + rightPair.getFinderPattern().getValue();
           if (targetCheckValue > 72) {
               targetCheckValue--;
@@ -11566,27 +11673,32 @@
       }
       decodePair(row, right, rowNumber, hints) {
           try {
-              let startEnd = this.findFinderPattern(row, right);
-              let pattern = this.parseFoundFinderPattern(row, rowNumber, right, startEnd);
-              let resultPointCallback = hints == null ? null : hints.get(DecodeHintType$1.NEED_RESULT_POINT_CALLBACK);
+              const startEnd = this.findFinderPattern(row, right);
+              const pattern = this.parseFoundFinderPattern(row, rowNumber, right, startEnd);
+              const resultPointCallback = hints == null ? null : hints.get(DecodeHintType$1.NEED_RESULT_POINT_CALLBACK);
               if (resultPointCallback != null) {
-                  let center = (startEnd[0] + startEnd[1]) / 2.0;
+                  let center = (startEnd[0] + startEnd[1] - 1) / 2.0;
                   if (right) {
                       // row is actually reversed
                       center = row.getSize() - 1 - center;
                   }
                   resultPointCallback.foundPossibleResultPoint(new ResultPoint(center, rowNumber));
               }
-              let outside = this.decodeDataCharacter(row, pattern, true);
-              let inside = this.decodeDataCharacter(row, pattern, false);
+              const outside = this.decodeDataCharacter(row, pattern, true);
+              const inside = this.decodeDataCharacter(row, pattern, false);
               return new Pair(1597 * outside.getValue() + inside.getValue(), outside.getChecksumPortion() + 4 * inside.getChecksumPortion(), pattern);
           }
-          catch (err) {
-              return null;
+          catch (ex) {
+              if (ex instanceof NotFoundException) {
+                  return null;
+              }
+              else {
+                  throw ex;
+              }
           }
       }
       decodeDataCharacter(row, pattern, outsideChar) {
-          let counters = this.getDataCharacterCounters();
+          const counters = this.getDataCharacterCounters();
           for (let x = 0; x < counters.length; x++) {
               counters[x] = 0;
           }
@@ -11594,30 +11706,30 @@
               OneDReader.recordPatternInReverse(row, pattern.getStartEnd()[0], counters);
           }
           else {
-              OneDReader.recordPattern(row, pattern.getStartEnd()[1] + 1, counters);
+              OneDReader.recordPattern(row, pattern.getStartEnd()[1], counters);
               // reverse it
               for (let i = 0, j = counters.length - 1; i < j; i++, j--) {
-                  let temp = counters[i];
+                  const temp = counters[i];
                   counters[i] = counters[j];
                   counters[j] = temp;
               }
           }
-          let numModules = outsideChar ? 16 : 15;
-          let elementWidth = MathUtils.sum(new Int32Array(counters)) / numModules;
-          let oddCounts = this.getOddCounts();
-          let evenCounts = this.getEvenCounts();
-          let oddRoundingErrors = this.getOddRoundingErrors();
-          let evenRoundingErrors = this.getEvenRoundingErrors();
+          const numModules = outsideChar ? 16 : 15;
+          const elementWidth = MathUtils.sum(new Int32Array(counters)) / numModules;
+          const oddCounts = this.getOddCounts();
+          const evenCounts = this.getEvenCounts();
+          const oddRoundingErrors = this.getOddRoundingErrors();
+          const evenRoundingErrors = this.getEvenRoundingErrors();
           for (let i = 0; i < counters.length; i++) {
-              let value = counters[i] / elementWidth;
-              let count = Math.floor(value + 0.5);
+              const value = counters[i] / elementWidth;
+              let count = Math.floor(value + 0.5); // Round
               if (count < 1) {
                   count = 1;
               }
               else if (count > 8) {
                   count = 8;
               }
-              let offset = Math.floor(i / 2);
+              const offset = Math.floor(i / 2);
               if ((i & 0x01) === 0) {
                   oddCounts[offset] = count;
                   oddRoundingErrors[offset] = value - count;
@@ -11642,41 +11754,41 @@
               evenChecksumPortion += evenCounts[i];
               evenSum += evenCounts[i];
           }
-          let checksumPortion = oddChecksumPortion + 3 * evenChecksumPortion;
+          const checksumPortion = oddChecksumPortion + 3 * evenChecksumPortion;
           if (outsideChar) {
               if ((oddSum & 0x01) !== 0 || oddSum > 12 || oddSum < 4) {
                   throw new NotFoundException();
               }
-              let group = (12 - oddSum) / 2;
-              let oddWidest = RSS14Reader.OUTSIDE_ODD_WIDEST[group];
-              let evenWidest = 9 - oddWidest;
-              let vOdd = RSSUtils.getRSSvalue(oddCounts, oddWidest, false);
-              let vEven = RSSUtils.getRSSvalue(evenCounts, evenWidest, true);
-              let tEven = RSS14Reader.OUTSIDE_EVEN_TOTAL_SUBSET[group];
-              let gSum = RSS14Reader.OUTSIDE_GSUM[group];
+              const group = (12 - oddSum) / 2;
+              const oddWidest = RSS14Reader.OUTSIDE_ODD_WIDEST[group];
+              const evenWidest = 9 - oddWidest;
+              const vOdd = RSSUtils.getRSSvalue(oddCounts, oddWidest, false);
+              const vEven = RSSUtils.getRSSvalue(evenCounts, evenWidest, true);
+              const tEven = RSS14Reader.OUTSIDE_EVEN_TOTAL_SUBSET[group];
+              const gSum = RSS14Reader.OUTSIDE_GSUM[group];
               return new DataCharacter(vOdd * tEven + vEven + gSum, checksumPortion);
           }
           else {
               if ((evenSum & 0x01) !== 0 || evenSum > 10 || evenSum < 4) {
                   throw new NotFoundException();
               }
-              let group = (10 - evenSum) / 2;
-              let oddWidest = RSS14Reader.INSIDE_ODD_WIDEST[group];
-              let evenWidest = 9 - oddWidest;
-              let vOdd = RSSUtils.getRSSvalue(oddCounts, oddWidest, true);
-              let vEven = RSSUtils.getRSSvalue(evenCounts, evenWidest, false);
-              let tOdd = RSS14Reader.INSIDE_ODD_TOTAL_SUBSET[group];
-              let gSum = RSS14Reader.INSIDE_GSUM[group];
+              const group = (10 - evenSum) / 2;
+              const oddWidest = RSS14Reader.INSIDE_ODD_WIDEST[group];
+              const evenWidest = 9 - oddWidest;
+              const vOdd = RSSUtils.getRSSvalue(oddCounts, oddWidest, true);
+              const vEven = RSSUtils.getRSSvalue(evenCounts, evenWidest, false);
+              const tOdd = RSS14Reader.INSIDE_ODD_TOTAL_SUBSET[group];
+              const gSum = RSS14Reader.INSIDE_GSUM[group];
               return new DataCharacter(vEven * tOdd + vOdd + gSum, checksumPortion);
           }
       }
       findFinderPattern(row, rightFinderPattern) {
-          let counters = this.getDecodeFinderCounters();
+          const counters = this.getDecodeFinderCounters();
           counters[0] = 0;
           counters[1] = 0;
           counters[2] = 0;
           counters[3] = 0;
-          let width = row.getSize();
+          const width = row.getSize();
           let isWhite = false;
           let rowOffset = 0;
           while (rowOffset < width) {
@@ -11716,7 +11828,7 @@
       }
       parseFoundFinderPattern(row, rowNumber, right, startEnd) {
           // Actually we found elements 2-5
-          let firstIsBlack = row.get(startEnd[0]);
+          const firstIsBlack = row.get(startEnd[0]);
           let firstElementStart = startEnd[0] - 1;
           // Locate element 1
           while (firstElementStart >= 0 && firstIsBlack !== row.get(firstElementStart)) {
@@ -11740,8 +11852,8 @@
           return new FinderPattern$1(value, [firstElementStart, startEnd[1]], start, end, rowNumber);
       }
       adjustOddEvenCounts(outsideChar, numModules) {
-          let oddSum = MathUtils.sum(new Int32Array(this.getOddCounts()));
-          let evenSum = MathUtils.sum(new Int32Array(this.getEvenCounts()));
+          const oddSum = MathUtils.sum(new Int32Array(this.getOddCounts()));
+          const evenSum = MathUtils.sum(new Int32Array(this.getEvenCounts()));
           let incrementOdd = false;
           let decrementOdd = false;
           let incrementEven = false;
@@ -11774,9 +11886,9 @@
                   incrementEven = true;
               }
           }
-          let mismatch = oddSum + evenSum - numModules;
-          let oddParityBad = (oddSum & 0x01) === (outsideChar ? 1 : 0);
-          let evenParityBad = (evenSum & 0x01) === 1;
+          const mismatch = oddSum + evenSum - numModules;
+          const oddParityBad = (oddSum & 0x01) === (outsideChar ? 1 : 0);
+          const evenParityBad = (evenSum & 0x01) === 1;
           if (mismatch === 1) {
               if (oddParityBad) {
                   if (evenParityBad) {
@@ -11883,6 +11995,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.oned {*/
   /**
    * @author Daniel Switkin <dswitkin@google.com>
    * @author Sean Owen
@@ -11920,6 +12033,7 @@
                   this.readers.push(new RSS14Reader());
               }
               if (possibleFormats.includes(BarcodeFormat$1.RSS_EXPANDED)) {
+                  // XXX
                   console.warn('RSS Expanded reader IS NOT ready for production yet! use at your own risk.');
                   this.readers.push(new RSSExpandedReader());
               }
@@ -11933,7 +12047,7 @@
               this.readers.push(new Code128Reader());
               this.readers.push(new ITFReader());
               this.readers.push(new RSS14Reader());
-              // this.readers.push(new RSSExpandedReader());
+              this.readers.push(new RSSExpandedReader());
           }
       }
       // @Override
@@ -11991,7 +12105,7 @@
    * each set of blocks. It also holds the number of error-correction codewords per block since it
    * will be the same across all blocks within one version.</p>
    */
-  class ECBlocks$1 {
+  let ECBlocks$1 = class ECBlocks {
       constructor(ecCodewords, ecBlocks1, ecBlocks2) {
           this.ecCodewords = ecCodewords;
           this.ecBlocks = [ecBlocks1];
@@ -12003,13 +12117,13 @@
       getECBlocks() {
           return this.ecBlocks;
       }
-  }
+  };
   /**
    * <p>Encapsulates the parameters for one error-correction block in one symbol version.
    * This includes the number of data codewords, and the number of times a block with these
    * parameters is used consecutively in the Data Matrix code version's format.</p>
    */
-  class ECB$1 {
+  let ECB$1 = class ECB {
       constructor(count, dataCodewords) {
           this.count = count;
           this.dataCodewords = dataCodewords;
@@ -12020,14 +12134,14 @@
       getDataCodewords() {
           return this.dataCodewords;
       }
-  }
+  };
   /**
    * The Version object encapsulates attributes about a particular
    * size Data Matrix Code.
    *
    * @author bbrown@google.com (Brian Brown)
    */
-  class Version$1 {
+  let Version$1 = class Version {
       constructor(versionNumber, symbolSizeRows, symbolSizeColumns, dataRegionSizeRows, dataRegionSizeColumns, ecBlocks) {
           this.versionNumber = versionNumber;
           this.symbolSizeRows = symbolSizeRows;
@@ -12077,7 +12191,7 @@
           if ((numRows & 0x01) !== 0 || (numColumns & 0x01) !== 0) {
               throw new FormatException();
           }
-          for (let version of Version$1.VERSIONS) {
+          for (let version of Version.VERSIONS) {
               if (version.symbolSizeRows === numRows && version.symbolSizeColumns === numColumns) {
                   return version;
               }
@@ -12093,39 +12207,39 @@
        */
       static buildVersions() {
           return [
-              new Version$1(1, 10, 10, 8, 8, new ECBlocks$1(5, new ECB$1(1, 3))),
-              new Version$1(2, 12, 12, 10, 10, new ECBlocks$1(7, new ECB$1(1, 5))),
-              new Version$1(3, 14, 14, 12, 12, new ECBlocks$1(10, new ECB$1(1, 8))),
-              new Version$1(4, 16, 16, 14, 14, new ECBlocks$1(12, new ECB$1(1, 12))),
-              new Version$1(5, 18, 18, 16, 16, new ECBlocks$1(14, new ECB$1(1, 18))),
-              new Version$1(6, 20, 20, 18, 18, new ECBlocks$1(18, new ECB$1(1, 22))),
-              new Version$1(7, 22, 22, 20, 20, new ECBlocks$1(20, new ECB$1(1, 30))),
-              new Version$1(8, 24, 24, 22, 22, new ECBlocks$1(24, new ECB$1(1, 36))),
-              new Version$1(9, 26, 26, 24, 24, new ECBlocks$1(28, new ECB$1(1, 44))),
-              new Version$1(10, 32, 32, 14, 14, new ECBlocks$1(36, new ECB$1(1, 62))),
-              new Version$1(11, 36, 36, 16, 16, new ECBlocks$1(42, new ECB$1(1, 86))),
-              new Version$1(12, 40, 40, 18, 18, new ECBlocks$1(48, new ECB$1(1, 114))),
-              new Version$1(13, 44, 44, 20, 20, new ECBlocks$1(56, new ECB$1(1, 144))),
-              new Version$1(14, 48, 48, 22, 22, new ECBlocks$1(68, new ECB$1(1, 174))),
-              new Version$1(15, 52, 52, 24, 24, new ECBlocks$1(42, new ECB$1(2, 102))),
-              new Version$1(16, 64, 64, 14, 14, new ECBlocks$1(56, new ECB$1(2, 140))),
-              new Version$1(17, 72, 72, 16, 16, new ECBlocks$1(36, new ECB$1(4, 92))),
-              new Version$1(18, 80, 80, 18, 18, new ECBlocks$1(48, new ECB$1(4, 114))),
-              new Version$1(19, 88, 88, 20, 20, new ECBlocks$1(56, new ECB$1(4, 144))),
-              new Version$1(20, 96, 96, 22, 22, new ECBlocks$1(68, new ECB$1(4, 174))),
-              new Version$1(21, 104, 104, 24, 24, new ECBlocks$1(56, new ECB$1(6, 136))),
-              new Version$1(22, 120, 120, 18, 18, new ECBlocks$1(68, new ECB$1(6, 175))),
-              new Version$1(23, 132, 132, 20, 20, new ECBlocks$1(62, new ECB$1(8, 163))),
-              new Version$1(24, 144, 144, 22, 22, new ECBlocks$1(62, new ECB$1(8, 156), new ECB$1(2, 155))),
-              new Version$1(25, 8, 18, 6, 16, new ECBlocks$1(7, new ECB$1(1, 5))),
-              new Version$1(26, 8, 32, 6, 14, new ECBlocks$1(11, new ECB$1(1, 10))),
-              new Version$1(27, 12, 26, 10, 24, new ECBlocks$1(14, new ECB$1(1, 16))),
-              new Version$1(28, 12, 36, 10, 16, new ECBlocks$1(18, new ECB$1(1, 22))),
-              new Version$1(29, 16, 36, 14, 16, new ECBlocks$1(24, new ECB$1(1, 32))),
-              new Version$1(30, 16, 48, 14, 22, new ECBlocks$1(28, new ECB$1(1, 49)))
+              new Version(1, 10, 10, 8, 8, new ECBlocks$1(5, new ECB$1(1, 3))),
+              new Version(2, 12, 12, 10, 10, new ECBlocks$1(7, new ECB$1(1, 5))),
+              new Version(3, 14, 14, 12, 12, new ECBlocks$1(10, new ECB$1(1, 8))),
+              new Version(4, 16, 16, 14, 14, new ECBlocks$1(12, new ECB$1(1, 12))),
+              new Version(5, 18, 18, 16, 16, new ECBlocks$1(14, new ECB$1(1, 18))),
+              new Version(6, 20, 20, 18, 18, new ECBlocks$1(18, new ECB$1(1, 22))),
+              new Version(7, 22, 22, 20, 20, new ECBlocks$1(20, new ECB$1(1, 30))),
+              new Version(8, 24, 24, 22, 22, new ECBlocks$1(24, new ECB$1(1, 36))),
+              new Version(9, 26, 26, 24, 24, new ECBlocks$1(28, new ECB$1(1, 44))),
+              new Version(10, 32, 32, 14, 14, new ECBlocks$1(36, new ECB$1(1, 62))),
+              new Version(11, 36, 36, 16, 16, new ECBlocks$1(42, new ECB$1(1, 86))),
+              new Version(12, 40, 40, 18, 18, new ECBlocks$1(48, new ECB$1(1, 114))),
+              new Version(13, 44, 44, 20, 20, new ECBlocks$1(56, new ECB$1(1, 144))),
+              new Version(14, 48, 48, 22, 22, new ECBlocks$1(68, new ECB$1(1, 174))),
+              new Version(15, 52, 52, 24, 24, new ECBlocks$1(42, new ECB$1(2, 102))),
+              new Version(16, 64, 64, 14, 14, new ECBlocks$1(56, new ECB$1(2, 140))),
+              new Version(17, 72, 72, 16, 16, new ECBlocks$1(36, new ECB$1(4, 92))),
+              new Version(18, 80, 80, 18, 18, new ECBlocks$1(48, new ECB$1(4, 114))),
+              new Version(19, 88, 88, 20, 20, new ECBlocks$1(56, new ECB$1(4, 144))),
+              new Version(20, 96, 96, 22, 22, new ECBlocks$1(68, new ECB$1(4, 174))),
+              new Version(21, 104, 104, 24, 24, new ECBlocks$1(56, new ECB$1(6, 136))),
+              new Version(22, 120, 120, 18, 18, new ECBlocks$1(68, new ECB$1(6, 175))),
+              new Version(23, 132, 132, 20, 20, new ECBlocks$1(62, new ECB$1(8, 163))),
+              new Version(24, 144, 144, 22, 22, new ECBlocks$1(62, new ECB$1(8, 156), new ECB$1(2, 155))),
+              new Version(25, 8, 18, 6, 16, new ECBlocks$1(7, new ECB$1(1, 5))),
+              new Version(26, 8, 32, 6, 14, new ECBlocks$1(11, new ECB$1(1, 10))),
+              new Version(27, 12, 26, 10, 24, new ECBlocks$1(14, new ECB$1(1, 16))),
+              new Version(28, 12, 36, 10, 16, new ECBlocks$1(18, new ECB$1(1, 22))),
+              new Version(29, 16, 36, 14, 16, new ECBlocks$1(24, new ECB$1(1, 32))),
+              new Version(30, 16, 48, 14, 22, new ECBlocks$1(28, new ECB$1(1, 49)))
           ];
       }
-  }
+  };
   Version$1.VERSIONS = Version$1.buildVersions();
 
   /*
@@ -12146,7 +12260,7 @@
   /**
    * @author bbrown@google.com (Brian Brown)
    */
-  class BitMatrixParser$1 {
+  let BitMatrixParser$2 = class BitMatrixParser {
       /**
        * @param bitMatrix {@link BitMatrix} to parse
        * @throws FormatException if dimension is < 8 or > 144 or not 0 mod 2
@@ -12156,7 +12270,7 @@
           if (dimension < 8 || dimension > 144 || (dimension & 0x01) !== 0) {
               throw new FormatException();
           }
-          this.version = BitMatrixParser$1.readVersion(bitMatrix);
+          this.version = BitMatrixParser.readVersion(bitMatrix);
           this.mappingBitMatrix = this.extractDataRegion(bitMatrix);
           this.readMappingMatrix = new BitMatrix(this.mappingBitMatrix.getWidth(), this.mappingBitMatrix.getHeight());
       }
@@ -12536,7 +12650,7 @@
           }
           return bitMatrixWithoutAlignment;
       }
-  }
+  };
 
   /*
    * Copyright 2008 ZXing authors
@@ -12560,7 +12674,7 @@
    *
    * @author bbrown@google.com (Brian Brown)
    */
-  class DataBlock$1 {
+  let DataBlock$1 = class DataBlock {
       constructor(numDataCodewords, codewords) {
           this.numDataCodewords = numDataCodewords;
           this.codewords = codewords;
@@ -12591,7 +12705,7 @@
               for (let i = 0; i < ecBlock.getCount(); i++) {
                   const numDataCodewords = ecBlock.getDataCodewords();
                   const numBlockCodewords = ecBlocks.getECCodewords() + numDataCodewords;
-                  result[numResultBlocks++] = new DataBlock$1(numDataCodewords, new Uint8Array(numBlockCodewords));
+                  result[numResultBlocks++] = new DataBlock(numDataCodewords, new Uint8Array(numBlockCodewords));
               }
           }
           // All blocks have the same amount of data, except that the last n
@@ -12635,7 +12749,7 @@
       getCodewords() {
           return this.codewords;
       }
-  }
+  };
 
   /*
    * Copyright 2007 ZXing authors
@@ -12652,6 +12766,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.common {*/
   /**
    * <p>This provides an easy abstraction to read bits at a time from a sequence of bytes, where the
    * number of bits read is not often a multiple of 8.</p>
@@ -12772,7 +12887,7 @@
    * @author bbrown@google.com (Brian Brown)
    * @author Sean Owen
    */
-  class DecodedBitStreamParser$2 {
+  let DecodedBitStreamParser$3 = class DecodedBitStreamParser {
       static decode(bytes) {
           const bits = new BitSource(bytes);
           const result = new StringBuilder();
@@ -13207,17 +13322,17 @@
           const tempVariable = randomizedBase256Codeword - pseudoRandomNumber;
           return tempVariable >= 0 ? tempVariable : tempVariable + 256;
       }
-  }
+  };
   /**
    * See ISO 16022:2006, Annex C Table C.1
    * The C40 Basic Character Set (*'s used for placeholders for the shift values)
    */
-  DecodedBitStreamParser$2.C40_BASIC_SET_CHARS = [
+  DecodedBitStreamParser$3.C40_BASIC_SET_CHARS = [
       '*', '*', '*', ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
       'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
       'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
   ];
-  DecodedBitStreamParser$2.C40_SHIFT2_SET_CHARS = [
+  DecodedBitStreamParser$3.C40_SHIFT2_SET_CHARS = [
       '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.',
       '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_'
   ];
@@ -13225,14 +13340,14 @@
    * See ISO 16022:2006, Annex C Table C.2
    * The Text Basic Character Set (*'s used for placeholders for the shift values)
    */
-  DecodedBitStreamParser$2.TEXT_BASIC_SET_CHARS = [
+  DecodedBitStreamParser$3.TEXT_BASIC_SET_CHARS = [
       '*', '*', '*', ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
       'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
       'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
   ];
   // Shift 2 for Text is the same encoding as C40
-  DecodedBitStreamParser$2.TEXT_SHIFT2_SET_CHARS = DecodedBitStreamParser$2.C40_SHIFT2_SET_CHARS;
-  DecodedBitStreamParser$2.TEXT_SHIFT3_SET_CHARS = [
+  DecodedBitStreamParser$3.TEXT_SHIFT2_SET_CHARS = DecodedBitStreamParser$3.C40_SHIFT2_SET_CHARS;
+  DecodedBitStreamParser$3.TEXT_SHIFT3_SET_CHARS = [
       '`', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
       'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '{', '|', '}', '~', String.fromCharCode(127)
   ];
@@ -13258,7 +13373,7 @@
    *
    * @author bbrown@google.com (Brian Brown)
    */
-  class Decoder$1 {
+  let Decoder$2 = class Decoder {
       constructor() {
           this.rsDecoder = new ReedSolomonDecoder(GenericGF.DATA_MATRIX_FIELD_256);
       }
@@ -13273,7 +13388,7 @@
        */
       decode(bits) {
           // Construct a parser and read version, error-correction level
-          const parser = new BitMatrixParser$1(bits);
+          const parser = new BitMatrixParser$2(bits);
           const version = parser.getVersion();
           // Read codewords
           const codewords = parser.readCodewords();
@@ -13298,7 +13413,7 @@
               }
           }
           // Decode the contents of that stream of bytes
-          return DecodedBitStreamParser$2.decode(resultBytes);
+          return DecodedBitStreamParser$3.decode(resultBytes);
       }
       /**
        * <p>Given data and error-correction codewords received, possibly corrupted by errors, attempts to
@@ -13327,7 +13442,7 @@
               codewordBytes[i] = codewordsInts[i];
           }
       }
-  }
+  };
 
   /*
    * Copyright 2008 ZXing authors
@@ -13350,7 +13465,7 @@
    *
    * @author Sean Owen
    */
-  class Detector$2 {
+  let Detector$2 = class Detector {
       constructor(image) {
           this.image = image;
           this.rectangleDetector = new WhiteRectangleDetector(this.image);
@@ -13386,7 +13501,7 @@
               // The matrix is square
               dimensionTop = dimensionRight = Math.max(dimensionTop, dimensionRight);
           }
-          let bits = Detector$2.sampleGrid(this.image, topLeft, bottomLeft, bottomRight, topRight, dimensionTop, dimensionRight);
+          let bits = Detector.sampleGrid(this.image, topLeft, bottomLeft, bottomRight, topRight, dimensionTop, dimensionRight);
           return new DetectorResult(bits, [topLeft, bottomLeft, bottomRight, topRight]);
       }
       static shiftPoint(point, to, div) {
@@ -13466,8 +13581,8 @@
           // Transition detection on the edge is not stable.
           // To safely detect, shift the points to the module center.
           let tr = this.transitionsBetween(pointA, pointD);
-          let pointBs = Detector$2.shiftPoint(pointB, pointC, (tr + 1) * 4);
-          let pointCs = Detector$2.shiftPoint(pointC, pointB, (tr + 1) * 4);
+          let pointBs = Detector.shiftPoint(pointB, pointC, (tr + 1) * 4);
+          let pointCs = Detector.shiftPoint(pointC, pointB, (tr + 1) * 4);
           let trBA = this.transitionsBetween(pointBs, pointA);
           let trCD = this.transitionsBetween(pointCs, pointD);
           // 0..3
@@ -13503,8 +13618,8 @@
           // shift points for safe transition detection.
           let trTop = this.transitionsBetween(pointA, pointD);
           let trRight = this.transitionsBetween(pointB, pointD);
-          let pointAs = Detector$2.shiftPoint(pointA, pointB, (trRight + 1) * 4);
-          let pointCs = Detector$2.shiftPoint(pointC, pointB, (trTop + 1) * 4);
+          let pointAs = Detector.shiftPoint(pointA, pointB, (trRight + 1) * 4);
+          let pointCs = Detector.shiftPoint(pointC, pointB, (trTop + 1) * 4);
           trTop = this.transitionsBetween(pointAs, pointD);
           trRight = this.transitionsBetween(pointCs, pointD);
           let candidate1 = new ResultPoint(pointD.getX() + (pointC.getX() - pointB.getX()) / (trTop + 1), pointD.getY() + (pointC.getY() - pointB.getY()) / (trTop + 1));
@@ -13542,8 +13657,8 @@
           let dimH = this.transitionsBetween(pointA, pointD) + 1;
           let dimV = this.transitionsBetween(pointC, pointD) + 1;
           // shift points for safe dimension detection
-          let pointAs = Detector$2.shiftPoint(pointA, pointB, dimV * 4);
-          let pointCs = Detector$2.shiftPoint(pointC, pointB, dimH * 4);
+          let pointAs = Detector.shiftPoint(pointA, pointB, dimV * 4);
+          let pointCs = Detector.shiftPoint(pointC, pointB, dimH * 4);
           //  calculate more precise dimensions
           dimH = this.transitionsBetween(pointAs, pointD) + 1;
           dimV = this.transitionsBetween(pointCs, pointD) + 1;
@@ -13557,21 +13672,21 @@
           // I want points on the edges.
           let centerX = (pointA.getX() + pointB.getX() + pointC.getX() + pointD.getX()) / 4;
           let centerY = (pointA.getY() + pointB.getY() + pointC.getY() + pointD.getY()) / 4;
-          pointA = Detector$2.moveAway(pointA, centerX, centerY);
-          pointB = Detector$2.moveAway(pointB, centerX, centerY);
-          pointC = Detector$2.moveAway(pointC, centerX, centerY);
-          pointD = Detector$2.moveAway(pointD, centerX, centerY);
+          pointA = Detector.moveAway(pointA, centerX, centerY);
+          pointB = Detector.moveAway(pointB, centerX, centerY);
+          pointC = Detector.moveAway(pointC, centerX, centerY);
+          pointD = Detector.moveAway(pointD, centerX, centerY);
           let pointBs;
           let pointDs;
           // shift points to the center of each modules
-          pointAs = Detector$2.shiftPoint(pointA, pointB, dimV * 4);
-          pointAs = Detector$2.shiftPoint(pointAs, pointD, dimH * 4);
-          pointBs = Detector$2.shiftPoint(pointB, pointA, dimV * 4);
-          pointBs = Detector$2.shiftPoint(pointBs, pointC, dimH * 4);
-          pointCs = Detector$2.shiftPoint(pointC, pointD, dimV * 4);
-          pointCs = Detector$2.shiftPoint(pointCs, pointB, dimH * 4);
-          pointDs = Detector$2.shiftPoint(pointD, pointC, dimV * 4);
-          pointDs = Detector$2.shiftPoint(pointDs, pointA, dimH * 4);
+          pointAs = Detector.shiftPoint(pointA, pointB, dimV * 4);
+          pointAs = Detector.shiftPoint(pointAs, pointD, dimH * 4);
+          pointBs = Detector.shiftPoint(pointB, pointA, dimV * 4);
+          pointBs = Detector.shiftPoint(pointBs, pointC, dimH * 4);
+          pointCs = Detector.shiftPoint(pointC, pointD, dimV * 4);
+          pointCs = Detector.shiftPoint(pointCs, pointB, dimH * 4);
+          pointDs = Detector.shiftPoint(pointD, pointC, dimV * 4);
+          pointDs = Detector.shiftPoint(pointDs, pointA, dimH * 4);
           return [pointAs, pointBs, pointCs, pointDs];
       }
       isValid(p) {
@@ -13623,7 +13738,7 @@
           }
           return transitions;
       }
-  }
+  };
 
   /*
    * Copyright 2007 ZXing authors
@@ -13647,7 +13762,7 @@
    */
   class DataMatrixReader {
       constructor() {
-          this.decoder = new Decoder$1();
+          this.decoder = new Decoder$2();
       }
       /**
        * Locates and decodes a Data Matrix code in an image.
@@ -13782,6 +13897,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.decoder {*/
   var ErrorCorrectionLevelValues;
   (function (ErrorCorrectionLevelValues) {
       ErrorCorrectionLevelValues[ErrorCorrectionLevelValues["L"] = 0] = "L";
@@ -13865,6 +13981,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.decoder {*/
   /**
    * <p>Encapsulates a QR Code's format information, including the data mask used and
    * error correction level.</p>
@@ -14053,6 +14170,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.decoder {*/
   /**
    * See ISO 18004:2006 Annex D
    *
@@ -14354,7 +14472,7 @@
   /**
    * @author Sean Owen
    */
-  class BitMatrixParser {
+  let BitMatrixParser$1 = class BitMatrixParser {
       /**
        * @param bitMatrix {@link BitMatrix} to parse
        * @throws FormatException if dimension is not >= 21 and 1 mod 4
@@ -14546,7 +14664,7 @@
               }
           }
       }
-  }
+  };
 
   /*
    * Copyright 2007 ZXing authors
@@ -14688,14 +14806,14 @@
    *
    * @author Sean Owen
    */
-  class Mode$2 {
+  let Mode$2 = class Mode {
       constructor(value, stringValue, characterCountBitsForVersions, bits /*int*/) {
           this.value = value;
           this.stringValue = stringValue;
           this.characterCountBitsForVersions = characterCountBitsForVersions;
           this.bits = bits;
-          Mode$2.FOR_BITS.set(bits, this);
-          Mode$2.FOR_VALUE.set(value, this);
+          Mode.FOR_BITS.set(bits, this);
+          Mode.FOR_VALUE.set(value, this);
       }
       /**
        * @param bits four bits encoding a QR Code data mode
@@ -14703,7 +14821,7 @@
        * @throws IllegalArgumentException if bits do not correspond to a known mode
        */
       static forBits(bits /*int*/) {
-          const mode = Mode$2.FOR_BITS.get(bits);
+          const mode = Mode.FOR_BITS.get(bits);
           if (undefined === mode) {
               throw new IllegalArgumentException();
           }
@@ -14735,7 +14853,7 @@
           return this.bits;
       }
       equals(o) {
-          if (!(o instanceof Mode$2)) {
+          if (!(o instanceof Mode)) {
               return false;
           }
           const other = o;
@@ -14744,7 +14862,7 @@
       toString() {
           return this.stringValue;
       }
-  }
+  };
   Mode$2.FOR_BITS = new Map();
   Mode$2.FOR_VALUE = new Map();
   Mode$2.TERMINATOR = new Mode$2(ModeValues.TERMINATOR, 'TERMINATOR', Int32Array.from([0, 0, 0]), 0x00); // Not really a mode...
@@ -14774,6 +14892,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.decoder {*/
   /*import java.io.UnsupportedEncodingException;*/
   /*import java.util.ArrayList;*/
   /*import java.util.Collection;*/
@@ -14787,7 +14906,7 @@
    *
    * @author Sean Owen
    */
-  class DecodedBitStreamParser$1 {
+  let DecodedBitStreamParser$2 = class DecodedBitStreamParser {
       static decode(bytes, version, ecLevel, hints) {
           const bits = new BitSource(bytes);
           let result = new StringBuilder();
@@ -14828,7 +14947,7 @@
                           break;
                       case Mode$2.ECI:
                           // Count doesn't apply to ECI
-                          const value = DecodedBitStreamParser$1.parseECIValue(bits);
+                          const value = DecodedBitStreamParser.parseECIValue(bits);
                           currentCharacterSetECI = CharacterSetECI.getCharacterSetECIByValue(value);
                           if (currentCharacterSetECI === null) {
                               throw new FormatException();
@@ -14839,8 +14958,8 @@
                           // Chinese mode contains a sub set indicator right after mode indicator
                           const subset = bits.readBits(4);
                           const countHanzi = bits.readBits(mode.getCharacterCountBits(version));
-                          if (subset === DecodedBitStreamParser$1.GB2312_SUBSET) {
-                              DecodedBitStreamParser$1.decodeHanziSegment(bits, result, countHanzi);
+                          if (subset === DecodedBitStreamParser.GB2312_SUBSET) {
+                              DecodedBitStreamParser.decodeHanziSegment(bits, result, countHanzi);
                           }
                           break;
                       default:
@@ -14849,16 +14968,16 @@
                           const count = bits.readBits(mode.getCharacterCountBits(version));
                           switch (mode) {
                               case Mode$2.NUMERIC:
-                                  DecodedBitStreamParser$1.decodeNumericSegment(bits, result, count);
+                                  DecodedBitStreamParser.decodeNumericSegment(bits, result, count);
                                   break;
                               case Mode$2.ALPHANUMERIC:
-                                  DecodedBitStreamParser$1.decodeAlphanumericSegment(bits, result, count, fc1InEffect);
+                                  DecodedBitStreamParser.decodeAlphanumericSegment(bits, result, count, fc1InEffect);
                                   break;
                               case Mode$2.BYTE:
-                                  DecodedBitStreamParser$1.decodeByteSegment(bits, result, count, currentCharacterSetECI, byteSegments, hints);
+                                  DecodedBitStreamParser.decodeByteSegment(bits, result, count, currentCharacterSetECI, byteSegments, hints);
                                   break;
                               case Mode$2.KANJI:
-                                  DecodedBitStreamParser$1.decodeKanjiSegment(bits, result, count);
+                                  DecodedBitStreamParser.decodeKanjiSegment(bits, result, count);
                                   break;
                               default:
                                   throw new FormatException();
@@ -14975,10 +15094,10 @@
           byteSegments.push(readBytes);
       }
       static toAlphaNumericChar(value /*int*/) {
-          if (value >= DecodedBitStreamParser$1.ALPHANUMERIC_CHARS.length) {
+          if (value >= DecodedBitStreamParser.ALPHANUMERIC_CHARS.length) {
               throw new FormatException();
           }
-          return DecodedBitStreamParser$1.ALPHANUMERIC_CHARS[value];
+          return DecodedBitStreamParser.ALPHANUMERIC_CHARS[value];
       }
       static decodeAlphanumericSegment(bits, result, count /*int*/, fc1InEffect) {
           // Read two characters at a time
@@ -14988,8 +15107,8 @@
                   throw new FormatException();
               }
               const nextTwoCharsBits = bits.readBits(11);
-              result.append(DecodedBitStreamParser$1.toAlphaNumericChar(Math.floor(nextTwoCharsBits / 45)));
-              result.append(DecodedBitStreamParser$1.toAlphaNumericChar(nextTwoCharsBits % 45));
+              result.append(DecodedBitStreamParser.toAlphaNumericChar(Math.floor(nextTwoCharsBits / 45)));
+              result.append(DecodedBitStreamParser.toAlphaNumericChar(nextTwoCharsBits % 45));
               count -= 2;
           }
           if (count === 1) {
@@ -14997,7 +15116,7 @@
               if (bits.available() < 6) {
                   throw new FormatException();
               }
-              result.append(DecodedBitStreamParser$1.toAlphaNumericChar(bits.readBits(6)));
+              result.append(DecodedBitStreamParser.toAlphaNumericChar(bits.readBits(6)));
           }
           // See section 6.4.8.1, 6.4.8.2
           if (fc1InEffect) {
@@ -15027,9 +15146,9 @@
               if (threeDigitsBits >= 1000) {
                   throw new FormatException();
               }
-              result.append(DecodedBitStreamParser$1.toAlphaNumericChar(Math.floor(threeDigitsBits / 100)));
-              result.append(DecodedBitStreamParser$1.toAlphaNumericChar(Math.floor(threeDigitsBits / 10) % 10));
-              result.append(DecodedBitStreamParser$1.toAlphaNumericChar(threeDigitsBits % 10));
+              result.append(DecodedBitStreamParser.toAlphaNumericChar(Math.floor(threeDigitsBits / 100)));
+              result.append(DecodedBitStreamParser.toAlphaNumericChar(Math.floor(threeDigitsBits / 10) % 10));
+              result.append(DecodedBitStreamParser.toAlphaNumericChar(threeDigitsBits % 10));
               count -= 3;
           }
           if (count === 2) {
@@ -15041,8 +15160,8 @@
               if (twoDigitsBits >= 100) {
                   throw new FormatException();
               }
-              result.append(DecodedBitStreamParser$1.toAlphaNumericChar(Math.floor(twoDigitsBits / 10)));
-              result.append(DecodedBitStreamParser$1.toAlphaNumericChar(twoDigitsBits % 10));
+              result.append(DecodedBitStreamParser.toAlphaNumericChar(Math.floor(twoDigitsBits / 10)));
+              result.append(DecodedBitStreamParser.toAlphaNumericChar(twoDigitsBits % 10));
           }
           else if (count === 1) {
               // One digit left over to read
@@ -15053,7 +15172,7 @@
               if (digitBits >= 10) {
                   throw new FormatException();
               }
-              result.append(DecodedBitStreamParser$1.toAlphaNumericChar(digitBits));
+              result.append(DecodedBitStreamParser.toAlphaNumericChar(digitBits));
           }
       }
       static parseECIValue(bits) {
@@ -15074,12 +15193,12 @@
           }
           throw new FormatException();
       }
-  }
+  };
   /**
    * See ISO 18004:2006, 6.4.4 Table 5
    */
-  DecodedBitStreamParser$1.ALPHANUMERIC_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
-  DecodedBitStreamParser$1.GB2312_SUBSET = 1;
+  DecodedBitStreamParser$2.ALPHANUMERIC_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
+  DecodedBitStreamParser$2.GB2312_SUBSET = 1;
   // function Uint8ArrayToString(a: Uint8Array): string {
   //     const CHUNK_SZ = 0x8000;
   //     const c = new StringBuilder();
@@ -15151,6 +15270,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.decoder {*/
   /*import java.util.Map;*/
   /**
    * <p>The main class which implements QR Code decoding -- as opposed to locating and extracting
@@ -15158,7 +15278,7 @@
    *
    * @author Sean Owen
    */
-  class Decoder {
+  let Decoder$1 = class Decoder {
       constructor() {
           this.rsDecoder = new ReedSolomonDecoder(GenericGF.QR_CODE_FIELD_256);
       }
@@ -15192,7 +15312,7 @@
        */
       decodeBitMatrix(bits, hints) {
           // Construct a parser and read version, error-correction level
-          const parser = new BitMatrixParser(bits);
+          const parser = new BitMatrixParser$1(bits);
           let ex = null;
           try {
               return this.decodeBitMatrixParser(parser, hints);
@@ -15254,7 +15374,7 @@
               }
           }
           // Decode the contents of that stream of bytes
-          return DecodedBitStreamParser$1.decode(resultBytes, version, ecLevel, hints);
+          return DecodedBitStreamParser$2.decode(resultBytes, version, ecLevel, hints);
       }
       /**
        * <p>Given data and error-correction codewords received, possibly corrupted by errors, attempts to
@@ -15285,7 +15405,7 @@
               codewordBytes[i] = /*(byte) */ codewordsInts[i];
           }
       }
-  }
+  };
 
   /*
    * Copyright 2007 ZXing authors
@@ -15302,6 +15422,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.detector {*/
   /**
    * <p>Encapsulates an alignment pattern, which are the smaller square patterns found in
    * all but the simplest QR Codes.</p>
@@ -15319,7 +15440,7 @@
        */
       aboutEquals(moduleSize /*float*/, i /*float*/, j /*float*/) {
           if (Math.abs(i - this.getY()) <= moduleSize && Math.abs(j - this.getX()) <= moduleSize) {
-              const moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
+              const moduleSizeDiff /*float*/ = Math.abs(moduleSize - this.estimatedModuleSize);
               return moduleSizeDiff <= 1.0 || moduleSizeDiff <= this.estimatedModuleSize;
           }
           return false;
@@ -15329,9 +15450,9 @@
        * with a new estimate. It returns a new {@code FinderPattern} containing an average of the two.
        */
       combineEstimate(i /*float*/, j /*float*/, newModuleSize /*float*/) {
-          const combinedX = (this.getX() + j) / 2.0;
-          const combinedY = (this.getY() + i) / 2.0;
-          const combinedModuleSize = (this.estimatedModuleSize + newModuleSize) / 2.0;
+          const combinedX /*float*/ = (this.getX() + j) / 2.0;
+          const combinedY /*float*/ = (this.getY() + i) / 2.0;
+          const combinedModuleSize /*float*/ = (this.estimatedModuleSize + newModuleSize) / 2.0;
           return new AlignmentPattern(combinedX, combinedY, combinedModuleSize);
       }
   }
@@ -15480,8 +15601,8 @@
        *         used by alignment patterns to be considered a match
        */
       foundPatternCross(stateCount) {
-          const moduleSize = this.moduleSize;
-          const maxVariance = moduleSize / 2.0;
+          const moduleSize /*float*/ = this.moduleSize;
+          const maxVariance /*float*/ = moduleSize / 2.0;
           for (let i = 0; i < 3; i++) {
               if (Math.abs(moduleSize - stateCount[i]) >= maxVariance) {
                   return false;
@@ -15559,10 +15680,10 @@
        */
       handlePossibleCenter(stateCount, i /*int*/, j /*int*/) {
           const stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2];
-          const centerJ = AlignmentPatternFinder.centerFromEnd(stateCount, j);
-          const centerI = this.crossCheckVertical(i, /*(int) */ centerJ, 2 * stateCount[1], stateCountTotal);
+          const centerJ /*float*/ = AlignmentPatternFinder.centerFromEnd(stateCount, j);
+          const centerI /*float*/ = this.crossCheckVertical(i, /*(int) */ centerJ, 2 * stateCount[1], stateCountTotal);
           if (!isNaN(centerI)) {
-              const estimatedModuleSize = (stateCount[0] + stateCount[1] + stateCount[2]) / 3.0;
+              const estimatedModuleSize /*float*/ = (stateCount[0] + stateCount[1] + stateCount[2]) / 3.0;
               for (const center of this.possibleCenters) {
                   // Look for about the same center and module size:
                   if (center.aboutEquals(estimatedModuleSize, centerI, centerJ)) {
@@ -15595,6 +15716,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.detector {*/
   /**
    * <p>Encapsulates a finder pattern, which are the three square patterns found in
    * the corners of QR Codes. It also encapsulates a count of similar finder patterns,
@@ -15631,7 +15753,7 @@
        */
       aboutEquals(moduleSize /*float*/, i /*float*/, j /*float*/) {
           if (Math.abs(i - this.getY()) <= moduleSize && Math.abs(j - this.getX()) <= moduleSize) {
-              const moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
+              const moduleSizeDiff /*float*/ = Math.abs(moduleSize - this.estimatedModuleSize);
               return moduleSizeDiff <= 1.0 || moduleSizeDiff <= this.estimatedModuleSize;
           }
           return false;
@@ -15643,9 +15765,9 @@
        */
       combineEstimate(i /*float*/, j /*float*/, newModuleSize /*float*/) {
           const combinedCount = this.count + 1;
-          const combinedX = (this.count * this.getX() + j) / combinedCount;
-          const combinedY = (this.count * this.getY() + i) / combinedCount;
-          const combinedModuleSize = (this.count * this.estimatedModuleSize + newModuleSize) / combinedCount;
+          const combinedX /*float*/ = (this.count * this.getX() + j) / combinedCount;
+          const combinedY /*float*/ = (this.count * this.getY() + i) / combinedCount;
+          const combinedModuleSize /*float*/ = (this.count * this.estimatedModuleSize + newModuleSize) / combinedCount;
           return new FinderPattern(combinedX, combinedY, combinedModuleSize, combinedCount);
       }
   }
@@ -15703,6 +15825,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.detector {*/
   /*import java.io.Serializable;*/
   /*import java.util.ArrayList;*/
   /*import java.util.Collections;*/
@@ -15759,11 +15882,7 @@
           const stateCount = new Int32Array(5);
           for (let i = iSkip - 1; i < maxI && !done; i += iSkip) {
               // Get a row of black/white values
-              stateCount[0] = 0;
-              stateCount[1] = 0;
-              stateCount[2] = 0;
-              stateCount[3] = 0;
-              stateCount[4] = 0;
+              stateCount.fill(0);
               let currentState = 0;
               for (let j = 0; j < maxJ; j++) {
                   if (image.get(j, i)) {
@@ -15811,11 +15930,7 @@
                                   }
                                   // Clear state to start looking again
                                   currentState = 0;
-                                  stateCount[0] = 0;
-                                  stateCount[1] = 0;
-                                  stateCount[2] = 0;
-                                  stateCount[3] = 0;
-                                  stateCount[4] = 0;
+                                  stateCount.fill(0);
                               }
                               else { // No, shift counts back by two
                                   stateCount[0] = stateCount[2];
@@ -15874,8 +15989,8 @@
           if (totalModuleSize < 7) {
               return false;
           }
-          const moduleSize = totalModuleSize / 7.0;
-          const maxVariance = moduleSize / 2.0;
+          const moduleSize /*float*/ = totalModuleSize / 7.0;
+          const maxVariance /*float*/ = moduleSize / 2.0;
           // Allow less than 50% variance from 1-1-3-1-1 proportions
           return Math.abs(moduleSize - stateCount[0]) < maxVariance &&
               Math.abs(moduleSize - stateCount[1]) < maxVariance &&
@@ -15884,13 +15999,8 @@
               Math.abs(moduleSize - stateCount[4]) < maxVariance;
       }
       getCrossCheckStateCount() {
-          const crossCheckStateCount = this.crossCheckStateCount;
-          crossCheckStateCount[0] = 0;
-          crossCheckStateCount[1] = 0;
-          crossCheckStateCount[2] = 0;
-          crossCheckStateCount[3] = 0;
-          crossCheckStateCount[4] = 0;
-          return crossCheckStateCount;
+          this.crossCheckStateCount.fill(0);
+          return this.crossCheckStateCount;
       }
       /**
        * After a vertical and horizontal scan finds a potential finder pattern, this method
@@ -16123,14 +16233,14 @@
       handlePossibleCenter(stateCount, i /*int*/, j /*int*/, pureBarcode) {
           const stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] +
               stateCount[4];
-          let centerJ = FinderPatternFinder.centerFromEnd(stateCount, j);
-          let centerI = this.crossCheckVertical(i, /*(int) */ Math.floor(centerJ), stateCount[2], stateCountTotal);
+          let centerJ /*float*/ = FinderPatternFinder.centerFromEnd(stateCount, j);
+          let centerI /*float*/ = this.crossCheckVertical(i, /*(int) */ Math.floor(centerJ), stateCount[2], stateCountTotal);
           if (!isNaN(centerI)) {
               // Re-cross check
               centerJ = this.crossCheckHorizontal(/*(int) */ Math.floor(centerJ), /*(int) */ Math.floor(centerI), stateCount[2], stateCountTotal);
               if (!isNaN(centerJ) &&
                   (!pureBarcode || this.crossCheckDiagonal(/*(int) */ Math.floor(centerI), /*(int) */ Math.floor(centerJ), stateCount[2], stateCountTotal))) {
-                  const estimatedModuleSize = stateCountTotal / 7.0;
+                  const estimatedModuleSize /*float*/ = stateCountTotal / 7.0;
                   let found = false;
                   const possibleCenters = this.possibleCenters;
                   for (let index = 0, length = possibleCenters.length; index < length; index++) {
@@ -16192,7 +16302,7 @@
        */
       haveMultiplyConfirmedCenters() {
           let confirmedCount = 0;
-          let totalModuleSize = 0.0;
+          let totalModuleSize /*float*/ = 0.0;
           const max = this.possibleCenters.length;
           for (const pattern of this.possibleCenters) {
               if (pattern.getCount() >= FinderPatternFinder.CENTER_QUORUM) {
@@ -16207,8 +16317,8 @@
           // and that we need to keep looking. We detect this by asking if the estimated module sizes
           // vary too much. We arbitrarily say that when the total deviation from average exceeds
           // 5% of the total module size estimates, it's too much.
-          const average = totalModuleSize / max;
-          let totalDeviation = 0.0;
+          const average /*float*/ = totalModuleSize / max;
+          let totalDeviation /*float*/ = 0.0;
           for (const pattern of this.possibleCenters) {
               totalDeviation += Math.abs(pattern.getEstimatedModuleSize() - average);
           }
@@ -16316,7 +16426,7 @@
    *
    * @author Sean Owen
    */
-  class Detector$1 {
+  let Detector$1 = class Detector {
       constructor(image) {
           this.image = image;
       }
@@ -16355,22 +16465,22 @@
           const topLeft = info.getTopLeft();
           const topRight = info.getTopRight();
           const bottomLeft = info.getBottomLeft();
-          const moduleSize = this.calculateModuleSize(topLeft, topRight, bottomLeft);
+          const moduleSize /*float*/ = this.calculateModuleSize(topLeft, topRight, bottomLeft);
           if (moduleSize < 1.0) {
               throw new NotFoundException('No pattern found in proccess finder.');
           }
-          const dimension = Detector$1.computeDimension(topLeft, topRight, bottomLeft, moduleSize);
+          const dimension = Detector.computeDimension(topLeft, topRight, bottomLeft, moduleSize);
           const provisionalVersion = Version.getProvisionalVersionForDimension(dimension);
           const modulesBetweenFPCenters = provisionalVersion.getDimensionForVersion() - 7;
           let alignmentPattern = null;
           // Anything above version 1 has an alignment pattern
           if (provisionalVersion.getAlignmentPatternCenters().length > 0) {
               // Guess where a "bottom right" finder pattern would have been
-              const bottomRightX = topRight.getX() - topLeft.getX() + bottomLeft.getX();
-              const bottomRightY = topRight.getY() - topLeft.getY() + bottomLeft.getY();
+              const bottomRightX /*float*/ = topRight.getX() - topLeft.getX() + bottomLeft.getX();
+              const bottomRightY /*float*/ = topRight.getY() - topLeft.getY() + bottomLeft.getY();
               // Estimate that alignment pattern is closer by 3 modules
               // from "bottom right" to known top left location
-              const correctionToTopLeft = 1.0 - 3.0 / modulesBetweenFPCenters;
+              const correctionToTopLeft /*float*/ = 1.0 - 3.0 / modulesBetweenFPCenters;
               const estAlignmentX = /*(int) */ Math.floor(topLeft.getX() + correctionToTopLeft * (bottomRightX - topLeft.getX()));
               const estAlignmentY = /*(int) */ Math.floor(topLeft.getY() + correctionToTopLeft * (bottomRightY - topLeft.getY()));
               // Kind of arbitrary -- expand search radius before giving up
@@ -16388,8 +16498,8 @@
               }
               // If we didn't find alignment pattern... well try anyway without it
           }
-          const transform = Detector$1.createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
-          const bits = Detector$1.sampleGrid(this.image, transform, dimension);
+          const transform = Detector.createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension);
+          const bits = Detector.sampleGrid(this.image, transform, dimension);
           let points;
           if (alignmentPattern === null) {
               points = [bottomLeft, topLeft, topRight];
@@ -16400,7 +16510,7 @@
           return new DetectorResult(bits, points);
       }
       static createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension /*int*/) {
-          const dimMinusThree = dimension - 3.5;
+          const dimMinusThree /*float*/ = dimension - 3.5;
           let bottomRightX; /*float*/
           let bottomRightY; /*float*/
           let sourceBottomRightX; /*float*/
@@ -16465,11 +16575,11 @@
        * width of each, measuring along the axis between their centers.</p>
        */
       calculateModuleSizeOneWay(pattern, otherPattern) {
-          const moduleSizeEst1 = this.sizeOfBlackWhiteBlackRunBothWays(/*(int) */ Math.floor(pattern.getX()), 
+          const moduleSizeEst1 /*float*/ = this.sizeOfBlackWhiteBlackRunBothWays(/*(int) */ Math.floor(pattern.getX()), 
           /*(int) */ Math.floor(pattern.getY()), 
           /*(int) */ Math.floor(otherPattern.getX()), 
           /*(int) */ Math.floor(otherPattern.getY()));
-          const moduleSizeEst2 = this.sizeOfBlackWhiteBlackRunBothWays(/*(int) */ Math.floor(otherPattern.getX()), 
+          const moduleSizeEst2 /*float*/ = this.sizeOfBlackWhiteBlackRunBothWays(/*(int) */ Math.floor(otherPattern.getX()), 
           /*(int) */ Math.floor(otherPattern.getY()), 
           /*(int) */ Math.floor(pattern.getX()), 
           /*(int) */ Math.floor(pattern.getY()));
@@ -16489,9 +16599,9 @@
        * of another point (another finder pattern center), and in the opposite direction too.
        */
       sizeOfBlackWhiteBlackRunBothWays(fromX /*int*/, fromY /*int*/, toX /*int*/, toY /*int*/) {
-          let result = this.sizeOfBlackWhiteBlackRun(fromX, fromY, toX, toY);
+          let result /*float*/ = this.sizeOfBlackWhiteBlackRun(fromX, fromY, toX, toY);
           // Now count other way -- don't run off image though of course
-          let scale = 1.0;
+          let scale /*float*/ = 1.0;
           let otherToX = fromX - (toX - fromX);
           if (otherToX < 0) {
               scale = fromX / /*(float) */ (fromX - otherToX);
@@ -16603,7 +16713,7 @@
           const alignmentFinder = new AlignmentPatternFinder(this.image, alignmentAreaLeftX, alignmentAreaTopY, alignmentAreaRightX - alignmentAreaLeftX, alignmentAreaBottomY - alignmentAreaTopY, overallEstModuleSize, this.resultPointCallback);
           return alignmentFinder.find();
       }
-  }
+  };
 
   /*
    * Copyright 2007 ZXing authors
@@ -16620,6 +16730,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode {*/
   /*import java.util.List;*/
   /*import java.util.Map;*/
   /**
@@ -16629,7 +16740,7 @@
    */
   class QRCodeReader {
       constructor() {
-          this.decoder = new Decoder();
+          this.decoder = new Decoder$1();
       }
       getDecoder() {
           return this.decoder;
@@ -16697,7 +16808,7 @@
           if (leftTopBlack === null || rightBottomBlack === null) {
               throw new NotFoundException();
           }
-          const moduleSize = this.moduleSize(leftTopBlack, image);
+          const moduleSize /*float*/ = this.moduleSize(leftTopBlack, image);
           let top = leftTopBlack[1];
           let bottom = rightBottomBlack[1];
           let left = leftTopBlack[0];
@@ -16763,8 +16874,8 @@
           return bits;
       }
       static moduleSize(leftTopBlack, image) {
-          const height = image.getHeight();
-          const width = image.getWidth();
+          const height /*int*/ = image.getHeight();
+          const width /*int*/ = image.getWidth();
           let x = leftTopBlack[0];
           let y = leftTopBlack[1];
           let inBlack = true;
@@ -16788,6 +16899,1678 @@
   QRCodeReader.NO_POINTS = new Array();
 
   /*
+   * Copyright 2007 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * Micro QR Code format information decoder.
+   *
+   * ISO 18004:2006 Annex E.4.4.
+   *
+   * The format information is 15 bits:
+   *   - 5 data bits [4:2]: combined version+EC indicator (versionIndicator, 0-7)
+   *   - 5 data bits [1:0]: data mask pattern (0-3)
+   *   - 10 BCH parity bits (generator polynomial x^10+x^8+x^5+x^4+x^2+x+1 = 0x537)
+   *
+   * The stored value is XOR-masked with 0x4445.
+   *
+   * versionIndicator mapping:
+   *   0=M1(noEC), 1=M2-L, 2=M2-M, 3=M3-L, 4=M3-M, 5=M4-L, 6=M4-M, 7=M4-Q
+   */
+  class MicroQRFormatInformation {
+      constructor(data5) {
+          this.versionIndicator = (data5 >> 2) & 0x07;
+          this.dataMask = data5 & 0x03;
+      }
+      /**
+       * Compute BCH(15,5) parity and return the full 15-bit format word (before XOR mask).
+       */
+      static computeBCHFormatWord(data5) {
+          let d = data5 << 10;
+          for (let i = 4; i >= 0; i--) {
+              if ((d >> (i + 10)) & 1) {
+                  d ^= (MicroQRFormatInformation.BCH_GENERATOR << i);
+              }
+          }
+          return ((data5 << 10) | (d & 0x3FF));
+      }
+      /**
+       * Build the 32-entry lookup table: [maskedFormatWord, data5] pairs.
+       */
+      static buildLookupTable() {
+          const table = [];
+          for (let data5 = 0; data5 < 32; data5++) {
+              const formatWord = MicroQRFormatInformation.computeBCHFormatWord(data5);
+              const masked = formatWord ^ MicroQRFormatInformation.FORMAT_INFO_MASK_MICRO_QR;
+              table.push([masked, data5]);
+          }
+          return table;
+      }
+      static numBitsDiffering(a, b) {
+          return Integer.bitCount(a ^ b);
+      }
+      /**
+       * Decode 15 format info bits (as read from the symbol, still masked).
+       *
+       * @param maskedFormatInfo 15 bits read directly from the symbol (XOR mask not yet removed)
+       * @return MicroQRFormatInformation, or null if no match within Hamming distance 3
+       */
+      static decodeFormatInformation(maskedFormatInfo) {
+          // Try exact match first
+          for (const [tableEntry, data5] of MicroQRFormatInformation.FORMAT_INFO_DECODE_LOOKUP) {
+              if (tableEntry === maskedFormatInfo) {
+                  return new MicroQRFormatInformation(data5);
+              }
+          }
+          // Find closest match within Hamming distance 3
+          let bestDifference = Number.MAX_SAFE_INTEGER;
+          let bestData5 = 0;
+          for (const [tableEntry, data5] of MicroQRFormatInformation.FORMAT_INFO_DECODE_LOOKUP) {
+              const bitsDiff = MicroQRFormatInformation.numBitsDiffering(maskedFormatInfo, tableEntry);
+              if (bitsDiff < bestDifference) {
+                  bestDifference = bitsDiff;
+                  bestData5 = data5;
+              }
+          }
+          if (bestDifference <= 3) {
+              return new MicroQRFormatInformation(bestData5);
+          }
+          return null;
+      }
+      /**
+       * Combined version+EC indicator (0-7):
+       *   0=M1, 1=M2-L, 2=M2-M, 3=M3-L, 4=M3-M, 5=M4-L, 6=M4-M, 7=M4-Q
+       */
+      getVersionIndicator() {
+          return this.versionIndicator;
+      }
+      /**
+       * Data mask pattern index (0-3).
+       */
+      getDataMask() {
+          return this.dataMask;
+      }
+      /**
+       * Actual version number: 1=M1, 2=M2, 3=M3, 4=M4.
+       */
+      getMicroQRVersionNumber() {
+          // versionIndicator 0→M1, 1-2→M2, 3-4→M3, 5-7→M4
+          if (this.versionIndicator === 0)
+              return 1;
+          if (this.versionIndicator <= 2)
+              return 2;
+          if (this.versionIndicator <= 4)
+              return 3;
+          return 4;
+      }
+      /** EC level label: 'L', 'M', 'Q', or null for M1. */
+      getECLevelLabel() {
+          switch (this.versionIndicator) {
+              case 0: return null; // M1, detection only
+              case 1:
+              case 3:
+              case 5: return 'L';
+              case 2:
+              case 4:
+              case 6: return 'M';
+              case 7: return 'Q';
+              default: return null;
+          }
+      }
+  }
+  MicroQRFormatInformation.FORMAT_INFO_MASK_MICRO_QR = 0x4445;
+  /**
+   * BCH generator polynomial for Micro QR format info:
+   * x^10 + x^8 + x^5 + x^4 + x^2 + x + 1 = 0x537
+   */
+  MicroQRFormatInformation.BCH_GENERATOR = 0x537;
+  /**
+   * Pre-computed lookup table: 32 entries, index = 5-bit data, value = masked 15-bit format word.
+   * Built at class load time.
+   */
+  MicroQRFormatInformation.FORMAT_INFO_DECODE_LOOKUP = MicroQRFormatInformation.buildLookupTable();
+
+  /*
+   * Copyright 2007 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * Micro QR Code version data.
+   *
+   * ISO 18004:2006 Annex E.
+   * Versions M1–M4: dimensions 11, 13, 15, 17.
+   *
+   * The versionIndicator (3 bits) encodes both symbol version and EC level:
+   *   0 → M1 (no EC / detection only)
+   *   1 → M2-L
+   *   2 → M2-M
+   *   3 → M3-L
+   *   4 → M3-M
+   *   5 → M4-L
+   *   6 → M4-M
+   *   7 → M4-Q
+   */
+  class MicroQRVersion {
+      constructor(versionNumber, // 1-4
+      versionIndicator, // 0-7
+      ecBlocks) {
+          this.versionNumber = versionNumber;
+          this.versionIndicator = versionIndicator;
+          this.ecBlocks = ecBlocks;
+          const ec = ecBlocks;
+          const ecb = ec.getECBlocks()[0];
+          this.totalCodewords = ecb.getCount() * (ecb.getDataCodewords() + ec.getECCodewordsPerBlock());
+      }
+      getVersionNumber() {
+          return this.versionNumber;
+      }
+      /** Combined version+EC indicator (0-7). */
+      getVersionIndicator() {
+          return this.versionIndicator;
+      }
+      /** Dimension of the symbol: 9 + 2*versionNumber. */
+      getDimensionForVersion() {
+          return 9 + 2 * this.versionNumber;
+      }
+      getTotalCodewords() {
+          return this.totalCodewords;
+      }
+      getNumDataCodewords() {
+          return this.ecBlocks.getECBlocks()[0].getDataCodewords();
+      }
+      getNumECCodewords() {
+          return this.totalCodewords - this.getNumDataCodewords();
+      }
+      getECBlocks() {
+          return this.ecBlocks;
+      }
+      /** EC level label: 'L', 'M', 'Q', or null for M1. */
+      getECLevelLabel() {
+          return MicroQRVersion.VERSION_INFO[this.versionIndicator][1];
+      }
+      /** Number of mode indicator bits (0 for M1, 1 for M2, 2 for M3, 3 for M4). */
+      getModeIndicatorBits() {
+          return MicroQRVersion.MODE_INDICATOR_BITS[this.versionNumber - 1];
+      }
+      /**
+       * Build the function pattern BitMatrix for this version.
+       * Marks: 9×9 upper-left area (finder + separator + format info),
+       * and timing strips on row 0 (cols 9+) and col 0 (rows 9+).
+       */
+      buildFunctionPattern() {
+          const dimension = this.getDimensionForVersion();
+          const bitMatrix = new BitMatrix(dimension);
+          // Upper-left 9×9: finder (7×7) + separator + format info area + dark module
+          bitMatrix.setRegion(0, 0, 9, 9);
+          // Timing strip: row 0, cols 9 to dim-1
+          if (dimension > 9) {
+              bitMatrix.setRegion(9, 0, dimension - 9, 1);
+              // Timing strip: col 0, rows 9 to dim-1
+              bitMatrix.setRegion(0, 9, 1, dimension - 9);
+          }
+          return bitMatrix;
+      }
+      /**
+       * Get a MicroQRVersion by its version indicator (0-7).
+       */
+      static getVersionForIndicator(versionIndicator) {
+          if (versionIndicator < 0 || versionIndicator > 7) {
+              throw new FormatException();
+          }
+          const [versionNumber] = MicroQRVersion.VERSION_INFO[versionIndicator];
+          return new MicroQRVersion(versionNumber, versionIndicator, MicroQRVersion.EC_BLOCKS[versionIndicator]);
+      }
+      /**
+       * Get a MicroQRVersion from the symbol dimension (11, 13, 15, or 17).
+       * Returns version M1-M4; EC level unknown (use version indicator 0 for each).
+       */
+      static getVersionForDimension(dimension) {
+          switch (dimension) {
+              case 11: return MicroQRVersion.getVersionForIndicator(0); // M1
+              case 13: return MicroQRVersion.getVersionForIndicator(1); // M2-L (placeholder)
+              case 15: return MicroQRVersion.getVersionForIndicator(3); // M3-L (placeholder)
+              case 17: return MicroQRVersion.getVersionForIndicator(5); // M4-L (placeholder)
+              default: throw new FormatException();
+          }
+      }
+      toString() {
+          return 'M' + this.versionNumber;
+      }
+  }
+  /** Maps versionIndicator (0-7) to [versionNumber, ecLevelLabel] */
+  MicroQRVersion.VERSION_INFO = [
+      [1, null], // 0: M1, no EC
+      [2, 'L'], // 1: M2-L
+      [2, 'M'], // 2: M2-M
+      [3, 'L'], // 3: M3-L
+      [3, 'M'], // 4: M3-M
+      [4, 'L'], // 5: M4-L
+      [4, 'M'], // 6: M4-M
+      [4, 'Q'], // 7: M4-Q
+  ];
+  /**
+   * ECBlocks indexed by versionIndicator (0-7).
+   * ECBlocks(ecCodewordsPerBlock, ECB(count, dataCodewords))
+   * Total codewords = ecCodewordsPerBlock*count + count*dataCodewords
+   *
+   * From ISO 18004:2006, Table E.1:
+   *   M1:   3 data + 2 EC = 5 total
+   *   M2-L: 5 data + 5 EC = 10 total
+   *   M2-M: 4 data + 6 EC = 10 total
+   *   M3-L: 11 data + 6 EC = 17 total
+   *   M3-M: 9 data + 8 EC = 17 total
+   *   M4-L: 16 data + 8 EC = 24 total
+   *   M4-M: 14 data + 10 EC = 24 total
+   *   M4-Q: 10 data + 14 EC = 24 total
+   */
+  MicroQRVersion.EC_BLOCKS = [
+      new ECBlocks(2, new ECB(1, 3)), // 0: M1
+      new ECBlocks(5, new ECB(1, 5)), // 1: M2-L
+      new ECBlocks(6, new ECB(1, 4)), // 2: M2-M
+      new ECBlocks(6, new ECB(1, 11)), // 3: M3-L
+      new ECBlocks(8, new ECB(1, 9)), // 4: M3-M
+      new ECBlocks(8, new ECB(1, 16)), // 5: M4-L
+      new ECBlocks(10, new ECB(1, 14)), // 6: M4-M
+      new ECBlocks(14, new ECB(1, 10)), // 7: M4-Q
+  ];
+  /**
+   * Number of mode indicator bits for versions M1-M4.
+   * M1: 0 (only Numeric), M2: 1, M3: 2, M4: 3.
+   */
+  MicroQRVersion.MODE_INDICATOR_BITS = [0, 1, 2, 3];
+
+  /*
+   * Copyright 2007 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * Micro QR Code data mask patterns per ISO 18004:2015 Table 10.
+   *
+   * These differ from the QR Code mask patterns. Indices correspond to the
+   * 2-bit data mask field in the format information word (binary 00–11):
+   *   00 (0): i mod 2 = 0
+   *   01 (1): ((i div 2) + (j div 3)) mod 2 = 0
+   *   10 (2): ((i*j mod 2) + (i*j mod 3)) mod 2 = 0
+   *   11 (3): ((i+j) mod 2 + i*j mod 3) mod 2 = 0
+   *
+   * Where i = row, j = column.
+   */
+  class MicroQRDataMask {
+      constructor(maskIndex, isMasked) {
+          this.maskIndex = maskIndex;
+          this.isMasked = isMasked;
+      }
+      static forIndex(maskIndex) {
+          if (maskIndex < 0 || maskIndex >= MicroQRDataMask.MASKS.length) {
+              throw new Error('Invalid Micro QR mask index: ' + maskIndex);
+          }
+          return MicroQRDataMask.MASKS[maskIndex];
+      }
+      /**
+       * Un-mask a BitMatrix (XOR mask bits).
+       * Applies to the entire matrix; function modules will be ignored by the parser.
+       */
+      unmaskBitMatrix(bits, dimension) {
+          for (let i = 0; i < dimension; i++) {
+              for (let j = 0; j < dimension; j++) {
+                  if (this.isMasked(i, j)) {
+                      bits.flip(j, i); // BitMatrix.flip(x, y) where x=col, y=row
+                  }
+              }
+          }
+      }
+  }
+  MicroQRDataMask.MASKS = [
+      // 00: i mod 2 = 0
+      new MicroQRDataMask(0, (i, _j) => (i & 0x01) === 0),
+      // 01: ((i div 2) + (j div 3)) mod 2 = 0
+      new MicroQRDataMask(1, (i, j) => (Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0),
+      // 10: ((i*j mod 2) + (i*j mod 3)) mod 2 = 0
+      new MicroQRDataMask(2, (i, j) => { const tmp = i * j; return ((tmp & 0x01) + (tmp % 3)) % 2 === 0; }),
+      // 11: ((i+j) mod 2 + i*j mod 3) mod 2 = 0
+      new MicroQRDataMask(3, (i, j) => (((i + j) & 0x01) + ((i * j) % 3)) % 2 === 0),
+  ];
+
+  /*
+   * Copyright 2007 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * Reads format information and codewords from a sampled Micro QR Code BitMatrix.
+   */
+  class MicroQRBitMatrixParser {
+      constructor(bitMatrix) {
+          this.bitMatrix = bitMatrix;
+          this.parsedFormatInfo = null;
+          this.parsedVersion = null;
+          const dimension = bitMatrix.getHeight();
+          // Micro QR dimensions: 11, 13, 15, 17 (odd, ≥ 11)
+          if (dimension < 11 || dimension > 17 || (dimension % 2) !== 1) {
+              throw new FormatException();
+          }
+      }
+      /**
+       * Read the 15-bit format information from the single format info location.
+       *
+       * Format info modules (1-indexed in the symbol):
+       *   row 8, col 1..8 → bits 14..7 (8 bits)
+       *   col 8, row 7..1 → bits 6..0  (7 bits)
+       */
+      readFormatInformation() {
+          if (this.parsedFormatInfo !== null) {
+              return this.parsedFormatInfo;
+          }
+          let formatInfoBits = 0;
+          // Row 8 (0-indexed), cols 1-8: bits 14..7
+          for (let col = 1; col <= 8; col++) {
+              formatInfoBits = this.copyBit(col, 8, formatInfoBits);
+          }
+          // Col 8 (0-indexed), rows 7..1: bits 6..0
+          for (let row = 7; row >= 1; row--) {
+              formatInfoBits = this.copyBit(8, row, formatInfoBits);
+          }
+          const formatInfo = MicroQRFormatInformation.decodeFormatInformation(formatInfoBits);
+          if (formatInfo !== null) {
+              this.parsedFormatInfo = formatInfo;
+              this.parsedVersion = MicroQRVersion.getVersionForIndicator(formatInfo.getVersionIndicator());
+              return formatInfo;
+          }
+          throw new FormatException();
+      }
+      copyBit(x, y, bits) {
+          return this.bitMatrix.get(x, y) ? (bits << 1) | 1 : bits << 1;
+      }
+      /**
+       * Read all codewords from the Micro QR BitMatrix.
+       * Applies data mask before reading.
+       *
+       * For M1 (versionNumber=1) and M3 (versionNumber=3), the last DATA codeword
+       * is only 4 bits (half-codeword). The bit stream layout is:
+       *   [numDataCodewords-1 full 8-bit data CWs][4-bit half data CW][numECCodewords full 8-bit EC CWs]
+       */
+      readCodewords() {
+          const formatInfo = this.readFormatInformation();
+          const version = this.parsedVersion;
+          // Unmask the bit matrix
+          const dataMask = MicroQRDataMask.forIndex(formatInfo.getDataMask());
+          const dimension = this.bitMatrix.getHeight();
+          dataMask.unmaskBitMatrix(this.bitMatrix, dimension);
+          // Build function pattern (modules we skip during codeword extraction)
+          const functionPattern = version.buildFunctionPattern();
+          const numDataCodewords = version.getNumDataCodewords();
+          const hasHalfCW = (version.getVersionNumber() === 1 || version.getVersionNumber() === 3);
+          let readingUp = true;
+          const result = new Uint8Array(version.getTotalCodewords());
+          let resultOffset = 0;
+          let currentByte = 0;
+          let bitsRead = 0;
+          // Traverse column pairs from right to left.
+          // Micro QR timing is in col 0 and row 0; both are marked in functionPattern.
+          for (let j = dimension - 1; j > 0; j -= 2) {
+              for (let count = 0; count < dimension; count++) {
+                  const i = readingUp ? dimension - 1 - count : count;
+                  for (let col = 0; col < 2; col++) {
+                      const x = j - col;
+                      if (!functionPattern.get(x, i)) {
+                          bitsRead++;
+                          currentByte <<= 1;
+                          if (this.bitMatrix.get(x, i)) {
+                              currentByte |= 1;
+                          }
+                          // Determine how many bits complete the current codeword.
+                          // The last data codeword for M1/M3 is only 4 bits (half-codeword).
+                          const isLastDataCW = hasHalfCW && resultOffset === numDataCodewords - 1;
+                          const cwBits = isLastDataCW ? 4 : 8;
+                          if (bitsRead === cwBits) {
+                              // For the 4-bit half-codeword, place the nibble in the high 4 bits.
+                              result[resultOffset++] = isLastDataCW
+                                  ? (currentByte << 4) & 0xFF
+                                  : currentByte & 0xFF;
+                              bitsRead = 0;
+                              currentByte = 0;
+                          }
+                      }
+                  }
+              }
+              readingUp = !readingUp;
+          }
+          if (resultOffset !== version.getTotalCodewords()) {
+              throw new FormatException();
+          }
+          return result;
+      }
+  }
+
+  /*
+   * Copyright 2007 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * Decodes Micro QR Code codeword bytes to text.
+   *
+   * Modes and character count bits by version (ISO 18004:2006, Annex E):
+   *
+   *            M1  M2  M3  M4
+   * Numeric     3   4   5   6
+   * Alpha       -   3   4   5
+   * Byte        -   -   4   5
+   * Kanji       -   -   3   4
+   *
+   * Mode indicator bits: 0 (M1), 1 (M2), 2 (M3), 3 (M4)
+   * Terminator: 3 bits (M1), 5 bits (M2-M4)
+   *
+   * The terminator is detected when count==0 after reading a mode indicator.
+   * For M1 (no mode indicator), it's detected when count==0.
+   */
+  class MicroQRDecodedBitStreamParser {
+      static decode(bytes, version, hints) {
+          const bits = new BitSource(bytes);
+          const result = new StringBuilder();
+          const byteSegments = [];
+          const versionNumber = version.getVersionNumber();
+          const modeIndicatorBits = version.getModeIndicatorBits();
+          try {
+              while (true) {
+                  // Determine mode
+                  let mode;
+                  if (modeIndicatorBits === 0) {
+                      // M1: always Numeric, no mode indicator field
+                      mode = MicroQRDecodedBitStreamParser.MODE_NUMERIC;
+                  }
+                  else {
+                      if (bits.available() < modeIndicatorBits)
+                          break;
+                      const modeBits = bits.readBits(modeIndicatorBits);
+                      mode = MicroQRDecodedBitStreamParser.decodeMode(modeBits, versionNumber);
+                  }
+                  // Read character count
+                  const countBits = MicroQRDecodedBitStreamParser.charCountBits(mode, versionNumber);
+                  if (bits.available() < countBits)
+                      break;
+                  const count = bits.readBits(countBits);
+                  // count == 0 signals the terminator (all-zero trailing bits)
+                  if (count === 0)
+                      break;
+                  // Decode the segment
+                  switch (mode) {
+                      case MicroQRDecodedBitStreamParser.MODE_NUMERIC:
+                          MicroQRDecodedBitStreamParser.decodeNumeric(bits, result, count);
+                          break;
+                      case MicroQRDecodedBitStreamParser.MODE_ALPHA:
+                          MicroQRDecodedBitStreamParser.decodeAlphanumeric(bits, result, count);
+                          break;
+                      case MicroQRDecodedBitStreamParser.MODE_BYTE:
+                          MicroQRDecodedBitStreamParser.decodeByte(bits, result, byteSegments, count, hints);
+                          break;
+                      case MicroQRDecodedBitStreamParser.MODE_KANJI:
+                          MicroQRDecodedBitStreamParser.decodeKanji(bits, result, count);
+                          break;
+                      default:
+                          throw new FormatException();
+                  }
+              }
+          }
+          catch (e) {
+              if (e instanceof FormatException)
+                  throw e;
+              throw new FormatException();
+          }
+          return new DecoderResult(bytes, result.toString(), byteSegments.length === 0 ? null : byteSegments, version.getECLevelLabel(), -1, -1);
+      }
+      /**
+       * Decode mode indicator bits.
+       * M2 (1 bit):  0=Numeric, 1=Alpha
+       * M3 (2 bits): 00=Numeric, 01=Alpha, 10=Byte, 11=Kanji
+       * M4 (3 bits): 000=Numeric, 001=Alpha, 010=Byte, 100=Kanji
+       */
+      static decodeMode(modeBits, versionNumber) {
+          switch (versionNumber) {
+              case 2: // M2: 1 bit
+                  return modeBits === 0
+                      ? MicroQRDecodedBitStreamParser.MODE_NUMERIC
+                      : MicroQRDecodedBitStreamParser.MODE_ALPHA;
+              case 3: // M3: 2 bits
+                  switch (modeBits) {
+                      case 0b00: return MicroQRDecodedBitStreamParser.MODE_NUMERIC;
+                      case 0b01: return MicroQRDecodedBitStreamParser.MODE_ALPHA;
+                      case 0b10: return MicroQRDecodedBitStreamParser.MODE_BYTE;
+                      case 0b11: return MicroQRDecodedBitStreamParser.MODE_KANJI;
+                  }
+                  break;
+              case 4: // M4: 3 bits; Kanji = 100 (not 011)
+                  switch (modeBits) {
+                      case 0b000: return MicroQRDecodedBitStreamParser.MODE_NUMERIC;
+                      case 0b001: return MicroQRDecodedBitStreamParser.MODE_ALPHA;
+                      case 0b010: return MicroQRDecodedBitStreamParser.MODE_BYTE;
+                      case 0b100: return MicroQRDecodedBitStreamParser.MODE_KANJI;
+                  }
+                  break;
+          }
+          throw new FormatException();
+      }
+      /**
+       * Character count bit widths by mode and version:
+       *
+       *            M1  M2  M3  M4
+       * Numeric     3   4   5   6     → versionNumber + 2
+       * Alpha       -   3   4   5     → versionNumber + 1
+       * Byte        -   -   4   5     → versionNumber + 1  (M3=4, M4=5)
+       * Kanji       -   -   3   4     → versionNumber      (M3=3, M4=4)
+       */
+      static charCountBits(mode, versionNumber) {
+          switch (mode) {
+              case MicroQRDecodedBitStreamParser.MODE_NUMERIC:
+                  return versionNumber + 2; // M1=3, M2=4, M3=5, M4=6
+              case MicroQRDecodedBitStreamParser.MODE_ALPHA:
+                  return versionNumber + 1; // M2=3, M3=4, M4=5
+              case MicroQRDecodedBitStreamParser.MODE_BYTE:
+                  return versionNumber + 1; // M3=4, M4=5
+              case MicroQRDecodedBitStreamParser.MODE_KANJI:
+                  return versionNumber; // M3=3, M4=4
+              default:
+                  throw new FormatException();
+          }
+      }
+      static decodeNumeric(bits, result, count) {
+          let remaining = count;
+          while (remaining >= 3) {
+              if (bits.available() < 10)
+                  throw new FormatException();
+              const threeDigits = bits.readBits(10);
+              if (threeDigits >= 1000)
+                  throw new FormatException();
+              result.append(MicroQRDecodedBitStreamParser.toChar(Math.floor(threeDigits / 100)));
+              result.append(MicroQRDecodedBitStreamParser.toChar(Math.floor(threeDigits / 10) % 10));
+              result.append(MicroQRDecodedBitStreamParser.toChar(threeDigits % 10));
+              remaining -= 3;
+          }
+          if (remaining === 2) {
+              if (bits.available() < 7)
+                  throw new FormatException();
+              const twoDigits = bits.readBits(7);
+              if (twoDigits >= 100)
+                  throw new FormatException();
+              result.append(MicroQRDecodedBitStreamParser.toChar(Math.floor(twoDigits / 10)));
+              result.append(MicroQRDecodedBitStreamParser.toChar(twoDigits % 10));
+          }
+          else if (remaining === 1) {
+              if (bits.available() < 4)
+                  throw new FormatException();
+              const oneDigit = bits.readBits(4);
+              if (oneDigit >= 10)
+                  throw new FormatException();
+              result.append(MicroQRDecodedBitStreamParser.toChar(oneDigit));
+          }
+      }
+      static decodeAlphanumeric(bits, result, count) {
+          let remaining = count;
+          while (remaining > 1) {
+              if (bits.available() < 11)
+                  throw new FormatException();
+              const twoChars = bits.readBits(11);
+              result.append(MicroQRDecodedBitStreamParser.toAlphaNum(Math.floor(twoChars / 45)));
+              result.append(MicroQRDecodedBitStreamParser.toAlphaNum(twoChars % 45));
+              remaining -= 2;
+          }
+          if (remaining === 1) {
+              if (bits.available() < 6)
+                  throw new FormatException();
+              result.append(MicroQRDecodedBitStreamParser.toAlphaNum(bits.readBits(6)));
+          }
+      }
+      static decodeByte(bits, result, byteSegments, count, hints) {
+          if (8 * count > bits.available())
+              throw new FormatException();
+          const readBytes = new Uint8Array(count);
+          for (let i = 0; i < count; i++) {
+              readBytes[i] = bits.readBits(8) & 0xFF;
+          }
+          const encoding = StringUtils.guessEncoding(readBytes, hints);
+          try {
+              result.append(StringEncoding.decode(readBytes, encoding));
+          }
+          catch (e) {
+              throw new FormatException();
+          }
+          byteSegments.push(readBytes);
+      }
+      static decodeKanji(bits, result, count) {
+          if (13 * count > bits.available())
+              throw new FormatException();
+          const buffer = new Uint8Array(2 * count);
+          let offset = 0;
+          for (let i = 0; i < count; i++) {
+              const twoBytes = bits.readBits(13);
+              let assembled = (Math.floor(twoBytes / 0x0C0) << 8) | (twoBytes % 0x0C0);
+              assembled += assembled < 0x01F00 ? 0x08140 : 0x0C140;
+              buffer[offset++] = (assembled >> 8) & 0xFF;
+              buffer[offset++] = assembled & 0xFF;
+          }
+          try {
+              result.append(StringEncoding.decode(buffer, StringUtils.SHIFT_JIS));
+          }
+          catch (e) {
+              throw new FormatException();
+          }
+      }
+      static toChar(value) {
+          if (value >= MicroQRDecodedBitStreamParser.ALPHANUMERIC_CHARS.length) {
+              throw new FormatException();
+          }
+          return MicroQRDecodedBitStreamParser.ALPHANUMERIC_CHARS[value];
+      }
+      static toAlphaNum(value) {
+          if (value >= MicroQRDecodedBitStreamParser.ALPHANUMERIC_CHARS.length) {
+              throw new FormatException();
+          }
+          return MicroQRDecodedBitStreamParser.ALPHANUMERIC_CHARS[value];
+      }
+  }
+  MicroQRDecodedBitStreamParser.ALPHANUMERIC_CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
+  MicroQRDecodedBitStreamParser.MODE_NUMERIC = 0;
+  MicroQRDecodedBitStreamParser.MODE_ALPHA = 1;
+  MicroQRDecodedBitStreamParser.MODE_BYTE = 2;
+  MicroQRDecodedBitStreamParser.MODE_KANJI = 3;
+
+  /*
+   * Copyright 2007 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * Orchestrates Micro QR Code decoding:
+   *   1. Parse format info and codewords from the bit matrix
+   *   2. Reed-Solomon error correction (RS for M2-M4; skip for M1)
+   *   3. Decode bit stream to text
+   */
+  class MicroQRDecoder {
+      constructor() {
+          this.rsDecoder = new ReedSolomonDecoder(GenericGF.QR_CODE_FIELD_256);
+      }
+      decodeBitMatrix(bits, hints) {
+          const parser = new MicroQRBitMatrixParser(bits);
+          const formatInfo = parser.readFormatInformation();
+          const version = MicroQRVersion.getVersionForIndicator(formatInfo.getVersionIndicator());
+          // Read raw codewords (format info parsed, data mask removed)
+          const codewords = parser.readCodewords();
+          const numDataCodewords = version.getNumDataCodewords();
+          version.getNumECCodewords();
+          if (version.getVersionNumber() === 1) {
+              // M1: error detection only — no RS correction, just pass data through.
+              // The 2 "EC" codewords are BCH-type detection codewords; we skip full correction.
+              return MicroQRDecodedBitStreamParser.decode(codewords.subarray(0, numDataCodewords), version, hints !== null && hints !== void 0 ? hints : null);
+          }
+          // M2-M4: RS error correction using GF(256), same as QR code
+          this.correctErrors(codewords, numDataCodewords);
+          return MicroQRDecodedBitStreamParser.decode(codewords.subarray(0, numDataCodewords), version, hints !== null && hints !== void 0 ? hints : null);
+      }
+      correctErrors(codewords, numDataCodewords) {
+          const codewordsInts = new Int32Array(codewords);
+          try {
+              this.rsDecoder.decode(codewordsInts, codewords.length - numDataCodewords);
+          }
+          catch (e) {
+              throw new ChecksumException();
+          }
+          // Write corrected bytes back
+          for (let i = 0; i < numDataCodewords; i++) {
+              codewords[i] = codewordsInts[i] & 0xFF;
+          }
+      }
+  }
+
+  /*
+   * Copyright 2007 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * Encapsulates a Micro QR Code finder pattern candidate.
+   */
+  class MicroQRFinderPattern extends ResultPoint {
+      constructor(posX, posY, estimatedModuleSize, count = 1) {
+          super(posX, posY);
+          this.estimatedModuleSize = estimatedModuleSize;
+          this.count = count;
+      }
+      getEstimatedModuleSize() {
+          return this.estimatedModuleSize;
+      }
+      getCount() {
+          return this.count;
+      }
+      /**
+       * Returns true if this pattern is approximately at position (i, j)
+       * with the given module size.
+       */
+      aboutEquals(moduleSize, i, j) {
+          if (Math.abs(i - this.getY()) <= moduleSize && Math.abs(j - this.getX()) <= moduleSize) {
+              const moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
+              return moduleSizeDiff <= 1.0 || moduleSizeDiff <= this.estimatedModuleSize;
+          }
+          return false;
+      }
+      /**
+       * Return a new pattern that is a weighted average of this pattern and a new estimate.
+       */
+      combineEstimate(i, j, newModuleSize) {
+          const combinedCount = this.count + 1;
+          const combinedX = (this.count * this.getX() + j) / combinedCount;
+          const combinedY = (this.count * this.getY() + i) / combinedCount;
+          const combinedModuleSize = (this.count * this.estimatedModuleSize + newModuleSize) / combinedCount;
+          return new MicroQRFinderPattern(combinedX, combinedY, combinedModuleSize, combinedCount);
+      }
+  }
+
+  /*
+   * Copyright 2007 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * Detects a Micro QR Code in an image.
+   *
+   * Algorithm:
+   *   1. Scan rows for 1:1:3:1:1 ratio black/white/black/white/black run (finder pattern).
+   *   2. Cross-check candidate vertically.
+   *   3. Estimate module size from the cross-section of the finder.
+   *   4. Probe timing patterns (row 0 and col 0) from the finder to determine symbol dimension.
+   *   5. Build perspective transform from 3 anchor points.
+   *   6. Sample the grid.
+   */
+  class MicroQRDetector {
+      constructor(image) {
+          this.image = image;
+      }
+      detect(hints) {
+          var _a;
+          this.resultPointCallback = (hints != null)
+              ? (_a = hints.get(DecodeHintType$1.NEED_RESULT_POINT_CALLBACK)) !== null && _a !== void 0 ? _a : null
+              : null;
+          const finderPattern = this.findFinderPattern(hints);
+          return this.processFinderPattern(finderPattern);
+      }
+      // ──────────────────────────────────────────────────────────────────────────
+      // Finder pattern search
+      // ──────────────────────────────────────────────────────────────────────────
+      findFinderPattern(hints) {
+          const image = this.image;
+          const maxI = image.getHeight();
+          const maxJ = image.getWidth();
+          const tryHarder = hints != null && hints.get(DecodeHintType$1.TRY_HARDER) !== undefined;
+          // Skip rows to speed up scan; scan every row when tryHarder
+          const iSkip = tryHarder ? 1 : Math.max(1, Math.floor(maxI / 64));
+          const stateCount = new Int32Array(5);
+          const possibleCenters = [];
+          for (let i = iSkip - 1; i < maxI; i += iSkip) {
+              stateCount.fill(0);
+              let currentState = 0;
+              for (let j = 0; j < maxJ; j++) {
+                  if (image.get(j, i)) {
+                      // Dark pixel
+                      if ((currentState & 1) === 1) {
+                          // Transition from white-counting state to dark-counting state
+                          currentState++;
+                      }
+                      stateCount[currentState]++;
+                  }
+                  else {
+                      // White pixel
+                      if ((currentState & 1) === 0) {
+                          // Currently in a dark-counting state
+                          if (currentState === 4) {
+                              // Potential complete pattern — check it
+                              if (this.foundPatternCross(stateCount)) {
+                                  const confirmed = this.handlePossibleCenter(stateCount, i, j, possibleCenters);
+                                  if (confirmed) {
+                                      stateCount.fill(0);
+                                      currentState = 0;
+                                      continue;
+                                  }
+                              }
+                              // Slide the window forward by two states
+                              stateCount[0] = stateCount[2];
+                              stateCount[1] = stateCount[3];
+                              stateCount[2] = stateCount[4];
+                              stateCount[3] = 1;
+                              stateCount[4] = 0;
+                              currentState = 3;
+                              continue;
+                          }
+                          else {
+                              // Transition from dark-counting to white-counting
+                              stateCount[++currentState]++;
+                          }
+                      }
+                      else {
+                          // Already in a white-counting state, just count
+                          stateCount[currentState]++;
+                      }
+                  }
+              }
+              if (this.foundPatternCross(stateCount)) {
+                  this.handlePossibleCenter(stateCount, i, maxJ, possibleCenters);
+              }
+          }
+          if (possibleCenters.length === 0) {
+              throw new NotFoundException('No Micro QR finder pattern found.');
+          }
+          // Return the candidate with the highest count (most confirmations)
+          possibleCenters.sort((a, b) => b.getCount() - a.getCount());
+          return possibleCenters[0];
+      }
+      foundPatternCross(stateCount) {
+          let totalModuleSize = 0;
+          for (let i = 0; i < 5; i++) {
+              const count = stateCount[i];
+              if (count === 0)
+                  return false;
+              totalModuleSize += count;
+          }
+          if (totalModuleSize < 7)
+              return false;
+          const moduleSize = totalModuleSize / 7.0;
+          const maxVariance = moduleSize / 2.0;
+          return Math.abs(moduleSize - stateCount[0]) < maxVariance &&
+              Math.abs(moduleSize - stateCount[1]) < maxVariance &&
+              Math.abs(3.0 * moduleSize - stateCount[2]) < 3 * maxVariance &&
+              Math.abs(moduleSize - stateCount[3]) < maxVariance &&
+              Math.abs(moduleSize - stateCount[4]) < maxVariance;
+      }
+      handlePossibleCenter(stateCount, i, j, possibleCenters) {
+          const stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+          const centerJ = this.centerFromEnd(stateCount, j);
+          const centerI = this.crossCheckVertical(i, Math.floor(centerJ), stateCount[2], stateCountTotal);
+          if (isNaN(centerI))
+              return false;
+          const estimatedModuleSize = (stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4]) / 7.0;
+          // Check if this center is near an existing candidate
+          for (let idx = 0; idx < possibleCenters.length; idx++) {
+              const center = possibleCenters[idx];
+              if (center.aboutEquals(estimatedModuleSize, centerI, centerJ)) {
+                  possibleCenters[idx] = center.combineEstimate(centerI, centerJ, estimatedModuleSize);
+                  return true;
+              }
+          }
+          possibleCenters.push(new MicroQRFinderPattern(centerJ, centerI, estimatedModuleSize));
+          if (this.resultPointCallback !== null) {
+              this.resultPointCallback.foundPossibleResultPoint(possibleCenters[possibleCenters.length - 1]);
+          }
+          return false;
+      }
+      centerFromEnd(stateCount, end) {
+          return end - stateCount[4] - stateCount[3] - stateCount[2] / 2.0;
+      }
+      crossCheckVertical(startI, centerJ, centralCount, originalStateCountTotal) {
+          const image = this.image;
+          const maxI = image.getHeight();
+          const stateCount = new Int32Array(5);
+          let i = startI;
+          while (i >= 0 && image.get(centerJ, i)) {
+              stateCount[2]++;
+              i--;
+          }
+          if (i < 0)
+              return NaN;
+          while (i >= 0 && !image.get(centerJ, i) && stateCount[1] <= originalStateCountTotal) {
+              stateCount[1]++;
+              i--;
+          }
+          if (i < 0 || stateCount[1] > originalStateCountTotal)
+              return NaN;
+          while (i >= 0 && image.get(centerJ, i) && stateCount[0] <= originalStateCountTotal) {
+              stateCount[0]++;
+              i--;
+          }
+          if (stateCount[0] > originalStateCountTotal)
+              return NaN;
+          i = startI + 1;
+          while (i < maxI && image.get(centerJ, i)) {
+              stateCount[2]++;
+              i++;
+          }
+          if (i === maxI)
+              return NaN;
+          while (i < maxI && !image.get(centerJ, i) && stateCount[3] < originalStateCountTotal) {
+              stateCount[3]++;
+              i++;
+          }
+          if (i === maxI || stateCount[3] >= originalStateCountTotal)
+              return NaN;
+          while (i < maxI && image.get(centerJ, i) && stateCount[4] < originalStateCountTotal) {
+              stateCount[4]++;
+              i++;
+          }
+          if (stateCount[4] >= originalStateCountTotal)
+              return NaN;
+          const stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+          if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= 2 * originalStateCountTotal)
+              return NaN;
+          return this.foundPatternCross(stateCount)
+              ? this.centerFromEnd(stateCount, i)
+              : NaN;
+      }
+      // ──────────────────────────────────────────────────────────────────────────
+      // Process finder pattern → perspective sample
+      // ──────────────────────────────────────────────────────────────────────────
+      processFinderPattern(finderPattern) {
+          const fx = finderPattern.getX();
+          const fy = finderPattern.getY();
+          const moduleSize = finderPattern.getEstimatedModuleSize();
+          if (moduleSize < 1.0) {
+              throw new NotFoundException('Module size too small.');
+          }
+          const detected = this.determineDimension(fx, fy, moduleSize);
+          if (detected === null) {
+              throw new NotFoundException('Cannot determine Micro QR symbol dimension.');
+          }
+          const { dim, orientation } = detected;
+          // The finder is always at the "top-left" of the symbol in its own coordinate system.
+          // topRight and bottomLeft offsets rotate with the symbol orientation.
+          //   orientation 0 (0°):   symbol extends right (+) and down (+)
+          //   orientation 1 (90°CW): symbol extends down (+) and left (-)
+          //   orientation 2 (180°): symbol extends left (-) and up (-)
+          //   orientation 3 (270°CW): symbol extends up (-) and right (+)
+          const dist = (dim - 7) * moduleSize;
+          const trDx = [dist, 0, -dist, 0][orientation];
+          const trDy = [0, dist, 0, -dist][orientation];
+          const blDx = [0, -dist, 0, dist][orientation];
+          const blDy = [dist, 0, -dist, 0][orientation];
+          const topRightX = fx + trDx;
+          const topRightY = fy + trDy;
+          const bottomLeftX = fx + blDx;
+          const bottomLeftY = fy + blDy;
+          const transform = MicroQRDetector.createTransform(fx, fy, topRightX, topRightY, bottomLeftX, bottomLeftY, dim);
+          const bits = MicroQRDetector.sampleGrid(this.image, transform, dim);
+          const points = [
+              new ResultPoint(fx, fy),
+              new ResultPoint(topRightX, topRightY),
+              new ResultPoint(bottomLeftX, bottomLeftY),
+          ];
+          return new DetectorResult(bits, points);
+      }
+      /**
+       * Determine the Micro QR symbol dimension and orientation by probing timing patterns.
+       *
+       * The timing pattern in row 0 (cols 8+) and col 0 (rows 8+) each alternate dark/light.
+       * From the finder center (fx, fy) the timing probes rotate with the symbol orientation:
+       *
+       *   orientation 0 (0°):    row probe (+5,-3)→right,  col probe (-3,+5)→down
+       *   orientation 1 (90°CW): row probe (+3,+5)→down,   col probe (-5,-3)→left
+       *   orientation 2 (180°):  row probe (-5,+3)→left,   col probe (+3,-5)→up
+       *   orientation 3 (270°CW):row probe (-3,-5)→up,     col probe (+5,+3)→right
+       */
+      determineDimension(fx, fy, ms) {
+          // Each entry: [rowStartDx, rowStartDy, rowDirX, rowDirY, colStartDx, colStartDy, colDirX, colDirY]
+          const ORIENTATION_PROBES = [
+              [5, -3, 1, 0, -3, 5, 0, 1], // 0°
+              [3, 5, 0, 1, -5, -3, -1, 0], // 90° CW
+              [-5, 3, -1, 0, 3, -5, 0, -1], // 180°
+              [-3, -5, 0, -1, 5, 3, 1, 0], // 270° CW
+          ];
+          // First pass: require both timing probes to agree — avoids false positives from data modules.
+          let bestSingle = null;
+          for (let orientation = 0; orientation < 4; orientation++) {
+              const [rDx, rDy, rdx, rdy, cDx, cDy, cdx, cdy] = ORIENTATION_PROBES[orientation];
+              const dimH = this.probeTimingLine(fx + rDx * ms, fy + rDy * ms, rdx, rdy, ms);
+              const dimV = this.probeTimingLine(fx + cDx * ms, fy + cDy * ms, cdx, cdy, ms);
+              if (dimH !== null && dimV !== null) {
+                  const dim = this.snapDimension(dimH, dimV);
+                  if (dim !== null) {
+                      return { dim, orientation };
+                  }
+              }
+              else if (bestSingle === null && (dimH !== null || dimV !== null)) {
+                  const dim = this.snapDimension(dimH, dimV);
+                  if (dim !== null) {
+                      bestSingle = { dim, orientation };
+                  }
+              }
+          }
+          // Fallback: accept single-probe result (e.g. near image boundary).
+          return bestSingle;
+      }
+      snapDimension(dimH, dimV) {
+          if (dimH === null)
+              return dimV;
+          if (dimV === null)
+              return dimH;
+          if (dimH === dimV)
+              return dimH;
+          const avg = Math.round((dimH + dimV) / 2);
+          const nearest = [11, 13, 15, 17].reduce((prev, curr) => Math.abs(curr - avg) < Math.abs(prev - avg) ? curr : prev);
+          return nearest;
+      }
+      /**
+       * Probe the timing pattern starting at (startX, startY), stepping by moduleSize in (dx, dy).
+       * Counts dark timing modules (at even-indexed positions 8, 10, 12, ...) and stops at mismatch.
+       *
+       * Returns the symbol dimension, or null if no valid dimension is detected.
+       */
+      probeTimingLine(startX, startY, dx, dy, moduleSize) {
+          let darkCount = 0;
+          for (let step = 0; step < 10; step++) {
+              const moduleIdx = 8 + step;
+              const x = Math.round(startX + dx * step * moduleSize);
+              const y = Math.round(startY + dy * step * moduleSize);
+              if (x < 0 || x >= this.image.getWidth() || y < 0 || y >= this.image.getHeight()) {
+                  break;
+              }
+              const isDark = this.image.get(x, y);
+              const expectDark = (moduleIdx % 2 === 0);
+              if (isDark !== expectDark) {
+                  break;
+              }
+              if (expectDark) {
+                  darkCount++;
+              }
+          }
+          if (darkCount < 2)
+              return null;
+          // dim = finder(7) + separator(1) + timing(2*darkCount - 1)
+          const dim = 8 + 2 * darkCount - 1;
+          if (dim === 11 || dim === 13 || dim === 15 || dim === 17) {
+              return dim;
+          }
+          // Round to nearest valid dimension
+          const nearest = [11, 13, 15, 17].reduce((prev, curr) => Math.abs(curr - dim) < Math.abs(prev - dim) ? curr : prev);
+          return Math.abs(nearest - dim) <= 2 ? nearest : null;
+      }
+      static createTransform(topLeftX, topLeftY, topRightX, topRightY, bottomLeftX, bottomLeftY, dimension) {
+          const dimMinusThree = dimension - 3.5;
+          return PerspectiveTransform.quadrilateralToQuadrilateral(3.5, 3.5, // source top-left (finder center in ideal grid)
+          dimMinusThree, 3.5, // source top-right
+          3.5, dimMinusThree, // source bottom-left
+          dimMinusThree, dimMinusThree, // source bottom-right (estimated)
+          topLeftX, topLeftY, topRightX, topRightY, bottomLeftX, bottomLeftY, 
+          // bottom-right: project both directions from top-left
+          topRightX + (bottomLeftX - topLeftX), topRightY + (bottomLeftY - topLeftY));
+      }
+      static sampleGrid(image, transform, dimension) {
+          const sampler = GridSamplerInstance.getInstance();
+          return sampler.sampleGridWithTransform(image, dimension, dimension, transform);
+      }
+  }
+
+  /*
+   * Copyright 2010 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * Detects and decodes Micro QR Codes in images.
+   */
+  class MicroQRCodeReader {
+      constructor() {
+          this.decoder = new MicroQRDecoder();
+      }
+      decode(image, hints) {
+          let decoderResult;
+          let points;
+          if (hints != null && hints.get(DecodeHintType$1.PURE_BARCODE) !== undefined) {
+              // Pure barcode path: image is already the bit matrix
+              const bits = image.getBlackMatrix();
+              decoderResult = this.decoder.decodeBitMatrix(bits, hints !== null && hints !== void 0 ? hints : undefined);
+              points = [];
+          }
+          else {
+              const detector = new MicroQRDetector(image.getBlackMatrix());
+              const detectorResult = detector.detect(hints !== null && hints !== void 0 ? hints : undefined);
+              points = detectorResult.getPoints();
+              decoderResult = this.decoder.decodeBitMatrix(detectorResult.getBits(), hints !== null && hints !== void 0 ? hints : undefined);
+          }
+          const result = new Result$1(decoderResult.getText(), decoderResult.getRawBytes(), decoderResult.getNumBits(), points, BarcodeFormat$1.MICRO_QR_CODE, System.currentTimeMillis());
+          const byteSegments = decoderResult.getByteSegments();
+          if (byteSegments !== null) {
+              result.putMetadata(ResultMetadataType$1.BYTE_SEGMENTS, byteSegments);
+          }
+          const ecLevel = decoderResult.getECLevel();
+          if (ecLevel !== null) {
+              result.putMetadata(ResultMetadataType$1.ERROR_CORRECTION_LEVEL, ecLevel);
+          }
+          return result;
+      }
+      reset() {
+          // nothing to reset
+      }
+  }
+
+  /*
+   * Copyright 2011 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * @author mike32767
+   * @author Manuel Kasten
+   */
+  class BitMatrixParser {
+      constructor(bitMatrix) {
+          this.bitMatrix = bitMatrix;
+      }
+      readCodewords() {
+          const result = new Uint8Array(144);
+          const height = this.bitMatrix.getHeight();
+          const width = this.bitMatrix.getWidth();
+          for (let y = 0; y < height; y++) {
+              const bitnrRow = BitMatrixParser.BITNR[y];
+              for (let x = 0; x < width; x++) {
+                  const bit = bitnrRow[x];
+                  if (bit >= 0 && this.bitMatrix.get(x, y)) {
+                      result[Math.floor(bit / 6)] |= (1 << (5 - (bit % 6)));
+                  }
+              }
+          }
+          return result;
+      }
+  }
+  /* tslint:disable:no-trailing-whitespace max-line-length */
+  BitMatrixParser.BITNR = [
+      [121, 120, 127, 126, 133, 132, 139, 138, 145, 144, 151, 150, 157, 156, 163, 162, 169, 168, 175, 174, 181, 180, 187, 186, 193, 192, 199, 198, -2, -2],
+      [123, 122, 129, 128, 135, 134, 141, 140, 147, 146, 153, 152, 159, 158, 165, 164, 171, 170, 177, 176, 183, 182, 189, 188, 195, 194, 201, 200, 816, -3],
+      [125, 124, 131, 130, 137, 136, 143, 142, 149, 148, 155, 154, 161, 160, 167, 166, 173, 172, 179, 178, 185, 184, 191, 190, 197, 196, 203, 202, 818, 817],
+      [283, 282, 277, 276, 271, 270, 265, 264, 259, 258, 253, 252, 247, 246, 241, 240, 235, 234, 229, 228, 223, 222, 217, 216, 211, 210, 205, 204, 819, -3],
+      [285, 284, 279, 278, 273, 272, 267, 266, 261, 260, 255, 254, 249, 248, 243, 242, 237, 236, 231, 230, 225, 224, 219, 218, 213, 212, 207, 206, 821, 820],
+      [287, 286, 281, 280, 275, 274, 269, 268, 263, 262, 257, 256, 251, 250, 245, 244, 239, 238, 233, 232, 227, 226, 221, 220, 215, 214, 209, 208, 822, -3],
+      [289, 288, 295, 294, 301, 300, 307, 306, 313, 312, 319, 318, 325, 324, 331, 330, 337, 336, 343, 342, 349, 348, 355, 354, 361, 360, 367, 366, 824, 823],
+      [291, 290, 297, 296, 303, 302, 309, 308, 315, 314, 321, 320, 327, 326, 333, 332, 339, 338, 345, 344, 351, 350, 357, 356, 363, 362, 369, 368, 825, -3],
+      [293, 292, 299, 298, 305, 304, 311, 310, 317, 316, 323, 322, 329, 328, 335, 334, 341, 340, 347, 346, 353, 352, 359, 358, 365, 364, 371, 370, 827, 826],
+      [409, 408, 403, 402, 397, 396, 391, 390, 79, 78, -2, -2, 13, 12, 37, 36, 2, -1, 44, 43, 109, 108, 385, 384, 379, 378, 373, 372, 828, -3],
+      [411, 410, 405, 404, 399, 398, 393, 392, 81, 80, 40, -2, 15, 14, 39, 38, 3, -1, -1, 45, 111, 110, 387, 386, 381, 380, 375, 374, 830, 829],
+      [413, 412, 407, 406, 401, 400, 395, 394, 83, 82, 41, -3, -3, -3, -3, -3, 5, 4, 47, 46, 113, 112, 389, 388, 383, 382, 377, 376, 831, -3],
+      [415, 414, 421, 420, 427, 426, 103, 102, 55, 54, 16, -3, -3, -3, -3, -3, -3, -3, 20, 19, 85, 84, 433, 432, 439, 438, 445, 444, 833, 832],
+      [417, 416, 423, 422, 429, 428, 105, 104, 57, 56, -3, -3, -3, -3, -3, -3, -3, -3, 22, 21, 87, 86, 435, 434, 441, 440, 447, 446, 834, -3],
+      [419, 418, 425, 424, 431, 430, 107, 106, 59, 58, -3, -3, -3, -3, -3, -3, -3, -3, -3, 23, 89, 88, 437, 436, 443, 442, 449, 448, 836, 835],
+      [481, 480, 475, 474, 469, 468, 48, -2, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, 0, 53, 52, 463, 462, 457, 456, 451, 450, 837, -3],
+      [483, 482, 477, 476, 471, 470, 49, -1, -2, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, -2, -1, 465, 464, 459, 458, 453, 452, 839, 838],
+      [485, 484, 479, 478, 473, 472, 51, 50, 31, -3, -3, -3, -3, -3, -3, -3, -3, -3, -3, 1, -2, 42, 467, 466, 461, 460, 455, 454, 840, -3],
+      [487, 486, 493, 492, 499, 498, 97, 96, 61, 60, -3, -3, -3, -3, -3, -3, -3, -3, -3, 26, 91, 90, 505, 504, 511, 510, 517, 516, 842, 841],
+      [489, 488, 495, 494, 501, 500, 99, 98, 63, 62, -3, -3, -3, -3, -3, -3, -3, -3, 28, 27, 93, 92, 507, 506, 513, 512, 519, 518, 843, -3],
+      [491, 490, 497, 496, 503, 502, 101, 100, 65, 64, 17, -3, -3, -3, -3, -3, -3, -3, 18, 29, 95, 94, 509, 508, 515, 514, 521, 520, 845, 844],
+      [559, 558, 553, 552, 547, 546, 541, 540, 73, 72, 32, -3, -3, -3, -3, -3, -3, 10, 67, 66, 115, 114, 535, 534, 529, 528, 523, 522, 846, -3],
+      [561, 560, 555, 554, 549, 548, 543, 542, 75, 74, -2, -1, 7, 6, 35, 34, 11, -2, 69, 68, 117, 116, 537, 536, 531, 530, 525, 524, 848, 847],
+      [563, 562, 557, 556, 551, 550, 545, 544, 77, 76, -2, 33, 9, 8, 25, 24, -1, -2, 71, 70, 119, 118, 539, 538, 533, 532, 527, 526, 849, -3],
+      [565, 564, 571, 570, 577, 576, 583, 582, 589, 588, 595, 594, 601, 600, 607, 606, 613, 612, 619, 618, 625, 624, 631, 630, 637, 636, 643, 642, 851, 850],
+      [567, 566, 573, 572, 579, 578, 585, 584, 591, 590, 597, 596, 603, 602, 609, 608, 615, 614, 621, 620, 627, 626, 633, 632, 639, 638, 645, 644, 852, -3],
+      [569, 568, 575, 574, 581, 580, 587, 586, 593, 592, 599, 598, 605, 604, 611, 610, 617, 616, 623, 622, 629, 628, 635, 634, 641, 640, 647, 646, 854, 853],
+      [727, 726, 721, 720, 715, 714, 709, 708, 703, 702, 697, 696, 691, 690, 685, 684, 679, 678, 673, 672, 667, 666, 661, 660, 655, 654, 649, 648, 855, -3],
+      [729, 728, 723, 722, 717, 716, 711, 710, 705, 704, 699, 698, 693, 692, 687, 686, 681, 680, 675, 674, 669, 668, 663, 662, 657, 656, 651, 650, 857, 856],
+      [731, 730, 725, 724, 719, 718, 713, 712, 707, 706, 701, 700, 695, 694, 689, 688, 683, 682, 677, 676, 671, 670, 665, 664, 659, 658, 653, 652, 858, -3],
+      [733, 732, 739, 738, 745, 744, 751, 750, 757, 756, 763, 762, 769, 768, 775, 774, 781, 780, 787, 786, 793, 792, 799, 798, 805, 804, 811, 810, 860, 859],
+      [735, 734, 741, 740, 747, 746, 753, 752, 759, 758, 765, 764, 771, 770, 777, 776, 783, 782, 789, 788, 795, 794, 801, 800, 807, 806, 813, 812, 861, -3],
+      [737, 736, 743, 742, 749, 748, 755, 754, 761, 760, 767, 766, 773, 772, 779, 778, 785, 784, 791, 790, 797, 796, 803, 802, 809, 808, 815, 814, 863, 862],
+  ];
+
+  /*
+   * Copyright 2011 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * <p>MaxiCodes can encode text or structured information as bits in one of several modes,
+   * with multiple character sets in one code. This class decodes the bits back into text.</p>
+   *
+   * @author mike32767
+   * @author Manuel Kasten
+   */
+  let DecodedBitStreamParser$1 = class DecodedBitStreamParser {
+      /* tslint:enable:max-line-length */
+      constructor() { }
+      static decode(bytes, mode) {
+          const result = [];
+          switch (mode) {
+              case 2:
+              case 3: {
+                  let postcode;
+                  if (mode === 2) {
+                      const pc = DecodedBitStreamParser.getPostCode2(bytes);
+                      const ps2Length = DecodedBitStreamParser.getPostCode2Length(bytes);
+                      if (ps2Length > 10) {
+                          throw FormatException.getFormatInstance();
+                      }
+                      postcode = String(pc).padStart(ps2Length, '0');
+                  }
+                  else {
+                      postcode = DecodedBitStreamParser.getPostCode3(bytes);
+                  }
+                  const country = String(DecodedBitStreamParser.getCountry(bytes)).padStart(3, '0');
+                  const service = String(DecodedBitStreamParser.getServiceClass(bytes)).padStart(3, '0');
+                  const message = DecodedBitStreamParser.getMessage(bytes, 10, 84);
+                  result.push(message);
+                  if (result.join('').startsWith('[)>' + DecodedBitStreamParser.RS + '01' + DecodedBitStreamParser.GS)) {
+                      result.splice(0, result.length);
+                      result.push(message.substring(0, 9));
+                      result.push(postcode + DecodedBitStreamParser.GS + country + DecodedBitStreamParser.GS + service + DecodedBitStreamParser.GS);
+                      result.push(message.substring(9));
+                  }
+                  else {
+                      result.splice(0, result.length);
+                      result.push(postcode + DecodedBitStreamParser.GS + country + DecodedBitStreamParser.GS + service + DecodedBitStreamParser.GS);
+                      result.push(message);
+                  }
+                  break;
+              }
+              case 4:
+                  result.push(DecodedBitStreamParser.getMessage(bytes, 1, 93));
+                  break;
+              case 5:
+                  result.push(DecodedBitStreamParser.getMessage(bytes, 1, 77));
+                  break;
+          }
+          return new DecoderResult(bytes, result.join(''), null, String(mode));
+      }
+      static getBit(bit, bytes) {
+          bit--;
+          return (bytes[Math.floor(bit / 6)] & (1 << (5 - (bit % 6)))) === 0 ? 0 : 1;
+      }
+      static getInt(bytes, x) {
+          let val = 0;
+          for (let i = 0; i < x.length; i++) {
+              val += DecodedBitStreamParser.getBit(x[i], bytes) << (x.length - i - 1);
+          }
+          return val;
+      }
+      static getCountry(bytes) {
+          return DecodedBitStreamParser.getInt(bytes, DecodedBitStreamParser.COUNTRY_BYTES);
+      }
+      static getServiceClass(bytes) {
+          return DecodedBitStreamParser.getInt(bytes, DecodedBitStreamParser.SERVICE_CLASS_BYTES);
+      }
+      static getPostCode2Length(bytes) {
+          return DecodedBitStreamParser.getInt(bytes, DecodedBitStreamParser.POSTCODE_2_LENGTH_BYTES);
+      }
+      static getPostCode2(bytes) {
+          return DecodedBitStreamParser.getInt(bytes, DecodedBitStreamParser.POSTCODE_2_BYTES);
+      }
+      static getPostCode3(bytes) {
+          const sb = [];
+          for (const p3bytes of DecodedBitStreamParser.POSTCODE_3_BYTES) {
+              sb.push(DecodedBitStreamParser.SETS[0].charAt(DecodedBitStreamParser.getInt(bytes, p3bytes)));
+          }
+          return sb.join('');
+      }
+      static getMessage(bytes, start, len) {
+          const sb = [];
+          let shift = -1;
+          let set = 0;
+          let lastset = 0;
+          for (let i = start; i < start + len; i++) {
+              const c = DecodedBitStreamParser.SETS[set].charAt(bytes[i]);
+              switch (c) {
+                  case DecodedBitStreamParser.LATCHA:
+                      set = 0;
+                      shift = -1;
+                      break;
+                  case DecodedBitStreamParser.LATCHB:
+                      set = 1;
+                      shift = -1;
+                      break;
+                  case DecodedBitStreamParser.SHIFTA:
+                  case DecodedBitStreamParser.SHIFTB:
+                  case DecodedBitStreamParser.SHIFTC:
+                  case DecodedBitStreamParser.SHIFTD:
+                  case DecodedBitStreamParser.SHIFTE:
+                      lastset = set;
+                      set = c.charCodeAt(0) - DecodedBitStreamParser.SHIFTA.charCodeAt(0);
+                      shift = 1;
+                      break;
+                  case DecodedBitStreamParser.TWOSHIFTA:
+                      lastset = set;
+                      set = 0;
+                      shift = 2;
+                      break;
+                  case DecodedBitStreamParser.THREESHIFTA:
+                      lastset = set;
+                      set = 0;
+                      shift = 3;
+                      break;
+                  case DecodedBitStreamParser.NS: {
+                      const nsval = (bytes[++i] << 24) + (bytes[++i] << 18) + (bytes[++i] << 12) + (bytes[++i] << 6) + bytes[++i];
+                      sb.push(String(nsval).padStart(9, '0'));
+                      break;
+                  }
+                  case DecodedBitStreamParser.LOCK:
+                      shift = -1;
+                      break;
+                  default:
+                      sb.push(c);
+              }
+              if (shift-- === 0) {
+                  set = lastset;
+              }
+          }
+          // Strip trailing PAD characters
+          while (sb.length > 0 && sb[sb.length - 1] === DecodedBitStreamParser.PAD) {
+              sb.pop();
+          }
+          return sb.join('');
+      }
+  };
+  DecodedBitStreamParser$1.SHIFTA = '\uFFF0';
+  DecodedBitStreamParser$1.SHIFTB = '\uFFF1';
+  DecodedBitStreamParser$1.SHIFTC = '\uFFF2';
+  DecodedBitStreamParser$1.SHIFTD = '\uFFF3';
+  DecodedBitStreamParser$1.SHIFTE = '\uFFF4';
+  DecodedBitStreamParser$1.TWOSHIFTA = '\uFFF5';
+  DecodedBitStreamParser$1.THREESHIFTA = '\uFFF6';
+  DecodedBitStreamParser$1.LATCHA = '\uFFF7';
+  DecodedBitStreamParser$1.LATCHB = '\uFFF8';
+  DecodedBitStreamParser$1.LOCK = '\uFFF9';
+  DecodedBitStreamParser$1.ECI = '\uFFFA';
+  DecodedBitStreamParser$1.NS = '\uFFFB';
+  DecodedBitStreamParser$1.PAD = '\uFFFC';
+  DecodedBitStreamParser$1.FS = '\u001C';
+  DecodedBitStreamParser$1.GS = '\u001D';
+  DecodedBitStreamParser$1.RS = '\u001E';
+  DecodedBitStreamParser$1.COUNTRY_BYTES = [53, 54, 43, 44, 45, 46, 47, 48, 37, 38];
+  DecodedBitStreamParser$1.SERVICE_CLASS_BYTES = [55, 56, 57, 58, 59, 60, 49, 50, 51, 52];
+  DecodedBitStreamParser$1.POSTCODE_2_LENGTH_BYTES = [39, 40, 41, 42, 31, 32];
+  DecodedBitStreamParser$1.POSTCODE_2_BYTES = [33, 34, 35, 36, 25, 26, 27, 28, 29, 30, 19,
+      20, 21, 22, 23, 24, 13, 14, 15, 16, 17, 18, 7, 8, 9, 10, 11, 12, 1, 2];
+  DecodedBitStreamParser$1.POSTCODE_3_BYTES = [
+      [39, 40, 41, 42, 31, 32],
+      [33, 34, 35, 36, 25, 26],
+      [27, 28, 29, 30, 19, 20],
+      [21, 22, 23, 24, 13, 14],
+      [15, 16, 17, 18, 7, 8],
+      [9, 10, 11, 12, 1, 2],
+  ];
+  /* tslint:disable:max-line-length */
+  DecodedBitStreamParser$1.SETS = [
+      '\rABCDEFGHIJKLMNOPQRSTUVWXYZ' + DecodedBitStreamParser$1.ECI + DecodedBitStreamParser$1.FS + DecodedBitStreamParser$1.GS + DecodedBitStreamParser$1.RS + DecodedBitStreamParser$1.NS + ' ' + DecodedBitStreamParser$1.PAD +
+          '"#$%&\'()*+,-./0123456789:' + DecodedBitStreamParser$1.SHIFTB + DecodedBitStreamParser$1.SHIFTC + DecodedBitStreamParser$1.SHIFTD + DecodedBitStreamParser$1.SHIFTE + DecodedBitStreamParser$1.LATCHB,
+      '`abcdefghijklmnopqrstuvwxyz' + DecodedBitStreamParser$1.ECI + DecodedBitStreamParser$1.FS + DecodedBitStreamParser$1.GS + DecodedBitStreamParser$1.RS + DecodedBitStreamParser$1.NS + '{' + DecodedBitStreamParser$1.PAD +
+          '}~\u007F;<=>?[\\]^_ ,./:@!|' + DecodedBitStreamParser$1.PAD + DecodedBitStreamParser$1.TWOSHIFTA + DecodedBitStreamParser$1.THREESHIFTA + DecodedBitStreamParser$1.PAD +
+          DecodedBitStreamParser$1.SHIFTA + DecodedBitStreamParser$1.SHIFTC + DecodedBitStreamParser$1.SHIFTD + DecodedBitStreamParser$1.SHIFTE + DecodedBitStreamParser$1.LATCHA,
+      '\u00C0\u00C1\u00C2\u00C3\u00C4\u00C5\u00C6\u00C7\u00C8\u00C9\u00CA\u00CB\u00CC\u00CD\u00CE\u00CF\u00D0\u00D1\u00D2\u00D3\u00D4\u00D5\u00D6\u00D7\u00D8\u00D9\u00DA' +
+          DecodedBitStreamParser$1.ECI + DecodedBitStreamParser$1.FS + DecodedBitStreamParser$1.GS + DecodedBitStreamParser$1.RS + DecodedBitStreamParser$1.NS +
+          '\u00DB\u00DC\u00DD\u00DE\u00DF\u00AA\u00AC\u00B1\u00B2\u00B3\u00B5\u00B9\u00BA\u00BC\u00BD\u00BE\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089' +
+          DecodedBitStreamParser$1.LATCHA + ' ' + DecodedBitStreamParser$1.LOCK + DecodedBitStreamParser$1.SHIFTD + DecodedBitStreamParser$1.SHIFTE + DecodedBitStreamParser$1.LATCHB,
+      '\u00E0\u00E1\u00E2\u00E3\u00E4\u00E5\u00E6\u00E7\u00E8\u00E9\u00EA\u00EB\u00EC\u00ED\u00EE\u00EF\u00F0\u00F1\u00F2\u00F3\u00F4\u00F5\u00F6\u00F7\u00F8\u00F9\u00FA' +
+          DecodedBitStreamParser$1.ECI + DecodedBitStreamParser$1.FS + DecodedBitStreamParser$1.GS + DecodedBitStreamParser$1.RS + DecodedBitStreamParser$1.NS +
+          '\u00FB\u00FC\u00FD\u00FE\u00FF\u00A1\u00A8\u00AB\u00AF\u00B0\u00B4\u00B7\u00B8\u00BB\u00BF\u008A\u008B\u008C\u008D\u008E\u008F\u0090\u0091\u0092\u0093\u0094' +
+          DecodedBitStreamParser$1.LATCHA + ' ' + DecodedBitStreamParser$1.SHIFTC + DecodedBitStreamParser$1.LOCK + DecodedBitStreamParser$1.SHIFTE + DecodedBitStreamParser$1.LATCHB,
+      '\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\n\u000B\u000C\r\u000E\u000F\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A' +
+          DecodedBitStreamParser$1.ECI + DecodedBitStreamParser$1.PAD + DecodedBitStreamParser$1.PAD + '\u001B' + DecodedBitStreamParser$1.NS + DecodedBitStreamParser$1.FS + DecodedBitStreamParser$1.GS + DecodedBitStreamParser$1.RS +
+          '\u001F\u009F\u00A0\u00A2\u00A3\u00A4\u00A5\u00A6\u00A7\u00A9\u00AD\u00AE\u00B6\u0095\u0096\u0097\u0098\u0099\u009A\u009B\u009C\u009D\u009E' +
+          DecodedBitStreamParser$1.LATCHA + ' ' + DecodedBitStreamParser$1.SHIFTC + DecodedBitStreamParser$1.SHIFTD + DecodedBitStreamParser$1.LOCK + DecodedBitStreamParser$1.LATCHB,
+  ];
+
+  /*
+   * Copyright 2011 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * <p>The main class which implements MaxiCode decoding -- as opposed to locating and extracting
+   * the MaxiCode from an image.</p>
+   *
+   * @author Manuel Kasten
+   */
+  class Decoder {
+      constructor() {
+          this.rsDecoder = new ReedSolomonDecoder(GenericGF.MAXICODE_FIELD_64);
+      }
+      decode(bits, hints) {
+          const parser = new BitMatrixParser(bits);
+          const codewords = parser.readCodewords();
+          let errorsCorrected = this.correctErrors(codewords, 0, 10, 10, Decoder.ALL);
+          const mode = codewords[0] & 0x0F;
+          let datawords;
+          switch (mode) {
+              case 2:
+              case 3:
+              case 4:
+                  errorsCorrected += this.correctErrors(codewords, 20, 84, 40, Decoder.EVEN);
+                  errorsCorrected += this.correctErrors(codewords, 20, 84, 40, Decoder.ODD);
+                  datawords = new Uint8Array(94);
+                  break;
+              case 5:
+                  errorsCorrected += this.correctErrors(codewords, 20, 68, 56, Decoder.EVEN);
+                  errorsCorrected += this.correctErrors(codewords, 20, 68, 56, Decoder.ODD);
+                  datawords = new Uint8Array(78);
+                  break;
+              default:
+                  throw FormatException.getFormatInstance();
+          }
+          for (let i = 0; i < 10; i++) {
+              datawords[i] = codewords[i];
+          }
+          for (let i = 0; i < datawords.length - 10; i++) {
+              datawords[i + 10] = codewords[i + 20];
+          }
+          const result = DecodedBitStreamParser$1.decode(datawords, mode);
+          result.setErrorsCorrected(errorsCorrected);
+          return result;
+      }
+      correctErrors(codewordBytes, start, dataCodewords, ecCodewords, mode) {
+          const codewords = dataCodewords + ecCodewords;
+          // in EVEN or ODD mode only half the codewords
+          const divisor = mode === Decoder.ALL ? 1 : 2;
+          // First read into an array of ints
+          const codewordsInts = new Int32Array(Math.floor(codewords / divisor));
+          for (let i = 0; i < codewords; i++) {
+              if ((mode === Decoder.ALL) || (i % 2 === (mode - 1))) {
+                  codewordsInts[Math.floor(i / divisor)] = codewordBytes[i + start] & 0xFF;
+              }
+          }
+          let errorsCorrected = 0;
+          try {
+              errorsCorrected = this.rsDecoder.decodeWithECCount(codewordsInts, Math.floor(ecCodewords / divisor));
+          }
+          catch (ex) {
+              if (ex instanceof ReedSolomonException) {
+                  throw ChecksumException.getChecksumInstance();
+              }
+              throw ex;
+          }
+          // Copy back into array of bytes -- only need to worry about the bytes that were data
+          // We don't care about errors in the error-correction codewords
+          for (let i = 0; i < dataCodewords; i++) {
+              if ((mode === Decoder.ALL) || (i % 2 === (mode - 1))) {
+                  codewordBytes[i + start] = codewordsInts[Math.floor(i / divisor)];
+              }
+          }
+          return errorsCorrected;
+      }
+  }
+  Decoder.ALL = 0;
+  Decoder.EVEN = 1;
+  Decoder.ODD = 2;
+
+  /*
+   * Copyright 2011 ZXing authors
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *      http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   */
+  /**
+   * This implementation can detect and decode a MaxiCode in an image.
+   */
+  class MaxiCodeReader {
+      constructor() {
+          this.decoder = new Decoder();
+      }
+      decode(image, hints = null) {
+          // Note that MaxiCode reader effectively always assumes PURE_BARCODE mode
+          // and can't detect it in an image
+          const bits = MaxiCodeReader.extractPureBits(image.getBlackMatrix());
+          const decoderResult = this.decoder.decode(bits, hints);
+          const result = new Result$1(decoderResult.getText(), decoderResult.getRawBytes(), 8 * decoderResult.getRawBytes().length, MaxiCodeReader.NO_POINTS, BarcodeFormat$1.MAXICODE, System.currentTimeMillis());
+          result.putMetadata(ResultMetadataType$1.ERRORS_CORRECTED, decoderResult.getErrorsCorrected());
+          const ecLevel = decoderResult.getECLevel();
+          if (ecLevel != null) {
+              result.putMetadata(ResultMetadataType$1.ERROR_CORRECTION_LEVEL, ecLevel);
+          }
+          return result;
+      }
+      reset() {
+          // do nothing
+      }
+      static extractPureBits(image) {
+          const enclosingRectangle = image.getEnclosingRectangle();
+          if (enclosingRectangle == null) {
+              throw new NotFoundException();
+          }
+          const left = enclosingRectangle[0];
+          const top = enclosingRectangle[1];
+          const width = enclosingRectangle[2];
+          const height = enclosingRectangle[3];
+          // Now just read off the bits
+          const bits = new BitMatrix(MaxiCodeReader.MATRIX_WIDTH, MaxiCodeReader.MATRIX_HEIGHT);
+          for (let y = 0; y < MaxiCodeReader.MATRIX_HEIGHT; y++) {
+              const iy = top + Math.min(Math.floor((y * height + height / 2) / MaxiCodeReader.MATRIX_HEIGHT), height - 1);
+              for (let x = 0; x < MaxiCodeReader.MATRIX_WIDTH; x++) {
+                  // srowen: I don't quite understand why the formula below is necessary, but it
+                  // can walk off the image if left + width = the right boundary. So cap it.
+                  const ix = left + Math.min(Math.floor((x * width + width / 2 + (y & 0x01) * Math.floor(width / 2)) / MaxiCodeReader.MATRIX_WIDTH), width - 1);
+                  if (image.get(ix, iy)) {
+                      bits.set(x, y);
+                  }
+              }
+          }
+          return bits;
+      }
+  }
+  MaxiCodeReader.NO_POINTS = [];
+  MaxiCodeReader.MATRIX_WIDTH = 30;
+  MaxiCodeReader.MATRIX_HEIGHT = 33;
+
+  /*
   * Copyright 2009 ZXing authors
   *
   * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16802,11 +18585,13 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+  // package com.google.zxing.pdf417;
+  // import java.util.Arrays;
   /**
    * @author SITA Lab (kevin.osullivan@sita.aero)
    * @author Guenther Grau
    */
-  /*public final*/ class PDF417Common {
+  class PDF417Common {
       PDF417Common() {
       }
       /**
@@ -17285,6 +19070,8 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+  // import com.google.zxing.NotFoundException;
+  // import com.google.zxing.ResultPoint;
   // import java.util.ArrayList;
   // import java.util.Arrays;
   // import java.util.List;
@@ -17297,7 +19084,7 @@
    * @author dswitkin@google.com (Daniel Switkin)
    * @author Guenther Grau
    */
-  /*public*/ /*final*/ class Detector {
+  class Detector {
       /**
        * <p>Detects a PDF417 Code in an image. Only checks 0 and 180 degree rotations.</p>
        *
@@ -17591,6 +19378,7 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+  // package com.google.zxing.pdf417.decoder.ec;
   /**
    * @author Sean Owen
    * @see com.google.zxing.common.reedsolomon.GenericGFPoly
@@ -17601,10 +19389,10 @@
               throw new IllegalArgumentException();
           }
           this.field = field;
-          let coefficientsLength = /*int*/ coefficients.length;
+          let coefficientsLength = coefficients.length;
           if (coefficientsLength > 1 && coefficients[0] === 0) {
               // Leading term must be non-zero for anything except the constant polynomial "0"
-              let firstNonZero = /*int*/ 1;
+              let firstNonZero = 1;
               while (firstNonZero < coefficientsLength && coefficients[firstNonZero] === 0) {
                   firstNonZero++;
               }
@@ -17651,14 +19439,14 @@
           }
           if (a === 1) {
               // Just the sum of the coefficients
-              let sum = /*int*/ 0;
+              let sum = 0;
               for (let coefficient /*int*/ of this.coefficients) {
                   sum = this.field.add(sum, coefficient);
               }
               return sum;
           }
-          let result = /*int*/ this.coefficients[0];
-          let size = /*int*/ this.coefficients.length;
+          let result = this.coefficients[0];
+          let size = this.coefficients.length;
           for (let i /*int*/ = 1; i < size; i++) {
               result = this.field.add(this.field.multiply(a, result), this.coefficients[i]);
           }
@@ -17682,7 +19470,7 @@
               largerCoefficients = temp;
           }
           let sumDiff = new Int32Array(largerCoefficients.length);
-          let lengthDiff = /*int*/ largerCoefficients.length - smallerCoefficients.length;
+          let lengthDiff = largerCoefficients.length - smallerCoefficients.length;
           // Copy high-order terms only found in higher-degree polynomial's coefficients
           System.arraycopy(largerCoefficients, 0, sumDiff, 0, lengthDiff);
           for (let i /*int*/ = lengthDiff; i < largerCoefficients.length; i++) {
@@ -17714,12 +19502,12 @@
               return new ModulusPoly(this.field, new Int32Array([0]));
           }
           let aCoefficients = this.coefficients;
-          let aLength = /*int*/ aCoefficients.length;
+          let aLength = aCoefficients.length;
           let bCoefficients = other.coefficients;
-          let bLength = /*int*/ bCoefficients.length;
+          let bLength = bCoefficients.length;
           let product = new Int32Array(aLength + bLength - 1);
           for (let i /*int*/ = 0; i < aLength; i++) {
-              let aCoeff = /*int*/ aCoefficients[i];
+              let aCoeff = aCoefficients[i];
               for (let j /*int*/ = 0; j < bLength; j++) {
                   product[i + j] = this.field.add(product[i + j], this.field.multiply(aCoeff, bCoefficients[j]));
               }
@@ -17727,7 +19515,7 @@
           return new ModulusPoly(this.field, product);
       }
       negative() {
-          let size = /*int*/ this.coefficients.length;
+          let size = this.coefficients.length;
           let negativeCoefficients = new Int32Array(size);
           for (let i /*int*/ = 0; i < size; i++) {
               negativeCoefficients[i] = this.field.subtract(0, this.coefficients[i]);
@@ -17741,7 +19529,7 @@
           if (scalar === 1) {
               return this;
           }
-          let size = /*int*/ this.coefficients.length;
+          let size = this.coefficients.length;
           let product = new Int32Array(size);
           for (let i /*int*/ = 0; i < size; i++) {
               product[i] = this.field.multiply(this.coefficients[i], scalar);
@@ -17755,7 +19543,7 @@
           if (coefficient === 0) {
               return new ModulusPoly(this.field, new Int32Array([0]));
           }
-          let size = /*int*/ this.coefficients.length;
+          let size = this.coefficients.length;
           let product = new Int32Array(size + degree);
           for (let i /*int*/ = 0; i < size; i++) {
               product[i] = this.field.multiply(this.coefficients[i], coefficient);
@@ -17793,7 +19581,7 @@
       toString() {
           let result = new StringBuilder( /*8 * this.getDegree()*/); // dynamic string size in JS
           for (let degree /*int*/ = this.getDegree(); degree >= 0; degree--) {
-              let coefficient = /*int*/ this.getCoefficient(degree);
+              let coefficient = this.getCoefficient(degree);
               if (coefficient !== 0) {
                   if (coefficient < 0) {
                       result.append(' - ');
@@ -17873,20 +19661,22 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // package com.google.zxing.pdf417.decoder.ec;
+  // import com.google.zxing.pdf417.PDF417Common;
   /**
    * <p>A field based on powers of a generator integer, modulo some modulus.</p>
    *
    * @author Sean Owen
    * @see com.google.zxing.common.reedsolomon.GenericGF
    */
-  /*public final*/ class ModulusGF extends ModulusBase {
+  class ModulusGF extends ModulusBase {
       // private /*final*/ modulus: /*int*/ number;
       constructor(modulus, generator) {
           super();
           this.modulus = modulus;
           this.expTable = new Int32Array(modulus);
           this.logTable = new Int32Array(modulus);
-          let x = /*int*/ 1;
+          let x = 1;
           for (let i /*int*/ = 0; i < modulus; i++) {
               this.expTable[i] = x;
               x = (x * generator) % modulus;
@@ -17933,6 +19723,8 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+  // package com.google.zxing.pdf417.decoder.ec;
+  // import com.google.zxing.ChecksumException;
   /**
    * <p>PDF417 error correction implementation.</p>
    *
@@ -17942,7 +19734,7 @@
    * @author Sean Owen
    * @see com.google.zxing.common.reedsolomon.ReedSolomonDecoder
    */
-  /*public final*/ class ErrorCorrection$1 {
+  /*public final*/ let ErrorCorrection$1 = class ErrorCorrection {
       constructor() {
           this.field = ModulusGF.PDF417_GF;
       }
@@ -18086,7 +19878,7 @@
           }
           return result;
       }
-  }
+  };
 
   /*
   * Copyright 2013 ZXing authors
@@ -18103,6 +19895,8 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+  // package com.google.zxing.pdf417.decoder;
+  // import com.google.zxing.NotFoundException;
   /**
    * @author Guenther Grau
    */
@@ -18368,6 +20162,8 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // package com.google.zxing.pdf417.decoder;
+  // import java.util.Formatter;
   /**
    * @author Guenther Grau
    */
@@ -18446,6 +20242,8 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // package com.google.zxing.pdf417.decoder;
+  // import com.google.zxing.pdf417.PDF417Common;
   // import java.util.ArrayList;
   // import java.util.Collection;
   // import java.util.HashMap;
@@ -18513,6 +20311,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // import com.google.zxing.pdf417.PDF417Common;
   /**
    * @author Guenther Grau
    */
@@ -18755,6 +20554,8 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // package com.google.zxing.pdf417.decoder;
+  // import com.google.zxing.pdf417.PDF417Common;
   /**
    * @author Guenther Grau
    */
@@ -19027,7 +20828,7 @@
   /**
    * @author Guenther Grau
    */
-  /*final*/ class Codeword {
+  class Codeword {
       constructor(startX, endX, bucket, value) {
           this.rowNumber = Codeword.BARCODE_ROW_UNKNOWN;
           this.startX = Math.trunc(startX);
@@ -19087,11 +20888,13 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+  // package com.google.zxing.pdf417.decoder;
+  // import com.google.zxing.common.detector.MathUtils;
   /**
    * @author Guenther Grau
    * @author creatale GmbH (christoph.schulz@creatale.de)
    */
-  /*final*/ class PDF417CodewordDecoder {
+  class PDF417CodewordDecoder {
       /* @note
        * this action have to be performed before first use of class
        * - static constructor
@@ -19145,7 +20948,7 @@
           return PDF417Common.getCodeword(decodedValue) === -1 ? -1 : decodedValue;
       }
       static getBitValue(moduleBitCount) {
-          let result = /*long*/ 0;
+          let result = 0;
           for (let /*int*/ i = 0; i < moduleBitCount.length; i++) {
               for ( /*int*/let bit = 0; bit < moduleBitCount[i]; bit++) {
                   result = (result << 1) | (i % 2 === 0 ? 1 : 0);
@@ -19515,6 +21318,8 @@
    * or visit www.oracle.com if you need additional information or have any
    * questions.
    */
+  // package java.io;
+  // import java.util.Arrays;
   /**
    * This class implements an output stream in which the data is
    * written into a byte array. The buffer automatically grows as data
@@ -19761,6 +21566,8 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // package com.google.zxing.pdf417.decoder;
+  // import com.google.zxing.FormatException;
   /*private*/ var Mode$1;
   (function (Mode) {
       Mode[Mode["ALPHA"] = 0] = "ALPHA";
@@ -19780,8 +21587,8 @@
       if (typeof window !== 'undefined') {
           return window['BigInt'] || null;
       }
-      if (typeof global !== 'undefined') {
-          return global['BigInt'] || null;
+      if (typeof globalThis !== 'undefined') {
+          return globalThis['BigInt'] || null;
       }
       if (typeof self !== 'undefined') {
           return self['BigInt'] || null;
@@ -19824,7 +21631,7 @@
    * @author SITA Lab (kevin.osullivan@sita.aero)
    * @author Guenther Grau
    */
-  /*final*/ class DecodedBitStreamParser {
+  class DecodedBitStreamParser {
       //   private DecodedBitStreamParser() {
       // }
       /**
@@ -20083,7 +21890,7 @@
           let i = 0;
           while (i < length) {
               let subModeCh = textCompactionData[i];
-              let ch = /*char*/ '';
+              let ch = '';
               switch (subMode) {
                   case Mode$1.ALPHA:
                       // Alpha (alphabetic: uppercase)
@@ -20265,7 +22072,7 @@
       static /*int*/ byteCompaction(mode, codewords, encoding, codeIndex, result) {
           let decodedBytes = new ByteArrayOutputStream();
           let count = 0;
-          let value = /*long*/ 0;
+          let value = 0;
           let end = false;
           switch (mode) {
               case DecodedBitStreamParser.BYTE_COMPACTION_MODE_LATCH:
@@ -20514,6 +22321,8 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+  // package com.google.zxing.pdf417.decoder;
+  // import com.google.zxing.ChecksumException;
   // import java.util.ArrayList;
   // import java.util.Collection;
   // import java.util.Formatter;
@@ -20521,7 +22330,7 @@
   /**
    * @author Guenther Grau
    */
-  /*public final*/ class PDF417ScanningDecoder {
+  class PDF417ScanningDecoder {
       constructor() { }
       /**
        * @TODO don't pass in minCodewordWidth and maxCodewordWidth, pass in barcode columns for start and stop pattern
@@ -20757,8 +22566,8 @@
           PDF417ScanningDecoder.adjustCodewordCount(detectionResult, barcodeMatrix);
           let erasures /*Collection<Integer>*/ = new Array();
           let codewords = new Int32Array(detectionResult.getBarcodeRowCount() * detectionResult.getBarcodeColumnCount());
-          let ambiguousIndexValuesList = /*List<int[]>*/ [];
-          let ambiguousIndexesList = /*Collection<Integer>*/ new Array();
+          let ambiguousIndexValuesList = [];
+          let ambiguousIndexesList = new Array();
           for (let row /*int*/ = 0; row < detectionResult.getBarcodeRowCount(); row++) {
               for (let column /*int*/ = 0; column < detectionResult.getBarcodeColumnCount(); column++) {
                   let values = barcodeMatrix[row][column + 1].getValue();
@@ -21126,6 +22935,8 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // package com.google.zxing.pdf417;
+  // import com.google.zxing.BarcodeFormat;
   // import java.util.ArrayList;
   // import java.util.List;
   // import java.util.Map;
@@ -21281,7 +23092,9 @@
        */
       /*@Override*/
       decode(image, hints) {
-          this.setHints(hints);
+          if (this.hints !== hints) {
+              this.setHints(hints);
+          }
           return this.decodeInternal(image);
       }
       /**
@@ -21333,6 +23146,9 @@
               if (formats.includes(BarcodeFormat$1.QR_CODE)) {
                   readers.push(new QRCodeReader());
               }
+              if (formats.includes(BarcodeFormat$1.MICRO_QR_CODE)) {
+                  readers.push(new MicroQRCodeReader());
+              }
               if (formats.includes(BarcodeFormat$1.DATA_MATRIX)) {
                   readers.push(new DataMatrixReader());
               }
@@ -21342,9 +23158,9 @@
               if (formats.includes(BarcodeFormat$1.PDF_417)) {
                   readers.push(new PDF417Reader());
               }
-              // if (formats.includes(BarcodeFormat.MAXICODE)) {
-              //    readers.push(new MaxiCodeReader())
-              // }
+              if (formats.includes(BarcodeFormat$1.MAXICODE)) {
+                  readers.push(new MaxiCodeReader());
+              }
               // At end in "try harder" mode
               if (addOneDReader && tryHarder) {
                   readers.push(new MultiFormatOneDReader(hints));
@@ -21355,10 +23171,11 @@
                   readers.push(new MultiFormatOneDReader(hints));
               }
               readers.push(new QRCodeReader());
+              readers.push(new MicroQRCodeReader());
               readers.push(new DataMatrixReader());
               readers.push(new AztecReader());
               readers.push(new PDF417Reader());
-              // readers.push(new MaxiCodeReader())
+              readers.push(new MaxiCodeReader());
               if (tryHarder) {
                   readers.push(new MultiFormatOneDReader(hints));
               }
@@ -21381,7 +23198,6 @@
               throw new ReaderException('No readers where selected, nothing can be read.');
           }
           for (const reader of this.readers) {
-              // Trying to decode with ${reader} reader.
               try {
                   return reader.decode(image, this.hints);
               }
@@ -21389,7 +23205,9 @@
                   if (ex instanceof ReaderException) {
                       continue;
                   }
-                  // Bad Exception.
+                  // Log non-reader exceptions for debugging but continue trying other readers
+                  console.warn('MultiFormatReader: non-ReaderException from reader:', ex);
+                  continue;
               }
           }
           throw new NotFoundException('No MultiFormat Readers were able to detect the code.');
@@ -21397,6 +23215,11 @@
   }
 
   class BrowserMultiFormatReader extends BrowserCodeReader {
+      set hints(hints) {
+          this._hints = hints || null;
+          // Since we don't pass the hints in `decodeBitmap` as other Browser readers do, we need to set them here.
+          this.reader.setHints(hints);
+      }
       constructor(hints = null, timeBetweenScansMillis = 500) {
           const reader = new MultiFormatReader();
           reader.setHints(hints);
@@ -21407,7 +23230,13 @@
        * attention to the hints set in the constructor function
        */
       decodeBitmap(binaryBitmap) {
-          return this.reader.decodeWithState(binaryBitmap);
+          try {
+              return this.reader.decodeWithState(binaryBitmap);
+          }
+          finally {
+              // Readers need to be reset before being reused on another bitmap.
+              this.reader.reset();
+          }
       }
   }
 
@@ -21689,8 +23518,8 @@
       static applyMaskPenaltyRule2(matrix) {
           let penalty = 0;
           const array = matrix.getArray();
-          const width = matrix.getWidth();
-          const height = matrix.getHeight();
+          const width /*int*/ = matrix.getWidth();
+          const height /*int*/ = matrix.getHeight();
           for (let y = 0; y < height - 1; y++) {
               const arrayY = array[y];
               for (let x = 0; x < width - 1; x++) {
@@ -21710,8 +23539,8 @@
       static applyMaskPenaltyRule3(matrix) {
           let numPenalties = 0;
           const array = matrix.getArray();
-          const width = matrix.getWidth();
-          const height = matrix.getHeight();
+          const width /*int*/ = matrix.getWidth();
+          const height /*int*/ = matrix.getHeight();
           for (let y = 0; y < height; y++) {
               for (let x = 0; x < width; x++) {
                   const arrayY = array[y]; // We can at least optimize this access
@@ -21768,8 +23597,8 @@
       static applyMaskPenaltyRule4(matrix) {
           let numDarkCells = 0;
           const array = matrix.getArray();
-          const width = matrix.getWidth();
-          const height = matrix.getHeight();
+          const width /*int*/ = matrix.getWidth();
+          const height /*int*/ = matrix.getHeight();
           for (let y = 0; y < height; y++) {
               const arrayY = array[y];
               for (let x = 0; x < width; x++) {
@@ -21875,6 +23704,8 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.encoder {*/
+  /*import java.util.Arrays;*/
   /**
    * JAVAPORT: The original code was a 2D array of ints, but since it only ever gets assigned
    * -1, 0, and 1, I'm going to use less memory and go with bytes.
@@ -22071,6 +23902,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.encoder {*/
   /**
    * @author satorux@google.com (Satoru Takabayashi) - creator
    * @author dswitkin@google.com (Daniel Switkin) - ported from C++
@@ -22413,46 +24245,46 @@
   ]);
   // From Appendix E. Table 1, JIS0510X:2004 (71: p). The table was double-checked by komatsu.
   MatrixUtil.POSITION_ADJUSTMENT_PATTERN_COORDINATE_TABLE = Array.from([
-      Int32Array.from([-1, -1, -1, -1, -1, -1, -1]),
-      Int32Array.from([6, 18, -1, -1, -1, -1, -1]),
-      Int32Array.from([6, 22, -1, -1, -1, -1, -1]),
-      Int32Array.from([6, 26, -1, -1, -1, -1, -1]),
-      Int32Array.from([6, 30, -1, -1, -1, -1, -1]),
-      Int32Array.from([6, 34, -1, -1, -1, -1, -1]),
-      Int32Array.from([6, 22, 38, -1, -1, -1, -1]),
-      Int32Array.from([6, 24, 42, -1, -1, -1, -1]),
-      Int32Array.from([6, 26, 46, -1, -1, -1, -1]),
-      Int32Array.from([6, 28, 50, -1, -1, -1, -1]),
-      Int32Array.from([6, 30, 54, -1, -1, -1, -1]),
-      Int32Array.from([6, 32, 58, -1, -1, -1, -1]),
-      Int32Array.from([6, 34, 62, -1, -1, -1, -1]),
-      Int32Array.from([6, 26, 46, 66, -1, -1, -1]),
-      Int32Array.from([6, 26, 48, 70, -1, -1, -1]),
-      Int32Array.from([6, 26, 50, 74, -1, -1, -1]),
-      Int32Array.from([6, 30, 54, 78, -1, -1, -1]),
-      Int32Array.from([6, 30, 56, 82, -1, -1, -1]),
-      Int32Array.from([6, 30, 58, 86, -1, -1, -1]),
-      Int32Array.from([6, 34, 62, 90, -1, -1, -1]),
-      Int32Array.from([6, 28, 50, 72, 94, -1, -1]),
-      Int32Array.from([6, 26, 50, 74, 98, -1, -1]),
-      Int32Array.from([6, 30, 54, 78, 102, -1, -1]),
-      Int32Array.from([6, 28, 54, 80, 106, -1, -1]),
-      Int32Array.from([6, 32, 58, 84, 110, -1, -1]),
-      Int32Array.from([6, 30, 58, 86, 114, -1, -1]),
-      Int32Array.from([6, 34, 62, 90, 118, -1, -1]),
-      Int32Array.from([6, 26, 50, 74, 98, 122, -1]),
-      Int32Array.from([6, 30, 54, 78, 102, 126, -1]),
-      Int32Array.from([6, 26, 52, 78, 104, 130, -1]),
-      Int32Array.from([6, 30, 56, 82, 108, 134, -1]),
-      Int32Array.from([6, 34, 60, 86, 112, 138, -1]),
-      Int32Array.from([6, 30, 58, 86, 114, 142, -1]),
-      Int32Array.from([6, 34, 62, 90, 118, 146, -1]),
-      Int32Array.from([6, 30, 54, 78, 102, 126, 150]),
-      Int32Array.from([6, 24, 50, 76, 102, 128, 154]),
-      Int32Array.from([6, 28, 54, 80, 106, 132, 158]),
-      Int32Array.from([6, 32, 58, 84, 110, 136, 162]),
-      Int32Array.from([6, 26, 54, 82, 110, 138, 166]),
-      Int32Array.from([6, 30, 58, 86, 114, 142, 170]),
+      Int32Array.from([-1, -1, -1, -1, -1, -1, -1]), // Version 1
+      Int32Array.from([6, 18, -1, -1, -1, -1, -1]), // Version 2
+      Int32Array.from([6, 22, -1, -1, -1, -1, -1]), // Version 3
+      Int32Array.from([6, 26, -1, -1, -1, -1, -1]), // Version 4
+      Int32Array.from([6, 30, -1, -1, -1, -1, -1]), // Version 5
+      Int32Array.from([6, 34, -1, -1, -1, -1, -1]), // Version 6
+      Int32Array.from([6, 22, 38, -1, -1, -1, -1]), // Version 7
+      Int32Array.from([6, 24, 42, -1, -1, -1, -1]), // Version 8
+      Int32Array.from([6, 26, 46, -1, -1, -1, -1]), // Version 9
+      Int32Array.from([6, 28, 50, -1, -1, -1, -1]), // Version 10
+      Int32Array.from([6, 30, 54, -1, -1, -1, -1]), // Version 11
+      Int32Array.from([6, 32, 58, -1, -1, -1, -1]), // Version 12
+      Int32Array.from([6, 34, 62, -1, -1, -1, -1]), // Version 13
+      Int32Array.from([6, 26, 46, 66, -1, -1, -1]), // Version 14
+      Int32Array.from([6, 26, 48, 70, -1, -1, -1]), // Version 15
+      Int32Array.from([6, 26, 50, 74, -1, -1, -1]), // Version 16
+      Int32Array.from([6, 30, 54, 78, -1, -1, -1]), // Version 17
+      Int32Array.from([6, 30, 56, 82, -1, -1, -1]), // Version 18
+      Int32Array.from([6, 30, 58, 86, -1, -1, -1]), // Version 19
+      Int32Array.from([6, 34, 62, 90, -1, -1, -1]), // Version 20
+      Int32Array.from([6, 28, 50, 72, 94, -1, -1]), // Version 21
+      Int32Array.from([6, 26, 50, 74, 98, -1, -1]), // Version 22
+      Int32Array.from([6, 30, 54, 78, 102, -1, -1]), // Version 23
+      Int32Array.from([6, 28, 54, 80, 106, -1, -1]), // Version 24
+      Int32Array.from([6, 32, 58, 84, 110, -1, -1]), // Version 25
+      Int32Array.from([6, 30, 58, 86, 114, -1, -1]), // Version 26
+      Int32Array.from([6, 34, 62, 90, 118, -1, -1]), // Version 27
+      Int32Array.from([6, 26, 50, 74, 98, 122, -1]), // Version 28
+      Int32Array.from([6, 30, 54, 78, 102, 126, -1]), // Version 29
+      Int32Array.from([6, 26, 52, 78, 104, 130, -1]), // Version 30
+      Int32Array.from([6, 30, 56, 82, 108, 134, -1]), // Version 31
+      Int32Array.from([6, 34, 60, 86, 112, 138, -1]), // Version 32
+      Int32Array.from([6, 30, 58, 86, 114, 142, -1]), // Version 33
+      Int32Array.from([6, 34, 62, 90, 118, 146, -1]), // Version 34
+      Int32Array.from([6, 30, 54, 78, 102, 126, 150]), // Version 35
+      Int32Array.from([6, 24, 50, 76, 102, 128, 154]), // Version 36
+      Int32Array.from([6, 28, 54, 80, 106, 132, 158]), // Version 37
+      Int32Array.from([6, 32, 58, 84, 110, 136, 162]), // Version 38
+      Int32Array.from([6, 26, 54, 82, 110, 138, 166]), // Version 39
+      Int32Array.from([6, 30, 58, 86, 114, 142, 170]), // Version 40
   ]);
   // Type info cells at the left top corner.
   MatrixUtil.TYPE_INFO_COORDINATES = Array.from([
@@ -22522,6 +24354,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode.encoder {*/
   /*import java.io.UnsupportedEncodingException;*/
   /*import java.util.ArrayList;*/
   /*import java.util.Collection;*/
@@ -22530,7 +24363,7 @@
    * @author satorux@google.com (Satoru Takabayashi) - creator
    * @author dswitkin@google.com (Daniel Switkin) - ported from C++
    */
-  class Encoder$1 {
+  let Encoder$1 = class Encoder {
       // TYPESCRIPTPORT: changed to UTF8, the default for js
       constructor() { }
       // The mask penalty calculation is complicated.  See Table 21 of JISX0510:2004 (p.45) for details.
@@ -22553,7 +24386,7 @@
       // }
       static encode(content, ecLevel, hints = null) {
           // Determine what character encoding has been specified by the caller, if any
-          let encoding = Encoder$1.DEFAULT_BYTE_MODE_ENCODING;
+          let encoding = Encoder.DEFAULT_BYTE_MODE_ENCODING;
           const hasEncodingHint = hints !== null && undefined !== hints.get(EncodeHintType$1.CHARACTER_SET);
           if (hasEncodingHint) {
               encoding = hints.get(EncodeHintType$1.CHARACTER_SET).toString();
@@ -22565,7 +24398,7 @@
           // length, as well as "header" segments like an ECI segment.
           const headerBits = new BitArray();
           // Append ECI segment if applicable
-          if (mode === Mode$2.BYTE && (hasEncodingHint || Encoder$1.DEFAULT_BYTE_MODE_ENCODING !== encoding)) {
+          if (mode === Mode$2.BYTE && (hasEncodingHint || Encoder.DEFAULT_BYTE_MODE_ENCODING !== encoding)) {
               const eci = CharacterSetECI.getCharacterSetECIByName(encoding);
               if (eci !== undefined) {
                   this.appendECI(eci, headerBits);
@@ -22639,8 +24472,8 @@
        *  -1 if there is no corresponding code in the table.
        */
       static getAlphanumericCode(code /*int*/) {
-          if (code < Encoder$1.ALPHANUMERIC_TABLE.length) {
-              return Encoder$1.ALPHANUMERIC_TABLE[code];
+          if (code < Encoder.ALPHANUMERIC_TABLE.length) {
+              return Encoder.ALPHANUMERIC_TABLE[code];
           }
           return -1;
       }
@@ -22660,7 +24493,7 @@
           let hasAlphanumeric = false;
           for (let i = 0, length = content.length; i < length; ++i) {
               const c = content.charAt(i);
-              if (Encoder$1.isDigit(c)) {
+              if (Encoder.isDigit(c)) {
                   hasNumeric = true;
               }
               else if (this.getAlphanumericCode(c.charCodeAt(0)) !== -1) {
@@ -22715,7 +24548,7 @@
       static chooseVersion(numInputBits /*int*/, ecLevel) {
           for (let versionNum = 1; versionNum <= 40; versionNum++) {
               const version = Version.getVersionForNumber(versionNum);
-              if (Encoder$1.willFit(numInputBits, version, ecLevel)) {
+              if (Encoder.willFit(numInputBits, version, ecLevel)) {
                   return version;
               }
           }
@@ -22836,11 +24669,11 @@
           for (let i = 0; i < numRSBlocks; ++i) {
               const numDataBytesInBlock = new Int32Array(1);
               const numEcBytesInBlock = new Int32Array(1);
-              Encoder$1.getNumDataBytesAndNumECBytesForBlockID(numTotalBytes, numDataBytes, numRSBlocks, i, numDataBytesInBlock, numEcBytesInBlock);
+              Encoder.getNumDataBytesAndNumECBytesForBlockID(numTotalBytes, numDataBytes, numRSBlocks, i, numDataBytesInBlock, numEcBytesInBlock);
               const size = numDataBytesInBlock[0];
               const dataBytes = new Uint8Array(size);
               bits.toBytes(8 * dataBytesOffset, dataBytes, 0, size);
-              const ecBytes = Encoder$1.generateECBytes(dataBytes, numEcBytesInBlock[0]);
+              const ecBytes = Encoder.generateECBytes(dataBytes, numEcBytesInBlock[0]);
               blocks.push(new BlockPair(dataBytes, ecBytes));
               maxNumDataBytes = Math.max(maxNumDataBytes, size);
               maxNumEcBytes = Math.max(maxNumEcBytes, ecBytes.length);
@@ -22909,16 +24742,16 @@
       static appendBytes(content, mode, bits, encoding) {
           switch (mode) {
               case Mode$2.NUMERIC:
-                  Encoder$1.appendNumericBytes(content, bits);
+                  Encoder.appendNumericBytes(content, bits);
                   break;
               case Mode$2.ALPHANUMERIC:
-                  Encoder$1.appendAlphanumericBytes(content, bits);
+                  Encoder.appendAlphanumericBytes(content, bits);
                   break;
               case Mode$2.BYTE:
-                  Encoder$1.append8BitBytes(content, bits, encoding);
+                  Encoder.append8BitBytes(content, bits, encoding);
                   break;
               case Mode$2.KANJI:
-                  Encoder$1.appendKanjiBytes(content, bits);
+                  Encoder.appendKanjiBytes(content, bits);
                   break;
               default:
                   throw new WriterException('Invalid mode: ' + mode);
@@ -22928,24 +24761,24 @@
           return singleCharacter.charCodeAt(0) - 48;
       }
       static isDigit(singleCharacter) {
-          const cn = Encoder$1.getDigit(singleCharacter);
+          const cn = Encoder.getDigit(singleCharacter);
           return cn >= 0 && cn <= 9;
       }
       static appendNumericBytes(content, bits) {
           const length = content.length;
           let i = 0;
           while (i < length) {
-              const num1 = Encoder$1.getDigit(content.charAt(i));
+              const num1 = Encoder.getDigit(content.charAt(i));
               if (i + 2 < length) {
                   // Encode three numeric letters in ten bits.
-                  const num2 = Encoder$1.getDigit(content.charAt(i + 1));
-                  const num3 = Encoder$1.getDigit(content.charAt(i + 2));
+                  const num2 = Encoder.getDigit(content.charAt(i + 1));
+                  const num3 = Encoder.getDigit(content.charAt(i + 2));
                   bits.appendBits(num1 * 100 + num2 * 10 + num3, 10);
                   i += 3;
               }
               else if (i + 1 < length) {
                   // Encode two numeric letters in seven bits.
-                  const num2 = Encoder$1.getDigit(content.charAt(i + 1));
+                  const num2 = Encoder.getDigit(content.charAt(i + 1));
                   bits.appendBits(num1 * 10 + num2, 7);
                   i += 2;
               }
@@ -22960,12 +24793,12 @@
           const length = content.length;
           let i = 0;
           while (i < length) {
-              const code1 = Encoder$1.getAlphanumericCode(content.charCodeAt(i));
+              const code1 = Encoder.getAlphanumericCode(content.charCodeAt(i));
               if (code1 === -1) {
                   throw new WriterException();
               }
               if (i + 1 < length) {
-                  const code2 = Encoder$1.getAlphanumericCode(content.charCodeAt(i + 1));
+                  const code2 = Encoder.getAlphanumericCode(content.charCodeAt(i + 1));
                   if (code2 === -1) {
                       throw new WriterException();
                   }
@@ -23028,15 +24861,15 @@
           // This is correct for values up to 127, which is all we need now.
           bits.appendBits(eci.getValue(), 8);
       }
-  }
+  };
   // The original table is defined in the table 5 of JISX0510:2004 (p.19).
   Encoder$1.ALPHANUMERIC_TABLE = Int32Array.from([
-      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-      36, -1, -1, -1, 37, 38, -1, -1, -1, -1, 39, 40, -1, 41, 42, 43,
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 44, -1, -1, -1, -1, -1,
-      -1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1, -1, -1, -1, -1,
+      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0x00-0x0f
+      -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0x10-0x1f
+      36, -1, -1, -1, 37, 38, -1, -1, -1, -1, 39, 40, -1, 41, 42, 43, // 0x20-0x2f
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 44, -1, -1, -1, -1, -1, // 0x30-0x3f
+      -1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, // 0x40-0x4f
+      25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, -1, -1, -1, -1, -1, // 0x50-0x5f
   ]);
   Encoder$1.DEFAULT_BYTE_MODE_ENCODING = CharacterSetECI.UTF8.getName(); // "ISO-8859-1"
 
@@ -23171,6 +25004,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing.qrcode {*/
   /*import java.util.Map;*/
   /**
    * This object renders a QR Code as a BitMatrix 2D array of greyscale values.
@@ -23256,6 +25090,17 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // import DataMatrixWriter from './datamatrix/DataMatrixWriter'
+  // import CodaBarWriter from './oned/CodaBarWriter'
+  // import Code128Writer from './oned/Code128Writer'
+  // import Code39Writer from './oned/Code39Writer'
+  // import Code93Writer from './oned/Code93Writer'
+  // import EAN13Writer from './oned/EAN13Writer'
+  // import EAN8Writer from './oned/EAN8Writer'
+  // import ITFWriter from './oned/ITFWriter'
+  // import UPCAWriter from './oned/UPCAWriter'
+  // import UPCEWriter from './oned/UPCEWriter'
+  // import PDF417Writer from './pdf417/PDF417Writer'
   /*import java.util.Map;*/
   /**
    * This is a factory class which finds the appropriate Writer subclass for the BarcodeFormat
@@ -23336,6 +25181,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing {*/
   /**
    * This object extends LuminanceSource around an array of YUV data returned from the camera driver,
    * with the option to crop to a rectangle within the full data. This can be used to exclude
@@ -23366,7 +25212,7 @@
           if (y < 0 || y >= this.getHeight()) {
               throw new IllegalArgumentException('Requested row is outside the image: ' + y);
           }
-          const width = this.getWidth();
+          const width /*int*/ = this.getWidth();
           if (row === null || row === undefined || row.length < width) {
               row = new Uint8ClampedArray(width);
           }
@@ -23376,8 +25222,8 @@
       }
       /*@Override*/
       getMatrix() {
-          const width = this.getWidth();
-          const height = this.getHeight();
+          const width /*int*/ = this.getWidth();
+          const height /*int*/ = this.getHeight();
           // If the caller asks for the entire underlying image, save the copy and give them the
           // original data. The docs specifically warn that result.length must be ignored.
           if (width === this.dataWidth && height === this.dataHeight) {
@@ -23408,8 +25254,8 @@
           return new PlanarYUVLuminanceSource(this.yuvData, this.dataWidth, this.dataHeight, this.left + left, this.top + top, width, height, false);
       }
       renderThumbnail() {
-          const width = this.getWidth() / PlanarYUVLuminanceSource.THUMBNAIL_SCALE_FACTOR;
-          const height = this.getHeight() / PlanarYUVLuminanceSource.THUMBNAIL_SCALE_FACTOR;
+          const width /*int*/ = this.getWidth() / PlanarYUVLuminanceSource.THUMBNAIL_SCALE_FACTOR;
+          const height /*int*/ = this.getHeight() / PlanarYUVLuminanceSource.THUMBNAIL_SCALE_FACTOR;
           const pixels = new Int32Array(width * height);
           const yuv = this.yuvData;
           let inputOffset = this.top * this.dataWidth + this.left;
@@ -23467,6 +25313,7 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  /*namespace com.google.zxing {*/
   /**
    * This class is used to help decode images from files which arrive as RGB data from
    * an ARGB pixel array. It does not support rotation.
@@ -24432,12 +26279,12 @@
           this.rsBlockData = rsBlockData;
           this.rsBlockError = rsBlockError;
       }
-      static lookup(dataCodewords, shape = 0 /* FORCE_NONE */, minSize = null, maxSize = null, fail = true) {
+      static lookup(dataCodewords, shape = 0 /* SymbolShapeHint.FORCE_NONE */, minSize = null, maxSize = null, fail = true) {
           for (const symbol of PROD_SYMBOLS) {
-              if (shape === 1 /* FORCE_SQUARE */ && symbol.rectangular) {
+              if (shape === 1 /* SymbolShapeHint.FORCE_SQUARE */ && symbol.rectangular) {
                   continue;
               }
-              if (shape === 2 /* FORCE_RECTANGLE */ && !symbol.rectangular) {
+              if (shape === 2 /* SymbolShapeHint.FORCE_RECTANGLE */ && !symbol.rectangular) {
                   continue;
               }
               if (minSize != null &&
@@ -24583,7 +26430,7 @@
               sb.append(ch);
           }
           this.msg = sb.toString(); // Not Unicode here!
-          this.shape = 0 /* FORCE_NONE */;
+          this.shape = 0 /* SymbolShapeHint.FORCE_NONE */;
           this.codewords = new StringBuilder();
           this.newEncoding = -1;
       }
@@ -24717,7 +26564,7 @@
       }
   }
 
-  class TextEncoder$1 extends C40Encoder {
+  let TextEncoder$1 = class TextEncoder extends C40Encoder {
       getEncodingMode() {
           return TEXT_ENCODATION;
       }
@@ -24774,14 +26621,14 @@
           len += this.encodeChar(c - 128, sb);
           return len;
       }
-  }
+  };
 
   // tslint:disable-next-line:no-circular-imports
   /**
    * DataMatrix ECC 200 data encoder following the algorithm described in ISO/IEC 16022:200(E) in
    * annex S.
    */
-  class HighLevelEncoder$1 {
+  let HighLevelEncoder$1 = class HighLevelEncoder {
       static randomize253State(codewordPosition) {
           const pseudoRandom = ((149 * codewordPosition) % 253) + 1;
           const tempVariable = PAD + pseudoRandom;
@@ -24799,7 +26646,7 @@
        * @param forceC40 enforce C40 encoding
        * @return the encoded message (the char values range from 0 to 255)
        */
-      static encodeHighLevel(msg, shape = 0 /* FORCE_NONE */, minSize = null, maxSize = null, forceC40 = false) {
+      static encodeHighLevel(msg, shape = 0 /* SymbolShapeHint.FORCE_NONE */, minSize = null, maxSize = null, forceC40 = false) {
           // the codewords 0..255 are encoded as Unicode characters
           const c40Encoder = new C40Encoder();
           const encoders = [
@@ -25110,7 +26957,7 @@
           hex = '0000'.substring(0, 4 - hex.length) + hex;
           throw new Error('Illegal character: ' + singleCharacter + ' (0x' + hex + ')');
       }
-  }
+  };
 
   /**
    * Set of CharsetEncoders for a given input string
@@ -25617,7 +27464,7 @@
        * @param shape requested shape.
        * @return the encoded message (the char values range from 0 to 255)
        */
-      static encodeHighLevel(msg, priorityCharset = null, fnc1 = -1, shape = 0 /* FORCE_NONE */) {
+      static encodeHighLevel(msg, priorityCharset = null, fnc1 = -1, shape = 0 /* SymbolShapeHint.FORCE_NONE */) {
           let macroId = 0;
           if (msg.startsWith(MACRO_05_HEADER) && msg.endsWith(MACRO_TRAILER)) {
               macroId = 5;
@@ -26263,14 +28110,14 @@
        **/
       getMinSymbolSize(minimum) {
           switch (this.input.getShapeHint()) {
-              case 1 /* FORCE_SQUARE */:
+              case 1 /* SymbolShapeHint.FORCE_SQUARE */:
                   for (const capacity of this.squareCodewordCapacities) {
                       if (capacity >= minimum) {
                           return capacity;
                       }
                   }
                   break;
-              case 2 /* FORCE_RECTANGLE */:
+              case 2 /* SymbolShapeHint.FORCE_RECTANGLE */:
                   for (const capacity of this.rectangularCodewordCapacities) {
                       if (capacity >= minimum) {
                           return capacity;
@@ -26568,7 +28415,7 @@
               throw new Error('Requested dimensions can\'t be negative: ' + width + 'x' + height);
           }
           // Try to get force shape & min / max size
-          let shape = 0 /* FORCE_NONE */;
+          let shape = 0 /* SymbolShapeHint.FORCE_NONE */;
           let minSize = null;
           let maxSize = null;
           if (hints != null) {
@@ -26944,38 +28791,38 @@
   const LATCH_TABLE = [
       Int32Array.from([
           0,
-          (5 << 16) + 28,
-          (5 << 16) + 30,
-          (5 << 16) + 29,
+          (5 << 16) + 28, // UPPER -> LOWER
+          (5 << 16) + 30, // UPPER -> DIGIT
+          (5 << 16) + 29, // UPPER -> MIXED
           (10 << 16) + (29 << 5) + 30 // UPPER -> MIXED -> PUNCT
       ]),
       Int32Array.from([
-          (9 << 16) + (30 << 4) + 14,
+          (9 << 16) + (30 << 4) + 14, // LOWER -> DIGIT -> UPPER
           0,
-          (5 << 16) + 30,
-          (5 << 16) + 29,
+          (5 << 16) + 30, // LOWER -> DIGIT
+          (5 << 16) + 29, // LOWER -> MIXED
           (10 << 16) + (29 << 5) + 30 // LOWER -> MIXED -> PUNCT
       ]),
       Int32Array.from([
-          (4 << 16) + 14,
-          (9 << 16) + (14 << 5) + 28,
+          (4 << 16) + 14, // DIGIT -> UPPER
+          (9 << 16) + (14 << 5) + 28, // DIGIT -> UPPER -> LOWER
           0,
-          (9 << 16) + (14 << 5) + 29,
+          (9 << 16) + (14 << 5) + 29, // DIGIT -> UPPER -> MIXED
           (14 << 16) + (14 << 10) + (29 << 5) + 30
           // DIGIT -> UPPER -> MIXED -> PUNCT
       ]),
       Int32Array.from([
-          (5 << 16) + 29,
-          (5 << 16) + 28,
-          (10 << 16) + (29 << 5) + 30,
+          (5 << 16) + 29, // MIXED -> UPPER
+          (5 << 16) + 28, // MIXED -> LOWER
+          (10 << 16) + (29 << 5) + 30, // MIXED -> UPPER -> DIGIT
           0,
           (5 << 16) + 30 // MIXED -> PUNCT
       ]),
       Int32Array.from([
-          (5 << 16) + 31,
-          (10 << 16) + (31 << 5) + 28,
-          (10 << 16) + (31 << 5) + 30,
-          (10 << 16) + (31 << 5) + 29,
+          (5 << 16) + 31, // PUNCT -> UPPER
+          (10 << 16) + (31 << 5) + 28, // PUNCT -> UPPER -> LOWER
+          (10 << 16) + (31 << 5) + 30, // PUNCT -> UPPER -> DIGIT
+          (10 << 16) + (31 << 5) + 29, // PUNCT -> UPPER -> MIXED
           0
       ])
   ];
@@ -27009,11 +28856,15 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // package com.google.zxing.aztec.encoder;
+  // import java.util.Deque;
+  // import java.util.LinkedList;
+  // import com.google.zxing.common.BitArray;
   /**
    * State represents all information about a sequence necessary to generate the current output.
    * Note that a state is immutable.
    */
-  /*final*/ class State {
+  class State {
       constructor(token, mode, binaryBytes, bitCount) {
           this.token = token;
           this.mode = mode;
@@ -27267,6 +29118,8 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+  // import java.util.Collection;
+  // import java.util.Collections;
   /**
    * This produces nearly optimal encodings of text into the first-level of
    * encoding used by Aztec code.
@@ -27460,7 +29313,7 @@
    *
    * @author Rustam Abdullaev
    */
-  /*public final*/ class Encoder {
+  class Encoder {
       constructor() {
       }
       /**
@@ -27779,6 +29632,8 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+  // package com.google.zxing.aztec;
+  // import com.google.zxing.BarcodeFormat;
   /**
    * Renders an Aztec code as a {@link BitMatrix}.
    */
@@ -27843,7 +29698,7 @@
   exports.AztecCode = AztecCode;
   exports.AztecCodeReader = AztecReader;
   exports.AztecCodeWriter = AztecWriter;
-  exports.AztecDecoder = Decoder$2;
+  exports.AztecDecoder = Decoder$3;
   exports.AztecDetector = Detector$3;
   exports.AztecDetectorResult = AztecDetectorResult;
   exports.AztecEncoder = Encoder;
@@ -27869,7 +29724,7 @@
   exports.Code128Reader = Code128Reader;
   exports.Code39Reader = Code39Reader;
   exports.Code93Reader = Code93Reader;
-  exports.DataMatrixDecodedBitStreamParser = DecodedBitStreamParser$2;
+  exports.DataMatrixDecodedBitStreamParser = DecodedBitStreamParser$3;
   exports.DataMatrixDefaultPlacement = DefaultPlacement;
   exports.DataMatrixErrorCorrection = ErrorCorrection;
   exports.DataMatrixHighLevelEncoder = HighLevelEncoder$1;
@@ -27883,6 +29738,7 @@
   exports.EAN13Reader = EAN13Reader;
   exports.EncodeHintType = EncodeHintType$1;
   exports.Exception = Exception;
+  exports.FinderPattern = FinderPattern$1;
   exports.FormatException = FormatException;
   exports.GenericGF = GenericGF;
   exports.GenericGFPoly = GenericGFPoly;
@@ -27897,6 +29753,13 @@
   exports.InvertedLuminanceSource = InvertedLuminanceSource;
   exports.LuminanceSource = LuminanceSource;
   exports.MathUtils = MathUtils;
+  exports.MaxiCodeDecodedBitStreamParser = DecodedBitStreamParser$1;
+  exports.MaxiCodeDecoder = Decoder;
+  exports.MaxiCodeReader = MaxiCodeReader;
+  exports.MicroQRCodeReader = MicroQRCodeReader;
+  exports.MicroQRDetector = MicroQRDetector;
+  exports.MicroQRFormatInformation = MicroQRFormatInformation;
+  exports.MicroQRVersion = MicroQRVersion;
   exports.MultiFormatOneDReader = MultiFormatOneDReader;
   exports.MultiFormatReader = MultiFormatReader;
   exports.MultiFormatWriter = MultiFormatWriter;
@@ -27910,7 +29773,7 @@
   exports.PlanarYUVLuminanceSource = PlanarYUVLuminanceSource;
   exports.QRCodeByteMatrix = ByteMatrix;
   exports.QRCodeDataMask = DataMask;
-  exports.QRCodeDecodedBitStreamParser = DecodedBitStreamParser$1;
+  exports.QRCodeDecodedBitStreamParser = DecodedBitStreamParser$2;
   exports.QRCodeDecoderErrorCorrectionLevel = ErrorCorrectionLevel;
   exports.QRCodeDecoderFormatInformation = FormatInformation;
   exports.QRCodeEncoder = Encoder$1;
@@ -27944,8 +29807,6 @@
   exports.ZXingStringEncoding = StringEncoding;
   exports.ZXingSystem = System;
   exports.createAbstractExpandedDecoder = createDecoder;
-
-  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
 //# sourceMappingURL=index.js.map
