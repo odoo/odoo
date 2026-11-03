@@ -759,6 +759,40 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'amount_total': 1384.0,
         })
 
+    def test_in_invoice_change_date_rounding_multi_currency(self):
+        new_currency_id = self.env['res.currency'].create({
+                'name': 'Test',
+                'symbol': 'T',
+                'rounding': 0.01,
+            })
+
+        self.env['res.currency.rate'].create([
+            {
+                'currency_id': new_currency_id.id,
+                'name': '2017-01-01',
+                'rate': 0.233661237937,
+            }, {
+                'currency_id': new_currency_id.id,
+                'name': '2016-01-01',
+                'rate': 0.233666697822,
+            }
+        ])
+
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice', check_move_validity=True))
+        move_form.partner_id = self.partner_a
+        move_form.currency_id = new_currency_id
+        move_form.invoice_date = '2016-01-01'
+        move_form.invoice_payment_term_id = self.env['account.payment.term']
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_a
+            line_form.price_unit = 88.54
+
+        move_form.save()
+
+        move_form.invoice_date = '2017-01-01'
+        move_form.save()
+
     def test_compute_cash_rounding_lines(self):
         cash_rounding_add_invoice_line = self.env['account.cash.rounding'].create({
             'name': 'Add invoice line Rounding Down',
