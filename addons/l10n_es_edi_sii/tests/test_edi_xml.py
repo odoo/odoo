@@ -98,6 +98,101 @@ class TestEdiXmls(TestEsEdiCommon):
         self.assertEqual(bills.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
         self.assertEqual(len(bills.l10n_es_edi_sii_document_ids.attachment_id), 1)
 
+    # -------------------------------------------------------------------------
+    # SENDING WIZARDS: the SII is never sent along with the email
+    # -------------------------------------------------------------------------
+
+    def test_sii_is_applicable_but_not_a_default(self):
+        """ The SII can be sent for these invoices, but never by default (e.g. along with the email). """
+        invoice = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        sent_invoice = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        invoices = invoice | sent_invoice
+        invoices.action_post()
+        self.env['l10n_es_edi_sii.document'].sudo().create({
+            'move_id': sent_invoice.id,
+            'state': 'accepted',
+            'csv': 'CSV-SENT',
+        })
+        sent_invoice.invalidate_recordset(['l10n_es_edi_sii_state'])
+
+        all_extra_edis = self.env['account.move.send']._get_all_extra_edis()
+        self.assertTrue(all_extra_edis['es_edi_sii']['is_applicable'](invoice))
+        self.assertTrue(all_extra_edis['es_edi_sii_resend']['is_applicable'](sent_invoice))
+
+        for move in invoices:
+            with self.subTest(move=move.name):
+                settings = self.env['account.move.send']._get_default_sending_settings(move, sending_methods={'manual'})
+                self.assertFalse(set(settings['extra_edis']) & {'es_edi_sii', 'es_edi_sii_resend'})
+
+    def test_batch_wizard_summary_excludes_sii(self):
+        """ The summary of the batch wizard (list view) must not announce a sending to the SII. """
+        invoice_1 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        invoice_2 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        invoices = invoice_1 | invoice_2
+        invoices.action_post()
+
+        wizard = self.env['account.move.send.batch.wizard'].with_context(
+            active_model='account.move', active_ids=invoices.ids,
+        ).create({})
+
+        self.assertFalse({'es_edi_sii', 'es_edi_sii_resend'} & set(wizard.summary_data))
+
+    def test_sending_without_extra_edis_does_not_send_to_sii(self):
+        """ When the user doesn't ask for it, the SII is not sent (it has its own dedicated button). """
+        invoice = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        invoice.action_post()
+
+        with (
+            patch(
+                'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+                autospec=True,
+                side_effect=self._mock_sii_webservice_batch,
+            ) as post_to_agency_mock,
+            patch.object(self.env.registry['account.move.send'], '_prepare_invoice_pdf_report'),
+        ):
+            self.env['account.move.send']._generate_and_send_invoices(invoice, sending_methods={'manual'})
+
+        post_to_agency_mock.assert_not_called()
+        self.assertEqual(invoice.l10n_es_edi_sii_state, 'to_send')
+
+    def test_sending_with_explicit_sii_sends_to_sii(self):
+        """ When the user explicitly asks for it (checkbox of the single invoice wizard), the SII is sent. """
+        invoice = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        invoice.action_post()
+
+        with (
+            patch(
+                'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
+                autospec=True,
+                side_effect=self._mock_sii_webservice_batch,
+            ) as post_to_agency_mock,
+            patch.object(self.env.registry['account.move.send'], '_prepare_invoice_pdf_report'),
+        ):
+            self.env['account.move.send']._generate_and_send_invoices(
+                invoice, sending_methods={'manual'}, extra_edis={'es_edi_sii'},
+            )
+
+        post_to_agency_mock.assert_called_once()
+        self.assertEqual(invoice.l10n_es_edi_sii_state, 'sent')
+
     def test_010_out_invoice_s_iva10b_s_iva21s(self):
         """ Invoice with goods and services as they need to be reported in different sections for customer invoices. """
         invoice = self._create_invoice_es(
