@@ -3107,6 +3107,10 @@ export class PosStore extends WithLazyGetterTrap {
         return this.snoozeTracker.isProductSnoozed(product);
     }
 
+    getProductSnoozeLabel(product) {
+        return this.snoozeTracker.getProductSnoozeLabel(product);
+    }
+
     async canAddProductToCurrentOrder(product) {
         if (!this.isProductSnoozed(product)) {
             return true;
@@ -3199,17 +3203,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getSnoozeCountdown(activeSnooze) {
-        // This function will calculate and return [countdown, activeSoozeRecord]
-        const now = DateTime.now();
-        const endTime = activeSnooze.end_time;
-        if (!endTime) {
-            return [_t("Next session"), activeSnooze];
-        }
-        const diff = endTime.diff(now, ["hours", "minutes", "seconds"]);
-        if (diff.as("seconds") <= 0) {
-            return ["", undefined];
-        }
-        return [diff.toFormat("hh:mm:ss"), activeSnooze];
+        return this.snoozeTracker.getSnoozeCountdown(activeSnooze);
     }
     snoozeItem(serviceType, onCreation, extraPayload = {}) {
         this.dialog.add(SnoozeDialog, {
