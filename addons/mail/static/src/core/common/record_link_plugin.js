@@ -1,5 +1,5 @@
 import { StorePlugin } from "@mail/core/common/store_plugin";
-import { getRecordLinkParams } from "@mail/utils/common/format";
+import { getRecordLinkParams, messageUrlRegExp } from "@mail/utils/common/format";
 import { createElementFromContent, getInnerHtml } from "@mail/utils/common/html";
 
 import { Plugin, usePlugin } from "@odoo/owl";
@@ -10,9 +10,11 @@ import { renderToElement } from "@web/core/utils/render";
 /** Delays in ms before fetching again the names that could not be fetched. */
 const NAME_FETCH_RETRY_DELAYS = [1000, 5000, 30000];
 
+export const RECORD_LINK_SELECTOR = "a.o_message_redirect, a.o_record_redirect";
+
 /**
- * Links to records of this database, rendered with the name of their record. The body keeps the
- * URL: each reader sees the name of the records they can read, the others as restricted.
+ * Links to messages and records of this database, rendered with the name of their record. The body
+ * keeps the URL: each reader sees the name of the records they can read, the others as restricted.
  */
 export class RecordLinkPlugin extends Plugin {
     /** Started with the store it uses (see `StorePlugin`). */
@@ -25,7 +27,8 @@ export class RecordLinkPlugin extends Plugin {
     restrictedRecords = new Set();
 
     /**
-     * Marks the links to records of this database with their model and id, for the body to render.
+     * Marks the links to messages and records of this database with their model and id, for the
+     * body to render.
      *
      * @param {string|ReturnType<markup>} body
      */
@@ -33,7 +36,7 @@ export class RecordLinkPlugin extends Plugin {
         const bodyEl = createElementFromContent(body);
         const linkEls = [...bodyEl.querySelectorAll("a")].filter(
             (linkEl) =>
-                linkEl.matches(".o_record_redirect") ||
+                linkEl.matches(RECORD_LINK_SELECTOR) ||
                 linkEl.textContent === linkEl.getAttribute("href")
         );
         if (!linkEls.length) {
@@ -43,29 +46,31 @@ export class RecordLinkPlugin extends Plugin {
             linkEls.map((linkEl) =>
                 linkEl.textContent === linkEl.getAttribute("href") &&
                 // a pasted link the composer did not render, e.g. after undo, is posted as shown
-                !linkEl.matches(".o_record_redirect:not([data-oe-id])")
+                !linkEl.matches(`:is(${RECORD_LINK_SELECTOR}):not([data-oe-id])`)
                     ? this.resolveRecordLink(linkEl.getAttribute("href"))
                     : undefined
             )
         );
         if (
             !records.some(Boolean) &&
-            !linkEls.some((linkEl) => linkEl.matches(".o_record_redirect"))
+            !linkEls.some((linkEl) => linkEl.matches(RECORD_LINK_SELECTOR))
         ) {
             return body;
         }
         linkEls.forEach((linkEl, index) => {
             const record = records[index];
             if (record) {
-                linkEl.classList.add("o_record_redirect");
+                const isMessage = record.model === "mail.message";
+                linkEl.classList.toggle("o_message_redirect", isMessage);
+                linkEl.classList.toggle("o_record_redirect", !isMessage);
                 linkEl.setAttribute("data-oe-model", record.model);
                 linkEl.setAttribute("data-oe-id", record.id);
                 return;
             }
-            if (!linkEl.classList.contains("o_record_redirect")) {
+            if (!linkEl.matches(RECORD_LINK_SELECTOR)) {
                 return;
             }
-            linkEl.classList.remove("o_record_redirect");
+            linkEl.classList.remove("o_message_redirect", "o_record_redirect");
             if (!linkEl.classList.length) {
                 linkEl.removeAttribute("class");
             }
@@ -81,6 +86,10 @@ export class RecordLinkPlugin extends Plugin {
      * @param {string} href
      */
     async resolveRecordLink(href) {
+        const messageId = messageUrlRegExp.exec(href ?? "")?.[1];
+        if (messageId) {
+            return { id: Number(messageId), model: "mail.message" };
+        }
         const params = getRecordLinkParams(href);
         // the model of an action is only known by the web client
         if (params?.model && !params.action) {
@@ -125,12 +134,21 @@ export class RecordLinkPlugin extends Plugin {
 
     /**
      * Renders the link with the name of its record when known, or as restricted when the user
-     * can't read it. Returns whether it is rendered.
+     * can't read it. Returns whether it is rendered. A message is only rendered when known.
      *
      * @param {HTMLAnchorElement} linkEl
      * @param {{ id: number, model: string }} record
      */
     renderRecordLink(linkEl, { id, model }) {
+        if (model === "mail.message") {
+            const message = this.store["mail.message"].get(id);
+            if (!message?.thread?.displayName) {
+                return false;
+            }
+            linkEl.classList.add("o_message_redirect_transformed");
+            linkEl.replaceChildren(renderToElement("mail.Message.messageLink", { message }));
+            return true;
+        }
         const thread = this.store["mail.thread"].get({ model, id });
         if (!thread?.displayName && !this.restrictedRecords.has(`${model},${id}`)) {
             return false;
@@ -147,6 +165,9 @@ export class RecordLinkPlugin extends Plugin {
      * @param {number[]} ids
      */
     fetchNames(model, ids) {
+        if (model === "mail.message") {
+            return this.fetchMessages(ids);
+        }
         // only internal users can fetch records, the others can't read them
         if (this.store.self_user?.share !== false) {
             ids.forEach((id) => this.restrictedRecords.add(`${model},${id}`));
@@ -171,6 +192,34 @@ export class RecordLinkPlugin extends Plugin {
             unfetchedIds.forEach((id) => this.nameFetches.set(`${model},${id}`, fetch));
         }
         return Promise.all(ids.map((id) => this.nameFetches.get(`${model},${id}`)));
+    }
+
+    /**
+     * Fetches the linked messages the user can read, for the name of their thread. A message
+     * received live only comes with those its author can read.
+     *
+     * @param {number[]} ids
+     */
+    fetchMessages(ids) {
+        // only internal users can fetch messages
+        if (this.store.self_user?.share !== false) {
+            return Promise.resolve();
+        }
+        const unfetchedIds = ids.filter(
+            (id) =>
+                !this.store["mail.message"].get(id)?.thread?.displayName &&
+                !this.nameFetches.has(`mail.message,${id}`)
+        );
+        if (unfetchedIds.length) {
+            const fetch = this.store
+                .fetchStoreData("mail.message", { ids: unfetchedIds })
+                .catch(() =>
+                    // fetched again on the next render
+                    unfetchedIds.forEach((id) => this.nameFetches.delete(`mail.message,${id}`))
+                );
+            unfetchedIds.forEach((id) => this.nameFetches.set(`mail.message,${id}`, fetch));
+        }
+        return Promise.all(ids.map((id) => this.nameFetches.get(`mail.message,${id}`)));
     }
 
     /**

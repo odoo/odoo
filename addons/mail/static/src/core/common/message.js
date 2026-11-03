@@ -11,7 +11,7 @@ import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
 import { Poll } from "@mail/core/common/poll";
 import { PollResult } from "@mail/core/common/poll_result";
-import { RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
+import { RECORD_LINK_SELECTOR, RecordLinkPlugin } from "@mail/core/common/record_link_plugin";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { groupAttachments } from "@mail/utils/common/attachments";
 
@@ -623,8 +623,7 @@ export class Message extends Component {
         );
         const channelLinks = bodyEl.querySelectorAll("a.o_channel_redirect");
         this.store.handleValidChannelMention(Array.from(channelLinks));
-        this.store.renderMessageLinks(bodyEl.querySelectorAll(".o_message_redirect"));
-        this.recordLink.renderRecordLinks(bodyEl.querySelectorAll("a.o_record_redirect"));
+        this.recordLink.renderRecordLinks(bodyEl.querySelectorAll(RECORD_LINK_SELECTOR));
         return this.renderEmbeddedCodeBlocks(bodyEl);
     }
 

@@ -1,16 +1,50 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { rightPos } from "@html_editor/utils/position";
-import { getRecordLinkParams } from "@mail/utils/common/format";
+import { withSequence } from "@html_editor/utils/resource";
+import { RECORD_LINK_SELECTOR } from "@mail/core/common/record_link_plugin";
+import { getRecordLinkParams, messageUrlRegExp } from "@mail/utils/common/format";
 import { setAttributes } from "@web/core/utils/xml";
 
+const RECORD_LINK_ATTRIBUTES = ["contenteditable", "data-oe-id", "data-oe-model"];
+const RECORD_LINK_CLASSES = [
+    "o_message_redirect",
+    "o_message_redirect_transformed",
+    "o_record_redirect",
+    "o_record_redirect_transformed",
+];
 const MARKED_RECORD_LINK_SELECTOR =
-    "a.o_record_redirect[data-oe-id]:not(.o_record_redirect_transformed)";
-const RENDERED_RECORD_LINK_SELECTOR = "a.o_record_redirect_transformed";
+    "a:is(.o_message_redirect, .o_record_redirect)[data-oe-id]:not(.o_message_redirect_transformed, .o_record_redirect_transformed)";
+const RENDERED_RECORD_LINK_SELECTOR =
+    "a.o_message_redirect_transformed, a.o_record_redirect_transformed";
 
 /**
- * Renders the links to records like in the message body. Only shown: the saved content keeps the
- * URL, as the body is rendered for each reader with their access.
+ * Class marking the link to a message or a record of this database.
+ *
+ * @param {string} [url]
+ */
+function getRecordLinkClass(url) {
+    if (messageUrlRegExp.test(url ?? "")) {
+        return "o_message_redirect";
+    }
+    const params = getRecordLinkParams(url);
+    if (params) {
+        return params.model === "mail.message" ? "o_message_redirect" : "o_record_redirect";
+    }
+}
+
+/** @param {HTMLAnchorElement} linkEl */
+function unmarkRecordLink(linkEl) {
+    linkEl.classList.remove(...RECORD_LINK_CLASSES);
+    if (!linkEl.classList.length) {
+        linkEl.removeAttribute("class");
+    }
+    RECORD_LINK_ATTRIBUTES.forEach((name) => linkEl.removeAttribute(name));
+}
+
+/**
+ * Renders the links to messages and records like in the message body. Only shown: the saved
+ * content keeps the URL, as the body is rendered for each reader with their access.
  */
 export class RecordLinkEditorPlugin extends Plugin {
     static id = "recordLink";
@@ -20,12 +54,28 @@ export class RecordLinkEditorPlugin extends Plugin {
     resources = {
         clean_for_save_processors: (root) => {
             for (const linkEl of root.querySelectorAll(RENDERED_RECORD_LINK_SELECTOR)) {
-                linkEl.classList.remove("o_record_redirect_transformed");
+                linkEl.classList.remove(
+                    "o_message_redirect_transformed",
+                    "o_record_redirect_transformed"
+                );
                 linkEl.removeAttribute("contenteditable");
                 linkEl.replaceChildren(linkEl.getAttribute("href"));
             }
             return root;
         },
+        // before the basic composer unwraps the links it does not preserve
+        fragment_to_insert_processors: withSequence(5, (fragment) => {
+            for (const linkEl of fragment.querySelectorAll(RECORD_LINK_SELECTOR)) {
+                const linkClass = getRecordLinkClass(linkEl.getAttribute("href"));
+                if (!linkClass || !linkEl.classList.contains(linkClass)) {
+                    unmarkRecordLink(linkEl);
+                } else if (linkEl.hasAttribute("data-oe-id")) {
+                    // rendered again with the access of the user, e.g. copied from a message
+                    linkEl.replaceChildren(linkEl.getAttribute("href"));
+                }
+            }
+            return fragment;
+        }),
         on_content_updated_handlers: () => this.renderEditedRecordLinks(),
         on_editor_started_handlers: () => this.renderEditedRecordLinks(),
         paste_text_overrides: this.handlePasteText.bind(this),
@@ -38,7 +88,8 @@ export class RecordLinkEditorPlugin extends Plugin {
     pendingRenders = new Set();
 
     /**
-     * Pastes a record URL as a link, also where the editor would not (basic composer, localhost).
+     * Pastes a message or record URL as a link, also where the editor would not (basic composer,
+     * localhost).
      *
      * @param {import("@html_editor/core/selection_plugin").EditorSelection} selection
      * @param {string} text
@@ -57,16 +108,15 @@ export class RecordLinkEditorPlugin extends Plugin {
      * @param {string} url
      */
     insertRecordLink(url) {
-        // a selected text is kept as the label of the link
-        if (
-            !getRecordLinkParams(url) ||
-            !this.dependencies.selection.getEditableSelection().isCollapsed
-        ) {
+        const linkClass = getRecordLinkClass(url);
+        // a selected text is left to the default paste, e.g. kept as the label of the link in the
+        // html composer
+        if (!linkClass || !this.dependencies.selection.getEditableSelection().isCollapsed) {
             return false;
         }
         const linkEl = this.document.createElement("a");
         setAttributes(linkEl, {
-            class: "o_record_redirect",
+            class: linkClass,
             href: url,
             rel: "noreferrer noopener",
             target: "_blank",
@@ -95,10 +145,9 @@ export class RecordLinkEditorPlugin extends Plugin {
         const href = linkEl.getAttribute("href");
         const recordLink = this.config.composerPluginDependencies.recordLink;
         const record = await recordLink.resolveRecordLink(href);
-        if (!record) {
-            return;
+        if (record) {
+            await recordLink.fetchNames(record.model, [record.id]);
         }
-        await recordLink.fetchNames(record.model, [record.id]);
         // the link may have been edited or removed meanwhile
         if (
             this.isDestroyed ||
@@ -110,7 +159,7 @@ export class RecordLinkEditorPlugin extends Plugin {
         const render = () => {
             const { anchorNode } = this.dependencies.selection.getEditableSelection();
             const hasCaret = linkEl.contains(anchorNode);
-            if (!recordLink.renderRecordLink(linkEl, record)) {
+            if (!record || !recordLink.renderRecordLink(linkEl, record)) {
                 return false;
             }
             setAttributes(linkEl, {
@@ -134,6 +183,11 @@ export class RecordLinkEditorPlugin extends Plugin {
         } else if (render()) {
             // not protected, in a step of its own: undo turns it back into its URL
             this.dependencies.history.commit();
+        } else {
+            // marked once posted, e.g. a message the user can't read but its readers may
+            this.dependencies.domObserver.ignore(() => unmarkRecordLink(linkEl));
+            // not committed, so the content is synced here
+            this.config.onChange?.();
         }
     }
 
