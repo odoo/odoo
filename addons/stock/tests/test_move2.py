@@ -298,11 +298,12 @@ class TestPickShip(TestStockCommon):
         stock_return_picking.product_return_moves.quantity = 2.0  # Return only 2
         stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
-        return_pick.move_ids[0].move_line_ids[0].quantity = 2.0
+        return_pick.move_ids[0].quantity = 2.0
         return_pick.move_ids[0].picked = True
         return_pick._action_done()
-        # the client picking should not be assigned anymore, as we returned partially what we took
-        self.assertEqual(picking_client.state, 'confirmed')
+        # the client move only loses the quantity that was returned
+        self.assertEqual(picking_client.move_ids.state, 'partially_available')
+        self.assertEqual(picking_client.move_ids.quantity, 8.0)
 
     def test_mto_moves_extra_qty(self):
         """ Ensure that a move in MTO will support an extra quantity. The extra
@@ -350,6 +351,8 @@ class TestPickShip(TestStockCommon):
         stock_return_picking.product_return_moves.quantity = 12.0 # Return 2 extra
         stock_return_picking_action = stock_return_picking.action_create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
+        picking_client.do_unreserve()
+        return_pick.action_assign()
 
         # Verify the extra move has been merged with the original move
         self.assertAlmostEqual(return_pick.move_ids.product_uom_qty, 12.0)
