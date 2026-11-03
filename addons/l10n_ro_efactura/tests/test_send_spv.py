@@ -63,6 +63,7 @@ class TestL10nRoEfacturaSend(TestUBLROCommon):
         invoice = self._create_invoice(self.partner_a)
         request = self._send_to_spv(invoice)
 
+        self.assertNotIn('extern', request['params'])
         self.assertEqual(request['data'], invoice.ubl_cii_xml_id.raw)
         self.assertIn(CIUSRO_CUSTOMIZATION_ID, request['data'])
 
@@ -74,3 +75,16 @@ class TestL10nRoEfacturaSend(TestUBLROCommon):
         self.assertNotIn(CIUSRO_CUSTOMIZATION_ID, invoice.ubl_cii_xml_id.raw)
         self.assertIn(CIUSRO_CUSTOMIZATION_ID, request['data'])
         self.assertEqual(invoice.l10n_ro_edi_document_ids.attachment_id.raw, request['data'])
+        # The buyer has no Romanian CUI
+        self.assertEqual(request['endpoint'], 'upload')
+        self.assertEqual(request['params'].get('extern'), 'DA')
+
+    def test_is_extern(self):
+        invoice = self._create_invoice(self.partner_ch)
+        self.assertTrue(invoice._l10n_ro_edi_is_extern())
+
+        # A foreign company registered for VAT in Romania has a CUI
+        self.partner_ch.vat = 'RO1234567897'
+        self.assertFalse(invoice._l10n_ro_edi_is_extern())
+
+        self.assertFalse(self._create_invoice(self.partner_a)._l10n_ro_edi_is_extern())
