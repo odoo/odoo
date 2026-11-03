@@ -2103,6 +2103,17 @@ class WebsiteSale(payment_portal.PaymentPortal):
             )
             return request.redirect('/shop/cart')
 
+        # Check that the cart does not contain combos modified since they were added to it.
+        if outdated_combo_lines := order_sudo._get_outdated_combo_lines():
+            outdated_combo_lines.shop_warning = request.env._(
+                "This combo has changed since it was added to your cart."
+            )
+            order_sudo.shop_warning = request.env._(
+                "Some combos in your cart have changed since you added them. Please remove them"
+                " and add them again."
+            )
+            return request.redirect('/shop/cart')
+
     def _check_addresses(self, order_sudo):
         """ Check whether the cart's addresses are complete and valid.
 
