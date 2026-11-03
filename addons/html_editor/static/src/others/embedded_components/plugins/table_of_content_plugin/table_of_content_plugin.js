@@ -3,9 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { withSequence } from "@html_editor/utils/resource";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { headingTags } from "@html_editor/utils/dom_info";
 
 export class TableOfContentPlugin extends Plugin {
@@ -58,16 +57,11 @@ export class TableOfContentPlugin extends Plugin {
         /** Processors */
         clean_for_save_processors: this.cleanForSave.bind(this),
 
-        toolbar_namespace_providers: withSequence(70, (targetedNodes) => {
-            if (
-                targetedNodes.length &&
-                targetedNodes.every((node) =>
-                    closestElement(node, `[data-embedded="tableOfContent"]`)
-                )
-            ) {
-                return DISABLED_NAMESPACE;
-            }
-        }),
+        /** Properties */
+        properties: {
+            predicate: (node) => closestElement(node, `[data-embedded="tableOfContent"]`),
+            toolbar: DISABLED_NAMESPACE,
+        },
 
         system_classes: ["o_embedded_toc_header_highlight"],
     };

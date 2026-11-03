@@ -63,11 +63,7 @@ export class DropZonePlugin extends Plugin {
                 }
             }
         },
-        can_contain_selection_placeholder_predicates: (container) => {
-            if (container.classList.contains("oe_structure")) {
-                return false;
-            }
-        },
+        properties: { predicate: ".oe_structure", selectionPlaceholders: false },
         is_valid_for_sibling_dropzone_predicates: (el) => {
             if (
                 // Do not drop blocks into an image field.

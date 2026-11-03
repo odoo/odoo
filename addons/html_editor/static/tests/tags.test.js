@@ -109,7 +109,7 @@ describe("to paragraph", () => {
         await testEditor({
             contentBefore: "<small>[abc]</small>",
             stepFunction: setTag("p"),
-            contentAfter: "<p><small>[]abc</small></p>",
+            contentAfter: "<p><small>[abc]</small></p>",
         });
     });
 
@@ -375,7 +375,7 @@ describe("to heading 1", () => {
         await testEditor({
             contentBefore: "<small>[abc]</small>",
             stepFunction: setTag("h1"),
-            contentAfter: "<h1><small>[]abc</small></h1>",
+            contentAfter: "<h1><small>[abc]</small></h1>",
         });
     });
 
