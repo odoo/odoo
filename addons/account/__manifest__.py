@@ -54,6 +54,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_analytic_distribution_model_views.xml',
         'views/account_analytic_line_views.xml',
         'views/report_invoice.xml',
+        'views/report_layout_legacy.xml',
         'report/account_invoice_report_view.xml',
         'views/account_cash_rounding_view.xml',
         'views/ir_actions_views.xml',

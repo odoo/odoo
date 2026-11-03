@@ -12,6 +12,24 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    def test_invoice_report_transport_references(self):
+        transporter = self.env['res.partner'].create({'name': 'Invoice Transporter'})
+        bill = self.env['l10n.in.ewaybill'].create({
+            'account_move_id': self.invoice.id, 'state': 'generated', 'name': 'EWB-42',
+            'transporter_id': transporter.id, 'vehicle_no': 'GJ01AB1234',
+            'transportation_doc_no': 'LR-42', 'transportation_doc_date': '2026-10-22',
+        })
+        values = self.invoice._l10n_in_get_invoice_report_header_values()
+        self.assertEqual(values['ewaybill_number'], 'EWB-42')
+        self.assertEqual(values['dispatched_through'], transporter.name)
+        self.assertEqual(values['transport_document_no'], 'LR-42')
+        self.assertEqual(values['vehicle_no'], 'GJ01AB1234')
+        self.assertFalse(values['dispatch_document_no'])
+        bill.state = 'cancel'
+        values = self.invoice._l10n_in_get_invoice_report_header_values()
+        self.assertFalse(values['ewaybill_number'])
+        self.assertFalse(values['transport_document_no'])
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
