@@ -5,9 +5,10 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_filter"/>
         <field name="arch" type="xml">
-            <filter name="at_work" position="after">
+            <xpath expr="//field[@name='category_ids']" position="after">
+                <separator/>
                 <filter name="absent" string="Absent" domain="[('is_absent', '=', True)]"/>
-            </filter>
+            </xpath>
         </field>
     </record>
 

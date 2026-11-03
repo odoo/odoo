@@ -64,19 +64,6 @@
         </field>
     </record>
 
-    <!--Hr Employee inherit search view-->
-    <record id="hr_employee_view_search" model="ir.ui.view">
-        <field name="name">hr.employee.search.view.inherit</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//filter[@name='permanent_contract']" position="before">
-                <filter name="at_work" string="Present" domain="[('is_absent', '=', False)]"/>
-                <separator/>
-            </xpath>
-        </field>
-    </record>
-
     <!-- hr_employee_public_view_kanban -->
     <record id="hr_kanban_view_public_employees_kanban" model="ir.ui.view">
         <field name="name">hr.employee.public.kanban.leaves.status</field>
