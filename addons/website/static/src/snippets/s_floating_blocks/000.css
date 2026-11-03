@@ -39,6 +39,12 @@
            aspect-ratio and the viewport size. */
         max-height: calc(100vh - (var(--o-bs-spacer-5) * 2)) !important; /* Fallback */
         max-height: calc(100lvh - (var(--o-bs-spacer-5) * 2)) !important;
+
+        @media (prefers-reduced-motion: reduce) {
+            // Disable the stacking effect: blocks simply scroll with the page.
+            // `!important` is needed to override the `position-sticky` utility.
+            position: static !important;
+        }
     }
 
     @media (min-width: 992px) { /* media-breakpoint-up(lg) */
