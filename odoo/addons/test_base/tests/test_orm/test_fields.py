@@ -3906,7 +3906,7 @@ class SudoCommands(TransactionCaseWithUserDemo):
                 })
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestHtmlField(TransactionCase):
 
     def setUp(self):
@@ -4069,7 +4069,7 @@ class TestHtmlField(TransactionCase):
         self.assertEqual(patch.call_count, 2)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestMagicFields(TransactionCase):
 
     def test_write_date(self):
@@ -4111,7 +4111,7 @@ class TestMagicFields(TransactionCase):
         self.assertTrue(field.store)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestParentStore(TransactionCaseWithUserDemo):
 
     @classmethod
@@ -4464,7 +4464,7 @@ class TestMany2oneReference(TransactionExpressionCase):
 
 
 @tagged('selection_abstract')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSelectionDeleteUpdate(TransactionCase):
 
     MODEL_ABSTRACT = 'test_orm.state_mixin'
@@ -4483,7 +4483,7 @@ class TestSelectionDeleteUpdate(TransactionCase):
 
 
 @tagged('selection_update_base')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSelectionUpdates(TransactionCase):
     MODEL_BASE = 'test_orm.model_selection_base'
     MODEL_RELATED = 'test_orm.model_selection_related'
@@ -4584,7 +4584,7 @@ class TestSelectionManualRelatedUpdate(TransactionCase):
 
 
 @tagged('selection_ondelete_base')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSelectionOndelete(TransactionCase):
 
     MODEL_BASE = 'test_orm.model_selection_base'
@@ -4775,7 +4775,7 @@ class TestSelectionOndelete(TransactionCase):
 
 
 @tagged('selection_ondelete_advanced')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSelectionOndeleteAdvanced(TransactionCase):
 
     MODEL_BASE = 'test_orm.model_selection_base'
@@ -4927,7 +4927,7 @@ def update(model, *fnames):
     )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestComputeQueries(TransactionCase):
     """ Test the queries made by create() with computed fields. """
 
@@ -5127,7 +5127,7 @@ class TestComputeQueries(TransactionCase):
             self.assertEqual(patch_compute.call_count, 1)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestComputeSudo(TransactionCaseWithUserDemo):
     def test_compute_sudo_depends_context_uid(self):
         record = self.env['test_orm.compute.sudo'].create({})
@@ -5135,7 +5135,7 @@ class TestComputeSudo(TransactionCaseWithUserDemo):
 
 
 @tagged('unlink_constraints')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestUnlinkConstraints(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -5171,7 +5171,7 @@ class TestUnlinkConstraints(TransactionCase):
 
 
 @tagged('wrong_related_path')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestWrongRelatedError(TransactionCase):
     def test_wrong_related_path(self):
         from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
@@ -5193,7 +5193,7 @@ class TestWrongRelatedError(TransactionCase):
             self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPrecomputeModel(TransactionCase):
 
     def test_precompute_consistency(self):
@@ -5252,7 +5252,7 @@ class TestPrecomputeModel(TransactionCase):
             self.registry.get_trigger_tree(Model._fields.values())
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPrecompute(TransactionCase):
 
     def test_precompute(self):
@@ -5462,7 +5462,7 @@ class TestPrecompute(TransactionCase):
             model.create({})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestModifiedPerformance(TransactionCase):
 
     @classmethod

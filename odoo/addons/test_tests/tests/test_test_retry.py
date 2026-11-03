@@ -36,7 +36,7 @@ class TestRetryCommon(BaseCase):
 
 
 @tagged('test_retry', 'test_retry_success')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetry(TestRetryCommon):
     """ Check some tests behaviour when ODOO_TEST_FAILURE_RETRIES is set"""
 
@@ -66,7 +66,7 @@ class TestRetryTracebackArg(TestRetryCommon):
 
 
 @tagged('-standard', 'test_retry', 'test_retry_failures')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetryFailures(TestRetryCommon):
     def test_retry_failure_assert(self):
         self.assertFalse(1 == 1)
@@ -76,7 +76,7 @@ class TestRetryFailures(TestRetryCommon):
 
 
 @tagged('test_retry', 'test_retry_success')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetryRollbackedCursor(TestRetryCommon, TransactionCase):
     def test_broken_cursor(self):
         if self.is_soft_fail():
@@ -84,7 +84,7 @@ class TestRetryRollbackedCursor(TestRetryCommon, TransactionCase):
 
 
 @tagged('test_retry', 'test_retry_success')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetryCommitedCursor(TestRetryCommon, TransactionCase):
     def test_broken_cursor(self):
         if self.is_soft_fail():
@@ -92,7 +92,7 @@ class TestRetryCommitedCursor(TestRetryCommon, TransactionCase):
 
 
 @tagged('test_retry', 'test_retry_success')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetryRollbackedCursorError(TestRetryCommon, TransactionCase):
     def test_broken_cursor(self):
         if self.is_soft_fail():
@@ -101,7 +101,7 @@ class TestRetryRollbackedCursorError(TestRetryCommon, TransactionCase):
 
 
 @tagged('test_retry', 'test_retry_success')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetryCommitedCursorError(TestRetryCommon, TransactionCase):
     def test_broken_cursor(self):
         if self.is_soft_fail():
@@ -110,7 +110,7 @@ class TestRetryCommitedCursorError(TestRetryCommon, TransactionCase):
 
 
 @tagged('test_retry', 'test_retry_success')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetrySubtest(TestRetryCommon):
 
     def test_retry_subtest_success_one(self):
@@ -133,7 +133,7 @@ class TestRetrySubtestAll(TestRetryCommon):
 
 
 @tagged('-standard', 'test_retry', 'test_retry_failures')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetrySubtestFailures(TestRetryCommon):
 
     def test_retry_subtest_failure_one(self):
@@ -151,7 +151,7 @@ class TestRetrySubtestFailures(TestRetryCommon):
 
 
 @tagged('-standard', 'test_retry', 'test_retry_disable')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetry1Disable(TestRetryCommon):
 
     def test_retry_0_retry_success(self):
@@ -169,7 +169,7 @@ class TestRetry1Disable(TestRetryCommon):
 
 
 @tagged('-standard', 'test_retry', 'test_retry_disable')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRetry2Disable(TestRetryCommon):
 
     def test_retry_second_class_fails(self):

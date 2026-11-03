@@ -5,7 +5,7 @@ from odoo.tests import tagged, TransactionCase, Form
 from odoo.exceptions import UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class test_res_lang(TransactionCase):
 
     def test_00_intersperse(self):

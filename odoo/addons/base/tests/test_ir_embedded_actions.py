@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
 
     @classmethod

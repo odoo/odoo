@@ -3,7 +3,7 @@
 from odoo.tests import tagged, common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class test_inherits(common.TransactionCase):
 
     def test_ir_model_data_inherits_again(self):

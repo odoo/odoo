@@ -33,7 +33,7 @@ def drop_sequence(code):
         seq.unlink()
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrSequenceStandard(BaseCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
 
@@ -72,7 +72,7 @@ class TestIrSequenceStandard(BaseCase):
         drop_sequence('test_sequence_type')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrSequenceNoGap(BaseCase):
     """ Copy of the previous tests for a 'No gap' sequence. """
 
@@ -112,7 +112,7 @@ class TestIrSequenceNoGap(BaseCase):
         drop_sequence('test_sequence_type_2')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrSequenceChangeImplementation(BaseCase):
     """ Create sequence objects and change their ``implementation`` field. """
 
@@ -150,7 +150,7 @@ class TestIrSequenceChangeImplementation(BaseCase):
         drop_sequence('test_sequence_type_4')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrSequenceGenerate(BaseCase):
     """ Create sequence objects and generate some values. """
 
@@ -256,7 +256,7 @@ class TestIrSequenceGenerate(BaseCase):
             env['ir.sequence'].search([('id', 'not in', cls._sequence_ids)]).unlink()
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrSequenceInit(common.TransactionCase):
 
     def test_00_read_next_sequence(self):

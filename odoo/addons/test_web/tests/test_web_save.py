@@ -3,7 +3,7 @@ from odoo.tests.common import tagged, TransactionCase
 from odoo.tools import BinaryBytes
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestWebSave(TransactionCase):
     def test_web_save_create(self):
         ''' Test the web_save method on a new record. '''

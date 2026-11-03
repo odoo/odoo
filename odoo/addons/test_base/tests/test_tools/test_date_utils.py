@@ -24,7 +24,7 @@ from odoo.tools.date_utils import (
 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestDateUtils(TransactionCase):
 
     @freeze_time('2024-05-01 14:00:00')
@@ -261,7 +261,7 @@ class TestDateUtils(TransactionCase):
                     self.assertEqual(len(set(weeknumbers)), 1, weeknumbers)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestDateRangeFunction(BaseCase):
     """ Test on date_range generator. """
 

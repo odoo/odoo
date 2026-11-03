@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.addons.uom.tests.common import UomCommon
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestUom(UomCommon):
 
     _test_user_groups = (

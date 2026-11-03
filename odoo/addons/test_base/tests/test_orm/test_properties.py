@@ -116,7 +116,7 @@ class TestPropertiesMixin(TransactionCase):
         return field._list_to_dict(read_value)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class PropertiesCase(TestPropertiesMixin):
 
     @mute_logger('odoo.sql_db')

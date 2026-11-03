@@ -357,7 +357,7 @@ class TestRealCursor(BaseCase):
             self.assertTrue(cr._cnx.readonly)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestHTTPCursor(HttpCase):
     def test_cursor_keeps_readwriteness(self):
         for has_db_replica in (True, False):
@@ -410,7 +410,7 @@ class TestHTTPCursor(HttpCase):
             self.assertEqual(readonly, False, 'Call to write are expecte to be read write')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestTestCursor(common.TransactionCase):
     def setUp(self):
         super().setUp()
@@ -568,7 +568,7 @@ class TestTestCursor(common.TransactionCase):
             config['db_port'] = origin_db_port
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCursorHooks(common.TransactionCase):
     def setUp(self):
         super().setUp()
@@ -625,7 +625,7 @@ class TestCursorHooks(common.TransactionCase):
         self.assertEqual(self.log, ['preR', 'postR'])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):
     """Check savepoint cases handle commit hooks properly."""
     @staticmethod

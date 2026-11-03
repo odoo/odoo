@@ -427,7 +427,7 @@ class TestDomainComplement(TransactionExpressionCase):
             self._search(Model, [('parent_id', '>=', 'Par')])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestDomainOptimize(TransactionCase):
     number_domain = Domain('numeric', '>', 5)
 

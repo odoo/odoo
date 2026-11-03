@@ -5,7 +5,7 @@ from odoo.tests.common import BaseCase, TransactionCase, tagged
 from odoo.tools import SQL
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class QueryTestCase(BaseCase):
 
     def test_basic_query(self):
@@ -81,7 +81,7 @@ class QueryTestCase(BaseCase):
         self.assertIsNone(query._ids, "adding where clause resets the ids")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestQuery(TransactionCase):
     def test_auto(self):
         model = self.env['test_orm.partner.category']

@@ -11,7 +11,7 @@ from odoo.tests.common import tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRecordCache(TransactionCaseWithUserDemo):
 
     def test_cache(self):

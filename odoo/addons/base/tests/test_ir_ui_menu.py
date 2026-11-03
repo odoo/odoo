@@ -4,7 +4,7 @@
 from odoo.tests.common import tagged, TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestMenu(TransactionCase):
 
     def test_00_menu_deletion(self):

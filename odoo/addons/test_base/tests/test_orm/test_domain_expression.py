@@ -49,7 +49,7 @@ class TransactionExpressionCase(TransactionCase):
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestExpression(TestOrmPartnerCommon, SavepointCaseWithUserDemo, TransactionExpressionCase):
 
     @classmethod
@@ -1764,7 +1764,7 @@ class TestBypassAccess(TransactionExpressionCase):
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestQueries(TransactionCase):
 
     def test_logic(self):
@@ -2061,7 +2061,7 @@ class TestQueries(TransactionCase):
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestMany2one(TransactionCase):
     def setUp(self):
         super().setUp()
@@ -2406,7 +2406,7 @@ class TestMany2one(TransactionCase):
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestOne2many(TransactionCase):
     def setUp(self):
         super().setUp()
@@ -2650,7 +2650,7 @@ class TestOne2many(TransactionCase):
 
 
 @tagged('res_partner')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestMany2many(TransactionCase):
     def setUp(self):
         super().setUp()
@@ -2859,7 +2859,7 @@ class TestMany2many(TransactionCase):
             self.Partner.search([('category_id', '=', False)], order='id')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestAnyfy(TransactionCase):
     def _test_combine_anies(self, domain, expected):
         model = self.env['test_orm.partner']

@@ -11,7 +11,7 @@ from odoo.tools.func import (
 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFrozendict(BaseCase):
     def test_frozendict_immutable(self):
         """ Ensure that a frozendict is immutable. """
@@ -54,7 +54,7 @@ class TestFrozendict(BaseCase):
         }))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestLazy(BaseCase):
     def test_lazy_compare(self):
         """ Ensure that a lazy can be compared with an other lazy. """

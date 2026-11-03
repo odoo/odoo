@@ -27,7 +27,7 @@ from odoo.addons.test_http.utils import (
 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestDevice(TestHttpBase):
 
     @classmethod

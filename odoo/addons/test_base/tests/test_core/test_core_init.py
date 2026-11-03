@@ -9,7 +9,7 @@ from odoo.tests import BaseCase, tagged
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestInit(BaseCase):
 
     @classmethod

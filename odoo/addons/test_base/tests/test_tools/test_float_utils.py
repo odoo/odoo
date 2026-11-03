@@ -14,7 +14,7 @@ from odoo.tools import (
 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFloatPrecision(TransactionCase):
     """ Tests on float precision. """
 

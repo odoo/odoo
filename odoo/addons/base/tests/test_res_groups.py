@@ -5,7 +5,7 @@ from odoo import Command
 from odoo.tests import tagged, TransactionCase, Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestGroups(TransactionCase):
 
     def test_res_groups_fullname_search(self):

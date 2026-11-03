@@ -36,7 +36,7 @@ from odoo.addons.base.tests import mail_examples
 
 
 @tagged('mail_sanitize')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSanitizer(BaseCase):
     """ Test the html sanitizer that filters html to remove unwanted attributes """
 
@@ -420,7 +420,7 @@ class TestSanitizer(BaseCase):
 
 
 @tagged('mail_sanitize')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestHtmlTools(BaseCase):
     """ Test some of our generic utility functions about html """
 
@@ -650,7 +650,7 @@ class TestHtmlTools(BaseCase):
 
 
 @tagged('mail_tools')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
 
@@ -1033,7 +1033,7 @@ class TestEmailTools(BaseCase):
                 )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestMailTools(BaseCase):
     """ Test mail utility methods. """
 

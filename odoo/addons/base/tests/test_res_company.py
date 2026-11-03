@@ -7,7 +7,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests import Command, TransactionCase, tagged, Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCompany(TransactionCase):
 
     def test_check_active(self):

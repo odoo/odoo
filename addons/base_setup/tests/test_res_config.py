@@ -9,7 +9,7 @@ def just_raise(*args):
     raise Exception("We should not be here.")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestResConfig(TransactionCase):
 
     def setUp(self):

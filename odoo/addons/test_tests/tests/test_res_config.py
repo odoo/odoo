@@ -4,7 +4,7 @@ from unittest.mock import patch
 from odoo.tests.common import tagged, TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestResConfig(TransactionCase):
 
     def test_00_add_parameter_with_default_value(self):

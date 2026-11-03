@@ -7,7 +7,7 @@ from odoo import Command
 from odoo.tests import tagged, common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestSessionInfo(common.HttpCase):
     @classmethod
     def setUpClass(cls):

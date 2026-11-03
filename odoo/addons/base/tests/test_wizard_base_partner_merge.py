@@ -3,7 +3,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo import Command
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestMergePartner(TransactionCase):
 
     def setUp(self):

@@ -4,7 +4,7 @@ from odoo import Command
 from odoo.tests.common import tagged, TransactionCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestResCurrency(TransactionCase):
     def test_currency_cache(self):
         currencyA, currencyB = self.env['res.currency'].create([{

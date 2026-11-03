@@ -9,7 +9,7 @@ from odoo.tools import mute_logger, sql
 from odoo import Command
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestXMLID(TransactionCase):
     def get_data(self, xml_id):
         """ Return the 'ir.model.data' record corresponding to ``xml_id``. """
@@ -379,7 +379,7 @@ class TestIrModelEdition(TransactionCase):
         self.assertEqual(len(fnames), len(set(fnames)), "registry.field_setup_dependents contains duplicates")
 
 @tagged('test_eval_context')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestEvalContext(TransactionCase):
 
     def test_module_usage(self):
@@ -421,7 +421,7 @@ class TestIrModelFieldsTranslation(HttpCase):
         self.start_tour("/odoo", 'ir_model_fields_translation_fr_tour2', login="admin")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrModelInherit(TransactionCase):
     def test_inherit(self):
         imi = self.env["ir.model.inherit"].search([("model_id.model", "=", "ir.actions.server")])

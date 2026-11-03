@@ -8,7 +8,7 @@ from odoo.tests.common import BaseCase, tagged
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestGraph(BaseCase):
     @mute_logger('odoo.modules.module_graph')
     def _test_graph_order(

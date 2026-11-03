@@ -3,7 +3,7 @@ from unittest.mock import patch
 from odoo.tests.common import TransactionCase, tagged
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestTransactionEnvs(TransactionCase):
     def test_transation_envs_weakrefs(self):
         transaction = self.env.transaction

@@ -5,7 +5,7 @@ from odoo.exceptions import AccessError
 from odoo.tests.common import tagged, TransactionCase, new_test_user
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestUnityRead(TransactionCase):
 
     @classmethod
