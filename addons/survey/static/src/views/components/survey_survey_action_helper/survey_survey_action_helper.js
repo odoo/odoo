@@ -1,3 +1,4 @@
+import { ConnectionLostError } from '@web/core/network/rpc';
 import { useService } from '@web/core/utils/hooks';
 import { Component, onWillStart } from '@odoo/owl';
 
@@ -9,11 +10,20 @@ export class SurveySurveyActionHelper extends Component {
         this.action = useService('action');
 
         onWillStart(async () => {
-            this.surveyTemplateData = await this.orm.call(
-                'survey.survey',
-                'get_survey_templates_data',
-                []
-            );
+            try {
+                this.surveyTemplateData = await this.orm.call(
+                    'survey.survey',
+                    'get_survey_templates_data',
+                    []
+                );
+            } catch (error) {
+                // Offline (e.g. the offline clickbot) or server unreachable:
+                // keep the "No Survey Found" helper usable without templates.
+                if (!(error instanceof ConnectionLostError)) {
+                    throw error;
+                }
+                this.surveyTemplateData = {};
+            }
         });
     }
 
