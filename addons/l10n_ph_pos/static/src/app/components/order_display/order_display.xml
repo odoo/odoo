@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_ph_pos.OrderDisplay" t-inherit="point_of_sale.OrderDisplay" t-inherit-mode="extension">
+        <xpath expr="//div[@id='order-widget-taxes']/.." position="before">
+            <t t-set="l10nPhDiscountBreakdown" t-value="this.l10nPhGetDiscountBreakdown()"/>
+            <div t-if="l10nPhDiscountBreakdown.length" class="o_l10n_ph_discount_privileges_summary d-flex flex-column gap-1">
+                <div t-foreach="l10nPhDiscountBreakdown" t-as="row" t-key="row.privilege.id"
+                        class="subentry d-flex justify-content-between w-100 fs-6 text-muted">
+                    <span t-out="row.privilege.name"/>
+                    <span t-out="this.formatCurrency(row.amount)"/>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
