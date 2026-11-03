@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="tax_report_is" model="account.report">
+        <field name="name">VAT Return (RSK 10.01)</field>
+        <field name="name@is">Virðisaukaskattsskýrsla (RSK 10.01)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.is"/>
+        <field name="allow_foreign_vat" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_is_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="name@is">Fjárhæð</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_is_line_a" model="account.report.line">
+                <field name="name">A. Taxable turnover excl. VAT, 24% rate</field>
+                <field name="name@is">A. Skattskyld velta án VSK í 24% þrepi</field>
+                <field name="code">IS_A</field>
+                <field name="expression_ids">
+                    <record id="tax_report_is_line_a_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-A</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_is_line_b" model="account.report.line">
+                <field name="name">B. Taxable turnover excl. VAT, 11% rate</field>
+                <field name="name@is">B. Skattskyld velta án VSK í 11% þrepi</field>
+                <field name="code">IS_B</field>
+                <field name="expression_ids">
+                    <record id="tax_report_is_line_b_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-B</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_is_line_c" model="account.report.line">
+                <field name="name">C. Zero-rated turnover, e.g. exports (Art. 12)</field>
+                <field name="name@is">C. Undanþegin velta, svo sem útflutningur (12. gr.)</field>
+                <field name="code">IS_C</field>
+                <field name="expression_ids">
+                    <record id="tax_report_is_line_c_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">-C</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_is_line_d" model="account.report.line">
+                <field name="name">D. Output VAT</field>
+                <field name="name@is">D. Útskattur</field>
+                <field name="code">IS_D</field>
+                <field name="aggregation_formula">IS_D24.balance + IS_D11.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_is_line_d24" model="account.report.line">
+                        <field name="name">Output VAT 24%</field>
+                        <field name="name@is">Útskattur 24%</field>
+                        <field name="code">IS_D24</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_is_line_d24_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-D24</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_is_line_d11" model="account.report.line">
+                        <field name="name">Output VAT 11%</field>
+                        <field name="name@is">Útskattur 11%</field>
+                        <field name="code">IS_D11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_is_line_d11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-D11</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_is_line_e" model="account.report.line">
+                <field name="name">E. Input VAT</field>
+                <field name="name@is">E. Innskattur</field>
+                <field name="code">IS_E</field>
+                <field name="aggregation_formula">IS_E24.balance + IS_E11.balance</field>
+                <field name="children_ids">
+                    <record id="tax_report_is_line_e24" model="account.report.line">
+                        <field name="name">Input VAT 24%</field>
+                        <field name="name@is">Innskattur 24%</field>
+                        <field name="code">IS_E24</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_is_line_e24_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">E24</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="tax_report_is_line_e11" model="account.report.line">
+                        <field name="name">Input VAT 11%</field>
+                        <field name="name@is">Innskattur 11%</field>
+                        <field name="code">IS_E11</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_is_line_e11_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">E11</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_is_line_f" model="account.report.line">
+                <field name="name">F. Net VAT payable or refundable (D - E)</field>
+                <field name="name@is">F. Álagning (D - E)</field>
+                <field name="code">IS_F</field>
+                <field name="aggregation_formula">IS_D.balance - IS_E.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>
