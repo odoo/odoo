@@ -309,4 +309,25 @@
         </div>
     </template>
 
+    <template id="payment.authorization_error">
+        <!-- Variables description:
+            - error_message: The reason of the error
+            - provider_form_route: The route to the payment provider's form view
+        -->
+        <t t-call="portal.frontend_layout">
+            <div class="wrap">
+                <div class="container">
+                    <h1>An error occurred</h1>
+                    <p>
+                        An error occurred while linking your account with Odoo.
+                    </p>
+                    <p><t t-out="error_message"/></p>
+                    <a t-att-href="provider_form_route" class="btn btn-primary mt-2">
+                        Back to the provider
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
 </odoo>
