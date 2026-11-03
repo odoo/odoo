@@ -30,7 +30,6 @@ export class CartPage extends Component {
         this.router = useService("router");
         this.ui = useService("ui");
         this.state = proxy({
-            orderNoteValue: "",
             skipComboSuggestion: false,
         });
 
@@ -119,7 +118,7 @@ export class CartPage extends Component {
     }
 
     get orderNote() {
-        return this.selfOrder?.currentOrder?.general_customer_note || this.state?.orderNoteValue;
+        return this.selfOrder.currentOrder.uiState.orderNote;
     }
 
     get lines() {
@@ -305,10 +304,12 @@ export class CartPage extends Component {
             placeholder: _t(
                 "Specify which utensils, napkins, straws, and condiments you want to be included or any special instructions that you want the restaurant to be aware of"
             ),
-            rows: 4,
+            rows: this.ui.isSmall ? 6 : 4,
+            maxLength: 150,
+            allowEmpty: true,
         });
         if (note !== undefined) {
-            this.state.orderNoteValue = note;
+            this.selfOrder.currentOrder.uiState.orderNote = note;
         }
     }
 
@@ -524,10 +525,7 @@ export class CartPage extends Component {
         } else if (this.selfOrder.currentTable) {
             this.selectTableDependingOnMode(this.selfOrder.currentTable);
         }
-        const noteText = this.state.orderNoteValue.trim();
-        if (noteText) {
-            this.selfOrder.currentOrder.general_customer_note = noteText;
-        }
+        this.selfOrder.currentOrder.general_customer_note = this.orderNote.trim();
         this.selfOrder.rpcLoading = true;
         await this.selfOrder.confirmOrder();
         this.selfOrder.rpcLoading = false;

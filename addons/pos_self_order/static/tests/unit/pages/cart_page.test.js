@@ -123,6 +123,39 @@ test("cart page is not affected by mobile dialog navigation", async () => {
     expect(".product-cart-item").toBeDisplayed();
 });
 
+test("discarding the order note popup keeps the current note", async () => {
+    const store = await setupSelfPosEnv("mobile", "table", "meal");
+    await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+
+    await contains(".order-note").click();
+    await contains(".modal textarea").fill("No straws");
+    await contains(".modal-footer button:contains(Apply)").click();
+    expect(comp.orderNote).toBe("No straws");
+
+    await contains(".order-note").click();
+    expect(".modal textarea").toHaveValue("No straws");
+    await contains(".modal textarea").edit("Something else");
+    await contains(".modal-footer button:contains(Discard)").click();
+    expect(comp.orderNote).toBe("No straws");
+});
+
+test("order note is kept when coming back to the cart page", async () => {
+    const store = await setupSelfPosEnv("mobile", "table", "meal");
+    const order = await getFilledSelfOrder(store);
+    await mountWithCleanup(CartPage, {});
+
+    await contains(".order-note").click();
+    await contains(".modal textarea").fill("No straws");
+    await contains(".modal-footer button:contains(Apply)").click();
+    // Not written on the order before it is confirmed
+    expect(order.general_customer_note).toBe("");
+
+    // A new cart page, as when navigating back to it
+    const cartPage = await mountWithCleanup(CartPage, {});
+    expect(cartPage.orderNote).toBe("No straws");
+});
+
 test("totalPriceAndTax", async () => {
     const store = await setupSelfPosEnv("mobile", "table", "meal");
     await getFilledSelfOrder(store);
