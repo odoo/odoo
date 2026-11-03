@@ -11,7 +11,7 @@ class HrHeadcount(models.Model):
 
     name = fields.Char(string='Name', compute='_compute_name', store=True)
     is_name_custom = fields.Boolean(string='Custom Name', compute="_compute_is_name_custom")
-    company_id = fields.Many2one('res.company', default=lambda self: self.env.company.id)
+    company_id = fields.Many2one('res.company', required=True, default=lambda self: self.env.company.id)
     line_ids = fields.One2many('hr.headcount.line', 'headcount_id')
     employee_count = fields.Integer(string='Employee Count')
     date_from = fields.Date(string='From', default=fields.Date.context_today, required=True)
