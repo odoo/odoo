@@ -227,6 +227,45 @@ class TestPurchaseStockReports(TestReportsCommon):
         )
         self.assertEqual(round(report[0]['days_to_arrival']), 10)
 
+    def test_purchase_report_effective_days_to_arrival_location_usage(self):
+        """ Test that receipts stop counting as arrivals once their
+        destination location becomes a supplier location.
+        """
+        receipt_location = self.env['stock.location'].create({
+            'name': 'Receipt Location',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        picking_type = self.picking_type_in.copy({
+            'default_location_dest_id': receipt_location.id,
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': picking_type.id,
+            'date_order': datetime.now() - timedelta(days=10),
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'product_qty': 1,
+                'date_planned': datetime.now() + timedelta(days=5),
+            })],
+        })
+        po.button_confirm()
+        po.picking_ids.button_validate()
+        self.assertTrue(po.effective_date)
+
+        # empty the location, otherwise its usage cannot be changed
+        self.env['stock.quant']._update_available_quantity(self.product, receipt_location, -1)
+        receipt_location.usage = 'supplier'
+        self.assertFalse(po.effective_date)
+
+        po.flush_model()
+        report = self.env['purchase.report'].read_group(
+            [('order_id', '=', po.id)],
+            ['order_id', 'days_to_arrival'],
+            ['order_id'],
+        )
+        self.assertEqual(round(report[0]['days_to_arrival']), 15)
+
     def test_vendor_delay_report_with_uom(self):
         """
         PO 12 units x P
