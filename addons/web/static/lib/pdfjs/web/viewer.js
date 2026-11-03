@@ -576,7 +576,8 @@ const defaultOptions = new Map([["allowedGlobalEvents", {
   value: "",
   kind: OptionKind.VIEWER + OptionKind.PREFERENCE
 }], ["annotationEditorMode", {
-  value: 0,
+  // Odoo
+  value: -1,
   kind: OptionKind.VIEWER + OptionKind.PREFERENCE
 }], ["annotationMode", {
   value: 2,
@@ -591,7 +592,7 @@ const defaultOptions = new Map([["allowedGlobalEvents", {
   value: 0,
   kind: OptionKind.VIEWER + OptionKind.PREFERENCE
 }], ["debuggerSrc", {
-  value: "./debugger.mjs",
+  value: "./debugger.js",
   kind: OptionKind.VIEWER
 }], ...[["defaultUrl", {
   value: "compressed.tracemonkey-pldi-09.pdf",
@@ -654,7 +655,8 @@ const defaultOptions = new Map([["allowedGlobalEvents", {
   value: true,
   kind: OptionKind.VIEWER + OptionKind.PREFERENCE
 }], ["enableScripting", {
-  value: true,
+  // Odoo: don't support scripting (#115302)
+  value: false,
   kind: OptionKind.VIEWER + OptionKind.PREFERENCE
 }], ["enableSelectionRendering", {
   value: true,
@@ -675,7 +677,8 @@ const defaultOptions = new Map([["allowedGlobalEvents", {
   value: "noopener noreferrer nofollow",
   kind: OptionKind.VIEWER
 }], ["externalLinkTarget", {
-  value: 0,
+  // ODOO: open links in new tabs to keep odoo document (#84594)
+  value: 2,
   kind: OptionKind.VIEWER + OptionKind.PREFERENCE
 }], ...[], ["highlightEditorColors", {
   value: "yellow=#FFFF98,green=#53FFBC,blue=#80EBFF,pink=#FFCBE6,red=#FF4F5F," + "yellow_HCM=#FFFFCC,green_HCM=#53FFBC,blue_HCM=#80EBFF,pink_HCM=#F6B8FF,red_HCM=#C50043",
@@ -717,7 +720,7 @@ const defaultOptions = new Map([["allowedGlobalEvents", {
   value: 150,
   kind: OptionKind.VIEWER
 }], ...[], ...[["sandboxBundleSrc", {
-  value: "../build/pdf.sandbox.mjs",
+  value: "../build/pdf.sandbox.js",
   kind: OptionKind.VIEWER
 }]], ["sidebarViewOnLoad", {
   value: -1,
@@ -732,7 +735,8 @@ const defaultOptions = new Map([["allowedGlobalEvents", {
   value: 1,
   kind: OptionKind.VIEWER + OptionKind.PREFERENCE
 }], ["viewerCssTheme", {
-  value: 0,
+  // Odoo
+  value: document.cookie.includes("color_scheme=dark") ? 2 : 1,
   kind: OptionKind.VIEWER + OptionKind.PREFERENCE
 }], ["viewOnLoad", {
   value: 0,
@@ -802,13 +806,13 @@ const defaultOptions = new Map([["allowedGlobalEvents", {
   value: [],
   kind: OptionKind.WORKER
 }], ["rendererSrc", {
-  value: "../build/pdf.renderer.mjs",
+  value: "../build/pdf.renderer.js",
   kind: OptionKind.WORKER
 }], ["workerPort", {
   value: null,
   kind: OptionKind.WORKER
 }], ["workerSrc", {
-  value: "../build/pdf.worker.mjs",
+  value: "../build/pdf.worker.js",
   kind: OptionKind.WORKER
 }]]);
 class AppOptions {
@@ -8886,6 +8890,8 @@ class PDFPrintService {
     this.pageStyleSheet = new CSSStyleSheet();
     this.pageStyleSheet.replaceSync(`@page { size: ${width}pt ${height}pt;}`);
     document.adoptedStyleSheets.push(this.pageStyleSheet);
+    // ODOO PATCH PRINT PREVIEW MOBILE
+    this.hasFinishPrint = null;
   }
   destroy() {
     if (activeService !== this) {
@@ -8956,16 +8962,24 @@ class PDFPrintService {
   }
   performPrint() {
     this.throwIfInactive();
-    return new Promise(resolve => {
-      setTimeout(() => {
-        if (!this.active) {
-          resolve();
-          return;
-        }
-        print.call(window);
+    // ODOO PATCH PRINT PREVIEW MOBILE
+    const hasFinishPrintPromise = new Promise((resolve) => {
+      if ("afterprint" in window) {
+        this.hasFinishPrint = resolve;
+      } else {
         setTimeout(resolve, 20);
-      }, 0);
+      }
     });
+    setTimeout(() => {
+      if (!this.active) {
+        // ODOO PATCH PRINT PREVIEW MOBILE
+        this.hasFinishPrint();
+        return;
+      }
+      print.call(window);
+    }, 0);
+    // ODOO PATCH PRINT PREVIEW MOBILE
+    return hasFinishPrintPromise;
   }
   get active() {
     return this === activeService;
@@ -8997,7 +9011,15 @@ window.print = function () {
       });
     } else {
       const activeServiceOnEntry = activeService;
-      activeService.renderPages().then(() => activeServiceOnEntry.performPrint()).catch(() => {}).then(() => {
+      // ODOO: FIX MOBILE PRINT PREVIEW
+      const timeBeforeRendering = new Date().getTime();
+      activeService.renderPages().then(function () {
+        // ODOO: FIX MOBILE PRINT PREVIEW
+        return Promise.all([
+          activeServiceOnEntry.performPrint(),
+          new Promise(resolve => setTimeout(resolve, 1000 + new Date().getTime() - timeBeforeRendering))
+        ]);
+      }).catch(function () {}).then(function () {
         if (activeServiceOnEntry.active) {
           abort();
         }
@@ -9038,6 +9060,11 @@ window.addEventListener("keydown", function (event) {
 }, true);
 if ("onbeforeprint" in window) {
   const stopPropagationIfNeeded = function (event) {
+    // ODOO PATCH PRINT PREVIEW MOBILE
+    if (activeService?.hasFinishPrint && event.type === "afterprint") {
+      activeService.hasFinishPrint();
+      return;
+    }
     if (event.detail !== "custom") {
       event.stopImmediatePropagation();
     }
@@ -19919,7 +19946,8 @@ const PDFViewerApplication = {
     });
     pagesPromise.then(() => {
       this._unblockDocumentLoadEvent();
-      this._initializeAutoPrint(pdfDocument, openActionPromise);
+      // Odoo: don't support scripting (#115302)
+      // this._initializeAutoPrint(pdfDocument, openActionPromise);
     }, reason => {
       this._documentError("pdfjs-loading-error", {
         message: reason.message

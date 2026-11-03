@@ -27,18 +27,19 @@ See https://github.com/adobe-type-tools/cmap-resources
     <meta name="google" content="notranslate" />
     <title>PDF.js viewer</title>
 
+  <!-- Odoo: allow inline styles, Odoo injects styles in the viewer (hidePDFJSButtons, sign items, ...) -->
   <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self'; img-src 'self' blob: data:; media-src blob:; font-src 'self' data:; connect-src * blob: data:; base-uri 'none'; form-action 'none';"
+      content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src blob:; font-src 'self' data:; connect-src * blob: data:; base-uri 'none'; form-action 'none';"
     />
 
 <!-- This snippet is used in production (included from viewer.html) -->
 <link rel="resource" type="application/l10n" href="locale/locale.json" />
-<script src="../build/pdf.mjs" type="module"></script>
+<script src="../build/pdf.js" type="module"></script>
 
     <link rel="stylesheet" href="viewer.css" />
 
-  <script src="viewer.mjs" type="module"></script>
+  <script src="viewer.js" type="module"></script>
   </head>
 
   <body tabindex="0">
