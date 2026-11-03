@@ -83,13 +83,18 @@ class L10nRoEdiDocument(models.Model):
         :param move_type: ``move_type`` field from ``account.move`` object, used for the request parameter
         :return: Result dictionary -> {'error': <str>} | {'key_loading': <str>}
         """
+        params = {'standard': 'UBL' if move_type == 'out_invoice' else 'CN',
+                  'cif': company.vat.replace('RO', '')}
+        if self.env.context.get('is_extern'):
+            # The buyer is outside Romania (no CUI or NIF): without this flag,
+            # the SPV rejects the invoice as the buyer's CUI can't be identified.
+            params['extern'] = 'DA'
         result = make_efactura_request(
             session=requests,
             company=company,
             endpoint='upload' if self.env.context.get('is_b2b') else 'uploadb2c',  # TODO: change the context value into a method parameter in master 
             method='POST',
-            params={'standard': 'UBL' if move_type == 'out_invoice' else 'CN',
-                    'cif': company.vat.replace('RO', '')},
+            params=params,
             data=xml_data,
         )
         if 'error' in result:
