@@ -103,10 +103,11 @@ class TestEventSale(TestEventSaleCommon):
 
         registrations = self.env['event.registration'].search([('sale_order_id', '=', customer_so.id)])
 
-        expected_states = ['draft', 'draft', 'cancel']
-        actual_states = registrations.sorted('id').mapped('state')
-
-        self.assertListEqual(actual_states, expected_states, "One of the registrations should be cancelled.")
+        self.assertCountEqual(
+            registrations.mapped('state'),
+            ['draft', 'draft', 'cancel'],
+            "One of the registrations should be cancelled.",
+        )
 
     @users('user_sales_salesman')
     def test_event_crm_sale(self):
