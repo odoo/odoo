@@ -4,37 +4,28 @@
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import ValidationError
 
-from dateutil.relativedelta import relativedelta
-
 
 class ProjectTaskRecurrence(models.Model):
     _name = 'project.task.recurrence'
+    _inherit = ['mail.recurrence.rule.mixin']
     _description = 'Task Recurrence'
 
     task_ids = fields.One2many('project.task', 'recurrence_id', copy=False)
 
-    repeat_interval = fields.Integer(string='Repeat Every', default=1)
-    repeat_unit = fields.Selection([
-        ('day', 'Days'),
-        ('week', 'Weeks'),
-        ('month', 'Months'),
-        ('year', 'Years'),
-    ], default='week', export_string_translation=False)
-    repeat_type = fields.Selection([
-        ('forever', 'Forever'),
-        ('until', 'Until'),
-    ], default="forever", string="Until")
-    repeat_until = fields.Date(string="End Date")
+    def _inverse_rrule(self):
+        # The rule is only built from the recurrence fields, never set from an rrule string.
+        # Parsing it back would turn 'forever' into 'count' (forever is serialized with a count limit).
+        pass
 
-    @api.constrains('repeat_interval')
+    @api.constrains('interval')
     def _check_repeat_interval(self):
-        if self.filtered(lambda t: t.repeat_interval <= 0):
+        if self.filtered(lambda t: t.interval <= 0):
             raise ValidationError(_('The interval should be greater than 0'))
 
-    @api.constrains('repeat_type', 'repeat_until')
+    @api.constrains('end_type', 'until')
     def _check_repeat_until_date(self):
         today = fields.Date.context_today(self)
-        if self.filtered(lambda t: t.repeat_type == 'until' and t.repeat_until < today):
+        if self.filtered(lambda t: t.end_type == 'end_date' and t.until < today):
             raise ValidationError(_('The end date should be in the future'))
 
     @api.model
@@ -59,23 +50,35 @@ class ProjectTaskRecurrence(models.Model):
             )
         }
 
-    def _get_recurrence_delta(self):
-        return relativedelta(**{
-            f"{self.repeat_unit}s": self.repeat_interval
-        })
+    def _get_next_date(self, current_date):
+        self.ensure_one()
+        rule = self._get_rrule(dtstart=current_date)
+        return rule.after(current_date)
+
+    def _get_postpone_delta(self, task, fields_to_postpone):
+        """ Return how much the dates of the next occurrence of `task` must be postponed:
+        the gap between its deadline (or first date to postpone) and the next date of the
+        recurrence, so that all of its dates, and those of its sub-tasks, keep the same gaps.
+        """
+        self.ensure_one()
+        anchor = task.date_deadline or next((value for value in fields_to_postpone.values() if value), None)
+        next_date = anchor and self._get_next_date(anchor)
+        return next_date and next_date - anchor
 
     @api.model
     def _create_next_occurrences(self, occurrences_from):
         tasks_copy = self.env['project.task']
 
+        count_recurrences = occurrences_from.recurrence_id.sudo().filtered(lambda rec: rec.end_type == 'count')
+        task_count_per_recurrence = dict(self.env['project.task'].sudo()._read_group(
+            [('recurrence_id', 'in', count_recurrences.ids)], ['recurrence_id'], ['__count'],
+        )) if count_recurrences else {}
+
         def should_create_occurrence(task):
             rec = task.recurrence_id.sudo()
-            return (
-                rec.repeat_type != 'until' or
-                not task.date_deadline or
-                rec.repeat_until and
-                (task.date_deadline + rec._get_recurrence_delta()).date() <= rec.repeat_until
-            )
+            if rec.end_type == 'count' and task_count_per_recurrence.get(rec, 0) >= rec.count:
+                return False
+            return not task.date_deadline or bool(rec._get_next_date(task.date_deadline))
 
         occurrences_from = occurrences_from.filtered(should_create_occurrence)
 
@@ -88,7 +91,7 @@ class ProjectTaskRecurrence(models.Model):
         return tasks_copy
 
     @api.model
-    def _create_next_occurrences_values(self, recurrence_by_task):
+    def _create_next_occurrences_values(self, recurrence_by_task, postpone_delta_by_task=None):
         tasks = self.env['project.task'].concat(recurrence_by_task.keys())
         list_create_values = []
         list_copy_data = tasks.with_context(copy_project=True, active_test=False).sudo().copy_data()
@@ -103,17 +106,25 @@ class ProjectTaskRecurrence(models.Model):
         ):
             recurrence = recurrence_by_task[task]
             fields_to_postpone.pop('id', None)
+            # sub-tasks are postponed as much as their parent task
+            if postpone_delta_by_task and postpone_delta_by_task.get(task):
+                postpone_delta = postpone_delta_by_task[task]
+            else:
+                postpone_delta = recurrence._get_postpone_delta(task, fields_to_postpone)
             create_values = {
                 'priority': '0',
                 'stage_id': task.sudo().project_id.type_ids[0].id if task.sudo().project_id.type_ids else task.stage_id.id,
-                'child_ids': [Command.create(vals) for vals in self._create_next_occurrences_values({child: recurrence for child in task.child_ids})]
+                'child_ids': [Command.create(vals) for vals in self._create_next_occurrences_values(
+                    {child: recurrence for child in task.child_ids},
+                    {child: postpone_delta for child in task.child_ids},
+                )],
             }
             create_values.update({
                 field: value[0] if isinstance(value, tuple) else value
                 for field, value in fields_to_copy.items()
             })
             create_values.update({
-                field: value and value + recurrence._get_recurrence_delta()
+                field: value + postpone_delta if value and postpone_delta else value
                 for field, value in fields_to_postpone.items()
             })
             copy_data.update(create_values)

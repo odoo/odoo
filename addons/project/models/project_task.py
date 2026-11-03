@@ -7,13 +7,14 @@ from datetime import timedelta, datetime, time, UTC
 from random import shuffle
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
-from odoo.fields import Command, Date, Domain
+from odoo.fields import Command, Domain
 from odoo.addons.rating.models import rating_data
 from odoo.addons.html_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_list, SQL, LazyTranslate
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.models.recurrence_utils import get_recurrence_values_from_date
 
 _lt = LazyTranslate(__name__)
 
@@ -46,10 +47,6 @@ PROJECT_TASK_READABLE_FIELDS = {
     'dependent_tasks_count',
     'depend_on_ids',
     'depend_on_count',
-    'repeat_interval',
-    'repeat_unit',
-    'repeat_type',
-    'repeat_until',
     'recurrence_id',
     'recurring_count',
     'duration_tracking',
@@ -97,6 +94,7 @@ class ProjectTask(models.Model):
         'rating.mixin',
         'mail.tracking.duration.mixin',
         'html.field.history.mixin',
+        'mail.recurrence.instance.mixin',
     ]
     _mail_post_access = 'read'
     _mail_thread_customer = True
@@ -297,20 +295,7 @@ class ProjectTask(models.Model):
     allow_recurring_tasks = fields.Boolean(compute='_compute_allow_recurring_tasks', compute_sudo=True, export_string_translation=False)
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
-    recurrence_id = fields.Many2one('project.task.recurrence', copy=False, index='btree_not_null')
-    repeat_interval = fields.Integer(string='Repeat Every', default=1, compute='_compute_repeat', compute_sudo=True, readonly=False)
-    repeat_unit = fields.Selection([
-        ('day', 'Days'),
-        ('week', 'Weeks'),
-        ('month', 'Months'),
-        ('year', 'Years'),
-    ], default='week', compute='_compute_repeat', compute_sudo=True, readonly=False)
-    repeat_type = fields.Selection([
-        ('forever', 'Forever'),
-        ('until', 'Until'),
-    ], default="forever", string="Until", compute='_compute_repeat', compute_sudo=True, readonly=False)
-    repeat_until = fields.Date(string="End Date", compute='_compute_repeat', compute_sudo=True, readonly=False)
-
+    recurrence_id = fields.Many2one('project.task.recurrence', string="Recurrence Rule", copy=False, index='btree_not_null')
     # Quick creation shortcuts
     display_name = fields.Char(
         inverse='_inverse_display_name',
@@ -355,7 +340,7 @@ class ProjectTask(models.Model):
 
     @property
     def TASK_PORTAL_READABLE_FIELDS(self):
-        return PROJECT_TASK_READABLE_FIELDS
+        return PROJECT_TASK_READABLE_FIELDS | self._get_recurrence_ui_fields()
 
     @property
     def TASK_PORTAL_WRITABLE_FIELDS(self):
@@ -523,32 +508,34 @@ class ProjectTask(models.Model):
             raise ValidationError(_("Two tasks cannot depend on each other."))
 
     @api.model
-    def _get_recurrence_fields(self):
-        return [
-            'repeat_interval',
-            'repeat_unit',
-            'repeat_type',
-            'repeat_until',
-        ]
+    def _get_recurrence_rule_model(self):
+        return 'project.task.recurrence'
+
+    @api.model
+    def _get_recurrence_record_field_name(self):
+        return 'recurrence_id'
+
+    @api.model
+    def _get_is_recurring_field_name(self):
+        return 'recurring_task'
+
+    def _get_recurrence_defaults(self):
+        self.ensure_one()
+        return self._get_recurrence_defaults_from_deadline(self.date_deadline)
+
+    @api.model
+    def _get_recurrence_defaults_from_deadline(self, date_deadline):
+        """ Repeat on the weekday / day of month of the deadline, so that the next deadline
+        is the current one plus the interval, and end in a week by default. """
+        return {
+            **get_recurrence_values_from_date(fields.Datetime.to_datetime(date_deadline) or fields.Datetime.now()),
+            'until': fields.Date.context_today(self) + timedelta(days=7),
+        }
 
     @api.depends('project_id.allow_task_dependencies', 'is_template')
     def _compute_allow_task_dependencies(self):
         for task in self:
             task.allow_task_dependencies = task.project_id.allow_task_dependencies if task.project_id else task.is_template
-
-    @api.depends('recurring_task')
-    def _compute_repeat(self):
-        rec_fields = self._get_recurrence_fields()
-        defaults = self.default_get(rec_fields)
-        for task in self:
-            for f in rec_fields:
-                if task.recurrence_id:
-                    task[f] = task.recurrence_id.sudo()[f]
-                else:
-                    if task.recurring_task:
-                        task[f] = defaults.get(f)
-                    else:
-                        task[f] = False
 
     @api.depends('recurrence_id')
     def _compute_recurring_count(self):
@@ -1053,9 +1040,6 @@ class ProjectTask(models.Model):
         if 'state' in fields and vals.get('state') == '04_waiting_normal':
             vals['state'] = '01_in_progress'
 
-        if 'repeat_until' in fields:
-            vals['repeat_until'] = Date.context_today(self) + timedelta(days=7)
-
         if 'partner_id' in vals and not vals['partner_id']:
             # if the default_partner_id=False or no default_partner_id then we search the partner based on the project and parent
             project_id = vals.get('project_id')
@@ -1165,10 +1149,12 @@ class ProjectTask(models.Model):
     def _load_records_create(self, vals_list):
         for vals in vals_list:
             if vals.get('recurring_task'):
-                rec_fields = vals.keys() & self._get_recurrence_fields()
+                rec_fields = vals.keys() & self._get_recurrent_fields()
                 if not vals.get('recurrence_id') and not rec_fields:
-                    default_val = self.default_get(self._get_recurrence_fields())
-                    vals.update(**default_val)
+                    vals.update({
+                        **self.env['project.task.recurrence'].default_get(list(self._get_recurrent_fields() - {'rrule'})),
+                        **self._get_recurrence_defaults_from_deadline(vals.get('date_deadline')),
+                    })
             project_id = vals.get('project_id')
             if project_id:
                 self = self.with_context(default_project_id=project_id)
@@ -1246,9 +1232,12 @@ class ProjectTask(models.Model):
                 additional_vals.update(self_ctx.update_date_end(vals['stage_id']))
                 additional_vals['date_last_stage_update'] = fields.Datetime.now()
             # recurrence
-            rec_fields = vals.keys() & self_ctx._get_recurrence_fields()
+            rec_fields = vals.keys() & self_ctx._get_recurrent_fields()
             if rec_fields and vals.get('recurring_task') is True:
-                rec_values = {rec_field: vals[rec_field] for rec_field in rec_fields}
+                rec_values = {
+                    **self_ctx._get_recurrence_defaults_from_deadline(vals.get('date_deadline')),
+                    **{rec_field: vals[rec_field] for rec_field in rec_fields},
+                }
                 recurrence = self_ctx.env['project.task.recurrence'].create(rec_values)
                 vals['recurrence_id'] = recurrence.id
 
@@ -1357,14 +1346,14 @@ class ProjectTask(models.Model):
             task_ids_without_user_set = {task.id for task in self if not task.user_ids}
 
         # recurrence fields
-        rec_fields = vals.keys() & self._get_recurrence_fields()
+        rec_fields = vals.keys() & self._get_recurrent_fields()
         if rec_fields:
             rec_values = {rec_field: vals[rec_field] for rec_field in rec_fields}
             for task in self:
                 if task.recurrence_id:
                     task.recurrence_id.write(rec_values)
                 elif vals.get('recurring_task'):
-                    recurrence = self.env['project.task.recurrence'].create(rec_values)
+                    recurrence = task._create_recurrence_rule(**rec_values)
                     task.recurrence_id = recurrence.id
 
         if not vals.get('recurring_task', True) and self.recurrence_id:
@@ -2133,7 +2122,7 @@ class ProjectTask(models.Model):
         ]
         project_id = self.env.context.get('default_project_id')
         if project_id and not self.env['project.project'].browse(project_id).allow_recurring_tasks:
-            fields.extend(self._get_recurrence_fields() + ["recurrence_id", "recurring_task"])
+            fields.extend([*self._get_recurrent_fields(), "recurrence_id", "recurring_task"])
         return fields
 
     def action_create_from_template(self, values=None):
