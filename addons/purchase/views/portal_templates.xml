@@ -241,7 +241,7 @@
                                       </a>
                                       <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                   </div>
-                                  <span t-if="i.payment_state in ('paid', 'in_payment')" class="badge rounded-pill text-bg-success small"><i class="oi oi-fw" data-icon="check"/>Paid</span>
+                                  <span t-if="i.payment_state == 'paid' or (i.payment_state == 'in_payment' and i.currency_id.is_zero(i.amount_residual_after_payments))" class="badge rounded-pill text-bg-success small"><i class="oi oi-fw" data-icon="check"/>Paid</span>
                                   <span t-elif="i.payment_state == 'reversed'" class="badge rounded-pill text-bg-success small"><i class="oi oi-fw" data-icon="check"/>Reversed</span>
                                   <span t-else="" class="small badge rounded-pill text-bg-primary"><i class="oi oi-fw" data-icon="schedule"/>Waiting Payment</span>
                               </div>
