@@ -76,9 +76,10 @@
             <div t-if="o.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_group_vat"/></div>
         </xpath>
         <xpath expr="//div[@name='due_date']" position="after">
-            <div class="col" t-if="o.l10n_hu_payment_mode" name="l10n_hu_payment_mode">
+            <t t-set="l10n_hu_payment_mode" t-value="o._l10n_hu_edi_get_payment_mode()"/>
+            <div class="col" t-if="l10n_hu_payment_mode" name="l10n_hu_payment_mode">
                 <strong>Payment Mode</strong>
-                <div t-field="o.l10n_hu_payment_mode"/>
+                <div t-out="dict(o._fields['l10n_hu_payment_mode']._description_selection(o.env))[l10n_hu_payment_mode]"/>
             </div>
         </xpath>
         <xpath expr="//table[@name='invoice_line_table']//span[@t-field='line.quantity']" position="attributes">
