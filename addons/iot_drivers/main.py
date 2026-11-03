@@ -155,6 +155,8 @@ class Manager(Thread):
 
         certificate.ensure_validity()
 
+        # this thread starts while the package is imported: wait for the drivers before the interfaces
+        from . import iot_handlers  # noqa: F401, PLC0415
         for interface_class in interfaces.values():
             interface_class().start()
 
