@@ -54,7 +54,7 @@ export class PaymentPage extends Component {
                 await this.selectedPaymentMethod.payment_interface.sendPaymentCancel(paymentLine);
             }
         }
-        this.selfOrder.currentOrder.uiState.lineChanges = {};
+        this.selfOrder.currentOrder.markLinesUnsent();
         this.router.back();
     }
 
