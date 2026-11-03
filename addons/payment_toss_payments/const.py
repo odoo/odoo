@@ -21,8 +21,5 @@ PAYMENT_METHODS_MAPPING = {"card": "CARD", "bank_transfer": "TRANSFER", "mobile"
 # Mapping of transaction states to Toss Payments' payment statuses.
 PAYMENT_STATUS_MAPPING = {"done": "DONE", "canceled": "EXPIRED", "error": "ABORTED"}
 
-# Event statuses to skip secret key verification
-VERIFICATION_EXEMPT_STATUSES = {"EXPIRED", "ABORTED"}
-
 # Events that are handled by the webhook.
 HANDLED_WEBHOOK_EVENTS = {"PAYMENT_STATUS_CHANGED"}

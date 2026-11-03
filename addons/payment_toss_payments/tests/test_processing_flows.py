@@ -17,7 +17,12 @@ class TestProcessingFlows(TossPaymentsCommon, PaymentHttpCommon):
         """Test that successfully initiating a payment triggers the processing of the payment
         data."""
         tx = self._create_transaction("direct")
-        redirect_success_params = {"orderId": tx.reference, "paymentKey": "test-pk", "amount": 750}
+        redirect_success_params = {
+            "orderId": tx.reference,
+            "paymentKey": "test-pk",
+            "amount": 750,
+            "access_token": payment_utils.generate_access_token(tx.reference, env=self.env),
+        }
         url = self._build_url(const.PAYMENT_SUCCESS_RETURN_ROUTE)
         with (
             patch(
@@ -35,7 +40,12 @@ class TestProcessingFlows(TossPaymentsCommon, PaymentHttpCommon):
     def test_failing_to_confirm_payment_sets_the_transaction_in_error(self):
         """Test that the transaction is set in error if the payment confirmation request fails."""
         tx = self._create_transaction("direct")
-        redirect_success_params = {"orderId": tx.reference, "paymentKey": "test-pk", "amount": 750}
+        redirect_success_params = {
+            "orderId": tx.reference,
+            "paymentKey": "test-pk",
+            "amount": 750,
+            "access_token": payment_utils.generate_access_token(tx.reference, env=self.env),
+        }
         url = self._build_url(const.PAYMENT_SUCCESS_RETURN_ROUTE)
         with patch(
             "odoo.addons.payment.models.payment_transaction.PaymentTransaction._send_api_request",
@@ -63,7 +73,7 @@ class TestProcessingFlows(TossPaymentsCommon, PaymentHttpCommon):
     def test_webhook_notification_triggers_processing(self):
         """Test that receiving a valid webhook notification triggers the processing of the payment
         data."""
-        self._create_transaction("direct")
+        self._create_transaction("direct", toss_payments_payment_secret="test-secret")
         url = self._build_url(const.WEBHOOK_ROUTE)
         with (
             patch("odoo.addons.payment.utils.verify_signature"),
@@ -76,8 +86,30 @@ class TestProcessingFlows(TossPaymentsCommon, PaymentHttpCommon):
 
     @mute_logger("odoo.addons.payment_toss_payments.controllers.main")
     def test_webhook_notification_triggers_signature_check(self):
-        self._create_transaction("direct")
+        self._create_transaction("direct", toss_payments_payment_secret="test-secret")
         url = self._build_url(const.WEBHOOK_ROUTE)
         with patch("odoo.addons.payment.utils.verify_signature") as signature_check_mock:
             self._make_json_request(url, data=self.webhook_data)
         self.assertEqual(signature_check_mock.call_args[0][0], self.webhook_data_signature)
+
+    @mute_logger("odoo.addons.payment_toss_payments.controllers.main")
+    def test_webhook_notification_without_stored_secret_records_fetched_payment_data(self):
+        """Test that a webhook notification for a transaction without a stored secret records the
+        payment data fetched from the API instead of the received data."""
+        self._create_transaction("direct")
+        url = self._build_url(const.WEBHOOK_ROUTE)
+        webhook_data = dict(
+            self.webhook_data, data=dict(self.webhook_data["data"], status="ABORTED", secret=None)
+        )
+        with (
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction"
+                "._send_api_request",
+                return_value=self.payment_result_data,
+            ),
+            patch(
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
+        ):
+            self._make_json_request(url, data=webhook_data)
+        self.assertEqual(record_mock.call_args.args[0], self.payment_result_data)
