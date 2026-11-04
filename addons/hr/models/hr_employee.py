@@ -2411,4 +2411,10 @@ class HrEmployee(models.Model):
     def action_cancel_departure(self):
         self.ensure_one()
         self.action_unarchive()
-        self.departure_id.unlink()
+        departure = self.departure_id
+        if departure:
+            # The departure date was set as end date of an open-ended contract when the departure was created
+            version_sudo = self._get_version(departure.departure_date).sudo()
+            if not version_sudo.fixed_term and version_sudo.contract_date_end == departure.departure_date:
+                version_sudo.contract_date_end = False
+        departure.unlink()
