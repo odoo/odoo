@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { animationFrame, expect, test } from "@odoo/hoot";
 import {
     clickSave,
     contains,
@@ -281,6 +281,40 @@ test("float field in editable list view", async () => {
     expect(".o_field_widget:eq(0)").toHaveText("18.896", {
         message: "The new value should be rounded properly.",
     });
+});
+
+test.tags("desktop");
+test("field value stays fully selected after an onchange updates it", async () => {
+    Partner._fields.source_float = fields.Float({
+        onChange(record) {
+            record.float_field = record.source_float;
+        },
+    });
+    Partner._records = [{ id: 1 }];
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: `<list editable="bottom">
+            <field name="source_float"/>
+            <field name="float_field"/>
+        </list>`,
+    });
+
+    const def = Promise.withResolvers();
+    onRpc("onchange", () => def.promise);
+    await contains(".o_data_cell[name='source_float']").click();
+    await contains("[name='source_float'] input").edit("7", { confirm: "tab" });
+    const inputSelector = "[name='float_field'] input";
+    expect(inputSelector).toBeFocused();
+    expect(inputSelector).toHaveValue("0.00");
+
+    // Resolve the onchange: the new value must be fully selected
+    def.resolve();
+    await animationFrame();
+    expect(inputSelector).toBeFocused();
+    expect(inputSelector).toHaveValue("7.00");
+    await contains(inputSelector).press("9");
+    expect(inputSelector).toHaveValue("9");
 });
 
 test("float field with type number option", async () => {
