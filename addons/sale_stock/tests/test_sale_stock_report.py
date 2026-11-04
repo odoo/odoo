@@ -507,6 +507,40 @@ class TestSaleStockInvoices(TestSaleCommon):
         self.assertEqual([rec['lot_id'] for rec in invoice02._get_invoiced_lot_values()], [lot02.id])
         self.assertEqual([rec['lot_id'] for rec in invoice03._get_invoiced_lot_values()], [lot01.id])
 
+    def test_backorder_and_invoicing_legacy_invoice(self):
+        """
+        Sell 2 products tracked by serial number. Deliver and invoice the first one(SN1).
+        The invoice then becomes 'invoicing_legacy' (Invoicing Switch Threshold).
+        Deliver and invoice the second product (SN2).
+        The second invoice should only contain its own serial number (SN2).
+        """
+        if self.env['ir.module.module']._get('account_accountant').state != 'installed':
+            self.skipTest("This test requires the installation of the account_accountant module")
+
+        self.product_by_usn.invoice_policy = 'delivery'
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': self.product_by_usn.id, 'product_uom_qty': 2}),
+            ],
+        })
+        so.action_confirm()
+
+        picking = so.picking_ids
+        picking.move_ids.quantity = 1
+        picking.with_context(skip_backorder=True).button_validate()
+        invoice01 = so._create_invoices()
+        invoice01.action_post()
+        self.env['res.config.settings'].create({
+            'invoicing_switch_threshold': invoice01.invoice_date + timedelta(days=1),
+        }).execute()
+
+        backorder = picking.backorder_ids
+        backorder.button_validate()
+        invoice02 = so._create_invoices()
+        invoice02.action_post()
+        self.assertEqual([lot['lot_id'] for lot in invoice02._get_invoiced_lot_values()], backorder.move_line_ids.lot_id.ids)
+
     def test_invoice_with_several_returns(self):
         """
         Mix of returns and partial invoice
