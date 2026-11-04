@@ -7,7 +7,7 @@
             <list editable="bottom" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name" placeholder="e.g. Developer"/>
-                <field name="user_ids" widget="many2many_avatar_user"/>
+                <field name="user_ids" widget="many2many_avatar_user" context="{'list_view_ref': 'base.view_users_list_assignees', 'search_view_ref': 'base.view_users_search_assignees', 'kanban_view_ref': 'base.view_users_kanban_assignees'}"/>
                 <field name="color" widget="color_picker" optional="show"/>
             </list>
         </field>
@@ -23,7 +23,7 @@
                     <group>
                         <field name="active" invisible="1"/>
                         <field name="name"/>
-                        <field name="user_ids" widget="many2many_avatar_user"/>
+                        <field name="user_ids" widget="many2many_avatar_user" context="{'list_view_ref': 'base.view_users_list_assignees', 'search_view_ref': 'base.view_users_search_assignees', 'kanban_view_ref': 'base.view_users_kanban_assignees'}"/>
                         <field name="color" widget="color_picker"/>
                     </group>
                 </sheet>

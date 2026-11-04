@@ -56,6 +56,7 @@
         'views/res_partner_bank_views.xml',
         'views/discuss_channel_views.xml',
         'views/res_users.xml',
+        'views/res_users_assignee_views.xml',
         'views/hr_templates.xml',
         'views/resource_resource_views.xml',
         'views/resource_calendar_views.xml',

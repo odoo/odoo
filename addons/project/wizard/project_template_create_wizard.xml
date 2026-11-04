@@ -29,7 +29,7 @@
                         <field name="role_to_users_ids">
                             <list create="0" delete="0" no_open="1" editable="bottom">
                                 <field name="role_id" force_save="1" string="Role" readonly="1" options="{'no_open': True}" width="240px"/>
-                                <field name="user_ids" widget="many2many_avatar_user" options="{'no_open': True, 'no_quick_create': True}"/>
+                                <field name="user_ids" widget="many2many_avatar_user" options="{'no_open': True, 'no_quick_create': True}" context="{'list_view_ref': 'base.view_users_list_assignees', 'search_view_ref': 'base.view_users_search_assignees', 'kanban_view_ref': 'base.view_users_kanban_assignees'}"/>
                             </list>
                         </field>
                     </page>
