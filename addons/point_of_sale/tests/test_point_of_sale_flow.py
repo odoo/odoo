@@ -32,6 +32,96 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         untax = res['total_excluded']
         return untax, sum(tax.get('amount', 0.0) for tax in res['taxes'])
 
+    def _shared_order_payload(self, session, product, uuid, **overrides):
+        """Build a `sync_from_ui` payload for an order of `product` at quantity 2.
+
+        Args:
+            session: the open `pos.session` the order belongs to.
+            product: the `product.product` sold, priced 100.0 and tax free.
+            uuid: the order uuid, which is what `_get_open_order` matches on.
+            **overrides: keys replacing the defaults, e.g. ``state`` or ``amount_total``.
+
+        Returns:
+            dict: a fresh payload, safe to pass to `sync_from_ui` (which mutates it).
+        """
+        payload = {
+            'access_token': '0123456789',
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+            'amount_tax': 0.0,
+            'amount_total': 200.0,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'last_order_preparation_change': '{}',
+            'lines': [Command.create({
+                'discount': 0.0,
+                'pack_lot_ids': [],
+                'price_subtotal': 200.0,
+                'price_subtotal_incl': 200.0,
+                'price_unit': 100.0,
+                'product_id': product.id,
+                'qty': 2.0,
+                'tax_ids': [Command.set([])],
+                'uuid': f'{uuid}-line',
+            })],
+            'name': 'Order 00001-001-0001',
+            'partner_id': False,
+            'payment_ids': [],
+            'sequence_number': 1,
+            'session_id': session.id,
+            'state': 'draft',
+            'user_id': self.env.uid,
+            'uuid': uuid,
+        }
+        payload.update(overrides)
+        return payload
+
+    def test_devices_rebuilding_a_line_keep_a_single_record(self):
+        """When two devices rebuild the same line, both saves must go to the record already in the database."""
+        product = self.env['product.product'].create({
+            'name': 'Shared Order Product',
+            'available_in_pos': True,
+            'list_price': 100.0,
+            'taxes_id': [Command.clear()],
+        })
+        self.pos_config.open_ui()
+        session = self.pos_config.current_session_id
+        uuid = '55555555-5555-5555-5555-555555555555'
+
+        def rebuilt_line(line_uuid, qty):
+            return Command.create({
+                'discount': 0.0,
+                'pack_lot_ids': [],
+                'price_subtotal': 100.0 * qty,
+                'price_subtotal_incl': 100.0 * qty,
+                'price_unit': 100.0,
+                'product_id': product.id,
+                'qty': qty,
+                'tax_ids': [Command.set([])],
+                'uuid': line_uuid,
+            })
+
+        order_id = self.PosOrder.sync_from_ui([self._shared_order_payload(
+            session, product, uuid, lines=[rebuilt_line('rebuilt-line', 2.0)],
+        )])['pos.order'][0]['id']
+        order = self.PosOrder.browse(order_id)
+        line = order.lines
+
+        # Device A rebuilds the line: the client unlinks the record it loaded ([3, id]) and sends it again.
+        self.PosOrder.sync_from_ui([self._shared_order_payload(
+            session, product, uuid, lines=[Command.unlink(line.id), rebuilt_line('rebuilt-line', 3.0)],
+        )])
+        # Device B never saw A's save. It deletes ([2, id]) and rebuilds the line from its own copy.
+        self.PosOrder.sync_from_ui([self._shared_order_payload(
+            session, product, uuid,
+            lines=[Command.delete(line.id), rebuilt_line('rebuilt-line', 4.0), rebuilt_line('new-line', 1.0)],
+        )])
+
+        self.assertTrue(line.exists(), "The rebuilt line must stay the same record")
+        self.assertEqual(line.qty, 4.0, "The last device to save must win")
+        self.assertEqual(len(order.lines), 2)
+        self.assertEqual(set(order.lines.mapped('uuid')), {'rebuilt-line', 'new-line'})
+
     def _create_pos_order_for_postponed_invoicing(self):
         # Create the order on the first of january.
         with freeze_time('2020-01-01'):

@@ -502,8 +502,9 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         );
         const id = vals["id"];
         record.id = id;
-        if (!vals.uuid && database[model]?.key === "uuid") {
-            record.uuid = uuidv4();
+        if (database[model]?.key === "uuid") {
+            // The owner's x2many indexes its records by this key, so set it before connecting the relations.
+            record.uuid = vals.uuid || uuidv4();
             vals.uuid = record.uuid;
         }
 
