@@ -149,6 +149,7 @@ class AccountMove(models.Model):
         }
 
     def l10n_es_edi_verifactu_button_cancel(self):
+        self.check_access('write')
         if self.l10n_es_edi_verifactu_state not in ('registered_with_errors', 'accepted'):
             raise ValidationError(self.env._(
                 "Veri*Factu Cancellation Request is only allowed for the invoice in either 'Registered with Errors' or 'Accepted' Veri*Factu Status."
