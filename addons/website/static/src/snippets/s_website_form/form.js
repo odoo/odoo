@@ -44,7 +44,7 @@ export class Form extends Interaction {
         },
         "input[type=file]": { "t-on-change": this.changeFile },
         "input.o_add_files_button": { "t-on-click": this.clickAddFilesButton },
-        ".s_website_form_field[data-type=binary]": { "t-on-click": this.clickFileDelete }, // delegate on ".o_file_delete"
+        ".o_file_delete": { "t-on-click": this.clickFileDelete },
         ".s_website_form_field": {
             "t-on-input": this.debounced(this.onFieldInput, 300),
             "t-att-class": (el) => ({ "d-none": !this.isFieldVisible(el) }),
@@ -1025,10 +1025,7 @@ export class Form extends Interaction {
      * @param {Event} ev
      */
     clickFileDelete(ev) {
-        if (!ev.target.closest(".o_file_delete")) {
-            return;
-        }
-        const fileBlockEl = ev.target.closest(".o_file_block");
+        const fileBlockEl = ev.currentTarget.closest(".o_file_block");
         const fieldEl = fileBlockEl.closest(".s_website_form_field");
         const fileInputEl = fieldEl.querySelector("input[type=file]");
         const fileDetails = fileBlockEl.fileDetails;
