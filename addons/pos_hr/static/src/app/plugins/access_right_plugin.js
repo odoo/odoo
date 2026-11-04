@@ -223,4 +223,7 @@ patch(PosAccessRightPlugin.prototype, {
     get canSwitchSelfAvailability() {
         return this.hasEmployeeRole(["manager", "cashier"]);
     },
+    get canEditPayment() {
+        return super.canEditPayment && this.hasEmployeeRole(["manager"]);
+    },
 });

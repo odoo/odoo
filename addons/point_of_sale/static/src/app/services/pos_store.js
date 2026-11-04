@@ -914,8 +914,6 @@ export class PosStore extends WithLazyGetterTrap {
     async afterProcessServerData() {
         // Adding the not synced paid orders to the pending orders
         const paidUnsyncedOrders = this.models["pos.order"].filter((order) => order.isUnsyncedPaid);
-        // Orders known by the server aren't dirty after a reload, they would be skipped by the sync
-        paidUnsyncedOrders.forEach((order) => order._markDirty());
         const paidUnsyncedOrderIds = paidUnsyncedOrders.map((order) => order.id);
 
         if (paidUnsyncedOrderIds.length > 0) {
@@ -1757,9 +1755,19 @@ export class PosStore extends WithLazyGetterTrap {
 
             try {
                 const serialized = order.serializeForORM({ keepCommands: true });
+                const isEditingPaidOrder = order.isPaidAndPrinted;
                 const data = await this.data.call("pos.order", "sync_from_ui", [[serialized]], {
                     context,
                 });
+                if (isEditingPaidOrder) {
+                    // Don't treat these payment changes as missing data. The edited order is synced
+                    // as a duplicate, while the original order is refunded without modifications.
+                    this.models["pos.payment"]
+                        .filter((x) => x.pos_order_id.id === order.id)
+                        .forEach((element) => {
+                            this.data.localDeleteCascade(element);
+                        });
+                }
                 order.serializeForORM();
                 const missingRecords = await this.data.missingRecursive(data);
                 const newData = this.models.loadConnectedData(missingRecords);
@@ -2229,7 +2237,7 @@ export class PosStore extends WithLazyGetterTrap {
         });
     }
     canEditPayment(order) {
-        return !this.config.autoPrint && order.nb_print === 0 && order.state === "paid";
+        return order.canEditPayment && this.accessRight.canEditPayment;
     }
     openFinalizedOrders() {
         const order = this.getOrder();

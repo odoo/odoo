@@ -165,6 +165,11 @@ class PosOrderLine(models.Model):
         refund_data['pack_lot_ids'] = lots
         return refund_data
 
+    def _prepare_replacement_data(self, replacement_order, line_map):
+        data = super()._prepare_replacement_data(replacement_order, line_map)
+        data['pack_lot_ids'] = [Command.create(vals) for vals in self.pack_lot_ids.copy_data()]
+        return data
+
     def _get_product_cost(self, at_closing=False):
         self.ensure_one()
         product = self.product_id

@@ -7,4 +7,8 @@ patch(PosOrder.prototype, {
             ? true
             : super.waitForPushOrder(...arguments);
     },
+    get canEditPayment() {
+        // A Veri*Factu record is created for the paid order, the edit would bypass it
+        return this.company.l10n_es_edi_verifactu_required ? false : super.canEditPayment;
+    },
 });

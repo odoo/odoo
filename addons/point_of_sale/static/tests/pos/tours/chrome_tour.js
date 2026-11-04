@@ -213,6 +213,7 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
+            FeedbackScreen.isEditBtnShown(),
             FeedbackScreen.clickEditPayment(),
             // Add customer
             PaymentScreen.clickPartnerButton(),
@@ -225,6 +226,38 @@ registry.category("web_tour.tours").add("test_edit_paid_order", {
                     await new Promise((resolve) => setTimeout(resolve, 200));
                 },
             },
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            negateStep(FeedbackScreen.isEditBtnShown()),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_edit_paid_order_after_print", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Organizer", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.enterPaymentLineAmount("Cash", "5", true, { remaining: "5.20" }),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
+            FeedbackScreen.isEditBtnShown(),
+            Chrome.closePrintingWarning(),
+            // we are adding, updating & deleting to check all the oprations once
+            FeedbackScreen.clickEditPayment(),
+            // deleted Bank entry
+            PaymentScreen.clickPaymentlineDelButton("Bank", "5.20"),
+            // update existing cash entry by changing amount to 3
+            { ...PaymentScreen.clickPaymentline("Cash", "5.00")[0], isActive: ["desktop"] },
+            PaymentScreen.enterPaymentLineAmount("Cash", "3.00", true, {
+                nth: "1",
+                remaining: "7.20",
+            }),
+            // a new cash entry for rest of the 7.2
+            PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
         ].flat(),

@@ -247,4 +247,8 @@ export class PosAccessRightPlugin extends Plugin {
     get canCreateBooking() {
         return true;
     }
+
+    get canEditPayment() {
+        return true;
+    }
 }
