@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy, signal, useListener, useProps, t } from "@odoo/owl";
+import { Component, proxy, signal, useListener, useOnChange, useProps, t } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
@@ -41,23 +40,36 @@ export class SearchBar extends Component {
         useListener(window, "click", this._hideOptions.bind(this));
         this.filterOptionsList = [...this.props.config.filter.options.keys()];
         this.searchFieldsList = [...this.props.config.searchFields.keys()];
-        const defaultSearchFieldId = this.searchFieldsList.indexOf(
-            this.props.config.defaultSearchDetails.fieldName
-        );
         this.state = proxy({
             searchInput: this.props.config.defaultSearchDetails.searchTerm || "",
-            selectedSearchFieldId: defaultSearchFieldId == -1 ? 0 : defaultSearchFieldId,
+            selectedSearchFieldId: this._searchFieldIdOf(
+                this.props.config.defaultSearchDetails.fieldName
+            ),
             showSearchFields: false,
             showFilterOptions: false,
             selectedFilter: this.props.config.defaultFilter || this.filterOptionsList[0],
         });
-        useLayoutEffect(
-            () => {
-                this.state.selectedFilter =
-                    this.props.config.defaultFilter || this.filterOptionsList[0];
+
+        useOnChange(
+            () => [this.props.config.defaultFilter],
+            (defaultFilter) => {
+                this.state.selectedFilter = defaultFilter || this.filterOptionsList[0];
             },
-            () => [this.props.config.defaultFilter]
+            { initialRun: false }
         );
+        useOnChange(
+            () => [this.props.config.defaultSearchDetails],
+            (defaultSearchDetails) => {
+                this.state.searchInput = defaultSearchDetails.searchTerm || "";
+                this.state.selectedSearchFieldId = this._searchFieldIdOf(
+                    defaultSearchDetails.fieldName
+                );
+            },
+            { initialRun: false }
+        );
+    }
+    _searchFieldIdOf(fieldName) {
+        return Math.max(this.searchFieldsList.indexOf(fieldName), 0);
     }
     _onSelectFilter(key) {
         this.state.selectedFilter = key;

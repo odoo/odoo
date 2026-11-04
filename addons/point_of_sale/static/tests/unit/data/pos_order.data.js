@@ -1,4 +1,4 @@
-import { models, Command } from "@web/../tests/web_test_helpers";
+import { models, Command, getKwArgs } from "@web/../tests/web_test_helpers";
 
 const { DateTime } = luxon;
 
@@ -184,10 +184,24 @@ export class PosOrder extends models.ServerModel {
         };
     }
 
-    search_order_ids(config_id, domain, limit, offset) {
+    search_order_ids() {
+        const kwargs = getKwArgs(
+            arguments,
+            "config_id",
+            "domain",
+            "limit",
+            "offset",
+            "focus_order_id"
+        );
+        const { domain, limit, offset, focus_order_id: focusOrderId } = kwargs;
+        const ids = this.search(domain, 0, false, "date_order desc, id desc");
+        const focusIndex = focusOrderId ? ids.indexOf(focusOrderId) : -1;
+        const pageIds = limit === 0 ? [] : ids.slice(offset, limit ? offset + limit : undefined);
+        const orders = this.read(pageIds, ["write_date"], false);
         return {
-            ordersInfo: [],
-            totalCount: 0,
+            ordersInfo: orders.map((o) => [o.id, o.write_date]),
+            totalCount: ids.length,
+            focusIndex: focusIndex === -1 ? false : focusIndex,
         };
     }
 }
