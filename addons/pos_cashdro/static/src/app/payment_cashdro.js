@@ -64,6 +64,13 @@ export class PaymentCashdro extends PaymentInterface {
             return executingOperationId !== null;
         }
 
+        if (this.pos.config.self_ordering_mode === "kiosk") {
+            this.showError(
+                _t("The cash machine is busy with another payment, please wait until it is free.")
+            );
+            return true;
+        }
+
         const shouldCancel = await ask(this.pos.dialog, {
             title: _t("Cashdro machine is busy"),
             body: _t(
