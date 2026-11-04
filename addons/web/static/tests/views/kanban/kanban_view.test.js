@@ -1148,6 +1148,42 @@ test("click on a button type='archive' to archive a record in a column", async (
     expect.verifySteps(["archive:1"]);
 });
 
+test("click on a button type='archive' uses the archiveRecord of a custom renderer", async () => {
+    // e.g. hr_recruitment's RecruitmentKanbanRenderer overrides archiveRecord to warn that
+    // archiving a job position also archives its applicants
+    class CustomKanbanRenderer extends KanbanRenderer {
+        async archiveRecord(record, active) {
+            expect.step(`custom archiveRecord: ${record.resId} ${active}`);
+        }
+    }
+    registry.category("views").add("custom_archive_kanban", {
+        ...kanbanView,
+        Renderer: CustomKanbanRenderer,
+    });
+    onRpc("action_archive", ({ args }) => {
+        expect.step(`archive:${args[0]}`);
+        return true;
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban js_class="custom_archive_kanban">
+                <templates>
+                    <t t-name="card">
+                        <a role="menuitem" type="archive" class="dropdown-item o_archive">archive</a>
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    await contains(".o_kanban_record .o_archive").click();
+    expect(".modal").toHaveCount(0);
+    expect.verifySteps(["custom archiveRecord: 1 true"]);
+});
+
 test("click on a button type='unarchive' to unarchive a record in a column", async () => {
     onRpc("action_unarchive", ({ args }) => {
         expect.step(`unarchive:${args[0]}`);
