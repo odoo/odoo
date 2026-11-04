@@ -188,8 +188,11 @@ class AccountBankStatement(models.Model):
     @api.depends('balance_end', 'balance_end_real', 'line_ids.amount', 'line_ids.state')
     def _compute_is_complete(self):
         for stmt in self:
-            stmt.is_complete = stmt.line_ids.filtered(lambda l: l.state == 'posted') and stmt.currency_id.compare_amounts(
-                stmt.balance_end, stmt.balance_end_real) == 0
+            posted_lines = stmt.line_ids.filtered(lambda l: l.state == 'posted')
+            stmt.is_complete = bool(stmt.currency_id) and stmt.currency_id.compare_amounts(
+                stmt.balance_end, stmt.balance_end_real) == 0 and (
+                not stmt.line_ids or bool(posted_lines)
+            )
 
     @api.depends('balance_end', 'balance_end_real')
     def _compute_is_valid(self):
