@@ -1,8 +1,9 @@
 import { CallInvitation } from "@mail/discuss/call/common/call_invitation";
+import { StorePlugin } from "@mail/core/common/store_plugin";
 
-import { Component } from "@odoo/owl";
+import { Component, Plugin, useOnChange, usePlugin } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallInvitations extends Component {
@@ -12,23 +13,24 @@ export class CallInvitations extends Component {
     setup() {
         super.setup();
         this.rtc = useService("discuss.rtc");
-        this.store = useService("mail.store");
+        this.store = usePlugin(StorePlugin);
     }
 }
 
-export const callInvitationsService = {
-    dependencies: ["discuss.rtc", "mail.store", "overlay"],
-    start(env, services) {
-        /** @type {import("models").Store} */
-        const store = services["mail.store"];
-        store.onChange(
-            () => [store.ringingChannels.length > 0],
+export class CallInvitationsPlugin extends Plugin {
+    /** @private */
+    overlay = usePlugin(OverlayPlugin);
+    /** @private */
+    store = usePlugin(StorePlugin);
+
+    setup() {
+        useOnChange(
+            () => [this.store.ringingChannels.length > 0],
             (hasRingingChannels) => {
                 if (hasRingingChannels) {
-                    return services.overlay.add(CallInvitations, {});
+                    return this.overlay.add(CallInvitations, {});
                 }
             }
         );
-    },
-};
-registry.category("services").add("discuss.call_invitations", callInvitationsService);
+    }
+}
