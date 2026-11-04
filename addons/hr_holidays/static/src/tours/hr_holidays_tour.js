@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
-            trigger: ".ui-autocomplete .ui-menu-item a:contains('Guaranted monthly wage illness')",
+            trigger: ".ui-autocomplete .ui-menu-item a:contains('Guaranted wage illness')",
             tooltipPosition: "right",
             run: "click",
         },
