@@ -249,6 +249,7 @@ class AccountMove(models.Model):
         }
 
     def l10n_es_edi_verifactu_button_cancel(self):
+        self.check_access('write')
         self._l10n_es_edi_verifactu_mark_for_next_batch(cancellation=True)
 
     def _l10n_es_edi_verifactu_check(self, cancellation=False):
