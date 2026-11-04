@@ -1,18 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.http import request, route
+from odoo.http import request
 from odoo.tools import str2bool
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
 class L10nArWebsiteSale(WebsiteSale):
-
-    @route()
-    def portal_address_country_info(self, country, address_type, **kw):
-        # The country-change refresh route doesn't forward the cart, which the DNI limit reads.
-        kw.setdefault('order_sudo', request.cart)
-        return super().portal_address_country_info(country, address_type, **kw)
 
     def _create_or_update_address(
         self, partner_sudo, address_type='billing', use_delivery_as_billing=False, **form_data,
