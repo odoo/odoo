@@ -18,3 +18,4 @@ from . import test_self_order_prices
 from . import test_self_order_data_loading
 from . import test_self_partner_validation
 from . import test_self_order_sibling_ptav
+from . import test_self_order_receipt_lang

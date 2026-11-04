@@ -351,6 +351,7 @@ class PosConfig(models.Model):
         record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.read(['mimetype'])
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
         record['_self_order_pos'] = True
+        record['_default_user_lang'] = config.self_ordering_default_user_id.lang
         google_places_api_key = self.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key')
         record['_has_google_places_api_key'] = bool(google_places_api_key)
         record['_base_url'] = config.get_base_url()
