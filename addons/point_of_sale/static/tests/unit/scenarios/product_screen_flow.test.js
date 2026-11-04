@@ -441,7 +441,9 @@ test("group by category: cart, receipt and preparation ticket are sorted by cate
     expect(Utils.getOrderlineNames()).toEqual(sortedNames);
 
     const { ticket } = renderReceipt(store, order);
-    expectTicketData(ticket, { orderlines: sortedNames.map((name) => ({ name })) });
+    expectTicketData(ticket, {
+        orderlines: ["Lemonade", "Burger Menu", "Fries", "Napkins"].map((name) => ({ name })),
+    });
 
     // Combo children are split by their own category, under a repeated combo header
     const { changes, tickets } = renderOrderChangeReceipt(store, order);

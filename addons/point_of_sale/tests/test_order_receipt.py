@@ -679,7 +679,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         order, _ = self.create_backend_pos_order({
             'pos_config': self.main_pos_config,
             'line_data': [
-                {'product_id': product.id, 'qty': 1, 'full_product_name': f"{product.name} (40)"},
+                {'product_id': product.id, 'qty': 1, 'full_product_name': f"{product.name} (40)", 'extra_tax_data': {'discount_value': 40}},
                 {'product_id': product.id, 'qty': 1},
             ],
         })
