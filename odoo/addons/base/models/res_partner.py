@@ -884,7 +884,7 @@ class ResPartner(models.Model):
             for partner in self:
                 for bank in partner.bank_ids:
                     if bank.acc_holder_name == partner.name:
-                        bank.acc_holder_name = vals['name']
+                        bank.sudo().acc_holder_name = vals['name']
 
         # filter to keep only really updated values -> field synchronize goes through
         # partner tree and we should avoid infinite loops in case same value is
