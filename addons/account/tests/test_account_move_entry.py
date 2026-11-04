@@ -882,6 +882,49 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'credit', 'debit': 0.0,   'credit': 100.0, 'account_id': income_account.id, 'tax_ids': caba_tax.ids, 'tax_line_id': False},
         ])
 
+    def test_always_exigible_caba_bank_reco_discount(self):
+        tax_account = self.company_data['default_account_tax_sale']
+        receivable_account = self.company_data['default_account_receivable']
+        income_account = self.company_data['default_account_revenue']
+        bank_account = self.company_data['default_journal_bank'].default_account_id
+        tax_account.reconcile = True
+        caba_tax = self.env['account.tax'].create({
+            'name': "CABA",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.safe_copy(tax_account).id,
+            'invoice_repartition_line_ids': [Command.create({'repartition_type': 'base'}), Command.create({'repartition_type': 'tax', 'account_id': tax_account.id})],
+            'refund_repartition_line_ids': [Command.create({'repartition_type': 'base'}), Command.create({'repartition_type': 'tax', 'account_id': tax_account.id})],
+        })
+
+        # payment of an invoice of 100 with a discount of 10 on the bank journal
+        move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
+        move_form.journal_id = self.company_data['default_journal_bank']
+        with move_form.line_ids.new() as receivable_line:
+            receivable_line.name = 'receivable'
+            receivable_line.account_id = receivable_account
+            receivable_line.credit = 100
+        with move_form.line_ids.new() as bank_line:
+            bank_line.name = 'bank'
+            bank_line.account_id = bank_account
+            bank_line.debit = 90
+        with move_form.line_ids.new() as discount_line:
+            discount_line.name = 'discount'
+            discount_line.account_id = income_account
+            discount_line.debit = 8.33
+            discount_line.tax_ids.clear()
+            discount_line.tax_ids.add(caba_tax)
+        move = move_form.save()
+
+        self.assertTrue(move.always_tax_exigible)
+        self.assertRecordValues(move.line_ids.sorted(lambda x: x.balance), [
+            {'name': 'receivable', 'debit': 0.0, 'credit': 100.0, 'account_id': receivable_account.id, 'tax_line_id': False},
+            {'name': 'CABA', 'debit': 1.67, 'credit': 0.0, 'account_id': tax_account.id, 'tax_line_id': caba_tax.id},
+            {'name': 'discount', 'debit': 8.33, 'credit': 0.0, 'account_id': income_account.id, 'tax_line_id': False},
+            {'name': 'bank', 'debit': 90.0, 'credit': 0.0, 'account_id': bank_account.id, 'tax_line_id': False},
+        ])
+
     def test_misc_with_taxes_reverse(self):
         test_account = self.company_data['default_account_revenue']
 
