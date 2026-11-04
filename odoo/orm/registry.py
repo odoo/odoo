@@ -1001,7 +1001,10 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     with cr.savepoint(flush=False):
                         if stale:
                             sql.drop_index(cr, indexname, tablename)
-                        sql.create_index(cr, indexname, tablename, [expression], method, where)
+                        comment = f"({expression})"
+                        if where:
+                            comment += f" WHERE {where}"
+                        sql.create_index(cr, indexname, tablename, [expression], method, where, comment=comment)
                 except psycopg2.OperationalError:
                     _schema.error("Unable to add index %r for %s", indexname, self)
 
