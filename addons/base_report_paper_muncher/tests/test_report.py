@@ -7,6 +7,7 @@ from odoo.tools import parse_version
 
 from odoo.addons.base_report_paper_muncher.paper_muncher import (
     SERVE_TIMEOUT,
+    PaperMuncherInfo,
     PaperMuncherServer,
     _capabilities,
     paper_muncher,
@@ -143,7 +144,50 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
     def test_capabilities(self):
         self.assertEqual(_capabilities(parse_version('0.5')), frozenset())
         self.assertEqual(_capabilities(parse_version('0.6')), {'baseline'})
-        self.assertEqual(_capabilities(parse_version('0.10')), {'baseline', 'per-input-decoration'})
+        self.assertEqual(_capabilities(parse_version('0.10')), {
+            'baseline',
+            'per-input-decoration',
+            'wkhtmltopdf-media-zero-viewport',
+            'wkhtmltopdf-media-screen',
+        })
+
+    def test_capability_features(self):
+        info = PaperMuncherInfo('ok', 'pm', (), capabilities=frozenset({'baseline', 'wkhtmltopdf-media-screen'}))
+        self.assertEqual(info.features, ['wkhtmltopdf-quirks-media-screen'])
+
+    def _render_pdf_args(self, info=None):
+        started = {}
+        init = PaperMuncherServer.__init__
+
+        def spy_init(self_server, args, *a, **kw):
+            started['args'] = [str(arg) for arg in args]
+            init(self_server, args, *a, **kw)
+
+        with patch.object(PaperMuncherServer, '__init__', spy_init), \
+             patch.dict('os.environ', {'ODOO_PAPER_MUNCHER_FEATURE': ''}):
+            if info:
+                with patch('odoo.addons.base_report_paper_muncher.models.ir_actions_report.paper_muncher', return_value=info):
+                    pdf = self._render_pdf(self.partners.ids)
+            else:
+                pdf = self._render_pdf(self.partners.ids)
+        self.assertTrue(pdf.startswith(b'%PDF-'), f"Expected a valid PDF got:\n{pdf}")
+        return started['args']
+
+    def test_wkhtmltopdf_quirks_enabled_when_available(self):
+        if not paper_muncher().has_capability('wkhtmltopdf-media-zero-viewport'):
+            self.skipTest("paper-muncher has no wkhtmltopdf quirks")
+        args = self._render_pdf_args()
+        self.assertEqual(args.count('--feature'), 1)
+        self.assertIn('wkhtmltopdf-quirks-media-zero-viewport=on', args)
+        self.assertIn('wkhtmltopdf-quirks-media-screen=on', args)
+
+    def test_wkhtmltopdf_quirks_not_passed_to_older_binaries(self):
+        info = paper_muncher()
+        legacy = info._replace(capabilities=info.capabilities - {
+            'wkhtmltopdf-media-zero-viewport',
+            'wkhtmltopdf-media-screen',
+        })
+        self.assertNotIn('--feature', self._render_pdf_args(legacy))
 
     def test_split_decoration_mismatch(self):
         html = '<!DOCTYPE html><html><body><div id="minimal_layout_report_headers"><div>A</div><div>B</div></div></body></html>'
