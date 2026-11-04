@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="multi_employee_sales_report_action" model="ir.actions.report">
+        <field name="name">Employee Sales Details</field>
+        <field name="model">pos.session</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pos_hr.multi_employee_sales_report</field>
+    </record>
+
+    <template id="multi_employee_sales_report">
+        <t t-set="company" t-value="env.company"/>
+        <t t-call="point_of_sale.pos_daily_sales_html_container">
+            <t t-call="web.basic_layout">
+                <t t-foreach="employee_ids" t-as="employee_id" t-key="employee_id">
+                    <t t-call="pos_hr.single_employee_sales_report">
+                        <t t-set="data" t-value="env['report.pos_hr.single_employee_sales_report'].get_sale_details(date_start, date_stop, config_ids, session_ids, employee_id)"/>
+                        <t t-set="opening_note" t-value="data['opening_note']"/>
+                        <t t-set="closing_note" t-value="data['closing_note']"/>
+                        <t t-set="state" t-value="data['state']"/>
+                        <t t-set="currency" t-value="data['currency']"/>
+                        <t t-set="nbr_orders" t-value="data['nbr_orders']"/>
+                        <t t-set="date_start" t-value="data['date_start']"/>
+                        <t t-set="date_stop" t-value="data['date_stop']"/>
+                        <t t-set="session_name" t-value="data['session_name']"/>
+                        <t t-set="employee_name" t-value="data['employee_name']"/>
+                        <t t-set="config_names" t-value="data['config_names']"/>
+                        <t t-set="payments" t-value="data['payments']"/>
+                        <t t-set="company_name" t-value="data['company_name']"/>
+                        <t t-set="taxes" t-value="data['taxes']"/>
+                        <t t-set="taxes_info" t-value="data['taxes_info']"/>
+                        <t t-set="products" t-value="data['products']"/>
+                        <t t-set="products_info" t-value="data['products_info']"/>
+                        <t t-set="refund_taxes" t-value="data['refund_taxes']"/>
+                        <t t-set="refund_taxes_info" t-value="data['refund_taxes_info']"/>
+                        <t t-set="refund_info" t-value="data['refund_info']"/>
+                        <t t-set="refund_products" t-value="data['refund_products']"/>
+                        <t t-set="discount_number" t-value="data['discount_number']"/>
+                        <t t-set="discount_amount" t-value="data['discount_amount']"/>
+                        <t t-set="invoiceList" t-value="data['invoiceList']"/>
+                        <t t-set="invoiceTotal" t-value="data['invoiceTotal']"/>
+                        <t t-set="total_paid" t-value="data['total_paid']"/>
+                    </t>
+                </t>    
+            </t>
+        </t>
+    </template>
+</odoo>

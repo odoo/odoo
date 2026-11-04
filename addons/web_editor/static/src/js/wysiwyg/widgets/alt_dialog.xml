@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="web_editor.AltDialog">
+    <Dialog size="'xl'" title.translate="Change media description and tooltip">
+        <form action="#">
+            <div class="mb-3 row">
+                <label class="col-md-3 col-form-label" for="alt"
+                    title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...).">
+                Description <small>(ALT Tag)</small>
+                </label>
+                <div class="col-md-8">
+                    <input class="form-control" t-ref="alt" required="required" t-att-value="props.alt" type="text"/>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-md-3 col-form-label" for="title"
+                    title="'Title tag' is shown as a tooltip when you hover the picture.">
+                Tooltip  <small>(TITLE Tag)</small>
+                </label>
+                <div class="col-md-8">
+                    <input class="form-control" t-ref="tag_title" required="required" t-att-value="props.tag_title" type="text"/>
+                </div>
+            </div>
+        </form>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="_confirm">Save</button>
+            <button class="btn btn-secondary" t-on-click="_cancel">Discard</button>
+        </t>
+    </Dialog>
+</t>
+
+</templates>

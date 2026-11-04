@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Project Template -->
+        <record id="so_template_project" model="project.project">
+            <field name="name">Sales Order</field>
+            <field name="active">False</field>
+            <field name="type_ids" eval="[Command.link(ref('project.project_stage_0')), Command.link(ref('project.project_stage_1')), Command.link(ref('project.project_stage_2'))]"/>
+            <field name="description">This project is used as a template for projects created from sales orders.</field>
+        </record>
+
+        <record id="product_service_create_project_and_task" model="product.product">
+            <field name="name">Website Redesign Service (project &amp; task)</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="type">service</field>
+            <field name="list_price">66.60</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_in_project</field>
+            <field name="project_template_id" ref="so_template_project"/>
+        </record>
+
+        <record id="product_service_create_project_only" model="product.product">
+            <field name="name">Digital Marketing Campaign (project)</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="type">service</field>
+            <field name="list_price">123.00</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">project_only</field>
+            <field name="project_template_id" ref="so_template_project"/>
+        </record>
+
+        <record id="product_service_create_task_only" model="product.product">
+            <field name="name">Office Furniture Set (task)</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="type">service</field>
+            <field name="list_price">42.42</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_project_1"/>
+        </record>
+
+        <function model="project.project" name="write">
+            <value model="project.project" search="[('id', '=', ref('project.project_home_construction'))]"/>
+            <value eval="{
+                'allow_billable': 'True',
+            }"/>
+        </function>
+
+        <!-- Task in project product -->
+        <record id="product_product_painting" model="product.product">
+            <field name="name">Painting</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">1000.00</field>
+            <field name="standard_price">1500.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <record id="product.product_product_furniture" model="product.product">
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <record id="product_product_flooring" model="product.product">
+            <field name="name">Flooring Services</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">700.00</field>
+            <field name="standard_price">1000.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <record id="product_product_plumbing" model="product.product">
+            <field name="name">Plumbing Services</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">500.00</field>
+            <field name="standard_price">700.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <record id="product_product_wiring" model="product.product">
+            <field name="name">Wiring Services</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">1500.00</field>
+            <field name="standard_price">2000.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <record id="product_product_screw_driver" model="product.product">
+            <field name="name">Screw Driver</field>
+            <field name="categ_id" ref="product.product_category_consumable"/>
+            <field name="standard_price">100.00</field>
+            <field name="list_price">150.00</field>
+            <field name="type">consu</field>
+            <field name="weight">0.75</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+
+        <record id="sale_order_construction_material" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <record id="sale_line_construction_material_1" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_construction_material"/>
+            <field name="sequence" eval="1"/>
+            <field name="product_id" ref="sale_project.product_product_wiring"/>
+            <field name="product_uom_qty">5</field>
+        </record>
+
+        <record id="sale_line_construction_material_2" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_construction_material"/>
+            <field name="sequence" eval="2"/>
+            <field name="product_id" ref="sale_project.product_product_screw_driver"/>
+            <field name="product_uom_qty">50</field>
+        </record>
+
+        <!-- Sale order for Project Home Construction -->
+        <record id="sale_order_construction" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="client_order_ref">MANUAL</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="tag_ids" eval="[Command.link(ref('sales_team.categ_oppor6'))]"/>
+        </record>
+
+        <record id="sale_line_construction_1" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_construction"/>
+            <field name="sequence" eval="2"/>
+            <field name="product_id" ref="product_product_painting"/>
+            <field name="product_uom_qty">7</field>
+        </record>
+
+        <record id="sale_line_construction_2" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_construction"/>
+            <field name="sequence" eval="2"/>
+            <field name="product_id" ref="product.product_product_furniture"/>
+            <field name="product_uom_qty">15</field>
+            <field name="qty_delivered">12</field>
+        </record>
+
+        <record id="sale_line_construction_3" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_construction"/>
+            <field name="sequence" eval="2"/>
+            <field name="product_id" ref="product_product_flooring"/>
+            <field name="product_uom_qty">10</field>
+            <field name="qty_delivered">8</field>
+        </record>
+
+        <record id="sale_line_construction_4" model="sale.order.line">
+            <field name="order_id" ref="sale_project.sale_order_construction"/>
+            <field name="sequence" eval="2"/>
+            <field name="product_id" ref="product_product_plumbing"/>
+            <field name="product_uom_qty">12</field>
+            <field name="qty_delivered">10</field>
+        </record>
+
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_construction_material')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_construction')]]"/>
+
+        <!-- Set users and state to task -->
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_project.sale_line_construction_1'))]"/>
+            <value eval="{
+                'user_ids': [Command.link(ref('base.user_admin'))],
+                'state': '02_changes_requested',
+            }"/>
+        </function>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_project.sale_line_construction_2'))]"/>
+            <value eval="{
+                'user_ids': [Command.link(ref('base.user_demo'))],
+                'state': '03_approved',
+            }"/>
+        </function>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_project.sale_line_construction_3'))]"/>
+            <value eval="{
+                'milestone_id': ref('project.project_home_construction_milestone_1'),
+                'stage_id': ref('project.project_stage_2'),
+                'user_ids':[Command.link(ref('base.user_admin'))],
+                'state': '1_done',
+            }"/>
+        </function>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_project.sale_line_construction_4'))]"/>
+            <value eval="{
+                'milestone_id': ref('project.project_home_construction_milestone_1'),
+                'user_ids': [Command.link(ref('base.user_demo'))],
+            }"/>
+        </function>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_project.sale_line_construction_material_1'))]"/>
+            <value eval="{
+                'milestone_id': ref('project.project_home_construction_milestone_3'),
+                'user_ids': [Command.link(ref('base.user_demo'))],
+            }"/>
+        </function>
+    </data>
+</odoo>

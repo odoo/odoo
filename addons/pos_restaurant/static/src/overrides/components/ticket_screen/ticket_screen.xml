@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('header-row')]//div[@name='delete']" position="before">
+            <div t-if="pos.config.module_pos_restaurant" class="col p-2" name="table">Table</div>
+            <div t-if="state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">Tip</div>
+        </xpath>
+        <xpath expr="//div[hasclass('order-row')]//div[@name='delete']" position="before">
+            <div t-if="pos.config.module_pos_restaurant" class="col p-2" name="table">
+                <t t-if="order.table_id">
+                    <div t-if="ui.isSmall">Table</div>
+                    <div><t t-esc="getTable(order)"></t></div>
+                </t>
+                <div t-elif="pos.config.module_pos_restaurant" t-esc="order.getFloatingOrderName()" />
+            </div>
+            <div t-if="state.filter == 'TIPPING'" class="col end narrow p-2" name="tip">
+                <div t-if="ui.isSmall">Tip</div>
+                <div><TipCell order="order" /></div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('mobileOrderList')]//div[hasclass('orderStatus')]" position="before">
+            <div t-if="order.table_id" t-esc="getTable(order)" />
+            <div t-elif="pos.config.module_pos_restaurant" t-esc="order.getFloatingOrderName()" />
+        </xpath>
+        <xpath expr="//div[hasclass('buttons')]" position="inside">
+            <button class="settle-tips btn btn-lg btn-primary" t-if="state.filter == 'TIPPING'" t-on-click="settleTips">Settle</button>
+        </xpath>
+    </t>
+
+    <t t-name="pos_restaurant.TipCell">
+        <div class="tip-cell" t-on-click.stop="editTip">
+            <t t-if="state.isEditing">
+                <input type="text" name="tip-amount" t-ref="autofocus" t-model="orderUiState.inputTipAmount" t-on-blur="onBlur" t-on-keydown="onKeydown" />
+            </t>
+            <div t-else="">
+                <t t-esc="tipAmountStr"></t>
+            </div>
+        </div>
+    </t>
+
+</templates>

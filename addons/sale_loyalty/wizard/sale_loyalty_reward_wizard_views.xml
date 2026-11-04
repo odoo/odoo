@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sale_loyalty_reward_wizard_view_form" model="ir.ui.view">
+        <field name="name">sale.loyalty.reward.wizard.view.form</field>
+        <field name="model">sale.loyalty.reward.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="order_id" invisible="1"/>
+                        <field name="reward_ids" invisible="1"/>
+                        <field name="multi_product_reward" invisible="1"/>
+                        <field name="reward_product_ids" invisible="1"/>
+                        <a invisible="reward_ids">
+                            No rewards available for this customer!
+                        </a>
+                        <label for="selected_reward_id" string="Choose your reward:" colspan="2"
+                            invisible="not reward_ids"/>
+                        <field name="selected_reward_id" widget="radio" colspan="2" nolabel="1"
+                            invisible="not reward_ids"/>
+                        <label for="selected_product_id" string="Choose a product:" colspan="2"
+                            invisible="not multi_product_reward"/>
+                        <field name="selected_product_id" widget="radio" colspan="2" nolabel="1"
+                            invisible="not multi_product_reward"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <!-- Has rewards -->
+                    <button type="object" name="action_apply" string="Apply" class="btn btn-primary"
+                        invisible="not reward_ids" data-hotkey="q"/>
+                    <button type="object" name="action_cancel" string="Discard" class="btn btn-secondary"
+                        invisible="not reward_ids" data-hotkey="x"/>
+                    <!-- No rewards -->
+                    <button special="cancel" string="Discard" class="btn btn-primary"
+                        invisible="reward_ids" data-hotkey="x"/>
+                    <button type="action" name="%(loyalty.loyalty_program_discount_loyalty_action)d" string="Coupons &amp; Loyalty" class="btn btn-secondary float-end"
+                        invisible="reward_ids" groups="sales_team.group_sale_manager" data-hotkey="q"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_loyalty_reward_wizard_action" model="ir.actions.act_window">
+        <field name="name">Available Rewards</field>
+        <field name="res_model">sale.loyalty.reward.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AvatarCardPopover">
+        <div class="o_avatar_card rounded bg-inherit">
+            <div class="card-body rounded bg-inherit">
+                <div class="d-flex align-items-start gap-2 bg-inherit">
+                    <span class="o_avatar pt-1 position-relative o_card_avatar bg-inherit">
+                        <img t-if="props.id"
+                            t-attf-src="/web/image/res.users/{{props.id}}/avatar_128"
+                            class="rounded"
+                        />
+                        <span t-if="user.im_status" name="icon" class="o_card_avatar_im_status position-absolute d-flex align-items-center justify-content-center bg-inherit">
+                            <i t-if="user.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online" role="img" aria-label="User is online"/>
+                            <i t-elif="user.im_status === 'away'" class="fa fa-fw fa-circle text-warning" title="Idle" role="img" aria-label="User is idle"/>
+                            <i t-elif="user.im_status === 'offline'" class="fa fa-fw fa-circle-o text-700" title="Offline" role="img" aria-label="User is offline"/>
+                            <i t-elif="user.im_status === 'bot'" class="fa fa-fw fa-heart text-success" title="Bot" role="img" aria-label="User is a bot"/>
+                            <i t-elif="!user.im_status" class="fa fa-fw fa-question-circle" title="No IM status available"/>
+                        </span>
+                    </span>
+                    <div class="d-flex flex-column o_card_user_infos overflow-hidden">
+                        <span class="fw-bold" t-esc="user.name"/>
+                        <t t-if="userInfoTemplate" t-call="{{userInfoTemplate}}"/>
+                        <a t-if="email" t-att-href="'mailto:'+email" t-att-title="email" class="text-truncate">
+                            <i class="fa fa-fw fa-envelope me-1"/><t t-esc="email"/>
+                        </a>
+                        <a t-if="phone" class="o-mail-avatar-card-tel text-truncate" t-att-title="phone" t-att-href="'tel:'+phone">
+                            <i class="fa fa-fw fa-phone me-1"/><t t-esc="phone"/>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex-wrap gap-2 mt-2">
+                    <div class="justify-content-end d-flex align-items-baseline">
+                        <div class="d-flex gap-2 o_avatar_card_buttons">
+                            <button t-if="!user.share" class="btn btn-secondary btn-sm" t-on-click.stop="onSendClick">Send message</button>
+                            <button t-if="showViewProfileBtn" class="btn btn-secondary btn-sm" t-on-click.stop="onClickViewProfile" t-ref="viewProfileBtn">View Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

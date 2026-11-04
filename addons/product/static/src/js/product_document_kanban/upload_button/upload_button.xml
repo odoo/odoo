@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="product.UploadButton">
+        <input
+            type="file"
+            multiple="true"
+            t-ref="uploadFileInput"
+            t-att-accept="props.allowedMIMETypes"
+            class="o_input_file o_hidden"
+            t-on-change.stop="onFileInputChange"
+        />
+        <button
+            type="button"
+            name="product_upload_document"
+            t-attf-class="btn btn-primary"
+            t-on-click.stop.prevent="() => this.uploadFileInputRef.el.click()"
+        >
+            Upload
+        </button>
+    </t>
+</templates>

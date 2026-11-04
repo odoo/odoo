@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="sst_ttx_registration_number_external_layout">
+        <li t-if="company.sst_registration_number and company.account_fiscal_country_id.code == 'MY'">
+            SST: <span t-field="company.sst_registration_number"/>
+        </li>
+        <li t-if="company.ttx_registration_number and company.account_fiscal_country_id.code == 'MY'">
+            TTx: <span t-field="company.ttx_registration_number"/>
+        </li>
+    </template>
+
+    <!-- Add the SST and TTx to the company -->
+    <template id="l10n_my_ubl_pint_external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_my_ubl_pint.sst_ttx_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_my_ubl_pint_external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_my_ubl_pint.sst_ttx_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_my_ubl_pint_external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_my_ubl_pint.sst_ttx_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_my_ubl_pint_external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_my_ubl_pint.sst_ttx_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_my_ubl_pint_external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_my_ubl_pint.sst_ttx_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_my_ubl_pint_external_layout_wave" inherit_id="web.external_layout_wave">
+        <xpath expr="//ul[@name='company_address_list']" position="inside">
+            <t t-call="l10n_my_ubl_pint.sst_ttx_registration_number_external_layout"/>
+        </xpath>
+    </template>
+
+    <template id="l10n_my_ubl_pint_external_layout_folder" inherit_id="web.external_layout_folder">
+        <xpath expr="//div[hasclass('o_folder_company_info')]" position="after">
+            <div t-if="company.sst_registration_number and company.account_fiscal_country_id.code == 'MY'">
+                SST: <span t-field="company.sst_registration_number"/>
+            </div>
+            <div t-if="company.ttx_registration_number and company.account_fiscal_country_id.code == 'MY'">
+                TTx: <span t-field="company.ttx_registration_number"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- add the SST to the partner -->
+    <template id="l10n_my_report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='partner_vat_address_not_same_as_shipping']" position="after">
+            <div t-if="o.partner_id.sst_registration_number and o.partner_id.country_code == 'MY'">
+                SST: <span t-field="o.partner_id.sst_registration_number"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='partner_vat_address_same_as_shipping']" position="after">
+            <div t-if="o.partner_id.sst_registration_number and o.partner_id.country_code == 'MY'">
+                SST: <span t-field="o.partner_id.sst_registration_number"/>
+            </div>
+        </xpath>
+
+        <xpath expr="//div[@id='partner_vat_no_shipping']" position="after">
+            <div t-if="o.partner_id.sst_registration_number and o.partner_id.country_code == 'MY'">
+                SST: <span t-field="o.partner_id.sst_registration_number"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

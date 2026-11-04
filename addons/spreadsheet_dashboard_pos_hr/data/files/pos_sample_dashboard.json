@@ -1,0 +1,770 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "sheet1",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 63,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "23": {
+                    "size": 40
+                },
+                "24": {
+                    "size": 40
+                },
+                "25": {
+                    "size": 29
+                },
+                "26": {
+                    "size": 29
+                },
+                "27": {
+                    "size": 29
+                },
+                "28": {
+                    "size": 29
+                },
+                "29": {
+                    "size": 29
+                },
+                "30": {
+                    "size": 29
+                },
+                "31": {
+                    "size": 29
+                },
+                "32": {
+                    "size": 29
+                },
+                "33": {
+                    "size": 29
+                },
+                "34": {
+                    "size": 29
+                },
+                "36": {
+                    "size": 40
+                },
+                "37": {
+                    "size": 40
+                },
+                "38": {
+                    "size": 29
+                },
+                "39": {
+                    "size": 29
+                },
+                "40": {
+                    "size": 29
+                },
+                "41": {
+                    "size": 29
+                },
+                "42": {
+                    "size": 29
+                },
+                "43": {
+                    "size": 29
+                },
+                "44": {
+                    "size": 29
+                },
+                "45": {
+                    "size": 29
+                },
+                "46": {
+                    "size": 29
+                },
+                "47": {
+                    "size": 29
+                },
+                "49": {
+                    "size": 40
+                },
+                "50": {
+                    "size": 40
+                },
+                "51": {
+                    "size": 29
+                },
+                "52": {
+                    "size": 29
+                },
+                "53": {
+                    "size": 29
+                },
+                "54": {
+                    "size": 29
+                },
+                "55": {
+                    "size": 29
+                },
+                "56": {
+                    "size": 29
+                },
+                "57": {
+                    "size": 29
+                },
+                "58": {
+                    "size": 29
+                },
+                "59": {
+                    "size": 29
+                },
+                "60": {
+                    "size": 29
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 200
+                },
+                "1": {
+                    "size": 125
+                },
+                "2": {
+                    "size": 131
+                },
+                "3": {
+                    "size": 100
+                },
+                "4": {
+                    "size": 200
+                },
+                "5": {
+                    "size": 125
+                },
+                "6": {
+                    "size": 125
+                }
+            },
+            "merges": [
+                "A25:B25",
+                "A26:B26",
+                "A27:B27",
+                "A28:B28",
+                "A29:B29",
+                "A30:B30",
+                "A31:B31",
+                "A32:B32",
+                "A33:B33",
+                "A34:B34",
+                "A35:B35"
+            ],
+            "cells": {
+                "A7": {
+                    "content": "[Orders by Month](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"date:month\"],\"graph_measure\":\"__count\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:month\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})"
+                },
+                "A24": {
+                    "content": "[Top Orders](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[]},\"modelName\":\"pos.order\",\"views\":[[false,\"list\"],[false,\"form\"],[false,\"kanban\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders\"})"
+                },
+                "A25": {
+                    "content": "=_t(\"Sessions\")"
+                },
+                "A37": {
+                    "content": "[Top Sessions](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"session_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"session_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})"
+                },
+                "A38": {
+                    "content": "=_t(\"Session\")"
+                },
+                "A50": {
+                    "content": "[Top Responsibles](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"user_id\",\"!=\",false]],\"context\":{\"group_by\":[\"user_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"user_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})"
+                },
+                "A51": {
+                    "content": "=_t(\"Responsible\")"
+                },
+                "B38": {
+                    "content": "=_t(\"Orders\")"
+                },
+                "B51": {
+                    "content": "=_t(\"Orders\")"
+                },
+                "C25": {
+                    "content": "=_t(\"Date\")"
+                },
+                "C38": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "C51": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "D25": {
+                    "content": "=_t(\"Point of Sale\")"
+                },
+                "E25": {
+                    "content": "=_t(\"Employee\")"
+                },
+                "E37": {
+                    "content": "[Top Points of Sale](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"config_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"config_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})"
+                },
+                "E38": {
+                    "content": "=_t(\"Point of Sale\")"
+                },
+                "E50": {
+                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"order_id\",\"price_total\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"report.pos.order\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Orders Analysis\"})"
+                },
+                "E51": {
+                    "content": "=_t(\"Product\")"
+                },
+                "F25": {
+                    "content": "=_t(\"Customer\")"
+                },
+                "F38": {
+                    "content": "=_t(\"Orders\")"
+                },
+                "F51": {
+                    "content": "=_t(\"Orders\")"
+                },
+                "G25": {
+                    "content": "=_t(\"Total\")"
+                },
+                "G38": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "G51": {
+                    "content": "=_t(\"Revenue\")"
+                }
+            },
+            "styles": {
+                "A7": 1,
+                "A24": 1,
+                "A37": 1,
+                "A50": 1,
+                "E37": 1,
+                "E50": 1,
+                "A25": 2,
+                "A38": 2,
+                "A51": 2,
+                "E38": 2,
+                "E51": 2,
+                "C25:F25": 2,
+                "B38:C38": 3,
+                "B51:C51": 3,
+                "G25": 3,
+                "F38:G38": 3,
+                "F51:G51": 3
+            },
+            "formats": {},
+            "borders": {
+                "A37:C37": 1,
+                "A50:C50": 1,
+                "A7:G7": 1,
+                "A24:G24": 1,
+                "E37:G37": 1,
+                "E50:G50": 1,
+                "A38:C38": 2,
+                "A51:C51": 2,
+                "A8:G8": 2,
+                "A25:G25": 2,
+                "E38:G38": 2,
+                "E51:G51": 2,
+                "A26": 3,
+                "A27:A35": 4,
+                "A56:C56": 4,
+                "E56:G56": 4,
+                "A49:C49": 5,
+                "A62:C62": 5,
+                "A36:G36": 5,
+                "E49:G49": 5,
+                "E62:G62": 5,
+                "A39": 6,
+                "A52": 6,
+                "B26": 6,
+                "E39": 6,
+                "E52": 6,
+                "A40:A48": 7,
+                "A53:A55": 7,
+                "A57:A61": 7,
+                "B27:B35": 7,
+                "E40:E48": 7,
+                "E53:E55": 7,
+                "E57:E61": 7,
+                "B39": 8,
+                "B52": 8,
+                "C26:F26": 8,
+                "F39": 8,
+                "F52": 8,
+                "B40:B48": 9,
+                "B53:B55": 9,
+                "B57:B61": 9,
+                "C27:F35": 9,
+                "F40:F48": 9,
+                "F53:F55": 9,
+                "F57:F61": 9,
+                "C39": 10,
+                "C52": 10,
+                "G26": 10,
+                "G39": 10,
+                "G52": 10,
+                "C40:C48": 11,
+                "C53:C55": 11,
+                "C57:C61": 11,
+                "G27:G35": 11,
+                "G40:G48": 11,
+                "G53:G55": 11,
+                "G57:G61": 11
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "cfee1ef1-ac54-4e9f-bdde-0162652de2cf",
+                    "x": 0,
+                    "y": 9,
+                    "width": 209,
+                    "height": 111,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Orders",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E2",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "d141cc35-0b60-4e91-b736-5c1453fea925",
+                    "x": 217,
+                    "y": 9,
+                    "width": 200,
+                    "height": 111,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Revenue",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E3",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "615fb94e-8098-456e-9f71-7799b82f04c4",
+                    "x": 426,
+                    "y": 9,
+                    "width": 197,
+                    "height": 111,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "percentage",
+                        "title": {
+                            "text": "Average order",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "baseline": "Data!E4",
+                        "baselineDescr": "since last period",
+                        "keyValue": "Data!D4",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "5143b90c-d735-4c43-a31c-db58bf917db8",
+                    "x": 0,
+                    "y": 178,
+                    "width": 1005,
+                    "height": 369,
+                    "tag": "chart",
+                    "data": {
+                        "type": "line",
+                        "dataSetsHaveTitle": false,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!C7:C16",
+                                "yAxisId": "y"
+                            }
+                        ],
+                        "legendPosition": "none",
+                        "labelRange": "Data!A7:A16",
+                        "title": {},
+                        "labelsAsText": true,
+                        "stacked": false,
+                        "aggregated": false,
+                        "cumulative": true,
+                        "fillArea": true
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "1497ba8c-9e7d-4aa4-8394-741da8110207",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 101,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"KPI\")"
+                },
+                "A2": {
+                    "content": "=_t(\"Orders\")"
+                },
+                "A3": {
+                    "content": "=_t(\"Revenue\")"
+                },
+                "A4": {
+                    "content": "=_t(\"Average order\")"
+                },
+                "A7": {
+                    "content": "=EDATE(TODAY(),-B7)"
+                },
+                "A8": {
+                    "content": "=EDATE(TODAY(),-B8)"
+                },
+                "A9": {
+                    "content": "=EDATE(TODAY(),-B9)"
+                },
+                "A10": {
+                    "content": "=EDATE(TODAY(),-B10)"
+                },
+                "A11": {
+                    "content": "=EDATE(TODAY(),-B11)"
+                },
+                "A12": {
+                    "content": "=EDATE(TODAY(),-B12)"
+                },
+                "A13": {
+                    "content": "=EDATE(TODAY(),-B13)"
+                },
+                "A14": {
+                    "content": "=EDATE(TODAY(),-B14)"
+                },
+                "A15": {
+                    "content": "=EDATE(TODAY(),-B15)"
+                },
+                "A16": {
+                    "content": "=EDATE(TODAY(),-B16)"
+                },
+                "B1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "B2": {
+                    "content": "567"
+                },
+                "B3": {
+                    "content": "855890"
+                },
+                "B4": {
+                    "content": "=IFERROR(B3/B2)"
+                },
+                "B7": {
+                    "content": "9"
+                },
+                "B8": {
+                    "content": "8"
+                },
+                "B9": {
+                    "content": "7"
+                },
+                "B10": {
+                    "content": "6"
+                },
+                "B11": {
+                    "content": "5"
+                },
+                "B12": {
+                    "content": "4"
+                },
+                "B13": {
+                    "content": "3"
+                },
+                "B14": {
+                    "content": "2"
+                },
+                "B15": {
+                    "content": "1"
+                },
+                "B16": {
+                    "content": "0"
+                },
+                "C1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "C2": {
+                    "content": "342"
+                },
+                "C4": {
+                    "content": "789"
+                },
+                "C7": {
+                    "content": "2675"
+                },
+                "C8": {
+                    "content": "5508"
+                },
+                "C9": {
+                    "content": "5386"
+                },
+                "C10": {
+                    "content": "8463"
+                },
+                "C11": {
+                    "content": "2014"
+                },
+                "C12": {
+                    "content": "5490"
+                },
+                "C13": {
+                    "content": "6956"
+                },
+                "C14": {
+                    "content": "2282"
+                },
+                "C15": {
+                    "content": "9875"
+                },
+                "C16": {
+                    "content": "5508"
+                },
+                "D1": {
+                    "content": "=_t(\"Current\")"
+                },
+                "D2": {
+                    "content": "=FORMAT.LARGE.NUMBER(B2)"
+                },
+                "D3": {
+                    "content": "=FORMAT.LARGE.NUMBER(B3)"
+                },
+                "D4": {
+                    "content": "=FORMAT.LARGE.NUMBER(B4)"
+                },
+                "E1": {
+                    "content": "=_t(\"Previous\")"
+                },
+                "E2": {
+                    "content": "=FORMAT.LARGE.NUMBER(C2)"
+                },
+                "E3": {
+                    "content": "=B3 - 343545"
+                },
+                "E4": {
+                    "content": "=FORMAT.LARGE.NUMBER(C4)"
+                }
+            },
+            "styles": {
+                "A1:E1": 4,
+                "A2:E4": 5
+            },
+            "formats": {
+                "A7:A16": 1,
+                "B3:B4": 2,
+                "C4": 2,
+                "C7:C16": 2,
+                "D3:E4": 2
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "fontSize": 16,
+            "bold": true
+        },
+        "2": {
+            "bold": true,
+            "textColor": "#434343",
+            "fontSize": 11
+        },
+        "3": {
+            "fontSize": 11,
+            "textColor": "#434343",
+            "bold": true,
+            "align": "center"
+        },
+        "4": {
+            "bold": true,
+            "fillColor": "#f2f2f2"
+        },
+        "5": {
+            "fillColor": "#f2f2f2"
+        }
+    },
+    "formats": {
+        "1": "mmmm yyyy",
+        "2": "[$$]#,##0"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#CCCCCC"
+            }
+        },
+        "3": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "4": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "6": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "7": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "8": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "9": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "10": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "11": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 7,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 2
+}

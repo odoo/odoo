@@ -1,0 +1,19 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_picking_salesman,stock_picking salesman,stock.model_stock_picking,sales_team.group_sale_salesman,1,1,1,0
+access_stock_move_salesman,stock_move salesman,stock.model_stock_move,sales_team.group_sale_salesman,1,1,1,0
+access_stock_move_manager,stock_move manager,stock.model_stock_move,sales_team.group_sale_manager,1,1,1,1
+access_sale_order_stock_worker,sale.order stock worker,model_sale_order,stock.group_stock_user,1,1,0,0
+access_sale_order_line_stock_worker,sale.order.line stock worker,model_sale_order_line,stock.group_stock_user,1,1,0,0
+access_stock_picking_sales,stock.picking.sales,stock.model_stock_picking,sales_team.group_sale_manager,1,1,1,1
+access_stock_picking_portal,stock.picking,stock.model_stock_picking,base.group_portal,1,0,0,0
+access_product_packaging_user,product.packaging.user,product.model_product_packaging,sales_team.group_sale_salesman,1,1,1,0
+access_stock_warehouse_user,stock.warehouse.user,stock.model_stock_warehouse,sales_team.group_sale_salesman,1,0,0,0
+access_stock_location_user,stock.location.user,stock.model_stock_location,sales_team.group_sale_salesman,1,0,0,0
+access_product_packaging_sale_manager,product.packaging salemanager,product.model_product_packaging,sales_team.group_sale_manager,1,1,1,1
+access_stock_warehouse_orderpoint_sale_salesman,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,sales_team.group_sale_salesman,1,0,0,0
+access_account_partial_reconcile,account.partial.reconcile,account.model_account_partial_reconcile,stock.group_stock_manager,1,1,1,1
+access_account_journal,account.journal,account.model_account_journal,stock.group_stock_manager,1,1,0,0
+access_stock_location_sale_manager,stock.location sale manager,stock.model_stock_location,sales_team.group_sale_manager,1,0,0,0
+access_stock_rule_salemanager,stock_rule salemanager,stock.model_stock_rule,sales_team.group_sale_manager,1,1,1,1
+access_stock_rule,stock.rule.flow,stock.model_stock_rule,sales_team.group_sale_salesman,1,0,0,0
+access_stock_package_type_salesman,stock_package_type salesman,stock.model_stock_package_type,sales_team.group_sale_salesman,1,0,0,0

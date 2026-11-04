@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ComboConfiguratorPopup">
+        <Dialog t-if="this.hasMultipleChoices()" title="props.product.display_name" contentClass="'combo-configurator-popup'">
+            <div t-if="isArchivedProductSelected()" class="alert alert-warning mt-3">
+                <span>This combination does not exist.</span>
+            </div>
+            <div t-foreach="props.product.combo_ids" t-as="combo" t-key="combo.id" class="d-flex flex-column m-3 mb-4">
+                <h3 class="me-auto mb-3" t-esc="combo.name"/>
+                <div class="product-list d-grid gap-1">
+                    <div t-foreach="getAvailableComboLines(combo)" t-as="combo_item" t-key="combo_item.id" class="m-2" t-att-class="{'ptav-not-available' : isArchived(combo_item)}">
+                        <t t-set="product" t-value="combo_item.product_id"/>
+                        <input type="radio" class="position-absolute"
+                            t-attf-name="combo-{{combo.id}}"
+                            t-attf-id="combo-{{combo.id}}-combo_item-{{combo_item.id}}"
+                            t-attf-value="{{combo_item.id}}"
+                            t-model="state.combo[combo.id]"
+                            t-att-class="{ 'selected': state.combo[combo.id] == combo_item.id }" />
+                        <label t-attf-for="combo-{{combo.id}}-combo_item-{{combo_item.id}}" class="combo-item d-block h-100 w-100 rounded cursor-pointer transition-base">
+                            <ProductCard name="product.display_name"
+                                class="'flex-column h-100 border'"
+                                productId="product.id"
+                                product="product"
+                                comboExtraPrice="formattedComboPrice(combo_item)"
+                                color="product.color || product.pos_categ_ids?.at(-1)?.color"
+                                imageUrl="pos.config.show_product_images and product.getImageUrl()"
+                                onClick="(ev) => this.onClickProduct({ product, combo_item }, ev)" />
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <div class="d-flex w-100 justify-content-start gap-2">
+                    <button class="confirm btn btn-lg btn-primary"
+                        t-att-disabled="!areAllCombosSelected() || isArchivedProductSelected()" t-on-click="confirm">
+                        Add to order
+                    </button>
+                    <div class="ms-auto">
+                        <t t-if="!areAllCombosSelected()">
+                            Complete the selection to proceed
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+</templates>

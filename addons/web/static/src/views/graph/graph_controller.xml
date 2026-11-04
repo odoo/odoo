@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.GraphView.Buttons">
+        <div class="btn-group" role="toolbar" aria-label="Main actions">
+            <ReportViewMeasures
+                measures="model.metaData.measures"
+                activeMeasures="[model.metaData.measure]"
+                onMeasureSelected.bind="this.onMeasureSelected"
+            />
+        </div>
+        <div class="btn-group" role="toolbar" aria-label="Change graph">
+            <button class="btn btn-secondary fa fa-bar-chart o_graph_button" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
+                t-on-click="() => this.onModeSelected('bar')"
+                t-att-class="{ active: model.metaData.mode === 'bar' }"
+            />
+            <button class="btn btn-secondary fa fa-line-chart o_graph_button" data-tooltip="Line Chart" aria-label="Line Chart" data-mode="line"
+                t-on-click="() => this.onModeSelected('line')"
+                t-att-class="{ active: model.metaData.mode === 'line' }"
+            />
+            <button class="btn btn-secondary fa fa-pie-chart o_graph_button" data-tooltip="Pie Chart" aria-label="Pie Chart" data-mode="pie"
+                t-on-click="() => this.onModeSelected('pie')"
+                t-att-class="{ active: model.metaData.mode === 'pie' }"
+            />
+        </div>
+        <div t-if="model.metaData.mode === 'bar'" class="btn-group" role="toolbar" aria-label="Change graph">
+            <button class="btn btn-secondary fa fa-database o_graph_button" data-tooltip="Stacked" aria-label="Stacked"
+                t-on-click="toggleStacked"
+                t-att-class="{ active: model.metaData.stacked }"
+            />
+        </div>
+        <div t-if="model.metaData.mode === 'line'" class="btn-group" role="toolbar" aria-label="Change graph">
+            <button class="btn btn-secondary fa fa-database o_graph_button" data-tooltip="Stacked" aria-label="Stacked"
+                t-on-click="toggleStacked"
+                t-att-class="{ active: model.metaData.stacked }"
+            />
+            <button class="btn btn-secondary fa fa-signal o_graph_button" data-tooltip="Cumulative" aria-label="Cumulative"
+                t-on-click="toggleCumulated"
+                t-att-class="{ active: model.metaData.cumulated }"
+            />
+        </div>
+        <div t-if="model.metaData.mode !== 'pie' and model.metaData.domains.length === 1" class="btn-group" role="toolbar" aria-label="Sort graph" name="toggleOrderToolbar">
+            <button class="btn btn-secondary fa fa-sort-amount-desc o_graph_button" data-tooltip="Descending" aria-label="Descending"
+                t-on-click="() => this.toggleOrder('DESC')"
+                t-att-class="{ active: model.metaData.order === 'DESC' }"
+            />
+            <button class="btn btn-secondary fa fa-sort-amount-asc o_graph_button" data-tooltip="Ascending" aria-label="Ascending"
+                t-on-click="() => this.toggleOrder('ASC')"
+                t-att-class="{ active: model.metaData.order === 'ASC' }"
+            />
+        </div>
+    </t>
+
+    <t t-name="web.GraphView">
+        <div t-att-class="props.className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <SearchBar toggler="searchBarToggler"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+                <t t-if="model.data">
+                    <t t-if="!model.hasData() or model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
+                        <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
+                    </t>
+                    <t t-if="model.data.exceeds">
+                        <div class="alert alert-info text-center o_graph_alert" role="status">
+                            There are too many data. The graph only shows a sample. Use the filters to refine the scope.
+                            <a class="o_graph_load_all_btn" href="#" t-on-click="() => this.loadAll()">
+                                Load everything anyway.
+                            </a>
+                        </div>
+                    </t>
+                    <t t-component="props.Renderer" model="model" buttonTemplate="props.buttonTemplate" />
+                </t>
+                <t t-else="" t-call="web.NoContentHelper">
+                    <t t-set="title">Invalid data</t>
+                    <t t-set="description">Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results</t>
+                </t>
+            </Layout>
+        </div>
+    </t>
+
+</templates>

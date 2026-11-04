@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//*[@name='thread content']" position="replace">
+           <FeedbackPanel t-if="props.chatWindow.hasFeedbackPanel" onClickClose="() => this.close()" thread="thread"/>
+           <t t-else="">
+            <t>$0</t>
+            <t t-if="this.livechatState.showCloseConfirmation">
+                <CloseConfirmation onCloseConfirmationDialog.bind="onCloseConfirmationDialog" onClickLeaveConversation.bind="close"/>
+            </t>
+           </t>
+        </xpath>
+        <xpath expr="//*[@t-ref='needactionCounter']" position="replace">
+            <t t-if="!chatbotService.chatbot">$0</t>
+        </xpath>
+        <xpath expr="//*[hasclass('o-mail-ChatWindow-header')]" position="attributes">
+            <attribute name="t-attf-style" add="color: {{ livechatService.options.title_color }}; background-color: {{ livechatService.options.header_background_color }} !important;" separator=" "/>
+        </xpath>
+        <xpath expr="//Composer" position="replace">
+            <t t-if="chatbotService.inputEnabled">$0</t>
+            <t t-else="">
+                <span class="bg-200 py-1 text-center fst-italic" t-esc="chatbotService.inputDisabledText"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

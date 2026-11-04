@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="product_product_ad_valorem" model="product.product">
+        <field name="name">Ad-Valorem</field>
+        <field name="type">service</field>
+        <field name="default_code">AD_VALOREM</field>
+        <field name="description">Charge for Ad-Valorem calculation in DIN</field>
+        <field name="sale_ok" eval="False"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+</odoo>

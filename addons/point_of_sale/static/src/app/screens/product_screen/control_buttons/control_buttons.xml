@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ControlButtons">
+        <!-- All buttons always displayed -->
+        <SelectPartnerButton partner="partner" t-if="!props.showRemainingButtons"/>
+        <t t-if="!props.showRemainingButtons || (ui.isSmall and props.showRemainingButtons)">
+            <OrderlineNoteButton
+                label="internalNoteLabel()"
+                getter="(orderline) => orderline.getNote()"
+                class="buttonClass"
+                setter="(orderline, note) => orderline.setNote(note)" />
+        </t>
+        <button t-if="!props.showRemainingButtons and !ui.isSmall and this.pos.showSaveOrderButton" t-att-disabled="this.pos.get_order().is_empty()" t-attf-class="{{ buttonClass }}" t-att-class="{'ms-auto': !props.showRemainingButtons}" t-on-click="() => this.pos.clickSaveOrder()">
+            <i class="fa fa-upload"/>
+        </button>
+        <button class="more-btn btn btn-light btn-lg flex-shrink-0" t-att-class="{'ms-auto': !this.pos.showSaveOrderButton}" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
+            Actions
+        </button>
+        <!-- All these buttons will only be displayed in a dialog -->
+        <t t-if="props.showRemainingButtons">
+            <div class="control-buttons control-buttons-modal d-grid gap-2 mt-2">
+                <OrderlineNoteButton class="buttonClass" label="internalNoteLabel(this.pos.get_order())"/>
+                <OrderlineNoteButton class="buttonClass" icon="'fa fa-sticky-note'"/>
+                <button class="o_pricelist_button btn btn-secondary btn-lg py-5" t-on-click="() => this.clickPricelist()">
+                    <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
+                    <t t-if="currentOrder?.pricelist_id" t-esc="currentOrder.pricelist_id.display_name" />
+                    <t t-else="">Pricelist</t>
+                </button>
+                <button class="btn btn-secondary btn-lg py-5" t-on-click="() => this.clickRefund()">
+                    <i class="fa fa-undo me-1" role="img" aria-label="Refund" title="Refund" />
+                    Refund
+                </button>
+                <button t-if="pos.models['account.fiscal.position'].length"
+                    class="control-button o_fiscal_position_button"
+                    t-att-class="buttonClass"
+                    t-on-click="() => this.clickFiscalPosition()">
+                    <i class="fa fa-book me-1" role="img" aria-label="Set fiscal position"
+                    title="Set fiscal position" />
+                    <t t-if="currentOrder?.fiscal_position_id" t-esc="currentOrder.fiscal_position_id.display_name" />
+                    <t t-else="">Tax</t>
+                </button>
+                <button class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.onDeleteOrder(this.pos.get_order())">
+                    <i class="fa fa-trash me-1" role="img" /> Cancel Order 
+                </button>
+            </div>
+        </t>
+    </t>
+</templates>

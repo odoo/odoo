@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.expense</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="85"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app data-string="Expenses" string="Expenses" name="hr_expense" groups="hr_expense.group_hr_expense_manager">
+                        <block title="Expenses" name="expenses_setting_container">
+                            <setting id="create_expense_setting" string="Incoming Emails"
+                                     help="Create expenses from incoming emails"
+                                     title="Send an email to this email alias with the receipt in attachment to create an expense in one click. If the first word of the mail subject contains the category's internal reference or the category name, the corresponding category will automatically be set. Type the expense amount in the mail subject to set it on the expense too.">
+                                <field name="hr_expense_use_mailgateway"/>
+                                <div class="content-group" invisible="not hr_expense_use_mailgateway or not alias_domain_id">
+                                    <div class="mt16 d-flex align-items-start" dir="ltr">
+                                        <label for="hr_expense_alias_prefix" string="Alias" class="o_light_label"/>
+                                        <field name="hr_expense_alias_prefix" placeholder="alias" class="oe_inline ps-2"/>
+                                        <span>@</span>
+                                        <field name="hr_expense_alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
+                                               options="{'no_create': True, 'no_open': True}"/>
+                                    </div>
+                                </div>
+                                <div class="content-group" invisible="not hr_expense_use_mailgateway or alias_domain_id">
+                                    <div class="mt16">
+                                        <a href="/odoo/settings#email-alias-setting" class="btn-link" role="button"><i class="oi oi-arrow-right"></i> Setup your alias domain</a>
+                                    </div>
+                                </div>
+                            </setting>
+                            <setting string="Reimburse in Payslip" help="Refund employees via their payslips." id="hr_payroll_accountant">
+                                <field name="module_hr_payroll_expense" widget="upgrade_boolean"/>
+                            </setting>
+                            <setting id="expense_extract_settings" string="Expense Digitalization (OCR)" company_dependent="1"
+                                     help="Digitalize your receipts with OCR and Artificial Intelligence"
+                                     title="use OCR to fill data from a picture of the bill">
+                                <field name="module_hr_expense_extract" widget="upgrade_boolean"/>
+                            </setting>
+                        </block>
+                        <block title="Accounting">
+                            <setting company_dependent="1" help="Default accounting journal for expenses paid by employees."
+                                     string="Employee Expense Journal">
+                                <field name="expense_journal_id"/>
+                            </setting>
+                            <setting company_dependent="1" help="Default outstanding account for expenses paid by company."
+                                     string="Expense Outstanding Account">
+                                <field name="expense_outstanding_account_id"/>
+                            </setting>
+                            <setting company_dependent="1" string="Payment methods"
+                                     help="Payment method allowed for expenses paid by company.">
+                                <field name="company_expense_allowed_payment_method_line_ids" widget="many2many_tags"
+                                       placeholder="All payment methods allowed" options="{'no_create': True}"/>
+                            </setting>
+                        </block>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_hr_expense_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'hr_expense', 'bin_size': False}</field>
+        </record>
+
+        <menuitem id="menu_hr_expense_global_settings" name="Settings"
+            parent="menu_hr_expense_configuration" sequence="0" action="action_hr_expense_configuration" groups="base.group_system"/>
+    </data>
+</odoo>

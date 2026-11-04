@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<record id="view_production_lot_form_stock_account" model="ir.ui.view">
+        <field name="name">view.production.lot.form.stock.account</field>
+        <field name="model">stock.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+        <xpath expr="//div[@name='button_box']" position="inside">
+            <button type="object"
+                name="action_view_stock_valuation_layers"
+                class="oe_stat_button" icon="fa-dollar" groups="stock.group_stock_manager"
+                invisible="not stock_valuation_layer_ids">
+                <div class="o_stat_info">
+                    <span class="o_stat_text">Valuation</span>
+                </div>
+            </button>
+        </xpath>
+        <xpath expr="//group[@name='main_group']/group[2]" position="inside">
+            <field name="company_currency_id" invisible="1"/>
+            <label for="total_value"/>
+            <div class="o_row">
+                <field name="total_value" widget='monetary' class="oe_inline" options="{'currency_field': 'company_currency_id'}"/>
+            </div>
+            <label for="avg_cost"/>
+            <div class="o_row">
+                <field name="avg_cost" widget='monetary' class="oe_inline" options="{'currency_field': 'company_currency_id'}"/>
+            </div>
+            <label for="standard_price"/>
+            <div class="o_row">
+                <field name="standard_price" widget='monetary' class="oe_inline" options="{'currency_field': 'company_currency_id'}"/>
+            </div>
+            </xpath>
+        </field>
+        </record>
+        </data>
+</odoo>

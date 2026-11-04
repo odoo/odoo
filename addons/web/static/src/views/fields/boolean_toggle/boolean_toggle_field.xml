@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BooleanToggleField" t-inherit="web.BooleanField" t-inherit-mode="primary">
+        <xpath expr="//CheckBox" position="attributes">
+            <attribute name="className">'o_field_boolean o_boolean_toggle form-switch'</attribute>
+        </xpath>
+        <xpath expr="//CheckBox" position="inside">
+            &#8203; <!-- Zero width space needed to set height -->
+        </xpath>
+    </t>
+
+</templates>

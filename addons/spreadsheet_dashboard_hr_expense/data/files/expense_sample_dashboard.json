@@ -1,0 +1,743 @@
+{
+    "version": 21,
+    "sheets": [
+        {
+            "id": "91067711-0fdf-451a-b1ec-9e8bdcff23f0",
+            "name": "Dashboard",
+            "colNumber": 7,
+            "rowNumber": 56,
+            "rows": {
+                "6": {
+                    "size": 40
+                },
+                "22": {
+                    "size": 40
+                },
+                "23": {
+                    "size": 40
+                },
+                "24": {
+                    "size": 30
+                },
+                "25": {
+                    "size": 30
+                },
+                "26": {
+                    "size": 30
+                },
+                "27": {
+                    "size": 30
+                },
+                "28": {
+                    "size": 30
+                },
+                "29": {
+                    "size": 30
+                },
+                "30": {
+                    "size": 30
+                },
+                "31": {
+                    "size": 30
+                },
+                "32": {
+                    "size": 30
+                },
+                "33": {
+                    "size": 30
+                },
+                "35": {
+                    "size": 40
+                },
+                "36": {
+                    "size": 40
+                },
+                "37": {
+                    "size": 30
+                },
+                "38": {
+                    "size": 30
+                },
+                "39": {
+                    "size": 30
+                },
+                "40": {
+                    "size": 30
+                },
+                "41": {
+                    "size": 30
+                },
+                "42": {
+                    "size": 30
+                },
+                "43": {
+                    "size": 30
+                },
+                "44": {
+                    "size": 30
+                },
+                "45": {
+                    "size": 30
+                },
+                "46": {
+                    "size": 30
+                }
+            },
+            "cols": {
+                "0": {
+                    "size": 276
+                },
+                "1": {
+                    "size": 95
+                },
+                "2": {
+                    "size": 100
+                },
+                "3": {
+                    "size": 50
+                },
+                "4": {
+                    "size": 295
+                },
+                "5": {
+                    "size": 85
+                },
+                "6": {
+                    "size": 100
+                }
+            },
+            "merges": [],
+            "cells": {
+                "A7": {
+                    "content": "[Expenses Analysis](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[],\"context\":{\"group_by\":[\"date:month\",\"product_id\"],\"graph_measure\":\"total_amount\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"date:month\",\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\",\"positional\":true})"
+                },
+                "A23": {
+                    "content": "[Top Expenses](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":\"[]\",\"context\":{\"group_by\":[]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})"
+                },
+                "A24": {
+                    "content": "=_t(\"Expense\")"
+                },
+                "A36": {
+                    "content": "[Top Reinvoiced Orders](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"sale_order_id\",\"!=\",false]],\"context\":{\"group_by\":[\"sale_order_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"sale_order_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})"
+                },
+                "A37": {
+                    "content": "=_t(\"Order\")"
+                },
+                "B24": {
+                    "content": "=_t(\"Employee\")"
+                },
+                "B37": {
+                    "content": "=_t(\"# Expenses\")"
+                },
+                "C24": {
+                    "content": "=_t(\"Total\")"
+                },
+                "C37": {
+                    "content": "=_t(\"Total\")"
+                },
+                "E23": {
+                    "content": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})"
+                },
+                "E24": {
+                    "content": "=_t(\"Category\")"
+                },
+                "E36": {
+                    "content": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[[\"product_id\",\"!=\",false]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"__count\",\"total_amount\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"hr.expense\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Expenses Analysis\"})"
+                },
+                "E37": {
+                    "content": "=_t(\"Employee\")"
+                },
+                "F24": {
+                    "content": "=_t(\"# Expenses\")"
+                },
+                "F37": {
+                    "content": "=_t(\"# Expenses\")"
+                },
+                "G24": {
+                    "content": "=_t(\"Total\")"
+                },
+                "G37": {
+                    "content": "=_t(\"Total\")"
+                }
+            },
+            "styles": {
+                "A7": 1,
+                "A23": 1,
+                "A36": 1,
+                "E23": 1,
+                "E36": 1,
+                "A37": 2,
+                "A24:B24": 2,
+                "E24": 2,
+                "E37": 2,
+                "C24": 3,
+                "B37:C37": 3,
+                "F24:G24": 3,
+                "F37:G37": 3
+            },
+            "formats": {},
+            "borders": {
+                "A23:C23": 1,
+                "A36:C36": 1,
+                "A7:G7": 1,
+                "E23:G23": 1,
+                "E36:G36": 1,
+                "A24:C24": 2,
+                "A37:C37": 2,
+                "A8:G8": 2,
+                "E24:G24": 2,
+                "E37:G37": 2,
+                "A25": 3,
+                "A38": 3,
+                "E25": 3,
+                "E38": 3,
+                "A26:A33": 4,
+                "A39:A46": 4,
+                "E26:E33": 4,
+                "E39:E46": 4,
+                "A34": 5,
+                "A47": 5,
+                "E34": 5,
+                "E47": 5,
+                "B25": 6,
+                "B38": 6,
+                "F25": 6,
+                "F38": 6,
+                "B26:B33": 7,
+                "B39:B46": 7,
+                "F26:F33": 7,
+                "F39:F46": 7,
+                "B34": 8,
+                "B47": 8,
+                "F34": 8,
+                "F47": 8,
+                "C25": 9,
+                "C38": 9,
+                "G25": 9,
+                "G38": 9,
+                "C26:C33": 10,
+                "C39:C46": 10,
+                "G26:G33": 10,
+                "G39:G46": 10,
+                "C34": 11,
+                "C47": 11,
+                "G34": 11,
+                "G47": 11
+            },
+            "conditionalFormats": [],
+            "figures": [
+                {
+                    "id": "34d7af0c-d66d-46f5-9b4f-91a8f26be506",
+                    "x": 0,
+                    "y": 12,
+                    "width": 200,
+                    "height": 106,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "Expenses",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#EFF6FF",
+                        "keyValue": "Data!C1",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "64e233df-0643-4205-86c8-d051c45326a4",
+                    "x": 210,
+                    "y": 12,
+                    "width": 200,
+                    "height": 106,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "To report",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "keyValue": "Data!C2",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "62c97109-f819-42a7-929d-e76a1204be62",
+                    "x": 420,
+                    "y": 12,
+                    "width": 200,
+                    "height": 106,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "To validate",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "keyValue": "Data!C3",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "a84056d3-f845-4555-9bd9-3281b8b1c872",
+                    "x": 629,
+                    "y": 12,
+                    "width": 200,
+                    "height": 106,
+                    "tag": "chart",
+                    "data": {
+                        "baselineColorDown": "#DC6965",
+                        "baselineColorUp": "#00A04A",
+                        "baselineMode": "difference",
+                        "title": {
+                            "text": "To reimburse",
+                            "bold": true,
+                            "color": "#434343"
+                        },
+                        "type": "scorecard",
+                        "background": "#FFF7ED",
+                        "keyValue": "Data!C4",
+                        "humanize": false
+                    }
+                },
+                {
+                    "id": "3ce1b146-06b2-4a52-8a21-183d9b25af67",
+                    "x": 0,
+                    "y": 178,
+                    "width": 1002,
+                    "height": 348,
+                    "tag": "chart",
+                    "data": {
+                        "type": "bar",
+                        "dataSetsHaveTitle": true,
+                        "dataSets": [
+                            {
+                                "dataRange": "Data!B7:B14",
+                                "yAxisId": "y"
+                            },
+                            {
+                                "dataRange": "Data!C7:C14"
+                            },
+                            {
+                                "dataRange": "Data!D7:D14"
+                            },
+                            {
+                                "dataRange": "Data!E7:E14"
+                            }
+                        ],
+                        "legendPosition": "top",
+                        "labelRange": "Data!A7:A14",
+                        "title": {},
+                        "stacked": true,
+                        "aggregated": false,
+                        "horizontal": false
+                    }
+                }
+            ],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        },
+        {
+            "id": "44bfb206-c15d-4314-a394-97690f1d5e8e",
+            "name": "Data",
+            "colNumber": 26,
+            "rowNumber": 98,
+            "rows": {},
+            "cols": {},
+            "merges": [],
+            "cells": {
+                "A1": {
+                    "content": "=_t(\"KPI - Expenses\")"
+                },
+                "A2": {
+                    "content": "=_t(\"KPI - To report\")"
+                },
+                "A3": {
+                    "content": "=_t(\"KPI - To validate\")"
+                },
+                "A4": {
+                    "content": "=_t(\"KPI - To reimburse\")"
+                },
+                "A8": {
+                    "content": "=EDATE(TODAY(),-F8)"
+                },
+                "A9": {
+                    "content": "=EDATE(TODAY(),-F9)"
+                },
+                "A10": {
+                    "content": "=EDATE(TODAY(),-F10)"
+                },
+                "A11": {
+                    "content": "=EDATE(TODAY(),-F11)"
+                },
+                "A12": {
+                    "content": "=EDATE(TODAY(),-F12)"
+                },
+                "A13": {
+                    "content": "=EDATE(TODAY(),-F13)"
+                },
+                "A14": {
+                    "content": "=EDATE(TODAY(),-F14)"
+                },
+                "B1": {
+                    "content": "34"
+                },
+                "B2": {
+                    "content": "8494.42"
+                },
+                "B3": {
+                    "content": "2878"
+                },
+                "B4": {
+                    "content": "=B2-B3"
+                },
+                "B7": {
+                    "content": "=_t(\"Expenses\")"
+                },
+                "B8": {
+                    "content": "351"
+                },
+                "B9": {
+                    "content": "1402"
+                },
+                "B10": {
+                    "content": "795"
+                },
+                "B11": {
+                    "content": "537"
+                },
+                "B12": {
+                    "content": "1269"
+                },
+                "B13": {
+                    "content": "496"
+                },
+                "B14": {
+                    "content": "1352"
+                },
+                "C1": {
+                    "content": "=FORMAT.LARGE.NUMBER(B1)"
+                },
+                "C2": {
+                    "content": "=FORMAT.LARGE.NUMBER(B2)"
+                },
+                "C3": {
+                    "content": "=FORMAT.LARGE.NUMBER(B3)"
+                },
+                "C4": {
+                    "content": "=FORMAT.LARGE.NUMBER(B4)"
+                },
+                "C7": {
+                    "content": "=_t(\"Mileage\")"
+                },
+                "C8": {
+                    "content": "1245"
+                },
+                "C9": {
+                    "content": "589"
+                },
+                "C10": {
+                    "content": "273"
+                },
+                "C11": {
+                    "content": "1254"
+                },
+                "C12": {
+                    "content": "1086"
+                },
+                "C13": {
+                    "content": "130"
+                },
+                "C14": {
+                    "content": "1388"
+                },
+                "D7": {
+                    "content": "=_t(\"Meals\")"
+                },
+                "D8": {
+                    "content": "1347"
+                },
+                "D9": {
+                    "content": "822"
+                },
+                "D10": {
+                    "content": "669"
+                },
+                "D11": {
+                    "content": "465"
+                },
+                "D12": {
+                    "content": "632"
+                },
+                "D13": {
+                    "content": "1378"
+                },
+                "D14": {
+                    "content": "298"
+                },
+                "E7": {
+                    "content": "=_t(\"Travel\")"
+                },
+                "E8": {
+                    "content": "1628"
+                },
+                "E9": {
+                    "content": "867"
+                },
+                "E10": {
+                    "content": "200"
+                },
+                "E11": {
+                    "content": "279"
+                },
+                "E12": {
+                    "content": "295"
+                },
+                "E13": {
+                    "content": "1142"
+                },
+                "E14": {
+                    "content": "1283"
+                },
+                "F8": {
+                    "content": "6"
+                },
+                "F9": {
+                    "content": "5"
+                },
+                "F10": {
+                    "content": "4"
+                },
+                "F11": {
+                    "content": "3"
+                },
+                "F12": {
+                    "content": "2"
+                },
+                "F13": {
+                    "content": "1"
+                },
+                "F14": {
+                    "content": "0"
+                }
+            },
+            "styles": {
+                "C1:C4": 4
+            },
+            "formats": {
+                "A8:A14": 1,
+                "B1": 2,
+                "B2:C4": 3,
+                "B8:E14": 3
+            },
+            "borders": {},
+            "conditionalFormats": [],
+            "figures": [],
+            "tables": [],
+            "areGridLinesVisible": true,
+            "isVisible": true,
+            "headerGroups": {
+                "ROW": [],
+                "COL": []
+            },
+            "dataValidationRules": [],
+            "comments": {}
+        }
+    ],
+    "styles": {
+        "1": {
+            "textColor": "#01666b",
+            "bold": true,
+            "fontSize": 16
+        },
+        "2": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true
+        },
+        "3": {
+            "textColor": "#434343",
+            "fontSize": 11,
+            "bold": true,
+            "align": "center"
+        },
+        "4": {
+            "fillColor": "#f8f9fa"
+        }
+    },
+    "formats": {
+        "1": "mmmm yyyy",
+        "2": "0",
+        "3": "[$$]#,##0"
+    },
+    "borders": {
+        "1": {
+            "bottom": {
+                "style": "thin",
+                "color": "#B7B7B7"
+            }
+        },
+        "2": {
+            "top": {
+                "style": "thin",
+                "color": "#B7B7B7"
+            }
+        },
+        "3": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "4": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "5": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "6": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "7": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "8": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "right": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "9": {
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "10": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "bottom": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        },
+        "11": {
+            "top": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            },
+            "left": {
+                "style": "thick",
+                "color": "#FFFFFF"
+            }
+        }
+    },
+    "revisionId": "START_REVISION",
+    "uniqueFigureIds": true,
+    "settings": {
+        "locale": {
+            "name": "English (US)",
+            "code": "en_US",
+            "thousandsSeparator": ",",
+            "decimalSeparator": ".",
+            "dateFormat": "mm/dd/yyyy",
+            "timeFormat": "hh:mm:ss",
+            "formulaArgSeparator": ",",
+            "weekStart": 7
+        }
+    },
+    "pivots": {},
+    "pivotNextId": 10,
+    "customTableStyles": {},
+    "odooVersion": 12,
+    "globalFilters": [],
+    "lists": {},
+    "listNextId": 2
+}

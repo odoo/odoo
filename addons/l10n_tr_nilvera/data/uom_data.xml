@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="product_uom_categ_energy" model="uom.category">
+        <field name="name">Energy</field>
+    </record>
+
+    <record id="product_uom_pk" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Parcel</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_pf" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Pallet</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_cr" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Crate</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_standard_cubic_meter" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Standard Cubic Meter</field>
+        <field name="factor_inv" eval="1000.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_sa" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Bags</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_cmq" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Cubic Centimeter - cm³</field>
+        <field name="factor" eval="1000.0"/>
+        <field name="uom_type">smaller</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_mlt" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Milliliter - ml</field>
+        <field name="factor" eval="1000.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_mmq" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_vol"/>
+        <field name="name">Cubic Millimeter - mm³</field>
+        <field name="factor" eval="1000000.0"/>
+        <field name="uom_type">smaller</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_cmk" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_surface"/>
+        <field name="name">Square Centimeter - cm²</field>
+        <field name="factor" eval="10000.0"/>
+        <field name="uom_type">smaller</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_bg" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Pack</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_bx" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Box</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_pr" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Pair</field>
+        <field name="factor" eval="0.5"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_mgm" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Milligram - mg</field>
+        <field name="factor" eval="1000000.0"/>
+        <field name="uom_type">smaller</field>
+    </record>
+    <record id="product_uom_mon" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_wtime"/>
+        <field name="name">Month</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_gt" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_kgm"/>
+        <field name="name">Gross Ton</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_ann" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_wtime"/>
+        <field name="name">Year</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_d61" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_wtime"/>
+        <field name="name">Minute</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">smaller</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_d62" model="uom.uom">
+        <field name="category_id" ref="uom.uom_categ_wtime"/>
+        <field name="name">Second</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">smaller</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_pa" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Package</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_kwt" model="uom.uom">
+        <field name="category_id" ref="l10n_tr_nilvera.product_uom_categ_energy"/>
+        <field name="name">Kilowatt</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">reference</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_mwh" model="uom.uom">
+        <field name="category_id" ref="l10n_tr_nilvera.product_uom_categ_energy"/>
+        <field name="name">Megawatt Hour</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_kwh" model="uom.uom">
+        <field name="category_id" ref="l10n_tr_nilvera.product_uom_categ_energy"/>
+        <field name="name">Kilowatt Hour</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_uom_set" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Set</field>
+        <field name="factor" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="active">False</field>
+    </record>
+</odoo>

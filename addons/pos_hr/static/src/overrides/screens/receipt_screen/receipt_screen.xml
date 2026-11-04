@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension">
+        <xpath expr="//span[hasclass('edit-order-payment')]" position="attributes">
+            <attribute name="t-if">(!this.pos.config.module_pos_hr || this.pos.employeeIsAdmin) and this.currentOrder.nb_print === 0</attribute>
+        </xpath>
+    </t>
+</templates>

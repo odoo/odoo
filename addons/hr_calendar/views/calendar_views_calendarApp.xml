@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="view_calendar_event_calendar" model="ir.ui.view">
+        <field name="name">view.calendar.event.calendar.inherit.calendar</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_calendar"/>
+        <field name="arch" type="xml">
+            <xpath expr="//calendar" position="attributes">
+                <attribute name="show_unusual_days">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_form_quick_create" model="ir.ui.view">
+        <field name="name">view.calendar.event.calendar.quick.create.inherit.calendar</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form_quick_create"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stop']" position="after">
+                <field name="unavailable_partner_ids" invisible="1" /> <!-- this field will be used in
+                    many2many_attendees widget -->
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_form" model="ir.ui.view">
+        <field name="name">view.calendar.event.calendar.inherit.calendar</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='stop']" position="after">
+                <field name="unavailable_partner_ids" invisible="1" /> <!-- this field will be used in
+                    many2many_attendees widget -->
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_share_wizard_view_form" model="ir.ui.view">
+        <field name="name">project.share.wizard.view.form</field>
+        <field name="model">project.share.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Share Project">
+                <field name="res_model" invisible="1"/>
+                <field name="res_id" invisible="1"/>
+                <group>
+                    <field name="share_link" widget="CopyClipboardChar"/>
+                </group>
+                <field name="collaborator_ids" nolabel="1">
+                    <list string="Collaborators" editable="bottom">
+                        <field name="partner_id"
+                               options="{'no_create': True, 'no_open': True}"
+                               domain="[('id', 'not in', parent.existing_partner_ids), ('partner_share', '=', True)]"
+                               context="{'show_email': True}"
+                        />
+                        <field name="access_mode"/>
+                        <field name="send_invitation"/>
+                    </list>
+                </field>
+                <p class="text-muted">Choose one of the following access modes for your collaborators:</p>
+                <ul class="text-muted">
+                    <li>Read: collaborators can view tasks but cannot edit them.</li>
+                    <li>Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.</li>
+                    <li>Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow.</li>
+                </ul>
+                <footer>
+                    <button string="Share Project" name="action_share_record" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_share_wizard_confirm_form" model="ir.ui.view">
+        <field name="name">project.share.wizard.view.form</field>
+        <field name="model">project.share.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirmation">
+                <p>People invited to collaborate on the project will have portal access rights.</p>
+                <p>They can edit shared project tasks and view specific documents in read mode on your website. This includes leads/opportunities, quotations/sales orders, purchase orders, invoices and bills, timesheets, and tickets.</p>
+                <p>You have full control and can revoke portal access anytime. Are you ready to proceed?</p>
+                <footer>
+                    <button string="Grant Portal Access" name="action_send_mail" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_share_wizard_action" model="ir.actions.act_window">
+        <field name="name">Share Project</field>
+        <field name="res_model">project.share.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

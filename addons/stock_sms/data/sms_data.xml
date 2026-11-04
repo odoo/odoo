@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="sms_template_data_stock_delivery" model="sms.template">
+            <field name="name">Delivery: Send by SMS Text Message</field>
+            <field name="model_id" ref="stock.model_stock_picking"/>
+            <field name="body">
+                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}
+            </field>
+        </record>
+    </data>
+</odoo>

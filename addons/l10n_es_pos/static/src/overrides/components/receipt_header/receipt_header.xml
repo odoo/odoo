@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]//div" position="before">
+            <t t-set="isSimplifiedInvoice" t-value="props.data.is_l10n_es_simplified_invoice"/>
+            <t t-if="props.data.is_spanish">
+                <t t-if="isSimplifiedInvoice">
+                    <div>Simplified invoice</div>
+                    <div class="simplified-invoice-number" t-esc="props.data.invoice_name" />
+                </t>
+                <div t-if="props.data.company.street" t-esc="props.data.company.street" />
+                <div t-if="props.data.company.zip" t-esc="props.data.company.zip" />
+                <div t-if="props.data.company.city" t-esc="props.data.company.city" />
+                <div t-if="props.data.company.state_id">(<t t-esc="props.data.company.state_id.name"/>)</div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="inside">
+            <t t-set="partner" t-value="props.data.partner"/>
+            <t t-if="props.data.is_spanish and partner and partner.id !== props.data.simplified_partner_id">
+                <div>Customer: <t t-esc="partner.name" /></div>
+                <div t-if="partner.vat"><t t-esc="props.data.company.country_id?.vat_label || 'Tax ID'"/>: <t t-esc="partner.vat" /></div>
+                <div t-if="partner.address" t-esc="partner.address"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

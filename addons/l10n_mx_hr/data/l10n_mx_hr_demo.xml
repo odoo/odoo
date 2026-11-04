@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="base.demo_company_mx" model="res.company" forcecreate="1">
+        <field name="name">ESCUELA KEMPER URGATE</field>
+        <field name="currency_id" ref="base.MXN"/>
+        <field name="country_id" ref="base.mx"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('base.demo_company_mx'))]"/>
+    </record>
+
+    <record id="base.hr_employee_cesar" model="hr.employee" forcecreate="1">
+        <field name="name">Cesar Osbaldo Cruz Solorzano</field>
+        <field name="l10n_mx_rfc">CUSC850516316</field>
+        <field name="l10n_mx_curp">CUSC850516XNERLS05</field>
+        <field name="company_id" ref="base.demo_company_mx" />
+    </record>
+
+    <record id="base.hr_employee_cecilia" model="hr.employee" forcecreate="1">
+        <field name="name">Cecilia Miranda Sanchez</field>
+        <field name="l10n_mx_rfc">MISC491214B86</field>
+        <field name="l10n_mx_curp">MISC491214MDFRNC06</field>
+        <field name="company_id" ref="base.demo_company_mx" />
+    </record>
+
+    <record id="base.hr_employee_xochilt" model="hr.employee" forcecreate="1">
+        <field name="name">Xochilt Casas Chavez</field>
+        <field name="l10n_mx_rfc">CACX7605011P8</field>
+        <field name="l10n_mx_curp">CACX760431HNESHC03</field>
+        <field name="company_id" ref="base.demo_company_mx" />
+    </record>
+
+    <record id="base.hr_employee_karla" model="hr.employee" forcecreate="1">
+        <field name="name">Karla Fuente Nolasco</field>
+        <field name="l10n_mx_rfc">FUNK671228PH6</field>
+        <field name="l10n_mx_curp">FUNK671228MYNNLR02</field>
+        <field name="company_id" ref="base.demo_company_mx" />
+    </record>
+</odoo>

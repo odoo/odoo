@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Template -->
+<template name="Showcase" id="s_showcase">
+    <section class="s_showcase pt48 pb48" data-vcss="003">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-12 pb32">
+                            <h3>Features showcase</h3>
+                            <p class="lead">A features section highlights your product’s key attributes, engaging visitors and boosting conversions.</p>
+                        </div>
+                        <div class="col-12 pt8 pb8" data-name="Feature">
+                            <i class="s_showcase_icon fa fa-star-o me-auto rounded float-start bg-o-color-3" role="img"/>
+                            <div class="d-flex flex-column">
+                                <h5 class="s_showcase_title">Highlights Key Attributes</h5>
+                                <p>A feature section allows you to clearly showcase the main benefits and unique aspects of your product.</p>
+                            </div>
+                        </div>
+                        <div class="col-12 pt8 pb8" data-name="Feature">
+                            <i class="s_showcase_icon fa fa-user-o me-auto rounded float-start bg-o-color-3" role="img"/>
+                            <div class="d-flex flex-column">
+                                <h5 class="s_showcase_title">Engages Visitors</h5>
+                                <p>It captures your visitors' attention and helps them quickly understand the value of your product.</p>
+                            </div>
+                        </div>
+                        <div class="col-12 pt8 pb8" data-name="Feature">
+                            <i class="s_showcase_icon fa fa-heart-o me-auto rounded float-start bg-o-color-3" role="img"/>
+                            <div class="d-flex flex-column">
+                                <h5 class="s_showcase_title">Boosts Conversions</h5>
+                                <p>Organizing and presenting key information effectively increases the likelihood of turning your visitors into customers.</p>
+                            </div>
+                        </div>
+                        <div class="col-12 pt8 pb8" style="text-align: right;">
+                            <div class="s_hr pt0 pb16" data-snippet="s_hr">
+                                <hr class="w-100 mx-auto"/>
+                            </div>
+                            <a href="#">Discover all the features</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 o_snippet_mobile_invisible d-lg-block d-none">
+                    <img src="/web/image/website.s_showcase_default_image" class="img img-fluid ms-auto rounded float-end" alt=""/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<!-- Options -->
+<template id="s_showcase_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='Box']" position="before">
+        <div data-js="Showcase" data-selector=".s_showcase .row &gt; div:has(&gt; .s_showcase_title)"/>
+    </xpath>
+</template>
+
+<!-- Assets -->
+<asset id="website.s_showcase_000_scss" name="Showcase 000 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_showcase/000.scss</path>
+</asset>
+
+<asset id="website.s_showcase_001_scss" name="Showcase 001 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_showcase/001.scss</path>
+</asset>
+
+<asset id="website.s_showcase_002_scss" name="Showcase 002 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_showcase/002.scss</path>
+</asset>
+
+<asset id="website.s_showcase_003_scss" name="Showcase 003 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_showcase/003.scss</path>
+</asset>
+
+</odoo>

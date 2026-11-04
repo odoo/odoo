@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_category_avco" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="property_valuation">manual_periodic</field>
+            <field name="property_cost_method">average</field>
+            <field name="name">AVCO</field>
+        </record>
+        <record id="product_category_fifo" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="property_valuation">manual_periodic</field>
+            <field name="property_cost_method">fifo</field>
+            <field name="name">FIFO</field>
+        </record>
+    </data>
+</odoo>

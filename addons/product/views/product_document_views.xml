@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_document_form" model="ir.ui.view">
+        <field name="name">product.document.form</field>
+        <field name="model">product.document</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="res_model" invisible="True"/>
+                    <h1>
+                        <field name="name" readonly="not datas and type != 'url'"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="type" readonly="datas or id" class="oe_inline"/>
+                            <label for="datas"/>
+                            <div class="o_row">
+                                <field name="datas"
+                                       filename="name"
+                                       invisible="type == 'url'"
+                                       required="type == 'binary'"
+                                       class="oe_inline"/>
+                            </div>
+                            <field name="url" widget="url" invisible="type == 'binary'" required="type == 'url'"/>
+                            <field name="res_name" string="Product Variant" invisible="res_model != 'product.product'"/>
+                        </group>
+                    </group>
+                    <group string="Attached To" groups="base.group_no_one">
+                        <field name="res_name"/>
+                        <field name="company_id"
+                               groups="base.group_multi_company"
+                               options="{'no_create': True}"
+                               class="oe_inline"/>
+                    </group>
+                    <group string="History" groups="base.group_no_one" invisible="not create_date">
+                        <label for="create_uid" string="Creation"/>
+                        <div name="creation_div">
+                            <field name="create_uid" readonly="1" class="oe_inline"/> on
+                            <field name="create_date" readonly="1" class="oe_inline"/>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_document_kanban" model="ir.ui.view">
+        <field name="name">product.document.kanban</field>
+        <field name="model">product.document</field>
+        <field name="arch" type="xml">
+            <kanban js_class="product_documents_kanban" can_open="0">
+                <field name="sequence" widget="handle"/>
+                <field name="ir_attachment_id"/>
+                <field name="mimetype"/>
+                <field name="type"/>
+                <field name="name"/>
+                <field name="active"/>
+                <field name="res_model"/>
+                <templates>
+                    <t t-name="menu">
+                        <a t-if="widget.editable" type="open" class="dropdown-item">Edit</a>
+                        <a t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
+                        <a t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=true" download="" class="dropdown-item">Download</a>
+                    </t>
+                    <t t-name="card" class="o_kanban_attachment flex-row">
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <widget name="web_ribbon" title="Variant" bg_color="text-bg-secondary" invisible="not active or res_model != 'product.product'" groups="product.group_product_variant"/>
+                        <aside class="o_kanban_image m-2">
+                            <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png|webp)').test(record.mimetype.value)"/>
+                            <t t-set="binaryPreviewable"
+                                t-value="new RegExp('(image|video|application/pdf|text)').test(record.mimetype.value) &amp;&amp; record.type.raw_value === 'binary'"/>
+                            <div t-attf-class="o_kanban_image_wrapper #{(webimage or binaryPreviewable) ? 'o_kanban_previewer' : ''}">
+                                <div t-if="record.type.raw_value == 'url'" class="fa fa-link fa-3x text-muted" aria-label="Image is a link"/>
+                                <img t-elif="webimage" t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}" width="100" height="100" alt="Document" class="o_attachment_image"/>
+                                <div t-else="" class="o_image o_image_thumbnail" t-att-data-mimetype="record.mimetype.value"/>
+                            </div>
+                        </aside>
+                        <main class="ms-2 p-2">
+                            <field name="name" class=" fw-bolder fs-5 text-truncate"/>
+                            <field  t-if="record.type.raw_value == 'url'" name="url" widget="url"/>
+                            <div class="d-flex flex-column mt-2">
+                                <field name="res_name" class="text-decoration-underline fst-italic" invisible="res_model != 'product.product'"/>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="product_document_list" model="ir.ui.view">
+        <field name="name">product.document.list</field>
+        <field name="model">product.document</field>
+        <field name="arch" type="xml">
+            <list editable="top" multi_edit="true">
+                <field name="res_model" column_invisible="True"/>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_document_search" model="ir.ui.view">
+        <field name="name">product.document.search</field>
+        <field name="model">product.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <filter
+                    string="Documents of this variant"
+                    name="context_variant"
+                    domain="[('res_model', '=', 'product.product'), ('res_id', '=', context.get('default_res_id'))]"/>
+                <filter name="all" string="All" domain="['|', ('active', '=', True), ('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,25 @@
+.configurator_color{
+    // This code is copied from the sale/static/src/js/product_template_attribute_line/product_template_attribute_line.scss
+    // since the POS does not directly depend on it.
+    // In the future, we should explore options to import the CSS directly to avoid duplication.
+    &.ptav-not-available {
+        opacity: 1;
+
+        &:after {
+            content: "";
+            @include o-position-absolute(-5px, -5px, -5px, -5px);
+            border: 2px solid map-get($theme-colors, 'danger');
+            border-radius: 50%;
+            background: str-replace(url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='39' height='39'><line y2='0' x2='39' y1='39' x1='0' style='stroke:#{map-get($theme-colors, 'danger')};stroke-width:2'/><line y2='1' x2='40' y1='40' x1='1' style='stroke:rgb(255,255,255);stroke-width:1'/></svg>"), "#", "%23") ;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    }
+}
+.ptav-not-available{
+    opacity: .5;
+}
+option.ptav-not-available {
+    opacity: 1;
+    color: #ccc;
+}

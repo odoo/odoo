@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="stock_picking_type_kanban_inherit_stock_fleet" model="ir.ui.view">
+            <field name="name">stock.picking.type.kanban.inherit.stock.transport</field>
+            <field name="model">stock.picking.type</field>
+            <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@name='kanban_menu_section']" position="after">
+                        <t t-if="record.code.raw_value == 'incoming' or record.code.raw_value == 'outgoing'">
+                            <div class="col-6">
+                                <h5 role="menuitem" class="o_kanban_card_manage_title" style="white-space: nowrap;">
+                                    <a>Transport Management</a>
+                                </h5>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'list,form'}">Manage Batches</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'gantt'}">Dock Dispatching</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'kanban'}">Batches by Route</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'calendar'}">Calendar</a>
+                                </div>
+                                <div role="menuitem">
+                                    <a name="action_batch" type="object" context="{'view_mode':'pivot'}">Statistics</a>
+                                </div>
+                            </div>
+                        </t>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

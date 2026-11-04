@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='content']" position="before">
+            <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
+        </xpath>
+        <xpath expr="//*[@t-ref='root']" position="replace">
+            <div class="h-100 d-flex flex-column">
+                <ControlPanel t-if="!ui.isSmall"/>
+                <t>$0</t>
+            </div>
+        </xpath>
+        <xpath expr="//*[@t-ref='root']" position="attributes">
+            <attribute name="class" add="h-0" remove="h-100" separator=" "/>
+        </xpath>
+        <xpath expr="//*[@t-ref='main']" position="inside">
+            <t t-if="!ui.isSmall" t-call="mail.Discuss.loading"/>
+        </xpath>
+        <xpath expr="//*[@name='thread']" position="inside">
+            <t t-if="!ui.isSmall" t-call="mail.Discuss.loading"/>
+        </xpath>
+    </t>
+    <t t-name="mail.Discuss.mobileTopbar">
+        <div class="btn-group d-flex w-100 p-1">
+            <t t-call="mail.MobileMailbox" >
+                <t t-set="mailbox" t-value="store.inbox"/>
+            </t>
+            <t t-call="mail.MobileMailbox">
+                <t t-set="mailbox" t-value="store.starred"/>
+            </t>
+            <t t-call="mail.MobileMailbox">
+                <t t-set="mailbox" t-value="store.history"/>
+            </t>
+        </div>
+    </t>
+</templates>

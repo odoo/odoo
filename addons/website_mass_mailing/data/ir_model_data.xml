@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mass_mailing.model_mailing_contact" model="ir.model">
+            <field name="website_form_key">create_mailing_contact</field>
+            <field name="website_form_access">True</field>
+            <field name="website_form_label">Subscribe to Newsletter</field>
+        </record>
+
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>mailing.contact</value>
+            <value eval="[
+                'name',
+                'first_name',
+                'last_name',
+                'company_name',
+                'title_id',
+                'email',
+                'list_ids',
+                'country_id',
+                'tag_ids',
+            ]"/>
+        </function>
+    </data>
+</odoo>

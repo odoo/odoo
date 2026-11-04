@@ -1,0 +1,95 @@
+.o-mail-ChatHub-bubbles {
+    width: $o-mail-ChatHub-bubblesWidth;
+    margin-top: $o-mail-ChatHub-bubblesMargin;
+    margin-right: $o-mail-ChatHub-bubblesMargin + $o-mail-ChatHub-bubblesStart;
+    margin-bottom: $o-mail-ChatHub-bubblesMargin;
+    margin-left: $o-mail-ChatHub-bubblesMargin;
+    z-index: $o-mail-NavigableList-zIndex - 1;
+
+    &.o-liftUp {
+        transform: translateY(-25px);
+    }
+}
+
+.o-mail-ChatHub-bubbleBtn {
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 50%;
+    box-shadow: $box-shadow-sm;
+}
+
+.o-mail-ChatHub-hiddenAvatar {
+    width: 28px;
+    height: 28px;
+}
+
+.o-mail-ChatHub-hiddenBtnIcon {
+    color: #FFFFFF!important;
+    background-color: $primary !important;
+    width: $o-mail-ChatBubble-sizeBig !important;
+    height: $o-mail-ChatBubble-sizeBig !important;
+}
+
+.o-mail-ChatHub-hiddenBtnCounter {
+    padding: 4px 8px;
+    z-index: $o-mail-NavigableList-zIndex - 1;
+    top: -4px;
+    right: -4px;
+}
+
+.o-mail-ChatHub-hiddenClose {
+    margin-left: auto;
+    background-color: transparent;
+    opacity: 25%;
+    padding: map-get($spacers, 1) / 2;
+    border: $border-width solid transparent;
+
+    &:hover {
+        border-color: mix($o-gray-300, $o-gray-400);
+    }
+}
+
+.o-mail-ChatHub-hiddenCounter {
+    right: 20px;
+}
+
+.o-mail-ChatHub-hiddenItem {
+    display: flex;
+    align-items: center;
+    max-width: 225px;
+
+    &:hover:not(:has(.o-mail-ChatHub-hiddenClose:hover)), &.o-active {
+        background-color: $o-gray-300;
+    }
+
+    &:hover, &.o-active {
+        cursor: pointer;
+
+        .o-mail-ChatHub-hiddenClose {
+            opacity: 100%;
+        }
+    }
+}
+
+.o-mail-ChatHub-hiddenMenu {
+    border-color: mix($o-gray-300, $o-gray-400) !important;
+}
+
+.o-mail-ChatHub-option {
+    &:hover, &.o-active {
+        background-color: $o-gray-300;
+        cursor: pointer;
+    }
+}
+
+.o-mail-ChatHub-optionsBtn {
+    font-size: 15px;
+    width: 30px !important;
+    height: 30px !important;
+    border: $border-width solid mix($o-gray-300, $o-gray-400) !important;
+
+    &:hover, &.show {
+        background-color: $o-gray-300 !important;
+        opacity: 100% !important;
+    }
+}

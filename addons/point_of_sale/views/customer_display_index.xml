@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="point_of_sale.customer_display_index" name="POS Customer Display">
+        &lt;!DOCTYPE html&gt;
+        <html>
+            <head>
+                <!-- <title>Odoo Customer Display</title> -->
+                <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+                <meta http-equiv="content-type" content="text/html, charset=utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta name="mobile-web-app-capable" content="yes" />
+                <link rel="icon" href="/point_of_sale/static/src/img/favicon.ico" type="image/x-icon"/>
+                <script type="text/javascript">
+                    var odoo =
+                    <t t-out="json.dumps({
+                        'csrf_token': request.csrf_token(None),
+                        '__session_info__': session_info,
+                        'debug': debug,
+                    })" />;
+                </script>
+                <t t-call-assets="point_of_sale.customer_display_assets" />
+                <t t-if="'tests' in debug or test_mode_enabled" t-call-assets="point_of_sale.customer_display_assets_test" />
+                <title><t t-esc="debug" /></title>
+            </head>
+            <body></body>
+        </html>
+    </template>
+</odoo>

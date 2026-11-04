@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_inherit_l10n_cl" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.cl</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <form>
+                <field name="l10n_latam_internal_type" invisible="1"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_latam_form_inherit_l10n_cl" model="ir.ui.view">
+        <field name="name">account.move.latam.form.inherit.l10n.cl</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_latam_invoice_document.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_latam_document_number" position="attributes">
+                <attribute name="invisible" add="(not l10n_latam_use_documents or not posted_before or state != 'draft' or country_code != 'CL')" separator=" and "/>
+                <attribute name="readonly">posted_before and state != 'draft'</attribute>
+                <attribute name="required">l10n_latam_manual_document_number</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_complete_invoice_refund_tree" model="ir.ui.view">
+        <field name="name">account.move.list2</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'" default_order="create_date" string="Invoices and Refunds" decoration-muted="state == 'cancel'" js_class="account_tree">
+                <field name="l10n_latam_document_type_id_code"/>
+                <field name="l10n_latam_document_number" string="Folio" readonly="state != 'draft'"/>
+                <field name="partner_id_vat"/>
+                <field name="partner_id" readonly="state != 'draft'"/>
+                <field name="invoice_date" optional="show" readonly="state != 'draft'"/>
+                <field name="invoice_date_due" optional="show"/>
+                <field name="date" string="Accounting Date" optional="show" readonly="state in ['cancel', 'posted']"/>
+                <field name="payment_reference" optional="hide"/>
+                <field name="invoice_user_id" optional="show" column_invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt')" string="Sales Person"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                <field name="invoice_origin" optional="show" string="Source Document"/>
+                <field name="amount_untaxed_signed" string="Amount Untaxed" sum="Total" optional="show"/>
+                <field name="amount_tax_signed" string="Tax" sum="Total" optional="show"/>
+                <field name="amount_total_signed" string="Total" sum="Total" optional="show"/>
+                <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="show"/>
+                <field name="currency_id" column_invisible="True" readonly="state in ['cancel', 'posted']"/>
+                <field name="company_currency_id" column_invisible="True"/>
+                <field name="state" optional="show"/>
+                <field name="payment_state" optional="hide"/>
+                <field name="move_type" column_invisible="context.get('default_move_type', True)"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="sale_invoices_credit_notes">
+        <field name="name">Sale Invoices and Credit Notes</field>
+        <field name="view_id" ref="view_complete_invoice_refund_tree"/>
+        <field name="res_model">account.move</field>
+        <field name="domain">[('move_type', 'in', ['out_invoice', 'out_refund'])]</field>
+        <field name="context">{'default_move_type': 'out_invoice'}</field>
+        <field name="target">current</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="vendor_bills_and_refunds">
+        <field name="name">Vendor Bills and Refunds</field>
+        <field name="view_id" ref="view_complete_invoice_refund_tree"/>
+        <field name="res_model">account.move</field>
+        <field name="domain">[('move_type', 'in', ['in_invoice', 'in_refund'])]</field>
+        <field name="context">{'default_move_type': 'in_invoice'}</field>
+        <field name="target">current</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_sale_invoices_credit_notes" parent="account.menu_finance_receivables" sequence="3" action="sale_invoices_credit_notes" name="Sale Invoices and Credit Notes (CL)"/>
+    <menuitem id="menu_vendor_bills_and_refunds" parent="account.menu_finance_payables" sequence="3" action="vendor_bills_and_refunds" name="Vendor Bills and Refunds (CL)"/>
+
+</odoo>

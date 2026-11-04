@@ -1,0 +1,345 @@
+// This file contains the style of very old kanban layout (<= v10) and not so old
+// kanban (<= v17). Remove it as soon as we no longer support them.
+.o_kanban_renderer {
+    // -------  Old semantic (< v18) -------
+    .o_legacy_kanban_record {
+        position: relative;
+        min-width: 150px;
+        margin: 0 0 (-$border-width);
+
+        > div:not(.o_dropdown_kanban) {
+            border: $border-width solid $border-color;
+            background-color: $o-view-background-color;
+            padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
+            width: 100%;
+            height: 100%;
+        }
+
+        // ------- Kanban Record, v11 Layout -------
+        // Records colours
+        > div::after {
+            content: "";
+            @include o-position-absolute(0, auto, 0, 0);
+            width: $o-kanban-color-border-width;
+        }
+
+        // Inner Sections
+        .o_kanban_record_top,
+        .o_kanban_record_body {
+            margin-bottom: var(--KanbanRecord-gap-v);
+        }
+
+        .o_kanban_record_top,
+        .o_kanban_record_bottom {
+            display: flex;
+        }
+
+        .o_kanban_record_top {
+            align-items: flex-start;
+
+            .o_dropdown_kanban {
+                // For v11 layout, reset positioning to default to properly use
+                // flex-box
+                position: relative;
+                top: auto;
+                right: auto;
+            }
+
+            .o_field_priority {
+                margin: auto;
+            }
+        }
+
+        .o_kanban_record_title {
+            @include o-kanban-record-title();
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+        }
+
+        .o_kanban_record_bottom {
+
+            .oe_kanban_bottom_left,
+            .oe_kanban_bottom_right {
+                display: flex;
+                align-items: center;
+                min-height: 20px;
+                gap: map-get($map: $spacers, $key: 1);
+            }
+            .oe_kanban_bottom_left {
+                flex: 1 1 auto;
+
+                > * {
+                    margin-right: 6px;
+                    line-height: 1;
+                }
+
+                .o_priority_star {
+                    margin-top: 1px;
+                    font-size: 18px;
+                }
+
+                span {
+                    overflow-wrap: anywhere;
+                }
+            }
+            .oe_kanban_bottom_right {
+                flex: 0 1 auto;
+            }
+            .o_link_muted {
+                color: $body-color;
+                &:hover {
+                    color: map-get($theme-colors, "primary");
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        // ---------- Kanban Record, fill image design ----------
+        // Records with images that compensate record's padding
+        // filling all the available space (eg. hr, partners.. )
+        .o_kanban_record_has_image_fill {
+            display: flex;
+
+            .o_kanban_image_fill_left {
+                position: relative;
+                margin-right: var(--KanbanRecord-padding-h);
+                @include media-breakpoint-up(sm) {
+                    margin: {
+                        top: calc(var(--KanbanRecord-padding-v) * -1);
+                        bottom: calc(var(--KanbanRecord-padding-v) * -1);
+                        left: calc(var(--KanbanRecord-padding-h) * -1);
+                    }
+                }
+                flex: 1 0 var(--KanbanRecord__image--fill-width);
+                min-height: 95px;
+                background: {
+                    size: cover;
+                    position: center;
+                    repeat: no-repeat;
+                }
+                > img:not(.o_kanban_image_inner_pic) {
+                    object-fit: cover;
+                    object-position: center;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+
+                &:not(.o_kanban_image_full) {
+                    max-height: 140px;
+                    height: calc(100% + var(--KanbanRecord-padding-v) * 2);
+                    align-self: center;
+                }
+                &.o_kanban_image_full {
+                    background-size: contain;
+                    > img {
+                        object-fit: contain;
+                    }
+                }
+            }
+
+            // Adapt default 'o_kanban_image' element if present.
+            // This adaptation allow to use both images type.
+            // Eg. In partners list we use to fill user picture only, keeping the
+            // default design for company logos.
+            .o_kanban_image {
+                position: relative;
+                margin-right: var(--KanbanRecord-padding-h);
+                flex: 0 0 var(--KanbanRecord__image-width);
+                min-height: var(--KanbanRecord__image-width);
+                align-self: center;
+                background: {
+                    size: cover;
+                    repeat: no-repeat;
+                    position: center;
+                }
+                > img:not(.o_kanban_image_inner_pic) {
+                    object-fit: cover;
+                    object-position: center;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+
+                @include media-breakpoint-down(md) {
+                    flex-basis: var(--KanbanRecord__image--fill-width);
+                    min-height: var(--KanbanRecord__image--fill-width);
+                }
+
+                // Reset immedialy after div padding
+                + div {
+                    padding-left: 0;
+                }
+            }
+
+            // Images (backgrounds) could accomodate another image inside.
+            // (eg. Company logo badge inside a contact picture)
+            .o_kanban_image_fill_left,
+            .o_kanban_image {
+                background-color: var(--KanbanRecord__image-bg-color, none);
+
+                .o_kanban_image_inner_pic {
+                    @include o-position-absolute($right: 0, $bottom: 0);
+                    max: {
+                        height: 25px;
+                        width: 80%;
+                    }
+                    background: white;
+                    box-shadow: -1px -1px 0 1px white;
+                }
+            }
+        }
+
+        // Records colours
+        @include o-kanban-record-color;
+
+        .oe_kanban_color_help {
+            @include o-position-absolute(0, auto, 0, -1px);
+            width: $o-kanban-color-border-width;
+            z-index: 1; // show the title over kanban color
+        }
+    }
+
+    // -------  Compatibility of old (<= v10) Generic layouts -------
+
+    // Kanban Records - Uniform Design
+    // Provide a basic style for different kanban record layouts
+    // ---------------------------------------------------------
+    .o_legacy_kanban_record {
+        // -------  v11 Layout + generic layouts (~v10) -------
+        // Kanban Record - Dropdown
+        .o_dropdown_kanban {
+            visibility: hidden;
+            @include media-breakpoint-down(md) {
+                visibility: visible;
+            }
+
+            .dropdown-toggle {
+                $padding-base: var(--KanbanRecord-padding-h);
+                margin: 1px 1px 0 0;
+                padding: if(type-of($padding-base) == 'string', calc(#{$padding-base}/2) $padding-base, $padding-base/2 $padding-base);
+                vertical-align: top;
+                @include o-hover-text-color($body-color, $headings-color);
+            }
+            &.show .dropdown-toggle {
+                position: relative;
+                z-index: $zindex-dropdown + 1;
+            }
+        }
+
+        &:hover .o_dropdown_kanban,
+        .o_dropdown_kanban.show {
+            visibility: visible;
+        }
+
+        // Kanban Record - Inner elements
+        .o_field_many2many_tags {
+            display: block;
+            margin-bottom: var(--KanbanRecord-gap-v);
+            word-break: break-all;
+
+            &.avatar {
+                margin: 0 0 0 6px;
+                .o_m2m_avatar_empty > span {
+                    display: block;
+                    margin-top: 3px;
+                }
+            }
+
+            .o_tag {
+                --Tag-max-width: MAX(200px, 100%);
+                --Tag-font-size: #{$o-font-size-base-smaller};
+            }
+        }
+
+        .o_field_many2one_avatar {
+            img.o_m2o_avatar {
+                margin-right: 0;
+            }
+        }
+
+        // Commonly used to place an image beside the text
+        // (e.g. Fleet, Employees, ...)
+        .o_kanban_image {
+            position: relative;
+            text-align: center;
+
+            img {
+                max-width: 100%;
+            }
+        }
+
+        &:focus-visible, &:focus-within {
+            z-index: 2;
+        }
+
+        .o_attachment_image > img {
+            width: 100%;
+            height: auto;
+        }
+
+        .o_progressbar {
+            height: $o-kanban-progressbar-height;
+
+            .o_progressbar_title {
+                flex: 0 0 auto;
+            }
+        }
+
+        .o_kanban_image {
+            float: left;
+            width: var(--KanbanRecord__image-width);
+
+            + div {
+                padding-left: calc(
+                    var(--KanbanRecord__image-width) + var(--KanbanRecord-padding-h)
+                );
+            }
+        }
+
+        .oe_kanban_details {
+            width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            // Useful for the class 'o_text_overflow'
+            min-width: 0;
+
+            ul {
+                margin-bottom: calc(var(--KanbanRecord-gap-v) * 0.5);
+                padding-left: 0;
+                list-style: none;
+                font-size: $font-size-sm;
+
+                li {
+                    margin-bottom: 2px;
+                }
+            }
+        }
+
+        .o_kanban_footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            > * {
+                flex: 0 0 auto;
+            }
+        }
+
+        .oe_kanban_text_red {
+            color: o-text-color("danger");
+            font-weight: $font-weight-bold;
+        }
+
+        .o_text_bold {
+            font-weight: $font-weight-bold;
+        }
+
+        .o_text_block {
+            display: block;
+        }
+    }
+}

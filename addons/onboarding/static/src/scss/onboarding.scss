@@ -1,0 +1,157 @@
+// = Onboarding Panel
+// ============================================================================
+$o-onboarding-step-width: map-get($container-max-widths, 'lg') / 4 !default;
+
+.o_onboarding_container {
+    transition: height 0.4s;
+
+    &.o-vertical-slide-enter, &.o-vertical-slide-leave {
+        height: 0 !important;
+        * {
+            display: none;
+        }
+    }
+}
+
+.o_onboarding_main {
+    background: linear-gradient(0deg, #{$o-gray-200} 0%, #{$o-gray-100} 100%);
+
+    .o_onboarding_wrap {
+        overflow-x: auto;
+    }
+
+    .o_onboarding_completed_message {
+        opacity: 0;
+        box-shadow: 0 -7px 20px -5px rgba(#000, 0.3);
+        animation: o_onboarding_slideInUpDownOut;
+        animation-duration: 6s;
+    }
+    
+    .o_onboarding_btn_close {
+        z-index: 2;
+    }
+
+    // = Step Design
+    // ------------------------------------------------------------------------
+    .o_onboarding_step {
+        flex: 1 1 0;
+
+        @for $i from 1 through 5 {
+            &.o_onboarding_step__todo:nth-child(#{$i}) {
+                @include print-variable('o-onboarding-animation-delay', $i * .15s);
+            }
+        }
+
+        &:first-child, &:last-child {
+            .o_onboarding_line {
+                width: $o-onboarding-line-width / 2 ;
+            }
+        }
+
+        &:first-child {
+            .o_onboarding_line {
+                margin-left: $o-onboarding-line-width / 2;
+            }
+        }
+
+        &:last-child {
+            .o_onboarding_line {
+                margin-right: $o-onboarding-line-width / 2;
+            }
+        }
+
+        .o_onboarding_line {
+            background: linear-gradient(to right, $o-onboarding-color-orange 0%, $o-onboarding-color-blue 100%);
+            height: $o-onboarding-line-height;
+            width: $o-onboarding-line-width;
+            top: $o-onboarding-image-size / 2;
+            background-attachment: fixed;
+        }
+
+        .o_onboarding_step_content {
+            width: $o-onboarding-step-width;
+        }
+
+        .o_onboarding_step_side img {            
+            width: $o-onboarding-image-size;
+            height: $o-onboarding-image-size;
+        }
+
+        .o_onboarding_step_action {
+            min-width: $o-onboarding-step-width * .5;
+            border: $border-width solid #{$o-onboarding-color-blue};
+            color: $o-onboarding-color-blue;
+        }
+
+        .o_onboarding_step_action__done {
+            i {
+                background-color: $o-onboarding-color-orange;
+                color: #FFF;
+            }
+        }
+
+        // = "To do" Step Design
+        // --------------------------------------------------------------------
+        &[data-step-state="not_done"] {
+            .o_onboarding_step_content_info {
+                animation: o_onboarding_zoomIn ($o-onboarding-base-time * 1.5) both;
+                animation-delay: var(--o-onboarding-animation-delay, 0);
+            }
+
+            .o_onboarding_step_action {
+                animation: o_onboarding_slideInUp ($o-onboarding-base-time * 2) both;
+                animation-delay: var(--o-onboarding-animation-delay, 0);
+            }
+        }
+
+        // = "Just Done" Step Design
+        // --------------------------------------------------------------------
+        &[data-step-state="just_done"] {
+            .o_onboarding_step_content_info {
+                animation: o_onboarding_fadeIn ($o-onboarding-base-time * 3);
+            }
+
+            .o_onboarding_step_action__done {
+                animation: bounceIn ($o-onboarding-base-time * 2);
+            }
+
+            .o_onboarding_confetti {
+                animation: o_onboarding_fadeInOut ($o-onboarding-base-time * 3) ease 0s 1 forwards;
+            }
+        }
+    }
+
+    // = Animations
+    // ------------------------------------------------------------------------
+    @keyframes o_onboarding_slideInUp {
+        from {
+            transform: translate3d(0, 20%, 0);
+            opacity: 0;
+        }
+    }
+
+    @keyframes o_onboarding_slideInUpDownOut {
+        25%, 85% { transform: translate3d(0, -80%, 0); opacity: 1; }
+        0%, 100% { transform: translate3d(0, 0, 0); }
+    }
+
+    @keyframes o_onboarding_zoomIn {
+        from {
+            transform: scale3d(0.8, 0.8, 0.8);
+            opacity: 0;
+        }
+        50% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes o_onboarding_fadeIn {
+        10%, 66% { opacity: 0; }
+        0%, 100% { opacity: 1; }
+    }
+
+    @keyframes o_onboarding_fadeInOut {
+        10%, 66% { opacity: 1; }
+        0%, 100% { opacity: 0; }
+    }
+}

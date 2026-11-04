@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.view.search.inherit.contract</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="first_contract_date"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_start']" position="attributes">
+                <attribute name="context">{'group_by': 'first_contract_date'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_tree" model="ir.ui.view">
+        <field name="name">hr.employee.list</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="first_contract_date" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_graph_inherit_hr_contract" model="ir.ui.view">
+        <field name="name">hr.employee.view.graph</field>
+        <field name="inherit_id" ref="hr.hr_employee_view_graph"/>
+        <field name="model">hr.employee</field>
+        <field name="priority">0</field>
+        <field name="arch" type="xml">
+            <field name="create_date" position="replace">
+                <field name="first_contract_date" interval="month"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_pivot_inherit_hr_contract" model="ir.ui.view">
+        <field name="name">hr.employee.view.pivot</field>
+        <field name="inherit_id" ref="hr.hr_employee_view_pivot"/>
+        <field name="model">hr.employee</field>
+        <field name="priority">0</field>
+        <field name="arch" type="xml">
+            <field name="create_date" position="replace">
+                <field name="first_contract_date" interval="month" type="row"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_employee_public_form" model="ir.ui.view">
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_email']" position="after">
+                <field name="is_manager" invisible="1"/>
+                <field name="first_contract_date" invisible="not is_manager"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

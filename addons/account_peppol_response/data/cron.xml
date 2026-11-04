@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_peppol_auto_register_services" model="ir.cron">
+        <field name="name">PEPPOL: auto register services</field>
+        <field name="interval_number">999</field>
+        <field name="interval_type">months</field>
+        <field name="model_id" ref="model_account_edi_proxy_client_user"/>
+        <field name="active" eval="True"/>
+        <field name="code">model._cron_peppol_auto_register_services()</field>
+        <field name="state">code</field>
+    </record>
+</odoo>

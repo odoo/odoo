@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_pos_order_filter" model="ir.ui.view">
+            <field name="name">pos.order.list.select</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='status']" position="inside">
+                    <filter string="Veri*Factu State"
+                            name="l10n_es_edi_verifactu_state"
+                            context="{'group_by': 'l10n_es_edi_verifactu_state'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_order_tree" model="ir.ui.view">
+            <field name="name">pos.order.tree</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="l10n_es_edi_verifactu_state" widget="badge"
+                           decoration-danger="l10n_es_edi_verifactu_state not in ('cancelled', 'accepted', 'registered_with_errors')"
+                           decoration-warning="l10n_es_edi_verifactu_state == 'registered_with_errors'"
+                           decoration-success="l10n_es_edi_verifactu_state == 'accepted'"
+                           decoration-muted="l10n_es_edi_verifactu_state == 'cancelled'"
+                           optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_pos_order_form_inherit_l10n_es_pos_verifactu" model="ir.ui.view">
+            <field name="name">pos.order.form.inherit.l10n_es_edi_verifactu_pos</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="l10n_es_edi_verifactu_button_send" type="object"
+                            string="Send Veri*Factu"
+                            invisible="account_move or not l10n_es_edi_verifactu_required or l10n_es_edi_verifactu_state in ('registered_with_errors', 'accepted')"/>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-info" role="alert"
+                        invisible="not l10n_es_edi_verifactu_warning or l10n_es_edi_verifactu_warning_level != 'info'">
+                        <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                        invisible="not l10n_es_edi_verifactu_warning or l10n_es_edi_verifactu_warning_level != 'warning'">
+                        <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                        invisible="not l10n_es_edi_verifactu_warning or l10n_es_edi_verifactu_warning_level != 'danger'">
+                        <field class="d-inline-block" name="l10n_es_edi_verifactu_warning"/>
+                    </div>
+                </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page
+                        id="verifactu_tab"
+                        string="Veri*Factu"
+                        invisible="account_move and not l10n_es_edi_verifactu_document_ids"
+                    >
+                        <group>
+                            <field name="l10n_es_edi_verifactu_refund_reason"
+                                   invisible="amount_total >= 0"
+                                   readonly="state != 'draft'"/>
+                            <field name="l10n_es_edi_verifactu_state"
+                                   invisible="   not l10n_es_edi_verifactu_required and not l10n_es_edi_verifactu_state
+                                              or account_move and not l10n_es_edi_verifactu_document_ids"/>
+                        </group>
+                        <group string="Veri*Factu Documents">
+                            <field name="l10n_es_edi_verifactu_document_ids"
+                                   colspan="2"
+                                   nolabel="1"
+                                   readonly="True">
+                                <list string="Veri*Factu Documents">
+                                    <field name="create_date"/>
+                                    <field name="id"/>
+                                    <field name="document_type"/>
+                                    <field name="state" widget="badge"
+                                           decoration-danger="state not in ('accepted', 'registered_with_errors')"
+                                           decoration-warning="state == 'registered_with_errors'"
+                                           decoration-success="state == 'accepted'"/>
+                                </list>
+                            </field>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

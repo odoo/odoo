@@ -1,0 +1,713 @@
+{
+  "version": 21,
+  "sheets": [
+      {
+          "id": "sheet1",
+          "name": "Dashboard",
+          "colNumber": 9,
+          "rowNumber": 48,
+          "rows": {
+              "6": {
+                  "size": 40
+              },
+              "22": {
+                  "size": 40
+              },
+              "23": {
+                  "size": 40
+              },
+              "24": {
+                  "size": 31
+              },
+              "25": {
+                  "size": 31
+              },
+              "26": {
+                  "size": 31
+              },
+              "27": {
+                  "size": 31
+              },
+              "28": {
+                  "size": 31
+              },
+              "29": {
+                  "size": 31
+              },
+              "30": {
+                  "size": 31
+              },
+              "31": {
+                  "size": 31
+              },
+              "32": {
+                  "size": 31
+              },
+              "33": {
+                  "size": 31
+              },
+              "35": {
+                  "size": 40
+              },
+              "36": {
+                  "size": 40
+              },
+              "37": {
+                  "size": 31
+              },
+              "38": {
+                  "size": 31
+              },
+              "39": {
+                  "size": 31
+              },
+              "40": {
+                  "size": 31
+              },
+              "41": {
+                  "size": 31
+              },
+              "42": {
+                  "size": 31
+              },
+              "43": {
+                  "size": 31
+              },
+              "44": {
+                  "size": 31
+              },
+              "45": {
+                  "size": 31
+              },
+              "46": {
+                  "size": 31
+              }
+          },
+          "cols": {
+              "0": {
+                  "size": 175
+              },
+              "1": {
+                  "size": 100
+              },
+              "2": {
+                  "size": 100
+              },
+              "3": {
+                  "size": 100
+              },
+              "4": {
+                  "size": 50
+              },
+              "5": {
+                  "size": 175
+              },
+              "6": {
+                  "size": 100
+              },
+              "7": {
+                  "size": 100
+              },
+              "8": {
+                  "size": 100
+              }
+          },
+          "merges": [],
+          "cells": {
+              "A7": {
+                  "content": "[Time Billed by Week](odoo://view/{\"viewType\":\"graph\",\"action\":{\"domain\":[[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"date:week\"],\"graph_measure\":\"billable_time\",\"graph_mode\":\"line\",\"graph_groupbys\":[\"date:week\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Timesheets by Billing Type\"})"
+              },
+              "A23": {
+                  "content": "[Top Projects](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"project_id\",\"!=\",false]],\"context\":{\"group_by\":[\"project_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"project_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Projects\"})"
+              },
+              "A24": {
+                  "content": "=_t(\"Project\")"
+              },
+              "A36": {
+                  "content": "[Top Departments](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"department_id\",\"!=\",false]],\"context\":{\"group_by\":[\"department_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"department_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Departments\"})"
+              },
+              "A37": {
+                  "content": "=_t(\"Department\")"
+              },
+              "B24": {
+                  "content": "=_t(\"Hours spent\")"
+              },
+              "B37": {
+                  "content": "=_t(\"Hours spent\")"
+              },
+              "C24": {
+                  "content": "=_t(\"Hours billed\")"
+              },
+              "C37": {
+                  "content": "=_t(\"Hours billed\")"
+              },
+              "D24": {
+                  "content": "=_t(\"Billable rate\")"
+              },
+              "D34": {
+                  "content": "=IFERROR(C34/B34)"
+              },
+              "D37": {
+                  "content": "=_t(\"Billable rate\")"
+              },
+              "F23": {
+                  "content": "[Top Tasks](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"task_id\",\"!=\",false]],\"context\":{\"group_by\":[\"task_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"task_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Tasks\"})"
+              },
+              "F24": {
+                  "content": "=_t(\"Task\")"
+              },
+              "F36": {
+                  "content": "[Top Employees](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"project_id\",\"!=\",false],[\"employee_id\",\"!=\",false]],\"context\":{\"group_by\":[\"employee_id\"],\"pivot_measures\":[\"unit_amount\",\"billable_time\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"employee_id\"]},\"modelName\":\"timesheets.analysis.report\",\"views\":[[false,\"pivot\"],[false,\"graph\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Employees\"})"
+              },
+              "F37": {
+                  "content": "=_t(\"Employee\")"
+              },
+              "G24": {
+                  "content": "=_t(\"Hours spent\")"
+              },
+              "G37": {
+                  "content": "=_t(\"Hours spent\")"
+              },
+              "H24": {
+                  "content": "=_t(\"Hours billed\")"
+              },
+              "H37": {
+                  "content": "=_t(\"Hours billed\")"
+              },
+              "I24": {
+                  "content": "=_t(\"Billable rate\")"
+              },
+              "I34": {
+                  "content": "=IFERROR(H34/G34)"
+              },
+              "I37": {
+                  "content": "=_t(\"Billable rate\")"
+              }
+          },
+          "styles": {
+              "A7": 1,
+              "A23": 1,
+              "A36": 1,
+              "F23": 1,
+              "F36": 1,
+              "A24": 2,
+              "A37": 2,
+              "F24": 2,
+              "F37": 2,
+              "A34:D34": 3,
+              "I34": 3,
+              "B24:D24": 4,
+              "B37:D37": 4,
+              "G24:I24": 4,
+              "G37:I37": 4
+          },
+          "formats": {
+              "D34": 1,
+              "I34": 2
+          },
+          "borders": {
+              "A23:D23": 1,
+              "A36:D36": 1,
+              "A7:I7": 1,
+              "F23:I23": 1,
+              "F36:I36": 1,
+              "A24:D24": 2,
+              "A37:D37": 2,
+              "A8:I8": 2,
+              "F24:I24": 2,
+              "F37:I37": 2,
+              "A25": 3,
+              "A38": 3,
+              "F25": 3,
+              "F38": 3,
+              "A26:A34": 4,
+              "A39:A40": 4,
+              "A42:A47": 4,
+              "F26:F34": 4,
+              "F39:F40": 4,
+              "F42:F47": 4,
+              "A35:D35": 5,
+              "A48:D48": 5,
+              "F35:I35": 5,
+              "F48:I48": 5,
+              "A41:D41": 6,
+              "F41:I41": 6,
+              "B25:C25": 7,
+              "B38:C38": 7,
+              "G25:H25": 7,
+              "G38:H38": 7,
+              "B26:C34": 8,
+              "B39:C40": 8,
+              "B42:C47": 8,
+              "G26:H34": 8,
+              "G39:H40": 8,
+              "G42:H47": 8,
+              "D25": 9,
+              "D38": 9,
+              "I25": 9,
+              "I38": 9,
+              "D26:D34": 10,
+              "D39:D40": 10,
+              "D42:D47": 10,
+              "I26:I34": 10,
+              "I39:I40": 10,
+              "I42:I47": 10
+          },
+          "conditionalFormats": [],
+          "figures": [
+              {
+                  "id": "14907ee1-177b-4dda-97d7-223b1b00abe5",
+                  "x": 0,
+                  "y": 9,
+                  "width": 200,
+                  "height": 109,
+                  "tag": "chart",
+                  "data": {
+                      "baselineColorDown": "#DC6965",
+                      "baselineColorUp": "#00A04A",
+                      "baselineMode": "percentage",
+                      "title": {
+                          "text": "Billable Hours",
+                          "bold": true,
+                          "color": "#434343"
+                      },
+                      "type": "scorecard",
+                      "background": "#FEF2F2",
+                      "baseline": "Data!E5",
+                      "baselineDescr": "since last period",
+                      "keyValue": "Data!D5",
+                      "humanize": false
+                  }
+              },
+              {
+                  "id": "c484c691-bb4a-4a9d-8a25-8464162ee96a",
+                  "x": 210,
+                  "y": 9,
+                  "width": 200,
+                  "height": 109,
+                  "tag": "chart",
+                  "data": {
+                      "baselineColorDown": "#DC6965",
+                      "baselineColorUp": "#00A04A",
+                      "baselineMode": "percentage",
+                      "title": {
+                          "text": "Non-billable Hours",
+                          "bold": true,
+                          "color": "#434343"
+                      },
+                      "type": "scorecard",
+                      "background": "#FEF2F2",
+                      "baseline": "Data!E6",
+                      "baselineDescr": "since last period",
+                      "keyValue": "Data!D6",
+                      "humanize": false
+                  }
+              },
+              {
+                  "id": "0b033641-2a0f-4db7-893d-f14fbb320b94",
+                  "x": 420,
+                  "y": 9,
+                  "width": 200,
+                  "height": 109,
+                  "tag": "chart",
+                  "data": {
+                      "baselineColorDown": "#DC6965",
+                      "baselineColorUp": "#00A04A",
+                      "baselineMode": "text",
+                      "title": {
+                          "text": "Billable Rate",
+                          "bold": true,
+                          "color": "#434343"
+                      },
+                      "type": "scorecard",
+                      "background": "#ECFDF5",
+                      "baseline": "Data!E8",
+                      "baselineDescr": "last period",
+                      "keyValue": "Data!D8",
+                      "humanize": false
+                  }
+              },
+              {
+                  "id": "97fc8891-3062-4bac-86f7-7bf737aade07",
+                  "x": 0,
+                  "y": 178,
+                  "width": 1001,
+                  "height": 344,
+                  "tag": "chart",
+                  "data": {
+                      "type": "line",
+                      "dataSetsHaveTitle": false,
+                      "dataSets": [
+                          {
+                              "dataRange": "Data!B11:B16",
+                              "yAxisId": "y"
+                          }
+                      ],
+                      "legendPosition": "none",
+                      "labelRange": "Data!A11:A16",
+                      "title": {},
+                      "labelsAsText": true,
+                      "stacked": false,
+                      "aggregated": false,
+                      "cumulative": true,
+                      "fillArea": true
+                  }
+              }
+          ],
+          "tables": [],
+          "areGridLinesVisible": true,
+          "isVisible": true,
+          "headerGroups": {
+              "ROW": [],
+              "COL": []
+          },
+          "dataValidationRules": [],
+          "comments": {}
+      },
+      {
+          "id": "7802fc6d-c96b-452f-86d8-1c69816bebdc",
+          "name": "Data",
+          "colNumber": 26,
+          "rowNumber": 100,
+          "rows": {},
+          "cols": {},
+          "merges": [],
+          "cells": {
+              "A1": {
+                  "content": "=_t(\"KPI\")"
+              },
+              "A2": {
+                  "content": "=_t(\"Billed fixed price\")"
+              },
+              "A3": {
+                  "content": "=_t(\"Billed manually\")"
+              },
+              "A4": {
+                  "content": "=_t(\"Billed timesheets\")"
+              },
+              "A5": {
+                  "content": "=_t(\"Billable hours\")"
+              },
+              "A6": {
+                  "content": "=_t(\"Non-billable hours\")"
+              },
+              "A7": {
+                  "content": "=_t(\"Grand total\")"
+              },
+              "A8": {
+                  "content": "=_t(\"Billable rate\")"
+              },
+              "A11": {
+                  "content": "=EDATE(TODAY(),0-15)"
+              },
+              "A12": {
+                  "content": "=EDATE(TODAY(),0-12)"
+              },
+              "A13": {
+                  "content": "=EDATE(TODAY(),0-9)"
+              },
+              "A14": {
+                  "content": "=EDATE(TODAY(),0-6)"
+              },
+              "A15": {
+                  "content": "=EDATE(TODAY(),0-3)"
+              },
+              "A16": {
+                  "content": "=EDATE(TODAY(),0)"
+              },
+              "B1": {
+                  "content": "=_t(\"Current\")"
+              },
+              "B2": {
+                  "content": "43.5"
+              },
+              "B3": {
+                  "content": "31"
+              },
+              "B4": {
+                  "content": "5"
+              },
+              "B5": {
+                  "content": "=597"
+              },
+              "B6": {
+                  "content": "167"
+              },
+              "B7": {
+                  "content": "104.5"
+              },
+              "B8": {
+                  "content": "0.79"
+              },
+              "B11": {
+                  "content": "=RANDBETWEEN(0,200)"
+              },
+              "B12": {
+                  "content": "=RANDBETWEEN(0,200)"
+              },
+              "B13": {
+                  "content": "=RANDBETWEEN(0,200)"
+              },
+              "B14": {
+                  "content": "=RANDBETWEEN(0,200)"
+              },
+              "B15": {
+                  "content": "=RANDBETWEEN(0,200)"
+              },
+              "B16": {
+                  "content": "=RANDBETWEEN(0,200)"
+              },
+              "C1": {
+                  "content": "=_t(\"Previous\")"
+              },
+              "C5": {
+                  "content": "467"
+              },
+              "C6": {
+                  "content": "234"
+              },
+              "C7": {
+                  "content": "2"
+              },
+              "C8": {
+                  "content": "0.67"
+              },
+              "D1": {
+                  "content": "=_t(\"Current\")"
+              },
+              "D2": {
+                  "content": "=FORMAT.LARGE.NUMBER(B2)"
+              },
+              "D3": {
+                  "content": "=FORMAT.LARGE.NUMBER(B3)"
+              },
+              "D4": {
+                  "content": "=FORMAT.LARGE.NUMBER(B4)"
+              },
+              "D5": {
+                  "content": "=FORMAT.LARGE.NUMBER(B5)"
+              },
+              "D6": {
+                  "content": "=FORMAT.LARGE.NUMBER(B6)"
+              },
+              "D7": {
+                  "content": "=FORMAT.LARGE.NUMBER(B7)"
+              },
+              "D8": {
+                  "content": "=B8"
+              },
+              "E1": {
+                  "content": "=_t(\"Previous\")"
+              },
+              "E2": {
+                  "content": "=FORMAT.LARGE.NUMBER(C2)"
+              },
+              "E3": {
+                  "content": "=FORMAT.LARGE.NUMBER(C3)"
+              },
+              "E4": {
+                  "content": "=FORMAT.LARGE.NUMBER(C4)"
+              },
+              "E5": {
+                  "content": "=FORMAT.LARGE.NUMBER(C5)"
+              },
+              "E6": {
+                  "content": "=FORMAT.LARGE.NUMBER(C6)"
+              },
+              "E7": {
+                  "content": "=FORMAT.LARGE.NUMBER(C7)"
+              },
+              "E8": {
+                  "content": "=C8"
+              }
+          },
+          "styles": {
+              "A1:E1": 5,
+              "A2:E8": 6
+          },
+          "formats": {
+              "D8:E8": 1,
+              "A11:A16": 3,
+              "B2:B4": 4,
+              "B6:C7": 4
+          },
+          "borders": {},
+          "conditionalFormats": [],
+          "figures": [],
+          "tables": [],
+          "areGridLinesVisible": true,
+          "isVisible": true,
+          "headerGroups": {
+              "ROW": [],
+              "COL": []
+          },
+          "dataValidationRules": [],
+          "comments": {}
+      }
+  ],
+  "styles": {
+      "1": {
+          "textColor": "#01666b",
+          "bold": true,
+          "fontSize": 16
+      },
+      "2": {
+          "textColor": "#434343",
+          "fontSize": 11,
+          "bold": true
+      },
+      "3": {
+          "textColor": "#434343",
+          "verticalAlign": "middle"
+      },
+      "4": {
+          "textColor": "#434343",
+          "fontSize": 11,
+          "bold": true,
+          "align": "center"
+      },
+      "5": {
+          "bold": true
+      },
+      "6": {
+          "fillColor": "#f2f2f2"
+      }
+  },
+  "formats": {
+      "1": "0%",
+      "2": "0.00%",
+      "3": "qq yyyy",
+      "4": "#,##0.00"
+  },
+  "borders": {
+      "1": {
+          "bottom": {
+              "style": "thin",
+              "color": "#CCCCCC"
+          }
+      },
+      "2": {
+          "top": {
+              "style": "thin",
+              "color": "#CCCCCC"
+          }
+      },
+      "3": {
+          "bottom": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "right": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          }
+      },
+      "4": {
+          "top": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "bottom": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "right": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          }
+      },
+      "5": {
+          "top": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          }
+      },
+      "6": {
+          "top": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "bottom": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          }
+      },
+      "7": {
+          "bottom": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "left": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "right": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          }
+      },
+      "8": {
+          "top": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "bottom": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "left": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "right": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          }
+      },
+      "9": {
+          "bottom": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "left": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          }
+      },
+      "10": {
+          "top": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "bottom": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          },
+          "left": {
+              "style": "thick",
+              "color": "#FFFFFF"
+          }
+      }
+  },
+  "revisionId": "START_REVISION",
+  "uniqueFigureIds": true,
+  "settings": {
+      "locale": {
+          "name": "English (US)",
+          "code": "en_US",
+          "thousandsSeparator": ",",
+          "decimalSeparator": ".",
+          "dateFormat": "mm/dd/yyyy",
+          "timeFormat": "hh:mm:ss",
+          "formulaArgSeparator": ",",
+          "weekStart": 7
+      }
+  },
+  "pivots": {},
+  "pivotNextId": 7,
+  "customTableStyles": {},
+  "odooVersion": 12,
+  "globalFilters": [],
+  "lists": {},
+  "listNextId": 1
+}

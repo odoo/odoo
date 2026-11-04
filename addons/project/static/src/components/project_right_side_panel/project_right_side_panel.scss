@@ -1,0 +1,75 @@
+$o-rightpanel-p: $o-horizontal-padding;
+$o-rightpanel-p-small: $o-horizontal-padding*0.5;
+$o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
+
+.o_controller_with_rightpanel .o_content {
+    overflow: hidden;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+
+    .o_renderer {
+        flex: 1 1 auto;
+        max-height: 100%;
+        position: relative;
+        padding: 0;
+
+        .o_kanban_record {
+            width: 100%;
+            margin: 0;
+            border-top: 0;
+            border-right: 0;
+        }
+    }
+}
+
+.o_rightpanel {
+    flex: 0 0 50%;
+    padding: $o-rightpanel-p-small $o-rightpanel-p $o-rightpanel-p*2 $o-rightpanel-p;
+    min-width: 400px;
+    max-width: 1140px;
+
+    .o_rightpanel_section {
+        .o_form_view {
+            .oe_button_box {
+                margin: -1px (-$o-rightpanel-p) 0;
+                box-shadow: inset 0 -1px 0 $border-color;
+
+                .oe_stat_button {
+
+                    .o_stat_text {
+                        white-space: normal;
+                    }
+                }
+            }
+        }
+
+        .o_rightpanel_header {
+            padding-left: $o-rightpanel-p;
+            padding-right: $o-rightpanel-p;
+            margin: 0 $o-rightpanel-p * -1;
+
+            @include media-breakpoint-down(md) {
+                cursor: pointer;
+            }
+        }
+
+        tr th:not(:first-child) {
+            width: 20%;
+        }
+    }
+
+    .o_rightpanel_full_width {
+        margin: 0 $o-rightpanel-p * -1;
+
+        th, td {
+            &:first-child {
+                padding-left: $o-rightpanel-p;
+            }
+
+            &:last-child {
+                padding-right: $o-rightpanel-p;
+            }
+        }
+    }
+}

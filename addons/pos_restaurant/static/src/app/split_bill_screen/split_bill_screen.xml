@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.SplitBillScreen">
+        <div class="splitbill-screen screen h-100 bg-200">
+            <div class="contents d-flex flex-column flex-nowrap h-100 my-0 mx-auto">
+                <div class="top-content d-flex align-items-center p-2 border-bottom text-center bg-view">
+                    <button class="button back back-button btn btn-secondary lh-lg" t-on-click="back">
+                        <i class="oi oi-chevron-left fa-fw"/>
+                    </button>
+                    <div class="top-content-center flex-grow-1 pe-5">
+                        <h4 class="mb-0">Bill Splitting</h4>
+                    </div>
+                </div>
+
+                <div class="main d-flex flex-column flex-lg-row flex-grow-1 gap-2 p-2 overflow-hidden">
+                    <div class="flex-grow-1 w-100 w-lg-50 me-0 me-lg-2 rounded-3 bg-view overflow-auto">
+                        <OrderWidget lines="orderlines" t-slot-scope="scope" generalNote="currentOrder.general_note or ''">
+                            <t t-set="line" t-value="scope.line" />
+                            <Orderline line="getLineData(line)"
+                                t-on-click="() => this.onClickLine(line)"
+                                class="{'selected active': qtyTracker[line.uuid] and qtyTracker[line.uuid] !== 0}" />
+                        </OrderWidget>
+                    </div>
+                    <div class="controls flex-column flex-nowrap w-100 w-lg-50">
+                        <div class="order-info mb-2 mt-2 mt-lg-0 py-3 py-lg-4 rounded-3 text-center bg-view">
+                            <span class="subtotal text-success">
+                                <t t-esc="env.utils.formatCurrency(newOrderPrice)" />
+                            </span>
+                        </div>
+                        <div class="pay-button">
+                            <div class="button btn btn-lg btn-primary py-3 py-lg-5 w-100" t-on-click="createSplittedOrder">
+                                <span>Split Order</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

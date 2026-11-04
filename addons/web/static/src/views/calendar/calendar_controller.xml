@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarController">
+        <div t-att-class="className" t-ref="root">
+            <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="layout-buttons">
+                    <t t-call="{{ props.buttonTemplate }}"/>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <SearchBar toggler="searchBarToggler"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
+                <div class="o_calendar_container d-grid h-100 bg-view">
+                    <div class="o_calendar_header d-flex align-items-center gap-1 px-3 pe-md-1 py-2 px-print-0 pt-print-0 border-bottom">
+                        <div t-if="!env.isSmall" class="o_calendar_navigation_buttons btn-group d-print-none">
+                            <button
+                                class="o_calendar_button_prev btn btn-secondary d-none d-md-block"
+                                title="Previous"
+                                aria-label="Previous"
+                                t-on-click.stop="() => this.setDate('previous')"
+                            ><i class="oi oi-arrow-left"/></button>
+                            <button
+                                class="o_calendar_button_next btn btn-secondary d-none d-md-block"
+                                title="Next"
+                                aria-label="Next"
+                                t-on-click.stop="() => this.setDate('next')"
+                            ><i class="oi oi-arrow-right"/></button>
+                        </div>
+                        <ViewScaleSelector scales="scales" currentScale="model.scale" isWeekendVisible="state.isWeekendVisible" setScale.bind="setScale" toggleWeekendVisibility.bind="toggleWeekendVisibility" dropdownClass="'d-print-none order-3 order-lg-0'"/>
+                        <button
+                            class="btn btn-secondary o_calendar_button_today d-print-none order-2 order-lg-0 ms-auto ms-lg-0"
+                            t-att-class="env.isSmall ? 'btn-sm btn-light' : 'btn-secondary'"
+                            t-on-click.stop="() => this.setDate('today')"
+                        >   <span t-if="env.isSmall" class="position-relative pt-1"><t t-esc="today"/><i class="fa fa-calendar-o position-absolute top-50 start-50 translate-middle fs-1"></i></span>
+                            <t t-else="">Today</t>
+                        </button>
+                        <h5 class="d-inline-flex ps-lg-2 ps-print-0 mb-0">
+                            <t t-if="model.meta.scale === 'year'">
+                                <t t-esc="currentYear"/>
+                            </t>
+                            <t t-elif="model.meta.scale === 'month'">
+                                <t t-esc="currentMonth"/>
+                            </t>
+                            <t t-elif="model.meta.scale === 'week'">
+                                <t t-esc="weekHeader"/> <span t-if="model.meta.scale === 'week'" class="badge bg-100 rounded px-1 ms-1">Week <t t-esc="currentWeek"/></span>
+                            </t>
+                            <t t-else="">
+                                <t t-esc="dayHeader" />
+                            </t>
+                        </h5>
+                    </div>
+                    <div class="o_sidebar_toggler d-none d-md-flex d-print-none align-items-center border-bottom pe-3">
+                        <button class="btn btn-light oi oi-panel-right collapsed ms-2 lh-base" t-on-click="toggleSideBar"/>
+                    </div>
+                    <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
+                    <div class="o_calendar_wrapper d-flex overflow-hidden">
+                        <t t-if="showCalendar" t-component="props.Renderer" t-props="rendererProps"/>
+                        <div t-if="showSideBar" class="o_calendar_sidebar_container d-print-none position-relative w-100 w-md-auto bg-view overflow-x-hidden overflow-y-auto">
+                            <div class="o_calendar_sidebar">
+                                <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
+                                <FilterPanel t-props="filterPanelProps" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Layout>
+        </div>
+    </t>
+
+    <t t-name="web.CalendarController.controlButtons"/>
+
+</templates>

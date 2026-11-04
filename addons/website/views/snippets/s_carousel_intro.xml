@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel_intro" name="Carousel Intro">
+    <section class="s_carousel_intro_wrapper p-0">
+        <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
+        <div t-attf-id="myCarouselIntro{{uniq}}" class="s_carousel_intro s_carousel_default carousel slide carousel-dark" data-bs-ride="true" data-bs-interval="10000">
+            <!-- Content -->
+            <div class="carousel-inner">
+                <!-- #01 -->
+                <div class="s_carousel_intro_item carousel-item o_cc o_cc1 px-0 pt72 pb96 active" data-name="Slide">
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="8">
+                            <div class="o_grid_item g-height-8 g-col-lg-5 col-lg-5" style="z-index: 1; grid-area: 1 / 1 / 9 / 6;" data-name="Block">
+                                <h1 class="display-3-fs">Driving innovation together</h1>
+                            </div>
+                            <div class="o_grid_item g-height-3 g-col-lg-4 col-lg-4" style="z-index: 2; grid-area: 2 / 7 / 5 / 11; --grid-item-padding-y: 0px;" data-name="Block">
+                                <p class="lead">Empowering teams to collaborate and innovate, creating impactful solutions that drive business growth and deliver lasting value.</p>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image g-height-4 g-col-lg-6 col-lg-6" style="z-index: 3; grid-area: 5 / 7 / 9 / 13;" data-name="Block">
+                                <img src="/web/image/website.s_carousel_intro_default_image_1" alt="" class="img img-fluid"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="s_carousel_intro_item carousel-item o_cc o_cc1 px-0 pt72 pb96" data-name="Slide">
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="8">
+                            <div class="o_grid_item g-height-5 g-col-lg-6 col-lg-6" style="z-index: 1; grid-area: 1 / 7 / 6 / 13;" data-name="Block">
+                                <h2 class="display-3-fs">Innovating for business success</h2>
+                            </div>
+                            <div class="o_grid_item g-height-2 g-col-lg-4 col-lg-4" style="z-index: 2; grid-area: 7 / 7 / 9 / 11; --grid-item-padding-y: 20px;" data-name="Block">
+                                <p class="lead">Creating solutions that drive growth and long-term value.</p>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image g-height-7 g-col-lg-5 col-lg-5" style="z-index: 3; grid-area: 2 / 1 / 9 / 6;" data-name="Block">
+                                <img src="/web/image/website.s_carousel_intro_default_image_2" alt="" class="img img-fluid"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="s_carousel_intro_item carousel-item o_cc o_cc1 px-0 pt72 pb96" data-name="Slide">
+                    <div class="container">
+                        <div class="row o_grid_mode" data-row-count="8">
+                            <div class="o_grid_item g-height-8 g-col-lg-5 col-lg-5" style="z-index: 1; grid-area: 1 / 1 / 9 / 6;" data-name="Box">
+                                <h2 class="display-3-fs">Leading the future with innovation and strategy</h2>
+                            </div>
+                            <div class="o_grid_item g-height-4 g-col-lg-4 col-lg-4" style="z-index: 2; grid-area: 5 / 9 / 9 / 13;" data-name="Box">
+                                <p class="lead">We combine strategic insights and innovative solutions to drive business success, ensuring sustainable growth and competitive advantage in a dynamic market.</p>
+                            </div>
+                            <div class="o_grid_item o_grid_item_image g-height-8 g-col-lg-3 col-lg-3" style="z-index: 3; grid-area: 1 / 6 / 9 / 9;" data-name="Box">
+                                <img src="/web/image/website.s_carousel_intro_default_image_3" alt="" class="img img-fluid"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="s_carousel_intro_controllers container position-absolute start-50 bottom-0 translate-middle-x w-100 mb-md-4 o_not_editable">
+                <div class="s_carousel_intro_controllers_row row gap-3 gap-lg-5 justify-content-between flex-nowrap flex-row-reverse">
+                    <!-- Controls -->
+                    <div class="o_arrows_wrapper gap-2 w-auto p-0">
+                        <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselIntro{{uniq}}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselIntro{{uniq}}" data-bs-slide="next" aria-label="Next" title="Next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"/>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <!-- Indicators -->
+                    <div class="s_carousel_indicators_numbers carousel-indicators align-items-center flex-shrink-1 w-auto">
+                        <button type="button" t-attf-data-bs-target="#myCarouselIntro{{uniq}}" data-bs-slide-to="0" class="active" aria-label="Carousel indicator"/>
+                        <button type="button" t-attf-data-bs-target="#myCarouselIntro{{uniq}}" data-bs-slide-to="1" aria-label="Carousel indicator"/>
+                        <button type="button" t-attf-data-bs-target="#myCarouselIntro{{uniq}}" data-bs-slide-to="2" aria-label="Carousel indicator"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="snippet_options_carousel_intro" inherit_id="website.snippet_options_carousel" primary="True">
+    <xpath expr="//div" position="attributes">
+        <attribute name="data-target">.s_carousel_intro</attribute>
+        <attribute name="data-exclude"/>
+        <attribute name="data-js">CarouselIntro</attribute>
+    </xpath>
+    <xpath expr="//we-button[@data-select-class='s_carousel_arrows_hidden']" position="attributes">
+        <attribute name="data-name">carousel_arrows_hidden_opt</attribute>
+        <attribute name="data-hidden-controllers">true</attribute>
+    </xpath>
+    <xpath expr="//we-button[@data-select-class='s_carousel_indicators_hidden']" position="attributes">
+        <attribute name="data-name">carousel_indicators_hidden_opt</attribute>
+        <attribute name="data-hidden-controllers">true</attribute>
+    </xpath>
+    <xpath expr="//we-select" position="replace">
+        <we-select string="Controllers" data-apply-to=".s_carousel_intro_controllers_row">
+            <we-button data-select-class="justify-content-between">Default</we-button>
+            <we-button data-select-class="justify-content-between flex-row-reverse">Reversed</we-button>
+            <we-button data-select-class="justify-content-center" data-name="carousel_controllers_centered_opt"  data-dependencies="carousel_arrows_hidden_opt, carousel_indicators_hidden_opt">Centered</we-button>
+        </we-select>
+    </xpath>
+</template>
+
+<template id="s_carousel_intro_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="after">
+        <t t-call="website.snippet_options_carousel_intro"/>
+    </xpath>
+
+    <xpath expr="//div[@data-js='GalleryElement']" position="after">
+        <div data-js="layout_column" data-selector=".s_carousel_intro_item" data-target="> .container, > .container-fluid, > .o_container_small">
+            <we-row>
+                <we-button-group string="Layout" data-no-preview="true">
+                    <we-button data-select-layout="grid" data-name="grid_mode">Grid</we-button>
+                    <we-button data-select-layout="normal" data-name="normal_mode">Cols</we-button>
+                </we-button-group>
+                <t t-call="website.column_count_option">
+                    <t t-set="with_grid" t-value="True"/>
+                </t>
+            </we-row>
+            <t t-call="website.grid_layout_options">
+                <t t-set="indent" t-value="True"/>
+            </t>
+        </div>
+        <div data-js="ContainerWidth" data-selector=".s_carousel_intro_item" data-target="> .container, > .container-fluid, > .o_container_small">
+            <we-button-group string="Content Width">
+                <we-button data-select-class="o_container_small"
+                        data-img="/website/static/src/img/snippets_options/content_width_small.svg"
+                        title="Small"/>
+                <we-button data-select-class="container"
+                        data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                        title="Regular"/>
+                <we-button data-select-class="container-fluid"
+                        data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                        title="Full"/>
+            </we-button-group>
+        </div>
+    </xpath>
+</template>
+
+<asset id="website.s_carousel_intro_000_scss" name="Carousel Intro 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_carousel_intro/000.scss</path>
+</asset>
+
+</odoo>

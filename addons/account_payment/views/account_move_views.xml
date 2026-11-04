@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="account_invoice_view_form_inherit_payment" model="ir.ui.view">
+        <field name="name">account.move.view.form.inherit.payment</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!--
+            The user must capture/void the authorized transactions before registering a new payment.
+            -->
+            <xpath expr="//button[@id='account_invoice_payment_btn']" position="attributes">
+                <attribute name="invisible" separator="or" add="authorized_transaction_ids"/>
+            </xpath>
+            <xpath expr="//button[@id='account_invoice_payment_secondary_btn']" position="attributes">
+                <attribute name="invisible" separator="or" add="authorized_transaction_ids"/>
+            </xpath>
+            <xpath expr="//button[@id='account_invoice_payment_btn']" position="after">
+                <field name="authorized_transaction_ids" invisible="1"/>
+                <button name="payment_action_capture" type="object"
+                        groups="account.group_account_invoice"
+                        string="Capture Transaction" class="oe_highlight" data-hotkey="shift+g"
+                        invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or state != 'posted' or not authorized_transaction_ids"/>
+                <button name="payment_action_void" type="object"
+                        groups="account.group_account_invoice"
+                        string="Void Transaction" data-hotkey="shift+v"
+                        confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
+                        invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or state != 'posted' or not authorized_transaction_ids"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_payment_transactions" type="object"
+                        groups="account.group_account_invoice"
+                        class="oe_stat_button" icon="fa-money"
+                        invisible="transaction_count == 0">
+                        <field name="transaction_count" widget="statinfo" string="Payment Transaction"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

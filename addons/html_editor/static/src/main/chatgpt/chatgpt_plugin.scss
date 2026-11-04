@@ -1,0 +1,38 @@
+
+@keyframes fade {
+    0%,100% { opacity: 0 }
+    30%,70% { opacity: 1 }
+}
+.o-chatgpt-content {
+    position: absolute;
+    background: rgba(1, 186, 210, 0.5);
+    opacity: 0;
+    animation: fade 1.5s ease-in-out;
+    z-index: 1;
+    outline: 2px dashed #01bad2;
+    outline-offset: -2px;
+}
+.o-prompt-input {
+    position: relative;
+    // see .o-mail-Composer-input
+    > textarea {
+        padding-top: 10px; // carefully crafted to have the text in the middle in chat window
+        padding-bottom: 10px;
+        min-height: 40px;
+        max-height: 110px;
+        resize: none;
+    }
+}
+button.o-message-insert {
+    line-height: 1;
+}
+.o-chatgpt-message > div > *:last-child,
+.o-chatgpt-alternative > *:last-child,
+.o-chatgpt-translated > *:last-child {
+    margin-bottom: 0;
+}
+.o-message-error {
+    color: #d44c59;
+    font-weight: bold;
+    --bg-opacity: 0.25;
+}

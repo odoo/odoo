@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.FloatTimeSelectionPopover">
+        <div class="position-relative d-flex align-items-center flex-sm-row gap-1 gap-md-1 p-2">
+            <select class="o_hour_selection form-control form-control-sm w-auto" t-on-change="onTimeChange" t-model="state.selectedHours">
+                <t t-foreach="availableHours" t-as="unit" t-key="unit[0]">
+                    <option class="text-center" t-att-value="unit[0]" t-esc="unit[1]" t-att-selected="unit[0] == state.selectedHours"/>
+                </t>
+            </select>
+            <span>:</span>
+            <select class="o_hour_selection form-control form-control-sm w-auto" t-on-change="onTimeChange" t-model="state.selectedMinutes">
+                <t t-foreach="availableMinutes" t-as="unit" t-key="unit[0]">
+                    <option class="text-center" t-att-value="unit[0]" t-esc="unit[1]" t-att-selected="unit[0] == state.selectedMinutes"/>
+                </t>
+            </select>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+<t t-name="html_editor.EmbeddedTableOfContent">
+    <div class="o_embedded_toc_content">
+        <t t-foreach="this.state.toc.headings" t-as="heading" t-key="heading_index">
+            <a href="#" contenteditable="false"
+                t-out="heading.name"
+                t-on-click.prevent="() => this.onTocLinkClick(heading)"
+                t-attf-class="o_no_link_popover py-1 pe-1 d-block o_embedded_toc_link #{'o_embedded_toc_link_depth_' + heading.depth}"/>
+        </t>
+    </div>
+    <i class="o_embedded_toc_hint" t-if="displayTocHint()">
+        Add headings in this field to fill the Table of Content
+    </i>
+</t>
+</templates>

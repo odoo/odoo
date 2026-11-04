@@ -1,0 +1,23 @@
+<templates>
+
+    <t t-name="project.ProjectMany2OneField" t-inherit="web.Many2OneField" t-inherit-mode="primary">
+        <xpath expr="//t[@t-if='!props.canOpen']/span" position="attributes">
+            <attribute name="t-if">props.record.data[props.name]</attribute>
+        </xpath>
+        <xpath expr="//t[@t-if='!props.canOpen']/span" position="after">
+            <span t-elif="!props.record.data.parent_id &amp;&amp; !props.record.data.project_id" class="text-danger fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+        </xpath>
+        <xpath expr="//t[@t-else='']/a" position="attributes">
+            <attribute name="t-if">displayName</attribute>
+        </xpath>
+        <xpath expr="//t[@t-else='']/a" position="after">
+            <span t-elif="!props.record.data.parent_id &amp;&amp; !props.record.data.project_id" class="text-danger fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
+        </xpath>
+        <xpath expr="//div[hasclass('o_field_many2one_selection')]" position="attributes">
+            <attribute name="t-att-class">{
+                private_placeholder: !props.record.data.parent_id &amp;&amp; !props.record.data.project_id,
+            }</attribute>
+        </xpath>
+    </t>
+
+</templates>

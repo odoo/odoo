@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_production_type_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='menu']" position="inside">
+                <div class="container" t-if="record.code.raw_value == 'mrp_operation'">
+                    <div class="row">
+                        <div class="col-6" name="picking_left_manage_pane">
+                            <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                <span>Orders</span>
+                            </h5>
+                            <div role="menuitem">
+                                <a name="%(mrp_production_action_picking_deshboard)d" type="action">All</a>
+                            </div>
+                            <div role="menuitem">
+                                <a name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_inprogress': 1}">In Progress</a>
+                            </div>
+                            <div role="menuitem">
+                                <a name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_planned': 1}">Planned</a>
+                            </div>
+                        </div>
+                        <div name="kanban_menu_section" class="col-6">
+                            <h5 role="menuitem" class="o_kanban_card_manage_title">
+                                <span>New</span>
+                            </h5>
+                            <div role="menuitem">
+                                <a name="%(action_mrp_production_form)d" context="{'default_picking_type_id': id}" type="action">Manufacturing Order</a>
+                            </div>
+                            <div role="menuitem">
+                                <a name="get_action_picking_type_moves_analysis" type="object">Reporting</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                        <div role="menuitem" aria-haspopup="true" class="col-8">
+                            <field name="color" widget="kanban_color_picker"/>
+                        </div>
+                    </div>
+
+                    <div t-if="widget.editable" class="o_kanban_card_manage_settings row">
+                        <field name="is_favorite" widget="boolean_favorite" class="col-6"/>
+                        <div class="col-6 text-end">
+                            <a class="dropdown-item" role="menuitem" type="open">Configuration</a>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr='//div[@name="stock_picking"]' position="after">
+                <div t-if="record.code.raw_value == 'mrp_operation'" class="px-2">
+                    <a t-if="!selection_mode" type="object" name="get_mrp_stock_picking_action_picking_type">
+                        <field name="name" class="fw-bold fs-4"/>
+                    </a>
+                    <field t-if="selection_mode" name="name" class="fw-bold fs-4"/>
+                    <field name="warehouse_id" class="d-block" groups="stock.group_stock_multi_warehouses"/>
+                    <div t-if="!selection_mode" class="row mt-3">
+                        <div class="col-6">
+                            <button class="btn btn-primary" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_confirmed': 1, 'default_picking_type_id': id}">
+                                <span t-if="record.count_mo_todo.raw_value > 0">
+                                    <field name="count_mo_todo"/> To Manufacture
+                                </span>
+                                <span t-else="">Open</span>
+                            </button>
+                        </div>
+                        <div class="col-6 stock-overview-links">
+                            <div t-if="record.count_mo_waiting.raw_value > 0" class="row">
+                                <a class="col-8 offset-4 text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_waiting': 1}">
+                                    <div class="row">
+                                        <span class="col-6">Waiting</span>
+                                        <field class="col-2 text-end" name="count_mo_waiting"/>
+                                    </div>
+                                </a>
+                            </div>
+                            <div t-if="record.count_mo_late.raw_value > 0" class="row">
+                                <a class="col-8 offset-4 text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_late_mo': 1, 'default_picking_type_id': id}">
+                                    <div class="row">
+                                        <span class="col-6">Late</span>
+                                        <field class="col-2 text-end" name="count_mo_late"/>
+                                    </div>
+                                </a>
+                            </div>
+                            <div t-if="record.count_mo_in_progress.raw_value > 0" class="row">
+                                <a class="col-8 offset-4 text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_in_progress': 1, 'default_picking_type_id': id}">
+                                    <div class="row">
+                                        <span class="col-6">In Progress</span>
+                                        <field class="col-2 text-end" name="count_mo_in_progress"/>
+                                    </div>
+                                </a>
+                            </div>
+                            <div t-if="record.count_mo_to_close.raw_value > 0" class="row">
+                                <a class="col-8 offset-4 text-truncate" name="%(mrp_production_action_picking_deshboard)d" type="action" context="{'search_default_filter_to_close': 1, 'default_picking_type_id': id}">
+                                    <div class="row">
+                                        <span class="col-6">To Close</span>
+                                        <field class="col-2 text-end" name="count_mo_to_close"/>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <field t-if="!selection_mode" name="kanban_dashboard_graph" class="mt-auto" graph_type="bar" widget="picking_type_dashboard_graph"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_form_inherit_mrp" model="ir.ui.view">
+        <field name="name">view.picking.form.inherit.mrp</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description_picking']" position="after">
+                <field name="description_bom_line" optional="show" column_invisible="not parent.has_kits"/>
+            </xpath>
+            <xpath expr="//button[@name='action_view_reception_report']" position="after">
+                <button class="oe_stat_button" name="action_view_mrp_production" type="object" icon="fa-wrench" invisible="not production_count" groups="mrp.group_mrp_user">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="production_count"/></span>
+                        <span class="o_stat_text">Manufacturing</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_move_line_detailed_operation_tree_mrp" model="ir.ui.view">
+        <field name="name">stock.move.line.operations.list.mrp</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="description_bom_line" optional="show" column_invisible="not context.get('has_kits')"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_picking_type_form_inherit_mrp" model="ir.ui.view">
+        <field name="name">Operation Types</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='stock_picking_type_lot']" position="after">
+                <group invisible="code != 'mrp_operation'" string="Traceability" groups="stock.group_production_lot">
+                    <field name="use_create_components_lots"/>
+                </group>
+            </xpath>
+            <field name="auto_show_reception_report" position="after">
+                <field name="auto_show_reception_report" invisible="code != 'mrp_operation'" groups="mrp.group_mrp_reception_report"/>
+            </field>
+            <xpath expr="//page[@name='hardware']" position="after">
+                <page name="mrp_hardware" string="Hardware" invisible="code != 'mrp_operation'">
+                    <group>
+                        <group string="Print when done">
+                            <field name="auto_print_done_production_order" string="Production Order"/>
+                            <label for="auto_print_done_mrp_product_labels" string="Product Labels"/>
+                            <div class="o_row">
+                                <field name="auto_print_done_mrp_product_labels" string="Product Labels"/>
+                                <label for="mrp_product_label_to_print" string="Print labels as:" invisible="not auto_print_done_mrp_product_labels" class="fw-bold"/>
+                                <field name="mrp_product_label_to_print" invisible="not auto_print_done_mrp_product_labels"/>
+                            </div>
+                            <label for="auto_print_done_mrp_lot" string="Lot/SN Labels" groups="stock.group_production_lot"/>
+                            <div class="o_row" groups="stock.group_production_lot">
+                                <field name="auto_print_done_mrp_lot" string="Lot/SN Labels"/>
+                                <label for="done_mrp_lot_label_to_print" string="Print labels as:" invisible="not auto_print_done_mrp_lot" class="fw-bold"/>
+                                <field name="done_mrp_lot_label_to_print" invisible="not auto_print_done_mrp_lot"/>
+                            </div>
+                            <field name="auto_print_mrp_reception_report" string="Allocation Report" groups="mrp.group_mrp_reception_report"/>
+                            <field name="auto_print_mrp_reception_report_labels" string="Allocation Report Labels" groups="mrp.group_mrp_reception_report"/>
+                        </group>
+                        <group string="">
+                            <div colspan="2">
+                                Odoo opens a PDF preview by default. If you want to print instantly,
+                                install the IoT App on a computer that is on the same local network as the
+                                barcode operator and configure the routing of the reports.
+                                <widget name="documentation_link" path="/applications/productivity/iot/devices/printer.html" label="Documentation" icon="fa-arrow-right"/>
+                            </div>
+                        </group>
+                        <group string='Print when "Create new Lot/SN"' groups="stock.group_production_lot">
+                            <label for="auto_print_generated_mrp_lot" string="Lot/SN Label"/>
+                            <div class="o_row">
+                                <field name="auto_print_generated_mrp_lot" string="Lot/SN Label"/>
+                                <label for="generated_mrp_lot_label_to_print" string="Print labels as:" invisible="not auto_print_generated_mrp_lot" class="fw-bold"/>
+                                <field name="generated_mrp_lot_label_to_print" invisible="not auto_print_generated_mrp_lot"/>
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_picking_tree_mrp_operation" model="ir.actions.act_window">
+        <field name="name">Manufacturings</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">list,kanban,form,calendar,activity</field>
+        <field name="domain"></field>
+        <field name="context">{'default_company_id': allowed_company_ids[0]}</field>
+        <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
+    </record>
+
+    <record id="action_picking_tree_mrp_operation_graph" model="ir.actions.act_window">
+        <field name="name">Manufacturings</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">list,kanban,form,calendar,activity</field>
+        <field name="domain"></field>
+        <field name="context">{'search_default_filter_confirmed': 1}</field>
+        <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
+    </record>
+
+    <menuitem id="mrp_operation_picking" name="Manufacturings" parent="stock.menu_stock_transfers"
+        action="action_picking_tree_mrp_operation" sequence="25"
+        groups="stock.group_stock_manager,stock.group_stock_user"/>
+</odoo>

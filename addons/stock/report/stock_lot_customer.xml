@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="stock_lot_customer_report_view_list" model="ir.ui.view">
+        <field name="name">stock.lot.report.view.list</field>
+        <field name="model">stock.lot.report</field>
+        <field name="arch" type="xml">
+            <list string="Lot / Serial Number" decoration-danger="has_return">
+                <field name="lot_id"/>
+                <field name="product_id"/>
+                <field name="partner_id"/>
+                <field name="picking_id"/>
+                <field name="quantity"/>
+                <field name="uom_id"/>
+                <field name="delivery_date"/>
+                <field name="address"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_lot_report" model="ir.actions.act_window">
+        <field name="name">Customer lots</field>
+        <field name="res_model">stock.lot.report</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+            <p>
+                Ship a lot to a customer.
+            </p>
+        </field>
+    </record>
+
+    <record id="search_customer_lot_filter" model="ir.ui.view">
+        <field name="name">Customer Lots Filter</field>
+        <field name="model">stock.lot.report</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="lot_id" string="Lot/Serial Number"/>
+                <field name="product_id"/>
+                <field name="partner_id"/>
+                <filter string="Delivery Date" name="delivery_date" date="delivery_date"/>
+                <filter string="Unreturned" name="filter_not_has_return" domain="[('has_return', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_product" string="Product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_by_partner" string="Address" domain="[]" context="{'group_by': 'address'}"/>
+                    <filter name="group_by_lot" string="Lot / Serial Number" domain="[]" context="{'group_by': 'lot_id'}"/>
+                    <filter name="group_by_delivery_date" string="Delivery date" domain="[]" context="{'group_by': 'delivery_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

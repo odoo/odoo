@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Timeline" id="s_timeline">
+    <section class="s_timeline pt48 pb48" data-vcss="002">
+        <div class="o_container_small">
+            <div class="row">
+                <div class="col-lg-12 pb24 text-center" data-name="Heading">
+                    <h2 class="h3-fs">Latest news</h2>
+                    <p class="lead">Highlight your history, showcase growth and key milestones.</p>
+                </div>
+            </div>
+            <div class="position-relative pt-3">
+                <div class="s_timeline_row position-relative d-flex gap-md-5 flex-column flex-md-row pb-4" data-name="Milestone">
+                    <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                    <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                    <div class="s_timeline_content w-100 ps-4 ps-md-0">
+                        <div class="s_timeline_card s_card card my-0 ms-auto text-md-end" style="border-width: 0px !important;" data-vxml="001" data-snippet="s_card" data-name="Milestone Event">
+                            <div class="card-body">
+                                <small class="text-muted">13/06/2019</small>
+                                <h3 class="h4-fs card-title">First Feature</h3>
+                                <p class="card-text">A timeline is a graphical representation on which important events are marked.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="s_timeline_content w-0 w-md-100 h-0"/>
+                </div>
+                <div class="s_timeline_row position-relative d-flex gap-md-5 flex-column flex-md-row pb-4" data-name="Milestone">
+                    <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                    <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                    <div class="s_timeline_content w-100 ps-4 ps-md-0">
+                        <div class="s_timeline_card s_card card my-0 me-auto text-md-end" style="border-width: 0px !important;" data-vxml="001" data-snippet="s_card" data-name="Milestone Event">
+                            <div class="card-body">
+                                <small class="text-muted">21/03/2021</small>
+                                <h3 class="h4-fs card-title">Second Feature</h3>
+                                <p class="card-text">A timeline is a graphical representation on which important events are marked.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="s_timeline_content w-100 ps-4 ps-md-0">
+                        <div class="s_timeline_card s_card card my-0 me-auto" style="border-width: 0px !important;" data-vxml="001" data-snippet="s_card" data-name="Milestone Event">
+                            <div class="card-body">
+                                <small class="text-muted">21/03/2021</small>
+                                <h3 class="h4-fs card-title">Third Feature</h3>
+                                <p class="card-text">A timeline is a visual display that highlights significant events in chronological order.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="s_timeline_row position-relative d-flex flex-column flex-md-row gap-md-5 pb-4" data-name="Milestone">
+                    <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                    <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                    <div class="s_timeline_content w-0 w-md-100 h-0"/>
+                    <div class="s_timeline_content w-100 ps-4 ps-md-0">
+                        <div class="s_timeline_card s_card card my-0 ms-auto" style="border-width: 0px !important;" data-vxml="001" data-snippet="s_card" data-name="Milestone Event">
+                            <div class="card-body">
+                                <small class="text-muted">25/12/2024</small>
+                                <h3 class="h4-fs card-title">Latest Feature</h3>
+                                <p class="card-text">A timeline is a graphical representation on which important events are marked.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_timeline_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
+        <div data-js="MultipleItems" data-selector=".s_timeline">
+            <we-row string="Date">
+                <we-button data-add-item="" data-item=".s_timeline_row:first" data-select-item="" data-add-before="true" data-no-preview="true" class="o_we_bg_brand_primary">
+                    Add Date
+                </we-button>
+            </we-row>
+        </div>
+    </xpath>
+    <xpath expr="." position="inside">
+        <div data-selector=".s_timeline_row" data-drop-near=".s_timeline_row"/>
+        <div data-js="Timeline" data-selector=".s_timeline_card">
+            <we-button data-timeline-card="" data-no-preview="true" class="o_we_overlay_opt"><i class="fa fa-fw fa-angle-left"/><i class="fa fa-fw fa-angle-right"/></we-button>
+        </div>
+    </xpath>
+    <xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
+        <attribute name="data-selector" add=".s_timeline_row" separator=","/>
+    </xpath>
+</template>
+
+<asset id="website.s_timeline_000_scss" name="Timeline 000 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_timeline/000.scss</path>
+</asset>
+
+<asset id="website.s_timeline_001_scss" name="Timeline 001 SCSS" active="False">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_timeline/001.scss</path>
+</asset>
+
+<asset id="website.s_timeline_002_scss" name="Timeline 002 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_timeline/002.scss</path>
+</asset>
+
+</odoo>

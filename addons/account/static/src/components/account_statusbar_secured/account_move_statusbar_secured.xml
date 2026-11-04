@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!-- Add "secured" indicator to the posted state -->
+
+    <t t-name="account.MoveStatusBarSecuredField.ItemLabel">
+        <span t-esc="item.label" />
+        <t t-if="item.value == 'posted'">
+            <i t-attf-class="fa fa-fw ms-1 #{isSecured ? 'fa-lock text-success' : 'fa-unlock text-warning'}"/>
+        </t>
+    </t>
+
+    <t t-name="account.MoveStatusBarSecuredField.Dropdown" t-inherit="web.StatusBarField.Dropdown" t-inherit-mode="primary">
+        <xpath expr="//span[@t-esc='item.label']" position="replace">
+            <t t-call="account.MoveStatusBarSecuredField.ItemLabel"/>
+        </xpath>
+    </t>
+
+    <t t-name="account.MoveStatusBarSecuredField" t-inherit="web.StatusBarField" t-inherit-mode="primary">
+        <xpath expr="//*[@t-call='web.StatusBarField.Dropdown']" position="attributes">
+            <attribute name="t-call">account.MoveStatusBarSecuredField.Dropdown</attribute>
+        </xpath>
+
+        <xpath expr="//*[@t-esc='item.label']" position="inside">
+            <t t-call="account.MoveStatusBarSecuredField.ItemLabel"/>
+        </xpath>
+        <xpath expr="//*[@t-esc='item.label']" position="attributes">
+            <attribute name="t-esc" />
+        </xpath>
+
+        <xpath expr="//*[@t-out='getCurrentLabel()']" position="replace">
+            <t t-set="item" t-value="currentItem"/>
+            <t t-call="account.MoveStatusBarSecuredField.ItemLabel"/>
+        </xpath>
+    </t>
+</templates>

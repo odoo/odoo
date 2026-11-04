@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@name='address_not_same_as_shipping']//t[@t-set='address']" position="inside">
+            <div t-if="o.buyer_reference">
+                Buyer Reference: <span t-field="o.buyer_reference"/>
+            </div>
+            <div t-if="o.contract_reference">
+                Contract Reference: <span t-field="o.contract_reference"/>
+            </div>
+            <div t-if="o.purchase_order_reference">
+                Purchase Order Reference: <span t-field="o.purchase_order_reference"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']//t[@t-set='address']" position="inside">
+            <div t-if="o.buyer_reference">
+                Buyer Reference: <span t-field="o.buyer_reference"/>
+            </div>
+            <div t-if="o.contract_reference">
+                Contract Reference: <span t-field="o.contract_reference"/>
+            </div>
+            <div t-if="o.purchase_order_reference">
+                Purchase Order Reference: <span t-field="o.purchase_order_reference"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']//t[@t-set='address']" position="inside">
+            <div t-if="o.buyer_reference">
+                Buyer Reference: <span t-field="o.buyer_reference"/>
+            </div>
+            <div t-if="o.contract_reference">
+                Contract Reference: <span t-field="o.contract_reference"/>
+            </div>
+            <div t-if="o.purchase_order_reference">
+                Purchase Order Reference: <span t-field="o.purchase_order_reference"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="website_sale_mass_mailing.newsletter"
+        inherit_id="website_sale.address"
+        name="Newsletter"
+        active="False"
+    >
+        <div id="div_email_public" position="after">
+            <div class="form-check mt-2">
+                <label>
+                    <input
+                        type="checkbox"
+                        name="newsletter"
+                        class="form-check-input"
+                    /> Be the first to find out all the latest news, products and trends
+                </label>
+            </div>
+        </div>
+    </template>
+
+</odoo>

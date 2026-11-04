@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_search_view_website" model="ir.ui.view">
+        <field name="name">product.template.search.published</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <filter name="combo" position="after">
+                <separator/>
+                <filter string="Published" name="published" domain="[('is_published', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="product_product_website_tree_view" model="ir.ui.view">
+        <field name="name">product.product.website.list</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="website_id" groups="website.group_multi_website" optional="show"/>
+                <field name="is_published" string="Is Published" optional="hide"/>
+            </field>
+            <field name="additional_product_tag_ids" position="after">
+                <field
+                    name="website_ribbon_id"
+                    invisible="variant_ribbon_id"
+                    optional="hide"
+                    readonly="1"
+                />
+                <field
+                    name="variant_ribbon_id" options="{'no_quick_create': True}" optional="hide"
+                />
+            </field>
+        </field>
+    </record>
+
+    <!-- We want website_id to be shown outside of website module like other models -->
+    <record id="product_template_view_tree" model="ir.ui.view">
+        <field name="name">product.template.view.list.inherit.website_sale</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="default_code" position="after">
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
+            </field>
+            <field name="product_tag_ids" position="after">
+                <field name="website_ribbon_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- only website module template view should use the website_sequence -->
+    <record id="product_template_view_tree_website_sale" model="ir.ui.view">
+        <field name="name">product.template.view.list.website_sale</field>
+        <field name="mode">primary</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_view_tree"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="default_order">website_sequence</attribute>
+            </list>
+            <field name="is_favorite" position="before">
+                <field name="website_sequence" widget="handle"/>
+            </field>
+            <field name="website_id" position="after">
+                <field name="public_categ_ids" widget="many2many_tags" string="Categories" optional="show"/>
+                <field name="is_published" string="Is Published" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_view_kanban_website_sale" model="ir.ui.view">
+        <field name="name">product.template.view.kanban.website_sale</field>
+        <field name="mode">primary</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_kanban_view"/>
+        <field name="arch" type="xml">
+            <kanban position="attributes">
+                <attribute name="default_order">website_sequence</attribute>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="product_template_action_website" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form,activity</field>
+        <field name="view_id"/>
+        <field name="search_view_id" ref="product_template_search_view_website"/>
+        <field name="context">{
+            'search_default_published': 1,
+            'list_view_ref': 'website_sale.product_template_view_tree_website_sale',
+            'kanban_view_ref': 'website_sale.product_template_view_kanban_website_sale'
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product
+            </p><p>
+                A product can be either a physical product or a service that you sell to your customers.
+            </p>
+        </field>
+    </record>
+
+    <record id="product_template_only_website_form_view" model="ir.ui.view">
+        <field name="name">product.template.product.only.website.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="before">
+                <label for="compare_list_price" groups="website_sale.group_product_price_comparison"/>
+                <div class="o_row" groups="website_sale.group_product_price_comparison">
+                    <del class="oe_read_only">
+                        <field name="compare_list_price" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
+                    </del>
+                    <field name="compare_list_price" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" class="oe_edit_only"/>
+                </div>
+                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
+                    <field name="base_unit_count" invisible="product_variant_count &gt; 1" style="width: 4rem;"/>
+                    <field name="base_unit_id" options="{'no_open': True}" invisible="product_variant_count &gt; 1" placeholder="Specify unit" style="width: 10rem;"/>
+                    <div class="d-flex flex-row" invisible="base_unit_price == 0 or product_variant_count &gt; 1">
+                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
+                    </div>
+                    <span class="text-muted" invisible="product_variant_count &lt;= 1">Based on variants</span>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_normal_website_form_view" model="ir.ui.view">
+        <field name="name">product.product.normal.view.website</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="before">
+                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
+                    <field name="base_unit_count" style="width: 4rem;"/>
+                    <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
+                    <div class="d-flex flex-row" invisible="base_unit_price == 0">
+                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
+                    </div>
+                </div>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.product.website.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <!-- add state field in header -->
+            <span id="button_website" position="before">
+                <field name="is_published" widget="website_redirect_button" invisible="not sale_ok"/>
+            </span>
+            <group name="upsell" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
+            <group name="upsell" position="inside">
+                <field name="accessory_product_ids" widget="many2many_tags" invisible="not sale_ok"
+                       placeholder="Suggested accessories in the eCommerce cart"/>
+                <field name="alternative_product_ids" widget="many2many_tags"
+                       domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                       context="{'search_product_product': True}"
+                       invisible="not sale_ok"
+                       placeholder="Displayed in bottom of product pages"/>
+                <field name="description_ecommerce" invisible="1" />         <!-- Adding this field as we needed in product_barcodelookup module to store value in this field -->
+            </group>
+            <xpath expr="//page[@name='sales']/group[@name='sale']" position="inside">
+                <group colspan="2" name="product_template_images" string="eCommerce Media" invisible="not sale_ok">
+                    <field
+                        colspan="2"
+                        name="product_template_image_ids"
+                        class="o_website_sale_image_list"
+                        context="{'default_name': name}"
+                        mode="kanban"
+                        add-label="Add Media"
+                        nolabel="1"
+                        widget="x2_many_media_viewer"
+                        options="{'convert_to_webp': True}"
+                    />
+                </group>
+            </xpath>
+            <xpath expr="//page[@name='sales']//group[@name='description']" position="after">
+                <group string="Ecommerce Description" name="ecom_description">
+                   <field
+                        colspan="2"
+                        name="description_ecommerce"
+                        nolabel="1"
+                        options="{'embedded_components': false}"
+                        placeholder="A detailed,formatted description to promote your product on
+                                     this page. Use '/' to discover more features."
+                    />
+                </group>
+            </xpath>
+            <group name="extra_info" position="inside">
+                <field name="is_published"/>
+                <field
+                    name="website_id"
+                    options="{'no_create': True}"
+                    groups="website.group_multi_website"
+                    placeholder="All"
+                />
+                <field name="website_sequence" groups="base.group_no_one"/>
+                <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
+                <field
+                    name="website_ribbon_id"
+                    groups="base.group_no_one"
+                    options="{'no_quick_create': True}"
+                />
+            </group>
+            <group name="extra_info" position="attributes">
+                <attribute name="string">Ecommerce Shop</attribute>
+            </group>
+        </field>
+    </record>
+
+    <record id="product_product_view_form_easy_inherit_website_sale" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy.inherit.website_sale</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <group name="pricing" position="inside">
+                <label for="base_unit_count" groups="website_sale.group_show_uom_price"/>
+                <div name="base_unit_price" groups="website_sale.group_show_uom_price" class="d-flex flex-row">
+                    <field name="base_unit_count" style="width: 4rem;"/>
+                    <field name="base_unit_id" options="{'no_open': True}" placeholder="Specify unit" style="width: 10rem;"/>
+                    <div class="d-flex flex-row" invisible="base_unit_price == 0">
+                        (<field name="base_unit_price" class="oe_inline"/> / <field name="base_unit_name" class="oe_inline"/>)
+                    </div>
+                </div>
+            </group>
+            <group name="sales" position="inside">
+                <field name="website_ribbon_id" options="{'no_open': True}" readonly="True"/>
+                <field name="variant_ribbon_id" options="{'no_quick_create': True}"/>
+            </group>
+            <group name="packaging" position="after">
+                <group colspan="2" name="product_variant_images" string="Extra Variant Media">
+                    <field name="product_variant_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add Media" nolabel="1" widget="x2_many_media_viewer" options="{'convert_to_webp': True}"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

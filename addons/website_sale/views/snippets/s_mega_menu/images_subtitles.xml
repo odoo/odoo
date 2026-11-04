@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="website_sale.s_mega_menu_images_subtitles"
+        name="eCommerce: Menu - images &amp; subtitles"
+        groups="base.group_user"
+    >
+        <section class="s_mega_menu_images_subtitles pt16 pb16 o_colored_level o_cc o_cc1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <nav class="nav d-flex">
+                            <t
+                                t-set="categories"
+                                t-value="request.env['product.public.category'].search([
+                                    ('parent_id', '=', False)
+                                ])[:8]"
+                            />
+                            <t t-foreach="categories" t-as="category">
+                                <a
+                                    t-att-href="'/shop/category/%s' % category.id"
+                                    class="col-lg-6 nav-link o_default_snippet_text px-2 rounded text-wrap"
+                                >
+                                    <div class="d-flex">
+                                        <img
+                                            t-if="category.image_1920"
+                                            t-att-src="image_data_uri(category.image_1920)"
+                                            class="me-3 rounded shadow"
+                                            alt=""
+                                        />
+                                        <div class="flex-grow-1 align-content-center">
+                                            <h4 class="mt-0 mb-0" t-esc="category.name"/>
+                                        </div>
+                                    </div>
+                                </a>
+                            </t>
+                        </nav>
+                    </div>
+                    <div class="col-12 col-lg-4 py-2">
+                        <img src="/web/image/website.s_mega_menu_images_subtitles_default_image_7" class="mb-3 rounded shadow img-fluid" alt=""/>
+                        <h4 class="o_default_snippet_text">The team</h4>
+                        <p class="text-muted o_default_snippet_text small">
+                            Created in 2021, the company is young and dynamic. Discover the composition of the team and their skills.
+                        </p>
+                        <a href="#" class="btn btn-primary o_default_snippet_text">Discover our team</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

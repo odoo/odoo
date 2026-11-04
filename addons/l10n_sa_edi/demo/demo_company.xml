@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.partner_demo_company_sa" model="res.partner">
+        <field name="vat">399999999900003</field>
+        <field name="state_id" ref="base.state_sa_70"/>
+        <field name="street2">Somewhere close to Mecca</field>
+        <field name="l10n_sa_edi_building_number">1234</field>
+        <field name="l10n_sa_edi_plot_identification">1234</field>
+        <field name="l10n_sa_additional_identification_scheme">OTH</field>
+        <field name="l10n_sa_additional_identification_number">3999999999</field>
+    </record>
+
+    <record id="partner_demo_simplified" model="res.partner">
+        <field name="name">Mohammed Maamour</field>
+        <field name="street">Al Amir Mohammed Bin Abdul Aziz Street</field>
+        <field name="city">المدينة المنورة</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="state_id" ref="base.state_sa_70"/>
+        <field name="zip">42318</field>
+        <field name="phone">+966 55 777 8888</field>
+        <field name="email">info@company.saexample.com</field>
+        <field name="website">www.saexample.com</field>
+        <field name="l10n_sa_additional_identification_number">123456789</field>
+    </record>
+
+    <record id="partner_demo_standard" model="res.partner">
+        <field name="name">ARAMCO Medinah Branch</field>
+        <field name="street">Al Amir Mohammed Bin Abdul Aziz Street</field>
+        <field name="street2">Ammi Saysi</field>
+        <field name="city">المدينة المنورة</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="state_id" ref="base.state_sa_70"/>
+        <field name="zip">42317</field>
+        <field name="vat">311112111111113</field>
+        <field name="company_type">company</field>
+        <field name="phone">+966 55 999 1010</field>
+        <field name="email">info@company.saexample.com</field>
+        <field name="website">www.saexample.com</field>
+        <field name="l10n_sa_edi_building_number">1234</field>
+        <field name="l10n_sa_edi_plot_identification">1234</field>
+        <field name="l10n_sa_additional_identification_number">123456789</field>
+    </record>
+
+    <function model="account.journal" name="_l10n_sa_load_edi_demo_data">
+        <value model="account.journal"
+               eval="obj().search([
+                    ('type', '=', 'sale'),
+                    ('company_id', '=', ref('base.demo_company_sa'))], limit=1).ids"/>
+    </function>
+
+</odoo>

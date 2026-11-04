@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.certificate</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='user_default_rights']" position="after">
+                <block title="Certificates and Keys" id="certificates_and_keys_settings" groups="base.group_system">
+                    <setting string="Manage your certificates" id="certificates_settings" company_dependent="1" title="Add, edit and delete certificates.">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <div class="col-6">
+                                    <button name="%(certificate.certificate_certificate_action_view_list)d" icon="oi-arrow-right" type="action"
+                                            string="Certificates" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting string="Manage your keys" id="keys_settings" company_dependent="1" title="Add, edit and delete keys.">
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <div class="col-6">
+                                    <button name="%(certificate.certificate_key_action_view_list)d" icon="oi-arrow-right" type="action"
+                                            string="Keys" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

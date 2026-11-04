@@ -1,0 +1,250 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record id="website_pages_form_view" model="ir.ui.view">
+    <field name="name">website.page.form</field>
+    <field name="model">website.page</field>
+    <field name="arch" type="xml">
+        <form string="Website Page Settings">
+            <sheet>
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="url"/>
+                        <field name="view_id" context="{'display_website': True}"/>
+                        <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                        <field name="track"/>
+                    </group>
+                    <group>
+                        <field name="website_indexed"/>
+                        <field name="is_published"/>
+                        <field name="date_publish"/>
+                    </group>
+                </group>
+                <label for="menu_ids" string="Related Menu Items"/>
+                <field name="menu_ids"/>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="website_page_properties_base_view_form" model="ir.ui.view">
+    <field name="name">website.page.properties.base.form.view</field>
+    <field name="model">website.page.properties.base</field>
+    <field name="arch" type="xml">
+        <form js_class="page_properties_dialog_form">
+            <group class="mt-4">
+                <label for="is_in_menu" string="In Menu"/>
+                <div class="o_row">
+                    <field name="is_in_menu" widget="boolean_toggle" options="{'autosave': False}"/>
+                    <button type="action" name="%(website.open_custom_menu)d" context="{'xmlid': 'website.menu_edit_menu'}" string="Edit Menu" class="btn-link" icon="oi-arrow-right"/>
+                </div>
+
+                <field name="is_homepage" string="Is Homepage" widget="boolean_toggle" options="{'autosave': False}"/>
+                <field name="is_published" string="Published" widget="boolean_toggle" options="{'autosave': False}" invisible="not can_publish"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="website_page_properties_view_form" model="ir.ui.view">
+    <field name="name">website.page.properties.form.view</field>
+    <field name="inherit_id" ref="website_page_properties_base_view_form"/>
+    <field name="model">website.page.properties</field>
+    <field name="arch" type="xml">
+        <xpath expr="//group/*" position="before"> <!-- Top -->
+            <field name="name" string="Page Title" placeholder="e.g. Home Page"/>
+            <field name="website_id" invisible="1"/>
+
+            <label for="url" string="Page URL"/>
+            <div class="o_col">
+                <field name="url" widget="page_url"/>
+                <div class="my-4" invisible="url == old_url">
+                    <div class="o_row">
+                        <field name="redirect_old_url" widget="boolean_toggle" options="{'autosave': False}"/>
+                        <label for="redirect_old_url" string="Redirect Old URL"/>
+                    </div>
+                    <div class="o_row">
+                        <widget name="form_page_dependencies" resModel="website.page" mode="popover"/>
+                    </div>
+                    <div class="o_row mt-4" invisible="not redirect_old_url">
+                        <label for="redirect_type" string="Type"/>
+                        <field name="redirect_type"/>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//group/field[@name='is_published']" position="after">
+            <field name="date_publish" widget="datetime"/>
+        </xpath>
+        <xpath expr="//group/*[last()]" position="after"> <!-- Bottom -->
+            <label for="website_indexed" string="Indexed"/>
+            <div class="o_row">
+                <field name="website_indexed" widget="boolean_toggle" options="{'autosave': False}" help="Hide this page from search results"/>
+                <span invisible="website_indexed">Won't appear in search engine results</span>
+            </div>
+
+            <field name="visibility"/>
+            <field name="visibility_password_display" invisible="visibility != 'password'" required="visibility == 'password'" password="True" string="Password"/>
+            <field name="groups_id" invisible="visibility != 'restricted_group'" string="Authorized Groups" widget="many2many_tags"/>
+            <field name="is_new_page_template" string="Is a Template" widget="boolean_toggle" options="{'autosave': False}"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="website_pages_tree_view" model="ir.ui.view">
+    <field name="name">website.page.list</field>
+    <field name="model">website.page</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+        <list js_class="website_pages_list" type="object" action="open_website_url" multi_edit="1" default_order="url asc, id asc">
+            <field name="is_homepage" column_invisible="True"/>
+            <field name="name" string="Page Title"/>
+            <field name="website_url" string="Page URL"/>
+            <field name="view_id" column_invisible="True"/>
+
+            <field name="website_indexed"/>
+            <field name="is_in_menu" string="Is In Main Menu"/>
+            <field name="is_seo_optimized"/>
+            <field name="is_published"/>
+
+            <field name="create_uid" column_invisible="True"/>
+            <field name="write_uid" widget="many2one_avatar" optional="hide"/>
+            <field name="write_date" optional="hide"/>
+            <field name="track" optional="hide"/>
+            <field name="website_id" groups="website.group_multi_website"/>
+
+            <button name="action_page_debug_view" type="object" title="Settings" icon="fa-bug fa-lg" groups="base.group_no_one"/>
+        </list>
+    </field>
+</record>
+
+<record id="website_pages_kanban_view" model="ir.ui.view">
+    <field name="name">website.page.kanban</field>
+    <field name="model">website.page</field>
+    <field name="priority">99</field>
+    <field name="arch" type="xml">
+        <kanban js_class="website_pages_kanban" action="open_website_url" type="object" sample="1">
+            <field name="is_homepage"/>
+            <templates>
+                <t t-name="card">
+                    <div class="text-truncate fw-bold fs-3">
+                        <i t-if="record.is_homepage.raw_value" class="fa fa-home pe-2"
+                            title="Home page of the current website"/>
+                        <field name="name" />
+                    </div>
+                    <div t-if="record.website_id.value" class="text-truncate fw-bold text-muted" groups="website.group_multi_website">
+                        <i class="fa fa-globe me-1" title="Website"/>
+                        <field name="website_id" groups="website.group_multi_website"/>
+                    </div>
+                    <field name="website_url" class="text-truncate fw-bold text-primary mb-auto"/>
+                    <div class="d-flex"><field name="is_in_menu" widget="boolean"/> In Main Menu</div>
+                    <div class="d-flex"><field name="is_seo_optimized" widget="boolean"/> SEO Optimized</div>
+                    <div class="d-flex border-top mt-2 pt-2">
+                        <field name="is_published" widget="boolean_toggle"/>
+                        <t t-if="record.is_published.raw_value">Published</t>
+                        <t t-else="">Not Published</t>
+                        <button
+                            class="btn-link ms-auto p-0"
+                            name="action_page_debug_view"
+                            groups="base.group_no_one"
+                            title="Settings"
+                            type="object"
+                            icon="fa-bug"
+                        />
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
+<record id="website_pages_view_search" model="ir.ui.view">
+    <field name="name">website.page.view.search</field>
+    <field name="model">website.page</field>
+    <field name="arch" type="xml">
+        <search string="Website Pages" >
+            <field name="url"/>
+            <filter string="Published" name="published" domain="[('website_published', '=', True)]"/>
+            <filter string="Not published" name="not_published" domain="[('website_published', '=', False)]"/>
+            <separator/>
+            <filter string="Tracked" name="tracked" domain="[('track', '=', True)]"/>
+            <filter string="Not tracked" name="not_tracked" domain="[('track', '=', False)]"/>
+        </search>
+    </field>
+</record>
+
+<record id="action_website_pages_list" model="ir.actions.act_window">
+    <field name="name">Website Pages</field>
+    <field name="res_model">website.page</field>
+    <field name="view_mode">list,kanban</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('website_pages_tree_view')}),
+        (0, 0, {'view_mode': 'kanban', 'view_id': ref('website_pages_kanban_view')}),
+    ]"/>
+</record>
+
+<menuitem id="menu_website_pages_list"
+    parent="menu_content"
+    sequence="10"
+    name="Pages"
+    action="action_website_pages_list"/>
+
+<!-- Extension of views for ir.ui.view and link with the page manager -->
+
+<record id="view_view_form_extend" model="ir.ui.view">
+    <field name="model">ir.ui.view</field>
+    <field name="inherit_id" ref="base.view_view_form"/>
+    <field name="arch" type="xml">
+        <field name="inherit_id" position="attributes">
+            <attribute name="context">{'display_website': True}</attribute>
+        </field>
+        <field name="model_id" position="before">
+            <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+            <label for="key"/>
+            <div class='o_row'>
+                <field name="key"/>
+                <button title="Show site map" invisible="type != 'qweb'" name="website.action_website_view_hierarchy" icon="fa-sitemap" type="action" class="btn btn-link"/>
+            </div>
+            <field name="page_ids" invisible="1" />
+            <field name="first_page_id" invisible="not page_ids" />
+            <label for="visibility"/>
+            <div>
+                <field name="visibility" invisible="type != 'qweb'" />
+                <span class="o_wrap_label" invisible="visibility != 'restricted_group'"/>
+                <div class="oe_edit_only alert alert-info" role="alert" invisible="visibility != 'restricted_group'">
+                    Add groups in the "Access Rights" tab below.
+                </div>
+            </div>
+            <field name="visibility_password_display" invisible="visibility != 'password'" password="True" string="Visibility Password" />
+        </field>
+        <sheet position="before">
+            <header>
+                <button type="action" name="website.action_website_pages_list"
+                    string="Go to Page Manager" invisible="not page_ids"/>
+            </header>
+        </sheet>
+        <field name="active" position="after">
+            <field name="track" invisible="type != 'qweb'" widget="boolean_toggle"/>
+        </field>
+    </field>
+</record>
+
+<record id="view_view_tree_inherit_website" model="ir.ui.view">
+    <field name="model">ir.ui.view</field>
+    <field name="inherit_id" ref="base.view_view_tree"/>
+    <field name="arch" type="xml">
+        <list position="attributes">
+            <attribute name="decoration-muted">not active</attribute>
+        </list>
+        <field name="name" position="after">
+            <field name="active" column_invisible="True"/>
+            <field name="website_id" groups="website.group_multi_website"/>
+        </field>
+        <field name="xml_id" position="before">
+            <field name="key" groups="website.group_multi_website"/>
+        </field>
+    </field>
+</record>
+
+</odoo>

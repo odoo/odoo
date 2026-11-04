@@ -1,0 +1,27 @@
+@include media-breakpoint-down(md) {
+    .o_wsale_delivery_price_badge {
+        max-width: 130px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+
+.o_delivery_form .o_outline {
+
+    &:hover:not(.text-muted) {
+        border-color: $primary;
+    }
+
+    &:not(:first-child):hover:not(.text-muted) {
+        // Since list-group items, except the first child, have no top border, this emulates the top
+        // border for the hovered state.
+        box-shadow: 0 (-$border-width) 0 $primary;
+    }
+
+    .o_delivery_carrier_label:before {
+        position: absolute;
+        inset: 0;
+        content: '';
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="web.FloatToggleField">
+        <span t-if="props.readonly and !props.disableReadOnly" t-esc="formattedValue" />
+        <button t-else="" class="o_field_float_toggle" t-on-click="onChange"><t t-esc="formattedValue" /></button>
+    </t>
+
+</templates>

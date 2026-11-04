@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="CTA Badge" id="s_cta_badge">
+    <span class="s_cta_badge d-inline-block my-3 border rounded py-2 px-3 o_cc o_cc1 o_animable" data-name="CTA Badge" style="border-radius: 32px !important;">
+        <i class="fa fa-fw fa-info-circle o_not-animable" role="img"/>&#160;&#160;What do you want to promote&amp;nbsp;? &#160;&#160;&#160;&#160;<a href="#">See more <i class="fa fa-long-arrow-right" role="img"/></a>
+    </span>
+</template>
+
+<template id="s_cta_badge_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <!-- Border and Shadow -->
+        <div data-js="Box" data-selector=".s_cta_badge">
+            <t t-call="website.snippet_options_border_widgets"/>
+            <t t-call="website.snippet_options_shadow_widgets"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

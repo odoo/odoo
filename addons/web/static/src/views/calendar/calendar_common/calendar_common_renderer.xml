@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarCommonRenderer">
+        <div class="o_calendar_widget" t-ref="fullCalendar" />
+    </t>
+
+    <t t-name="web.CalendarCommonRenderer.event">
+            <t t-if="!isTimeHidden">
+                <span class="d-none d-lg-inline fc-time" t-esc="startTime" />
+                <t> </t>
+            </t>
+            <div class="o_event_title" t-out="title"/>
+    </t>
+
+    <t t-name="web.CalendarCommonRendererHeader">
+        <span class="o_cw_day_name" t-esc="scale == 'day' ? weekdayLong : weekdayShort "/> <span t-if="scale != 'month'" class="fc-day-number o_cw_day_number" t-esc="day"/>
+    </t>
+
+</templates>

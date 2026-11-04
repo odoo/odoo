@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="mail_group_footer" name="Mail Group: Footer">
+            <div id="o_mg_message_footer">
+                <p>_______________________________________________</p>
+                <p>Mailing-List: <t t-esc="group_url"/></p>
+                <p>Post to: <t t-esc="mailto"/></p>
+                <p>Unsubscribe: <a t-att-href="unsub_url" t-esc="unsub_label"/></p>
+            </div>
+        </template>
+
+        <template id="mail_group_notify_moderation">
+            <div style="max-width: 600px">
+                <p>Hello <t t-esc="moderator.partner_id.name"/>,</p>
+                <p>You have messages to moderate, please go for the proceedings.</p>
+                <p><a t-attf-href="/odoo/action-mail_group.mail_group_action/{{group.id}}" class="o_default_snippet_text">Moderate Messages</a></p>
+                <p>Thank you!</p>
+            </div>
+        </template>
+    </data>
+</odoo>

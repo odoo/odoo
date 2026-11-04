@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="nemhandel_rejection_wizard_view_form" model="ir.ui.view">
+        <field name="name">nemhandel.rejection.wizard.view.form</field>
+        <field name="model">nemhandel.rejection.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Nemhandel Document">
+                <group>
+                    <span>The following note will be sent with your rejection response. Enter any issue you have with this bill/invoice.</span>
+                    <field name="note" nolabel="1" colspan="2" placeholder="Enter an optional note here..."/>
+                </group>
+                <footer>
+                    <button name="button_send" string="Send Rejection" type="object" class="btn-primary" data-hotkey="q"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

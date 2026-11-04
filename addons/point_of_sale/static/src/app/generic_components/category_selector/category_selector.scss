@@ -1,0 +1,21 @@
+.category-button {
+    --btn-border-color: #{$o-gray-200};
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
+.category-list {
+    overflow-y: auto;
+    flex-shrink: 0;
+    margin-bottom: map-get($spacers, 2);
+    max-height: 13.5rem;
+
+    @include media-breakpoint-down(md) {
+        max-height: 9rem;
+    }
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <record model="ir.module.category" id="module_category_canned_response">
+        <field name="name">Canned Responses</field>
+    </record>
+
+    <record id="group_mail_canned_response_admin" model="res.groups">
+        <field name="name">Canned Response Administrator</field>
+        <field name="category_id" ref="module_category_canned_response"/>
+    </record>
+
+    <record id="group_mail_template_editor" model="res.groups">
+        <field name="name">Mail Template Editor</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('mail.group_mail_template_editor')), (4, ref('mail.group_mail_canned_response_admin'))]"/>
+    </record>
+
+    <!-- Group used for the notification_type field of res.users -->
+    <record id="group_mail_notification_type_inbox" model="res.groups">
+        <field name="name">Receive notifications in Odoo</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+</data>
+</odoo>

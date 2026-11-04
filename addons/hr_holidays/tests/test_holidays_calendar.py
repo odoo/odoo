@@ -1,0 +1,171 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import date, timedelta, datetime
+import pytz
+
+from odoo.osv import expression
+
+from odoo.addons.base.tests.common import HttpCase
+from odoo.tests.common import tagged
+from odoo.tests.common import users
+
+from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+
+@tagged('post_install', '-at_install', 'holiday_calendar')
+class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
+
+    @users('enguerran')
+    def test_hours_time_off_request_calendar_view(self):
+        """
+        Testing the flow of clicking on a day, save the leave request directly
+        and verify that the start/end time are correctly set.
+        """
+        self.env.user.tz = 'UTC'
+        first_day_of_year = date(date.today().year, 1, 1)
+        days_to_thursday = (3 - first_day_of_year.weekday()) % 7
+        first_thursday_of_year = first_day_of_year + timedelta(days=days_to_thursday)
+
+        leave = self.env['hr.leave'].new({
+            'name': 'Reference Holiday',
+            'employee_id': self.employee_emp.id,
+            'request_date_from': first_thursday_of_year,
+            'request_date_to': first_thursday_of_year,
+        })
+        leave._compute_date_from_to()
+        expected_leave_start = leave.date_from.hour
+        expected_leave_end = leave.date_to.hour
+
+        # Tour that takes a leave on the first thursday of the year.
+        self.start_tour('/', 'time_off_request_calendar_view', login='enguerran')
+
+        last_leave = self.env['hr.leave'].search([('employee_id.id', '=', self.employee_emp.id)]).sorted(lambda leave: leave.create_date)[-1]
+        self.assertEqual(last_leave.date_from.weekday(), 3, "It should be Thursday")
+        self.assertEqual(last_leave.date_from.hour, expected_leave_start, "Wrong start of the day")
+        self.assertEqual(last_leave.date_to.hour, expected_leave_end, "Wrong end of the day")
+
+    def test_timezone_calendar_event_single_day(self):
+        """
+        Test that single-day time off requests have a single day display in calendar
+        """
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'no_validation',
+            'create_calendar_meeting': True,
+        })
+
+        # case 1: full day in Los/Angeles tz
+
+        test_date = date(2025, 4, 22)
+        self.employee_emp.user_id.tz = 'America/Los_Angeles'
+        self.employee_emp.resource_calendar_id.tz = 'America/Los_Angeles'
+        leave = self.env['hr.leave'].create({
+            'name': 'Single Day Leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': test_date,
+            'request_date_to': test_date,
+            'request_unit_half': False,
+        })
+
+        leave.action_validate()
+
+        self.assertEqual(leave.meeting_id.allday, True)
+        self.assertEqual(leave.meeting_id.start_date, test_date,
+                        f"Meeting start date should be {test_date}")
+        self.assertEqual(leave.meeting_id.stop_date, test_date,
+                        f"Meeting end date should be {test_date}")
+
+        # case 2: half day in Los/Angeles tz
+
+        test_date_half = date(2025, 4, 23)
+
+        leave_half = self.env['hr.leave'].create({
+            'name': 'Half Day Leave LA',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': test_date_half,
+            'request_date_to': test_date_half,
+            'request_unit_half': True,
+            'request_date_from_period': 'pm',
+        })
+
+        leave_half.action_validate()
+
+        self.assertEqual(leave_half.meeting_id.allday, False)
+        self.assertEqual(leave_half.meeting_id.start, leave_half.date_from)
+        self.assertEqual(leave_half.meeting_id.stop, leave_half.date_to)
+
+    def test_duration_calendar_event_all_day(self):
+        """
+        Ensure that calendar events created from multi-day leave requests
+        have their duration computed correctly
+        """
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'hr',
+            'create_calendar_meeting': True,
+        })
+
+        leave = self._take_leave(self.employee_emp, leave_type, date(2026, 8, 24), date(2026, 8, 28))
+        leave.action_validate()
+        event = leave.meeting_id
+
+        # Ensure that the length of the duration matches the start and stop times
+        self.assertTrue(event.allday)
+        self.assertEqual(event.duration, 105)
+
+    def test_contiguous_leaves_gantt_singleton_error(self):
+        """
+        Contiguous hour-based leaves merge into one interval whose data is a
+        multi-record resource.calendar.leaves set. _get_flexible_leaves_date
+        must not raise a singleton error on it.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Flexible Leaves',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'no_validation',
+            'request_unit': 'hour',
+        })
+        test_date = date(2026, 10, 15)
+
+        leaves = self.env['hr.leave']
+        # Back-to-back slots: 08:00-12:00 and 12:00-16:00
+        for name, hour_from, hour_to in (
+            ('Morning Time Off', 8, 12),
+            ('Afternoon Time Off', 12, 16),
+        ):
+            leave = self.env['hr.leave'].create({
+                'name': name,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': test_date,
+                'request_date_to': test_date,
+                'request_unit_hours': True,
+                'request_hour_from': hour_from,
+                'request_hour_to': hour_to,
+            })
+            leave.action_validate()
+            leaves |= leave
+
+        calendar_leaves = self.env['resource.calendar.leaves'].search(
+            [('holiday_id', 'in', leaves.ids)])
+        # Guard: the test is meaningless unless the set has several records
+        self.assertGreater(len(calendar_leaves), 1, "Need >1 calendar leaves to reproduce")
+        self.assertTrue(all(calendar_leaves.holiday_id.mapped('request_unit_hours')))
+
+        tz = pytz.timezone(self.employee_emp.tz or 'UTC')
+        start = pytz.utc.localize(datetime.combine(test_date, datetime.min.time()))
+        end = pytz.utc.localize(datetime.combine(test_date, datetime.max.time()))
+        resource = self.employee_emp.resource_id
+        res_leaves = [(start, end, calendar_leaves)]
+
+        # Must not raise "Expected singleton" (ValueError)
+        result = self.env['resource.calendar']._get_flexible_leaves_date(
+            res_leaves, resource, tz)
+
+        # Hour-based leaves keep their exact interval instead of being widened to full days
+        self.assertEqual(result, [(start, end)])

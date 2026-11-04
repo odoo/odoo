@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit the preference view to remove title, image and footer -->
+        <!-- This view is meant to be included in the employee profile view -->
+        <!-- It ensures that if the 'normal' Preferences view is changed, it's
+            also reflected in the employee's profile -->
+        <record id="res_users_view_form_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.simplified.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <footer position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </footer>
+                <h1 position="replace"/>
+                <xpath expr="//field[@name='image_1920']" position="replace"/>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_form_simple_modif_resource" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.resource</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+            <field name="arch" type="xml">
+                <field name="tz" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                <field name="tz" position="after">
+                    <field name="is_system" invisible="1"/>
+                </field>
+                <xpath expr="//button[@name='%(base.action_view_base_language_install)d']" position="attributes">
+                    <attribute name="invisible">not is_system</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_view_form_profile" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="res_users_view_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <form position="attributes">
+                    <attribute name="create">false</attribute>
+                    <attribute name="delete">false</attribute>
+                    <attribute name="js_class">hr_employee_profile_form</attribute>
+                </form>
+                <notebook position="replace">
+                        <field name="hr_presence_state" invisible="1"/>
+                        <header>
+                        </header>
+                        <sheet>$0</sheet>
+                </notebook>
+                <notebook position="before">
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            id="hr_presence_button"
+                            class="oe_stat_button"
+                            disabled="1"
+                            invisible="context.get('from_my_profile', False) or hr_presence_state == 'absent'">
+                            <div role="img" class="fa fa-fw fa-circle text-success o_button_icon" invisible="hr_presence_state != 'present'" aria-label="Available" title="Available"/>
+                            <div role="img" class="fa fa-fw fa-circle text-muted o_button_icon" invisible="hr_presence_state != 'out_of_working_hour'" aria-label="Away" title="Away"/>
+                            <div role="img" class="fa fa-fw fa-circle text-warning o_button_icon" invisible="hr_presence_state != 'absent'" aria-label="Not available" title="Not available"/>
+
+                            <div class="o_stat_info" invisible="hr_presence_state == 'present'">
+                                <span class="o_stat_text">
+                                    Not Connected
+                                </span>
+                            </div>
+                            <div class="o_stat_info" invisible="hr_presence_state != 'present'">
+                                <span class="o_stat_value" invisible="not last_activity_time">
+                                    <field name="last_activity_time"/>
+                                </span>
+                                <span class="o_stat_value" invisible="last_activity_time">
+                                    <field name="last_activity"/>
+                                </span>
+                                <span class="o_stat_text">Connected Since</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="avatar_128" invisible="1"/>
+                    <field name="image_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Employee's Name" required="True" readonly="context.get('from_my_profile', False)"/>
+                        </h1>
+                    </div>
+                    <div class="row">
+                        <h2 class="col-lg-6 ps-lg-0">
+                            <field name="job_title" class="w-100" placeholder="Job Position" readonly="not can_edit"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="can_edit" invisible="1"/>
+                            <field name="mobile_phone" widget="phone" readonly="not can_edit"/>
+                            <field name="work_phone" widget="phone" readonly="not can_edit"/>
+                        </group>
+                        <group>
+                            <field name="work_email" widget="email" readonly="not can_edit"/>
+                            <field name="work_location_id" readonly="not can_edit"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="employee_parent_id" readonly="not can_edit"/>
+                            <field name="coach_id" readonly="not can_edit"/>
+                        </group>
+                    </group>
+                </notebook>
+                <notebook position="inside">
+                    <page name="public" string="Work Information">
+                        <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
+                            <div id="o_work_employee_main" class="flex-grow-1">
+                                <group string="Location">
+                                    <field name="department_id" readonly="not can_edit"/>
+                                    <field name="address_id"
+                                        context="{'show_address': 1}"
+                                        options='{"highlight_first_line": True}'
+                                        readonly="not can_edit"/>
+                                </group>
+                                <group name="managers" string="Approvers" class="hide-group-if-empty">
+                                    <!-- overridden in other modules -->
+                                </group>
+                            </div>
+                        </div>
+                    </page>
+                    <page name="personal_information" string="Private Information">
+                        <group>
+                            <group string="Contact Information">
+                                <field name="employee_ids" invisible="1"/>
+                                <label for="private_street" string="Private Address"/>
+                                <div class="o_address_format">
+                                    <field name="private_street" placeholder="Street..." class="o_address_street" readonly="not can_edit"/>
+                                    <field name="private_street2" placeholder="Street 2..." class="o_address_street" readonly="not can_edit"/>
+                                    <field name="private_city" placeholder="City" class="o_address_city" readonly="not can_edit"/>
+                                    <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}" readonly="not can_edit"/>
+                                    <field name="private_zip" placeholder="ZIP" class="o_address_zip" readonly="not can_edit"/>
+                                    <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}' readonly="not can_edit"/>
+                                </div>
+                                <field name="private_email" string="Email" readonly="not can_edit"/>
+                                <field name="private_phone" string="Phone" class="o_force_ltr" readonly="not can_edit"/>
+                                <field name="private_lang" string="Language" readonly="not can_edit"/>
+                                <field name="employee_bank_account_id" readonly="not can_edit"/>
+                                <label for="distance_home_work"/>
+                                <div class="o_row">
+                                    <field name="distance_home_work" readonly="not can_edit" class="o_hr_narrow_field"/>
+                                    <span><field name="distance_home_work_unit" readonly="not can_edit"/></span>
+                                </div>
+                            </group>
+                            <group string="Citizenship">
+                                <field name="employee_country_id" options='{"no_open": True, "no_create": True}' readonly="not can_edit"/>
+                                <field name="identification_id" readonly="not can_edit"/>
+                                <field name="ssnid" readonly="not can_edit"/>
+                                <field name="passport_id" readonly="not can_edit"/>
+                                <field name="gender" readonly="not can_edit"/>
+                                <field name="birthday" readonly="not can_edit"/>
+                                <field name="place_of_birth" readonly="not can_edit"/>
+                                <field name="country_of_birth" readonly="not can_edit"/>
+                            </group>
+                            <group string="Marital Status">
+                                <field name="marital" readonly="not can_edit"/>
+                                <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']" readonly="not can_edit"/>
+                                <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']" readonly="not can_edit"/>
+                            </group>
+                            <group string="Education">
+                                <field name="certificate" readonly="not can_edit"/>
+                                <field name="study_field" readonly="not can_edit"/>
+                                <field name="study_school" readonly="not can_edit"/>
+                            </group>
+                            <group string="Dependant">
+                                <field name="children" readonly="not can_edit"/>
+                            </group>
+                            <group string="Emergency">
+                                <field name="emergency_contact" readonly="not can_edit"/>
+                                <field name="emergency_phone" widget="phone" readonly="not can_edit"/>
+                            </group>
+                            <group string="Work Permit" name="has_work_permit">
+                                <field name="visa_no" readonly="not can_edit"/>
+                                <field name="permit_no" readonly="not can_edit"/>
+                                <field name="visa_expire" readonly="not can_edit"/>
+                            </group>
+                        </group>
+                    </page>
+                     <page name="hr_settings" string="HR Settings">
+                        <group>
+                            <group string='Status' name="active_group">
+                                <field name="employee_type" readonly="not can_edit"/>
+                            </group>
+                            <group string="Attendance" name="identification_group">
+                                <field name="pin" readonly="not can_edit"/>
+                                <field name="barcode" readonly="not can_edit"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record id="view_users_simple_form_inherit_hr" model="ir.ui.view">
+            <field name="name">view.users.simple.form.inherit.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_simple_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_employees"
+                            class="oe_stat_button"
+                            icon="fa-users"
+                            invisible="employee_count == 0"
+                            context="{'active_test': False}"
+                            type="object">
+                            <field name="employee_count" widget="statinfo" string="Employee"/>
+                        </button>
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='mobile']" position="after">
+                    <field name="create_employee_id" force_save="1" invisible="1"/>
+                    <field name="create_employee" force_save="1" string="Create Employee" invisible="create_employee_id &gt; 0 or id &gt; 0" groups="hr.group_hr_user"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_users_simple_form" model="ir.ui.view">
+            <field name="name">view.users.simple.form.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_simple_form"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <sheet position="after">
+                    <footer>
+                        <button string="Save" special="save" class="btn btn-primary"/>
+                        <button string="Cancel" special="cancel" class="btn btn-secondary"/>
+                    </footer>
+                </sheet>
+            </field>
+        </record>
+
+        <record id="res_users_action_my" model="ir.actions.act_window">
+            <field name="name">Change my Preferences</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'from_my_profile': True}</field>
+            <field name="view_id" ref="hr.res_users_view_form_profile"/>
+        </record>
+
+        <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.form.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//header" position="inside">
+                    <field name="share" invisible="1"/>
+                    <field name="employee_ids" invisible="1"/>
+                    <field name="employee_id" invisible="1"/>
+                    <button string="Create employee"
+                            type="object" name="action_create_employee"
+                            invisible="not id or share or employee_id"
+                            groups="hr.group_hr_user"/>
+                            <!-- share is not correctly recomputed because it depends on fields of reified view => invisible before saving (id=False) -->
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_open_employees"
+                        class="oe_stat_button"
+                        icon="fa-users"
+                        invisible="employee_count == 0"
+                        context="{'active_test': False}"
+                        type="object">
+                        <field name="employee_count" widget="statinfo" string="Employee"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.rule" id="production_subcontractor_rule">
+        <field name="name">MRP Productions Subcontractor</field>
+        <field name="model_id" ref="model_mrp_production"/>
+        <field name="domain_force">[('subcontractor_id', '=', user.partner_id.commercial_partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="bom_subcontractor_rule">
+        <field name="name">MRP BoMs Subcontractor</field>
+        <field name="model_id" ref="mrp.model_mrp_bom"/>
+        <field name="domain_force">[('id', 'in', user.partner_id.commercial_partner_id.bom_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="bom_line_subcontractor_rule">
+        <field name="name">MRP BoM Lines Subcontractor</field>
+        <field name="model_id" ref="mrp.model_mrp_bom_line"/>
+        <field name="domain_force">[('id', 'in', user.partner_id.commercial_partner_id.bom_ids.bom_line_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="consumption_warning_subcontractor_rule">
+        <field name="name">MRP Consumption Warnings Subcontractor</field>
+        <field name="model_id" ref="mrp.model_mrp_consumption_warning"/>
+        <field name="domain_force">[('mrp_production_ids', 'in', user.partner_id.commercial_partner_id.production_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="consumption_warning_line_subcontractor_rule">
+        <field name="name">MRP Consumption Warning Lines Subcontractor</field>
+        <field name="model_id" ref="mrp.model_mrp_consumption_warning_line"/>
+        <field name="domain_force">[('mrp_production_id', 'in', user.partner_id.commercial_partner_id.production_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+    
+    <record model="ir.rule" id="stock_move_subcontractor_rule">
+        <field name="name">Stock Moves Subcontractor</field>
+        <field name="model_id" ref="stock.model_stock_move"/>
+        <field name="domain_force">[
+        '|', 
+            '|',
+                ('production_id.subcontractor_id', '=', user.partner_id.commercial_partner_id.id),
+                ('move_orig_ids.production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids),
+            ('raw_material_production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids)
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="stock_move_line_subcontractor_rule">
+        <field name="name">Stock Move Lines Subcontractor</field>
+        <field name="model_id" ref="model_stock_move_line"/>
+        <field name="domain_force">[
+        '|', 
+            '|',
+                ('move_id.production_id.subcontractor_id', '=', user.partner_id.commercial_partner_id.id),
+                ('move_id.move_orig_ids.production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids),
+            ('move_id.raw_material_production_id.subcontractor_id', 'in', user.partner_id.commercial_partner_id.ids),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="picking_subcontractor_rule">
+        <field name="name">Stock Pickings Subcontractor</field>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="domain_force">[('partner_id.commercial_partner_id', '=', user.partner_id.commercial_partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="picking_type_subcontractor_rule">
+        <field name="name">Stock Picking Types Subcontractor</field>
+        <field name="model_id" ref="stock.model_stock_picking_type"/>
+        <field name="domain_force">['|', ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.picking_type_id.ids), ('id', 'in', user.partner_id.commercial_partner_id.production_ids.picking_type_id.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="stock_location_subcontractor_rule">
+        <field name="name">Stock Locations Subcontractor</field>
+        <field name="model_id" ref="stock.model_stock_location"/>
+        <field name="domain_force">[
+            '|',
+                '|',
+                    '|',
+                        '|', 
+                            ('child_ids', 'in', user.partner_id.commercial_partner_id.picking_ids.location_id.ids), 
+                            ('child_ids', 'in', user.partner_id.commercial_partner_id.picking_ids.location_dest_id.ids),
+                        '|', 
+                            ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_id.ids), 
+                            ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.location_dest_id.ids),
+                    '|',
+                        ('id', 'in', user.partner_id.commercial_partner_id.picking_ids.picking_type_id.warehouse_id.view_location_id.ids),
+                        ('id', 'in', user.partner_id.commercial_partner_id.production_ids.production_location_id.ids),
+                ('id', 'in', user.partner_id.commercial_partner_id.production_ids.move_finished_ids.move_dest_ids.location_id.ids),
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="stock_warehouse_subcontractor_rule">
+        <field name="name">Warehouses Subcontractor</field>
+        <field name="model_id" ref="stock.model_stock_warehouse"/>
+        <field name="domain_force">[('id', 'in', user.partner_id.commercial_partner_id.picking_ids.picking_type_id.warehouse_id.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="stock_lot_subcontracting_rule" model="ir.rule">
+        <field name="name">Stock Lot Subcontractor</field>
+        <field name="model_id" ref="stock.model_stock_lot"/>
+        <field name="domain_force">[
+        '|',
+            '|',
+                ('product_id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_id.ids),
+                ('product_id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_tmpl_id.product_variant_ids.ids),
+            ('product_id', 'in', user.partner_id.commercial_partner_id.bom_ids.bom_line_ids.product_id.ids),
+            ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="product_template_subcontracting_rule" model="ir.rule">
+        <field name="name">Product Template Subcontractor</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="domain_force">[
+        '|',
+            '|',
+                ('id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_id.product_tmpl_id.ids),
+                ('id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_tmpl_id.ids),
+            ('id', 'in', user.partner_id.commercial_partner_id.bom_ids.bom_line_ids.product_id.product_tmpl_id.ids),
+            ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="uom_subcontracting_rule" model="ir.rule">
+        <field name="name">UoM Subcontractor</field>
+        <field name="model_id" ref="uom.model_uom_uom"/>
+        <field name="domain_force">[
+        '|',
+            '|',
+                ('category_id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_id.product_tmpl_id.uom_id.category_id.ids),
+                ('category_id', 'in', user.partner_id.commercial_partner_id.bom_ids.product_tmpl_id.uom_id.category_id.ids),
+            ('category_id', 'in', user.partner_id.commercial_partner_id.bom_ids.bom_line_ids.product_id.product_tmpl_id.uom_id.category_id.ids),
+            ]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+</odoo>

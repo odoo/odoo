@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="resource.FormViewWithHtmlExpander" t-inherit="web.FormView">
+        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="reloadHtmlFieldHeight">htmlExpanderState.reload</attribute>
+            <attribute name="notifyHtmlExpander.bind">notifyHTMLFieldExpanded</attribute>
+        </xpath>
+    </t>
+
+</templates>

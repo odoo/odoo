@@ -1,0 +1,8 @@
+.o-mail-MessageReactions:not(.o-emojiPickerOpen):not(:hover) .o-mail-MessageReactions-add {
+    visibility: hidden;
+}
+
+.o-mail-MessageReaction.o-selfReacted {
+    --border-opacity: 0.75;
+    background: mix($o-brand-primary, $o-view-background-color, 10%);
+}

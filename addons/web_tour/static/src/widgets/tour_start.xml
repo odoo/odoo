@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="web_tour.TourStartWidget">
+        <button title="Start Tour"
+                t-on-click.prevent.stop="_onStartTour"
+                t-att-class="'o_start_tour btn ' + (this.props.link ? 'btn-link py-0' : 'btn-primary')">
+            Onboarding
+        </button>
+        <button title="Test Tour"
+                t-on-click.prevent.stop="_onTestTour"
+                t-att-class="'o_test_tour btn ' + (this.props.link ? 'btn-link py-0' : 'btn-primary ms-1')">
+            Testing
+        </button>
+    </t>
+</templates>

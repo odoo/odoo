@@ -1,0 +1,41 @@
+<templates>
+
+    <t t-name="account.UploadDropZone">
+        <t t-if="dashboardState.isDragging or props.visible">
+            <div
+                class="o_drop_area d-flex align-items-center justify-content-center flex-column"
+                t-att-class="{
+                    'drag_to_card': props.visible,
+                }"
+                t-on-click="() => this.env.setDragging(false)"
+                t-on-dragover.prevent="()=>{}"
+                t-on-dragleave="props.hideZone"
+                t-on-drop.prevent="onDrop"
+            >
+                <t t-if="props.dragIcon and props.dragText">
+                    <div class="text-align-center pe-none">
+                        <img class="img-fluid" t-att-src="props.dragIcon"/>
+                    </div>
+                    <t t-if="props.visible">
+                        <div class="position-absolute upload_badge pe-none">
+                            <i class="fa fa-circle fa-stack-2x text-primary"/>
+                            <i class="fa fa-upload fa-stack-1x fa-inverse"/>
+                        </div>
+                   </t>
+                    <div class="h3 pe-none" t-att-class="{'text-primary': props.visible}">
+                        <t t-out="props.dragTitle"/>
+                    </div>
+                  <div class="pe-none">
+                      <span t-att-class="{'invisible': !props.visible, 'text-primary': props.visible}">
+                          <t t-out="props.dragText"/>
+                      </span>
+                  </div>
+                </t>
+                <t t-elif="props.visible">
+                    <i class="fa fa-upload fa-10x pe-none"/>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>

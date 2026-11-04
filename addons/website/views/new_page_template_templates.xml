@@ -1,0 +1,1060 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- This template is used to obtain the order and the translations of all
+group names.
+It is not done in python (eg: a method returning a list of translated terms,
+overridden by modules), because:
+- it needs to be simple for designers and community: only write XML in themes
+- python is ignored when importing modules in Odoo, which is a common flow for
+  themes
+-->
+<template id="new_page_template_groups">
+    <div id="basic">Basic</div>
+    <div id="about">About</div>
+    <div id="landing">Landing Pages</div>
+    <div id="gallery">Gallery</div>
+    <div id="services">Services</div>
+    <div id="pricing">Pricing Plans</div>
+    <div id="team">Team</div>
+    <div id="custom">Custom</div>
+</template>
+
+<!-- Specific templates are generated from the manifest files:
+    If the manifest defines:
+    'new_page_template': {
+        'somekind': {
+            'somespecific': ['s_cover'... list of snippets],
+        },
+    }
+    A template named: new_page_template_sections_somekind_somespecific is generated.
+    Its arch contains t-snippet-calls to each listed snippet, all nested in a div#wrap.
+-->
+
+<!-- Customized snippets -->
+
+<!-- Alternative s_text_block: s_text_block_2nd -->
+
+<template id="s_text_block_2nd" inherit_id="website.s_text_block" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_text_block</attribute>
+        <attribute name="class" add="o_colored_level" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_s_text_block_2nd" inherit_id="website.s_text_block_2nd" primary="True"/>
+
+<template id="new_page_template_about_s_text_block_2nd" inherit_id="website.new_page_template_s_text_block_2nd" primary="True"/>
+
+<template id="new_page_template_about_map_s_text_block_2nd" inherit_id="website.new_page_template_about_s_text_block_2nd" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_colored_level" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_gallery_s_text_block_2nd" inherit_id="website.new_page_template_s_text_block_2nd" primary="True">
+    <xpath expr="//p" position="replace">
+        <p>Explore our captivating gallery, a visual journey showcasing our finest work and creative projects. Immerse yourself in a collection of images that capture the essence of our craftsmanship, innovation, and dedication to excellence.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_services_s_text_block_2nd" inherit_id="website.new_page_template_s_text_block_2nd" primary="True">
+    <xpath expr="//p" position="replace">
+        <p>Welcome to our comprehensive range of Tailored Fitness Coaching Services, with personalized workouts, customized nutrition plans, and unwavering support, we're committed to helping you achieve lasting results that align with your aspirations.</p>
+        <p>It's time to elevate your fitness journey with coaching that's as unique as you are. Choose your path, embrace the guidance, and transform your life.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_pricing_s_text_block_2nd" inherit_id="website.new_page_template_s_text_block_2nd" primary="True">
+    <xpath expr="//p" position="replace">
+        <p>Our software plans are designed to cater to a variety of needs, ensuring that you find the perfect fit for your requirements. From individual users to businesses of all sizes, we offer pricing options that provide exceptional value without compromising on features or performance.</p>
+        <p>Experience the power of our software without breaking the bank – choose a plan that suits you best and start unlocking its full potential today.</p>
+    </xpath>
+</template>
+
+<!-- Base H1 title as s_text_block: s_text_block_h1 -->
+
+<template id="s_text_block_h1" inherit_id="website.s_text_block" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_text_block</attribute>
+        <attribute name="class" add="pb0" remove="pb40" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]|//div[hasclass('o_container_small')]" position="replace">
+        <div class="container s_allow_columns">
+            <h1 style="text-align: center;">Title</h1>
+        </div>
+    </xpath>
+</template>
+
+<template id="new_page_template_s_text_block_h1" inherit_id="website.s_text_block_h1" primary="True"/>
+
+<template id="new_page_template_basic_s_text_block_h1" inherit_id="website.new_page_template_s_text_block_h1" primary="True"/>
+
+<template id="new_page_template_basic_2_s_text_block_h1" inherit_id="website.new_page_template_basic_s_text_block_h1" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_s_text_block_h1" inherit_id="website.new_page_template_s_text_block_h1" primary="True">
+    <xpath expr="//h1" position="replace" mode="inner">About Us</xpath>
+</template>
+
+<template id="new_page_template_about_full_1_s_text_block_h1" inherit_id="website.new_page_template_about_s_text_block_h1" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb40" remove="pb0" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_map_s_text_block_h1" inherit_id="website.new_page_template_about_s_text_block_h1" primary="True">
+    <xpath expr="//h1" position="replace" mode="inner">Title</xpath>
+</template>
+
+<template id="new_page_template_services_s_text_block_h1" inherit_id="website.new_page_template_s_text_block_h1" primary="True">
+    <xpath expr="//h1" position="replace" mode="inner">Our Services</xpath>
+</template>
+
+<template id="new_page_template_services_3_s_text_block_h1" inherit_id="website.new_page_template_services_s_text_block_h1" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb40" remove="pb0" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_pricing_s_text_block_h1" inherit_id="website.new_page_template_s_text_block_h1" primary="True">
+    <xpath expr="//h1" position="replace" mode="inner">Pricing Plans</xpath>
+</template>
+
+<template id="new_page_template_pricing_5_s_text_block_h1" inherit_id="website.new_page_template_pricing_s_text_block_h1" primary="True">
+    <xpath expr="//h1" position="replace" mode="inner">Our Menus</xpath>
+</template>
+
+<template id="new_page_template_team_s_text_block_h1" inherit_id="website.new_page_template_s_text_block_h1" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb40" remove="pb0" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace" mode="inner">Our Team</xpath>
+</template>
+
+<template id="new_page_template_team_2_s_text_block_h1" inherit_id="website.new_page_template_team_s_text_block_h1" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb0" remove="pb40" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Secondary H2 title as s_text_block: s_text_block_h2 -->
+
+<template id="s_text_block_h2" inherit_id="website.s_text_block" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_text_block</attribute>
+        <attribute name="class" add="pb0" remove="pb40" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('container')]|//div[hasclass('o_container_small')]" position="replace">
+        <div class="container s_allow_columns">
+            <h2 style="text-align: center;">Title</h2>
+        </div>
+    </xpath>
+</template>
+
+<template id="new_page_template_s_text_block_h2" inherit_id="website.s_text_block_h2" primary="True"/>
+
+<template id="new_page_template_about_s_text_block_h2" inherit_id="website.new_page_template_s_text_block_h2" primary="True"/>
+
+<template id="new_page_template_about_full_1_s_text_block_h2" inherit_id="website.new_page_template_about_s_text_block_h2" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb40" remove="pb0" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">Meet The Team</xpath>
+</template>
+
+<template id="new_page_template_about_map_s_text_block_h2" inherit_id="website.new_page_template_about_s_text_block_h2" primary="True">
+    <xpath expr="//h2" position="replace" mode="inner">Our Offices</xpath>
+</template>
+
+<template id="new_page_template_about_mini_s_text_block_h2" inherit_id="website.new_page_template_about_s_text_block_h2" primary="True">
+    <xpath expr="//h2" position="attributes">
+        <attribute name="style">text-align: left;</attribute>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">Our Story</xpath>
+</template>
+
+<template id="new_page_template_about_personal_s_text_block_h2" inherit_id="website.new_page_template_about_s_text_block_h2" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc o_cc3" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">What Makes Me Proud</xpath>
+</template>
+
+<template id="new_page_template_about_timeline_s_text_block_h2" inherit_id="website.new_page_template_about_s_text_block_h2" primary="True">
+    <xpath expr="//h2" position="replace" mode="inner">About Me</xpath>
+</template>
+
+<template id="new_page_template_landing_s_text_block_h2" inherit_id="website.new_page_template_s_text_block_h2" primary="True"/>
+
+<template id="new_page_template_landing_2_s_text_block_h2" inherit_id="website.new_page_template_landing_s_text_block_h2" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">Our Services</xpath>
+    <xpath expr="//h2" position="after">
+        <t t-snippet-call="website.s_searchbar_input" string="Search Input"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_3_s_text_block_h2" inherit_id="website.new_page_template_landing_s_text_block_h2" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc2" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">Our Offer</xpath>
+</template>
+
+<template id="new_page_template_landing_4_s_text_block_h2" inherit_id="website.new_page_template_landing_s_text_block_h2" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb40" remove="pb0" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">About Us</xpath>
+</template>
+
+<template id="new_page_template_gallery_s_text_block_h2" inherit_id="website.new_page_template_s_text_block_h2" primary="True">
+    <xpath expr="//h2" position="replace" mode="inner">Gallery</xpath>
+</template>
+
+<template id="new_page_template_services_s_text_block_h2" inherit_id="website.new_page_template_s_text_block_h2" primary="True">
+    <xpath expr="//h2" position="attributes">
+        <attribute name="style">text-align: left;</attribute>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">Questions?</xpath>
+</template>
+
+<template id="new_page_template_pricing_s_text_block_h2" inherit_id="website.new_page_template_s_text_block_h2" primary="True">
+    <xpath expr="//h2" position="attributes">
+        <attribute name="style">text-align: left;</attribute>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">Questions?</xpath>
+</template>
+
+<!-- Alernative secondary H2 title as s_text_block: s_text_block_h2_contact -->
+
+<template id="s_text_block_h2_contact" inherit_id="website.s_text_block_h2" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb40" remove="pb0" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="attributes">
+        <attribute name="style">text-align: left;</attribute>
+    </xpath>
+    <xpath expr="//h2" position="replace" mode="inner">Contact Us</xpath>
+</template>
+
+<!-- s_image_text -->
+
+<template id="new_page_template_s_image_text" inherit_id="website.s_image_text" primary="True"/>
+
+<template id="new_page_template_about_s_image_text" inherit_id="website.new_page_template_s_image_text" primary="True"/>
+
+<template id="new_page_template_about_full_s_image_text" inherit_id="website.new_page_template_about_s_image_text" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level pt48 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//h2" position="replace">
+        <h2>Our Story</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>Embark on a journey through time as we share the story of our humble beginnings. What started as a simple idea in a garage has evolved into an innovative force in the industry.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_personal_s_image_text" inherit_id="website.new_page_template_about_s_image_text" primary="True">
+    <xpath expr="//h2" position="replace">
+        <h2 class="h3-fs">About Me</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>I'm a fullstack developer with a background in management. My analytical skills, coupled with effective communication, enable me to lead cross-functional teams to success.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_services_s_image_text" inherit_id="website.new_page_template_s_image_text" primary="True">
+    <xpath expr="//h2" position="replace">
+        <h2 class="h3-fs">Strategic Marketing Solutions</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>Discover our comprehensive marketing service designed to amplify your brand's reach and impact.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_team_s_image_text" inherit_id="website.new_page_template_s_image_text" primary="True">
+    <xpath expr="//h2" position="replace">
+        <h2 class="h3-fs">Tony Fred, CEO</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>Founder, Tony is the driving force behind the company. He loves to keep his hands full by participating in the development of the software, marketing, and customer experience.</p>
+    </xpath>
+    <xpath expr="//img" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_1" class="img img-fluid mx-auto w-100"/>
+    </xpath>
+</template>
+
+
+<!-- Alternative s_image_text: s_image_text_2nd -->
+
+<template id="s_image_text_2nd" inherit_id="website.new_page_template_s_image_text" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_image_text</attribute>
+    </xpath>
+</template>
+
+<template id="new_page_template_s_image_text_2nd" inherit_id="website.s_image_text_2nd" primary="True"/>
+
+<template id="new_page_template_gallery_s_image_text_2nd" inherit_id="website.new_page_template_s_image_text_2nd" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level pt48 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_services_s_image_text_2nd" inherit_id="website.new_page_template_s_image_text_2nd" primary="True">
+    <xpath expr="//h2" position="replace">
+        <h2 class="h3-fs">Digital Consulting Expertise</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>Our seasoned consultants provide tailored guidance, leveraging their deep industry knowledge to analyze your current strategies, identify opportunities, and formulate data-driven recommendations.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_pricing_s_image_text_2nd" inherit_id="website.new_page_template_s_image_text_2nd" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level pt48 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_team_s_image_text_2nd" inherit_id="website.new_page_template_s_image_text_2nd" primary="True">
+    <xpath expr="//h2" position="replace">
+        <h2 class="h3-fs">Aline Turner, CTO</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>Aline is one of the iconic people in life who can say they love what they do. She mentors 100+ in-house developers and looks after the community of thousands of developers.</p>
+    </xpath>
+    <xpath expr="//img" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_3" class="img img-fluid mx-auto w-100"/>
+    </xpath>
+</template>
+
+<!-- s_text_image -->
+
+<template id="new_page_template_s_text_image" inherit_id="website.s_text_image" primary="True"/>
+
+<template id="new_page_template_about_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True"/>
+
+<template id="new_page_template_about_full_s_text_image" inherit_id="website.new_page_template_about_s_text_image" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level pt56 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//h2|//h3" position="replace">
+        <h2 class="h3-fs">Our Goals</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>We're driven by the aspiration to redefine industry standards, to exceed the expectations of our clients, and to foster a culture of continuous growth.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level pt56 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//h2|//h3" position="replace">
+        <h2 class="h3-fs">Our Approach</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>We believe that every fitness journey is unique. Our approach begins with understanding your fitness aspirations, your current lifestyle, and any challenges you face.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_services_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level pt56 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//h2|//h3" position="replace">
+        <h2 class="h3-fs">Transform Your Brand</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>From revitalizing your visual identity to realigning your messaging for the digital landscape, we'll guide you through a strategic process that ensures your brand remains relevant and resonates with your audience.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_team_s_text_image" inherit_id="website.new_page_template_s_text_image" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level pt56 pb56" remove="pt80 pb80" separator=" "/>
+    </xpath>
+    <xpath expr="//h2|//h3" position="replace">
+        <h2 class="h3-fs">Mich Stark, COO</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>Mich loves taking on challenges. With his multi-year experience as Commercial Director in the software industry, Mich has helped the company to get where it is today.</p>
+    </xpath>
+    <xpath expr="//img" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_2" class="img img-fluid mx-auto w-100"/>
+    </xpath>
+</template>
+
+<!-- s_picture -->
+
+<template id="new_page_template_s_picture" inherit_id="website.s_picture" primary="True"/>
+
+<template id="new_page_template_basic_s_picture" inherit_id="website.new_page_template_s_picture" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level" separator=" "/>
+    </xpath>
+    <xpath expr="//h1|//h2" position="replace"/>
+</template>
+
+<template id="new_page_template_about_s_picture" inherit_id="website.new_page_template_s_picture" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level" separator=" "/>
+    </xpath>
+    <xpath expr="//h1|//h2" position="replace">
+        <h2 style="text-align: center;">Our Team</h2>
+    </xpath>
+    <xpath expr="//p" position="replace"/>
+</template>
+
+<template id="new_page_template_team_s_picture" inherit_id="website.new_page_template_s_picture" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level" separator=" "/>
+    </xpath>
+    <xpath expr="//img" position="replace">
+        <img alt="" src="/web/image/website.library_image_team" class="figure-img rounded"/>
+    </xpath>
+</template>
+
+<!-- Image only s_picture: s_picture_only -->
+
+<template id="s_picture_only" inherit_id="website.new_page_template_s_picture" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_picture</attribute>
+        <attribute name="class" add="o_colored_level" separator=" "/>
+    </xpath>
+    <xpath expr="//h1|//h2" position="replace"/>
+    <xpath expr="//p" position="replace"/>
+</template>
+
+<!-- s_text_cover -->
+
+<template id="new_page_template_s_text_cover" inherit_id="website.s_text_cover" primary="True"/>
+
+<template id="new_page_template_basic_s_text_cover" inherit_id="website.new_page_template_s_text_cover" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_full_screen_height" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_s_text_cover" inherit_id="website.new_page_template_s_text_cover" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_full_screen_height" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace">
+        <h1>Hello, I'm Tony Fred</h1>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Experienced fullstack developer.</p>
+    </xpath>
+    <xpath expr="//p" position="after">
+        <t t-snippet-call="website.s_social_media" string="Social"/>
+        <t t-snippet-call="website.s_hr" string="Separator"/>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_s_text_cover" inherit_id="website.new_page_template_s_text_cover" primary="True">
+    <xpath expr="//h1" position="replace">
+        <h1>EchoTunes Wireless Earbuds</h1>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Designed to provide an immersive audio experience on the go.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_services_s_text_cover" inherit_id="website.new_page_template_s_text_cover" primary="True">
+    <xpath expr="//h1" position="replace">
+        <h1>Crafting Your Digital Success Story</h1>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Experience a digital transformation like never before with our range of innovative solutions, designed to illuminate your brand's potential.</p>
+    </xpath>
+</template>
+
+<!-- s_features -->
+
+<template id="new_page_template_s_features" inherit_id="website.s_features" primary="True"/>
+
+<template id="new_page_template_about_s_features" inherit_id="website.new_page_template_s_features" primary="True">
+    <xpath expr="//h3" position="replace">
+        <h3 class="h5-fs">My Skills</h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div/h3" position="replace">
+        <h3 class="h5-fs">Backend</h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/h3" position="replace">
+        <h3 class="h5-fs">Frontend</h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/h3" position="replace">
+        <h3 class="h5-fs">Management</h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div/p" position="replace">
+        <p>Proficient in backend development, specializing in Python, Django, and database management to create efficient and scalable solutions.</p>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/p" position="replace">
+        <p>Mastering frontend craftsmanship with expertise in HTML, CSS, and JavaScript to craft captivating and responsive user experiences.</p>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/p" position="replace">
+        <p>Experienced in effective project management, adept at leading cross-functional teams and delivering successful outcomes with a strategic approach.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_s_features" inherit_id="website.new_page_template_s_features" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="" separator=" "/>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div/h3" position="replace">
+        <h3 class="h5-fs">Marketing</h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/h3" position="replace">
+        <h3 class="h5-fs">Rebranding</h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/h3" position="replace">
+        <h3 class="h5-fs">Consulting</h3>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[1]/div/p" position="replace">
+        <p>From SEO to social media, we create campaigns that not only get you noticed but also drive engagement and conversions.</p>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[2]/div/p" position="replace">
+        <p>Your brand is your story. We help you tell it through cohesive visual identity and messaging that resonates with your audience.</p>
+    </xpath>
+    <xpath expr="//div[hasclass('row')]/div[3]/div/p" position="replace">
+        <p>Empowering your business through strategic digital insights and expertise.</p>
+    </xpath>
+</template>
+
+<!-- s_numbers -->
+
+<template id="new_page_template_s_numbers" inherit_id="website.s_numbers" primary="True"/>
+
+<template id="new_page_template_about_s_numbers" inherit_id="website.new_page_template_s_numbers" primary="True"/>
+
+<template id="new_page_template_about_full_s_numbers" inherit_id="website.new_page_template_about_s_numbers" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_cc3 o_colored_level" remove="o_cc1" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_about_personal_s_numbers" inherit_id="website.new_page_template_about_s_numbers" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt0 o_cc3 o_colored_level" remove="o_cc1 pt80" separator=" "/>
+    </xpath>
+    <xpath expr="//span[hasclass('h5-fs')]" position="replace" mode="inner">
+        Clients
+    </xpath>
+    <xpath expr="(//span[hasclass('h5-fs')])[2]" position="replace" mode="inner">
+        Growth Rate
+    </xpath>
+    <xpath expr="(//span[hasclass('h5-fs')])[3]" position="replace" mode="inner">
+        Websites
+    </xpath>
+</template>
+
+<!-- s_company_team -->
+
+<template id="new_page_template_s_company_team" inherit_id="website.s_company_team" primary="True"/>
+
+<template id="new_page_template_about_s_company_team" inherit_id="website.new_page_template_s_company_team" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level" remove="pt48" separator=" "/>
+    </xpath>
+</template>
+
+<!-- s_quotes_carousel -->
+
+<template id="new_page_template_s_quotes_carousel" inherit_id="website.s_quotes_carousel" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level o_cc o_cc1" separator=" "/>
+    </xpath>
+</template>
+
+<template id="new_page_template_basic_s_quotes_carousel" inherit_id="website.new_page_template_s_quotes_carousel" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" remove="o_colored_level o_cc o_cc1" separator=" "/>
+    </xpath>
+</template>
+
+<!-- s_references -->
+
+<template id="new_page_template_s_references" inherit_id="website.s_references" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level" separator=" "/>
+    </xpath>
+</template>
+
+<!-- s_cover -->
+
+<template id="new_page_template_s_cover" inherit_id="website.s_cover" primary="True"/>
+
+<template id="new_page_template_about_s_cover" inherit_id="website.new_page_template_s_cover" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt40 pb40" remove="pt232 pb232" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace">
+        <h1 style="text-align: center;">About Us</h1>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_s_cover" inherit_id="website.new_page_template_s_cover" primary="True"/>
+
+<template id="new_page_template_landing_0_s_cover" inherit_id="website.new_page_template_landing_s_cover" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pt256 pb256" remove="pt232 pb232" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace">
+        <h1 style="text-align: center;">Coming Soon</h1>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_2_s_cover" inherit_id="website.new_page_template_landing_s_cover" primary="True">
+    <xpath expr="//h1" position="replace">
+        <h1 class="text-center">Personalized Fitness</h1>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_4_s_cover" inherit_id="website.new_page_template_landing_s_cover" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" remove="o_full_screen_height" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace">
+        <h1 style="text-align: center;">We Are Coming Soon</h1>
+    </xpath>
+</template>
+
+
+<!-- s_banner -->
+
+<template id="new_page_template_s_banner" inherit_id="website.s_banner" primary="True"/>
+
+<template id="new_page_template_about_s_banner" inherit_id="website.new_page_template_s_banner" primary="True">
+    <xpath expr="//h1" position="replace">
+        <h1>Hello, I'm Tony Fred</h1>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Experienced fullstack developer.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_s_banner" inherit_id="website.new_page_template_s_banner" primary="True"/>
+
+<template id="new_page_template_landing_1_s_banner" inherit_id="website.new_page_template_landing_s_banner" primary="True">
+    <xpath expr="//h1" position="replace">
+        <h1>Elevate Your Brand With Us</h1>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">By Crafting unique and compelling brand identities that leave a lasting impact.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_5_s_banner" inherit_id="website.new_page_template_landing_s_banner" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_full_screen_height" separator=" "/>
+    </xpath>
+    <xpath expr="//h1" position="replace">
+        <h1 style="text-align: center;">We Are Down for Maintenance</h1>
+    </xpath>
+    <xpath expr="//p" position="replace"/>
+</template>
+
+<template id="new_page_template_gallery_s_banner" inherit_id="website.new_page_template_s_banner" primary="True">
+    <xpath expr="//h1" position="replace">
+        <h1>Discover Our Univers</h1>
+    </xpath>
+    <xpath expr="//p" position="replace"/>
+</template>
+
+<!-- s_carousel -->
+
+<template id="new_page_template_s_carousel" inherit_id="website.s_carousel" primary="True">
+    <xpath expr="//h1|//h2" position="replace">
+        <h2>Happy Hour</h2>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead"> Every Friday From 6PM to 7PM !</p>
+    </xpath>
+</template>
+
+<!-- s_three_columns -->
+
+<template id="new_page_template_s_three_columns" inherit_id="website.s_three_columns" primary="True"/>
+
+<template id="new_page_template_about_s_three_columns" inherit_id="website.new_page_template_s_three_columns" primary="True">
+    <xpath expr="//h3|//h4|//h5" position="replace">
+        <h3 class="card-title">Our Story</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[2]" position="replace">
+        <h3 class="card-title">Our Mission</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[3]" position="replace">
+        <h3 class="card-title">Our Values</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="card-text">Step into our past and witness the transformation of a simple idea into an innovative force. Our journey, born in a garage, reflects the power of passion and hard work.</p>
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace">
+        <p class="card-text">Our mission is to create transformative experiences and foster growth, driven by a relentless pursuit of innovation and a commitment to exceeding expectations.</p>
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace">
+        <p class="card-text">Our values shape our culture, influence our decisions, and guide us in providing exceptional service. They reflect our dedication to integrity, collaboration, and client satisfaction.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_s_three_columns" inherit_id="website.new_page_template_s_three_columns" primary="True"/>
+
+<template id="new_page_template_landing_2_s_three_columns" inherit_id="website.new_page_template_landing_s_three_columns" primary="True">
+    <xpath expr="//h3|//h4|//h5" position="replace">
+        <h3 class="card-title">Personalized Workouts</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[2]" position="replace">
+        <h3 class="card-title">Nutritional Guidance</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[3]" position="replace">
+        <h3 class="card-title">Progress Tracking</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="card-text">Our experienced fitness coaches design workouts that align with your goals, fitness level, and preferences.</p>
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace">
+        <p class="card-text">Achieve holistic health with personalized nutritional advice that complements your workouts, promoting overall well-being.</p>
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace">
+        <p class="card-text">We monitor your progress meticulously, adjusting your plan as needed to ensure continuous improvement and results.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_3_s_three_columns" inherit_id="website.new_page_template_landing_s_three_columns" primary="True">
+    <xpath expr="//h3|//h4|//h5" position="replace">
+        <h3 class="card-title">Amazing Sound Quality</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[2]" position="replace">
+        <h3 class="card-title">Wireless Freedom</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[3]" position="replace">
+        <h3 class="card-title">All-Day Comfort</h3>
+    </xpath>
+</template>
+
+
+<template id="new_page_template_services_s_three_columns" inherit_id="website.new_page_template_s_three_columns" primary="True"/>
+
+<template id="new_page_template_services_0_s_three_columns" inherit_id="website.new_page_template_services_s_three_columns" primary="True">
+    <xpath expr="//h3|//h4|//h5" position="replace">
+        <h3 class="card-title">Wellness Coaching</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[2]" position="replace">
+        <h3 class="card-title">Strength Training: </h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[3]" position="replace">
+        <h3 class="card-title">Weight Loss Transformation</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="card-text">Our Coaching combines personalized fitness plans with mindfulness practices, ensuring you achieve harmony in your body and peace in your mind.</p>
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace">
+        <p class="card-text">This coaching program offers specialized strength-focused workouts, nutrition guidance, and expert coaching. Elevate your fitness level and achieve feats you never thought possible.</p>
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace">
+        <p class="card-text">With personalized fitness plans, tailored nutrition guidance, and consistent support, you'll shed unwanted pounds while building healthy habits that last.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_team_s_three_columns" inherit_id="website.new_page_template_s_three_columns" primary="True"/>
+
+<template id="new_page_template_team_0_s_three_columns" inherit_id="website.new_page_template_team_s_three_columns" primary="True">
+    <xpath expr="//h3|//h4|//h5" position="replace">
+        <h3 class="card-title">Tony Fred, CEO</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[2]" position="replace">
+        <h3 class="card-title">Mich Stark, COO</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[3]" position="replace">
+        <h3 class="card-title">Aline Turner, CTO</h3>
+    </xpath>
+    <xpath expr="//div[hasclass('card')]//p|//div[hasclass('card-wrapper')]//p" position="replace">
+        <p class="card-text">Founder and chief visionary, Tony is the driving force behind the company. He loves to keep his hands full by participating in the development of the software, marketing, and customer experience strategies.</p>
+    </xpath>
+    <xpath expr="(//div[hasclass('card')])[2]//p|(//div[hasclass('card-wrapper')])[2]//p" position="replace">
+        <p class="card-text">Mich loves taking on challenges. With his multi-year experience as Commercial Director in the software industry, Mich has helped the company to get where it is today. Mich is among the best minds.</p>
+    </xpath>
+    <xpath expr="(//div[hasclass('card')])[3]//p|(//div[hasclass('card-wrapper')])[3]//p" position="replace">
+        <p class="card-text">Aline is one of the iconic people in life who can say they love what they do. She mentors 100+ in-house developers and looks after the community of thousands of developers.</p>
+    </xpath>
+    <xpath expr="//img" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_1" class="o_card_img card-img-top"/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_2" class="o_card_img card-img-top"/>
+    </xpath>
+    <xpath expr="(//img)[3]" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_3" class="o_card_img card-img-top"/>
+    </xpath>
+</template>
+
+<!-- Unchanged s_three_columns: s_three_columns_2nd -->
+
+<template id="s_three_columns_2nd" inherit_id="website.s_three_columns" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_three_columns</attribute>
+    </xpath>
+</template>
+
+<!-- Custom snippet to reset customisations done to it in themes -->
+
+<template id="s_three_columns_menu" inherit_id="website.s_three_columns" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_three_columns</attribute>
+    </xpath>
+    <xpath expr="//h3|//h4|//h5" position="replace">
+        <h3 class="card-title">Menu One</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[2]" position="replace">
+        <h3 class="card-title">Menu Two</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[3]" position="replace">
+        <h3 class="card-title">All You Can Eat</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="card-text">Vegetable Salad, Beef Burger and Mango Ice Cream</p>
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace">
+        <p class="card-text">Beef Carpaccio, Filet Mignon 8oz and Cheesecake</p>
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace">
+        <p class="card-text">Mediterranean buffet of starters, main dishes and desserts</p>
+    </xpath>
+</template>
+
+<!-- s_color_blocks_2 -->
+
+<template id="new_page_template_s_color_blocks_2" inherit_id="website.s_color_blocks_2" primary="True"/>
+
+<template id="new_page_template_landing_s_color_blocks_2" inherit_id="website.new_page_template_s_color_blocks_2" primary="True">
+    <xpath expr="//h2" position="replace">
+        <h2 class="h3-fs">Crystal Clear Sound</h2>
+    </xpath>
+</template>
+
+<!-- s_showcase -->
+
+<template id="new_page_template_s_showcase" inherit_id="website.s_showcase" primary="True"/>
+
+<template id="new_page_template_landing_s_showcase" inherit_id="website.new_page_template_s_showcase" primary="True">
+    <xpath expr="//h5" position="replace" mode="inner">
+        Intuitive Touch Controls
+    </xpath>
+    <xpath expr="(//h5)[2]" position="replace" mode="inner">
+        Secure and Comfortable Fit
+    </xpath>
+    <xpath expr="(//h5)[3]" position="replace" mode="inner">
+        On-the-Go Charging
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p>Adjust volume, skip tracks, answer calls, and activate voice assistants with a simple tap, keeping your hands free and your focus on what matters most.</p>
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace">
+        <p>EchoTunes comes with customizable ear tip sizes that provide a secure and comfortable fit.</p>
+    </xpath>
+    <xpath expr="(//p)[3]" position="replace">
+        <p>The compact charging case offers convenient on-the-go charging with a battery life that lasts up to 17h, you can enjoy your favorite tunes without interruption.</p>
+    </xpath>
+</template>
+
+<!-- s_call_to_action -->
+
+<template id="new_page_template_s_call_to_action" inherit_id="website.s_call_to_action" primary="True"/>
+
+<template id="new_page_template_landing_s_call_to_action" inherit_id="new_page_template_s_call_to_action" primary="True"/>
+
+<template id="new_page_template_landing_2_s_call_to_action" inherit_id="new_page_template_landing_s_call_to_action" primary="True">
+    <xpath expr="//h2|//h3|//h4" position="replace">
+        <h3>Ready to Embrace Your Fitness Journey?</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Contact us today to embark on your path to a healthier, more vibrant you. Your fitness journey begins here.</p>
+    </xpath>
+</template>
+
+<template id="new_page_template_landing_3_s_call_to_action" inherit_id="new_page_template_landing_s_call_to_action" primary="True">
+    <xpath expr="//h2|//h3|//h4" position="replace">
+        <h3>Elevate Your Audio Journey Today</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Ready to embark on your auditory adventure? Order your EchoTunes Wireless Earbuds today and let the symphony begin.</p>
+    </xpath>
+</template>
+
+<!-- Alternative s_call_to_action: s_call_to_action_about -->
+
+<template id="s_call_to_action_about" inherit_id="website.s_call_to_action" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_call_to_action</attribute>
+    </xpath>
+    <xpath expr="//h2|//h3|//h4" position="replace">
+        <h3>Ready to bring your digital vision to life?</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Let's collaborate to create innovative solutions that stand out in the digital landscape. Reach out today and let's build something extraordinary together.</p>
+    </xpath>
+</template>
+
+<!-- Alternative s_call_to_action: s_call_to_action_digital -->
+
+<template id="s_call_to_action_digital" inherit_id="website.s_call_to_action" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_call_to_action</attribute>
+    </xpath>
+    <xpath expr="//h2|//h3|//h4" position="replace">
+        <h3>Ready to embark on a journey of digital transformation?</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Let's turn your vision into reality. Contact us today to set your brand on the path to digital excellence with us.</p>
+    </xpath>
+</template>
+
+<!-- Alternative s_call_to_action: s_call_to_action_menu -->
+
+<template id="s_call_to_action_menu" inherit_id="website.s_call_to_action" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="data-snippet">s_call_to_action</attribute>
+    </xpath>
+    <xpath expr="//h2|//h3|//h4" position="replace">
+        <h3>Book your table today</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="lead">Join us for a remarkable dining experience that blends exquisite flavors with a warm ambiance. </p>
+    </xpath>
+</template>
+
+<!-- s_parallax -->
+
+<template id="new_page_template_s_parallax" inherit_id="website.s_parallax" primary="True"/>
+
+<template id="new_page_template_services_s_parallax" inherit_id="website.new_page_template_s_parallax" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="pb168 pt256" remove="o_half_screen_height" separator=" "/>
+    </xpath>
+    <xpath expr="//span[hasclass('s_parallax_bg')]" position="attributes">
+        <attribute name="style" add="background-position: 0% 44.4099%;" remove="background-position: 50% 75%;" separator=";"/>
+    </xpath>
+</template>
+
+<!-- s_media_list -->
+
+<template id="new_page_template_s_media_list" inherit_id="website.s_media_list" primary="True"/>
+
+<template id="new_page_template_team_s_media_list" inherit_id="website.new_page_template_s_media_list" primary="True">
+    <xpath expr="//h3|//h4|//h5" position="replace">
+        <h3 class="card-title">Tony Fred, CEO</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[last()]" position="replace">
+        <h3 class="card-title">Aline Turner, CTO</h3>
+    </xpath>
+    <xpath expr="(//h3|//h4|//h5)[2]" position="replace">
+        <h3 class="card-title">Mich Stark, COO</h3>
+    </xpath>
+    <xpath expr="//p" position="replace">
+        <p class="card-text">Founder, Tony is the driving force behind the company. He loves to keep his hands full by participating in the development of the software, marketing, and UX strategies.</p>
+    </xpath>
+    <xpath expr="(//p)[last()]" position="replace">
+        <p class="card-text">Aline is one of the iconic people in life who can say they love what they do. She mentors 100+ in-house developers and looks after the community of thousands of developers.</p>
+    </xpath>
+    <xpath expr="(//p)[2]" position="replace">
+        <p class="card-text">Mich loves taking on challenges. With his multi-year experience as Commercial Director in the software industry, Mich has helped the company to get where it is today. Mich is among the best minds.</p>
+    </xpath>
+    <xpath expr="//img" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_1" class="s_media_list_img h-100 w-100"/>
+    </xpath>
+    <xpath expr="(//img)[last()]" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_3" class="s_media_list_img h-100 w-100"/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_2" class="s_media_list_img h-100 w-100"/>
+    </xpath>
+</template>
+
+<!-- s_image_gallery -->
+
+<template id="new_page_template_s_image_gallery" inherit_id="website.s_image_gallery" primary="True"/>
+
+<template id="new_page_template_team_s_image_gallery" inherit_id="website.new_page_template_s_image_gallery" primary="True">
+    <xpath expr="//img" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_1" class="img img-fluid d-block h-100" data-name="Image" data-index="0"/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_2" class="img img-fluid d-block h-100" data-name="Image" data-index="1"/>
+    </xpath>
+    <xpath expr="(//img)[3]" position="replace">
+        <img alt="" src="/web/image/website.s_company_team_image_3" class="img img-fluid d-block h-100" data-name="Image" data-index="2"/>
+    </xpath>
+    <xpath expr="//div[hasclass('carousel-indicators')]" position="replace">
+        <div class="carousel-indicators">
+            <button data-bs-target="#slideshow_sample" data-bs-slide-to="0" style="background-image: url(/web/image/website.s_company_team_image_1)" class="active" aria-label="Carousel indicator"/>
+            <button data-bs-target="#slideshow_sample" data-bs-slide-to="1" style="background-image: url(/web/image/website.s_company_team_image_2)" aria-label="Carousel indicator"/>
+            <button data-bs-target="#slideshow_sample" data-bs-slide-to="2" style="background-image: url(/web/image/website.s_company_team_image_3)" aria-label="Carousel indicator"/>
+        </div>
+    </xpath>
+</template>
+
+<!-- s_images_wall -->
+<template id="new_page_template_s_images_wall" inherit_id="website.s_images_wall" primary="True"/>
+
+<template id="new_page_template_team_s_images_wall" inherit_id="website.new_page_template_s_images_wall" primary="True">
+    <xpath expr="//img" position="replace">
+        <img alt="" src="/website/static/src/img/snippets_demo/s_mega_menu_images_subtitles_default_image_1.jpg" class="img img-fluid d-block"/>
+    </xpath>
+    <xpath expr="(//img)[2]" position="replace">
+        <img alt="" src="/website/static/src/img/snippets_demo/s_mega_menu_images_subtitles_default_image_5.jpg" class="img img-fluid d-block"/>
+    </xpath>
+    <xpath expr="(//img)[3]" position="replace">
+        <img alt="" src="/website/static/src/img/snippets_demo/s_mega_menu_images_subtitles_default_image_2.jpg" class="img img-fluid d-block"/>
+    </xpath>
+    <xpath expr="(//img)[4]" position="replace">
+        <img alt="" src="/website/static/src/img/snippets_demo/s_mega_menu_images_subtitles_default_image_4.jpg" class="img img-fluid d-block"/>
+    </xpath>
+    <xpath expr="(//img)[5]" position="replace">
+        <img alt="" src="/website/static/src/img/snippets_demo/s_mega_menu_images_subtitles_default_image_6.jpg" class="img img-fluid d-block"/>
+    </xpath>
+    <xpath expr="(//img)[6]" position="replace">
+        <img alt="" src="/website/static/src/img/snippets_demo/s_mega_menu_images_subtitles_default_image_3.jpg" class="img img-fluid d-block"/>
+    </xpath>
+</template>
+
+<!-- Previews for blocks that normally generate part of their content upon drop -->
+<!-- Defined in website so that every theme can benefit from it -->
+<!-- Form: adapt style -->
+<template id="new_page_template_s_website_form" inherit_id="s_website_form" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_colored_level" separator=" "/>
+    </xpath>
+    <xpath expr="//form" position="attributes">
+        <attribute name="data-success-mode">redirect</attribute>
+        <attribute name="data-success-page">/contactus-thank-you</attribute>
+        <attribute name="data-model_name">mail.mail</attribute>
+    </xpath>
+</template>
+
+<!-- Map: change height -->
+<template id="new_page_template_s_map" inherit_id="s_map" primary="True">
+    <xpath expr="//section" position="attributes">
+        <attribute name="class" add="o_half_screen_height" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Using `function` so that it is called during both module install and update -->
+<!-- Generate primary snippet templates that are not predefined -->
+<function model="ir.module.module" name="_generate_primary_snippet_templates">
+    <value eval="[ref('base.module_website')]"/>
+</function>
+<!-- Generate primary page templates from manifest -->
+<function model="ir.module.module" name="_generate_primary_page_templates">
+    <value eval="[ref('base.module_website')]"/>
+</function>
+
+</odoo>

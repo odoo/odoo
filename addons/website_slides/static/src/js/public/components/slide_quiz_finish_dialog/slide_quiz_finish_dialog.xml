@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="website_slides.SlideQuizFinishDialog" owl="1">
+        <Dialog
+            bodyClass="'d-flex p-0'"
+            contentClass="'o_wslides_quiz_modal shadow-lg'"
+            footer="false"
+            header="false"
+            size="'md'"
+            technical="false"
+        >
+            <a role="button" class="o_wslides_quiz_modal_close_btn btn-close position-absolute" aria-label="Close" t-on-click.prevent="() => this.props.close()"/>
+            <div class="o_wslides_quiz_success_image d-none d-md-flex flex-shrink-0">
+                <img class="o_wslides_quiz_modal_hero" src="/website_slides/static/src/img/quiz_modal_success.svg" alt="Triumphant hero"/>
+            </div>
+            <div class="d-flex flex-column flex-grow-1 justify-content-between ps-md-5 p-3 overflow-visible">
+                <div>
+                    <h1 class="mt-3 display-4 fw-bold" t-out="title"/>
+                    <div class="pb-3">
+                        <h4 class="pb-2 d-flex fade" t-att-class="state.animateKarmaGain ? 'show in': ''">
+                            <t t-if="props.quiz.quizKarmaWon > 0">
+                                You gained <span class="badge text-bg-success text-white fw-bold ms-2 me-1"><t t-out="props.quiz.quizKarmaWon"/> XP</span>!
+                            </t>
+                            <t t-else="">You did it!</t>
+                        </h4>
+                        <div class="mt-5 mb-4">
+                            <SlideXPProgressBar
+                                previousRank="props.quiz.rankProgress.previous_rank"
+                                newRank="props.quiz.rankProgress.new_rank"
+                                levelUp="props.quiz.rankProgress.level_up"
+                            />
+                        </div>
+                    </div>
+                    <div class="pb-3 o_wslides_quiz_modal_rank_motivational" t-att-class="{'fade': state.fadeRankMotivational, 'show in': state.showRankMotivational}">
+                        <t t-if="props.quiz.rankProgress.last_rank" t-out="props.quiz.rankProgress.description"/>
+                        <t t-else="" t-out="props.quiz.rankProgress.new_rank.motivational"/>
+                    </div>
+                </div>
+                <div t-attf-class="o_wslides_quiz_modal_dismiss align-self-end ${this.state.hideDismissBtns ? 'd-none': ''}">
+                    <a t-if="props.quiz.rankProgress.level_up" type="button" target="_blank" t-attf-href="/profile/user/#{props.userId}" class="btn btn-light border me-1">
+                        Check Profile
+                    </a>
+                    <button t-if="props.hasNext" type="button" class="btn btn-light border" t-on-click="onClickNext">
+                        Next <i class="oi oi-chevron-right"/>
+                    </button>
+                    <a t-else="" type="button" href="/slides" class="btn btn-light border">End course</a>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+
+</templates>

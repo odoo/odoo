@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_report_ci" model="account.report">
+        <field name="name">VAT Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ci"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="account_tax_report_ci_base" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="account_tax_report_ci_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_ci_operations" model="account.report.line">
+                <field name="name">02. Operations realised</field>
+                <field name="code">CI_OPE</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_ci_operations_total" model="account.report.line">
+                        <field name="name">Total amount of operations</field>
+                        <field name="code">CI_OPE_TOTAL</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ci_operations_total_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CI_Export.base + CI_EXEMPT_LEGAL.base + CI_EXEMPT_CONV.base + CI_NON_TAXED.base + CI_TAXABLE.base</field>
+                            </record>
+                            <record id="account_tax_report_line_ci_operations_total_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CI_TAXABLE.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_ci_exportation" model="account.report.line">
+                                <field name="name">Exportations</field>
+                                <field name="code">CI_Export</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_ci_exportation_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">export</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_ci_exempt_legal" model="account.report.line">
+                                <field name="name">Legal exempt operations</field>
+                                <field name="code">CI_EXEMPT_LEGAL</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_ci_exempt_legal_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">sale_exempt_legal</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_ci_exempt_conventional" model="account.report.line">
+                                <field name="name">Conventional exempt operations</field>
+                                <field name="code">CI_EXEMPT_CONV</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_ci_exempt_conventional_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">sale_exempt_conv</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_ci_non_taxed" model="account.report.line">
+                                <field name="name">Other non taxed operations</field>
+                                <field name="code">CI_NON_TAXED</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_ci_non_taxed_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">non_taxed</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_ci_taxable" model="account.report.line">
+                                <field name="name">Taxable operations</field>
+                                <field name="code">CI_TAXABLE</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_ci_taxable_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">CI_TAXABLE_18.base + CI_TAXABLE_9.base + CI_SELF.base</field>
+                                    </record>
+                                    <record id="account_tax_report_line_ci_taxable_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">CI_TAXABLE_18.tax + CI_TAXABLE_9.tax + CI_SELF.tax</field>
+                                    </record>
+                                </field>
+                                <field name="children_ids">
+                                    <record id="account_tax_report_line_ci_taxable_18" model="account.report.line">
+                                        <field name="name">Taxable - normal rate</field>
+                                        <field name="code">CI_TAXABLE_18</field>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_ci_taxable_18_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">base_sale_18</field>
+                                            </record>
+                                            <record id="account_tax_report_line_ci_taxable_18_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">tax_sale_18</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                    <record id="account_tax_report_line_ci_taxable_9" model="account.report.line">
+                                        <field name="name">Taxable - reduced rate</field>
+                                        <field name="code">CI_TAXABLE_9</field>
+                                        <field name="expression_ids">
+                                            <record id="account_tax_report_line_ci_taxable_9_base" model="account.report.expression">
+                                                <field name="label">base</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">base_sale_9</field>
+                                            </record>
+                                            <record id="account_tax_report_line_ci_taxable_9_tax" model="account.report.expression">
+                                                <field name="label">tax</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">tax_sale_9</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_ci_self_delivery" model="account.report.line">
+                        <field name="name">Self delivery or service</field>
+                        <field name="code">CI_SELF</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ci_self_delivery_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CI_SELF_18.base + CI_SELF_9.base</field>
+                            </record>
+                            <record id="account_tax_report_line_ci_self_delivery_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CI_SELF_18.tax + CI_SELF_9.tax</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="account_tax_report_line_ci_self_delivery_18" model="account.report.line">
+                                <field name="name">Normal rate</field>
+                                <field name="code">CI_SELF_18</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_ci_self_delivery_18_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_self_18</field>
+                                    </record>
+                                    <record id="account_tax_report_line_ci_self_delivery_18_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">tax_self_18</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="account_tax_report_line_ci_self_delivery_9" model="account.report.line">
+                                <field name="name">Reduced rate</field>
+                                <field name="code">CI_SELF_9</field>
+                                <field name="expression_ids">
+                                    <record id="account_tax_report_line_ci_self_delivery_9_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">base_self_9</field>
+                                    </record>
+                                    <record id="account_tax_report_line_ci_self_delivery_9_tax" model="account.report.expression">
+                                        <field name="label">tax</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">tax_self_9</field>
+                                    </record>
+                                </field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ci_taxable_turnover" model="account.report.line">
+                <field name="name">03. Taxable turnover</field>
+                <field name="code">CI_TAXABLE_TURNOVER</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ci_taxable_turnover_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CI_TAXABLE_TURNOVER_18.base + CI_TAXABLE_TURNOVER_9.base</field>
+                    </record>
+                    <record id="account_tax_report_line_ci_taxable_turnover_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CI_TAXABLE_TURNOVER_18.tax + CI_TAXABLE_TURNOVER_9.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_ci_taxable_turnover_18" model="account.report.line">
+                        <field name="name">Normal rate</field>
+                        <field name="code">CI_TAXABLE_TURNOVER_18</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ci_taxable_turnover_18_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CI_TAXABLE_18.base + CI_SELF_18.base</field>
+                            </record>
+                            <record id="account_tax_report_line_ci_taxable_turnover_18_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CI_TAXABLE_18.tax + CI_SELF_18.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_ci_taxable_turnover_9" model="account.report.line">
+                        <field name="name">Reduced rate</field>
+                        <field name="code">CI_TAXABLE_TURNOVER_9</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ci_taxable_turnover_9_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CI_TAXABLE_9.base + CI_SELF_9.base</field>
+                            </record>
+                            <record id="account_tax_report_line_ci_taxable_turnover_9_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CI_TAXABLE_9.tax + CI_SELF_9.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ci_adjustment" model="account.report.line">
+                <field name="name">04. Adjustment of previously deducted vat to be repaid</field>
+                <field name="code">CI_ADJUSTMENT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ci_adjustment_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ci_gross" model="account.report.line">
+                <field name="name">05. Total gross VAT</field>
+                <field name="code">CI_GROSS</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ci_gross_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CI_OPE_TOTAL.tax + CI_ADJUSTMENT.tax</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ci_deduction" model="account.report.line">
+                <field name="name">06. Deductions</field>
+                <field name="code">CI_VAT_DEDUCT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ci_deduction_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CI_DEDUCTIBLE.base</field>
+                    </record>
+                    <record id="account_tax_report_line_ci_deduction_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CI_DEDUCTIBLE.tax + CI_CREDIT_REPORTED.tax</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_ci_deductible" model="account.report.line">
+                        <field name="name">Deductible VAT</field>
+                        <field name="code">CI_DEDUCTIBLE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ci_deductible_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">base_purchase</field>
+                            </record>
+                            <record id="account_tax_report_line_ci_deductible_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">tax_purchase</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_ci_tva_credit" model="account.report.line">
+                        <field name="name">Last month's credit reported</field>
+                        <field name="code">CI_CREDIT_REPORTED</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_ci_tva_credit_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CI_CREDIT_REPORTED._applied_carryover_tax</field>
+                            </record>
+                            <record id="account_tax_report_line_ci_tva_credit_tax_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ci_net_to_pay" model="account.report.line">
+                <field name="name">Net VAT to pay (05 - 06)</field>
+                <field name="code">CI_NET_TO_PAY</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ci_net_to_pay_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CI_GROSS.tax - CI_VAT_DEDUCT.tax</field>
+                        <field name="subformula">if_above(XOF(0))</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ci_asked_reimbursement" model="account.report.line">
+                <field name="name">Credit asked to be reimbursed</field>
+                <field name="code">CI_REIMBURSEMENT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ci_asked_reimbursement_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">external</field>
+                        <field name="formula">sum</field>
+                        <field name="subformula">editable</field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_ci_to_report" model="account.report.line">
+                <field name="name">Credit to report</field>
+                <field name="code">CI_REPORT</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_ci_to_report_tax" model="account.report.expression">
+                        <field name="label">tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CI_VAT_DEDUCT.tax - CI_GROSS.tax - CI_REIMBURSEMENT.tax</field>
+                        <field name="subformula">if_above(XOF(0))</field>
+                        <field name="carryover_target" eval="False"/>
+                    </record>
+                    <record id="account_tax_report_line_ci_to_report_carryover" model="account.report.expression">
+                        <field name="label">_carryover_tax</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">CI_REPORT.tax</field>
+                        <field name="carryover_target">CI_CREDIT_REPORTED._applied_carryover_tax</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

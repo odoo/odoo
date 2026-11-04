@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="spreadsheet.DateFromToValue" class="date_filter_values">
+        <DateTimeInput
+            value="dateFrom"
+            type="'date'"
+            placeholder.translate="Date from..."
+            onChange.bind="onDateFromChanged"
+        />
+        <i class="oi oi-arrow-right"></i>
+        <DateTimeInput
+            value="dateTo"
+            type="'date'"
+            placeholder.translate="Date to..."
+            onChange.bind="onDateToChanged"
+        />
+    </div>
+</templates>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="documents_spreadsheet.MobileFigureContainer">
+        <t t-if="!figures.length">
+            Only chart figures are displayed in small screens but this dashboard doesn't contain any
+        </t>
+        <div
+            t-foreach="figures" t-as="figure"
+            t-key="figure.id"
+            t-on-click="() => this.onClick(figure.id)"
+            t-attf-style="min-height: #{figure.height}px; direction: ltr;"
+        >
+            <t t-component="getFigureComponent(figure)" figure="figure"/>
+        </div>
+    </t>
+</templates>

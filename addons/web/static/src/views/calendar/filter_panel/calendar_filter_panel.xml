@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarFilterPanel">
+        <t t-foreach="props.model.filterSections" t-as="section" t-key="section.fieldName">
+            <t t-if="section.filters.length gt 0">
+                <div
+                    class="o_calendar_filter d-flex flex-column gap-1 mt-4 mb-2"
+                    t-att-class="{'o-calendar-filter-panel--section-collapsed': isSectionCollapsed(section)}"
+                    t-att-data-name="section.fieldName"
+                >
+                    <t t-if="section.label">
+                        <div
+                            class="o_calendar_filter_items_checkall o-checkbox form-check"
+                            data-value="section"
+                        >
+                            <t t-set="filterId" t-value="nextFilterId"/>
+                            <input
+                                type="checkbox"
+                                name="select-all"
+                                class="form-check-input"
+                                t-attf-id="o_calendar_filter_{{filterId}}"
+                                t-att-checked="isAllActive(section)"
+                                t-on-change="(ev) => this.onAllFilterInputChange(section, ev)"
+                            />
+                             <t t-if="section.canCollapse">
+                                <label
+                                    class="d-flex align-items-center"
+                                    type="button"
+                                    t-on-click.stop.prevent="() => this.toggleSection(section, ev)"
+                                >
+                                    <span class="o_cw_filter_label fw-bolder" t-esc="section.label"/>
+                                    <i
+                                        class="o_cw_filter_collapse_icon fa ms-1"
+                                        t-attf-class="fa-caret-{{ isSectionCollapsed(section) ? 'left' : 'down' }}"
+                                    />
+                                </label>
+                            </t>
+                            <t t-else="">
+                                <label class="o_cw_filter_label fw-bolder" t-esc="section.label"/>
+                            </t>
+                        </div>
+                    </t>
+                    <Transition visible="!isSectionCollapsed(section)" name="'o-section-slide'" leaveDuration="350" t-slot-scope="transition">
+                        <div class="o_calendar_filter_items d-flex flex-column gap-1" t-att-class="transition.className">
+                            <t t-foreach="getSortedFilters(section)" t-as="filter" t-key="filter.value">
+                                <t t-set="filterId" t-value="nextFilterId"/>
+                                <t t-call="{{ constructor.subTemplates.filter }}"/>
+                            </t>
+                        </div>
+                    </Transition>
+                    <t t-if="section.canAddFilter">
+                        <AutoComplete t-props="getAutoCompleteProps(section)"/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="web.CalendarFilterPanel.filter">
+        <div
+            class="o_calendar_filter_item o-checkbox form-check position-relative w-100 overflow-hidden cursor-pointer"
+            t-att-class="getFilterColor(filter)"
+            t-att-data-value="filter.value"
+        >
+            <input
+                type="checkbox"
+                name="selection"
+                class="o_cw_filter_input_bg form-check-input"
+                t-att-style="filter.colorIndex and typeof filter.colorIndex !== 'number' ? `border-color: ${filter.colorIndex}; background-color: ${filter.colorIndex};` : ''"
+                t-attf-id="o_calendar_filter_item_{{filterId}}"
+                t-att-checked="filter.active"
+                t-on-change="(ev) => this.onFilterInputChange(section, filter, ev)"
+            />
+            <label
+                class="d-flex align-items-center gap-1"
+                t-attf-for="o_calendar_filter_item_{{filterId}}"
+            >
+                <t t-if="section.hasAvatar and filter.hasAvatar">
+                    <img
+                        class="o_cw_filter_avatar o_avatar rounded"
+                        t-attf-src="/web/image/{{ section.avatar.model }}/{{ filter.value }}/{{ section.avatar.field }}"
+                        alt="Avatar"
+                    />
+                </t>
+                <t t-elif="filter.type === 'all'">
+                    <i
+                        class="o_cw_filter_avatar o_avatar fa fa-users fa-fw flex-shrink-0 me-1"
+                        role="img"
+                        aria-label="Avatar"
+                        title="Avatar"
+                    />
+                </t>
+                <span
+                    class="o_cw_filter_title flex-grow-1 text-truncate lh-base"
+                    t-esc="filter.label"
+                />
+            </label>
+            <t t-if="filter.canRemove">
+                <button
+                    class="o_remove btn position-absolute top-50 end-0 py-0 px-2 bg-view text-700 transition-base"
+                    role="img"
+                    title="Remove this favorite from the list"
+                    aria-label="Remove this favorite from the list"
+                    t-on-click="() => this.onFilterRemoveBtnClick(section, filter)"
+                >
+                    <i class="oi oi-close"/>
+                </button>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.CalendarFilterPanel.autocomplete.options">
+        <img t-if='option.value' t-attf-src="/web/image/{{option.model}}/{{option.value}}/avatar_128"
+                class="rounded me-1 o_avatar"
+        />
+        <t t-esc="option.label" />
+    </t>
+</templates>

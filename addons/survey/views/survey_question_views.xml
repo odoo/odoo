@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- QUESTIONS -->
+    <record model="ir.ui.view" id="survey_question_form">
+        <field name="name">Form view for survey question</field>
+        <field name="model">survey.question</field>
+        <field name="arch" type="xml">
+            <form string="Survey Question" create="false" class="o_survey_question_view_form">
+                <field name="is_placed_before_trigger" invisible="1"/>
+                <div class="alert alert-warning text-center" role="alert" invisible="not is_placed_before_trigger">
+                    ⚠️ This question is positioned before some or all of its triggers and could be skipped.
+                </div>
+                <field name="is_page" invisible="1"/>
+                <field name="page_id" invisible="1" required="False"/>
+                <field name="sequence" invisible="1"/>
+                <field name="scoring_type" invisible="1"/>
+                <field name="has_image_only_suggested_answer" invisible="1"/>
+                <sheet>
+                    <field name="survey_id" invisible="not context.get('show_survey_field')" readonly="1"/>
+                    <div class="float-end d-flex flex-column text-center" invisible="not is_page">
+                        <label for="background_image"/>
+                        <field name="background_image" widget="image" class="oe_avatar"/>
+                    </div>
+                    <div class="oe_title" style="width: 100%;">
+                        <label for="title" string="Section" invisible="not is_page"/>
+                        <label for="title" string="Question" invisible="is_page"/><br/>
+                        <field name="title" placeholder="e.g. &quot;What is the...&quot;" colspan="4"/>
+                        <field name="questions_selection" invisible="1"/>
+                    </div>
+                    <group class="o_label_nowrap" invisible="not is_page or questions_selection == 'all'">
+                        <field name="random_questions_count"/>
+                    </group>
+                    <group invisible="is_page">
+                        <group>
+                            <field name="question_type" widget="radio" required="not is_page" />
+                        </group>
+                        <group>
+                            <div class="mx-lg-auto w-lg-50 d-none d-sm-block o_preview_questions bg-light" colspan="2">
+                                <!-- Multiple choice: only one answer -->
+                                <div invisible="question_type != 'simple_choice'" role="img" aria-label="Multiple choice with one answer"
+                                    title="Multiple choice with one answer">
+                                    <span>Which is yellow?</span><br/>
+                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-circle-o  fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-dot-circle-o fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice"><i class="fa fa-circle-o  fa-lg me-2"/>answer</div>
+                                </div>
+                                <!-- Multiple choice: multiple answers allowed -->
+                                <div invisible="question_type != 'multiple_choice'" role="img" aria-label="Multiple choice with multiple answers"
+                                    title="Multiple choice with multiple answers">
+                                    <span>Which are yellow?</span><br/>
+                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-square-o fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-check-square-o fa-lg me-2"/>answer</div>
+                                    <div class="o_preview_questions_choice"><i class="fa fa-check-square-o fa-lg me-2"/>answer</div>
+                                </div>
+                                <!-- Multiple Lines Text Zone -->
+                                <div invisible="question_type != 'text_box'">
+                                    <span>Name all the animals</span><br/>
+                                    <i class="fa fa-align-justify fa-4x" role="img" aria-label="Multiple lines" title="Multiple Lines"/>
+                                </div>
+                                <!-- Single Line Text Zone -->
+                                <div invisible="question_type != 'char_box'">
+                                    <span>Name one animal</span><br/>
+                                    <i class="fa fa-minus fa-4x" role="img" aria-label="Single Line" title="Single Line"/>
+                                </div>
+                                <!-- Numerical Value -->
+                                <div invisible="question_type != 'numerical_box'">
+                                    <span>How many ...?</span><br/>
+                                    <i class="fa fa-2x" role="img" aria-label="Numeric" title="Numeric">123&#160;</i>
+                                    <i class="fa fa-2x fa-sort" role="img" aria-label="Numeric"/>
+                                </div>
+                                <!-- Date -->
+                                <div invisible="question_type != 'date'">
+                                    <span>When is Christmas?</span><br/>
+                                    <p class="o_datetime border-0" >YYYY-MM-DD
+                                        <i class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"/>
+                                    </p>
+                                </div>
+                                <!-- Date and Time -->
+                                <div invisible="question_type != 'datetime'">
+                                    <span>When does ... start?</span><br/>
+                                    <p class="o_datetime border-0">YYYY-MM-DD hh:mm:ss
+                                        <i class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"/>
+                                    </p>
+                                </div>
+                                <!-- Matrix -->
+                                <div invisible="question_type != 'matrix'">
+                                    <div class="row o_matrix_head">
+                                        <div class="col-3"></div>
+                                        <div class="col-3">ans</div>
+                                        <div class="col-3">ans</div>
+                                        <div class="col-3">ans</div>
+                                    </div>
+                                    <div class="row o_matrix_row">
+                                        <div class="col-3">Row1</div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                    </div>
+                                    <div class="row o_matrix_row">
+                                        <div class="col-3">Row2</div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                    </div>
+                                    <div class="row o_matrix_row">
+                                        <div class="col-3">Row3</div>
+                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
+                                    </div>
+                                </div>
+                                <!-- Scale -->
+                                <div invisible="question_type != 'scale'">
+                                    <span>Do you like it?</span><br/>
+                                    <div class="btn-group w-100" role="group" aria-label="Scale">
+                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">1</a>
+                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">2</a>
+                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">3</a>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <div>Label</div>
+                                        <div>Label</div>
+                                        <div>Label</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Answers" name="answers" invisible="is_page or question_type == 'text_box' or scoring_type == 'no_scoring' and question_type in ['numerical_box', 'date', 'datetime']">
+                            <group>
+                                <group invisible="question_type != 'scale'">
+                                    <field name="scale_min" placeholder="Scale Minimum Value (0 to 10)"/>
+                                    <field name="scale_max" placeholder="Scale Maximum Value (0 to 10)"/>
+                                </group>
+                                <group invisible="question_type != 'scale'">
+                                    <field name="scale_min_label" placeholder="Not likely at all"/>
+                                    <field name="scale_mid_label" placeholder="Neutral"/>
+                                    <field name="scale_max_label" placeholder="Extremely likely"/>
+                                </group>
+                                <group invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']">
+                                    <field name="answer_numerical_box" string="Correct Answer" class="oe_inline"
+                                        invisible="question_type != 'numerical_box'"
+                                        required="is_scored_question and question_type == 'numerical_box'" />
+                                    <field name="answer_date" string="Correct Answer"  class="oe_inline"
+                                        invisible="question_type != 'date'"
+                                        required="is_scored_question and question_type == 'date'"/>
+                                    <field name="answer_datetime" string="Correct Answer" class="oe_inline"
+                                        invisible="question_type != 'datetime'"
+                                        required="is_scored_question and question_type == 'datetime'"/>
+
+                                    <field name="validation_email" invisible="question_type != 'char_box'"/>
+                                    <field name="save_as_email" invisible="not validation_email or question_type != 'char_box'"/>
+                                    <field name="save_as_nickname" invisible="question_type != 'char_box'"/>
+                                </group>
+
+                                <group invisible="scoring_type == 'no_scoring' or question_type not in ['numerical_box', 'date', 'datetime']">
+                                    <label for="is_scored_question"/>
+                                    <div name="survey_scored_question">
+                                        <field name="is_scored_question" nolabel="1"/>
+                                        <field name="answer_score" class="w-50 mx-2" invisible="not is_scored_question" nolabel="1"/>
+                                        <span invisible="not is_scored_question">Points</span>
+                                    </div>
+                                </group>
+                            </group>
+                            <field name="suggested_answer_ids" context="{'default_question_id': id}" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="value" string="Choices" required="not value_image"/>
+                                    <field name="is_correct"
+                                        column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
+                                    <field name="answer_score"
+                                        column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
+                                    <field name="value_image_filename" column_invisible="not parent.has_image_only_suggested_answer"/>
+                                    <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
+                                           column_invisible="parent.question_type in ['matrix', 'scale']" required="not value"/>
+                                </list>
+                            </field>
+
+                            <field name="matrix_row_ids" context="{'default_matrix_question_id': id}"
+                                invisible="question_type != 'matrix'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="value" string="Rows"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description" name="survey_description">
+                            <field name="description" widget="html"
+                                   options="{'embedded_components': false}"
+                                   placeholder="e.g. Guidelines, instructions, picture, ... to help attendees answer"/>
+                        </page>
+                        <page string="Options" name="options" invisible="is_page">
+                            <group>
+                                <group string="Answers" invisible="question_type == 'scale'">
+                                    <!-- Global validation setting -->
+                                    <field name="validation_required"
+                                           invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']"/>
+                                    <div class="o_wrap_label o_form_label" invisible="not validation_required">Min/Max Limits</div>
+                                    <div class="o_survey_question_validation_parameters" invisible="not validation_required">
+                                        <!-- Minima -->
+                                        <field name="validation_length_min" class="o_survey_question_validation_inline" nolabel="1" placeholder="Minimum"
+                                               invisible="question_type != 'char_box'"
+                                               required="validation_required and question_type == 'char_box'"/>
+                                        <field name="validation_min_float_value" class="o_survey_question_validation_inline" nolabel="1" placeholder="Minimum"
+                                               invisible="question_type != 'numerical_box'"
+                                               required="validation_required and question_type == 'numerical_box'"/>
+                                        <field name="validation_min_date" nolabel="1" placeholder="Minimum"
+                                               invisible="question_type != 'date'"
+                                               required="validation_required and question_type == 'date' and not validation_max_date"/>
+                                        <field name="validation_min_datetime" nolabel="1" placeholder="Minimum"
+                                               invisible="question_type != 'datetime'"
+                                               required="validation_required and question_type == 'datetime' and not validation_max_datetime"/>
+
+                                        <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                        <!-- Maxima -->
+                                        <field name="validation_length_max" class="o_survey_question_validation_inline" nolabel="1" placeholder="Maximum"
+                                               invisible="question_type != 'char_box'"
+                                               required="validation_required and question_type == 'char_box'"/>
+                                        <field name="validation_max_float_value" class="o_survey_question_validation_inline" nolabel="1" placeholder="Maximum"
+                                               invisible="question_type != 'numerical_box'"
+                                               required="validation_required and question_type == 'numerical_box'"/>
+                                        <field name="validation_max_date" nolabel="1" placeholder="Maximum"
+                                               invisible="question_type != 'date'"
+                                               required="validation_required and question_type == 'date' and not validation_min_date"/>
+                                        <field name="validation_max_datetime" nolabel="1" placeholder="Maximum"
+                                               invisible="question_type != 'datetime'"
+                                               required="validation_required and question_type == 'datetime' and not validation_min_datetime"/>
+                                    </div>
+                                    <field name="validation_error_msg" invisible="not validation_required"
+                                        placeholder="Displayed when the answer entered is not valid."/>
+
+                                    <field name="matrix_subtype" invisible="question_type != 'matrix'" required="question_type == 'matrix'"/>
+                                    <field name="question_placeholder"
+                                           invisible="question_type not in ['text_box', 'char_box', 'date', 'datetime', 'numerical_box']"
+                                           placeholder="Help Participants know what to write"/>
+                                    <field name="comments_allowed" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']"/>
+                                    <field name="comments_message"
+                                           invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix'] or not comments_allowed"
+                                           placeholder="If other, please specify:"/>
+                                    <field name='comment_count_as_answer'
+                                        invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix'] or not comments_allowed"/>
+                                </group>
+                                <group string="Conditional display">
+                                    <p class="text-muted" colspan="2" invisible="questions_selection == 'all'">
+                                        Conditional display is not available when questions are randomly picked.
+                                    </p>
+                                    <field name="allowed_triggering_question_ids" invisible="1"/>
+                                    <field name="triggering_answer_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"
+                                           domain="[('question_id', 'in', allowed_triggering_question_ids)]"
+                                           invisible="questions_selection == 'random'"
+                                           placeholder="Optional previous answers required"
+                                    />
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Constraints">
+                                    <field name="constr_mandatory" string="Mandatory Answer"/>
+                                    <field name="constr_error_msg"
+                                        invisible="not constr_mandatory"
+                                        placeholder="This question requires an answer."/>
+                                </group>
+                                <group string="Live Sessions">
+                                    <field name="is_time_customized" invisible="True"/>
+                                    <field name="session_available" invisible="True"/>
+                                    <p class="text-muted" colspan="2" invisible="session_available">
+                                        Time limits are only available for Live Sessions.
+                                    </p>
+                                    <label for="is_time_limited" string="Time Limit (seconds)" invisible="not session_available"/>
+                                    <div invisible="not session_available">
+                                        <field name="is_time_limited" nolabel="1" class="oe_inline"
+                                            widget="boolean_update_flag"
+                                            options="{'flagFieldName': 'is_time_customized'}"
+                                            context="{'referenceValue': survey_session_speed_rating}"/>
+                                        <field name="time_limit" nolabel="1" class="oe_inline"
+                                            widget="integer_update_flag"
+                                            options="{'flagFieldName': 'is_time_customized'}"
+                                            context="{'referenceValue': survey_session_speed_rating_time_limit}"
+                                            invisible="not is_time_limited" />
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="survey_question_tree">
+        <field name="name">List view for survey question</field>
+        <field name="model">survey.question</field>
+        <field name="arch" type="xml">
+            <list string="Survey Question" create="false">
+                <field name="title"/>
+                <field name="survey_id"/>
+                <field name="question_type"/>
+                <field name="constr_mandatory" optional="1"/>
+            </list>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="survey_question_search">
+        <field name="name">Search view for survey question</field>
+        <field name="model">survey.question</field>
+        <field name="arch" type="xml">
+            <search string="Search Question">
+                <field name="title"/>
+                <field name="survey_id" string="Survey"/>
+                <field name="question_type" string="Type"/>
+                <group expand="1" string="Group By">
+                    <filter name="group_by_type" string="Type" domain="[]" context="{'group_by':'question_type'}"/>
+                    <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by':'survey_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_survey_question_form">
+        <field name="name">Questions</field>
+        <field name="res_model">survey.question</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="survey_question_search"/>
+        <field name="context">{'search_default_group_by_page': True, 'show_survey_field': True}</field>
+        <field name="domain">[('is_page', '=', False)]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_empty_folder">
+            No Questions yet!
+          </p><p>
+            Come back once you have added questions to your Surveys.
+          </p>
+        </field>
+    </record>
+
+    <!-- LABELS -->
+    <record id="survey_question_answer_view_tree" model="ir.ui.view">
+        <field name="name">survey.question.answer.view.list</field>
+        <field name="model">survey.question.answer</field>
+        <field name="arch" type="xml">
+            <list string="Survey Label" create="false" default_order="question_id">
+                <field name="sequence" widget="handle"/>
+                <field name="question_id"/>
+                <field name="value" string="Answer"/>
+                <field name="answer_score" groups="base.group_no_one"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="survey_question_answer_view_form" model="ir.ui.view">
+        <field name="name">survey.question.answer.view.form</field>
+        <field name="model">survey.question.answer</field>
+        <field name="arch" type="xml">
+            <form string="Question Answer Form" create="False">
+                <sheet>
+                    <field name="question_type" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="scoring_type" invisible="1"/>
+                            <field name="question_id"/>
+                            <field name="is_correct" invisible="scoring_type == 'no_scoring'"/>
+                            <field name="answer_score" invisible="scoring_type == 'no_scoring' or question_type == 'matrix'"/>
+                            <field name="value_image"/>
+                        </group>
+                        <group>
+                            <field name="value"/>
+                            <field name="matrix_question_id" invisible="question_type != 'matrix'"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="survey_question_answer_view_search" model="ir.ui.view">
+        <field name="name">survey.question.answer.view.search</field>
+        <field name="model">survey.question.answer</field>
+        <field name="arch" type="xml">
+            <search string="Search Label">
+                <field name="question_id"/>
+                <group expand="1" string="Group By">
+                    <filter name="group_by_question" string="Question" domain="[]" context="{'group_by':'question_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="survey_question_answer_action" model="ir.actions.act_window">
+        <field name="name">Suggested Values</field>
+        <field name="res_model">survey.question.answer</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="survey_question_answer_view_search"/>
+        <field name="context">{'search_default_group_by_question': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_empty_folder">
+            No survey labels found
+          </p>
+        </field>
+    </record>
+
+    <menuitem name="Questions"
+        id="menu_survey_question_form1"
+        action="action_survey_question_form"
+        parent="survey_menu_questions"
+        sequence="2"/>
+    <menuitem name="Suggested Values"
+        id="menu_survey_label_form1"
+        action="survey_question_answer_action"
+        parent="survey_menu_questions"
+        sequence="3"/>
+    <menuitem name="Detailed Answers"
+        id="menu_survey_response_line_form"
+        action="survey_user_input_line_action"
+        parent="survey_menu_questions"
+        sequence="4"/>
+</data>
+</odoo>

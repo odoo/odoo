@@ -1,0 +1,17 @@
+.o_kanban_view.o-website-controller-page-kanban {
+    .o_kanban_record {
+        min-height: 90px;
+    }
+    .o_kanban_grouped .o_kanban_record {
+        justify-content: space-around !important;
+    }
+    .o_kanban_ungrouped {
+        .o_kanban_record {
+            width: 100%;
+            flex-flow: row;
+            [data-section='data'] {
+                width: 30%;
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="mail_notification_invite" inherit_id="mail.mail_notification_layout" primary="True">
+            <xpath expr="//td[@t-if='subtitles']" position="before">
+                <t t-if="not has_button_access">
+                    <t t-set="subtitles" t-value="False" />
+                </t>
+            </xpath>
+            <xpath expr="//div[@t-out='message.body']" position="replace">
+                <div style="font-size:13px;">
+                    <div>
+                        <t t-out='message.author_id.name'/> (<t t-out='message.author_id.email'/>) added you as a follower of this <t t-out="model_description"/>.
+                    </div>
+                    <br t-if="len(message.body) > 0"/>
+                    <div style="color:grey;">
+                        <t t-out="message.body"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//span[@id='mail_unfollow']" position="replace"/>
+            <xpath expr="//div[@style='margin-top:16px;']/hr" position="before">
+                <span id="mail_unfollow" style="font-size: 13px;">
+                    Not interested by this? <a href="/mail/unfollow" style="text-decoration:none; color:#555555;">Unfollow</a>
+                </span>
+            </xpath>
+        </template>
+    </data>
+</odoo>

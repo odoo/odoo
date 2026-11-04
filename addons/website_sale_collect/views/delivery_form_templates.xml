@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="unavailable_products_warning">
+        <div name="unavailable_products_warning" class="alert alert-warning mt-2">
+            Some of the products are not available at <strong><t t-out="wh_name"/></strong>.
+            <div
+                t-foreach="unavailable_order_lines"
+                t-as="order_line"
+                t-attf-class="d-flex m-2 position-relative"
+            >
+                <div class="d-flex align-items-center gap-2">
+                    <a t-att-href="order_line.product_id.website_url">
+                        <span
+                            t-field="order_line.product_id.image_128"
+                            t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'o_image_64_max rounded'}"
+                        />
+                    </a>
+                    <t t-out="order_line.product_id.name"/>
+                    <a
+                        href='#'
+                        class="js_delete_product small"
+                        aria-label="Remove from cart"
+                        title="Remove from cart"
+                    >
+                        <i t-att-data-product-id="order_line.product_id.id" class="fa fa-trash"/>
+                    </a>
+                     ( <t t-out="order_line.shop_warning"/> )
+                </div>
+             </div>
+        </div>
+    </template>
+
+    <template id="in_store_delivery_method" inherit_id="website_sale.delivery_method">
+        <xpath expr="//t[@t-set='is_pickup_needed']" position="attributes">
+            <attribute name="t-value" add="dm.delivery_type=='in_store'" separator=" or "/>
+        </xpath>
+        <div name="o_pickup_location" position="after">
+            <t t-if="dm.delivery_type=='in_store' and order.carrier_id.id==dm.id">
+                <t
+                    t-if="unavailable_order_lines"
+                    t-call="website_sale_collect.unavailable_products_warning"
+                >
+                    <t t-set="wh_name" t-value="order.pickup_location_data.get('name')"/>
+                </t>
+            </t>
+        </div>
+    </template>
+
+</odoo>

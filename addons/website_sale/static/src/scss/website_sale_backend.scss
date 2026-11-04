@@ -1,0 +1,67 @@
+.o_website_sale_image_list .o_kanban_view.o_kanban_ungrouped {
+    width: auto;
+
+    .o_kanban_record{
+        flex: 0 1 50%;
+        position: relative;
+
+        @include media-breakpoint-up(md) {
+            flex: 0 0 percentage(1/3);
+        }
+
+        @include media-breakpoint-up(lg) {
+            flex: 0 0 percentage(1/5);
+        }
+
+        @include media-breakpoint-up(xl) {
+            flex: 0 0 percentage(1/6);
+        }
+        // make the image square and in the center
+        .o_squared_image {
+            position: relative;
+            overflow: hidden;
+            padding-bottom: 100%;
+            > img {
+                position: absolute;
+                margin: auto;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
+        }
+
+        .o_product_image_size {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+}
+
+.o_website_sale_image_modal {
+    .o_website_sale_image_modal_container {
+        border-left: 1px solid map-get($grays, '400');
+
+        .o_field_image {
+            margin-bottom: 0;
+            box-shadow: 0 2px 10px map-get($grays, '300');
+
+            > img {
+                border: 1px solid map-get($grays, '400');
+                height: 200px;
+                width: auto;
+            }
+        }
+    }
+    .o_video_container {
+        height: 200px;
+        position: relative;
+        @include o-we-preview-box($text-muted);
+        .o_invalid_warning {
+            width: 90%;
+            @include o-position-absolute($top: 50%, $left: 50%);
+            transform: translate(-50%, -50%);
+        }
+    }
+}

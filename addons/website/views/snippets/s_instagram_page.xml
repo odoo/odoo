@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_instagram_page" name="Instagram Page">
+    <section class="s_instagram_page" data-instagram-page="odoo.official">
+        <div class="o_container_small o_instagram_container o_not_editable">
+            <!-- The iframe will be added here by the public widget. -->
+        </div>
+    </section>
+</template>
+
+
+<template id="s_instagram_page_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="InstagramPage" data-selector=".s_instagram_page">
+            <we-alert class="mt-2">
+                Your instagram page must be public to be integrated into an Odoo website.
+            </we-alert>
+            <we-input string="Instagram Page"
+                      class="o_we_large"
+                      placeholder="odoo.official"
+                      data-set-instagram-page=""
+                      data-no-preview="true"/>
+        </div>
+    </xpath>
+</template>
+
+<asset id="website.s_instagram_page_000_js" name="Instagram Page 000 JS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_instagram_page/000.js</path>
+</asset>
+
+<asset id="website.s_instagram_page_000_scss" name="Instagram Page 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_instagram_page/000.scss</path>
+</asset>
+
+</odoo>

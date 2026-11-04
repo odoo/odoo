@@ -1,0 +1,43 @@
+.o-mail-Thread:focus-visible {
+    outline: 0;
+}
+
+.o-mail-Thread-jumpPresent {
+    z-index: $o-mail-NavigableList-zIndex - 1;
+    --border-opacity: .5;
+}
+
+.o-mail-Thread-newMessage {
+    transition: opacity 0.5s;
+
+    span {
+        font-size: 0.6rem;
+        clip-path: polygon(0% 50%, 15% 0%, 100% 0%, 100% 100%, 15% 100%);
+    }
+}
+
+.o_mail_notification {
+    & a:hover {
+        text-decoration: underline;
+    }
+    display: inline;
+}
+
+.o-mail-NotificationMessage p {
+    margin-bottom: 0;
+}
+
+.o-mail-NotificationMessage:has(.o_hide_author) {
+    & .o-mail-NotificationMessage-author {
+        display: none!important;
+    }
+}
+
+.o-mail-Thread-banner {
+    z-index: $o-mail-NavigableList-zIndex - 1;
+    --border-opacity: 0.25;
+}
+
+.o-mail-Thread-bannerHover:hover {
+    filter: brightness(98%);
+}

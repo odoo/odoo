@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="sale.ProductCard">
+        <article
+            tabindex="0"
+            t-attf-class="product-card card flex-shrink-0 w-md-auto w-50 rounded cursor-pointer {{props.isSelected ? 'selected' : ''}}"
+            t-on-keypress="(event) => event.code === 'Space' ? props.onClick() : () => {}"
+            t-on-click="props.onClick"
+        >
+            <div class="card-header p-0">
+                <img
+                    class="w-100"
+                    t-att-src="props.product.image_src || `/web/image/product.product/${props.product.id}/image_256`"
+                    alt="Product Image"
+                />
+            </div>
+            <div class="card-body">
+                <div class="card-title" t-out="props.product.display_name"/>
+                <div class="card-subtitle text-muted">
+                    <div
+                        t-foreach="props.product.ptals.filter(shouldShowPtal)"
+                        t-as="ptal"
+                        t-key="ptal.id"
+                        t-out="ptal.ptalDisplayName"
+                    />
+                </div>
+                <BadgeExtraPrice
+                    t-if="props.extraPrice"
+                    price="props.extraPrice"
+                    currencyId="env.currency.id"
+                />
+            </div>
+        </article>
+    </t>
+</templates>

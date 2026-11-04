@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="card_campaign_view_form" model="ir.ui.view">
+        <field name="name">card.campaign.view.form</field>
+        <field name="model">card.campaign</field>
+        <field name="arch" type="xml">
+            <form string="Share Campaign" class="o_card_campaign_form">
+                <header invisible="not active" class="mb-2">
+                    <button name="action_share" type="object" class="btn-primary">Send</button>
+                    <button name="action_preview" type="object" class="btn-secondary" invisible="not preview_record_ref">Preview</button>
+                </header>
+                <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_mailings" type="object" icon="fa-envelope">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">
+                                Mailings
+                            </span>
+                            <span class="o_stat_value">
+                                <field name="mailing_count" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                    <button icon="fa-mouse-pointer">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">
+                                Clicks
+                            </span>
+                            <span class="o_stat_value">
+                                <field name="target_url_click_count" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                    <button name="action_view_cards" type="object" icon="fa-paper-plane">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">
+                                Cards
+                            </span>
+                            <span class="o_stat_value">
+                                <field name="card_count" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                    <button name="action_view_cards_clicked" type="object" icon="fa-eye">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">
+                                Opened
+                            </span>
+                            <span class="o_stat_value">
+                                <field name="card_click_count" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                    <button name="action_view_cards_shared" type="object" icon="fa-share">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">
+                                Shared
+                            </span>
+                            <span class="o_stat_value">
+                                <field name="card_share_count" readonly="1"/>
+                            </span>
+                        </div>
+                    </button>
+                </div>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name" placeholder="e.g. Odoo Experience Talks"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="preview_record_ref" string="Recipients" placeholder="Preview on..." options="{'no_create': True}"/>
+                        <field name="target_url" placeholder="Your Home Page"/>
+                        <field name="res_model" invisible="1"/><!--Get the default model for field pickers-->
+                        <field name="res_model" groups="base.group_no_one"/>
+                        <field name="post_suggestion" placeholder="Join me at this event!" widget="text_emojis"/>
+                    </group>
+                    <group>
+                        <field name="user_id" widget="many2one_avatar"/>
+                        <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page name="Card Layout" string="Card Layout">
+                        <group>
+                        <group>
+                            <field name="content_background" widget="image" class="w-25"/>
+                            <label for="content_header"/>
+                            <div class="d-flex">
+                                <field name="content_header_dyn" title="Dynamic Field?"/>
+                                <field name="content_header" invisible="content_header_dyn" placeholder="e.g. Join Odoo Experience 2024"/>
+                                <field name="content_header_path" invisible="not content_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_header_color" widget="color" class="ms-auto" style="min-width: 40px; max-width: 40px;"/>
+                            </div>
+                            <label for="content_sub_header"/>
+                            <div class="d-flex">
+                                <field name="content_sub_header_dyn"/>
+                                <field name="content_sub_header" invisible="content_sub_header_dyn" placeholder="e.g. Aug 24, Brussels Expo"/>
+                                <field name="content_sub_header_path" invisible="not content_sub_header_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                                <field name="content_sub_header_color" widget="color" class="ms-auto" style="min-width: 40px; max-width: 40px;"/>
+                            </div>
+                            <label for="content_section"/>
+                            <div class="d-flex">
+                                <field name="content_section_dyn"/>
+                                <field name="content_section" invisible="content_section_dyn" placeholder="e.g. Sample Talk"/>
+                                <field name="content_section_path" invisible="not content_section_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                            </div>
+                            <label for="content_sub_section1"/>
+                            <div class="d-flex">
+                                <field name="content_sub_section1_dyn"/>
+                                <field name="content_sub_section1" invisible="content_sub_section1_dyn" placeholder="e.g. By Lionel Messy"/>
+                                <field name="content_sub_section1_path" invisible="not content_sub_section1_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                            </div>
+                             <label for="content_sub_section2"/>
+                            <div class="d-flex">
+                                <field name="content_sub_section2_dyn"/>
+                                <field name="content_sub_section2" invisible="content_sub_section2_dyn" placeholder="e.g. CFO Chief Football Officer"/>
+                                <field name="content_sub_section2_path" invisible="not content_sub_section2_dyn" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                            </div>
+                            <field name="content_image1_path" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                            <field name="content_image2_path" placeholder="Select a field" widget="DynamicModelFieldSelectorChar" options="{'model': 'res_model'}"/>
+                            <field name="content_button" placeholder="No button"/>
+                        </group>
+                        <group>
+                            <field name="card_template_id" required="1" nolabel="1" colspan="2"
+                            widget="selection_badge" options="{'size': 'sm'}"/>
+                            <field name="image_preview" class="o_marketing_card_image_preview" nolabel="1" colspan="2"
+                            invisible="not card_template_id" widget="image" options="{'size': [0, 500]}"/>
+                        </group>
+                        </group>
+                    </page>
+                    <page name="Recipient Message" string="Recipient Message">
+                        <group>
+                            <group>
+                                <field name="request_title"/>
+                                <field name="request_description" placeholder="e.g. Why people should share on their network?"/>
+                            </group>
+                            <group>
+                                <field name="reward_target_url" placeholder='e.g. "https://www.mycompany.com/reward"'/>
+                                <field name="reward_message" placeholder='e.g. "Thanks for sharing, here is your reward!"'/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+                </sheet>
+                <chatter reload_on_post="True"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="card_campaign_view_kanban" model="ir.ui.view">
+        <field name="name">card.campaign.view.kanban</field>
+        <field name="model">card.campaign</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <templates>
+                    <t t-name="card" class="o_marketing_card_campaign_kanban">
+                        <field name="name" class="fw-bolder fs-5"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="mt-2"/>
+                        <footer class="pt-0">
+                            <div>
+                                <a type="object" name="action_view_cards_shared" href="#" class="me-1">
+                                    <span class="badge rounded-pill">
+                                        <i class="fa fa-fw fa-share" aria-label="Shares" role="img" title="Shares"/>
+                                        <field name="card_share_count"/>
+                                    </span>
+                                </a>
+                                <a type="object" name="action_view_cards_clicked" href="#" class="me-1">
+                                    <span class="badge rounded-pill">
+                                        <i class="fa fa-fw fa-mouse-pointer" aria-label="Clicks" role="img" title="Clicks"/>
+                                        <field name="target_url_click_count"/>
+                                    </span>
+                                </a>
+                            </div>
+                            <field name="user_id" class="ms-auto" widget="many2one_avatar_user"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="card_campaign_view_tree" model="ir.ui.view">
+        <field name="name">card.campaign.view.list</field>
+        <field name="model">card.campaign</field>
+        <field name="arch" type="xml">
+            <list sample="1">
+                <field name="create_date"/>
+                <field name="name"/>
+                <field name="user_id" widget="many2one_avatar"/>
+                <field name="res_model" optional="hide"/>
+                <field name="target_url" optional="hide"/>
+                <field name="tag_ids" widget="many2many_tags"  options="{'color_field': 'color'}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="card_campaign_view_search" model="ir.ui.view">
+        <field name="name">card.campaign.view.search</field>
+        <field name="model">card.campaign</field>
+        <field name="arch" type="xml">
+            <search string="Search Share Campaign">
+                <filter string="My Campaigns" name="my_campaigns" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <field name="name"/>
+                <field name="tag_ids"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" name="by_responsible" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Tags" name="by_tags" domain="[]" context="{'group_by': 'tag_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="card_campaign_action" model="ir.actions.act_window">
+        <field name="name">Card Campaign</field>
+        <field name="res_model">card.campaign</field>
+        <field name="search_view_id" ref="card_campaign_view_search"/>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create a Sharing Campaign!</p>
+            <p>Prepare a design and some content and let your community spread the word!</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_ng_tax_report" model="account.report">
+        <field name="name">VAT Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.ng"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_ng_tr_balance" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_ng_tr_a" model="account.report.line">
+                <field name="name">A - TRANSACTION SUMMARY</field>
+                <field name="code">L10N_NG_A</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ng_tr_a_5" model="account.report.line">
+                        <field name="name">5. Total No of Branches</field>
+                        <field name="code">L10N_NG_A5</field>
+                        <field name="external_formula">integer</field>
+                    </record>
+                    <record id="l10n_ng_tr_a_10" model="account.report.line">
+                        <field name="name">10. Total Sales/Income Exclusive of VAT</field>
+                        <field name="code">L10N_NG_A10</field>
+                        <field name="aggregation_formula">L10N_NG_B20.balance</field>
+                    </record>
+                    <record id="l10n_ng_tr_a_15" model="account.report.line">
+                        <field name="name">15. Total Purchases</field>
+                        <field name="code">L10N_NG_A15</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_15_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">15</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ng_tr_b" model="account.report.line">
+                <field name="name">B - SALES/ INCOME</field>
+                <field name="code">L10N_NG_B</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ng_tr_b_20" model="account.report.line">
+                        <field name="name">20. Total Income Received from Sale for the Month Excluding VAT</field>
+                        <field name="code">L10N_NG_B20</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_20_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">20</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_b_25" model="account.report.line">
+                        <field name="name">25. Less: Value of Goods and Services Exempted Included in Line 20</field>
+                        <field name="code">L10N_NG_B25</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_25_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">25</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_b_30" model="account.report.line">
+                        <field name="name">30. Less: Value of Zero Rated Goods &amp; Services Included in line 20</field>
+                        <field name="code">L10N_NG_B30</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_30_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">30</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_b_35" model="account.report.line">
+                        <field name="name">35. Sales Adjustments (Gross amount)</field>
+                        <field name="code">L10N_NG_B35</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_35_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">35</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_b_40" model="account.report.line">
+                        <field name="name">40. Income Received from Sales Subject to VAT </field>
+                        <field name="code">L10N_NG_B40</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">L10N_NG_B20.balance - L10N_NG_B25.balance - L10N_NG_B30.balance + L10N_NG_B35.balance</field>
+                    </record>
+                    <record id="l10n_ng_tr_b_45" model="account.report.line">
+                        <field name="name">45. TOTAL Output Tax Collected @ 7.5%</field>
+                        <field name="code">L10N_NG_B45</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_45_tax_tag" model="account.report.expression">
+                                <field name="label">_tax_tags</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">45</field>
+                            </record>
+                            <record id="l10n_ng_tr_b_45_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_NG_B45._tax_tags - L10N_NG_B35.balance</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_ng_tr_c" model="account.report.line">
+                <field name="name">C - VAT ON PURCHASES/EXPENSES</field>
+                <field name="code">L10N_NG_C</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_ng_tr_c_50" model="account.report.line">
+                        <field name="name">50. Payments for Domestic Purchases other than zero rated and exempted goods and services For the Month</field>
+                        <field name="code">L10N_NG_C50</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_50_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">50</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_c_55" model="account.report.line">
+                        <field name="name">55. Payments for Domestic Purchases for Zero Rated Goods</field>
+                        <field name="code">L10N_NG_C55</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_55_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">55</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_c_60" model="account.report.line">
+                        <field name="name">60. Total Domestic Purchases Subject to Input Tax</field>
+                        <field name="code">L10N_NG_C60</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">L10N_NG_C50.balance + L10N_NG_C55.balance</field>
+                    </record>
+                    <record id="l10n_ng_tr_c_65" model="account.report.line">
+                        <field name="name">65. Payment for Imported Goods For the Month</field>
+                        <field name="code">L10N_NG_C65</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_65_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">65</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_c_70" model="account.report.line">
+                        <field name="name">70. TOTAL Purchases Subject to Input Tax</field>
+                        <field name="code">L10N_NG_C70</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">L10N_NG_C60.balance + L10N_NG_C65.balance</field>
+                    </record>
+                    <record id="l10n_ng_tr_c_75" model="account.report.line">
+                        <field name="name">75. Total Input Tax Paid Line 70 @ 7.5%</field>
+                        <field name="code">L10N_NG_C75</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_75_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">75</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_c_80" model="account.report.line">
+                        <field name="name">80. VAT Payable /(Credit) for Current Month</field>
+                        <field name="code">L10N_NG_C80</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">L10N_NG_B45.balance - L10N_NG_C75.balance</field>
+                    </record>
+                    <record id="l10n_ng_tr_c_85" model="account.report.line">
+                        <field name="name">85. Less VAT deducted at source (by MDAs &amp; Oil and Gas) Current Month</field>
+                        <field name="code">L10N_NG_C85</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_85_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">85</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_c_90" model="account.report.line">
+                        <field name="name">90. Less Automatic/Electronic VAT Payment in Current Month</field>
+                        <field name="code">L10N_NG_C90</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_b_90_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">90</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_c_95" model="account.report.line">
+                        <field name="name">95. Net VAT Payable/(Refundable) Current Month</field>
+                        <field name="code">L10N_NG_C95</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="aggregation_formula">L10N_NG_C80.balance - L10N_NG_C85.balance - L10N_NG_C90.balance</field>
+                    </record>
+                    <!-- the value should be either negative or equal to 0 -->
+                    <record id="l10n_ng_tr_c_100" model="account.report.line">
+                        <field name="name">100. Previous Unrelieved VAT Credit Brought Forward</field>
+                        <field name="code">L10N_NG_C100</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_c_100_balance_carryover" model="account.report.expression">
+                                <field name="label">_applied_carryover_balance</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                            <!-- tax tag to populate the very first credit brought forward -->
+                            <record id="l10n_ng_tr_100_tag" model="account.report.expression">
+                                <field name="label">tag</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">100</field>
+                            </record>
+                            <record id="l10n_ng_tr_c_100_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_NG_C100.tag + L10N_NG_C100._applied_carryover_balance</field>
+                            </record>
+                        </field>
+                    </record>
+                    <!-- this one should be either negative, meaning there is something to claim -->
+                    <!-- or equal to zero -->
+                    <record id="l10n_ng_tr_c_105" model="account.report.line">
+                        <field name="name">105. Total VAT Credit claimable</field>
+                        <field name="code">L10N_NG_C105</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_c_105_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_NG_C95.balance + L10N_NG_C100.balance</field>
+                                <field name="subformula">if_below(NGN(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_c_110" model="account.report.line">
+                        <field name="name">110. VAT Credit Relieved (expected value: negative or zero)</field>
+                        <field name="code">L10N_NG_C110</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="external_formula">monetary</field>
+                    </record>
+                    <record id="l10n_ng_tr_c_115" model="account.report.line">
+                        <field name="name">115. Unrelieved VAT Credit Carried Forward</field>
+                        <field name="code">L10N_NG_C115</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_c_115_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_NG_C105.balance - L10N_NG_C110.balance</field>
+                                <field name="subformula">if_below(NGN(0))</field>
+                            </record>
+                            <record id="tax_report_c_115_carryover" model="account.report.expression">
+                                <field name="label">_carryover_balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_NG_C115.balance</field>
+                                <field name="carryover_target">L10N_NG_C100._applied_carryover_balance</field>
+                                <field name="subformula" eval="False"/>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_ng_tr_c_120" model="account.report.line">
+                        <field name="name">120. VAT Payable</field>
+                        <field name="code">L10N_NG_C120</field>
+                        <field name="hierarchy_level">1</field>
+                        <field name="expression_ids">
+                            <record id="l10n_ng_tr_c_120_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">L10N_NG_C95.balance + L10N_NG_C100.balance</field>
+                                <field name="subformula">if_above(NGN(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

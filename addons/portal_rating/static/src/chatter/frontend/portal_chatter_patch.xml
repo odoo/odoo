@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="portal.Chatter" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Chatter-top')]/*[1]" position="before">
+            <div t-if="env.displayRating and ratingStats and ratingStats.total" class="my-2" t-att-class="{ 'mb-4':props.twoColumns }">
+                <t t-call="portal_rating.rating_card">
+                    <t t-set="two_columns" t-value="props.twoColumns"/>
+                    <t t-set="rating_stats" t-value="ratingStats"/>
+                    <t t-set="selected_rating" t-value="state.thread?.selectedRating"/>
+                </t>
+            </div>
+        </xpath>
+    </t>
+</templates>
