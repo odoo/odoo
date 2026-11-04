@@ -3209,12 +3209,13 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     clickSaveOrder() {
-        this.syncAllOrders({ orders: [this.getOrder()] });
+        const promise = this.syncAllOrders({ orders: [this.getOrder()] });
         this.notification.add(_t("Order saved for later"), { type: "success" });
         const newOrder = this.getEmptyOrder();
         this.setOrder(newOrder);
         this.navigate("ProductScreen", { orderUuid: newOrder.uuid });
         this.mobile_pane = "right";
+        return promise;
     }
     canEditPayment(order) {
         return order.nb_print === 0;

@@ -1,14 +1,22 @@
-import { Wysiwyg } from "@html_editor/wysiwyg";
-import { destroy, expect, getFixture } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
-import { Component, markup, onWillDestroy, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { getContent, getSelection, setContent } from "./selection";
-import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
-import { dispatchCleanForSave } from "./dispatch";
-import { fixInvalidHTML } from "@html_editor/utils/sanitize";
-import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
+import { invalidateCache } from "@html_editor/utils/image_processing";
+import { fixInvalidHTML } from "@html_editor/utils/sanitize";
+import { Wysiwyg } from "@html_editor/wysiwyg";
+import {
+    Deferred,
+    afterEach,
+    animationFrame,
+    destroy,
+    expect,
+    getFixture,
+    queryOne,
+    tick,
+} from "@odoo/hoot";
+import { Component, markup, onWillDestroy, xml } from "@odoo/owl";
+import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
+import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { dispatchCleanForSave } from "./dispatch";
+import { getContent, getSelection, setContent } from "./selection";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
@@ -19,6 +27,9 @@ const defaultTestConfig = {
     debouncePowerbuttons: false,
     debounceHints: false,
 };
+
+// Cached object URLs are revoked after each test
+afterEach(invalidateCache);
 
 // A generic base64 image for testing
 export const base64Img =

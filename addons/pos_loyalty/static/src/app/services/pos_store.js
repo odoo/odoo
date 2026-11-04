@@ -76,7 +76,7 @@ patch(PosStore.prototype, {
         if (!order || order.finalized) {
             return;
         }
-        updateRewardsMutex.exec(() =>
+        return updateRewardsMutex.exec(() =>
             this.orderUpdateLoyaltyPrograms().then(async () => {
                 // Try auto claiming rewards
                 const claimableRewards = order.getClaimableRewards(false, false, true);
@@ -343,7 +343,7 @@ patch(PosStore.prototype, {
                 !claimableRewards[0].reward.multi_product
             ) {
                 order._applyReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
-                this.updateRewards();
+                await this.updateRewards();
             }
         }
         if (!rule && order.lines.length === 0 && coupon) {
@@ -454,7 +454,7 @@ patch(PosStore.prototype, {
                 product: result.product_id,
             });
         }
-        this.updateRewards();
+        await this.updateRewards();
 
         return result;
     },
@@ -644,7 +644,7 @@ patch(PosStore.prototype, {
     async initServerData() {
         await super.initServerData(...arguments);
         if (this.selectedOrderUuid) {
-            this.updateRewards();
+            await this.updateRewards();
         }
     },
     /**
