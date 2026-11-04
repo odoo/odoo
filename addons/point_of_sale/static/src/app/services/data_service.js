@@ -803,6 +803,8 @@ export class PosData {
                         {
                             context: {
                                 load_archived: true,
+                                pos_data_server_date:
+                                    this.models["pos.config"].getFirst()?._data_server_date,
                             },
                         }
                     );
