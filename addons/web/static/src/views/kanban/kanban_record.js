@@ -41,7 +41,7 @@ export function getColorIndex(value) {
 
 export const kanbanRecordProps = {
     archInfo: t.any(),
-    archiveRecord: t.function().optional(() => () => {}),
+    archiveRecord: t.function().optional(),
     canOpenRecords: t.any().optional(),
     canResequence: t.any().optional(),
     cardColorField: t.any().optional(),
@@ -96,6 +96,9 @@ export class KanbanRecord extends CardRenderer {
     }
 
     async archiveRecord(record, active) {
+        if (this.props.archiveRecord) {
+            return this.props.archiveRecord(record, active);
+        }
         if (active) {
             this.dialog.add(ConfirmationDialog, {
                 body: _t("Are you sure that you want to archive this record?"),
