@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order_deposit.CartPage" t-inherit="pos_self_order.CartPage" t-inherit-mode="extension">
+        <xpath expr="//t[@t-set='attribute_ids']" position="before">
+            <div t-if="line.depositLine" class="text-muted">
+                Incl. deposit <t t-out="this.getDepositPrice(line)"/>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-out='this.formatProductName(cline.product_id)']" position="after">
+            <span t-if="cline.depositLine" class="text-muted">
+                · Incl. deposit <t t-out="this.getDepositPrice(cline)"/>
+            </span>
+        </xpath>
+    </t>
+</templates>
