@@ -38,20 +38,23 @@ class ResPartner(models.Model):
             )
         return PartnerTax.search(domain).tax_id
 
-    def _l10n_ar_get_period_accumulation(self, tax, date, exclude_payment=None):
+    def _l10n_ar_get_period_accumulation(self, tax, date, exclude_payment=None, company=None):
         """ Earnings withholdings are computed on everything paid to the partner since the beginning
             of the month. Return what already accumulated this month for the regime of the tax.
 
             :param tax: the withholding tax whose regime is accumulated.
             :param date: the date of the payment being computed.
             :param exclude_payment: a payment to leave out, typically the one being computed.
+            :param company: the company paying, the tax company if not given. Only what the companies
+            of its hierarchy sharing its CUIT paid accumulates: each CUIT is a withholding agent of its own.
             :return: a dict with the 'base' already levied on and the 'withheld' already taken, as well
             as the currency of these amounts.
         """
         self.ensure_one()
         assert tax.l10n_ar_withholding_tax_type in EARNINGS_TAX_TYPES, "Doesn't make sense to compute accumulation for other regimes"
+        same_vat_companies = (company or tax.company_id)._l10n_ar_get_same_vat_companies()
         domain = Domain([
-            ('company_id', 'child_of', tax.company_id.id),
+            ('company_id', 'in', same_vat_companies.ids),
             ('parent_state', '=', 'posted'),
             ('date', '>=', start_of(date, 'month')),
             ('date', '<=', end_of(date, 'month')),

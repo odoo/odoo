@@ -417,6 +417,82 @@ class TestArWithholdingArRi(TestArCommon):
         self.assertEqual(accumulation['base'], -10000.0)
         self.assertEqual(accumulation['withheld'], -127.8)
 
+    def test_earnings_accumulation_per_cuit_of_the_branches(self):
+        """ Each CUIT is a withholding agent of its own: a branch with a CUIT of its own does not
+        accumulate what its parent paid, while a branch without one withholds as its parent.
+        """
+        tax = self.tax_wth_purchase_earnings
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': self.env.company.id,
+            'tax_id': tax.id,
+        })
+        root = self.env.company
+        root.write({
+            'child_ids': [
+                Command.create({'name': 'Branch other CUIT', 'vat': '30714295698'}),
+                Command.create({'name': 'Branch same CUIT'}),
+            ],
+        })
+        self.env.cr.precommit.run()
+        branch_other_cuit, branch_same_cuit = root.child_ids
+        self.env.user.company_ids |= root.child_ids
+
+        # The root pays a 30.000 bill: (30.000 - 7.870 non-taxable) * 6%
+        invoice = self.create_invoice(product_id=self.service_iva_21, price_unit=30000.0, tax_ids=None)
+        wizard = self.create_payment_register(invoice, payment_date='2023-01-05')
+        self.assertEqual(wizard.withholding_line_ids.filtered(lambda l: l.tax_id == tax).amount, 1327.8)
+        wizard._create_payments()
+
+        # 5.000 alone stays under the non-taxable amount.
+        invoice = self.create_invoice(
+            company_id=branch_other_cuit.id, product_id=self.service_iva_21, price_unit=5000.0, tax_ids=None,
+        )
+        wizard = self.create_payment_register(invoice, payment_date='2023-01-06')
+        self.assertEqual(wizard.withholding_line_ids.filtered(lambda l: l.tax_id == tax).amount, 0.0)
+
+        # Along with what the root paid: (35.000 - 7.870) * 6% - 1.327,8 already withheld.
+        invoice = self.create_invoice(
+            company_id=branch_same_cuit.id, product_id=self.service_iva_21, price_unit=5000.0, tax_ids=None,
+        )
+        wizard = self.create_payment_register(invoice, payment_date='2023-01-06')
+        self.assertEqual(wizard.withholding_line_ids.filtered(lambda l: l.tax_id == tax).amount, 300.0)
+
+    def test_same_vat_companies_of_a_hierarchy(self):
+        """ A company withholds with its own CUIT or, lacking one, with the one of its closest parent;
+        the companies withholding with the same CUIT are the same withholding agent, wherever
+        they hang in the hierarchy.
+        """
+        root = self.env.company
+        root_vat = root.vat
+        root.write({
+            'child_ids': [
+                Command.create({
+                    'name': 'Branch other CUIT',
+                    'vat': '30714295698',
+                    'child_ids': [
+                        Command.create({'name': 'Sub-branch inheriting the other CUIT'}),
+                        Command.create({'name': 'Sub-branch back to the root CUIT', 'vat': root_vat}),
+                    ],
+                }),
+                Command.create({'name': 'Branch same CUIT'}),
+            ],
+        })
+        self.env.cr.precommit.run()
+        branch_other_cuit = root.child_ids.filtered(lambda c: c.vat)
+        branch_same_cuit = root.child_ids - branch_other_cuit
+        sub_branch_inheriting, sub_branch_back = branch_other_cuit.child_ids.sorted(lambda c: bool(c.vat))
+
+        self.assertEqual(sub_branch_inheriting._l10n_ar_get_parent_vat(), '30714295698')
+        self.assertEqual(branch_same_cuit._l10n_ar_get_parent_vat(), root_vat)
+
+        root_agent = root | branch_same_cuit | sub_branch_back
+        other_agent = branch_other_cuit | sub_branch_inheriting
+        for company in root_agent:
+            self.assertEqual(company._l10n_ar_get_same_vat_companies(), root_agent, company.name)
+        for company in other_agent:
+            self.assertEqual(company._l10n_ar_get_same_vat_companies(), other_agent, company.name)
+
     def test_earnings_partial_payment_withholding_applied_with_scale(self):
         """Partial payment with withholding tax (with tax type 'Earnings Scale'). Verify withholding amount."""
         invoice = self.create_invoice(product_id=self.service_iva_21, price_unit=30000.0, tax_ids=None)
