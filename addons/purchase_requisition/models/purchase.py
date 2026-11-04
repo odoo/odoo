@@ -48,9 +48,13 @@ class PurchaseOrder(models.Model):
         if self.state != 'draft':
             return
         order_lines = []
+        existing_seqs = self.order_line.mapped('sequence')
+        seq_num = (max(existing_seqs) + 10) if existing_seqs else 10
         for line in requisition.line_ids:
             if line.display_type:
-                order_lines.append((0, 0, line._prepare_purchase_order_line(name=False)))
+                line_vals = line._prepare_purchase_order_line(name=False)
+                line_vals['sequence'] = seq_num
+                order_lines.append((0, 0, line_vals))
                 continue
             # Compute name
             product_lang = line.product_id.with_context(
@@ -69,6 +73,7 @@ class PurchaseOrder(models.Model):
             order_line_values = line._prepare_purchase_order_line(
                 name=name, product_qty=product_qty, price_unit=line.price_unit,
                 taxes_ids=taxes_ids)
+            order_line_values['sequence'] = seq_num
             order_lines.append((0, 0, order_line_values))
         self.order_line = order_lines
 
