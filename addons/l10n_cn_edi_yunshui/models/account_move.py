@@ -401,48 +401,36 @@ class AccountMove(models.Model):
             ))
         client = self.company_id._l10n_cn_edi_get_client()
         client.ensure_ready()
-        return self._l10n_cn_edi_request_direct_red(client, original_move)
-
-    def _l10n_cn_edi_request_direct_red(self, client, original_move):
-        """Issue the red fapiao of this credit note directly, without a red form."""
-        self.ensure_one()
-        doc = self._l10n_cn_edi_get_document('fapiao')
-        # A full red (2.1.2): Yunshui takes the buyer and the lines from the original fapiao.
-        payload = {
-            'fpqqlsh': doc.serial_no,
-            'nsrsbh': self.company_id.vat,
-            'invoiceKind': INVOICE_KIND[original_move.l10n_cn_edi_invoice_type_code],
-            'invoiceType': '2',
-            'originInvoiceNo': original_move.l10n_cn_edi_fapiao_no,
-            'redReason': self.l10n_cn_edi_red_form_reason,
-            'deliverType': '0',
-        }
-        doc._l10n_cn_edi_attach_sent_data(payload)
+        doc = self._l10n_cn_edi_get_document('red_form')
+        if doc.state in RED_FORM_ACTIVE_STATES:
+            raise UserError(self.env._("This Credit Note already has a Red Form."))
+        # The reason first: the move reads it back from its red form.
+        doc.write({'state': 'draft', 'error_message': False, 'red_form_reason': reason})
         try:
-            result = client.issue(payload)
-        except L10nCnEdiProviderUnreachable as e:
-            doc._l10n_cn_edi_set_unreachable(client, e)
-            return None
+            result = client.request_red_form(doc)
         except UserError as e:
             # Not raised: that would also roll back what the provider recorded, like a forced relogin.
-            self.message_post(body=self.env._("Red fapiao not issued: %(error)s", error=e))
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {'type': 'danger', 'message': str(e)},
-            }
-        if doc._l10n_cn_edi_apply_fapiao_result(result, client) or result.get('state') != 'sent':
+            doc.write({'state': 'failed', 'error_message': str(e)})
+            self.l10n_cn_edi_state = 'failed'
+            self.message_post(body=self.env._("Red Form request failed: %(error)s", error=e))
             return None
-        for delay in client.result_delays:
-            client.wait(delay)
-            try:
-                polled = client.query_invoice(doc, just_submitted=True)
-            except UserError as e:
-                _logger.warning("E-Fapiao: could not follow up on direct red invoice %s: %s", self.name, e)
-                continue
-            if doc._l10n_cn_edi_apply_fapiao_result(polled, client) or polled.get('state') != 'sent':
-                break
+        doc.write({'red_form_uuid': result['uuid'], 'state': 'red_form_pending'})
+        doc._l10n_cn_edi_apply_red_form_result(result)
         return None
+
+    def action_l10n_cn_edi_cancel_red_form(self):
+        """Withdraw the red form of this credit note, while the customer hasn't answered it."""
+        self.ensure_one()
+        self.check_access('write')
+        doc = self.l10n_cn_edi_document_ids.filtered(lambda doc: doc.kind == 'red_form' and doc.state == 'red_form_pending')[:1]
+        if not doc:
+            return
+        try:
+            self.company_id._l10n_cn_edi_get_client().operate_red_form(doc, 'revoke')
+        except UserError as e:
+            raise UserError(self.env._("Failed to revoke the Red Form: %(error)s", error=e))
+        doc.write({'state': 'cancelled', 'bureau_state': '08', 'error_message': self.env._("Revoked by user.")})
+        self.message_post(body=self.env._("Red Form %(number)s revoked. You may request a new one.", number=doc.red_form_number))
 
     def action_l10n_cn_edi_login(self):
         """Log the drawer back in to the tax bureau, then send this invoice again."""

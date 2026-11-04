@@ -7,7 +7,7 @@ import uuid
 import zipfile
 from base64 import b64decode
 from binascii import Error as BinasciiError
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo
 
@@ -30,7 +30,15 @@ QUERY_RESULT = 'ele.encrypt.queryResult'
 LOGIN = 'ele.eleLogin'
 GET_CREDIT_LINE = 'ele.creditLine'
 DOWNLOAD_INVOICE = 'ele.invoice.download'
-QUERY_RED_FORM = 'ele.hzqrd.query'
+H5_PASS_THROUGH = 'ele.h5.pass.through'
+BLUE_LIST = 'h5.js.blueInkInvoiceList.query'
+RED_FORM_INIT = 'h5.js.RedConfirmationDetail.init'
+RED_FORM_ISSUE = 'h5.js.redConfirmationSheet.issue'
+RED_FORM_DETAIL = 'h5.js.redInvoiceConfirmDetail.query'
+RED_FORM_UPDATE = 'h5.js.redInkConfirmationStatus.update'
+RED_FORM_LIST = 'h5.js.redInvoiceConfirmList.query'
+H5_DOWNLOAD = 'h5.js.invoice.download'
+RED_FORM_ACTIONS = {'confirm': '1', 'reject': '2', 'revoke': '3'}
 
 INVOICE_KIND = {'01': '81', '02': '82'}
 PENDING = '1002'
@@ -96,7 +104,7 @@ class YunshuiClient:
         self._call(QUERY_RESULT, payload)
 
     def issue(self, payload):
-        """Submit a simpleInvoiceIssue ``payload`` (2.1.2), blue or red."""
+        """Submit a simpleInvoiceIssue ``payload`` (2.1.2)."""
         code, message = self._submit(payload)
         if code is None:
             return message
@@ -126,19 +134,80 @@ class YunshuiClient:
             'new_serial': True,
         }
 
+    def request_red_form(self, document):
+        """
+        Raise the red form of ``document``'s credit note against its whole fapiao (3.2.7, 3.2.20, 3.2.5).
+
+        The bureau fills the form in from the fapiao; 3.2.5 takes it back with its own field names
+        added, and the total in words it requires. When the buyer needn't confirm, the bureau
+        issues the red fapiao right away.
+        """
+        original = document.move_id.reversed_entry_id
+        fapiao_no = original.l10n_cn_edi_fapiao_no
+        issued_on = self._shanghai(original.l10n_cn_edi_fapiao_date).date() if original.l10n_cn_edi_fapiao_date else original.invoice_date
+        found = self._h5(BLUE_LIST, {
+            'gxfxz': '0',
+            'fp_hm': fapiao_no,
+            # A day around it: the date Odoo has may differ from the bureau's by a few seconds.
+            'kprqq': str(issued_on - timedelta(days=1)),
+            'kprqz': str(issued_on + timedelta(days=1)),
+            'cxym': '1',
+            'ts': '10',
+        })
+        blue = next((row for row in found.get('list') or [] if row.get('fp_hm') == fapiao_no), None)
+        if not blue:
+            raise UserError(self.company.env._(
+                "The tax bureau doesn't offer fapiao %(fapiao)s for a red form: it may already be reversed.",
+                fapiao=fapiao_no,
+            ))
+        form = self._h5(RED_FORM_INIT, {
+            'lzfpqdhm': fapiao_no,
+            'xsfnsrsbh': self.tax_no,
+            'lzkprq': blue.get('kprq'),
+            'sflzfp': blue.get('sflzfp'),
+            'fply_dm': blue.get('fply_dm'),
+            'gjbq': blue.get('gjbq'),
+            'fplxdm': blue.get('fplx_dm'),
+            'gmfnsrsbh': blue.get('ghf_nsrsbh'),
+            'kpfnsrsbh': blue.get('kpfnsrsbh'),
+            'tdyslxdm': blue.get('tdyslx_dm'),
+            'lrfsf': '0',
+        })
+        form.pop('code', None)
+        form.pop('message', None)
+        answer = self._h5(RED_FORM_ISSUE, {
+            **form,
+            'lzfpqd_hm': form.get('lzfphm'),
+            'xhf_nsrsbh': form.get('xsfnsrsbh'),
+            'xhf_mc': form.get('xsfmc'),
+            'ghf_nsrsbh': form.get('gmfnsrsbh'),
+            'ghf_mc': form.get('gmfmc'),
+            'lzfppzdm': form.get('lzfppz_dm'),
+            'lzfplxdm2': form.get('lzfplx_dm2'),
+            'zzsytdm': form.get('zzsyt_dm'),
+            'xfsytdm': form.get('xfsyt_dm'),
+            'fprzztdm': form.get('fprzzt_dm'),
+            'hzqrxxztdm': form.get('hzqrxxzt_dm'),
+            'fplydm': form.get('fply_dm'),
+            'hzqrxxmxlist': [{**line, 'sl': line.get('sl1')} for line in form.get('hzqrxxmx_list') or []],
+            'jshjdx': _amount_in_words(form.get('jshj') or 0),
+            'chyydm': document.red_form_reason,
+            'chyy_dm': document.red_form_reason,
+            'nsrsbh': self.tax_no,
+        })
+        return self._red_form_result(answer)
+
     def query_red_form(self, document):
-        raise UserError(self.company.env._(
-            "Yunshui uses direct red invoice issuance; red confirmation-form polling is not supported.",
-        ))
+        return self._red_form_result(self._h5(RED_FORM_DETAIL, {'uuid': document.red_form_uuid, 'xhf_nsrsbh': self.tax_no}))
 
     def operate_red_form(self, document, action):
-        raise UserError(self.company.env._(
-            "Yunshui does not support %(action)s on red forms from Odoo yet.",
-            action=action,
-        ))
+        self._h5(RED_FORM_UPDATE, {
+            'uuid': document.red_form_uuid,
+            'xhf_nsrsbh': self.tax_no,
+            'czlx': RED_FORM_ACTIONS[action],
+        })
 
     def list_inbound_red_forms(self, date_from, date_to):
-        # 2.1.11 only queries the red-confirmation form of a known fpqqlsh, it has no date-range listing.
         raise UserError(self.company.env._(
             "Yunshui does not support listing inbound red forms by date range.",
         ))
@@ -206,10 +275,7 @@ class YunshuiClient:
     def _query_outcome(self, document, invoice_kind, code, response, just_submitted):
         """Return the result of a queryResult code that isn't a definitive failure, else None."""
         if code == ISSUED:
-            result = self._issued_result(response, serial_no=document.serial_no, invoice_kind=invoice_kind)
-            if document.move_id.move_type == 'out_refund':
-                result.update(self._red_form_of(document.serial_no, invoice_kind))
-            return result
+            return self._issued_result(response, serial_no=document.serial_no, invoice_kind=invoice_kind)
         if code == RELOGIN:
             # Recorded rather than raised: the poll cron's savepoint would roll the flag back with the error.
             self.company.sudo().l10n_cn_edi_yunshui_relogin = True
@@ -220,25 +286,42 @@ class YunshuiClient:
             return {'state': 'sent'}
         return None
 
-    def _red_form_of(self, serial_no, invoice_kind):
-        """The red form the bureau recorded for the red fapiao issued under ``serial_no`` (2.1.11)."""
+    def _red_form_result(self, answer):
+        """The red form of a 3.2.5 or 3.2.1 ``answer``, with its red fapiao and that fapiao's files once issued."""
+        result = {
+            'uuid': answer.get('uuid'),
+            'number': answer.get('hzfpxxqrdbh'),
+            'bureau_state': answer.get('hzqrxxzt_dm') or answer.get('hzqrxxztdm'),
+            'red_fapiao_no': answer.get('hzfp_hm'),
+        }
+        if result['red_fapiao_no'] and answer.get('hzkprq'):
+            result['red_fapiao_date'] = self._utc(answer['hzkprq'])
+            result.update(self._fapiao_files(result['red_fapiao_no'], answer['hzkprq']))
+        return result
+
+    def _fapiao_files(self, fapiao_no, issued_at):
+        """The links to a fapiao's PDF and OFD, and its XML, by its number (3.2.9)."""
+        payload = {
+            'fp_hm': fapiao_no,
+            'kprq': issued_at.replace('-', '').replace(':', '').replace(' ', ''),
+            'xsfnsrsbh': self.tax_no,
+            'nsrsbh': self.tax_no,
+            'dqbm': self.company.l10n_cn_edi_yunshui_region_code,
+        }
+        files = {}
         try:
-            response = self._call(QUERY_RED_FORM, {'fpqqlsh': serial_no, 'invoiceKind': invoice_kind})
+            for key, file_type in (('pdf_url', '0'), ('ofd_url', '1')):
+                files[key] = self._https_url(self._h5(H5_DOWNLOAD, {**payload, 'xzlx': file_type, 'isurl_flag': 'true'}).get('jfdljUrl'))
+            files['xml'] = self._unzip_xml(self._h5(H5_DOWNLOAD, {**payload, 'xzlx': '2'}).get('wjl'), fapiao_no)
         except UserError as e:
-            _logger.warning("Yunshui: could not read the red form of %s for company %s: %s", serial_no, self.company.vat, e)
-            return {}
-        return {'red_form_uuid': response.get('uuid'), 'red_form_number': response.get('hzfpxxqrdbh')}
+            _logger.warning("Yunshui: could not fetch the files of fapiao %s for company %s: %s", fapiao_no, self.company.vat, e)
+        return files
 
     def _issued_result(self, response, serial_no=None, invoice_kind=None):
-        date_value = response.get('kprq')
-        fapiao_date = False
-        if date_value:
-            shanghai_time = datetime.strptime(date_value, '%Y-%m-%d %H:%M:%S').replace(tzinfo=SHANGHAI_TZ)
-            fapiao_date = shanghai_time.astimezone(UTC_TZ).replace(tzinfo=None)
         result = {
             'state': 'issued',
             'fapiao_no': response.get('fphm'),
-            'fapiao_date': fapiao_date,
+            'fapiao_date': self._utc(response['kprq']) if response.get('kprq') else False,
             'qr_code': response.get('ewmUrl') or False,
             # Yunshui's links to the PDF and OFD can come after the fapiao itself: the cron fills them in later.
             'pdf_url': self._https_url(response.get('pdfUrl')),
@@ -255,7 +338,11 @@ class YunshuiClient:
         except UserError as e:
             _logger.warning("Yunshui: could not download the XML of %s for company %s: %s", serial_no, self.company.vat, e)
             return None
-        content = self._decode_base64_file(response.get('file'))
+        return self._unzip_xml(response.get('file'), serial_no)
+
+    def _unzip_xml(self, value, reference):
+        """The XML in the base64 zip ``value`` Yunshui sends it in."""
+        content = self._decode_base64_file(value)
         if not content:
             return None
         try:
@@ -265,7 +352,7 @@ class YunshuiClient:
         except zipfile.BadZipFile:
             xml = None
         if not xml:
-            _logger.warning("Yunshui: ignored a malformed XML archive of %s for company %s", serial_no, self.company.vat)
+            _logger.warning("Yunshui: ignored a malformed XML archive of %s for company %s", reference, self.company.vat)
         return xml
 
     def _decode_base64_file(self, value):
@@ -284,6 +371,24 @@ class YunshuiClient:
             return None
         return content
 
+    def _utc(self, shanghai_time):
+        """A naive UTC datetime from Yunshui's Shanghai ``'%Y-%m-%d %H:%M:%S'``."""
+        return datetime.strptime(shanghai_time, '%Y-%m-%d %H:%M:%S').replace(tzinfo=SHANGHAI_TZ).astimezone(UTC_TZ).replace(tzinfo=None)
+
+    def _shanghai(self, utc_time):
+        return utc_time.replace(tzinfo=UTC_TZ).astimezone(SHANGHAI_TZ)
+
+    def _h5(self, interface_code, payload):
+        """Call a chapter 3 interface: they go through the H5 pass-through, as the logged-in drawer."""
+        try:
+            answer = self._call(interface_code, {key: value for key, value in payload.items() if value not in (None, '')}, h5=True)
+        except YunshuiProviderError as e:
+            self._check_session(e.code, e.msg)
+            raise
+        if answer.get('code') == 'N':
+            raise UserError(answer.get('message') or self.company.env._("The tax bureau refused the request."))
+        return answer
+
     def _https_url(self, url):
         try:
             parsed = urlparse(url or '')
@@ -291,7 +396,7 @@ class YunshuiClient:
             return False
         return url if parsed.scheme == 'https' and parsed.hostname else False
 
-    def _call(self, interface_code, payload):
+    def _call(self, interface_code, payload, h5=False):
         request_body = sm4_envelope.build_request(
             interface_code,
             payload,
@@ -301,9 +406,9 @@ class YunshuiClient:
         )
         try:
             with requests.post(
-                f"{HOSTS[self.gateway]}/{interface_code}",
+                f"{HOSTS[self.gateway]}/{H5_PASS_THROUGH if h5 else interface_code}",
                 data=json.dumps(request_body, ensure_ascii=False).encode('utf-8'),
-                headers={'Content-Type': 'application/json'},
+                headers={'Content-Type': 'application/json', **({'X-KPY-YHM': self.username} if h5 else {})},
                 timeout=TIMEOUT,
                 stream=True,
             ) as response:
@@ -392,6 +497,38 @@ def _read_capped(response, limit):
         if len(content) > limit:
             return None
     return bytes(content)
+
+
+def _amount_in_words(amount):
+    """``amount`` the way a fapiao writes its total: 1060.5 -> 壹仟零陆拾圆伍角整."""
+    digits, units, groups = '零壹贰叁肆伍陆柒捌玖', ('', '拾', '佰', '仟'), ('', '万', '亿', '万亿')
+    cents = round(abs(float(amount)) * 100)
+    yuan, jiao, fen = cents // 100, cents // 10 % 10, cents % 10
+    words, gap = '', False
+    group_values = []
+    while yuan:
+        group_values.append(yuan % 10000)
+        yuan //= 10000
+    for index in range(len(group_values) - 1, -1, -1):
+        value = group_values[index]
+        if not value:
+            gap = bool(words)
+            continue
+        if words and (gap or value < 1000):
+            words += '零'
+        part, zero = '', False
+        for position in range(3, -1, -1):
+            digit = value // 10 ** position % 10
+            if digit:
+                part += ('零' if zero and part else '') + digits[digit] + units[position]
+            zero = not digit
+        words += part + groups[index]
+        gap = False
+    words += '圆' if words else ''
+    if not (jiao or fen):
+        return (words or '零圆') + '整'
+    words += digits[jiao] + '角' if jiao else ('零' if words else '')
+    return words + (digits[fen] + '分' if fen else '整')
 
 
 class YunshuiProviderError(UserError):

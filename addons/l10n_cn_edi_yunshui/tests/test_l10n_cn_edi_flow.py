@@ -12,6 +12,8 @@ from odoo.tests import tagged
 from .common import L10nCnEdiTestCommon
 from odoo.addons.l10n_cn_edi_yunshui.tools import L10nCnEdiProviderUnreachable
 
+RED_FORM_ISSUED_AT_ONCE = {'uuid': 'a' * 32, 'number': '67045685257273632319', 'bureau_state': '01', 'red_fapiao_no': 'red-fapiao-789'}
+
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
@@ -483,19 +485,13 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_red_fapiao_sends_the_chosen_reason(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'), reason='02')
-        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['request_red_form'] = RED_FORM_ISSUED_AT_ONCE
 
         credit_note.action_l10n_cn_edi_request_red_form()
 
-        self.assertEqual(self.client.calls[-1][1][0], {
-            'fpqqlsh': self._fapiao(credit_note).serial_no,
-            'nsrsbh': self.company_data['company'].vat,
-            'invoiceKind': '82',
-            'invoiceType': '2',
-            'originInvoiceNo': '24442000000071309399',
-            'redReason': '02',
-            'deliverType': '0',
-        })
+        doc = credit_note.l10n_cn_edi_document_ids
+        self.assertEqual(self.client.calls[-1], ('request_red_form', (doc,)))
+        self.assertEqual(doc.red_form_reason, '02')
         self.assertEqual(credit_note.l10n_cn_edi_red_form_reason, '02')
 
     def test_only_a_full_reversal_gets_a_red_fapiao(self):
@@ -518,130 +514,72 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
     def test_red_form_status_cron_handles_empty_queue(self):
         self.env['l10n_cn_edi.document']._cron_check_red_form_status()
 
-    def test_direct_red_is_a_fapiao_document(self):
+    def test_refused_red_form_fails_the_credit_note(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue'] = {'state': 'sent'}
-        self.responses['query_invoice'] = {'state': 'sent'}
+        self.responses['request_red_form'] = UserError("The tax bureau doesn't offer fapiao 24442000000071309399")
 
         credit_note.action_l10n_cn_edi_request_red_form()
 
-        self.assertRecordValues(credit_note.l10n_cn_edi_document_ids, [{'kind': 'fapiao', 'state': 'sent'}])
-        self.assertEqual(credit_note.l10n_cn_edi_state, 'sent')
-        self.assertIn('issue', [method for method, _args in self.client.calls])
-
-        self.responses['query_invoice'] = {
-            'state': 'issued',
-            'fapiao_no': 'red-fapiao-789',
-            'fapiao_date': datetime(2026, 9, 23, 4, 30),
-        }
-        self.env['account.move']._cron_l10n_cn_edi_poll_invoices()
-
-        self.assertRecordValues(credit_note.l10n_cn_edi_document_ids, [{'kind': 'fapiao', 'state': 'issued'}])
-        self.assertEqual(credit_note.l10n_cn_edi_state, 'issued')
-        self.assertEqual(credit_note.l10n_cn_edi_fapiao_no, 'red-fapiao-789')
-
-    def test_direct_red_failure_uses_invoice_failure_state(self):
-        credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue'] = {'state': 'failed', 'error': 'Yunshui refused direct red'}
-
-        credit_note.action_l10n_cn_edi_request_red_form()
-
-        self.assertRecordValues(credit_note.l10n_cn_edi_document_ids, [{'kind': 'fapiao', 'state': 'failed'}])
+        self.assertRecordValues(credit_note.l10n_cn_edi_document_ids, [{'kind': 'red_form', 'state': 'failed'}])
         self.assertEqual(credit_note.l10n_cn_edi_state, 'failed')
+        self.assertIn("doesn't offer fapiao", credit_note.message_ids[0].body)
 
-    def test_direct_red_post_button_guard_uses_invoice_state(self):
+    def test_red_fapiao_unhides_the_post_button(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
 
         credit_note._compute_hide_post_button()
         self.assertTrue(credit_note.hide_post_button)
 
-        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['request_red_form'] = RED_FORM_ISSUED_AT_ONCE
         credit_note.action_l10n_cn_edi_request_red_form()
         credit_note._compute_hide_post_button()
         self.assertFalse(credit_note.hide_post_button)
 
     def test_credit_note_with_its_red_fapiao_posts(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['request_red_form'] = RED_FORM_ISSUED_AT_ONCE
         credit_note.action_l10n_cn_edi_request_red_form()
 
         credit_note.action_post()
 
         self.assertRecordValues(credit_note, [{'state': 'posted', 'l10n_cn_edi_fapiao_no': 'red-fapiao-789'}])
 
-    def test_direct_red_cron_uses_direct_query(self):
-        credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self._set_sent(credit_note)
-        self.responses['query_invoice'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
-
-        self.env['account.move']._cron_l10n_cn_edi_poll_invoices()
-
-        self.assertEqual(self.client.calls, [('query_invoice', (self._fapiao(credit_note), True))])
-        self.assertEqual(credit_note.l10n_cn_edi_state, 'issued')
-
-    def test_direct_red_unanswered_request_waits_for_the_cron(self):
-        credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue'] = L10nCnEdiProviderUnreachable("Connection reset")
-
+    def _request_pending_red_form(self, credit_note):
+        self.responses['request_red_form'] = {**RED_FORM_ISSUED_AT_ONCE, 'bureau_state': '02', 'red_fapiao_no': False}
         credit_note.action_l10n_cn_edi_request_red_form()
 
-        self.assertEqual(credit_note.l10n_cn_edi_state, 'sent')
-        with self.assertRaisesRegex(UserError, 'its red fapiao is requested or issued'):
-            credit_note.invoice_line_ids.price_unit = 1.0
-
-    def test_direct_red_refused_request_changes_nothing(self):
+    def test_pending_red_form_credit_note_cannot_be_deleted(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue'] = UserError("Invalid credentials")
-
-        action = credit_note.action_l10n_cn_edi_request_red_form()
-
-        self.assertEqual(action['params']['message'], 'Invalid credentials')
-        self.assertEqual(credit_note.l10n_cn_edi_state, 'not_sent')
-
-    def test_direct_red_uses_stable_serial(self):
-        credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue'] = {'state': 'failed', 'error': 'temporary'}
-
-        credit_note.action_l10n_cn_edi_request_red_form()
-        serial_1 = self._fapiao(credit_note).serial_no
-        credit_note.action_l10n_cn_edi_request_red_form()
-        serial_2 = self._fapiao(credit_note).serial_no
-
-        self.assertEqual(serial_1, serial_2)
-        self.assertTrue(serial_1.startswith(f'R{credit_note.id}_0_'))
-
-    def test_direct_red_sent_credit_note_cannot_be_deleted(self):
-        credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self._set_sent(credit_note)
+        self._request_pending_red_form(credit_note)
 
         with self.assertRaisesRegex(UserError, 'its red fapiao is requested or issued'):
             credit_note.unlink()
 
-    def test_direct_red_sent_credit_note_cannot_edit_invoice_lines(self):
+    def test_pending_red_form_credit_note_cannot_edit_invoice_lines(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self._set_sent(credit_note)
+        self._request_pending_red_form(credit_note)
 
         with self.assertRaisesRegex(UserError, 'its red fapiao is requested or issued'):
             credit_note.write({'invoice_line_ids': [(1, credit_note.invoice_line_ids[0].id, {'name': 'Edited'})]})
 
-    def test_direct_red_sent_credit_note_cannot_edit_lines_via_line_model(self):
+    def test_pending_red_form_credit_note_cannot_edit_lines_via_line_model(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self._set_sent(credit_note)
+        self._request_pending_red_form(credit_note)
 
         with self.assertRaisesRegex(UserError, 'its red fapiao is requested or issued'):
             credit_note.invoice_line_ids[0].write({'name': 'Edited'})
 
-    def test_direct_red_sent_credit_note_cannot_reassign_lines(self):
+    def test_pending_red_form_credit_note_cannot_reassign_lines(self):
         invoice = self._create_posted_invoice(fapiao_no='24442000000071309399')
         credit_note = self._reverse(invoice)
-        self._set_sent(credit_note)
+        self._request_pending_red_form(credit_note)
 
         with self.assertRaisesRegex(UserError, 'its red fapiao is requested or issued'):
             credit_note.invoice_line_ids[0].write({'move_id': invoice.id})
 
-    def test_direct_red_sent_credit_note_cannot_delete_lines(self):
+    def test_pending_red_form_credit_note_cannot_delete_lines(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self._set_sent(credit_note)
+        self._request_pending_red_form(credit_note)
 
         with self.assertRaisesRegex(UserError, 'its red fapiao is requested or issued'):
             credit_note.invoice_line_ids.unlink()
@@ -746,7 +684,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_red_fapiao_request_requires_accounting_role(self):
         credit_note = self._reverse(self._create_posted_invoice(fapiao_no='24442000000071309399'))
-        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['request_red_form'] = RED_FORM_ISSUED_AT_ONCE
 
         with self.assertRaises(AccessError):
             credit_note.with_user(self._create_user('account.group_account_readonly')).action_l10n_cn_edi_request_red_form()
@@ -762,7 +700,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertEqual(invoice.l10n_cn_edi_state, 'issued')
 
         credit_note = self._reverse(invoice.with_user(user))
-        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['request_red_form'] = RED_FORM_ISSUED_AT_ONCE
 
         credit_note.action_l10n_cn_edi_request_red_form()
 
@@ -873,7 +811,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
     def test_issued_credit_note_must_keep_the_red_amount(self):
         invoice = self._create_posted_invoice(fapiao_no='24442000000071309399')
         credit_note = self._reverse(invoice)
-        self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
+        self.responses['request_red_form'] = RED_FORM_ISSUED_AT_ONCE
         credit_note.action_l10n_cn_edi_request_red_form()
         # Changed behind the edit guard's back.
         self.env.flush_all()
