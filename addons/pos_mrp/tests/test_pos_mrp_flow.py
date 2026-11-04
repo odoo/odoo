@@ -1,7 +1,10 @@
+import uuid
+
 import odoo
 
 from odoo.addons.pos_mrp.tests.common import CommonPosMrpTest
 from odoo import Command, fields
+from odoo.tests import new_test_user
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -638,3 +641,42 @@ class TestPosMrp(CommonPosMrpTest):
         # Close the PoS session - this should not raise a singleton error
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed')
+
+    def test_bom_kit_order_paid_by_pos_user(self):
+        """ A Point of Sale user without Inventory rights must be able to pay an
+        order containing a kit: the component moves are created and confirmed
+        while processing the order, which must not depend on stock access rights.
+        """
+        pos_user = new_test_user(self.env, login='pos_kit_user', groups='base.group_user,point_of_sale.group_pos_user')
+        pos_config = self.pos_config_usd.with_user(pos_user)
+        pos_config.open_ui()
+        kit = self.product_product_kit_two
+        order_uuid = str(uuid.uuid4())
+        self.env['pos.order'].with_user(pos_user).sync_from_ui([{
+            'uuid': order_uuid,
+            'state': 'paid',
+            'session_id': pos_config.current_session_id.id,
+            'config_id': pos_config.id,
+            'company_id': self.env.company.id,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'amount_total': kit.lst_price,
+            'amount_paid': kit.lst_price,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'lines': [Command.create({
+                'uuid': str(uuid.uuid4()),
+                'product_id': kit.id,
+                'qty': 1.0,
+                'price_unit': kit.lst_price,
+                'price_subtotal': kit.lst_price,
+                'price_subtotal_incl': kit.lst_price,
+            })],
+            'payment_ids': [Command.create({
+                'payment_method_id': self.cash_payment_method.id,
+                'amount': kit.lst_price,
+            })],
+        }])
+        order = self.env['pos.order'].search([('uuid', '=', order_uuid)])
+        self.assertEqual(order.state, 'paid')
+        self.assertTrue(order.picking_ids)
+        self.assertEqual(order.picking_ids.move_ids.product_id, self.bom_two_lines.bom_line_ids.product_id)
