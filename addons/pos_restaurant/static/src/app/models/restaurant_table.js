@@ -39,6 +39,13 @@ export class RestaurantTable extends Base {
     getName() {
         return this.table_number.toString();
     }
+    getChildTables() {
+        return this.models["restaurant.table"].filter((t) => {
+            if (t.floor_id && t.floor_id.id === this.floor_id?.id) {
+                return this.isParent(t);
+            }
+        });
+    }
     get children() {
         return this.backLink("<-restaurant.table.parent_id");
     }
