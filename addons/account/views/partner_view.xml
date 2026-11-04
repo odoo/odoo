@@ -302,6 +302,7 @@
                    <separator/>
                    <filter string="Overdue Invoices"
                         name="overdue"
+                        groups="account.group_account_invoice,account.group_account_readonly"
                         domain="[('invoice_ids.invoice_date_due', '&lt;', 'today')]" />
                    <separator/>
                 </xpath>
