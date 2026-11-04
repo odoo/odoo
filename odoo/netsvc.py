@@ -91,6 +91,18 @@ def init_logger():
     from .tools.translate import resetlocale
     resetlocale()
 
+    # Configure loggers levels, before log_config so the levels it sets win
+    pseudo_config = PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])
+
+    logconfig = tools.config['log_handler']
+
+    logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
+    for logconfig_item in logging_configurations:
+        loggername, level = logconfig_item.strip().split(':')
+        level = getattr(logging, level, logging.INFO)
+        logger = logging.getLogger(loggername)
+        logger.setLevel(level)
+
     if conf := tools.config['log_config']:
         with open(conf, 'rb') as fobj:
             if conf.endswith('.toml'):
@@ -148,18 +160,6 @@ def init_logger():
         postgresqlHandler = PostgreSQLHandler(log_db)
         postgresqlHandler.setLevel(int(db_levels.get(tools.config['log_db_level'], tools.config['log_db_level'])))
         logging.getLogger().addHandler(postgresqlHandler)
-
-    # Configure loggers levels
-    pseudo_config = PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])
-
-    logconfig = tools.config['log_handler']
-
-    logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
-    for logconfig_item in logging_configurations:
-        loggername, level = logconfig_item.strip().split(':')
-        level = getattr(logging, level, logging.INFO)
-        logger = logging.getLogger(loggername)
-        logger.setLevel(level)
 
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)

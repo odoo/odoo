@@ -1,9 +1,11 @@
 import argparse
+import json
 import logging
 import os
 import re
 import subprocess as sp
 import sys
+import tempfile
 import unittest
 from contextlib import redirect_stdout
 from io import BytesIO, TextIOWrapper
@@ -164,6 +166,42 @@ class TestCommand(BaseCase):
         # we skip local variables as they differ based on configuration (e.g.: if a database is specified or not)
         lines = [line for line in shell.stdout.read().splitlines() if line.startswith('>>>')]
         self.assertEqual(lines, [">>> Hello from Python!", '>>> '])
+
+    def test_log_config(self):
+        print_logging = (
+            "import json, logging\n"
+            "print(json.dumps({\n"
+            "    'levels': {name: logging.getLevelName(logging.getLogger(name).level)\n"
+            "               for name in ('', 'odoo', 'odoo.sql_db', 'werkzeug')},\n"
+            "    'root_handlers': bool(logging.root.handlers),\n"
+            "}))\n"
+        )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            log_config = Path(tmpdir, 'log_config.json')
+            for keep_odoo_default in (False, True):
+                with self.subTest(keep_odoo_default=keep_odoo_default):
+                    log_config.write_text(json.dumps({
+                        'version': 1,
+                        'keep_odoo_default': keep_odoo_default,
+                        'loggers': {'odoo.sql_db': {'level': 'INFO'}},
+                    }), encoding='utf-8')
+                    proc = self.run_command(
+                        'shell',
+                        '--database=',
+                        f'--log-config={log_config}',
+                        '--log-level=warn',
+                        '--log-handler=werkzeug:ERROR,odoo.sql_db:DEBUG',
+                        input=print_logging,
+                    )
+                    output = json.loads(proc.stdout)
+                    self.assertEqual(output['levels'], {
+                        '': 'INFO',  # DEFAULT_LOG_CONFIGURATION
+                        'odoo': 'WARNING',  # --log-level
+                        'werkzeug': 'ERROR',  # --log-handler
+                        'odoo.sql_db': 'INFO',  # the file wins over --log-handler
+                    })
+                    # the file sets no root handler, so any is Odoo's own
+                    self.assertEqual(output['root_handlers'], keep_odoo_default)
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
