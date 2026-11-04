@@ -3643,7 +3643,7 @@ class AccountMoveLine(models.Model):
         Intended to be overriden in localization.
         """
         self.ensure_one()
-        return self.move_id.state == 'posted'
+        return self.move_id.state == 'posted' or self.move_id.payment_state == 'invoicing_legacy'
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
