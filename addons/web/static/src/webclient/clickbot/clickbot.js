@@ -50,6 +50,10 @@ const BLACKLISTED_RECORD_ACTIONS = new Set([
     "documents.dashboard", // there is no form view
     "spreadsheet_dashboard.spreadsheet_dashboard_group_menu_configuration_sections", // there is no form view
     "website.menu_visitor_view_menu", // there is no form view
+    "website_hr_recruitment.menu_job_pages", // a click on a job opens it in the website editor, not a form
+    "website_blog.menu_blog_post_pages", // a click on a post opens it in the website editor, not a form
+    "mass_mailing.mailing_menu_report_mailing", // report model, there is no form view
+    "mass_mailing_sms.mass_mailing_sms_menu_reporting", // report model, there is no form view
     "mail.menu_channel", // opens a chat window, not a form
     "mail.discuss_channel_menu_settings", // opens a chat window, not a form
 ]);
