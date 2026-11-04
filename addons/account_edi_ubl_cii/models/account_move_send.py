@@ -228,9 +228,13 @@ class AccountMoveSend(models.AbstractModel):
         writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml', afrelationship='/Alternative')
 
         # PDF-A.
+        # An explicit facturx/zugferd format must always be PDF/A-3, whatever the company country is
         if ((invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd')
-                or (invoice.commercial_partner_id.country_code in ('FR', 'DE') and invoice.commercial_partner_id.peppol_eas != '0204'))
-                and invoice.country_code in ('FR', 'DE')
+                or (
+                    invoice.commercial_partner_id.country_code in ('FR', 'DE')
+                    and invoice.commercial_partner_id.peppol_eas != '0204'
+                    and invoice.country_code in ('FR', 'DE')
+                ))
                 and not writer.is_pdfa
             ):
             try:
