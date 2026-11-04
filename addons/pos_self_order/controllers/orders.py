@@ -1,3 +1,4 @@
+import base64
 import math
 
 from odoo import http
@@ -267,6 +268,28 @@ class PosSelfOrderController(http.Controller):
             # Remove orders that no longer exist on the server but are still shown in the self-order UI
             pos_config._notify('REMOVE_ORDERS', {'deleted_order_tokens': deleted_order_tokens})
         return self._generate_return_values(orders, pos_config) if orders else {}
+
+    @http.route('/pos-self-order/kiosk/change-receipt/<int:order_id>', auth='public', type='jsonrpc', website=True)
+    def pos_self_order_change_receipt(self, access_token, order_id, order_access_token):
+        pos_config = self._verify_pos_config(access_token)
+        if pos_config.self_ordering_mode != 'kiosk':
+            raise Forbidden()
+        pos_order_sudo = self._verify_pos_order(pos_config, order_id, order_access_token).sudo()
+
+        receipts = {}
+        default_lang = pos_order_sudo.config_id.self_ordering_default_user_id.lang
+        data = pos_order_sudo.with_company(pos_order_sudo.company_id)\
+            .with_context(reprint_preparation_receipt=True, lang=default_lang)\
+            ._order_change_receipts_generate_html()
+
+        for printer, htmls in data.items():
+            # For the moment, the backend only generates 80mm receipts
+            if printer.paper_size != '80' or not htmls:
+                continue
+            images = pos_order_sudo.env['ir.actions.report']._run_image_engine('wkhtmltopdf', htmls, 500, 0)
+            receipts[printer.id] = [base64.b64encode(image).decode() for image in images] if all(images) else []
+
+        return {'receipts': receipts}
 
     @http.route('/pos-self-order/receipt/<int:order_id>', auth='public', type='http')
     def pos_self_order_receipt(self, order_id, access_token=None):

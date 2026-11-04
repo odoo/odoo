@@ -1,10 +1,12 @@
 import { Component, onMounted, onWillUnmount, proxy, t, useProps } from "@odoo/owl";
 import { PrintingFailurePopup } from "@pos_self_order/app/components/printing_failure_popup/printing_failure_popup";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import { location } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { imageDataUri } from "@point_of_sale/utils";
+import { redirect } from "@web/core/utils/urls";
 
 export class ConfirmationPage extends Component {
     static template = "pos_self_order.ConfirmationPage";
@@ -192,13 +194,23 @@ export class ConfirmationPage extends Component {
             this.selfOrder.config.self_ordering_mode === "kiosk"
         ) {
             cookie.set("frontend_lang", defaultLanguage.code);
-            window.location.reload();
             this.state.onReload = true;
+            redirect(this.defaultRouteUrl);
             return true;
         }
 
         return this.state.onReload;
     }
+
+    get defaultRouteUrl() {
+        const defaultRoute = this.selfOrder.router.registeredRoutes.default.route;
+        const url = new URL(defaultRoute, location.origin);
+        new URLSearchParams(location.search).forEach((value, key) => {
+            url.searchParams.set(key, value);
+        });
+        return url.toString();
+    }
+
     get orderTimeStr() {
         return this.confirmedOrder.preset_time.toFormat("h:mm a");
     }
