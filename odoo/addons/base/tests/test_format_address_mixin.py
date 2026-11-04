@@ -80,3 +80,18 @@ class TestPartnerFormatAddress(FormatAddressCase):
         self.assertIn('123 Main Street', display_name)
         self.assertIn('Paris', display_name)
         self.assertNotIn('\n\n', display_name)
+
+    def test_partner_address_format_fallback(self):
+        """
+        When a partner does not have a country set, we should use the
+        company's country instead of going directly to a default format.
+        """
+        self.env.company.country_id = self.env.ref('base.fr')
+        partner = self.env['res.partner'].create({
+            'name': 'No Country Partner',
+            'street': '123 Main Street',
+            'zip': '75001',
+            'city': 'Paris',
+        })
+        address = partner._display_address()
+        self.assertLess(address.index('75001'), address.index('Paris'))
