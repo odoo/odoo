@@ -44,7 +44,7 @@ export class Form extends Interaction {
         },
         "input[type=file]": { "t-on-change": this.changeFile },
         "input.o_add_files_button": { "t-on-click": this.clickAddFilesButton },
-        ".s_website_form_field[data-type=binary]": { "t-on-click": this.clickFileDelete }, // delegate on ".o_file_delete"
+        ".s_website_form_field:has(input[type=file])": { "t-on-click": this.clickFileDelete }, // delegate on ".o_file_delete"
         ".s_website_form_field": {
             "t-on-input": this.debounced(this.onFieldInput, 300),
             "t-att-class": (el) => ({ "d-none": !this.isFieldVisible(el) }),
