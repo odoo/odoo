@@ -878,6 +878,64 @@ export function getScheduleORMExtras(model, records) {
     return extras;
 }
 
+/**
+ * Composes two successive sets of changes, in the format of `web_save`, into a
+ * single set of changes with the same effect. Values of `nextChanges` override
+ * the ones of `changes`, except for x2many commands: the server applies them in
+ * sequence, so they are concatenated, with two exceptions:
+ * - a command that targets a record created by a command of `changes` is merged
+ *   into that CREATE command, as such a record only exists under its virtual id
+ *   until the server creates it;
+ * - a CLEAR or SET command drops the previous commands that only change which
+ *   records are in the relation (CREATE, LINK, UNLINK and the commands on the
+ *   created records), so that no record is created only to be removed.
+ *
+ * @param {Object} changes
+ * @param {Object} nextChanges
+ * @param {Object} fields
+ * @returns {Object}
+ */
+export function composeChanges(changes, nextChanges, fields) {
+    const { CREATE, UPDATE, DELETE, UNLINK, LINK, CLEAR, SET } = x2ManyCommands;
+    const result = {};
+    for (const [fieldName, value] of Object.entries(changes)) {
+        result[fieldName] = Array.isArray(value) ? [...value] : value;
+    }
+    for (const [fieldName, value] of Object.entries(nextChanges)) {
+        const previous = result[fieldName];
+        if (!["one2many", "many2many"].includes(fields[fieldName]?.type) || !previous) {
+            result[fieldName] = value;
+            continue;
+        }
+        let commands = previous;
+        for (const command of value) {
+            if (command[0] === CLEAR || command[0] === SET) {
+                const createdIds = commands.filter((c) => c[0] === CREATE).map((c) => c[1]);
+                commands = commands.filter(
+                    (c) =>
+                        ![CREATE, LINK, UNLINK, CLEAR, SET].includes(c[0]) &&
+                        !createdIds.includes(c[1])
+                );
+                commands.push(command);
+                continue;
+            }
+            const createIndex = [UPDATE, DELETE, UNLINK].includes(command[0])
+                ? commands.findIndex((c) => c[0] === CREATE && c[1] === command[1])
+                : -1;
+            if (createIndex === -1) {
+                commands.push(command);
+            } else if (command[0] === UPDATE) {
+                const [, virtualId, values] = commands[createIndex];
+                commands[createIndex] = [CREATE, virtualId, { ...values, ...command[2] }];
+            } else {
+                commands.splice(createIndex, 1);
+            }
+        }
+        result[fieldName] = commands;
+    }
+    return result;
+}
+
 export function getOfflineDisplayName(record) {
     return (
         record.data.complete_name ||

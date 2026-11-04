@@ -734,6 +734,23 @@ export class FormController extends Component {
                 const params = { reload: !(this.env.inDialog && clickParams.close) };
                 saved = await record.save(params);
             }
+            if (saved !== false && clickParams.special === "save" && record.isSavedOffline) {
+                // saved offline, as with the save icon: the record isn't reloaded, since the
+                // server doesn't have its changes yet, but a dialog is closed
+                this.env.config.setDisplayName(this.displayName());
+                this.props.onSave(record, clickParams);
+                return Boolean(this.env.inDialog);
+            }
+            if (saved !== false && record.isSavedOffline) {
+                // the server doesn't have the changes yet (nor the record, if it is new)
+                this.model.notification.add(
+                    _t(
+                        "Your changes are saved offline. The action will be available once they are synchronized."
+                    ),
+                    { type: "warning" }
+                );
+                return false;
+            }
             if (saved !== false) {
                 this.env.config.setDisplayName(this.displayName());
                 this.props.onSave(record, clickParams);
