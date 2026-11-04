@@ -21,7 +21,7 @@ You can keep track of time off in different ways by following reports:
 * Time Off by Department
 * Time Off Analysis
 
-A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a time off request is accepted by setting up a type of meeting in time off Type.
+A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a time off request is accepted by setting up a type of meeting in the time type.
 """,
     'depends': ['hr_work_entry', 'hr_calendar', 'resource'],
     'data': [
