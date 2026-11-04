@@ -86,7 +86,7 @@ class TestNegative(TestHrHolidaysCommon):
             # The leave should not be possible to edit since it would bring the balance at -6
             with self.assertRaises(ValidationError):
                 one_day_leave.with_user(self.user_hrmanager_id).write({
-                    'date_to': datetime(2023, 10, 24),
+                    'request_date_to': datetime(2023, 10, 24),
                 })
 
     def test_negative_allocation_not_allowed(self):
