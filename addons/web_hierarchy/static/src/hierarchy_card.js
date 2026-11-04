@@ -1,71 +1,31 @@
-import { Component, useProps, t } from "@odoo/owl";
+import { useProps, t } from "@odoo/owl";
 
-import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { Field } from "@web/views/fields/field";
-import { Record } from "@web/model/record";
-import { ViewButton } from "@web/views/view_button/view_button";
-import { useViewCompiler } from "@web/views/view_compiler";
+import { CardRenderer, cardRendererProps } from "@web/views/card/card_renderer";
 
-import { HierarchyCompiler } from "./hierarchy_compiler";
-import { getFormattedRecord } from "@web/views/kanban/kanban_record";
+export class HierarchyCard extends CardRenderer {
+    static template = "web_hierarchy.HierarchyCard";
 
-export class HierarchyCard extends Component {
-    static components = {
-        Record,
-        Field,
-        ViewButton,
-    };
     props = useProps({
-        node: t.object(),
+        ...cardRendererProps,
         openRecord: t.function(),
-        archInfo: t.object(),
         classNames: t.string().optional(""),
     });
-    static template = "web_hierarchy.HierarchyCard";
-    static Compiler = HierarchyCompiler;
 
-    setup() {
-        const { archInfo } = this.props;
-        this.templates = useViewCompiler(this.constructor.Compiler, archInfo.templateDocs);
-        this.evaluateBooleanExpr = evaluateBooleanExpr;
-    }
-
-    get classNames() {
-        const classNames = [this.props.classNames];
-        if (this.props.node.nodes.length) {
-            classNames.push("o_hierarchy_node_unfolded");
-        }
-        return classNames.join(" ");
-    }
-
-    getRenderingContext(data) {
-        const record = getFormattedRecord(data.record);
+    get renderingContext() {
         return {
-            context: this.props.node.context,
-            JSON,
-            luxon,
-            record,
-            __comp__: Object.assign(Object.create(this), { this: this }),
-            __record__: data.record,
+            ...super.renderingContext,
+            parentResId: this.props.record.parentResId,
         };
+    }
+
+    getCardClasses() {
+        return ['bg-view', super.getCardClasses(), this.props.classNames].join(' ');
     }
 
     onGlobalClick(ev, newWindow) {
         if (ev.target.closest("button")) {
             return;
         }
-        this.props.openRecord(this.props.node, newWindow);
-    }
-
-    onClickArrowUp(ev) {
-        this.props.node.fetchParentNode();
-    }
-
-    onClickArrowDown(ev) {
-        if (this.props.node.nodes.length) {
-            this.props.node.collapseChildNodes();
-        } else {
-            this.props.node.showChildNodes();
-        }
+        this.props.openRecord(this.props.record, newWindow);
     }
 }

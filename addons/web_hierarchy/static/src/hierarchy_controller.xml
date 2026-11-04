@@ -5,7 +5,7 @@
             <div class="me-2" t-if="this.props.archInfo.activeActions.create and (!this.props.archInfo.createInline or this.displayNoContent)">
                 <button class="btn btn-primary o_hierarchy_button_add"
                         type="button"
-                        t-on-click="this.props.createRecord">
+                        t-on-click="this.onClickCreate">
                     New
                 </button>
             </div>
@@ -32,6 +32,7 @@
                 </t>
                     <t t-component="this.props.Renderer"
                         model="this.model"
+                        list="this.model.root"
                         openRecord.bind="this.openRecord"
                         archInfo="this.props.archInfo"
                     />
