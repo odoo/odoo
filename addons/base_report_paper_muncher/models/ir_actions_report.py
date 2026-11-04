@@ -96,8 +96,13 @@ class IrActionsReport(models.Model):
             if footers:
                 inputs += ['--footer', f'pipe:/paper-muncher/footer-{i}.html']
 
+        dpi = float(specific_paperformat_args.get('data-report-dpi', paperformat.dpi))
+        # wkhtmltopdf lays CSS px out at ~76/dpi with smart shrinking, and at its
+        # zoom (96/dpi) with --disable-smart-shrinking.
+        scale = (96 if paperformat.disable_shrinking else 76) / dpi
+
         extra_args = [
-            '--scale', f'{76 / float(specific_paperformat_args.get('data-report-dpi', paperformat.dpi))}x',
+            '--scale', f'{scale}x',
             '--margins', f'0mm {paperformat.margin_right}mm 0mm {paperformat.margin_left}mm',
             '--header-size', f'{specific_paperformat_args.get('data-report-margin-top', paperformat.margin_top)}mm',
             '--footer-size', f'{specific_paperformat_args.get('data-report-margin-bottom', paperformat.margin_bottom)}mm',
