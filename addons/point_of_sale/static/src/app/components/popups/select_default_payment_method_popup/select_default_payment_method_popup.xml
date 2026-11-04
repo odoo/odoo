@@ -14,6 +14,13 @@
                         t-on-click="() => this.select(group.provider, pm.id)"
                         t-out="pm.name"/>
                 </div>
+                <div t-foreach="group.options" t-as="option" t-key="option.name" class="form-check mt-2">
+                    <input type="checkbox" class="form-check-input"
+                        t-att-id="`${group.provider}_${option.name}`"
+                        t-att-checked="this.state.options[group.provider][option.name]"
+                        t-on-change="() => this.toggleOption(group.provider, option.name)"/>
+                    <label class="form-check-label" t-att-for="`${group.provider}_${option.name}`" t-out="option.label"/>
+                </div>
             </div>
             <t t-set-slot="footer">
                 <button class="btn btn-primary" t-on-click="this.confirmSelection">

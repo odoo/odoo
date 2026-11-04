@@ -73,20 +73,49 @@ export class PosPaymentMethodPlugin extends Plugin {
         this.defaultIds[provider] = pmId || false;
     }
 
+    /**
+     * Device-level boolean settings of a provider, displayed as checkboxes in
+     * the default payment method popup. Meant to be overridden by providers.
+     *
+     * @param {string} provider
+     * @returns {{ name: string, label: string, value: boolean }[]}
+     */
+    getProviderOptions(_provider) {
+        return [];
+    }
+
+    /**
+     * Stores the values of the options returned by `getProviderOptions`.
+     *
+     * @param {string} provider
+     * @param {Object<string, boolean>} options
+     */
+    setProviderOptions(_provider, _options) {}
+
     async selectDefaults(providers = Object.keys(this.defaultGroups)) {
-        const selection = await makeAwaitable(this.dialog, SelectDefaultPaymentMethodPopup, {
-            groups: providers.map((provider) => ({
-                provider,
-                name: this.defaultGroups[provider][0]._payment_provider_name,
-                paymentMethods: this.defaultGroups[provider],
-                selectedId: this.getDefault(provider)?.id || false,
-            })),
+        const result = await makeAwaitable(this.dialog, SelectDefaultPaymentMethodPopup, {
+            groups: providers.map((provider) => {
+                const paymentMethods = this.defaultGroups[provider];
+                return {
+                    provider,
+                    name: paymentMethods[0]._payment_provider_name,
+                    paymentMethods,
+                    selectedId:
+                        this.getDefault(provider)?.id ||
+                        (paymentMethods.length === 1 && paymentMethods[0].id) ||
+                        false,
+                    options: this.getProviderOptions(provider),
+                };
+            }),
         });
-        if (!selection) {
+        if (!result) {
             return false;
         }
-        for (const [provider, pmId] of Object.entries(selection)) {
+        for (const [provider, pmId] of Object.entries(result.selection)) {
             this.setDefault(provider, pmId);
+        }
+        for (const [provider, options] of Object.entries(result.options)) {
+            this.setProviderOptions(provider, options);
         }
         return true;
     }

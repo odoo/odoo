@@ -77,6 +77,7 @@ test("selectDefaults", async () => {
             expect(group.name).toBe("Test Provider");
             expect(group.paymentMethods.map((pm) => pm.id)).toEqual([terminal1.id, terminal2.id]);
             expect(group.selectedId).toBe(terminal1.id);
+            expect(group.options).toEqual([]);
             if (response) {
                 props.getPayload(response);
             } else {
@@ -91,7 +92,42 @@ test("selectDefaults", async () => {
     expect(plugin.getDefault("test_terminal")).toBe(terminal1);
 
     // Confirmed: the default is updated
-    response = { test_terminal: terminal2.id };
+    response = { selection: { test_terminal: terminal2.id }, options: { test_terminal: {} } };
     expect(await plugin.selectDefaults()).toBe(true);
     expect(plugin.getDefault("test_terminal")).toBe(terminal2);
+});
+
+test("selectDefaults with provider options", async () => {
+    const store = await setupPosEnv();
+    const plugin = store.paymentMethods;
+    const [terminal1] = addTestTerminals(store, 1);
+    plugin.defaultGroups = { test_terminal: [terminal1] };
+
+    const stored = {};
+    patch(plugin, {
+        getProviderOptions(provider) {
+            return [{ name: "my_option", label: "My option", value: Boolean(stored[provider]) }];
+        },
+        setProviderOptions(provider, options) {
+            stored[provider] = options.my_option;
+        },
+    });
+    patch(plugin.dialog, {
+        add(component, props) {
+            const [group] = props.groups;
+            // A provider with a single method has it preselected
+            expect(group.selectedId).toBe(terminal1.id);
+            expect(group.options).toEqual([
+                { name: "my_option", label: "My option", value: false },
+            ]);
+            props.getPayload({
+                selection: { test_terminal: group.selectedId },
+                options: { test_terminal: { my_option: true } },
+            });
+        },
+    });
+
+    expect(await plugin.selectDefaults()).toBe(true);
+    expect(plugin.getDefault("test_terminal")).toBe(terminal1);
+    expect(stored.test_terminal).toBe(true);
 });
