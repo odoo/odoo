@@ -71,6 +71,12 @@ class Website(models.Model):
 
         return new_page
 
+    # Called by the menu editor, event managers have no access to website.rewrite
+    def check_existing_page(self, page):
+        if not self.env.su and self.env.user.has_group('event.group_event_manager') and self.env.user.has_group('website.group_website_restricted_editor'):
+            return self.sudo().check_existing_page(page)
+        return super().check_existing_page(page)
+
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('Events'), self.env['ir.http']._url_for('/event'), 'website_event'))
