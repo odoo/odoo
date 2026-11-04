@@ -142,6 +142,8 @@ class PosOrder(models.Model):
         pass
 
     def l10n_es_edi_verifactu_button_send(self):
+        self.check_access_rights('write')
+        self.check_access_rule('write')
         self._l10n_es_edi_verifactu_mark_for_next_batch()
 
     def _l10n_es_edi_verifactu_check(self, cancellation=False):
