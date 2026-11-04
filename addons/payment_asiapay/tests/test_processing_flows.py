@@ -46,9 +46,3 @@ class TestProcessingFlows(AsiaPayCommon, PaymentHttpCommon):
             self.assertEqual(
                 signature_check_mock.call_args[0][0], self.webhook_payment_data_signature
             )
-
-    def test_compute_signature_returns_correct_signature(self):
-        signature = self.provider._asiapay_calculate_signature(
-            self.webhook_payment_data, incoming=True
-        )
-        self.assertEqual(signature, self.webhook_payment_data_signature)

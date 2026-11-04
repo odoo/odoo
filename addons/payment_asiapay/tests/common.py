@@ -29,6 +29,7 @@ class AsiaPayCommon(PaymentCommon):
             "successcode": "0",
             "Ref": cls.reference,
             "PayRef": "dummy",
+            "payMethod": "alipay",
             "Cur": cls.currency.name,
             "Amt": cls.amount,
             "payerAuth": "dummy",

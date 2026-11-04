@@ -2,11 +2,15 @@
 
 from unittest.mock import patch
 
+import requests
+
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_authorize import const
+from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 from odoo.addons.payment_authorize.tests.common import AuthorizeCommon
 
 
@@ -43,3 +47,14 @@ class TestProcessingFlows(AuthorizeCommon, PaymentHttpCommon):
             self.assertEqual(
                 signature_check_mock.call_args[0][0], self.webhook_authcapture_data_signature
             )
+
+    @mute_logger('odoo.addons.payment_authorize.models.authorize_request')
+    def test_get_transaction_details_raises_on_timeout(self):
+        """Transport failures fetching details should raise ValidationError."""
+        authorize_api = AuthorizeAPI(self.authorize)
+        with patch(
+            'odoo.addons.payment_authorize.models.authorize_request.requests.post',
+            side_effect=requests.exceptions.Timeout(),
+        ):
+            with self.assertRaises(ValidationError):
+                authorize_api.get_transaction_details('60012345678')

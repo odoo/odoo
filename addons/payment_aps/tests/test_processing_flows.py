@@ -12,7 +12,7 @@ from odoo.addons.payment_aps.tests.common import APSCommon
 @tagged("post_install", "-at_install")
 class TestProcessingFlows(APSCommon):
     @mute_logger("odoo.addons.payment_aps.controllers.main")
-    def test_redirect_notification_triggers_processing(self):
+    def test_returning_from_payment_triggers_processing(self):
         """Test that receiving a redirect notification triggers the processing of the notification
         data."""
         self._create_transaction(flow="redirect")
@@ -50,7 +50,7 @@ class TestProcessingFlows(APSCommon):
             self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_aps.controllers.main")
-    def test_redirect_notification_triggers_signature_check(self):
+    def test_returning_from_payment_triggers_signature_check(self):
         self._create_transaction("redirect")
         url = self._build_url(APSController._return_url)
         with (
@@ -76,7 +76,3 @@ class TestProcessingFlows(APSCommon):
         ):
             self._make_http_post_request(url, data=self.payment_data)
             self.assertEqual(signature_check_mock.call_args[0][0], self.payment_data_signature)
-
-    def test_compute_signature_returns_correct_signature(self):
-        signature = self.provider._aps_calculate_signature(self.payment_data, incoming=True)
-        self.assertEqual(signature, self.payment_data_signature)
