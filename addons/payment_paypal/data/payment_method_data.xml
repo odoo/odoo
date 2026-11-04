@@ -108,6 +108,15 @@
         />
     </record>
 
+    <record id="payment_method_eps" model="payment.method">
+        <field name="name">EPS</field>
+        <field name="code">eps</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/eps.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.at')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
+    </record>
+
     <record id="payment_method_google_pay" model="payment.method">
         <field name="name">Google Pay</field>
         <field name="code">google_pay</field>
@@ -179,15 +188,6 @@
                         ref('base.USD'),
                     ])]"
         />
-    </record>
-
-    <record id="payment_method_eps" model="payment.method">
-        <field name="name">EPS</field>
-        <field name="code">eps</field>
-        <field name="provider_id" ref="payment.payment_provider_paypal"/>
-        <field name="image" type="bytes" file="payment/static/img/eps.png"/>
-        <field name="supported_country_ids" eval="[Command.set([ref('base.at')])]"/>
-        <field name="supported_currency_ids" eval="[Command.set([ref('base.EUR')])]"/>
     </record>
 
     <record id="payment_method_ideal" model="payment.method">

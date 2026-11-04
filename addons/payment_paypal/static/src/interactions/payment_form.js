@@ -1,4 +1,4 @@
-/* global paypal */
+/* global google, paypal */
 
 import { loadJS } from '@web/core/assets';
 import { _t } from '@web/core/l10n/translation';
@@ -224,6 +224,7 @@ patch(PaymentForm.prototype, {
      */
     _paypalRenderCardFields(paymentOptionId) {
         if (paypal.CardFields === undefined) {
+            this._paypalDisplayNotAvailablePMDialog();
             return;
         }
         const paypalData = this.paypalData[paymentOptionId];
@@ -264,6 +265,7 @@ patch(PaymentForm.prototype, {
      */
     async _paypalRenderGooglePayButton(paymentOptionId) {
         if (paypal.Googlepay === undefined) {
+            this._paypalDisplayNotAvailablePMDialog();
             return;
         }
         const googlePayConfig = await this.waitFor(paypal.Googlepay().config());
@@ -564,7 +566,6 @@ patch(PaymentForm.prototype, {
     _paypalGetGoogleErrorResponse(message) {
         const errorResponse = { transactionState: "ERROR" };
         if (message) {
-            debugger;
             errorResponse.error = { intent: "PAYMENT_AUTHORIZATION", message };
         }
         return errorResponse;
