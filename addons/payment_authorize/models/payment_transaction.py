@@ -92,6 +92,8 @@ class PaymentTransaction(models.Model):
                     error_message=tx_details.get("err_msg"),
                 )
             )
+            # Post-process immediately, as the state change skipped the processing cron
+            self._try_post_process()
             return None
 
         tx_status = tx_details.get("transaction", {}).get("transactionStatus")
@@ -141,6 +143,8 @@ class PaymentTransaction(models.Model):
             self.with_context(
                 payment_safe_write=True  # The API call is idempotent
             )._set_error(err_msg)
+            # Post-process immediately, as the state change skipped the processing cron
+            self._try_post_process()
 
     def _send_capture_request(self):
         """Override of `payment` to send a capture request to Authorize."""
