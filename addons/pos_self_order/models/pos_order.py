@@ -404,6 +404,10 @@ class PosOrder(models.Model):
         partner = pos_config.env['res.partner'].sudo().browse(partner_id)
         return partner if partner.exists() else False
 
+    def _get_self_order_non_negative_lines(self):
+        """Lines whose recomputed price may not be negative (see process_order)."""
+        return self.lines
+
     def recompute_prices(self):
         self.ensure_one()
         self._check_combo_lines()

@@ -60,13 +60,6 @@ export function clickCancel() {
     ];
 }
 
-export function checkOrderTotal(amount) {
-    return {
-        content: `Confirm '${amount}' is displayed correctly`,
-        trigger: `.o_self_product_list_page .order-total:contains('${amount}')`,
-    };
-}
-
 export function checkProductQty(productName, qty) {
     return {
         content: `Confirm product '${qty}' is displayed correctly`,
