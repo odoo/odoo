@@ -11,7 +11,10 @@ from odoo import api, fields, models
 from odoo.http import request
 from odoo.http.session import session_store, update_session_token
 
-from ..paper_muncher import PaperMuncherServer, paper_muncher
+from odoo.addons.base_report_paper_muncher.paper_muncher import (
+    PaperMuncherServer,
+    paper_muncher,
+)
 
 _logger = logging.getLogger(__name__)
 
