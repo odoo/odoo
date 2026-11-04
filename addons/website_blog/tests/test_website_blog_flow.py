@@ -159,6 +159,24 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
 
         self.assertEqual(self.test_blog_post.teaser, "Test Content...")
 
+    def test_website_blog_with_sanitize(self):
+        dangerous_script = '<script>alert("Looks like the joke\'s on us!");</script>'
+        user_designer = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'Jimbo Designer',
+            'login': 'jimbo',
+            'email': 'jimbo.designer@example.com',
+            'group_ids': [(6, 0, [
+                self.ref('base.group_user'),
+                self.ref('website_blog.group_website_blog_manager'),
+                self.ref('website.group_website_designer'),
+            ])],
+        })
+        for record in (self.test_blog_post, self.test_blog):
+            record.with_user(user_designer).content = dangerous_script
+            self.assertIn('<script', record.content)
+            with self.assertRaises(UserError):
+                record.with_user(self.user_blogmanager).content = dangerous_script
+
 
 @tagged('-at_install', 'post_install')
 class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
