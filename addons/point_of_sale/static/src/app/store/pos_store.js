@@ -1580,9 +1580,9 @@ export class PosStore extends Reactive {
     getProductPrice(product, p = false) {
         const taxesData = this.getProducePriceDetails(product, p);
         if (this.config.iface_tax_included === "total") {
-            return taxesData.total_included;
+            return taxesData.total_included + taxesData.delta_total_excluded;
         } else {
-            return taxesData.total_excluded;
+            return taxesData.total_excluded + taxesData.delta_total_excluded;
         }
     }
 

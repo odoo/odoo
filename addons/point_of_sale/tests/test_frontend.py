@@ -2262,6 +2262,47 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertAlmostEqual(lines[3].balance, 352.59)
         self.assertAlmostEqual(lines[4].balance, 7771.01)
 
+    def test_tax_included_price_with_global_rounding(self):
+        """ Test that a product with multiple tax-included taxes correctly displays its price
+            on the order line and receipt under round_globally rounding.
+        """
+        self.main_pos_config.company_id.tax_calculation_rounding_method = 'round_globally'
+
+        tax_group_gst = self.env['account.tax.group'].create({'name': 'GST'})
+        tax_group_qst = self.env['account.tax.group'].create({'name': 'QST'})
+
+        tax_gst = self.env['account.tax'].create({
+            'name': 'GST 5%',
+            'amount_type': 'percent',
+            'amount': 5.0,
+            'price_include_override': 'tax_included',
+            'include_base_amount': False,
+            'tax_group_id': tax_group_gst.id,
+        })
+        tax_qst = self.env['account.tax'].create({
+            'name': 'QST 9.975%',
+            'amount_type': 'percent',
+            'amount': 9.975,
+            'price_include_override': 'tax_included',
+            'include_base_amount': False,
+            'tax_group_id': tax_group_qst.id,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Tax Included Candy',
+            'list_price': 0.50,
+            'taxes_id': [(6, 0, [tax_gst.id, tax_qst.id])],
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_tax_included_price_with_global_rounding', login="pos_user")
+
+        pos_session = self.main_pos_config.current_session_id
+        order = pos_session.order_ids[0]
+        self.assertEqual(order.amount_total, 0.50)
+        self.assertEqual(order.lines[0].price_unit, 0.50)
+
     def test_ctrl_number_ignored(self):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_ctrl_number_ignored', login="pos_user")
 
