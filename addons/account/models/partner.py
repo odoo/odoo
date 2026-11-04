@@ -476,6 +476,13 @@ class ResPartner(models.Model):
         is important to define a unique currency to compute the total amount otherwise this one is meaningless. This currency
         is either the one of the partner's company if they have one or the currency of the environment's company."""
         if self.ids:
+            all_partners_and_children = {
+                partner: self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
+                for partner in self
+            }
+            all_partner_ids = tuple(
+                {partner_id for child_ids in all_partners_and_children.values() for partner_id in child_ids}
+            )
             query_res = self.env.execute_query(SQL(
                 """SELECT move.partner_id, SUM(move.amount_total_signed * COALESCE(currency_rate.rate, 1))
                      FROM account_move move
@@ -499,7 +506,7 @@ class ResPartner(models.Model):
                       AND move.partner_id IN %(partner_ids)s
                       AND move.move_type IN ('out_invoice', 'out_refund')
                     GROUP BY move.partner_id""",
-                partner_ids=tuple(self.ids),
+                partner_ids=all_partner_ids,
                 company_ids=tuple(self.env.companies.ids),
                 default_company_id=self.env.company.id,
             ))
@@ -508,7 +515,9 @@ class ResPartner(models.Model):
             data_map = {}
 
         for partner in self:
-            partner.total_invoiced = data_map.get(partner.id, 0.0)
+            partner.total_invoiced = sum(
+                data_map.get(partner_id, 0.0) for partner_id in all_partners_and_children.get(partner, ())
+            )
 
     @api.depends('credit')
     def _compute_days_sales_outstanding(self):

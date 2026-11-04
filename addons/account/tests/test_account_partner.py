@@ -12,6 +12,20 @@ class TestAccountPartner(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    def test_total_invoiced_includes_child_contacts(self):
+        company = self.env['res.partner'].create({
+            'name': 'My Company',
+            'is_company': True,
+        })
+        contact = self.env['res.partner'].create({
+            'name': 'My Contact',
+            'parent_id': company.id,
+        })
+        invoice = self.init_invoice('out_invoice', contact, amounts=[100], post=True)
+
+        self.assertEqual(company.total_invoiced, invoice.amount_total_signed)
+        self.assertEqual(contact.total_invoiced, invoice.amount_total_signed)
+
     @freeze_time("2023-05-31")
     def test_days_sales_outstanding(self):
         partner = self.env['res.partner'].create({'name': 'MyCustomer'})
