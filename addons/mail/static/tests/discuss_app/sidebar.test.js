@@ -2,11 +2,13 @@ import {
     click,
     contains as mailContains,
     defineMailModels,
+    hover,
     insertText,
     listenStoreFetch,
     openDiscuss,
     openFormView,
     openMessagingMenu,
+    rightClick,
     setupChatHub,
     start,
     startServer,
@@ -21,12 +23,10 @@ import { describe, expect, mockTouch, test, waitFor } from "@odoo/hoot";
 import {
     animationFrame,
     freezeTime,
-    hover,
     leave,
     manuallyDispatchProgrammaticEvent,
     press,
     queryOne,
-    rightClick,
     waitForNone,
 } from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
@@ -1066,7 +1066,6 @@ test("hovering a conversation of the sidebar shows a preview of its last message
     });
     await start();
     await openDiscuss();
-    await waitFor(".o-mail-MessagingMenuItem:has(:text('Demo')):count(1)");
     await hover(".o-mail-MessagingMenuItem:has(:text('Demo')) .o-mail-NotificationItem");
     await advanceTime(PEEK_DELAY);
     await waitFor(".o-mail-ThreadPreview:text('Hello!'):count(1)");
@@ -1086,10 +1085,9 @@ test("hovering the call participants of a conversation does not show its preview
     });
     await start();
     await openDiscuss(MENU_ACTIVE_IDS.CHANNEL);
-    await waitFor(
-        ".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-MessagingMenuCallParticipants:count(1)"
+    await hover(
+        ".o-mail-MessagingMenuItem:has(:text('General')) .o-mail-MessagingMenuCallParticipants"
     );
-    await hover(".o-mail-MessagingMenuCallParticipants");
     await advanceTime(PEEK_DELAY);
     await animationFrame();
     expect(".o-mail-ThreadPreview").toHaveCount(0);
