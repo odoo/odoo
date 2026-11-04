@@ -63,7 +63,7 @@ class IrActionsReport(models.Model):
     print_report_name = fields.Char('Printed Report Name', translate=True,
                                     help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.")
     save_as_attachment = fields.Boolean(help='Whether the report is saved as attachment when it is printed')
-    attachment_use = fields.Boolean(string='Generate new file each time the report is printed',
+    attachment_use = fields.Boolean(string='Reload from attachment',
                                     help='If enabled, then the second time the user prints with same attachment name, it returns the previous report.')
     attachment = fields.Char(string='Attachment Name',
                              help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.')
