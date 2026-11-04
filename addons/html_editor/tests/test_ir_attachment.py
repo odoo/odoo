@@ -14,3 +14,14 @@ class TestIrAttachmentWebEditor(TransactionCase):
 
         expected_url = f'/web/image/{attachment.id}-0/test.png'
         self.assertEqual(attachment.image_src, expected_url)
+
+    def test_image_src_for_url_attachment_without_url(self):
+        """That that URL attachment without a URL uses the image redirect URL."""
+        attachment = self.env['ir.attachment'].create({
+            'name': 'test attachment',
+            'type': 'url',
+            'mimetype': 'image/jpeg',
+        })
+
+        expected_url = f'/web/image/{attachment.id}-redirect/test%20attachment'
+        self.assertEqual(attachment.image_src, expected_url)
