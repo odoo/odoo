@@ -1549,7 +1549,7 @@ class Website(Home):
                     wrap_el = html_tree.xpath('//div[@id="wrap"]')[0]
                     group['templates'].append({
                         'key': page.key,
-                        'template': html.tostring(wrap_el),
+                        'template': html.tostring(wrap_el, encoding='unicode'),
                         'name': page.name,
                     })
                 group['is_custom'] = True
@@ -1580,7 +1580,7 @@ class Website(Home):
 
                     group['templates'].append({
                         'key': template.key,
-                        'template': html.tostring(html_tree),
+                        'template': html.tostring(html_tree, encoding='unicode'),
                         'is_from_configurator': 'configurator_pages' in template.key,
                     })
                 except Exception as error:
@@ -2289,7 +2289,7 @@ class Website(Home):
 
                 bundle_data[1][i] = {
                     'url': "/%s/%s" % (url_info["module"], url_info["resource_path"]),
-                    'arch': content,
+                    'arch': content.decode('utf-8') if hasattr(content, 'decode') else content,
                     'customized': url_info["customized"],
                 }
 
