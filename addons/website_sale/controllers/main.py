@@ -447,9 +447,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
         # categories
 
         Category = request.env["product.public.category"]
-        categs_domain = (
-            Domain("parent_id", "=", False) & Domain("not_in_shop", "=", False) & website_domain
-        )
+        categs_domain = Domain("not_in_shop", "=", False) & website_domain
+        # The sidebar renders the whole category tree: fetch it at once rather than level by level
+        show_category_tree = website.is_view_active("website_sale.products_categories")
+        if not show_category_tree:
+            categs_domain &= Domain("parent_id", "=", False)
         if search:
             # using a sub-query is more efficient than using a query in the shape of "ids in (...)"
             # when there are 100k product ids to match.
@@ -461,6 +463,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         else:
             search_categories = Category
         categs = Category.search_fetch(categs_domain)
+        if show_category_tree:
+            # `filtered` keeps the whole tree as prefetch ids
+            categs = categs.filtered(lambda c: not c.parent_id)
 
         category_entries = Category
         if category:
