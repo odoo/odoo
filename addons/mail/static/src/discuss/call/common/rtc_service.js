@@ -1,5 +1,6 @@
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
+import { BusPlugin } from "@bus/services/bus_plugin";
 import { DiscussP2PPlugin } from "@mail/discuss/call/common/discuss_p2p_plugin";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
@@ -2947,7 +2948,7 @@ export class Rtc extends Record {
 Rtc.register();
 
 export const rtcService = {
-    dependencies: ["bus_service", "discuss.pip_service", "mail.store", "presence"],
+    dependencies: ["discuss.pip_service", "mail.store", "presence"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
@@ -3030,42 +3031,37 @@ export const rtcService = {
              */
             return sequence >= session?.sequence;
         };
-        services["bus_service"].subscribe(
-            "discuss.channel.rtc.session/sfu_hot_swap",
-            async ({ serverInfo }) => {
-                if (!rtc.localSession) {
-                    return;
-                }
-                if (rtc.serverInfo?.channelUUID === serverInfo.channelUUID) {
-                    // we clear peers as inbound p2p connections may still be active
-                    rtc.p2pService.removeALlPeers();
-                    // no reason to swap if the server is the same, if at some point we want to force a swap
-                    // there should be an explicit flag in the event payload.
-                    return;
-                }
-                rtc.serverInfo = serverInfo;
-                await rtc._initConnection();
+        const bus = usePlugin(BusPlugin);
+        bus.subscribe("discuss.channel.rtc.session/sfu_hot_swap", async ({ serverInfo }) => {
+            if (!rtc.localSession) {
+                return;
             }
-        );
-        services["bus_service"].subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
+            if (rtc.serverInfo?.channelUUID === serverInfo.channelUUID) {
+                // we clear peers as inbound p2p connections may still be active
+                rtc.p2pService.removeALlPeers();
+                // no reason to swap if the server is the same, if at some point we want to force a swap
+                // there should be an explicit flag in the event payload.
+                return;
+            }
+            rtc.serverInfo = serverInfo;
+            await rtc._initConnection();
+        });
+        bus.subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
             if (rtc.localSession?.id === sessionId) {
                 rtc.notifyServerDisconnect();
                 rtc.endCall();
             }
         });
-        services["bus_service"].subscribe(
-            "discuss.channel.rtc.session/update_and_broadcast",
-            (payload) => {
-                const { store_data, channelId } = payload;
-                /**
-                 * If this event comes from the channel of the current call, information is shared in real time
-                 * through the peer to peer connection. So we do not use this less accurate broadcast.
-                 */
-                if (channelId !== rtc.channel?.id) {
-                    rtc.store.insert(store_data);
-                }
+        bus.subscribe("discuss.channel.rtc.session/update_and_broadcast", (payload) => {
+            const { store_data, channelId } = payload;
+            /**
+             * If this event comes from the channel of the current call, information is shared in real time
+             * through the peer to peer connection. So we do not use this less accurate broadcast.
+             */
+            if (channelId !== rtc.channel?.id) {
+                rtc.store.insert(store_data);
             }
-        );
+        });
         /**
          * Attempts to play RTC medias when a user shows signs of presence (interaction with the page) as
          * they cannot be played on windows that have not been interacted with.
