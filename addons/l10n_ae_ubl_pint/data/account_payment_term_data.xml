@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Frequency of billing (BTAE-06) of the standard payment terms whose period matches one.
+         https://docs.peppol.eu/poac/ae/pint-ae/trn-invoice/codelist/FreqBilling/ -->
+    <record id="account.account_payment_term_15days" model="account.payment.term">
+        <field name="l10n_ae_billing_frequency">Q15</field>
+    </record>
+    <record id="account.account_payment_term_30days" model="account.payment.term">
+        <field name="l10n_ae_billing_frequency">MTH</field>
+    </record>
+    <record id="account.account_payment_term_30days_early_discount" model="account.payment.term">
+        <field name="l10n_ae_billing_frequency">MTH</field>
+    </record>
+    <record id="account.account_payment_term_end_following_month" model="account.payment.term">
+        <field name="l10n_ae_billing_frequency">MTH</field>
+    </record>
+    <record id="account.account_payment_term_45days" model="account.payment.term">
+        <field name="l10n_ae_billing_frequency">Q45</field>
+    </record>
+    <record id="account.account_payment_term_90days_on_the_10th" model="account.payment.term">
+        <field name="l10n_ae_billing_frequency">QTR</field>
+    </record>
+</odoo>
