@@ -34,7 +34,8 @@ class PosPaymentMethod(models.Model):
         for record in read_records:
             if record['payment_method_type'] == 'bank_qr_code':
                 payment_method = self.browse(record['id'])
-                record['_qr_payment_icon_urls'] = [[icon.id, url_join(config.get_base_url(), icon.local_url)] for icon in payment_method.qr_payment_icon_ids]
+                # icons uploaded before the payment method is saved keep res_id = 0, readable only by their uploader
+                record['_qr_payment_icon_urls'] = [[icon.id, url_join(config.get_base_url(), icon.local_url)] for icon in payment_method.sudo().qr_payment_icon_ids]
         return read_records
 
     def get_qr_code_value(self, amount, free_communication, structured_communication, currency, debtor_partner):

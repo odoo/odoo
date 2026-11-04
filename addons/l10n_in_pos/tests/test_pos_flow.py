@@ -1,4 +1,5 @@
-from odoo.tests import tagged
+from odoo.fields import Command
+from odoo.tests import new_test_user, tagged
 from .common import TestInPosBase
 
 
@@ -68,3 +69,34 @@ class TestPosFlow(TestInPosBase):
             'amount_tax': 0.0,
             'amount_total': 630.0,
         })
+
+    def test_load_qr_payment_icons_uploaded_before_save(self):
+        """ A cashier can load a UPI payment method whose QR icons were uploaded
+        by another user before the payment method was saved (res_id = 0). """
+        bank_journal = self.company_data['default_journal_bank']
+        bank_journal.bank_account_id = self.env['res.partner.bank'].create({
+            'account_number': '0144748555',
+            'partner_id': self.company.partner_id.id,
+        })
+        icon = self.env['ir.attachment'].create({
+            'name': 'upi.png',
+            'raw': b'icon',
+            'res_model': 'pos.payment.method',
+            'res_id': 0,
+        })
+        upi_pm = self.env['pos.payment.method'].create({
+            'name': 'UPI',
+            'journal_id': bank_journal.id,
+            'payment_method_type': 'bank_qr_code',
+            'qr_code_method': 'upi',
+            'upi_identifier': 'shop@upi',
+            'qr_payment_icon_ids': [Command.set(icon.ids)],
+        })
+        cashier = new_test_user(
+            self.env, login='in_cashier', groups='base.group_user,point_of_sale.group_pos_user',
+            company_id=self.company.id, company_ids=self.company.ids,
+        )
+        self.env.invalidate_all()
+
+        records = upi_pm.with_user(cashier)._load_pos_data_read(upi_pm.with_user(cashier), self.config)
+        self.assertEqual([icon_id for icon_id, _url in records[0]['_qr_payment_icon_urls']], icon.ids)
