@@ -1,9 +1,9 @@
-import { fromUnityToServerValues, x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { omit, pick } from "@web/core/utils/objects";
 import { completeActiveFields, getFieldsSpec } from "@web/model/relational_model/utils";
 import { DataPoint } from "./datapoint";
-import { getBasicEvalContext, getId, patchActiveFields } from "./utils";
+import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
 import { markRaw } from "@odoo/owl";

@@ -85,6 +85,24 @@ class Base(models.AbstractModel):
             self = self.browse(next_id)
         return self.with_context(bin_size=True).web_read(specification)
 
+    def web_save_offline(self, vals, specification: dict[str, dict], onchange_fields: list[str], onchange_spec: dict[str, dict], changed_fields: list[str], next_id=None) -> list[dict]:
+        """ Replay of a ``web_save`` scheduled while offline: the onchanges that
+        could not be made at that time are made first, and their values are
+        added to ``vals``, except for the fields that the user changed.
+
+        :param onchange_fields: names of the fields to trigger the onchange of
+        :param onchange_spec: specification of the fields to take from the
+            result of the onchange, without any sub-specification for the
+            many2one, so that their values can be written as is
+        :param changed_fields: names of the fields changed by the user
+        """
+        if onchange_fields:
+            result = self.onchange(dict(vals), onchange_fields, onchange_spec)
+            for fname, value in result['value'].items():
+                if fname not in changed_fields:
+                    vals[fname] = value
+        return self.web_save(vals, specification, next_id)
+
     def web_save_multi(self, vals_list: list[dict], specification: dict[str, dict]) -> list[dict]:
         if len(self) != len(vals_list):
             raise ValueError("Each record must have a corresponding vals entry.")

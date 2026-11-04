@@ -10147,7 +10147,7 @@ test("[Offline] disable new button if not previously visited", async () => {
 test.tags("desktop");
 test("[Offline] create record when offline (quickCreate)", async () => {
     expect.errors(1); // 1x ConnectionLostError
-    onRpc("web_save", () => expect.step(`web_save`));
+    onRpc("web_save_offline", () => expect.step(`web_save_offline`));
     Partner._views = {
         "kanban,false": `
             <kanban default_group_by="product_id" on_create="quick_create" quick_create_view="some_view_ref">
@@ -10210,7 +10210,7 @@ test("[Offline] create record when offline (quickCreate)", async () => {
     await setOffline(false);
 
     expect(getService("offline").offline).toBe(false);
-    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    await expect.waitForSteps(["web_save_offline"]); // We sync when the connection returns
     //The current view is not updated when the offline is sync.
     //In this case we don't see the newly created record, until the view is reloaded.
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4, {
@@ -10226,7 +10226,7 @@ test("[Offline] create record when offline (quickCreate)", async () => {
 test.tags("desktop");
 test("[Offline] create record when offline (form view)", async () => {
     expect.errors(2); // 2x ConnectionLostError
-    onRpc("web_save", () => expect.step(`web_save`));
+    onRpc("web_save_offline", () => expect.step(`web_save_offline`));
     Partner._views = {
         "kanban,false": `
             <kanban>
@@ -10289,7 +10289,7 @@ test("[Offline] create record when offline (form view)", async () => {
     await setOffline(false);
 
     expect(getService("offline").offline).toBe(false);
-    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    await expect.waitForSteps(["web_save_offline"]); // We sync when the connection returns
     //The current view is not updated when the offline is sync.
     //In this case we don't see the newly created record, until the view is reloaded.
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(4, {

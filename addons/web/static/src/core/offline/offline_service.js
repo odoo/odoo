@@ -1,7 +1,6 @@
 import { markRaw } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, rpc, rpcBus } from "@web/core/network/rpc";
-import { fromUnityToServerValues } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 import { Reactive } from "@web/core/utils/reactive";
@@ -434,9 +433,6 @@ class OfflineManager extends Reactive {
                     await new Promise((r) => browser.setTimeout(r, 1000)); // Waits 1 second
                 }
                 try {
-                    if (value.extras.onchange) {
-                        await this._runScheduledOnchange(value);
-                    }
                     await this.orm.silent.call(value.model, value.method, value.args, value.kwargs);
                     this.removeScheduledORM(key);
                 } catch (e) {
@@ -451,25 +447,6 @@ class OfflineManager extends Reactive {
             }
             this._syncingORM = false;
         });
-    }
-
-    async _runScheduledOnchange({ model, args, kwargs, extras }) {
-        const { fieldNames, fields, activeFields, specification } = extras.onchange;
-        const [ids, values] = args;
-        const { value } = await this.orm.silent.call(
-            model,
-            "onchange",
-            [ids, values, fieldNames, specification],
-            { context: kwargs.context }
-        );
-        const serverValues = fromUnityToServerValues(value, fields, activeFields, {
-            context: kwargs.context,
-        });
-        for (const [name, val] of Object.entries(serverValues)) {
-            if (!(name in extras.changes)) {
-                values[name] = val;
-            }
-        }
     }
 
     async _updateScheduledORMList() {

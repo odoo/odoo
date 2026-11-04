@@ -49,7 +49,7 @@ class OfflineSystray extends Component {
                     records: value.extras.displayNames || [],
                 },
             };
-            if (value.method === "web_save") {
+            if (value.method === "web_save_offline") {
                 item.status = value.args[0].length ? STATUS.EDITED : STATUS.CREATED;
                 item.tooltip.changes = Object.entries(value.extras.changes).map(([k, v]) => [
                     k,
@@ -86,7 +86,7 @@ class OfflineSystray extends Component {
     isClickable(value) {
         const resId = value.args[0].length ? value.args[0][0] : false;
         return (
-            value.method === "web_save" &&
+            value.method === "web_save_offline" &&
             value.extras.viewType === "form" &&
             (!this.offlineService.offline ||
                 this.offlineService.isAvailableOffline(value.extras.actionId, "form", resId))

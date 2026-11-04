@@ -8,6 +8,7 @@ import { FetchRecordError } from "./errors";
 import {
     createPropertyActiveField,
     getBasicEvalContext,
+    getOfflineOnchangeSpec,
     getFieldContext,
     getFieldsSpec,
     getOfflineDisplayName,
@@ -354,7 +355,7 @@ export class Record extends DataPoint {
             scheduledORM = Object.values(this.model.offline.scheduledORM).find(
                 (s) =>
                     s.value.extras?.actionId === this.model.env.config.actionId &&
-                    s.value.method === "web_save" && // Only web_save changes are applied
+                    s.value.method === "web_save_offline" && // Only web_save changes are applied
                     s.value.extras.viewType === "form" && // Only changes made on a view form are applied
                     s.value.args[0]?.[0] === this.resId
             );
@@ -366,7 +367,7 @@ export class Record extends DataPoint {
             );
             this._offlineTimeStamp = scheduledORM.value.extras.timeStamp;
             this._offlinePendingOnchanges = markRaw(
-                new Set(scheduledORM.value.extras.onchange?.fieldNames)
+                new Set(scheduledORM.value.kwargs.onchange_fields)
             );
             return this.update(this._offlineChanges);
         }
@@ -1395,9 +1396,17 @@ export class Record extends DataPoint {
         this._offlineTimeStamp = this._offlineTimeStamp || Date.now();
         this._offlineId = this.model.offline.scheduleORM(
             this.resModel,
-            "web_save",
+            "web_save_offline",
             [this.resId ? [this.resId] : [], offlineChanges],
-            { context: this.context, specification: {} }, //Here for the kwargs we don't need the specification or the next_id
+            {
+                context: this.context,
+                specification: {}, //Here for the kwargs we don't need the specification or the next_id
+                onchange_fields: [...this._offlinePendingOnchanges],
+                onchange_spec: this._offlinePendingOnchanges.size
+                    ? getOfflineOnchangeSpec(this.activeFields, this.fields, this.evalContext)
+                    : {},
+                changed_fields: Object.keys(this._offlineChanges),
+            },
             {
                 id: this._offlineId,
                 extras: {
@@ -1408,19 +1417,6 @@ export class Record extends DataPoint {
                         { changes: false }
                     ),
                     timeStamp: this._offlineTimeStamp,
-                    onchange: this._offlinePendingOnchanges.size
-                        ? {
-                              fieldNames: [...this._offlinePendingOnchanges],
-                              fields: this.fields,
-                              activeFields: this.activeFields,
-                              specification: getFieldsSpec(
-                                  this.activeFields,
-                                  this.fields,
-                                  getBasicEvalContext(this.config),
-                                  { withInvisible: true }
-                              ),
-                          }
-                        : undefined,
                 },
             }
         );

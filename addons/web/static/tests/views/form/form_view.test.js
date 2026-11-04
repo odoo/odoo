@@ -309,6 +309,9 @@ test(`[Offline] save a form view offline (click save icon)`, async () => {
         if (route === "/web/dataset/call_kw/partner/web_save") {
             expect.step("web_save");
         }
+        if (route === "/web/dataset/call_kw/partner/web_save_offline") {
+            expect.step("web_save_offline");
+        }
         if (offline) {
             return new Response("", { status: 502 });
         }
@@ -362,7 +365,7 @@ test(`[Offline] save a form view offline (click save icon)`, async () => {
     await runAllTimers(); // execute checkConnection
 
     expect(getService("offline").offline).toBe(false);
-    await expect.waitForSteps(["web_save"]); // We sync when the connection returns
+    await expect.waitForSteps(["web_save_offline"]); // We sync when the connection returns
 
     await contains(".o_breadcrumb .o_back_button").click();
     expect(".o_data_cell:first").toHaveText("new foo");
@@ -483,6 +486,9 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
         if (route === "/web/dataset/call_kw/partner/web_save") {
             expect.step("web_save");
         }
+        if (route === "/web/dataset/call_kw/partner/web_save_offline") {
+            expect.step("web_save_offline");
+        }
         if (offline) {
             return new Response("", { status: 502 });
         }
@@ -540,7 +546,7 @@ test(`[Offline] save a form view offline (autosave when leaving)`, async () => {
     expect(getService("offline").offline).toBe(false);
     // TODO: It should be nice to reload the current view after sync ?? For me it should be "new foo"
     expect(".o_data_cell:first").toHaveText("yop");
-    await expect.waitForSteps(["web_save"]);
+    await expect.waitForSteps(["web_save_offline"]);
 });
 
 test.tags("desktop");
@@ -731,13 +737,8 @@ test(`[Offline] new record saved offline: skipped onchange is made before replay
             record.int_field = 5;
         },
     };
-    onRpc("onchange", ({ args }) => {
-        if (args[2].length) {
-            expect.step(`onchange ${args[2]}`);
-        }
-    });
-    onRpc("web_save", ({ args }) => {
-        expect.step(`web_save foo=${args[1].foo} int_field=${args[1].int_field}`);
+    onRpc("web_save_offline", ({ args, kwargs }) => {
+        expect.step(`web_save_offline ${kwargs.onchange_fields} foo=${args[1].foo}`);
     });
     Partner._views = {
         form: `
@@ -767,10 +768,9 @@ test(`[Offline] new record saved offline: skipped onchange is made before replay
     expect.verifySteps([]);
 
     await setOffline(false);
-    await expect.waitForSteps([
-        "onchange parent_id",
-        "web_save foo=My little Foo Value int_field=5",
-    ]);
+    await expect.waitForSteps(["web_save_offline parent_id foo=My little Foo Value"]);
+    await animationFrame();
+    expect(MockServer.env["partner"].at(-1).int_field).toBe(5);
 });
 
 test.tags("desktop");
@@ -782,13 +782,8 @@ test(`[Offline] new record saved offline: the values set by the user are kept wh
             record.int_field = 5;
         },
     };
-    onRpc("onchange", ({ args }) => {
-        if (args[2].length) {
-            expect.step(`onchange ${args[2]}`);
-        }
-    });
-    onRpc("web_save", ({ args }) => {
-        expect.step(`web_save foo=${args[1].foo} int_field=${args[1].int_field}`);
+    onRpc("web_save_offline", ({ args, kwargs }) => {
+        expect.step(`web_save_offline ${kwargs.onchange_fields} foo=${args[1].foo}`);
     });
     Partner._views = {
         form: `
@@ -818,30 +813,19 @@ test(`[Offline] new record saved offline: the values set by the user are kept wh
     await clickSave();
 
     await setOffline(false);
-    await expect.waitForSteps(["onchange parent_id", "web_save foo=mine int_field=5"]);
+    await expect.waitForSteps(["web_save_offline parent_id foo=mine"]);
+    await animationFrame();
+    expect(MockServer.env["partner"].at(-1).foo).toBe("mine");
+    expect(MockServer.env["partner"].at(-1).int_field).toBe(5);
 });
 
 test.tags("desktop");
-test(`[Offline] new record saved offline: relational values of the skipped onchange are replayed`, async () => {
+test(`[Offline] new record saved offline: the relational fields are sent without their display name for the skipped onchange`, async () => {
     const setOffline = mockOffline();
-    onRpc("onchange", ({ args }) => {
-        if (args[2].length) {
-            expect.step(`onchange ${args[2]}`);
-            return {
-                value: {
-                    product_id: { id: 37 },
-                    reference: { id: { id: 2, model: "partner" }, display_name: "second record" },
-                    child_ids: [
-                        [0, "virtual_1", { name: "kid", parent_id: { id: 2, display_name: "x" } }],
-                        [4, 2, { name: "second record" }],
-                    ],
-                },
-            };
-        }
-    });
-    onRpc("web_save", ({ args }) => {
-        const { product_id, reference, child_ids } = args[1];
-        expect.step(`web_save ${product_id} ${reference} ${JSON.stringify(child_ids)}`);
+    let onchangeSpec;
+    onRpc("web_save_offline", ({ kwargs }) => {
+        onchangeSpec = kwargs.onchange_spec;
+        expect.step("web_save_offline");
     });
     Partner._views = {
         form: `
@@ -873,23 +857,25 @@ test(`[Offline] new record saved offline: relational values of the skipped oncha
     await clickSave();
 
     await setOffline(false);
-    await expect.waitForSteps([
-        "onchange parent_id",
-        'web_save 37 partner,2 [[0,"virtual_1",{"name":"kid","parent_id":2}],[4,2]]',
-    ]);
+    await expect.waitForSteps(["web_save_offline"]);
+    expect(onchangeSpec).toEqual({
+        parent_id: {},
+        foo: {},
+        bar: {},
+        int_field: {},
+        product_id: {},
+        reference: {},
+        child_ids: { fields: { name: {}, parent_id: {} } },
+    });
 });
 
 test.tags("desktop");
-test(`[Offline] new record saved offline: only the readonly fields with force_save of the skipped onchange are replayed`, async () => {
+test(`[Offline] new record saved offline: the readonly fields are not requested for the skipped onchange, except with force_save`, async () => {
     const setOffline = mockOffline();
-    onRpc("onchange", ({ args }) => {
-        if (args[2].length) {
-            return { value: { foo: "from onchange", int_field: 7 } };
-        }
-    });
-    onRpc("web_save", ({ args }) => {
-        const { foo, int_field } = args[1];
-        expect.step(`web_save ${foo} ${int_field}`);
+    let onchangeSpec;
+    onRpc("web_save_offline", ({ kwargs }) => {
+        onchangeSpec = kwargs.onchange_spec;
+        expect.step("web_save_offline");
     });
     Partner._views = {
         form: `
@@ -917,7 +903,8 @@ test(`[Offline] new record saved offline: only the readonly fields with force_sa
     await clickSave();
 
     await setOffline(false);
-    await expect.waitForSteps(["web_save undefined 7"]);
+    await expect.waitForSteps(["web_save_offline"]);
+    expect(Object.keys(onchangeSpec)).toEqual(["parent_id", "int_field"]);
 });
 
 test.tags("desktop");
@@ -928,13 +915,8 @@ test(`[Offline] record saved offline twice: the skipped onchange is made once wh
             record.int_field = 5;
         },
     };
-    onRpc("onchange", ({ args }) => {
-        if (args[2].length) {
-            expect.step(`onchange ${args[2]}`);
-        }
-    });
-    onRpc("web_save", ({ args }) => {
-        expect.step(`web_save foo=${args[1].foo} int_field=${args[1].int_field}`);
+    onRpc("web_save_offline", ({ args, kwargs }) => {
+        expect.step(`web_save_offline ${kwargs.onchange_fields} foo=${args[1].foo}`);
     });
     Partner._views = {
         form: `
@@ -967,10 +949,9 @@ test(`[Offline] record saved offline twice: the skipped onchange is made once wh
     expect.verifySteps([]);
 
     await setOffline(false);
-    await expect.waitForSteps([
-        "onchange parent_id",
-        "web_save foo=My little Foo Value int_field=5",
-    ]);
+    await expect.waitForSteps(["web_save_offline parent_id foo=My little Foo Value"]);
+    await animationFrame();
+    expect(MockServer.env["partner"].at(-1).int_field).toBe(5);
 });
 
 test.tags("desktop");
