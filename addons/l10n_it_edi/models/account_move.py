@@ -319,14 +319,6 @@ class AccountMove(models.Model):
                     return xml_tree
         return res
 
-    def _check_l10n_it_edi_xml_content(self, file_data):
-        """ Checks if the XML root tag starts with 'FatturaElettronica'. Handles both standard XML and signed p7m files."""
-        xml_tree = self._parse_xml_with_recovery(file_data['raw'], file_data['name'])
-        if xml_tree is None:
-            return False
-        tag_name = etree.QName(xml_tree).localname
-        return tag_name.startswith('FatturaElettronica')
-
     def _is_l10n_it_edi_import_file(self, file_data):
         xml_tree = file_data.get('xml_tree')
         return (xml_tree is not None and etree.QName(file_data['xml_tree']).localname.startswith('FatturaElettronica'))
