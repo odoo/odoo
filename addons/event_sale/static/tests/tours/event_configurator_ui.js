@@ -9,6 +9,20 @@ registry.category("web_tour.tours").add("event_configurator_tour", {
         ...tourUtils.selectCustomer("Azure"),
         ...tourUtils.addProduct("Event Registration"),
         {
+            content: "Discard the event configurator without selecting an event",
+            trigger: ".modal .modal-footer button:contains(Discard)",
+            run: "click",
+        },
+        {
+            content: "Wait the modal is closed",
+            trigger: "body:not(:has(.modal))",
+        },
+        {
+            content: "Check that the unconfigured line has been removed",
+            trigger: ".o_field_one2many[name=order_line] tbody:not(:has(.o_data_row))",
+        },
+        ...tourUtils.addProduct("Event Registration"),
+        {
             trigger: 'div[name="event_id"] input',
             run: "click",
         },
