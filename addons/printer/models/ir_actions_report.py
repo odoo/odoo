@@ -60,7 +60,7 @@ class IrActionsReport(models.Model):
 
         jobs = []
         if report.report_type == "qweb-text" and "zpl" in report.name.lower() and has_printer("zpl"):
-            jobs.append({"type": "zpl", "report": base64.b64encode(self._render(report_name, docids, data=data)[0])})
+            jobs.append({"type": "zpl", "report": base64.b64encode(self._render(report_name, docids, data=data)[0]).decode()})
         elif report.report_type == "qweb-pdf" and has_printer("epos"):
             html = self._render_qweb_html(report_name, docids, data=data)[0].decode()
             # Reports reference relative URLs (e.g. the barcode widget's <img src="/report/barcode/...">),
@@ -69,7 +69,7 @@ class IrActionsReport(models.Model):
             html = html.replace("<head>", f'<head><base href="{base_url}"/>', 1)
             image = self._run_image_engine("wkhtmltopdf", [html], 576, 0)[0]
             if image:
-                jobs.append({"type": "epos", "report": base64.b64encode(thermal_printer_format(image))})
+                jobs.append({"type": "epos", "report": base64.b64encode(thermal_printer_format(image)).decode()})
 
         return jobs
 

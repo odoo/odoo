@@ -34,7 +34,7 @@ class IrActionsReport(models.Model):
             if name.endswith((".jpeg", ".jpg", ".png")) and use_epos_printers:
                 jobs.append({
                     "type": "epos",
-                    "report": base64.b64encode(thermal_printer_format(attachment.raw)),
+                    "report": base64.b64encode(thermal_printer_format(attachment.raw)).decode(),
                 })
             elif ".zpl" in name and use_zpl_printers:
                 jobs.append({"type": "zpl", "report": attachment.raw.to_base64()})
