@@ -5,10 +5,11 @@ export class AccountFiscalPosition extends Base {
     static pythonModel = "account.fiscal.position";
 
     getTaxesAfterFiscalPosition(taxes) {
+        // Read the raw ids: a tax can be linked to fiscal positions that are not loaded in the PoS.
         if (!this.tax_ids?.length) {
             // Mirror Python's map_tax: only return empty when the taxes themselves
             // are linked to fiscal positions (tax units pattern). Otherwise pass through.
-            if (taxes.some((tax) => tax.fiscal_position_ids?.length)) {
+            if (taxes.some((tax) => tax.raw.fiscal_position_ids?.length)) {
                 return [];
             }
             return taxes;
@@ -21,8 +22,8 @@ export class AccountFiscalPosition extends Base {
                     newTaxIds.push(mapTaxId);
                 }
             } else if (
-                !tax.fiscal_position_ids?.length ||
-                tax.fiscal_position_ids.some((taxFp) => taxFp.id === this.id)
+                !tax.raw.fiscal_position_ids?.length ||
+                tax.raw.fiscal_position_ids.includes(this.id)
             ) {
                 newTaxIds.push(tax.id);
             }
