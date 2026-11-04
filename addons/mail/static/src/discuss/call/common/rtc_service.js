@@ -1,6 +1,7 @@
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { DiscussP2PPlugin } from "@mail/discuss/call/common/discuss_p2p_plugin";
+import { CallInvitationsPlugin } from "@mail/discuss/call/common/call_invitations";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
@@ -2956,6 +2957,7 @@ export const rtcService = {
         const store = services["mail.store"];
         const rtc = store.rtc;
         rtc.pttExtService = usePlugin(PttExtensionPlugin);
+        usePlugin(CallInvitationsPlugin);
         rtc.pipService = services["discuss.pip_service"];
         rtc.onChange(
             () => [rtc.pipService.state.active],
