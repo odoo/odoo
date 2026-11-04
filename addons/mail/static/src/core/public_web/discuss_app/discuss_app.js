@@ -23,6 +23,7 @@ import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
+import { CommandPlugin } from "@web/core/commands/command_plugin";
 import { useService } from "@web/core/utils/hooks";
 
 /**
@@ -63,6 +64,7 @@ export class Discuss extends Component {
         providePlugins([MessageHighlightPlugin], { thread: () => this.thread });
         this.effect = usePlugin(EffectPlugin);
         this.ui = usePlugin(UIPlugin);
+        this.command = usePlugin(CommandPlugin);
         useAncestors({ inDiscussApp: true });
         useListener(
             window,
@@ -74,7 +76,7 @@ export class Discuss extends Component {
                     }
                 }
                 if (getActiveHotkey(ev) === "control+k") {
-                    this.store.env.services.command.openMainPalette({ searchValue: "@" });
+                    this.command.openMainPalette({ searchValue: "@" });
                     ev.preventDefault();
                     ev.stopPropagation();
                 }
