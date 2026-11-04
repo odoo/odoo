@@ -132,6 +132,7 @@ class TestDeparture(MailCase, TestHrCommon):
             'departure_date': date(2025, 5, 30),
         }])
         self.assertEqual(self.employee.version_ids[1].departure_id, departure)
+<<<<<<< 2811c26751cd8afa4a81b066e582c41c6caff926
 
     def test_departure_notice_contract_date(self):
         self.emp_D.write({
@@ -255,3 +256,44 @@ class TestDeparture(MailCase, TestHrCommon):
             'dismissal_date': (False, datetime(2025, 8, 1)),
             'departure_date': (False, datetime(2025, 8, 1)),
         })
+||||||| 076c3857e0680b5fe504fe61c635b236b2eb8023
+=======
+
+    def test_departure_notice_contract_date(self):
+        self.emp_D.write({
+            'employee_type_id': self.env.ref('hr.contract_type_employee').id,
+        })
+
+        departure = self.env['hr.employee.departure'].create({
+            'employee_id': self.emp_D.id,
+            'dismissal_date': date(2025, 5, 25),
+            'departure_date': date(2025, 5, 30),
+            'departure_reason_id': self.env.ref('hr.departure_fired').id,
+            'departure_description': 'PFI fired',
+        })
+
+        self.assertEqual(self.emp_D.contract_date_end, departure.departure_date)
+
+        # Cancelling the departure reopens the contract
+        self.emp_D.action_cancel_departure()
+        self.assertFalse(self.emp_D.contract_date_end)
+
+    def test_departure_fixed_term_contract_date(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Fixed Term Employee',
+            'date_version': date(2025, 2, 1),
+            'contract_date_start': date(2025, 2, 1),
+            'contract_date_end': date(2025, 12, 31),
+            'fixed_term': True,
+        })
+        self.env['hr.employee.departure'].create({
+            'employee_id': employee.id,
+            'dismissal_date': date(2025, 5, 25),
+            'departure_date': date(2025, 5, 30),
+            'departure_reason_id': self.env.ref('hr.departure_fired').id,
+        })
+        # The end of the fixed-term contract is kept until the departure is applied, to be kept on cancellation
+        self.assertEqual(employee.contract_date_end, date(2025, 12, 31))
+        employee.action_cancel_departure()
+        self.assertEqual(employee.contract_date_end, date(2025, 12, 31))
+>>>>>>> 0cf51f286d578b1344e0b4a0ea930a0ae4abafc9

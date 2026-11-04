@@ -145,7 +145,19 @@ class HrEmployeeDeparture(models.Model):
             departure.employee_id.version_ids.filtered(
                 lambda v: v.contract_date_start == version.contract_date_start
                 and v.contract_date_end == version.contract_date_end,
+<<<<<<< 2811c26751cd8afa4a81b066e582c41c6caff926
             ).with_context(sync_contract_dates=True).write(vals)
+||||||| 076c3857e0680b5fe504fe61c635b236b2eb8023
+            ).write({"departure_id": departure.id})
+=======
+            ).write({"departure_id": departure.id})
+            # The contract end date is restricted to the HR administrators, the departure is created by HR officers.
+            # The end date of a fixed-term contract is kept until the departure is applied: it couldn't be put back
+            # if the departure is cancelled.
+            version_sudo = version.sudo()
+            if version_sudo.contract_date_start and not (version_sudo.fixed_term and version_sudo.contract_date_end):
+                version_sudo.write({'contract_date_end': departure.departure_date})
+>>>>>>> 0cf51f286d578b1344e0b4a0ea930a0ae4abafc9
         return res
 
     def _track_in_employee_chatter(self, is_cancellation=False):

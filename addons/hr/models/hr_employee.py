@@ -3145,10 +3145,22 @@ class HrEmployee(models.Model):
         """
         self.ensure_one()
         self.action_unarchive()
+<<<<<<< 2811c26751cd8afa4a81b066e582c41c6caff926
         version = self._get_version(self.departure_id.departure_date)
         version.contract_date_end = self.departure_id.last_contract_date_end
         self.departure_id._track_in_employee_chatter(is_cancellation=True)
         self.departure_id.unlink()
+||||||| 076c3857e0680b5fe504fe61c635b236b2eb8023
+        self.departure_id.unlink()
+=======
+        departure = self.departure_id
+        if departure:
+            # The departure date was set as end date of an open-ended contract when the departure was created
+            version_sudo = self._get_version(departure.departure_date).sudo()
+            if not version_sudo.fixed_term and version_sudo.contract_date_end == departure.departure_date:
+                version_sudo.contract_date_end = False
+        departure.unlink()
+>>>>>>> 0cf51f286d578b1344e0b4a0ea930a0ae4abafc9
 
     def _get_working_periods_by_field(self, start, stop, field_key):
         """Return the contract periods of the employees overlapping ``[start, stop]``, keyed by ``field_key``.
