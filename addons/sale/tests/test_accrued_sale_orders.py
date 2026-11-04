@@ -212,3 +212,22 @@ class TestAccruedSaleOrders(TestSaleCommon):
                 {"account_id": self.wizard.account_id.id, "debit": 6000, "credit": 0},
             ],
         )
+
+    def test_discount_is_applied_to_accrued_amount(self):
+        # The accrued entry must reflect the line discount, both in the amount and
+        # in the "delivered at $X each" label price.
+        order_line = self.sale_order.order_line[0]
+        order_line.price_unit = 100.0
+        order_line.discount = 50.0
+        order_line.qty_delivered = 10.0
+
+        self.assertEqual(order_line.amount_to_invoice_at_date, 500.0)  # 10 * 100 * (1 - 50 / 100)
+
+        main_move = self.env["account.move"].search(self.wizard.create_entries()["domain"]).filtered(
+            lambda move: not move.reversed_entry_id
+        )
+        revenue_lines = main_move.line_ids.filtered(lambda line: line.account_id == self.account_revenue)
+        self.assertRecordValues(
+            revenue_lines,
+            [{"account_id": self.account_revenue.id, "debit": 0.0, "credit": 500.0}],
+        )
