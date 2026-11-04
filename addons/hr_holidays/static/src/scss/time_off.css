@@ -123,6 +123,26 @@
     }
 }
 
+/* Tablet: the time off form keeps two columns (see above), so the label stays beside its box, as on desktop */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .o_form_view .o_hr_leave_content .o_inner_group:not(.oe_subtotal_footer) .o_wrap_label:has(+ .o_cell:not(.o_no_box)) .o_hr_leave_label {
+        align-self: start;
+        gap: var(--o-bs-spacer-2) !important;
+        transform: none;
+        padding: calc(var(--field-spacing-unit) + 2px) 0 0; /* on the first line of the box */
+        background: none;
+        font-size: inherit;
+
+        .oi {
+            font-size: 1.25em;
+        }
+
+        .o_form_label {
+            font-size: inherit !important;
+        }
+    }
+}
+
 .o_calendar_popover_holidays {
     max-width: 448px !important;
     min-width: 250px;

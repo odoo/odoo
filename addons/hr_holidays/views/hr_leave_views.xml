@@ -414,13 +414,14 @@
                                         readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"
                                         options="{'no_create': True, 'request_type': 'leave'}"
                                         placeholder="eg. Sickness, Paid time off, Unpaid, ..."
+                                        class="mt-1 mt-sm-0"
                                     />
                                 </div>
                                 <div class="o_wrap_label o_hr_leave_label d-flex gap-2">
                                     <i class="oi oi-lg align-self-center" data-icon="schedule" title="Dates" name="date"/>
                                     <label for="request_date_from" string="Dates"/>
                                 </div>
-                                <div class="o_hr_leave_dates">
+                                <div class="o_hr_leave_dates pt-1 pt-sm-0">
                                     <div id="full_date" invisible="work_entry_type_request_unit == 'hour'">
                                         <field name="request_date_from"
                                                widget="daterange"
@@ -467,7 +468,7 @@
                                             <span class="text-muted text-nowrap" invisible="work_entry_type_request_unit == 'hour'">day(s)</span>
                                         </div>
                                     </div>
-                                    <div invisible="work_entry_type_request_unit != 'half_day' or last_several_days">
+                                    <div class="mt-1" invisible="work_entry_type_request_unit != 'half_day' or last_several_days">
                                         <field name="work_entry_type_request_unit" invisible="1"/> <!-- Needed -->
                                         <field name="last_several_days" invisible="1"/> <!-- Needed -->
                                         <field name="allowed_request_durations" invisible="1"/> <!-- Needed -->
