@@ -126,19 +126,56 @@ class StockPicking(models.Model):
     def _create_move_from_pos_order_lines(self, lines):
         self.ensure_one()
 
-        def get_grouping_key(line):
-            return (line.product_id.id, tuple(sorted(line.attribute_value_ids.ids)))
+        # 1. Ensure any new offline lots are created in the DB
+        self.env['stock.move']._create_production_lots_for_pos_order(lines)
 
-        move_vals = [
-            self._prepare_stock_move_vals(order_lines[0], order_lines)
-            for order_lines in lines.grouped(get_grouping_key).values()
-        ]
+        move_vals = []
+        lot_names_for_moves = []
+
+        for line in lines:
+            if line.product_id.tracking in ['lot', 'serial'] and line.pack_lot_ids:
+                qty_left = abs(line._get_qty_to_move())
+                for pos_lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
+                    if line.product_id.uom_id.is_zero(qty_left):
+                        break
+
+                    lot_qty = 1 if line.product_id.tracking == 'serial' else qty_left
+                    vals = self._prepare_stock_move_vals(line, [line])
+                    vals['product_uom_qty'] = lot_qty
+
+                    move_vals.append(vals)
+                    lot_names_for_moves.append(pos_lot.lot_name)
+
+                    qty_left -= lot_qty
+            else:
+                vals = self._prepare_stock_move_vals(line, [line])
+                move_vals.append(vals)
+                lot_names_for_moves.append(False)
+
         moves = self.env['stock.move'].create(move_vals)
-        confirmed_moves = moves._action_confirm()
-        confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
+
+        # FIX 2: Pass merge=False so Odoo doesn't re-combine your split moves or scramble the order
+        confirmed_moves = moves._action_confirm(merge=False)
+        confirmed_moves.move_line_ids.unlink()
+
+        for move, lot_name in zip(confirmed_moves, lot_names_for_moves):
+            if lot_name:
+                # FIX 1: Search the database directly so both pre-existing and newly created lots are found
+                mapped_lot = self.env['stock.lot'].search([
+                    ('product_id', '=', move.product_id.id),
+                    ('name', '=', lot_name),
+                    ('company_id', 'in', [move.company_id.id, False]),
+                ], limit=1)
+
+                move._action_assign(lot_id=mapped_lot)
+            else:
+                move._action_assign()
+
+            for move_line in move.move_line_ids:
+                move_line.quantity = move_line.quantity_product_uom
+
         confirmed_moves.picked = True
         self._link_owner_on_return_picking(lines)
-
     def _link_owner_on_return_picking(self, lines):
         """This method tries to retrieve the owner of the returned product"""
         if lines and lines[0].order_id.refunded_order_id.picking_ids:
