@@ -6,7 +6,7 @@
         <div class="payment-method-card col-12" t-att-class="{ 'col-md-6' : this.paymentMethods.length > 1 }">
             <div class="d-flex justify-content-between fs-5 fw-bold">
                 <span t-out="pm.name"/>
-                <div>
+                <div t-if="!pm.is_default_cash || canSeeExpectedCash">
                     <span
                         t-if="diffAmount"
                         class="me-2 amount-difference"
@@ -35,7 +35,7 @@
                     t-on-click="this.openDetailsPopup"
                 />
             </div>
-            <div t-if="pm.is_default_cash" class="cash-summary">
+            <div t-if="pm.is_default_cash and canSeeExpectedCash" class="cash-summary">
                 <div class="d-flex justify-content-between pt-1 fs-5">
                     <span>Opening</span>
                     <span t-out="this.pos.formatCurrency(pm.opening)"/>
@@ -51,11 +51,12 @@
     </t>
 
     <t t-name="point_of_sale.ClosePosPopup">
+        <t t-set="canSeeExpectedCash" t-value="this.pos.accessRight.canSeeExpectedCash"/>
         <Dialog contentClass="'close-pos-popup' + (!this.ui.isSmall ? ' p-2 rounded-4' : '')" bodyClass="'pt-2 pb-1'">
             <t t-set-slot="header">
                 <div class="d-flex flex-grow-1 justify-content-between pb-2 border-bottom">
                     <h4 class="my-1 fs-2">Closing Register</h4>
-                    <div class="total-orders fw-bolder align-middle my-1">
+                    <div t-if="canSeeExpectedCash" class="total-orders fw-bolder align-middle my-1">
                         <t t-out="this.props.orders_details.quantity"/> Orders:
                         <span class="amount" t-out="this.pos.formatCurrency(this.props.orders_details.amount)"/>
                     </div>
@@ -85,7 +86,7 @@
             <t t-set-slot="footer">
                 <div class="w-100 gap-2" t-att-class="this.ui.isSmall ? 'd-grid' : 'd-flex justify-content-between flex-wrap'"
                     t-att-style="this.ui.isSmall ? 'grid-template-columns: repeat(2, minmax(0, 1fr));' : ''">
-                    <button class="button highlight btn btn-primary" t-att-disabled="!this.canConfirm()" t-on-click="this.confirm" t-att-class="{'btn-lg': !this.ui.isSmall}">
+                    <button t-if="this.pos.accessRight.canCloseSession" class="button highlight btn btn-primary" t-att-disabled="!this.canConfirm()" t-on-click="this.confirm" t-att-class="{'btn-lg': !this.ui.isSmall}">
                         Close Register
                     </button>
                     <button class="button btn btn-secondary" t-att-disabled="!this.canCancel()" t-on-click="this.cancel" t-att-class="{'btn-lg me-auto': !this.ui.isSmall}">
@@ -95,11 +96,11 @@
                         Cash In/Out
                     </button>
                     <div class="d-flex gap-2">
-                        <button class="button icon btn btn-secondary flex-grow-1" t-on-click="this.downloadSalesReport" t-att-class="{'btn-lg': !this.ui.isSmall}" title="Download Sales Report">
+                        <button t-if="this.pos.accessRight.canPrintReport" class="button icon btn btn-secondary flex-grow-1" t-on-click="this.downloadSalesReport" t-att-class="{'btn-lg': !this.ui.isSmall}" title="Download Sales Report">
                             <i t-if="!this.ui.isSmall" class="oi" data-icon="download" role="img"/>
                             Daily Sale
                         </button>
-                        <button t-if="this.pos.ticketPrinter.hasReceiptPrinters" class="button icon btn btn-secondary">
+                        <button t-if="this.pos.ticketPrinter.hasReceiptPrinters and this.pos.accessRight.canPrintReport" class="button icon btn btn-secondary">
                             <SaleDetailsButton/>
                         </button>
                     </div>

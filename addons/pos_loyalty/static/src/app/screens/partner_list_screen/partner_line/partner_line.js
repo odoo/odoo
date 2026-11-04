@@ -16,6 +16,9 @@ patch(PartnerLine.prototype, {
      * @returns {{id: number, repr: string}[]}
      */
     getLoyaltyPoints() {
+        if (!this.pos.accessRight.canApplyRewards) {
+            return [];
+        }
         const order = this.pos.getOrder();
         const isOrderPartner = order?.partner_id?.id === this.props.partner.id;
         const entries = [];
