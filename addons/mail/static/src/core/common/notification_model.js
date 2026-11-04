@@ -53,6 +53,7 @@ export class Notification extends Record {
     notification_status;
     /** @type {string} */
     notification_type;
+    isSent = this.computed(() => this.notification_status === "sent");
     mail_email_address;
     failure = fields.One("Failure", { inverse: "notifications" });
     /** @type {string} */
@@ -95,6 +96,16 @@ export class Notification extends Record {
                 return _t("Opted Out");
         }
         return "";
+    }
+
+    deliveryMessage() {
+        switch (this.notification_type) {
+            case "email":
+                return _t("Delivered via email");
+            case "inbox":
+                return _t("Delivered via Odoo");
+        }
+        return _t("Delivered");
     }
 
     get isFailure() {
