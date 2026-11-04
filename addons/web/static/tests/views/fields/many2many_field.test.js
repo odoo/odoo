@@ -780,6 +780,66 @@ test("many2many list (editable): edition", async () => {
     ]);
 });
 
+async function mountTimmyForm(expectedValues) {
+    Partner._records[0].timmy = [1, 2];
+    PartnerType._records.push({ id: 15, name: "bronze", color: 6 });
+    PartnerType._views = { list: '<list><field name="name"/></list>', search: "<search/>" };
+    onRpc("partner", "web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1]).toEqual(expectedValues);
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="timmy"><list editable="bottom"><field name="name"/></list></field></form>`,
+        resId: 1,
+    });
+}
+
+test("many2many list (editable): add back a removed and edited record", async () => {
+    await mountTimmyForm({ timmy: [Command.link(15), Command.update(15, { name: "new name" })] });
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".modal .o_list_view .o_data_row .o_data_cell").click();
+    await contains(".o_data_row:eq(2) .o_data_cell").click();
+    await contains(".o_selected_row div[name=name] input").edit("new name", { confirm: false });
+    await contains(".o_form_view").click();
+    await contains(".o_list_record_remove:eq(2)").click();
+    expect(".o_data_row").toHaveCount(2);
+    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".modal .o_list_view .o_data_row .o_data_cell").click();
+    expect(queryAllTexts(".o_data_row .o_data_cell")).toEqual(["gold", "silver", "new name"]);
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
+
+test("many2many list (editable): remove the record being edited", async () => {
+    await mountTimmyForm({ timmy: [[3, 1]] });
+    await contains(".o_data_row:eq(0) .o_data_cell").click();
+    await contains(".o_selected_row div[name=name] input").edit("new name", { confirm: false });
+    await contains(".o_list_record_remove:eq(0)").click();
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
+
+test("many2many list (editable): discard the removal of an edited record", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="turtles"><list><field name="name"/></list><form><field name="partner_ids"><list editable="bottom"><field name="name"/></list></field></form></field></form>`,
+        resId: 1,
+    });
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".modal .o_data_row:eq(0) .o_data_cell").click();
+    await contains(".o_selected_row div[name=name] input").edit("new name", { confirm: false });
+    await contains(".modal .o_form_view").click();
+    await contains(".modal .o_form_button_save").click();
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".modal .o_list_record_remove:eq(0)").click();
+    await contains(".modal .o_form_button_cancel").click();
+    await contains(".o_data_row .o_data_cell").click();
+    expect(queryAllTexts(".modal .o_data_row .o_data_cell")).toEqual(["new name", "aaa"]);
+});
+
 test("many2many: create & delete attributes (both true)", async () => {
     Partner._records[0].timmy = [1, 2];
 
