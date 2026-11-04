@@ -16410,7 +16410,7 @@ test(`monetary field display for rtl languages`, async () => {
 test(`add record in editable list view with sample data`, async () => {
     Foo._records = [];
 
-    let deferred = null;
+    let deferred;
     onRpc("web_search_read", () => deferred);
 
     await mountView({
