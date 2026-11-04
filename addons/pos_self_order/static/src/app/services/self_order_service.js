@@ -867,6 +867,7 @@ export class SelfOrder extends Reactive {
             }
 
             this.currentOrder.recomputeChanges();
+            this.currentOrder.uiState.unsentSyncedQty = {};
             return this.models["pos.order"].getBy("uuid", uuid);
         } catch (error) {
             const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
@@ -902,6 +903,7 @@ export class SelfOrder extends Reactive {
         }
 
         const pendingDeltas = this._computePendingDeltas();
+        const deletedUnsentLineUuids = this._computeDeletedUnsentLineUuids();
 
         try {
             const data = await rpc(`/pos-self-order/get-user-data/`, {
@@ -946,7 +948,9 @@ export class SelfOrder extends Reactive {
                     }
                 }
 
+                this._removeDeletedUnsentLines(openOrder, deletedUnsentLineUuids);
                 this._reapplyPendingDeltas(openOrder, pendingDeltas);
+                this._restoreUnsentSyncedLines(openOrder);
             }
             this.data.debouncedSynchronizeLocalDataInIndexedDB();
         } catch (error) {
@@ -967,6 +971,41 @@ export class SelfOrder extends Reactive {
             }
         }
         return pendingDeltas;
+    }
+
+    /**
+     * Synced lines made unsent again (back from the kiosk payment page) then deleted by the
+     * customer: they are still on the server until the order is sent again.
+     */
+    _computeDeletedUnsentLineUuids() {
+        const uuids = new Set();
+        for (const order of this.models["pos.order"].filter((o) => o.state === "draft")) {
+            for (const uuid of Object.keys(order.uiState.unsentSyncedQty || {})) {
+                if (!this.models["pos.order.line"].getBy("uuid", uuid)) {
+                    uuids.add(uuid);
+                }
+            }
+        }
+        return uuids;
+    }
+
+    /** Deletes again the lines the refresh brought back although the customer deleted them. */
+    _removeDeletedUnsentLines(openOrder, deletedUnsentLineUuids) {
+        const lines = openOrder.lines.filter((l) => deletedUnsentLineUuids.has(l.uuid));
+        for (const line of lines) {
+            line.delete();
+        }
+    }
+
+    // Deleted lines keep their entry, so that the next refresh deletes them again
+    _restoreUnsentSyncedLines(openOrder) {
+        const { lineChanges, unsentSyncedQty } = openOrder.uiState;
+        for (const uuid of Object.keys(unsentSyncedQty)) {
+            if (lineChanges[uuid]) {
+                unsentSyncedQty[uuid] = lineChanges[uuid].qty;
+                delete lineChanges[uuid];
+            }
+        }
     }
 
     /** Reapplies pending deltas on top of the refreshed qty, removing lines dropped to 0 or below. */
