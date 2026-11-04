@@ -799,7 +799,7 @@ export class MockServer {
             for (const [callback, routeParams, { pure }] of listeners) {
                 try {
                     const callbackResult = await callback.call(this, request, routeParams);
-                    if (result instanceof Error) {
+                    if (callbackResult instanceof Error) {
                         error = callbackResult;
                     } else {
                         result = callbackResult;

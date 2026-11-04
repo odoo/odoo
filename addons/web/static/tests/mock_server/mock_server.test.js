@@ -297,6 +297,18 @@ test("onRpc: JSON-RPC error handling", async () => {
     });
 });
 
+test("onRpc: returned errors are handled like thrown ones", async () => {
+    onRpc("/boom", () => {
+        expect.step("not called");
+    });
+    onRpc("/boom", () => new Error("boom"));
+
+    await makeMockServer();
+
+    await expect(rpc("/boom")).rejects.toThrow("RPC_ERROR: boom");
+    expect.verifySteps([]);
+});
+
 test("onRpc: handlers returning undefined fall through to the next one", async () => {
     onRpc("/get_result", () => "fallback result");
     onRpc("/get_result", () => {
