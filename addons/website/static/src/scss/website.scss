@@ -489,7 +489,12 @@ h1, h2, h3, h4, h5, h6,
             filter: var(--o-bs-btn-close-white-filter);
         }
     }
-    @include o-add-gradient('menu-gradient');
+    // The menu gradient is designed for the full-width header only. Other
+    // navbar-light bars (blog, eLearning, recruitment, portal) keep the
+    // menu colors but not the gradient.
+    #wrapwrap > header & {
+        @include o-add-gradient('menu-gradient');
+    }
 
     a.nav-link {
         color: var(--#{$variable-prefix}nav-link-color);
@@ -499,7 +504,7 @@ h1, h2, h3, h4, h5, h6,
     }
 }
 
-.navbar-light .o_navbar_mobile {
+#wrapwrap > header .navbar-light .o_navbar_mobile {
     @include o-add-gradient('menu-gradient');
 }
 
