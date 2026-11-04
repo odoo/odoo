@@ -94,7 +94,22 @@ class PaymentTransaction(models.Model):
         return super()._compute_reference_prefix(separator, **values)
 
     def _get_line_items(self):
-        """ Override of `payment` to add the items of the linked invoices. """
+        """ Override of `payment` to add the items of the linked invoices.
+
+        The items are returned as a dict mapping each invoice line to a dict with the following
+        keys:
+
+        - `name`: The name of the product.
+        - `description`: The label of the invoice line.
+        - `sku`: The internal reference of the product, if any.
+        - `barcode`: The barcode of the product, if any.
+        - `product_type`: The type of the product.
+        - `quantity`: The quantity of the invoice line.
+        - `total`: The total amount of the invoice line, taxes included.
+
+        :return: The details of the items.
+        :rtype: dict
+        """
         line_items = super()._get_line_items()
         for line in self.invoice_ids.invoice_line_ids:
             if line.display_type != 'product':
@@ -107,8 +122,7 @@ class PaymentTransaction(models.Model):
                 'barcode': product.barcode,
                 'product_type': product.type,
                 'quantity': line.quantity,
-                'subtotal': line.price_subtotal,
-                'tax_amount': line.price_total - line.price_subtotal,
+                'total': line.price_total,
             }
         return line_items
 
