@@ -9,8 +9,16 @@ from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 from odoo.addons.base.models.res_partner import Partner
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
+<<<<<<< 99efbb4e2c8791495a9f86dd361d131700c3b105
 from odoo.tests import Form
 from odoo.tests.common import new_test_user, tagged, TransactionCase, users
+||||||| 6f00fdadb875342de2d14a179f25431f93cd63c9
+from odoo.tests import Form
+from odoo.tests.common import tagged, TransactionCase
+=======
+from odoo.tests import Form, new_test_user
+from odoo.tests.common import tagged, TransactionCase
+>>>>>>> bb803e34126e0a70a5c6cd0dc9c1e32448f31aa1
 
 # samples use effective TLDs from the Mozilla public suffix
 # list at http://publicsuffix.org
@@ -1068,6 +1076,7 @@ class TestPartnerRecursion(TransactionCase):
         self.p1.parent_id = self.p2
         with self.assertRaises(ValidationError):
             (self.p3|self.p2).write({'parent_id': self.p1.id})
+<<<<<<< 99efbb4e2c8791495a9f86dd361d131700c3b105
 
 
 @tagged('res_partner')
@@ -1078,3 +1087,53 @@ class TestPartnerCategory(TransactionCase):
         result = self.env['res.partner.category'].name_search('buggy_test')
         self.assertEqual(len(result), 1)
         self.assertEqual(result, [(category.id, category.display_name)])
+||||||| 6f00fdadb875342de2d14a179f25431f93cd63c9
+=======
+
+
+@tagged('res_partner')
+class TestPartnerBankHolderNameSync(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # a user that may rename partners but only read their bank accounts e.g salespeople
+        cls.partner_writer_group = cls.env['res.groups'].create({
+            'name': 'Can Edit Partners ',
+        })
+        cls.env['ir.model.access'].create({
+            'name': 'res_partner ACL test',
+            'model_id': cls.env['ir.model']._get_id('res.partner'),
+            'group_id': cls.partner_writer_group.id,
+            'perm_read': True,
+            'perm_write': True,
+            'perm_create': True,
+            'perm_unlink': True,
+        })
+        # test user
+        cls.test_user = new_test_user(
+            cls.env,
+            email='emp@test.mycompany.com',
+            groups='base.group_user',
+            login='partner_writer',
+        )
+        cls.test_user.groups_id = [Command.link(cls.partner_writer_group.id)]
+        cls.partner = cls.env['res.partner'].create({'name': 'Alice'})
+        cls.bank = cls.env['res.partner.bank'].create({
+            'acc_number': 'BE71096123456769',
+            'partner_id': cls.partner.id,
+        })
+
+    def test_holder_name_synced_without_bank_write_access(self):
+        self.assertEqual(self.bank.acc_holder_name, 'Alice')
+        # the user indeed has no write access on the bank account
+        with self.assertRaises(AccessError):
+            self.bank.with_user(self.test_user).acc_holder_name = 'Mallory'
+        # renaming the partner works and propagates to the holder name
+        self.partner.with_user(self.test_user).name = 'Alice Cooper'
+        self.assertEqual(self.bank.acc_holder_name, 'Alice Cooper')
+
+    def test_holder_name_not_synced_when_it_differs(self):
+        self.bank.acc_holder_name = 'Alice (personal)'
+        self.partner.with_user(self.test_user).name = 'Alice Cooper'
+        self.assertEqual(self.bank.acc_holder_name, 'Alice (personal)')
+>>>>>>> bb803e34126e0a70a5c6cd0dc9c1e32448f31aa1
