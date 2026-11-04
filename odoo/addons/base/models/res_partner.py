@@ -776,7 +776,7 @@ class Partner(models.Model):
             for partner in self:
                 for bank in partner.bank_ids:
                     if bank.acc_holder_name == partner.name:
-                        bank.acc_holder_name = vals['name']
+                        bank.sudo().acc_holder_name = vals['name']
         if 'company_id' in vals:
             company_id = vals['company_id']
             for partner in self:
