@@ -18,7 +18,7 @@
 .o-EmojiPicker {
     --EmojiPicker-active: color-mix(in srgb, var(--o-action) 15%, transparent);
 
-    background-color: var(--EmojiPicker-background-color, $gray-100);
+    background-color: var(--EmojiPicker-background-color, var(--gray-100));
 
     .o-Emoji {
         padding-left: var(--o-bs-spacer-1);
@@ -48,7 +48,7 @@
     }
 
     .o-EmojiPicker-section {
-        background-color: var(--EmojiPicker-background-color, $gray-100);
+        background-color: var(--EmojiPicker-background-color, var(--gray-100));
 
         .o-EmojiPicker-sectionIcon {
             filter: grayscale(1);
@@ -84,7 +84,7 @@
 
         &, &:focus {
             background-color: var(--EmojiPicker-background-color, var(--o-view-background-color));
-            color: var(--EmojiPicker-input-color, $input-color);
+            color: var(--EmojiPicker-input-color, var(--o-bs-input-color));
         }
 
         &::placeholder {
@@ -99,7 +99,7 @@
 
     .o-EmojiPicker-searchContour:focus-within {
         --border-color: var(--o-bs-input-focus-border-color);
-        box-shadow: $input-focus-box-shadow;
+        box-shadow: var(--o-bs-input-focus-box-shadow);
     }
 
     [data-icon="search"],

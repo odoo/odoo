@@ -4,7 +4,7 @@
 
     z-index: var(--o-bs-zindex-sticky);
     &.o-mobile {
-        z-index: var(--mail-ChatWindow-mobileZindex, $zindex-sticky - 2) !important;
+        z-index: var(--mail-ChatWindow-mobileZindex, calc(var(--o-bs-zindex-sticky) - 2)) !important;
     }
     &:not(.o-mobile) {
         height: Min(95vh, calc(var(--o-mail-ChatWindow-width) * 15 / 9));

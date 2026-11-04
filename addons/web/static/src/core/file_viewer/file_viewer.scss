@@ -28,8 +28,8 @@
 }
 
 .o-FileViewer-headerButton:hover {
-    background-color: rgba($white, 0.1);
-    color: lighten($gray-400, 15%);
+    background-color: color-mix(in srgb, var(--white) 10%, transparent);
+    color: hsl(from var(--gray-400) h s calc(l + 15));
 }
 
 .o-FileViewer-toolbar {
@@ -52,7 +52,7 @@
     outline: none;
 
     &.o-isText {
-        background: $white;
+        background: var(--white);
 
         &.o-FileViewer-loading {
             background: var(--o-bs-black);
