@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_bank_ready_mat" model="res.partner.bank">
+        <field name="account_number">9876543210</field>
+        <field name="bank_name">Wells Fargo Bank</field>
+        <field name="bank_bic">WFBIUS6S</field>
+        <field name="street">420 Montgomery Street</field>
+        <field name="city">San Francisco</field>
+        <field name="state_id" ref="base.state_us_5"/>
+        <field name="zip">94104</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="clearing_number">121042882</field>
+        <field name="l10n_us_bank_account_type">checking</field>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="allow_out_payment" eval="True"/>
+    </record>
+</odoo>
