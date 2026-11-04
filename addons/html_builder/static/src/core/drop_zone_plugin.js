@@ -248,6 +248,7 @@ export class DropZonePlugin extends Plugin {
             selectorChildren: new Set(selectorChildren),
             selectorSanitized,
             selectorGrids,
+            isBlock: snippetEl.matches(this.getResource("so_snippet_addition_selectors").join(", ")),
         };
     }
 
@@ -470,6 +471,7 @@ export class DropZonePlugin extends Plugin {
      *   which an indicative dropzone preventing the drop must be inserted
      * @property {Set<HTMLElement>} selectorGrids elements which are in grid
      *   mode and for which a grid dropzone must be inserted
+     * @property {Boolean} isBlock true if the dragged element is a block
      */
     /**
      * @typedef Options
@@ -486,7 +488,7 @@ export class DropZonePlugin extends Plugin {
      * @returns
      */
     activateDropzones(
-        { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids },
+        { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids, isBlock },
         { toInsertInline, isContentInIframe = true } = {}
     ) {
         const isIgnored = (el) => el.matches(this.ignoredSiblingSelectors) || !isVisible(el);
@@ -494,7 +496,11 @@ export class DropZonePlugin extends Plugin {
         for (const parentEl of selectorChildren) {
             const validChildrenEls = [...parentEl.children].filter((el) => !isIgnored(el));
             hookEls.push(...validChildrenEls);
-            parentEl.prepend(this.createDropzone(parentEl));
+            const dropzoneEl = this.createDropzone(parentEl);
+            // Lets inner content dropzones look different in areas that also
+            // accept blocks.
+            dropzoneEl.classList.toggle("o_inner_dropzone", !isBlock);
+            parentEl.prepend(dropzoneEl);
         }
         hookEls.push(...selectorSiblings);
         const systemNodeSelectors = this.getResource("system_node_selectors").join(",");

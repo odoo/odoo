@@ -17,7 +17,10 @@
     }
 
     &.oe_structure.oe_empty,
-    &[data-oe-type=html]:not(.o_drop_inner_empty),
+    &[data-oe-type=html]:not(
+        .o_drop_inner_empty:not(.oe_structure),
+        :has(> .o_inner_dropzone)
+    ),
     .oe_structure.oe_empty {
 
         /* Base case (website.page (#wrap), t-field (product description), ...) */
