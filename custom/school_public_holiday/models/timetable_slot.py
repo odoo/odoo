@@ -188,7 +188,7 @@ class UniversityTimetableSlot(models.Model):
         }
 
     @api.model
-    def get_schedule(self, start_date_str, end_date_str, filters=None, limit=100, offset=0):
+    def get_schedule(self, start_date_str, end_date_str, filters=None, limit=1000, offset=0):
         res = super().get_schedule(start_date_str, end_date_str, filters=filters, limit=limit, offset=offset)
         if not isinstance(res, dict) or "holidays" not in res:
             return res

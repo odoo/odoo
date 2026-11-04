@@ -36,9 +36,9 @@ class TestEnrollment(TransactionCase):
         )
         self.year = Year.create(
             {
-                "name": "Enrollment Test Year 2025-2026",
-                "date_start": "2025-09-01",
-                "date_end": "2026-06-30",
+                "name": "Enrollment Test Year 2036-2037",
+                "date_start": "2036-09-01",
+                "date_end": "2037-06-30",
             }
         )
         self.semester = Semester.create(
@@ -46,8 +46,8 @@ class TestEnrollment(TransactionCase):
                 "name": "Semester 1",
                 "academic_year_id": self.year.id,
                 "semester_type": "semester_1",
-                "date_start": "2025-09-01",
-                "date_end": "2025-12-22",
+                "date_start": "2036-09-01",
+                "date_end": "2036-12-22",
             }
         )
         self.section = Section.create(
@@ -203,17 +203,17 @@ class TestEnrollmentModelRules(TransactionCase):
             "department_id": self.department.id,
         })
         self.year = self.env["university.academic.year"].create({
-            "name": "Rules Test Academic Year 2026",
-            "date_start": "2026-01-01",
-            "date_end": "2026-12-31",
+            "name": "Rules Test Academic Year 2038",
+            "date_start": "2038-01-01",
+            "date_end": "2038-12-31",
             "state": "open",
         })
         self.semester = self.env["university.semester"].create({
-            "name": "Spring 2026",
+            "name": "Spring 2038",
             "academic_year_id": self.year.id,
             "semester_type": "semester_1",
-            "date_start": "2026-01-01",
-            "date_end": "2026-06-30",
+            "date_start": "2038-01-01",
+            "date_end": "2038-06-30",
         })
         self.section = self.env["university.class.section"].create({
             "name": "SE-2026-A",
@@ -284,19 +284,29 @@ class TestEnrollmentModelRules(TransactionCase):
     def test_registration_window(self):
         """Enrollment must respect the department term registration window."""
         today = fields.Date.today()
-        future_year = self.env["university.academic.year"].create({
-            "name": "Registration Window Year",
-            "date_start": today - timedelta(days=30),
-            "date_end": today + timedelta(days=300),
-            "state": "open",
-        })
-        future_sem = self.env["university.semester"].create({
-            "name": "Registration Window Semester",
-            "academic_year_id": future_year.id,
-            "semester_type": "semester_2",
-            "date_start": today + timedelta(days=20),
-            "date_end": today + timedelta(days=120),
-        })
+        future_year = self.env["university.academic.year"].search([
+            ("date_start", "<=", today),
+            ("date_end", ">=", today),
+        ], limit=1)
+        if not future_year:
+            future_year = self.env["university.academic.year"].create({
+                "name": "Registration Window Year",
+                "date_start": today - timedelta(days=30),
+                "date_end": today + timedelta(days=300),
+                "state": "open",
+            })
+        future_sem = self.env["university.semester"].search([
+            ("academic_year_id", "=", future_year.id),
+            ("semester_type", "=", "semester_2"),
+        ], limit=1)
+        if not future_sem:
+            future_sem = self.env["university.semester"].create({
+                "name": "Registration Window Semester",
+                "academic_year_id": future_year.id,
+                "semester_type": "semester_2",
+                "date_start": today + timedelta(days=20),
+                "date_end": today + timedelta(days=120),
+            })
         future_section = self.env["university.class.section"].create({
             "name": "SE-Future-A",
             "program_id": self.program.id,
@@ -305,14 +315,24 @@ class TestEnrollmentModelRules(TransactionCase):
             "active": True,
         })
         # Create department term with window in the future
-        term = self.env["university.department.term"].create({
-            "semester_id": future_sem.id,
-            "department_id": self.department.id,
-            "date_start": today + timedelta(days=20),
-            "date_end": today + timedelta(days=120),
-            "registration_start": today + timedelta(days=5),
-            "registration_end": today + timedelta(days=15),
-        })
+        term = self.env["university.department.term"].search([
+            ("semester_id", "=", future_sem.id),
+            ("department_id", "=", self.department.id),
+        ], limit=1)
+        if not term:
+            term = self.env["university.department.term"].create({
+                "semester_id": future_sem.id,
+                "department_id": self.department.id,
+                "date_start": future_sem.date_start,
+                "date_end": future_sem.date_end,
+                "registration_start": today + timedelta(days=5),
+                "registration_end": today + timedelta(days=15),
+            })
+        else:
+            term.write({
+                "registration_start": today + timedelta(days=5),
+                "registration_end": today + timedelta(days=15),
+            })
         with self.assertRaises(ValidationError):
             self.env["university.enrollment"].create({
                 "student_id": self.student.id,

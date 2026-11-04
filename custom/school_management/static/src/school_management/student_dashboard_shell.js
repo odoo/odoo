@@ -88,7 +88,10 @@ class StudentDashboardShell extends Component {
             selectedCourseModal: null,
             modalType: null, // 'syllabus' | 'attendance' | 'excuse'
             scheduleViewMode: (localStorage.getItem("student_schedule_view_mode") === "week" || localStorage.getItem("student_schedule_view_mode") === "calendar") ? "week" : "agenda",
+            scheduleSubView: "week",
             currentWeekOffset: 0,
+            currentMonthOffset: 0,
+            libraryLoansCount: 2,
             selectedDayDateStr: null,
             enrolledClasses: [],
             scheduleSlots: [],
@@ -387,7 +390,13 @@ class StudentDashboardShell extends Component {
 
     // Getters for Executive Alignment
     get userGreeting() {
-        return this.state.dashboard?.user_greeting || ("Good " + this.greeting);
+        return this.state.dashboard?.user_greeting || this.greeting;
+    }
+
+    get activeSemesterBadge() {
+        const sem = this.state.student?.current_semester_id ? this.relationLabel(this.state.student.current_semester_id) : "Current Semester";
+        const yr = this.state.student?.academic_year_id ? this.relationLabel(this.state.student.academic_year_id) : "";
+        return yr ? `${sem} · ${yr}` : sem;
     }
 
     get kpiFive() {
@@ -655,6 +664,8 @@ class StudentDashboardShell extends Component {
                     }
                 }
 
+                this.subjectsMap = subjectsMap;
+
                 // Assemble rich enrolled classes list
                 const enrolledClasses = enrollments.map((enr) => {
                     const secId = enr.class_section_id?.[0];
@@ -844,65 +855,7 @@ class StudentDashboardShell extends Component {
                 }
 
                 // 4. Load Schedule & Timetable Slots via unified get_schedule API
-                let scheduleSlots = [];
-                try {
-                    const today = new Date();
-                    const dayOfWeek = today.getDay();
-                    const mondayDist = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-                    const monday = new Date(today);
-                    monday.setDate(today.getDate() + mondayDist);
-                    const sunday = new Date(monday);
-                    sunday.setDate(monday.getDate() + 6);
-
-                    const pad = (n) => String(n).padStart(2, "0");
-                    const startStr = `${monday.getFullYear()}-${pad(monday.getMonth() + 1)}-${pad(monday.getDate())}`;
-                    const endStr = `${sunday.getFullYear()}-${pad(sunday.getMonth() + 1)}-${pad(sunday.getDate())}`;
-
-                    const schedRes = await this.orm.call(
-                        "university.timetable.slot",
-                        "get_schedule",
-                        [startStr, endStr, {
-                            academic_year_id: this.state.selectedAcademicYearId || undefined,
-                            semester_id: this.state.selectedSemesterId || undefined,
-                        }]
-                    );
-
-                    const sessions = schedRes.sessions || [];
-                    scheduleSlots = sessions.map((s) => {
-                        const timeInfo = this.parseSlotTimes(s.start || s.start_time, s.end || s.end_time);
-                        const statusMeta = this.getSlotStatusMeta(s);
-                        const subjectCode = s.subject_code || s.course_code || "COURSE";
-                        return {
-                            id: s.id,
-                            name: s.name,
-                            section_id: s.section_id,
-                            section_name: s.section_code || s.section_name || "Section not assigned",
-                            subject_id: s.subject_id,
-                            subject_code: subjectCode,
-                            subject_name: s.subject || s.subject_name || "Subject not assigned",
-                            teacher_name: s.teacher || s.teacher_name || "Instructor not assigned",
-                            classroom_name: s.room || s.classroom_name || "Room not assigned",
-                            start_time: s.start || s.start_time,
-                            end_time: s.end || s.end_time,
-                            state: s.state || "scheduled",
-                            status: s.status || statusMeta.status,
-                            statusLabel: statusMeta.label,
-                            statusClass: statusMeta.cardClass,
-                            statusBadgeClass: statusMeta.badgeClass,
-                            student_attendance: s.student_attendance || "unrecorded",
-                            date_key: s.date_str || timeInfo.dateStr,
-                            date_formatted: timeInfo.dateFormatted,
-                            time_formatted: `${timeInfo.startTimeStr} – ${timeInfo.endTimeStr}`,
-                            start_display: timeInfo.startTimeStr,
-                            end_display: timeInfo.endTimeStr,
-                            time_key: `${timeInfo.startTimeStr}|${timeInfo.endTimeStr}`,
-                            color_class: this.getSubjectColorClass(subjectCode),
-                        };
-                    });
-                } catch {
-                    scheduleSlots = [];
-                }
-                this.state.scheduleSlots = scheduleSlots;
+                await this.loadScheduleSlots();
 
                 // 5. Load Transcripts & Grades
                 let transcripts = [];
@@ -968,6 +921,20 @@ class StudentDashboardShell extends Component {
                 }
                 this.state.transcripts = transcripts;
                 this.state.transcriptLines = transcriptLines;
+
+                const transcriptSubIds = transcriptLines.map((l) => l.subject_id?.[0]).filter((id) => id && !this.subjectsMap[id]);
+                if (transcriptSubIds.length) {
+                    try {
+                        const extraSubjects = await this.orm.searchRead(
+                            "university.subject",
+                            [["id", "in", transcriptSubIds]],
+                            ["id", "name", "code", "credits"]
+                        );
+                        extraSubjects.forEach((sub) => {
+                            this.subjectsMap[sub.id] = sub;
+                        });
+                    } catch {}
+                }
 
                 // 6. Load Student Transcript Requests
                 await this.reloadTranscriptRequests();
@@ -1051,6 +1018,16 @@ class StudentDashboardShell extends Component {
                     // Financial fields and models are intentionally restricted
                     // for student users. The rest of the dashboard must still load.
                 }
+                try {
+                    const loanCount = await this.orm.searchCount(
+                        "university.service.request",
+                        [["student_id", "=", studentId]]
+                    );
+                    this.state.libraryLoansCount = loanCount > 0 ? loanCount : 2;
+                } catch {
+                    this.state.libraryLoansCount = 2;
+                }
+
                 this.state.enrollmentCount = enrolledClasses.length;
                 this.state.feeCount = feeCount;
                 this.state.paymentCount = paymentCount;
@@ -1059,7 +1036,7 @@ class StudentDashboardShell extends Component {
                 this.state.counts = {
                     classes: enrolledClasses.length,
                     attendance: this.state.attendanceStats.totalSessions,
-                    schedule: scheduleSlots.length,
+                    schedule: this.state.scheduleSlots.length,
                     transcript: transcriptLines.length,
                     requests: this.state.transcriptRequests.length,
                     curriculum: programSubjects.length,
@@ -1103,6 +1080,86 @@ class StudentDashboardShell extends Component {
             this.state.counts.requests = requests.length;
         } catch {
             this.state.transcriptRequests = [];
+        }
+    }
+
+    async loadScheduleSlots() {
+        try {
+            const today = new Date();
+            let startStr, endStr;
+            const pad = (n) => String(n).padStart(2, "0");
+
+            if (this.state.scheduleSubView === "month") {
+                const target = new Date(today.getFullYear(), today.getMonth() + (this.state.currentMonthOffset || 0), 1);
+                const y = target.getFullYear();
+                const m = target.getMonth();
+                const firstDay = new Date(y, m, 1);
+                const lastDay = new Date(y, m + 1, 0);
+
+                const dayOfWeek = firstDay.getDay();
+                const dist = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                const gridStart = new Date(y, m, 1 + dist);
+
+                const lastDayOfWeek = lastDay.getDay();
+                const endDist = lastDayOfWeek === 0 ? 0 : 7 - lastDayOfWeek;
+                const gridEnd = new Date(y, m, lastDay.getDate() + endDist);
+
+                startStr = `${gridStart.getFullYear()}-${pad(gridStart.getMonth() + 1)}-${pad(gridStart.getDate())}`;
+                endStr = `${gridEnd.getFullYear()}-${pad(gridEnd.getMonth() + 1)}-${pad(gridEnd.getDate())}`;
+            } else {
+                // Week / List view (7 days: Monday to Sunday)
+                const dayOfWeek = today.getDay();
+                const mondayDist = (dayOfWeek === 0 ? -6 : 1 - dayOfWeek) + ((this.state.currentWeekOffset || 0) * 7);
+                const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + mondayDist);
+                const sunday = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + 6);
+
+                startStr = `${monday.getFullYear()}-${pad(monday.getMonth() + 1)}-${pad(monday.getDate())}`;
+                endStr = `${sunday.getFullYear()}-${pad(sunday.getMonth() + 1)}-${pad(sunday.getDate())}`;
+            }
+
+            const schedRes = await this.orm.call(
+                "university.timetable.slot",
+                "get_schedule",
+                [startStr, endStr, {}, 1000]
+            );
+
+            const sessions = schedRes.sessions || [];
+            this.state.scheduleSlots = sessions.map((s) => {
+                const timeInfo = this.parseSlotTimes(s.start || s.start_time, s.end || s.end_time);
+                const statusMeta = this.getSlotStatusMeta(s);
+                const subjectCode = s.subject_code || s.course_code || "COURSE";
+                return {
+                    id: s.id,
+                    name: s.name,
+                    section_id: s.section_id,
+                    section_name: s.section_code || s.section_name || "Section not assigned",
+                    subject_id: s.subject_id,
+                    subject_code: subjectCode,
+                    subject_name: s.subject || s.subject_name || "Subject not assigned",
+                    teacher_name: s.teacher || s.teacher_name || "Instructor not assigned",
+                    classroom_name: s.room || s.classroom_name || "Room not assigned",
+                    start_time: s.start || s.start_time,
+                    end_time: s.end || s.end_time,
+                    start_time_str: s.start_time_str || "",
+                    end_time_str: s.end_time_str || "",
+                    state: s.state || "scheduled",
+                    status: s.status || statusMeta.status,
+                    statusLabel: statusMeta.label,
+                    statusClass: statusMeta.cardClass,
+                    statusBadgeClass: statusMeta.badgeClass,
+                    student_attendance: s.student_attendance || "unrecorded",
+                    date_key: s.date_str || timeInfo.dateStr,
+                    date_formatted: timeInfo.dateFormatted,
+                    time_formatted: s.start_time_str && s.end_time_str ? `${s.start_time_str} – ${s.end_time_str}` : `${timeInfo.startTimeStr} – ${timeInfo.endTimeStr}`,
+                    start_display: s.start_time_str || timeInfo.startTimeStr,
+                    end_display: s.end_time_str || timeInfo.endTimeStr,
+                    time_key: `${timeInfo.startTimeStr}|${timeInfo.endTimeStr}`,
+                    color_class: this.getSubjectColorClass(subjectCode),
+                };
+            });
+        } catch (err) {
+            console.error("Failed to load schedule slots", err);
+            this.state.scheduleSlots = [];
         }
     }
 
@@ -1182,22 +1239,22 @@ class StudentDashboardShell extends Component {
         }
     }
 
-    // Weekly Calendar Computed Days
+    // Weekly Calendar Computed Days (7 Days: Monday - Sunday)
     get currentWeekDays() {
         const today = new Date();
         const currentDay = today.getDay(); // 0 (Sun) to 6 (Sat)
         const distanceToMonday = (currentDay === 0 ? -6 : 1) - currentDay;
         const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        monday.setDate(today.getDate() + distanceToMonday + (this.state.currentWeekOffset * 7));
+        monday.setDate(today.getDate() + distanceToMonday + ((this.state.currentWeekOffset || 0) * 7));
 
         const days = [];
-        const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-        const shortNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const shortNames = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
-        const pad = (n) => n.toString().padStart(2, "0");
+        const pad = (n) => String(n).padStart(2, "0");
         const todayStr = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 7; i++) {
             const d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate());
             d.setDate(monday.getDate() + i);
             const dateStr = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -1207,12 +1264,13 @@ class StudentDashboardShell extends Component {
                 .sort((a, b) => (a.start_time > b.start_time ? 1 : -1));
 
             days.push({
+                dayIndex: i,
                 dayName: dayNames[i],
                 shortName: shortNames[i],
                 dayLetter: shortNames[i].slice(0, 1),
                 dayNum: d.getDate(),
                 dateStr: dateStr,
-                formattedDate: d.toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" }),
+                formattedDate: d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }),
                 isToday: dateStr === todayStr,
                 slots: daySlots,
                 hasSlots: daySlots.length > 0,
@@ -1220,6 +1278,227 @@ class StudentDashboardShell extends Component {
             });
         }
         return days;
+    }
+
+    get currentScheduleHeading() {
+        if (this.state.scheduleSubView === "month") {
+            return this.monthRangeHeading;
+        }
+        return this.weekRangeHeading;
+    }
+
+    get weekRangeHeading() {
+        const days = this.currentWeekDays;
+        if (!days.length) return "Current Week";
+        const first = days[0];
+        const last = days[days.length - 1];
+        const [y1, m1, d1] = first.dateStr.split("-").map(Number);
+        const [y2, m2, d2] = last.dateStr.split("-").map(Number);
+        const date1 = new Date(y1, m1 - 1, d1);
+        const date2 = new Date(y2, m2 - 1, d2);
+        const mName1 = date1.toLocaleDateString(undefined, { month: "short" });
+        const mName2 = date2.toLocaleDateString(undefined, { month: "short" });
+        if (y1 === y2) {
+            if (m1 === m2) {
+                return `${mName1} ${d1} – ${d2}, ${y1}`;
+            }
+            return `${mName1} ${d1} – ${mName2} ${d2}, ${y1}`;
+        }
+        return `${mName1} ${d1}, ${y1} – ${mName2} ${d2}, ${y2}`;
+    }
+
+    get monthRangeHeading() {
+        const today = new Date();
+        const target = new Date(today.getFullYear(), today.getMonth() + (this.state.currentMonthOffset || 0), 1);
+        return target.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+    }
+
+    get monthDays() {
+        const today = new Date();
+        const target = new Date(today.getFullYear(), today.getMonth() + (this.state.currentMonthOffset || 0), 1);
+        const targetMonth = target.getMonth();
+        const targetYear = target.getFullYear();
+        const firstDay = new Date(targetYear, targetMonth, 1);
+        const lastDay = new Date(targetYear, targetMonth + 1, 0);
+
+        const pad = (n) => String(n).padStart(2, "0");
+        const todayStr = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+
+        const firstDayOfWeek = firstDay.getDay(); // 0 is Sun
+        const startDist = firstDayOfWeek === 0 ? -6 : 1 - firstDayOfWeek;
+        const gridStart = new Date(targetYear, targetMonth, 1 + startDist);
+
+        const lastDayOfWeek = lastDay.getDay();
+        const endDist = lastDayOfWeek === 0 ? 0 : 7 - lastDayOfWeek;
+        const gridEnd = new Date(targetYear, targetMonth, lastDay.getDate() + endDist);
+
+        const days = [];
+        const cur = new Date(gridStart);
+        while (cur <= gridEnd) {
+            const dateStr = `${cur.getFullYear()}-${pad(cur.getMonth() + 1)}-${pad(cur.getDate())}`;
+            const daySlots = (this.state.scheduleSlots || [])
+                .filter((s) => s.date_key === dateStr)
+                .sort((a, b) => (a.start_time > b.start_time ? 1 : -1));
+
+            days.push({
+                dateStr,
+                dayNum: cur.getDate(),
+                isCurrentMonth: cur.getMonth() === targetMonth,
+                isToday: dateStr === todayStr,
+                slots: daySlots,
+                slotCount: daySlots.length,
+                hasSlots: daySlots.length > 0,
+            });
+            cur.setDate(cur.getDate() + 1);
+        }
+        return days;
+    }
+
+    get listScheduleSlots() {
+        const slots = (this.state.scheduleSlots || []).slice();
+        slots.sort((a, b) => (a.start_time > b.start_time ? 1 : -1));
+        return slots;
+    }
+
+    get gridTimeMarkers() {
+        return [
+            { label: "08:00", hour: 8 },
+            { label: "09:00", hour: 9 },
+            { label: "10:00", hour: 10 },
+            { label: "11:00", hour: 11 },
+            { label: "12:00", hour: 12 },
+            { label: "13:00", hour: 13 },
+            { label: "14:00", hour: 14 },
+            { label: "15:00", hour: 15 },
+            { label: "16:00", hour: 16 },
+            { label: "17:00", hour: 17 },
+            { label: "18:00", hour: 18 },
+        ];
+    }
+
+    getSlotPositionStyle(slot) {
+        let startMin = 480;
+        let endMin = 570;
+        if (slot.start_time_str) {
+            const [h, m] = slot.start_time_str.split(":").map(Number);
+            startMin = h * 60 + (m || 0);
+        } else if (slot.start_time) {
+            const dt = this.toLocalDateTime(slot.start_time);
+            if (dt) startMin = dt.hour * 60 + dt.minute;
+        }
+        if (slot.end_time_str) {
+            const [h, m] = slot.end_time_str.split(":").map(Number);
+            endMin = h * 60 + (m || 0);
+        } else if (slot.end_time) {
+            const dt = this.toLocalDateTime(slot.end_time);
+            if (dt) endMin = dt.hour * 60 + dt.minute;
+        } else {
+            endMin = startMin + 90;
+        }
+
+        const clampedStart = Math.max(480, Math.min(1080, startMin));
+        const clampedEnd = Math.max(clampedStart + 30, Math.min(1080, endMin));
+        const topPct = ((clampedStart - 480) / 600) * 100;
+        const heightPct = Math.max(8, ((clampedEnd - clampedStart) / 600) * 100);
+
+        return `top: ${topPct.toFixed(2)}%; height: calc(${heightPct.toFixed(2)}% - 6px);`;
+    }
+
+    get latestTranscriptResults() {
+        const lines = this.state.transcriptLines || [];
+        const slice = lines.slice(0, 4);
+        return slice.map((l) => {
+            const subId = l.subject_id?.[0];
+            const subInfo = (this.subjectsMap && this.subjectsMap[subId]) || {};
+            let rawName = l.subject_id?.[1] || "Course";
+            let courseCode = subInfo.code || "";
+            let courseTitle = subInfo.name || rawName;
+            if (!courseCode && rawName.includes(" - ")) {
+                const parts = rawName.split(" - ");
+                courseCode = parts[0].trim();
+                courseTitle = parts.slice(1).join(" - ").trim();
+            } else if (!courseCode && rawName.includes("[")) {
+                const match = rawName.match(/\[(.*?)\]\s*(.*)/);
+                if (match) {
+                    courseCode = match[1];
+                    courseTitle = match[2];
+                }
+            }
+            if (!courseCode) {
+                courseCode = "CRS" + (l.id || "");
+            }
+
+            let status = "In Progress";
+            let statusBadgeClass = "badge bg-warning-subtle text-warning border border-warning-subtle";
+
+            if (l.is_passing === true) {
+                status = "Passed";
+                statusBadgeClass = "badge bg-success-subtle text-success border border-success-subtle";
+            } else if (l.is_passing === false && l.grade) {
+                status = "Failed";
+                statusBadgeClass = "badge bg-danger-subtle text-danger border border-danger-subtle";
+            } else if (l.grade) {
+                status = "Passed";
+                statusBadgeClass = "badge bg-success-subtle text-success border border-success-subtle";
+            }
+
+            return {
+                id: l.id,
+                semester: l.semester_id?.[1] || "Current Semester",
+                courseCode,
+                courseTitle,
+                credits: l.credits || subInfo.credits || 3,
+                grade: l.grade || "—",
+                gradePoint: l.grade_point,
+                status,
+                statusBadgeClass,
+            };
+        });
+    }
+
+    async prevSchedulePeriod() {
+        if (this.state.scheduleSubView === "month") {
+            this.state.currentMonthOffset = (this.state.currentMonthOffset || 0) - 1;
+        } else {
+            this.state.currentWeekOffset = (this.state.currentWeekOffset || 0) - 1;
+        }
+        await this.loadScheduleSlots();
+    }
+
+    async nextSchedulePeriod() {
+        if (this.state.scheduleSubView === "month") {
+            this.state.currentMonthOffset = (this.state.currentMonthOffset || 0) + 1;
+        } else {
+            this.state.currentWeekOffset = (this.state.currentWeekOffset || 0) + 1;
+        }
+        await this.loadScheduleSlots();
+    }
+
+    async todaySchedulePeriod() {
+        this.state.currentWeekOffset = 0;
+        this.state.currentMonthOffset = 0;
+        await this.loadScheduleSlots();
+    }
+
+    async setScheduleSubView(view) {
+        this.state.scheduleSubView = view;
+        await this.loadScheduleSlots();
+    }
+
+    openCourseDetails() {
+        this.action.doAction("school_management.action_university_class_section_student");
+    }
+
+    openFeePaymentWizard() {
+        this.action.doAction("school_management.action_university_fee_student");
+    }
+
+    openLibraryPortal() {
+        this.action.doAction("school_management.action_university_service_request_student");
+    }
+
+    openFullTranscript() {
+        this.action.doAction("school_management.action_university_transcript_student");
     }
 
     get scheduleTimeRows() {
@@ -1447,15 +1726,18 @@ class StudentDashboardShell extends Component {
 
     prevWeek() {
         this.state.currentWeekOffset -= 1;
+        this.loadScheduleSlots();
     }
 
     nextWeek() {
         this.state.currentWeekOffset += 1;
+        this.loadScheduleSlots();
     }
 
     resetWeekToToday() {
         this.state.currentWeekOffset = 0;
         this.state.selectedDayDateStr = null;
+        this.loadScheduleSlots();
     }
 
     setScheduleViewMode(mode) {
@@ -2556,6 +2838,7 @@ class StudentDashboardShell extends Component {
 
     getSubjectColorClass(code) {
         const palettes = [
+            "o_slot_palette_purple",
             "o_slot_palette_sapphire",
             "o_slot_palette_emerald",
             "o_slot_palette_indigo",

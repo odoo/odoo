@@ -56,12 +56,12 @@
     <!-- 1. Schedule is available from the student dashboard only. Keep the
          backend timetable menu disabled for student users. -->
     <record id="menu_student_nav_schedule" model="ir.ui.menu">
-        <field name="name">Schedule Session</field>
+        <field name="name">Schedule</field>
         <field name="parent_id" ref="menu_school_root"/>
         <field name="action" ref="action_university_timetable_slot_student"/>
         <field name="sequence">20</field>
         <field name="group_ids" eval="[(6, 0, [ref('school_management.group_school_student')])]"/>
-        <field name="active" eval="False"/>
+        <field name="active" eval="True"/>
     </record>
 
     <!-- 2. Academics Dropdown -->
@@ -348,10 +348,10 @@
     <menuitem
         id="menu_university_grade_assignment"
         name="Assignments"
-        parent="menu_university_sec_coursework"
+        parent="menu_university_sec_classes"
         action="action_university_assignment"
-        sequence="10"
-        groups="school_management.group_university_teacher,school_management.group_school_hod,school_management.group_school_admin,base.group_system"
+        sequence="20"
+        groups="school_management.group_school_teacher,school_management.group_university_teacher,school_management.group_school_hod,school_management.group_school_admin,base.group_system"
     />
     <menuitem
         id="menu_university_assignment_submission"

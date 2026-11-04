@@ -4,6 +4,8 @@
 **Security Group:** `school_management.group_school_student` (University Student)  
 **Target File Reference:** [classroom.py](file:///C:/Odoo/odoo/custom/school_management/models/classroom.py)  
 **Documentation Path:** `C:\Odoo\odoo\custom\school_management\document\student_role_features.md`  
+**Component Reference:** [student_dashboard_shell.js](file:///C:/Odoo/odoo/custom/school_management/static/src/school_management/student_dashboard_shell.js)  
+**Component Technical Guide:** [student_dashboard_shell.md](file:///C:/Odoo/odoo/custom/school_management/document/student_dashboard_shell.md)  
 
 ---
 
@@ -108,23 +110,36 @@ Students have **read-only access** to classroom data, enabling them to discover 
 ## 4. Feature Breakdown by Functional Domain
 
 ### 4.1 Student Dashboard Shell (Interactive OWL SPA)
-The student's default landing view (`action_student_dashboard_shell`) is an OWL component loaded full-screen:
 
-1. **Header & Academic Status:**
-   - Time-sensitive greeting (`Good Morning / Good Afternoon`).
-   - Student ID, Degree Program, Department, and Status Badge (`Active`, `Probation`, `Alumni`).
-2. **Key Academic Metric Cards (KPIs):**
-   - **Cumulative GPA:** Real-time GPA with honor badges (e.g., Dean's List for GPA $\ge 3.5$).
-   - **Attendance Rate:** Percentage badge with at-risk indicator if attendance falls below 80%.
-   - **Completed Credits:** Progress bar showing earned credits versus required program graduation credits.
-   - **Academic Risk Level:** Early warning indicator (`Normal`, `Warning`, `Critical`, `Probation`) with advisor reason.
-   - **Financial Balance:** Outstanding tuition balance with direct link to payment history.
-3. **Today's Classes & Timetable Strip:**
-   - Next upcoming session card showing Subject, Time Slot, Instructor, and **Classroom / Building**.
-4. **Enrolled Courses Grid:**
-   - Card deck of current classes with course codes, credits, instructor details, and quick syllabus modal launcher.
-5. **Advisor Follow-ups & Announcements:**
-   - Direct alert feed of visible academic advising notes and university notices.
+> [!NOTE]
+> For the comprehensive, line-by-line developer manual and component architecture of the frontend controller, refer to the dedicated specification: [student_dashboard_shell.md](file:///C:/Odoo/odoo/custom/school_management/document/student_dashboard_shell.md).
+
+The student's default landing view (`action_student_dashboard_shell`) is an interactive Single Page Application (SPA) built using Odoo 19 OWL 2 (`@odoo/owl`), Chart.js, and Luxon DateTime, registered under technical action key `student_dashboard_shell` in [student_dashboard_shell.js](file:///C:/Odoo/odoo/custom/school_management/static/src/school_management/student_dashboard_shell.js):
+
+1. **Identity & Academic Placement Header:**
+   - Real-time salutation (`Good morning / afternoon / evening, {FirstName}`).
+   - Student avatar, matriculation ID, academic program, department, advisor name, and enrollment status badge (`Active`, `Probation`, `Alumni`).
+2. **Key Academic Metric Cards (Executive KPIs):**
+   - **Cumulative GPA:** Dynamic GPA calculation with academic standing badge (First Class Honors $\ge 3.8$, Dean's List $\ge 3.5$, Good Standing $\ge 2.0$, Academic Advisory $< 2.0$).
+   - **Attendance Rate:** Overall attendance percentage with warning trigger when attendance drops below the 80% final exam eligibility policy.
+   - **Credits Progress:** Visual progress bar tracking earned credit hours against program graduation requirements.
+   - **Tuition & Balance:** Real-time fee balance display with direct one-click launcher for payment receipts and the online fee payment wizard.
+3. **Interactive Visual Analytics (Chart.js):**
+   - **Weekly Attendance Trend (Line Chart):** Multi-week attendance progression with gradient fill and Bézier curvature (`tension: 0.4`).
+   - **Session Status Distribution (Doughnut Chart):** 75% cutout ring chart displaying Present, Late, Absent, and Excused sessions with custom canvas center text plugin (`doughnutCenterText`).
+4. **Today's Classes & Live Timetable Strip:**
+   - Active week schedule strip with day selector (Mon–Fri).
+   - "Up Next" class card with real-time countdown badge (`"Live Now"`, `"Starts in 15 min"`, `"Starts in 2 hours"`).
+   - Direct modal launcher for course syllabi, instructor office hours, and room assignments.
+5. **Enrolled Classes Deck & Client-Side Export:**
+   - Grid cards of all active semester course sections, credit counts, schedule chips, and instructor initials.
+   - Built-in RFC-4180 CSV export (`downloadClassesList`) to download class schedules offline.
+6. **Campus Communications & Modal Dialogs:**
+   - Live campus announcement ticker with 7-day "New" badge detection.
+   - Full-screen modal reader for rich-text bulletins.
+   - Self-service absence excuse filing modal with category selector (`Medical`, `Family Emergency`, `Official University Event`).
+7. **Administrative Staff Preview Mode:**
+   - Allows teachers, registrars, and administrators to inspect any student's portal with a student switcher banner, without changing user sessions.
 
 ---
 

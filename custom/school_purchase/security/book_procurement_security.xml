@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Students have no ACL on university.book.requirement (denied by default).
+        Teachers/registrars may read requirements; admins and purchase users manage them.
+        Teachers inherit school section visibility from school_management record rules
+        on university.class.section; no broader sudo bypass is used in procurement code.
+    -->
+    <record id="rule_university_book_requirement_company" model="ir.rule">
+        <field name="name">Book Requirement: multi-company</field>
+        <field name="model_id" ref="model_university_book_requirement"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</odoo>

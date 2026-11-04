@@ -1,250 +1,79 @@
-# University Management System - Project Overview
+# University Management System Addon: Technical Overview
 
-Updated to match the codebase on 2026-09-10.
+This document summarizes the custom `school_management` addon for Odoo 19. It reflects the refactored architecture that consolidates the system into a single cohesive module, fixes historical access/linkage issues, and establishes clean role-based dashboards.
 
-## Summary
+## Documentation index
 
-`custom/school_management/` is an Odoo 19 application addon for university operations. It covers structure, academics, admissions, students, teachers, enrollments, class sections, timetables, assignments/lesson plans, grading and assessment, two dashboards (operational + teacher), attendance, and a lightweight finance flow built on standalone fee and payment models rather than the Odoo `account` module.
+The module documentation set is organized under [`document/README.md`](./README.md). Use it as the entry point before reading the detailed design notes and feature specifications in this folder.
 
-Manifest facts from `__manifest__.py`:
+## Core Domain Models
 
-- Name: `University Management System`
-- Category: `Education`
-- Version: `19.0.1.2.1`
-- Depends: `auth_signup`, `base`, `mail`, `portal`, `web`
-- Installable: `True`
-- Application: `True`
+- **Academic Structure**: `university.faculty` (head/dean, code, departments) -> `university.department` (head, faculty) -> `university.program` (degree type, duration, total credits, department) -> `university.subject` (code, credits, department).
+- **Academic Calendar**: `university.academic.year` (code, current, date range, semesters) and `university.semester` (academic year, semester type, start/end dates).
+- **People**:
+  - `university.teacher`: HR-independent staff record with employee ID, user link (`res.users.teacher_id`), qualification, gender, active/inactive.
+  - `university.student`: student ID (unique index), user link (`res.users.student_id`), status (draft/admitted/active/probation/graduated/suspended/withdrawn), academic placement (faculty, department, program, year, semester), GPA, completed credits, attendance rate, and emergency contact details.
+  - `university.academic.assignment`: tracks teachers serving as Dean, HOD, Advisor, or Coordinator with active date ranges.
+- **Operations**:
+  - `university.classroom`: room number, building, capacity, facilities, active state.
+  - `university.class.section`: subject, academic year, semester, teacher, room, capacity, status, slot count.
+  - `university.class.schedule.line` & `university.timetable.slot`: recurring weekly lines and concrete timetable slots (day of week, start/end times).
+  - `university.enrollment`: student enrollments into sections, tracking status (draft/enrolled/dropped/completed) and final grades.
+  - `university.attendance`: per-session student attendance (present, late, absent, excused).
+  - `university.assignment` & `university.assignment.submission`: coursework tracking, max scores, and submissions.
+  - `university.lesson.plan`: syllabus/curriculum delivery tracking per class section.
+  - `university.notice.board`: campus bulletins with urgency tags and audience targeting.
+  - `university.service.hour`: extracurricular community service hour tracking.
+- **Grading & Transcripts**:
+  - `university.grading.scale`: GPA scales (4.0 standard, percentage boundaries, grade points).
+  - `university.assessment.result`: continuous assessment and exam grade entries.
+  - `university.report.card` & `university.transcript`: semester evaluations, cumulative GPA, and printed transcript records.
+- **Finance**:
+  - `university.fee`: student billing/invoice with line items and balance due.
+  - `university.payment`: student payments against invoices.
 
-## System Flow
+## Security Roles & Group Hierarchy
 
-The implemented system follows this business flow:
-
-1. Structure: faculties, departments, programs, subjects, classrooms.
-2. Academic calendar: academic years and semesters.
-3. People: teachers and students; admission applications feed student records.
-4. Delivery: class sections connect subject, semester, teacher, and room; timetables schedule slots.
-5. Registration: enrollments connect students to class sections.
-6. Academic work: lesson plans, assignments/submissions, attendance, grading and assessment, report cards and transcripts.
-7. Finance: fee structures, fee invoices, and payments belong to students.
-8. Visibility and operations: dashboards (operational, student, teacher), reports, portals, and role-based record visibility.
-
-## Implemented Models
-
-### Core business models
-
-- `university.faculty`
-- `university.department`
-- `university.program`
-- `university.subject`
-- `university.classroom`
-- `university.academic.year`
-- `university.semester`
-- `university.semester.subject`
-- `university.teacher`
-- `university.academic.assignment`
-- `university.admission.application`
-- `university.student`
-- `university.enrollment`
-- `university.class.section`
-
-### Academic operation models
-
-- `university.lesson.plan`
-- `university.assignment`
-- `university.assignment.submission`
-- `university.timeslot`
-- `university.timetable.slot`
-- `university.attendance`
-- `university.notice.board`
-- `university.service.hour`
-
-### Grading and results
-
-- `university.grade.scale`
-- `university.grade.scale.line`
-- `university.assessment.category`
-- `university.assessment.result`
-- `university.report.card`
-- `university.report.card.line`
-- `university.transcript`
-- `university.transcript.line`
-
-### Finance
-
-- `university.fee`
-- `university.fee.line`
-- `university.fee.structure`
-- `university.fee.structure.line`
-- `university.payment`
-
-### Miscellaneous
-
-- `school.dashboard`
-- `university.capability`
-- `university.document.signature`
-
-### Model extensions and wizards
-
-- `res.users` is extended in `models/res_users.py` with `teacher_id`.
-- `university.student.enrollment.wizard`
-- `university.bulk.enrollment.wizard`
-- `university.populate.class.wizard`
-- `university.timetable.generation.wizard`
-- `university.teacher.account.wizard`
-
-## Relationship Map
+All roles inherit through `school_management_privilege`:
 
 ```mermaid
-flowchart TB
-    FAC[Faculty] --> DEP[Department]
-    DEP --> PROG[Program]
-    DEP --> SUBJ[Subject]
-
-    AY[Academic Year] --> SEM[Semester]
-    SUBJ --> SEC[Class Section]
-    SEM --> SEC
-    TCH[Teacher] --> SEC
-    ROOM[Classroom] --> SEC
-    TS[Timeslot] --> SEC
-
-    STU[Student] --> ENR[Enrollment]
-    SEC --> ENR
-
-    STU --> FEE[Fee Invoice]
-    FEE --> LINE[Fee Line]
-    FEE --> PAY[Payment]
-    STU --> PAY
-    FS[Fee Structure] --> FEE
-
-    ASG[Academic Assignment] -->|dean/head| FAC
-    ASG -->|department head| DEP
-
-    USER[res.users] -->|teacher_id| TCH
+graph TD
+    BaseUser["base.group_user (Internal User)"] --> SchoolUser["group_school_user (School User)"]
+    SchoolUser --> Student["group_school_student (Student)"]
+    SchoolUser --> Teacher["group_school_teacher (Teacher)"]
+    Teacher --> Advisor["group_school_advisor (Advisor)"]
+    Teacher --> HOD["group_school_hod (HOD)"]
+    HOD --> Dean["group_school_dean (Dean)"]
+    SchoolUser --> Registrar["group_school_registrar (Registrar)"]
+    Dean --> Admin["group_school_admin (School Administrator)"]
+    Registrar --> Admin
 ```
 
-## Security Flow
+Key access concepts:
 
-The addon loads `security/security.xml` (groups), `security/ir.model.access.csv` (model rights), and `security/record_rules.xml` (record rules). All three are registered in the manifest.
+- `group_school_user` provides baseline read access to academic lookups (faculties, departments, programs, subjects, classrooms).
+- `group_school_student` is isolated: users only see their own `university.student` profile, enrollments, attendance, assignments, and grades.
+- `group_school_teacher` accesses class sections, attendance sheets, and students assigned to them.
+- `group_school_hod` scopes to their department (teachers, students, sections, subjects).
+- `group_school_dean` scopes to their faculty and child departments.
+- `group_school_registrar` manages enrollments, academic records, and student lifecycle.
+- `group_school_admin` has full operational access.
 
-### Groups
+## Data Integrity & Constraints
 
-Groups are grouped under one privilege, `res.groups.privilege` "University Management":
-
-| Group | Name | Implies |
-|---|---|---|
-| `group_school_user` | School User | `base.group_user` |
-| `group_school_student` | Student | `group_school_user` |
-| `group_school_teacher` | Teacher | `group_school_user` |
-| `group_school_hod` | Head of Department | `group_school_teacher` |
-| `group_school_dean` | Head of Faculty | `group_school_hod` |
-| `group_school_registrar` | Registrar | `group_school_user` |
-| `group_school_admin` | University Administrator | `group_school_dean` |
-| `group_teacher_dashboard` | Teacher dashboard support group | `group_school_teacher` |
-| `group_student_portal` | Student Portal | `base.group_portal` (external portal role, not `base.group_user`) |
-
-The six functional roles are **Student**, **Teacher/Advisor**, **Head of Department**, **Head of Faculty**, **Registrar**, and **University Administrator**. The dashboard selects its data and actions from the signed-in user's highest applicable functional role. `group_teacher_dashboard` remains a supporting access group for teacher-specific screens, not a separate business role.
-
-University Administrators also inherit Odoo System Administration. They can use **University -> Administration -> Role Management** to manage users and the six University Management roles, as well as the native settings and technical administration available to system administrators.
-
-### Why `res.users.teacher_id` matters
-
-`models/res_users.py` extends `res.users` with a `teacher_id` Many2one to `university.teacher`. That link is the backbone for organizational record rules.
-
-Examples from `record_rules.xml`:
-
-- Teachers can see their own teacher profile.
-- Teachers can see class sections where `teacher_id.user_id = user.id`.
-- Teachers can see subjects where they are assigned.
-- Teachers can see students and enrollments in their own sections.
-- HOD users can see teachers, subjects, and sections inside their headed department.
-- Dean users can manage departments, programs/majors, subjects, teachers, and students inside their faculty.
-- Students can only read their own profile, enrollments, fees, fee lines, and payments.
-
-This means the real security flow is:
-
-`res.users` -> `teacher_id` -> teacher -> department/faculty -> record rule scope.
-
-With `-u school_management`, `data/fix_user_teacher_links.xml` runs `_fix_demo_staff_links()` to keep the forward (`res.users.teacher_id`) and reverse (`university.teacher.user_id`) links reciprocal for the demo staff. The standalone SQL equivalent is kept in `security/fix_demo_staff_links.sql` (reference only, not loaded by Odoo).
-
-## Finance Flow
-
-The finance layer is a lightweight operational billing workflow. Fee structures (`university.fee.structure` + lines) let the admin predefine fee item templates for an invoice.
-
-### Fee invoice
-
-`university.fee` stores:
-
-- student
-- academic year and semester
-- fee lines
-- related payments
-- total amount, paid amount, and balance
-- state: `draft`, `posted`, `paid`, `canceled`
-
-`fee._compute_totals()` recalculates:
-
-- `total_amount` from fee lines
-- `paid_amount` from posted payments only
-- `balance = total_amount - paid_amount`
-- state transition back to `posted` if a previously paid invoice becomes unpaid again
-
-### Payment
-
-`university.payment` stores:
-
-- receipt reference from sequence `university.payment`
-- required `student_id`
-- optional `fee_id`
-- date, amount, payment method, reference
-- state: `draft`, `posted`, `canceled`
-
-Current code behavior in `models/payment.py`:
-
-- Amount must be strictly positive by backend constraint.
-- If `fee_id` is set, the fee must belong to the same student by backend constraint.
-- Posted and canceled payments are protected by `write()` and cannot be edited directly.
-- State changes should go through `action_post()`, `action_cancel()`, and `action_draft()`.
-- The payment form is readonly once the payment leaves `draft`.
-
-### Payment workflow
-
-1. Create fee invoice in `draft` (optionally from a fee structure).
-2. Add fee lines.
-3. Confirm fee invoice to `posted`.
-4. Create payment for the same student.
-5. Optionally link the payment to the posted fee invoice.
-6. Confirm payment to `posted`.
-7. Fee totals recompute automatically.
-8. If balance reaches zero or below and total is positive, the fee moves to `paid`.
-
-### Known finance boundaries
-
-This is not a full accounting ledger. It does not yet implement:
-
-- scholarships
-- refunds/reversals
-- reconciliation
-- accounting journal entries
-- currency conversion
-
-## Student Flow
-
-`university.student` is the identity and aggregation record, not the place where every academic transaction is stored directly.
-
-Student-related behavior in code:
-
-- enrollments are stored in `university.enrollment`
-- fees are stored in `university.fee`
-- payments are stored in `university.payment`
-- fee summary fields on the student aggregate posted/paid fee invoices
-- academic placement (department/faculty) derives from the selected program
+- `university.student` enforces `_sql_constraints` on unique `student_id`.
+- Teacher records link to `res.users` through `res.users.teacher_id`; a migration and data fix (`fix_user_teacher_links.xml`) link the demo teacher accounts cleanly.
+- `academic_assignment` uniqueness: only one active Dean per faculty and one active HOD per department.
+- On student creation:
+  - `student_id` auto-generates if omitted (`ir.sequence`: `seq.university.student`).
+  - academic placement (department/faculty) derives from the selected program
 
 ## Dashboard
 
 The addon ships three OWL dashboard shells under `static/src/school_management/`:
 
 - **Operational dashboard** (`school.dashboard` + `dashboard_shell`) — KPI counts and finance totals with actions that open the corresponding models.
-- **Student dashboard shell** (`student_dashboard_shell`) — the student-facing start screen.
+- **Student dashboard shell** ([`student_dashboard_shell.js`](file:///C:/Odoo/odoo/custom/school_management/static/src/school_management/student_dashboard_shell.js), complete guide: [student_dashboard_shell.md](file:///C:/Odoo/odoo/custom/school_management/document/student_dashboard_shell.md)) — the student-facing interactive start screen featuring Chart.js attendance charts, weekly schedule matrix, course cards, absence excuse submissions, and staff preview mode.
 - **Teacher dashboard shell** (`teacher_dashboard_shell`) — teacher/advisor-focused attendance, class, and follow-up information.
 
 The custom `layout/school_layout.js` wraps the sidebar, while the main Dashboard routes each of the six roles to the data and quick actions appropriate to its scope. The backend also patches the webclient topbar/sidebar via `layout/webclient_patch.js`.
@@ -327,6 +156,7 @@ As of 2026-09-10:
 school_management/
 |-- __manifest__.py
 |-- __init__.py
+|-- README.md                         # Module root README documenting Student Dashboard Shell
 |-- models/
 |   |-- __init__.py
 |   |-- academic_assignment.py
@@ -392,6 +222,7 @@ school_management/
 |   |--  portal_templates — placeholder)
 |-- static/
 |   `-- src/school_management/
+|       |-- README.md                 # Frontend assets README
 |       |-- backend.scss
 |       |-- dashboard_shell.{js,xml,scss}
 |       |-- student_dashboard_shell.{js,xml,scss}
@@ -409,6 +240,9 @@ school_management/
 |   |-- run_seed.py
 |   `-- seed_data.sql
 `-- document/
+    |-- README.md
+    |-- student_dashboard_shell.md    # Dedicated technical manual for student_dashboard_shell.js
+    |-- student_role_features.md      # Student security, permissions, and features
     |-- project_overview.md
     |-- project_structure.md.md
     |-- agent_guide.md

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Subject: single required book product -->
+    <record id="view_university_subject_form_inherit_books" model="ir.ui.view">
+        <field name="name">university.subject.form.inherit.books</field>
+        <field name="model">university.subject</field>
+        <field name="inherit_id" ref="school_management.view_university_subject_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Required Book" name="books_tab">
+                    <group>
+                        <field name="book_product_id"
+                               options="{'no_create_edit': False}"
+                               context="{'default_purchase_ok': True, 'default_type': 'consu', 'default_is_storable': True}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Class Section: Book Procurement panel -->
+    <record id="view_university_class_section_form_inherit_book_purchase" model="ir.ui.view">
+        <field name="name">university.class.section.form.inherit.book.purchase</field>
+        <field name="model">university.class.section</field>
+        <field name="inherit_id" ref="school_management.view_university_class_section_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_close_enrollment_for_books"
+                        type="object"
+                        string="Close Enrollment"
+                        class="btn-secondary"
+                        groups="school_management.group_school_admin,purchase.group_purchase_user,purchase.group_purchase_manager"
+                        invisible="enroll_closed"
+                        confirm="Close enrollment for this class section? New enrollments will be blocked."/>
+                <button name="action_compute_book_requirements"
+                        type="object"
+                        string="Compute Requirements"
+                        class="btn-secondary"
+                        groups="school_management.group_school_admin,purchase.group_purchase_user,purchase.group_purchase_manager"
+                        invisible="not enroll_closed"/>
+                <button name="action_create_book_purchase"
+                        type="object"
+                        string="Create Book Purchase"
+                        class="oe_highlight"
+                        groups="school_management.group_school_admin,purchase.group_purchase_user,purchase.group_purchase_manager"
+                        invisible="not enroll_closed or missing_books"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_book_requirements"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-book"
+                        groups="school_management.group_school_admin,school_management.group_school_registrar,school_management.group_school_teacher,school_management.group_university_teacher,school_management.group_school_hod,school_management.group_school_dean,purchase.group_purchase_user">
+                    <field name="book_requirement_count" widget="statinfo" string="Requirements"/>
+                </button>
+                <button name="action_view_purchase_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart"
+                        groups="school_management.group_school_admin,purchase.group_purchase_user">
+                    <field name="purchase_order_count" widget="statinfo" string="Book POs"/>
+                </button>
+            </xpath>
+            <xpath expr="//group[1]" position="after">
+                <group string="Book Procurement" name="group_book_purchase"
+                       groups="school_management.group_school_admin,school_management.group_school_registrar,school_management.group_school_teacher,school_management.group_university_teacher,school_management.group_school_hod,school_management.group_school_dean,purchase.group_purchase_user">
+                    <group string="Enrollment Status">
+                        <field name="enroll_deadline"/>
+                        <field name="enroll_closed" readonly="1"/>
+                        <field name="book_vendor_id"
+                               string="Fallback Book Vendor"
+                               domain="[('user_ids', '=', False), '|', ('supplier_rank', '&gt;', 0), ('is_company', '=', True)]"
+                               context="{'res_partner_search_mode': 'supplier', 'default_supplier_rank': 1, 'default_is_company': True}"
+                               options="{'no_create_edit': False, 'no_quick_create': False}"/>
+                    </group>
+                    <group string="Procurement Summary">
+                        <field name="student_count" string="Total Students" readonly="1"/>
+                        <field name="subjects_requiring_books_count" readonly="1"/>
+                        <field name="students_no_book_count" string="Students Needing Books" readonly="1"
+                               decoration-danger="students_no_book_count &gt; 0"/>
+                        <field name="students_with_book_count" readonly="1"/>
+                        <field name="total_required_books" readonly="1"/>
+                        <field name="total_available_stock" readonly="1"/>
+                        <field name="total_purchase_qty" readonly="1"/>
+                        <field name="purchase_order_count" readonly="1"/>
+                        <field name="missing_books" readonly="1" decoration-danger="missing_books"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Book Requirements" name="book_requirements_tab"
+                      groups="school_management.group_school_admin,school_management.group_school_registrar,school_management.group_school_teacher,school_management.group_university_teacher,school_management.group_school_hod,school_management.group_school_dean,purchase.group_purchase_user">
+                    <field name="book_requirement_ids" readonly="1"
+                           groups="school_management.group_school_admin,school_management.group_school_registrar,school_management.group_school_teacher,school_management.group_university_teacher,school_management.group_school_hod,school_management.group_school_dean,purchase.group_purchase_user">
+                        <list decoration-success="state == 'done'"
+                              decoration-info="state == 'rfq'"
+                              decoration-muted="state == 'cancel'"
+                              decoration-warning="state in ('draft', 'ready') and purchase_qty &gt; 0">
+                            <field name="subject_id"/>
+                            <field name="product_id" string="Book Product"/>
+                            <field name="vendor_id"/>
+                            <field name="students_needing_books" string="Students Needing Books"/>
+                            <field name="required_qty"/>
+                            <field name="available_qty"/>
+                            <field name="purchase_qty"/>
+                            <field name="purchase_order_id" optional="show" groups="school_management.group_school_admin,purchase.group_purchase_user"/>
+                            <field name="state" string="Procurement Status" widget="badge"
+                                   decoration-success="state == 'done'"
+                                   decoration-info="state == 'rfq'"
+                                   decoration-warning="state in ('draft', 'ready')"
+                                   decoration-muted="state == 'cancel'"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Book Purchase Orders" name="book_purchase_orders_tab"
+                      groups="school_management.group_school_admin,purchase.group_purchase_user">
+                    <field name="purchase_order_ids" readonly="1"
+                           groups="school_management.group_school_admin,purchase.group_purchase_user">
+                        <list limit="10">
+                            <field name="name"/>
+                            <field name="partner_id" string="Vendor"/>
+                            <field name="date_order"/>
+                            <field name="amount_total"/>
+                            <field name="state" widget="badge"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr="//page[@name='students_tab']//list" position="inside">
+                <field name="has_book" widget="boolean_toggle"/>
+                <field name="book_status" widget="badge"
+                       decoration-success="book_status == 'has_book'"
+                       decoration-danger="book_status == 'no_book'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_university_class_section_list_inherit_book_purchase" model="ir.ui.view">
+        <field name="name">university.class.section.list.inherit.book.purchase</field>
+        <field name="model">university.class.section</field>
+        <field name="inherit_id" ref="school_management.view_university_class_section_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="decoration-danger">is_full or missing_books</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="enroll_deadline" optional="show"/>
+                <field name="enroll_closed" optional="show"/>
+                <field name="student_count" optional="show"/>
+                <field name="students_with_book_count" optional="show"/>
+                <field name="students_no_book_count" optional="show"/>
+                <field name="missing_books" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_university_enrollment_list_inherit_books" model="ir.ui.view">
+        <field name="name">university.enrollment.list.inherit.books</field>
+        <field name="model">university.enrollment</field>
+        <field name="inherit_id" ref="school_management.view_university_enrollment_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='status']" position="after">
+                <field name="has_book" widget="boolean_toggle" optional="show"/>
+                <field name="book_status" widget="badge"
+                       decoration-success="book_status == 'has_book'"
+                       decoration-danger="book_status == 'no_book'"
+                       optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_university_class_section_missing_books" model="ir.actions.act_window">
+        <field name="name">Classes missing books</field>
+        <field name="res_model">university.class.section</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('missing_books', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No classes are currently missing books.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_university_class_section_missing_books"
+        name="Classes missing books"
+        parent="school_management.menu_university_sec_classes"
+        action="action_university_class_section_missing_books"
+        sequence="20"
+        groups="purchase.group_purchase_manager,school_management.group_school_admin,base.group_system"
+    />
+
+    <record id="view_purchase_order_form_inherit_class_book" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.class.book</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_mark_class_books_received"
+                        type="object"
+                        string="Mark Books Distributed"
+                        class="btn-secondary"
+                        invisible="not class_section_id or state not in ('purchase', 'done')"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="class_section_id" options="{'no_create': True}" readonly="1"/>
+            </xpath>
+            <xpath expr="//notebook" position="before">
+                <div class="alert alert-info d-flex align-items-center justify-content-between p-2 my-2 shadow-sm"
+                     role="alert"
+                     invisible="not class_section_id">
+                    <div>
+                        <i class="fa fa-info-circle me-1" title="Information" aria-label="Information"/>
+                        <field name="class_validation_msg" readonly="1" class="d-inline fw-bold"/>
+                    </div>
+                    <div class="text-nowrap ms-3">
+                        <span class="badge bg-primary me-1">Total Enrolled: <field name="class_enrolled_count"/></span>
+                        <span class="badge bg-success me-1">Have Books: <field name="class_has_book_count"/></span>
+                        <span class="badge bg-danger">Need Books: <field name="class_no_book_count"/></span>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Class Students &amp; Book Validation" name="class_students_book_tab" invisible="not class_section_id">
+                    <div class="d-flex justify-content-end p-2 mb-2">
+                        <button name="action_mark_all_students_has_book"
+                                type="object"
+                                string="Mark All: Have Book"
+                                class="btn btn-sm btn-outline-success"/>
+                        <button name="action_reset_all_students_no_book"
+                                type="object"
+                                string="Reset All: Need Book"
+                                class="btn btn-sm btn-outline-danger ms-1"/>
+                    </div>
+                    <field name="class_enrollment_ids" readonly="1">
+                        <list create="0" delete="0" decoration-success="has_book" decoration-danger="not has_book">
+                            <field name="student_id" string="Student"/>
+                            <field name="subject_id" string="Enrolled Subject"/>
+                            <field name="status" widget="badge"/>
+                            <field name="has_book" widget="boolean_toggle" readonly="1"/>
+                            <field name="book_status" widget="badge"
+                                   decoration-success="book_status == 'has_book'"
+                                   decoration-danger="book_status == 'no_book'"/>
+                            <button name="action_toggle_has_book"
+                                    type="object"
+                                    string="Toggle Book"
+                                    icon="fa-exchange"
+                                    class="btn btn-sm btn-outline-secondary"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

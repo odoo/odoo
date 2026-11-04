@@ -170,7 +170,7 @@
     <record id="rule_teacher_ui_timetable" model="ir.rule">
         <field name="name">Teacher: timetable for assigned sections</field>
         <field name="model_id" ref="model_university_timetable_slot"/>
-        <field name="domain_force">[('teacher_id.user_id', '=', user.id)]</field>
+        <field name="domain_force">['|', ('teacher_id.user_id', '=', user.id), ('section_id.teacher_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('group_university_teacher'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
@@ -234,7 +234,7 @@
     <record id="rule_teacher_ui_schedule_lines" model="ir.rule">
         <field name="name">Teacher: schedule lines for assigned sections</field>
         <field name="model_id" ref="model_university_class_schedule_line"/>
-        <field name="domain_force">[('class_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="domain_force">['|', ('teacher_id.user_id', '=', user.id), ('class_id.teacher_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('group_university_teacher'))]"/>
     </record>
     <record id="rule_teacher_ui_notice_read" model="ir.rule">

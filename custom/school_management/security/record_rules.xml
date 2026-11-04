@@ -68,6 +68,28 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="rule_admin_all_fees" model="ir.rule">
+        <field name="name">Admin: all fees</field>
+        <field name="model_id" ref="model_university_fee"/>
+        <field name="groups" eval="[(4, ref('group_school_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_registrar_all_fees" model="ir.rule">
+        <field name="name">Registrar: all fees</field>
+        <field name="model_id" ref="model_university_fee"/>
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record id="rule_student_own_fee_lines" model="ir.rule">
         <field name="name">Student: own fee lines</field>
         <field name="model_id" ref="model_university_fee_line"/>
@@ -79,6 +101,28 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="rule_admin_all_fee_lines" model="ir.rule">
+        <field name="name">Admin: all fee lines</field>
+        <field name="model_id" ref="model_university_fee_line"/>
+        <field name="groups" eval="[(4, ref('group_school_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_registrar_all_fee_lines" model="ir.rule">
+        <field name="name">Registrar: all fee lines</field>
+        <field name="model_id" ref="model_university_fee_line"/>
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record id="rule_student_own_payments" model="ir.rule">
         <field name="name">Student: own payments</field>
         <field name="model_id" ref="model_university_payment"/>
@@ -87,6 +131,28 @@
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_admin_all_payments" model="ir.rule">
+        <field name="name">Admin: all payments</field>
+        <field name="model_id" ref="model_university_payment"/>
+        <field name="groups" eval="[(4, ref('group_school_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_registrar_all_payments" model="ir.rule">
+        <field name="name">Registrar: all payments</field>
+        <field name="model_id" ref="model_university_payment"/>
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="False"/>
     </record>
 
@@ -126,7 +192,7 @@
         <field name="name">Student: own timetable</field>
         <field name="model_id" ref="model_university_timetable_slot"/>
         <field name="groups" eval="[(4, ref('group_school_student'))]"/>
-        <field name="domain_force">[('generation_state', '=', 'published'), ('section_id.enrollment_ids', 'any', [('student_id.user_id', '=', user.id), ('status', '=', 'enrolled')])]</field>
+        <field name="domain_force">[('generation_state', '=', 'published'), ('section_id.enrollment_ids', 'any', [('student_id.user_id', '=', user.id), ('student_id.active', '=', True), ('status', '=', 'enrolled')])]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -137,7 +203,7 @@
         <field name="name">Teacher: own timetable</field>
         <field name="model_id" ref="model_university_timetable_slot"/>
         <field name="groups" eval="[(4, ref('group_university_teacher'))]"/>
-        <field name="domain_force">[('teacher_id.user_id', '=', user.id)]</field>
+        <field name="domain_force">['|', ('teacher_id.user_id', '=', user.id), ('section_id.teacher_id.user_id', '=', user.id)]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="False"/>
@@ -191,6 +257,18 @@
         <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="True"/>
     </record>
+
+    <!-- Registrar: see all timetable slots -->
+    <record id="rule_registrar_all_timetable_slots" model="ir.rule">
+        <field name="name">Registrar: all timetable slots</field>
+        <field name="model_id" ref="model_university_timetable_slot"/>
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
     <record id="rule_student_own_attendance" model="ir.rule">
         <field name="name">Student: own attendance</field>
         <field name="model_id" ref="model_university_attendance"/>
@@ -224,6 +302,28 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="rule_admin_all_report_cards" model="ir.rule">
+        <field name="name">Admin: all report cards</field>
+        <field name="model_id" ref="model_university_report_card"/>
+        <field name="groups" eval="[(4, ref('group_school_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_registrar_all_report_cards" model="ir.rule">
+        <field name="name">Registrar: all report cards</field>
+        <field name="model_id" ref="model_university_report_card"/>
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record id="rule_student_own_report_card_lines" model="ir.rule">
         <field name="name">Student: own report card lines</field>
         <field name="model_id" ref="model_university_report_card_line"/>
@@ -232,6 +332,28 @@
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_admin_all_report_card_lines" model="ir.rule">
+        <field name="name">Admin: all report card lines</field>
+        <field name="model_id" ref="model_university_report_card_line"/>
+        <field name="groups" eval="[(4, ref('group_school_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_registrar_all_report_card_lines" model="ir.rule">
+        <field name="name">Registrar: all report card lines</field>
+        <field name="model_id" ref="model_university_report_card_line"/>
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="False"/>
     </record>
 
@@ -246,6 +368,28 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="rule_admin_all_transcripts" model="ir.rule">
+        <field name="name">Admin: all transcripts</field>
+        <field name="model_id" ref="model_university_transcript"/>
+        <field name="groups" eval="[(4, ref('group_school_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_registrar_all_transcripts" model="ir.rule">
+        <field name="name">Registrar: all transcripts</field>
+        <field name="model_id" ref="model_university_transcript"/>
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
     <record id="rule_student_own_transcript_lines" model="ir.rule">
         <field name="name">Student: own transcript lines</field>
         <field name="model_id" ref="model_university_transcript_line"/>
@@ -254,6 +398,28 @@
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="rule_admin_all_transcript_lines" model="ir.rule">
+        <field name="name">Admin: all transcript lines</field>
+        <field name="model_id" ref="model_university_transcript_line"/>
+        <field name="groups" eval="[(4, ref('group_school_admin'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="rule_registrar_all_transcript_lines" model="ir.rule">
+        <field name="name">Registrar: all transcript lines</field>
+        <field name="model_id" ref="model_university_transcript_line"/>
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
         <field name="perm_unlink" eval="False"/>
     </record>
     <!-- Teacher: see own profile only -->

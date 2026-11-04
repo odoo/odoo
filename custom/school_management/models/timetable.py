@@ -1539,7 +1539,7 @@ class UniversityTimetableSlot(models.Model):
     # High-Performance Schedule View Data API
     # =========================================================================
     @api.model
-    def get_schedule(self, date_from, date_to, filters=None, limit=500, offset=0):
+    def get_schedule(self, date_from, date_to, filters=None, limit=1000, offset=0):
         """
         Unified Schedule API for Student, Teacher, and Administrator roles.
         Check order: Admin -> Teacher -> Student -> Unauthorized.
@@ -1643,7 +1643,8 @@ class UniversityTimetableSlot(models.Model):
                 ("student_id", "=", student_rec.id),
                 ("status", "=", "enrolled"),
             ])
-            enrolled_section_ids = enrollments.mapped("class_section_id").ids or enrollments.mapped("section_id").ids
+            enrolled_sections = (enrollments.mapped("class_section_id") | enrollments.mapped("section_id")).filtered(lambda s: s.active)
+            enrolled_section_ids = enrolled_sections.ids
             if not enrolled_section_ids:
                 return {
                     "role": "student",
@@ -1718,7 +1719,7 @@ class UniversityTimetableSlot(models.Model):
 
         # 5. Query slots with limit & offset (preventing N+1 with batch fetch)
         total_count = self.search_count(domain)
-        slots = self.search(domain, order="start_time asc", limit=limit or 500, offset=offset or 0)
+        slots = self.search(domain, order="start_time asc", limit=limit or 1000, offset=offset or 0)
 
         # 6. Optimized Cross-Resource Conflict Detection (Single batch query)
         all_active_slots = self.sudo().search([
@@ -1737,12 +1738,12 @@ class UniversityTimetableSlot(models.Model):
                 if other.start_time < s.end_time and other.end_time > s.start_time:
                     reasons = []
                     if s.classroom_id and other.classroom_id and s.classroom_id.id == other.classroom_id.id:
-                        if role == "teacher":
+                        if role in ("teacher", "student"):
                             reasons.append(_("Room conflict with another session."))
                         else:
                             reasons.append(_("Room '%s' double-booked with %s") % (s.classroom_id.name, other.name or other.subject_id.name))
                     if s.teacher_id and other.teacher_id and s.teacher_id.id == other.teacher_id.id:
-                        if role == "teacher":
+                        if role in ("teacher", "student"):
                             reasons.append(_("Teacher conflict with another session."))
                         else:
                             reasons.append(_("Teacher '%s' double-booked with %s") % (s.teacher_id.name, other.name or other.subject_id.name))
@@ -2081,6 +2082,29 @@ class UniversityTimetableSlot(models.Model):
     def get_gantt_data(self, date_start, date_stop, domain=None):
         """API for Odoo Schedule by Resource weekly Gantt matching target UI."""
         user = self.env.user
+        is_admin_or_staff = (
+            self.env.is_system()
+            or user.has_group("base.group_system")
+            or user.has_group("school_management.group_school_admin")
+            or user.has_group("school_management.group_school_timetable_manager")
+            or user.has_group("school_management.group_school_registrar")
+            or user.has_group("school_management.group_school_dean")
+            or user.has_group("school_management.group_school_hod")
+        )
+        is_teacher = (
+            user.has_group("school_management.group_school_teacher")
+            or user.has_group("school_management.group_university_teacher")
+        )
+        is_student = (
+            user.has_group("school_management.group_school_student")
+            or user.has_group("school_management.group_university_student")
+        )
+
+        if is_student and not is_admin_or_staff and not is_teacher:
+            raise AccessError(_("Students are not authorized to access administrative resource scheduling."))
+        if not is_admin_or_staff and not is_teacher:
+            raise AccessError(_("You are not authorized to access administrative resource scheduling."))
+
         tz_name = user.tz or "UTC"
         user_tz = pytz.timezone(tz_name)
         today_date = fields.Date.context_today(self)
@@ -2098,7 +2122,11 @@ class UniversityTimetableSlot(models.Model):
         # Sync resources for active teachers so each teacher appears in Gantt
         Resource = self.env["resource.resource"].sudo()
         Teacher = self.env["university.teacher"].sudo()
-        teachers = Teacher.search([("active", "=", True)])
+        if is_admin_or_staff:
+            teachers = Teacher.search([("active", "=", True)])
+        else:
+            teachers = Teacher.search([("active", "=", True), ("user_id", "=", user.id)])
+
         for t in teachers:
             res = Resource.search([("teacher_id", "=", t.id)], limit=1)
             if not res:
@@ -2111,9 +2139,14 @@ class UniversityTimetableSlot(models.Model):
                 })
 
         Resource = self.env["resource.resource"].sudo()
-        all_resources = Resource.search([
-            "|", ("teacher_id", "!=", False), ("id", "in", slots.mapped("resource_id").ids)
-        ], order="name asc")
+        if is_admin_or_staff:
+            all_resources = Resource.search([
+                "|", ("teacher_id", "!=", False), ("id", "in", slots.mapped("resource_id").ids)
+            ], order="name asc")
+        else:
+            all_resources = Resource.search([
+                ("teacher_id", "in", teachers.ids)
+            ], order="name asc")
 
         open_shifts_list = []
         slot_dicts = []
@@ -2224,6 +2257,17 @@ class UniversityTimetableSlot(models.Model):
     @api.model
     def action_publish_week_shifts(self, date_start, date_stop):
         """Publish all draft slots in the specified date range."""
+        user = self.env.user
+        is_admin_or_staff = (
+            self.env.is_system()
+            or user.has_group("base.group_system")
+            or user.has_group("school_management.group_school_admin")
+            or user.has_group("school_management.group_school_timetable_manager")
+            or user.has_group("school_management.group_school_dean")
+            or user.has_group("school_management.group_school_hod")
+        )
+        if not is_admin_or_staff:
+            raise AccessError(_("Only timetable managers and administrators can publish shifts."))
         slots = self.search([
             ("start_time", ">=", f"{date_start} 00:00:00"),
             ("start_time", "<=", f"{date_stop} 23:59:59"),
@@ -2238,6 +2282,17 @@ class UniversityTimetableSlot(models.Model):
     @api.model
     def action_copy_previous_week_shifts(self, date_start):
         """Duplicate previous week's shifts into current week as draft."""
+        user = self.env.user
+        is_admin_or_staff = (
+            self.env.is_system()
+            or user.has_group("base.group_system")
+            or user.has_group("school_management.group_school_admin")
+            or user.has_group("school_management.group_school_timetable_manager")
+            or user.has_group("school_management.group_school_dean")
+            or user.has_group("school_management.group_school_hod")
+        )
+        if not is_admin_or_staff:
+            raise AccessError(_("Only timetable managers and administrators can copy shifts."))
         curr_start = fields.Date.from_string(date_start)
         prev_start = curr_start - timedelta(days=7)
         prev_end = prev_start + timedelta(days=6)
@@ -2273,37 +2328,63 @@ class IrUiMenu(models.Model):
     def _load_menus_blacklist(self):
         res = super()._load_menus_blacklist()
         user = self.env.user
-        if user.has_group("school_management.group_school_admin") or self.env.is_system():
-            hidden_xml_ids = [
-                "school_management.menu_teacher_nav_profile",
+        is_admin_or_system = user.has_group("school_management.group_school_admin") or self.env.is_system()
+        is_student_only = user.has_group("school_management.group_school_student") and not (
+            user.has_group("school_management.group_school_teacher") or
+            user.has_group("school_management.group_school_admin") or
+            self.env.is_system()
+        )
+        is_teacher = user.has_group("school_management.group_school_teacher") and not is_admin_or_system
+
+        hidden_xml_ids = []
+        if is_admin_or_system:
+            # Hide student-specific and teacher-specific redundant portals from Admin
+            hidden_xml_ids.extend([
+                "school_management.menu_student_dashboard",
+                "school_management.menu_student_my_learning",
+                "school_management.menu_student_nav_transcripts",
+                "school_management.menu_student_nav_schedule",
                 "school_management.menu_student_nav_profile",
+                "school_management.menu_teacher_nav_profile",
                 "school_management.menu_university_timetable_teacher",
-            ]
-            blacklisted = []
-            for xml_id in hidden_xml_ids:
-                menu = self.env.ref(xml_id, raise_if_not_found=False)
-                if menu:
-                    blacklisted.append(menu.id)
-            return list(set(res + blacklisted))
-        return res
+                "school_management.menu_school_teacher_dashboard",
+            ])
+        elif is_student_only:
+            # Hide operational admin and staff categories from Student
+            hidden_xml_ids.extend([
+                "school_management.menu_school_dashboard",
+                "school_management.menu_school_teacher_dashboard",
+                "school_management.menu_university_schedule_category",
+                "school_management.menu_university_academic_category",
+                "school_management.menu_university_people",
+                "school_management.menu_university_enrollment_category",
+                "school_management.menu_university_structure",
+                "school_management.menu_university_administration",
+                "school_management.menu_teacher_nav_profile",
+                "school_management.menu_school_my_profile",
+            ])
+        elif is_teacher:
+            # Hide student-specific menus from Teachers
+            hidden_xml_ids.extend([
+                "school_management.menu_student_dashboard",
+                "school_management.menu_student_my_learning",
+                "school_management.menu_student_nav_transcripts",
+                "school_management.menu_student_nav_schedule",
+                "school_management.menu_student_nav_profile",
+            ])
+
+        blacklisted = []
+        for xml_id in hidden_xml_ids:
+            menu = self.env.ref(xml_id, raise_if_not_found=False)
+            if menu:
+                blacklisted.append(menu.id)
+        return list(set(res + blacklisted))
 
     def _filter_visible_menus(self):
         res = super()._filter_visible_menus()
-        user = self.env.user
-        # Remove "My Profile" and "My Timetable" from Admin menus
-        if user.has_group("school_management.group_school_admin") or self.env.is_system():
-            hidden_xml_ids = [
-                "school_management.menu_teacher_nav_profile",
-                "school_management.menu_student_nav_profile",
-                "school_management.menu_university_timetable_teacher",
-            ]
-            to_remove = self.browse()
-            for xml_id in hidden_xml_ids:
-                menu = self.env.ref(xml_id, raise_if_not_found=False)
-                if menu and menu in res:
-                    to_remove |= menu
-            if to_remove:
-                res = res - to_remove
+        blacklisted_ids = self._load_menus_blacklist()
+        if blacklisted_ids:
+            res = res.filtered(lambda m: m.id not in blacklisted_ids)
         return res
 
 

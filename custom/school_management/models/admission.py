@@ -517,7 +517,7 @@ class UniversityAdmissionApplication(models.Model):
         enrollment = self.env["university.enrollment"].search(domain, limit=1)
         if enrollment:
             return enrollment
-        return self.env["university.enrollment"].create(
+        return self.env["university.enrollment"].with_context(bypass_registration_window=True).create(
             {
                 "student_id": student.id,
                 "program_id": self.program_id.id,

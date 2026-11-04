@@ -14,27 +14,54 @@ class StudyPlanCommon(TransactionCase):
         cls.env.user.tz = "Asia/Phnom_Penh"
 
         today = fields.Date.today()
-        # Find next Monday (relative to today, never fixed calendar dates)
-        days_ahead = (0 - today.weekday()) % 7
-        if days_ahead == 0:
-            days_ahead = 7
-        cls.next_monday = today + timedelta(days=days_ahead)
+        # Find next Monday (relative to today, skipping any holiday period)
+        cur = today + timedelta(days=((0 - today.weekday()) % 7 or 7))
+        PublicHoliday = cls.env["public.holiday"] if "public.holiday" in cls.env else None
+        while True:
+            if PublicHoliday is not None:
+                hols = PublicHoliday.search_count([
+                    ("date_from", "<=", cur + timedelta(days=28)),
+                    ("date_to", ">=", cur),
+                    ("active", "=", True),
+                ])
+                if hols:
+                    cur += timedelta(days=7)
+                    continue
+            break
+        cls.next_monday = cur
 
         # 1. Academic Year & Semester (covering next ~8-10 weeks)
-        cls.academic_year = cls.env["university.academic.year"].create({
-            "name": f"Test AY {today.year}_{secrets.token_hex(4)}",
-            "date_start": cls.next_monday - timedelta(days=30),
-            "date_end": cls.next_monday + timedelta(days=300),
-            "state": "running",
-        })
+        ay_domain = [
+            ("date_start", "<=", cls.next_monday),
+            ("date_end", ">=", cls.next_monday),
+        ]
+        existing_ay = cls.env["university.academic.year"].search(ay_domain, limit=1)
+        if existing_ay:
+            cls.academic_year = existing_ay
+        else:
+            cls.academic_year = cls.env["university.academic.year"].create({
+                "name": f"Test AY {today.year}_{secrets.token_hex(4)}",
+                "date_start": cls.next_monday - timedelta(days=30),
+                "date_end": cls.next_monday + timedelta(days=300),
+                "state": "running",
+            })
 
-        cls.semester = cls.env["university.semester"].create({
-            "name": f"Test Sem {today.year}_{secrets.token_hex(4)}",
-            "academic_year_id": cls.academic_year.id,
-            "semester_type": "semester_1",
-            "date_start": cls.next_monday - timedelta(days=7),
-            "date_end": cls.next_monday + timedelta(days=70),
-        })
+        sem_domain = [
+            ("academic_year_id", "=", cls.academic_year.id),
+            ("date_start", "<=", cls.next_monday),
+            ("date_end", ">=", cls.next_monday),
+        ]
+        existing_sem = cls.env["university.semester"].search(sem_domain, limit=1)
+        if existing_sem:
+            cls.semester = existing_sem
+        else:
+            cls.semester = cls.env["university.semester"].create({
+                "name": f"Test Sem {today.year}_{secrets.token_hex(4)}",
+                "academic_year_id": cls.academic_year.id,
+                "semester_type": "semester_1",
+                "date_start": cls.next_monday - timedelta(days=7),
+                "date_end": cls.next_monday + timedelta(days=70),
+            })
 
         # Academic infrastructure
         cls.faculty = cls.env["university.faculty"].create({

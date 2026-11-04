@@ -9,15 +9,15 @@ class TestSchoolManagementRecordRules(TransactionCase):
         super().setUp()
         self.year = self.env["university.academic.year"].create({
             "name": "Rule Test Academic Year",
-            "date_start": "2026-01-01",
-            "date_end": "2026-12-31",
+            "date_start": "2035-01-01",
+            "date_end": "2035-12-31",
         })
         self.semester = self.env["university.semester"].create({
             "name": "Rule Test Semester",
             "academic_year_id": self.year.id,
             "semester_type": "semester_1",
-            "date_start": "2026-01-01",
-            "date_end": "2026-06-30",
+            "date_start": "2035-01-01",
+            "date_end": "2035-06-30",
         })
         self.faculty_a = self.env["university.faculty"].create({
             "name": "Rule Test Faculty A", "code": "RTFA"
@@ -41,24 +41,26 @@ class TestSchoolManagementRecordRules(TransactionCase):
         holiday_model = self.env["university.holiday"]
         self.university_holiday = holiday_model.create({
             "name": "University Holiday", "academic_year_id": self.year.id,
-            "date_start": "2026-02-01", "date_end": "2026-02-01",
+            "date_start": "2035-02-01", "date_end": "2035-02-01",
         })
         self.faculty_a_holiday = holiday_model.create({
             "name": "Faculty A Holiday", "academic_year_id": self.year.id,
-            "faculty_id": self.faculty_a.id, "date_start": "2026-02-02", "date_end": "2026-02-02",
+            "faculty_id": self.faculty_a.id,
+            "date_start": "2035-02-02", "date_end": "2035-02-02",
         })
         self.faculty_b_holiday = holiday_model.create({
             "name": "Faculty B Holiday", "academic_year_id": self.year.id,
-            "faculty_id": self.faculty_b.id, "date_start": "2026-02-03", "date_end": "2026-02-03",
+            "faculty_id": self.faculty_b.id,
+            "date_start": "2035-02-03", "date_end": "2035-02-03",
         })
         term_model = self.env["university.department.term"]
         self.term_a = term_model.create({
             "semester_id": self.semester.id, "department_id": self.department_a.id,
-            "date_start": "2026-01-01", "date_end": "2026-06-30",
+            "date_start": "2035-01-01", "date_end": "2035-06-30",
         })
         self.term_b = term_model.create({
             "semester_id": self.semester.id, "department_id": self.department_b.id,
-            "date_start": "2026-01-01", "date_end": "2026-06-30",
+            "date_start": "2035-01-01", "date_end": "2035-06-30",
         })
 
     def _make_user(self, login, group_xmlid):

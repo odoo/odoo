@@ -221,7 +221,8 @@
                        decoration-muted="state == 'cancelled'"/>
                 <field name="year_level" optional="hide"/>
                 <field name="conflict_indicator" string="Conflict" widget="badge" optional="show"
-                       decoration-danger="conflict_indicator == 'conflict'" invisible="not has_conflict"/>
+                       decoration-danger="conflict_indicator == 'conflict'" invisible="not has_conflict"
+                       groups="school_management.group_school_teacher,school_management.group_school_admin,school_management.group_school_timetable_manager"/>
                 <field name="room_change_indicator" string="Room Changed" widget="badge" optional="hide"
                        decoration-warning="room_change_indicator == 'changed'" invisible="not is_room_changed"/>
                 <button name="action_track_attendance" type="object" string="Attendance" icon="fa-calendar-check-o" 
@@ -272,7 +273,8 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <span class="badge text-bg-danger mb-2" invisible="not has_conflict">
+                        <span class="badge text-bg-danger mb-2" invisible="not has_conflict"
+                              groups="school_management.group_school_teacher,school_management.group_school_admin,school_management.group_school_timetable_manager">
                             <i class="fa fa-exclamation-triangle me-1" title="Schedule Conflict" aria-label="Schedule Conflict"/>Schedule Conflict
                         </span>
                         <span class="badge text-bg-warning mb-2" invisible="not is_room_changed">Room Changed</span>
@@ -386,7 +388,8 @@
                                     <span class="badge text-bg-primary fs-6 px-2 py-1">
                                         <field name="subject_id"/>
                                     </span>
-                                    <span t-if="record.has_conflict.raw_value" class="badge text-bg-danger">
+                                    <span t-if="record.has_conflict.raw_value" class="badge text-bg-danger"
+                                          groups="school_management.group_school_teacher,school_management.group_school_admin,school_management.group_school_timetable_manager">
                                         <i class="fa fa-exclamation-triangle me-1" title="Schedule Conflict" aria-label="Schedule Conflict"/>Conflict
                                     </span>
                                     <span t-if="record.is_holiday.raw_value" class="badge text-bg-warning">
@@ -472,7 +475,7 @@
                 <filter string="Ongoing" name="filter_ongoing" domain="[('status', '=', 'ongoing')]"/>
                 <filter string="Completed" name="filter_completed" domain="[('status', '=', 'completed')]"/>
                 <filter string="Cancelled" name="filter_cancelled" domain="[('state', '=', 'cancelled')]"/>
-                <filter string="Conflict" name="filter_conflict" domain="[('has_conflict', '=', True)]"/>
+                <filter string="Conflict" name="filter_conflict" domain="[('has_conflict', '=', True)]" groups="school_management.group_school_teacher,school_management.group_school_admin,school_management.group_school_timetable_manager"/>
                 <group>
                     <filter string="Academic Year" name="group_by_academic_year" context="{'group_by': 'academic_year_id'}"/>
                     <filter string="Semester" name="group_by_semester" context="{'group_by': 'semester_name'}"/>
@@ -517,6 +520,36 @@
         </field>
     </record>
 
+    <!-- Student Dedicated Study Schedule Calendar View (Read-Only, Enrollment-Focused) -->
+    <record id="view_university_timetable_slot_student_calendar" model="ir.ui.view">
+        <field name="name">university.timetable.slot.student.calendar</field>
+        <field name="model">university.timetable.slot</field>
+        <field name="arch" type="xml">
+            <calendar string="My Study Schedule"
+                      date_start="start_time"
+                      date_stop="end_time"
+                      color="subject_id"
+                      mode="week"
+                      scales="day,week,month"
+                      event_limit="8"
+                      quick_create="0"
+                      create="0"
+                      edit="0"
+                      delete="0"
+                      event_open_popup="true">
+                <field name="academic_year_id" string="Academic Year" filters="1"/>
+                <field name="semester_id" string="Semester" filters="1"/>
+                <field name="subject_id" string="Subject"/>
+                <field name="section_id" string="Class / Section"/>
+                <field name="teacher_id" string="Instructor"/>
+                <field name="classroom_id" string="Classroom"/>
+                <field name="location" string="Location"/>
+                <field name="session_type"/>
+                <field name="status" widget="badge"/>
+            </calendar>
+        </field>
+    </record>
+
     <!-- Unified OWL Schedule Client Action -->
     <record id="action_university_schedule_view" model="ir.actions.client">
         <field name="name">Schedule by Resource</field>
@@ -529,90 +562,92 @@
     <record id="action_university_timetable_slot" model="ir.actions.act_window">
         <field name="name">Schedule by Resource</field>
         <field name="res_model">university.timetable.slot</field>
-        <field name="view_mode">gantt,kanban,list,form</field>
-        <field name="view_id" ref="view_university_timetable_slot_gantt"/>
+        <field name="view_mode">calendar,gantt,kanban,list,form</field>
+        <field name="view_id" ref="view_university_timetable_slot_calendar"/>
         <field name="search_view_id" ref="view_university_timetable_slot_search"/>
-        <field name="context">{'search_default_group_by_resource': 1, 'search_default_active_sessions': 1}</field>
+        <field name="context">{'default_mode': 'week', 'calendar_mode': 'week', 'search_default_group_by_resource': 1, 'search_default_active_sessions': 1}</field>
         <field name="limit">80</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">No schedules planned for this week.</p>
         </field>
+        <field name="group_ids" eval="[(4, ref('school_management.group_school_admin')), (4, ref('school_management.group_school_timetable_manager')), (4, ref('school_management.group_school_hod')), (4, ref('school_management.group_school_dean')), (4, ref('school_management.group_university_teacher'))]"/>
+    </record>
+
+    <record id="action_university_timetable_slot_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_university_timetable_slot_calendar"/>
+        <field name="act_window_id" ref="action_university_timetable_slot"/>
     </record>
 
     <record id="action_university_timetable_slot_view_gantt" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="2"/>
         <field name="view_mode">gantt</field>
         <field name="view_id" ref="view_university_timetable_slot_gantt"/>
         <field name="act_window_id" ref="action_university_timetable_slot"/>
     </record>
 
     <record id="action_university_timetable_slot_view_kanban" model="ir.actions.act_window.view">
-        <field name="sequence" eval="2"/>
+        <field name="sequence" eval="3"/>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="view_university_timetable_slot_kanban"/>
         <field name="act_window_id" ref="action_university_timetable_slot"/>
     </record>
 
     <record id="action_university_timetable_slot_view_list" model="ir.actions.act_window.view">
-        <field name="sequence" eval="3"/>
+        <field name="sequence" eval="4"/>
         <field name="view_mode">list</field>
         <field name="view_id" ref="view_university_timetable_slot_tree"/>
         <field name="act_window_id" ref="action_university_timetable_slot"/>
     </record>
 
     <record id="action_university_timetable_slot_view_form" model="ir.actions.act_window.view">
-        <field name="sequence" eval="4"/>
+        <field name="sequence" eval="5"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_university_timetable_slot_form"/>
         <field name="act_window_id" ref="action_university_timetable_slot"/>
     </record>
 
 
-    <!-- Student Action: matches Admin's Schedule 100% with Gantt, Calendar, Kanban, List, Form -->
+    <!-- Student Action: My Study Schedule (Enrolled classes only, read-only calendar, kanban, list, form) -->
     <record id="action_university_timetable_slot_student" model="ir.actions.act_window">
-        <field name="name">Schedule by Resource</field>
+        <field name="name">My Study Schedule</field>
         <field name="res_model">university.timetable.slot</field>
-        <field name="view_mode">gantt,calendar,kanban,list,form</field>
-        <field name="view_id" ref="view_university_timetable_slot_gantt"/>
+        <field name="view_mode">calendar,kanban,list,form</field>
+        <field name="view_id" ref="view_university_timetable_slot_student_calendar"/>
         <field name="search_view_id" ref="view_university_timetable_slot_search"/>
         <field name="domain">[('generation_state', '=', 'published'), ('section_id.enrollment_ids', 'any', [('student_id.user_id', '=', uid), ('status', '=', 'enrolled')])]</field>
-        <field name="context">{'search_default_group_by_resource': 1, 'search_default_active_sessions': 1, 'create': False, 'edit': False, 'delete': False}</field>
+        <field name="context">{'default_mode': 'week', 'calendar_mode': 'week', 'create': False, 'edit': False, 'delete': False}</field>
         <field name="limit">80</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">No schedules planned for this week.</p>
+            <p class="o_view_nocontent_smiling_face">No classes scheduled for this period.</p>
         </field>
-    </record>
-
-    <record id="action_university_timetable_slot_student_view_gantt" model="ir.actions.act_window.view">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">gantt</field>
-        <field name="view_id" ref="view_university_timetable_slot_gantt"/>
-        <field name="act_window_id" ref="action_university_timetable_slot_student"/>
+        <field name="group_ids" eval="[(4, ref('school_management.group_school_student'))]"/>
     </record>
 
     <record id="action_university_timetable_slot_student_view_calendar" model="ir.actions.act_window.view">
-        <field name="sequence" eval="2"/>
+        <field name="sequence" eval="1"/>
         <field name="view_mode">calendar</field>
-        <field name="view_id" ref="view_university_timetable_slot_calendar"/>
+        <field name="view_id" ref="view_university_timetable_slot_student_calendar"/>
         <field name="act_window_id" ref="action_university_timetable_slot_student"/>
     </record>
 
     <record id="action_university_timetable_slot_student_view_kanban" model="ir.actions.act_window.view">
-        <field name="sequence" eval="3"/>
+        <field name="sequence" eval="2"/>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="view_university_timetable_slot_kanban"/>
         <field name="act_window_id" ref="action_university_timetable_slot_student"/>
     </record>
 
     <record id="action_university_timetable_slot_student_view_list" model="ir.actions.act_window.view">
-        <field name="sequence" eval="4"/>
+        <field name="sequence" eval="3"/>
         <field name="view_mode">list</field>
         <field name="view_id" ref="view_university_timetable_slot_tree"/>
         <field name="act_window_id" ref="action_university_timetable_slot_student"/>
     </record>
 
     <record id="action_university_timetable_slot_student_view_form" model="ir.actions.act_window.view">
-        <field name="sequence" eval="5"/>
+        <field name="sequence" eval="4"/>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_university_timetable_slot_form"/>
         <field name="act_window_id" ref="action_university_timetable_slot_student"/>

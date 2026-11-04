@@ -126,15 +126,15 @@ class TestStudentModel(TransactionCase):
             "program_id": self.program_cs.id,
         })
         academic_year = self.env["university.academic.year"].create({
-            "name": "AY 2026 Test",
-            "date_start": "2026-01-01",
-            "date_end": "2026-12-31",
+            "name": "AY 2041 Test",
+            "date_start": "2041-01-01",
+            "date_end": "2041-12-31",
         })
         semester = self.env["university.semester"].create({
             "name": "Sem 1 Test",
             "academic_year_id": academic_year.id,
-            "date_start": "2026-01-01",
-            "date_end": "2026-06-30",
+            "date_start": "2041-01-01",
+            "date_end": "2041-06-30",
         })
         subject = self.env["university.subject"].create({
             "name": "Intro to CS Test",

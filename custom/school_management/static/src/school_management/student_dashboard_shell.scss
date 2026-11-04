@@ -2702,3 +2702,498 @@
   .o_day_picker_btn.active { background: #6366f1; color: #fff; }
   .o_link_full_calendar, .o_link_view_all_notices, .o_btn_toggle_courses { color: #6366f1; }
 }
+
+/* ==========================================================================
+   UNIVERSITY STUDENT PORTAL - EXECUTIVE ADMIN LAYOUT ALIGNMENT
+   ========================================================================== */
+.o_student_portal_root {
+    background-color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    .o_executive_dashboard_container {
+        background-color: #f8fafc;
+        color: #1e293b;
+    }
+
+    .o_dashboard_canvas {
+        max-width: 1720px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    // 1. Executive Header Card
+    .o_exec_header_card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.02);
+
+        .o_student_header_avatar_wrap {
+            width: 48px;
+            height: 48px;
+        }
+
+        .o_student_header_avatar {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+        }
+
+        .o_student_avatar_placeholder {
+            width: 48px;
+            height: 48px;
+            font-size: 1.15rem;
+        }
+
+        .o_exec_title {
+            font-size: 1.45rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+
+        .o_exec_subtitle {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .o_btn_refresh {
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            background-color: #f8fafc;
+            color: #475569;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            transition: all 0.15s ease;
+
+            &:hover {
+                background-color: #ffffff;
+                color: #4f46e5;
+                border-color: #4f46e5;
+                box-shadow: 0 2px 6px rgba(79, 70, 229, 0.12);
+            }
+
+            &.is-refreshing i {
+                animation: spin 1s infinite linear;
+            }
+        }
+    }
+
+    // 2. KPI Five Section
+    .o_kpi_five_section {
+        .o_kpi_five_row {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 1rem;
+
+            @media (max-width: 1399.98px) {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+            @media (max-width: 991.98px) {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            @media (max-width: 575.98px) {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .o_kpi_metric_card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            min-height: 130px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.02);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+            cursor: pointer;
+
+            &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08) !important;
+                border-color: #cbd5e1;
+            }
+
+            .o_kpi_metric_label {
+                font-size: 0.8125rem;
+                font-weight: 600;
+                color: #64748b;
+            }
+
+            .o_kpi_metric_value {
+                font-size: 1.85rem;
+                font-weight: 800;
+                color: #0f172a;
+                line-height: 1.15;
+                letter-spacing: -0.025em;
+            }
+
+            .o_kpi_icon_bubble {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.95rem;
+
+                &.bg-indigo-subtle { background-color: #eef2ff !important; color: #4f46e5 !important; }
+                &.bg-teal-subtle { background-color: #ccfbf1 !important; color: #0f766e !important; }
+                &.bg-purple-subtle { background-color: #f3e8ff !important; color: #7c3aed !important; }
+                &.bg-amber-subtle { background-color: #fef3c7 !important; color: #d97706 !important; }
+                &.bg-emerald-subtle { background-color: #dcfce7 !important; color: #16a34a !important; }
+            }
+        }
+    }
+
+    // 3. Chart and Detail Cards
+    .o_chart_card,
+    .o_detail_card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 2px 6px rgba(15, 23, 42, 0.02);
+
+        .o_card_title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: -0.015em;
+        }
+
+        .o_card_subtitle {
+            font-size: 0.8rem;
+        }
+    }
+
+    // 4. Weekly Timetable Grid
+    .o_weekly_calendar_wrapper {
+        min-width: 640px;
+        overflow-x: auto;
+    }
+
+    .o_week_headers_row {
+        display: grid;
+        grid-template-columns: 55px repeat(7, 1fr);
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 6px;
+        padding-bottom: 8px;
+
+        .o_week_time_corner {
+            color: #94a3b8;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .o_week_day_header {
+            .o_day_name {
+                color: #64748b;
+                font-size: 0.7rem;
+                font-weight: 700;
+                letter-spacing: 0.04em;
+                margin-bottom: 3px;
+            }
+
+            .o_day_number {
+                color: #0f172a;
+                font-size: 0.95rem;
+                font-weight: 700;
+                width: 28px;
+                height: 28px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+                border-radius: 50%;
+            }
+
+            &.is_today {
+                .o_day_name {
+                    color: #4f46e5;
+                    font-weight: 800;
+                }
+
+                .o_today_circle {
+                    background: #4f46e5 !important;
+                    color: #ffffff !important;
+                    font-weight: 800;
+                    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.35);
+                }
+            }
+        }
+    }
+
+    .o_week_grid_body {
+        display: grid;
+        grid-template-columns: 55px repeat(7, 1fr);
+        height: 560px;
+        position: relative;
+
+        .o_time_gutter {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            padding: 4px 0;
+
+            .o_time_marker {
+                color: #94a3b8;
+                font-size: 0.7rem;
+                font-weight: 600;
+                text-align: right;
+                padding-right: 10px;
+                line-height: 1;
+                transform: translateY(-50%);
+            }
+        }
+
+        .o_week_columns_container {
+            grid-column: 2 / -1;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            height: 100%;
+            position: relative;
+        }
+
+        .o_week_day_column {
+            position: relative;
+            height: 100%;
+            border-right: 1px solid #f1f5f9;
+            padding: 0 3px;
+
+            &:last-child {
+                border-right: none;
+            }
+
+            &.is_today {
+                background: rgba(79, 70, 229, 0.02);
+            }
+
+            .o_column_grid_lines {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                pointer-events: none;
+
+                .o_grid_line {
+                    width: 100%;
+                    border-top: 1px dashed #f1f5f9;
+                }
+            }
+        }
+
+        .o_schedule_slot_card {
+            position: absolute;
+            left: 3px;
+            right: 3px;
+            border-radius: 8px;
+            padding: 6px 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: transform 0.15s ease, box-shadow 0.15s ease, z-index 0.1s ease;
+            z-index: 2;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-left-width: 4px;
+            cursor: pointer;
+
+            &:hover {
+                transform: scale(1.02);
+                z-index: 10;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .o_slot_code {
+                font-size: 0.74rem;
+                line-height: 1.15;
+            }
+
+            .o_slot_title {
+                font-size: 0.76rem;
+                line-height: 1.2;
+            }
+
+            .o_slot_time {
+                font-size: 0.65rem;
+                color: #475569;
+            }
+
+            .o_slot_room,
+            .o_slot_instructor {
+                font-size: 0.65rem;
+                color: #64748b;
+            }
+
+            // Subject Palettes
+            &.o_slot_palette_purple {
+                background: #f5f3ff;
+                border-left-color: #7c3aed;
+                color: #4c1d95;
+            }
+            &.o_slot_palette_sapphire {
+                background: #eff6ff;
+                border-left-color: #3b82f6;
+                color: #1e3a8a;
+            }
+            &.o_slot_palette_emerald {
+                background: #ecfdf5;
+                border-left-color: #10b981;
+                color: #065f46;
+            }
+            &.o_slot_palette_indigo {
+                background: #eef2ff;
+                border-left-color: #6366f1;
+                color: #312e81;
+            }
+            &.o_slot_palette_amber {
+                background: #fffbeb;
+                border-left-color: #f59e0b;
+                color: #78350f;
+            }
+            &.o_slot_palette_teal {
+                background: #f0fdfa;
+                border-left-color: #14b8a6;
+                color: #134e4a;
+            }
+            &.o_slot_palette_rose {
+                background: #fff1f2;
+                border-left-color: #f43f5e;
+                color: #881337;
+            }
+        }
+    }
+
+    // 5. Month Calendar Grid
+    .o_month_calendar_wrapper {
+        overflow-x: auto;
+    }
+
+    .o_month_headers_row {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 6px;
+        margin-bottom: 6px;
+
+        .o_month_header {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+    }
+
+    .o_month_grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+
+        .o_month_day_cell {
+            min-height: 72px;
+            padding: 6px;
+            border: 1px solid #f1f5f9;
+            border-radius: 8px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            &.is_muted {
+                background: #f8fafc;
+                opacity: 0.5;
+            }
+
+            &.is_today {
+                border-color: #c7d2fe;
+                background: #eef2ff;
+            }
+
+            .o_month_day_num {
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: #1e293b;
+                width: 22px;
+                height: 22px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .o_month_session_badge {
+                cursor: pointer;
+                transition: transform 0.15s ease;
+                &:hover {
+                    transform: scale(1.04);
+                }
+            }
+
+            .o_month_no_class {
+                color: #94a3b8;
+                font-size: 0.68rem;
+            }
+        }
+    }
+
+    // 6. List View
+    .o_schedule_list_item {
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+        }
+    }
+
+    // 7. Quick Actions
+    .o_quick_action_tile {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px;
+        transition: all 0.15s ease;
+        cursor: pointer;
+
+        &:hover {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.08);
+
+            .o_tile_title {
+                color: #4f46e5 !important;
+            }
+        }
+
+        .o_op_icon_wrap {
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.95rem;
+
+            &.bg-purple-subtle { background-color: #f3e8ff !important; color: #7c3aed !important; }
+            &.bg-primary-subtle { background-color: #dbeafe !important; color: #2563eb !important; }
+            &.bg-success-subtle { background-color: #dcfce7 !important; color: #16a34a !important; }
+            &.bg-warning-subtle { background-color: #fef3c7 !important; color: #d97706 !important; }
+            &.bg-info-subtle { background-color: #e0f2fe !important; color: #0284c7 !important; }
+        }
+
+        .o_tile_title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.2;
+            transition: color 0.15s ease;
+        }
+    }
+}
