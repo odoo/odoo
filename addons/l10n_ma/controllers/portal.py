@@ -6,8 +6,8 @@ class L10nMAPortalAccount(PortalAccount):
     def _is_morocco_fiscal_country(self):
         return self.env.company.account_fiscal_country_id.code == "MA"
 
-    def _get_checkout_additional_identifiers_metadata(self, country_code):
-        metadata = super()._get_checkout_additional_identifiers_metadata(country_code)
+    def _get_checkout_additional_identifiers_metadata(self, country_sudo, **kwargs):
+        metadata = super()._get_checkout_additional_identifiers_metadata(country_sudo, **kwargs)
         # The ICE has its own field on the address form.
         metadata.pop('MA_ICE', None)
         return metadata
