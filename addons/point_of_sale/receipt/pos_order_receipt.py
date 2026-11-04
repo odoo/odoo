@@ -298,6 +298,9 @@ class PosOrderReceipt(models.AbstractModel):
                 continue
 
             quantity = orderline.prep_line_ids.quantity - orderline.prep_line_ids.cancelled
+            if self.env.context.get('reprint_preparation_receipt'):
+                quantity = 0
+
             quantity_diff = orderline.qty - quantity
 
             if quantity_diff != 0:
