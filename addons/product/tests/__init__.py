@@ -8,6 +8,7 @@ from . import (
     test_pricelist,
     test_pricelist_auto_creation,
     test_pricelist_report,
+    test_pricelist_rule_resolution,
     test_product_attribute_value_config,
     test_product_combo,
     test_product_document,
