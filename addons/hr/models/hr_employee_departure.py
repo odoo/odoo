@@ -107,9 +107,13 @@ class HrEmployeeDeparture(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         for departure in res:
-            departure.employee_id._get_version(departure.departure_date).write({
+            version = departure.employee_id._get_version(departure.departure_date)
+            version.write({
                 'departure_id': departure.id,
             })
+            # The contract end date is restricted to the HR administrators, the departure is created by HR officers
+            if version.sudo().contract_date_start:
+                version.sudo().write({'contract_date_end': departure.departure_date})
         return res
 
     def _cron_apply_departure(self):
