@@ -35,7 +35,7 @@ class MrpWorkorder(models.Model):
         'mrp.workcenter', 'Work Center', required=True, index=True, tracking=True,
         group_expand='_read_group_workcenter_id', check_company=True)
     working_state = fields.Selection(
-        string='Workcenter Status', related='workcenter_id.working_state') # technical: used in views only
+        string='Workcenter Status', related='workcenter_id.working_state')  # technical: used in views only
     product_id = fields.Many2one(related='production_id.product_id')
     product_tracking = fields.Selection(related="product_id.tracking")
     uom_id = fields.Many2one(related='production_id.uom_id')
@@ -44,7 +44,7 @@ class MrpWorkorder(models.Model):
     production_lot_producing_id = fields.Many2many('stock.lot', related="production_id.lot_producing_ids")
     production_availability = fields.Selection(
         string='Stock Availability', readonly=True,
-        related='production_id.reservation_state', store=True) # Technical: used in views and domains only
+        related='production_id.reservation_state', store=True)  # Technical: used in views and domains only
     production_state = fields.Selection(
         string='Production State', readonly=True,
         related='production_id.state', tracking=False)  # Technical: used in views only
@@ -117,14 +117,13 @@ class MrpWorkorder(models.Model):
         'mrp.workcenter.productivity', 'workorder_id', copy=False)
     is_user_working = fields.Boolean(
         'Is the Current User Working', compute='_compute_is_user_working')  # technical: is the current user working
+    # Technical field to store the hourly cost of workcenter at time of work order completion (i.e. to keep a consistent cost).',
     costs_hour = fields.Float(
         string='Cost per hour',
         default=0.0, aggregator="avg")
-        # Technical field to store the hourly cost of workcenter at time of work order completion (i.e. to keep a consistent cost).',
-    cost_mode = fields.Selection([('actual', 'Actual'), ('estimated', 'Estimated')], default='actual')
     # Technical field to store the cost_mode of a workorder in case it is changed on the operation_id later on.
     # This field should only be changed once at MO confirmation and should reflect the cost_mode of the operation_id.
-
+    cost_mode = fields.Selection([('actual', 'Actual'), ('estimated', 'Estimated')], default='actual')
     cost = fields.Float(
         string='Cost', compute='_compute_cost', store=True, aggregator="sum",
         help="Total real cost of the work order based on duration and hourly cost.")
@@ -444,7 +443,7 @@ class MrpWorkorder(models.Model):
     @api.depends('allowed_employees')
     def _compute_all_employees_allowed(self):
         for wo in self:
-            wo.all_employees_allowed = len(wo.allowed_employees) == 0
+            wo.all_employees_allowed = not wo.allowed_employees
 
     def _search_is_planned(self, operator, value):
         if (operator == '=' and value) or (operator == '!=' and not value):
@@ -1101,7 +1100,7 @@ class MrpWorkorder(models.Model):
         if isinstance(res, dict) and res.get('res_model') == 'mrp.production.backorder':
             return res
         loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'productive')], limit=1)
-        if len(loss_id) < 1:
+        if not loss_id:
             raise UserError(self.env._("You need to define at least one productivity loss in the category 'Productive'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
         self.state = 'done'
         self._set_default_time_log(loss_id)

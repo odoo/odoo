@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 from datetime import timedelta, datetime
@@ -308,7 +307,7 @@ class MrpWorkcenter(models.Model):
     def write(self, vals):
         if 'company_id' in vals:
             self.resource_id.company_id = vals['company_id']
-        return super(MrpWorkcenter, self).write(vals)
+        return super().write(vals)
 
     def action_show_operations(self):
         self.ensure_one()
@@ -425,7 +424,7 @@ class MrpWorkcenter(models.Model):
                 'title': _("Note that archived work center(s): '%s' is/are still linked to active Bill of Materials, which means that operations can still be planned on it/them. "
                            "To prevent this, deletion of the work center is recommended instead.", filtered_workcenters),
                 'type': 'warning',
-                'sticky': True,  #True/False will display for few seconds if false
+                'sticky': True,  # True/False will display for few seconds if false
                 'next': {'type': 'ir.actions.act_window_close'},
                 },
             }

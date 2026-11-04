@@ -1008,10 +1008,10 @@ class MrpProduction(models.Model):
             packages = mo.move_finished_ids.move_line_ids.result_package_id
             mo.packages_count = len(packages)
 
-    @api.depends('workorder_ids', 'workorder_ids.employee_ids')
+    @api.depends('workorder_ids.employee_ids')
     def _compute_employee_ids(self):
-        for record in self:
-            record.employee_ids = record.workorder_ids.employee_ids
+        for production in self:
+            production.employee_ids = production.workorder_ids.employee_ids
 
     def _change_producing(self):
         if self.state in ['draft', 'cancel'] or (self.state == 'done' and self.is_locked):
