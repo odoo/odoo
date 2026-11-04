@@ -51,6 +51,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
             self.skipTest("pos_settle_due module is required for this test")
 
+        # The settlement tour identifies the invoice by this journal prefix.
+        self.main_pos_config.journal_id.code = 'TSJ'
+
         # create customer account payment method
         self.customer_account_payment_method = self.env['pos.payment.method'].create({
             'name': 'Customer Account',

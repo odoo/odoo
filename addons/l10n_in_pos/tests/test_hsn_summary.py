@@ -1,6 +1,6 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_in.tests.test_hsn_summary import TestL10nInHSNSummary
-from odoo.addons.point_of_sale.tests.test_frontend import TestTaxCommonPOS
+from odoo.addons.point_of_sale.tests.common import TestTaxCommonPOS
 from odoo.tests import tagged
 
 
@@ -29,5 +29,5 @@ class TestL10nInHSNSummaryPos(TestTaxCommonPOS, TestL10nInHSNSummary):
             'state_id': self.env['res.country.state'].search([], limit=1).id,
         })
         self.ensure_products_on_document(test1[1], 'product_1')
-        with self.with_new_session(user=self.pos_user):
-            self.start_pos_tour('test_l10n_in_hsn_summary_pos')
+        self.start_pos_tour('test_l10n_in_hsn_summary_pos')
+        self.close_pos_session()
