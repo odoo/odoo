@@ -6,7 +6,7 @@ from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
-from .common import HOST, L10nCnEdiYunshuiTestCommon, MockResponse, MockYunshuiGateway
+from .common import HOST, L10nCnEdiYunshuiTestCommon, MockYunshuiGateway
 from odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client import (
     QUERY_RED_FORM,
     QUERY_RESULT,
@@ -24,10 +24,6 @@ class TestYunshuiRed(L10nCnEdiYunshuiTestCommon):
             self.company.l10n_cn_edi_yunshui_platform_code,
         )
         patch('odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.requests.post', self.gateway).start()
-        patch(
-            'odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.requests.get',
-            lambda url, **kwargs: MockResponse(status=404),
-        ).start()
         patch('odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.HOSTS', {'test': HOST, 'prod': HOST}).start()
         self.addCleanup(patch.stopall)
 

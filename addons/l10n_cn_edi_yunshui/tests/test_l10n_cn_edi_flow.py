@@ -755,17 +755,11 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
     def test_billing_user_can_issue_and_reverse_a_fapiao(self):
         user = self._create_user('account.group_account_invoice')
         invoice = self._create_posted_invoice()
-        self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399', 'pdf': b'%PDF'}
+        self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
 
         self.create_send_and_print(invoice, as_user=user).action_send_and_print()
 
         self.assertEqual(invoice.l10n_cn_edi_state, 'issued')
-
-        self.responses['query_invoice'] = {'state': 'issued', 'ofd': b'OFD'}
-
-        invoice.with_user(user).action_l10n_cn_edi_fetch_fapiao_files()
-
-        self.assertEqual(self._fapiao(invoice).ofd_id.raw.content, b'OFD')
 
         credit_note = self._reverse(invoice.with_user(user))
         self.responses['issue'] = {'state': 'issued', 'fapiao_no': 'red-fapiao-789'}
@@ -913,29 +907,23 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
         self.assertEqual(len(bill.l10n_cn_edi_document_ids), 1)
 
-    def test_fetching_files_again_only_adds_the_missing_ones(self):
-        invoice = self._create_posted_invoice()
-        self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399', 'pdf': b'%PDF first'}
-        self._issue(invoice)
-        not_issued = self._create_posted_invoice()
-        self.responses['query_invoice'] = {'state': 'issued', 'pdf': b'%PDF again', 'ofd': b'OFD'}
-
-        action = (invoice | not_issued).action_l10n_cn_edi_fetch_fapiao_files()
-
-        self.assertIsNone(action)
-        doc = self._fapiao(invoice)
-        self.assertEqual([args[0] for method, args in self.client.calls if method == 'query_invoice'], [doc])
-        self.assertEqual(doc.pdf_id.raw.content, b'%PDF first')
-        self.assertEqual(doc.ofd_id.raw.content, b'OFD')
-
-    def test_fetching_files_that_are_not_there_is_logged(self):
+    def test_cron_fills_in_the_files_the_provider_did_not_have_yet(self):
         invoice = self._create_posted_invoice()
         self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
         self._issue(invoice)
-        self.responses['query_invoice'] = {'state': 'issued'}
+        self.responses['query_invoice'] = {
+            'state': 'issued',
+            'fapiao_no': '24442000000071309399',
+            'pdf_url': 'https://digi.51fapiao.cn/v/pdf',
+            'ofd_url': 'https://digi.51fapiao.cn/v/ofd',
+            'xml': b'<EInvoice/>',
+        }
 
-        action = invoice.action_l10n_cn_edi_fetch_fapiao_files()
+        self.env['account.move']._cron_l10n_cn_edi_poll_invoices()
+        self.env['account.move']._cron_l10n_cn_edi_poll_invoices()
 
-        self.assertEqual(action['params']['type'], 'warning')
-        self.assertFalse(self._fapiao(invoice).pdf_id)
-        self.assertIn('could not be downloaded', invoice.message_ids[0].body)
+        doc = self._fapiao(invoice)
+        self.assertEqual([method for method, _args in self.client.calls].count('query_invoice'), 1)
+        self.assertEqual((doc.pdf_url, doc.ofd_url), ('https://digi.51fapiao.cn/v/pdf', 'https://digi.51fapiao.cn/v/ofd'))
+        self.assertEqual(doc.xml_id.raw.content, b'<EInvoice/>')
+        self.assertEqual(invoice.message_ids.mapped('body').count(invoice.message_ids[0].body), 1)
