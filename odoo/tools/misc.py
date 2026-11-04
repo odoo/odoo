@@ -836,11 +836,13 @@ def dumpstacks(sig=None, frame=None, thread_idents=None, log_level=logging.INFO)
             self = frame.f_locals.get('self')
             if not self:
                 continue
-            if not hasattr(self, 'env'):
+            try:
+                env = self.env
+            except (AttributeError, RuntimeError):
                 continue
-            if not isinstance(self.env, Environment):
+            if not isinstance(env, Environment):
                 continue
-            return self.env
+            return env
         return None
 
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696

@@ -115,8 +115,9 @@ class Controller:
             Controller.children_classes[module].append(cls)
 
     @property
-    def env(self) -> Environment | None:
-        return request.env if request else None
+    def env(self) -> Environment:
+        """ Alias for ``request.env``. """
+        return request.env
 
 
 def route(
@@ -290,7 +291,12 @@ def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converter
             yield Ctrl()
 
     for ctrl in build_controllers():
-        for method_name, method in inspect.getmembers(ctrl, inspect.ismethod):
+        for method_name in dir(type(ctrl)):
+            # Skip this attribute if not a method
+            method = inspect.getattr_static(type(ctrl), method_name)
+            if not inspect.isfunction(method) and not isinstance(method, classmethod):
+                continue
+            method = getattr(ctrl, method_name)
 
             # Skip this method if it is not @route decorated anywhere in
             # the hierarchy
