@@ -26,7 +26,7 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
             'report_type': 'qweb-pdf-paper-muncher',
             'paperformat_id': cls.env.ref('base.paperformat_euro').id,
         })
-        cls.env['ir.ui.view'].create({
+        cls.report_view = cls.env['ir.ui.view'].create({
             'type': 'qweb',
             'name': 'base_report_paper_muncher.test_report_partner',
             'key': 'base_report_paper_muncher.test_report_partner',
@@ -94,6 +94,61 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
         pdf = self._render_pdf(self.partners.ids)
         self.assertTrue(pdf.startswith(b'%PDF-'), f"Expected a valid PDF got:\n{pdf}")
 
+    def _render_pdf_with_headers(self):
+        self.report_view.arch = '''
+            <t t-name="base_report_paper_muncher.test_report_partner">
+                <t t-call="web.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="header"><p>Header: <t t-out="o.name"/></p></div>
+                        <div class="article">
+                            <div class="page">
+                                <p>Name: <t t-out="o.name"/></p>
+                            </div>
+                        </div>
+                        <div class="footer"><p>Footer: <t t-out="o.name"/></p></div>
+                    </t>
+                </t>
+            </t>
+        '''
+        served = {}
+        serve = PaperMuncherServer.serve
+
+        def spy_serve(self_server, documents, header='', footer='', **kwargs):
+            served.update(header=header, footer=footer)
+            return serve(self_server, documents, header, footer, **kwargs)
+
+        with patch.object(PaperMuncherServer, 'serve', spy_serve):
+            pdf = self._render_pdf(self.partners.ids)
+        self.assertTrue(pdf.startswith(b'%PDF-'), f"Expected a valid PDF got:\n{pdf}")
+        return served
+
+    def test_render_multiple_documents_with_headers(self):
+        if not paper_muncher().has_capability('per-input-decoration'):
+            self.skipTest("paper-muncher does not support per-input headers and footers")
+        served = self._render_pdf_with_headers()
+        for decoration in ('header', 'footer'):
+            self.assertEqual(len(served[decoration]), 2)
+            for document, partner, other in zip(served[decoration], self.partners, self.partners[::-1]):
+                self.assertIn(partner.name, document)
+                self.assertNotIn(other.name, document)
+
+    def test_render_multiple_documents_with_headers_legacy(self):
+        info = paper_muncher()
+        legacy = info._replace(capabilities=info.capabilities - {'per-input-decoration'})
+        with patch('odoo.addons.base_report_paper_muncher.models.ir_actions_report.paper_muncher', return_value=legacy):
+            served = self._render_pdf_with_headers()
+        self.assertIsInstance(served['header'], str)
+        self.assertIsInstance(served['footer'], str)
+
     def test_capabilities(self):
         self.assertEqual(_capabilities(parse_version('0.5')), frozenset())
         self.assertEqual(_capabilities(parse_version('0.6')), {'baseline'})
+        self.assertEqual(_capabilities(parse_version('0.10')), {'baseline', 'per-input-decoration'})
+
+    def test_split_decoration_mismatch(self):
+        html = '<!DOCTYPE html><html><body><div id="minimal_layout_report_headers"><div>A</div><div>B</div></div></body></html>'
+        split = self.env['ir.actions.report']._split_paper_muncher_decoration
+        self.assertEqual(len(split(html, 'minimal_layout_report_headers', 2)), 2)
+        self.assertIsNone(split(html, 'minimal_layout_report_headers', 3))
+        self.assertIsNone(split(html, 'minimal_layout_report_footers', 2))
+        self.assertIsNone(split(None, 'minimal_layout_report_headers', 2))
