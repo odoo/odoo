@@ -160,6 +160,76 @@ describe("pos_store.js", () => {
         expect(printed).toEqual(["Kitchen: 3 TEST", "Bar: 2 TEST 2"]);
     });
 
+    const setupPreparationPrinters = async (store, printerFailures) => {
+        const kitchen = store.models["pos.printer"].get(1);
+        kitchen.name = "Kitchen";
+        kitchen.product_categories_ids = [store.models["pos.category"].get(1)];
+        const bar = store.models["pos.printer"].create({
+            name: "Bar",
+            product_categories_ids: [store.models["pos.category"].get(2)],
+            printer_type: "epson_epos",
+        });
+        store.config.preparation_printer_ids = [kitchen, bar];
+        await store.ticketPrinter.initPrinters();
+
+        const state = { retry: null };
+        patchWithCleanup(store.ticketPrinter, {
+            async generateIframe(template, ticket) {
+                return ticket;
+            },
+            setIframeSizeFromPrinter() {},
+            async generateImage(ticket) {
+                return ticket;
+            },
+            async print() {
+                if (printerFailures.count-- > 0) {
+                    return { successful: false, message: { body: "Printer is not reachable" } };
+                }
+                return { successful: true };
+            },
+            showPrinterErrorDialog(message, retryFunction) {
+                state.retry = retryFunction;
+            },
+        });
+        return state;
+    };
+
+    test("printOrderChanges adds the changes to the print history once for all printers", async () => {
+        const store = await setupPosEnv();
+        await setupPreparationPrinters(store, { count: 0 });
+        const order = await getFilledOrder(store);
+
+        await store.ticketPrinter.printOrderChanges({ order });
+        expect(order.lastPrints).toHaveLength(1);
+    });
+
+    test("printOrderChanges does not keep a failed print in the history without a preparation display", async () => {
+        const store = await setupPosEnv();
+        const state = await setupPreparationPrinters(store, { count: 2 });
+        const order = await getFilledOrder(store);
+
+        expect(await store.ticketPrinter.printOrderChanges({ order })).toBe(false);
+        expect(order.lastPrints).toHaveLength(0);
+
+        await state.retry();
+        expect(order.lastPrints).toHaveLength(1);
+    });
+
+    test("printOrderChanges keeps a failed print in the history with a preparation display", async () => {
+        const store = await setupPosEnv();
+        const state = await setupPreparationPrinters(store, { count: 2 });
+        // The preparation display receives the changes even if the printers fail
+        patchWithCleanup(store.data.models, { "pos.prep.display": [{ id: 1 }] });
+        const order = await getFilledOrder(store);
+
+        expect(await store.ticketPrinter.printOrderChanges({ order })).toBe(false);
+        expect(order.lastPrints).toHaveLength(1);
+
+        // Retrying the failed print must not add it to the history a second time
+        await state.retry();
+        expect(order.lastPrints).toHaveLength(1);
+    });
+
     describe("syncAllOrders", () => {
         test("simple sync", async () => {
             const store = await setupPosEnv();
