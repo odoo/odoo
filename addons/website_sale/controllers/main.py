@@ -1331,6 +1331,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "discard_url": callback or (is_anonymous_cart and "/shop/cart") or "/shop/checkout",
         }
 
+    @route()
+    def portal_address_country_info(self, country, address_type, **kwargs):
+        """Override of `portal` to compute the required fields with the cart, which may not need a
+        full address."""
+        return super().portal_address_country_info(
+            country, address_type, order_sudo=request.cart, **kwargs
+        )
+
     def _get_default_country(self, order_sudo=False, **kwargs):
         """Override `portal` to return country of customer if customer is not logged in."""
         is_anonymous_cart = order_sudo and order_sudo._is_anonymous_cart()

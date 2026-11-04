@@ -6,9 +6,10 @@ from unittest.mock import patch
 from werkzeug.exceptions import Forbidden
 
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import HttpCase, tagged
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.models.website import CART_SESSION_CACHE_KEY
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
@@ -840,3 +841,23 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             de_fp.country_id,
             "The fiscal position should be based on the shipping address",
         )
+
+
+@tagged('post_install', '-at_install')
+class TestCheckoutAddressCountryInfo(WebsiteSaleCommon, HttpCase):
+
+    def test_country_info_cart_without_address(self):
+        self.env['ir.config_parameter'].sudo().set_bool(
+            'website_sale.require_billing_details_for_services', False
+        )
+        cart = self._create_so(
+            partner_id=self.public_partner.id,
+            order_line=[Command.create({'product_id': self.service_product.id})],
+        )
+        self.assertFalse(cart._needs_customer_address())
+
+        self.authenticate(None, None, session_extra={CART_SESSION_CACHE_KEY: cart.id})
+        res = self.make_jsonrpc_request(
+            f'/my/address/country_info/{self.country_us.id}', {'address_type': 'billing'}
+        )
+        self.assertNotIn('street', res['required_fields'])
