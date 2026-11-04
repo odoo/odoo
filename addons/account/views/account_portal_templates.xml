@@ -46,7 +46,8 @@
                         <td name="invoice_amount" class="text-end pe-3"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
                         <td name="invoice_status" class="o_not_editable">
                             <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
-                                <span t-if="invoice.currency_id.is_zero(invoice.amount_residual)"
+                                <span t-if="invoice.currency_id.is_zero(invoice.amount_residual)
+                                            and invoice.payment_state != 'reversed'"
                                       class="badge rounded-pill text-bg-success">
                                     <i class="oi oi-fw" data-icon="check" aria-label="Paid" title="Paid" role="img"/>
                                     <span class="d-none d-md-inline"> Paid</span>
