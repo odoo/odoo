@@ -13,6 +13,7 @@ class HrHolidaysOvertimeCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.env.company.resource_calendar_id = cls.env['resource.calendar'].create({
             'name': 'Standard 40h/week',
             'attendance_ids': [
@@ -25,7 +26,7 @@ class HrHolidaysOvertimeCommon(TransactionCase):
 
         cls.att_wet = cls.env.company._get_default_attendance_work_entry_type()
         cls.env.company.attendance_work_entry_type_id = cls.att_wet
-        cls.overtime_wet = cls.env.ref('hr_work_entry.generic_work_entry_type_overtime')
+        cls.overtime_wet = cls.env.ref('hr_work_entry.be_work_entry_type_overtime')
 
         # deactivate all data-file rules so tests are self-contained
         cls.env['hr.time.rule'].search([]).write({'active': False})

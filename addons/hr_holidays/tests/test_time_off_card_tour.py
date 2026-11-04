@@ -6,6 +6,7 @@ class TestTimeOffCardTour(HttpCase):
 
     @users('admin')
     def test_time_off_card_tour(self):
+        self.env.company.country_id = self.env.ref('base.us').id
         work_entry_type = self.env['hr.work.entry.type'].create({
             'name': 'Time Off with no validation for approval',
             'code': 'Time Off with no validation for approval',

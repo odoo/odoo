@@ -64,19 +64,12 @@ class HrLeaveAccrualPlan(models.Model):
 
     @api.depends('company_id')
     def _compute_allowed_work_entry_type_ids(self):
+        selectable_domain = [
+            ('requires_allocation', '=', True),
+            ('time_off_selectable', '=', True),
+        ]
         for accrual in self:
-            country = accrual.company_id.country_id or self.env.company.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            domain = Domain.AND([
-                domain,
-                [
-                    ('requires_allocation', '=', True),
-                    ('time_off_selectable', '=', True),
-                ]
-            ])
+            domain = Domain.AND([selectable_domain, [('country_id', '=', accrual.company_id.country_id.id)]])
             accrual.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
 
     @api.depends('level_ids')

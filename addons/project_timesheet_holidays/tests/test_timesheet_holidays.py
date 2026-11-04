@@ -33,6 +33,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.country_id = cls.env.ref('base.us')
         cls.calendar_flexible_40_8 = cls.env['resource.calendar'].create({
             'name': 'Flexible Calendar 40h/week',
             'calendar_type': 'undefined',

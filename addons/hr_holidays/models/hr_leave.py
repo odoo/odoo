@@ -301,13 +301,13 @@ class HrLeave(models.Model):
             if self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
             else Domain('time_off_selectable', '=', True)
         )
+        work_entry_types_by_country = dict(self.env['hr.work.entry.type']._read_group(
+            domain=Domain.AND([selectable_domain, [('country_id', 'in', self.company_id.country_id.ids + [False])]]),
+            groupby=['country_id'],
+            aggregates=['id:recordset'],
+        ))
         for leave in self:
-            country = leave.company_id.country_id
-            if not country or not self.env['hr.work.entry.type'].search_count([('country_id', '=', country.id)], limit=1):
-                domain = [('country_id', '=', False)]
-            else:
-                domain = [('country_id', '=', country.id)]
-            leave.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(Domain.AND([selectable_domain, domain]))
+            leave.allowed_work_entry_type_ids = work_entry_types_by_country.get(leave.company_id.country_id, self.env['hr.work.entry.type'])
 
     @api.onchange('request_hour_from', 'request_hour_to')
     def _onchange_hours(self):
@@ -835,24 +835,31 @@ class HrLeave(models.Model):
     # so that when we consider allocated work entry types for employees that don't have allocations, it doesn't revert back to a generic one
     @api.onchange('employee_id', 'request_date_from', 'request_date_to')
     def _onchange_work_entry_type_id(self):
-        for holiday in self:
-            if not holiday.work_entry_type_id.requires_allocation:
-                continue
-            if not holiday.work_entry_type_id.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id):
-                local_work_entry_types = self.env['hr.work.entry.type'].with_context(
-                    default_date_from=holiday.request_date_from,
-                    default_date_to=holiday.request_date_to,
-                ).search([('country_id', 'in', [holiday.employee_id.country_id.id or holiday.employee_id.company_id.country_id.id] + [False])])
-                all_valid_work_entry_types = local_work_entry_types.with_context(
-                    default_date_from=holiday.request_date_from,
-                    default_date_to=holiday.request_date_to,
-                ).filtered_domain([('has_valid_allocation', '=', True)])
-                no_allocation_required = local_work_entry_types.filtered_domain([('requires_allocation', '=', False)])
-                valid_types = all_valid_work_entry_types.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id)
-                if not valid_types or not holiday.employee_id:
-                    holiday.work_entry_type_id = no_allocation_required[:1] or False
-                else:
-                    holiday.work_entry_type_id = valid_types[0]
+        relevant = self.filtered(
+            lambda h: h.work_entry_type_id.requires_allocation
+            and not h.work_entry_type_id.get_work_entry_types_with_valid_allocations(h.request_date_from, h.request_date_to, h.employee_id.id)
+        )
+        if not relevant:
+            return
+        countries = relevant.mapped('employee_id.country_id') | relevant.mapped('employee_id.company_id.country_id')
+        work_entry_types_by_country = dict(self.env['hr.work.entry.type']._read_group(
+            domain=[('country_id', 'in', countries.ids + [False])],
+            groupby=['country_id'],
+            aggregates=['id:recordset'],
+        ))
+        for holiday in relevant:
+            country = holiday.employee_id.country_id or holiday.employee_id.company_id.country_id
+            local_work_entry_types = work_entry_types_by_country.get(country, self.env['hr.work.entry.type']).with_context(
+                default_date_from=holiday.request_date_from,
+                default_date_to=holiday.request_date_to,
+            )
+            all_valid_work_entry_types = local_work_entry_types.filtered_domain([('has_valid_allocation', '=', True)])
+            no_allocation_required = local_work_entry_types.filtered_domain([('requires_allocation', '=', False)])
+            valid_types = all_valid_work_entry_types.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id)
+            if not valid_types or not holiday.employee_id:
+                holiday.work_entry_type_id = no_allocation_required[:1] or False
+            else:
+                holiday.work_entry_type_id = valid_types[0]
 
     @api.depends('employee_id')
     def _compute_department_id(self):
