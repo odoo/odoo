@@ -1,13 +1,16 @@
 import collections
 import os.path
 import unittest
+from unittest.mock import patch
 
 from lxml import etree as ET
 from lxml.builder import E
 
+from odoo.models import BaseModel
 from odoo.tests import common, tagged
 from odoo.tools import config
-from odoo.tools.convert import _eval_xml, convert_file, xml_import
+from odoo.tools import convert
+from odoo.tools.convert import _eval_xml, convert_csv_import, convert_file, xml_import
 from odoo.tools.misc import file_path
 
 Data = E.data
@@ -456,3 +459,104 @@ class TestEnv(common.TransactionCase):
         r = self.env['test_tools.convert.usered'].search([])
         self.assertEqual(r.name, 'f')
         self.assertEqual(r.tz, 'America/Adak')
+
+
+@tagged('at_install', '-post_install')
+class TestConvertCsvBulk(common.TransactionCase):
+    """ Large CSV files of simple records are inserted in bulk, see
+    `_bulk_load_csv`. The threshold is lowered to test it with small files.
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.startPatcher(patch.object(convert, 'BULK_LOAD_MIN_ROWS', 2))
+        bulk_load_csv = convert._bulk_load_csv
+        self.bulk_loaded = []
+
+        def bulk_load(*args):
+            self.bulk_loaded.append(result := bulk_load_csv(*args))
+            return result
+        self.startPatcher(patch.object(convert, '_bulk_load_csv', bulk_load))
+        self.parent = self.env.ref('test_base.test_translated_field')
+
+    def load(self, content, mode='init', noupdate=False, env=None):
+        """ Load the CSV content, and return whether it was bulk loaded. """
+        self.bulk_loaded.clear()
+        convert_csv_import(
+            env or self.env, 'test_base', 'test_tools.convert.usered.csv', content.encode(), {}, mode, noupdate,
+        )
+        return self.bulk_loaded[0]
+
+    def test_bulk_load(self):
+        # read the inverse one2many, its cache must be invalidated
+        self.assertFalse(self.parent.usered_ids)
+        self.env.user.tz = 'Europe/Brussels'
+        self.assertTrue(self.load(
+            'id,name,test_id:id\n'
+            'usered_1,Foo,test_translated_field\n'
+            'usered_2,"Bar, ""quoted"" \\u2013 é",\n',
+        ))
+        usered_1 = self.env.ref('test_base.usered_1')
+        usered_2 = self.env.ref('test_base.usered_2')
+        self.assertRecordValues(usered_1 + usered_2, [
+            {'name': 'Foo', 'test_id': self.parent.id, 'user_id': self.env.user.id, 'tz': 'Europe/Brussels'},
+            {'name': 'Bar, "quoted" \\u2013 é', 'test_id': False, 'user_id': self.env.user.id, 'tz': 'Europe/Brussels'},
+        ])
+        self.assertEqual(self.parent.usered_ids, usered_1)
+        self.assertEqual(usered_1.create_uid, self.env.user)
+        self.assertTrue(self.registry.loaded_xmlids.issuperset({'test_base.usered_1', 'test_base.usered_2'}))
+
+    def test_bulk_load_existing(self):
+        content = 'id,name\nusered_1,Foo\nusered_2,Bar\nusered_3,Baz\n'
+        self.assertTrue(self.load(content, noupdate=True))
+        usered_1 = self.env.ref('test_base.usered_1')
+        usered_2 = self.env.ref('test_base.usered_2')
+        usered_1.name = usered_2.name = 'changed'
+        self.env.ref('test_base.usered_3').unlink()
+
+        # update mode: records with noupdate external ids are left untouched
+        self.assertTrue(self.load(content, mode='update', noupdate=True))
+        self.assertEqual((usered_1 + usered_2).mapped('name'), ['changed', 'changed'])
+        self.assertEqual(self.env.ref('test_base.usered_3').name, 'Baz')
+
+        self.env['ir.model.data'].search([('module', '=', 'test_base'), ('name', '=', 'usered_1')]).noupdate = False
+        self.assertTrue(self.load(content, mode='update', noupdate=True))
+        self.assertEqual((usered_1 + usered_2).mapped('name'), ['Foo', 'changed'])
+
+        # init mode: all the existing records are written, if they changed
+        # patched on BaseModel, as an override on the model disables the bulk load
+        with patch.object(BaseModel, '_load_records_write', autospec=True, side_effect=BaseModel._load_records_write) as write:
+            self.assertTrue(self.load(content))
+        self.assertEqual((usered_1 + usered_2).mapped('name'), ['Foo', 'Bar'])
+        write.assert_called_once_with(usered_2, {'name': 'Bar'})
+        self.assertEqual(self.env['test_tools.convert.usered'].search_count([]), 3)
+
+    def test_bulk_load_fallback(self):
+        # unsupported columns and values are loaded with the regular import
+        self.assertFalse(self.load('id,name,test_id\nusered_1,Foo,\nusered_2,Bar,\n'))
+        self.assertEqual(self.env.ref('test_base.usered_2').name, 'Bar')
+        self.assertFalse(self.load('id,name\nusered_3,Foo\n'))
+        self.assertEqual(self.env.ref('test_base.usered_3').name, 'Foo')
+        with self.assertRaisesRegex(Exception, "No matching record found for external id 'unknown' in field 'Test'"):
+            self.load('id,name,test_id:id\nusered_4,Foo,unknown\nusered_5,Bar,\n')
+        self.assertEqual(self.bulk_loaded, [False])
+
+    def test_bulk_load_fallback_access(self):
+        # access rights are not checked by the bulk load
+        self.assertFalse(self.load('id,name\nusered_1,Foo\nusered_2,Bar\n', env=self.env(user=self.env.ref('base.user_admin'))))
+        self.assertEqual(self.env.ref('test_base.usered_2').name, 'Bar')
+
+    def test_bulk_load_fallback_override(self):
+        # methods patched on the registry class, like automation rules do
+        Usered = self.registry['test_tools.convert.usered']
+        with patch.object(Usered, '_load_records_create', autospec=True, side_effect=Usered._load_records_create) as create:
+            self.assertFalse(self.load('id,name\nusered_1,Foo\nusered_2,Bar\n'))
+        create.assert_called_once()
+
+    def test_bulk_load_fallback_required(self):
+        # missing required values are reported by the regular import
+        name = self.registry['test_tools.convert.usered']._fields['name']
+        with patch.object(name, 'required', True):
+            self.assertFalse(self.load('id,name\nusered_1,Foo\nusered_2,\n'))
+            self.assertFalse(self.load('id,tz\nusered_3,Europe/Brussels\nusered_4,Europe/Brussels\n'))
+            self.assertTrue(self.load('id,name\nusered_5,Foo\nusered_6,Bar\n'))
