@@ -348,7 +348,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
         self.assertEqual(leave_during_partial_time.number_of_days, 2)
         self.assertEqual(leave_during_full_time.number_of_hours, 24)
         self.assertEqual(leave_during_partial_time.number_of_hours, 16)
-        # Simulate the unit change days/hours of the time off type
+        # Simulate the unit change days/hours of the time type
         (leave_during_full_time + leave_during_partial_time)._compute_duration()
         self.assertEqual(leave_during_full_time.number_of_days, 3)
         self.assertEqual(leave_during_partial_time.number_of_days, 2)

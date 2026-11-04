@@ -1657,10 +1657,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_filter_time_off_type_multiple_employees(self):
         """ This test mimics the behavior of creating time off for multiple employees.
-        We check that the time off types that the user can select are correct.
-        In this example, we use a time off type that requires allocations.
-        Only the current user has an allocation for the time off type.
-        This time off type should not appear when multiple employees are select (user included or not).
+        We check that the time types that the user can select are correct.
+        In this example, we use a time type that requires allocations.
+        Only the current user has an allocation for the time type.
+        This time type should not appear when multiple employees are select (user included or not).
         """
         self.assertFalse(self.env['hr.leave.allocation'].search([['work_entry_type_id', '=', self.holidays_type_2.id]]))
 
@@ -3572,7 +3572,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertIn(
             unselectable_type,
             manager_allowed,
-            "A holiday manager should still be able to select an unselectable time off type",
+            "A holiday manager should still be able to select an unselectable time type",
         )
 
         leave.invalidate_recordset(['allowed_work_entry_type_ids'])
@@ -3580,7 +3580,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertNotIn(
             unselectable_type,
             employee_allowed,
-            "A regular user must not be able to select an unselectable time off type",
+            "A regular user must not be able to select an unselectable time type",
         )
 
     def test_leave_autovalidation_for_manager(self):
