@@ -2131,7 +2131,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         # pop key if the quantity available amount to 0
         return {k: v for k, v in available_move_lines.items() if self.product_id.uom_id.compare(v, 0) > 0}
 
-    def _action_assign(self, force_qty=False):
+    def _action_assign(self, force_qty=False, lot_id=None):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `reserved_qty` for all its move lines is
         equal to its `product_qty`. If it is less, the stock move is considered
@@ -2154,6 +2154,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             )
 
         for move in moves_to_assign:
+            move_lot = lot_id if (lot_id and move.product_id == lot_id.product_id) else None
             move = move.with_company(move.company_id)
             if not force_qty:
                 missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
@@ -2214,7 +2215,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         assigned_moves_ids.add(move.id)
                         continue
                     # Reserve new quants and create move lines accordingly.
-                    taken_quantity = move._update_reserved_quantity(need, move.location_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(need, move.location_id, lot_id=move_lot, strict=False)
                     if move.product_id.uom_id.is_zero(taken_quantity):
                         continue
                     moves_to_redirect.add(move.id)
@@ -2229,6 +2230,8 @@ Please change the quantity done or the rounding precision in your settings.""",
                     # the reserved quantity on the quants, convert it here in
                     # `product_id.uom_id` (the UOM of the quants is the UOM of the product).
                     available_move_lines = move._get_available_move_lines(assigned_moves_ids, partially_available_moves_ids)
+                    if move_lot:
+                        available_move_lines = {k: v for k, v in available_move_lines.items() if k[1] == move_lot}
                     if not available_move_lines:
                         continue
                     taken_quantities = {}
