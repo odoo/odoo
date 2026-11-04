@@ -68,5 +68,8 @@ class HrEmployeeSkill(models.Model):
             )
         return action
 
+    def action_new_certification(self):
+        return self.env['hr.employee.skill'].open_hr_employee_skill_modal()
+
     def action_save(self):
         return {'type': 'ir.actions.act_window_close'}
