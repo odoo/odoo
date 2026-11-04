@@ -82,7 +82,30 @@ export class CustomizeWebsitePlugin extends Plugin {
             }
         }),
         save_handlers: this.onSave.bind(this),
+        before_save_handlers: this.normalizeBodyBackgroundImage.bind(this),
     };
+
+    async normalizeBodyBackgroundImage() {
+        // Some websites since 18.4 can have a base64 body background, this
+        // resolves it to an attachment URL.
+        if (!this.services.website.isDesigner) {
+            return;
+        }
+        const bodyImage = this.getWebsiteVariableValue("body-image");
+        if (!bodyImage.startsWith("data:image/")) {
+            return;
+        }
+        const attachment = await rpc("/html_editor/attachment/add_data", {
+            name: null,
+            data: bodyImage.split("base64,")[1],
+            is_image: true,
+        });
+        if (!attachment.error) {
+            await this.customizeWebsiteVariables({
+                "body-image": `'${attachment.image_src}'`,
+            });
+        }
+    }
 
     async onSave() {
         if (this.viewsToEnableOnSave.size || this.viewsToDisableOnSave.size) {
@@ -514,7 +537,7 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
                 imageSrc = historyImageSrc;
             } else {
                 const imageEl = await getAction("replaceBgImage").load({ el });
-                imageSrc = imageEl?.src || null;
+                imageSrc = imageEl?.dataset.originalSrc || imageEl?.getAttribute("src") || null;
             }
             if (imageSrc) {
                 await this.dependencies.customizeWebsite.customizeWebsiteVariables({
