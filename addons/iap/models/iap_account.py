@@ -165,10 +165,18 @@ class IapAccount(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        vals_list = list(vals_list)
+        # The name of an iap.account defaults to its service name. A name is
+        # required, but setting it afterwards (as below) would be a write, which
+        # internal users are not allowed on iap.account; supplying it before the
+        # create keeps the first-account creation working for them.
+        for vals in vals_list:
+            if not vals.get('name'):
+                service_id = vals.get('service_id')
+                if service_id:
+                    vals['name'] = self.env['iap.service'].browse(service_id).name
+
         accounts = super().create(vals_list)
-        for account in accounts:
-            if not account.name:
-                account.name = account.service_id.name
 
         if self.env['ir.config_parameter'].sudo().get_bool('database.is_neutralized'):
             # Disable new accounts on a neutralized database
