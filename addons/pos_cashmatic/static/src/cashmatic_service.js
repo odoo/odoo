@@ -1,5 +1,6 @@
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { lna } from "@iot_base/network_utils/lna";
 
 export class CashmaticError extends Error {
     constructor(message, status) {
@@ -36,7 +37,7 @@ export class CashmaticService {
         const url = `${protocol}//${this.ip}:${port}${operation}`;
         let response;
         try {
-            response = await fetch(url, {
+            response = await lna.fetch(url, {
                 method: "POST",
                 signal: AbortSignal.timeout(5000),
                 headers: {
@@ -45,6 +46,7 @@ export class CashmaticService {
                 },
                 body: JSON.stringify(params),
                 targetAddressSpace: this.forceHttp ? "local" : undefined,
+                httpsPort: HTTPS_PORT,
             });
         } catch (e) {
             if (e.name === "TimeoutError" || e.name === "AbortError") {
