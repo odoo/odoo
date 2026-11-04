@@ -189,6 +189,21 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
         })
         self.assertNotIn('--feature', self._render_pdf_args(legacy))
 
+    def _scale_arg(self, args):
+        return float(args[args.index('--scale') + 1].removesuffix('x'))
+
+    def test_scale_smart_shrinking(self):
+        paperformat = self.env.ref('base.paperformat_euro')
+        self.assertFalse(paperformat.disable_shrinking)
+        args = self._render_pdf_args()
+        self.assertAlmostEqual(self._scale_arg(args), 76 / paperformat.dpi)
+
+    def test_scale_disable_shrinking(self):
+        paperformat = self.env.ref('base.paperformat_euro').copy({'disable_shrinking': True})
+        self.report.paperformat_id = paperformat
+        args = self._render_pdf_args()
+        self.assertAlmostEqual(self._scale_arg(args), 96 / paperformat.dpi)
+
     def test_split_decoration_mismatch(self):
         html = '<!DOCTYPE html><html><body><div id="minimal_layout_report_headers"><div>A</div><div>B</div></div></body></html>'
         split = self.env['ir.actions.report']._split_paper_muncher_decoration
