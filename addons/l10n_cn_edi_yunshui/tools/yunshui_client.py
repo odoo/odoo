@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import io
 import json
 import logging
 import time
 import uuid
+import zipfile
 from base64 import b64decode
 from binascii import Error as BinasciiError
 from datetime import datetime
@@ -39,7 +41,6 @@ SESSION_CODES = {*NEEDS_LOGIN, RELOGIN}
 SHANGHAI_TZ = ZoneInfo('Asia/Shanghai')
 UTC_TZ = ZoneInfo('UTC')
 MAX_RESPONSE_BYTES = 20 * 1024 * 1024
-MAX_DOWNLOAD_BYTES = 10 * 1024 * 1024
 MAX_BASE64_FILE_BYTES = 10 * 1024 * 1024
 
 
@@ -229,7 +230,6 @@ class YunshuiClient:
         return {'red_form_uuid': response.get('uuid'), 'red_form_number': response.get('hzfpxxqrdbh')}
 
     def _issued_result(self, response, serial_no=None, invoice_kind=None):
-        fapiao_no = response.get('fphm')
         date_value = response.get('kprq')
         fapiao_date = False
         if date_value:
@@ -237,44 +237,36 @@ class YunshuiClient:
             fapiao_date = shanghai_time.astimezone(UTC_TZ).replace(tzinfo=None)
         result = {
             'state': 'issued',
-            'fapiao_no': fapiao_no,
+            'fapiao_no': response.get('fphm'),
             'fapiao_date': fapiao_date,
             'qr_code': response.get('ewmUrl') or False,
+            # Yunshui's links to the PDF and OFD can come after the fapiao itself: the cron fills them in later.
+            'pdf_url': self._https_url(response.get('pdfUrl')),
+            'ofd_url': self._https_url(response.get('ofdUrl')),
         }
-        for kind, field in (('pdf', 'pdfUrl'), ('ofd', 'ofdUrl')):
-            content = self._download(response.get(field))
-            if content and self._is_expected_file(kind, content):
-                result.update({kind: content, f'{kind}_filename': f'{fapiao_no}.{kind}'})
-                continue
-            if content:
-                _logger.warning(
-                    "Yunshui: ignored malformed %s payload from query_result for company %s",
-                    kind,
-                    self.company.vat,
-                )
-            if serial_no and invoice_kind:
-                content = self._download_invoice_file(serial_no, invoice_kind, kind)
-                if content:
-                    result.update({kind: content, f'{kind}_filename': f'{fapiao_no}.{kind}'})
+        if serial_no and invoice_kind:
+            result['xml'] = self._download_xml(serial_no, invoice_kind)
         return result
 
-    def _download_invoice_file(self, serial_no, invoice_kind, kind):
-        file_type = '1' if kind == 'pdf' else '2'
+    def _download_xml(self, serial_no, invoice_kind):
+        """The fapiao's XML, the record the law has the company keep (2.1.10). Yunshui zips it."""
         try:
-            response = self._call(DOWNLOAD_INVOICE, {
-                'fpqqlsh': serial_no,
-                'invoiceKind': invoice_kind,
-                'fileType': file_type,
-            })
+            response = self._call(DOWNLOAD_INVOICE, {'fpqqlsh': serial_no, 'invoiceKind': invoice_kind, 'fileType': '3'})
         except UserError as e:
-            _logger.warning("Yunshui: could not download %s through API for company %s: %s", kind, self.company.vat, e)
+            _logger.warning("Yunshui: could not download the XML of %s for company %s: %s", serial_no, self.company.vat, e)
             return None
         content = self._decode_base64_file(response.get('file'))
-        if content and self._is_expected_file(kind, content):
-            return content
-        if content:
-            _logger.warning("Yunshui: ignored malformed %s blob from invoice.download for company %s", kind, self.company.vat)
-        return None
+        if not content:
+            return None
+        try:
+            with zipfile.ZipFile(io.BytesIO(content)) as archive:
+                member = next((info for info in archive.infolist() if info.filename.endswith('.xml')), None)
+                xml = archive.read(member) if member and member.file_size <= MAX_BASE64_FILE_BYTES else None
+        except zipfile.BadZipFile:
+            xml = None
+        if not xml:
+            _logger.warning("Yunshui: ignored a malformed XML archive of %s for company %s", serial_no, self.company.vat)
+        return xml
 
     def _decode_base64_file(self, value):
         if not value:
@@ -292,39 +284,12 @@ class YunshuiClient:
             return None
         return content
 
-    def _is_expected_file(self, kind, content):
-        if not content:
-            return False
-        if kind == 'pdf':
-            return content.startswith(b'%PDF')
-        if kind == 'ofd':
-            return content.startswith(b'PK')
-        return False
-
-    def _download(self, url):
-        if not url:
-            return None
-        host = _url_host(url)
-        if not self._is_safe_download_url(url):
-            _logger.warning("Yunshui: blocked non-https file URL on %s for company %s", host, self.company.vat)
-            return None
+    def _https_url(self, url):
         try:
-            with requests.get(url, timeout=TIMEOUT, allow_redirects=False, stream=True) as response:
-                response.raise_for_status()
-                content = _read_capped(response, MAX_DOWNLOAD_BYTES)
-        except requests.RequestException as e:
-            _logger.warning("Yunshui: could not download file from %s for company %s: %s", host, self.company.vat, type(e).__name__)
-            return None
-        if content is None:
-            _logger.warning("Yunshui: file download from %s too large for company %s", host, self.company.vat)
-        return content
-
-    def _is_safe_download_url(self, url):
-        try:
-            parsed = urlparse(url)
-            return parsed.scheme == 'https' and bool(parsed.hostname)
+            parsed = urlparse(url or '')
         except ValueError:
             return False
+        return url if parsed.scheme == 'https' and parsed.hostname else False
 
     def _call(self, interface_code, payload):
         request_body = sm4_envelope.build_request(
@@ -427,13 +392,6 @@ def _read_capped(response, limit):
         if len(content) > limit:
             return None
     return bytes(content)
-
-
-def _url_host(url):
-    try:
-        return urlparse(url).hostname or ''
-    except ValueError:
-        return ''
 
 
 class YunshuiProviderError(UserError):

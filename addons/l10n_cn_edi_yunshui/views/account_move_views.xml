@@ -81,6 +81,8 @@
                             <field name="kind"/>
                             <field name="serial_no"/>
                             <field name="fapiao_no"/>
+                            <field name="pdf_url" widget="url" text="PDF"/>
+                            <field name="ofd_url" widget="url" text="OFD"/>
                             <field name="red_form_number" optional="hide"/>
                             <field name="sent_data_id" optional="hide"/>
                             <field name="state" widget="badge"
@@ -102,19 +104,6 @@
             <xpath expr="//field[@name='invoice_line_ids']/list/column[@name='product_and_description']" position="after">
                 <field name="l10n_cn_tax_category_id" optional="show" column_invisible="parent.country_code != 'CN'"/>
             </xpath>
-        </field>
-    </record>
-
-    <record id="action_l10n_cn_edi_fetch_fapiao_files" model="ir.actions.server">
-        <field name="name">Download e-Fapiao Files</field>
-        <field name="model_id" ref="account.model_account_move"/>
-        <field name="binding_model_id" ref="account.model_account_move"/>
-        <field name="binding_view_types">list,form</field>
-        <field name="group_ids" eval="[(4, ref('account.group_account_invoice'))]"/>
-        <field name="state">code</field>
-        <field name="code">
-if records:
-    action = records.action_l10n_cn_edi_fetch_fapiao_files()
         </field>
     </record>
 </odoo>

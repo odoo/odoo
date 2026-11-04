@@ -34,6 +34,8 @@ RED_FORM_ACTIVE_STATES = ('red_form_pending', 'red_form_confirmed')
 
 # How long after submission a provider may not know a fapiao yet.
 SUBMISSION_GRACE = timedelta(minutes=10)
+# How long after issuing Odoo keeps asking for a fapiao's XML and file links the provider didn't have yet.
+FILES_GRACE = timedelta(days=1)
 
 
 class L10nCnEdiDocument(models.Model):
@@ -86,13 +88,14 @@ class L10nCnEdiDocument(models.Model):
     )
     fapiao_date = fields.Datetime(string="Fapiao Date", copy=False)
     qr_code = fields.Char(string="Fapiao QR Code", readonly=True, copy=False)
-    pdf_id = fields.Many2one(comodel_name='ir.attachment', string="Fapiao PDF", readonly=True, copy=False)
-    ofd_id = fields.Many2one(
+    pdf_url = fields.Char(string="Fapiao PDF", readonly=True, copy=False)
+    ofd_url = fields.Char(string="Fapiao OFD", readonly=True, copy=False)
+    xml_id = fields.Many2one(
         comodel_name='ir.attachment',
-        string="Fapiao OFD",
+        string="Fapiao XML",
         readonly=True,
         copy=False,
-        help="The legal original of the e-Fapiao. The PDF is a copy for reading and emailing.",
+        help="The fapiao's data as the tax bureau issued it, the record kept for audits.",
     )
     red_form_uuid = fields.Char(string="Red Form UUID", copy=False, index='btree_not_null')
     red_form_number = fields.Char(string="Red Form Number", copy=False)
@@ -123,22 +126,20 @@ class L10nCnEdiDocument(models.Model):
             'res_id': self.move_id.id,
         })
 
-    def _l10n_cn_edi_attach_fapiao_files(self, result):
-        """Attach the PDF and OFD of a provider result to the move. Return the attachments."""
+    def _l10n_cn_edi_record_fapiao_files(self, result):
+        """Keep the XML of a provider result on the move, and the links to its PDF and OFD. Return the new XML."""
         self.ensure_one()
-        attachments = self.env['ir.attachment']
-        for kind, mimetype in (('pdf', 'application/pdf'), ('ofd', 'application/ofd')):
-            if result.get(kind):
-                attachment = self.env['ir.attachment'].create({
-                    'name': result.get(f'{kind}_filename') or f"{self.fapiao_no}.{kind}",
-                    'raw': result[kind],
-                    'mimetype': mimetype,
-                    'res_model': 'account.move',
-                    'res_id': self.move_id.id,
-                })
-                self[f'{kind}_id'] = attachment
-                attachments += attachment
-        return attachments
+        self.write({key: result[key] for key in ('pdf_url', 'ofd_url') if result.get(key) and not self[key]})
+        if self.xml_id or not result.get('xml'):
+            return self.env['ir.attachment']
+        self.xml_id = self.env['ir.attachment'].create({
+            'name': f"{self.fapiao_no}.xml",
+            'raw': result['xml'],
+            'mimetype': 'application/xml',
+            'res_model': 'account.move',
+            'res_id': self.move_id.id,
+        })
+        return self.xml_id
 
     # ------------------------------------------------------------------
     # Fapiao
@@ -163,6 +164,9 @@ class L10nCnEdiDocument(models.Model):
         """Record a fapiao result of the provider on this document and its move. Return an error message, or None."""
         self.ensure_one()
         move = self.move_id
+        if result.get('state') == 'issued' and self.state == 'issued':
+            self._l10n_cn_edi_record_fapiao_files(result)
+            return None
         if result.get('state') == 'issued':
             self.write({
                 'state': 'issued',
@@ -180,7 +184,7 @@ class L10nCnEdiDocument(models.Model):
             })
             move.message_post(
                 body=self.env._("E-Fapiao issued successfully. Invoice No: %(fapiao)s", fapiao=result.get('fapiao_no')),
-                attachment_ids=self._l10n_cn_edi_attach_fapiao_files(result).ids,
+                attachment_ids=self._l10n_cn_edi_record_fapiao_files(result).ids,
             )
             return None
         if result.get('state') == 'sent':

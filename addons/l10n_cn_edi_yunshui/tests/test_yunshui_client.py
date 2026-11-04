@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import io
+import zipfile
 from base64 import b64encode
 from datetime import datetime
 from unittest.mock import patch
-
-import requests
 
 from odoo import Command
 from odoo.exceptions import UserError
@@ -30,14 +30,7 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
             self.company.l10n_cn_edi_yunshui_identity_code,
             self.company.l10n_cn_edi_yunshui_platform_code,
         )
-        self.downloads = {}
         patch('odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.requests.post', self.gateway).start()
-        patch(
-            'odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.requests.get',
-            lambda url, **kwargs: (
-                MockResponse(content=self.downloads[url]) if url in self.downloads else MockResponse(status=404)
-            ),
-        ).start()
         patch('odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.HOSTS', {'test': HOST, 'prod': HOST}).start()
         self.addCleanup(patch.stopall)
 
@@ -114,54 +107,33 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         self.assertEqual(invoice.l10n_cn_edi_state, 'issued')
         self.assertEqual(invoice.l10n_cn_edi_fapiao_no, '0082X')
 
-    def test_downloaded_files_are_attached(self):
+    def test_issued_fapiao_keeps_its_links_and_xml(self):
         invoice = self._post_invoice()
-        self.downloads['https://yunshui.test/invoice.pdf'] = b'%PDF-1.4'
-        self.downloads['https://yunshui.test/invoice.ofd'] = b'PK'
         self.gateway.handlers[SIMPLE_ISSUE] = {'code': '1000', 'message': '提交成功'}
         self.gateway.handlers[QUERY_RESULT] = {
             'code': '1000',
             'message': '开票成功',
             'fphm': '00820748268268168425',
             'kprq': '2026-09-30 14:58:10',
-            'pdfUrl': 'https://yunshui.test/invoice.pdf',
-            'ofdUrl': 'https://yunshui.test/invoice.ofd',
+            'pdfUrl': 'https://digi.51fapiao.cn/v/pdf',
+            'ofdUrl': 'http://digi.51fapiao.cn/v/ofd',
         }
+        archive = io.BytesIO()
+        with zipfile.ZipFile(archive, 'w') as zip_file:
+            zip_file.writestr('dzfp_00820748268268168425.xml', '<EInvoice/>')
+        self.gateway.handlers[DOWNLOAD_INVOICE] = {'code': '1000', 'message': 'ok', 'file': b64encode(archive.getvalue()).decode()}
 
         self._issue(invoice)
-        self.assertEqual(self._fapiao(invoice).pdf_id.raw.content, b'%PDF-1.4')
-        self.assertEqual(self._fapiao(invoice).ofd_id.raw.content, b'PK')
+
+        doc = self._fapiao(invoice)
+        self.assertEqual(doc.pdf_url, 'https://digi.51fapiao.cn/v/pdf')
+        self.assertFalse(doc.ofd_url, "only https links are kept")
+        self.assertEqual(doc.xml_id.raw.content, b'<EInvoice/>')
         self.assertEqual(invoice.l10n_cn_edi_fapiao_date, datetime(2026, 9, 30, 6, 58, 10))
+        download = next(request for request in self.gateway.requests if request['interface_code'] == DOWNLOAD_INVOICE)
+        self.assertEqual(download['inner']['fileType'], '3')
 
-    def test_missing_ofd_uses_download_endpoint_file_payload(self):
-        invoice = self._post_invoice()
-        self.downloads['https://yunshui.test/invoice.pdf'] = b'%PDF-1.4'
-        self.gateway.handlers[SIMPLE_ISSUE] = {'code': '1000', 'message': '提交成功'}
-        self.gateway.handlers[QUERY_RESULT] = {
-            'code': '1000',
-            'message': '开票成功',
-            'fphm': '00820748268268168425',
-            'kprq': '2026-09-30 14:58:10',
-            'pdfUrl': 'https://yunshui.test/invoice.pdf',
-        }
-        self.gateway.handlers[DOWNLOAD_INVOICE] = lambda payload: {
-            'code': '1000',
-            'message': 'ok',
-            'fpqqlsh': payload['fpqqlsh'],
-            'invoiceKind': payload['invoiceKind'],
-            'fileType': payload['fileType'],
-            'file': b64encode(b'PK\x03\x04OFD').decode(),
-        }
-
-        self._issue(invoice)
-
-        self.assertEqual(invoice.l10n_cn_edi_state, 'issued')
-        self.assertEqual(self._fapiao(invoice).pdf_id.raw.content, b'%PDF-1.4')
-        self.assertEqual(self._fapiao(invoice).ofd_id.raw.content, b'PK\x03\x04OFD')
-        download_requests = [request for request in self.gateway.requests if request['interface_code'] == DOWNLOAD_INVOICE]
-        self.assertEqual(download_requests[0]['inner']['fileType'], '2')
-
-    def test_download_endpoint_failures_do_not_lose_issued_state(self):
+    def test_malformed_xml_does_not_lose_issued_state(self):
         invoice = self._post_invoice()
         self.gateway.handlers[SIMPLE_ISSUE] = {'code': '1000', 'message': '提交成功'}
         self.gateway.handlers[QUERY_RESULT] = {
@@ -170,25 +142,13 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
             'fphm': '00820748268268168425',
             'kprq': '2026-09-30 14:58:10',
         }
-
-        def download_handler(payload):
-            if payload['fileType'] == '1':
-                error = 'pdf unavailable'
-                raise UserError(error)
-            return {
-                'code': '1000',
-                'message': 'ok',
-                'file': 'not-base64',
-            }
-
-        self.gateway.handlers[DOWNLOAD_INVOICE] = download_handler
+        self.gateway.handlers[DOWNLOAD_INVOICE] = {'code': '1000', 'message': 'ok', 'file': b64encode(b'not a zip').decode()}
 
         self._issue(invoice)
 
         self.assertEqual(invoice.l10n_cn_edi_state, 'issued')
         self.assertEqual(invoice.l10n_cn_edi_fapiao_no, '00820748268268168425')
-        self.assertFalse(self._fapiao(invoice).pdf_id)
-        self.assertFalse(self._fapiao(invoice).ofd_id)
+        self.assertFalse(self._fapiao(invoice).xml_id)
 
     def test_get_session_state_mapping(self):
         client = self.company._l10n_cn_edi_get_client()
@@ -367,35 +327,6 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         with patch(f'{CLIENT}.MAX_RESPONSE_BYTES', 1024), self.assertRaisesRegex(UserError, 'could not read'):
             self.company._l10n_cn_edi_get_client().get_session_state()
 
-    def test_download_is_streamed_and_capped(self):
-        calls = []
-
-        def get(url, **kwargs):
-            calls.append(kwargs)
-            return MockResponse(content=b'%PDF' + b'x' * 2048)
-
-        client = self.company._l10n_cn_edi_get_client()
-        with patch(f'{CLIENT}.requests.get', get):
-            self.assertTrue(client._download('https://files.example.cn/a.pdf'))
-            with patch(f'{CLIENT}.MAX_DOWNLOAD_BYTES', 1024):
-                self.assertIsNone(client._download('https://files.example.cn/a.pdf'))
-        self.assertTrue(all(call['stream'] and not call['allow_redirects'] for call in calls))
-
-    def test_download_logs_only_the_hostname(self):
-        url = 'https://files.example.cn/secret/path.pdf?token=s3cr3t'
-        client = self.company._l10n_cn_edi_get_client()
-
-        def get(url, **kwargs):
-            raise requests.ConnectionError(f"Max retries exceeded with url: {url}")
-
-        with patch(f'{CLIENT}.requests.get', get), self.assertLogs(CLIENT, 'WARNING') as logs:
-            client._download(url)
-            client._download(url.replace('https', 'http'))
-        output = '\n'.join(logs.output)
-        self.assertIn('files.example.cn', output)
-        self.assertNotIn('s3cr3t', output)
-        self.assertNotIn('/secret/', output)
-
     def test_response_signature_is_ignored(self):
         self.company.l10n_cn_edi_yunshui_gateway = 'prod'
         self.gateway.bad_signature = True
@@ -405,10 +336,3 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         self.gateway.unreachable = True
         with self.assertRaisesRegex(UserError, 'Yunshui did not answer'):
             self.company._l10n_cn_edi_get_client().test_connection()
-
-    def test_download_rejects_unsafe_url(self):
-        client = self.company._l10n_cn_edi_get_client()
-        self.assertFalse(client._is_safe_download_url('http://example.com/file.pdf'))
-        self.assertFalse(client._is_safe_download_url('https:///file.pdf'))
-        self.assertFalse(client._is_safe_download_url('https://[::1/file.pdf'))
-        self.assertTrue(client._is_safe_download_url('https://files.51fapiao.cn/file.pdf'))

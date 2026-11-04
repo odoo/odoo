@@ -9,6 +9,7 @@ from .l10n_cn_edi_document import (
     BUREAU_STATES,
     RED_FORM_ACTIVE_STATES,
     RED_FORM_REASONS,
+    FILES_GRACE,
     SUBMISSION_GRACE,
 )
 from odoo.addons.l10n_cn_edi_yunshui.tools import (
@@ -533,50 +534,18 @@ class AccountMove(models.Model):
             lambda doc: doc.serial_no and doc.state in ('issued', 'red_form_confirmed'),
         ).sorted('id', reverse=True)[:1]
 
-    def action_l10n_cn_edi_fetch_fapiao_files(self):
-        """
-        Download again the PDF and OFD that issued fapiao are missing, e.g. after a failed download.
-
-        Each move logs its outcome in its chatter: one that fails must not undo the others.
-        """
-        self.check_access('write')
-        docs = self.env['l10n_cn_edi.document'].union(*(move._l10n_cn_edi_issued_document() for move in self))
-        docs = docs.filtered(lambda doc: not (doc.pdf_id and doc.ofd_id))
-        failed = self.env['account.move']
-        for company, company_docs in docs.grouped(lambda doc: doc.move_id.company_id).items():
-            client = company._l10n_cn_edi_get_client()
-            for doc in company_docs:
-                try:
-                    result = doc._l10n_cn_edi_query(client)
-                except UserError as e:
-                    result = {'error': str(e)}
-                missing = {kind: result[kind] for kind in ('pdf', 'ofd') if result.get(kind) and not doc[f'{kind}_id']}
-                if attachments := doc._l10n_cn_edi_attach_fapiao_files(missing):
-                    doc.move_id.message_post(body=self.env._("E-Fapiao files downloaded."), attachment_ids=attachments.ids)
-                else:
-                    failed += doc.move_id
-                    doc.move_id.message_post(body=self.env._(
-                        "The e-Fapiao files could not be downloaded: %(error)s",
-                        error=result.get('error') or self.env._("the provider has none for this fapiao yet."),
-                    ))
-        if not failed:
-            return None
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': 'warning',
-                'message': self.env._(
-                    "Some e-Fapiao files could not be downloaded: %(moves)s. See their chatter.",
-                    moves=', '.join(failed.mapped('name')),
-                ),
-            },
-        }
-
     @api.model
     def _cron_l10n_cn_edi_poll_invoices(self):
-        """Fetch the result of every fapiao the provider accepted but hadn't finished issuing."""
-        docs = self.env['l10n_cn_edi.document'].search([('kind', '=', 'fapiao'), ('state', '=', 'sent')])
+        """Fetch the result of every fapiao the provider hadn't finished issuing, or whose files it didn't have yet."""
+        docs = self.env['l10n_cn_edi.document'].search([
+            ('kind', '=', 'fapiao'),
+            '|',
+            ('state', '=', 'sent'),
+            '&', '&',
+            ('state', '=', 'issued'),
+            ('create_date', '>=', fields.Datetime.now() - FILES_GRACE),
+            '|', ('pdf_url', '=', False), ('xml_id', '=', False),
+        ])
         self.env['ir.cron']._commit_progress(remaining=len(docs))
         grace_start = fields.Datetime.now() - SUBMISSION_GRACE
         for company, company_docs in docs.grouped(lambda doc: doc.move_id.company_id).items():
