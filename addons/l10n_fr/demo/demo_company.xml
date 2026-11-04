@@ -24,6 +24,8 @@
         <field name="partner_id" ref="base.partner_demo_company_fr"/>
         <field name="company_id" ref="base.demo_company_fr"/>
         <field name="allow_out_payment" eval="True"/>
+        <field name="bank_name">BNP PARIBAS</field>
+        <field name="bank_bic">BNPAFRPPXXX</field>
     </record>
 
     <function model="res.company" name="_onchange_country_id">
