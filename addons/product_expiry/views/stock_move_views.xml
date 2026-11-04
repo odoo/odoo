@@ -25,8 +25,8 @@
                 <field name="expiration_date" force_save="1"
                     column_invisible="not context.get('show_lot_expiration_date')"
                     readonly="picking_type_use_existing_lots"
-                    decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
-                    decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"/>
+                    decoration-danger="is_expired if state == 'done' else expiration_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"
+                    decoration-bf="is_expired if state == 'done' else expiration_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
             </xpath>
         </field>
     </record>
@@ -42,8 +42,8 @@
                     column_invisible="not context.get('show_lot_expiration_date')"
                     invisible="not use_expiration_date"
                     readonly="picking_type_use_existing_lots"
-                    decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
-                    decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"/>
+                    decoration-danger="is_expired if state == 'done' else expiration_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"
+                    decoration-bf="is_expired if state == 'done' else expiration_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
             </xpath>
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="is_expired" column_invisible="True"/>
@@ -62,8 +62,8 @@
                     column_invisible="not context.get('show_lot_expiration_date')"
                     invisible="not use_expiration_date"
                     readonly="picking_type_use_existing_lots"
-                    decoration-danger="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"
-                    decoration-bf="is_expired if state == 'done' else expiration_date &lt; context_today().strftime('%Y-%m-%d')"/>
+                    decoration-danger="is_expired if state == 'done' else expiration_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"
+                    decoration-bf="is_expired if state == 'done' else expiration_date &lt; (context_today() + datetime.timedelta(days=1)).strftime('%Y-%m-%d')"/>
             </xpath>
         </field>
     </record>

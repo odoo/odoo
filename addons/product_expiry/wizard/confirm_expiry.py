@@ -8,16 +8,16 @@ class ExpiryPickingConfirmation(models.TransientModel):
     _name = 'expiry.picking.confirmation'
     _description = 'Confirm Expiry'
 
-    lot_ids = fields.Many2many('stock.lot', readonly=True, required=True)
-    picking_ids = fields.Many2many('stock.picking', readonly=True)
+    move_line_ids = fields.Many2many('stock.move.line', readonly=True)
     description = fields.Char('Description', compute='_compute_descriptive_fields')
     show_lots = fields.Boolean('Show Lots', compute='_compute_descriptive_fields')
+    show_list = fields.Boolean('Show List', compute='_compute_descriptive_fields')
 
-    @api.depends('lot_ids')
+    @api.depends('move_line_ids')
     def _compute_descriptive_fields(self):
-        # Shows expired lots only if we are more than one expired lot.
-        self.show_lots = len(self.lot_ids) > 1
-        if self.show_lots:
+        self.show_list = len(self.move_line_ids) > 1
+        self.show_lots = bool(self.move_line_ids.lot_id)
+        if self.show_list:
             # For multiple expired lots, they are listed in the wizard view.
             self.description = _(
                 "You are going to deliver some product expired lots."
@@ -28,8 +28,8 @@ class ExpiryPickingConfirmation(models.TransientModel):
             self.description = _(
                 "You are going to deliver the product %(product_name)s, %(lot_name)s which is expired or should at least be removed from stock."
                 "\nDo you confirm you want to proceed?",
-                product_name=self.lot_ids.product_id.display_name or self.env.context.get('expired_product_name'),
-                lot_name=self.lot_ids.name or self.env.context.get('expired_lot_name'),
+                product_name=self.move_line_ids.product_id.display_name,
+                lot_name=self.move_line_ids.lot_id.name or self.move_line_ids.lot_name,
             )
 
     def process(self):
@@ -37,12 +37,12 @@ class ExpiryPickingConfirmation(models.TransientModel):
         if picking_to_validate:
             picking_to_validate = self.env['stock.picking'].browse(picking_to_validate)
             ctx = dict(self.env.context, skip_expired=True)
-            ctx.pop('default_lot_ids')
+            ctx.pop('default_move_line_ids')
             return picking_to_validate.with_context(ctx).button_validate()
         return True
 
     def process_no_expired(self):
         """ Remove the expired mls and confirm the picking. """
         pickings_to_validate = self.env['stock.picking'].browse(self.env.context.get('button_validate_picking_ids'))
-        self.picking_ids._get_move_lines_with_removal_warning().unlink()
+        self.move_line_ids.unlink()
         return pickings_to_validate.with_context(clean_context(self.env.context)).button_validate()
