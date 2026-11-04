@@ -517,6 +517,25 @@ class TestUsers2(UsersCommonCase):
         with self.assertRaises(AccessError):
             other.login = "foo"
 
+    def test_write_group_ids_access_cache(self):
+        group = self.env['res.groups'].create({'name': 'Read test parameters'})
+        self.env['ir.model.access'].create({
+            'name': 'Read test parameters',
+            'model_id': self.env['ir.model']._get('ir.config_parameter').id,
+            'group_id': group.id,
+            'perm_read': True,
+        })
+        parameter = self.env['ir.config_parameter'].create({
+            'key': 'test_res_users.access_cache',
+            'value': 'test',
+        }).with_user(self.user_internal)
+
+        self.user_internal.write({'group_ids': [Command.link(group.id)]})
+        self.assertTrue(parameter.has_access('read'))  # fills the cache
+
+        self.user_internal.write({'group_ids': [Command.unlink(group.id)]})
+        self.assertFalse(parameter.has_access('read'))
+
     @warmup
     def test_write_group_ids_performance(self):
         contact_creation_group = self.env.ref("base.group_partner_manager")
