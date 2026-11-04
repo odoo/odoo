@@ -219,7 +219,7 @@ class Partner(models.Model):
         # protection for `default_type` values leaking from menu action context (e.g. for crm's email)
         if 'type' in default_fields and values.get('type'):
             if values['type'] not in self._fields['type'].get_values(self.env):
-                values['type'] = None
+                values['type'] = 'contact'
         return values
 
     name = fields.Char(index=True, default_export_compatible=True)
@@ -772,6 +772,9 @@ class Partner(models.Model):
             vals['website'] = self._clean_website(vals['website'])
         if vals.get('parent_id'):
             vals['company_name'] = False
+        if 'type' in vals and not vals['type']:
+            # prevent to lose the contact type as we need one in most functional addons, but do not force reset to contact.
+            vals.pop('type')
         if vals.get('name'):
             for partner in self:
                 for bank in partner.bank_ids:
@@ -809,6 +812,9 @@ class Partner(models.Model):
                 vals['website'] = self._clean_website(vals['website'])
             if vals.get('parent_id'):
                 vals['company_name'] = False
+            if 'type' in vals and not vals['type']:
+                # prevent to lose the contact type as we need one in most functional addons, but do not force reset to contact.
+                vals.pop('type')
         create_self = self
         if 'default_user_ids' in self.env.context:
             # default_user_ids targets other models (e.g. task assignees); as
