@@ -517,7 +517,6 @@ class DigestDigest(models.Model):
         return {
             'kpi_action': {
                 'kpi_res_users_connected': f"base.action_res_users?menu_id={self.env.ref('base.menu_administration').id}",
-                'kpi_mail_message_total': f"mail.action_discuss?menu_id={self.env.ref('mail.menu_root_discuss').id}",
             },
             'kpi_module': {
                 'kpi_mail_message_total': 'mail',
