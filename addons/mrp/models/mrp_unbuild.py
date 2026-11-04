@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
+from odoo.tools import float_compare
 from odoo.tools.misc import clean_context
 
 
