@@ -1,4 +1,6 @@
+import base64
 import json
+import logging
 import os
 from datetime import timezone
 from dateutil.parser import parse
@@ -11,6 +13,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from odoo import fields, Command
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
+_logger = logging.getLogger(__name__)
 
 ROLES = {
     'seller': 'Subject1',
@@ -21,6 +24,26 @@ ROLES = {
 
 
 class KsefApiServiceBatch(KsefApiService):
+    @staticmethod
+    def b64(value):
+        if not value:
+            return False
+        if isinstance(value, str):
+            value = value.encode()
+        return base64.b64encode(value).decode()
+
+    @staticmethod
+    def u64(value):
+        if not value:
+            return False
+        if isinstance(value, str):
+            value = value.encode()
+        return base64.b64decode(value)
+
+    @staticmethod
+    def pretty_json(value):
+        return json.dumps(value, indent=4)
+
     @staticmethod
     def _url_to_name(url):
         return Path(unquote(urlparse(url).path)).name
@@ -33,14 +56,15 @@ class KsefApiServiceBatch(KsefApiService):
         key_padding = padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
         encrypted_symmetric_key = public_key.encrypt(raw_symmetric_key, key_padding)
         return {
-            'raw_symmetric_key': KsefApiService.b64(raw_symmetric_key),
-            'encrypted_symmetric_key': KsefApiService.b64(encrypted_symmetric_key),
-            'raw_iv': KsefApiService.b64(raw_iv),
+            'raw_symmetric_key': self.b64(raw_symmetric_key),
+            'encrypted_symmetric_key': self.b64(encrypted_symmetric_key),
+            'raw_iv': self.b64(raw_iv),
         }
 
     def download_batch_status(self, name):
         response = self._make_request('GET', f'{self.api_url}/invoices/exports/{name}')
         json_response = response.json()
+        _logger.debug("KSeF batch %s status response:\n%s", name, self.pretty_json(json_response))
 
         date_expiry_str = json_response.get('packageExpirationDate') or False
         if date_expiry_str:
@@ -50,11 +74,11 @@ class KsefApiServiceBatch(KsefApiService):
 
         return {
             'name': name,
-            'content': json.dumps(json_response, indent=4),
+            'content': json_response,
             'status': f"{json_response['status']['code']}" or False,
             'error': '\n'.join(json_response['status'].get('details', []) or []) or False,
             'date_expiry': date_expiry_str,
-            'parts': [
+            'part_ids': [
                 Command.create({
                     'name': self._url_to_name(part['url']),
                     'batch_name': name,

@@ -37,6 +37,7 @@
             <form string="KSeF Batch Download">
                 <header>
                     <button name="check_status" string="Check Status" type="object" class="oe_highlight" invisible="status not in ('100', False)"/>
+                    <button name="unzip" string="Unzip" type="object" invisible="not part_ids"/>
                     <button name="import_attachments" string="Import Bills" type="object" class="oe_highlight" invisible="not attachment_ids"/>
                     <field name="status" widget="statusbar" statusbar_visible="100,200,imported,failed" readonly="1"/>
                 </header>
@@ -71,7 +72,6 @@
                                     <field string="Method" name="download_method" width="90px"/>
                                     <field name="download_url" widget="url" width="550px"/>
                                     <button name="download" string="Download" type="object" icon="fa-download"/>
-                                    <button name="unzip" string="Unzip" type="object" icon="fa-file-archive-o"/>
                                 </list>
                             </field>
                         </page>
@@ -128,7 +128,6 @@
                 <field name="download_url" widget="url"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <button name="download" string="Download" type="object" icon="fa-download"/>
-                <button name="unzip" string="Unzip" type="object" icon="fa-file-archive-o"/>
             </list>
         </field>
     </record>
@@ -140,7 +139,6 @@
             <form string="KSeF Batch Part">
                 <header>
                     <button name="download" string="Download from KSeF" type="object" class="oe_highlight"/>
-                    <button name="unzip" string="Unzip" type="object"/>
                 </header>
                 <sheet>
                     <group>

@@ -1,6 +1,5 @@
 import logging
 import tempfile
-import zipfile
 
 import requests
 from cryptography.hazmat.backends import default_backend
@@ -73,7 +72,8 @@ class BatchDownloadPart(models.Model):
                 tmpf.flush()
                 tmpf.seek(0)
                 content = tmpf.read()
-            record.attachment_id = self.env['ir.attachment'].sudo().create({
+            # Fill the attachment the part already has through _inherits, instead of creating a new one
+            record.attachment_id.sudo().write({
                 'name': record.part_name,
                 'description': record.batch_name,
                 'type': 'binary',
@@ -83,43 +83,7 @@ class BatchDownloadPart(models.Model):
                 'res_id': record.id,
                 'res_field': 'attachment_id',
                 'raw': content,
-            }).with_env(record.env)
+            })
             _logger.info("KSeF Batch part %s downloaded succesfully", record.part_name)
             if commit and not modules.module.current_test:
                 self.env.cr.commit()
-
-    def unzip(self, commit=True):
-        if not self:
-            raise ValueError("No part was selected for unzip")
-        batches = self.mapped("batch_id")
-        company = self[0].company_id
-        attachments = self.env['ir.attachment']
-        sorted_parts = self.sorted(key=lambda a: a.name).filtered(lambda a: a.file_size > 0)
-        with tempfile.TemporaryFile(mode='w+b') as temp_zip_stream:
-            for part in sorted_parts:
-                temp_zip_stream.write(part.raw)
-            temp_zip_stream.seek(0)
-            existing_names = batches.attachment_ids.mapped("name")
-            with zipfile.ZipFile(temp_zip_stream, 'r') as zf:
-                zipped_names = [
-                    name
-                    for name in zf.namelist()
-                    if '.json' not in name
-                    and name not in existing_names
-                ]
-                for xml_name in zipped_names:
-                    with zf.open(xml_name) as xml_file:
-                        content = xml_file.read()
-                        attachment = self.env['ir.attachment'].sudo().create({
-                            'name': xml_name,
-                            'mimetype': 'application/xml',
-                            'company_id': company.id,
-                            'res_model': 'l10n_pl_edi_batch.download',
-                            'res_id': batches.id,
-                            'raw': content,
-                        }).with_env(self.env)
-                        attachments |= attachment
-                        if commit and not modules.module.current_test:
-                            self.env.cr.commit()
-        batches.attachment_ids |= attachments
-        return batches.attachment_ids

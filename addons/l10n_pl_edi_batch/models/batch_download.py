@@ -1,4 +1,8 @@
+import tempfile
+import zipfile
+
 from odoo import api, fields, models, modules
+from odoo.exceptions import UserError
 from odoo.osv.expression import OR
 
 from odoo.addons.l10n_pl_edi_batch.tools.ksef_api_service import KsefApiServiceBatch as Service
@@ -69,6 +73,11 @@ class BatchDownload(models.Model):
         for record in self:
             record.is_expired = (record.date_expiry and record.date_expiry < now)
 
+    def unlink(self):
+        # Unlink the parts through the ORM, so that their attachments are removed too
+        self.part_ids.unlink()
+        return super().unlink()
+
     @api.autovacuum
     def _gc_batch_downloads(self):
         """Unlink expired KSeF batch download records and clean up associated attachments."""
@@ -82,18 +91,19 @@ class BatchDownload(models.Model):
     def _request(self, company, date_from, date_to):
         service = Service(company)
         encryption_data = service._create_encryption_data()
-        for record in self:
-            batch_data = service.download_batch_request(date_from, date_to, encryption_data)
-            return self.sudo().create({
-                'company_id': company.id,
-                'status': '100',
-                'name': batch_data.get('referenceNumber', False),
-                'date_from': fields.Datetime.to_string(date_from),
-                'date_to': fields.Datetime.to_string(date_to),
-                'raw_symmetric_key_b64': Service.u64(encryption_data['raw_symmetric_key']),
-                'encrypted_symmetric_key_b64': Service.u64(encryption_data['encrypted_symmetric_key']),
-                'raw_iv_b64': Service.u64(encryption_data['raw_iv']),
-            }).with_env(self.env)
+        batch_data = service.download_batch_request(date_from, date_to, encryption_data)
+        return self.sudo().create({
+            'active': True,
+            'company_id': company.id,
+            'status': '100',
+            'name': batch_data.get('referenceNumber', False),
+            'date_from': fields.Datetime.to_string(date_from),
+            'date_to': fields.Datetime.to_string(date_to),
+            # Binary fields are written base64-encoded, which is what encryption_data already holds
+            'raw_symmetric_key': encryption_data['raw_symmetric_key'],
+            'encrypted_symmetric_key': encryption_data['encrypted_symmetric_key'],
+            'raw_iv': encryption_data['raw_iv'],
+        }).with_env(self.env)
 
     def check_status(self):
         companies = self.mapped('company_id')
@@ -104,12 +114,51 @@ class BatchDownload(models.Model):
             data = service.download_batch_status(record.name)
             record.update(data)
 
+    def unzip(self, commit=True):
+        """ The parts are the slices of a single ZIP: join all of them, in order, then extract the XMLs on the batch. """
+        self.ensure_one()
+        if not self.part_ids or any(part.file_size == 0 for part in self.part_ids):
+            raise UserError(self.env._("All the parts of KSeF batch %s must be downloaded before unzipping it.", self.name))
+        sorted_parts = self.part_ids.sorted('part_number')
+        existing_names = self.attachment_ids.mapped('name')
+        Attachment = self.env['ir.attachment'].sudo()
+        with tempfile.TemporaryFile(mode='w+b') as temp_zip_stream:
+            for part in sorted_parts:
+                temp_zip_stream.write(part.raw)
+            temp_zip_stream.seek(0)
+            with zipfile.ZipFile(temp_zip_stream, 'r') as zf:
+                xml_names = [
+                    name
+                    for name in zf.namelist()
+                    if '.json' not in name
+                    and name not in existing_names
+                ]
+                for xml_name in xml_names:
+                    with zf.open(xml_name) as xml_file:
+                        content = xml_file.read()
+                    Attachment.create({
+                        'name': xml_name,
+                        'mimetype': 'application/xml',
+                        'company_id': self.company_id.id,
+                        'res_model': self._name,
+                        'res_id': self.id,
+                        'raw': content,
+                    })
+                    if commit and not modules.module.current_test:
+                        self.env.cr.commit()
+        self.invalidate_recordset(fnames=['attachment_ids'])
+        return self.attachment_ids
+
     def import_attachments(self, commit=True):
         for record in self:
             for attachment in record.attachment_ids:
                 move = self.env['account.move'].with_company(record.company_id).create([{
                     'move_type': 'in_invoice',
                 }])
+                # Commit before and after the import, as 19.0 does instead of a savepoint (rollbackable_transaction)
+                if not modules.module.current_test:
+                    self.env.cr.commit()
+                # Posting the attachment imports it (account.move._message_post_after_hook)
                 move.message_post(body=self.env._("KSeF bill %s has been attached", attachment.name), attachment_ids=attachment.ids)
                 attachment.write({
                     'company_id': record.company_id.id,
@@ -118,15 +167,13 @@ class BatchDownload(models.Model):
                     'res_field': 'l10n_pl_edi_attachment_file',
                     'res_id': move.id,
                 })
-                import ipdb; ipdb.set_trace()
                 move.write({
-                    'l10n_pl_edi_ref': attachment.name.replace('.xml', ''),
+                    'l10n_pl_edi_number': attachment.name.replace('.xml', ''),
                     'l10n_pl_edi_attachment_id': attachment.id,
-                    'l10n_pl_edi_status': 'fetched',
                 })
                 move.invalidate_recordset(fnames=['l10n_pl_edi_attachment_id', 'l10n_pl_edi_attachment_file'])
-            if not modules.module.current_test:
-                self.env.cr.commit()
+                if not modules.module.current_test:
+                    self.env.cr.commit()
 
             # Schedule for deletion through autovacuum
             record.active = False
