@@ -102,7 +102,9 @@ class ResourceCalendarLeaves(models.Model):
         results = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float))))
         for calendar_id, cal_attendance_intervals_params_entry in cal_attendance_intervals_dict.items():
             calendar = calendars_dict[calendar_id] if calendar_id else self.env['resource.calendar']
-            resources_per_tz = cal_attendance_intervals_params_entry['resources']._get_resources_per_tz()
+            resources_per_tz = cal_attendance_intervals_params_entry['resources']._get_resources_per_tz() or {
+                self.with_context(tz=(calendar.company_id or self.env.company).tz).env.tz: self.env['resource.resource'],
+            }
             work_hours_intervals = calendar._attendance_intervals_batch(
                 cal_attendance_intervals_params_entry['date_from'],
                 cal_attendance_intervals_params_entry['date_to'],
