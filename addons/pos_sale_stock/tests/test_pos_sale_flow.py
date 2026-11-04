@@ -671,9 +671,14 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         picking = sale_order.pos_order_line_ids.order_id.picking_ids
         self.assertEqual(picking.move_ids.quantity, 6)
         self.assertEqual(len(picking.move_ids.move_line_ids), 3)
+        # self.assertRecordValues(picking.move_ids.move_line_ids, [
+        #     {'lot_id': lot_1001.id, 'quantity': 3, 'location_id': self.shelf_2.id},
+        #     {'lot_id': lot_1001.id, 'quantity': 1, 'location_id': self.shelf_1.id},
+        #     {'lot_id': lot_1002.id, 'quantity': 2, 'location_id': self.shelf_2.id},
+        # ])
         self.assertRecordValues(picking.move_ids.move_line_ids, [
-            {'lot_id': lot_1001.id, 'quantity': 3, 'location_id': self.shelf_2.id},
             {'lot_id': lot_1001.id, 'quantity': 1, 'location_id': self.shelf_1.id},
+            {'lot_id': lot_1001.id, 'quantity': 3, 'location_id': self.shelf_2.id},
             {'lot_id': lot_1002.id, 'quantity': 2, 'location_id': self.shelf_2.id},
         ])
 

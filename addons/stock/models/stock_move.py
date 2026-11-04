@@ -2133,7 +2133,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         # pop key if the quantity available amount to 0
         return {k: v for k, v in available_move_lines.items() if self.product_id.uom_id.compare(v, 0) > 0}
 
-    def _action_assign(self, force_qty=False):
+    def _action_assign(self, force_qty=False, lot_id=None):
         """ Reserve stock moves by creating their stock move lines. A stock move is
         considered reserved once the sum of `reserved_qty` for all its move lines is
         equal to its `product_qty`. If it is less, the stock move is considered
@@ -2156,6 +2156,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             )
 
         for move in moves_to_assign:
+            move_lot = lot_id if (lot_id and move.product_id == lot_id.product_id) else None
             move = move.with_company(move.company_id)
             if not force_qty:
                 missing_reserved_uom_quantity = move.product_uom_qty - reserved_availability[move]
@@ -2169,13 +2170,13 @@ Please change the quantity done or the rounding precision in your settings.""",
                 # create the move line(s) but do not impact quants
                 if move.move_orig_ids:
                     available_move_lines = move._get_available_move_lines(assigned_moves_ids, partially_available_moves_ids)
-                    for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
+                    for (location_id, line_lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         qty_added = min(missing_reserved_quantity, quantity)
                         move_line_vals = move._prepare_move_line_vals(qty_added)
                         move_line_vals.update({
                             'location_id': location_id.id,
-                            'lot_id': lot_id.id,
-                            'lot_name': lot_id.name,
+                            'lot_id': line_lot_id.id,
+                            'lot_name': line_lot_id.name,
                             'owner_id': owner_id.id,
                             'package_id': package_id.id,
                         })
@@ -2216,7 +2217,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         assigned_moves_ids.add(move.id)
                         continue
                     # Reserve new quants and create move lines accordingly.
-                    taken_quantity = move._update_reserved_quantity(need, move.location_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(need, move.location_id, lot_id=move_lot, strict=False)
                     if move.product_id.uom_id.is_zero(taken_quantity):
                         continue
                     moves_to_redirect.add(move.id)
@@ -2231,21 +2232,23 @@ Please change the quantity done or the rounding precision in your settings.""",
                     # the reserved quantity on the quants, convert it here in
                     # `product_id.uom_id` (the UOM of the quants is the UOM of the product).
                     available_move_lines = move._get_available_move_lines(assigned_moves_ids, partially_available_moves_ids)
+                    if move_lot:
+                        available_move_lines = {k: v for k, v in available_move_lines.items() if k[1] == move_lot}
                     if not available_move_lines:
                         continue
                     taken_quantities = {}
                     all_move_line_vals = []
-                    for (location_id, lot_id, package_id, owner_id), quantity in available_move_lines.items():
+                    for (location_id, line_lot_id, package_id, owner_id), quantity in available_move_lines.items():
                         need = move.product_qty - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
                         effective_need = move._get_quantity_to_assign() - sum(move.move_line_ids.mapped('quantity_product_uom')) - sum(taken_quantities.values())
-                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, effective_need), location_id, lot_id, package_id, owner_id, strict=True)
+                        move_line_vals, taken_quantity = move._update_reserved_quantity_vals(min(quantity, effective_need), location_id, line_lot_id, package_id, owner_id, strict=True)
                         all_move_line_vals += move_line_vals
                         if move_line_vals:  # Only subtract for new lines (updates are already reflected in sum(move_line_ids))
-                            taken_quantities[need, location_id, lot_id, package_id, owner_id] = taken_quantity
+                            taken_quantities[need, location_id, line_lot_id, package_id, owner_id] = taken_quantity
                     if all_move_line_vals:
                         self.env['stock.move.line'].create(all_move_line_vals)
 
-                    for (need, location_id, lot_id, package_id, owner_id), taken_quantity in taken_quantities.items():
+                    for (need, location_id, line_lot_id, package_id, owner_id), taken_quantity in taken_quantities.items():
                         # `quantity` is what is brought by chained done move lines. We double check
                         # here this quantity is available on the quants themselves. If not, this
                         # could be the result of an inventory adjustment that removed totally of

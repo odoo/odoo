@@ -347,7 +347,7 @@ class StockMove(models.Model):
             return super(StockMove, self - protected)._do_unreserve()
         return super()._do_unreserve()
 
-    def _action_assign(self, force_qty=False):
+    def _action_assign(self, force_qty=False, lot_id=None):
         # Moves with a quantity should be protected from re-assignation (similar to picked).
         # This override is to do that for moves which got updated from updating qty_producing as
         # they are not marked as picked any more
@@ -358,9 +358,9 @@ class StockMove(models.Model):
                 and m.quantity
                 and m.raw_material_production_id.qty_producing > 0
             )
-            res = super(StockMove, self - protected)._action_assign(force_qty=force_qty)
+            res = super(StockMove, self - protected)._action_assign(force_qty=force_qty, lot_id=lot_id)
         else:
-            res = super()._action_assign(force_qty=force_qty)
+            res = super()._action_assign(force_qty=force_qty, lot_id=lot_id)
         for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
             if move.move_line_ids:
                 move.move_line_ids.write({'production_id': move.raw_material_production_id.id,

@@ -125,6 +125,7 @@ class StockPicking(models.Model):
 
     def _create_move_from_pos_order_lines(self, lines):
         self.ensure_one()
+        self = self.sudo()
 
         def get_grouping_key(line):
             return (line.product_id.id, tuple(sorted(line.attribute_value_ids.ids)))
@@ -134,9 +135,56 @@ class StockPicking(models.Model):
             for order_lines in lines.grouped(get_grouping_key).values()
         ]
         moves = self.env['stock.move'].create(move_vals)
-        confirmed_moves = moves._action_confirm()
-        confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
-        confirmed_moves.picked = True
+
+        confirmed_moves = moves._action_confirm(merge=False)
+        confirmed_moves.move_line_ids.unlink()
+
+        valid_lots = confirmed_moves._create_production_lots_for_pos_order(lines)
+        lots_by_key = {(lot.product_id.id, lot.name): lot for lot in valid_lots}
+        lines_by_product = lines.grouped('product_id')
+
+        for move in confirmed_moves:
+            bom_line = move['bom_line_id'] if 'bom_line_id' in move._fields else False
+            pos_product = bom_line.bom_id.product_tmpl_id.product_variant_id if bom_line else move.product_id
+            matching_lines = lines_by_product.get(pos_product, self.env['pos.order.line'])
+            uses_lots = (
+                move.product_id.tracking in ['lot', 'serial']
+                and (move.picking_type_id.use_existing_lots or move.picking_type_id.use_create_lots)
+            )
+
+            if uses_lots:
+                for line in matching_lines:
+                    qty_left = abs(line._get_qty_to_move()) * (
+                        bom_line.product_qty if bom_line else 1
+                    )
+                    for pos_lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
+                        if move.product_id.uom_id.is_zero(qty_left):
+                            break
+
+                        lot_qty = 1 if move.product_id.tracking == 'serial' else qty_left
+                        mapped_lot = lots_by_key.get((move.product_id.id, pos_lot.lot_name))
+                        if mapped_lot:
+                            before_qty = sum(move.move_line_ids.mapped('quantity'))
+                            move._action_assign(force_qty=lot_qty, lot_id=mapped_lot)
+                            if move.location_id.usage != 'internal':
+                                move.move_line_ids.filtered(lambda ml: not ml.lot_id).lot_id = mapped_lot
+                            assigned_qty = sum(move.move_line_ids.mapped('quantity')) - before_qty
+                            unassigned_qty = lot_qty - assigned_qty
+                            if move.product_id.uom_id.compare(unassigned_qty, 0) > 0:
+                                ml_vals = move._prepare_move_line_vals(quantity=unassigned_qty)
+                                ml_vals['lot_id'] = mapped_lot.id
+                                ml_vals['lot_name'] = mapped_lot.name
+                                ml_vals['picked'] = True
+                                self.env['stock.move.line'].create(ml_vals)
+                        else:
+                            ml_vals = move._prepare_move_line_vals(quantity=lot_qty)
+                            ml_vals['lot_name'] = pos_lot.lot_name
+                            ml_vals['picked'] = True
+                            self.env['stock.move.line'].create(ml_vals)
+                        qty_left -= lot_qty
+            else:
+                move.quantity = move.product_uom_qty
+        confirmed_moves.filtered(lambda m: m.move_line_ids or m.quantity > 0).picked = True
         self._link_owner_on_return_picking(lines)
 
     def _link_owner_on_return_picking(self, lines):
