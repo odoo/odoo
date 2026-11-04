@@ -267,11 +267,11 @@ test("test_preset_timing_restaurant: select takeaway preset, name popup, pick ti
 
     const rows = document.querySelectorAll(".ticket-screen .order-row");
     expect(rows.length).toBe(2);
-    expect(rows[0].textContent).toInclude("John");
-    expect(rows[1].textContent).toInclude("002");
+    expect(rows[0].textContent).toInclude("002");
+    expect(rows[1].textContent).toInclude("John");
     if (!Utils.isMobile()) {
-        expect(rows[0].textContent).toInclude("Out");
-        expect(rows[1].textContent).toInclude("In");
+        expect(rows[0].textContent).toInclude("In");
+        expect(rows[1].textContent).toInclude("Out");
     }
 
     await Utils.clickPlanButton();

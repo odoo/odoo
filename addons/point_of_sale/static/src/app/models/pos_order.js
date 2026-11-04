@@ -101,6 +101,14 @@ export class PosOrder extends PosOrderAccounting {
         return this.state !== "draft";
     }
 
+    get isPaid() {
+        return this.state === "done" || this.state === "paid";
+    }
+
+    get isCancelled() {
+        return this.state === "cancel";
+    }
+
     get canBeRemovedFromIndexedDB() {
         return (this.finalized && !this.isUnsyncedPaid) || this.state === "cancel";
     }

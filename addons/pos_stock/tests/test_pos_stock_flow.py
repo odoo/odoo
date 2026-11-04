@@ -1013,18 +1013,19 @@ class TestPosStockFlow(CommonPosStockTest):
         })
 
         # paid filter: excludes other config and cancelled orders
-        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [], 80, 0, state_filter='paid')['ordersInfo']]
+        paid_domain = [('state', 'in', ['paid', 'done'])]
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, paid_domain, 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertIn(paid_order_2.id, order_ids)
         self.assertNotIn(cancelled_order.id, order_ids)
 
-        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0, state_filter='paid')['ordersInfo']]
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, paid_domain + [('partner_id.complete_name', 'ilike', self.partner.complete_name)], 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertIn(paid_order_2.id, order_ids)
         self.assertNotIn(cancelled_order.id, order_ids)
 
         # cancelled filter: excludes other config and paid orders
-        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [], 80, 0, state_filter='cancelled')['ordersInfo']]
+        order_ids = [oi[0] for oi in self.env['pos.order'].search_order_ids(other_pos_config.id, [('state', '=', 'cancel')], 80, 0)['ordersInfo']]
         self.assertNotIn(paid_order_1.id, order_ids)
         self.assertNotIn(paid_order_2.id, order_ids)
         self.assertIn(cancelled_order.id, order_ids)
