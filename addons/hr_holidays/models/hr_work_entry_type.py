@@ -217,7 +217,7 @@ time type are overlapping with public holidays, meaning that the balance of thos
         ], limit=1)
         if leave_count:
             raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting because one or more leaves have already \
-been taken for this time off type. Changing it now would affect existing employee balances."))
+been taken for this time type. Changing it now would affect existing employee balances."))
 
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         """Return the types of ``self`` the employee can request time off of during a period.
