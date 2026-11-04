@@ -50,6 +50,12 @@ const BLACKLISTED_RECORD_ACTIONS = new Set([
     "documents.dashboard", // there is no form view
     "spreadsheet_dashboard.spreadsheet_dashboard_group_menu_configuration_sections", // there is no form view
     "website.menu_visitor_view_menu", // there is no form view
+    "ai_agentic.ai_agent_menu_action", // a click on an agent opens its chat in Discuss, not a form view
+    "social.social_live_channels", // a click on a channel opens its discuss channel, not a form view
+    "website_hr_recruitment.menu_job_pages", // a click on a job opens it in the website editor
+    "website_blog.menu_blog_post_pages", // a click on a post opens it in the website editor
+    "mass_mailing.mailing_menu_report_mailing", // report model, there is no form view
+    "mass_mailing_sms.mass_mailing_sms_menu_reporting", // report model, there is no form view
 ]);
 
 // Actions that don't open a form view when clicking on list/kanban
@@ -77,6 +83,27 @@ const EXCEPTION_RECORD_ACTIONS = {
     "crm.sales_team_menu_team_pipeline": {
         kanban: {
             toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "account_reports.menu_action_account_return": {
+        // a return card opens the kanban of its checks, not a form
+        kanban: {
+            toCheck: ".o_kanban_view.account_return_check_kanban",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "hr.hr_certification_menu": {
+        // a certification row opens its form in a dialog, which has no breadcrumb
+        list: {
+            toCheck: ".o_dialog .o_form_view",
+            toGoBack: ".o_dialog header > .btn-close",
+        },
+    },
+    "hr_payroll.menu_hr_payslip_run": {
+        // a pay run card opens the list of its payslips, not a form
+        kanban: {
+            toCheck: ".o_list_view",
             toGoBack: ".o_back_button",
         },
     },
