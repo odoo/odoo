@@ -4,9 +4,9 @@
         <div class="floor-screen screen h-100 position-relative d-flex flex-column flex-nowrap m-0 bg-view text-start overflow-hidden">
             <div class="position-relative w-100 p-2 border-bottom z-2">
                 <div class="o_fp_toolbar d-flex flex-row justify-content-between gap-1" t-on-transitionend="this.onToolbarTransitionEnd">
-                    <button class="new-order btn btn-lg lh-lg" t-attf-class="{{ this.pos.getOrder()?.isDirectSale ? 'btn-secondary' : 'btn-primary'}}"
+                    <button class="new-order btn btn-lg lh-lg" t-attf-class="{{ this.isBackButton() ? 'btn-secondary' : 'btn-primary'}}"
                             t-on-click="() => this.clickNewOrder()">
-                        <t t-if="this.pos.getOrder()?.isDirectSale">
+                        <t t-if="this.isBackButton()">
                             <i class="oi oi-fw" data-icon="keyboard_double_arrow_left" role="img" aria-label="Back" title="Back"/>
                             <span t-if="!this.ui.isSmall" class="ms-1">Back</span>
                         </t>
