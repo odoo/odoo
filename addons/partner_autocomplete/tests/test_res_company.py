@@ -87,7 +87,7 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
             return response, error
 
         with patch.object(self.env.registry['iap.autocomplete.api'], '_request_partner_autocomplete', patched_request):
-            result = self.env['res.partner'].with_context(enriched_company_data=be_company_data).enrich_by_duns('BE1234567')
+            result = self.env['res.partner'].enrich_by_duns('BE1234567', company_data=be_company_data)
             self.assertEqual(result.get('vat'), '')
 
     def test_enrich_by_duns_vat_from_query(self):
@@ -107,5 +107,5 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
                     return_value={'data': company_data},
                 ),
             ):
-                result = self.env['res.partner'].with_context(enriched_company_data=suggestion).enrich_by_duns('123456789')
+                result = self.env['res.partner'].enrich_by_duns('123456789', company_data=suggestion)
                 self.assertEqual(result.get('vat'), expected_vat)

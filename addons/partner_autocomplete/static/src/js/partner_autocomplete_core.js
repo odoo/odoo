@@ -61,14 +61,10 @@ export function usePartnerAutocomplete() {
      * @private
      */
     function enrichCompany(company) {
-        const context = {
-            enriched_company_data: company,
-        };
-
         if (isGSTNumber(company.query)) {
             return orm.call("res.partner", "enrich_by_gst", [company.query]);
         }
-        return orm.call("res.partner", "enrich_by_duns", [company.duns], { context: context });
+        return orm.call("res.partner", "enrich_by_duns", [company.duns], { company_data: company });
     }
 
     function removeUselessFields(company, fieldsToKeep) {

@@ -91,12 +91,6 @@ class ResPartner(models.Model):
                 return self.autocomplete_by_name(query, query_country_id, include_branches=include_branches)
             case "duns":
                 return self.autocomplete_by_duns(query, query_country_id)
-            case "vat":
-                # Without country, or searching worldwide, the VAT number may come from any country
-                country = self.env['res.country'].browse(query_country_id).exists() if query_country_id else None
-                if country and not self._run_vat_checks(country, query, validation='setnull')[0]:
-                    return []
-                return self.autocomplete_by_vat(query, query_country_id, include_branches=include_branches)
             case _:
                 return self.autocomplete_by_vat(query, query_country_id, include_branches=include_branches)
 
@@ -120,8 +114,11 @@ class ResPartner(models.Model):
 
     @api.model
     def autocomplete_by_vat(self, vat, query_country_id, timeout=15, include_branches=False):
-        query_country_id = query_country_id or self.env.company.country_id.id
-        query_country_code = self.env['res.country'].browse(query_country_id).code
+        # Without country, or searching worldwide, the VAT number may come from any country
+        query_country = self.env['res.country'].browse(query_country_id).exists() or self.env.company.country_id
+        if query_country and not self._run_vat_checks(query_country, vat, validation='setnull')[0]:
+            return []
+        query_country_code = query_country.code
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
             'query': vat,
             'query_country_code': query_country_code,
@@ -133,6 +130,7 @@ class ResPartner(models.Model):
                 results.append(self._format_data_company(suggestion))
             return results
         else:
+            # FIXME @wan maybe we should also not check the VIES if we have a country set and it's not one of UE ?
             vies_result = None
             try:
                 vies_result = check_vies(vat, timeout=timeout)
@@ -174,7 +172,7 @@ class ResPartner(models.Model):
         return results
 
     @api.model
-    def _process_enriched_response(self, response, error):
+    def _process_enriched_response(self, response, error, company_data=None):
         if response and response.get('data'):
             result = self._format_data_company(response.get('data'))
         else:
@@ -195,16 +193,21 @@ class ResPartner(models.Model):
                 'error': True,
                 'error_message': error
             })
-        return self._validate_partner_autocomplete_response(result)
+        return self._validate_partner_autocomplete_response(result, company_data)
 
     @api.model
-    def _validate_partner_autocomplete_response(self, autocomplete_response):
-        if not (enriched_company := self.env.context.get('enriched_company_data')):
+    def _validate_partner_autocomplete_response(self, autocomplete_response, company_data=None):
+        """ Check the VAT number of the enriched company against its country.
+
+        :param dict autocomplete_response: the enrichment data of the company
+        :param dict company_data: the suggestion the company was enriched from
+        """
+        if not company_data:
             return autocomplete_response
-        country = self.env['res.country'].browse((enriched_company.get('country_id') or {}).get('id')).exists()
+        country = self.env['res.country'].browse((company_data.get('country_id') or {}).get('id')).exists()
         if vat_number := autocomplete_response.get('vat'):
             autocomplete_response['vat'] = self._run_vat_checks(country, vat_number, validation='setnull')[0]
-        elif (query := enriched_company.get('query')) and country and self._get_vat_validation_method(country.code):
+        elif (query := company_data.get('query')) and country and self._get_vat_validation_method(country.code):
             # The company may have been found from its VAT number, which the enrichment data does not hold.
             vat_number, vat_country_code = self._run_vat_checks(country, query, validation='setnull')
             if vat_number and vat_country_code == country.code:
@@ -212,11 +215,15 @@ class ResPartner(models.Model):
         return autocomplete_response
 
     @api.model
-    def enrich_by_duns(self, duns, timeout=15):
+    def enrich_by_duns(self, duns, timeout=15, company_data=None):
+        """ Get the data of the company with the given DUNS number.
+
+        :param dict company_data: the suggestion the user selected, to complete the enrichment data with
+        """
         response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich_by_duns', {
             'duns': duns,
         }, timeout=timeout)
-        return self._process_enriched_response(response, error)
+        return self._process_enriched_response(response, error, company_data)
 
     @api.model
     def enrich_by_vat(self, vat, timeout=15):
