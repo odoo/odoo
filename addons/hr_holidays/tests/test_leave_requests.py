@@ -3151,6 +3151,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             self.assertEqual(form.request_date_to, self.tuesday)
         self.assertEqual((form.record.request_hour_from, form.record.request_hour_to), (9, 13))
 
+    def test_a_request_in_hours_saved_from_the_form_counts_its_days(self):
+        """ A request in hours saved from the form is counted in days too. """
+        with Form(self.env['hr.leave']) as form:
+            form.employee_id = self.employee_emp
+            form.work_entry_type_id = self.holidays_type_hours
+            form.request_date_hour_from = self._utc(datetime(2030, 9, 3, 9, 0))
+            form.request_date_hour_to = self._utc(datetime(2030, 9, 3, 12, 0))
+        self.assertRecordValues(form.record, [{'number_of_hours': 3, 'number_of_days': 0.5}])
+
     def test_a_write_that_moves_one_bound_answers_the_other(self):
         """ A save has nothing of the pair in cache: the bound the client did not write
         has to come back all the same. """
