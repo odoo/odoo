@@ -10,7 +10,15 @@
                     </span>
                 </span>
                 <div class="d-flex flex-column o_card_user_infos overflow-hidden">
-                    <span t-if="this.name" class="o-mail-avatar-card-name fw-bold" t-out="this.name"/>
+                    <span t-if="this.name" class="o-mail-avatar-card-name fw-bold d-flex align-items-center gap-2">
+                        <span class="text-truncate" t-out="this.name"/>
+                        <t t-set="notification" t-value="this.notification()"/>
+                        <button t-if="notification?.isSent or notification?.isFailure" type="button" class="o-mail-avatar-card-notification badge rounded-pill border-0 flex-shrink-0 ms-auto" t-att-class="notification.isSent ? 'bg-success-subtle text-success-emphasis' : 'bg-danger-subtle text-danger-emphasis'" t-on-click="(ev) => this.onClickNotification(ev)">
+                            <i class="oi me-1" data-icon="notifications"/>
+                            <t t-if="notification.isSent" t-out="notification.statusTitle"/>
+                            <t t-else="">Failed</t>
+                        </button>
+                    </span>
                     <a t-if="this.email" t-att-href="'mailto:'+this.email" t-att-title="this.email" class="text-truncate">
                         <i class="oi oi-fw oi-filled me-1" data-icon="mail"/><t t-out="this.email"/>
                     </a>

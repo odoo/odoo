@@ -8,6 +8,7 @@ import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field
 import { CannedResponseSuggestionPlugin } from "@mail/core/common/plugin/suggestion/canned_response_suggestion_plugin";
 import { PartnerSuggestionPlugin } from "@mail/core/common/plugin/suggestion/partner_suggestion_plugin";
 import { MailSuggestionPlugin } from "@mail/core/common/plugin/suggestion/suggestion_plugin";
+import { PartnerMentionPlugin } from "@mail/core/common/plugin/partner_mention_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { DisableBannerCommandsPlugin } from "./disable_banner_commands_plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
@@ -82,6 +83,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
             CannedResponseSuggestionPlugin,
             DisableBannerCommandsPlugin,
             MailSuggestionPlugin,
+            PartnerMentionPlugin,
             PartnerSuggestionPlugin,
         ];
         if (this.props.record.data.composition_comment_option === "reply_all") {

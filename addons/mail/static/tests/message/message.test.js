@@ -2225,6 +2225,64 @@ test("avatar card from author should be opened after clicking on their name", as
     await waitFor(".o_card_user_infos > a:text('+5646548'):count(1)");
 });
 
+test("clicking the avatar then the name of a mention keeps a single avatar card", async () => {
+    const pyEnv = await startServer();
+    const [threadId, partnerId] = pyEnv["res.partner"].create([{}, { name: "Zara" }]);
+    pyEnv["mail.message"].create({
+        body: `<a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@Zara</a>`,
+        message_type: "comment",
+        model: "res.partner",
+        res_id: threadId,
+    });
+    await start();
+    await openFormView("res.partner", threadId);
+    await contains(".o-mail-Message a.o_mail_redirect img.o-mail-partnerMention-avatar").click();
+    await waitFor(".o-mail-avatar-card-name:text('Zara'):count(1)");
+    await contains(".o-mail-Message a.o_mail_redirect").click();
+    await animationFrame();
+    await waitFor(".o-mail-avatar-card-name:text('Zara'):count(1)");
+});
+
+test("mention color and card status follow the delivery of its notification", async () => {
+    const pyEnv = await startServer();
+    const [threadId, sentPartnerId, failedPartnerId] = pyEnv["res.partner"].create([
+        {},
+        { name: "Zara" },
+        { name: "Yan" },
+    ]);
+    const messageId = pyEnv["mail.message"].create({
+        body: `<a class="o_mail_redirect" data-oe-id="${sentPartnerId}" data-oe-model="res.partner">@Zara</a> <a class="o_mail_redirect" data-oe-id="${failedPartnerId}" data-oe-model="res.partner">@Yan</a>`,
+        message_type: "comment",
+        model: "res.partner",
+        partner_ids: [sentPartnerId, failedPartnerId],
+        res_id: threadId,
+    });
+    const baseNotification = { mail_message_id: messageId, notification_type: "email" };
+    pyEnv["mail.notification"].create([
+        { ...baseNotification, notification_status: "sent", res_partner_id: sentPartnerId },
+        {
+            ...baseNotification,
+            failure_type: "mail_email_invalid",
+            notification_status: "exception",
+            res_partner_id: failedPartnerId,
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", threadId);
+    await contains(".o-mail-Message a.o-mail-partnerMention-sent:text('@Zara')").click();
+    await waitFor(
+        ".o-mail-avatar-card-name:has(span:text('Zara')) .o-mail-avatar-card-notification:text('Delivered'):count(1)"
+    );
+    await contains(".o-mail-avatar-card-notification").click();
+    await waitFor(".o-tooltip:text('Delivered via email'):count(1)");
+    await contains(".o-mail-Message a.o-mail-partnerMention-failed:text('@Yan')").click();
+    await waitFor(
+        ".o-mail-avatar-card-name:has(span:text('Yan')) .o-mail-avatar-card-notification:text('Failed'):count(1)"
+    );
+    await contains(".o-mail-avatar-card-notification").click();
+    await waitFor(".o-tooltip:text('Invalid email address'):count(1)");
+});
+
 test("subtype description should be displayed if it is different than body", async () => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});

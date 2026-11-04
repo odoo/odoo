@@ -1668,6 +1668,34 @@ test("pasted mention of unknown partner is notified when posted right away", asy
     await expect.waitForSteps(["message_post"]);
 });
 
+test("partner mention is shown with its avatar but posted as text", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Zara" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        name: "General",
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("message_post");
+        expect(args.post_data.body).toMatch(/<a [^>]*class="o_mail_redirect"[^>]*>@Zara<\/a>/);
+    });
+    await start();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html");
+    pasteHtml(
+        getEditorFromComposerEl(".o-mail-Composer"),
+        `<a class="o_mail_redirect" data-oe-id="${partnerId}" data-oe-model="res.partner">@Zara</a>`
+    );
+    await waitFor(
+        ".o-mail-Composer-html a.o_mail_redirect:has(img.o-mail-partnerMention-avatar):text('@Zara'):count(1)"
+    );
+    await press("Enter");
+    await expect.waitForSteps(["message_post"]);
+    await waitFor(
+        ".o-mail-Message a.o_mail_redirect:has(img.o-mail-partnerMention-avatar):text('@Zara'):count(1)"
+    );
+});
+
 test("pasted mention is checked again after a failed fetch", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Zara" });
