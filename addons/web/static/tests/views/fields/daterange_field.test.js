@@ -3,7 +3,6 @@ import {
     animationFrame,
     click,
     edit,
-    pointerDown,
     press,
     queryOne,
     queryAll,
@@ -286,6 +285,9 @@ test("Date field - interaction with the datepicker - empty dates", async () => {
     await contains(getPickerCell("5")).click();
     await contains(getPickerCell("12")).click();
 
+    // Selecting both range endpoints auto-closes the picker; reopen to check the range.
+    expect(".o_datetime_picker").toHaveCount(0);
+    await contains("button[data-field=date_start]").click();
     expect(".o_select_start").toHaveText("5");
     expect(".o_select_end").toHaveText("12");
 });
@@ -1213,13 +1215,6 @@ test(`list daterange in x2many: open/close picker`, async () => {
     await contains(getPickerCell("15")).click();
     await contains(getPickerCell("20")).click();
 
-    if (isSmall()) {
-        // Close the bottom sheet
-        await click(".o_bottom_sheet_backdrop");
-    } else {
-        // Close picker
-        await pointerDown(`.o_view_controller`);
-    }
     await animationFrame();
     expect(".o_datetime_picker").toHaveCount(0);
 
@@ -1398,11 +1393,7 @@ test("update the selected input date after removing the existing date", async ()
     await contains(getPickerCell("12")).click();
     await animationFrame();
 
-    if (queryOne(".o_datetime_picker").matches(".o_bottom_sheet *")) {
-        expect("input[data-field=date]").toHaveValue("02/12/2017");
-    } else {
-        expect("button[data-field=date]").toHaveValue("02/12/2017");
-    }
+    expect("button[data-field=date]").toHaveValue("02/12/2017");
 });
 
 test("daterange with inverted start date and end date", async () => {
