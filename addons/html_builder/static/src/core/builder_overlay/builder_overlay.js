@@ -101,6 +101,11 @@ export class BuilderOverlay {
         const isMobile = this.isMobileView(overlayTarget);
         const iframeScaleX = isMobile ? iframeRect.width / this.iframe.offsetWidth : 1;
         const iframeScaleY = isMobile ? iframeRect.height / this.iframe.offsetHeight : 1;
+        // Show the name inside the element when there is no room above it.
+        this.overlayElement.classList.toggle(
+            "o_hb_overlay_name_inside",
+            targetRect.top * iframeScaleY < this.nameEl.offsetHeight
+        );
 
         Object.assign(this.overlayElement.style, {
             width: `${targetRect.width * iframeScaleX}px`,
@@ -113,11 +118,6 @@ export class BuilderOverlay {
             }px`,
         });
         this.handlesWrapperEl.style.height = `${targetRect.height * iframeScaleY}px`;
-        // Show the name inside the element when there is no room above it.
-        this.overlayElement.classList.toggle(
-            "o_hb_overlay_name_inside",
-            targetRect.top * iframeScaleY < this.nameEl.offsetHeight
-        );
     }
 
     refreshHandles() {
