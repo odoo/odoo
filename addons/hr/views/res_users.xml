@@ -284,7 +284,7 @@
             </field>
         </record>
 
-        <record id="res_users_view_list" model="ir.ui.view">
+        <record id="view_users_tree" model="ir.ui.view">
             <field name="name">res.users.view.list.inherit.hr</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_tree"/>
@@ -292,6 +292,52 @@
                 <xpath expr="//field[@name='role']" position="after">
                     <field name="job_id" optional="hide"/>
                     <field name="department_id" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_view_list" model="ir.ui.view">
+            <field name="name">res.users.view.list.inherit.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.res_users_view_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='login']" position="after">
+                    <field name="job_id" string="Job Position" optional="show"/>
+                    <field name="skill_ids" string="Skills" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_view_search" model="ir.ui.view">
+            <field name="name">res.users.view.search.inherit.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.res_users_view_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="job_id" string="Job Position"/>
+                    <field name="skill_ids" string="Skills"/>
+                </xpath>
+                <xpath expr="//search" position="inside">
+                    <filter name="group_job" string="Job Position" context="{'group_by': 'job_id'}"/>
+                    <filter name="group_skills" string="Skills" context="{'group_by': 'skill_ids'}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_users_view_kanban" model="ir.ui.view">
+            <field name="name">res.users.view.kanban.inherit.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.res_users_view_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="job_id"/>
+                    <field name="skill_ids"/>
+                </xpath>
+                <xpath expr="//div[@name='assignee_identity']" position="after">
+                    <div>
+                        <field name="job_id" class="small mb-1"/>
+                        <field name="skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="mb-2"/>
+                    </div>
                 </xpath>
             </field>
         </record>
