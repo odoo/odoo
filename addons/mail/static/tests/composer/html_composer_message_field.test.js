@@ -183,10 +183,18 @@ test("mention a partner", async () => {
     ]);
 
     await press("enter");
-    await animationFrame();
-    expect(getContent(editable)).toBe(
-        `<p>\uFEFF<a href="/odoo/res.partner/${serverState.partnerId}" class="o_mail_redirect" data-oe-id="${serverState.partnerId}" data-oe-model="res.partner" target="_blank" contenteditable="false">@Mitchell Admin</a>\uFEFF&nbsp;[]</p>`
+    await waitFor(
+        ".odoo-editor-editable a.o_mail_redirect:has(img.o-mail-partnerMention-avatar):text('@Mitchell Admin'):count(1)"
     );
+    const mentionEl = queryOne(".odoo-editor-editable a.o_mail_redirect");
+    expect(mentionEl).toHaveAttribute("contenteditable", "false");
+    expect(mentionEl).toHaveAttribute("data-oe-id", String(serverState.partnerId));
+    expect(mentionEl).toHaveAttribute("data-oe-model", "res.partner");
+    expect(mentionEl).toHaveAttribute("href", `/odoo/res.partner/${serverState.partnerId}`);
+    expect(getContent(editable)).toMatch(/^<p>\uFEFF<a [^>]*>.*<\/a>\uFEFF&nbsp;\[\]<\/p>$/);
+    const savedMentionEl = htmlEditor.getElContent().querySelector("a.o_mail_redirect");
+    expect(savedMentionEl).toHaveAttribute("class", "o_mail_redirect");
+    expect(savedMentionEl.innerHTML).toBe("@Mitchell Admin");
 });
 
 test("send the canned responses inserted", async () => {

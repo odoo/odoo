@@ -7,6 +7,7 @@ import { Component, computed, signal, t, useListener, useProps } from "@odoo/owl
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { Tooltip } from "@web/core/tooltip/tooltip";
 import { useService } from "@web/core/utils/hooks";
 
 export class AvatarCard extends Component {
@@ -19,13 +20,15 @@ export class AvatarCard extends Component {
     viewProfileBtnRef = signal.ref();
 
     setup() {
+        this.store = useService("mail.store");
         this.props = useProps({
             close: t.function([]),
             id: t.number(),
+            // message mentioning the partner, to show the state of their notification
+            message: t.instanceOf(this.store["mail.message"]).optional(),
             model: t.selection(AvatarCard.allowedModels),
         });
         this.actionService = useService("action");
-        this.store = useService("mail.store");
         this.dialog = useService("dialog");
         this.store.fetchStoreData("avatar_card", {
             id: this.props.id,
@@ -34,6 +37,24 @@ export class AvatarCard extends Component {
         this.partnerLocalDateTimeFormatted = computed(() =>
             this.store.localTimeIn(this.partner?.tz)
         );
+        this.notification = computed(() =>
+            this.props.message?.getPartnerNotification(this.props.id)
+        );
+        this.notificationTooltip = usePopover(Tooltip, { position: "bottom" });
+    }
+
+    /** @param {MouseEvent} ev */
+    onClickNotification(ev) {
+        if (this.notificationTooltip.isOpen) {
+            this.notificationTooltip.close();
+            return;
+        }
+        const notification = this.notification();
+        this.notificationTooltip.open(ev.currentTarget, {
+            tooltip: notification.isSent
+                ? notification.deliveryMessage()
+                : notification.failureMessage,
+        });
     }
 
     get avatarUrl() {
