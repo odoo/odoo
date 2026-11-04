@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -195,6 +197,20 @@ class Pricelist(models.Model):
         # Fetch all rules potentially matching specified products/templates/categories and date
         rules = self._get_applicable_rules(products, date, **kwargs)
 
+        # A rule restricted to a variant, a product or a category may only apply to some products:
+        # index the rules by the key of these products, so that each product is only checked
+        # against the rules that may apply to it, in their order of precedence.
+        PricelistItem = self.env['product.pricelist.item']
+        candidates = list(rules)
+        unrestricted_positions = []
+        restricted_positions_by_key = defaultdict(list)
+        for position, rule in enumerate(candidates):
+            if key := rule._get_applicability_key():
+                restricted_positions_by_key[key].append(position)
+            else:
+                unrestricted_positions.append(position)
+        key_models = {model for model, _record_id in restricted_positions_by_key}
+
         results = {}
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
@@ -211,7 +227,17 @@ class Pricelist(models.Model):
             else:
                 qty_in_product_uom = quantity
 
-            for rule in rules:
+            positions = unrestricted_positions
+            if key_models:
+                restricted_positions = [
+                    position
+                    for key in PricelistItem._get_applicability_keys(product, key_models)
+                    for position in restricted_positions_by_key.get(key, ())
+                ]
+                if restricted_positions:
+                    positions = sorted(restricted_positions + unrestricted_positions)
+            for position in positions:
+                rule = candidates[position]
                 if rule._is_applicable_for(product, qty_in_product_uom):
                     suitable_rule = rule
                     break
