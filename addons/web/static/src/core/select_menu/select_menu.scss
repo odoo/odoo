@@ -19,8 +19,8 @@
         position: absolute;
         top: var(--o-input-padding-y);
         left: auto;
-        bottom: $input-border-width;
-        right: $o-input-padding-x;
+        bottom: var(--o-bs-input-border-width);
+        right: var(--o-input-padding-x);
         visibility: hidden;
     }
 
@@ -55,7 +55,7 @@
 
         input {
             cursor: text !important;
-            height: $input-height;
+            height: var(--o-bs-input-height);
             padding-left: 20px;
         }
 
@@ -67,6 +67,7 @@
             right: auto;
             transform: translateY(-50%);
             content: "search";
+            /* eslint-disable-next-line css/font-family-fallbacks -- icon font */
             font-family: 'Material Symbols Outlined';
             line-height: 1;
             opacity: .75;

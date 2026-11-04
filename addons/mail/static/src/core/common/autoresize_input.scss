@@ -2,7 +2,7 @@
     --o-input-border-color: transparent;
     --o-input-padding-x: var(--o-bs-spacer-1);
     padding-inline: var(--o-input-padding-x);
-    border: $input-border-width solid var(--o-input-border-color);
+    border: var(--o-bs-input-border-width) solid var(--o-input-border-color);
     background-color: var(--o-input-background-color, var(--o-bs-input-bg));
 
     /* Invisible copy of the value, used for sizing. */
@@ -13,7 +13,7 @@
     }
 
     &:where(:has(.o-mail-AutoresizeInput:enabled)):hover {
-        --o-input-border-color: #{$border-color};
+        --o-input-border-color: var(--o-border-color, var(--o-bs-border-color));
     }
 
     &:focus-within {

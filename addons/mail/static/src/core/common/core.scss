@@ -27,7 +27,7 @@ $o-discuss-talkingColor: lighten($success, 10%);
         padding: 3px 4px;
 
         &.o-muted {
-            --o-discuss-badge-bg: #{var(--mail-discuss-badge-mutedBg, mix($gray-500, $gray-600))};
+            --o-discuss-badge-bg: var(--mail-discuss-badge-mutedBg, color-mix(in srgb, var(--gray-500), var(--gray-600)));
         }
     }
 

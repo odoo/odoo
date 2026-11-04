@@ -89,11 +89,11 @@
             padding: var(--o-bs-spacer-2) !important;
         }
         &.o-sendMessageActive {
-            --btn-bg: #{lighten($primary, 7.5%)};
+            --btn-bg: hsl(from var(--primary) h s calc(l + 7.5));
             --btn-border-color: var(--primary);
             opacity: 100% !important;
             &:focus-visible {
-                outline: darken($o-action, 15%) solid 1px;
+                outline: hsl(from var(--o-action) h s calc(l - 15)) solid 1px;
             }
         }
         i[data-icon="send"] {
@@ -110,7 +110,7 @@
             background-color: color-mix(in srgb, var(--o-action) 75%, transparent);
             opacity: 100% !important;
             &:focus-visible {
-                outline: darken($o-action, 15%) solid 1px;
+                outline: hsl(from var(--o-action) h s calc(l - 15)) solid 1px;
             }
             i[data-icon="send"] {
                 color: #FFF;
@@ -210,7 +210,7 @@
 }
 
 .o-mail-Composer-inputContainer {
-    --border-color: #{rgba($dark, var(--mail-Composer-inputContainerUnfocusedBorderOpacity, .2))};
+    --border-color: color-mix(in srgb, var(--dark) calc(var(--mail-Composer-inputContainerUnfocusedBorderOpacity, .2) * 100%), transparent);
     border-radius: calc(var(--o-mail-Composer-vPadding) + var(--o-mail-Composer-pillRadiusBase)); /* Keep the single-line pill radius when the composer grows. */
 
     .o-mail-Composer.o-extended & {
@@ -231,7 +231,7 @@
 }
 
 .o-mail-Composer-suggestionList:has(.o-open) {
-    border: var(--o-bs-border-width) solid $border-color;
+    border: var(--o-bs-border-width) solid var(--o-border-color, var(--o-bs-border-color));
 }
 
 .o-mail-Composer-suggestionPartner-name.o-has-email {
