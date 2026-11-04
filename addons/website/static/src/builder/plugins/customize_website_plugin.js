@@ -510,9 +510,13 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
                 "body-image": "",
             });
         } else {
-            const imageEl = historyImageSrc || (await getAction("replaceBgImage").load({ el }));
-            if (imageEl) {
-                imageSrc = imageEl.src;
+            if (historyImageSrc) {
+                imageSrc = historyImageSrc;
+            } else {
+                const imageEl = await getAction("replaceBgImage").load({ el });
+                imageSrc = imageEl?.src || null;
+            }
+            if (imageSrc) {
                 await this.dependencies.customizeWebsite.customizeWebsiteVariables({
                     "body-image-type": `'${value}'`,
                     "body-image": `'${imageSrc}'`,
