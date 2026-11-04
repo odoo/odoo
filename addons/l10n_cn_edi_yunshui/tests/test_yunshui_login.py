@@ -5,7 +5,7 @@ from unittest.mock import patch
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import new_test_user, tagged
 
-from .common import HOST, L10nCnEdiYunshuiTestCommon, MockResponse, MockYunshuiGateway
+from .common import HOST, L10nCnEdiYunshuiTestCommon, MockYunshuiGateway
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -18,10 +18,6 @@ class TestYunshuiLogin(L10nCnEdiYunshuiTestCommon):
             self.company.l10n_cn_edi_yunshui_platform_code,
         )
         patch('odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.requests.post', self.gateway).start()
-        patch(
-            'odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.requests.get',
-            lambda url, **kwargs: MockResponse(status=404),
-        ).start()
         patch('odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.HOSTS', {'test': HOST, 'prod': HOST}).start()
         self.addCleanup(patch.stopall)
 
