@@ -114,6 +114,8 @@ class IrActionsReport(models.Model):
         if footer and not footers:
             extra_args += ['--footer', 'pipe:/paper-muncher/footer.html']
 
+        extra_args.append('--sandboxed')
+
         if landscape or specific_paperformat_args.get('data-report-landscape', False):
             extra_args += ['--orientation', 'landscape']
         elif paperformat and paperformat.orientation:

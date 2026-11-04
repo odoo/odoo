@@ -204,6 +204,9 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
         args = self._render_pdf_args()
         self.assertAlmostEqual(self._scale_arg(args), 96 / paperformat.dpi)
 
+    def test_sandboxed(self):
+        self.assertIn('--sandboxed', self._render_pdf_args())
+
     def test_split_decoration_mismatch(self):
         html = '<!DOCTYPE html><html><body><div id="minimal_layout_report_headers"><div>A</div><div>B</div></div></body></html>'
         split = self.env['ir.actions.report']._split_paper_muncher_decoration
