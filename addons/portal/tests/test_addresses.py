@@ -303,6 +303,20 @@ class TestPortalAddresses(BaseCommon, HttpCase):
         })
         self.assertIn('vat', res['invalid_fields'])
 
+    def test_commercial_field_error_message_on_child_address(self):
+        self.company_partner.vat = 'BE0477472701'
+        self.authenticate(self.account_a.login, self.account_a.login)
+
+        res = self._submit_address_values({
+            **self.default_address_values,
+            'vat': 'BE0926372368',
+            'csrf_token': self.csrf_token(),
+            'partner_id': self.account_a.partner_id.id,
+        })
+        self.assertIn('vat', res['invalid_fields'])
+        vat_label = self.env['res.partner']._fields['vat']._description_string(self.env)
+        self.assertEqual(res['messages'], [f"The {vat_label} is managed on your company account."])
+
     def test_main_address_update(self):
         self.authenticate(self.portal_user.login, self.portal_user.login)
         csrf_token = self.csrf_token()
