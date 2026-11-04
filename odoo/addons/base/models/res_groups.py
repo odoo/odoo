@@ -254,15 +254,20 @@ class ResGroups(models.Model):
         # field 'share' depends on method has_group()
         # DLE P139
         if any(self._ids):
-            self.env['ir.access']._clear_caches()
+            self._clear_membership_caches()
 
         res = super().write(vals)
 
         # invalidate caches after the write (if not su) because we check access
         # when writing
         if any(self._ids) and not self.env.su:
-            self.env['ir.access']._clear_caches()
+            self._clear_membership_caches()
         return res
+
+    def _clear_membership_caches(self):
+        self.env.invalidate_all()
+        self.env.transaction.invalidate_access_cache()
+        self.env.transaction.invalidate_ormcache()
 
     def _ensure_xml_id(self):
         """Return the groups external identifiers, creating the external identifier for groups missing one"""
