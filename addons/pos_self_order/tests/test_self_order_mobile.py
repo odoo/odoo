@@ -236,6 +236,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             delete_mobile_order_from_backend,
             create=True,
         ):
+            self.env.transaction.invalidate_ormcache('routing')
             self.start_tour(self_route, 'test_delete_mobile_order_from_backend')
 
     def test_self_order_pay_warns_on_stale_cart(self):
@@ -265,6 +266,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
             self.env['pos.order.line'].sudo().browse(line_id).write({'qty': qty})
 
         with patch.object(PosSelfOrderController, 'modify_line_qty_from_backend', modify_line_qty_from_backend, create=True):
+            self.env.transaction.invalidate_ormcache('routing')
             self.start_tour(self_route, 'self_order_mobile_pay_warns_on_stale_cart')
 
     def test_self_order_snooze_service(self):
