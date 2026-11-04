@@ -17,7 +17,16 @@
     </record>
 
     <record id="demo_bank_us" model="res.partner.bank">
-        <field name="account_number">BKIGRWRR</field>
+        <field name="account_number">1234567890</field>
+        <field name="clearing_number">121000248</field>
+        <field name="bank_bic">CHASUS33</field>
+        <field name="allow_out_payment" eval="True"/>
+        <field name="bank_name">JPMorgan Chase Bank</field>
+        <field name="street">383 Madison Avenue</field>
+        <field name="city">New York</field>
+        <field name="state_id" ref="base.state_us_27"/>
+        <field name="zip">10179</field>
+        <field name="country_id" ref="base.us"/>
         <field name="partner_id" ref="partner_demo_company_us"/>
         <field name="company_id" ref="demo_company_us"/>
     </record>
