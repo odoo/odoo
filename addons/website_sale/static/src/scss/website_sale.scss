@@ -191,6 +191,14 @@ $input-border-color: $gray-400;
         padding-bottom: 0.75rem;
     }
 
+    .wsale_products_categories_list .accordion-header:has(.accordion-button:focus) {
+        color: $accordion-button-active-color;
+        background-color: $accordion-button-active-bg;
+        box-shadow: inset 0 ($accordion-border-width * -1) 0 $accordion-border-color;
+        outline: 0;
+        box-shadow: $accordion-button-focus-box-shadow;
+    }
+
     #products_grid_before {
         // == Guess the distance with the navbar
         $-container-top-gap: calc(#{map-get($spacers, 2)} + var(--gutter-x));
