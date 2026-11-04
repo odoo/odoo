@@ -10,11 +10,11 @@
         <field name="arch" type="xml">
             <field name="delay" position="after">
                 <field name="last_purchase_date" width="auto"/>
-                <button name="action_set_supplier" type="object" string="Set as Supplier" class="btn btn-link"
+                <button name="action_set_supplier" type="object" string="Set as Vendor" class="btn btn-link"
                         invisible="not show_set_supplier_button"/>
             </field>
             <xpath expr="//list" position="attributes">
-                <attribute name="decoration-bf">parent.supplierinfo_id == id</attribute>
+                <attribute name="decoration-bf">parent.effective_supplier_id == id</attribute>
             </xpath>
             <field name="sequence" position="attributes">
                 <attribute name="column_invisible">True</attribute>
