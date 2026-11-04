@@ -113,6 +113,12 @@ class HrEmployeeDeparture(models.Model):
                 lambda v: v.contract_date_start == version.contract_date_start
                 and v.contract_date_end == version.contract_date_end,
             ).write({"departure_id": departure.id})
+            # The contract end date is restricted to the HR administrators, the departure is created by HR officers.
+            # The end date of a fixed-term contract is kept until the departure is applied: it couldn't be put back
+            # if the departure is cancelled.
+            version_sudo = version.sudo()
+            if version_sudo.contract_date_start and not (version_sudo.fixed_term and version_sudo.contract_date_end):
+                version_sudo.write({'contract_date_end': departure.departure_date})
         return res
 
     def _cron_apply_departure(self):
