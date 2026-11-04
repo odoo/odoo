@@ -20,12 +20,12 @@ class SaleOrderLine(models.Model):
 
     def _l10n_ph_get_discount_price_details(self):
         """
-        Return the gross (pre-discount) price amounts and the discount
-        amounts derived from the current SOL.
+        Return the gross (pre-discount) VAT-exclusive subtotal and the
+        discount derived from the current SOL.
 
-        The gross amounts are recomputed with the tax engine on a base line
-        without discount: price_subtotal/price_total are pre-rounded amounts
-        that would introduce inaccuracies (and are zero at 100% discount).
+        The gross subtotal is recomputed with the tax engine on a base line
+        without discount: price_subtotal is a pre-rounded amount that would
+        introduce inaccuracies (and is zero at 100% discount).
         """
         self.ensure_one()
         company = self.company_id or self.env.company
@@ -33,13 +33,7 @@ class SaleOrderLine(models.Model):
         self.env["account.tax"]._add_tax_details_in_base_line(base_line, company)
         self.env["account.tax"]._round_base_lines_tax_details([base_line], company)
         gross_price_subtotal = base_line["tax_details"]["raw_total_excluded_currency"]
-        gross_price_total = base_line["tax_details"]["raw_total_included_currency"]
-        return (
-            gross_price_subtotal,
-            gross_price_subtotal - self.price_subtotal,
-            gross_price_total,
-            gross_price_total - self.price_total,
-        )
+        return gross_price_subtotal, gross_price_subtotal - self.price_subtotal
 
     @api.depends(
         "price_unit",
