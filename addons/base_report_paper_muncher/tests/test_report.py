@@ -3,8 +3,14 @@
 import odoo.tests
 from odoo.tests import patch
 from odoo.tests.common import TEST_CURSOR_COOKIE_NAME, release_test_lock
+from odoo.tools import parse_version
 
-from ..paper_muncher import SERVE_TIMEOUT, PaperMuncherServer, paper_muncher
+from odoo.addons.base_report_paper_muncher.paper_muncher import (
+    SERVE_TIMEOUT,
+    PaperMuncherServer,
+    _capabilities,
+    paper_muncher,
+)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -87,3 +93,7 @@ class TestPaperMuncherReport(odoo.tests.HttpCase):
     def test_render_multiple_documents(self):
         pdf = self._render_pdf(self.partners.ids)
         self.assertTrue(pdf.startswith(b'%PDF-'), f"Expected a valid PDF got:\n{pdf}")
+
+    def test_capabilities(self):
+        self.assertEqual(_capabilities(parse_version('0.5')), frozenset())
+        self.assertEqual(_capabilities(parse_version('0.6')), {'baseline'})

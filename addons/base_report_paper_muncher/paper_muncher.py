@@ -11,6 +11,7 @@ import sys
 import threading
 import time
 from collections.abc import Sequence
+from dataclasses import dataclass
 from email.utils import format_datetime
 from functools import cache
 from io import DEFAULT_BUFFER_SIZE, BytesIO
@@ -36,7 +37,16 @@ WRITE_TIMEOUT = 15  # seconds
 SERVE_TIMEOUT = 15 * 60  # 15 minutes
 CHUNK_SIZE = 8192  # 8kiB, buffer size of paper-muncher
 MAX_INCOMPLETE_EVENT_SIZE = 8192  # 8kiB
-MIN_REQUIRED_VERSION = '0.6'  # keep in sync with README.md
+
+
+@dataclass(frozen=True)
+class Capability:
+    since: str
+
+
+CAPABILITIES = {
+    'baseline': Capability('0.6'),  # minimum supported version, keep in sync with README.md
+}
 GET_DOCUMENT_RE = re.compile(br'^/paper-muncher/(header|footer|\.|[0-9]+)\.(?:html|xhtml|xml)$')
 
 
@@ -369,6 +379,11 @@ class PaperMuncherInfo(NamedTuple):
     state: Literal['ok', 'install']
     bin: str
     version: tuple[str, ...]
+    capabilities: frozenset[str] = frozenset()
+
+    def has_capability(self, capability: str) -> bool:
+        assert capability in CAPABILITIES, capability
+        return capability in self.capabilities
 
 
 def extract_version(output: bytes) -> str:
@@ -376,6 +391,10 @@ def extract_version(output: bytes) -> str:
     if not match:
         raise ValueError(f"Could not find version in output: {output!r}")
     return match[1].decode()
+
+
+def _capabilities(version: tuple[str, ...]) -> frozenset[str]:
+    return frozenset(name for name, capability in CAPABILITIES.items() if version >= parse_version(capability.since))
 
 
 @cache
@@ -399,10 +418,11 @@ def paper_muncher() -> PaperMuncherInfo:
                      exc_info=_logger.isEnabledFor(logging.DEBUG))
         return PaperMuncherInfo(state='install', bin=bin_path, version=version)
 
-    if version < parse_version(MIN_REQUIRED_VERSION):
+    capabilities = _capabilities(version)
+    if 'baseline' not in capabilities:
         _logger.info("Your paper-muncher version %s is too old, please upgrade to at least %s",
-                     version_str, MIN_REQUIRED_VERSION)
+                     version_str, CAPABILITIES['baseline'].since)
         return PaperMuncherInfo(state='install', bin=bin_path, version=version)
 
     _logger.info("Will use the paper-muncher binary at %s (version %s)", bin_path, version_str)
-    return PaperMuncherInfo(state='ok', bin=bin_path, version=version)
+    return PaperMuncherInfo(state='ok', bin=bin_path, version=version, capabilities=capabilities)
