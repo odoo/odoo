@@ -321,6 +321,33 @@ class TestWebsiteSalePerformanceWithPricelistDepth(TestWebsiteSalePerformanceWit
         )
 
 
+class TestWebsiteSalePerformanceCategoriesSidebar(TestWebsiteSalePerformanceNoPricelist):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Published category with an unpublished child (inaccessible to public/portal users)
+        parent_categ = cls.env["product.public.category"].create({"name": "Published"})
+        cls.env["product.public.category"].create({
+            "name": "Unpublished", "parent_id": parent_categ.id
+        })
+        cls.heavy_product.public_categ_ids = parent_categ
+
+        # Show the categories as a sidebar instead of a top bar
+        cls.env.ref("website_sale.products_categories_top").active = False
+        cls.env.ref("website_sale.products_categories").active = True
+
+    def _get_shop_page_queries(self):
+        res = super()._get_shop_page_queries()
+        res["product_public_category"] += 3
+        return res
+
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+
 # STOCK
 
 
