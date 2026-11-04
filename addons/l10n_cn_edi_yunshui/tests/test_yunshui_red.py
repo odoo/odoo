@@ -15,6 +15,7 @@ from odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client import (
     RED_FORM_DETAIL,
     RED_FORM_INIT,
     RED_FORM_ISSUE,
+    RED_FORM_LIST,
     RED_FORM_UPDATE,
 )
 
@@ -136,9 +137,46 @@ class TestYunshuiRed(L10nCnEdiYunshuiTestCommon):
         self.assertEqual(self._red_form(credit_note).state, 'failed')
         self.assertTrue(self.company.sudo().l10n_cn_edi_yunshui_relogin)
 
-    def test_inbound_listing_is_empty_for_now(self):
-        with self.assertRaisesRegex(UserError, 'does not support listing inbound red forms'):
-            self.company._l10n_cn_edi_get_client().list_inbound_red_forms(
-                date(2026, 9, 1),
-                date(2026, 9, 30),
-            )
+    def test_red_form_whose_answer_was_lost_is_adopted(self):
+        credit_note = self._credit_note(reason='02')
+        self.gateway.handlers[BLUE_LIST] = {'total': 0, 'list': []}
+        self.gateway.handlers[RED_FORM_LIST] = {'total': 1, 'list': [{**self._form('02'), 'lzfphm': BLUE_NO}]}
+        self.gateway.handlers[RED_FORM_DETAIL] = self._form('02')
+
+        credit_note.action_l10n_cn_edi_request_red_form()
+
+        self.assertRecordValues(self._red_form(credit_note), [{'state': 'red_form_pending', 'red_form_uuid': 'a' * 32}])
+        self.assertNotIn(RED_FORM_ISSUE, [request['interface_code'] for request in self.gateway.requests])
+
+    def test_inbound_red_forms_are_listed_page_by_page_for_both_sides(self):
+        rows = {'0': [{**self._form('03'), 'uuid': f'{index:032}', 'lzfphm': BLUE_NO} for index in range(51)], '1': []}
+        self.gateway.handlers[RED_FORM_LIST] = lambda payload: {
+            'total': len(rows[payload['gxfxz']]),
+            'list': rows[payload['gxfxz']][(int(payload['cxym']) - 1) * 50:][:50],
+        }
+
+        forms = self.company._l10n_cn_edi_get_client().list_inbound_red_forms(date(2026, 11, 1), date(2026, 11, 4))
+
+        self.assertEqual(len(forms), 51)
+        self.assertEqual(
+            [(request['inner']['gxfxz'], request['inner']['cxlx'], request['inner']['cxym']) for request in self.gateway.requests],
+            [('0', '1', '1'), ('0', '1', '2'), ('1', '1', '1')],
+        )
+        self.assertEqual(forms[0]['original_fapiao_no'], BLUE_NO)
+        self.assertEqual(forms[0]['bureau_state'], '03')
+
+    def test_supplier_red_form_is_answered_as_the_buyer(self):
+        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=self.product_a, post=True)
+        bill.l10n_cn_edi_fapiao_no = BLUE_NO
+        self.gateway.handlers[RED_FORM_LIST] = lambda payload: {
+            'total': 1,
+            'list': [{**self._form('02'), 'lzfphm': BLUE_NO, 'hzcxje': '-1.00', 'hzcxse': '-0.06'}] if payload['gxfxz'] == '1' else [],
+        }
+
+        self.env['l10n_cn_edi.document']._cron_check_red_form_status()
+        bill.action_l10n_cn_edi_reject_inbound_red_form()
+
+        self.assertRecordValues(bill.l10n_cn_edi_document_ids, [{'state': 'cancelled', 'amount_untaxed': -1.0}])
+        update = self.gateway.requests[-1]
+        self.assertEqual(update['interface_code'], RED_FORM_UPDATE)
+        self.assertEqual((update['inner']['czlx'], update['inner']['xhf_nsrsbh']), ('2', self.partner_a.vat))
