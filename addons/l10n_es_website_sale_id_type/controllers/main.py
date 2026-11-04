@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.l10n_es_website_sale.controllers.main import WebsiteSaleL10nEsEcommerce
+from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 L10N_ES_ID_TYPE_KEYS = ('ES_FOREIGN_ID', 'ES_PASSPORT', 'ES_RES_CERT', 'ES_OTHER_ID')
 # VAT is folded into the same selector (the plain VAT field is hidden, see the
@@ -7,7 +7,7 @@ L10N_ES_ID_TYPE_KEYS = ('ES_FOREIGN_ID', 'ES_PASSPORT', 'ES_RES_CERT', 'ES_OTHER
 L10N_ES_ID_TYPE_SELECTOR_KEYS = ('vat',) + L10N_ES_ID_TYPE_KEYS
 
 
-class WebsiteSaleL10nEsIdType(WebsiteSaleL10nEsEcommerce):
+class WebsiteSaleL10nEsIdType(WebsiteSale):
 
     def _prepare_address_form_values(self, *args, **kwargs):
         rendering_values = super()._prepare_address_form_values(*args, **kwargs)
