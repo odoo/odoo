@@ -169,3 +169,37 @@ class TestHolidaysCalendar(HttpCase, TestHrHolidaysCommon):
 
         # Hour-based leaves keep their exact interval instead of being widened to full days
         self.assertEqual(result, [(start, end)])
+
+    def test_flexible_unavailable_intervals_without_tz(self):
+        """ The unavailable intervals of a flexible resource with a time off can
+        be computed without giving a timezone, like the other intervals. """
+        self.employee_emp.resource_calendar_id = self.env['resource.calendar'].create({
+            'name': 'Flexible',
+            'tz': 'Europe/Brussels',
+            'flexible_hours': True,
+            'hours_per_day': 8.0,
+        })
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Flexible Leaves',
+            'requires_allocation': 'no',
+            'leave_validation_type': 'no_validation',
+        })
+        test_date = date(2026, 10, 15)
+        self.env['hr.leave'].create({
+            'name': 'Day Off',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': test_date,
+            'request_date_to': test_date,
+        }).action_validate()
+
+        resource = self.employee_emp.resource_id
+        start = pytz.utc.localize(datetime.combine(test_date - timedelta(days=1), datetime.min.time()))
+        end = pytz.utc.localize(datetime.combine(test_date + timedelta(days=1), datetime.max.time()))
+        intervals = self.employee_emp.resource_calendar_id._unavailable_intervals_batch(
+            start, end, resources=resource)[resource.id]
+        brussels = pytz.timezone('Europe/Brussels')
+        self.assertEqual(intervals, [(
+            brussels.localize(datetime.combine(test_date, datetime.min.time())).astimezone(pytz.utc),
+            brussels.localize(datetime.combine(test_date, datetime.max.time())).astimezone(pytz.utc),
+        )])
