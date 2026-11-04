@@ -39,6 +39,8 @@ RED_FORM_UPDATE = 'h5.js.redInkConfirmationStatus.update'
 RED_FORM_LIST = 'h5.js.redInvoiceConfirmList.query'
 H5_DOWNLOAD = 'h5.js.invoice.download'
 RED_FORM_ACTIONS = {'confirm': '1', 'reject': '2', 'revoke': '3'}
+ACTIVE_RED_FORM_STATES = {'01', '02', '03', '04'}
+RED_FORM_PAGE_SIZE = 50
 
 INVOICE_KIND = {'01': '81', '02': '82'}
 PENDING = '1002'
@@ -156,6 +158,13 @@ class YunshuiClient:
         })
         blue = next((row for row in found.get('list') or [] if row.get('fp_hm') == fapiao_no), None)
         if not blue:
+            # 3.2.5 takes no serial: when its answer got lost, the form exists and the fapiao isn't offered anymore.
+            requested_on = self._shanghai(document.create_date).date()
+            if form := next((
+                form for form in self._red_forms('0', '0', requested_on - timedelta(days=1), requested_on + timedelta(days=1))
+                if form['original_fapiao_no'] == fapiao_no and form['bureau_state'] in ACTIVE_RED_FORM_STATES
+            ), None):
+                return self._red_form_result(self._h5(RED_FORM_DETAIL, {'uuid': form['uuid'], 'xhf_nsrsbh': self.tax_no}))
             raise UserError(self.company.env._(
                 "The tax bureau doesn't offer fapiao %(fapiao)s for a red form: it may already be reversed.",
                 fapiao=fapiao_no,
@@ -198,19 +207,50 @@ class YunshuiClient:
         return self._red_form_result(answer)
 
     def query_red_form(self, document):
-        return self._red_form_result(self._h5(RED_FORM_DETAIL, {'uuid': document.red_form_uuid, 'xhf_nsrsbh': self.tax_no}))
+        return self._red_form_result(self._h5(RED_FORM_DETAIL, {
+            'uuid': document.red_form_uuid,
+            'xhf_nsrsbh': self._seller_tax_no(document),
+        }))
 
     def operate_red_form(self, document, action):
         self._h5(RED_FORM_UPDATE, {
             'uuid': document.red_form_uuid,
-            'xhf_nsrsbh': self.tax_no,
+            'xhf_nsrsbh': self._seller_tax_no(document),
             'czlx': RED_FORM_ACTIONS[action],
         })
 
     def list_inbound_red_forms(self, date_from, date_to):
-        raise UserError(self.company.env._(
-            "Yunshui does not support listing inbound red forms by date range.",
-        ))
+        """The red forms raised against us, as the seller of our invoices and the buyer of our bills (3.2.6)."""
+        return [form for side in ('0', '1') for form in self._red_forms(side, '1', date_from, date_to)]
+
+    def _red_forms(self, side, direction, date_from, date_to):
+        """The red forms of ``side`` (0 seller, 1 buyer) we raised (``direction`` 0) or received (1), page by page."""
+        forms, page = [], 1
+        while True:
+            answer = self._h5(RED_FORM_LIST, {
+                'gxfxz': side,
+                'cxlx': direction,
+                'kprqq': str(date_from),
+                'kprqz': str(date_to),
+                'cxym': str(page),
+                'ts': str(RED_FORM_PAGE_SIZE),
+            })
+            rows = answer.get('list') or []
+            forms += [{
+                **self._red_form_result(row, with_files=False),
+                'original_fapiao_no': row.get('lzfphm'),
+                'amount_untaxed': float(row.get('hzcxje') or 0),
+                'amount_tax': float(row.get('hzcxse') or 0),
+                'reason': row.get('chyydm'),
+            } for row in rows]
+            if len(rows) < RED_FORM_PAGE_SIZE or page * RED_FORM_PAGE_SIZE >= int(answer.get('total') or 0):
+                return forms
+            page += 1
+
+    def _seller_tax_no(self, document):
+        """The seller of a red form's fapiao: us on our invoices, the supplier on our bills."""
+        move = document.move_id
+        return move.commercial_partner_id.vat if move.is_purchase_document() else self.tax_no
 
     def login_step(self, step_name, **extra_payload):
         self.ensure_ready()
@@ -286,8 +326,8 @@ class YunshuiClient:
             return {'state': 'sent'}
         return None
 
-    def _red_form_result(self, answer):
-        """The red form of a 3.2.5 or 3.2.1 ``answer``, with its red fapiao and that fapiao's files once issued."""
+    def _red_form_result(self, answer, with_files=True):
+        """The red form of a 3.2.5, 3.2.1 or 3.2.6 ``answer``, with its red fapiao and that fapiao's files once issued."""
         result = {
             'uuid': answer.get('uuid'),
             'number': answer.get('hzfpxxqrdbh'),
@@ -296,7 +336,8 @@ class YunshuiClient:
         }
         if result['red_fapiao_no'] and answer.get('hzkprq'):
             result['red_fapiao_date'] = self._utc(answer['hzkprq'])
-            result.update(self._fapiao_files(result['red_fapiao_no'], answer['hzkprq']))
+            if with_files:
+                result.update(self._fapiao_files(result['red_fapiao_no'], answer['hzkprq']))
         return result
 
     def _fapiao_files(self, fapiao_no, issued_at):
