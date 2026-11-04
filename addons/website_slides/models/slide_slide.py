@@ -683,10 +683,11 @@ class Slide(models.Model):
             elif values['slide_category'] != 'article':
                 values = {'html_content': False, **values}
 
+        newly_published = values.get('is_published') and self.filtered(lambda slide: not slide.is_published)
         res = super(Slide, self).write(values)
-        if values.get('is_published'):
-            self.date_published = datetime.datetime.now()
-            self._post_publication()
+        if newly_published:
+            newly_published.date_published = datetime.datetime.now()
+            newly_published._post_publication()
 
         # avoid fetching external metadata when installing the module (i.e. for demo data)
         # we also support a context key if you don't want to fetch the metadata when modifying a slide
