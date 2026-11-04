@@ -129,6 +129,9 @@ export class SelfOrder extends Reactive {
                 if (payment_result === "Success") {
                     const [orderData] = data["pos.order"];
                     const localOrder = this.models["pos.order"].get(orderData.id);
+                    if (!localOrder) {
+                        return;
+                    }
                     orderData.partner_id = localOrder?.raw.partner_id || false;
                     this.models.connectNewData(data);
                     const order = this.models["pos.order"].find(
