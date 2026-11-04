@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.ContractPeriodField">
+        <t t-set="contract" t-value="this.contract()"/>
+        <div t-if="contract" t-att-class="{'text-danger': this.isEnded(contract)}">
+            <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="contract" title="Contract"/>
+            <span t-out="this.formatDate(contract.start)"/>
+            <t t-if="contract.end">
+                <span> - </span>
+                <span t-out="this.formatDate(contract.end)"/>
+            </t>
+        </div>
+    </t>
+
+</templates>
