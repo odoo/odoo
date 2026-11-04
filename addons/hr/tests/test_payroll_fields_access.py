@@ -83,7 +83,6 @@ class TestPayrollFieldsAccess(TransactionCase):
             'new_car_model_id',
             'ordered_car_id',
             'fuel_type',
-            'transport_mode_bike',
             'bike_id',
             'new_bike',
             'new_bike_model_id',
