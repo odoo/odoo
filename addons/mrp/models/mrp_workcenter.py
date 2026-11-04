@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 from datetime import timedelta, datetime
@@ -203,7 +202,6 @@ class MrpWorkcenter(models.Model):
             workcenter.workorder_progress_count = result[workcenter.id].get('progress', 0)
             workcenter.workorder_late_count = count_data.get(workcenter.id, 0)
 
-    # To test
     @api.depends('time_ids', 'time_ids.date_end', 'time_ids.loss_type')
     def _compute_working_state(self):
         # We search for a productivity line associated to this workcenter having no `date_end`.
@@ -310,7 +308,7 @@ class MrpWorkcenter(models.Model):
     def write(self, vals):
         if 'company_id' in vals:
             self.resource_id.company_id = vals['company_id']
-        return super(MrpWorkcenter, self).write(vals)
+        return super().write(vals)
 
     def action_show_operations(self):
         self.ensure_one()
@@ -383,10 +381,10 @@ class MrpWorkcenter(models.Model):
                 date_stop = date_start + delta
                 available_intervals = get_available_intervals(date_start, date_stop)[resource.id]
                 workorder_intervals = get_workorder_intervals(date_start, date_stop)[resource.id]
-                for start, stop, _records in available_intervals:
+                for start, stop, records in available_intervals:
                     start_interval = start_interval or start
                     interval_minutes = (stop - start).total_seconds() / 60
-                    while (interval := Intervals([(start_interval or start, start + timedelta(minutes=min(remaining, interval_minutes)), _records)])) \
+                    while (interval := Intervals([(start_interval or start, start + timedelta(minutes=min(remaining, interval_minutes)), records)])) \
                       and (conflict := workorder_intervals.overlapping_with(interval) or extra_leaves_slots_intervals.overlapping_with(interval)):
                         start = min(max(conflict_stop for _start, conflict_stop, _records in conflict), stop)  # restart available interval at conflicting interval stop
                         interval_minutes = (stop - start).total_seconds() / 60
@@ -401,10 +399,10 @@ class MrpWorkcenter(models.Model):
                 available_intervals = get_available_intervals(date_start, date_stop)[resource.id]
                 available_intervals = reversed(available_intervals)
                 workorder_intervals = get_workorder_intervals(date_start, date_stop)[resource.id]
-                for start, stop, _records in available_intervals:
+                for start, stop, records in available_intervals:
                     stop_interval = stop_interval or stop
                     interval_minutes = (stop - start).total_seconds() / 60
-                    while (interval := Intervals([(stop - timedelta(minutes=min(remaining, interval_minutes)), stop_interval or stop, _records)])) \
+                    while (interval := Intervals([(stop - timedelta(minutes=min(remaining, interval_minutes)), stop_interval or stop, records)])) \
                       and (conflict := workorder_intervals.overlapping_with(interval) or extra_leaves_slots_intervals.overlapping_with(interval)):
                         stop = max(min(conflict_start for conflict_start, _stop, _records in conflict), start)  # restart available interval at conflicting interval start
                         interval_minutes = (stop - start).total_seconds() / 60
@@ -427,7 +425,7 @@ class MrpWorkcenter(models.Model):
                 'title': _("Note that archived work center(s): '%s' is/are still linked to active Bill of Materials, which means that operations can still be planned on it/them. "
                            "To prevent this, deletion of the work center is recommended instead.", filtered_workcenters),
                 'type': 'warning',
-                'sticky': True,  #True/False will display for few seconds if false
+                'sticky': True,  # True/False will display for few seconds if false
                 'next': {'type': 'ir.actions.act_window_close'},
                 },
             }

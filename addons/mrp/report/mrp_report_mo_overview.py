@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import copy
 import json
 from collections import defaultdict
@@ -352,7 +350,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                             employee_duration, employee_hourly,
                         ))
                         e_index += 1
-        # If we need to keep the previous order
+        # If we need to keep the previous order workcenter costs then employee costs
         operations.extend(employee_costs)
         return {
             'summary': {

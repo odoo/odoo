@@ -133,9 +133,9 @@ class MrpRoutingWorkcenter(models.Model):
     @api.depends_context('product', 'quantity', 'unit', 'workcenter')
     def _compute_cost(self):
         for operation in self:
-            operation_time = (operation.time_total / 60.0)
-            operation.cost = operation_time * operation.workcenter_id.costs_hour + \
-                operation_time * operation.workcenter_id.employee_costs_hour * (operation.employee_ratio or 1)
+            workcenter = operation.workcenter_id
+            hourly_cost = workcenter.costs_hour + workcenter.employee_costs_hour * (operation.employee_ratio or 1)
+            operation.cost = (operation.time_total / 60.0) * hourly_cost
 
     @api.constrains('blocked_by_operation_ids')
     def _check_no_cyclic_dependencies(self):
@@ -191,7 +191,7 @@ class MrpRoutingWorkcenter(models.Model):
             'res_model': 'mrp.routing.workcenter',
             'view_mode': 'list,form',
             'domain': ['|', ('bom_id', '=', False), ('bom_id.active', '=', True)],
-            'context' : {
+            'context': {
                 'bom_id': self.env.context["bom_id"],
                 'list_view_ref': 'mrp.mrp_routing_workcenter_copy_to_bom_tree_view',
             }

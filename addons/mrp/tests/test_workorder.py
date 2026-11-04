@@ -333,7 +333,7 @@ class TestWorkorder(TestMrpCommon):
         # the access cache would otherwise keep the employee marked as readable
         self.env.transaction.invalidate_access_cache()
         self.assertEqual(production.employee_ids, self.employee_1)
-        allowed_employees = (self.employee_1 | self.employee_2)
+        allowed_employees = self.employee_1 | self.employee_2
         self.assertRecordValues(production.workorder_ids, [{
             'employee_assigned_ids': self.employee_1.ids,
             'employee_ids': self.employee_1.ids,
