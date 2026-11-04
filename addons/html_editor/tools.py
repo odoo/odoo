@@ -7,13 +7,41 @@ import re
 from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import remove_accents
+from odoo.tools import html_sanitize, remove_accents
 from odoo.tools.translate import adapt_translated_field_value
 
 from odoo.addons.web.icons import ICONS
 
+try:
+    import markdown2
+except ImportError:
+    markdown2 = None
+
 logger = logging.getLogger(__name__)
 diverging_history_regex = 'data-last-history-commits="([0-9,]+)"'
+
+
+def markdown_to_html(text):
+    """ Convert Markdown into sanitized HTML.
+
+    :param str text: the Markdown to convert
+    :return: the HTML, or None if markdown2 is not installed
+    """
+    if not markdown2:
+        return None
+    html = markdown2.Markdown(safe_mode='escape', extras=[
+        'break-on-newline',
+        'cuddled-lists',
+        'fenced-code-blocks',
+        'highlightjs-lang',
+        'strike',
+        'tables',
+        'tag-friendly',
+        'task_list',
+    ]).convert(text)
+    # Raw HTML being escaped, the only form elements are the checkboxes of
+    # lists, which the editor converts into checklists.
+    return html_sanitize(html, sanitize_form=False)
 
 
 # This method must be called in a context that has write access to the record as

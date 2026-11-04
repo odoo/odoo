@@ -11,6 +11,13 @@ export const FULL_EDIT_PLUGINS = MAIN_PLUGINS.filter((P) => !removedPlugins.has(
     (P) => customPlugins[P.id] || P
 );
 
-const fullEditOnlyPlugins = new Set(["link", "linkPaste", "mediaUrlPaste", "imageCrop", "media"]);
+const fullEditOnlyPlugins = new Set([
+    "link",
+    "linkPaste",
+    "markdown",
+    "mediaUrlPaste",
+    "imageCrop",
+    "media",
+]);
 
 export const BASIC_PLUGINS = FULL_EDIT_PLUGINS.filter((P) => !fullEditOnlyPlugins.has(P.id));

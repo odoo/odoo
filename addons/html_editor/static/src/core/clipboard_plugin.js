@@ -120,6 +120,12 @@ const ONLY_LINK_REGEX = new RegExp(
  * @typedef {(() => void)[]} on_will_paste_handlers
  *
  * @typedef {((selection: EditorSelection, text: string) => boolean)[]} paste_text_overrides
+ * @typedef {((
+ *     selection: EditorSelection,
+ *     clipboardElem: DocumentFragment,
+ *     sanitizedFragment: DocumentFragment,
+ *     clipboardData: DataTransfer
+ *   ) => boolean | undefined)[]} paste_html_overrides
  * @typedef {((selection: EditorSelection, clipboardData: DataTransfer) => boolean | undefined)[]} should_paste_as_text_predicates
  *
  * @typedef {((
@@ -287,7 +293,15 @@ export class ClipboardPlugin extends Plugin {
         this.dependencies.sanitize.sanitize(fragment);
         if (files.length || clipboardHtml) {
             const clipboardElem = this.prepareClipboardData(clipboardHtml);
-            if (this.delegateTo("paste_html_overrides", selection, clipboardElem, fragment)) {
+            if (
+                this.delegateTo(
+                    "paste_html_overrides",
+                    selection,
+                    clipboardElem,
+                    fragment,
+                    clipboardData
+                )
+            ) {
                 return true;
             }
             // @phoenix @todo: should it be handled in table plugin?
