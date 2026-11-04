@@ -72,7 +72,16 @@
                                 decoration-warning="l10n_cn_edi_red_form_status == 'red_form_pending'"
                                 decoration-danger="l10n_cn_edi_red_form_status in ('failed', 'cancelled')"/>
 
-                            <field name="l10n_cn_edi_red_form_uuid"/>
+                            <label for="l10n_cn_edi_red_form_uuid"/>
+                            <div class="o_row">
+                                <field name="l10n_cn_edi_red_form_uuid"/>
+                                <button name="action_l10n_cn_edi_cancel_red_form"
+                                    string="Revoke"
+                                    type="object"
+                                    class="btn-secondary"
+                                    icon="cancel"
+                                    invisible="move_type != 'out_refund' or l10n_cn_edi_red_form_status != 'red_form_pending'"/>
+                            </div>
                         </group>
                     </group>
                     <field name="l10n_cn_edi_document_ids" readonly="1" invisible="not l10n_cn_edi_document_ids">

@@ -66,6 +66,7 @@ class MockYunshuiGateway:
         )
         self.requests.append({
             'url': url,
+            'headers': headers,
             'interface_code': interface_code,
             'outer': request_outer,
             'inner': request_inner,
@@ -189,6 +190,9 @@ class FakeClient:
 
     def query_invoice(self, document, just_submitted=False):
         return self._answer('query_invoice', document, just_submitted)
+
+    def request_red_form(self, document):
+        return self._answer('request_red_form', document)
 
     def query_red_form(self, document):
         return self._answer('query_red_form', document)

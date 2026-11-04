@@ -264,6 +264,8 @@ class L10nCnEdiDocument(models.Model):
         if not bureau_state:
             if result.get('error'):
                 self.write({'state': 'failed', 'error_message': result['error']})
+                if self.move_id.move_type == 'out_refund':
+                    self.move_id.l10n_cn_edi_state = 'failed'
                 self.move_id.message_post(body=self.env._("Red Form rejected: %(error)s", error=result['error']))
             # Otherwise the bureau hasn't registered the form yet: still pending.
             return
@@ -281,13 +283,26 @@ class L10nCnEdiDocument(models.Model):
         })
         if state == was_state:
             return
-        if state == 'red_form_confirmed':
+        if state == 'red_form_confirmed' and move.move_type == 'out_refund':
+            move.write({
+                'l10n_cn_edi_state': 'issued',
+                'l10n_cn_edi_fapiao_no': red_fapiao_no,
+                'l10n_cn_edi_fapiao_date': self.fapiao_date,
+            })
+            move.message_post(
+                body=self.env._("Red fapiao %(fapiao)s issued: the Credit Note can be posted.", fapiao=red_fapiao_no),
+                attachment_ids=self._l10n_cn_edi_record_fapiao_files(result).ids,
+            )
+        elif state == 'red_form_confirmed':
             move.activity_schedule(
                 'mail.mail_activity_data_todo',
                 summary=self.env._("Inbound Red Form %(number)s approved and issued. Please ensure a matching Credit Note is posted.", number=self.red_form_number),
                 user_id=(move.invoice_user_id or move.create_uid).id,
             )
         elif state == 'cancelled':
+            if move.move_type == 'out_refund':
+                # The form is void at the bureau: a new request gets a new document.
+                move.l10n_cn_edi_state = 'failed'
             move.message_post(body=self.env._(
                 "Red Form rejected/cancelled. Tax bureau state: %(state)s",
                 state=dict(BUREAU_STATES).get(bureau_state, bureau_state),
