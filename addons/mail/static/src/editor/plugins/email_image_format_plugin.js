@@ -48,6 +48,30 @@ function getDisplaySrc(src) {
     return `${src.substring(0, 50)}${src.length > 50 ? "..." : ""}`;
 }
 
+function fetchError(src) {
+    throw new InvalidSourceEmailImageError(`The image could not be fetched. ${getDisplaySrc(src)}`);
+}
+
+function createAttachmentError(src) {
+    throw new AttachmentCreationEmailImageError(
+        `The image could not be saved. ${getDisplaySrc(src)}`
+    );
+}
+
+function noCORSError(src) {
+    throw new UncleanOriginEmailImageError(
+        `The image loaded successfully but couldn't be fetched, CORS headers are probably missing. ${getDisplaySrc(
+            src
+        )}`
+    );
+}
+
+function processImageError(src) {
+    throw new InvalidSourceEmailImageError(
+        `The image could not be processed. ${getDisplaySrc(src)}`
+    );
+}
+
 export class EmailImageFormatPlugin extends Plugin {
     static id = "emailImageFormat";
     static dependencies = ["imagePostProcess", "imageSave"];
@@ -252,7 +276,7 @@ export class EmailImageFormatPlugin extends Plugin {
         try {
             return canvas.toDataURL(this.config.defaultImageMimetype);
         } catch {
-            this.throwNoCORSError(src);
+            throw noCORSError(src);
         }
     }
 
@@ -419,44 +443,22 @@ export class EmailImageFormatPlugin extends Plugin {
         return this.config.getRecordInfo ? this.config.getRecordInfo(editableEl) : {};
     }
 
-    throwFetchError(src) {
-        throw new InvalidSourceEmailImageError(
-            `The image could not be fetched. ${getDisplaySrc(src)}`
-        );
-    }
-
-    throwCreateAttachmentError(src) {
-        throw new AttachmentCreationEmailImageError(
-            `The image could not be saved. ${getDisplaySrc(src)}`
-        );
-    }
-
-    throwNoCORSError(src) {
-        throw new UncleanOriginEmailImageError(
-            `The image loaded successfully but couldn't be fetched, CORS headers are probably missing. ${getDisplaySrc(
-                src
-            )}`
-        );
-    }
-
-    throwProcessImageError(src) {
-        throw new InvalidSourceEmailImageError(
-            `The image could not be processed. ${getDisplaySrc(src)}`
-        );
-    }
-
     async fetchImageUrl(url) {
         let response;
         try {
             response = await fetch(url);
         } catch {
             await loadImage(url).then(
-                () => this.throwNoCORSError(url),
-                () => this.throwFetchError(url)
+                () => {
+                    throw noCORSError(url);
+                },
+                () => {
+                    throw fetchError(url);
+                }
             );
         }
         if (!response.ok) {
-            this.throwFetchError(url);
+            throw fetchError(url);
         }
         return response;
     }
@@ -550,7 +552,7 @@ export class EmailImageFormatPlugin extends Plugin {
         const response = await this.fetchImageUrl(url);
         const blob = await response.blob();
         if (!blob.type.startsWith("image/")) {
-            this.throwFetchError(url);
+            throw fetchError(url);
         }
         return await new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -618,7 +620,7 @@ export class EmailImageFormatPlugin extends Plugin {
         if (!src || (src === PLACEHOLDER_IMAGE && attachmentId)) {
             this.updateImageSource(el, unmodifiedSrc);
             this.updateImageSource(sourceEl, unmodifiedSrc);
-            this.throwCreateAttachmentError(unmodifiedSrc);
+            throw createAttachmentError(unmodifiedSrc);
         }
         if (!attachmentId) {
             // If there is no attachment, reset the image source and attempt
@@ -637,7 +639,7 @@ export class EmailImageFormatPlugin extends Plugin {
                 attachment = await this.convertImageDataToEditorAttachment(dataUrl);
             }
             if (!attachment || !attachment.image_src) {
-                this.throwCreateAttachmentError(unmodifiedSrc);
+                throw createAttachmentError(unmodifiedSrc);
             }
             this.updateImageData(el, attachment);
             this.updateImageData(sourceEl, attachment);
@@ -664,11 +666,11 @@ export class EmailImageFormatPlugin extends Plugin {
                     await this.dependencies.imageSave.savePendingImagesInClone(el, sourceEl);
                     src = getImageSrc(el)?.trimStart();
                     if (!src || src === PLACEHOLDER_IMAGE) {
-                        this.throwCreateAttachmentError(processedSrc);
+                        throw createAttachmentError(processedSrc);
                     }
                 } else if (updatedSrc !== processedSrc) {
                     this.updateImageSource(sourceEl, updatedSrc);
-                    this.throwProcessImageError(updatedSrc);
+                    throw processImageError(updatedSrc);
                 }
             }
             src = getImageSrc(el)?.trimStart();
