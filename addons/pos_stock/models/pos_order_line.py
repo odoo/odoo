@@ -18,6 +18,20 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         return self.qty
 
+    def _get_lot_quantities(self):
+        """Return the (lot name, quantity) entered on the line, quantity in the product UoM."""
+        self.ensure_one()
+        product_uom = self.product_id.uom_id
+        qty_left = abs(self._get_qty_to_move())
+        lot_quantities = []
+        for pack_lot in self.pack_lot_ids.filtered('lot_name'):
+            if product_uom.is_zero(qty_left):
+                break
+            quantity = min(1.0, qty_left) if self.product_id.tracking == 'serial' else qty_left
+            lot_quantities.append((pack_lot.lot_name, quantity))
+            qty_left -= quantity
+        return lot_quantities
+
     def write(self, vals):
         if vals.get('pack_lot_line_ids'):
             for pl in vals.get('pack_lot_ids'):
@@ -129,20 +143,22 @@ class PosOrderLine(models.Model):
             self.env['stock.rule'].run(procurements)
 
         # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
-        orders = self.mapped('order_id')
-        for order in orders:
+        for order in self.order_id:
             pickings_to_confirm = order.picking_ids
-            if pickings_to_confirm:
-                # Trigger the Scheduler for Pickings
-                tracked_lines = order.lines.filtered(lambda line: line.product_id.tracking in ['lot', 'serial'])
-                lines_by_tracked_product = tracked_lines.grouped('product_id')
-                pickings_to_confirm.action_confirm()
-                for product, lines in lines_by_tracked_product.items():
-                    product_id = product.id
-                    moves = pickings_to_confirm.move_ids.filtered(lambda m: m.product_id.id == product_id)
-                    moves.move_line_ids.unlink()
-                    moves._add_mls_related_to_order(lines, are_qties_done=False)
-                    moves._recompute_state()
+            if not pickings_to_confirm:
+                continue
+            pickings_to_confirm.action_confirm()
+            # Reserve the lots chosen in the PoS on the moves taking the goods from the stock,
+            # as far as the stock allows: the goods are still in the warehouse.
+            tracked_lines = order.lines.filtered(lambda line: line.product_id.tracking in ['lot', 'serial'])
+            moves = pickings_to_confirm.move_ids.filtered(lambda m: (
+                m.product_id in tracked_lines.product_id and not m.move_orig_ids
+                and m.state not in ('done', 'cancel') and m._use_pos_lots()
+            ))
+            lots_by_name = {(lot.product_id, lot.name): lot for lot in moves._create_production_lots_for_pos_order(tracked_lines)}
+            moves._do_unreserve()
+            for move in moves:
+                move._assign_pos_lots(tracked_lines, lots_by_name)
         return True
 
     def _is_product_storable_fifo_avco(self):

@@ -519,9 +519,7 @@ class TestPosMrp(CommonPosMrpTest):
     def test_kit_with_lot_tracked_component_multiple_orders(self):
         """
         Tests that ordering the same kit product across multiple lines/orders in a
-        session does not raise a singleton error when closing the session, since
-        _get_lot_line_qty must sum quantities across all matching order lines
-        instead of accessing .qty on a single record.
+        session does not raise a singleton error when closing the session
         """
 
         product_a = self.env['product.template'].create({
