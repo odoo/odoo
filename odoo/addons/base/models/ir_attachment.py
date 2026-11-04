@@ -1143,7 +1143,9 @@ class IrAttachment(models.Model):
             except OSError:
                 pass
 
-        elif self.url:
+        elif self.url and not self.db_datas:
+            # the url of an attachment with content in the database (e.g. an
+            # asset bundle) is its own address, not a redirection target
             return Stream(type='url', url=self.url, **kw)
 
         data = self.raw.content
