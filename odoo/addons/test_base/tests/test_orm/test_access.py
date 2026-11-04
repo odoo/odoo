@@ -4,10 +4,11 @@ from contextlib import contextmanager
 
 from odoo import Command
 from odoo.exceptions import AccessError
-from odoo.tests import TransactionCase
+from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
 
+@tagged('at_install', '-post_install')
 class TestAccess(TransactionCase):
     MODEL = 'test_access_right.some_obj'
 

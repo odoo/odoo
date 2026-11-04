@@ -3,7 +3,7 @@
 from odoo.tests import tagged, common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class test_inherits(common.TransactionCase):
 
     def test_ir_model_data_inherits_again(self):
@@ -16,7 +16,6 @@ class test_inherits(common.TransactionCase):
         field = IrModelData.search([('name', '=', 'field_test_box__name')])
         self.assertEqual(len(field), 1)
         self.assertEqual(field.module, 'test_base')
-
 
     def test_ir_model_data_inherits_depends(self):
         """ Check the existence of the correct ir.model.data """

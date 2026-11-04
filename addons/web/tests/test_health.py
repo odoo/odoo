@@ -2,10 +2,9 @@
 import psycopg2
 from unittest.mock import patch
 
-from odoo.tests import tagged, HttpCase
+from odoo.tests import HttpCase
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebController(HttpCase):
     def test_health(self):
         response = self.url_open('/web/health')
@@ -33,7 +32,6 @@ class TestWebController(HttpCase):
             self.assertEqual(payload['db_server_status'], False)
 
 
-@tagged('-at_install', 'post_install')
 class TestCloc(HttpCase):
     def test_cloc_user_space(self):
         self.authenticate("admin", "admin")

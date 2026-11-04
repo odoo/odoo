@@ -96,7 +96,7 @@ except Exception:
         })
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestServerActions(TestServerActionsBase):
     def test_00_server_action(self):
         with self.assertLogs('odoo.addons.base.models.ir_actions.server_action_safe_eval',

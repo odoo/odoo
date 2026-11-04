@@ -14,7 +14,7 @@ PROJECT_PATH = odoo.tools.config.root_path.removesuffix('/odoo')
 DEFAULT_DATADIR = odoo.tools.config._default_options['data_dir']
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestConfigManager(TransactionCase):
     maxDiff = None
 

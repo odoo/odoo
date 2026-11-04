@@ -3,7 +3,7 @@
 from odoo.tests import tagged, common
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestInheritDepends(common.TransactionCase):
     def test_inherited_field_external_id(self):
         # Module A defines model M, module B defines a mixin (abstract model) X,

@@ -18,6 +18,7 @@ from odoo.tools.misc import config
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
 
+@tagged('at_install', '-post_install')
 class TestOrmCache(TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -157,6 +158,7 @@ class TestOrmCache(TransactionCase):
         cr.execute(f"SELECT setval('orm_signaling_registry_id_seq', {sequence_start})")
 
 
+@tagged('-at_install', 'post_install')
 class TestOrmCacheSignaling(BaseCase):
     @classmethod
     def setUpClass(cls):
@@ -165,6 +167,7 @@ class TestOrmCacheSignaling(BaseCase):
         # an autoretry hidding errors
         cls._retry = False
         cls.registry = Registry(common.get_db_name())
+        assert cls.registry.ready, "Registry must be ready for this test to run."
 
     def setUp(self):
         super().setUp()
@@ -357,7 +360,7 @@ class TestRealCursor(BaseCase):
             self.assertTrue(cr._cnx.readonly)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestHTTPCursor(HttpCase):
     def test_cursor_keeps_readwriteness(self):
         for has_db_replica in (True, False):
@@ -410,7 +413,7 @@ class TestHTTPCursor(HttpCase):
             self.assertEqual(readonly, False, 'Call to write are expecte to be read write')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestTestCursor(common.TransactionCase):
     def setUp(self):
         super().setUp()
@@ -568,7 +571,7 @@ class TestTestCursor(common.TransactionCase):
             config['db_port'] = origin_db_port
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCursorHooks(common.TransactionCase):
     def setUp(self):
         super().setUp()
@@ -625,7 +628,7 @@ class TestCursorHooks(common.TransactionCase):
         self.assertEqual(self.log, ['preR', 'postR'])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCursorHooksTransactionCaseCleanup(common.TransactionCase):
     """Check savepoint cases handle commit hooks properly."""
     @staticmethod

@@ -384,7 +384,7 @@ class TestIrAttachment(TransactionCaseWithUserDemo):
             "new text index must be more memory efficient")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestPermissions(TransactionCaseWithUserDemo):
     def setUp(self):
         super().setUp()

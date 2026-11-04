@@ -2,7 +2,7 @@ from odoo.tests.common import tagged, TransactionCase
 from odoo.addons.web.controllers.utils import get_action, get_action_triples, og_title_from_path
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestWebRouter(TransactionCase):
     def test_router_get_action_exist(self):
         ir_cron_act = self.env.ref('base.ir_cron_act')

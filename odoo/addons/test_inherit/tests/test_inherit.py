@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
@@ -9,7 +8,7 @@ from odoo.tools.sql import column_exists
 from ..models.mother_inherit_4 import TestInheritMother
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class test_inherits(common.TransactionCase):
 
     def test_10_access_from_child_to_parent_model(self):
@@ -86,7 +85,7 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(self.env.ref('test_inherit.mother_a').surname, 'Mother A')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class test_inherits_demo(TransactionCaseWithUserDemo):
 
     def test_50_search_one2many(self):
@@ -108,7 +107,7 @@ class test_inherits_demo(TransactionCaseWithUserDemo):
         self.assertIn(partner_demo, partners)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class test_override_property(common.TransactionCase):
 
     def test_override_with_normal_field(self):
@@ -127,7 +126,7 @@ class test_override_property(common.TransactionCase):
         self.assertFalse(type(record).property_bar.company_dependent)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestInherit(common.TransactionCase):
     def test_ir_model_inherit(self):
         imi = self.env['ir.model.inherit'].search(
@@ -163,7 +162,7 @@ class TestInherit(common.TransactionCase):
         self.assertEqual(len(child._constraint_methods), 1)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestXMLIDS(common.TransactionCase):
     def test_xml_ids(self):
         """ check XML ids of selection fields. """

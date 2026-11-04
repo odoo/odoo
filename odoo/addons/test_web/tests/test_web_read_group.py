@@ -2,7 +2,7 @@ from odoo.tests import tagged, common
 from unittest.mock import patch
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestWebReadGroup(common.TransactionCase):
     """Test the 'length' logic of web_read_group, groups logic
     are tested in test_formatted_read_group"""

@@ -9,7 +9,7 @@ from odoo.tools import mute_logger, sql
 from odoo import Command
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestXMLID(TransactionCase):
     def get_data(self, xml_id):
         """ Return the 'ir.model.data' record corresponding to ``xml_id``. """
@@ -216,7 +216,7 @@ class TestXMLID(TransactionCase):
         xmlid = 'base.test_xmlid_noupdates'
         with self.assertQueryCount(1):
             self.env['ir.model.data']._update_xmlids([
-                {'xml_id': xmlid, 'record': records[3], 'noupdate':True}, # record created as noupdate
+                {'xml_id': xmlid, 'record': records[3], 'noupdate': True},  # record created as noupdate
             ])
 
         assert_xmlid(xmlid, records[3], f'The xmlid {xmlid} should have been created for record {records[2]}')
@@ -378,8 +378,9 @@ class TestIrModelEdition(TransactionCase):
         fnames = [str(field) for field in self.registry.field_setup_dependents[res_partner_name]]
         self.assertEqual(len(fnames), len(set(fnames)), "registry.field_setup_dependents contains duplicates")
 
+
 @tagged('test_eval_context')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestEvalContext(TransactionCase):
 
     def test_module_usage(self):
@@ -394,6 +395,7 @@ class TestEvalContext(TransactionCase):
                         "dateutil.relativedelta.relativedelta(hours=1)")
         })
         self.env['res.partner'].create({'name': 'foo'}).x_foo_bar_baz
+
 
 @tagged('-at_install', 'post_install')
 class TestIrModelFieldsTranslation(HttpCase):
@@ -421,7 +423,7 @@ class TestIrModelFieldsTranslation(HttpCase):
         self.start_tour("/odoo", 'ir_model_fields_translation_fr_tour2', login="admin")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrModelInherit(TransactionCase):
     def test_inherit(self):
         imi = self.env["ir.model.inherit"].search([("model_id.model", "=", "ir.actions.server")])
@@ -436,6 +438,7 @@ class TestIrModelInherit(TransactionCase):
         self.assertEqual(len(imi), 1)
         self.assertEqual(imi.parent_id.model, "res.partner")
         self.assertEqual(imi.parent_field_id.name, "partner_id")
+
 
 class TestCommonCustomFields(TransactionCase):
     MODEL = 'res.partner'
@@ -824,6 +827,7 @@ class TestCustomFields(TestCommonCustomFields):
         self.assertEqual(rec3.x_sel, 'baz')
 
 
+@tagged('-at_install', 'post_install')
 class TestCustomFieldsPostInstall(TestCommonCustomFields):
     def test_related_field_non_stored_not_allowed(self):
         """ Test related field behavior with stored/non-stored combinations """

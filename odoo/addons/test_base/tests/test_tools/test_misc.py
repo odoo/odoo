@@ -74,7 +74,7 @@ class TestFindCircularDependency(BaseCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestMergeSequences(BaseCase):
     def test_merge_sequences(self):
         # base case
@@ -103,7 +103,7 @@ class TestMergeSequences(BaseCase):
         self.assertEqual(seq, ['A', 'B', 'X', 'Y', 'C', 'Z'])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFormatLangDate(TransactionCase):
     def test_00_accepted_types(self):
         self.env.user.tz = 'Europe/Brussels'
@@ -215,7 +215,7 @@ class TestFormatLangDate(TransactionCase):
         self.assertEqual(misc.format_date(self.env, date_datetime), '12/31/2016', "User's tz must be ignored when tz is specifed in datetime object")
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCallbacks(BaseCase):
     def test_callback(self):
         log = []
@@ -288,7 +288,7 @@ class TestCallbacks(BaseCase):
         self.assertEqual(log, ["foo1", "bar", "foo2"])
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestRemoveAccents(BaseCase):
     def test_empty_string(self):
         self.assertEqual(remove_accents(False), False)
@@ -304,7 +304,7 @@ class TestRemoveAccents(BaseCase):
         self.assertEqual(remove_accents('русский алфавит'), 'русскии алфавит')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestAddonsFileAccess(BaseCase):
 
     def assertCannotAccess(self, path, ExceptionType=OSError, filter_ext=None, check_exists=True):
@@ -408,7 +408,7 @@ class TestAddonsFileAccess(BaseCase):
         self.assertCannotRead(__file__.replace('.py', '.foo'), ValueError, filter_ext=('.png',))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestDictTools(BaseCase):
     def test_readonly_dict(self):
         d = misc.frozendict({'foo': 'bar'})
@@ -420,7 +420,7 @@ class TestDictTools(BaseCase):
             dict.update(d, {'baz': 'xyz'})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestDiffTools(BaseCase):
     def test_diff_zip(self):
         self.assertEqual(
@@ -449,7 +449,7 @@ class TestDiffTools(BaseCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFormatLang(TransactionCase):
     def test_value_and_digits(self):
         self.assertEqual(misc.formatLang(self.env, 100.23, digits=1), '100.2')
@@ -556,7 +556,7 @@ class TestFormatLang(TransactionCase):
         self.assertEqual(comma_lang.format(f'%.{1}f', 1200.50, grouping=False), '1200,5')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestUrlValidate(BaseCase):
     def test_url_validate(self):
         for case, truth in [
@@ -581,7 +581,7 @@ class TestUrlValidate(BaseCase):
         self.assertEqual(validate_url('#model=project.task&id=3603607'), 'http://#model=project.task&id=3603607')
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestUrlJoin(BaseCase):
     # simple path joins
     def test_basic_relative_path(self):
@@ -689,7 +689,7 @@ class TestUrlJoin(BaseCase):
         )
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestMiscToken(TransactionCase):
 
     def test_expired_token(self):
@@ -742,7 +742,7 @@ class TestMiscToken(TransactionCase):
         self.assertEqual(misc.verify_hash_signed(self.env, 'test', token_default, secret=db_secret), payload)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFormatAmountFunction(TransactionCase):
     @classmethod
     def setUpClass(cls):

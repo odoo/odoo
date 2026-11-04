@@ -677,7 +677,7 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
 
 
 @tagged('bacon_and_eggs')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIrPropertyOptimizations(TransactionCase):
 
     def setUp(self):
@@ -747,7 +747,7 @@ class TestIrPropertyOptimizations(TransactionCase):
 
 
 @tagged('mapped_perf')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestMapped(TransactionCase):
 
     def test_relational_mapped(self):
@@ -766,7 +766,7 @@ class TestMapped(TransactionCase):
 
 
 @tagged('increment_perf')
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestIncrementFieldsSkipLock(TransactionCase):
     """ Test the behavior of the function `increment_fields_skiplock`.
 

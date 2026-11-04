@@ -4,7 +4,7 @@ from odoo.tests.common import tagged, TransactionCase
 from odoo.tools.mimetypes import guess_mimetype
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestAvatarMixin(TransactionCase):
 
     """ tests the avatar mixin """

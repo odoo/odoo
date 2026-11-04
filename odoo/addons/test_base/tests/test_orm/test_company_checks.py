@@ -4,7 +4,7 @@ from odoo.tests import common, patch, tagged
 from odoo.tools import frozendict
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCompanyCheck(common.TransactionCase):
 
     @classmethod

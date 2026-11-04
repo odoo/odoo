@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
@@ -7,7 +6,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests import Command, TransactionCase, tagged, Form
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestCompany(TransactionCase):
 
     def test_check_active(self):

@@ -7,7 +7,7 @@ from odoo.tests import tagged, common, new_test_user
 from odoo import Command, fields
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFormattedReadGroup(common.TransactionCase):
     ''' Test formatted_read_group, similar tests are done in test_private_read_group
     for _read_group.'''
@@ -2026,7 +2026,7 @@ class TestFormattedReadGroup(common.TransactionCase):
             self.assertEqual(group['__count'], RelatedBase.search_count(group['__extra_domain']))
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestFormattedReadGroupMonetary(common.TransactionCase):
 
     @classmethod

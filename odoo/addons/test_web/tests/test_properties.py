@@ -11,7 +11,7 @@ from odoo.tests import tagged, Form
 from odoo.tools import get_lang, mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class PropertiesCase(TestPropertiesMixin):
     def test_properties_web_read(self):
         """Test the web_read method when reading properties field."""
@@ -314,7 +314,7 @@ class PropertiesCase(TestPropertiesMixin):
             {'new_property': 'test value'})
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class PropertiesGroupByCase(TestPropertiesMixin):
     @classmethod
     def setUpClass(cls):

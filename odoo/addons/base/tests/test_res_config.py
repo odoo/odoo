@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -11,11 +10,11 @@ from odoo.tests import Form, TransactionCase, tagged
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestResConfig(TransactionCase):
 
     def setUp(self):
-        super(TestResConfig, self).setUp()
+        super().setUp()
         self.ResConfig = self.env['res.config.settings']
 
         # Define the test values
