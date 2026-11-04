@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 from odoo import api, fields, models, _
 from odoo.tools import format_date
 from odoo.fields import Domain
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
@@ -285,7 +286,9 @@ class HrLeaveAllocation(models.Model):
         for allocation in self:
             if not allocation.employee_id:
                 continue
-            allocation.number_of_hours = (allocation.number_of_days * allocation._get_employee_hours_per_day())
+            allocation.number_of_hours = (
+                allocation.number_of_days * (allocation._get_employee_hours_per_day() or HOURS_PER_DAY)
+            )
 
     @api.depends('number_of_hours', 'number_of_days_display')
     def _compute_duration_display(self):
@@ -360,8 +363,8 @@ class HrLeaveAllocation(models.Model):
     @api.onchange('employee_id')
     def _inverse_number_of_hours(self):
         for allocation in self.filtered('employee_id'):
-            hours_per_day = allocation._get_employee_hours_per_day()
-            allocation.number_of_days = allocation.number_of_hours / hours_per_day if hours_per_day else 0
+            hours_per_day = allocation._get_employee_hours_per_day() or HOURS_PER_DAY
+            allocation.number_of_days = allocation.number_of_hours / hours_per_day
 
     @api.constrains('number_of_days', 'work_entry_type_id', 'employee_id')
     def _check_negative_allocation(self):
