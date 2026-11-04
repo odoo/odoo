@@ -427,19 +427,16 @@ test("No rpc call if “previewableWebsiteConfig” action is undone", async () 
 });
 
 test("theme background image is properly set", async () => {
-    const base64Image =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
-        "A".repeat(1000);
-
+    const attachmentSrc = "/web/image/test";
     // Using historyImageSrc to avoid mocking the gallery dialog
     patchWithCleanup(CustomizeBodyBgTypeAction.prototype, {
         async load(editingElement) {
-            editingElement.historyImageSrc = { src: base64Image };
+            editingElement.historyImageSrc = attachmentSrc;
             super.load(editingElement);
         },
         apply(params) {
             params.loadResult = {
-                imageSrc: base64Image,
+                imageSrc: attachmentSrc,
                 oldImageSrc: "",
                 oldValue: "'image'",
             };
@@ -451,7 +448,7 @@ test("theme background image is properly set", async () => {
         _name = "website.assets";
         make_scss_customization(location, changes) {
             expect(
-                changes["body-image"].includes(base64Image) &&
+                changes["body-image"].includes(attachmentSrc) &&
                     changes["body-image-type"].includes("image")
             ).toBe(true);
             expect.step("scss_customization");
