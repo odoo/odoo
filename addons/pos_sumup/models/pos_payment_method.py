@@ -11,6 +11,14 @@ _logger = logging.getLogger(__name__)
 SUMUP_API_URL = "https://api.sumup.com"
 
 
+def _sumup_error_detail(response):
+    try:
+        body = response.json()
+    except ValueError:
+        return response.text
+    return body.get("detail") or (body.get("errors") or {}).get("detail") or response.text
+
+
 def _sumup_pair_reader(merchant_code: str, api_key: str, pairing_code: str, name: str):
     if not merchant_code:
         raise UserError(_("Please set the SumUp merchant code first."))
@@ -29,15 +37,8 @@ def _sumup_pair_reader(merchant_code: str, api_key: str, pairing_code: str, name
         raise UserError(_("Could not reach SumUp. Please try again in a moment."))
 
     if not response.ok:
-        try:
-            error_detail = response.json().get("detail")
-        except ValueError:
-            error_detail = None
         raise UserError(
-            _(
-                "Could not pair the reader: %(error)s",
-                error=error_detail or response.text,
-            ),
+            _("Could not pair the reader: %(error)s", error=_sumup_error_detail(response)),
         )
 
     return response.json()["id"]
@@ -138,6 +139,33 @@ class PosPaymentMethod(models.Model):
         if not self.env.su and not self.env.user.has_group("point_of_sale.group_pos_user"):
             raise AccessError(self.env._("You do not have the necessary permissions to make a SumUp payment."))
 
+    def action_sumup_test_creds(self):
+        self._check_sumup_access()
+        self.ensure_one()
+        if not self.sumup_terminal_id:
+            raise UserError(_("Please pair a SumUp reader first."))
+        try:
+            response = requests.get(
+                f"{SUMUP_API_URL}/v0.1/merchants/{self.sumup_merchant_code}/readers/{self.sumup_terminal_id}/status",
+                headers={"Authorization": f"Bearer {self.sudo().sumup_api_key}"},
+                timeout=10,
+            )
+        except requests.exceptions.RequestException:
+            raise UserError(_("Could not reach SumUp. Please try again in a moment."))
+        if not response.ok:
+            raise UserError(
+                _("SumUp connection failed: %(error)s", error=_sumup_error_detail(response)),
+            )
+        status = response.json()["data"]["status"]
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "type": "success" if status == "ONLINE" else "warning",
+                "message": _("Credentials are valid. Reader status: %(status)s", status=status),
+            },
+        }
+
     def sumup_get_checkout_status(self, checkout_id: str):
         """Ask SumUp directly for the current status of a reader checkout.
         Used as a polling fallback for the initial payment, in case the
@@ -212,14 +240,10 @@ class PosPaymentMethod(models.Model):
             return {"error": {"message": _("Could not reach SumUp. Please try again.")}}
 
         if not response.ok:
-            try:
-                error_detail = response.json().get("errors").get("detail")
-            except ValueError:
-                error_detail = None
             return {
                 "error": {
                     "status_code": response.status_code,
-                    "message": error_detail or response.text,
+                    "message": _sumup_error_detail(response),
                 },
             }
 
