@@ -85,14 +85,14 @@ class PosOrder(models.Model):
 
     @api.depends('l10n_es_edi_verifactu_document_ids', 'l10n_es_edi_verifactu_document_ids.json_attachment_id')
     def _compute_l10n_es_edi_verifactu_qr_code(self):
+        # Unlike account.move's field of the same name, this one is only ever used to generate a
+        # new QR code on the POS receipt (not as an `<img src>`), so it must hold the raw AEAT
+        # validation URL, not the `/report/barcode` image-proxy URL.
         for order in self:
             invoice = order.account_move
-            if invoice:
-                url = invoice.l10n_es_edi_verifactu_qr_code
-            else:
-                last_submission = order.l10n_es_edi_verifactu_document_ids._get_last('submission')
-                url = last_submission._get_qr_code_img_url() if last_submission else False
-            order.l10n_es_edi_verifactu_qr_code = url
+            documents = invoice.l10n_es_edi_verifactu_document_ids if invoice else order.l10n_es_edi_verifactu_document_ids
+            last_submission = documents._get_last('submission')
+            order.l10n_es_edi_verifactu_qr_code = last_submission._get_qr_code_url() if last_submission else False
 
     def _l10n_es_edi_verifactu_get_tax_applicability(self):
         """
