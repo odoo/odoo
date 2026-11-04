@@ -25,4 +25,23 @@
          </div>
      </template>
 
+    <template id="website_sale_stock.pickup_billing_address_form" inherit_id="website_sale.billing_address_form">
+        <!-- A pickup point can't be used as billing address: use the contact details instead. -->
+        <t t-set="delivery_as_billing_partner" position="attributes">
+            <attribute name="t-value">
+                order.partner_invoice_id if order.partner_shipping_id.pickup_location_data
+                else order.partner_shipping_id
+            </attribute>
+        </t>
+        <span name="delivery_as_billing_label" position="replace">
+            <span
+                t-if="order.partner_shipping_id.pickup_location_data"
+                name="delivery_as_billing_label"
+            >
+                Same as contact details
+            </span>
+            <t t-else="">$0</t>
+        </span>
+    </template>
+
 </odoo>

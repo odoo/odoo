@@ -32,8 +32,7 @@ class TestCheckoutAddress(GelatoCommon, WebsiteSaleCommon):
                 self.gelato_order
             )
             self.assertEqual(
-                redirect,
-                f"/shop/address?partner_id={self.partner_street_too_long.id}&address_type=delivery",
+                redirect, f"/shop/address?partner_id={self.partner_street_too_long.id}"
             )
 
     def test_do_not_allow_express_checkout_with_invalid_gelato_address(self):

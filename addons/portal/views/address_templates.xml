@@ -5,56 +5,26 @@
     <template id="portal.my_addresses">
         <t t-set="additional_title">My addresses</t>
         <t t-call="portal.portal_layout">
-            <t t-set="address_type" t-valuef="delivery"/>
-            <t
-                t-set="new_address_url"
-                t-valuef="{{address_url}}?address_type={{address_type}}&amp;use_delivery_as_billing={{use_delivery_as_billing}}"
-            />
-            <section class="o_portal_addresses">
+            <section class="o_portal_addresses col-12 col-lg-8 mx-auto">
                 <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                    <h5 class="mb-0">Delivery addresses</h5>
-                    <a
-                        role="button"
-                        t-att-href="new_address_url"
-                        t-att-data-address-type="address_type"
-                        class="o_address_card_add_new btn btn-outline-primary btn-sm"
-                        title="Add an address"
-                        aria-label="Add an address"
-                    >
-                        <i class="oi me-1" data-icon="add"/>Add
-                    </a>
+                    <h5 class="mb-0">Main address</h5>
                 </div>
-                <t t-call="portal.address_list" addresses="delivery_addresses"/>
-                <t t-set="address_type" t-valuef="billing"/>
-                <t t-set="new_address_url" t-valuef="{{address_url}}?address_type={{address_type}}"/>
+                <t t-call="portal.address_list" addresses="main_address"/>
+                <t t-set="new_address_url" t-valuef="{{address_url}}?address_type=other"/>
                 <div class="d-flex justify-content-between align-items-start gap-3 mt-4 pt-2">
-                    <h5 class="mb-0">Billing addresses</h5>
+                    <h5 class="mb-0">Other addresses</h5>
                     <a
                         role="button"
                         t-att-href="new_address_url"
-                        t-att-data-address-type="address_type"
-                        t-attf-class="o_address_card_add_new o_add_billing_address_btn btn btn-outline-primary btn-sm {{'d-none' if use_delivery_as_billing else ''}}"
+                        class="o_address_card_add_new o_add_billing_address_btn btn btn-outline-primary btn-sm"
                         title="Add an address"
                         aria-label="Add an address"
                     >
                         <i class="oi me-1" data-icon="add"/>Add
                     </a>
                 </div>
-                <div class="form-check form-switch mt-2">
-                    <label id="use_delivery_as_billing_label">
-                        <input
-                            type="checkbox"
-                            id="use_delivery_as_billing"
-                            class="form-check-input"
-                            t-att-checked="use_delivery_as_billing"
-                        /> Same as delivery address
-                    </label>
-                </div>
-                <div
-                    id="billing_container"
-                    t-attf-class="mt-3 {{'d-none' if use_delivery_as_billing else ''}}"
-                >
-                    <t t-call="portal.address_list" addresses="billing_addresses"/>
+                <div id="billing_container" class="mt-3">
+                    <t t-call="portal.address_list" addresses="addresses - main_address"/>
                 </div>
             </section>
         </t>
@@ -96,50 +66,9 @@
             t-att-data-address-type="address_type"
             t-att-data-partner-id="contact.id"
         >
-            <div class="card-body d-flex flex-column flex-md-row justify-content-between gap-2">
-                <div class="d-inline-block flex-grow-1">
-                    <t
-                        t-out="contact"
-                        t-options="dict(
-                            widget='contact',
-                            fields=['name', 'address'],
-                            no_marker=True,
-                            no_tag_br=True,
-                        )"
-                    />
-                    <div
-                        t-if="contact.vat"
-                        t-attf-class="o_address_card_vat  mt-2 {{
-                            'd-none' if not (
-                                (use_delivery_as_billing or address_type == 'billing')
-                                and contact.type in ['contact', 'invoice']
-                            ) else ''
-                        }}"
-                    >
-                        <span t-field="contact.vat"/>
-                    </div>
-                </div>
-                <t t-set="badge_classes" t-value="'badge text-bg-info'"/>
-                <div class="d-flex flex-row-reverse flex-md-column justify-content-between align-items-end">
-                    <span
-                        t-if="is_user_address"
-                        t-att-class=" badge_classes "
-                    >
-                        Main Address
-                    </span>
-                    <span
-                        t-elif="contact.type=='delivery'"
-                        t-att-class=" badge_classes "
-                    >
-                        Delivery Address
-                    </span>
-                    <span
-                        t-elif="contact.type=='invoice'"
-                        t-att-class=" badge_classes "
-                    >
-                        Billing Address
-                    </span>
-                    <div t-if="can_be_edited" class="d-flex gap-1 mt-auto ms-n2 ms-md-auto me-auto me-md-n2 mb-n2">
+            <div class="card-body">
+                <div class="ps-2 float-end no-decoration">
+                    <div t-if="can_be_edited" class="d-flex gap-1 me-md-n2">
                         <t
                             t-set="address_update_url"
                             t-value="address_update_url or (new_address_url + '&amp;partner_id=' + str(contact.id))"
@@ -147,7 +76,7 @@
                         <a
                             name="card_address_ref"
                             t-att-href="address_update_url"
-                            class="js_edit_address p-2"
+                            class="js_edit_address"
                             role="button"
                             title="Edit this address"
                             aria-label="Edit this address"
@@ -155,9 +84,9 @@
                             <i class="oi oi-fw oi-filled" data-icon="edit"/>
                         </a>
                         <t t-if="show_removal">
-                            <span class="d-block border-start border-2 my-2"/>
+                            <span class="d-block border-start border-2"/>
                             <a
-                                class="o_remove_address p-2 text-danger"
+                                class="o_remove_address text-danger"
                                 role="button"
                                 title="Remove this address"
                                 aria-label="Remove this address"
@@ -168,6 +97,11 @@
                         </t>
                     </div>
                 </div>
+                <div
+                    class="text-truncate"
+                    t-att-title="contact.contact_address_inline"
+                    t-out="contact.contact_address_inline"
+                />
             </div>
         </div>
     </template>
@@ -528,6 +462,9 @@
                             </t>
                             <t t-elif="address_type == 'delivery'">
                                 <h3 class="mb-3">Delivery address</h3>
+                            </t>
+                            <t t-else="">
+                                <h3 class="mb-3">Address</h3>
                             </t>
                             <div id="errors"/> <!-- for js -->
                             <form

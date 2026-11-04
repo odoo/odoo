@@ -8,7 +8,7 @@
             <!-- This is the drag-and-drop area for website building blocs at the end of each
                  checkout page. This is append at the of the page in `checkout_layout`. The
                  templates created in the database to store blocs are hooked using XPath on the
-                 `oe_struture` element ID. Therefore, we can't use dynamic IDs (like with
+                 `oe_structure` element ID. Therefore, we can't use dynamic IDs (like with
                  t-att-id) and each template needs to define a div element. -->
             <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
         </t>
@@ -33,9 +33,10 @@
             <h4 t-else="" class="mb-3">
                 Confirm order
             </h4>
-            <div id="address_on_payment">
-                <t t-call="website_sale.address_on_checkout"/>
-            </div>
+            <t t-if="website_sale_order._has_deliverable_products()">
+                <t t-call="website_sale.delivery_address_on_payment"/>
+            </t>
+            <t t-call="website_sale.billing_address_form" addresses="addresses"/>
         </t>
     </template>
 
@@ -47,6 +48,119 @@
             <t t-else="">
                 <t>$0</t>
             </t>
+        </div>
+    </template>
+
+    <template id="website_sale.delivery_address_on_payment">
+        <div class="mb-3 pt-2">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+                <p t-attf-class="mb-0 {{only_services and 'h4' or 'h5'}}">
+                    Delivery
+                </p>
+            </div>
+        </div>
+        <div id="delivery_address_card" class="mb-3">
+            <t
+                t-call="portal.address_card"
+                address_update_url="'/shop/checkout'"
+                contact="order.partner_shipping_id"
+                can_be_edited="true"
+                show_removal="false"
+            />
+        </div>
+    </template>
+
+    <template id="website_sale.billing_address_form">
+        <t t-set="has_delivery" t-value="order._has_deliverable_products()"/>
+        <!-- The partner set as billing address when "Same as shipping address" is chosen. -->
+        <t t-set="delivery_as_billing_partner" t-value="order.partner_shipping_id"/>
+        <div class="mb-3 pt-2">
+            <div class="d-flex justify-content-between align-items-start gap-3">
+                <p t-attf-class="mb-0 {{only_services and 'h4' or 'h5'}}">
+                    Billing
+                </p>
+            </div>
+        </div>
+        <div id="billing_address_form" class="o_payment_form mb-3">
+            <ul class="list-group">
+                <li class="list-group-item d-flex flex-column gap-2 py-3 o_outline position-relative" t-if="has_delivery">
+                    <div class="form-check d-flex flex-grow-1 flex-wrap justify-content-between align-items-center gap-2 mb-0">
+                        <input
+                            type="radio"
+                            name="billing_address_choice"
+                            id="use_delivery_as_billing"
+                            class="form-check-input position-absolute mt-0"
+                            checked="checked"
+                            t-att-data-partner-id="delivery_as_billing_partner.id"
+                        />
+                        <label class="form-check-label stretched-link cursor-pointer" for="use_delivery_as_billing">
+                            <span name="delivery_as_billing_label">Same as shipping address</span>
+                        </label>
+                    </div>
+                </li>
+                <li class="list-group-item d-flex flex-column gap-2 py-3 o_outline position-relative">
+                    <div t-if="has_delivery" class="form-check d-flex flex-grow-1 flex-wrap justify-content-between align-items-center gap-2 mb-0">
+                        <input
+                            type="radio"
+                            name="billing_address_choice"
+                            id="use_different_billing_address"
+                            class="form-check-input position-absolute mt-0"
+                        />
+                        <label class="form-check-label stretched-link cursor-pointer" for="use_different_billing_address">
+                            Use a different billing address
+                        </label>
+                    </div>
+                    <div t-else="" class="form-check form-switch d-flex flex-grow-1 flex-wrap justify-content-between align-items-center gap-2 mb-0">
+                        <input
+                            type="checkbox"
+                            role="switch"
+                            id="set_invoice_address_input"
+                            class="form-check-input position-absolute mt-0"
+                            t-att-data-partner-id="order.partner_id.id"
+                        />
+                        <label class="form-check-label stretched-link cursor-pointer" for="set_invoice_address_input">
+                            Do you want an invoice?
+                        </label>
+                    </div>
+                    <div
+                        id="billing_address_form_container"
+                        class="d-none position-relative z-2 o_customer_address_fill"
+                    >
+                        <form
+                            action="/shop/address/submit"
+                            method="post"
+                            name="address_form"
+                            class="address_autoformat o_address_autocomplete"
+                            t-att-data-company-country-code="res_company.country_id.code"
+                            t-att-data-default-required-fields="billing_address_required_fields"
+                            t-att-data-submit-url="'/shop/address/submit'"
+                        >
+                            <div class="row">
+                                <div id="div_saved_addresses" class="col-lg-12 mb-2" t-if="not website.is_public_user()">
+                                    <label class="col-form-label" for="o_billing_address_dropdown">Saved Addresses</label>
+                                    <select
+                                        id="o_billing_address_dropdown"
+                                        name="o_billing_address_dropdown"
+                                        class="form-select"
+                                    >
+                                        <option value="">Use a new address...</option>
+                                        <option
+                                            t-foreach="addresses"
+                                            t-as="address"
+                                            t-att-value="address.id"
+                                            t-att-selected="selected_billing_address and address == selected_billing_address"
+                                            t-out="address.contact_address_inline"
+                                        />
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="o_billing_address_form_fields" class="row">
+                                <t t-out="billing_address_form"/>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+            </ul>
         </div>
     </template>
 

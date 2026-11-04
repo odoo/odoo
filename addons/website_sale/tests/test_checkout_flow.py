@@ -123,8 +123,7 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
             response = self.CheckoutController.shop_checkout()
 
         self.assert_redirected_to(
-            response,
-            f"/shop/address?partner_id={self.cart.partner_invoice_id.id}&address_type=billing",
+            response, f"/shop/address?partner_id={self.cart.partner_invoice_id.id}"
         )
 
     def test_cart_must_have_a_delivery_address(self):
@@ -152,8 +151,7 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
             response = self.CheckoutController.shop_checkout()
 
         self.assert_redirected_to(
-            response,
-            f"/shop/address?partner_id={self.cart.partner_shipping_id.id}&address_type=delivery",
+            response, f"/shop/address?partner_id={self.cart.partner_shipping_id.id}"
         )
 
     def test_impossible_to_confirm_if_no_delivery_method_available(self):
