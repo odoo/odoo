@@ -10,10 +10,27 @@ patch(ControlButtons.prototype, {
             ["state", "!=", "cancel"],
             ["invoice_status", "!=", "invoiced"],
             ["currency_id", "=", this.pos.currency.id],
-            // A down payment still has to be deducted when settling the order
+            // A down payment still has to be deducted when settling the order,
+            // settling deducts it with a negative PoS line
             "|",
             ["amount_unpaid", ">", 0],
+            "&",
             ["order_line.is_downpayment", "=", true],
+            [
+                "order_line",
+                "not any",
+                [
+                    ["is_downpayment", "=", true],
+                    [
+                        "pos_order_line_ids",
+                        "any",
+                        [
+                            ["qty", "<", 0],
+                            ["order_id.state", "not in", ["cancel", "draft"]],
+                        ],
+                    ],
+                ],
+            ],
         ];
         if (this.pos.get_order()?.get_partner()) {
             domain = [
