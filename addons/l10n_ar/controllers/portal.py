@@ -18,8 +18,9 @@ class L10nARPortalAccount(CustomerPortal):
             default_afip_responsibility_type_id = (
                 rendering_values['current_partner'].l10n_ar_afip_responsibility_type_id
             )
+            if not default_afip_responsibility_type_id and can_edit_commercial_fields:
+                default_afip_responsibility_type_id = request.env.ref('l10n_ar.res_CF')
             rendering_values.update({
-                'display_b2b_fields': True,
                 'responsibility': default_afip_responsibility_type_id,
                 'responsibility_types': (
                     ArAfipResponsibilityType.search([])
