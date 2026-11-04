@@ -1302,9 +1302,14 @@ class Field[T]:
         # skip the initialization when there is nothing to initialize: this
         # method only fills in NULL values, and does nothing without
         # init_storage, default or compute; skip empty tables as well
+        # skip non empty column as well
         if not (self.init_storage or self.default or self.compute):
             return
         if not model.env.execute_query(SQL('SELECT 1 FROM %s LIMIT 1', SQL.identifier(model._table))):
+            return
+        if self.required and not model.env.execute_query(
+            SQL('SELECT 1 FROM %s WHERE %s IS NULL LIMIT 1', SQL.identifier(model._table), SQL.identifier(self.name))
+        ):
             return
         # Check if we have a custom init function
         if self.init_storage:
