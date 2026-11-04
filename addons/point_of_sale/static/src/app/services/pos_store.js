@@ -137,12 +137,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.mobile_pane = "right";
         this.ticket_screen_mobile_pane = "left";
 
-        this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
         this.screenState = {
-            ticketScreen: {
-                offsetByDomain: {},
-                totalCount: 0,
-            },
             partnerList: {
                 offsetBySearch: {},
             },
