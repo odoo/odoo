@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from odoo.fields import Command
+from odoo.fields import Command, Datetime
 from odoo.tests.common import JsonRpcException, tagged
 from odoo.tools import mute_logger
 
@@ -66,6 +66,30 @@ class WebsiteSaleCartPayment(PaymentHttpCommon, WebsiteSaleCommon):
         }
         with self.assertRaises(JsonRpcException, msg="odoo.exceptions.ValidationError"):
             self.make_jsonrpc_request(url, route_kwargs)
+
+    def test_pay_cart_with_service_product_and_commitment_date(self):
+        """Test paying for a cart containing a service product with a commitment date."""
+        self.cart.partner_id.write(self.dummy_partner_address_values.copy())
+        self.cart.write({
+            "order_line": [Command.clear(), Command.create({"product_id": self.service_product.id})],
+            "commitment_date": Datetime.now(),
+        })
+        self.assertFalse(self.cart.carrier_id)
+
+        response = self.make_jsonrpc_request(
+            f"/shop/payment/transaction/{self.cart.id}",
+            {
+                "access_token": self.cart._portal_ensure_token(),
+                "provider_id": self.provider.id,
+                "payment_method_id": self.payment_method_id,
+                "token_id": None,
+                "flow": "direct",
+                "tokenization_requested": False,
+                "landing_route": "/shop/payment/validate",
+            },
+        )
+        self.assertEqual(response["state"], "draft")
+        self.assertFalse(response["state_message"])
 
     def test_payment_confirmation_mail(self):
         """Check that a salesperson gets assigned when sending payment confirmation mails."""

@@ -1190,7 +1190,7 @@ class SaleOrder(models.Model):
         """Whether the commitment date is still up to date with the carrier constraints."""
         self.ensure_one()
         allowed_commitment_dates = (
-            self.commitment_date and self.carrier_id._get_estimate_delivery_days()
+            self.commitment_date and self.carrier_id and self.carrier_id._get_estimate_delivery_days()
         ) or []
         if (
             not allowed_commitment_dates  # No allowed date means any date is acceptable.
