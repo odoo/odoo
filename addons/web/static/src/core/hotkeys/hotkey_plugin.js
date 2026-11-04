@@ -31,6 +31,14 @@ import { AUTHORIZED_KEYS, getActiveHotkey, isEditableTarget, MODIFIERS } from ".
  *  callback: HotkeyCallback,
  *  activeElement: HTMLElement,
  * }} HotkeyRegistration
+ *
+ * @typedef {{
+ *  hotkey: string,
+ *  activeElement: HTMLElement,
+ *  isRepeated: boolean,
+ *  target: EventTarget,
+ *  shouldProtectEditable: boolean,
+ * }} HotkeyDispatchInfo
  */
 
 export class HotkeyPlugin extends Plugin {
@@ -111,7 +119,7 @@ export class HotkeyPlugin extends Plugin {
 
         // Special case: open hotkey overlays
         if (!this.#overlaysVisible && hotkey === this.overlayModifier) {
-            if (this.#addHotkeyOverlays(activeElement)) {
+            if (this.#addHotkeyOverlays(activeElement, event.target)) {
                 event.preventDefault();
             }
             return;
@@ -160,33 +168,17 @@ export class HotkeyPlugin extends Plugin {
      *   method (NB: in descending order of insertion = newer first)
      * - then all registrations done through the DOM [data-hotkey] attribute
      *
-     * @param {{
-     *  activeElement: HTMLElement,
-     *  hotkey: string,
-     *  isRepeated: boolean,
-     *  target: EventTarget,
-     *  shouldProtectEditable: boolean,
-     * }} infos
+     * @param {HotkeyDispatchInfo} infos
      * @returns {boolean} true if has been dispatched
      */
     #dispatch(infos) {
-        const { activeElement, hotkey, isRepeated, target, shouldProtectEditable } = infos;
-
         // Prepare registrations and the common filter
         const reversedRegistrations = Array.from(this.#registrations.values()).reverse();
-        const domRegistrations = this.#getDomRegistrations(hotkey, activeElement);
+        const domRegistrations = this.#getDomRegistrations(infos.hotkey, infos.activeElement);
         const allRegistrations = reversedRegistrations.concat(domRegistrations);
 
         // Find all candidates
-        const candidates = allRegistrations.filter(
-            (reg) =>
-                reg.hotkey === hotkey &&
-                (reg.allowRepeat || !isRepeated) &&
-                (reg.bypassEditableProtection || !shouldProtectEditable) &&
-                (reg.global || reg.activeElement === activeElement) &&
-                (!reg.isAvailable || reg.isAvailable(target)) &&
-                (!reg.area || (target && reg.area() && reg.area().contains(target)))
-        );
+        const candidates = allRegistrations.filter((reg) => this.#canDispatch(reg, infos));
 
         // First candidate
         let winner = candidates.shift();
@@ -203,11 +195,32 @@ export class HotkeyPlugin extends Plugin {
         if (winner) {
             winner.callback({
                 area: winner.area && winner.area(),
-                target,
+                target: infos.target,
             });
             return true;
         }
         return false;
+    }
+
+    /**
+     * Whether the given registration would be triggered by the hotkey described
+     * by `infos`.
+     *
+     * @param {HotkeyRegistration} reg
+     * @param {HotkeyDispatchInfo} infos
+     * @returns {boolean}
+     */
+    #canDispatch(registration, infos) {
+        const { activeElement, hotkey, isRepeated, target, shouldProtectEditable } = infos;
+        return (
+            registration.hotkey === hotkey &&
+            (registration.allowRepeat || !isRepeated) &&
+            (registration.bypassEditableProtection || !shouldProtectEditable) &&
+            (registration.global || registration.activeElement === activeElement) &&
+            (!registration.isAvailable || registration.isAvailable(target)) &&
+            (!registration.area ||
+                (target && registration.area() && registration.area().contains(target)))
+        );
     }
 
     /**
@@ -247,32 +260,47 @@ export class HotkeyPlugin extends Plugin {
     /**
      * Add the hotkey overlays respecting the ui active element.
      * @param {HTMLElement} activeElement
+     * @param {HTMLElement} target
      * @returns {boolean} true if overlays were actually displayed
      */
-    #addHotkeyOverlays(activeElement) {
-        // Gather the hotkeys to overlay registered through the useHotkey hook.
-        const hotkeysFromHookToHighlight = [];
-        for (const [, registration] of this.#registrations) {
-            const overlayElement = registration.withOverlay?.();
-            if (overlayElement) {
-                hotkeysFromHookToHighlight.push({
-                    hotkey: registration.hotkey.replace(`${this.overlayModifier}+`, ""),
-                    el: overlayElement,
-                });
+    #addHotkeyOverlays(activeElement, target) {
+        const items = new Map();
+        const infos = { activeElement, target, isRepeated: false, shouldProtectEditable: false };
+
+        // Gather the hotkeys to overlay registered through the DOM datasets.
+        for (const el of getVisibleElements(activeElement, "[data-hotkey]:not(:disabled)")) {
+            const hotkey = `${this.overlayModifier}+${el.dataset.hotkey}`.toLowerCase();
+            if (!items.has(hotkey)) {
+                items.set(hotkey, { hotkey: el.dataset.hotkey, el });
             }
         }
 
-        // Gather the hotkeys to overlay registered through the DOM datasets.
-        const hotkeysFromDomToHighlight = getVisibleElements(
-            activeElement,
-            "[data-hotkey]:not(:disabled)"
-        ).map((el) => ({ hotkey: el.dataset.hotkey, el }));
+        // Gather the hotkeys to overlay registered through the useHotkey hook.
+        for (const [, reg] of this.#registrations) {
+            if (!this.#canDispatch(reg, { ...infos, hotkey: reg.hotkey })) {
+                continue;
+            }
 
-        const items = [...hotkeysFromDomToHighlight, ...hotkeysFromHookToHighlight];
-        if (!items.length) {
+            const overlayElement = reg.withOverlay?.();
+            if (overlayElement) {
+                items.set(reg.hotkey, {
+                    hotkey: reg.hotkey.replace(`${this.overlayModifier}+`, ""),
+                    el: overlayElement,
+                });
+            } else if (items.has(reg.hotkey)) {
+                console.warn(
+                    `The hotkey "${
+                        items.get(reg.hotkey).hotkey
+                    }" is being shadowed by a global hotkey, no overlay will be displayed.`
+                );
+                items.delete(reg.hotkey);
+            }
+        }
+
+        if (!items.size) {
             return false;
         }
-        for (const item of items) {
+        for (const item of items.values()) {
             const hotkey = item.hotkey;
             const overlay = document.createElement("div");
             overlay.classList.add(
