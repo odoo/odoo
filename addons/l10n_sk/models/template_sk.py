@@ -114,3 +114,11 @@ class AccountChartTemplate(models.AbstractModel):
                 'asset_expense_account_id': 'chart_sk_551000',
             },
         }
+
+    def _get_bank_fees_reco_account(self, company):
+        # Slovak account for the bank fees reco model: 568 Other financial
+        # expenses. The generic lookup searches for an account named "Bank Fees",
+        # which this chart does not have, and falls back to the first expense
+        # account, a consumption-of-material account.
+        account = self.with_company(company).ref('chart_sk_568000', raise_if_not_found=False)
+        return account or super()._get_bank_fees_reco_account(company)
