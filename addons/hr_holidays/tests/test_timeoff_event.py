@@ -12,8 +12,8 @@ class TestTimeoffEvent(TestHrHolidaysCommon):
         """ Test that the timeoff event does not need a video call """
 
         self.hr_work_entry_type = self.env['hr.work.entry.type'].with_user(self.user_hrmanager).create({
-            'name': 'Time Off Type',
-            'code': 'Time Off Type',
+            'name': 'Time Type',
+            'code': 'Time Type',
             'requires_allocation': False,
             'request_unit': 'day',
             'unit_of_measure': 'day',
