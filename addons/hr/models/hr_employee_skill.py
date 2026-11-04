@@ -51,7 +51,7 @@ class HrEmployeeSkill(models.Model):
             'has_certification_skill_type': bool(self.env['hr.skill.type'].search_count([('is_certification', '=', True)], limit=1)),
         }
 
-    def open_hr_employee_skill_modal(self):
+    def action_open_certification(self):
         return {
             'type': 'ir.actions.act_window',
             'name': self.env._('Certification'),

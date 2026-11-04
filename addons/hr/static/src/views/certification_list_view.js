@@ -20,7 +20,7 @@ export class CertificationListController extends ListController {
             ...this._archInfo,
             headerButtons: this._archInfo.headerButtons.filter(
                 (button) =>
-                    button.clickParams.name !== "open_hr_employee_skill_modal" ||
+                    !button.className.includes("o_hr_new_certification") ||
                     this.hasCertificationSkillType
             ),
         };

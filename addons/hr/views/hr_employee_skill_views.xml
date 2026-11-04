@@ -86,7 +86,7 @@
             <list string="Certification"
                 js_class="hr_employee_skill_certification_list"
                 help_id="%(hr.hr_employee_skill_view_help)d"
-                action="open_hr_employee_skill_modal"
+                action="action_open_certification"
                 type="object"
                 create="0"
                 expand="1"
@@ -96,7 +96,7 @@
                 <header>
                     <!-- Visibility is decided live in CertificationListController, which hides
                          this button when there is no certification skill type yet. -->
-                    <button name="open_hr_employee_skill_modal" string="New" type="object" class="btn-primary" display="always"/>
+                    <button name="%(hr.action_hr_employee_new_certification)d" string="New" type="action" class="btn-primary o_hr_new_certification" display="always"/>
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="skill_id" string="Certification"/>
