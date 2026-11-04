@@ -39,6 +39,7 @@ import {
     getPagerLimit,
     getPagerValue,
     getService,
+    hideTab,
     installLanguages,
     makeServerError,
     MockServer,
@@ -11089,6 +11090,63 @@ test(`form view with edit='0' but create='1', new record`, async () => {
         arch: `<form edit="0"><field name="foo"/></form>`,
     });
     expect(`.o_form_editable`).toHaveCount(1);
+});
+
+async function mountCreateOnlyForm(props) {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form edit="0"><field name="foo"/></form>`,
+        ...props,
+    });
+}
+
+test(`form view with edit='0' but create='1', save a new record`, async () => {
+    onRpc("web_save", () => expect.step("web_save"));
+    await mountCreateOnlyForm({ resId: 1 });
+    expect(`.o_form_status_indicator`).toHaveCount(0);
+
+    await contains(`.o_form_button_create`).click();
+    expect(`.o_form_button_cancel`).toHaveCount(1);
+    await contains(`[name=foo] input`).edit("new foo", { confirm: false });
+    await contains(`.o_form_button_save`).click();
+    expect.verifySteps(["web_save"]);
+    expect(`.o_form_readonly`).toHaveCount(1);
+    expect(`.o_form_status_indicator`).toHaveCount(0);
+});
+
+test(`form view with edit='0' but create='1', discard after a save error`, async () => {
+    onRpc("web_save", () => {
+        throw makeServerError({ message: "Some business message" });
+    });
+    await mountCreateOnlyForm();
+    await contains(`[name=foo] input`).edit("new foo", { confirm: false });
+    await contains(`.o_form_button_save`).click();
+    await contains(`.o_error_dialog .btn-secondary`).click();
+    expect(`.o_form_editable`).toHaveCount(1);
+    expect(`.o_form_status_indicator`).toHaveCount(1);
+});
+
+test(`form view with edit='0' but create='1', save with a button`, async () => {
+    mockService("action", {
+        doActionButton: (params) => params.onClose(),
+    });
+    await mountCreateOnlyForm({
+        arch: `<form edit="0"><button name="post" type="object" class="s"/><field name="foo"/></form>`,
+    });
+    await contains(`[name=foo] input`).edit("new foo", { confirm: false });
+    await contains(`.s`).click();
+    expect(`.o_form_readonly`).toHaveCount(1);
+    expect(`.o_form_status_indicator`).toHaveCount(0);
+});
+
+test(`form view with edit='0' but create='1', save when hiding the tab`, async () => {
+    await mountCreateOnlyForm();
+    await contains(`[name=foo] input`).edit("new foo");
+    await hideTab();
+    await animationFrame();
+    expect(`.o_form_readonly`).toHaveCount(1);
+    expect(`.o_form_status_indicator`).toHaveCount(0);
 });
 
 test(`save a form view with an invisible required field`, async () => {
