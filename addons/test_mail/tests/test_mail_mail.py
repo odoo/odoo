@@ -15,7 +15,9 @@ from OpenSSL.SSL import Error as SSLError
 
 from odoo import api, Command, fields, SUPERUSER_ID
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
+from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import AccessError, LockError
 from odoo.fields import Domain
 from odoo.tests import common, tagged, users
@@ -825,6 +827,26 @@ class TestMailMail(MailCommon):
                 self.assertEqual(notification.failure_reason, msg)
                 self.assertEqual(notification.failure_type, failure_type)
                 self.assertEqual(notification.notification_status, 'exception')
+
+    def test_mail_mail_send_mention_delivery(self):
+        """ The author is told when the email of a partner mentioned in their message is delivered. """
+        partner = self.env['res.partner'].create({'email': 'zara@example.com', 'name': 'Zara'})
+        with self.mock_mail_gateway():
+            message = self.test_record.with_user(self.user_employee).message_post(
+                body=Markup('<p><a class="o_mail_redirect" data-oe-id="%s" data-oe-model="res.partner">@Zara</a></p>') % partner.id,
+                force_send=False,
+                message_type='comment',
+                partner_ids=partner.ids,
+                subtype_xmlid='mail.mt_comment',
+            )
+        mail = self.env['mail.mail'].sudo().search([('mail_message_id', '=', message.id)])
+        self.assertEqual(mail.state, 'outgoing')
+        with self.mock_mail_gateway(), self.assertBus(lambda: [
+            BusResult(self.user_employee, "mail.record/insert", Store().add(message, "_store_notification_fields")),
+        ]):
+            mail.with_user(self.user_employee).sudo().send()
+        self.assertEqual(message.notification_ids.res_partner_id, partner)
+        self.assertEqual(message.notification_ids.notification_status, 'sent')
 
     def test_mail_mail_values_misc(self):
         """ Test various values on mail.mail, notably default values """

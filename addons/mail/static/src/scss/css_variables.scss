@@ -81,6 +81,23 @@ $o-mail-discussMainBgColor: if($o-webclient-color-scheme == dark, mix($gray-100,
     }
 }
 
+/* Partner mentions: neutral until their notification is sent, then green once delivered or red when it failed. */
+@mixin o-mail-partner-mention-colors($color, $text-color) {
+    @include o-mail-mention-colors(rgba($color, .15), rgba($color, .3), $text-color, rgba($color, .25), rgba($color, .45));
+}
+
+.o-mail-partnerMention {
+    @include o-mail-partner-mention-colors($gray-600, $gray-900);
+}
+
+.o-mail-partnerMention-sent {
+    @include o-mail-partner-mention-colors($success, if($o-webclient-color-scheme == dark, lighten($success, 25%), darken($success, 10%)));
+}
+
+.o-mail-partnerMention-failed {
+    @include o-mail-partner-mention-colors($danger, if($o-webclient-color-scheme == dark, lighten($danger, 25%), darken($danger, 10%)));
+}
+
 /* Fainter on the main discuss background than on the page, which contrasts less with them. */
 .o-mail-DiscussContent-column,
 .o-mail-ChatWindow {
