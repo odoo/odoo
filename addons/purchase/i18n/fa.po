@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-23 06:16+0000\n"
 "Last-Translator: Heshmatkhah <maheshmatkhah.soft@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/purchase/"
@@ -151,8 +151,8 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div dir=\"rtl\" style=\"margin: 0px; padding: 0px; font-family:IRANSansX;\">"
-"\n"
+"<div dir=\"rtl\" style=\"margin: 0px; padding: 0px; font-family:IRANSansX;"
+"\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-out=\"object.partner_id.name or ''\">احسان امیری</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
@@ -168,8 +168,8 @@ msgstr ""
 "        </t>\n"
 "        است که انتظار می‌رود در تاریخ \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date"
-"(object.date_planned) or ''\">1402/05/08</span>.\n"
+"            <span style=\"font-weight:bold;\" t-"
+"out=\"format_date(object.date_planned) or ''\">1402/05/08</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">تعریف نشده</span>.\n"
@@ -237,8 +237,8 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div dir=\"rtl\" style=\"margin: 0px; padding: 0px; font-family: "
-"IRANSansX;\">\n"
+"<div dir=\"rtl\" style=\"margin: 0px; padding: 0px; font-family: IRANSansX;"
+"\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-out=\"object.partner_id.name or ''\">آراز عزتی</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
@@ -249,11 +249,12 @@ msgstr ""
 "        سفارش خرید <span style=\"font-weight:bold;\" t-out=\"object.name or "
 "''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            با شماره ارجاع: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"\n"
+"            با شماره ارجاع: <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
-"        به مبلغ <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">600000 ریال</span>\n"
+"        به مبلغ <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">600000 "
+"ریال</span>\n"
 "        مربوط به <t t-out=\"object.company_id.name or ''\">شرکت من</t> "
 "به‌حضورتان ارسال می‌گردد.\n"
 "        <br/><br/>\n"
@@ -312,8 +313,8 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div dir=\"rtl\" style=\"margin: 0px; padding: 0px; font-family: "
-"IRANSansX;\">\n"
+"<div dir=\"rtl\" style=\"margin: 0px; padding: 0px; font-family: IRANSansX;"
+"\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-out=\"object.partner_id.name or ''\">آراز عزتی</t>\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
@@ -325,8 +326,8 @@ msgstr ""
 "        بدینوسیله یک درخواست پیش‌فاکتور <span style=\"font-weight:bold;\" t-"
 "out=\"object.name or ''\">P00015</span>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            با شماره ارجاع <t t-out=\"object.partner_ref or ''\">REF_XXX</t>"
-"\n"
+"            با شماره ارجاع <t t-out=\"object.partner_ref or ''\">REF_XXX</"
+"t>\n"
 "        </t>\n"
 "        مربوط به <t t-out=\"object.company_id.name or ''\">شرکت من</t> به "
 "پیوست به‌حضورتان ارسال می‌گردد.\n"
@@ -429,8 +430,8 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order </span>"
 msgstr ""
-"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
-"درخواست پیش‌فاکتور </span>\n"
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')"
+"\">درخواست پیش‌فاکتور </span>\n"
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">سفارش خرید</span>"
 
@@ -2275,8 +2276,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid "Please select bill lines with the same vendor."
-msgstr ""
-"لطفاً سطرهای صورت‌حسابی را انتخاب کنید که تأمین‌کننده یکسانی داشته باشند."
+msgstr "لطفاً سطرهای صورت‌حسابی را انتخاب کنید که تأمین‌کننده یکسانی داشته باشند."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__pol_id
@@ -2509,6 +2509,7 @@ msgstr "تعداد سفارش خرید"
 #: model:ir.actions.act_window,name:purchase.action_purchase_history
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_line_id
+#: model:ir.model.fields,field_description:purchase.field_account_tax__purchase_order_line_ids
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
@@ -2880,8 +2881,8 @@ msgid ""
 "                Once an agreement has been found with the supplier, they "
 "will be confirmed and turned into purchase orders."
 msgstr ""
-"درخواست‌ استعلام قیمت اسنادی هستند که به تامین‌کنندگان شما ارسال می‌شوند تا قیمت "
-"محصولات مختلفی را که قصد خرید آن را دارید درخواست کنند.\n"
+"درخواست‌ استعلام قیمت اسنادی هستند که به تامین‌کنندگان شما ارسال می‌شوند تا "
+"قیمت محصولات مختلفی را که قصد خرید آن را دارید درخواست کنند.\n"
 "                 هنگامی که توافقی با تامین کننده پیدا شد، آنها تایید شده و "
 "به سفارش خرید تبدیل می شوند."
 
@@ -2958,8 +2959,7 @@ msgstr "فروشنده انتخاب شده"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
-"محصولات را با واحدهای اندازه‌گیری یا بسته‌بندی‌های مختلف بفروشید و بخرید"
+msgstr "محصولات را با واحدهای اندازه‌گیری یا بسته‌بندی‌های مختلف بفروشید و بخرید"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3007,8 +3007,8 @@ msgstr "این ایمیل با پیوست سفارش خرید مربوطه به 
 msgid ""
 "Sent to vendors before expected arrival, based on the purchase order setting"
 msgstr ""
-"این ایمیل قبل از تاریخ مورد انتظار دریافت محصولات، بر اساس تنظیمات سفارش خرید "
-"به تأمین‌کننده ارسال می‌شود"
+"این ایمیل قبل از تاریخ مورد انتظار دریافت محصولات، بر اساس تنظیمات سفارش "
+"خرید به تأمین‌کننده ارسال می‌شود"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -3237,6 +3237,12 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__price_unit_product_uom
 msgid "The Price of one unit of the product's Unit of Measure"
 msgstr "قیمت هر واحد از واحد اندازه‌گیری محصول"
+
+#. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/res_partner.py:0
+msgid "The partner cannot be deleted because it is used as a dropship address"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3674,9 +3680,9 @@ msgid ""
 msgstr ""
 "هنگام ایجاد سفارش خرید، به نرخ <i>تحویل به موقع<i> تأمین‌کننده توجه کنید: این "
 "نرخ نشانگر درصد محصولاتی است که به موقع ارسال شده است. اگر این مقدار خیلی کم "
-"باشد، <i> یادآورهای خودکار<i> را فعال کنید. چند روز قبل از موعد تحویل مرسوله"
-"، اودو ایمیلی به تأمین‌کننده ارسال می‌کند تا تاریخ مرسوله را تأیید کند و در "
-"صورت تأخیر شما را مطلع خواهد کرد. برای دریافت آمار عملکرد تأمین‌کننده، روی "
+"باشد، <i> یادآورهای خودکار<i> را فعال کنید. چند روز قبل از موعد تحویل "
+"مرسوله، اودو ایمیلی به تأمین‌کننده ارسال می‌کند تا تاریخ مرسوله را تأیید کند و "
+"در صورت تأخیر شما را مطلع خواهد کرد. برای دریافت آمار عملکرد تأمین‌کننده، روی "
 "نرخ تحویل به موقع (OTD) کلیک کنید.</i></i></i></i>"
 
 #. module: purchase
@@ -3745,7 +3751,8 @@ msgstr ""
 #: code:addons/purchase/models/purchase_bill_line_match.py:0
 msgid ""
 "You must select at least one Purchase Order line to match or create bill."
-msgstr "باید حداقل یک سطر سفارش خرید را برای تطبیق یا ایجاد فاکتور انتخاب کنید."
+msgstr ""
+"باید حداقل یک سطر سفارش خرید را برای تطبیق یا ایجاد فاکتور انتخاب کنید."
 
 #. module: purchase
 #. odoo-python
@@ -3756,8 +3763,8 @@ msgid ""
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
-"استعلام قیمت شما حاوی محصولات شرکت %(product_company)s است، در حالی که استعلام "
-"قیمت شما متعلق به شرکت %(quote_company)s است.\n"
+"استعلام قیمت شما حاوی محصولات شرکت %(product_company)s است، در حالی که "
+"استعلام قیمت شما متعلق به شرکت %(quote_company)s است.\n"
 "  لطفا شرکت استعلام قیمت خود را تغییر دهید یا محصولات را از سایر شرکت ها (%"
 "(bad_products)s) حذف کنید."
 

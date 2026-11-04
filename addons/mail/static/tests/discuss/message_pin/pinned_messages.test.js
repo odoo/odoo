@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    isInViewportOf,
     openDiscuss,
     scroll,
     start,
@@ -105,6 +106,40 @@ test("Jump to message", async () => {
     await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
     await contains(".o-mail-Thread .o-mail-Message-body", { text: "Hello world!", visible: true });
+});
+
+test("Jump to message after a jump that needs no scroll", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        body: "First pinned",
+        model: "discuss.channel",
+        res_id: channelId,
+        pinned_at: "2023-04-03 08:15:04",
+    });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Non Empty Body ".repeat(25),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    pyEnv["mail.message"].create({
+        body: "Last pinned",
+        model: "discuss.channel",
+        res_id: channelId,
+        pinned_at: "2023-04-03 08:16:04",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList");
+    await click(".o-mail-DiscussContent-header button[title='Pinned Messages']");
+    await contains(".o-mail-Thread", { setScroll: 0 });
+    await click(".card:has(:text(First pinned)) .o-mail-MessageCard-jump");
+    await contains(".o-mail-Message.o-highlighted:has(:text(First pinned))");
+    await click(".card:has(:text(Last pinned)) .o-mail-MessageCard-jump");
+    await isInViewportOf(".o-mail-Thread .o-mail-Message-body:text(Last pinned)", ".o-mail-Thread");
 });
 
 test("Jump to message from notification", async () => {

@@ -12,6 +12,7 @@ import { reactive, toRaw } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 import { pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
 import { loadBundle, loadJS } from "@web/core/assets";
@@ -74,6 +75,7 @@ export const CROSS_TAB_CLIENT_MESSAGE = {
     LEAVE: "LEAVE", // request the host to leave the call
     UPDATE_VOLUME: "UPDATE_VOLUME", // sent by a tab to signal a volume change
 };
+export const CROSS_TAB_INIT_TIMEOUT = 2000;
 const PING_INTERVAL = 30_000;
 const UNAVAILABLE_AS_REMOTE = _t("This action can only be done in the call tab.");
 const CALL_FULLSCREEN_ID = Symbol("CALL_FULLSCREEN");
@@ -313,6 +315,7 @@ export class Rtc extends Record {
     _remotelyHostedSessionId;
     _remotelyHostedChannelId;
     _crossTabTimeoutId;
+    crossTabInitDeferred = new Deferred();
     /** @type {number} count of how many times the p2p service attempted a connection recovery */
     _p2pRecoveryCount = 0;
     upgradeConnectionDebounce = debounce(
@@ -415,6 +418,7 @@ export class Rtc extends Record {
             this._broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
             this._postToTabs({ type: CROSS_TAB_CLIENT_MESSAGE.INIT });
         }
+        browser.setTimeout(() => this.crossTabInitDeferred.resolve(), CROSS_TAB_INIT_TIMEOUT);
         /**
          * @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer}
          */
@@ -1059,6 +1063,7 @@ export class Rtc extends Record {
                 this._remotelyHostedChannelId = hostedChannelId;
                 this._refreshCrossTabTimeout();
                 this.updateSessionInfo(changes);
+                this.crossTabInitDeferred.resolve();
                 return;
             case CROSS_TAB_HOST_MESSAGE.CLOSE: {
                 if (this._remotelyHostedSessionId !== hostedSessionId) {

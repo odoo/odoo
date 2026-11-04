@@ -22,7 +22,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 18:39+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
@@ -175,8 +175,8 @@ msgid ""
 "to cart</span>"
 msgstr ""
 "<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
-"                                    <span class=\"d-none d-md-inline\">"
-"Přidat do košíku</span>"
+"                                    <span class=\"d-none d-md-"
+"inline\">Přidat do košíku</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -208,8 +208,8 @@ msgid ""
 ">\n"
 "                    <span class=\"o_label small ms-1\">Add to Cart</span>"
 msgstr ""
-"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/>"
-"\n"
+"<i class=\"fa fa-fw fa-shopping-cart o_not-animable\" role=\"presentation\"/"
+">\n"
 "                    <span class=\"o_label small ms-1\">Přidat do košíku</"
 "span>"
 
@@ -655,15 +655,15 @@ msgstr ""
 "width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
 "0px 0px 0px 0px; border-collapse:separate;\"> \n"
 "               <tr><td valign=\"top\" style=\"font-size: 13px;\"> \n"
-"                   <h1 style=\"color:#A9A9A9;\">MÁTE NĚCO V KOŠÍKU.</h1>"
-"Chcete dokončit nákup?<br/><br/> <t t-if=\"object.order_line\">\n"
+"                   <h1 style=\"color:#A9A9A9;\">MÁTE NĚCO V KOŠÍKU.</"
+"h1>Chcete dokončit nákup?<br/><br/> <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-"
 "as=\"line\"> <hr/>\n"
 "                            <table width=\"100%\"> <tr>\n"
-"                                    <td style=\"padding: 10px; "
-"width:150px;\"> <img t-attf-src=\"/web/image/product.product/{{ "
-"line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; "
-"object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    <td style=\"padding: 10px; width:150px;"
+"\"> <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/"
+"image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" "
+"alt=\"Product image\"/>\n"
 "                                    </td> <td>\n"
 "                                        <strong t-"
 "out=\"line.product_id.display_name or ''\"> [FURN_7800] Kombinace psacího "
@@ -680,10 +680,10 @@ msgstr ""
 "                    <div style=\"text-align: center; padding: 16px 0px 16px "
 "0px; font-size: 14px;\"> <a t-attf-href=\"{{ object.get_base_url() }}/shop/"
 "cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" "
-"target=\"_blank\" t-attf-style=\"background-color: {"
-"{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
-"8px 16px 8px 16px; text-decoration: none; color: {"
-"{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
+"target=\"_blank\" t-attf-style=\"background-color: "
+"{{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: "
+"8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-"
 "radius: 5px; font-size:13px;\"> \n"
 "Obnovit objednávku </a>\n"
 "                    </div> <t t-set=\"company\" t-value=\"object.company_id "
@@ -728,8 +728,8 @@ msgid ""
 "on                                      this page. Use '/' to discover more "
 "features."
 msgstr ""
-"Podrobný, formátovaný popis pro propagaci vašeho produktu na"
-"                                      této stránce. Použijte '/' pro "
+"Podrobný, formátovaný popis pro propagaci vašeho produktu "
+"na                                      této stránce. Použijte '/' pro "
 "zobrazení více funkcí."
 
 #. module: website_sale
@@ -5229,6 +5229,14 @@ msgstr "Vyprodáno"
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
+msgid ""
+"Some products in your cart are not available for purchase in your country. "
+"Please remove them or contact us."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
 msgid "Sorry, we are unable to ship your order."
 msgstr "Je nám líto, ale vaši objednávku nemůžeme odeslat."
 
@@ -5535,6 +5543,14 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid ""
+"The number of selected combo items must match the number of available combo "
+"choices."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The order has been cancelled."
 msgstr "Objednávka byla zrušena."
@@ -5666,6 +5682,18 @@ msgstr "Tento produkt již není k dispozici."
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 msgid "This product is not available (anymore) in this unit of measure."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/cart.py:0
+msgid "This product is part of a combo and can't be updated individually."
 msgstr ""
 
 #. module: website_sale

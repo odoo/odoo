@@ -37,12 +37,14 @@ class StockPicking(models.Model):
             return pickings
         positive_lines = stockable_lines.filtered(lambda l: l.qty > 0)
         negative_lines = stockable_lines - positive_lines
+        session_id = stockable_lines.order_id.session_id
 
         if positive_lines:
             location_id = picking_type.default_location_src_id.id
-            positive_picking = self.env['stock.picking'].create(
-                self._prepare_picking_vals(partner, picking_type, location_id, location_dest_id)
-            )
+            positive_picking = self.env['stock.picking'].create({
+                **self._prepare_picking_vals(partner, picking_type, location_id, location_dest_id),
+                'pos_session_id': session_id.id,
+            })
 
             positive_picking._create_move_from_pos_order_lines(positive_lines)
             try:
@@ -103,9 +105,10 @@ class StockPicking(models.Model):
                 return_picking_type = picking_type
                 return_location_id = picking_type.default_location_src_id.id
 
-            negative_picking = self.env['stock.picking'].create(
-                self._prepare_picking_vals(partner, return_picking_type, location_dest_id, return_location_id)
-            )
+            negative_picking = self.env['stock.picking'].create({
+                **self._prepare_picking_vals(partner, return_picking_type, location_dest_id, return_location_id),
+                'pos_session_id': session_id.id,
+            })
             negative_picking._create_move_from_pos_order_lines(negative_lines)
             try:
                 with self.env.cr.savepoint():
@@ -167,8 +170,11 @@ class StockPicking(models.Model):
 
 
     def _send_confirmation_email(self):
-        # Avoid sending Mail/SMS for POS deliveries
-        pickings = self.filtered(lambda p: p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id)
+        # Over the counter sales need no Mail/SMS confirmation
+        pickings = self.filtered(lambda p:
+            p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id
+            and not (p.pos_session_id and not p.pos_order_id.shipping_date)
+        )
         return super(StockPicking, pickings)._send_confirmation_email()
 
 

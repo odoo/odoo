@@ -687,6 +687,7 @@ class IrAttachment(models.Model):
         domain &= sec_domain | Domain('res_model', '!=', False)
         domain = domain.optimize_full(self)
         ordered = bool(order)
+        fields_to_fetch = [self._fields[name] for name in SECURITY_FIELDS]
         if limit is None:
             # The SQL conditions alone grant access to public attachments and
             # to the ones linked to no record, for an administrator or for
@@ -700,8 +701,13 @@ class IrAttachment(models.Model):
                     & Domain('res_field', '=', False)
                     & Domain('create_uid', '=', self.env.uid)
                 )
-            to_check = self.sudo().with_context(active_test=False).search_fetch(
-                domain & ~granted, SECURITY_FIELDS).sudo(False)
+            query = super()._search(
+                domain & ~granted,
+                order='id',
+                active_test=False,
+                bypass_access=True,
+            )
+            to_check = self._fetch_query(query, fields_to_fetch)
             accessible = granted | Domain('id', 'in', to_check._filtered_access('read').ids)
             return super()._search(domain & accessible, offset, limit, order, active_test=active_test)
         # Fetch by small batches
@@ -712,13 +718,15 @@ class IrAttachment(models.Model):
             # By default, order by model to batch access checks.
             order = 'res_model nulls first, id'
         while len(result) < limit:
-            records = self.sudo().with_context(active_test=False).search_fetch(
+            query = super()._search(
                 domain,
-                SECURITY_FIELDS,
                 offset=sub_offset,
                 limit=PREFETCH_MAX,
                 order=order,
-            ).sudo(False)
+                active_test=False,
+                bypass_access=True,
+            )
+            records = self._fetch_query(query, fields_to_fetch)
             result.extend(records._filtered_access('read')._ids)
             if len(records) < PREFETCH_MAX:
                 # There are no more records
@@ -774,10 +782,10 @@ class IrAttachment(models.Model):
 
         # remove computed field depending of datas
         vals_list = [{
-            key: value
-            for key, value
-            in vals.items()
-            if key not in ('file_size', 'checksum', 'store_fname')
+            **vals,
+            'file_size': 0,
+            'checksum': False,
+            'store_fname': False,
         } for vals in vals_list]
         checksum_raw_map = {}
 

@@ -136,7 +136,7 @@ class ProductTemplate(models.Model):
         product_read = products._load_pos_data_read(products.with_context(display_default_code=False), config)
 
         # product.template loading
-        product_tmpl_read = self._load_pos_data_read(product_tmpls, config)
+        product_tmpl_read = self._load_pos_data_read(product_tmpls.with_context(active_test=True), config)
 
         # product.uom loading
         packaging_domain = Domain('product_id', 'in', products.ids)

@@ -258,7 +258,7 @@ function containsOdooFunction(content) {
  */
 function isLoaded(model) {
     for (const sheetId of model.getters.getSheetIds()) {
-        for (const cell of Object.values(model.getters.getEvaluatedCells(sheetId))) {
+        for (const cell of model.getters.getEvaluatedCells(sheetId)) {
             if (cell.type === "error" && isLoadingError(cell)) {
                 return false;
             }

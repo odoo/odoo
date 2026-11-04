@@ -440,6 +440,12 @@ class MyInvoisDocument(models.Model):
             'document_not_found': self.env._('The document provided in the request does not exist.'),  # Should never happen
             'submission_too_large': self.env._('The submission is too large, try to send fewer invoices at once.'),
             'action_forbidden': self.env._('Permission to do this action has not been granted. Please ensure that Odoo has sufficient permissions on the MyInvois platform.'),
+            # The signed document exceeds the size accepted by MyInvois. Data contains its size and the maximum size, in KB.
+            'document_too_large': self.env._(
+                'This document is too large to be sent to MyInvois (%(size)s KB, the maximum is %(max_size)s KB). Please reduce its number of lines.',
+                size=error_data.get('size'),
+                max_size=error_data.get('max_size'),
+            ),
         }
 
         if error.get('target'):

@@ -5,7 +5,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
-const response_from_adyen_on_pos_webhook = (session, ServiceID) => ({
+const response_from_adyen_on_pos_webhook = (orderUuid, session, ServiceID) => ({
     SaleToPOIResponse: {
         MessageHeader: {
             MessageCategory: "Payment",
@@ -63,7 +63,7 @@ const response_from_adyen_on_pos_webhook = (session, ServiceID) => ({
             SaleData: {
                 SaleTransactionID: {
                     TimeStamp: "2024-10-24T11:24:29.000Z",
-                    TransactionID: `921e7aa8-36b3-400c-a416-2b9a1eaf1283--${session}`,
+                    TransactionID: `${orderUuid}--${session}`,
                 },
             },
         },
@@ -98,6 +98,7 @@ registry.category("web_tour.tours").add("PosAdyenTour", {
                         },
                         body: JSON.stringify(
                             response_from_adyen_on_pos_webhook(
+                                posmodel.getOrder().uuid,
                                 posmodel.config.current_session_id.id,
                                 payment_terminal.most_recent_service_id
                             )

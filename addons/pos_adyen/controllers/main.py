@@ -68,13 +68,17 @@ class PosAdyenController(http.Controller):
 
     def _process_payment_response(self, data, adyen_pm_sudo):
         transaction_id = data['SaleToPOIResponse']['PaymentResponse']['SaleData']['SaleTransactionID']['TransactionID']
-        if not transaction_id:
-            return
-        transaction_id_parts = transaction_id.split("--")
-        if len(transaction_id_parts) != 2:
+        transaction_id_parts = transaction_id.split("--") if transaction_id else []
+        if len(transaction_id_parts) != 2 or not transaction_id_parts[1].isdigit():
+            _logger.warning('Received an Adyen notification with an unexpected TransactionID: %s', transaction_id)
             return
         pos_session_id = int(transaction_id_parts[1])
-        pos_session_sudo = request.env["pos.session"].sudo().browse(pos_session_id)
+        pos_session_sudo = request.env["pos.session"].sudo().browse(pos_session_id).exists()
+        if not pos_session_sudo:
+            _logger.warning('Received an Adyen notification for an unknown PoS session: %s', pos_session_id)
+            return
         adyen_pm_sudo.adyen_latest_response = json.dumps(data)
-        pos_session_sudo.config_id._notify("ADYEN_LATEST_RESPONSE", pos_session_sudo.config_id.id)
+        pos_session_sudo.config_id._notify("ADYEN_LATEST_RESPONSE", {
+            'payment_method_id': adyen_pm_sudo.id,
+        })
         return request.make_json_response('[accepted]') # https://docs.adyen.com/point-of-sale/design-your-integration/choose-your-architecture/cloud/#guarantee

@@ -44,8 +44,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
-"PO-Revision-Date: 2026-10-07 08:35+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-29 08:29+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/web/fi/>"
 "\n"
@@ -304,8 +304,8 @@ msgid ""
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
 "Barbara\n"
-"                                       Rd<br/>Pleasant Hill CA 94523<br/>"
-"Yhdysvallat</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/"
+">Yhdysvallat</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1799,6 +1799,7 @@ msgstr "Muunna webp:ksi"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1809,6 +1810,12 @@ msgstr "Kopioitu"
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copy"
 msgstr "Kopioi"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6125,6 +6132,12 @@ msgstr "Hae enemmän ..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
 msgid "Search emoji"
 msgstr "Etsi hymiötä"
@@ -6428,6 +6441,12 @@ msgstr "Shinkansen"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Shinto"
 msgstr "Shinto"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
+msgid "Shortcuts"
+msgstr "Pikavalinnat"
 
 #. module: web
 #. odoo-javascript
@@ -6823,6 +6842,14 @@ msgid "The app seems to be installed on your device"
 msgstr "Sovellus on asennettu laitteeseesi"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_arch_parser.js:0
+msgid ""
+"The autocomplete value for %(field)s has not been found: the record with id %"
+"(id)s doesn't seem to exist"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 msgid ""
@@ -6836,7 +6863,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/domain/domain_field.js:0
 msgid "The domain involves non-literals. Their evaluation might fail."
-msgstr "Hakualue sisältää ei-literaaleja. Niiden arviointi saattaa epäonnistua."
+msgstr ""
+"Hakualue sisältää ei-literaaleja. Niiden arviointi saattaa epäonnistua."
 
 #. module: web
 #. odoo-javascript
@@ -6980,7 +7008,8 @@ msgstr "Tätä verkkotunnusta ei tueta."
 #. odoo-javascript
 #: code:addons/web/static/src/search/control_panel/control_panel.js:0
 msgid "This embedded action is global and will be removed for everyone."
-msgstr "Tämä upotettu toiminto on maailmanlaajuinen, ja se poistetaan kaikilta."
+msgstr ""
+"Tämä upotettu toiminto on maailmanlaajuinen, ja se poistetaan kaikilta."
 
 #. module: web
 #. odoo-javascript
@@ -7022,7 +7051,8 @@ msgstr "Tämä on esimerkki sisäisestä raportista."
 msgid ""
 "This record belongs to a different parent so you can not change this "
 "property."
-msgstr "Tämä tietue kuuluu eri tasolle, joten et voi muuttaa tätä ominaisuutta."
+msgstr ""
+"Tämä tietue kuuluu eri tasolle, joten et voi muuttaa tätä ominaisuutta."
 
 #. module: web
 #. odoo-javascript
@@ -16636,7 +16666,7 @@ msgstr "lehtivihreä"
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "ledger"
-msgstr "kirjanpidon pääkirja"
+msgstr "tilikirja"
 
 #. module: web
 #. odoo-javascript
@@ -27691,9 +27721,6 @@ msgstr "空"
 
 #~ msgid "Share with all users"
 #~ msgstr "Jaa kaikkien käyttäjien kanssa"
-
-#~ msgid "Shortcuts"
-#~ msgstr "Pikavalinnat"
 
 #~ msgid "Size:"
 #~ msgstr "Koko:"

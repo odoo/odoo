@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
-from datetime import date, datetime, time
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -183,12 +183,7 @@ class ProductProduct(models.Model):
         self.company_currency_id = company_id.currency_id
         products = self._with_valuation_context()
 
-        at_date = self.env.context.get('to_date')
-        original_value = at_date
-        at_date = fields.Datetime.to_datetime(at_date)
-        if (isinstance(original_value, date) and not isinstance(original_value, datetime)) or \
-            (isinstance(original_value, str) and len(original_value) == 10):
-            at_date = datetime.combine(at_date.date(), time.max)
+        at_date = self.env.company._to_datetime_upper_bound(self.env.context.get('to_date'))
 
         if at_date:
             products = products.with_context(at_date=at_date, to_date=at_date)
@@ -688,8 +683,8 @@ class ProductProduct(models.Model):
                         if last_in_price_unit := last_in._get_price_unit():
                             product.sudo().with_context(disable_auto_revaluation=True).standard_price = last_in_price_unit
 
-            elif cost_method == 'average':
-                new_standard_price_by_product = self._run_average_batch(force_recompute=True)[0]
+            elif cost_method == 'average' and products:
+                new_standard_price_by_product = products._run_average_batch(force_recompute=True)[0]
                 for product in products:
                     if product.id in new_standard_price_by_product:
                         product.with_context(disable_auto_revaluation=True).sudo().standard_price = new_standard_price_by_product[product.id]

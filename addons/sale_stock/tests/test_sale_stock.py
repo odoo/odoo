@@ -2451,7 +2451,8 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
     def test_multicompany_transit_with_one_company_for_user(self):
         """ Check that the inter-company transit location is created when
-        user has only one allowed company. """
+        user has only one allowed company, and that a delivery address whose
+        customer location is a transit sublocation of it is delivered there. """
         company_a = self.env['res.company'].create({'name': 'Company A'})
         company_b = self.env['res.company'].create({'name': 'Company B'})
         user_a = self.env['res.users'].create({
@@ -2474,6 +2475,27 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         intercom_location = self.env.ref('stock.stock_location_inter_company')
         self.assertEqual(so.picking_ids.location_dest_id, intercom_location)
         self.assertEqual(so.picking_ids.move_ids.location_dest_id, intercom_location)
+
+        transit_location = self.env['stock.location'].create({
+            'name': 'Company B Transit',
+            'location_id': intercom_location.id,
+            'usage': 'transit',
+            'company_id': False,
+        })
+        # The customer location is company dependent: set it for Company A, the seller
+        delivery_address = self.env['res.partner'].with_company(company_a).create({
+            'name': 'Company B Delivery',
+            'parent_id': company_b.partner_id.id,
+            'property_stock_customer': transit_location.id,
+        })
+        so_to_delivery_address = self.env['sale.order'].with_user(user_a).create({
+            'partner_id': company_b.partner_id.id,
+            'partner_shipping_id': delivery_address.id,
+            'order_line': [Command.create({'product_id': product.id})],
+        })
+        so_to_delivery_address.action_confirm()
+        self.assertEqual(so_to_delivery_address.picking_ids.location_dest_id, transit_location)
+        self.assertEqual(so_to_delivery_address.picking_ids.move_ids.location_dest_id, transit_location)
 
     def test_sale_order_line_quantity_forecast_widget_display(self):
         """
@@ -2967,6 +2989,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         customer_location = self.env.ref('stock.stock_location_customers')
         sale_orders = self._get_new_sale_order(product=self.new_product) | self._get_new_sale_order(product=self.new_product)
         delivery = self.env['stock.picking'].create({
+            'partner_id': self.partner_a.id,
             'picking_type_id': warehouse.out_type_id.id,
             'location_id': warehouse.lot_stock_id.id,
             'location_dest_id': customer_location.id,
@@ -2986,3 +3009,12 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertRecordValues(sale_orders[0].picking_ids, [
             {'picking_type_code': 'outgoing', 'sale_id': sale_orders[0].id},
         ])
+
+    def test_delivery_empty_list_help_sales_orders_button(self):
+        """ The "Sales Orders" button of the empty deliveries list must only be
+        shown to users having access to the Sales app. """
+        stock_user = new_test_user(self.env, login='stock_user_no_sale', groups='stock.group_stock_user')
+        salesman = self.company_data['default_user_salesman']
+        Picking = self.env['stock.picking'].with_context(restricted_picking_type_code='outgoing')
+        self.assertNotIn('sale.action_orders', Picking.with_user(stock_user).get_empty_list_help(''))
+        self.assertIn('sale.action_orders', Picking.with_user(salesman).get_empty_list_help(''))

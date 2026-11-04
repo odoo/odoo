@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-08-05 16:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
@@ -522,7 +522,8 @@ msgstr "Journal par défaut pour les dépenses"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by employees."
-msgstr "Journal comptable par défaut pour les dépenses payées par les employés."
+msgstr ""
+"Journal comptable par défaut pour les dépenses payées par les employés."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -954,6 +955,11 @@ msgstr "A un message"
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hôtel, billet d'avion, taxi, etc."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
+msgid "Hr Expense"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
@@ -1758,13 +1764,10 @@ msgstr "Scannez ce QR code pour obtenir l'application Odoo :"
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Sélectionnez l'utilisateur responsable de la validation des \"Dépenses\" de "
-"cet employé.\n"
-"Si vide, la validation est faite par un administrateur ou un approbateur "
-"(déterminé dans les paramètres/utilisateurs)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1976,8 +1979,10 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "The current user has no related employee. Please, create one."
-msgstr "L'utilisateur actuel n'a pas d'employé associé. Veuillez en créer un."
+msgid ""
+"The current user has no related employee. Please, create one in %(company)s, "
+"or switch to a company where they have one."
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2264,8 +2269,8 @@ msgstr ""
 "seulement la quantité. Utilisez un coût différent de 0 pour les catégories "
 "de dépenses financées par                                             "
 "l'entreprise à un coût fixe, comme les indemnités kilométriques, les "
-"indemnités journalières, l'hébergement"
-"                                             ou les repas."
+"indemnités journalières, "
+"l'hébergement                                             ou les repas."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2413,6 +2418,7 @@ msgstr "Vous n'avez pas les droits pour modifier cette dépense."
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the access rights to modify this expense."
 msgstr ""
 
@@ -2508,6 +2514,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "existe déjà avec le même reçu."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Sélectionnez l'utilisateur responsable de la validation des \"Dépenses\" "
+#~ "de cet employé.\n"
+#~ "Si vide, la validation est faite par un administrateur ou un approbateur "
+#~ "(déterminé dans les paramètres/utilisateurs)."
+
+#~ msgid "The current user has no related employee. Please, create one."
+#~ msgstr ""
+#~ "L'utilisateur actuel n'a pas d'employé associé. Veuillez en créer un."
 
 #~ msgid "$100.00"
 #~ msgstr "100,00 $"

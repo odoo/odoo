@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:35+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 16:33+0000\n"
 "Last-Translator: or balmas <or@laylinetech.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/hr/he/>\n"
@@ -151,8 +151,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
-"<small><b>קרא</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>קרא</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -161,8 +161,8 @@ msgid ""
 "<b>Congratulations!</b> May I recommend you to setup an <a "
 "href=\"%s\">onboarding plan?</a>"
 msgstr ""
-"<b>ברכות ואיחולים!</b> מותר לי להמליץ לך להגדיר <a href=\"%s\">תוכנית "
-"קליטה?</a>"
+"<b>ברכות ואיחולים!</b> מותר לי להמליץ לך להגדיר <a href=\"%s\">תוכנית קליטה?"
+"</a>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -210,8 +210,8 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"Birthday\"/>"
 msgstr ""
-"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"יום "
-"הולדת\"/>"
+"<i class=\"fa fa-fw me-2 fa-birthday-cake text-primary\" title=\"יום הולדת\"/"
+">"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -3759,8 +3759,8 @@ msgid ""
 "enabled in Configuration) and to change the cashier in the Point of Sale "
 "application."
 msgstr ""
-"PIN משמש לביצוע צ'ק-אין/אאוט במצב Kiosk של אפליקציית נוכחות (אם מופעל ב-"
-"Configuration) ולהחלפת הקופאית באפליקציית Point of Sale."
+"PIN משמש לביצוע צ'ק-אין/אאוט במצב Kiosk של אפליקציית נוכחות (אם מופעל "
+"ב-Configuration) ולהחלפת הקופאית באפליקציית Point of Sale."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_id
@@ -4671,20 +4671,19 @@ msgid "Temporary"
 msgstr "זמני"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"מזהה התג חייב להיות אלפאנומרי ללא סימנים דיאקריטיים ובאורך של עד 18 תווים."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
 "employee."
 msgstr "מזהה התג חייב להיות ייחודי, זה כבר משויך לעובד אחר."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -5679,6 +5678,12 @@ msgstr "עבודה"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "מזהה התג חייב להיות אלפאנומרי ללא סימנים דיאקריטיים ובאורך של עד 18 תווים."
 
 #~ msgid "&amp;nbsp;"
 #~ msgstr "&amp;nbsp;"

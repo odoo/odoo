@@ -34,3 +34,10 @@ class TestResConfig(TransactionCase):
         ICP.set_param('resConfigTest.parameterBool', 'True')
         defaults = ResConfigTest.default_get(['param_bool'])
         self.assertTrue(defaults['param_bool'])
+
+    def test_config_parameter_numeric_zero(self):
+        self.env['res.config.test'].create({'param1': 0}).execute()
+
+        IrConfigParameter = self.env['ir.config_parameter'].sudo()
+        self.assertEqual(IrConfigParameter.get_param('resConfigTest.parameter1'), '0')
+        self.assertEqual(self.env['res.config.test'].create({}).param1, 0)

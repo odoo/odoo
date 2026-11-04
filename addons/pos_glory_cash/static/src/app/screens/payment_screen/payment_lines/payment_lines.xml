@@ -58,9 +58,11 @@
             <attribute name="class">electronic_status d-flex gap-2</attribute>
         </xpath>
         <xpath expr="//div[hasclass('electronic_status') and contains(text(), 'Request sent')]" position="inside">
-            <t t-if="line.payment_method_id.payment_method_type === 'glory_cash'">
-                <strong>Cash inserted:</strong>
-                <t t-out="env.utils.formatCurrency(line.payment_method_id.payment_terminal.amountInserted)"/>
+            <t t-if="line.payment_method_id.payment_method_type === 'glory_cash' and line.amount > 0">
+                <span class="ms-auto">
+                    <strong>Cash inserted: </strong>
+                    <t t-out="env.utils.formatCurrency(line.payment_method_id.payment_terminal.amountInserted)"/>
+                </span>
             </t>
         </xpath>
     </t>

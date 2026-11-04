@@ -4028,6 +4028,7 @@ class MailThread(models.AbstractModel):
                 'body': html2plaintext(body, include_references=False) + self._generate_tracking_message(message),
                 'icon': icon,
                 'data': {
+                    "message_id": message.id,
                     'model': model if model else '',
                     'res_id': res_id if res_id else '',
                 }

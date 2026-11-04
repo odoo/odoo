@@ -14,6 +14,7 @@ class SeparatorOptionPlugin extends Plugin {
         },
         so_content_addition_selector: [".s_hr"],
         is_movable_selector: { selector: ".s_hr", direction: "vertical" },
+        content_not_editable_selectors: ".s_hr",
     };
 }
 

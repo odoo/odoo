@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:35+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-09-09 18:11+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -131,8 +131,8 @@ msgid ""
 "<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
 "target=\"_blank\"><small><b>READ</b></small></a>"
 msgstr ""
-"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" target=\"_blank\">"
-"<small><b>MÁS INFORMACIÓN</b></small></a>"
+"<a href=\"/\" class=\"btn btn-primary o_translate_inline\" "
+"target=\"_blank\"><small><b>MÁS INFORMACIÓN</b></small></a>"
 
 #. module: hr
 #. odoo-python
@@ -963,8 +963,8 @@ msgid ""
 "                                culture while enhancing employee "
 "satisfaction and productivity."
 msgstr ""
-"Su labor como gerente de Recursos Humanos en nuestra empresa será <b>"
-"trabajar con todos los\n"
+"Su labor como gerente de Recursos Humanos en nuestra empresa será "
+"<b>trabajar con todos los\n"
 "                                departamentos para diseñar e implementar "
 "iniciativas de RR. HH. que se alineen con nuestros objetivos\n"
 "                                empresariales</b>. Nuestra empresa está "
@@ -1077,8 +1077,8 @@ msgstr ""
 "                                Buscamos un desarrollador con habilidades y "
 "pasión por la tecnología y la innovación.\n"
 "                                <br>\n"
-"                                En este puesto será responsable de <b>"
-"escribir código limpio y mantenible,\n"
+"                                En este puesto será responsable de "
+"<b>escribir código limpio y mantenible,\n"
 "                                participar en revisiones de código y "
 "solucionar problemas</b>. Su trabajo implicará tanto\n"
 "                                <b>resolver problemas de forma creativa como "
@@ -2530,8 +2530,8 @@ msgstr "Fecha de finalización"
 #: model:ir.model.fields,help:hr.field_hr_version__contract_date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
 msgstr ""
-"Fecha de finalización del contrato (si es un contrato por tiempo determinado)"
-"."
+"Fecha de finalización del contrato (si es un contrato por tiempo "
+"determinado)."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__trial_date_end
@@ -4867,16 +4867,6 @@ msgid "Temporary"
 msgstr "Temporal"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-"El ID de la credencial debe ser alfanumérico, no debe tener acentos y "
-"tampoco debe exceder los 18 caracteres."
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -4884,6 +4874,14 @@ msgid ""
 msgstr ""
 "El ID de la identificación debe ser único, este ya esta asignado a otro "
 "empleado."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code
@@ -4949,7 +4947,8 @@ msgstr "El contrato de %s está por vencer."
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "The default working hours are set in configuration."
-msgstr "Las horas de trabajo predeterminadas se establecen en la configuración."
+msgstr ""
+"Las horas de trabajo predeterminadas se establecen en la configuración."
 
 #. module: hr
 #. odoo-python
@@ -5626,8 +5625,8 @@ msgid ""
 "You are not allowed to access \"Employee\" (hr.employee) records.\n"
 "We can redirect you to the public employee list."
 msgstr ""
-"No tienes permiso para acceder a los registros de \"Empleado\" (hr.employee)"
-".\n"
+"No tienes permiso para acceder a los registros de \"Empleado\" "
+"(hr.employee).\n"
 "Podemos redirigirte a la lista pública de empleados."
 
 #. module: hr
@@ -5700,7 +5699,8 @@ msgstr "Debes definir una dirección de correo de trabajo válida para %s"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 msgid "You need to set the work email address for %s"
-msgstr "Necesita configurar la dirección de correo electrónico de trabajo de %s"
+msgstr ""
+"Necesita configurar la dirección de correo electrónico de trabajo de %s"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_trainee
@@ -5932,6 +5932,13 @@ msgstr "trabajo"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
 msgid "work_permit_name"
 msgstr "work_permit_name"
+
+#~ msgid ""
+#~ "The Badge ID must be alphanumeric without any accents and no longer than "
+#~ "18 characters."
+#~ msgstr ""
+#~ "El ID de la credencial debe ser alfanumérico, no debe tener acentos y "
+#~ "tampoco debe exceder los 18 caracteres."
 
 #~ msgid "Cannot archive the only active record of an employee."
 #~ msgstr "No puedes archivar el único registro activo de un empleado."

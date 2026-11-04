@@ -59,6 +59,15 @@ class TestSubmodel(models.Model):
     name = fields.Char(required=True)
     test_model_id = fields.Many2one('test.model')
     tag_id = fields.Many2one('test.tag')
+    test_model_name = fields.Char(string="Model Name", related='test_model_id.name')
+
+
+class TestSubSubmodel(models.Model):
+    _name = 'test.subsubmodel'
+    _description = 'Website Sub Submodel Test'
+
+    test_submodel_id = fields.Many2one('test.submodel')
+    test_submodel_name = fields.Char(related='test_submodel_id.test_model_name')
 
 
 class TestTag(models.Model):

@@ -2026,8 +2026,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: A dict grouping attribute value ids by attribute id.
         :rtype: dict(int, list(int))
         """
-        attribute_value_pairs = [value.split('-') for value in attribute_values if value]
-        return {
-            int(pair[0]): [int(value_id) for value_id in pair[1].split(',')]
-            for pair in attribute_value_pairs
-        }
+        attribute_value_dict = {}
+        for value in attribute_values:
+            pair = value.split('-')
+            if len(pair) < 2 or not pair[0].isdigit():
+                continue
+            value_ids = [value_id for value_id in pair[1].split(',') if value_id.isdigit()]
+            if value_ids:
+                attribute_value_dict[int(pair[0])] = [int(value_id) for value_id in value_ids]
+        return attribute_value_dict

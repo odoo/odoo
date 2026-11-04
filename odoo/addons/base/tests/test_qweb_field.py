@@ -174,3 +174,19 @@ class TestQwebFieldMany2One(common.TransactionCase):
         parent = self.env['res.partner'].create({'name': 'BigBoss'})
         child = self.env['res.partner'].create({'name': 'Minion', 'parent_id': parent.id})
         self.assertEqual(self.value_to_html(child.parent_id), 'BigBoss')
+
+    def test_monetary_field_render_without_currency_fields(self):
+        converter = self.env['ir.qweb.field.monetary']
+        company_currency = self.env.company.currency_id
+
+        html_default = converter.value_to_html(123.45, {})
+        self.assertIn('123.45', html_default)
+        self.assertIn(company_currency.symbol, html_default)
+
+        html_false = converter.value_to_html(99.95, {'display_currency': False})
+        self.assertIn('99.95', html_false)
+        self.assertIn(company_currency.symbol, html_false)
+
+        html_empty_rec = converter.value_to_html(123.45, {'display_currency': self.env['res.currency']})
+        self.assertIn('123.45', html_empty_rec)
+        self.assertIn(company_currency.symbol, html_empty_rec)

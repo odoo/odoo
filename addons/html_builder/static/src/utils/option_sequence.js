@@ -19,7 +19,7 @@ export const DEFAULT = track(10);
  * @return {Number} position parameter itself
  */
 function track(position) {
-    if (!(position in ALL)) {
+    if (!ALL.includes(position)) {
         const index = ALL.findIndex((value) => value > position);
         if (index === -1) {
             ALL.push(position);

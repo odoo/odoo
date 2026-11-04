@@ -27,7 +27,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-06 11:22+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
@@ -109,15 +109,10 @@ msgid ""
 "* 'Show with notification' is 'Show' in addition to a floating text just "
 "next to the button.\n"
 "* 'Open automatically' displays the button and automatically opens the "
-"conversation pane.\n"
+"conversation pane on larger screens. On small screens, this behaves like "
+"'Show'.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
-"* «Mostra» mostra el botó de xat a les pàgines.\n"
-"* «Mostra amb notificació» és «Mostra» a més d'un text flotant just al "
-"costat del botó.\n"
-"* «Obre automàticament» mostra el botó i obre automàticament la subfinestra "
-"de converses.\n"
-"* «Oculta» oculta el botó de xat a les pàgines.\n"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -237,7 +232,8 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Add the following code to the &lt;head&gt; section of your website:"
-msgstr "Afegeix el següent codi a la secció &lt;principal&gt; del teu lloc web:"
+msgstr ""
+"Afegeix el següent codi a la secció &lt;principal&gt; del teu lloc web:"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -801,7 +797,8 @@ msgstr "Color de fons predeterminat del botó de Livechat"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Default background color of the channel header once open"
-msgstr "Color de fons predeterminat de la capçalera del canal una vegada oberta"
+msgstr ""
+"Color de fons predeterminat de la capçalera del canal una vegada oberta"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text_color
@@ -1096,12 +1093,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
-"<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
-"<strong>Marketing.</strong>"
+"<strong>Settings</strong> &gt; <strong>General.</strong>"
 msgstr ""
-"Dirigeix-te a <strong>Lloc web</strong> &gt; <strong>Configuració</strong> "
-"&gt; <strong>Configuració</strong> &gt; <strong>Correu electrònic</strong> "
-"&amp; <strong>Màrqueting.</strong>"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1297,7 +1290,8 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+msgstr ""
+"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_discuss_channel__message_has_error
@@ -2694,6 +2688,12 @@ msgid "Thank you for your feedback"
 msgstr "Gràcies pels vostres comentaris"
 
 #. module: im_livechat
+#. odoo-python
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+msgid "The URL Regex '%(regex)s' is not valid."
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__channel_id
 msgid "The channel of the rule"
 msgstr "El canal de la regla"
@@ -2712,8 +2712,8 @@ msgid ""
 "chat button will be hidden on the specified URL from the visitors located in "
 "these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
-"La norma només s'aplicarà a aquests països. Exemple: si seleccioneu «Bèlgica"
-"» i «Estats Units» i si establiu l'acció a «Oculta», el botó de xat "
+"La norma només s'aplicarà a aquests països. Exemple: si seleccioneu "
+"«Bèlgica» i «Estats Units» i si establiu l'acció a «Oculta», el botó de xat "
 "s'ocultarà a l'URL especificat dels visitants situats en aquests 2 països. "
 "Aquesta característica requereix la GeoIP instal·lada al servidor."
 
@@ -3227,6 +3227,30 @@ msgstr "segons"
 #: model:ir.model,name:im_livechat.model_ir_websocket
 msgid "websocket message handling"
 msgstr "gestió de missatges websocket"
+
+#~ msgid ""
+#~ "* 'Show' displays the chat button on the pages.\n"
+#~ "* 'Show with notification' is 'Show' in addition to a floating text just "
+#~ "next to the button.\n"
+#~ "* 'Open automatically' displays the button and automatically opens the "
+#~ "conversation pane.\n"
+#~ "* 'Hide' hides the chat button on the pages.\n"
+#~ msgstr ""
+#~ "* «Mostra» mostra el botó de xat a les pàgines.\n"
+#~ "* «Mostra amb notificació» és «Mostra» a més d'un text flotant just al "
+#~ "costat del botó.\n"
+#~ "* «Obre automàticament» mostra el botó i obre automàticament la "
+#~ "subfinestra de converses.\n"
+#~ "* «Oculta» oculta el botó de xat a les pàgines.\n"
+
+#~ msgid ""
+#~ "Go to <strong>Website</strong> &gt; <strong>Configuration</strong> &gt; "
+#~ "<strong>Settings</strong> &gt; <strong>Email</strong> &amp; "
+#~ "<strong>Marketing.</strong>"
+#~ msgstr ""
+#~ "Dirigeix-te a <strong>Lloc web</strong> &gt; <strong>Configuració</"
+#~ "strong> &gt; <strong>Configuració</strong> &gt; <strong>Correu "
+#~ "electrònic</strong> &amp; <strong>Màrqueting.</strong>"
 
 #~ msgid " (copy)"
 #~ msgstr " (còpia)"

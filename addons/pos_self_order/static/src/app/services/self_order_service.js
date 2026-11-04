@@ -925,14 +925,15 @@ export class SelfOrder extends Reactive {
                 ? Object.values(this.currentOrder.uiState.lineChanges[line.uuid]).every((v) => !v)
                 : false;
 
-            const wrongChild = line.combo_line_ids.find((l) => !this.isLineProductAvailable(l));
-            if (wrongChild || !this.isLineProductAvailable(line)) {
+            const wrongChild = line.combo_line_ids.find((l) => !l.product_id.self_order_available);
+            const lineAvailable = this.isLineProductAvailable(line);
+            if (wrongChild || !lineAvailable) {
                 if (alreadySent) {
                     line.qty = alreadySent.qty;
                     line.customer_note = alreadySent.customer_note;
                     line.selected_attributes = alreadySent.selected_attributes;
                 } else {
-                    const productName = !this.isLineProductAvailable(line)
+                    const productName = !lineAvailable
                         ? line.product_id?.name
                         : wrongChild?.product_id?.name;
 

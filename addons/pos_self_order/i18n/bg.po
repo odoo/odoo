@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-02 12:31+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
@@ -102,15 +102,16 @@ msgstr ""
 "                        <t t-else=\"\">Здравейте,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Вашата поръчка <t t-out=\"object.tracking_number\">"
-"...</t> на стойност <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">$xx.xx</t> беше потвърдена. <span "
-"t-if=\"object.preset_time or client.street\">Ще бъде готова</span> <span t-"
-"if=\"object.preset_time\">в <t t-out=\"format_time(time=object.preset_time, "
-"tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t></span> <span t-"
-"if=\"client.street\">на адрес <t t-out=\"street\">street</t>, <t t-"
-"out=\"state\">state</t>, <t t-out=\"client.zip or ''\">zip</t>, <t t-"
-"out=\"city\">city</t>, <t t-out=\"country\">country</t></span></div>\n"
+"                    <div>Вашата поръчка <t t-"
+"out=\"object.tracking_number\">...</t> на стойност <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> "
+"беше потвърдена. <span t-if=\"object.preset_time or client.street\">Ще бъде "
+"готова</span> <span t-if=\"object.preset_time\">в <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">на адрес <t "
+"t-out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-"
+"out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-"
+"out=\"country\">country</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Благодарим Ви,</div>\n"
 "                    <br/>\n"
@@ -160,12 +161,12 @@ msgstr ""
 "                        <t t-else=\"\">Здравейте,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Вашата поръчка <t t-out=\"object.tracking_number\">"
-"...</t> на стойност <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">$xx.xx</t> беше потвърдена. <span "
-"t-if=\"object.preset_time\">Ще бъде готова в <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 "
-"pm</t></span></div>\n"
+"                    <div>Вашата поръчка <t t-"
+"out=\"object.tracking_number\">...</t> на стойност <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> "
+"беше потвърдена. <span t-if=\"object.preset_time\">Ще бъде готова в <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00 pm</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Благодарим Ви,</div>\n"
 "                    <br/>\n"
@@ -789,8 +790,33 @@ msgstr "Изгубена интернет връзка"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid combo line"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid preset"
 msgstr "Невалидна предварителна настройка"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product attribute"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product configuration"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid quantity"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1162,6 +1188,18 @@ msgid "Points of Sale"
 msgstr "Каси"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in self-ordering"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in this configuration"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
 msgid "Preview"
 msgstr "Преглед"
@@ -1223,7 +1261,8 @@ msgstr "QR кодове"
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "QR codes can only be generated in mobile or consultation mode."
-msgstr "QR кодове могат да се генерират само в мобилен или консултантски режим."
+msgstr ""
+"QR кодове могат да се генерират само в мобилен или консултантски режим."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
@@ -1321,12 +1360,6 @@ msgstr "Изберете държава"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
-msgid "Select a hour"
-msgstr "Изберете час"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a state"
 msgstr "Изберете област"
@@ -1336,6 +1369,12 @@ msgstr "Изберете област"
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Select a table"
 msgstr "Изберете маса"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Select an hour"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -1568,6 +1607,14 @@ msgstr "Потребителят по подразбиране за самопо
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
 msgstr "Имейл шаблонът с xmlid %s беше изтрит."
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid ""
+"The order ID isn't linked to the order UUID. This is a sign of a tampered "
+"payload."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -1826,3 +1873,6 @@ msgstr "на допълнителна единица"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "Select a hour"
+#~ msgstr "Изберете час"

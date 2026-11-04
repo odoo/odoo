@@ -1,3 +1,5 @@
+/* global Sha1 */
+
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -139,7 +141,9 @@ export class PaymentRazorpay extends PaymentInterface {
         const sequenceNumber = order.payment_ids.filter(
             (pi) => pi.payment_method_id.use_payment_terminal === "razorpay"
         ).length;
-        const referenceId = `${this.pos.config.id}/${order.uuid}/${this.payment_method_id.id}/${this.pos.config.currency_id.name}/${line.amount}/${sequenceNumber}`;
+        const referenceId = Sha1.hash(
+            `${this.pos.config.id}/${order.uuid}/${this.payment_method_id.id}/${this.pos.config.currency_id.name}/${line.amount}/${sequenceNumber}`
+        );
         line.payment_ref_no = referenceId;
         if (order.isRefund) {
             line.setPaymentStatus("waitingCard");

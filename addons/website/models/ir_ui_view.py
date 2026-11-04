@@ -395,11 +395,30 @@ class IrUiView(models.Model):
         return domain & Domain('website_id', 'in', (False, self.env.context.get('website_id', False)))
 
     @api.model
+    def _raise_error(self, error):
+        kind, *values = error
+        if len(values) == 2:
+            error, website_id = values
+            if kind == 'missing_template':
+                raise MissingError(self.env._("Template not found: '%(error)s' (website: %(website_id)s)",
+                    error=error, website_id=website_id))
+            if kind == 'missing_view':
+                raise MissingError(self.env._("Template does not exist or has been deleted: %(error)s (website: %(website_id)s)",
+                    error=error, website_id=website_id))
+            if kind == 'missing_external':
+                raise MissingError(self.env._("External ID can not be loaded: %(error)s (website: %(website_id)s)",
+                    error=error, website_id=website_id))
+        super()._raise_error(error)
+
+    @api.model
     def _fetch_template_views(self, ids_or_xmlids):
         data = super()._fetch_template_views(ids_or_xmlids)
         for key in list(data):
-            if isinstance(data[key], MissingError):
-                data[key] = MissingError(self.env._("%(error)s (website: %(website_id)s)", error=data[key], website_id=self.env.context.get('website_id')))
+            if (
+                isinstance(data[key], tuple) and data[key]
+                and data[key][0] in ('missing_template', 'missing_view', 'missing_external')
+            ):
+                data[key] = (data[key][0], data[key][1], self.env.context.get('website_id'))
         return data
 
     @api.model
@@ -409,7 +428,7 @@ class IrUiView(models.Model):
     def _get_cached_visibility(self):
         info = self._get_cached_template_info(self.id, _view=self)
         if info['error']:
-            raise info['error']
+            self._raise_error(info['error'])
         return info['visibility']
 
     def _handle_visibility(self, do_raise=True):

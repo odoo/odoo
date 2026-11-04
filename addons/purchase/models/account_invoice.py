@@ -517,7 +517,8 @@ class AccountMove(models.Model):
                         'sequence': -1,
                     })]
 
-        if not any(line.purchase_order_id for line in self.line_ids):
+        # Only clean the origin when it was guessed from the line descriptions: an explicit order reference is kept.
+        if self.env.context.get('invoice_origin_from_description') and not any(line.purchase_order_id for line in self.line_ids):
             self.invoice_origin = False
 
 

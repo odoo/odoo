@@ -52,6 +52,7 @@ class FleetVehicleSendMail(models.TransientModel):
                 body=bodies[vehicle.id],
                 email_layout_xmlid='mail.mail_notification_light',
                 message_type='comment',
+                attachment_ids=self.attachment_ids.copy({'res_model': 'fleet.vehicle', 'res_id': vehicle.id}).ids,
                 partner_ids=vehicle.driver_id.ids,
                 subject=subjects[vehicle.id],
             )

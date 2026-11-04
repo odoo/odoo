@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-05 17:02+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
@@ -74,6 +74,7 @@ msgstr "현금 투입액:"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/components/cancel_dialog.xml:0
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
 msgid "Cash machine error"
 msgstr "현금 인출기 오류"
 
@@ -98,6 +99,7 @@ msgstr "거스름돈: %s"
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/components/cancel_dialog.xml:0
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
 msgid "Close"
 msgstr "닫기"
 
@@ -164,9 +166,21 @@ msgstr "오류"
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Error code:"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/utils/constants.js:0
 msgid "Failed to authenticate"
 msgstr "인증에 실패했습니다"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid "Failed to cancel cash machine transaction."
+msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -237,9 +251,23 @@ msgid "Please configure the IP address before opening the admin page"
 msgstr ""
 
 #. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
+"Please remove the cash from the exit of the cash machine before starting a "
+"transaction."
+msgstr ""
+
+#. module: pos_glory_cash
 #: model:ir.model,name:pos_glory_cash.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
 msgstr "POS 결제 수단"
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/components/glory_error_dialog.xml:0
+msgid "Reset"
+msgstr "초기화"
 
 #. module: pos_glory_cash
 #. odoo-javascript
@@ -287,6 +315,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
 msgid ""
+"The cash machine is busy counting its inventory, please wait a few seconds "
+"and retry."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
 "The cash machine is busy with another operation. Do you want to cancel it?"
 msgstr ""
 
@@ -312,8 +348,24 @@ msgstr ""
 
 #. module: pos_glory_cash
 #. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
+"The cash machine is not ready to start a transaction. Check all the covers "
+"are closed and then try again."
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/screens/payment_screen/payment_lines/payment_lines.xml:0
 msgid "The cash machine is running low on the following coins/bills:"
+msgstr ""
+
+#. module: pos_glory_cash
+#. odoo-javascript
+#: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
+msgid ""
+"The cash machine is unable to return the inserted cash, please refund the "
+"client via another method."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -339,7 +391,9 @@ msgstr ""
 #. module: pos_glory_cash
 #. odoo-javascript
 #: code:addons/pos_glory_cash/static/src/app/payment_glory.js:0
-msgid "There is insufficient cash in the machine to give change."
+msgid ""
+"There is insufficient cash in the machine to give change. You will need to "
+"refund the difference via another method."
 msgstr ""
 
 #. module: pos_glory_cash
@@ -409,9 +463,6 @@ msgstr "재고 관리 대기 중"
 
 #~ msgid "Download logs"
 #~ msgstr "다운로드 로그"
-
-#~ msgid "Reset"
-#~ msgstr "초기화"
 
 #~ msgid "Reset cash machine"
 #~ msgstr "현금 입출금기 초기화"

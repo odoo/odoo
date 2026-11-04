@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.tests import tagged
 
@@ -140,6 +142,15 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         self._send_patched(final_invoice)
         self._assert_invoice_ubl_file(final_invoice, "ubl_21_fr_out_final_invoice")
 
+    def test_export_invoice_with_no_vat(self):
+        self.company_data['company'].write({'vat': False, 'company_registry': '96851575905808'})
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+
+        wizard = self.create_send_and_print(invoice, sending_methods=['manual'], extra_edis=['ubl_21_fr'])
+        wizard.action_send_and_print()
+        self._assert_invoice_ubl_file(invoice, "ubl_21_fr_out_no_vat_invoice")
+
     def test_import_downpayments_partner_fr(self):
         downpayment_invoice = self._import_invoice_as_attachment_on('ubl_21_fr_in_downpayment_invoice')
         self.assertEqual(downpayment_invoice.move_type, 'in_invoice')
@@ -183,3 +194,51 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
             {'price_subtotal': 1000.0, 'price_total': 1200.0},
             {'price_subtotal': 400.0, 'price_total': 480.0},
         ])
+
+    def test_import_partner_with_siret(self):
+        """ Test that Odoo retrieves correctly the partner using the SIRET """
+        # partner a is SUPER FRENCH PARTNER with VAT FR23334175221
+        self.partner_a.supplier_rank = 10
+        other_establishment = self.env['res.partner'].create({
+            'name': 'SUPER FRENCH PARTNER PARIS',
+            'country_id': self.env.ref('base.fr').id,
+            'vat': 'FR23334175221',
+            'company_registry': '33417522100012',
+        })
+        bill = self._import_invoice_as_attachment_on('ubl_21_fr_in_invoice_establishment')
+        self.assertEqual(bill.partner_id, other_establishment)
+        self.assertEqual(bill.partner_bank_id.partner_id, other_establishment)
+
+# Tests below tests unusuals invoice line.
+# Since ubl 2.1 doesn't include the peppol rule https://docs.peppol.eu/poacc/billing/3.0/rules/ubl-peppol/PEPPOL-EN16931-R120/
+# People can ends up with weird invoices that were validated by the Approved Plateform
+# At the end, the imported line subtotal should match LineExtensionAmount
+
+    def test_import_partial_invoice_line_charges_price_details(self):
+        # Some invoice provider (FedEx) uses allowances and charges to details the price of an items
+        invoice = self._import_invoice_as_attachment_on('ubl_21_fr_in_partial_invoice_line_charges_price_details')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'quantity': 1, 'price_subtotal': 100.0},
+        ])
+
+    def test_import_partial_invoice_line_wrong_unit_price(self):
+        # Some invoice provider puts the subtotal of the line (without charges and allowances) on the PriceAmount in the price section.
+        # Without taking into account the invoiced quantity or the implicite PriceAmount quantity.
+        invoice = self._import_invoice_as_attachment_on('ubl_21_fr_in_partial_invoice_line_wrong_unit_price')
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'quantity': 10, 'price_subtotal': 100.0},
+        ])
+
+    def test_import_en16931_customization_id(self):
+        # Some Approved Platforms only set the EN16931 CustomizationID, but the documents still follow the French rules
+        attachment = self._import_invoice_as_attachment('ubl_21_fr_in_partial_invoice_en16931_customization_id')
+        file_data = self.env['account.move']._to_files_data(attachment)[0]
+        self.assertEqual(self.env['account.move']._get_import_file_type(file_data), 'account.edi.xml.ubl_21_fr')
+        invoice = self._import_invoice_as_attachment_on(attachment=attachment)
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {'quantity': 10, 'price_unit': 10.0, 'discount': 0.0, 'price_subtotal': 100.0},
+        ])
+
+        # Without PDP, the generic format is used
+        with patch.object(self.env.registry['res.company'], '_get_peppol_proxy_type', return_value='peppol'):
+            self.assertEqual(self.env['account.move']._get_import_file_type(file_data), 'account.edi.xml.ubl_21')

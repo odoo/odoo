@@ -44,6 +44,7 @@ export class GloryService {
             StatusChangeEvent: this._statusChangeHandler.bind(this),
             InventoryResponse: this._inventoryChangeHandler.bind(this),
             SpecialDeviceError: this._deviceErrorHandler.bind(this),
+            GlyCashierEvent: this._cashierEventHandler.bind(this),
         };
         this.onStatusChange = onStatusChange;
         this.socketIo = new SocketIoService({
@@ -110,6 +111,9 @@ export class GloryService {
                 "WAITING_ERROR_RECOVERY",
                 "WAITING_REPLENISHMENT",
                 "COLLECTING",
+                "WAITING_CASH_IN_REMOVE",
+                "WAITING_CASH_OUT_REMOVE",
+                "WAITING_INVENTORY",
             ].includes(this.status)
         ) {
             return {
@@ -137,14 +141,14 @@ export class GloryService {
             },
         ]);
 
-        const result = await this._handlePaymentResponse(xmlResponse);
+        return await this._handlePaymentResponse(xmlResponse);
+    }
 
-        if (this.occupied) {
-            await this._release();
-        }
-        this.paymentInProgress = false;
-
-        return result;
+    async resumePayment() {
+        const xmlResponse = await this._waitForResponseWithType(
+            XML_REQUESTS.startPayment.responseName
+        );
+        return await this._handlePaymentResponse(xmlResponse);
     }
 
     async initiatePaymentCancel() {
@@ -201,6 +205,8 @@ export class GloryService {
             inventory: [],
             amountInserted: 0,
             lastDeviceError: null,
+            errorCode: null,
+            errorGif: null,
         });
 
         this.resolvers = {};
@@ -308,6 +314,8 @@ export class GloryService {
 
         if (!["ERROR", "WAITING_ERROR_RECOVERY"].includes(this.status)) {
             this.state.lastDeviceError = null;
+            this.state.errorCode = null;
+            this.state.errorGif = null;
         }
 
         if (this.status === "COUNTING") {
@@ -338,6 +346,17 @@ export class GloryService {
     _deviceErrorHandler(deviceErrorResponse) {
         const errorMessageElement = deviceErrorResponse.getElementsByTagName("ErrorMessage")[0];
         this.state.lastDeviceError = errorMessageElement.textContent;
+    }
+
+    /**
+     * @param {Element} cashierEventResponse
+     */
+    _cashierEventHandler(cashierEventResponse) {
+        const eventElement = cashierEventResponse.firstElementChild;
+        if (eventElement.tagName === "eventError") {
+            this.state.errorCode = eventElement.getElementsByTagName("ErrorCode")[0].textContent;
+            this.state.errorGif = eventElement.getElementsByTagName("RecoveryURL")[0].textContent;
+        }
     }
 
     /**
@@ -375,12 +394,20 @@ export class GloryService {
         const baseResponse = {
             status: parseGloryResult(paymentResponse),
         };
-        if (["SUCCESS", "CHANGE_SHORTAGE"].includes(baseResponse.status)) {
+        if (
+            ["SUCCESS", "CHANGE_SHORTAGE", "CANCEL_CHANGE_SHORTAGE"].includes(baseResponse.status)
+        ) {
             return {
                 ...baseResponse,
                 ...this._getTransactionInfo(paymentResponse),
             };
         }
+
+        if (this.occupied) {
+            await this._release();
+        }
+        this.paymentInProgress = false;
+
         return baseResponse;
     }
 
@@ -457,6 +484,10 @@ export class GloryService {
             return this._sendXmlRequest(request, children, true);
         }
 
+        if (statusCode === "NOT_OCCUPIED") {
+            this.occupied = false;
+        }
+
         return { statusCode, xmlResponse };
     }
 
@@ -470,6 +501,15 @@ export class GloryService {
         });
         const result = await responsePromise;
         this.resolvers[type] = null;
+
+        if (this.sequenceNumber && result instanceof Element) {
+            const sequenceNumber = result.getElementsByTagName("SeqNo")[0]?.textContent;
+            if (sequenceNumber && sequenceNumber !== this.sequenceNumber) {
+                // This response was intended for a different POS, wait for the next one
+                return this._waitForResponseWithType(type);
+            }
+        }
+
         return result;
     }
 

@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-10-13 06:49+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
@@ -974,6 +974,11 @@ msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hotelli, lentolippu, taksi jne."
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
+msgid "Hr Expense"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
 msgid "Hr Expense Alias Domain"
 msgstr "Henkilöstöhallintokulujen alias-domain"
@@ -1766,12 +1771,10 @@ msgstr "Skannaa tämä QR-koodi hankkiaksesi Odoo-sovelluksen:"
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Valitse käyttäjä jonka vastuulla on hyväksyä tämän työntekijän kulut.\n"
-"Jos tyhjä, hyväksynnän tekee Ylläpitäjä tai Hyväksyjä (riippuen asetuksista/"
-"käyttäjistä)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1981,10 +1984,10 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "The current user has no related employee. Please, create one."
+msgid ""
+"The current user has no related employee. Please, create one in %(company)s, "
+"or switch to a company where they have one."
 msgstr ""
-"Nykyisellä käyttäjällä ei ole työntekijätietoja. Ole hyvä ja liitä "
-"työntekijätieto käyttäjään."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2262,13 +2265,13 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
-"Kun kulutuotteen kustannus on muu kuin 0, tuotetta käyttävä käyttäjä"
-"                                             ei voi muuttaa kulun suuruutta, "
-"vaan                                             ainoastaan määrää. Käytä "
-"kustannusta, joka on muu kuin 0, yrityksen kiinteiden"
-"                                            kustannusten rahoittamissa "
-"kulukategorioissa, kuten kilometrikorvauksissa, päivärahoissa, majoitus- tai "
-"ateriakorvauksissa."
+"Kun kulutuotteen kustannus on muu kuin 0, tuotetta käyttävä "
+"käyttäjä                                             ei voi muuttaa kulun "
+"suuruutta, vaan                                             ainoastaan "
+"määrää. Käytä kustannusta, joka on muu kuin 0, yrityksen "
+"kiinteiden                                            kustannusten "
+"rahoittamissa kulukategorioissa, kuten kilometrikorvauksissa, päivärahoissa, "
+"majoitus- tai ateriakorvauksissa."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2408,6 +2411,7 @@ msgstr "Sinulla ei ole oikeuksia muokata tätä kulua."
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the access rights to modify this expense."
 msgstr "Sinulla ei ole käyttöoikeuksia tämän kulun muokkaamiseen."
 
@@ -2502,6 +2506,20 @@ msgstr "käytä tekstintunnistustoimintoa lukemaan tiedot kuitin kuvasta"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "samalla kuitilla, joka on jo olemassa."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Valitse käyttäjä jonka vastuulla on hyväksyä tämän työntekijän kulut.\n"
+#~ "Jos tyhjä, hyväksynnän tekee Ylläpitäjä tai Hyväksyjä (riippuen "
+#~ "asetuksista/käyttäjistä)."
+
+#~ msgid "The current user has no related employee. Please, create one."
+#~ msgstr ""
+#~ "Nykyisellä käyttäjällä ei ole työntekijätietoja. Ole hyvä ja liitä "
+#~ "työntekijätieto käyttäjään."
 
 #~ msgid "$100.00"
 #~ msgstr "100.00 USD"

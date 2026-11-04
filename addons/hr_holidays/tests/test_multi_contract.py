@@ -511,3 +511,29 @@ class TestHolidaysMultiContract(TestHolidayContract):
         leave.action_approve()
 
         self.assertRaises(employee.version_id.write({'resource_calendar_id': second_schedule.id}))
+
+    def test_cancelled_leave_next_version_calendar_change(self):
+        # A cancelled time off shouldn't be impacted when the working schedule of the next version changes
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee with two versions',
+            'tz': 'Europe/Brussels',
+        })
+        employee.version_id.write({
+            'date_version': date(2026, 9, 1),
+            'contract_date_start': date(2026, 9, 1),
+            'resource_calendar_id': self.calendar_40h.id,
+        })
+        october_version = employee.create_version({
+            'date_version': date(2026, 10, 1),
+            'resource_calendar_id': self.calendar_40h.id,
+        })
+        leave = self.create_leave(date(2026, 9, 30), date(2026, 10, 2), employee_id=employee.id)
+        leave.action_approve()
+        leave._force_cancel("Not needed anymore")
+        self.assertEqual(leave.state, 'cancel')
+
+        october_version.resource_calendar_id = self.calendar_35h
+
+        self.assertEqual(leave.state, 'cancel')
+        self.assertEqual(leave.resource_calendar_id, self.calendar_40h)
+        self.assertEqual(self.env['hr.leave'].search([('employee_id', '=', employee.id)]), leave)

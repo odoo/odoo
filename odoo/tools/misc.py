@@ -825,6 +825,11 @@ class lower_logging(logging.Handler):
 
 class MungedTracebackLogRecord(logging.LogRecord):
     def getMessage(self):
+        if self.exc_info:
+            self.exc_text = logging.Formatter.formatException(None, self.exc_info).replace(
+                'Traceback (most recent call last):',
+                '_Traceback_ (most recent call last):',
+            )
         return super().getMessage().replace(
             'Traceback (most recent call last):',
             '_Traceback_ (most recent call last):',
@@ -1992,6 +1997,11 @@ def get_flag(country_code: str) -> str:
 
     This emoji is composed of the two regional indicator emoji of the country code.
     """
+    from odoo.addons.base.models.res_country import NO_FLAG_COUNTRIES  # noqa: PLC0415
+
+    if country_code in NO_FLAG_COUNTRIES:
+        return ""
+
     return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)
 
 

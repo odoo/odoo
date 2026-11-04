@@ -53,6 +53,23 @@ test("close on click away", async () => {
     expect(".o_popover #comp").toHaveCount(0);
 });
 
+test("close on pointer down with a nonzero event detail", async () => {
+    class Comp extends Component {
+        static template = xml`<div id="comp">in popover</div>`;
+        static props = ["*"];
+    }
+
+    getService("popover").add(target, Comp);
+    await animationFrame();
+
+    expect(".o_popover").toHaveCount(1);
+
+    document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, detail: 1 }));
+    await animationFrame();
+
+    expect(".o_popover").toHaveCount(0);
+});
+
 test("close on click away when loading", async () => {
     const def = new Deferred();
     class Comp extends Component {

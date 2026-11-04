@@ -341,6 +341,22 @@ class WithContext(HttpCase):
         self.assertEqual(r.status_code, 200, "Admin should see the specific unpublished page")
         self.assertEqual('I am a specific page' in r.text, True, "Admin should see the specific unpublished page")
 
+    def test_unpublished_page_deactivated_user(self):
+        designer = common.new_test_user(
+            self.env,
+            login='designer',
+            groups='base.group_user,website.group_website_designer',
+        )
+        self.page.is_published = False
+
+        self.authenticate(designer.login, designer.login)
+        r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 200, "Website Designers should see unpublished pages")
+
+        designer.active = False
+        r = self.url_open(self.page.url)
+        self.assertEqual(r.status_code, 404, "Deactivated users should be logged out before serving fallback pages")
+
     def test_unpublished_page_no_cache(self):
         """Ensure that a previously-published page that is now unpublished will not be cached."""
         self.authenticate(None, None)
@@ -745,6 +761,65 @@ class WithContext(HttpCase):
         self.assertEqual(r.status_code, 200, "Specific should be reachable")
         r = self.url_open(generic_page.url)
         self.assertEqual(r.status_code, 404, "Generic should not be reachable")
+
+
+@tagged('-at_install', 'post_install')
+class TestPageInMenu(common.TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref('website.default_website')
+        cls.page = cls.env['website.page'].create({
+            'name': 'In Menu Page',
+            'type': 'qweb',
+            'arch': '<div>content</div>',
+            'key': 'test.in_menu_page',
+            'url': '/in-menu-page',
+            'website_id': cls.website.id,
+        })
+        # A menu tree other than the main menu
+        other_menu = cls.env['website.menu'].create({
+            'name': 'Other Menu',
+            'url': '#',
+            'website_id': cls.website.id,
+        })
+        cls.other_entry = cls.env['website.menu'].create({
+            'name': 'In Menu Page',
+            'url': cls.page.url,
+            'page_id': cls.page.id,
+            'parent_id': other_menu.id,
+            'website_id': cls.website.id,
+        })
+
+    def _page_properties(self):
+        return self.env['website.page.properties'].create({
+            'target_model_id': self.page.id,
+            'website_id': self.website.id,
+            'url': self.page.url,
+        })
+
+    def _main_menu_entries(self):
+        return self.env['website.menu'].search([
+            ('page_id', '=', self.page.id),
+            ('parent_id', '=', self.website.menu_id.id),
+        ])
+
+    def test_in_menu_ignores_other_menu_trees(self):
+        self.assertFalse(self.page.is_in_menu)
+        properties = self._page_properties()
+        self.assertFalse(properties.is_in_menu)
+
+        properties.is_in_menu = True
+        self.assertEqual(len(self._main_menu_entries()), 1, "Switching 'In Menu' on should add the page to the main menu")
+        self.page.invalidate_recordset(['menu_ids', 'is_in_menu'])
+        self.assertTrue(self.page.is_in_menu)
+
+        properties = self._page_properties()
+        self.assertTrue(properties.is_in_menu)
+        properties.is_in_menu = False
+        self.assertFalse(self._main_menu_entries(), "Switching 'In Menu' off should remove the page from the main menu")
+        self.assertTrue(self.other_entry.exists(), "'In Menu' should not remove the entries of other menu trees")
 
 
 @tagged('-at_install', 'post_install')

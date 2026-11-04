@@ -6,7 +6,7 @@ from lxml import etree
 from stdnum.be import vat as be_vat
 
 from odoo import Command, _, api, fields, models
-from odoo.tools import formatLang, frozendict, groupby, html2plaintext, html_escape, pdf, str2bool, unique
+from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, str2bool, unique
 from odoo.tools.float_utils import float_compare
 
 from odoo.addons.account.tools import dict_to_xml
@@ -2620,28 +2620,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         base_lines belonging to sections without `collapse_composition` are left untouched.
         """
-        def _build_collapsed_base_line(group, section):
-            """Build a single base_line representing all lines of a tax group under a collapsed section"""
-            AccountTax = self.env['account.tax']
-            first_line = group[0]
-            total_excluded_currency = sum(bl['tax_details']['total_excluded_currency'] for bl in group)
-
-            collapsed_line = AccountTax._prepare_base_line_for_taxes_computation(
-                first_line['record'],
-                quantity=1.0,
-                price_unit=total_excluded_currency,
-                discount=0.0,
-                tax_ids=first_line['tax_ids'],
-                currency_id=first_line['currency_id'],
-            )
-            collapsed_line.update({
-                'name': section.name,
-                '_line_name': section.name,
-                'product_id': self.env['product.product'],
-            })
-            AccountTax._add_tax_details_in_base_lines([collapsed_line], invoice.company_id)
-            AccountTax._round_base_lines_tax_details([collapsed_line], invoice.company_id)
-            return collapsed_line
+        AccountTax = self.env['account.tax']
 
         def _get_collapsed_section_line_ids(invoice, base_lines):
             """Return collapse roots (sections/subsections), their subsections, and the hidden product lines."""
@@ -2669,11 +2648,15 @@ class AccountEdiUBL(models.AbstractModel):
                 if not section_bls:
                     continue
 
-                for _taxes, lines in groupby(
-                    sorted(section_bls, key=lambda bl: bl['tax_ids'].ids),
-                    key=lambda bl: bl['tax_ids'],
-                ):
-                    result.append(_build_collapsed_base_line(list(lines), section))
+                reduced_lines = AccountTax._reduce_base_lines_with_grouping_function(section_bls)
+
+                for bl in reduced_lines:
+                    bl.update({
+                        'name': section.name,
+                        '_line_name': section.name,
+                        'product_id': self.env['product.product'],
+                    })
+                result.extend(reduced_lines)
             return result
 
         collapsed_roots, hidden_lines = _get_collapsed_section_line_ids(invoice, base_lines)
@@ -2874,6 +2857,7 @@ class AccountEdiUBL(models.AbstractModel):
                 pattern = f'{prefix}\\d{{{sequence.padding}}}{suffix}'
                 refs = re.findall(pattern, ' '.join([desc.text for desc in tree.findall('.//{*}Item/{*}Description') if desc.text]))
                 invoice_origin = ' '.join(refs)
+                collected_values['file_data']['invoice_origin_from_description'] = bool(invoice_origin)
 
         if invoice_origin:
             collected_values['to_write']['invoice_origin'] = invoice_origin
@@ -3116,6 +3100,12 @@ class AccountEdiUBL(models.AbstractModel):
                 'reason_code': reason_code,
             }
 
+    def _fix_price_unit_quantity_discount(self, quantity, discount, price_unit, line_extension_amount, currency):
+        """Used in l10n_fr_pdp to recompute the quantity, discount and price unit so they match the line extension amounts"""
+        # TO OVERRIDE
+        # TODO: Remove this when french enforces stricter rules
+        return quantity, discount, price_unit
+
     def _import_ubl_invoice_line_add_price_unit_quantity_discount(self, collected_values):
         file_document_sign = collected_values['file_document_sign']
         line_tree = collected_values['line_tree']
@@ -3229,6 +3219,8 @@ class AccountEdiUBL(models.AbstractModel):
         # Turn discount_amount to a percentage
         gross_subtotal = price_unit * quantity
         discount = (discount_amount * 100 / gross_subtotal) if gross_subtotal else 0.0
+
+        quantity, discount, price_unit = self._fix_price_unit_quantity_discount(quantity, discount, price_unit, line_extension_amount, currency)
 
         to_write = collected_values['to_write']
         to_write['quantity'] = quantity

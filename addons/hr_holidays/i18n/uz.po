@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-07 02:12+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-19/"
@@ -533,6 +533,11 @@ msgstr ""
 "Ta'tilni turli ish jadvallari bilan bir nechta versiyalarga qo‘yib "
 "bo‘lmaydi.  Har bir versiya davri uchun alohida dam olish vaqtini yarating.  "
 "Dam olish vaqti: %(time_off)s Versiyalar: %(versions)s"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "A supporting document is required for this type of time off."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -1528,8 +1533,8 @@ msgid ""
 "in the future. Please review this employee's leaves and adjust their "
 "allocation accordingly."
 msgstr ""
-"Ushbu ish jadvalining o‘zgartirilishi natijasida ta'sirga uchragan xodim"
-"(lar) kelajakda olgan ta'tillari uchun yetarli miqdorda ajratmaga ega "
+"Ushbu ish jadvalining o‘zgartirilishi natijasida ta'sirga uchragan "
+"xodim(lar) kelajakda olgan ta'tillari uchun yetarli miqdorda ajratmaga ega "
 "bo‘lmaydi. Iltimos, ushbu xodimning ta'tillarini ko‘rib chiqing va "
 "ajratmalarini tegishli ravishda moslashtiring."
 
@@ -2830,6 +2835,14 @@ msgid ""
 msgstr ""
 "Agar faol maydon \"false\" qilib o‘rnatilsa, dam olish turini o‘chirmasdan "
 "yashirish imkonini beradi."
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
@@ -4230,8 +4243,8 @@ msgid ""
 "            #       by the Time Off Officer, Employee's Approver or both."
 msgstr ""
 "Xodim tomonidan so‘rov berilganda kerakli tasdiqlash darajasini tanlang # - "
-"Tasdiqlash shart emas: Xodimning so‘rovi avtomatik ravishda tasdiqlanadi. "
-"# - Dam olish vaqti bo‘yicha mas'ul xodim tomonidan tasdiqlanadi: Xodimning "
+"Tasdiqlash shart emas: Xodimning so‘rovi avtomatik ravishda tasdiqlanadi. # "
+"- Dam olish vaqti bo‘yicha mas'ul xodim tomonidan tasdiqlanadi: Xodimning "
 "so‘rovi dam olish vaqti bo‘yicha mas'ul xodim, xodimning tasdiqlovchisi yoki "
 "ikkalasi tomonidan qo‘lda tasdiqlanishi kerak."
 
@@ -4712,7 +4725,8 @@ msgstr "Boshlanish sanasi tugash sanasidan oldin bo‘lishi kerak."
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
 #, fuzzy
 msgid "The start date must be before or equal to the end date."
-msgstr "Boshlanish sanasi tugash sanasidan oldin yoki unga teng bo‘lishi kerak."
+msgstr ""
+"Boshlanish sanasi tugash sanasidan oldin yoki unga teng bo‘lishi kerak."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__state
@@ -5834,7 +5848,8 @@ msgstr "Bir xil harakatni ikki marta bajara olmaysiz"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, fuzzy
 msgid "You can't refuse a leave with validation by Time Off Officer."
-msgstr "Dam olish vaqti xodimi tomonidan tekshirilgan ta'tilni rad eta olmaysiz"
+msgstr ""
+"Dam olish vaqti xodimi tomonidan tekshirilgan ta'tilni rad eta olmaysiz"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5875,7 +5890,8 @@ msgstr "Bu ta'tilni tasdiqlay olmaysiz."
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 #, fuzzy
 msgid "You cannot allow requests on top of leaves of type 'Absence'."
-msgstr "\"Yo‘qlik\" turidagi ta'tillar ustiga so‘rovlarga ruxsat bera olmaysiz."
+msgstr ""
+"\"Yo‘qlik\" turidagi ta'tillar ustiga so‘rovlarga ruxsat bera olmaysiz."
 
 #. module: hr_holidays
 #. odoo-python

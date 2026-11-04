@@ -1119,6 +1119,21 @@ export class LinkPlugin extends Plugin {
         );
         if (links.size) {
             for (const link of links) {
+                const styleClasses = [...link.classList].filter(
+                    (c) => !c.startsWith("btn") && !this.getResource("system_classes").includes(c)
+                );
+                const hasStyle = styleClasses.length || link.style.length;
+                if (hasStyle && isVisible(link)) {
+                    const span = this.document.createElement("span");
+                    link.after(span);
+                    cursors.update(callbacksForCursorUpdate.after(link, span));
+                    span.append(link);
+                    cursors.update(callbacksForCursorUpdate.append(span, link));
+                    span.classList.add(...styleClasses);
+                    if (link.style.length) {
+                        span.style.cssText = link.style.cssText;
+                    }
+                }
                 cursors.update(callbacksForCursorUpdate.unwrap(link));
                 unwrapContents(link);
             }
@@ -1136,7 +1151,7 @@ export class LinkPlugin extends Plugin {
     }
 
     updateFontSizedButtonClass(root) {
-        const buttons = selectElements(root, ".btn");
+        const buttons = [...selectElements(root, ".btn")];
         const parentButton = closestElement(root, ".btn");
         if (parentButton && parentButton !== root) {
             buttons.push(parentButton);

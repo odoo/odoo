@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-09-10 11:13+0000\n"
 "Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -519,6 +519,11 @@ msgstr ""
 "\n"
 "Različice:\n"
 "%(versions)s"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "A supporting document is required for this type of time off."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -2517,6 +2522,14 @@ msgstr ""
 "časa, ne da bi ga odstranili."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
@@ -4168,7 +4181,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
 msgid ""
 "The type with the smallest sequence is the default value in time off request"
-msgstr "Tip z najmanjšim zaporedjem je privzeta vrednost v zahtevi za odsotnost"
+msgstr ""
+"Tip z najmanjšim zaporedjem je privzeta vrednost v zahtevi za odsotnost"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5016,7 +5030,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
 msgid ""
 "You can define a period of time where the days carried over will be available"
-msgstr "Določite lahko časovno obdobje, v katerem bodo preneseni dnevi na voljo"
+msgstr ""
+"Določite lahko časovno obdobje, v katerem bodo preneseni dnevi na voljo"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__carryover_options
@@ -5227,7 +5242,8 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid ""
 "You don't have the rights to apply second approval on a time off request"
-msgstr "Nimate pravice do uveljavljanja druge odobritve za zahtevo za odsotnost"
+msgstr ""
+"Nimate pravice do uveljavljanja druge odobritve za zahtevo za odsotnost"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.action_my_days_off_dashboard_calendar

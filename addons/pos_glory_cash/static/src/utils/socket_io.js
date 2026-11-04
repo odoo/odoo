@@ -150,6 +150,9 @@ export class SocketIoService {
     }
 
     _onMessageReceived(data) {
+        if (this.closed) {
+            return;
+        }
         if (data instanceof Blob) {
             this.callbacks.onBinaryEvent(data);
             return;

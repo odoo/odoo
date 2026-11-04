@@ -33,7 +33,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-19 17:35+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-10-14 07:09+0000\n"
 "Last-Translator: Josep Anton <jabelchi@gmail.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/hr/ca/>\n"
@@ -616,7 +616,8 @@ msgstr ""
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
 msgid "A user cannot be linked to multiple employees in the same company."
-msgstr "Un usuari no es pot vincular a diversos empleats de la mateixa empresa."
+msgstr ""
+"Un usuari no es pot vincular a diversos empleats de la mateixa empresa."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2853,7 +2854,8 @@ msgstr "Nº identificació"
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_version__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
+msgstr ""
+"Si està marcat, hi ha nous missatges que requereixen la vostra atenció."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
@@ -4655,14 +4657,6 @@ msgid "Temporary"
 msgstr "Temporal"
 
 #. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee.py:0
-msgid ""
-"The Badge ID must be alphanumeric without any accents and no longer than 18 "
-"characters."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_barcode_uniq
 msgid ""
 "The Badge ID must be unique, this one is already assigned to another "
@@ -4670,6 +4664,14 @@ msgid ""
 msgstr ""
 "L'ID de la identificació ha de ser únic, aquest ja està assignat a un altre "
 "empleat."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid ""
+"The Badge ID must contain only printable ASCII characters, without spaces, "
+"and be no longer than 18 characters."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_reason__country_code

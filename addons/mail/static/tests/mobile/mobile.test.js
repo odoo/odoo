@@ -20,8 +20,8 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
-import { describe, test } from "@odoo/hoot";
-import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { advanceTime, pointerDown, press, queryAllRects } from "@odoo/hoot-dom";
 import { Deferred, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
 import { browser } from "@web/core/browser/browser";
@@ -152,4 +152,64 @@ test("click on an odoo link should fold the chat window (mobile)", async () => {
     await openListView("discuss.channel", { res_id: channelId });
     await contains(".o-mail-ChatBubble");
     assertChatHub({ folded: [channelId] });
+});
+
+test("click on a record link should fold the chat window (mobile)", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Lead customer" });
+    const channelId = pyEnv["discuss.channel"].create({});
+    pyEnv["mail.message"].create({
+        body: `<a href="#" data-oe-model="res.partner" data-oe-id="${partnerId}">Lead customer</a>`,
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-ChatWindow");
+    await click("a[data-oe-model='res.partner']");
+    await contains(".o_form_view");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+});
+
+test("click on a pin notification link highlights the message without folding the chat window (mobile)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({});
+    const messageId = pyEnv["mail.message"].create({
+        body: "Pin me",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await pyEnv["discuss.channel"].set_message_pin(channelId, messageId, true);
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-ChatWindow");
+    await click("a[data-oe-type='highlight']");
+    await contains(".o-mail-Message.o-highlighted .o-mail-Message-content:text(Pin me):count(1)");
+    await contains(".o-mail-ChatWindow");
+});
+
+test("activity mark done popover buttons do not overlap (mobile)", async () => {
+    await patchUiSize({ width: 360 });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.activity"].create({
+        can_write: true,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click(".btn:text('Mark Done')");
+    await contains(".o-mail-ActivityMarkAsDone button", { count: 3 });
+    const rects = queryAllRects(".o-mail-ActivityMarkAsDone button");
+    for (let i = 1; i < rects.length; i++) {
+        if (Math.round(rects[i].top) === Math.round(rects[i - 1].top)) {
+            expect(rects[i].left).toBeGreaterThan(rects[i - 1].right);
+        } else {
+            expect(rects[i].left).toBe(rects[0].left);
+            expect(rects[i].top).toBeGreaterThan(rects[i - 1].bottom);
+        }
+    }
 });

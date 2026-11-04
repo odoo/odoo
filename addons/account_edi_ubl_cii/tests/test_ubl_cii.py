@@ -7,7 +7,6 @@ from zipfile import ZipFile
 from lxml import etree
 from odoo import fields, Command
 from odoo.tests import HttpCase, tagged
-from odoo.tools.pdf import OdooPdfFileWriter
 from odoo.tools.safe_eval import datetime
 
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
@@ -184,17 +183,6 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
         new_invoice = invoice.journal_id._create_document_from_attachment(attachment.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, line_vals)
 
-    def _get_pdf_bytes(self, xml_content=None, filename='factur-x.xml'):
-        """ Small A4 PDF, with `xml_content` embedded as `filename` if given. """
-        a4_width_pt, a4_height_pt = 595, 842
-        writer = OdooPdfFileWriter()
-        writer.addBlankPage(a4_width_pt, a4_height_pt)
-        if xml_content:
-            writer.addAttachment(filename, xml_content, subtype='text/xml', afrelationship='/Alternative')
-        buffer = BytesIO()
-        writer.write(buffer)
-        return buffer.getvalue()
-
     def _configure_seller_for_cii_export(self):
         """ Factur-X/ZUGFeRD/CII exports require a fully configured seller (VAT, phone, email,
         bank account with a sanitized account number) or the export raises validation errors. """
@@ -321,12 +309,13 @@ class TestAccountEdiUblCii(TestUblCiiCommon, HttpCase):
             'peppol_endpoint': 'FR23334175221',
         }])
 
-        partner.vat = '23334175221'
+        if self.env['ir.module.module']._get('base_vat').state == 'installed':
+            partner.vat = '23334175221'
 
-        self.assertRecordValues(partner, [{
-            'peppol_eas': '9957',
-            'peppol_endpoint': '23334175221',
-        }])
+            self.assertRecordValues(partner, [{
+                'peppol_eas': '9957',
+                'peppol_endpoint': 'FR23334175221',
+            }])
 
         partner.write({
             'vat': 'BE0477472701',
@@ -902,6 +891,50 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         })
         self.assertEqual(node[0].text, self.company.vat, "Company VAT fallback")
 
+    def test_facturx_omits_schemeid_va_when_vat_is_slash(self):
+        """Test that Factur-X never outputs '/' as a VAT id.
+
+        '/' is the conventional value Odoo uses to mark a partner as not subject to VAT (as
+        opposed to one who simply hasn't had a VAT number entered yet): it must never be emitted
+        as a real VAT id, be it the seller's (the company's own VAT) or the buyer's. A VAT id
+        without its ISO country-code prefix (e.g. 'DE', 'FR') would otherwise violate EN16931
+        rule BR-CO-09.
+
+        (The fiscal position's foreign VAT isn't tested here: base_vat's format validation
+        already rejects '/' at creation, so that branch can never actually see it.)
+        """
+        namespaces = {
+            "ram": "urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100",
+            "rsm": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100",
+        }
+
+        # Company VAT and buyer VAT are both '/' at once: 2 independent t-if conditions evaluated
+        # on the same invoice, so one export already exercises both; a bug in either would
+        # surface a VA tag on its side.
+        self.company.vat = '/'
+        self.partner_a.write({'invoice_edi_format': 'facturx', 'vat': '/'})
+        invoice = self._create_invoice_one_line(price_unit=1)
+        invoice.action_post()
+
+        # The fix was applied to both the legacy QWeb template and the new dict-based builder:
+        # exercise both so neither regresses on its own. set_param(key, False) would unlink the
+        # parameter instead of storing it (see ir.config_parameter.set_param), silently falling
+        # back to its own True default, hence the str() conversion.
+        for use_new_dict_to_xml_helpers in (False, True):
+            self.env['ir.config_parameter'].sudo().set_param(
+                'account_edi_ubl_cii.use_new_dict_to_xml_helpers', str(use_new_dict_to_xml_helpers))
+            with self.subTest(use_new_dict_to_xml_helpers=use_new_dict_to_xml_helpers):
+                xml_bytes = self.env["account.edi.xml.cii"]._export_invoice(invoice)[0]
+
+                self.assertFalse(
+                    etree.fromstring(xml_bytes).xpath("//ram:SellerTradeParty//ram:ID[@schemeID='VA']", namespaces=namespaces),
+                    "'/' company / seller VAT must not be output as a VA tag",
+                )
+                self.assertFalse(
+                    etree.fromstring(xml_bytes).xpath("//ram:BuyerTradeParty//ram:ID[@schemeID='VA']", namespaces=namespaces),
+                    "'/' buyer VAT must not be output as a VA tag",
+                )
+
     def test_facturx_line_without_product_has_name(self):
         """A line with no product_id (e.g. a sale order down payment invoice line) must still
         expose a ram:Name in the Factur-X/CII export, falling back to the line's free-text name,
@@ -1220,3 +1253,45 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         exemption_reason_code = xml_tree.find('.//ram:ApplicableTradeTax/ram:ExemptionReasonCode', self.namespaces)
         self.assertEqual(category_code.text, 'G')
         self.assertEqual(exemption_reason_code.text, 'VATEX-EU-G')
+
+    def test_facturx_export_import_discount_rounding(self):
+        """ An invoice generated by Odoo and imported back as a vendor bill must keep the same line amounts. """
+        tax_sale = self.company_data['default_tax_sale']
+        tax_sale_included = tax_sale.copy({'name': 'Tax included', 'price_include_override': 'tax_included'})
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                # 103.00 * 9.75% = 10.0425 of discount per unit: the net price unit (92.9575) is exported rounded to 2 decimals.
+                # The line total is 31 * 92.9575 = 2881.68, not 31 * 92.96 = 2881.76.
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 31,
+                    'price_unit': 103.0,
+                    'discount': 9.75,
+                    'tax_ids': [Command.set(tax_sale.ids)],
+                }),
+                # No discount: the net price unit (86.956522) is exported rounded to 2 decimals.
+                # The line total is 3 * 86.956522 = 260.87, not 3 * 86.96 = 260.88. As there is no discount on the line,
+                # the difference is managed by a rounding line.
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'price_unit': 100.0,
+                    'tax_ids': [Command.set(tax_sale_included.ids)],
+                }),
+            ],
+        })
+        invoice.action_post()
+        self.assertRecordValues(invoice.invoice_line_ids, [{'price_subtotal': 2881.68}, {'price_subtotal': 260.87}])
+
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        bill = self._import_invoice_as_attachment_on(attachment=xml_attachment, journal=self.company_data['default_journal_purchase'])
+        self.assertRecordValues(bill.invoice_line_ids, [
+            {'quantity': 31.0, 'price_unit': 103.0, 'discount': 9.75, 'price_subtotal': 2881.68},
+            {'quantity': 3.0, 'price_unit': 86.95666666666666, 'discount': 0.0, 'price_subtotal': 260.87},
+        ])
+        self.assertRecordValues(bill, [{'amount_untaxed': invoice.amount_untaxed, 'amount_total': invoice.amount_total}])

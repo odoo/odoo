@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 13:33+0000\n"
 "Last-Translator: Toma Tomov <toma.tomov@gmail.com>\n"
 "Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
@@ -293,16 +293,16 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
-"\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Здравейте <t t-out=\"partner.name or ''\">Brandon Freeman</t>"
-",<br/><br/>\n"
+"                Здравейте <t t-out=\"partner.name or ''\">Brandon Freeman</"
+"t>,<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Здравейте,<br/><br/>\n"
@@ -310,8 +310,9 @@ msgstr ""
 "            Моля, отделете момент, за да оцените нашите услуги, свързани със "
 "задачата <strong t-out=\"object.name or ''\">Planning and budget</strong>\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                възложена на <strong t-out=\"object._rating_get_operator()"
-".name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                възложена на <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
+">\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -363,8 +364,8 @@ msgstr ""
 "            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
 "color: #454748;\">Това проучване за удовлетвореност беше изпратено, защото "
-"вашата задача беше преместена в етап <b t-out=\"object.stage_id.name or ''\">"
-"In progress</b></span>\n"
+"вашата задача беше преместена в етап <b t-out=\"object.stage_id.name or "
+"''\">In progress</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
 "                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
@@ -380,19 +381,19 @@ msgstr ""
 "t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-"
-"4567</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
+"650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ "
-"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
-"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
-"info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
-"\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -429,8 +430,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; "
@@ -476,8 +477,8 @@ msgstr ""
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
-"\n"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></"
+"div>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -611,8 +612,8 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                            <i class=\"fa fa-lightbulb-o pe-"
-"2\"/>\n"
+"                                            <i class=\"fa fa-lightbulb-o "
+"pe-2\"/>\n"
 "                                            <span "
 "name=\"rating_status_helper\">\n"
 "                                                <span "
@@ -853,8 +854,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Добавете колони, за да организирате задачите си в <b>етапи</b> <i>напр. "
-"Нова - В процес - Готова</i>."
+"Добавете колони, за да организирате задачите си в <b>етапи</b> <i>напр. Нова "
+"- В процес - Готова</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1014,7 +1015,8 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_share_wizard__share_link
 msgid "Anyone with this link can access the project in read mode."
-msgstr "Всеки с тази връзка може да получи достъп до проекта в режим на четене."
+msgstr ""
+"Всеки с тази връзка може да получи достъп до проекта в режим на четене."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
@@ -2024,7 +2026,8 @@ msgstr "Описание"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__description
 msgid "Description to provide more information and context about this project"
-msgstr "Описание за предоставяне на повече информация и контекст за този проект"
+msgstr ""
+"Описание за предоставяне на повече информация и контекст за този проект"
 
 #. module: project
 #. odoo-javascript
@@ -2374,6 +2377,7 @@ msgid "Future"
 msgstr "Бъдеще"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
@@ -2869,6 +2873,7 @@ msgid "Last Updated on"
 msgstr "Последно актуализирано на"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
@@ -3109,6 +3114,7 @@ msgid "Months"
 msgstr "Месеци"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Activities"
@@ -4561,6 +4567,7 @@ msgid "Show Sub-Tasks"
 msgstr "Показване на подзадачи"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records whose next activity date is past"
@@ -5507,6 +5514,7 @@ msgid "Today"
 msgstr "Днес"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
@@ -5918,7 +5926,8 @@ msgstr "Работно време до приключване"
 msgid ""
 "Would you like to unarchive all of the projects contained in these stages as "
 "well?"
-msgstr "Искате ли да разархивирате и всички проекти, съдържащи се в тези етапи?"
+msgstr ""
+"Искате ли да разархивирате и всички проекти, съдържащи се в тези етапи?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard

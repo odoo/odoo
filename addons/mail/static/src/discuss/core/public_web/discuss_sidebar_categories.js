@@ -191,13 +191,13 @@ export class DiscussSidebarChannel extends Component {
 export class DiscussSidebarCategory extends Component {
     static template = "mail.DiscussSidebarCategory";
     static props = ["category"];
-    static components = { Dropdown };
+    static components = { Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.discusscorePublicWebService = useService("discuss.core.public.web");
-        this.hover = useHover(["root", "floating"], {
+        this.hover = useHover(["root"], {
             onHover: () => {
                 if (this.store.discuss.isSidebarCompact) {
                     this.onHover(true);

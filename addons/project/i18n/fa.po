@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-24 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-09 10:37+0000\n"
 "Last-Translator: Aliraza Habibitanha <alireza.habibitanha@gmail.com>\n"
 "Language-Team: Persian <https://translate.odoo.com/projects/odoo-19/project/"
@@ -296,16 +296,16 @@ msgid ""
 "            "
 msgstr ""
 "<div dir=\"rtl\" style=\"font-family: IRANSansX;\">\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
-"\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                <t t-out=\"partner.name or ''\">احسان امیری</t> گرامی،<br/>"
-"<br/>\n"
+"                <t t-out=\"partner.name or ''\">احسان امیری</t> گرامی،<br/"
+"><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                با سلام و احترام،<br/><br/>\n"
@@ -381,19 +381,19 @@ msgstr ""
 "           <t t-out=\"object.project_id.company_id.name or ''\">شرکت من</t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
-"            <t t-out=\"object.project_id.company_id.phone or ''\">"
-"+98416352168</t>\n"
+"            <t t-out=\"object.project_id.company_id.phone or "
+"''\">+98416352168</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href=\"mailto:{{ "
-"object.project_id.company_id.email }}\" style=\"text-decoration:none; color: "
-"#454748;\" t-out=\"object.project_id.company_id.email or ''\">"
-"info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
 "                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
 "\" style=\"text-decoration:none; color: #454748;\" t-"
-"out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>"
-"\n"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -447,8 +447,8 @@ msgid ""
 "        "
 msgstr ""
 "<div>\n"
-"    <t t-out=\"object.partner_id.name or 'customer'\">مشتری</t> گرامی،<br/>"
-"<br/>\n"
+"    <t t-out=\"object.partner_id.name or 'customer'\">مشتری</t> گرامی،<br/"
+"><br/>\n"
 "    سپاس از تماس شما! از اینکه به محصولات/خدمات ما علاقه‌مند هستید، بسیار "
 "خرسندیم.<br/>\n"
 "    تیم ما در حال بررسی درخواست شماست و در اسرع وقت پاسخ درخواست به شما "
@@ -595,8 +595,8 @@ msgid ""
 "                                        </span>"
 msgstr ""
 "<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
-"                                            <i class=\"fa fa-lightbulb-o pe-"
-"2\"/>\n"
+"                                            <i class=\"fa fa-lightbulb-o "
+"pe-2\"/>\n"
 "                                            <span "
 "name=\"rating_status_helper\">\n"
 "                                                <span "
@@ -1197,8 +1197,8 @@ msgid ""
 "Automatically send an email to customers when a task reaches a specific "
 "stage in a project by setting this template on that stage"
 msgstr ""
-"هنگامی که یک کار به مرحله خاصی از پروژه می رسد، با تنظیم این الگو در آن مرحله"
-"، به طور خودکار برای مشتریان ایمیل ارسال کنید."
+"هنگامی که یک کار به مرحله خاصی از پروژه می رسد، با تنظیم این الگو در آن "
+"مرحله، به طور خودکار برای مشتریان ایمیل ارسال کنید."
 
 #. module: project
 #. odoo-python
@@ -1839,7 +1839,8 @@ msgid ""
 "you can get statistics on the time it usually takes to assign tasks."
 msgstr ""
 "تاریخی که این کار آخرین بار اختصاص داده شد (یا لغو اختصاص داده شد). بر اساس "
-"این، می‌توانید آمار زمانی را که معمولاً برای اختصاص کارها صرف می‌شود، بدست آورید."
+"این، می‌توانید آمار زمانی را که معمولاً برای اختصاص کارها صرف می‌شود، بدست "
+"آورید."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rotting_threshold_days
@@ -2346,6 +2347,7 @@ msgid "Future"
 msgstr "آینده"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
@@ -2842,6 +2844,7 @@ msgid "Last Updated on"
 msgstr "آخرین بروز رسانی در"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
@@ -3082,6 +3085,7 @@ msgid "Months"
 msgstr "ماه"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Activities"
@@ -4526,6 +4530,7 @@ msgid "Show Sub-Tasks"
 msgstr "نمایش زیر وظایف"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records whose next activity date is past"
@@ -5284,8 +5289,8 @@ msgid ""
 msgstr ""
 "این پروژه با %(project_company)s مرتبط است، در حالی که مرحله انتخابی به %"
 "(stage_company)s تعلق دارد. چند گزینه برای بررسی وجود دارد: یا نام شرکت را "
-"از پروژه یا از مرحله حذف کنید. در غیر این صورت، می‌توانید اطلاعات شرکت را برای "
-"این سوابق به‌روزرسانی کنید تا آن‌ها را تحت همان شرکت هم‌راستا کنید."
+"از پروژه یا از مرحله حذف کنید. در غیر این صورت، می‌توانید اطلاعات شرکت را "
+"برای این سوابق به‌روزرسانی کنید تا آن‌ها را تحت همان شرکت هم‌راستا کنید."
 
 #. module: project
 #. odoo-python
@@ -5294,8 +5299,8 @@ msgid ""
 "This project is currently a template. Would you like to convert it back into "
 "a regular project?"
 msgstr ""
-"این پروژه در حال حاضر یک قالب است. می‌خواهید آن را به یک پروژه عادی بازگردانید"
-"؟"
+"این پروژه در حال حاضر یک قالب است. می‌خواهید آن را به یک پروژه عادی "
+"بازگردانید؟"
 
 #. module: project
 #. odoo-python
@@ -5329,8 +5334,8 @@ msgid ""
 "This task is currently a template. Would you like to convert it back into a "
 "regular task?"
 msgstr ""
-"این وظیفه در حال حاضر یک قالب است. می‌خواهید آن را به یک وظیفه عادی بازگردانید"
-"؟"
+"این وظیفه در حال حاضر یک قالب است. می‌خواهید آن را به یک وظیفه عادی "
+"بازگردانید؟"
 
 #. module: project
 #. odoo-javascript
@@ -5461,6 +5466,7 @@ msgid "Today"
 msgstr "امروز"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
@@ -5503,7 +5509,8 @@ msgstr "رسیدن به نقاط پیشرفت عمده‌ای که باید بر
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #: model_terms:ir.actions.act_window,help:project.project_milestone_action
 msgid "Track major progress points that must be reached to achieve success."
-msgstr "ردیابی نقاط پیشرفت عمده ای که برای دستیابی به موفقیت باید به آنها رسید."
+msgstr ""
+"ردیابی نقاط پیشرفت عمده ای که برای دستیابی به موفقیت باید به آنها رسید."
 
 #. module: project
 #. odoo-javascript

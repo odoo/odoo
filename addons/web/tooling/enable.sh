@@ -11,6 +11,8 @@ enableInDir () {
     cd "$1" || exit
     hooksPath="$(realpath --relative-to=. "$tooling/hooks")"
     git config core.hooksPath "$hooksPath"
+    # installed by the eslint 10 tooling of newer versions, eslint 8.57 would use it
+    rm -f eslint.config.cjs .eslint-ignore
     cp "$tooling/_eslintignore" .eslintignore
     cp "$tooling/_eslintrc.json" .eslintrc.json
     cp "$tooling/_jsconfig.json" jsconfig.json

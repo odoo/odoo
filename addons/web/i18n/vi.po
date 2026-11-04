@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-07 05:14+0000\n"
 "Last-Translator: Alex Tran <tral@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/web/"
@@ -1772,6 +1772,7 @@ msgstr "Chuyển đổi thành webp"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1782,6 +1783,12 @@ msgstr "Đã sao chép"
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copy"
 msgstr "Sao chép"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5049,7 +5056,8 @@ msgstr "Chỉ có thể tìm kiếm"
 msgid ""
 "Only the first %(count)s records have been deleted (out of %(total)s "
 "selected)"
-msgstr "Chỉ có %(count)s dữ liệu đầu tiền được xóa (trong số %(total)s đã chọn)"
+msgstr ""
+"Chỉ có %(count)s dữ liệu đầu tiền được xóa (trong số %(total)s đã chọn)"
 
 #. module: web
 #. odoo-python
@@ -5058,8 +5066,8 @@ msgid ""
 "Only types %(supported_types)s are supported for category (found type %"
 "(field_type)s)"
 msgstr ""
-"Chỉ có loại %(supported_types)s được dùng cho nhóm (found type %(field_type)"
-"s)"
+"Chỉ có loại %(supported_types)s được dùng cho nhóm (found type %"
+"(field_type)s)"
 
 #. module: web
 #. odoo-python
@@ -5359,8 +5367,8 @@ msgid ""
 "in red."
 msgstr ""
 "Xin lưu ý rằng chế độ xem của bạn bao gồm các bộ định vị không hợp lệ.<br/>\n"
-"Các nút này không thể được gắn vào chế độ xem chính và sẽ không có tác "
-"dụng.<br/>\n"
+"Các nút này không thể được gắn vào chế độ xem chính và sẽ không có tác dụng."
+"<br/>\n"
 "Vấn đề này có thể phát sinh do các chỉnh sửa thủ công hoặc trong quá trình "
 "nâng cấp.<br/>\n"
 "Để tiện tham khảo, các nút xpath không hợp lệ được tô đỏ nổi bật."
@@ -6080,6 +6088,12 @@ msgstr "Tìm kiếm thêm..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
 msgid "Search emoji"
 msgstr "Tìm kiếm biểu tượng cảm xúc"
@@ -6383,6 +6397,12 @@ msgstr "Tàu Shinkansen"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Shinto"
 msgstr "Cổng Shinto"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
+msgid "Shortcuts"
+msgstr "Phím tắt"
 
 #. module: web
 #. odoo-javascript
@@ -6778,6 +6798,14 @@ msgid "The app seems to be installed on your device"
 msgstr "Có vẻ ứng dụng đã được cài đặt trên thiết bị của bạn"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_arch_parser.js:0
+msgid ""
+"The autocomplete value for %(field)s has not been found: the record with id %"
+"(id)s doesn't seem to exist"
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 msgid ""
@@ -6855,8 +6883,8 @@ msgid ""
 "The selected file (%(size)sB) is larger than the maximum allowed file size (%"
 "(maxSize)sB)."
 msgstr ""
-"Tệp đã chọn (%(size)sB) vượt quá kích thước tệp tối đa cho phép (%(maxSize)"
-"sB)."
+"Tệp đã chọn (%(size)sB) vượt quá kích thước tệp tối đa cho phép (%"
+"(maxSize)sB)."
 
 #. module: web
 #. odoo-javascript
@@ -27633,9 +27661,6 @@ msgstr ""
 
 #~ msgid "Share with all users"
 #~ msgstr "Chia sẻ với tất cả người dùng"
-
-#~ msgid "Shortcuts"
-#~ msgstr "Phím tắt"
 
 #~ msgid "Size:"
 #~ msgstr "Kích thước:"

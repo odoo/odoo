@@ -10,6 +10,7 @@ from urllib.parse import unquote
 from odoo.exceptions import UserError, ValidationError, AccessError
 
 from odoo import api, fields, models, _, service
+from odoo.fields import Domain
 from odoo.tools import file_open, split_every
 from odoo.service.common import exp_version
 
@@ -192,6 +193,10 @@ class PosConfig(models.Model):
             for config in self.filtered(lambda c: c.self_ordering_mode == 'kiosk' and c.has_active_session):
                 config._notify('CONFIG_UPDATED', {'write_date': config.write_date})
         return res
+
+    def _get_paid_orders_config_domain(self):
+        kiosk_domain = Domain('config_id.self_ordering_mode', '=', 'kiosk') & Domain('config_id.company_id', '=', self.company_id.id)
+        return super()._get_paid_orders_config_domain() | kiosk_domain
 
     @api.model
     def _get_kiosk_reload_fields(self):

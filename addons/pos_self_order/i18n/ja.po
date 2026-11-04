@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-08-06 23:07+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
+"PO-Revision-Date: 2026-10-27 03:37+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "pos_self_order/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -121,8 +121,8 @@ msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
 msgstr ""
-"このユーザのアクセス権は、セッションが開かれていないときに"
-"セルフオーダウェブサイトにアクセスするときに使用されます。"
+"このユーザのアクセス権は、セッションが開かれていないときにセルフオーダウェブ"
+"サイトにアクセスするときに使用されます。"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -568,7 +568,8 @@ msgstr ""
 msgid ""
 "Feel free to use and print this QR code as many times as needed according to "
 "your requirements."
-msgstr "このQRコードはご要望に応じて、何度でもご自由にご利用・印刷して頂けます。"
+msgstr ""
+"このQRコードはご要望に応じて、何度でもご自由にご利用・印刷して頂けます。"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -709,7 +710,7 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
 msgid "Inactive"
-msgstr "無効"
+msgstr "非アクティブ"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__info
@@ -725,7 +726,32 @@ msgstr "インターネット接続が切断されました"
 #. module: pos_self_order
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid combo line"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
 msgid "Invalid preset"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product attribute"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/controllers/orders.py:0
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid product configuration"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid quantity"
 msgstr ""
 
 #. module: pos_self_order
@@ -814,8 +840,8 @@ msgid ""
 "Make it easy for your customers to explore your menu\n"
 "                online or order with the QR codes on your tables"
 msgstr ""
-"テーブルのQRコードで、顧客は簡単にオンラインメニューを検索し、オーダできます"
-"。"
+"テーブルのQRコードで、顧客は簡単にオンラインメニューを検索し、オーダできま"
+"す。"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1029,8 +1055,8 @@ msgid ""
 "Personalize your splash screen by adding one or multiple images to create a "
 "slideshow"
 msgstr ""
-"1枚または複数の画像を追加してスライドショーを作成し、スプラッシュ画面を"
-"パーソナライズします"
+"1枚または複数の画像を追加してスライドショーを作成し、スプラッシュ画面をパーソ"
+"ナライズします"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1096,6 +1122,18 @@ msgid "Points of Sale"
 msgstr "POS"
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in self-ordering"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Preset is not available in this configuration"
+msgstr ""
+
+#. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__link_html
 msgid "Preview"
 msgstr "プレビュー"
@@ -1157,7 +1195,8 @@ msgstr "QRコード"
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "QR codes can only be generated in mobile or consultation mode."
-msgstr "QRコードは、モバイルモードまたはコンサルテーションモードでのみ生成できます。"
+msgstr ""
+"QRコードは、モバイルモードまたはコンサルテーションモードでのみ生成できます。"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
@@ -1255,12 +1294,6 @@ msgstr "国を選択"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
-msgid "Select a hour"
-msgstr "時間を選択"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a state"
 msgstr "州・都道府県を選択"
@@ -1270,6 +1303,12 @@ msgstr "州・都道府県を選択"
 #: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
 msgid "Select a table"
 msgstr "テーブルを選択"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
+msgid "Select an hour"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_self_order_custom_link__pos_config_ids
@@ -1502,6 +1541,14 @@ msgstr "セルフオーダデフォルトユーザはPOSユーザである必要
 #: code:addons/pos_self_order/models/pos_order.py:0
 msgid "The mail template with xmlid %s has been deleted."
 msgstr "%sのメールテンプレートは削除されました。"
+
+#. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid ""
+"The order ID isn't linked to the order UUID. This is a sign of a tampered "
+"payload."
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-python
@@ -1758,6 +1805,9 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr ""
+
+#~ msgid "Select a hour"
+#~ msgstr "時間を選択"
 
 #~ msgid "Sent to customers with the receipt in attachment"
 #~ msgstr "顧客にレシートを添付して送信"

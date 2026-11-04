@@ -3,7 +3,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Thread } from "@mail/core/common/thread_model";
 import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
-import { useHover } from "@mail/utils/common/hooks";
+import { useHover, UseHoverOverlay } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
@@ -16,13 +16,13 @@ import { _t } from "@web/core/l10n/translation";
 export class DiscussSidebarCallParticipants extends Component {
     static template = "mail.DiscussSidebarCallParticipants";
     static props = { thread: { type: Thread }, compact: { type: Boolean, optional: true } };
-    static components = { AvatarStack, DiscussSidebarCallParticipants, Dropdown };
+    static components = { AvatarStack, DiscussSidebarCallParticipants, Dropdown, UseHoverOverlay };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
-        this.hover = useHover(["root", "floating"], {
+        this.hover = useHover(["root"], {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
         });

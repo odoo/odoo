@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:39+0000\n"
 "PO-Revision-Date: 2026-08-03 21:06+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Serbian (Latin script) <https://translate.odoo.com/projects/"
@@ -29,26 +29,6 @@ msgid ""
 msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Code"
-msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder First Name"
-msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Holder Last Name"
-msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Card Number"
-msgstr ""
-
-#. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__code
 msgid "Code"
 msgstr "Kod"
@@ -60,48 +40,10 @@ msgid "Display Name"
 msgstr "Naziv za prikaz"
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Email"
-msgstr "E-mail"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Expiration"
-msgstr ""
-
-#. module: payment_xendit
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_provider__id
 #: model:ir.model.fields,field_description:payment_xendit.field_payment_transaction__id
 msgid "ID"
 msgstr "ID"
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Invalid CVN"
-msgstr ""
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Invalid Card Number"
-msgstr ""
-
-#. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Invalid Date"
-msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "John"
-msgstr ""
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "MM"
-msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model,name:payment_xendit.model_payment_provider
@@ -114,40 +56,33 @@ msgid "Payment Transaction"
 msgstr "Transakcija plaćanja"
 
 #. module: payment_xendit
-#. odoo-javascript
-#: code:addons/payment_xendit/static/src/interactions/payment_form.js:0
-msgid "Payment processing failed"
-msgstr "Obrada plaćanja nije uspela"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Phone Number"
-msgstr "Broj telefona"
-
-#. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
-msgid "Public Key"
-msgstr ""
-
-#. module: payment_xendit
 #: model_terms:ir.ui.view,arch_db:payment_xendit.payment_provider_form_xendit
 msgid "Secret Key"
 msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "Smith"
-msgstr ""
-
-#. module: payment_xendit
 #. odoo-python
-#: code:addons/payment_xendit/controllers/main.py:0
-msgid "The access token doesn't match the transaction reference."
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid ""
+"The payment requires authentication from the customer, which isn't possible "
+"for this unattended transaction. Please ask the customer to pay manually."
 msgstr ""
 
 #. module: payment_xendit
 #: model:ir.model.fields,help:payment_xendit.field_payment_provider__code
 msgid "The technical code of this payment provider."
+msgstr ""
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_transaction.py:0
+msgid "The transaction is not linked to a token."
+msgstr ""
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Update the Xendit webhook configuration"
 msgstr ""
 
 #. module: payment_xendit
@@ -158,6 +93,12 @@ msgstr ""
 #. module: payment_xendit
 #: model:ir.model.fields.selection,name:payment_xendit.selection__payment_provider__code__xendit
 msgid "Xendit"
+msgstr ""
+
+#. module: payment_xendit
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "Xendit Dashboard"
 msgstr ""
 
 #. module: payment_xendit
@@ -176,11 +117,26 @@ msgid "Xendit Webhook Token"
 msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "YYYY"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid ""
+"Xendit replaced the single webhook field used by the %(provider)s payment "
+"provider with separate v3 event groups. Update the %(webhook_link)s on the %"
+"(dashboard_link)s before %(deadline)s to keep receiving payment and card "
+"token status updates."
 msgstr ""
 
 #. module: payment_xendit
-#: model_terms:ir.ui.view,arch_db:payment_xendit.inline_form
-msgid "john.smith@example.com"
+#. odoo-python
+#: code:addons/payment_xendit/models/payment_provider.py:0
+msgid "webhook configuration"
 msgstr ""
+
+#~ msgid "Email"
+#~ msgstr "E-mail"
+
+#~ msgid "Payment processing failed"
+#~ msgstr "Obrada plaćanja nije uspela"
+
+#~ msgid "Phone Number"
+#~ msgstr "Broj telefona"

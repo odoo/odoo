@@ -170,7 +170,7 @@
     .o_dragged {
         transition: transform 0.6s, box-shadow 0.3s;
 
-        &:not(.o_draggable_norotate) {
+        &:not(.o_draggable_norotate, .o_kanban_group) {
             transform: rotate(-3deg);
         }
 

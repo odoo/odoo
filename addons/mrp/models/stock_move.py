@@ -475,9 +475,12 @@ class StockMove(models.Model):
 
     def _prepare_procurement_origin(self):
         self.ensure_one()
-        if self.raw_material_production_id and self.raw_material_production_id.orderpoint_id:
+        if self.raw_material_production_id and self._should_use_production_origin():
             return self.origin
         return super()._prepare_procurement_origin()
+
+    def _should_use_production_origin(self):
+        return True
 
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         return {
@@ -569,16 +572,7 @@ class StockMove(models.Model):
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
-        keys += (self.created_production_id,)
-        if self._feeds_raw_material_production():
-            keys += (self.production_group_id,)
-        return keys
-
-    def _feeds_raw_material_production(self):
-        """Whether this move directly or indirectly supplies components for a production
-        (i.e. ends up in a `raw_material_production_id`).
-        """
-        return bool(self.browse(self._rollup_move_dests()).raw_material_production_id)
+        return keys + (self.created_production_id, self.production_group_id)
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
@@ -671,8 +665,6 @@ class StockMove(models.Model):
         return domain
 
     def _get_production_assignation_domain(self):
-        if not self._feeds_raw_material_production():
-            return []
         return [('production_group_id', '=', self.production_group_id.id)]
 
     def action_open_reference(self):

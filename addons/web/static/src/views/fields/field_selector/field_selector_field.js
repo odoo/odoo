@@ -15,6 +15,7 @@ export class FieldSelectorField extends Component {
         onlySearchable: { type: Boolean, optional: true },
         allowProperties: { type: Boolean, optional: true },
         followRelations: { type: Boolean, optional: true },
+        required: { type: Boolean, optional: true },
     };
 
     filter(fieldDef) {
@@ -82,6 +83,7 @@ export const fieldSelectorField = {
             allowProperties: options.allow_properties ?? true,
             followRelations: options.follow_relations ?? true,
             onlySearchable: exprToBoolean(options.only_searchable),
+            required: dynamicInfo.required,
             resModel: options.model,
         };
     },

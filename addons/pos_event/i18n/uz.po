@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:36+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-08 01:07+0000\n"
 "Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: Uzbek <https://translate.odoo.com/projects/odoo-19/pos_event/"
@@ -32,6 +32,12 @@ msgstr ""
 #, fuzzy
 msgid " for this slot"
 msgstr "bu joy uchun"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "%s limit exceeded"
+msgstr ""
 
 #. module: pos_event
 #. odoo-javascript
@@ -63,12 +69,6 @@ msgstr ""
 #, fuzzy
 msgid "<span class=\"o_stat_text\">PoS Order</span>"
 msgstr "<span class=\"o_stat_text\">Sotuv nuqtasi buyurtmasi</span>"
-
-#. module: pos_event
-#. odoo-javascript
-#: code:addons/pos_event/static/src/app/screens/product_screen/product_screen.js:0
-msgid "All slots are booked out for this event."
-msgstr ""
 
 #. module: pos_event
 #: model:ir.model.fields,field_description:pos_event.field_pos_order__attendee_count
@@ -118,7 +118,6 @@ msgstr "Ko‘rsatiladigan nom"
 
 #. module: pos_event
 #. odoo-javascript
-#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.js:0
 #: code:addons/pos_event/static/src/app/components/popup/event_slot_selection_popup/event_slot_selection_popup.js:0
 #, fuzzy
@@ -126,6 +125,8 @@ msgid "Error"
 msgstr "Xatolik"
 
 #. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
 #: model:ir.model,name:pos_event.model_event_event
 #, fuzzy
 msgid "Event"
@@ -323,6 +324,12 @@ msgstr "%(event)s uchun chiptalarni tanlang (%(seats)s o‘rin mavjud%(suffix)s)
 
 #. module: pos_event
 #. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "Slot"
+msgstr ""
+
+#. module: pos_event
+#. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.xml:0
 #: code:addons/pos_event/static/src/app/components/product_card/product_card.xml:0
 #, fuzzy
@@ -353,6 +360,12 @@ msgstr "Chipta xatosi"
 
 #. module: pos_event
 #. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid "Ticket limit exceeded"
+msgstr ""
+
+#. module: pos_event
+#. odoo-javascript
 #: code:addons/pos_event/static/src/app/components/popup/event_registration_popup/event_registration_popup.xml:0
 #, fuzzy
 msgid "Tickets"
@@ -372,6 +385,14 @@ msgstr "Cheklanmagan"
 #, fuzzy
 msgid "You cannot change quantity for a line linked with an event registration"
 msgstr "Tadbir ro‘yxatiga bog‘langan qator uchun miqdorni o‘zgartira olmaysiz"
+
+#. module: pos_event
+#. odoo-javascript
+#: code:addons/pos_event/static/src/app/components/popup/event_configurator_popup/event_configurator_popup.js:0
+msgid ""
+"You selected more tickets than available seats (max %s). Please select a "
+"smaller amount."
+msgstr ""
 
 #. module: pos_event
 #. odoo-javascript

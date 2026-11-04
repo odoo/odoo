@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-10-01 14:33+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -53,8 +53,8 @@ msgid ""
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
 "                    新增檢查清單\n"
-"                    （/<span style=\"font-style: normal;\">checklist</span>"
-"）\n"
+"                    （/<span style=\"font-style: normal;\">checklist</"
+"span>）\n"
 "                </span>"
 
 #. module: project_todo
@@ -67,8 +67,8 @@ msgid ""
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
 "                    加入分隔\n"
-"                    （/<span style=\"font-style: normal;\">separator</span>"
-"）\n"
+"                    （/<span style=\"font-style: normal;\">separator</"
+"span>）\n"
 "                </span>"
 
 #. module: project_todo
@@ -126,8 +126,8 @@ msgid ""
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
 "            選取文字以作\n"
-"            <font style=\"background-color: #017E84; color: white\">醒目提"
-"示</font>、\n"
+"            <font style=\"background-color: #017E84; color: white\">醒目提示"
+"</font>、\n"
 "            <span style=\"text-decoration-line: line-through;\">加上刪除線</"
 "span>，\n"
 "            或套用\n"
@@ -289,7 +289,8 @@ msgstr "<span style=\"font-size: 14px;\">勾選此方塊以表示完成</span>"
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
 msgid ""
 "<span style=\"font-size: 14px;\">Click anywhere, and just start typing</span>"
-msgstr "<span style=\"font-size: 14px;\">只需按一下任何位置，然後開始輸入</span>"
+msgstr ""
+"<span style=\"font-size: 14px;\">只需按一下任何位置，然後開始輸入</span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -669,6 +670,12 @@ msgid ""
 msgstr "待辦事項描述目前沒有任何可恢復的過往內容。"
 
 #. module: project_todo
+#. odoo-javascript
+#: code:addons/project_todo/static/src/views/todo_form/todo_form_controller.js:0
+msgid "The To-do description was empty at the time."
+msgstr "待辦事項描述目前空白。"
+
+#. module: project_todo
 #. odoo-python
 #: code:addons/project_todo/models/res_users.py:0
 msgid "To-Do"
@@ -820,9 +827,6 @@ msgstr "todo-access"
 
 #~ msgid "Onboarding todo already generated for those users"
 #~ msgstr "已為該些使用者產生新手待辦事項範例"
-
-#~ msgid "The To-do description was empty at the time."
-#~ msgstr "待辦事項描述目前空白。"
 
 #~ msgid "To-do..."
 #~ msgstr "待辦事項⋯"

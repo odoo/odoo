@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 12:44+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/base_import/"
@@ -20,6 +20,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "%(number)s file(s) selected"
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "%(property_string)s (%(parent_name)s)"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -36,7 +48,9 @@ msgstr "ນຳເຂົ້າ %s ບັນທຶກສຳເລັດແລ້�
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "A single column was found in the file, this often means the file separator is incorrect."
+msgid ""
+"A single column was found in the file, this often means the file separator "
+"is incorrect."
 msgstr "ພົບພຽງຖັນດຽວໃນໄຟລ໌, ນີ້ມັກຈະໝາຍຄວາມວ່າຕົວຂັ້ນໄຟລ໌ບໍ່ຖືກຕ້ອງ."
 
 #. module: base_import
@@ -53,6 +67,13 @@ msgstr "ຂັ້ນສູງ"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid ""
+"After each batch import, this delay is applied to avoid unthrottled calls"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "Allow matching with subfields"
 msgstr "ອະນຸຍາດໃຫ້ຈັບຄູ່ກັບຟິວຍ່ອຍ"
@@ -60,11 +81,15 @@ msgstr "ອະນຸຍາດໃຫ້ຈັບຄູ່ກັບຟິວຍ່
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
+msgid ""
+"An unknown issue occurred during import (possibly lost connection, data "
+"limit exceeded or memory limits exceeded). Please retry in case the issue is "
+"transient. If the issue still occurs, try to split the file rather than "
+"import it at once."
 msgstr ""
-"ເກີດບັນຫາທີ່ບໍ່ຮູ້ຈັກໃນລະຫວ່າງການນຳເຂົ້າ (ອາດຈະສູນເສຍການເຊື່ອມຕໍ່, ຂໍ້ມູນເກີນກຳນົດ ຫຼື ໜ່ວຍຄວາມຈຳເກີນກຳ"
-"ນົດ). ກະລຸນາລອງໃໝ່ອີກຄັ້ງໃນກໍລະນີທີ່ບັນຫາເປັນພຽງຊົ່ວຄາວ. ຖ້າບັນຫາຍັງຄົງຢູ່, ໃຫ້ລອງແຍກໄຟລ໌ແທນທີ່ຈະນຳເຂົ້"
-"າທັງໝົດໃນເທື່ອດຽວ."
+"ເກີດບັນຫາທີ່ບໍ່ຮູ້ຈັກໃນລະຫວ່າງການນຳເຂົ້າ (ອາດຈະສູນເສຍການເຊື່ອມຕໍ່, ຂໍ້ມູນເກີນກຳນົດ ຫຼື "
+"ໜ່ວຍຄວາມຈຳເກີນກຳນົດ). ກະລຸນາລອງໃໝ່ອີກຄັ້ງໃນກໍລະນີທີ່ບັນຫາເປັນພຽງຊົ່ວຄາວ. ຖ້າບັນຫາຍັງຄົງຢູ່, "
+"ໃຫ້ລອງແຍກໄຟລ໌ແທນທີ່ຈະນຳເຂົ້າທັງໝົດໃນເທື່ອດຽວ."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -102,6 +127,12 @@ msgstr "ຂີດຈຳກັດຊຸດ"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "But, you can also use .csv files"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
 msgid "Cancel"
 msgstr "ຍົກເລີກ"
 
@@ -114,14 +145,16 @@ msgstr "ຄລິກ 'ສືບຕໍ່' ເພື່ອດຳເນີນກ�
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values (value: %s)"
-msgstr "ຖັນ %s ມີຄ່າທີ່ບໍ່ຖືກຕ້ອງ (ຄ່າ: %s)"
+msgid "Column %(column)s contains incorrect values (value: %(value)s)"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "ຖັນ %s ມີຄ່າທີ່ບໍ່ຖືກຕ້ອງ. ຂໍ້ຜິດພາດໃນແຖວ %d: %s"
+msgid ""
+"Column %(column)s contains incorrect values. Error in line %(line)d: %"
+"(error)s"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -143,9 +176,9 @@ msgstr "ຄຳເຫັນ"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
-msgstr ""
-"ບໍ່ສາມາດດຶງ URL ໄດ້: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgid ""
+"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgstr "ບໍ່ສາມາດດຶງ URL ໄດ້: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -164,6 +197,12 @@ msgstr "ສ້າງໂດຍ"
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__create_date
 msgid "Created on"
 msgstr "ສ້າງເມື່ອ"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Data to import"
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -190,8 +229,21 @@ msgid "Decimals Separator:"
 msgstr "ຕົວຂັ້ນທົດສະນິຍົມ:"
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_model.js:0
+msgid "Defines how many megabytes can be imported in each batch import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Delay after each batch"
+msgstr ""
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
+#: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
 msgstr "ຊື່ທີ່ສະແດງ"
 
@@ -210,6 +262,12 @@ msgstr "ດາວໂຫຼດ"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.xml:0
+msgid "Drop or upload a file to import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "Encoding:"
 msgstr "ການເຂົ້າລະຫັດ:"
@@ -217,14 +275,30 @@ msgstr "ການເຂົ້າລະຫັດ:"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr "ຂໍ້ຜິດພາດໃນການວິເຄາະວັນທີ [%s:L%d]: %s"
+msgid "Error Parsing Date [%(field)s:L%(line)d]: %(error)s"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Error at row %s: \"%s\""
-msgstr "ຂໍ້ຜິດພາດຢູ່ແຖວ %s: \"%s\""
+msgid "Error at row %(row)s: \"%(error)s\""
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %(title_row_entries)d entries while the first row has %"
+"(first_row_entries)d. You may need to change the separator character."
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -249,6 +323,12 @@ msgstr "ແນະນຳໃຫ້ໃຊ້ໄຟລ໌ Excel ເນື່ອງ�
 #: code:addons/base_import/models/base_import.py:0
 msgid "External ID"
 msgstr "ໄອດີພາຍນອກ"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid "Field '%(field)s' does not accept date/time values."
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
@@ -289,6 +369,12 @@ msgstr "ໄຟລ໌ເພື່ອທົດສອບ ແລະ/ຫຼື ນຳ
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Files to import"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 msgid "Finalizing current batch before interrupting..."
 msgstr "ກຳລັງສິ້ນສຸດຊຸດປັດຈຸບັນກ່ອນທີ່ຈະຂັດຈັງຫວະ..."
@@ -308,9 +394,10 @@ msgstr "ການກຳນົດຮູບແບບ"
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
-msgstr ""
-"ພົບຂໍ້ມູນຮູບພາບທີ່ບໍ່ຖືກຕ້ອງ, ຮູບພາບຄວນຈະຖືກນຳເຂົ້າເປັນ URL ຫຼື ຂໍ້ມູນທີ່ເຂົ້າລະຫັດ base64."
+msgid ""
+"Found invalid image data, images should be imported as either URLs or base64-"
+"encoded data."
+msgstr "ພົບຂໍ້ມູນຮູບພາບທີ່ບໍ່ຖືກຕ້ອງ, ຮູບພາບຄວນຈະຖືກນຳເຂົ້າເປັນ URL ຫຼື ຂໍ້ມູນທີ່ເຂົ້າລະຫັດ base64."
 
 #. module: base_import
 #. odoo-javascript
@@ -333,6 +420,7 @@ msgstr "ນີ້ແມ່ນສ່ວນເລີ່ມຕົ້ນຂອງໄ
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__id
+#: model:ir.model.fields,field_description:base_import.field_res_users__id
 msgid "ID"
 msgstr "ໄອດີ"
 
@@ -345,15 +433,16 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
-"ຖ້າໄຟລ໌ມີຊື່ຖັນ, Odoo ສາມາດລອງກວດຫາຟິວທີ່ກົງກັບຖັນນັ້ນໂດຍອັດຕະໂນມັດ. ສິ່ງນີ້ຊ່ວຍໃຫ້ການນຳເຂົ້າງ່າຍຂຶ້ນ ໂດ"
-"ຍສະເພາະໃນເວລາທີ່ໄຟລ໌ມີຫຼາຍຖັນ."
+"ຖ້າໄຟລ໌ມີຊື່ຖັນ, Odoo ສາມາດລອງກວດຫາຟິວທີ່ກົງກັບຖັນນັ້ນໂດຍອັດຕະໂນມັດ. ສິ່ງນີ້ຊ່ວຍໃຫ້ການນຳເຂົ້າງ່າຍຂຶ້ນ "
+"ໂດຍສະເພາະໃນເວລາທີ່ໄຟລ໌ມີຫຼາຍຖັນ."
 
 #. module: base_import
-#. odoo-python
-#: code:addons/base_import/models/base_import.py:0
-msgid "Image size excessive, imported images must be smaller than 42 million pixel"
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"If the model uses openchatter, history tracking will set up subscriptions "
+"and send notifications during the import, but lead to a slower import."
 msgstr ""
-"ຂະໜາດຮູບພາບໃຫຍ່ເກີນໄປ, ຮູບພາບທີ່ນຳເຂົ້າຕ້ອງມີຂະໜາດນ້ອຍກວ່າ 42 ລ້ານພິກເຊລ"
 
 #. module: base_import
 #. odoo-javascript
@@ -393,23 +482,23 @@ msgstr "ນຳເຂົ້າບັນທຶກ"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-msgid "Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file)."
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Imported records"
 msgstr ""
-"ການນຳເຂົ້າໝົດເວລາ. ກະລຸນາລອງໃໝ່. ຖ້າທ່ານຍັງພົບບັນຫານີ້, ໄຟລ໌ອາດຈະໃຫຍ່ເກີນໄປສຳລັບການກຳນົດຄ່າຂອງລ"
-"ະບົບ, ໃຫ້ລອງແຍກໄຟລ໌ (ນຳເຂົ້າບັນທຶກໜ້ອຍລົງຕໍ່ໄຟລ໌)."
-
-#. module: base_import
-#. odoo-javascript
-#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
-msgid "Imported file"
-msgstr "ໄຟລ໌ທີ່ນຳເຂົ້າ"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 msgid "Importing"
 msgstr "ກຳລັງນຳເຂົ້າ"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
+msgstr ""
 
 #. module: base_import
 #. odoo-python
@@ -432,8 +521,8 @@ msgstr "ອັບເດດຫຼ້າສຸດເມື່ອ"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Load File"
-msgstr "ໂຫຼດໄຟລ໌"
+msgid "Load Data File"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -446,6 +535,18 @@ msgstr "ກຳລັງໂຫຼດໄຟລ໌..."
 #: code:addons/base_import/static/src/import_block_ui.xml:0
 msgid "Loading..."
 msgstr "ກຳລັງໂຫຼດ..."
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Max size per batch"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Mb"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -472,6 +573,12 @@ msgstr "ບໍ່ມີຕົວຂັ້ນ"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.js:0
+msgid "No file selected"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 msgid "No matching records found for the following name"
 msgstr "ບໍ່ພົບບັນທຶກທີ່ກົງກັນສຳລັບຊື່ຕໍ່ໄປນີ້"
@@ -484,6 +591,18 @@ msgstr "ຟິວ Odoo"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload a single file."
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_action/import_action.js:0
+msgid "Please upload an Excel (.xls or .xlsx) or .csv file to import."
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 msgid "Prevent import"
 msgstr "ປ້ອງກັນການນຳເຂົ້າ"
@@ -493,6 +612,12 @@ msgstr "ປ້ອງກັນການນຳເຂົ້າ"
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Preview"
 msgstr "ເບິ່ງຕົວຢ່າງ"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+msgid "Progress bar"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
@@ -519,7 +644,7 @@ msgstr "ສືບຕໍ່"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_content/import_data_content.js:0
+#: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 msgid "Search a field..."
 msgstr "ຄົ້ນຫາຟິວ..."
 
@@ -650,6 +775,22 @@ msgid "The file will be imported by batches"
 msgstr "ໄຟລ໌ຈະຖືກນຳເຂົ້າເປັນຊຸດ"
 
 #. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was automatically detected."
+msgstr ""
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+msgid ""
+"There was an issue decoding the file using encoding “%s”.\n"
+"This encoding was manually selected."
+msgstr ""
+
+#. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 msgid "This column will be concatenated in field"
@@ -682,15 +823,16 @@ msgstr "ຕິດຕາມປະຫວັດໃນລະຫວ່າງການ
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
+msgid ""
+"Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr "ບໍ່ສາມາດໂຫຼດໄຟລ໌ \"{extension}\" ໄດ້: ຕ້ອງການໂມດູນ Python \"{modname}\""
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr ""
-"ບໍ່ຮອງຮັບຮູບແບບໄຟລ໌ \"{}\", ການນຳເຂົ້າຮອງຮັບພຽງແຕ່ CSV, ODS, XLS ແລະ XLSX"
+msgid ""
+"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr "ບໍ່ຮອງຮັບຮູບແບບໄຟລ໌ \"{}\", ການນຳເຂົ້າຮອງຮັບພຽງແຕ່ CSV, ODS, XLS ແລະ XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -701,31 +843,39 @@ msgstr "ບໍ່ມີຊື່"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload File"
-msgstr "ອັບໂຫຼດໄຟລ໌"
+msgid "Upload Data File"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_action/import_action.xml:0
-msgid "Upload an Excel or CSV file to import"
-msgstr "ອັບໂຫຼດໄຟລ໌ Excel ຫຼື CSV ເພື່ອນຳເຂົ້າ"
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid "Upload your files"
+msgstr ""
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h system. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use HH for hours in a 24h system, use II in conjonction with 'p' for a 12h "
+"system. You can use a custom format in addition to the suggestions provided. "
+"Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
-"ໃຊ້ HH ສຳລັບຊົ່ວໂມງໃນລະບົບ 24 ຊົ່ວໂມງ, ໃຊ້ II ຮ່ວມກັບ 'p' ສຳລັບລະບົບ 12 ຊົ່ວໂມງ. ທ່ານສາມາດໃຊ້"
-"ຮູບແບບທີ່ກຳນົດເອງນອກຈາກຄຳແນະນຳທີ່ໃຫ້ໄວ້. ປ່ອຍໃຫ້ຫວ່າງເປົ່າເພື່ອໃຫ້ Odoo ຄາດເດົາຮູບແບບ (ແນະນຳ)"
+"ໃຊ້ HH ສຳລັບຊົ່ວໂມງໃນລະບົບ 24 ຊົ່ວໂມງ, ໃຊ້ II ຮ່ວມກັບ 'p' ສຳລັບລະບົບ 12 ຊົ່ວໂມງ. "
+"ທ່ານສາມາດໃຊ້ຮູບແບບທີ່ກຳນົດເອງນອກຈາກຄຳແນະນຳທີ່ໃຫ້ໄວ້. ປ່ອຍໃຫ້ຫວ່າງເປົ່າເພື່ອໃຫ້ Odoo "
+"ຄາດເດົາຮູບແບບ (ແນະນຳ)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
-msgid "Use YYYY to represent the year, MM for the month and DD for the day. Include separators such as a dot, forward slash or dash. You can use a custom format in addition to the suggestions provided. Leave empty to let Odoo guess the format (recommended)"
+msgid ""
+"Use YYYY to represent the year, MM for the month and DD for the day. Include "
+"separators such as a dot, forward slash or dash. You can use a custom format "
+"in addition to the suggestions provided. Leave empty to let Odoo guess the "
+"format (recommended)"
 msgstr ""
-"ໃຊ້ YYYY ເພື່ອແທນປີ, MM ສຳລັບເດືອນ ແລະ DD ສຳລັບວັນ. ລວມທັງຕົວຂັ້ນ ເຊັ່ນ ຈຸດ, ສະແລັດ ຫຼື ຂີດຕໍ່. ທ່າ"
-"ນສາມາດໃຊ້ຮູບແບບທີ່ກຳນົດເອງນອກຈາກຄຳແນະນຳທີ່ໃຫ້ໄວ້. ປ່ອຍໃຫ້ຫວ່າງເປົ່າເພື່ອໃຫ້ Odoo ຄາດເດົາຮູບແບບ "
-"(ແນະນຳ)"
+"ໃຊ້ YYYY ເພື່ອແທນປີ, MM ສຳລັບເດືອນ ແລະ DD ສຳລັບວັນ. ລວມທັງຕົວຂັ້ນ ເຊັ່ນ ຈຸດ, ສະແລັດ ຫຼື ຂີດຕໍ່. "
+"ທ່ານສາມາດໃຊ້ຮູບແບບທີ່ກຳນົດເອງນອກຈາກຄຳແນະນຳທີ່ໃຫ້ໄວ້. ປ່ອຍໃຫ້ຫວ່າງເປົ່າເພື່ອໃຫ້ Odoo "
+"ຄາດເດົາຮູບແບບ (ແນະນຳ)"
 
 #. module: base_import
 #. odoo-javascript
@@ -740,6 +890,14 @@ msgstr "ຜູ້ໃຊ້"
 
 #. module: base_import
 #. odoo-javascript
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
+msgid ""
+"Warning: ignores the labels line, empty lines and lines composed only of "
+"empty cells"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.xml:0
 msgid "When a value cannot be matched:"
 msgstr "ເມື່ອຄ່າບໍ່ສາມາດຈັບຄູ່ໄດ້:"
@@ -747,9 +905,10 @@ msgstr "ເມື່ອຄ່າບໍ່ສາມາດຈັບຄູ່ໄດ
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-msgid "You can not import images via URL, check with your administrator or support for the reason."
+msgid ""
+"You can not import file via URL, check with your administrator or support "
+"for the reason."
 msgstr ""
-"ທ່ານບໍ່ສາມາດນຳເຂົ້າຮູບພາບຜ່ານ URL ໄດ້, ກະລຸນາກວດສອບກັບຜູ້ດູແລລະບົບ ຫຼື ຝ່າຍຊ່ວຍເຫຼືອສຳລັບເຫດຜົນ."
 
 #. module: base_import
 #. odoo-javascript
@@ -802,6 +961,7 @@ msgstr "ຈາກທັງໝົດ"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
+#: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 msgid "seconds"
 msgstr "ວິນາທີ"
 
@@ -810,3 +970,46 @@ msgstr "ວິນາທີ"
 #: code:addons/base_import/models/base_import.py:0
 msgid "unknown error code %s"
 msgstr "ລະຫັດຂໍ້ຜິດພາດທີ່ບໍ່ຮູ້ຈັກ %s"
+
+#~ msgid "Column %s contains incorrect values (value: %s)"
+#~ msgstr "ຖັນ %s ມີຄ່າທີ່ບໍ່ຖືກຕ້ອງ (ຄ່າ: %s)"
+
+#~ msgid "Column %s contains incorrect values. Error in line %d: %s"
+#~ msgstr "ຖັນ %s ມີຄ່າທີ່ບໍ່ຖືກຕ້ອງ. ຂໍ້ຜິດພາດໃນແຖວ %d: %s"
+
+#~ msgid "Error Parsing Date [%s:L%d]: %s"
+#~ msgstr "ຂໍ້ຜິດພາດໃນການວິເຄາະວັນທີ [%s:L%d]: %s"
+
+#~ msgid "Error at row %s: \"%s\""
+#~ msgstr "ຂໍ້ຜິດພາດຢູ່ແຖວ %s: \"%s\""
+
+#~ msgid ""
+#~ "Image size excessive, imported images must be smaller than 42 million "
+#~ "pixel"
+#~ msgstr "ຂະໜາດຮູບພາບໃຫຍ່ເກີນໄປ, ຮູບພາບທີ່ນຳເຂົ້າຕ້ອງມີຂະໜາດນ້ອຍກວ່າ 42 ລ້ານພິກເຊລ"
+
+#~ msgid ""
+#~ "Import timed out. Please retry. If you still encounter this issue, the "
+#~ "file may be too big for the system's configuration, try to split it "
+#~ "(import less records per file)."
+#~ msgstr ""
+#~ "ການນຳເຂົ້າໝົດເວລາ. ກະລຸນາລອງໃໝ່. ຖ້າທ່ານຍັງພົບບັນຫານີ້, "
+#~ "ໄຟລ໌ອາດຈະໃຫຍ່ເກີນໄປສຳລັບການກຳນົດຄ່າຂອງລະບົບ, ໃຫ້ລອງແຍກໄຟລ໌ (ນຳເຂົ້າບັນທຶກໜ້ອຍລົງຕໍ່ໄຟລ໌)."
+
+#~ msgid "Imported file"
+#~ msgstr "ໄຟລ໌ທີ່ນຳເຂົ້າ"
+
+#~ msgid "Load File"
+#~ msgstr "ໂຫຼດໄຟລ໌"
+
+#~ msgid "Upload File"
+#~ msgstr "ອັບໂຫຼດໄຟລ໌"
+
+#~ msgid "Upload an Excel or CSV file to import"
+#~ msgstr "ອັບໂຫຼດໄຟລ໌ Excel ຫຼື CSV ເພື່ອນຳເຂົ້າ"
+
+#~ msgid ""
+#~ "You can not import images via URL, check with your administrator or "
+#~ "support for the reason."
+#~ msgstr ""
+#~ "ທ່ານບໍ່ສາມາດນຳເຂົ້າຮູບພາບຜ່ານ URL ໄດ້, ກະລຸນາກວດສອບກັບຜູ້ດູແລລະບົບ ຫຼື ຝ່າຍຊ່ວຍເຫຼືອສຳລັບເຫດຜົນ."

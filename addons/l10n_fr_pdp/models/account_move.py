@@ -9,7 +9,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import frozendict, html2plaintext
 
 from odoo.addons.l10n_fr_pdp.models.account_edi_proxy_user import STATUS_TO_PROCESS_CONDITION_CODE_PDP
-from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import PDP_CUSTOMIZATION_ID, CPRO_CUSTOMIZATION_ID
+from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_CUSTOMIZATION_ID, EN16931_CUSTOMIZATION_ID
 from odoo.addons.l10n_fr_pdp.models.account_peppol_response import NEW_STATUSES
 from odoo.addons.l10n_fr_pdp.models.pdp_flow import FLOW_OPEN_STATES_SELECTION, FLOW_SENT_STATES, FLOW_SENT_STATES_SELECTION
 from odoo.addons.l10n_fr_pdp.utils import drom_com_territories
@@ -281,14 +281,13 @@ class AccountMove(models.Model):
     def _get_ubl_cii_builder_from_xml_tree(self, tree):
         # Extends account_edi_ubl_cii
         customization_id = tree.findtext('{*}CustomizationID')
-        # Note: The CustomizationID alone is not enough because e.g. SuperPDP just sends `urn:cen.eu:en16931:2017`
-        #       but still expects the full French validation.
         if customization_id == CPRO_CUSTOMIZATION_ID:
             return self.env['account.edi.xml.ubl_21_fr']
-        if customization_id == PDP_CUSTOMIZATION_ID:
-            receiver_endpoint_node = tree.find('./{*}AccountingCustomerParty/{*}Party/{*}EndpointID')
-            if receiver_endpoint_node is not None and receiver_endpoint_node.get('schemeID') == '0225':
-                return self.env['account.edi.xml.ubl_21_fr']
+        # Note: The CustomizationID alone is not enough because e.g. SuperPDP just sends `urn:cen.eu:en16931:2017`
+        #       but still expects the full French validation.
+        company = self.company_id or self.env.company
+        if customization_id == EN16931_CUSTOMIZATION_ID and company._get_peppol_proxy_type() == 'pdp':
+            return self.env['account.edi.xml.ubl_21_fr']
         return super()._get_ubl_cii_builder_from_xml_tree(tree)
 
     def action_pdp_open_response_wizard(self, **wizard_kwargs):
@@ -373,7 +372,9 @@ class AccountMove(models.Model):
                 + Markup('</span><ul>') + error_lines + Markup('</ul></li>')
             )
         body += Markup('</ul>')
-        self._message_log(body=body)
+        # Avoid logging a message with a "random" user
+        author_id = self.env.ref('base.partner_root').id if self.env.user.share else None
+        self._message_log(body=body, author_id=author_id)
 
     def button_cancel(self):
         res = super().button_cancel()
@@ -417,7 +418,10 @@ class AccountMove(models.Model):
                 order='id desc',
                 limit=1,
             )
-            if not last_flow or (last_flow.state in FLOW_SENT_STATES and not move.l10n_fr_pdp_sent_in_flow_ids):
+            if not last_flow or (
+                last_flow.state in FLOW_SENT_STATES
+                and any(not scope_move.l10n_fr_pdp_sent_in_flow_ids for scope_move in moves)
+            ):
                 last_flow = Flow._get_open_flow_and_create_if_needed(moves[0])
             moves.l10n_fr_pdp_last_flow_id = last_flow
 
@@ -502,7 +506,7 @@ class AccountMove(models.Model):
     )
     def _compute_l10n_fr_pdp_flow_10_report_type(self):
         for move in self:
-            if move.pdp_is_sent:
+            if move.state != 'draft' and move.pdp_is_sent:
                 if move.l10n_fr_pdp_sent_in_flow_ids and move.l10n_fr_pdp_flow_10_report_type:
                     # The previous e-report must be rectified before clearing its scope.
                     self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
@@ -715,20 +719,30 @@ class AccountMove(models.Model):
                 and move.state == 'posted'
                 and move.l10n_fr_pdp_last_flow_id.state != 'error'
             ):
+                # Ensure the RE flow exists for the move period. This must happen before clearing
+                # l10n_fr_pdp_sent_in_flow_ids: a move that left the Flow 10 scope gets its RE scope
+                # from the last flow it was sent in.
+                self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
+                # A move out of the Flow 10 scope won't be part of the RE, even if posted again.
+                # Keep it in the sent moves of the previous flow, so the RE differs from it and
+                # its removal is transmitted.
+                if not move.l10n_fr_pdp_flow_10_report_type:
+                    continue
                 # When a flow is sent it compares the moves it sends vs the moves of the previous
                 # flow to avoid sending the data twice if it's strictly the same.
                 # Setting "l10n_fr_pdp_sent_in_flow_ids" to None will ensure the move is not already
                 # considered as sent in previous flow, and allow the current flow to be sent even if
                 # it's the only diffrence between the 2 flows.
                 move.l10n_fr_pdp_sent_in_flow_ids = False
-                # Ensure RE flow exist for current move period.
-                self.env['l10n.fr.pdp.reports.flow']._get_open_flow_and_create_if_needed(move)
         return super().button_draft()
 
     def _get_import_file_type(self, file_data):
         """ Identify UBL files. """
         # EXTENDS 'account'
         if (tree := file_data['xml_tree']) is not None:
-            if tree.findtext('{*}CustomizationID') == 'urn:cen.eu:en16931:2017#conformant#urn.cpro.gouv.fr:1p0:extended-ctc-fr':
+            customization_id = tree.findtext('{*}CustomizationID')
+            if customization_id == CPRO_CUSTOMIZATION_ID:
+                return 'account.edi.xml.ubl_21_fr'
+            if self.env.company._get_peppol_proxy_type() == 'pdp' and customization_id == EN16931_CUSTOMIZATION_ID:
                 return 'account.edi.xml.ubl_21_fr'
         return super()._get_import_file_type(file_data)

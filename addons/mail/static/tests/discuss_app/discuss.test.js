@@ -25,7 +25,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, press, tick, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, Deferred, press, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import {
     asyncStep,
@@ -2388,6 +2388,52 @@ test("Escape key should focus the composer if it's not focused", async () => {
     await contains(".o-mail-Composer-input:focus");
 });
 
+test("header fits a narrow content area", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await patchUiSize({ width: 800 });
+    await animationFrame();
+    const content = queryOne(".o-mail-DiscussContent");
+    expect(content.scrollWidth).toBe(content.clientWidth);
+    const description = queryOne(".o-mail-DiscussContent-threadDescription");
+    const actions = queryOne(".o-mail-DiscussContent-header .o-mail-ActionList");
+    expect(description.getBoundingClientRect().right).toBeLessThan(
+        actions.getBoundingClientRect().left
+    );
+});
+
+test("long description does not truncate the parent channel name", async () => {
+    const pyEnv = await startServer();
+    const parentId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        name: "Troubleshooting",
+        parent_channel_id: parentId,
+        description: "A description too long for the header. ".repeat(5),
+    });
+    await start();
+    await openDiscuss(subChannelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await patchUiSize({ width: 1400 });
+    await animationFrame();
+    const parentName = queryOne(".o-mail-DiscussContent-header span[title='General']");
+    expect(parentName.scrollWidth).toBe(parentName.clientWidth);
+});
+
+test("short description keeps the width of its text", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General", description: "Short" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await patchUiSize({ width: 1400 });
+    await animationFrame();
+    const description = queryOne(".o-mail-DiscussContent-threadDescription");
+    expect(description.offsetWidth).toBe(parseFloat(description.style.width));
+});
+
 test("Notification settings: basic rendering", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
@@ -2586,22 +2632,20 @@ test("leaveChannel closed the channel on RPC success with simulated SH websocket
     pyEnv["discuss.channel"].create({
         name: "SH leaveChannel test",
         channel_type: "channel",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-        ],
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
     });
     await start();
     await openDiscuss();
-    // simulate websocket traffic failing to reach the browser 
+    // simulate websocket traffic failing to reach the browser
     onRpc("discuss.channel", "action_unfollow", () => {
         asyncStep("action_unfollow_called");
-        return true; 
+        return true;
     });
     await contains(".o-mail-DiscussSidebarChannel:has(:text('SH leaveChannel test'))");
     await click("[title='Channel Actions']");
     await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button:contains(Leave Conversation)");
     await waitForSteps(["action_unfollow_called"]);
-    // ensure the channel has been fully closed 
+    // ensure the channel has been fully closed
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "SH leaveChannel test" });
 });

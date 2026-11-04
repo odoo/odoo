@@ -3,13 +3,14 @@
 # * project_sms
 #
 # Lohushchenko <nadiia.lohushchenko@self-erp.com>, 2026.
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2026-08-02 11:21+0000\n"
-"Last-Translator: Lohushchenko <nadiia.lohushchenko@self-erp.com>\n"
+"PO-Revision-Date: 2026-10-22 13:33+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "project_sms/uk/>\n"
 "Language: uk\n"
@@ -18,12 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2026.6.1\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #. module: project_sms
 #: model:ir.model,website_form_label:project_sms.model_project_task
 msgid "Create a Task"
-msgstr ""
+msgstr "Створити завдання"
 
 #. module: project_sms
 #: model:ir.model.fields,field_description:project_sms.field_project_project__display_name
@@ -31,7 +32,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_sms.field_project_task__display_name
 #: model:ir.model.fields,field_description:project_sms.field_project_task_type__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Назва для відображення"
 
 #. module: project_sms
 #: model:ir.model.fields,field_description:project_sms.field_project_project__id
@@ -39,7 +40,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_sms.field_project_task__id
 #: model:ir.model.fields,field_description:project_sms.field_project_task_type__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_sms
 #: model:ir.model.fields,help:project_sms.field_project_project_stage__sms_template_id
@@ -47,6 +48,8 @@ msgid ""
 "If set, an SMS Text Message will be automatically sent to the customer when "
 "the project reaches this stage."
 msgstr ""
+"Якщо ця опція встановлена, клієнту автоматично надсилатиметься SMS-"
+"повідомлення, коли Проект досягне цієї стадії."
 
 #. module: project_sms
 #: model:ir.model.fields,help:project_sms.field_project_task_type__sms_template_id
@@ -54,6 +57,8 @@ msgid ""
 "If set, an SMS Text Message will be automatically sent to the customer when "
 "the task reaches this stage."
 msgstr ""
+"Якщо ця опція встановлена, клієнту автоматично надсилатиметься SMS-"
+"повідомлення, коли завдання досягне цієї стадії."
 
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_project
@@ -63,29 +68,29 @@ msgstr "Проєкт"
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_project_stage
 msgid "Project Stage"
-msgstr ""
+msgstr "Етап проекту"
 
 #. module: project_sms
 #: model:ir.model.fields,field_description:project_sms.field_project_project_stage__sms_template_id
 #: model:ir.model.fields,field_description:project_sms.field_project_task_type__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "Шаблон SMS"
 
 #. module: project_sms
 #: model:ir.actions.act_window,name:project_sms.project_project_act_window_sms_composer
 #: model:ir.actions.act_window,name:project_sms.project_task_act_window_sms_composer
 msgid "Send SMS"
-msgstr ""
+msgstr "Надішліть SMS"
 
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Завдання"
 
 #. module: project_sms
 #: model:ir.model,name:project_sms.model_project_task_type
 msgid "Task Stage"
-msgstr ""
+msgstr "Етап завдання"
 
 #. module: project_sms
 #: model:ir.model.fields,help:project_sms.field_project_task__display_name
@@ -102,3 +107,14 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Використовуйте ці ключові слова в заголовку, щоб встановити нові завдання:\n"
+"\n"
+"30 год. Виділіть 30 годин на завдання\n"
+"#tags Встановіть теги для завдання\n"
+"@user Призначте завдання користувачеві\n"
+"! Встановіть для завдання середній пріоритет\n"
+"!! Встановіть для завдання високий пріоритет\n"
+"!!! Встановіть для завдання терміновий пріоритет\n"
+"\n"
+"Переконайтеся, що ви використовуєте правильний формат і порядок, наприклад, "
+"Покращте екран конфігурації 5 год. #feature #v16 @Mitchell !"

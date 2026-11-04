@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 17:38+0000\n"
+"POT-Creation-Date: 2026-10-24 17:38+0000\n"
 "PO-Revision-Date: 2026-08-03 04:18+0000\n"
 "Last-Translator: Stanislav Kurinec <stenly.kurinec@gmail.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/web/cs/>\n"
@@ -283,8 +283,8 @@ msgid ""
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
 "Barbara\n"
-"                                       Rd<br/>Pleasant Hill CA 94523<br/>"
-"United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/"
+">United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -1776,6 +1776,7 @@ msgstr "Převést na webp"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copied"
@@ -1786,6 +1787,12 @@ msgstr "Kopírováno"
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 msgid "Copy"
 msgstr "Kopírovat"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+msgid "Copy Arch"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5047,7 +5054,8 @@ msgstr "Ok"
 #: code:addons/web/controllers/home.py:0
 msgid ""
 "Only employees can access this database. Please contact the administrator."
-msgstr "Do této databáze mají přístup pouze zaměstnanci. Obraťte se na správce."
+msgstr ""
+"Do této databáze mají přístup pouze zaměstnanci. Obraťte se na správce."
 
 #. module: web
 #. odoo-javascript
@@ -5370,8 +5378,8 @@ msgid ""
 "                    For your reference, invalid xpath nodes are highlighted "
 "in red."
 msgstr ""
-"Vezměte prosím na vědomí, že váš pohled obsahuje neplatné lokalizátory.<br/>"
-"\n"
+"Vezměte prosím na vědomí, že váš pohled obsahuje neplatné lokalizátory.<br/"
+">\n"
 "                    Tyto uzly nebylo možné ukotvit k nadřazenému pohledu a "
 "nemají žádný účinek.<br/>\n"
 "                    Tento problém mohl vzniknout v důsledku ručních úprav "
@@ -6094,6 +6102,12 @@ msgstr "Vyhledat více..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/reference/reference_field.js:0
+msgid "Search a record..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_picker.js:0
 msgid "Search emoji"
 msgstr ""
@@ -6397,6 +6411,12 @@ msgstr "Šinkansen"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 msgid "Shinto"
 msgstr "Šintoismus"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
+msgid "Shortcuts"
+msgstr "Klávesové zkratky"
 
 #. module: web
 #. odoo-javascript
@@ -6789,6 +6809,14 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/core/install_scoped_app/install_scoped_app.xml:0
 msgid "The app seems to be installed on your device"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/search_arch_parser.js:0
+msgid ""
+"The autocomplete value for %(field)s has not been found: the record with id %"
+"(id)s doesn't seem to exist"
 msgstr ""
 
 #. module: web
@@ -27534,9 +27562,6 @@ msgstr ""
 
 #~ msgid "Share with all users"
 #~ msgstr "Sdílet se všemi uživateli"
-
-#~ msgid "Shortcuts"
-#~ msgstr "Klávesové zkratky"
 
 #~ msgid "Size:"
 #~ msgstr "Velikost:"

@@ -97,7 +97,7 @@ test("Hide product name if its not translated", async () => {
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveValue("A description");
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
 });
 
 test("If translated product name already in the SOL name, should not hide the translated product name", async () => {
@@ -120,7 +120,7 @@ test("If translated product name already in the SOL name, should not hide the tr
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveValue(
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText(
         [translatedProductName, "A description"].join("\n")
     );
 });
@@ -150,7 +150,7 @@ test("Editing the description shouldn't show the translated product name", async
     await contains(".o_field_product_label_section_and_note_cell textarea").edit("A description");
     await clickSave();
 
-    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveValue("A description");
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
     expect(sol.name).toBe([translatedProductName, "A description"].join("\n"));
 });
 
@@ -218,5 +218,49 @@ test("Show full description if SOL name is not started with product name", async
         resId: soId,
     });
 
-    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveValue("A description");
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
+});
+
+test("Description is a textarea only on the line being edited", async () => {
+    const { env } = await makeMockServer();
+    const product = env["product.product"][0];
+    const description = "First line\nSecond line";
+    const soId = env["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [
+            Command.create({
+                product_id: product.id,
+                name: [product.name, description].join("\n"),
+            }),
+        ],
+    });
+    const [so] = env["sale.order"].browse(soId);
+    const [sol] = env["sale.order.line"].browse(so.order_line);
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+        arch: `
+            <form>
+                <field name="order_line" widget="sol_o2m" mode="list">
+                    <list editable="bottom">
+                        <field name="product_id" widget="sol_product_many2one" readonly="1"/>
+                        <field name="name" widget="sol_text"/>
+                    </list>
+                </field>
+            </form>`,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell textarea").toHaveCount(0);
+    expect(".o_field_product_label_section_and_note_cell div.o_input").toHaveText(description);
+
+    // the description stays editable on an open order, even if the product is readonly
+    await contains(".o_field_product_label_section_and_note_cell").click();
+    expect(".o_field_product_label_section_and_note_cell textarea").toHaveValue(description);
+    await contains(".o_field_product_label_section_and_note_cell textarea").edit("New description");
+    await clickSave();
+
+    expect(".o_field_product_label_section_and_note_cell textarea").toHaveCount(0);
+    expect(".o_field_product_label_section_and_note_cell div.o_input").toHaveText("New description");
+    expect(sol.name).toBe([product.name, "New description"].join("\n"));
 });

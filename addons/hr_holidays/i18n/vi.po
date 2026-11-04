@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-17 17:37+0000\n"
+"POT-Creation-Date: 2026-10-24 17:37+0000\n"
 "PO-Revision-Date: 2026-08-02 12:32+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -503,6 +503,11 @@ msgstr ""
 "\n"
 "Phiên bản:\n"
 "%(versions)s"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+msgid "A supporting document is required for this type of time off."
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -2491,6 +2496,14 @@ msgstr ""
 "không cần xóa."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__create_calendar_meeting
+msgid ""
+"If this field is checked, every leave request of this type will have a "
+"corresponding entry in the calendar application. There will be no entry if "
+"this stays unchecked."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
@@ -4205,7 +4218,8 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_type
 msgid "This field defines the unit of time after which the accrual starts."
-msgstr "Trường này xác định đơn vị thời gian sau đó thời gian tích lũy bắt đầu."
+msgstr ""
+"Trường này xác định đơn vị thời gian sau đó thời gian tích lũy bắt đầu."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__has_valid_allocation
@@ -4861,7 +4875,8 @@ msgstr "Hàng tuần"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "When do you want the accrued time left to be carried-over?"
-msgstr "Bạn muốn thời gian tích lũy còn lại được chuyển tiếp vào thời điểm nào?"
+msgstr ""
+"Bạn muốn thời gian tích lũy còn lại được chuyển tiếp vào thời điểm nào?"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
@@ -5239,7 +5254,8 @@ msgstr "Bạn đã đăng ký ngày nghỉ trùng với khoảng thời gian nà
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Your %(leave_type)s planned on %(date)s has been accepted"
-msgstr "%(leave_type)s của bạn được lên kế hoạch vào %(date)s đã được chấp nhận"
+msgstr ""
+"%(leave_type)s của bạn được lên kế hoạch vào %(date)s đã được chấp nhận"
 
 #. module: hr_holidays
 #. odoo-python

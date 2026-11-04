@@ -63,6 +63,26 @@ class TestDefaultTeam(TestSalesCommon):
             'sequence': 3,
         })
 
+    def test_default_team_active_check(self):
+        """
+        _get_default_team_id should not return an archived team,
+        even when `archive_test` is False.
+        """
+        user = self.env.user
+        company_id = user.company_id.id
+        archived_team = self.env['crm.team'].create({
+            'name': "Archived Team",
+            'company_id': company_id,
+            'sequence': -1,
+            'user_id': user.id,
+            'member_ids': [4, user.id],
+            'active': False,
+            })
+
+        crm_team = self.env['crm.team']
+        result = crm_team.with_context(active_test=False)._get_default_team_id(user_id=user.id)
+        self.assertNotEqual(result, archived_team)
+
     def test_default_team_fallback(self):
         """ Test fallbacks when computing default team without any memberships:
         domain, order """
@@ -151,6 +171,7 @@ class TestDefaultTeam(TestSalesCommon):
                 team, self.sales_team_1,
                 'SalesTeam: default taken into account when no member / responsible'
             )
+
 
 class TestMultiCompany(TestSalesMC):
     """Tests to check multi company management with sales team and their

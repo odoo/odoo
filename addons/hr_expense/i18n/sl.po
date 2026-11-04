@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-03 17:35+0000\n"
+"POT-Creation-Date: 2026-10-30 17:37+0000\n"
 "PO-Revision-Date: 2026-09-10 11:12+0000\n"
 "Last-Translator: Nedžad Beus <nedzad.beus@implex.si>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
@@ -965,6 +965,11 @@ msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hotel, letalska vozovnica, taksi itd."
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_account_tax__hr_expense_ids
+msgid "Hr Expense"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
 msgid "Hr Expense Alias Domain"
 msgstr "Vzdevek domene stroškov HR"
@@ -1403,7 +1408,8 @@ msgstr ""
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
 "validate it."
-msgstr "Ko ustvarite svoj strošek, ga pošljite svojemu vodji, ki ga bo potrdil."
+msgstr ""
+"Ko ustvarite svoj strošek, ga pošljite svojemu vodji, ki ga bo potrdil."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1759,12 +1765,10 @@ msgstr "Skenirajte to QR kodo, da dobite aplikacijo Odoo:"
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
 msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
-"If empty, the approval is done by an Administrator or Approver (determined "
-"in settings/users)."
+"If empty, the approval is done by the department manager (if they are an "
+"expense approver), otherwise by the employee's manager. If there is none, "
+"the expense is auto-validated."
 msgstr ""
-"Izberite uporabnika, odgovornega za odobritev »Stroškov« tega zaposlenega.\n"
-"Če je polje prazno, odobritev opravi skrbnik ali odobritelj (določeno v "
-"nastavitvah/uporabnikih)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__selectable_payment_method_line_ids
@@ -1975,9 +1979,10 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-msgid "The current user has no related employee. Please, create one."
+msgid ""
+"The current user has no related employee. Please, create one in %(company)s, "
+"or switch to a company where they have one."
 msgstr ""
-"Trenutni uporabnik nima sorodnega zaposlenega. Prosimo, ustvarite enega."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2334,7 +2339,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "You cannot cancel an expense linked to a posted journal entry"
-msgstr "Stroška, povezanega s knjiženim vpisom v dnevnik, ni mogoče preklicati."
+msgstr ""
+"Stroška, povezanega s knjiženim vpisom v dnevnik, ni mogoče preklicati."
 
 #. module: hr_expense
 #. odoo-python
@@ -2346,7 +2352,8 @@ msgstr "Knjiženega ali odobrenega stroška ni mogoče izbrisati."
 #. odoo-python
 #: code:addons/hr_expense/models/analytic.py:0
 msgid "You cannot delete an analytic account that is used in an expense."
-msgstr "Analitičnega računa, ki se uporablja pri stroških, ni mogoče izbrisati."
+msgstr ""
+"Analitičnega računa, ki se uporablja pri stroških, ni mogoče izbrisati."
 
 #. module: hr_expense
 #. odoo-python
@@ -2400,6 +2407,7 @@ msgstr "Nimate pravic za urejanje tega stroška."
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "You don't have the access rights to modify this expense."
 msgstr "Nimate pravic za spreminjanje tega stroška."
 
@@ -2494,6 +2502,20 @@ msgstr "uporabite OCR za izpolnjevanje podatkov s slike računa"
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "with the same receipt already exists."
 msgstr "z istim računom že obstaja."
+
+#~ msgid ""
+#~ "Select the user responsible for approving \"Expenses\" of this employee.\n"
+#~ "If empty, the approval is done by an Administrator or Approver "
+#~ "(determined in settings/users)."
+#~ msgstr ""
+#~ "Izberite uporabnika, odgovornega za odobritev »Stroškov« tega "
+#~ "zaposlenega.\n"
+#~ "Če je polje prazno, odobritev opravi skrbnik ali odobritelj (določeno v "
+#~ "nastavitvah/uporabnikih)."
+
+#~ msgid "The current user has no related employee. Please, create one."
+#~ msgstr ""
+#~ "Trenutni uporabnik nima sorodnega zaposlenega. Prosimo, ustvarite enega."
 
 #~ msgid "$100.00"
 #~ msgstr "100.00 €"

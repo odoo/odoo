@@ -14,6 +14,7 @@ export class ProductComparison extends Interaction {
     static selector = '.js_sale:not(.o_wsale_comparison_page)';
 
     dynamicContent = {
+        _window: { 't-on-pageshow': this.onPageShow },
         '.o_add_compare, .o_add_compare_dyn': { 't-on-click': this.addProduct },
         'input.product_id': { 't-on-change': this.onChangeVariant },
         '.o_comparelist_remove': { 't-on-click': this.removeProduct },
@@ -73,6 +74,23 @@ export class ProductComparison extends Interaction {
             comparisonUtils.updateDisabled(button, isDisabled);
             button.dataset.productProductId = productId;
         }
+    }
+
+    /**
+     * Refresh comparison state changed on another page while this page was cached.
+     *
+     * @param {PageTransitionEvent} ev
+     */
+    onPageShow(ev) {
+        if (!ev.persisted) {
+            return;
+        }
+        const productIds = comparisonUtils.getComparisonProductIds();
+        for (const button of this.el.querySelectorAll('[data-action="o_comparelist"]')) {
+            const productId = parseInt(button.dataset.productProductId);
+            comparisonUtils.updateDisabled(button, productIds.includes(productId));
+        }
+        comparisonUtils.notifyComparisonListeners(this.bus);
     }
 
     /**
