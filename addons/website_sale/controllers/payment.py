@@ -8,6 +8,7 @@ from odoo.http import request, route
 from odoo.tools import SQL
 
 from odoo.addons.payment.controllers import portal as payment_portal
+from odoo.addons.sale.controllers import portal as sale_portal
 
 # TODO ANVFE part of payment routes ? /shop/payment ? express_checkout ?
 
@@ -19,6 +20,34 @@ class PaymentPortal(payment_portal.PaymentPortal):
         Override me to apply payment unrelated checks & processing.
         """
         return
+
+    def _check_shop_payment_option(self, order_sudo, amount, **kwargs):
+        """Check that the payment option of the customer is available for the order.
+
+        Express checkout pays with the "unknown" payment method of the provider, which is not in the
+        payment options. For express checkout, only the provider is checked, against the providers
+        that allow express checkout.
+
+        :param sale.order order_sudo: The sales order to pay.
+        :param float amount: The amount of the transaction.
+        :param dict kwargs: The transaction route values.
+        :return: None
+        :raise ValidationError: If the payment option is not available.
+        """
+        payment_options_context = sale_portal.CustomerPortal._get_order_payment_options_context(
+            self, order_sudo, amount
+        )
+        payment_method_sudo = (
+            self.env["payment.method"].sudo().browse(kwargs.get("payment_method_id")).exists()
+        )
+        if kwargs.get("flow") == "direct" and payment_method_sudo.code == "unknown":  # Express
+            providers_sudo = self._get_available_payment_options(
+                **payment_options_context, is_express_checkout=True
+            )["providers_sudo"]
+            if kwargs.get("provider_id") not in providers_sudo.ids:
+                raise ValidationError(self.env._("This payment option is not available."))
+        else:
+            self._check_payment_option(payment_options_context, **kwargs)
 
     @route("/shop/payment/transaction/<int:order_id>", type="jsonrpc", auth="public", website=True)
     def shop_payment_transaction(self, order_id, access_token, amount=None, **kwargs):
@@ -77,6 +106,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         if order_sudo._is_paid():
             raise UserError(self.env._("The cart has already been paid. Please refresh the page."))
+
+        self._check_shop_payment_option(order_sudo, amount, **kwargs)
 
         if delay_token_charge := kwargs.get("flow") == "token":
             request.update_context(delay_token_charge=True)  # wait until after tx validation
