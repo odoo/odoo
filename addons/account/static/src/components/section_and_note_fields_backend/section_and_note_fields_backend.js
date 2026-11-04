@@ -94,7 +94,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         this.titleField = "name";
         this.priceColumns = [...this.props.aggregatedFields, "price_unit"];
         // invisible fields to force copy when duplicating a section
-        this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
+        this.copyFields = ["display_type", "collapse_composition", "collapse_prices", "account_id"];
         // fields to never copy when duplicating a section
         this.noCopyFields = [];
         this.parentSectionMap = new Map();
@@ -260,6 +260,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
             targetIndex: sectionIndex,
             copyFields: this.copyFields,
             noCopyFields: this.noCopyFields,
+            onchangeContext: { first_onchange_call: true },
         });
     }
 
