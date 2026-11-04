@@ -46,8 +46,9 @@ class Capability:
 
 CAPABILITIES = {
     'baseline': Capability('0.6'),  # minimum supported version, keep in sync with README.md
+    'per-input-decoration': Capability('0.10'),  # --header/--footer given after each input
 }
-GET_DOCUMENT_RE = re.compile(br'^/paper-muncher/(header|footer|\.|[0-9]+)\.(?:html|xhtml|xml)$')
+GET_DOCUMENT_RE = re.compile(br'^/paper-muncher/(?:(?P<kind>header|footer)-(?P<index>[0-9]+)|(?P<name>header|footer|\.|[0-9]+))\.(?:html|xhtml|xml)$')
 
 
 class PaperMuncherServer:
@@ -108,8 +109,8 @@ class PaperMuncherServer:
     def serve(
         self,
         documents: Sequence[str],
-        header: str = '',
-        footer: str = '',
+        header: str | Sequence[str] = '',
+        footer: str | Sequence[str] = '',
         *,
         timeout: int = SERVE_TIMEOUT,
     ):
@@ -187,9 +188,11 @@ class PaperMuncherServer:
     def _process_request(self):
         if self._request.method == b'GET' and (match := GET_DOCUMENT_RE.match(self._request.target)):
             response, bytes_sent = self._handle_get((
-                     self._header if match[1] == b'header'
-                else self._footer if match[1] == b'footer'
-                else self._documents[int(match[1])]
+                     self._header[int(match['index'])] if match['kind'] == b'header'
+                else self._footer[int(match['index'])] if match['kind'] == b'footer'
+                else self._header if match['name'] == b'header'
+                else self._footer if match['name'] == b'footer'
+                else self._documents[int(match['name'])]
             ).encode())
         elif self._request.method == b'PUT' and self._request.target == b'/paper-muncher/output.pdf':
             response, bytes_sent = self._handle_put(self._request_body)
