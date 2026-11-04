@@ -55,7 +55,7 @@
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_our_super_product'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
-            <field eval="289.0" name="total_amount_currency"/>
+            <field eval="289.0" name="price_unit_currency"/>
             <field name="date" eval="time.strftime('%Y')+'-04-03'"/>
             <field name="payment_mode">company_account</field>
             <field name="approval_state">submitted</field>
@@ -66,7 +66,7 @@
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_our_super_product'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
-            <field eval="889.0" name="total_amount_currency"/>
+            <field eval="889.0" name="price_unit_currency"/>
             <field name="date" eval="time.strftime('%Y')+'-04-03'"/>
         </record>
 
@@ -83,7 +83,7 @@
             <field name="name">BreakFast</field>
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="product_id" ref="expense_product_meal"/>
-            <field eval="20" name="total_amount_currency"/>
+            <field eval="20" name="price_unit_currency"/>
         </record>
 
         <record id="travel_by_air_expense" model="hr.expense">
@@ -91,7 +91,7 @@
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_our_super_product'): 100}"/>
             <field name="product_id" ref="expense_product_travel_accommodation"/>
-            <field eval="700.0" name="total_amount_currency"/>
+            <field eval="700.0" name="price_unit_currency"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-12'"/>
             <field name="approval_state">submitted</field>
@@ -103,7 +103,7 @@
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="expense_product_travel_accommodation"/>
-            <field eval="2000.0" name="total_amount_currency"/>
+            <field eval="2000.0" name="price_unit_currency"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-17'"/>
             <field name="approval_state">submitted</field>
@@ -114,7 +114,7 @@
             <field name="employee_id" ref="hr.employee_admin"/>
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="expense_product_meal"/>
-            <field eval="152.8" name="total_amount_currency"/>
+            <field eval="152.8" name="price_unit_currency"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-13'"/>
         </record>
 
@@ -124,7 +124,7 @@
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-15'"/>
-            <field eval="56.8" name="total_amount_currency"/>
+            <field eval="56.8" name="price_unit_currency"/>
         </record>
 
         <!-- ++++++++++++++ Expense for Demo ++++++++++++++-->
@@ -144,7 +144,7 @@
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
-            <field eval="152.8" name="total_amount_currency"/>
+            <field eval="152.8" name="price_unit_currency"/>
             <field name="approval_state">approved</field>
         </record>
 
@@ -155,7 +155,7 @@
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
-            <field eval="154" name="total_amount_currency"/>
+            <field eval="154" name="price_unit_currency"/>
         </record>
 
         <record id="drinks_bill_expense" model="hr.expense">
@@ -164,7 +164,7 @@
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="expense_product_meal"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
-            <field eval="42.5" name="total_amount_currency"/>
+            <field eval="42.5" name="price_unit_currency"/>
         </record>
 
         <record id="paintball_bill_expense" model="hr.expense">
@@ -173,7 +173,7 @@
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-05'"/>
-            <field eval="25" name="total_amount_currency"/>
+            <field eval="25" name="price_unit_currency"/>
             <field name="approval_state">approved</field>
         </record>
 
@@ -185,7 +185,7 @@
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
-            <field eval="55.75" name="total_amount_currency"/>
+            <field eval="55.75" name="price_unit_currency"/>
         </record>
 
         <record id="lamp_bill_expense" model="hr.expense">
@@ -194,7 +194,7 @@
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-06-02'"/>
-            <field eval="28.99" name="total_amount_currency"/>
+            <field eval="28.99" name="price_unit_currency"/>
             <field name="approval_state">refused</field>
         </record>
 
@@ -205,7 +205,7 @@
             <field name="analytic_distribution" eval="{ref('analytic.analytic_nebula'): 100}"/>
             <field name="product_id" ref="product_product_no_cost"/>
             <field name="date" eval="time.strftime('%Y')+'-03-15'"/>
-            <field eval="450.58" name="total_amount_currency"/>
+            <field eval="450.58" name="price_unit_currency"/>
             <field name="payment_mode">company_account</field>
         </record>
     </data>
