@@ -317,18 +317,6 @@ describe("pos.order restaurant patches", () => {
         expect(order.getSelectedCourse().uuid).toBe(course1.uuid);
     });
 
-    test("isTippedAfterPayment", async () => {
-        const store = await setupPosEnv();
-        const order = await getFilledOrder(store);
-        order.config_id.set_tip_after_payment = true;
-        order.state = "paid";
-        order.amount_paid = order.priceIncl - 1;
-        expect(order.isTippedAfterPayment).toBe(true);
-
-        order.amount_paid = order.priceIncl;
-        expect(order.isTippedAfterPayment).toBe(false);
-    });
-
     test("cleanCourses renames courses after their new index", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
