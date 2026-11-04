@@ -707,6 +707,22 @@ test("between operator", async () => {
     expect.verifySteps([`["&", ("int", ">=", 5), ("int", "<=", 7)]`]);
 });
 
+test("between operator is not introduced on a '|' connector", async () => {
+    await makeDomainSelector({
+        domain: `["|", ("int", ">=", 100), ("int", "<=", 10)]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    // "int >= 100 OR int <= 10" is not "int between 100 and 10"
+    expect(SELECTORS.condition).toHaveCount(2);
+    expect(getCurrentOperator()).toBe(label(">="));
+    expect(getCurrentOperator(1)).toBe(label("<="));
+
+    await contains(`${SELECTORS.condition}:first input`).edit(200);
+    expect.verifySteps([`["|", ("int", ">=", 200), ("int", "<=", 10)]`]);
+});
+
 test("between operator (2)", async () => {
     await makeDomainSelector({
         domain: `["&", "&", ("foo", "=", "abc"), ("int", ">=", 1), ("int", "<=", 4)]`,
