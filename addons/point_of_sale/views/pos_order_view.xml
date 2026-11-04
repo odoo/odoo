@@ -140,6 +140,10 @@
                                 class="h3 mb-3 mb-md-0"
                                 invisible="amount_paid == 'amount_total'"
                                 readonly="state != 'draft'"/>
+                            <div class="text-warning text-end" colspan="2" invisible="state != 'paid' or amount_paid &lt;= amount_total">
+                                <i class="oi oi-lg me-1" data-icon="warning" aria-hidden="true"/>
+                                <span>Paid amount is higher than the total.</span>
+                            </div>
                             <label for="margin"/>
                             <div>
                                 <field name="margin" class="oe_inline" invisible="not is_total_cost_computed"/>

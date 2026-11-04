@@ -204,10 +204,7 @@ class TestUi(TestPosHrHttpCommon):
 
     def test_pos_hr_chatter_author(self):
         """Ensure PoS chatter entries are authored by the cashier performing the action."""
-        self.main_pos_config.write({
-            'order_edit_tracking': True,
-            'advanced_employee_ids': [Command.set(self.admin.ids)],
-        })
+        self.main_pos_config.write({'manager_employee_ids': [Command.set(self.admin.ids)]})
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         session = self.main_pos_config.current_session_id
 
@@ -240,7 +237,7 @@ class TestUi(TestPosHrHttpCommon):
         )
 
         session_messages = session.message_ids.sorted('id')
-        opening = session_messages.filtered(lambda m: "Opened register" in m.body)
+        opening = session_messages.filtered(lambda m: "Register Opened" in m.body)
         self.assertEqual(
             opening.author_id,
             emp1_partner,
@@ -254,7 +251,7 @@ class TestUi(TestPosHrHttpCommon):
             emp1_partner + admin_partner,
             "The cashier switches must be authored by the cashier that just logged in"
         )
-        closing = session_messages.filtered(lambda m: "Closed Register" in m.body)
+        closing = session_messages.filtered(lambda m: "Register Closed" in m.body)
         self.assertEqual(
             closing.author_id,
             admin_partner,

@@ -784,7 +784,7 @@ export class PosDataPlugin extends Plugin {
 
             let promise = null;
             const context = this.getExecutionContext({ ...options.context, ...kwargs.context });
-            const writeContext = { device_identifier: this.device.identifier, ...context };
+            const writeContext = { device_identifier: this.device?.identifier, ...context };
 
             let limitedFields = false;
             if (fields.length === 0) {
@@ -800,13 +800,13 @@ export class PosDataPlugin extends Plugin {
 
             switch (type) {
                 case "write":
-                    promise = await this.orm.write(model, ids, values, { context: writeContext });
+                    promise = this.orm.write(model, ids, values, { context: writeContext });
                     break;
                 case "delete":
-                    promise = await this.orm.unlink(model, ids, { context: writeContext });
+                    promise = this.orm.unlink(model, ids, { context: writeContext });
                     break;
                 case "call":
-                    promise = await this.orm.call(model, method, args, { ...kwargs, context });
+                    promise = this.orm.call(model, method, args, { ...kwargs, context });
                     break;
                 case "read":
                     queue = false;
