@@ -25,7 +25,7 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
             'list_price': 100
         })
 
-    def create_pay_order_close(self):
+    def create_pay_order_close(self, order_vals=None):
         self.pos_config.open_ui()
         pos_session = self.pos_config.current_session_id
         pos_session.set_opening_control(0, None)
@@ -50,6 +50,7 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
             'amount_return': 0,
             'last_order_preparation_change': '{}'
         }
+        pos_order_values.update(order_vals or {})
 
         pos_order = self.PosOrder.create(pos_order_values)
 
@@ -101,6 +102,21 @@ class TestContinentalPerpetualFlow(TestContinentalCommon):
         self.env.company.inventory_valuation = 'real_time'
         self.category.property_valuation = False
         current_session_id = self.create_pay_order_close()
+
+        valuation_account = self.category.property_stock_valuation_account_id
+        valuation_lines = current_session_id.move_id.line_ids.filtered(lambda line: line.account_id == valuation_account)
+
+        self.assertEqual(len(valuation_lines), 1)
+        self.assertEqual(valuation_lines.credit, 20.0)
+
+    def test_cogs_session_closing_ship_later_no_invoice(self):
+        """
+        Tests that a shipped later order with no invoice still has cogs at session closing
+        """
+        self.env.company.inventory_valuation = 'real_time'
+        self.category.property_valuation = 'real_time'
+        self.env['stock.quant']._update_available_quantity(self.product, self.warehouse.lot_stock_id, 5)
+        current_session_id = self.create_pay_order_close({'to_invoice': False, 'shipping_date': '2026-01-01'})
 
         valuation_account = self.category.property_stock_valuation_account_id
         valuation_lines = current_session_id.move_id.line_ids.filtered(lambda line: line.account_id == valuation_account)
