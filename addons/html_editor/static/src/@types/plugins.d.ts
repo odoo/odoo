@@ -4,7 +4,7 @@ declare module "plugins" {
     import { ResourceWithSequence } from "@html_editor/utils/resource";
 
     import { BaseContainerShared, is_valid_for_base_container_predicates } from "@html_editor/core/base_container_plugin";
-    import { on_image_added_handlers, on_pasted_handlers, on_will_paste_handlers, should_bypass_paste_image_files_predicates, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_text_overrides } from "@html_editor/core/clipboard_plugin";
+    import { on_image_added_handlers, on_pasted_handlers, on_will_paste_handlers, should_bypass_paste_image_files_predicates, clipboard_content_processors, clipboard_text_processors, ClipboardShared, paste_html_overrides, paste_text_overrides } from "@html_editor/core/clipboard_plugin";
     import { content_editable_providers, content_not_editable_providers, contenteditable_to_remove_selector, is_valid_contenteditable_predicates } from "@html_editor/core/content_editable_plugin";
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, removable_descendants_providers, system_node_selectors } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
@@ -201,6 +201,7 @@ declare module "plugins" {
         double_click_overrides: double_click_overrides;
         fix_selection_on_no_inline_root_overrides: fix_selection_on_no_inline_root_overrides;
         insert_line_break_element_overrides: insert_line_break_element_overrides;
+        paste_html_overrides: paste_html_overrides;
         paste_text_overrides: paste_text_overrides;
         paste_url_overrides: paste_url_overrides;
         set_attribute_overrides: set_attribute_overrides;

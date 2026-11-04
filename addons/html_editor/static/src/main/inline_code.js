@@ -16,6 +16,7 @@ export class InlineCodePlugin extends Plugin {
         on_input_handlers: this.onInput.bind(this),
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),
         normalize_processors: this.normalize.bind(this),
+        html_compatibility_processors: this.adaptStandardInlineCode.bind(this),
 
         /** Providers */
         feff_providers: (root, cursors) =>
@@ -62,6 +63,20 @@ export class InlineCodePlugin extends Plugin {
 
     setup() {
         this.addDomListener(this.document, "keydown", this.onKeyDown.bind(this));
+    }
+
+    /**
+     * Standard inline code becomes the editor's inline code.
+     *
+     * @param {HTMLElement} root
+     */
+    adaptStandardInlineCode(root) {
+        for (const code of selectElements(root, "code:not(.o_inline_code)")) {
+            if (!closestElement(code, "pre")) {
+                code.classList.add("o_inline_code");
+            }
+        }
+        return root;
     }
 
     handleSelectionChange() {

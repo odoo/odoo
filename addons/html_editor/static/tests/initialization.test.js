@@ -371,9 +371,11 @@ describe("formatting normalization", () => {
 
     for (const tagName of FORMATTABLE_TAGS.map((tag) => tag.toLowerCase())) {
         test(`merges adjacent formattable ${tagName}`, async () => {
+            // Standard inline code gets the class of the editor's inline code.
+            const classAttribute = tagName === "code" ? ' class="o_inline_code"' : "";
             await testEditor({
                 contentBefore: `<p><${tagName}>A</${tagName}><${tagName}>B</${tagName}></p>`,
-                contentAfter: `<p><${tagName}>AB</${tagName}></p>`,
+                contentAfter: `<p><${tagName}${classAttribute}>AB</${tagName}></p>`,
             });
         });
     }
