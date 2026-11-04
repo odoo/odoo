@@ -1419,6 +1419,24 @@ class TestTrackingInternals(TestTrackingCommon):
         record = record_form.save()
         self.assertEqual(record.name, 'TestDoNoCrash')
 
+    def test_track_record_unlinked(self):
+        """ Tracking finalization is bound to the records that prepared it. If
+        those are unlinked while other records still have values to track, and
+        tracked fields are not cached (properties definitions read on records),
+        it should not crash and still track the remaining records. """
+        self.env = self.env(context={**self.env.context, 'lang': 'en_US'})
+        record_unlinked, record = self.test_tracking_records[:2].with_env(self.env)
+        record_unlinked.write({'integer_field': 1})
+        record.write({'integer_field': 2})
+        record_unlinked.unlink()
+        self.env.transaction.invalidate_ormcache()
+
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.flush_tracking()
+        self.assertMessageFields(self._new_msgs, {'tracking_values': [
+            ('integer_field', 'integer', 0, 2),
+        ]})
+
     @users('employee')
     def test_track_invalid(self):
         """ Test invalid use cases: unknown field, unsupported type, ... """

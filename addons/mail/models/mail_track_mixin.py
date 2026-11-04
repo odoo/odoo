@@ -213,7 +213,7 @@ class MailTrackMixin(models.AbstractModel):
         # track properties if any property definition contains a tracking = True
         for fname, f in self._fields.items():
             if f.type == "properties":
-                properties = self.sudo()[f.definition_record].mapped(f.definition_record_field)
+                properties = self.sudo().exists()[f.definition_record].mapped(f.definition_record_field)
                 tracking_properties = [any(x.get('tracking') for x in p) for p in properties]
                 if any(tracking_properties):
                     model_fields.add(fname)
