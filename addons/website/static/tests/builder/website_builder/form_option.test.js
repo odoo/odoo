@@ -1224,14 +1224,12 @@ describe("Many2one Field", () => {
         await contains(addRecordButtonSelector).click();
         await contains(".o_select_menu_menu .o-dropdown-item:first").click();
 
-        expect(".o_we_table_wrapper table tr:first input[name=display_name]").toHaveValue(
-            "Belgium"
-        );
+        expect(".o_we_table_wrapper table tr:first .o_hb_list_readonly_item").toHaveText("Belgium");
         expect(".o_we_table_wrapper table tr:first input[type=checkbox]").toBeChecked();
-        expect(".o_we_table_wrapper table tr:nth-of-type(2) input[name=display_name]").toHaveValue(
+        expect(".o_we_table_wrapper table tr:nth-of-type(2) .o_hb_list_readonly_item").toHaveText(
             "India"
         );
-        expect(".o_we_table_wrapper table tr:nth-of-type(3) input[name=display_name]").toHaveValue(
+        expect(".o_we_table_wrapper table tr:nth-of-type(3) .o_hb_list_readonly_item").toHaveText(
             "Brazil"
         );
 
@@ -1248,7 +1246,7 @@ describe("Many2one Field", () => {
         });
         expect(".o_we_table_wrapper table tr").toHaveCount(records.length);
         expect(".o_we_table_wrapper table tr:first input[type=checkbox]").toBeChecked();
-        expect(".o_we_table_wrapper table tr:nth-of-type(2) input[name=display_name]").toHaveValue(
+        expect(".o_we_table_wrapper table tr:nth-of-type(2) .o_hb_list_readonly_item").toHaveText(
             "Brazil",
             {
                 message:
@@ -1280,7 +1278,7 @@ describe("Many2one Field", () => {
             await contains(".modal-dialog .o_left_panel .o_list_item").click();
             await contains(".modal-dialog .btn-primary").click();
             expect(".o_we_table_wrapper table tr").toHaveCount(1);
-            expect(".o_we_table_wrapper table tr input[name=display_name]").toHaveValue("Belgium", {
+            expect(".o_we_table_wrapper table tr .o_hb_list_readonly_item").toHaveText("Belgium", {
                 message: "Belgium should be the first record of the dialog and the only one added",
             });
 
@@ -1309,7 +1307,7 @@ describe("Many2one Field", () => {
             });
             await contains(".modal-dialog .btn-primary").click();
             expect(".o_we_table_wrapper table tr").toHaveCount(4);
-            expect(".o_we_table_wrapper table tr:last-child input[name=display_name]").toHaveValue(
+            expect(".o_we_table_wrapper table tr:last-child .o_hb_list_readonly_item").toHaveText(
                 "Kenya"
             );
 

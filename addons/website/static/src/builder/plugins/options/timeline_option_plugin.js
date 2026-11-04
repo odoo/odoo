@@ -2,6 +2,7 @@ import { isElement } from "@html_editor/utils/dom_info";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { scrollTo } from "@html_builder/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
@@ -105,6 +106,7 @@ export class AddMilestoneAction extends BuilderAction {
         newRowEl.prepend(dotLineEl);
         lastRowEl.after(newRowEl);
         this.dependencies.builderOptions.setNextTarget(newRowEl);
+        scrollTo(newRowEl, { extraOffset: 50 });
     }
 }
 

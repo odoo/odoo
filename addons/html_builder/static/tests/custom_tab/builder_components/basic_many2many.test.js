@@ -78,7 +78,7 @@ test("basic many2many: find tag, select tag, unselect tag", async () => {
     await contains("button[data-icon='remove']").click();
     expect(selection).toEqual([{ id: 2, name: "Second", display_name: "Second" }]);
     expect("table tr").toHaveCount(1);
-    expect("table input").toHaveValue("Second");
+    expect("table .o_hb_list_readonly_item").toHaveText("Second");
     expect.verifySteps(["name_search", "name_search"]);
 });
 

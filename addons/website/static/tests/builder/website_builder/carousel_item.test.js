@@ -87,6 +87,6 @@ test("Should disable reordering and navigation buttons when carousel has a singl
     }
 
     expect('[data-label="Re-order"]').toHaveAttribute("data-disabled");
-    expect("button[title='Move Backward']").toHaveClass("disabled");
-    expect("button[title='Move Forward']").toHaveClass("disabled");
+    expect("button[title='Move Backward']").not.toBeEnabled();
+    expect("button[title='Move Forward']").not.toBeEnabled();
 });

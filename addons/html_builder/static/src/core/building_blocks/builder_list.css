@@ -28,3 +28,18 @@ table .visually-hidden {
         color: unset;
     }
 }
+
+.o_hb_list_readonly_item {
+    display: block;
+    border: var(--o-we-sidebar-content-field-border-width) solid
+        color-mix(in srgb, var(--o-we-sidebar-content-field-border-color) 50%, var(--o-we-bg-lighter));
+    border-radius: var(--o-we-sidebar-content-field-border-radius);
+    background-color: color-mix(in srgb, var(--o-we-sidebar-content-field-input-bg) 30%, var(--o-we-bg-lighter));
+    padding: 0.15rem var(--o-we-sidebar-content-field-clickable-spacing);
+    color: var(--o-hb-row-color, var(--o-we-fg-dark));
+
+    td:has(> &) {
+        width: 100%;
+        max-width: 0;
+    }
+}
