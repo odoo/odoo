@@ -306,14 +306,11 @@ patch(PaymentForm.prototype, {
      * @return {void}
      */
     async _paypalRenderApplePayButton(paymentOptionId) {
-        if (paypal.Applepay === undefined) {
-            this._paypalDisplayNotAvailablePMDialog();
-            return;
-        }
         await this.waitFor(
             loadJS("https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js")
         );
-        const applePayConfig = window.ApplePaySession?.canMakePayments()
+        const applePayConfig = paypal.Applepay
+            && window.ApplePaySession?.canMakePayments()
             && await this.waitFor(paypal.Applepay().config());
         if (!applePayConfig?.isEligible) {
             this._paypalDisplayNotAvailablePMDialog();
@@ -322,11 +319,7 @@ patch(PaymentForm.prototype, {
         this.paypalData[paymentOptionId].applePayConfig = applePayConfig;
         for (const container of document.querySelectorAll("#o_paypal_button_container")) {
             const button = document.createElement("apple-pay-button");
-            // button.setAttribute("buttonstyle", "black");
-            // button.setAttribute("type", "pay");
-            // button.setAttribute("locale", document.documentElement.lang || "en-US");
-            // button.style.setProperty("--apple-pay-button-width", "100%");
-            // button.style.setProperty("--apple-pay-button-height", "40px");
+            button.setAttribute("type", "plain");
             this.addListener(button, "click", () =>
                 this._paypalOnApplePayButtonClicked(paymentOptionId)
             );
@@ -633,7 +626,6 @@ patch(PaymentForm.prototype, {
             currencyCode: currency_code,
             merchantCapabilities: applePayConfig.merchantCapabilities,
             supportedNetworks: applePayConfig.supportedNetworks,
-            // requiredBillingContactFields: ["postalAddress"],
             total: {
                 label: merchant_name,
                 amount: this.paymentContext["amount"],
@@ -643,7 +635,7 @@ patch(PaymentForm.prototype, {
             this._paypalOnApplePayValidateMerchant(session, event);
         session.onpaymentauthorized = (event) =>
             this._paypalOnApplePayPaymentAuthorized(paymentOptionId, session, event);
-        session.oncancel = () => this._enableButton();
+        session.oncancel = this._paypalOnCancel.bind(this);
         session.begin();
     },
 
