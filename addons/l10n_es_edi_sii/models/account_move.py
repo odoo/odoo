@@ -671,7 +671,7 @@ class AccountMove(models.Model):
 
             else:
                 match tax_values['l10n_es_type']:
-                    case 'sujeto' | 'sujeto_isp' | 'dua':
+                    case 'sujeto' | 'sujeto_isp' | 'dua' | 'sujeto_agricultura':
                         tax_amount_deductible += tax_values['tax_amount']
                     case 'no_sujeto':
                         tax_amount_deductible += tax_values['tax_amount']
