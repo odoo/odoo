@@ -42,11 +42,20 @@ MAX_INCOMPLETE_EVENT_SIZE = 8192  # 8kiB
 @dataclass(frozen=True)
 class Capability:
     since: str
+    features: tuple[str, ...] = ()
 
 
 CAPABILITIES = {
     'baseline': Capability('0.6'),  # minimum supported version, keep in sync with README.md
     'per-input-decoration': Capability('0.10'),  # --header/--footer given after each input
+    # Report templates rely on these wkhtmltopdf behaviors. Only enabled when the binary
+    # has them: an unknown --feature makes paper-muncher fail.
+    'wkhtmltopdf-media-zero-viewport': Capability('0.10', features=(
+        'wkhtmltopdf-quirks-media-zero-viewport',
+    )),
+    'wkhtmltopdf-media-screen': Capability('0.10', features=(
+        'wkhtmltopdf-quirks-media-screen',
+    )),
 }
 GET_DOCUMENT_RE = re.compile(br'^/paper-muncher/(?:(?P<kind>header|footer)-(?P<index>[0-9]+)|(?P<name>header|footer|\.|[0-9]+))\.(?:html|xhtml|xml)$')
 
@@ -387,6 +396,10 @@ class PaperMuncherInfo(NamedTuple):
     def has_capability(self, capability: str) -> bool:
         assert capability in CAPABILITIES, capability
         return capability in self.capabilities
+
+    @property
+    def features(self) -> list[str]:
+        return sorted({feature for name in self.capabilities for feature in CAPABILITIES[name].features})
 
 
 def extract_version(output: bytes) -> str:

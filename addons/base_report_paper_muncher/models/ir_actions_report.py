@@ -113,8 +113,14 @@ class IrActionsReport(models.Model):
             extra_args += ['--orientation', 'landscape']
         elif paperformat and paperformat.orientation:
             extra_args += ['--orientation', paperformat.orientation.lower()]
+        features = []
         if os.getenv('ODOO_PAPER_MUNCHER_FEATURE') == '1':
-            extra_args += ['--feature', '*=on']  # activate all experimental/optional features
+            features.append('*=on')  # activate all experimental/optional features
+        else:
+            features += [f'{feature}=on' for feature in paper_muncher().features]
+        if features:
+            # NOTE: a single --feature option, repeating it would override the previous one
+            extra_args += ['--feature', *features]
         if paperformat and paperformat.format:
             if paperformat.format != 'custom':
                 extra_args += ['--paper', paperformat.format]
