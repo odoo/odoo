@@ -56,7 +56,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.internal_task_leaves = self.env.company.leave_timesheet_task_id
 
         self.hr_work_entry_type_with_ts = self.env['hr.work.entry.type'].sudo().create({
-            'name': 'Time Off Type with timesheet generation (absence)',
+            'name': 'Time Type with timesheet generation (absence)',
             'code': 'TOWITHTS',
             'requires_allocation': False,
             'request_unit': 'day',
@@ -65,7 +65,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
 
         self.hr_work_entry_type_worked = self.env['hr.work.entry.type'].sudo().create({
-            'name': 'Time Off Type (worked time)',
+            'name': 'Time Type (worked time)',
             'code': 'TOWT',
             'requires_allocation': False,
             'count_as': 'working_time',
@@ -74,7 +74,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
 
         self.hr_work_entry_type_half_day = self.env['hr.work.entry.type'].sudo().create({
-            'name': 'Time Off Type (half day)',
+            'name': 'Time Type (half day)',
             'code': 'LEAVEHALFDAY',
             'requires_allocation': False,
             'request_unit': 'half_day',

@@ -292,7 +292,7 @@ class TestFrenchLeaves(TransactionCase):
         - Company works from 9 to 18 without a lunch break on Tuesday
         - Employee requests 1 day off on Monday -> duration should be 1.0
         - Employee requests 0.5 day off on Monday morning or afternoon -> duration should be 0.5
-        - Employee requests a full day off on Tuesday using a time off type in half-days -> duration should be 1.0
+        - Employee requests a full day off on Tuesday using a time type in half-days -> duration should be 1.0
         - Employee requests a half-day off on Tuesday in the morning -> duration should be 0.5
         """
         employee_calendar = self.env['resource.calendar'].create({
