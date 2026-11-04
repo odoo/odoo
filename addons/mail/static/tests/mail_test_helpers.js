@@ -14,6 +14,7 @@ import {
     queryFirst,
     registerDebugInfo,
     resize,
+    rightClick as hootRightClick,
     test,
 } from "@odoo/hoot";
 import {
@@ -958,6 +959,11 @@ export async function openMessagingMenu(tabId) {
 export async function hover(selector) {
     await mailContains(selector);
     await hootHover(selector);
+}
+
+export async function rightClick(selector) {
+    await mailContains(selector);
+    await hootRightClick(selector);
 }
 
 /**
