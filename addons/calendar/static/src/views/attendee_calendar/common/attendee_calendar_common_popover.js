@@ -68,7 +68,8 @@ export class AttendeeCalendarCommonPopover extends CalendarCommonPopover {
      * @override
      */
     get isEventDeletable() {
-        return super.isEventDeletable && this.isEventEditable;
+        console.log(this.props.record.rawRecord.user_can_delete);
+        return this.props.record.rawRecord.user_can_delete && this.isEventEditable;
     }
 
     /**
