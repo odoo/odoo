@@ -190,7 +190,7 @@ class StockPicking(models.Model):
     def action_cancel(self):
         res = super().action_cancel()
         for picking in self:
-            if picking.batch_id and any(picking.state != 'cancel' for picking in picking.batch_id.picking_ids):
+            if picking.batch_id and any(picking.state != 'cancel' for picking in picking.batch_id.sudo().picking_ids):
                 picking.batch_id = None
         return res
 

@@ -7,7 +7,7 @@ from odoo import Command
 from odoo.tools import float_round
 
 from odoo.exceptions import UserError
-from odoo.tests import Form, HttpCase, tagged
+from odoo.tests import Form, HttpCase, new_test_user, tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -666,6 +666,37 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.batch.state, 'in_progress', 'Batch Transfers should be in progress.')
         self.batch.write({'picking_ids': [[5, 0, 0]]})
         self.assertEqual(self.batch.state, 'cancel', 'Batch Transfers should be cancelled when there are no transfers.')
+
+    def test_cancel_batched_picking_without_batch_access(self):
+        """ A user allowed to cancel transfers but without access to batches
+        (e.g. a PoS cashier settling a sale order) can cancel a batched picking.
+        """
+        group = self.env['res.groups'].create({
+            'name': 'Transfers only',
+            'model_access': [
+                Command.create({
+                    'name': model,
+                    'model_id': self.env['ir.model']._get_id(model),
+                    'perm_read': True, 'perm_write': True, 'perm_create': True, 'perm_unlink': True,
+                }) for model in ('stock.picking', 'stock.move', 'stock.move.line')
+            ],
+        })
+        user = new_test_user(self.env, 'transfer_user')
+        user.groups_id |= group
+        self.batch.action_confirm()
+        self.env.invalidate_all()
+
+        self.picking_client_1.with_user(user).action_cancel()
+
+        self.assertEqual(self.picking_client_1.state, 'cancel')
+        self.assertFalse(self.picking_client_1.batch_id)
+        self.assertEqual(self.batch.picking_ids, self.picking_client_2)
+
+        self.env.invalidate_all()
+        self.picking_client_2.with_user(user).action_cancel()
+
+        self.assertEqual(self.picking_client_2.state, 'cancel')
+        self.assertEqual(self.picking_client_2.batch_id, self.batch)
 
     def test_backorder_on_one_picking(self):
         """
