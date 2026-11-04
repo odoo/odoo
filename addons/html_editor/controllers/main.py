@@ -493,7 +493,7 @@ class HTML_Editor(http.Controller):
             else:
                 url_fragments = attachment.url.split('/')
                 url_fragments.insert(-1, str(attachment.id))
-                attachment.url = '/'.join(url_fragments)
+                attachment.sudo().url = '/'.join(url_fragments)
 
         if attachment.public:
             return attachment.image_src
