@@ -97,7 +97,7 @@ const formTemplate = /* html */ `
     </div>
 `;
 
-function createFileUploadForm(maxFiles = 1) {
+function createFileUploadForm(maxFiles = 1, fieldType = "binary") {
     return `
         <div id="wrapwrap">
             <section class="s_website_form" data-vcss="001" data-snippet="s_website_form" data-name="Form">
@@ -109,7 +109,7 @@ function createFileUploadForm(maxFiles = 1) {
                         <div class="s_website_form_rows row s_col_no_bgcolor">
                             <div data-name="Field" class="s_website_form_field mb-3 col-12
                                 s_website_form_custom s_website_form_required pb0 o_colored_level"
-                                data-type="binary">
+                                data-type="${fieldType}">
                                 <div class="row s_col_no_resize s_col_no_bgcolor">
                                     <label class="col-sm-auto s_website_form_label" style="width: 200px" for="o3xe8o85w0ct">
                                         <span class="s_website_form_label_content">File Upload</span>
@@ -283,6 +283,21 @@ test("max file upload limit > 1", async () => {
     await setInputFiles([file]);
     await animationFrame();
     expect(".o_add_files_button").toHaveValue("Add Files");
+});
+
+test("delete a file from an attachments field", async () => {
+    await startInteractions(createFileUploadForm(10, "one2many"));
+    const files = ["a.pdf", "b.pdf"].map(
+        (name) => new File(["fake_file"], name, { type: "application/pdf" })
+    );
+    await contains(".s_website_form input[type='file']").click();
+    await setInputFiles(files);
+    await animationFrame();
+    expect(".o_file_block").toHaveCount(2);
+    await click(".o_file_block:first-child .o_file_delete");
+    await animationFrame();
+    expect(".o_file_block").toHaveCount(1);
+    expect(".o_file_block .o_file_name").toHaveText("b.pdf");
 });
 
 test("(mail) form checks conditions", async () => {
