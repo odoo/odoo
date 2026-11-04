@@ -1,17 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import io
+import zipfile
+from base64 import b64encode
 from datetime import date
 from unittest.mock import patch
 
-from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from .common import HOST, L10nCnEdiYunshuiTestCommon, MockYunshuiGateway
 from odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client import (
-    QUERY_RED_FORM,
-    QUERY_RESULT,
-    SIMPLE_ISSUE,
+    BLUE_LIST,
+    H5_DOWNLOAD,
+    RED_FORM_DETAIL,
+    RED_FORM_INIT,
+    RED_FORM_ISSUE,
+    RED_FORM_UPDATE,
 )
+
+BLUE_NO = '00820748268268168425'
+RED_NO = '00465309071486707222'
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -26,80 +34,107 @@ class TestYunshuiRed(L10nCnEdiYunshuiTestCommon):
         patch('odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.requests.post', self.gateway).start()
         patch('odoo.addons.l10n_cn_edi_yunshui.tools.yunshui_client.HOSTS', {'test': HOST, 'prod': HOST}).start()
         self.addCleanup(patch.stopall)
-
-    def test_full_red_uses_simple_issue_invoice_type_2(self):
-        credit_note = self._credit_note(reason='01')
-        self.gateway.handlers[SIMPLE_ISSUE] = {'code': '1000', 'message': '提交成功'}
-        self.gateway.handlers[QUERY_RESULT] = {'code': '1002', 'message': '开票中'}
-
-        credit_note.action_l10n_cn_edi_request_red_form()
-
-        request = self.gateway.requests[0]
-        self.assertEqual(request['interface_code'], SIMPLE_ISSUE)
-        payload = request['inner']
-        self.assertEqual(payload['invoiceType'], '2')
-        self.assertEqual(payload['originInvoiceNo'], '00820748268268168425')
-        self.assertEqual(payload['redReason'], '01')
-        self.assertNotIn('invoiceItems', payload)
-        self.assertEqual(self._fapiao(credit_note).state, 'sent')
-        self.assertEqual(credit_note.l10n_cn_edi_state, 'sent')
-
-    def test_red_poll_issues_the_credit_note(self):
-        credit_note = self._credit_note(reason='02')
-        self.gateway.handlers[SIMPLE_ISSUE] = {'code': '1000', 'message': '提交成功'}
-        self.gateway.handlers[QUERY_RESULT] = {'code': '1002', 'message': '开票中'}
-        credit_note.action_l10n_cn_edi_request_red_form()
-
-        self.gateway.handlers[QUERY_RESULT] = {
-            'code': '1000',
-            'message': '开票成功',
-            'fphm': '29746948242065126876',
-            'kprq': '2026-09-30 14:58:27',
+        # As the sandbox answered on 2026-11-04, cut down.
+        self.gateway.handlers[BLUE_LIST] = {'total': 1, 'list': [{
+            'fp_hm': BLUE_NO, 'kprq': '2026-11-03 17:56:05', 'sflzfp': 'Y', 'fply_dm': '2', 'gjbq': '1', 'fplx_dm': '82',
+            'kpfnsrsbh': self.company.vat, 'ghf_nsrsbh': '',
+        }]}
+        self.gateway.handlers[RED_FORM_INIT] = {
+            'code': 'Y', 'message': '成功', 'lzfphm': BLUE_NO, 'xsfnsrsbh': self.company.vat, 'jshj': 1.06,
+            'hzqrxxzt_dm': '01', 'hzqrxxmx_list': [{'xh': 1, 'je': '-1.00', 'sl1': '0.06', 'se': '-0.06'}],
         }
-        self.gateway.handlers[QUERY_RED_FORM] = {'code': 'y', 'uuid': 'a' * 32, 'hzfpxxqrdbh': '44030025093000012345'}
-        self.env['account.move']._cron_l10n_cn_edi_poll_invoices()
+        archive = io.BytesIO()
+        with zipfile.ZipFile(archive, 'w') as zip_file:
+            zip_file.writestr(f'dzfp_{RED_NO}.xml', '<EInvoice/>')
+        self.gateway.handlers[H5_DOWNLOAD] = lambda payload: (
+            {'wjl': b64encode(archive.getvalue()).decode()} if payload['xzlx'] == '2'
+            else {'jfdljUrl': f"https://digi.51fapiao.cn/v/{payload['xzlx']}"}
+        )
 
-        self.assertEqual(self._fapiao(credit_note).state, 'issued')
+    def _form(self, state, red_no=None):
+        return {
+            'code': 'Y', 'uuid': 'a' * 32, 'hzfpxxqrdbh': '67045685257273632319', 'hzqrxxzt_dm': state,
+            **({'hzfp_hm': red_no, 'hzkprq': '2026-11-04 11:39:50'} if red_no else {}),
+        }
+
+    def _red_form(self, credit_note):
+        return credit_note.l10n_cn_edi_document_ids.filtered(lambda doc: doc.kind == 'red_form')
+
+    def test_red_fapiao_issued_at_once_when_the_buyer_need_not_confirm(self):
+        credit_note = self._credit_note(reason='01')
+        self.gateway.handlers[RED_FORM_ISSUE] = self._form('01', RED_NO)
+
+        credit_note.action_l10n_cn_edi_request_red_form()
+
+        self.assertEqual(
+            [request['interface_code'] for request in self.gateway.requests][:3],
+            [BLUE_LIST, RED_FORM_INIT, RED_FORM_ISSUE],
+        )
+        issue = next(request for request in self.gateway.requests if request['interface_code'] == RED_FORM_ISSUE)
+        self.assertTrue(issue['url'].endswith('/ele.h5.pass.through'))
+        self.assertEqual(issue['headers']['X-KPY-YHM'], self.company.l10n_cn_edi_yunshui_username)
+        self.assertEqual(issue['inner']['jshjdx'], '壹圆零陆分')
+        self.assertEqual(issue['inner']['xhf_nsrsbh'], self.company.vat)
+        self.assertEqual(issue['inner']['chyydm'], '01')
+        self.assertEqual(issue['inner']['hzqrxxmxlist'][0]['sl'], '0.06')
         self.assertRecordValues(credit_note, [{
             'l10n_cn_edi_state': 'issued',
-            'l10n_cn_edi_fapiao_no': '29746948242065126876',
-            'l10n_cn_edi_red_form_number': '44030025093000012345',
-            'l10n_cn_edi_red_form_uuid': 'a' * 32,
-            'l10n_cn_edi_red_form_status': False,
+            'l10n_cn_edi_fapiao_no': RED_NO,
+            'l10n_cn_edi_red_form_number': '67045685257273632319',
+            'l10n_cn_edi_red_form_status': 'red_form_confirmed',
         }])
-        self.assertEqual(self.gateway.requests[-1]['inner'], {'fpqqlsh': self._fapiao(credit_note).serial_no, 'invoiceKind': '82'})
+        doc = self._red_form(credit_note)
+        self.assertEqual(doc.pdf_url, 'https://digi.51fapiao.cn/v/0')
+        self.assertEqual(doc.xml_id.raw.content, b'<EInvoice/>')
+        credit_note.action_post()
 
-    def test_red_definitive_failure_asks_for_new_serial(self):
+    def test_red_form_waits_for_the_buyer(self):
         credit_note = self._credit_note(reason='02')
-        self.gateway.handlers[SIMPLE_ISSUE] = {'code': '1000', 'message': '提交成功'}
-        self.gateway.handlers[QUERY_RESULT] = {'code': '1002', 'message': '开票中'}
+        self.gateway.handlers[RED_FORM_ISSUE] = self._form('02')
+
         credit_note.action_l10n_cn_edi_request_red_form()
 
-        self.gateway.handlers[QUERY_RESULT] = {'code': '2001', 'message': '开票失败'}
-        # Past the grace period in which a fresh order may not be known yet.
-        self._fapiao(credit_note).sent_date = fields.Datetime.subtract(fields.Datetime.now(), hours=1)
-        self.env['account.move']._cron_l10n_cn_edi_poll_invoices()
+        self.assertEqual(credit_note.l10n_cn_edi_red_form_status, 'red_form_pending')
+        self.assertNotEqual(credit_note.l10n_cn_edi_state, 'issued')
+        with self.assertRaisesRegex(UserError, 'only once its red fapiao is issued'):
+            credit_note.action_post()
 
-        self.assertEqual(credit_note.l10n_cn_edi_state, 'failed')
-        self.assertEqual(self._fapiao(credit_note).state, 'cancelled')
+        self.gateway.handlers[RED_FORM_DETAIL] = self._form('04', RED_NO)
+        self.env['l10n_cn_edi.document']._cron_check_red_form_status()
+
+        self.assertEqual(credit_note.l10n_cn_edi_state, 'issued')
+        self.assertEqual(credit_note.l10n_cn_edi_fapiao_no, RED_NO)
+        self.assertEqual(self.gateway.requests[-4]['inner'], {'uuid': 'a' * 32, 'xhf_nsrsbh': self.company.vat})
+
+    def test_revoke_a_red_form_the_buyer_has_not_answered(self):
+        credit_note = self._credit_note(reason='02')
+        self.gateway.handlers[RED_FORM_ISSUE] = self._form('02')
+        credit_note.action_l10n_cn_edi_request_red_form()
+
+        credit_note.action_l10n_cn_edi_cancel_red_form()
+
+        self.assertEqual(self.gateway.requests[-1]['interface_code'], RED_FORM_UPDATE)
+        self.assertEqual(self.gateway.requests[-1]['inner']['czlx'], '3')
+        self.assertRecordValues(self._red_form(credit_note), [{'state': 'cancelled', 'bureau_state': '08'}])
+
+    def test_reversed_fapiao_is_not_offered(self):
+        credit_note = self._credit_note(reason='02')
+        self.gateway.handlers[BLUE_LIST] = {'total': 0, 'list': []}
+
+        credit_note.action_l10n_cn_edi_request_red_form()
+
+        self.assertEqual(self._red_form(credit_note).state, 'failed')
+        self.assertIn('may already be reversed', credit_note.message_ids[0].body)
+        self.assertNotIn(RED_FORM_ISSUE, [request['interface_code'] for request in self.gateway.requests])
 
     def test_red_relogin_code_forces_next_login(self):
         credit_note = self._credit_note(reason='02')
-        self.gateway.handlers[SIMPLE_ISSUE] = {'_outer_code': '3203', '_outer_msg': '需强制重新登录'}
+        self.gateway.handlers[BLUE_LIST] = {'_outer_code': '3203', '_outer_msg': '需强制重新登录'}
 
         credit_note.action_l10n_cn_edi_request_red_form()
 
-        self.assertNotEqual(credit_note.l10n_cn_edi_state, 'failed')
+        self.assertEqual(self._red_form(credit_note).state, 'failed')
         self.assertTrue(self.company.sudo().l10n_cn_edi_yunshui_relogin)
-
-    def test_red_failure_returns_provider_message(self):
-        credit_note = self._credit_note(reason='04')
-        self.gateway.handlers[SIMPLE_ISSUE] = {'code': '2001', 'message': '原发票已全额冲红'}
-
-        credit_note.action_l10n_cn_edi_request_red_form()
-
-        self.assertEqual(self._fapiao(credit_note).state, 'failed')
-        self.assertEqual(credit_note.l10n_cn_edi_state, 'failed')
 
     def test_inbound_listing_is_empty_for_now(self):
         with self.assertRaisesRegex(UserError, 'does not support listing inbound red forms'):
