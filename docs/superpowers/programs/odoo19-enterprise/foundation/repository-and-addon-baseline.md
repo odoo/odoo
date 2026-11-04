@@ -10,7 +10,7 @@
 | Required reviewers | Architecture lead, delivery lead, security reviewer |
 | Artifact status | Active baseline |
 | Review cadence | Reconfirm before each domain build starts and whenever repository structure or addon boundaries change |
-| Last updated | 2026-10-04 |
+| Last updated | 2026-11-04 |
 
 ## Purpose
 
@@ -24,13 +24,34 @@ Define where delivery artifacts belong, how addon boundaries are evaluated, and 
 
 ## Repository Layout Rules
 
+The repository is a disciplined monorepo: the upstream Odoo tree and the program's own delivery areas live side by side but have separate ownership. The upstream area must stay mergeable with `odoo/odoo` and is never the target of program edits.
+
+### Upstream area — mirror-owned, read-only
+
+| Path | Intended contents | Control rule |
+| --- | --- | --- |
+| `odoo/` | Odoo core framework | Never edit. Changes arrive only through merges from `upstream/19.0`. |
+| `addons/` | Odoo core addons | Never edit. Same merge-only rule as `odoo/`. |
+| `setup/`, `debian/`, `doc/` | Upstream packaging and documentation | Reserved upstream paths; never edit. |
+
+### Program area — team-owned
+
 | Path or area | Intended contents | Control rule |
 | --- | --- | --- |
 | `docs/` | Specs, plans, governance, reporting, discovery, and review evidence | Documentation must remain reviewable, versioned, and linked from the relevant program artifact. |
 | `custom_addons/` | Company-specific addons approved after standard and OCA evaluation | Every addon must map to an approved domain scope and satisfy install, upgrade, and uninstall safety. |
-| `third_party/oca/` | OCA addons selected for reuse | Keep source provenance visible and document selection rationale before adoption. |
-| `deployment/` | Runtime configuration, compose files, services, runbooks, release notes | Runtime settings must not embed live secrets and must support rollback planning. |
+| `third_party/oca/` | OCA addons reused as pinned git submodules | Keep provenance visible; pin by commit SHA in `.gitmodules` and never declare `branch =`. |
+| `deployment/` | Runtime configuration templates, service units, install script, runbook, release notes | Owned by the delivery lead. Must not embed live secrets and must support rollback planning. |
+| `migration/` | Odoo 15 → 19 migration utilities and reconciliation artifacts | Migration-only helpers stay here, never inside unrelated business addons. |
+| `backups/` | Local dump/bundle archives (git-ignored) | Never committed; restore procedure is recorded in the rollback note. |
 | `tests/` or addon-local test paths | Automated tests, fixtures, and verification helpers | Test evidence must be traceable to the domain or baseline under review. |
+
+### Path Ownership
+
+- Upstream paths (`odoo/`, `addons/`, `setup/`, `debian/`, `doc/`) are owned by the Odoo merge flow; program work must never modify them.
+- Program paths (`custom_addons/`, `deployment/`, `docs/`, `migration/`) are owned by the program team and follow the review gates in this baseline.
+- The first-party `deployment/` package is the only supported way to install the stack onto another server; the reference procedure is `deployment/README.md`, released through tags only.
+- A change that must cross the ownership boundary is a structural exception and requires architecture lead sign-off.
 
 ## Addon Boundary Rules
 

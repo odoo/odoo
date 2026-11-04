@@ -10,7 +10,7 @@
 | Required reviewers | Program engineering lead, architecture lead, security reviewer |
 | Artifact status | Active baseline |
 | Review cadence | Reconfirm before release planning, before environment promotion, and whenever access or delivery controls change |
-| Last updated | 2026-10-04 |
+| Last updated | 2026-11-04 |
 
 ## Purpose
 
@@ -46,8 +46,17 @@ Define the operating contract for each environment, who may change it, what evid
 
 - Every merge that affects shared environments must link to the approved scope, review evidence, and relevant quality results.
 - Every deployment must include a release note, execution owner, rollback expectation, and post-deploy verification responsibility.
+- Every promotion must name the release tag it deploys; a branch head is not an acceptable release artifact.
 - Production is never a testing ground for unreviewed behavior, schema experiments, or undocumented operational fixes.
 - Emergency changes may shorten the path but cannot skip owner identification, change recording, or rollback planning.
+
+## Release Tag Control
+
+- Releases are cut as annotated tags `v19.0.<n>` on the `19.0` trunk; deployments check out a tag, never a branch head.
+- Each tag is the immutable evidence anchor for promotion: the promotion record must cite the tag and its commit SHA.
+- Runtime configuration and install steps for a release come from that tag's `deployment/` package (`odoo.conf.template`, `install.sh`, `systemd/odoo19.service`).
+- A tag is immutable once pushed; corrections ship as the next tag (`v19.0.<n+1>`), never by moving or re-pointing an existing tag.
+- Addons are delivered from the tag's `custom_addons/` tree with OCA submodules resolved to their pinned commit SHAs.
 
 ## Promotion Control Block
 
