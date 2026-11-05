@@ -3,8 +3,10 @@ import base64
 
 from freezegun import freeze_time
 from os.path import join as opj
+from unittest.mock import patch
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
 from odoo import fields
 from odoo.tools import misc
 
@@ -25,6 +27,18 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         # remove this tax, otherwise, at import, this tax with children taxes can be selected and the total is wrong
         cls.tax_armageddon.children_tax_ids.unlink()
         cls.tax_armageddon.unlink()
+
+        # No wkhtmltopdf in tests: the invoice report is rendered as HTML, store a real PDF instead.
+        IrActionsReport = cls.env.registry['ir.actions.report']
+        get_splitted_report = IrActionsReport._get_splitted_report
+
+        def _get_splitted_report(self, report_ref, content, report_type):
+            content_by_id = get_splitted_report(self, report_ref, content, report_type)
+            if report_type == 'html':
+                return {res_id: TestUblCiiCommon._get_pdf_bytes() for res_id in content_by_id}
+            return content_by_id
+
+        cls.startClassPatcher(patch.object(IrActionsReport, '_get_splitted_report', _get_splitted_report))
 
         cls.move_template = cls.env['mail.template'].create({
             'auto_delete': True,
