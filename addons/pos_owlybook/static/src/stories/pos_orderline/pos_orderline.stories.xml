@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="pos_owlybook.OrderlineDefault" owl="1">
+    <h1>Orderline</h1>
+    <span>The Orderline component renders a single line in a POS order,
+    showing product name, quantity, price, discounts, and notes.</span>
+    <ul class="list-unstyled mt-3" style="max-width: 400px;">
+        <Orderline t-props="props.storyProps"/>
+    </ul>
+</t>
+
+<t t-name="pos_owlybook.OrderlineSelected" owl="1">
+    <h1>Orderline - Selected</h1>
+    <span>An orderline in selected state with quantity of 2 and attribute string.</span>
+    <ul class="list-unstyled mt-3" style="max-width: 400px;">
+        <Orderline t-props="props.storyProps"/>
+    </ul>
+</t>
+
+<t t-name="pos_owlybook.OrderlineDiscount" owl="1">
+    <h1>Orderline - With Discount</h1>
+    <span>An orderline showing a 15% discount applied.</span>
+    <ul class="list-unstyled mt-3" style="max-width: 400px;">
+        <Orderline t-props="props.storyProps"/>
+    </ul>
+</t>
+
+<t t-name="pos_owlybook.OrderlineWithNote" owl="1">
+    <h1>Orderline - With Customer Note</h1>
+    <span>An orderline with a customer note attached.</span>
+    <ul class="list-unstyled mt-3" style="max-width: 400px;">
+        <Orderline t-props="props.storyProps"/>
+    </ul>
+</t>
+
+</templates>

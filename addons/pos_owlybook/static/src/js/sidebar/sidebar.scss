@@ -1,0 +1,84 @@
+
+// TODO: move this
+$o-owlybook-enterprise-color: $o-enterprise-color;
+$o-owlybook-community-color: $o-community-color;
+$o-owlybook-hover-color: map-get($theme-colors, "primary");
+
+.o_owlybook_sidebar {
+    width: 280px;
+    background-color: var(--owlybook-background-color);
+}
+
+@media (max-width: 575.98px) {
+    .o_owlybook_sidebar {
+      width: 100%;
+    }
+  }
+
+.o_owlybook_title {
+    color: $o-owlybook-community-color;
+}
+.o_owlybook_module {
+    letter-spacing: 0.20em;
+}
+
+.o_owlybook_active {
+    background-color: rgba($o-owlybook-hover-color, 0.1);
+    font-weight: 600;
+}
+
+.o_owlybook_hover:hover {
+    color: $o-owlybook-hover-color;
+    background-color: rgba($o-owlybook-hover-color, 0.2);
+    cursor: pointer;
+}
+
+.o_owlybook_caret {
+    color: grey;
+    width: 1.29em;
+}
+
+.o_owlybook_intro {
+    color: goldenrod;
+    font-size:15px;
+}
+
+.o_owlybook_folder_button {
+    color: $o-owlybook-community-color;
+    font-size:15px;
+}
+
+.o_owlybook_item_button {
+    color: darkcyan;
+    font-size:15px;
+}
+
+ul,
+li {
+    list-style: none;
+    padding: 0px;
+}
+
+.o_searchview_ui {
+    align-items: flex-end;
+    padding: 0 20px 1px 0;
+    position: relative;
+
+    .o_searchview_input_container {
+        display: flex;
+        flex-flow: row wrap;
+        position: relative;
+    }
+
+    .o_searchview_input {
+        flex: 1 0 auto;
+        width: 75px;
+        border: none;
+        outline: none;
+        background-color: var(--o-input-background-color, #{$input-bg});
+    }
+
+    .o_searchview_icon {
+        @include o-position-absolute($top: 4px, $right: 0);
+    }
+}
