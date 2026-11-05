@@ -5,6 +5,11 @@
 Only the lines still open for billing (``qty_to_invoice > 0``) are pulled:
 a line already invoiced in full never shows up, and a partially invoiced line
 only brings its remaining quantity.
+
+The form button only shows when the order carries at least one billable
+*service* line (no delivery needed); a goods-only order never shows it - the
+goods are billed from the delivery transfer instead. A source line already
+referenced by an active request is never pulled twice.
 """
 
 from odoo.exceptions import UserError
@@ -24,12 +29,36 @@ class TestBillingRequestFromSaleOrder(AccountTestInvoicingCommon):
         # (od19_delivery_label requires a DEPT code on outgoing pickings).
         cls.product.type = "service"
         cls.product.invoice_policy = "order"
+        # Goods product (with delivery) used to prove the button stays hidden
+        # on an order that only contains physical products.
+        cls.goods_product = cls.env["product.product"].create(
+            {
+                "name": "SO Goods Product",
+                "type": "consu",
+                "is_storable": False,
+                "invoice_policy": "order",
+                "list_price": 50.0,
+            }
+        )
+        # A delivery picking is created when a goods order is confirmed; the
+        # delivery-label module then requires a DEPT code on outgoing pickings.
+        cls.department = cls.env["hr.department"].create(
+            {"name": "Billing SO Test", "code": "BST"}
+        )
+        cls.env["hr.employee"].create(
+            {
+                "name": "Billing SO Test Employee",
+                "user_id": cls.env.uid,
+                "department_id": cls.department.id,
+            }
+        )
 
     # ------------------------------------------------------------------
     # Helpers
     # ------------------------------------------------------------------
-    def _confirmed_so(self, lines):
+    def _confirmed_so(self, lines, product=None):
         """``lines`` = [(name, qty, price), ...]."""
+        product = product or self.product
         so = self.env["sale.order"].sudo().create(
             {
                 "partner_id": self.customer.id,
@@ -38,7 +67,7 @@ class TestBillingRequestFromSaleOrder(AccountTestInvoicingCommon):
                         0,
                         0,
                         {
-                            "product_id": self.product.id,
+                            "product_id": product.id,
                             "product_uom_qty": qty,
                             "price_unit": price,
                             "name": name,
@@ -133,6 +162,28 @@ class TestBillingRequestFromSaleOrder(AccountTestInvoicingCommon):
 
         self.assertEqual(len(request.line_ids), 1)
         self.assertAlmostEqual(request.line_ids.quantity, 6.0)
+
+    def test_service_order_shows_button(self):
+        so = self._confirmed_so([("Service", 3.0, 50.0)])
+
+        self.assertTrue(so.od19_billing_request_available)
+
+    def test_goods_only_order_hides_button(self):
+        """งานสินค้าล้วน: แม้ยังไม่เปิดบิลก็ต้องไม่แสดงปุ่ม (ไปใช้ปุ่มบนใบส่งของ)."""
+        so = self._confirmed_so([("Goods", 3.0, 50.0)], product=self.goods_product)
+
+        self.assertGreater(so.order_line.qty_to_invoice, 0.0)
+        self.assertEqual(so.invoice_status, "to invoice")
+        self.assertFalse(so.od19_billing_request_available)
+
+    def test_line_already_requested_is_not_pulled_twice(self):
+        so = self._confirmed_so([("Service", 5.0, 100.0)])
+
+        _action, first = self._request_from(so)
+        self.assertEqual(len(first.line_ids), 1)
+
+        _action, second = self._request_from(so)
+        self.assertFalse(second.line_ids)
 
     def test_sale_order_form_button_view_exists(self):
         self.assertTrue(

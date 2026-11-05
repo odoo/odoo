@@ -8,7 +8,7 @@
             <div name="button_box" position="inside">
                 <button name="action_od19_create_billing_request" type="object"
                         class="oe_stat_button" icon="fa-file-text-o"
-                        invisible="state != 'sale' or invoice_status != 'to invoice'"
+                        invisible="not od19_billing_request_available"
                         groups="od19_billing_request.group_od19_billing_requester,od19_billing_request.group_od19_billing_accounting">
                     <div class="o_stat_info">
                         <span class="o_stat_text">Billing Request</span>
