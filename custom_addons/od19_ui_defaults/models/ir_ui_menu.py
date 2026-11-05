@@ -15,6 +15,9 @@ CONFIGURATION_MENU_LABELS = ("Configuration", "ตั้งค่า", "กา�
 # sequence numbers (see APP_MENU_CLUSTER_GAP) and the apps inside a cluster are
 # ordered by their position in the tuple. Apps of modules that are not
 # installed are skipped, so the list may safely reference optional modules.
+# Only *top-level* menus may be listed: the sequence is applied whatever the
+# menu's parent, so a section of another application would be pushed to the
+# end of that application instead of being ordered inside it.
 APP_MENU_CLUSTERS = (
     ("Front office", (
         "mail.menu_root_discuss",
@@ -50,7 +53,6 @@ APP_MENU_CLUSTERS = (
         "project.menu_main_pm",
         "hr_timesheet.timesheet_menu_root",
         "helpdesk_mgmt.helpdesk_ticket_main_menu",
-        "od19_helpdesk_extension.menu_internal_helpdesk",
         "od19_document_sign.menu_od19_document_sign_root",
     )),
     ("Human resources", (

@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <!-- ===================================================== -->
-    <!-- Internal IT Helpdesk - separate top-level menu         -->
+    <!-- Internal IT Helpdesk - section of the Helpdesk app     -->
     <!-- ===================================================== -->
+    <!-- The internal IT queues live *inside* the OCA "Helpdesk"  -->
+    <!-- application. A second top-level app carrying the same    -->
+    <!-- icon and handling the same model (helpdesk.ticket)      -->
+    <!-- showed up as a duplicate application in the app          -->
+    <!-- switcher, so the queues are grouped under one section.   -->
     <menuitem
         id="menu_internal_helpdesk"
         name="Internal Helpdesk"
-        sequence="17"
-        web_icon="helpdesk_mgmt,static/description/icon.png"
+        parent="helpdesk_mgmt.helpdesk_ticket_main_menu"
+        sequence="15"
         groups="group_internal_helpdesk"
     />
 
@@ -21,7 +26,7 @@
 
     <menuitem
         id="menu_internal_tickets"
-        name="Tickets"
+        name="Internal Tickets"
         parent="menu_internal_helpdesk"
         action="action_internal_helpdesk_tickets"
         sequence="10"
@@ -29,7 +34,7 @@
     />
 
     <record id="action_internal_my_tickets" model="ir.actions.act_window">
-        <field name="name">My Tickets</field>
+        <field name="name">My Internal Tickets</field>
         <field name="res_model">helpdesk.ticket</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('team_type', '=', 'internal'), ('user_id', '=', uid)]</field>
@@ -38,7 +43,7 @@
 
     <menuitem
         id="menu_internal_my_tickets"
-        name="My Tickets"
+        name="My Internal Tickets"
         parent="menu_internal_helpdesk"
         action="action_internal_my_tickets"
         sequence="5"

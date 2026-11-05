@@ -35,9 +35,12 @@ OD19_GUIDE_APP_TOURS = [
     # Guides that live inside another application (e-Tax Invoice under
     # Accounting, Audit Counts under Inventory, Sale Order Print under Sales)
     # keep their own app root and stay reachable from the User Guide menu or
-    # from /odoo?tour=<tour_name>.
+    # from /odoo?tour=<tour_name>. A guide that is the only one of its
+    # application is mapped to that application root instead -- the internal IT
+    # queues are a section of the OCA Helpdesk app, so its root carries the
+    # Internal Helpdesk tour.
     ("od19_document_sign.menu_od19_document_sign_root", "od19_signing_tour"),
-    ("od19_helpdesk_extension.menu_internal_helpdesk", "od19_internal_helpdesk_tour"),
+    ("helpdesk_mgmt.helpdesk_ticket_main_menu", "od19_internal_helpdesk_tour"),
     ("od19_billing_request.menu_od19_billing_request_root", "od19_billing_request_tour"),
     ("stock_request.menu_stock_request_root", "od19_goods_issue_tour"),
     ("website.menu_website_configuration", "od19_recruitment_tour"),
