@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { renderToElement } from "@web/core/utils/render";
-import { unwrapContents } from "@html_editor/utils/dom";
+import { removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import {
     EDITABLE_MEDIA_CLASS,
@@ -86,18 +86,21 @@ export class CaptionPlugin extends Plugin {
         html_drop_overrides: this.onPaste.bind(this),
         paste_overrides: this.onPaste.bind(this),
         normalize_processors: (root) => {
-            let figures = [];
-            if (root.matches(CAPTION_SPAN_SELECTOR)) {
-                figures = [closestElement(root, "figure")];
-            } else {
-                figures = [...root.querySelectorAll("figure")]
-                    .filter(figure => figure.querySelectorAll("img").length === 1);
-            }
+            const rootFigure = closestElement(root, "figure");
+            const figures = (rootFigure ? [rootFigure] : [...root.querySelectorAll("figure")])
+                .filter((figure) => figure.querySelectorAll("img").length === 1);
             figures.forEach((figure) => {
                 const captionSpan = figure.querySelector(CAPTION_SPAN_SELECTOR);
                 const image = figure.querySelector("IMG");
                 if (image && image.getAttribute("data-caption") !== captionSpan.textContent) {
                     image.setAttribute("data-caption", captionSpan.textContent);
+                }
+                // Float the figure like its image, so the caption gets the image width.
+                figure.classList.toggle("float-start", image.classList.contains("float-start"));
+                if (figure.classList.contains("float-start") && image.style.width) {
+                    figure.style.width = image.style.width;
+                } else {
+                    removeStyle(figure, "width");
                 }
                 if (captionSpan.textContent) {
                     const figcaption = figure.querySelector("figcaption");
