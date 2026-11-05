@@ -233,7 +233,8 @@ class HrEmployee(models.Model):
     has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user")
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
     work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name', groups="hr.group_hr_user")
-    certificate = fields.Selection(selection='_get_certificate_selection', string='Certificate Level', groups="hr.group_hr_user", tracking=True)
+    # certificate = fields.Selection(selection='_get_certificate_selection', string='Certificate Level', groups="hr.group_hr_user", tracking=True)
+    certificate = fields.Selection(readonly=False, related='version_id.certificate', inherited=True, groups="hr.group_hr_user")
     study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
     emergency_contact = fields.Char(groups="hr.group_hr_user", tracking=True)
     emergency_phone = fields.Char(groups="hr.group_hr_user", tracking=True)
@@ -661,15 +662,15 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.age = employee._get_age()
 
-    @api.model
-    def _get_certificate_selection(self):
-        return [
-            ('graduate', self.env._('Graduate')),
-            ('bachelor', self.env._('Bachelor')),
-            ('master', self.env._('Master')),
-            ('doctor', self.env._('Doctor')),
-            ('other', self.env._('Other')),
-        ]
+    # @api.model
+    # def _get_certificate_selection(self):
+    #     return [
+    #         ('graduate', self.env._('Graduate')),
+    #         ('bachelor', self.env._('Bachelor')),
+    #         ('master', self.env._('Master')),
+    #         ('doctor', self.env._('Doctor')),
+    #         ('other', self.env._('Other')),
+    #     ]
 
     @api.depends('version_ids.contract_date_start')
     def _compute_first_contract_date(self):

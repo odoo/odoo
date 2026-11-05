@@ -182,6 +182,13 @@ class HrVersion(models.Model):
         help='Person responsible for validating the employee\'s contracts.', domain=lambda self: self._get_hr_responsible_domain(),
         default=lambda self: self.env.user, required=True, groups="hr.group_hr_user")
 
+    certificate = fields.Selection(
+        selection='_get_certificate_selection',
+        string='Certificate Level',
+        groups="hr.group_hr_user",
+        tracking=True
+    )
+
     _check_contract_start_date_defined = models.Constraint(
         'CHECK(contract_date_end IS NULL OR contract_date_start IS NOT NULL)',
         'The contract must have a start date.',
@@ -973,3 +980,13 @@ class HrVersion(models.Model):
             'target': 'current',
             'context': self.env.context
         }
+
+    @api.model
+    def _get_certificate_selection(self):
+        return [
+            ('graduate', self.env._('Graduate')),
+            ('bachelor', self.env._('Bachelor')),
+            ('master', self.env._('Master')),
+            ('doctor', self.env._('Doctor')),
+            ('other', self.env._('Other')),
+        ]
