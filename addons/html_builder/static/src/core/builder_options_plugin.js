@@ -776,7 +776,7 @@ export class BuilderOptionsPlugin extends Plugin {
         return {
             template: node.getAttribute("template"),
             selector: node.getAttribute("selector"),
-            exclude: node.getAttribute("exclude"),
+            exclude: node.getAttribute("exclude") || "",
             applyTo: node.getAttribute("applyTo") || undefined,
             title: node.getAttribute("title"),
             editableOnly: node.getAttribute("editableOnly") !== "false",
