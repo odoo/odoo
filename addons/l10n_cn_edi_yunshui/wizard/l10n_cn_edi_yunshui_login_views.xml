@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_cn_edi_yunshui_login_view_form" model="ir.ui.view">
+        <field name="name">l10n_cn_edi_yunshui.login.form</field>
+        <field name="model">l10n_cn_edi_yunshui.login</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>
+                    Yunshui login can require role selection, SMS code, or QR verification depending on the tax bureau flow.
+                </p>
+                <group>
+                    <field name="step_name" readonly="1"/>
+                    <field name="step_code" readonly="1"/>
+                    <field name="message" readonly="1" invisible="not message"/>
+                    <field name="role_options" readonly="1" invisible="not role_options"/>
+                </group>
+                <group invisible="step_code != '2'">
+                    <field name="zrrlx"/>
+                </group>
+                <group invisible="step_code != '3'">
+                    <field name="sms_code" placeholder="123456"/>
+                </group>
+                <div class="text-center" invisible="not qrcode_image">
+                    <field name="qrcode_image" widget="image" options="{'size': [240, 240]}" nolabel="1" readonly="1"/>
+                    <group>
+                        <label for="qrcode_expires_in" string="QR Expires In" invisible="not qrcode_expires_in"/>
+                        <field name="qrcode_expires_in" readonly="1" nolabel="1" invisible="not qrcode_expires_in"/>
+                        <label for="qrcode_status" string="QR Status" invisible="not qrcode_status"/>
+                        <field name="qrcode_status" readonly="1" nolabel="1" invisible="not qrcode_status"/>
+                    </group>
+                </div>
+                <footer>
+                    <button name="action_send_sms" string="Send SMS" type="object" class="btn-secondary" invisible="step_code != '1'"/>
+                    <button name="action_get_qr" string="Get QR Code" type="object" class="btn-secondary" invisible="step_code != '1'"/>
+                    <button name="action_select_role" string="Submit Role" type="object" class="btn-primary" invisible="step_code != '2'"/>
+                    <button name="action_submit_sms" string="Submit SMS" type="object" class="btn-primary" invisible="step_code != '3'"/>
+                    <button name="action_verify_qr" string="Check QR Status" type="object" class="btn-primary" invisible="step_code != '4'"/>
+                    <button name="action_next" string="Continue" type="object" class="btn-primary" invisible="step_code not in ('', False)"/>
+                    <button name="action_restart" string="Restart" type="object" class="btn-secondary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
