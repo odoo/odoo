@@ -113,7 +113,7 @@
                                 </div>
                                 <div name="currency_conversion_div" class="d-flex gap-1 text-muted" invisible="company_currency_id == (currency_id if currency_id != company_currency_id else (source_currency_id or company_currency_id))">
                                     <field name="exchange_rate" invisible="1"/> <!-- rate_field feeding the account_currency_exchange_rate widget below -->
-                                    <widget name="account_currency_exchange_rate" readonly="1" options="{'rate_field': 'exchange_rate'}"/>
+                                    <widget name="account_currency_exchange_rate" readonly="1" options="{'rate_field': 'exchange_rate', 'currency_field': 'exchange_rate_currency_id'}"/>
                                 </div>
                             </div>
                             <field
