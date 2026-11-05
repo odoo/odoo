@@ -36,10 +36,17 @@ export class ToolbarMobile extends Component {
      * Fixes the position of the toolbar for the keyboard height.
      */
     fixToolbarPosition() {
+<<<<<<< fa28f4b91fb94d76aa3451fa8dca980f02f440ed
         const el = this.toolbarRef();
         if (!el) {
             return;
         }
+||||||| 3828306014f63c07b769f0fb3cfce5eb7f7c50d3
+=======
+        if (!this.toolbar.el) {
+            return;
+        }
+>>>>>>> 0729db0a2f4b4a3fa34dd623151db1dd19deac57
         const visualViewport = this.targetWindow.visualViewport;
         const keyboardHeight = Math.max(
             0,
