@@ -519,6 +519,62 @@ describe("pos.order - loyalty", () => {
         expect(loyaltyStats[0].points.spent).toBe(0);
     });
 
+    test("free product earns no points when another rule of the program is not met", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+        const program = models["loyalty.program"].get(7);
+        program.applies_on = "both";
+        program.pricelist_ids = [];
+        const ruleChair = models["loyalty.rule"].get(4);
+        ruleChair.update({ any_product: false, reward_point_mode: "money" });
+        ruleChair.validProductIds = new Set([10]);
+        const ruleBurger = models["loyalty.rule"].create({
+            id: 100,
+            program_id: program,
+            any_product: false,
+            reward_point_amount: 1,
+            reward_point_mode: "money",
+            minimum_qty: 0,
+            minimum_amount: 0,
+        });
+        ruleBurger.validProductIds = new Set([12]);
+        const reward = models["loyalty.reward"].get(3);
+        const card = models["loyalty.card"].get(4);
+        card.points = 0;
+        order.setPartner(models["res.partner"].get(1));
+        order.pricelist_id = false;
+
+        const chairLine = await addProductLineToOrder(store, order, {
+            templateId: 10,
+            productId: 10,
+            qty: 2,
+            price_unit: 600,
+        });
+        // Paying one chair earns exactly the points of the other, free, chair
+        reward.required_points = chairLine.prices.total_included / 2;
+        await store.orderUpdateLoyaltyPrograms();
+        expect(order._applyReward(reward, card.id)).toBe(true);
+        const [rewardLine] = order._get_reward_lines();
+        expect(rewardLine.getQuantity()).toBe(1);
+        expect(rewardLine.prices.total_included).toBe(-chairLine.prices.total_included / 2);
+        // Only the paid chair earns points, not the free one
+        const expectedWon = chairLine.prices.total_included / 2;
+        expect(order.getLoyaltyPoints()[0].points.won).toBe(expectedWon);
+
+        const burgerLine = await addProductLineToOrder(store, order, {
+            templateId: 12,
+            productId: 12,
+            qty: 1,
+            price_unit: 14,
+        });
+        await store.orderUpdateLoyaltyPrograms();
+        expect(order.getLoyaltyPoints()[0].points.won).toBe(
+            expectedWon + burgerLine.prices.total_included
+        );
+    });
+
     test("reward amount tax included cheapest product", async () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();
