@@ -3,6 +3,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+# สถานะคำขอที่ยังถือสิทธิ์บนบรรทัดต้นทาง (ใช้กันการดึงซ้ำข้ามคำขอ)
+_ACTIVE_REQUEST_STATES = ("draft", "submitted", "invoiced")
+
 
 class Od19BillingRequest(models.Model):
     _name = "od19.billing.request"
@@ -262,9 +265,28 @@ class Od19BillingRequest(models.Model):
             },
         ]
 
+    def _od19_pull_taken_ids(self, source):
+        """รหัสบรรทัดต้นทางที่ถูกอ้างแล้วโดยคำขอที่ยัง active อยู่.
+
+        นับรวมบรรทัดของคำขอตัวเองด้วย จึงกันการดึงซ้ำทั้งภายในคำขอเดียวและ
+        ข้ามคำขอ (cross-request dedup).
+        """
+        self.ensure_one()
+        ids = self._od19_pull_origin_line_ids(source)
+        if not ids:
+            return set()
+        lines = self.env["od19.billing.request.line"].search(
+            [
+                ("origin_line_model", "=", source._name),
+                ("origin_line_id", "in", ids),
+                ("request_id.state", "in", _ACTIVE_REQUEST_STATES),
+            ]
+        )
+        return set(lines.mapped("origin_line_id"))
+
     def _od19_pull_candidate_lines(self, source):
         self.ensure_one()
-        taken_ids = self._od19_pull_bound_lines(source).mapped("origin_line_id")
+        taken_ids = self._od19_pull_taken_ids(source)
         if source._name in ("sale.order", "purchase.order"):
             return source.order_line.filtered(
                 lambda line: line.product_id
