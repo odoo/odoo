@@ -6,6 +6,29 @@
             <field name="country_id" ref="base.us"/>
             <field name="lang_id" ref="base.lang_en"/>
         </record>
+        <record id="website_livechat_visitor_11_track_1_demo" model="website.track">
+            <field name="visitor_id" ref="website_livechat.website_livechat_visitor_11_demo"/>
+            <field name="page_id" ref="website.homepage_page"/>
+            <field name="url" model="website" eval="obj(ref('base.default_website')).get_base_url() + '/'"/>
+            <field name="visit_datetime" eval="datetime.now() - timedelta(minutes=30)"/>
+        </record>
+        <record id="website_livechat_visitor_11_track_2_demo" model="website.track">
+            <field name="visitor_id" ref="website_livechat.website_livechat_visitor_11_demo"/>
+            <field name="url" model="website" eval="obj(ref('base.default_website')).get_base_url() + '/website/info'"/>
+            <field name="visit_datetime" eval="datetime.now() - timedelta(minutes=20)"/>
+        </record>
+        <record id="website_livechat_visitor_11_track_3_demo" model="website.track">
+            <field name="visitor_id" ref="website_livechat.website_livechat_visitor_11_demo"/>
+            <field name="page_id" ref="website.privacy_policy_page"/>
+            <field name="url" model="website" eval="obj(ref('base.default_website')).get_base_url() + '/privacy'"/>
+            <field name="visit_datetime" eval="datetime.now() - timedelta(minutes=12)"/>
+        </record>
+        <record id="website_livechat_visitor_11_track_4_demo" model="website.track">
+            <field name="visitor_id" ref="website_livechat.website_livechat_visitor_11_demo"/>
+            <field name="page_id" ref="website.contactus_page"/>
+            <field name="url" model="website" eval="obj(ref('base.default_website')).get_base_url() + '/contactus'"/>
+            <field name="visit_datetime" eval="datetime.now() - timedelta(minutes=3)"/>
+        </record>
         <record id="im_livechat.livechat_channel_session_11" model="discuss.channel">
             <field name="livechat_visitor_id" ref="website_livechat.website_livechat_visitor_11_demo"/>
         </record>

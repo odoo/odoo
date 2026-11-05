@@ -433,3 +433,61 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
         self.assertTrue(channel.livechat_looking_for_help_since_dt)
         channel.livechat_end_dt = fields.Datetime.now()
         self.assertFalse(channel.livechat_looking_for_help_since_dt)
+
+    def test_request_browsing_history(self):
+        self.authenticate(None, None)
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        agent = channel.livechat_agent_partner_ids.user_ids
+        guest = channel.channel_member_ids.guest_id
+        with self.assertBus(BusResult(guest, "im_livechat.history/request", {
+            "id": channel.id,
+            "partner_id": agent.partner_id.id,
+            "request_id": "history-request",
+        })):
+            channel.with_user(agent).request_browsing_history("history-request")
+        other_agent = (self.operators - agent)[0]
+        other_agent.group_ids |= self.env.ref("im_livechat.im_livechat_group_user")
+        with self.assertBus([]):
+            channel.with_user(other_agent).request_browsing_history("non-member-request")
+
+    def test_history_filters_unsafe_pages(self):
+        self.authenticate(None, None)
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        agent = channel.livechat_agent_partner_ids.user_ids
+        page = {
+            "url": "https://example.com/contactus",
+            "title": "Contact us",
+            "visit_datetime": "2026-11-04T10:00:00.000Z",
+        }
+        invalid_pages = [
+            {**page, "url": "javascript:alert(1)"},
+            {"url": page["url"], "title": page["title"]},
+            {**page, "visit_datetime": "not-a-date"},
+            {**page, "visit_datetime": "2026-02-30T10:00:00.000Z"},
+        ]
+        with self.assertBus(BusResult(agent, "im_livechat.history/response", {
+            "channel_id": channel.id,
+            "request_id": "history-request",
+            "page_history": [page] * 3,
+        })):
+            self.make_jsonrpc_request("/im_livechat/history", {
+                "channel_id": channel.id,
+                "pid": agent.partner_id.id,
+                "request_id": "history-request",
+                "page_history": invalid_pages + [page] * 4,
+            })
+        other_agent = (self.operators - agent)[0]
+        other_agent.group_ids |= self.env.ref("im_livechat.im_livechat_group_user")
+        with self.assertBus([]):
+            self.make_jsonrpc_request("/im_livechat/history", {
+                "channel_id": channel.id,
+                "pid": other_agent.partner_id.id,
+                "request_id": "history-request",
+                "page_history": [page],
+            })

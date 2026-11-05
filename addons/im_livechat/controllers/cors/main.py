@@ -15,8 +15,8 @@ class CorsLivechatController(LivechatController):
         self.feedback(channel_id, rate, reason)
 
     @route("/im_livechat/cors/history", type="jsonrpc", auth="force_guest", save_session=False, cors="*")
-    def cors_history_pages(self, guest_token, pid, channel_id, page_history=None):
-        return self.history_pages(pid, channel_id, page_history)
+    def cors_history_pages(self, guest_token, pid, channel_id, page_history, request_id):
+        self.history_pages(pid, channel_id, page_history, request_id)
 
     @route("/im_livechat/cors/download_transcript/<int:channel_id>", type="http", auth="force_guest", save_session=False, cors="*")
     def cors_download_livechat_transcript(self, guest_token, channel_id):

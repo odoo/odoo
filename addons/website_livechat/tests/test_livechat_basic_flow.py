@@ -312,25 +312,22 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                 ],
                 "website.track": [
                     {
+                        "id": self.track_ids[3].id,
+                        "page_id": False,
+                        "url": self.track_ids[3].url,
+                        "visit_datetime": fields.Datetime.to_string(self.track_ids[3].visit_datetime),
+                    },
+                    {
                         "id": self.track_ids[2].id,
                         "page_id": self.page_1.id,
-                        "visit_datetime": fields.Datetime.to_string(
-                            self.track_ids[2].visit_datetime
-                        ),
+                        "url": self.track_ids[2].url,
+                        "visit_datetime": fields.Datetime.to_string(self.track_ids[2].visit_datetime),
                     },
                     {
                         "id": self.track_ids[1].id,
                         "page_id": self.page_2.id,
-                        "visit_datetime": fields.Datetime.to_string(
-                            self.track_ids[1].visit_datetime
-                        ),
-                    },
-                    {
-                        "id": self.track_ids[0].id,
-                        "page_id": self.page_1.id,
-                        "visit_datetime": fields.Datetime.to_string(
-                            self.track_ids[0].visit_datetime
-                        ),
+                        "url": self.track_ids[1].url,
+                        "visit_datetime": fields.Datetime.to_string(self.track_ids[1].visit_datetime),
                     },
                 ],
                 "website.visitor": [
@@ -339,7 +336,8 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
                         "display_name": f"Website Visitor #{self.visitor.id}",
                         "id": self.visitor.id,
                         "lang_id": self.env.ref("base.lang_en").id,
-                        "last_track_ids": self.track_ids.ids[::-1],
+                        "last_track_ids": self.track_ids[3:0:-1].ids,
+                        "track_count": 4,
                         "partner_id": False,
                         "website_id": self.env.ref("base.default_website").id,
                     }
