@@ -50,6 +50,12 @@ class MailTemplate(models.Model):
     email_from = fields.Char('Send From',
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
+    email_from_responsible = fields.Boolean(
+        'Send as Responsible', default=True,
+        help="When no sender is set and the email is sent automatically (e.g. by a scheduled "
+             "action or after an online payment), send it as the responsible of the record "
+             "(e.g. salesperson), or its company, instead of OdooBot. Emails sent by a user "
+             "are always sent as that user.")
     user_id = fields.Many2one('res.users', string='Owner', domain="[('share', '=', False)]")
     # recipients
     use_default_to = fields.Boolean(
@@ -784,9 +790,15 @@ class MailTemplate(models.Model):
                 # delegate attachments after creation due to ACL check
                 attachments_list.append(values.pop('attachments', []))
 
-                # add a protection against void email_from
+                # void email_from: fallback on record default author (current
+                # user, or record responsible for automated sending)
                 if 'email_from' in values and not values.get('email_from'):
                     values.pop('email_from')
+                    if record and 'author_id' not in values:
+                        author = record._mail_get_default_author(
+                            use_responsible=self.email_from_responsible,
+                        )[record.id]
+                        values.update(author_id=author.id, email_from=author.email_formatted)
 
                 # encapsulate body
                 if not sending_email_layout_xmlid:

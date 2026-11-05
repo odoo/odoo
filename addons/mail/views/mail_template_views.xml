@@ -39,6 +39,7 @@
                                 <field name="model_id" groups="base.group_no_one" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
                                 <field name="subject" options="{'dynamic_placeholder': true}"
                                        placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
+                                <field name="email_from_responsible" widget="boolean_toggle" invisible="email_from"/>
                             </group>
                         </div>
                         <notebook>
