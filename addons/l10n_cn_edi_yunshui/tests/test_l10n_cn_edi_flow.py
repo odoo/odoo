@@ -247,7 +247,10 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
                 raise UserError(error)
             return self.client
 
-        with patch.object(self.env.registry['res.company'], '_l10n_cn_edi_get_client', get_client):
+        with (
+            patch.object(self.env.registry['res.company'], '_l10n_cn_edi_get_client', get_client),
+            self.assertLogs('odoo.addons.l10n_cn_edi_yunshui.models.account_move', 'WARNING'),
+        ):
             self.env['account.move'].sudo()._cron_l10n_cn_edi_poll_invoices()
 
         self.assertEqual((invoice + other_invoice).mapped('l10n_cn_edi_state'), ['sent', 'issued'])
@@ -317,7 +320,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         send_model = self.env['account.move.send']
         self.assertFalse(send_model._get_all_extra_edis()['cn_edi']['is_applicable'](invoice))
 
-        invoices_data = {invoice: {}}
+        invoices_data = {invoice: {'extra_edis': set()}}
         send_model._call_web_service_before_invoice_pdf_render(invoices_data)
 
         self.assertTrue(invoices_data[invoice]['error']['retry'])
@@ -711,6 +714,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_billing_user_can_issue_and_reverse_a_fapiao(self):
         user = self._create_user('account.group_account_invoice')
+        user.group_ids += self.env.ref('base.group_partner_manager')
         invoice = self._create_posted_invoice()
         self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
 
