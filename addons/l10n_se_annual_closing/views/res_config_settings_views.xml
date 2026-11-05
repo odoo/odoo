@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_se" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_se</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='fiscal_localization_setting_container']" position="after">
+                <block title="Sweden" name="l10n_se_setting_container" invisible="country_code != 'SE'">
+                    <setting string="Approved for F-tax" company_dependent="1"
+                             help="State on customer invoices that the company is approved for F-tax">
+                        <field name="l10n_se_f_tax_approved"/>
+                    </setting>
+                    <setting string="SRU Form" company_dependent="1"
+                             help="Income tax return form used to map accounts to SRU codes">
+                        <div class="content-group">
+                            <div class="mt16">
+                                <field name="l10n_se_sru_type" class="w-100"/>
+                            </div>
+                            <div class="mt16">
+                                <button name="action_l10n_se_load_sru_mapping" type="object" string="Load SRU Mapping"
+                                        icon="refresh" class="btn-secondary"
+                                        invisible="not l10n_se_sru_type"
+                                        confirm="This replaces the SRU mappings of this company for the selected form. Continue?"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,5 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+"""Hidden base template shared by all Swedish charts of accounts.
+
+Holds the data every Swedish chart needs regardless of size: taxes, tax groups,
+fiscal positions and the company settings that do not depend on a specific
+account. The visible charts (K1, K2 and their extensions) inherit from it.
+Bank and cash accounts are not part of any chart: Odoo creates them from the
+code prefixes below when bank and cash journals are created.
+"""
 from odoo import models
+
 from odoo.addons.account.models.chart_template import template
 
 
@@ -9,6 +18,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('se')
     def _get_se_template_data(self):
         return {
+            'name': 'Sweden - Base',
+            'visible': False,
             'code_digits': '4',
         }
 
@@ -20,17 +31,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'bank_account_code_prefix': '193',
                 'cash_account_code_prefix': '191',
                 'transfer_account_code_prefix': '194',
-                'account_default_pos_receivable_account_id': 'a1910',
-                'income_currency_exchange_account_id': 'a3960',
-                'expense_currency_exchange_account_id': 'a3960',
-                'account_journal_early_pay_discount_loss_account_id': 'a9993',
-                'account_journal_early_pay_discount_gain_account_id': 'a9994',
                 'account_sale_tax_id': 'sale_tax_25_goods',
                 'account_purchase_tax_id': 'purchase_tax_25_goods',
-                'expense_account_id': 'a4000',
-                'income_account_id': 'a30011',
-                'receivable_account_id': 'a1510',
-                'payable_account_id': 'a2440',
-                'account_stock_valuation_id': 'a1410',
             },
         }

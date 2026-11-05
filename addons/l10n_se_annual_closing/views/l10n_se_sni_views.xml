@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- SNI list view -->
+        <record id="l10n_se_sni_view_list" model="ir.ui.view">
+            <field name="name">l10n.se.sni.list</field>
+            <field name="model">l10n_se.sni</field>
+            <field name="arch" type="xml">
+                <list string="SNI 2025 Codes">
+                    <field name="code"/>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- SNI form view -->
+        <record id="l10n_se_sni_view_form" model="ir.ui.view">
+            <field name="name">l10n.se.sni.form</field>
+            <field name="model">l10n_se.sni</field>
+            <field name="arch" type="xml">
+                <form string="SNI Code">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="display_name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- SNI search view -->
+        <record id="l10n_se_sni_view_search" model="ir.ui.view">
+            <field name="name">l10n.se.sni.search</field>
+            <field name="model">l10n_se.sni</field>
+            <field name="arch" type="xml">
+                <search string="SNI 2025 Codes">
+                    <field name="code" string="Code"/>
+                    <field name="name" string="Description"/>
+                    <field name="display_name" string="SNI Code"
+                        filter_domain="['|', ('code', 'ilike', self), ('name', 'ilike', self)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- SNI action -->
+        <record id="l10n_se_sni_action" model="ir.actions.act_window">
+            <field name="name">SNI 2025 Codes</field>
+            <field name="res_model">l10n_se.sni</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <!-- Menu under Accounting > Configuration -->
+        <menuitem
+            id="l10n_se_sni_menu"
+            name="SNI 2025 Codes"
+            parent="account.account_account_menu"
+            action="l10n_se_sni_action"
+            groups="account.group_account_manager"
+            sequence="101"/>
+    </data>
+</odoo>
