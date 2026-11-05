@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="hr_time_rule_action" model="ir.actions.act_window">
-        <field name="name">Time Rules</field>
+        <field name="name">Automatic Rules</field>
         <field name="res_model">hr.time.rule</field>
         <field name="view_mode">list,form</field>
         <field name="context">{'default_company_id': context.get('allowed_company_ids', [False])[0]}</field>
@@ -102,7 +102,7 @@
                             <separator string="Effect"/>
                             <group style="grid-template-columns: max-content 1fr; row-gap: 12px;">
                                 <span class="o_form_label" invisible="threshold_operator == 'less_than'">Set Excess to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can define a time type that will be created to count the amount of time in excess.">?</sup></span>
-                                <span class="o_form_label" invisible="threshold_operator != 'less_than'">Set Deficit to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can define a time type that will be created to count the amount of time missing to fullfill the condition.">?</sup></span>
+                                <span class="o_form_label" invisible="threshold_operator != 'less_than'">Set Deficit to <sup class="d-print-none text-info p-1 ms-1" data-tooltip="You can define a time type that will be created to count the amount of time missing to fulfill the condition.">?</sup></span>
                                 <div>
                                     <field name="work_entry_type_id" nolabel="1"
                                         options="{'no_create': True}"
