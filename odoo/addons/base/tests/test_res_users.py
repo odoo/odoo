@@ -629,6 +629,64 @@ class TestUsers2(UsersCommonCase):
             with self.assertRaises(ValidationError, msg="The user cannot be at the same time in groups: ['Membre', 'Portal', 'Foo / Small user group']"):
                 user_form.save()
 
+    def test_share_after_group_membership_change(self):
+        """Adding or removing the internal group updates user and partner share flags."""
+        user = self.env['res.users'].create({
+            'name': 'Share test',
+            'login': 'group_membership_share',
+            'group_ids': [Command.set([])],
+        })
+        partner = user.partner_id
+        for su in (True, False):
+            with self.subTest(su=su):
+                group = self.env.ref('base.group_user').with_user(self.env.ref('base.user_admin')).sudo(su)
+                # Read the share flags before writing so stale cached values are detected.
+                self.assertTrue(user.share)
+                self.assertTrue(partner.partner_share)
+
+                group.write({'user_ids': [Command.link(user.id)]})
+                self.assertFalse(user.share)
+                self.assertFalse(partner.partner_share)
+
+                group.write({'user_ids': [Command.unlink(user.id)]})
+                self.assertTrue(user.share)
+                self.assertTrue(partner.partner_share)
+
+    def test_share_after_group_implication_change(self):
+        """Changing inherited internal-user status updates share without changing explicit user groups."""
+        admin = self.env.ref('base.user_admin')
+        implied = self.env['res.groups'].create({'name': 'Share implied group'})
+        group = self.env['res.groups'].create({
+            'name': 'Share parent group',
+            'implied_ids': [Command.link(implied.id)],
+        })
+        user = self.env['res.users'].create({
+            'name': 'Share test',
+            'login': 'group_implication_share',
+            'group_ids': [Command.set(group.ids)],
+        })
+        partner = user.partner_id
+        for su in (True, False):
+            with self.subTest(su=su):
+                internal = self.env.ref('base.group_user').with_user(admin).sudo(su)
+                child = implied.with_user(admin).sudo(su)
+
+                def assert_share(share):
+                    self.assertEqual(user.share, share)
+                    self.assertEqual(partner.partner_share, share)
+
+                # Keep the user's explicit groups unchanged:
+                # only the transitive hierarchy changes.
+                assert_share(True)
+                child.write({'implied_ids': [Command.link(internal.id)]})
+                assert_share(False)
+                internal.write({'implied_by_ids': [Command.unlink(child.id)]})
+                assert_share(True)
+                internal.write({'implied_by_ids': [Command.link(child.id)]})
+                assert_share(False)
+                child.write({'implied_ids': [Command.unlink(internal.id)]})
+                assert_share(True)
+
     def test_view_group_hierarchy(self):
         """Test that the group hierarchy shows up in the correct language of the user."""
         self.env['res.lang']._activate_lang('fr_FR')

@@ -375,3 +375,27 @@ class TestAccess(TransactionCase):
         # combining access, where access condition is negated
         rule.domain = str(['&', ('categ_id', 'access', 'read'), '!', ('categ_id', 'access', 'write')])
         self.assertEqual(get_groups(), self.group1 | (comodel_groups - comodel_groups_write))
+
+    def test_group_write_revoke_own_access(self):
+        """Removing one's own group succeeds, but revokes permission to edit that group again."""
+        self.env['ir.access'].create([
+            {
+                'name': 'Read groups',
+                'model_id': self.env['ir.model']._get_id('res.groups'),
+                'group_id': self.group1.id,
+                'operation': 'r',
+            },
+            {
+                'name': 'Edit own group',
+                'model_id': self.env['ir.model']._get_id('res.groups'),
+                'group_id': self.group1.id,
+                'operation': 'u',
+                'domain': str([('id', '=', self.group1.id)]),
+            },
+        ])
+        group = self.group1.with_user(self.user)
+        self.assertTrue(group.has_access('write'))
+        group.write({'user_ids': [Command.unlink(self.user.id)]})
+        self.assertFalse(group.has_access('write'))
+        with self.assertAccessError():
+            group.write({'name': 'No longer allowed'})
