@@ -61,7 +61,7 @@ import operator
 import types
 import typing
 import warnings
-from datetime import date, datetime, time, timedelta, timezone, UTC
+from datetime import date, datetime, time, timedelta, UTC
 
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL, OrderedSet, classproperty, partition, str2bool
@@ -1652,6 +1652,8 @@ def _value_to_date(value, env, iso_only=False, inside_day=lambda dt: dt.date()):
                 return value
         else:
             value = parse_date(value, env)
+            if isinstance(value, datetime):
+                return value.replace(tzinfo=UTC).astimezone(env.tz).date()
         return _value_to_date(value, env, inside_day=inside_day)
     if isinstance(value, COLLECTION_TYPES):
         return OrderedSet(_value_to_date(v, env=env, iso_only=iso_only, inside_day=inside_day) for v in value)
@@ -1720,7 +1722,7 @@ def _value_to_datetime(value, env, iso_only=False):
         if value.tzinfo:
             # cast to a naive datetime
             warnings.warn("Use naive datetimes in domains")
-            value = value.astimezone(timezone.utc).replace(tzinfo=None)
+            value = value.astimezone(UTC).replace(tzinfo=None)
         return value, False
     if isinstance(value, str):
         if iso_only:
@@ -1737,7 +1739,7 @@ def _value_to_datetime(value, env, iso_only=False):
         value = datetime.combine(value, time.min)
         if value.year not in (1, 9999) and env.tz != UTC:
             value = value.replace(tzinfo=env.tz) \
-                .astimezone(timezone.utc) \
+                .astimezone(UTC) \
                 .replace(tzinfo=None)
         return value, True
     if isinstance(value, COLLECTION_TYPES):
