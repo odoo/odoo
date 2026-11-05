@@ -1574,3 +1574,62 @@ class TestThemeViews(common.TransactionCase):
         test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
         self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
         self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")
+
+    def test_cow_keeps_theme_template(self):
+        """ A theme view that is already specific to a website, and customized
+        there, is copied under the website-specific parent when its generic
+        parent is COWd. The copy must stay linked to the theme template, or the
+        next theme update recreates the view and drops the customization. """
+        View = self.env['ir.ui.view']
+        website_1 = self.env['website'].create({'name': 'Website 1'})
+
+        # 1. A theme with a child view of a generic view, loaded on website_1
+        main_view = View.create({
+            'name': 'Test Main View',
+            'type': 'qweb',
+            'arch': '<body>Arch is not relevant for this test</body>',
+            'key': '_test.main_view',
+        })
+        patcher = patch('odoo.modules.module._get_manifest_cached', return_value=copy.deepcopy(_DEFAULT_MANIFEST))
+        self.startPatcher(patcher)
+        test_theme_module = self.env['ir.module.module'].create({'name': 'test_theme'})
+        self.env['ir.model.data'].create({
+            'module': 'base',
+            'name': 'module_test_theme_module',
+            'model': 'ir.module.module',
+            'res_id': test_theme_module.id,
+        })
+        theme_view = self.env['theme.ir.ui.view'].with_context(install_filename='/testviews').create({
+            'name': 'Test Child View',
+            'mode': 'extension',
+            'inherit_id': 'ir.ui.view,%s' % main_view.id,
+            'arch': '<xpath expr="//body" position="replace"><span>C</span></xpath>',
+            'key': 'test_theme.test_child_view',
+        })
+        self.env['ir.model.data'].create({
+            'module': 'test_theme',
+            'name': 'products',
+            'model': 'theme.ir.ui.view',
+            'res_id': theme_view.id,
+        })
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        child_view = View.search([('key', '=', 'test_theme.test_child_view'), ('website_id', '=', website_1.id)])
+        self.assertEqual(child_view.theme_template_id, theme_view)
+
+        # 2. The user customizes the theme view on website_1
+        user_arch = '<xpath expr="//body" position="replace"><span>User</span></xpath>'
+        child_view.with_context(website_id=website_1.id).arch = user_arch
+
+        # 3. Writing on the generic parent in website_1 context triggers COW
+        main_view.with_context(website_id=website_1.id).website_meta_title = 'Specific title'
+        specific_main_view = View.search([('key', '=', '_test.main_view'), ('website_id', '=', website_1.id)])
+        cow_child_view = specific_main_view.inherit_children_ids
+        self.assertEqual(cow_child_view.key, 'test_theme.test_child_view', "The child should have been copied under the specific parent..")
+        self.assertEqual(cow_child_view.theme_template_id, theme_view, "..and still be linked to its theme template.")
+
+        # 4. Theme update: the customized copy is kept, not replaced
+        theme_view.arch = '<xpath expr="//body" position="replace"><span>Odoo Change</span></xpath>'
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        child_views = View.search([('key', '=', 'test_theme.test_child_view'), ('website_id', '=', website_1.id)])
+        self.assertEqual(child_views, cow_child_view, "Theme update should not recreate the view nor delete the copy.")
+        self.assertEqual(cow_child_view.arch, user_arch, "User arch changes should be kept on theme update.")
