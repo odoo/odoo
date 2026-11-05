@@ -4,6 +4,17 @@ import * as tourUtils from "@website_sale/js/tours/wishlist_tour_utils";
 registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
     steps: () => [
         ...tourUtils.addToWishlistFromShopPage(),
+        tourUtils.assertWishlistQuantity(1),
+        {
+            content: "Click again to remove the product from the wishlist",
+            trigger: "#o_wsale_products_grid button.o_add_wishlist.o_in_wishlist",
+            run: "click",
+        },
+        {
+            content: "Check that the product is no longer in the wishlist",
+            trigger: "#o_wsale_products_grid:not(:has(button.o_add_wishlist.o_in_wishlist))",
+        },
+        ...tourUtils.addToWishlistFromShopPage(),
         tourUtils.goToWishlist({ quantity: 1 }),
         {
             content: "remove first item in whishlist",
@@ -46,7 +57,7 @@ registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
         },
         {
             content: "check the first variant is already in wishlist",
-            trigger: '#product_detail .o_add_wishlist_dyn:disabled',
+            trigger: '#product_detail .o_add_wishlist_dyn.o_in_wishlist',
         },
         {
             trigger: "#product_detail label:contains(Aluminium) input",
@@ -57,7 +68,7 @@ registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
             run: "click",
         },
         {
-            trigger: "#product_detail .o_add_wishlist_dyn:not(:disabled)",
+            trigger: "#product_detail .o_add_wishlist_dyn:not(.o_in_wishlist)",
         },
         {
             content: "wait button enable and click on add to wishlist",
@@ -134,7 +145,7 @@ registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
         },
         {
             content: "The product is in the wishlist",
-            trigger: '.oe_product_cart .o_wsale_product_btn:has(.o_add_wishlist[disabled])',
+            trigger: '.oe_product_cart .o_wsale_product_btn:has(.o_add_wishlist.o_in_wishlist)',
         },
         {
             content: "Go to the wishlist",
@@ -161,7 +172,7 @@ registry.category("web_tour.tours").add('website_sale.wishlist_updates', {
         },
         {
             content: "The product is not in the wishlist",
-            trigger: '.oe_product_cart .o_wsale_product_btn:not(:has(.o_add_wishlist[disabled]))',
+            trigger: '.oe_product_cart .o_wsale_product_btn:not(:has(.o_add_wishlist.o_in_wishlist))',
         },
     ]
 });
@@ -185,7 +196,7 @@ registry.category("web_tour.tours").add('website_sale.dynamic_variants_wishlist'
             // wait for the button to be correctly disabled because the first
             // variant was already added to the wishlist from the product page.
             content: "Check that the button is disabled",
-            trigger: ".js_product button.o_add_wishlist_dyn:disabled",
+            trigger: ".js_product button.o_add_wishlist_dyn.o_in_wishlist",
         },
         {
             content: "Select Bottle with second variant from /product",
@@ -199,6 +210,13 @@ registry.category("web_tour.tours").add('website_sale.dynamic_variants_wishlist'
             trigger: "input.js_variant_change[data-value-name=black]:not(:visible)",
             run: "click",
         },
+        ...tourUtils.addToWishlistFromProductPage(),
+        {
+            content: "Click again to remove the third variant from the wishlist",
+            trigger: ".js_product button.o_add_wishlist_dyn.o_in_wishlist",
+            run: "click",
+        },
+        tourUtils.assertWishlistQuantity(2),
         ...tourUtils.addToWishlistFromProductPage(),
         tourUtils.goToWishlist({ quantity: 3}),
         {
