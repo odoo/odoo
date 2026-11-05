@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_od19_timesheet_invoice_wizard" model="ir.actions.act_window">
+        <field name="name">Invoice Timesheets</field>
+        <field name="res_model">od19.timesheet.invoice.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_od19_timesheet_invoice_wizard"
+              name="Invoice Timesheets"
+              parent="sale.menu_sale_invoicing"
+              action="action_od19_timesheet_invoice_wizard"
+              groups="sales_team.group_sale_salesman"
+              sequence="30"/>
+</odoo>

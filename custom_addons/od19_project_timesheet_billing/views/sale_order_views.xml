@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sale_order_form_inherit_od19_tsb" model="ir.ui.view">
+        <field name="name">sale.order.form.od19.timesheet.billing</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_od19_view_unbilled_timesheets"
+                        icon="fa-clock-o"
+                        invisible="od19_unbilled_timesheet_count == 0">
+                    <field name="od19_unbilled_timesheet_count"
+                           widget="statinfo"
+                           string="Unbilled Timesheets"/>
+                </button>
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_od19_open_timesheet_invoice_wizard"
+                        icon="fa-file-text-o"
+                        invisible="state != 'sale' or od19_unbilled_timesheet_count == 0">
+                    <span class="o_stat_text">Invoice</span>
+                    <span class="o_stat_text">Timesheets</span>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

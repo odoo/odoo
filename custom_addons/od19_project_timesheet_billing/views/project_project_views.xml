@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_project_project_form_inherit_od19_tsb" model="ir.ui.view">
+        <field name="name">project.project.form.od19.timesheet.billing</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_od19_view_unbilled_timesheets"
+                        icon="fa-clock-o"
+                        invisible="od19_unbilled_timesheet_count == 0">
+                    <field name="od19_unbilled_timesheet_count"
+                           widget="statinfo"
+                           string="Unbilled Timesheets"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
