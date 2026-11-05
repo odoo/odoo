@@ -56,6 +56,43 @@ test("getComboSelection", async () => {
     }
 });
 
+test("getFixedComboSelection includes a single non-configurable combo item", async () => {
+    const store = await setupSelfPosEnv("mobile");
+    const models = store.models;
+    const comboProduct = models["product.template"].get(7);
+
+    const fixedComboChoice = models["product.combo"].create({
+        id: 7,
+        name: "Fixed choice",
+        qty_free: 1,
+        qty_max: 1,
+    });
+
+    const fixedComboChoiceItem = models["product.combo.item"].create({
+        id: 7,
+        combo_id: fixedComboChoice.id,
+        product_id: 10,
+        extra_price: 0,
+    });
+
+    comboProduct.combo_ids = [...comboProduct.combo_ids, fixedComboChoice.id];
+
+    const comp = await mountWithCleanup(ComboPage, {
+        props: { productTemplate: comboProduct },
+    });
+
+    const selection = comp.getFixedComboSelection();
+
+    expect(selection).toHaveLength(1);
+    expect(selection[0].combo_item_id.id).toBe(fixedComboChoiceItem.id);
+    expect(selection[0].qty).toBe(1);
+    expect(selection[0].configuration).toMatchObject({
+        attribute_custom_values: [],
+        attribute_value_ids: [],
+        price_extra: 0,
+    });
+});
+
 test("isBackVisible", async () => {
     const store = await setupSelfPosEnv();
     const models = store.models;
