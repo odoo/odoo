@@ -624,9 +624,9 @@ $-navbar-mobile-bg-color: o-color('menu-custom') or o-color('menu');
     }
 }
 
-$-header-nav-link-height: $nav-link-height;
+$-header-nav-link-font-size: o-website-value('header-font-size') or $font-size-base;
+$-header-nav-link-height: calc(#{$-header-nav-link-font-size} * var(--body-line-height) + #{$nav-link-padding-y * 2});
 @if o-website-value('header-font-size') {
-    $-header-nav-link-height: o-website-value('header-font-size') * $line-height-base + $nav-link-padding-y * 2;
     header {
         font-size: o-website-value('header-font-size');
 
@@ -639,9 +639,9 @@ $-header-nav-link-height: $nav-link-height;
     /* With default values, this makes it slightly bigger than standard
        navbar-brand, which is what we want */
     header .navbar-brand {
-        font-size: $o-theme-navbar-logo-height / $line-height-base;
+        font-size: calc(#{$o-theme-navbar-logo-height} / var(--body-line-height));
 
-        $-logo-padding-y: max(0, $-header-nav-link-height - $o-theme-navbar-logo-height) / 2;
+        $-logo-padding-y: calc(max(0px, #{$-header-nav-link-height} - #{$o-theme-navbar-logo-height}) / 2);
         &, &.logo {
             padding-top: $-logo-padding-y;
             padding-bottom: $-logo-padding-y;
@@ -809,7 +809,7 @@ font[class*='bg-'] {
         }
         /* Default, if no color or background-color already selected */
         &:where(:not([class*='bg-'])) {
-            color: $gray-900;
+            color: var(--gray-900);
         }
         background-color: var(--gray-100);
     }

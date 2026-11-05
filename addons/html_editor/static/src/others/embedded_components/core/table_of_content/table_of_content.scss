@@ -15,7 +15,7 @@ $embedded-toc-bg--active: #1ba1e4;
         a[class*="o_embedded_toc_link_depth_"] {
             font-family: $font-family-base !important;
             border-radius: 5px;
-            min-height: $line-height-base * $font-size-base;
+            min-height: calc(var(--body-line-height) * #{$font-size-base});
             border: transparent;
 
             &:hover {
