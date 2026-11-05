@@ -3,7 +3,6 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
 import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut } from "@html_editor/utils/position";
 import { READ, withSequence } from "@html_editor/utils/resource";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
@@ -59,19 +58,16 @@ export class ImagePlugin extends Plugin {
                 icon: "delete",
                 iconClass: "oi-filled text-danger",
                 run: this.deleteImage.bind(this),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "previewImage",
                 description: _t("Preview image"),
                 icon: "zoom_in",
                 run: this.previewImage.bind(this),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "resizeImage",
                 run: this.resizeImage.bind(this),
-                isAvailable: isHtmlContentSupported,
             },
         ],
         properties: [
@@ -101,7 +97,6 @@ export class ImagePlugin extends Plugin {
                         this.setImageAlignment(item);
                     },
                 },
-                isAvailable: isHtmlContentSupported,
             }),
             withSequence(30, {
                 id: "image_padding",
@@ -118,7 +113,6 @@ export class ImagePlugin extends Plugin {
                         this.setImagePadding({ size: item.value });
                     },
                 },
-                isAvailable: isHtmlContentSupported,
             }),
             {
                 id: "image_size",
@@ -136,8 +130,7 @@ export class ImagePlugin extends Plugin {
                         this.updateImageParams();
                     },
                 },
-                isAvailable: (selection) =>
-                    isHtmlContentSupported(selection) && (this.config.allowImageResize ?? true),
+                isAvailable: () => this.config.allowImageResize ?? true,
             },
             {
                 id: "image_preview",

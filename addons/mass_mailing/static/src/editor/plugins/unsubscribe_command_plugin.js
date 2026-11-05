@@ -1,4 +1,4 @@
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { isLinkSupported } from "@html_editor/main/link/link_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -15,7 +15,7 @@ export class UnsubscribeCommandPlugin extends Plugin {
                 description: _t("Insert an unsubscribe link"),
                 icon: "link_off",
                 run: this.insertUnsubscribeLink.bind(this),
-                isAvailable: (selection) => isHtmlContentSupported(selection),
+                isAvailable: isLinkSupported,
             },
         ],
         powerbox_items: [
