@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -46,6 +48,7 @@ class SaleOrderLine(models.Model):
         order line has a product_uom_qty attribute that will be the number of
         registrations linked to this line. """
         registrations_vals = []
+        registrations_to_check = defaultdict(list)
         for so_line in self:
             if so_line.service_tracking != 'event':
                 continue
@@ -57,11 +60,25 @@ class SaleOrderLine(models.Model):
                     'sale_order_line_id': so_line.id,
                     'sale_order_id': so_line.order_id.id,
                 }
-                # When confirming in backend a single order, keep paid registrations in draft
-                # so attendee details can be filled before confirmation; free ones stay open for seat checks.
-                if len(self.order_id) == 1 and not so_line.currency_id.is_zero(so_line.price_total):
+                # From the order form, paid registrations wait for the registration editor.
+                # Otherwise, they wait when seats are missing so that the order goes through.
+                if not self.env.context.get('event_sale_registration'):
+                    registrations_to_check[so_line.event_id].append((so_line, values))
+                elif not so_line.currency_id.is_zero(so_line.order_id.amount_total):
                     values['state'] = 'draft'
                 registrations_vals.append(values)
+
+        no_ticket = self.env['event.event.ticket']
+        for event, registrations in registrations_to_check.items():
+            # count all lines of the event together: lines can share seats
+            seats = defaultdict(int)
+            for so_line, _values in registrations:
+                seats[so_line.event_slot_id, so_line.event_ticket_id] += 1
+                seats[so_line.event_slot_id, no_ticket] += 1
+            availabilities = event._get_seats_availability(list(seats))
+            if any(available is not None and available < count for available, count in zip(availabilities, seats.values())):
+                for _so_line, values in registrations:
+                    values['state'] = 'draft'
 
         if registrations_vals:
             self.env['event.registration'].sudo().create(registrations_vals)

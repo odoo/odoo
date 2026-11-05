@@ -40,6 +40,7 @@ class EventRegistration(models.Model):
         ui_domain="[('event_id', '=', event_id)]")
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True, index='btree_not_null')
+    overbooking_message = fields.Char(compute='_compute_overbooking_message')
     active = fields.Boolean(default=True)
     barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
     # utm informations
@@ -101,7 +102,12 @@ class EventRegistration(models.Model):
 
     @api.constrains('active', 'state', 'event_id', 'event_slot_id', 'event_ticket_id')
     def _check_seats_availability(self):
+        # extra attendees added from the back-end, once warned (see overbooking_message)
+        if self.env.context.get('event_registration_allow_overbooking') and self.env.user.has_group('event.group_event_registration_desk'):
+            return
         tocheck = self.filtered(lambda registration: registration.state in ('open', 'done') and registration.active)
+        # attendees keeping their seat are not checked again (see write)
+        tocheck -= self.browse(self.env.context.get('event_registration_seated_ids', ()))
         for event, registrations in tocheck.grouped('event_id').items():
             event._verify_seats_availability([
                 (slot, ticket, 0)
@@ -201,6 +207,27 @@ class EventRegistration(models.Model):
             else:
                 registration.remaining_entries = 0
 
+    @api.depends('event_id', 'event_slot_id', 'event_ticket_id')
+    def _compute_overbooking_message(self):
+        """ Warning shown before adding an attendee (new or unconfirmed) without seat left. """
+        self.overbooking_message = False
+        without_seat = self.filtered(lambda registration:
+            registration.event_id
+            and (registration.event_slot_id or not registration.is_multi_slots)
+            and not (registration._origin.state in ('open', 'done') and registration._origin.active)
+        )
+        for event, registrations in without_seat.grouped('event_id').items():
+            availabilities = event._get_seats_availability([
+                (registration.event_slot_id, registration.event_ticket_id) for registration in registrations
+            ])
+            for registration, available in zip(registrations, availabilities, strict=True):
+                if available is not None and available < 1:
+                    registration.overbooking_message = _(
+                        "There are not enough seats available for the event: %(event_name)s\n"
+                        "Do you still want to add an extra attendee?",
+                        event_name=event.name,
+                    )
+
     @api.model
     def _search_event_end_date(self, operator, value):
         return Domain.OR([
@@ -296,7 +323,11 @@ class EventRegistration(models.Model):
         confirming = vals.get('state') in {'open', 'done'}
         to_confirm = (self.filtered(lambda registration: registration.state in {'draft', 'cancel'})
                       if confirming else None)
-        ret = super().write(vals)
+        records = self
+        if confirming and not any(field in vals for field in ['active', 'event_id', 'event_slot_id', 'event_ticket_id']):
+            # registered <-> attended keeps the same seat, unless the attendee moves (event, slot, ticket, archive)
+            records = self.with_context(event_registration_seated_ids=(self.filtered('active') - to_confirm).ids)
+        ret = super(EventRegistration, records).write(vals)
         if confirming:
             to_confirm._update_mail_schedulers()
 

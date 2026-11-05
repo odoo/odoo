@@ -25,8 +25,14 @@
                        decoration-success="state == 'done'"
                        decoration-muted="state == 'cancel'" widget="badge"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="state != 'draft'"/>
+                <field name="overbooking_message" column_invisible="True"/> <!-- drives invisible of the action_confirm buttons -->
                 <button name="action_confirm" string="Registered" type="object" icon="check"
-                        invisible="not active or state != 'draft'"/>
+                        invisible="not active or state != 'draft' or overbooking_message"/>
+                <button name="action_confirm" string="Registered" type="object" icon="check"
+                        invisible="not active or state != 'draft' or not overbooking_message"
+                        confirm="There are not enough seats available for this event. Do you still want to add an extra attendee?"
+                        confirm-label="Add"
+                        context="{'event_registration_allow_overbooking': True}"/>
                 <button name="action_attend_event" string="Mark as Attending" type="object" icon="subdirectory_arrow_right"
                         invisible="not active or state != 'open'"/>
                 <button name="action_cancel" string="Cancel" type="object"
@@ -41,8 +47,9 @@
         <field name="name">event.registration.form</field>
         <field name="model">event.registration</field>
         <field name="arch" type="xml">
-            <form string="Event Registration">
+            <form string="Event Registration" js_class="event_registration_form">
                 <field name="active" invisible="1"/> <!-- drives invisible of the action_send_badge_email button, the action_confirm button and 3 more -->
+                <field name="overbooking_message" invisible="1"/> <!-- read by the event_registration_form controller (overbooking dialog) -->
                 <header>
                     <button name="action_send_badge_email" string="Send by Email" type="object" class="oe_highlight"
                             invisible="not active or state != 'open' and state != 'done'"/>
