@@ -86,3 +86,30 @@ class TestResConfigSettings(TestSaleProjectCommon):
             'manual',
             'The quantity delivered method of SOL containing milestone product should keep the same quantity delivered method even if the project milestones feature is renabled.')
         self.assertEqual(self.product_milestone_sale_line.qty_delivered, 2, 'The quantity delivered should be the one set by the user.')
+
+    def test_saving_without_changing_milestone_setting(self):
+        """ Saving the setting when the milestone feature is not toggled must not update product's service policy """
+        self.assertTrue(self.env.user.has_group('project.group_project_milestone'), 'The Projct Milestone feature should be enabled.')
+
+        # Product switch to manual delivery despite having and SOL linked to a milestone
+        self.product_milestone.service_policy = 'delivered_manual'
+        self.assertEqual(self.product_milestone.service_type, 'manual')
+
+        # Saving setting with milestone feature still enable ( aka, no change )
+        self.set_project_milestone_feature(True)
+
+        self.assertTrue(self.env.user.has_group('project.group_project_milestone'), 'The Projct Milestone feature should still be enabled.')
+        self.assertEqual(
+            self.product_milestone.service_policy,
+            'delivered_manual',
+            'The product\'s service policy should not be changed'
+        )
+        self.assertEqual(
+            self.product_milestone.service_type,
+            'manual',
+            'The product\'s service type should not be changed'
+        )
+        self.assertEqual(
+            self.product_milestone2.service_policy,
+            'delivered_milestones',
+            'Other milestone products should be left untouched.')
