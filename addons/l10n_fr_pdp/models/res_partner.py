@@ -311,4 +311,5 @@ class ResPartner(models.Model):
             'in_annuaire': bool(identifiers),
             'identifiers': identifiers,
             'count': len(identifiers),
+            'lines': lines,
         }
