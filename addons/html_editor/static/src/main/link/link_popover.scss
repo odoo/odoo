@@ -13,6 +13,8 @@
 }
 
 .o-we-linkpopover {
+    scrollbar-width: thin;
+
     .input-group {
         label {
             width: 70px;
@@ -26,6 +28,21 @@
     .form-control:focus, .form-select:focus, .form-check-input:focus {
         border-color: $input-focus-border-color !important;
         box-shadow: 0 0 0 $focus-ring-width rgba($input-focus-border-color, $focus-ring-opacity);
+    }
+
+    .o_popover_sliding_panel {
+        .o_he_icon_sup {
+            @include o-he-icon-sup();
+        }
+
+        .o_popover_sliding_panel_card_content input {
+            height: 24px;
+            border-color: $o-we-item-border-color;
+            border-radius: $o-we-item-border-radius;
+            padding: 0 map-get($spacers, 1);
+            background-color: $o-view-background-color;
+            font-size: inherit;
+        }
     }
 
     .o_link_popover_container {
@@ -77,30 +94,6 @@
     }
 }
 /* rtl:end:ignore */
-
-.o_seo_option_child {
-    padding-left: 20px;
-    position: relative;
-
-    &::before, &::after {
-        content: "";
-        position: absolute;
-        left: 6px;
-        background: #999;
-    }
-
-    &::before {
-        top: 0;
-        height: calc(100% - 14px);
-        width: 1px;
-    }
-
-    &::after {
-        top: 16px;
-        width: 10px;
-        height: 1px;
-    }
-}
 
 .o-we-linkpopover {
     .o-autocomplete--dropdown-menu {
