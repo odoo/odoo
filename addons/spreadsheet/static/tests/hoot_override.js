@@ -12,7 +12,7 @@ const { RendererPlugin } = owlPlugins;
  * For debugging urpose, the patch is ineffective when running tests in debug mode
  * and the grid is drawn as usual.
  */
-patch(RendererPlugin.prototype, {
+export const unPatchRenderer = patch(RendererPlugin.prototype, {
     drawLayer(ctx, layer) {
         if (__debug__().debug) {
             return super.drawLayer(ctx, layer);
