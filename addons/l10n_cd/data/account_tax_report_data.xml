@@ -433,6 +433,7 @@
                                 <field name="label">_applied_carryover_balance</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
+                                <field name="subformula">closing_account_id=receivable</field>
                                 <field name="date_scope">previous_return_period</field>
                             </record>
                         </field>
@@ -617,6 +618,11 @@
                                 <field name="label">balance</field>
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CD_NET_TO_PAY.balance + CD_CALCULATION_PM.balance + CD_THIRD_PARTY.balance</field>
+                            </record>
+                            <record id="account_tax_report_line_cd_calculation_to_pay_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CD_TAX.balance + CD_IMP_SERVICE_TAX.balance + CD_REPAYMENTS.balance + CD_RECOVERY.balance - CD_DEDUCTIBLE_AMOUNT.balance - CD_ADD_DEDUCTION.balance - CD_MINING.balance + CD_THIRD_PARTY.balance + CD_REPAYMENT_ASKED.balance</field>
                             </record>
                         </field>
                     </record>

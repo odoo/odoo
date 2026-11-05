@@ -191,6 +191,13 @@
                 <field name="code">ILTAX_VAT_DUE</field>
                 <field name="aggregation_formula">(ILTAX_OUT_BALANCE_00.balance + ILTAX_OUT_BALANCE_PA.balance) - (ILTAX_IN_BALANCE_17.balance + ILTAX_IN_BALANCE_18.balance + ILTAX_IN_BALANCE_2_3.balance + ILTAX_IN_BALANCE_1_4.balance + ILTAX_IN_BALANCE_PA.balance) - ILTAX_VAT_IN_FA.balance</field>
                 <field name="hierarchy_level">0</field>
+                <field name="expression_ids">
+                    <record id="account_tax_report_line_vat_due_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">ILTAX_VAT_DUE.balance</field>
+                    </record>
+                </field>
             </record>
         </field>
     </record>

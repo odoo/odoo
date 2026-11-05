@@ -381,6 +381,11 @@
                         <field name="engine">aggregation</field>
                         <field name="formula">lt_vat_27.balance + lt_vat_29.balance + lt_vat_30.balance + lt_vat_31.balance + lt_vat_32.balance + lt_vat_33.balance + lt_vat_34.balance - lt_vat_35.balance</field>
                     </record>
+                    <record id="tax_report_line_36_closing_amount" model="account.report.expression">
+                        <field name="label">_closing_amount</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">lt_vat_36.balance</field>
+                    </record>
                 </field>
             </record>
         </field>

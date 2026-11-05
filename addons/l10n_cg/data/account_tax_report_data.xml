@@ -201,6 +201,17 @@
                                 <field name="formula">CG_SALES.tax - CG_VAT_DEDUCT.tax</field>
                                 <field name="subformula">if_above(EUR(0))</field>
                             </record>
+                            <record id="account_tax_report_line_cg_to_pay_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CG_SALES.tax - CG_VAT_DEDUCT.tax</field>
+                            </record>
+                            <record id="account_tax_report_line_cg_to_pay_closing_account_balance" model="account.report.expression">
+                                <field name="label">_closing_account_balance</field>
+                                <field name="engine">domain</field>
+                                <field name="formula">[('tax_repartition_line_id.use_in_tax_closing', '=', True)]</field>
+                                <field name="subformula">-sum</field>
+                            </record>
                         </field>
                     </record>
                 </field>

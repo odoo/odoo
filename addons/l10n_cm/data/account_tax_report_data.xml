@@ -142,6 +142,7 @@
                                 <field name="label">_applied_carryover_tax</field>
                                 <field name="engine">external</field>
                                 <field name="formula">most_recent</field>
+                                <field name="subformula">closing_account_id=receivable</field>
                                 <field name="date_scope">previous_return_period</field>
                             </record>
                         </field>
@@ -332,6 +333,11 @@
                                 <field name="engine">aggregation</field>
                                 <field name="formula">CM_COLLECTED.tax - CM_DEDUCTIBLE_VAT_29.tax - CM_ADJUSTMENT_TO_DEDUCT.tax + CM_ADJUSTMENT_TO_PAY.tax</field>
                                 <field name="subformula">if_above(XAF(0))</field>
+                            </record>
+                            <record id="account_tax_report_line_cm_vat_to_pay_closing_amount" model="account.report.expression">
+                                <field name="label">_closing_amount</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_COLLECTED.tax - CM_DEDUCTIBLE_VAT_29.tax - CM_ADJUSTMENT_TO_DEDUCT.tax + CM_ADJUSTMENT_TO_PAY.tax</field>
                             </record>
                         </field>
                     </record>
