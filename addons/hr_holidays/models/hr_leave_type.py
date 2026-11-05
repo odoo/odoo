@@ -506,7 +506,14 @@ class HrLeaveType(models.Model):
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
         )._get_consumed_leaves(self, target_date)
+<<<<<<< 9cd6f090a8a21d9531c70ceec7f5c51271e24168
         leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation)
+||||||| 1b3c8dd2baf0ba97af3a6991299ebdac50dc8411
+        leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation == 'yes')
+=======
+        leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation == 'yes')
+        is_holiday_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+>>>>>>> bfec503d1089159a75f6ade47d08efb4d36eb4cd
 
         for employee in employees:
             for leave_type in leave_type_requires_allocation:
@@ -531,7 +538,12 @@ class HrLeaveType(models.Model):
                         'icon': leave_type.sudo().icon_id.url,
                         'allows_negative': leave_type.allows_negative,
                         'max_allowed_negative': leave_type.max_allowed_negative,
+<<<<<<< 9cd6f090a8a21d9531c70ceec7f5c51271e24168
                         'employee_company': employee.company_id.id,
+||||||| 1b3c8dd2baf0ba97af3a6991299ebdac50dc8411
+=======
+                        'can_request_allocation': leave_type.employee_requests == 'yes' or is_holiday_user,
+>>>>>>> bfec503d1089159a75f6ade47d08efb4d36eb4cd
                     },
                     leave_type.requires_allocation,
                     leave_type.id)
