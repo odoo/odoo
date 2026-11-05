@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report_tit" model="account.report">
+        <field name="name">Simplified Tax Report</field>
+        <field name="name@az">Sadələşdirilmiş vergi bəyannaməsi</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.az"/>
+        <field name="availability_condition">country</field>
+        <field name="default_opening_date_filter">previous_quarter</field>
+        <field name="column_ids">
+            <record id="tax_report_tit_column_base" model="account.report.column">
+                <field name="name">Amount</field>
+                <field name="expression_label">base</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_tit_section_part1" model="account.report.line">
+                <field name="name">Part 1 - Tax base and calculation</field>
+                <field name="name@az">Hissə 1 - Vergi bazası və hesablanma</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+            <record id="tax_report_tit_line_az_sv1" model="account.report.line">
+                <field name="name">Value of goods/works/services and property supplied in Month 1 of the quarter</field>
+                <field name="name@az">Rübün 1-ci ayında təqdim edilmiş malların (işlərin, xidmətlərin) və əmlakın dəyəri</field>
+                <field name="code">az_sv1</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tit_line_az_sv1_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_engine_l10n_az_tit_month1</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_tit_line_az_sv2" model="account.report.line">
+                <field name="name">Value of goods/works/services and property supplied in Month 2 of the quarter</field>
+                <field name="name@az">Rübün 2-ci ayında təqdim edilmiş malların (işlərin, xidmətlərin) və əmlakın dəyəri</field>
+                <field name="code">az_sv2</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tit_line_az_sv2_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_engine_l10n_az_tit_month2</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_tit_line_az_sv3" model="account.report.line">
+                <field name="name">Value of goods/works/services and property supplied in Month 3 of the quarter</field>
+                <field name="name@az">Rübün 3-cü ayında təqdim edilmiş malların (işlərin, xidmətlərin) və əmlakın dəyəri</field>
+                <field name="code">az_sv3</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tit_line_az_sv3_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_engine_l10n_az_tit_month3</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_tit_line_az_sv4" model="account.report.line">
+                <field name="name">Total gross revenue from goods/works/services and property for the quarter, plus non-operating income (excl. income taxed at source)</field>
+                <field name="name@az">Rüb üzrə əldə edilmiş ümumi hasilatın, habelə satışdankənar gəlirlərin (ödəmə mənbəyində vergi tutulmuş gəlirlər istisna edilməklə) həcmi</field>
+                <field name="code">az_sv4</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tit_line_az_sv4_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">az_sv1.base+az_sv2.base+az_sv3.base+az_sv5.base</field>
+                    </record>
+                </field>
+                <field name="children_ids">
+                    <record id="tax_report_tit_line_az_sv5" model="account.report.line">
+                        <field name="name">incl. non-operating income</field>
+                        <field name="name@az">satışdankənar gəlirlərdən (ödəmə mənbəyində vergi tutulmuş gəlirlər istisna edilməklə)</field>
+                        <field name="code">az_sv5</field>
+                        <field name="hierarchy_level">5</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_tit_line_az_sv5_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">domain</field>
+                                <field name="formula">[('account_id.account_type','=','income_other')]</field>
+                                <field name="subformula">-sum</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_tit_line_az_sv6" model="account.report.line">
+                <field name="name">Tax rate (%)</field>
+                <field name="name@az">Verginin dərəcəsi, faizlə</field>
+                <field name="code">az_sv6</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tit_line_az_sv6_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">custom</field>
+                        <field name="formula">_report_engine_l10n_az_tit_rate</field>
+                        <field name="figure_type">float</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_tit_line_az_sv7" model="account.report.line">
+                <field name="name">Calculated Tax Amount</field>
+                <field name="name@az">Hesablanmış verginin məbləği</field>
+                <field name="code">az_sv7</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tit_line_az_sv7_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">az_sv4.base * az_sv6.base / 100</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_tit_line_az_sv8" model="account.report.line">
+                <field name="name">Tax to be reduced (total reductions)</field>
+                <field name="name@az">Azaldılmalı verginin məbləği</field>
+                <field name="code">az_sv8</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tit_line_az_sv8_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">SV1</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_tit_line_az_sv9" model="account.report.line">
+                <field name="name">Tax payable</field>
+                <field name="name@az">Ödənilməli verginin məbləği</field>
+                <field name="code">az_sv9</field>
+                <field name="hierarchy_level">3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_tit_line_az_sv9_base" model="account.report.expression">
+                        <field name="label">base</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">az_sv7.base - az_sv8.base</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -60,6 +60,7 @@ _ref_vat = frozendict({
     'ar': '20055361682',
     'at': 'ATU12345675',
     'au': '83 914 571 673',
+    'az': '1234567890 [Ten digits]',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
     'br': _lt('either 11 digits for CPF or 14 characters for CNPJ'),
@@ -1899,6 +1900,13 @@ class ResPartner(models.Model):
         """Check Albania VAT number"""
         number = split_vat(vat, default_country_code='al')[1]
         return len(number) == 10 and self._check_vat_al_re.match(number)
+
+    _check_vat_az_re = re.compile(r'^[0-9]{10}$')
+
+    def check_vat_az(self, vat):
+        """Check Azerbaijan VOEN (TIN): ten digits."""
+        number = split_vat(vat, default_country_code='az')[1]
+        return bool(self._check_vat_az_re.match(number))
 
     # Minimal regex matching similar to stdnum
     # Derived from https://github.com/arthurdejong/python-stdnum/commit/d3ec3bd7fefe0d0a708b6594a66de28777eb9b8d
