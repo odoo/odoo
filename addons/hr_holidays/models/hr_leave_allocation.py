@@ -253,7 +253,15 @@ class HrLeaveAllocation(models.Model):
                 )
             allocation.name_validity = name_validity
 
-    @api.depends('employee_id', 'work_entry_type_id', 'nextcall')
+    @api.depends(
+        'employee_id', 'work_entry_type_id', 'nextcall',
+        'employee_id.leave_ids.state',
+        'employee_id.leave_ids.work_entry_type_id',
+        'employee_id.leave_ids.date_from',
+        'employee_id.leave_ids.date_to',
+        'employee_id.leave_ids.number_of_days',
+        'employee_id.leave_ids.number_of_hours',
+    )
     def _compute_leaves(self):
         date_from = fields.Date.context_today(self)
         employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
