@@ -7,9 +7,9 @@ from odoo.exceptions import UserError
 
 from .l10n_cn_edi_document import (
     BUREAU_STATES,
+    FILES_GRACE,
     RED_FORM_ACTIVE_STATES,
     RED_FORM_REASONS,
-    FILES_GRACE,
     SUBMISSION_GRACE,
 )
 from odoo.addons.l10n_cn_edi_yunshui.tools import (
@@ -414,10 +414,9 @@ class AccountMove(models.Model):
             doc.write({'state': 'failed', 'error_message': str(e)})
             self.l10n_cn_edi_state = 'failed'
             self.message_post(body=self.env._("Red Form request failed: %(error)s", error=e))
-            return None
+            return
         doc.write({'red_form_uuid': result['uuid'], 'state': 'red_form_pending'})
         doc._l10n_cn_edi_apply_red_form_result(result)
-        return None
 
     def action_l10n_cn_edi_cancel_red_form(self):
         """Withdraw the red form of this credit note, while the customer hasn't answered it."""

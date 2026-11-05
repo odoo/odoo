@@ -8,7 +8,7 @@ import zipfile
 from base64 import b64decode
 from binascii import Error as BinasciiError
 from datetime import datetime, timedelta
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
 from zoneinfo import ZoneInfo
 
 import requests
@@ -433,7 +433,7 @@ class YunshuiClient:
 
     def _https_url(self, url):
         try:
-            parsed = urlparse(url or '')
+            parsed = urlsplit(url or '')
         except ValueError:
             return False
         return url if parsed.scheme == 'https' and parsed.hostname else False

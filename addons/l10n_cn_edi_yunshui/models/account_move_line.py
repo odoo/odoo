@@ -44,6 +44,6 @@ class AccountMoveLine(models.Model):
                 self.env['account.move'].browse(vals['move_id'])._l10n_cn_edi_check_red_lock()
         return super().write(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_l10n_cn_edi_red_lock(self):
         self.move_id._l10n_cn_edi_check_red_lock()
-        return super().unlink()

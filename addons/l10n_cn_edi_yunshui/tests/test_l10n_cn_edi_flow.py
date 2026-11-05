@@ -247,7 +247,10 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
                 raise UserError(error)
             return self.client
 
-        with patch.object(self.env.registry['res.company'], '_l10n_cn_edi_get_client', get_client):
+        with (
+            patch.object(self.env.registry['res.company'], '_l10n_cn_edi_get_client', get_client),
+            self.assertLogs('odoo.addons.l10n_cn_edi_yunshui.models.account_move', 'WARNING'),
+        ):
             self.env['account.move'].sudo()._cron_l10n_cn_edi_poll_invoices()
 
         self.assertEqual((invoice + other_invoice).mapped('l10n_cn_edi_state'), ['sent', 'issued'])
@@ -288,7 +291,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertIn('cn_edi', all_extra_edis)
         self.assertTrue(all_extra_edis['cn_edi']['is_applicable'](invoice))
 
-        invoices_data = {invoice: {'extra_edis': {'cn_edi'}}}
+        invoices_data = {invoice: send_model._get_default_sending_settings(invoice, extra_edis=['cn_edi'])}
         with patch.object(invoice.__class__, '_l10n_cn_edi_submit_invoice', return_value="Provider error"):
             send_model._call_web_service_before_invoice_pdf_render(invoices_data)
 
@@ -302,8 +305,9 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.responses['issue'] = {'state': 'sent'}
         self.responses['query_invoice'] = {'state': 'sent'}
 
-        invoices_data = {invoice: {'extra_edis': {'cn_edi'}}}
-        self.env['account.move.send']._call_web_service_before_invoice_pdf_render(invoices_data)
+        send_model = self.env['account.move.send']
+        invoices_data = {invoice: send_model._get_default_sending_settings(invoice, extra_edis=['cn_edi'])}
+        send_model._call_web_service_before_invoice_pdf_render(invoices_data)
 
         self.assertEqual(invoices_data[invoice]['error'], {
             'error_title': "Error when issuing the e-Fapiao:",
@@ -317,7 +321,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         send_model = self.env['account.move.send']
         self.assertFalse(send_model._get_all_extra_edis()['cn_edi']['is_applicable'](invoice))
 
-        invoices_data = {invoice: {}}
+        invoices_data = {invoice: send_model._get_default_sending_settings(invoice, extra_edis=[])}
         send_model._call_web_service_before_invoice_pdf_render(invoices_data)
 
         self.assertTrue(invoices_data[invoice]['error']['retry'])
@@ -711,6 +715,7 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
 
     def test_billing_user_can_issue_and_reverse_a_fapiao(self):
         user = self._create_user('account.group_account_invoice')
+        user.group_ids += self.env.ref('base.group_partner_manager')
         invoice = self._create_posted_invoice()
         self.responses['issue'] = {'state': 'issued', 'fapiao_no': '24442000000071309399'}
 

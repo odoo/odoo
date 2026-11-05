@@ -45,7 +45,7 @@ class TestYunshuiRed(L10nCnEdiYunshuiTestCommon):
             'hzqrxxzt_dm': '01', 'hzqrxxmx_list': [{'xh': 1, 'je': '-1.00', 'sl1': '0.06', 'se': '-0.06'}],
         }
         archive = io.BytesIO()
-        with zipfile.ZipFile(archive, 'w') as zip_file:
+        with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED) as zip_file:
             zip_file.writestr(f'dzfp_{RED_NO}.xml', '<EInvoice/>')
         self.gateway.handlers[H5_DOWNLOAD] = lambda payload: (
             {'wjl': b64encode(archive.getvalue()).decode()} if payload['xzlx'] == '2'
