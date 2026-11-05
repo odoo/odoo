@@ -108,9 +108,9 @@ graph TD
 
 ### Task B2 — ปรับ branch naming ให้ตรง contract
 - [x] **Objective:** ให้ทุก branch ใช้ prefix เดียว `feature/`
-- [ ] **Evidence:** `git branch -a` แสดงเฉพาะ `feature/*` + `19.0` (main)
+- [x] **Evidence:** `git branch -a` แสดงเฉพาะ `feature/*` + `19.0` (main)
 - [x] **Steps (local — ปิดแล้ว 2026-11-01):** rename 6 branch แล้ว → `feature/od19-wave2b-vat-compliance`, `feature/od19-wave3-corporate-income-tax`, `feature/od19-document-pull`, `feature/od19-employee-shortcut-menu`, `feature/wave1-accounting-operational-closure`, `feature/wave1-sales-contract-core`; `git branch` เหลือ `19.0` main + `feature/*` (+ `backup/wave3-pre-rewrite` เก็บเป็น backup โดยเจตนา)
-- [ ] **คงเหลือ (ต้อง push — รอผู้ใช้อนุมัติ):** remote 3 ตัวยังชื่อเดิม `origin/feat/od19-wave2b-vat-compliance`, `origin/feat/od19-wave3-corporate-income-tax`, `origin/feat/od19-employee-shortcut-menu` → ต้อง rename บน origin จึงจะครบ Evidence (`git branch -a`)
+- [x] **ปิดงาน (2026-11-05):** ตรวจ `git ls-remote --heads origin` → remote origin **เหลือเฉพาะ `refs/heads/19.0`** แล้ว (branch `origin/feat/*` ทั้ง 3 ตัวไม่มีอยู่จริงบน remote) ⇒ ไม่มีอะไรต้อง rename บน origin อีก; ตรวจ local → ทุกชื่อเป็น `feature/*` ตาม contract ครบ; เก็บกวาด upstream ค้างของ 4 branch ที่ชี้ `origin/feat|feature/*` ที่หายไปด้วย `git branch --unset-upstream`
 
 ### Task B3 — Merge Wave 3 เข้า 19.0 (ปิดแล้ว 2026-11-02)
 - [x] **Objective:** รวม `feature/od19-wave3-corporate-income-tax` เข้า `19.0` ผ่าน PR
@@ -127,7 +127,7 @@ graph TD
 - [x] **Objective:** ย้าย `Arial.jar` เข้า LFS; cleanup ~90 ไฟล์ที่ไม่ควร track
 - [x] **Acceptance:** `.gitattributes` มี LFS rule; repo size ลด
 - [x] **ปิดงาน (2026-11-02):** เพิ่ม [.gitattributes](file:///c:/odoo-dev/odoo19/.gitattributes) (rule `*.jar`, `*.jasper`, `*.dump`, `*.zip`) + ปลดล็อก dotfile ด้วย `!.gitattributes` ใน [.gitignore](file:///c:/odoo-dev/odoo19/.gitignore); รัน `git lfs install --local` สำเร็จ → commit `b80218bb4b4`; dump/zip ใหญ่ถูก ignore แล้วโดย `.gitignore` (`/backups/`, `migration/od15_export/*.dump`) ⇒ ไม่เข้า object store
-- [ ] **เหลือ (ต้องรออนุมัติ):** migrate history ของ 4 `.jar` ที่ track อยู่ (`Arial.jar` 51 MB, `jython-2.7.0.jar`, `groovy-all-2.4.12.jar`, `jasperreports-6.10.0.jar`) ด้วย `git lfs migrate import` + force-push (ต้อง coordinate)
+- [x] **ยกเลิกโดยคำตัดสิน (2026-11-05) — RETIRED:** รายการ migrate history ของ 4 `.jar` (`Arial.jar` 51 MB, `jython-2.7.0.jar`, `groovy-all-2.4.12.jar`, `jasperreports-6.10.0.jar`) ด้วย `git lfs migrate import` **ถูกยกเลิกถาวร** เพราะต้อง `force-push` ซึ่ง AGENTS.md §1.2 ข้อ 2 ห้ามเด็ดขาด; ประกอบกับ `.gitattributes` (อัปเดต 2026-11-04) ได้ถอด LFS filter ออกแล้วและยืนยันว่าไม่มีไฟล์ใดถูก track ใน LFS (`git lfs ls-files` ว่าง) → ไฟล์ `.jar`/`.jasper` เก็บเป็น binary Git object ปกติต่อไป
 
 ### Task B6 — Release แรก
 - [ ] **Objective:** ออก `v19.0.<n>` ตาม Release Checklist

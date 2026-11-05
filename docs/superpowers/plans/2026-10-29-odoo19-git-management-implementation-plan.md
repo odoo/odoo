@@ -377,7 +377,8 @@ cp deployment/odoo.conf.template odoo_local.conf   # แล้วแก้ค่
 
 ### Task 6.2: ตรวจ "ติดตั้งได้" จาก tag
 - [x] ตรวจแบบ static (light verification, 2026-11-04): tag `v19.0.1` มี `deployment/` ครบ 4 ไฟล์, `install.sh`/`odoo.conf.template` ถูกต้อง, `.gitattributes` ไม่มี LFS filter, OCA gitlinks ครบ 22 ตัว
-- [ ] ทดสอบว่า checkout tag + submodule + start ผ่าน (บนเครื่อง Linux หรือ WSL) — ยังค้าง
+- [x] ตรวจ syntax `deployment/install.sh` ด้วย `bash -n` (Git Bash) — ผ่าน (`exit 0`), 2026-11-05
+- [ ] ทดสอบว่า checkout tag + submodule + start ผ่าน (บนเครื่อง Linux หรือ WSL) — ยังค้าง (เครื่อง dev Windows มีเพียง WSL distro `docker-desktop` แบบ stopped ⇒ ต้องรันบนเครื่อง Linux/WSL ที่พร้อม)
 
 ```powershell
 git clone --recurse-submodules c:\odoo-dev\odoo19 c:\odoo-dev\_install_test
