@@ -38,7 +38,7 @@ class AccountMove(models.Model):
             domain = [('country_id.code', '=', 'CL')]
             if self.move_type in ['in_invoice', 'out_invoice']:
                 domain += [('internal_type', 'in', ['invoice', 'debit_note', 'invoice_in'])]
-            elif self.move_type in ['in_refund', 'out_refund']:
+            elif self.is_refund():
                 domain += [('internal_type', '=', 'credit_note')]
             if self.company_id.partner_id.l10n_cl_sii_taxpayer_type == '1':
                 domain += [('code', '!=', '71')]  # Companies with VAT Affected doesn't have "Boleta de honorarios Electrónica"
