@@ -267,6 +267,104 @@ class MailActivityMixin(models.AbstractModel):
             ('user_id', '=', self.env.user.id)
         ])]
 
+<<<<<<< fdc98823c1e14d4e5a55c451626cd1f1ad4b4d09
+||||||| 7544c9fd0ee5d0f2e53d4984b3215d0d358bd845
+    def _read_group_groupby(self, alias, groupby_spec, query):
+        if groupby_spec != 'activity_state':
+            return super()._read_group_groupby(alias, groupby_spec, query)
+        self._check_field_access(self._fields['activity_state'], 'read')
+
+        # if already grouped by activity_state, do not add the join again
+        alias = query.make_alias(self._table, 'last_activity_state')
+        if alias in query._joins:
+            return SQL.identifier(alias, 'activity_state')
+
+        self.env['mail.activity'].flush_model(['res_model', 'res_id', 'user_id', 'date_deadline'])
+        self.env['res.users'].flush_model(['partner_id'])
+        self.env['res.partner'].flush_model(['tz'])
+
+        tz = 'UTC'
+        if self.env.context.get('tz') in pytz.all_timezones_set:
+            tz = self.env.context['tz']
+
+        sql_join = SQL(
+            """
+            (SELECT res_id,
+                CASE
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, %(tz)s))))) > 0 THEN 'planned'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, %(tz)s))))) < 0 THEN 'overdue'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, %(tz)s))))) = 0 THEN 'today'
+                    ELSE null
+                END AS activity_state
+            FROM mail_activity
+            WHERE res_model = %(res_model)s AND mail_activity.active = true
+            GROUP BY res_id)
+            """,
+            res_model=self._name,
+            today_utc=pytz.utc.localize(datetime.utcnow()),
+            tz=tz,
+        )
+        alias = query.left_join(self._table, "id", sql_join, "res_id", "last_activity_state")
+
+        return SQL.identifier(alias, 'activity_state')
+
+=======
+    def write(self, vals):
+        result = super().write(vals)
+        # Update activity names if any of the dependencies (and transitively those fields' dependencies) is written to
+        # e.g. if self.display_name depends on 'sale_order_id.name, customer_name' and self.customer_name depends on 'partner_id'
+        # then writing to either `sale_order_id`, `customer_name` or `partner_id` will recompute the name of all activities.
+        # The trigger tree "root" is cached and already contains all the fields on this record which need to be recomputed
+        # so simply checking if "display_name" is one of them for each written field is sufficient and relatively cheap.
+        if any(
+            self._fields['display_name'] in self.pool.get_field_trigger_tree(self._fields[fname]).root
+            for fname in vals
+        ):
+            activities = self.sudo().with_context(active_test=False).activity_ids
+            res_name_field = activities._fields['res_name']
+            self.env.add_to_compute(res_name_field, activities - self.env.protected(res_name_field))
+        return result
+
+    def _read_group_groupby(self, alias, groupby_spec, query):
+        if groupby_spec != 'activity_state':
+            return super()._read_group_groupby(alias, groupby_spec, query)
+        self._check_field_access(self._fields['activity_state'], 'read')
+
+        # if already grouped by activity_state, do not add the join again
+        alias = query.make_alias(self._table, 'last_activity_state')
+        if alias in query._joins:
+            return SQL.identifier(alias, 'activity_state')
+
+        self.env['mail.activity'].flush_model(['res_model', 'res_id', 'user_id', 'date_deadline'])
+        self.env['res.users'].flush_model(['partner_id'])
+        self.env['res.partner'].flush_model(['tz'])
+
+        tz = 'UTC'
+        if self.env.context.get('tz') in pytz.all_timezones_set:
+            tz = self.env.context['tz']
+
+        sql_join = SQL(
+            """
+            (SELECT res_id,
+                CASE
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, %(tz)s))))) > 0 THEN 'planned'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, %(tz)s))))) < 0 THEN 'overdue'
+                    WHEN min(EXTRACT(day from (mail_activity.date_deadline - DATE_TRUNC('day', %(today_utc)s AT TIME ZONE COALESCE(mail_activity.user_tz, %(tz)s))))) = 0 THEN 'today'
+                    ELSE null
+                END AS activity_state
+            FROM mail_activity
+            WHERE res_model = %(res_model)s AND mail_activity.active = true
+            GROUP BY res_id)
+            """,
+            res_model=self._name,
+            today_utc=pytz.utc.localize(datetime.utcnow()),
+            tz=tz,
+        )
+        alias = query.left_join(self._table, "id", sql_join, "res_id", "last_activity_state")
+
+        return SQL.identifier(alias, 'activity_state')
+
+>>>>>>> 1b25aee4696e3525f6d5fae1de435621782032d2
     # Reschedules next my activity to Today
     def action_reschedule_my_next_today(self):
         self.ensure_one()
