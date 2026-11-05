@@ -1,6 +1,7 @@
 import { fields, Record } from "@mail/model/export";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { BusPlugin } from "@bus/services/bus_plugin";
+import { PresencePlugin } from "@bus/services/presence_plugin";
 import { DiscussP2PPlugin } from "@mail/discuss/call/common/discuss_p2p_plugin";
 import { CallPermissionDialog } from "@mail/discuss/call/common/call_permission_dialog";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
@@ -2952,7 +2953,7 @@ export class Rtc extends Record {
 Rtc.register();
 
 export const rtcService = {
-    dependencies: ["discuss.pip_service", "mail.store", "presence"],
+    dependencies: ["discuss.pip_service", "mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
@@ -3070,7 +3071,7 @@ export const rtcService = {
          * Attempts to play RTC medias when a user shows signs of presence (interaction with the page) as
          * they cannot be played on windows that have not been interacted with.
          */
-        services["presence"].bus.addEventListener(
+        usePlugin(PresencePlugin).bus.addEventListener(
             "presence",
             () => {
                 env.bus.trigger("RTC-SERVICE:PLAY_MEDIA");
