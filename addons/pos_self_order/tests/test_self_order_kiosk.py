@@ -4,7 +4,7 @@ import random
 
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
-from odoo import Command
+from odoo import Command, fields
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -268,3 +268,75 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
 
         result = self.env['pos.order'].search_order_ids(classic_config.id, [], 80, 0)
         self.assertIn(order.id, [order_id for order_id, _ in result['ordersInfo']])
+
+    def test_kiosk_snooze_propagation(self):
+        other_company = self.env['res.company'].create({
+            'name': 'Other Company',
+            'chart_template': self.env.company.chart_template,
+            'parent_id': self.env.company.id,
+        })
+        other_company_kiosk = self.env['pos.config'].with_company(other_company).create({
+            'name': 'Other Kiosk',
+            'company_id': other_company.id,
+            'self_ordering_mode': 'kiosk',
+            'self_ordering_default_user_id': self.pos_user.id,
+            'payment_method_ids': [],
+        })
+        kiosk = self.pos_config.copy({'self_ordering_mode': 'kiosk'})
+        regular = self.pos_config.copy({'self_ordering_mode': 'nothing'})
+
+        # 1. Snooze origin config -> propagates to kiosk, but not regular
+        snooze = self.env['pos.snooze'].create({
+            'pos_config_id': self.pos_config.id,
+            'product_template_id': self.cola.product_tmpl_id.id,
+            'start_time': fields.Datetime.now(),
+            'type': 'product',
+        })
+        snoozes = self.env['pos.snooze'].search([
+            ('product_template_id', '=', self.cola.product_tmpl_id.id),
+            ('pos_config_id', 'in', (kiosk | regular).ids),
+        ])
+        self.assertEqual(snoozes.pos_config_id, kiosk)
+
+        # Pre-snooze the same product on other company's kiosk
+        other_snooze = self.env['pos.snooze'].create({
+            'pos_config_id': other_company_kiosk.id,
+            'product_template_id': self.cola.product_tmpl_id.id,
+            'start_time': fields.Datetime.now(),
+            'type': 'product',
+        })
+
+        # 3. Unlink origin snooze -> unlinks from kiosk, leaves other company intact
+        snooze.unlink()
+        self.assertFalse(self.env['pos.snooze'].search([
+            ('pos_config_id', '=', kiosk.id),
+            ('product_template_id', '=', self.cola.product_tmpl_id.id),
+        ]))
+        self.assertTrue(other_snooze.exists(), "Snooze in other company must not be affected")
+
+    def test_unlink_kiosk_snooze_avoids_infinite_recursion(self):
+        """Deleting a kiosk snooze when there are >=2 kiosks must not trigger recursion."""
+        kiosk1 = self.pos_config.copy({'self_ordering_mode': 'kiosk'})
+        kiosk2 = self.pos_config.copy({'self_ordering_mode': 'kiosk'})
+        product_tmpl = self.cola.product_tmpl_id
+
+        snooze = self.env['pos.snooze'].create({
+            'pos_config_id': self.pos_config.id,
+            'product_template_id': product_tmpl.id,
+            'start_time': fields.Datetime.now(),
+            'type': 'product',
+        })
+        snooze_kiosk1 = self.env['pos.snooze'].search([
+            ('pos_config_id', '=', kiosk1.id),
+            ('product_template_id', '=', product_tmpl.id),
+        ])
+        snooze_kiosk2 = self.env['pos.snooze'].search([
+            ('pos_config_id', '=', kiosk2.id),
+            ('product_template_id', '=', product_tmpl.id),
+        ])
+        self.assertTrue(snooze_kiosk1)
+        self.assertTrue(snooze_kiosk2)
+
+        snooze_kiosk1.unlink() # could be triggered via cron only
+        self.assertFalse(snooze_kiosk1.exists())
+        self.assertFalse(snooze_kiosk2.exists())
