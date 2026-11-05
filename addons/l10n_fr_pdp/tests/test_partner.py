@@ -415,3 +415,53 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
                 'peppol_verification_state': 'valid',
                 'pdp_verification_display_state': 'pdp_valid',
             }])
+
+    def test_account_move_send_annuaire_reverify_endpoint(self):
+        self.env.company.write({
+            'account_peppol_proxy_state': 'receiver',
+        })
+
+        self.partner_a.write({
+            'peppol_eas': '0002',
+            'peppol_endpoint': '968515759',
+            'peppol_verification_state': 'not_valid',
+        })
+
+        invoice = self._create_french_invoice()
+        invoice.action_post()
+
+        def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
+            self.assertEqual(r.method, "GET")
+            origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp']['test']
+
+            if r.url.startswith(f"{origin}/api/pdp/1/pdp_annuaire_lookup"):
+                response = requests.Response()
+                response.status_code = 200
+                response._content = b'{"annuaire_lines": [{"identifier": "968515759"}]}'
+                return response
+            elif r.url.startswith(f"{origin}/api/pdp/1/annuaire_lookup?pdp_identifier="):
+                pdp_identifier = parse_qs(r.path_url.rsplit('?')[1])['pdp_identifier'][0]
+                return self._get_annuaire_lookup_response(pdp_identifier, "968515759")
+            elif r.url.startswith(f"{origin}/api/pdp/1/lookup?peppol_identifier="):
+                peppol_identifier = parse_qs(r.path_url.rsplit('?')[1])['peppol_identifier'][0]
+                return self._get_peppol_lookup_response(peppol_identifier, "0225:968515759")
+            return requests.Response()
+
+        with (
+            mock.patch.object(self.env.registry['res.company'], 'search', lambda *args, **kwargs: self.env.company),
+            mock.patch.object(requests.sessions.Session, 'send', _request_handler),
+        ):
+            wizard = self.env['account.move.send.wizard'].with_context(
+                active_model='account.move',
+                active_ids=invoice.ids
+            ).create({})
+
+            peppol_box = wizard.sending_method_checkboxes.get('peppol', {})
+
+            self.assertRecordValues(self.partner_a, [{
+                'peppol_eas': '0225',
+                'peppol_endpoint': '968515759',
+                'peppol_verification_state': 'valid',
+                'pdp_verification_display_state': 'pdp_valid',
+            }])
+            self.assertTrue(peppol_box.get('checked'))
