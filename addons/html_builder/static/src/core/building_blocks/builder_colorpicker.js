@@ -14,7 +14,7 @@ import {
     useDomState,
     useHasPreview,
 } from "../utils";
-import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { isCSSColor, isCSSColorKeyword, isColorGradient } from "@web/core/utils/colors";
 import { getAllUsedColors } from "@html_builder/utils/utils_css";
 
 // TODO replace by useInputBuilderComponent after extract unit by AGAU
@@ -167,7 +167,10 @@ export class BuilderColorPicker extends Component {
             if (isColorGradient(this.state.selectedColor)) {
                 return `background-image: ${this.state.selectedColor}`;
             }
-            if (isCSSColor(this.state.selectedColor)) {
+            if (
+                isCSSColor(this.state.selectedColor) ||
+                isCSSColorKeyword(this.state.selectedColor)
+            ) {
                 return `background-color: ${this.state.selectedColor}`;
             }
             return `background-color: var(--${this.state.selectedColor})`;
