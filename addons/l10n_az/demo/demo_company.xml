@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="base.partner_demo_company_az" model="res.partner" forcecreate="1">
+        <field name="name">My Azerbaijani Company</field>
+        <field name="street">Azadlıq prospekti 28</field>
+        <field name="street2">Nəsimi rayonu</field>
+        <field name="city">Bakı</field>
+        <field name="state_id" ref="base.state_az_ba"/>
+        <field name="zip">AZ1010</field>
+        <field name="country_id" ref="base.az"/>
+        <field name="phone">+994 12 598 76 54</field>
+        <field name="email">azcompany@example.com</field>
+        <field name="vat">2087654331</field>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="base.demo_company_az" model="res.company" forcecreate="1">
+        <field name="name">My Azerbaijani Company</field>
+        <field name="partner_id" ref="base.partner_demo_company_az"/>
+    </record>
+
+    <record id="base.demo_bank_az" model="res.partner.bank" forcecreate="1">
+        <field name="account_number">AZ21NABZ00000000137010001944</field>
+        <field name="partner_id" ref="base.partner_demo_company_az"/>
+        <field name="company_id" ref="base.demo_company_az"/>
+        <field name="allow_out_payment" eval="True"/>
+    </record>
+
+    <record id="partner_demo_az_individual" model="res.partner" forcecreate="1">
+        <field name="name">Elvin Məmmədov</field>
+        <field name="street">Nizami küçəsi, ev 10 / mənzil 5, 2-ci mərtəbə</field>
+        <field name="city">Bakı</field>
+        <field name="state_id" ref="base.state_az_ba"/>
+        <field name="country_id" ref="base.az"/>
+        <field name="phone">+994 50 123 45 67</field>
+        <field name="email">elvin.mammadov@azexample.com</field>
+        <field name="vat">1412345662</field>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('base.demo_company_az')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('base.demo_company_az'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>az</value>
+        <value model="res.company" eval="obj().env.ref('base.demo_company_az')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>

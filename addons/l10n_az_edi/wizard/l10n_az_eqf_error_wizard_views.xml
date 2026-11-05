@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_az_eqf_error_wizard_view_form" model="ir.ui.view">
+        <field name="name">l10n_az.eqf.error.wizard.form</field>
+        <field name="model">l10n_az.eqf.error.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate EQF">
+                <field name="alerts" class="o_field_html" widget="actionable_errors"/>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

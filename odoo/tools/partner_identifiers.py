@@ -91,6 +91,11 @@ TIN_METADATA = {
         'validation_function': au_abn.validate,
         'countries': ['AU'],
     },
+    'AZ_TIN': {
+        'placeholder': '1234567890',
+        'category': 'TIN',
+        'countries': ['AZ'],
+    },
     'BA_VAT': {
         'scheme': '9924',
         'category': 'VAT',
