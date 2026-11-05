@@ -190,6 +190,8 @@ def parse_date(value: str, env: Environment) -> date | datetime:
         # Operations on dates
         try:
             unit = _SHORT_DATE_UNIT[term[-1]]
+            if unit in ("hours", "minutes", "seconds") and not isinstance(dt, datetime):
+                dt = env.tz.localize(datetime.combine(dt, time.min))
             if operator in ('+', '-'):
                 number = int(term[:-1])  # positive or negative
             else:
