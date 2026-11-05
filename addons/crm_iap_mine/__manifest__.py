@@ -27,7 +27,6 @@
     'iap_paid_service': True,
     'assets': {
         'web.assets_backend': [
-            'crm_iap_mine/static/src/js/**/*',
             'crm_iap_mine/static/src/components/**/*',
         ],
     },
