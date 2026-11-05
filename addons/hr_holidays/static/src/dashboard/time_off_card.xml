@@ -58,7 +58,7 @@
     <t t-name="hr_holidays.TimeOffCardPopover">
         <ul class="list-unstyled p-3 mb-0">
             <li class="d-flex justify-content-between">
-                <span>Allocated (<span class="btn-link p-0 cursor-pointer" t-on-click="props.onClickNewAllocationRequest">new request</span>):</span>
+                <span>Allocated<t t-if="props.can_request_allocation"> (<span class="btn-link p-0 cursor-pointer" t-on-click="props.onClickNewAllocationRequest">new request</span>)</t>:</span>
                 <span class="ps-1" t-esc="props.allocated"/>
             </li>
             <li class="d-flex justify-content-between" t-if="props.accrual_bonus">

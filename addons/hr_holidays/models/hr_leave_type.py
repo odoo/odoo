@@ -476,6 +476,7 @@ class HolidaysType(models.Model):
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
         )._get_consumed_leaves(self, target_date)
         leave_type_requires_allocation = self.filtered(lambda lt: lt.requires_allocation == 'yes')
+        is_holiday_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for employee in employees:
             for leave_type in leave_type_requires_allocation:
@@ -500,6 +501,7 @@ class HolidaysType(models.Model):
                         'icon': leave_type.sudo().icon_id.url,
                         'allows_negative': leave_type.allows_negative,
                         'max_allowed_negative': leave_type.max_allowed_negative,
+                        'can_request_allocation': leave_type.employee_requests == 'yes' or is_holiday_user,
                     },
                     leave_type.requires_allocation,
                     leave_type.id)
