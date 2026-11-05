@@ -119,7 +119,7 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
             'ofdUrl': 'http://digi.51fapiao.cn/v/ofd',
         }
         archive = io.BytesIO()
-        with zipfile.ZipFile(archive, 'w') as zip_file:
+        with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED) as zip_file:
             zip_file.writestr('dzfp_00820748268268168425.xml', '<EInvoice/>')
         self.gateway.handlers[DOWNLOAD_INVOICE] = {'code': '1000', 'message': 'ok', 'file': b64encode(archive.getvalue()).decode()}
 
@@ -144,7 +144,8 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         }
         self.gateway.handlers[DOWNLOAD_INVOICE] = {'code': '1000', 'message': 'ok', 'file': b64encode(b'not a zip').decode()}
 
-        self._issue(invoice)
+        with self.assertLogs(CLIENT, 'WARNING'):
+            self._issue(invoice)
 
         self.assertEqual(invoice.l10n_cn_edi_state, 'issued')
         self.assertEqual(invoice.l10n_cn_edi_fapiao_no, '00820748268268168425')
@@ -305,7 +306,8 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
         invoice = self._sent_invoice()
         self.gateway.handlers[QUERY_RESULT] = {'_outer_code': '3203', '_outer_msg': '需强制重新登录'}
 
-        self.env['account.move']._cron_l10n_cn_edi_poll_invoices()
+        with self.assertLogs(CLIENT, 'WARNING'):
+            self.env['account.move']._cron_l10n_cn_edi_poll_invoices()
 
         self.assertEqual(invoice.l10n_cn_edi_state, 'sent')
         self.assertTrue(self.company.sudo().l10n_cn_edi_yunshui_relogin)
@@ -319,12 +321,12 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
             MockResponse(body={'code': '1000', 'datagram': 'x', 'access_token': 'abc'}),
         ):
             self.gateway.raw_response = raw
-            with self.assertRaisesRegex(UserError, 'could not read'):
+            with self.assertRaisesRegex(UserError, 'could not read'), self.assertLogs(CLIENT, 'WARNING'):
                 client.get_session_state()
 
     def test_response_body_is_capped(self):
         self.gateway.raw_response = MockResponse(content=b'{"code": "1000", "datagram": "' + b'A' * 2048 + b'"}')
-        with patch(f'{CLIENT}.MAX_RESPONSE_BYTES', 1024), self.assertRaisesRegex(UserError, 'could not read'):
+        with patch(f'{CLIENT}.MAX_RESPONSE_BYTES', 1024), self.assertRaisesRegex(UserError, 'could not read'), self.assertLogs(CLIENT, 'WARNING'):
             self.company._l10n_cn_edi_get_client().get_session_state()
 
     def test_response_signature_is_ignored(self):
@@ -334,5 +336,5 @@ class TestYunshuiClient(L10nCnEdiYunshuiTestCommon):
 
     def test_network_failure_is_user_error(self):
         self.gateway.unreachable = True
-        with self.assertRaisesRegex(UserError, 'Yunshui did not answer'):
+        with self.assertRaisesRegex(UserError, 'Yunshui did not answer'), self.assertLogs(CLIENT, 'WARNING'):
             self.company._l10n_cn_edi_get_client().test_connection()
