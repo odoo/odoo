@@ -4,7 +4,6 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { closestElement, firstLeaf } from "@html_editor/utils/dom_traversal";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { nodeSize } from "@html_editor/utils/position";
 
 const REGEX_BOOTSTRAP_COLUMN = /(^| )col(-[a-zA-Z]+)?(-\d+)?(?= |$)/;
@@ -33,7 +32,7 @@ export class ColumnPlugin extends Plugin {
                 description: _t("Convert into columns"),
                 icon: "view_column",
                 run: this.columnize.bind(this),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
         ],
         powerbox_items: [

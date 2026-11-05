@@ -1,4 +1,3 @@
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { SignatureDialog } from "@web/core/signature/signature_dialog";
@@ -16,7 +15,7 @@ export class SignaturePlugin extends Plugin {
                 icon: "o_signature_icon",
                 run: this.insertSignature.bind(this),
                 isAvailable: (selection) =>
-                    this.config.allowImage && isHtmlContentSupported(selection),
+                    this.config.allowImage && this.dependencies.dom.supportsHtmlContent(selection),
             },
         ],
         powerbox_items: [

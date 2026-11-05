@@ -26,12 +26,11 @@ import {
     findFurthest,
     selectElements,
 } from "@html_editor/utils/dom_traversal";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { getDeepestEditablePosition, isTextNode } from "@html_editor/utils/dom_info";
 
 export class TextEffectPlugin extends Plugin {
     static id = "textEffect";
-    static dependencies = ["selection", "split", "history", "format"];
+    static dependencies = ["dom", "selection", "split", "history", "format"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         builder_actions: {
@@ -57,7 +56,7 @@ export class TextEffectPlugin extends Plugin {
                     },
                 },
                 isAvailable: (selection) =>
-                    isHtmlContentSupported(selection) && !selection.isCollapsed,
+                    this.dependencies.dom.supportsHtmlContent(selection) && !selection.isCollapsed,
             }),
         ],
         can_remove_format_predicates: (editableTargetedNodes) => {

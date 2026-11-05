@@ -1,4 +1,3 @@
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { unwrapContents } from "@html_editor/utils/dom";
@@ -47,7 +46,7 @@ export class UserSignaturePlugin extends Plugin {
                 icon: "edit_square",
                 run: this.insertUserSignature.bind(this),
                 isAvailable: (selection) =>
-                    isHtmlContentSupported(selection) &&
+                    this.dependencies.dom.supportsHtmlContent(selection) &&
                     closestElement(selection.anchorNode, allowsParagraphRelatedElements)
                         ?.isContentEditable,
             },

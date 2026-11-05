@@ -1,4 +1,3 @@
-import { isLinkSupported } from "@html_editor/main/link/link_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -6,7 +5,7 @@ import { renderToElement } from "@web/core/utils/render";
 
 export class UnsubscribeCommandPlugin extends Plugin {
     static id = "unsubscribeCommandPlugin";
-    static dependencies = ["history", "dom"];
+    static dependencies = ["history", "dom", "link"];
     resources = {
         user_commands: [
             {
@@ -15,7 +14,7 @@ export class UnsubscribeCommandPlugin extends Plugin {
                 description: _t("Insert an unsubscribe link"),
                 icon: "link_off",
                 run: this.insertUnsubscribeLink.bind(this),
-                isAvailable: isLinkSupported,
+                isAvailable: this.dependencies.link.supportsLink,
             },
         ],
         powerbox_items: [

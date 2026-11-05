@@ -7,7 +7,6 @@ import { htmlEscape } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock, isParagraphRelatedElement } from "../utils/dom_info";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 /**
  * @typedef { Object } BannerShared
@@ -106,7 +105,7 @@ export class BannerPlugin extends Plugin {
         ],
         is_banner_command_available_predicates: (selection, bannerType) => {
             if (
-                !isHtmlContentSupported(selection) ||
+                !this.dependencies.dom.supportsHtmlContent(selection) ||
                 closestElement(selection.anchorNode, `.o_editor_banner.alert-${bannerType}`)
             ) {
                 return false;

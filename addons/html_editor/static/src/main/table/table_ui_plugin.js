@@ -5,7 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 import { MobileTablePicker } from "./mobile_table_picker";
 import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { TableDragDrop } from "./table_drag_drop";
 import { registry } from "@web/core/registry";
 import { getRowIndex } from "@html_editor/utils/table";
@@ -18,7 +17,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
  */
 export class TableUIPlugin extends Plugin {
     static id = "tableUi";
-    static dependencies = ["history", "overlay", "selection", "table"];
+    static dependencies = ["dom", "history", "overlay", "selection", "table"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -29,7 +28,7 @@ export class TableUIPlugin extends Plugin {
                 icon: "table",
                 run: this.openPickerOrInsertTable.bind(this),
                 isAvailable: (selection) =>
-                    isHtmlContentSupported(selection) &&
+                    this.dependencies.dom.supportsHtmlContent(selection) &&
                     closestElement(selection.anchorNode, allowsParagraphRelatedElements)
                         ?.isContentEditable,
             },

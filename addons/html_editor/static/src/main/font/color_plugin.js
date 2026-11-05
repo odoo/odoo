@@ -29,7 +29,6 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
@@ -60,7 +59,15 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
 
 export class ColorPlugin extends Plugin {
     static id = "color";
-    static dependencies = ["selection", "split", "history", "format", "delete", "properties"];
+    static dependencies = [
+        "dom",
+        "selection",
+        "split",
+        "history",
+        "format",
+        "delete",
+        "properties",
+    ];
     static shared = [
         "colorElement",
         "removeAllColor",
@@ -79,7 +86,7 @@ export class ColorPlugin extends Plugin {
                     this.requestColor(color, mode);
                     this.dependencies.history.commit();
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
         ],
         /** Handlers */

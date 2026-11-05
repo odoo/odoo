@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 import { _t } from "@web/core/l10n/translation";
 import { AnimateText } from "./animate_text";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
 import { ancestors, closestElement, findFurthest } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "@html_editor/utils/blocks";
@@ -34,7 +33,7 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 
 export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
-    static dependencies = ["history", "selection", "split", "properties"];
+    static dependencies = ["dom", "history", "selection", "split", "properties"];
     static shared = [
         "forceAnimation",
         "getDirectionsItems",
@@ -57,7 +56,7 @@ export class AnimateOptionPlugin extends Plugin {
                     isActive: this.isAnimatedTextActive.bind(this),
                     animateOptionProps: { ...this.animateOptionProps, requireAnimation: true },
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
                 isDisabled: this.isAnimatedTextDisabled.bind(this),
             },
         ],

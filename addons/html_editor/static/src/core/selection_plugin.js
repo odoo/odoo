@@ -34,7 +34,6 @@ import {
     normalizeSelfClosingElement,
 } from "../utils/selection";
 import { closestScrollableY } from "@web/core/utils/scrolling";
-import { weakMemoize } from "@html_editor/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 
 /**
@@ -98,14 +97,6 @@ import { withSequence } from "@html_editor/utils/resource";
 export function isNotAllowedContent(node) {
     return isMediaElement(node) || selfClosingHtmlTags.includes(node.nodeName);
 }
-
-export const isHtmlContentSupported = weakMemoize(
-    (/** @type {EditorSelection} */ selection) =>
-        !closestElement(
-            selection.focusNode,
-            '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
-        )
-);
 
 /**
  * Builds a Range only when needed, Chrome updates every Range on each DOM
