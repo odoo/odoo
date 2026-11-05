@@ -353,10 +353,11 @@ class PurchaseOrder(models.Model):
     @api.depends('order_line.qty_received', 'order_line.product_uom_qty', 'state')
     def _compute_show_receive_button(self):
         for order in self:
+            lines = order._get_receivable_lines()
             order.show_receive_button = (
                 order.state == 'purchase'
-                and any(line.qty_received < line.product_qty for line in order.order_line)
-                and all(line.qty_received_method == "manual" for line in order.order_line)
+                and any(line.qty_received < line.product_qty for line in lines)
+                and all(line.qty_received_method == "manual" for line in lines)
             )
 
     @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'order_line.purchase_line_warn_msg')
@@ -679,17 +680,22 @@ class PurchaseOrder(models.Model):
         action['display_name'] = _("Purchase Comparison for %s", self.display_name)
         return action
 
+    def _get_receivable_lines(self):
+        """ Lines that can be received, i.e. without sections, notes and down payments. """
+        self.ensure_one()
+        return self.order_line.filtered(lambda line: not line.display_type and not line.is_downpayment)
+
     def action_receive(self):
         invalid_targets = self.filtered(
             lambda o: o.state != "purchase" or
-            any(line.qty_received_method != "manual" for line in o.order_line)
+            any(line.qty_received_method != "manual" for line in o._get_receivable_lines())
         )
         if invalid_targets:
             raise UserError(
                 _("The following purchase orders %(invalid_orders)s can't be received. Cancelled all receptions.",
-                invalid_orders=invalid_targets))
+                invalid_orders=", ".join(invalid_targets.mapped("name"))))
         for order in self:
-            for line in order.order_line:
+            for line in order._get_receivable_lines():
                 line.qty_received = line.product_qty
 
     def _mark_rfqs_as_sent(self):
