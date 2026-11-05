@@ -1,3 +1,4 @@
+from freezegun import freeze_time
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
@@ -41,6 +42,7 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
             },
         ])
 
+    @freeze_time("2026-03-20")
     def test_hr_leave_employee_report(self):
         self.env['hr.leave.allocation'].create([
             {
@@ -102,11 +104,12 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
 
         left_allocation = leave_balance.filtered(lambda l: l.holiday_status == 'left')
-        taken_allocation = leave_balance.filtered(lambda l: l.holiday_status == 'taken')
+        allocated_allocation = leave_balance.filtered(lambda l: l.holiday_status == 'allocated')
 
         self.assertEqual(sum(left_allocation.mapped('number_of_hours')), 104.5)
-        self.assertEqual(sum(taken_allocation.mapped('number_of_hours')), 24.0)
+        self.assertEqual(sum(allocated_allocation.mapped('number_of_hours')), 128.5)
 
+    @freeze_time("2026-06-01")
     def test_overlapping_allocations_leaves_balance(self):
         """
         Test that leaves only deduct from allocations they actually overlap.
@@ -119,7 +122,7 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         Verification:
             The leave occurs in 2026, so it should only overlap Allocation B.
             Allocation A should remain untouched (10 days), and Allocation B
-            should have 1 day deducted (9 days), totaling 19 remaining days.
+            should have 1 day deducted (9 days), totaling 9 remaining days.
         """
         self.env['hr.leave'].create([
             {
@@ -137,12 +140,13 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
 
         left_records = leave_balance.filtered(lambda l: l.holiday_status == 'left')
-        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'taken')
+        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'allocated')
 
-        # 20 total allocated - 1 taken = 19 remaining
-        self.assertEqual(sum(left_records.mapped('number_of_days')), 19)
-        self.assertEqual(sum(taken_records.mapped('number_of_days')), 1)
+        # 10 total allocated - 1 taken = 9 remaining
+        self.assertEqual(sum(left_records.mapped('number_of_days')), 9)
+        self.assertEqual(sum(taken_records.mapped('number_of_days')), 10)
 
+    @freeze_time("2026-06-01")
     def test_overlapping_allocations_leaves_deduction(self):
         """
         Scenario:
@@ -200,20 +204,27 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
 
         left_records = leave_balance.filtered(lambda l: l.holiday_status == 'left')
-        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'taken')
+        taken_records = leave_balance.filtered(lambda l: l.holiday_status == 'allocated')
 
-        # 20 total allocated - 13 taken = 7 remaining
         self.assertEqual(sum(left_records.mapped('number_of_days')), 7)
-        self.assertEqual(sum(taken_records.mapped('number_of_days')), 13)
+        self.assertEqual(sum(taken_records.mapped('number_of_days')), 10)
 
+    @freeze_time("2027-06-01")
     def test_open_ended_allocation_not_affected_by_earlier_leave(self):
         """
         Scenario:
             - Allocation A: 2024-2025 (10 days)
             - Allocation B: 2025-2026 (10 days)
             - Allocation C: 2027-01-01, no end date (20 days)
-            - Leave: 2025 (1 day)
+            - Leave: 2025 (1 day), taken while A/B were active
+
+        By 2027-06-01, allocations A and B have both expired and no longer
+        count towards the balance; only the open-ended allocation C is
+        active. The 2025 leave happened entirely before C started, so it
+        must not reduce C's balance.
         """
+        self.alloc_a.action_approve()
+        self.alloc_b.action_approve()
         self.env['hr.leave.allocation'].create({
             'employee_id': self.employee_emp.id,
             'work_entry_type_id': self.leave_type.id,
@@ -236,10 +247,7 @@ class TestHrLeaveReport(TestHrHolidaysCommon):
         ]
         leave_balance = self.env['hr.leave.employee.type.report'].search(domain)
         left_records = leave_balance.filtered(lambda l: l.holiday_status == 'left')
-        left_2024 = left_records.filtered(lambda l: l.date_from.year == 2024)
-        left_2027 = left_records.filtered(lambda l: l.date_from.year == 2027)
 
-        # Allocation A: 10 - 1 = 9
-        self.assertEqual(sum(left_2024.mapped('number_of_days')), 9)
-        # Allocation C (no end date): untouched at 20
-        self.assertEqual(sum(left_2027.mapped('number_of_days')), 20)
+        # Allocation C (no end date): untouched at 20, unaffected by the
+        # earlier leave against the now-expired allocations A and B.
+        self.assertEqual(sum(left_records.mapped('number_of_days')), 20)
