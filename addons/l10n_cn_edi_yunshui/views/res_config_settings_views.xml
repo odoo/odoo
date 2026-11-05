@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_cn_edi</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='peppol']" position="after">
+                <block title="E-Fapiao" id="l10n_cn_edi" invisible="country_code != 'CN'">
+                    <setting id="l10n_cn_edi_provider" string="E-Fapiao Provider" company_dependent="1">
+                        <div class="text-muted" invisible="l10n_cn_edi_is_ready">
+                            No e-Fapiao provider is connected for this company.
+                        </div>
+                        <div class="text-success" invisible="not l10n_cn_edi_is_ready">
+                            <i class="oi oi-filled" data-icon="check_circle"/> E-Fapiao is connected.
+                        </div>
+                    </setting>
+                    <setting id="l10n_cn_edi_yunshui" string="Aisino Yunshui 爱信诺云税" company_dependent="1"
+                        help="Company-specific Yunshui credentials (section 7.3 demo style): identity code, platform code and tax-bureau login user.">
+                        <div class="content-group">
+                            <div class="row" groups="base.group_system">
+                                <label for="l10n_cn_edi_yunshui_identity_code" class="col-lg-4"/>
+                                <field name="l10n_cn_edi_yunshui_identity_code" password="True"/>
+                            </div>
+                            <div class="row" groups="base.group_system">
+                                <label for="l10n_cn_edi_yunshui_platform_code" class="col-lg-4"/>
+                                <field name="l10n_cn_edi_yunshui_platform_code"/>
+                            </div>
+                            <div class="row" groups="base.group_system">
+                                <label for="l10n_cn_edi_yunshui_region_code" class="col-lg-4"/>
+                                <field name="l10n_cn_edi_yunshui_region_code"/>
+                            </div>
+                            <div class="row">
+                                <label for="l10n_cn_edi_yunshui_gateway" class="col-lg-4"/>
+                                <field name="l10n_cn_edi_yunshui_gateway"/>
+                            </div>
+                            <div class="row" groups="base.group_system">
+                                <label for="l10n_cn_edi_yunshui_username" class="col-lg-4"/>
+                                <field name="l10n_cn_edi_yunshui_username"/>
+                            </div>
+                            <div class="row" groups="base.group_system">
+                                <label for="l10n_cn_edi_yunshui_password" class="col-lg-4"/>
+                                <field name="l10n_cn_edi_yunshui_password" password="True"/>
+                            </div>
+                            <div class="mt16">
+                                <button name="action_l10n_cn_edi_yunshui_test_connection"
+                                    type="object"
+                                    string="Test Connection"
+                                    class="btn-secondary"
+                                    icon="network_check"/>
+                                <button name="action_l10n_cn_edi_yunshui_login"
+                                    type="object"
+                                    string="Tax Bureau Login"
+                                    class="btn-secondary ms-2"
+                                    icon="qr_code"/>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="l10n_cn_edi_drawer" string="Drawer (开票人)" company_dependent="1"
+                        help="Printed as the drawer on issued e-Fapiao. Defaults to the current user.">
+                        <field name="l10n_cn_edi_drawer"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

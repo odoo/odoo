@@ -1,0 +1,7 @@
+id,name,model_id,group_id/id,operation,domain
+access_l10n_cn_edi_document_readonly,l10n_cn_edi.document.readonly,l10n_cn_edi.document,account.group_account_readonly,r,
+access_l10n_cn_edi_document_accountant,l10n_cn_edi.document.accountant,l10n_cn_edi.document,account.group_account_invoice,crud,
+access_l10n_cn_edi_document_company,l10n_cn_edi.document company restriction,l10n_cn_edi.document,,crud,"[('move_id.company_id', 'in', company_ids)]"
+access_l10n_cn_edi_document_unlink_rule,l10n_cn_edi.document unlink only unsent or dead,l10n_cn_edi.document,,d,"[('state', 'not in', ('sent', 'issued', 'red_form_pending', 'red_form_confirmed'))]"
+access_l10n_cn_edi_tax_category,l10n_cn_edi.tax.category.user,l10n_cn_edi.tax.category,base.group_user,r,
+access_l10n_cn_edi_yunshui_login,l10n_cn_edi_yunshui.login,l10n_cn_edi_yunshui.login,account.group_account_invoice,crud,"[('create_uid', '=', user.id)]"
