@@ -2,12 +2,20 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenuItemContextMenu">
+<<<<<<< 8dd23357410ce4592702c0eb65e46096ce62e456
     <Dropdown state="this.props.dropdownState" manual="true" menuClass="this.store.discussDropdownMenuClass(this.ancestors)" noClasses="true" position="'right-start'">
         <span class="o-mail-MessagingMenuItem-contextMenuAnchor d-flex position-fixed z-1" t-ref="this.props.anchorRef"/>
+||||||| 8ea8dd69ebc899afa567040fc31379aa48ddf320
+    <Dropdown state="this.props.dropdownState" manual="true" menuClass="this.store.discussDropdownMenuClass(this)" noClasses="true" position="'right-start'">
+        <span class="o-mail-MessagingMenuItem-contextMenuAnchor d-flex position-fixed z-1" t-ref="this.anchorRef"/>
+=======
+    <IsolatedDropdown state="this.props.dropdownState" manual="true" menuClass="this.store.discussDropdownMenuClass(this)" noClasses="true" position="'right-start'">
+        <span class="o-mail-MessagingMenuItem-contextMenuAnchor d-flex position-fixed z-1" t-ref="this.anchorRef"/>
+>>>>>>> 03078485c59c6146eb9358c2dea001dd01204bf0
         <t t-set-slot="content">
             <ActionList actions="this.props.actionsList" dropdown="true" panelContainer="this.props.panelContainer"/>
         </t>
-    </Dropdown>
+    </IsolatedDropdown>
 </t>
 
 </templates>

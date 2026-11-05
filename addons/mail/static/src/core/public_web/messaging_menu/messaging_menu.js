@@ -1,4 +1,5 @@
 import { DiscussSearch } from "@mail/core/public_web/discuss_search";
+import { IsolatedDropdown } from "@mail/core/public_web/messaging_menu/isolated_dropdown";
 import { MessageInDialog } from "@mail/core/public_web/messaging_menu/message_in_dialog";
 import { MessagingMenuEmpty } from "@mail/core/public_web/messaging_menu/messaging_menu_empty";
 import { MessagingMenuItem } from "@mail/core/public_web/messaging_menu/messaging_menu_item";
@@ -11,7 +12,6 @@ import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { Component, computed, signal, types, useEffect, usePlugin, useProps } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { normalize } from "@web/core/l10n/utils";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
@@ -20,13 +20,6 @@ import { useDebounced } from "@web/core/utils/timing";
 
 /** How long the pointer rests on a tab for the shown list to change to it. */
 export const PEEK_TAB_DELAY = 50;
-
-/** Never a submenu of an ancestor Dropdown it's embedded in, even visually/positionally. */
-class IsolatedDropdown extends Dropdown {
-    get hasParent() {
-        return false;
-    }
-}
 
 export class MessagingMenu extends Component {
     static components = {
