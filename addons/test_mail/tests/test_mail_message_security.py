@@ -532,6 +532,9 @@ class TestMailMessageAccess(MessageAccessCommon):
         # batch mixes messages granted by ACLs and by document access: an inaccessible message
         # in the batch should not drop messages granted by ACLs only (here: authored one)
         self.assertEqual(valid, messages_all[:2] + msg_author)
+        messages_su_with_access = messages_su._get_with_access()
+        self.assertEqual(messages_su_with_access, valid, 'Batch version = concatenation of singleton version')
+        self.assertTrue(messages_su_with_access.env.su, 'Result keeps caller env, used as sudo by controllers')
 
         with self.assertRaises(AccessError):  # fetch should be symmetric to read
             _message = messages_all[2].with_user(self.user_employee).copy_data()
@@ -553,6 +556,7 @@ class TestMailMessageAccess(MessageAccessCommon):
         messages_su = (message + orphan).with_user(self.user_employee).sudo()
         self.assertFalse(messages_su[1]._get_with_access())
         self.assertEqual(messages_su[0]._get_with_access(), message)
+        self.assertEqual(messages_su._get_with_access(), message)
 
     def test_access_read_portal(self):
         """ Read access check for portal users """
