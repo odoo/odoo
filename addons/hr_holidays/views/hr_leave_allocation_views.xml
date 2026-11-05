@@ -134,7 +134,7 @@
                                 <field name="date_from" nolabel="1"
                                     readonly="state == 'refuse' or (accrual_plan_id and state != 'confirm')"
                                     invisible="not accrual_plan_id and state != 'confirm'"/>
-                                <i class="oi mx-2" data-icon="east" aria-label="Arrow icon" title="Arrow"
+                                <i class="oi mx-2" data-icon="east" aria-label="to" title="To"
                                     invisible="accrual_plan_id or state != 'confirm'"/>
                                 <label class="mx-2" for="date_to" string="Run until"
                                     invisible="not accrual_plan_id"/>
@@ -216,7 +216,7 @@
                 <attribute name="invisible">0</attribute>
             </field>
             <xpath expr="//i[@data-icon='east']" position="replace">
-                <i class="oi oi-fw mx-2" data-icon="east" aria-label="Arrow icon" title="Arrow" invisible="accrual_plan_id"/>
+                <i class="oi oi-fw mx-2" data-icon="east" aria-label="to" title="To" invisible="accrual_plan_id"/>
             </xpath>
             <field name="date_to" position="attributes">
                 <attribute name="invisible">0</attribute>
