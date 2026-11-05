@@ -280,6 +280,12 @@ export class Message extends Component {
         onMounted(prepareRenderedBody);
         onPatched(prepareRenderedBody);
         onWillUnmount(destroyBodyRoots);
+        // e.g. a notification fails once the message is shown
+        useOnChange(
+            () => this.message.notification_ids.map((n) => n.notification_status),
+            () => !this.isEditing && this.renderPartnerMentionStates(this.messageBody()),
+            { initialRun: false }
+        );
     }
 
     /** @type {import("@mail/core/common/action_list").GetActionComponent} */
@@ -571,7 +577,7 @@ export class Message extends Component {
      * @param {MouseEvent} ev
      */
     async onClick(ev) {
-        if (this.store.handleClickOnLink(ev, this.props.thread)) {
+        if (this.store.handleClickOnLink(ev, this.props.thread, this.message)) {
             return;
         }
         if (
@@ -625,7 +631,36 @@ export class Message extends Component {
         this.store.handleValidChannelMention(Array.from(channelLinks));
         this.store.renderMessageLinks(bodyEl.querySelectorAll(".o_message_redirect"));
         this.recordLink.renderRecordLinks(bodyEl.querySelectorAll("a.o_record_redirect"));
+        this.renderPartnerMentions(bodyEl);
         return this.renderEmbeddedCodeBlocks(bodyEl);
+    }
+
+    /** @param {HTMLElement} [bodyEl] */
+    renderPartnerMentions(bodyEl) {
+        // the email-like body is in a shadow root, without the style of the mentions
+        if (!bodyEl || this.message.hasEmailLikeBody) {
+            return;
+        }
+        this.store.renderPartnerMentions(bodyEl);
+        this.renderPartnerMentionStates(bodyEl);
+    }
+
+    /**
+     * Colors the rendered partner mentions with the state of their notification.
+     *
+     * @param {HTMLElement} [bodyEl]
+     */
+    renderPartnerMentionStates(bodyEl) {
+        for (const mentionEl of bodyEl?.querySelectorAll(".o-mail-partnerMention") ?? []) {
+            const notification = this.message.getPartnerNotification(
+                Number(mentionEl.dataset.oeId)
+            );
+            mentionEl.classList.toggle(
+                "o-mail-partnerMention-failed",
+                Boolean(notification?.isFailure)
+            );
+            mentionEl.classList.toggle("o-mail-partnerMention-sent", Boolean(notification?.isSent));
+        }
     }
 
     /** @param {HTMLElement} bodyEl */

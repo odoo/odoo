@@ -36,6 +36,7 @@ import { MailCodeBlockPlugin } from "@mail/core/common/plugin/mail_code_block_pl
 import { MailComposerPlugin } from "@mail/core/common/plugin/mail_composer_plugin";
 import { MentionPlugin } from "@mail/core/common/plugin/mention_plugin";
 import { MessageLinkPlugin } from "@mail/core/common/plugin/message_link_plugin";
+import { PartnerMentionPlugin } from "@mail/core/common/plugin/partner_mention_plugin";
 import { PersistSelectionPlugin } from "@mail/core/common/plugin/persist_selection_plugin";
 import { RecordLinkEditorPlugin } from "@mail/core/common/plugin/record_link_editor_plugin";
 import { StripPastedFormatPlugin } from "@mail/core/common/plugin/strip_pasted_format_plugin";
@@ -67,6 +68,7 @@ export const MAIL_TEXT_PLUGINS = [
     MessageLinkPlugin,
     NoInlineRootPlugin,
     OverlayPlugin,
+    PartnerMentionPlugin,
     PartnerSuggestionPlugin,
     PersistSelectionPlugin,
     PropertiesPlugin,
@@ -96,6 +98,7 @@ export const MAIL_CORE_PLUGINS = [
     MailSuggestionPlugin,
     MentionPlugin,
     MessageLinkPlugin,
+    PartnerMentionPlugin,
     PartnerSuggestionPlugin,
     PersistSelectionPlugin,
     ProtectedNodePlugin,

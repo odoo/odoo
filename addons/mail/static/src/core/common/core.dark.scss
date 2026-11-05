@@ -6,8 +6,17 @@ a.o_mail_redirect, a.o_channel_redirect, a.o_message_redirect_transformed, a.o_r
     @include o-mention-variant(rgba(lighten($o-action, 5%), .15), rgba(lighten($o-action, 15%), .15), lighten($o-action, 35%), rgba(lighten($o-action, 5%), .25), rgba(lighten($o-action, 15%), .35), lighten($o-action, 35%));
 }
 
-a.o-discuss-mention {
+a.o-discuss-mention, .o-discuss-readonly-mention {
     @include o-mention-variant(rgba(lighten($o-action, 5%), .15), rgba(lighten($o-action, 15%), .15), lighten($o-action, 35%), rgba(lighten($o-action, 5%), .15), rgba(lighten($o-action, 15%), .15), lighten($o-action, 35%));
+}
+
+.o_mail_redirect, .o-discuss-readonly-mention {
+    &.o-mail-partnerMention-sent {
+        @include o-partner-mention-variant($success, lighten($success, 25%), lighten($success, 30%));
+    }
+    &.o-mail-partnerMention-failed {
+        @include o-partner-mention-variant($danger, lighten($danger, 25%), lighten($danger, 30%));
+    }
 }
 
 .o-discuss-badge {

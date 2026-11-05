@@ -3,7 +3,11 @@ import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
 import { SoundEffectsPlugin } from "@mail/core/common/sound_effects_plugin";
 import { Store as BaseStore, fields, makeStore } from "@mail/model/export";
 import { formatLocalDateTime, resolveTimeZoneName } from "@mail/utils/common/dates";
-import { attClassObjectToString, generateEmojisOnHtml } from "@mail/utils/common/format";
+import {
+    attClassObjectToString,
+    generateEmojisOnHtml,
+    PARTNER_MENTION_SELECTOR,
+} from "@mail/utils/common/format";
 
 import { Plugin, proxy, usePlugin } from "@odoo/owl";
 
@@ -24,7 +28,7 @@ import { user } from "@web/core/user";
 import { Mutex } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
 import { debounce } from "@web/core/utils/timing";
-import { getOrigin } from "@web/core/utils/urls";
+import { getOrigin, imageUrl } from "@web/core/utils/urls";
 import { session } from "@web/session";
 import { isMarkup, createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { useEnv } from "@web/owl2/utils";
@@ -37,6 +41,42 @@ const { DateTime } = luxon;
 
 let prevLastMessageId = null;
 let temporaryIdOffset = 0.01;
+
+/**
+ * Edits the mention in place, so that what is in its text (e.g. a search highlight) is kept: the
+ * avatar replaces the "@", which is only hidden. Up to date when called again.
+ *
+ * @param {HTMLElement} mentionEl
+ * @param {string} [avatarUrl]
+ */
+function renderPartnerMentionAvatar(mentionEl, avatarUrl) {
+    let avatarEl = mentionEl.querySelector(":scope > .o-mail-partnerMention-avatar");
+    const atEl = mentionEl.querySelector(".o-mail-partnerMention-at");
+    if (!avatarUrl) {
+        avatarEl?.remove();
+        atEl?.replaceWith(...atEl.childNodes);
+        return;
+    }
+    if (!avatarEl) {
+        avatarEl = document.createElement("img");
+        avatarEl.className =
+            "o-mail-partnerMention-avatar rounded-circle object-fit-cover align-middle ms-n1 me-1";
+        avatarEl.alt = "";
+        avatarEl.draggable = false;
+        mentionEl.prepend(avatarEl);
+    }
+    if (avatarEl.getAttribute("src") !== avatarUrl) {
+        avatarEl.setAttribute("src", avatarUrl);
+    }
+    const textNode = document.createTreeWalker(mentionEl, NodeFilter.SHOW_TEXT).nextNode();
+    if (!atEl && textNode?.data.startsWith("@")) {
+        textNode.splitText(1);
+        const newAtEl = document.createElement("span");
+        newAtEl.className = "o-mail-partnerMention-at";
+        textNode.replaceWith(newAtEl);
+        newAtEl.append(textNode);
+    }
+}
 
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
@@ -449,7 +489,7 @@ export class Store extends BaseStore {
         await this.env.services["discuss.rtc"].startMeetingCall(channel, { fullscreen: true });
     }
 
-    handleClickOnLink(ev, thread) {
+    handleClickOnLink(ev, thread, message) {
         const link = ev.composedPath()[0].closest("a");
         if (!link) {
             return;
@@ -470,7 +510,7 @@ export class Store extends BaseStore {
             return true;
         } else if (link.classList.contains("o_mail_redirect") && id) {
             ev.preventDefault();
-            this.onClickPartnerMention(ev, id);
+            this.onClickPartnerMention(link, message);
             return true;
         } else if (link.classList.contains("o_message_redirect")) {
             const message = this["mail.message"].get(id);
@@ -634,6 +674,32 @@ export class Store extends BaseStore {
             }
             linkEl.classList.add("o_message_redirect_transformed");
             linkEl.replaceChildren(renderToElement("mail.Message.messageLink", { message }));
+        }
+    }
+
+    /**
+     * Renders the partner mentions with the avatar of the partner. Only shown: the saved content
+     * keeps the mention text.
+     *
+     * @param {HTMLElement} rootEl
+     */
+    renderPartnerMentions(rootEl) {
+        for (const mentionEl of rootEl.querySelectorAll(PARTNER_MENTION_SELECTOR)) {
+            const partnerId = Number(mentionEl.dataset.oeId);
+            if (mentionEl.dataset.oeModel !== "res.partner" || !partnerId) {
+                continue;
+            }
+            const partner = this["res.partner"].get(partnerId);
+            // only internal users can read the avatar of a partner without its token
+            const canReadAvatar =
+                this.self_user?.share === false || partner?.avatar_128_access_token;
+            mentionEl.classList.add("o-mail-partnerMention");
+            renderPartnerMentionAvatar(
+                mentionEl,
+                canReadAvatar
+                    ? partner?.avatarUrl ?? imageUrl("res.partner", partnerId, "avatar_128")
+                    : undefined
+            );
         }
     }
 
@@ -854,12 +920,9 @@ export class Store extends BaseStore {
         chat?.open({ focus: true });
     }
 
-    /**
-     * @param {MouseEvent} ev - Click event triggering the popover.
-     * @param {number} id - Partner Id of mentioned partner.
-     */
-    onClickPartnerMention(ev, id) {
-        this.openChat({ partnerId: id });
+    /** @param {HTMLAnchorElement} link - Clicked mention. */
+    onClickPartnerMention(link) {
+        this.openChat({ partnerId: Number(link.dataset.oeId) });
     }
 
     /**
