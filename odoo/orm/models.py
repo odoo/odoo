@@ -2066,6 +2066,14 @@ class BaseModel(metaclass=MetaModel):
             # special case for many2many fields: prepare a query on the comodel
             # and inject the query as an extra condition of the left join
             codomain = field.get_comodel_domain(self)
+            if query.is_empty():
+                # The query returns nothing, so the comodel query is only made
+                # to check the access (e.g. in _description_groupable). Use a
+                # domain that matches no record, as an override of _search may
+                # fetch the matching records to check their access, which is
+                # very expensive (e.g. ir.attachment). Do not use Domain.FALSE,
+                # as overrides may shortcut it, skipping their checks.
+                codomain = Domain.custom(to_sql=lambda model, alias, query: SQL("FALSE"))
             comodel = self.env[field.comodel_name].with_context(**field.context)
             coquery = comodel._search(codomain, bypass_access=field.bypass_search_access)
             # LEFT JOIN {field.relation} AS rel_alias ON

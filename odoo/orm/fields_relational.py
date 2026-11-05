@@ -1390,16 +1390,20 @@ class Many2many(_RelationalMulti):
         # possibly filtering all records of the comodel before joining
         filter_access = self.bypass_search_access and type(comodel)._search is not BaseModel._search
 
-        # make the query for the lines
-        domain = self.get_comodel_domain(records)
+        # make the query for the lines, restricted to the lines of records to
+        # avoid processing the whole comodel in an override of _search
+        sql_id1 = SQL.identifier(self.relation, self.column1)
+        sql_id2 = SQL.identifier(self.relation, self.column2)
+        domain = Domain(self.get_comodel_domain(records)) & Domain('id', 'in', SQL(
+            "SELECT %s FROM %s WHERE %s IN %s",
+            sql_id2, SQL.identifier(self.relation), sql_id1, tuple(records.ids),
+        ))
         try:
             query = comodel._search(domain, order=comodel._order, bypass_access=filter_access)
         except AccessError as e:
             raise AccessError(records.env._("Failed to read field %s", self) + '\n' + str(e)) from e
 
         # join with many2many relation table
-        sql_id1 = SQL.identifier(self.relation, self.column1)
-        sql_id2 = SQL.identifier(self.relation, self.column2)
         query.add_join('JOIN', self.relation, None, SQL(
             "%s = %s", sql_id2, SQL.identifier(comodel._table, 'id'),
         ))
