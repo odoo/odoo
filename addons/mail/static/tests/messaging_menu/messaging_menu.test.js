@@ -33,6 +33,7 @@ import {
     waitFor,
     waitForNone,
 } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { animationFrame, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
@@ -1313,4 +1314,22 @@ test("preserve message link formatting in messaging menu", async () => {
     await start();
     await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
     await waitFor(`.o-mail-NotificationItem-text a[href="https://odoo.com/"]:count(1)`);
+});
+
+test("allow tab navigation in messaging menu", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create([
+        { name: "R&D" },
+        { name: "General" },
+    ]);
+    await start();
+    await openMessagingMenu(MENU_ACTIVE_IDS.CHANNEL);
+    await waitFor(".o-mail-NotificationItem:has(:text('General'))");
+    await click(".o-mail-SearchInput input");
+    expect(".o-mail-SearchInput input").toBeFocused();
+    for (let i = 0; i < 5; i++) {
+        await press("Tab");
+        await animationFrame();
+    }
+    expect(".o-mail-NotificationItem:has(:text('R&D'))").toBeFocused();
 });
