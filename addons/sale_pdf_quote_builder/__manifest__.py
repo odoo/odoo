@@ -6,6 +6,7 @@
     "description": "Build nice quotations",
     "depends": ["sale_management"],
     "data": [
+        "data/ir_config_parameter.xml",
         "data/ir_cron.xml",
         "data/sale_pdf_form_field.xml",
         "report/ir_actions_report.xml",
