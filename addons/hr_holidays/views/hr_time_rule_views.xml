@@ -33,10 +33,10 @@
         <field name="arch" type="xml">
             <!-- extend existing "Set Excess/Deficit to" tooltips with leave-specific constraints -->
             <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Excess')]/sup" position="attributes">
-                <attribute name="data-tooltip">The time off type created for the excess. Must not require allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
+                <attribute name="data-tooltip">You can define a time type that will be created to count the amount of time in excess. It cannot be a time type requiring an allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
             </xpath>
             <xpath expr="//span[hasclass('o_form_label')][contains(.,'Set Deficit')]/sup" position="attributes">
-                <attribute name="data-tooltip">The time off type created for the deficit. Must not require allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
+                <attribute name="data-tooltip">You can define a time type that will be created to count the amount of time missing to fulfill the condition. It cannot be a time type requiring an allocation. The output unit may be finer than the condition unit (e.g. hour output on a day leave trims the source to sub-day).</attribute>
             </xpath>
 
             <!-- allocation row appended after the output WET div -->
