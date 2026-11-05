@@ -301,7 +301,6 @@ export class CallActionList extends Component {
         });
         this.rtc = useService("discuss.rtc");
         this.ui = usePlugin(UIPlugin);
-        this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions(this.callActionsParams);
         this.fullscreenHintPopover = usePopover(FullscreenHint, {
             closeOnClickAway: false,
