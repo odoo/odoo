@@ -5740,3 +5740,26 @@ class TestTourMrpOrder(HttpCase):
             ('location_dest_id', '=', warehouse.pbm_loc_id.id)
         ])
         self.assertEqual(component_transfer.product_uom_qty, 2)
+
+
+class TestFinishedProductLabel(TestMrpCommon):
+
+    def test_finished_product_label_untracked_product_uses_barcode(self):
+        """ Labels of a finished product that is not tracked must carry the
+        product barcode (one label request for the whole produced quantity). """
+        mo, _bom, product, _comp_1, _comp_2 = self.generate_mo(qty_final=3)
+        product.sudo().barcode = 'FINISHED-123'
+        self.assertFalse(product.tracking)
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
+        wizard = self.env['mrp.finished.product.label.layout'].create({
+            'move_ids': mo.move_finished_ids.ids,
+            'move_quantity': 'move',
+            'print_format': '4x12',
+            'with_price': False,
+        })
+        requests = wizard._get_label_requests()
+        self.assertEqual(len(requests), 1)
+        self.assertEqual(requests[0]['barcode_value'], 'FINISHED-123')
+        self.assertEqual(requests[0]['secondary_text'], '3 Units')
