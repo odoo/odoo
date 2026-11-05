@@ -1,4 +1,5 @@
-import { waitFor, queryFirst } from "@odoo/hoot-dom";
+import { waitFor, queryFirst, animationFrame } from "@odoo/hoot-dom";
+import { contains } from "@web/../tests/web_test_helpers";
 
 export async function checkConfirmationPage() {
     await waitFor(".confirmation-page");
@@ -24,4 +25,10 @@ export async function checkOrderNumberIs(prefix, num) {
             `Order number '${text}' does not start with '${prefix}' and end with '${num}'`
         );
     }
+}
+
+export async function clickConfirmationPage() {
+    await waitFor(".o_pos_status_base button:enabled");
+    await contains(".tracking-number").click();
+    await animationFrame();
 }

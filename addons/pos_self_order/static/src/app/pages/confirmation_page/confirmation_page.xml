@@ -8,7 +8,7 @@
                 </div>
             </div>
         </div>
-        <div t-else="" class="confirmation-page o_pos_status_shell d-flex flex-column align-items-center h-100 p-3 text-center bg-100">
+        <div t-else="" class="confirmation-page o_pos_status_shell d-flex flex-column align-items-center h-100 p-3 text-center bg-100" t-on-click="this.onPageClick">
             <!-- Brand -->
             <div class="o_pos_status_brand flex-shrink-0">
                 <t t-set="logo" t-value="this.logoUrl"/>
