@@ -26,6 +26,7 @@ from . import test_mail_security
 from . import test_mail_thread_internals
 from . import test_mail_thread_mixins
 from . import test_mail_template
+from . import test_mail_template_author
 from . import test_mail_template_preview
 from . import test_message_post
 from . import test_message_track
