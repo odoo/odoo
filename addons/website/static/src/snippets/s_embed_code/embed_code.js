@@ -16,6 +16,10 @@ export class EmbedCode extends Interaction {
         // affect the DOM in edit mode, and to remove elements that would have
         // been introduced by a script.
         const templateContent = this.el.querySelector("template.s_embed_code_saved").content;
+        // Comments are saved as `<o-comment>` elements, restore them.
+        for (const commentEl of templateContent.querySelectorAll("o-comment")) {
+            commentEl.replaceWith(document.createComment(commentEl.dataset.comment));
+        }
         this.embedCodeEl.replaceChildren(cloneContentEls(templateContent));
     }
 }

@@ -39,3 +39,15 @@ test("embed_code resets on stop", async () => {
     expect(core.interactions).toHaveLength(0);
     expect(".s_embed_code_embedded div").toHaveText("original");
 });
+
+test("embed_code restores comments on stop", async () => {
+    const { core } = await startInteractions(`
+        <section class="s_embed_code" data-snippet="s_embed_code" data-name="Embed Code">
+            <template class="s_embed_code_saved"><o-comment data-comment="saved"></o-comment><div>x</div></template>
+            <div class="s_embed_code_embedded container o_not_editable"><div>x</div></div>
+        </section>
+    `);
+    core.stopInteractions();
+    expect(queryOne("template.s_embed_code_saved").innerHTML).toBe("<!--saved--><div>x</div>");
+    expect(queryOne(".s_embed_code_embedded").innerHTML).toBe("<div>x</div>");
+});
