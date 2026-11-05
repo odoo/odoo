@@ -121,16 +121,12 @@ export class SetPortalCardGapAction extends BuilderAction {
         );
     }
 
-    apply({ isPreviewing, value }) {
+    apply({ value }) {
         const previousValue = this.getValue();
-        if (isPreviewing) {
-            this.setGap(value);
-        } else {
-            this.dependencies.history.stage({
-                apply: () => this.setGap(value),
-                revert: () => this.setGap(previousValue),
-            });
-        }
+        this.dependencies.history.stage({
+            apply: () => this.setGap(value),
+            revert: () => this.setGap(previousValue),
+        });
     }
 
     setGap(value) {

@@ -67,7 +67,7 @@ test("reorder and toggle portal cards before saving", async () => {
     expect.verifySteps(["save portal cards"]);
 });
 
-test("should undo and redo portal card gaps", async () => {
+test("should preview, undo and redo portal card gaps", async () => {
     patch(WebsiteBuilderClientAction.prototype, {
         onIframeLoad(ev) {
             super.onIframeLoad(ev);
@@ -87,8 +87,18 @@ test("should undo and redo portal card gaps", async () => {
     const builderActions = editor.shared.builderActions;
     const setPortalGapAction = builderActions.getAction("setPortalCardGap");
     const getGap = setPortalGapAction.getValue.bind(setPortalGapAction);
-    // Change the gap.
     expect(getGap()).toBe("1rem");
+
+    // Preview a gap, then cancel it.
+    const { preview, revert } = editor.shared.history.makePreviewableAsyncOperation(() =>
+        setPortalGapAction.apply({ value: "3rem", isPreviewing: true })
+    );
+    await preview();
+    expect(getGap()).toBe("3rem");
+    await revert();
+    expect(getGap()).toBe("1rem");
+
+    // Change the gap.
     await builderActions.applyAction("setPortalCardGap", { value: "2rem" });
     expect(getGap()).toBe("2rem");
 
