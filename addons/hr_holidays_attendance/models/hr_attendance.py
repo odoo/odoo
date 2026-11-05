@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, fields, models
 
 # fields that when changed invalidate previously credited allocations
 _TIME_FIELDS = frozenset({'check_in', 'check_out', 'employee_id'})
@@ -11,6 +11,12 @@ _INVALID_STATES = frozenset({'refused', 'draft'})
 
 class HrAttendance(models.Model):
     _inherit = 'hr.attendance'
+
+    allocation_log_ids = fields.One2many(
+        'hr.time.rule.allocation.log', 'res_id',
+        string="Allocation Credits",
+        domain=[('res_model', '=', 'hr.attendance')],
+    )
 
     def _get_work_entry_type_domain(self, country_ids=None):
         return super()._get_work_entry_type_domain(country_ids=country_ids) + [('requires_allocation', '=', False)]
