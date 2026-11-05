@@ -19,14 +19,14 @@
 
 <t t-name="website.FooterWidthOption">
     <BuilderRow label.translate="Content width">
-        <BuilderButtonGroup action="'previewableWebsiteConfig'">
-            <BuilderButton actionParam="{ views: ['website.footer_copyright_content_width_small'], previewClass: 'o_container_small'}">
+        <BuilderButtonGroup action="'previewableFooterWebsiteConfig'">
+            <BuilderButton actionParam="{ views: ['website.footer_content_width_small'], previewClass: 'o_footer_content_width_small' }">
                 <Image src="'/website/static/src/img/snippets_options/content_width_small.svg'"/>
             </BuilderButton>
-            <BuilderButton actionParam="{ views: [], previewClass: 'container'}">
+            <BuilderButton actionParam="{ views: [] }">
                 <Image src="'/website/static/src/img/snippets_options/content_width_normal.svg'"/>
             </BuilderButton>
-            <BuilderButton actionParam="{ views: ['website.footer_copyright_content_width_fluid'], previewClass: 'container-fluid'}">
+            <BuilderButton actionParam="{ views: ['website.footer_content_width_fluid'], previewClass: 'o_footer_content_width_fluid' }">
                 <Image src="'/website/static/src/img/snippets_options/content_width_full.svg'"/>
             </BuilderButton>
         </BuilderButtonGroup>
@@ -113,7 +113,6 @@
         <footer_width_option
             template="website.FooterWidthOption"
             selector="#wrapwrap > footer"
-            applyTo=":is(:scope > #footer > section, .o_footer_copyright) > :is(.container, .container-fluid, .o_container_small)"
             editableOnly="false"
             groups='["website.group_website_designer"]'/>
         <footer_slideout_option
