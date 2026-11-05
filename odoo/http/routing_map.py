@@ -311,6 +311,7 @@ def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converter
                 'methods': None,
                 'routes': [],
             }
+            original_module = None
 
             for cls in unique(reversed(type(ctrl).mro()[:-2])):  # ancestors first
                 if method_name not in cls.__dict__:
@@ -321,9 +322,16 @@ def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converter
                     _logger.warning("The endpoint %s is not decorated by @route(), decorating it myself.", f'{cls.__module__}.{cls.__name__}.{method_name}')
                     submethod = route()(submethod)
 
+                # Record the addon that introduced the route
+                if original_module is None and submethod.original_routing.get('routes'):
+                    path = cls.__module__.split('.')
+                    original_module = path[2] if path[:2] == ['odoo', 'addons'] else None
+
                 _check_and_complete_route_definition(cls, submethod, merged_routing)
 
                 merged_routing.update(submethod.original_routing)
+
+            merged_routing['original_module'] = original_module
 
             if not merged_routing['routes']:
                 _logger.warning("%s is a controller endpoint without any route, skipping.", f'{cls.__module__}.{cls.__name__}.{method_name}')

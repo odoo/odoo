@@ -259,6 +259,8 @@ class WebsiteMenu(models.Model):
             raise UserError(_("You cannot delete this website menu as this serves as the default parent menu for new websites (e.g., /shop, /event, ...)."))
 
     def _compute_visible(self):
+        IrHttp = self.env['ir.http']
+        current_website_id = self.env.website.id
         for menu in self:
             visible = True
             if menu.page_id and not menu.env.user._is_internal():
@@ -273,6 +275,18 @@ class WebsiteMenu(models.Model):
                 if (not controller_page_sudo.is_published
                     or (controller_page_sudo.view_id._get_cached_visibility() != "password"
                         and not controller_page_sudo.view_id._handle_visibility(do_raise=False))):
+                    visible = False
+
+            # Hide menus whose route belongs to a module disabled on this
+            # website (internal users keep them so they can re-enable).
+            if (
+                visible and request and menu.url
+                and menu.url not in ('#', '#top', '#bottom')
+                and not menu.env.user._is_internal()
+            ):
+                website_id = menu.website_id.id or current_website_id
+                disabled = website_id and IrHttp._get_disabled_modules(website_id)
+                if disabled and IrHttp._get_module_for_url(menu.url).name in disabled:
                     visible = False
 
             menu.is_visible = visible

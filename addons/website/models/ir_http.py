@@ -6,6 +6,7 @@ import unittest
 from zoneinfo import ZoneInfoNotFoundError, ZoneInfo
 
 import werkzeug
+import werkzeug.routing
 from lxml import etree
 
 import odoo
@@ -227,6 +228,72 @@ class IrHttp(models.AbstractModel):
                     # 403 instead of using `sudo()` for perfs as this is
                     # low level.
                     raise werkzeug.exceptions.Forbidden()
+
+        # Per-website module disabling for public users
+        if (
+            request.is_frontend
+            and rule.endpoint.routing.get('website')
+            and website_id
+            and not request.env.user.has_group('website.group_website_designer')
+        ):
+            addon = cls._get_route_module(rule)
+            if addon and addon in request.env['ir.http']._get_disabled_modules(website_id):
+                raise werkzeug.exceptions.NotFound()
+
+    @classmethod
+    def _get_route_module(cls, rule):
+        """Return the module that defined the route.
+        """
+        # Fallback, equivalent but self-contained, in case the `original_module`
+        # addition to odoo/http/routing_map.py is not accepted upstream. It
+        # mirrors the merge in _generate_routing_rules: walk the controller MRO
+        # base-most first and return the first class that declares `routes`.
+        # Keep in sync with routing_map.py if the merge order ever changes.
+        # ctrl = rule.endpoint.func.__self__
+        # name = rule.endpoint.func.__name__
+        # for klass in reversed(type(ctrl).mro()[:-2]):  # base-most first
+        #     member = klass.__dict__.get(name)
+        #     if member is not None and getattr(member, 'original_routing', {}).get('routes'):
+        #         path = klass.__module__.split('.')
+        #         return path[2] if path[:2] == ['odoo', 'addons'] else None
+        # return None
+        return rule.endpoint.routing.get('original_module')
+
+    @api.ormcache('website_id', cache='routing')
+    def _get_disabled_modules(self, website_id):
+        """Frozenset of module names whose that are disabled on the given
+        website. Cached in the 'routing' group: should be cleared on module
+        install/uninstall and on `website.disabled_module_ids` writes.
+        """
+        website = self.env['website'].sudo().browse(website_id)
+        return frozenset(website.disabled_module_ids.mapped('name'))
+
+    def _get_module_for_url(self, url):
+        """Return the installed, disable-eligible module that defines the website
+        route serving ``url`` (empty recordset if none). Resolved from the route
+        the URL matches.
+        """
+        Module = self.env['ir.module.module']
+        if not request or not url or not url.startswith('/'):
+            return Module
+        try:
+            rule, _args = request.env['ir.http'].routing_map().bind_to_environ(
+                request.httprequest.environ,
+            ).match(path_info=url, return_rule=True)
+        except (werkzeug.exceptions.NotFound, werkzeug.exceptions.MethodNotAllowed, werkzeug.routing.RequestRedirect):
+            return Module
+        if not rule.endpoint.routing.get('website'):
+            return Module
+        addon = self._get_route_module(rule)
+        if not addon:
+            return Module
+        return Module.sudo().search(
+            [
+                ('name', '=', addon),
+                *self.env['website']._get_disableable_modules_domain(),
+            ],
+            limit=1,
+        )
 
     @classmethod
     def _get_editor_context(cls):
