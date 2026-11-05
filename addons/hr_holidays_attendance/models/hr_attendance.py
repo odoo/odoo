@@ -56,3 +56,9 @@ class HrAttendance(models.Model):
         src_field = self._time_rule_source_field
         self.with_context(active_test=False, skip_time_rules=True).write({src_field: False})
         orphaned.with_context(active_test=False, skip_time_rules=True).sudo().unlink()
+
+    def _time_rule_wizard_extra_domain(self):
+        return [('state', '=', 'validated')]
+
+    def action_reprocess_time_rules(self):
+        return self.env['hr.time.rule.regenerate.wizard'].action_open_from_records(self)

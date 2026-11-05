@@ -1184,3 +1184,20 @@ class HrTimeRule(models.Model):
                     excess[employee][iv.source].append(iv)
 
         return excess, deficit, active_iv
+
+    def action_reprocess_time_rules(self):
+        src_filter = self.env.context.get('time_rule_app', 'all')
+        rules = self or self.search([])
+        wizard = self.env['hr.time.rule.regenerate.wizard'].create({
+            'rule_ids': [(6, 0, rules.ids)],
+            'source_model_filter': src_filter,
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env['hr.time.rule.regenerate.wizard']._description,
+            'res_model': 'hr.time.rule.regenerate.wizard',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'target': 'new',
+        }
