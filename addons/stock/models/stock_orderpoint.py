@@ -199,11 +199,11 @@ class StockWarehouseOrderpoint(models.Model):
         for orderpoint in orderpoints_to_compute:
             all_product_routes = orderpoint.product_id.route_ids | orderpoint.product_id.categ_id.total_route_ids | orderpoint.product_id.get_total_routes()
             cache_key = (orderpoint.location_id, orderpoint.route_id, all_product_routes)
-            rule_ids = rules_cache.get(cache_key) or orderpoint.product_id._get_rules_from_location(
-                orderpoint.location_id, route_ids=orderpoint.route_id
-            )
-            orderpoint.rule_ids = rule_ids
-            rules_cache[cache_key] = rule_ids
+            if cache_key not in rules_cache:
+                rules_cache[cache_key] = orderpoint.product_id._get_rules_from_location(
+                    orderpoint.location_id, route_ids=orderpoint.route_id
+                )
+            orderpoint.rule_ids = rules_cache[cache_key]
         (self - orderpoints_to_compute).rule_ids = False
 
     @api.depends('product_min_qty')
