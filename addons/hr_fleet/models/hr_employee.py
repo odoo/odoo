@@ -33,6 +33,7 @@ class HrEmployee(models.Model):
                 create=False,
                 edit=False,
                 delete=False,
+                form_view_ref=False,
             ),
             "name": self.env._("Cars History"),
         }
