@@ -155,6 +155,7 @@ class AccountEdiProxyClientUser(models.Model):
         :return: the created invoice if the document was saved, `False` if it was not
         """
         self.ensure_one()
+        partner_endpoint = self._context.get('peppol_sender_identifier')
         journal, move_type = self._peppol_get_import_journal_and_move_type(attachment)
         if not journal:
             return False
@@ -171,9 +172,10 @@ class AccountEdiProxyClientUser(models.Model):
             if move._extend_with_attachments(attachment, new=True):
                 move._message_log(
                     body=self.env._(
-                        "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully",
+                        "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully from %(partner_endpoint)s",
                         proxy_type=dict(self._fields['proxy_type']._description_selection(self.env))[self.proxy_type],
                         uuid=uuid,
+                        partner_endpoint=partner_endpoint,
                     ),
                     attachment_ids=attachment.ids,
                 )
@@ -185,8 +187,8 @@ class AccountEdiProxyClientUser(models.Model):
             move._autopost_bill()
         except Exception as err:
             _logger.exception(
-                "Unexpected error occurred during the import of bill with id %s (%s uuid: %s, attachment: %s)",
-                move.id, self.proxy_type, uuid, attachment.id,
+                "Unexpected error occurred during the import of bill with id %s (%s uuid: %s, attachment: %s, partner_endpoint: %s)",
+                move.id, self.proxy_type, uuid, attachment.id, partner_endpoint,
             )
             move._message_log(
                 body=Markup("%s<br/>%s") % (
@@ -300,6 +302,10 @@ class AccountEdiProxyClientUser(models.Model):
                 endpoint=edi_user._get_peppol_proxy_endpoint('1/get_document'),
                 params={'message_uuids': message_uuids},
             )
+            # The sender identifier is only returned by `get_all_documents`.
+            uuid_to_sender = {message['uuid']: message.get('sender') for message in received_messages}
+            for uuid, content in all_messages.items():
+                content.setdefault('sender', uuid_to_sender.get(uuid))
 
             processed_uuids, moves = edi_user._peppol_process_new_messages(all_messages)
 
@@ -347,7 +353,7 @@ class AccountEdiProxyClientUser(models.Model):
                     "mimetype": mimetype,
                 }
             )
-            if move := self._peppol_import_invoice(attachment, None, content['state'], uuid):
+            if move := self.with_context(peppol_sender_identifier=content.get('sender'))._peppol_import_invoice(attachment, None, content['state'], uuid):
                 # Only acknowledge when we saved the document somewhere
                 processed_uuids.append(uuid)
                 if not isinstance(move, bool):
