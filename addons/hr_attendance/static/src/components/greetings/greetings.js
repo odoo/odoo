@@ -32,18 +32,8 @@ export class KioskGreetings extends Component {
         this.attendance.check_out ? formatDateTime(deserializeDateTime(this.attendance.check_out)) : ""
     );
     hoursToday = computed(() => formatFloatTime(this.props.employeeData.hours_today));
-    overtimeToday = computed(
-        () =>
-            this.props.employeeData.display_overtime &&
-            Boolean(this.props.employeeData.overtime_today) &&
-            formatFloatTime(this.props.employeeData.overtime_today)
-    );
-    totalOvertime = computed(
-        () =>
-            this.props.employeeData.display_overtime &&
-            Boolean(this.props.employeeData.total_overtime) &&
-            formatFloatTime(this.props.employeeData.total_overtime)
-    );
+    overtimeToday = computed(() => formatFloatTime(this.props.employeeData.overtime_today || 0));
+    totalOvertime = computed(() => formatFloatTime(this.props.employeeData.total_overtime || 0));
 
     clearKioskDelay() {
         clearTimeout(this.kioskDelay);

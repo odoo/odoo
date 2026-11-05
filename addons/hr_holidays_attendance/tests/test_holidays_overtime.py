@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import date, datetime, time
 
 from odoo import Command
 from odoo.tests import new_test_user, tagged
@@ -199,3 +199,52 @@ class TestHolidaysOvertimeKiosk(HrHolidaysOvertimeCommon, HttpCase):
             places=1,
             msg="Kiosk should show total_overtime matching output attendance hours",
         )
+
+    def _kiosk_employee_data(self):
+        return self.make_jsonrpc_request(
+            '/hr_attendance/attendance_employee_data',
+            {'token': self.employee.company_id.attendance_kiosk_key, 'employee_id': self.employee.id},
+        )
+
+    def test_employee_kiosk_total_overtime_deducts_missing_time(self):
+        """The missing time of 'less than' rules is deducted from the total, which can be negative."""
+        undertime_wet = self.env['hr.work.entry.type'].create({
+            'name': 'Missing Hours',
+            'code': 'KIOSKMISS',
+            'requires_allocation': False,
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'Daily Undertime Rule',
+            'threshold_operator': 'less_than',
+            'working_hours_mode': 'schedule_day',
+            'work_entry_type_id': undertime_wet.id,
+            'condition_work_entry_type_ids': [Command.set([self.att_wet.id])],
+        })
+        # Mon Jan 4 2021: 6h worked for 8h expected -> 2h missing
+        self.new_attendance(check_in=datetime(2021, 1, 4, 8), check_out=datetime(2021, 1, 4, 14))
+        # Tue Jan 5 2021: 9h worked for 8h expected -> 1h extra
+        self.new_attendance(check_in=datetime(2021, 1, 5, 8), check_out=datetime(2021, 1, 5, 17))
+
+        self.assertAlmostEqual(self.employee.total_overtime, -1, places=2,
+                               msg="1h extra - 2h missing = -1h")
+        self.assertAlmostEqual(self._kiosk_employee_data()['total_overtime'], -1, places=2)
+
+    def test_employee_kiosk_total_overtime_archived_rule(self):
+        """The hours created by a rule still count in the total once the rule is archived."""
+        # Sat Jan 2 2021: no schedule -> 9h extra
+        self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 17))
+        self.daily_rule.active = False
+        self.employee.invalidate_recordset(['total_overtime'])
+        self.assertAlmostEqual(self.employee.total_overtime, 9, places=2)
+        self.assertAlmostEqual(self._kiosk_employee_data()['total_overtime'], 9, places=2)
+
+    def test_employee_kiosk_overtime_today(self):
+        """The extra hours of the day are the net hours of today's time rule outputs."""
+        today = date.today()
+        self.daily_rule.write({'working_hours_mode': 'day', 'expected_hours': 2})
+        self.new_attendance(
+            check_in=datetime.combine(today, time(0, 30)),
+            check_out=datetime.combine(today, time(5, 30)),
+        )
+        self.assertAlmostEqual(self._kiosk_employee_data()['overtime_today'], 3, places=2,
+                               msg="5h worked for 2h expected -> 3h extra today")

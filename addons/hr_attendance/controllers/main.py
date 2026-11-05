@@ -100,13 +100,11 @@ class HrAttendance(http.Controller):
                     'check_in': employee.last_attendance_id.check_in,
                     'check_out': employee.last_attendance_id.check_out,
                 },
-                'overtime_today': sum(request.env['hr.attendance'].sudo().search([
-                    ('employee_id', '=', employee.id),
-                    ('time_rule_id', '!=', False),
+                'overtime_today': float_round(employee._get_time_rule_hours([
                     ('source_attendance_id', '!=', False),
                     ('check_in', '<', datetime.datetime.combine(fields.Date.context_today(request.env.user), datetime.time.max)),
                     ('check_out', '>', datetime.datetime.combine(fields.Date.context_today(request.env.user), datetime.time.min)),
-                ]).mapped('worked_hours')) or 0,
+                ])[employee], precision_digits=2),
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
                 'display_overtime': True,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
