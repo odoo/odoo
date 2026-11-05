@@ -6,7 +6,7 @@ import {
     iconClasses,
     getTableColgroup,
 } from "../utils/dom_info";
-import { Plugin } from "../plugin";
+import { Plugin, shared } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { unwrapContents, splitTextNode } from "../utils/dom";
 import { fillHtmlTransferData } from "../utils/clipboard";
@@ -109,11 +109,6 @@ const ONLY_LINK_REGEX = new RegExp(
 );
 
 /**
- * @typedef {Object} ClipboardShared
- * @property {ClipboardPlugin['pasteText']} pasteText
- */
-
-/**
  * @typedef {((img: HTMLImageElement) => void)[]} on_image_added_handlers
  * @typedef {(() => void)[]} on_pasted_handlers
  * @typedef {(() => void)[]} on_will_paste_handlers
@@ -140,7 +135,7 @@ export class ClipboardPlugin extends Plugin {
         "delete",
         "lineBreak",
     ];
-    static shared = ["pasteText"];
+    static shared = shared(["pasteText"]);
 
     setup() {
         this.addDomListener(this.editable, "copy", this.onCopy);

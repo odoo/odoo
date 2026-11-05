@@ -4,7 +4,7 @@ import {
     loadImageInfo,
 } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { searchSupportedParentLinkEl } from "./replace_media_option";
 import { getMimetype } from "@html_editor/utils/image";
 import { computeMaxDisplayWidth } from "@html_builder/plugins/image/image_format_option";
@@ -30,7 +30,7 @@ export class ImageToolOptionPlugin extends Plugin {
         "media",
         "builderOptions",
     ];
-    static shared = ["getCSSColorValue"];
+    static shared = shared(["getCSSColorValue"]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {

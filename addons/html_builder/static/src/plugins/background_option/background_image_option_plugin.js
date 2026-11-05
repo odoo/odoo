@@ -1,6 +1,6 @@
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { getBgImageURLFromEl, isBackgroundImageAttribute } from "@html_builder/utils/utils_css";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { removeOnImageChangeAttrs } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
@@ -19,12 +19,12 @@ import { withSequence } from "@html_editor/utils/resource";
 export class BackgroundImageOptionPlugin extends Plugin {
     static id = "backgroundImageOption";
     static dependencies = ["builderActions", "media", "style"];
-    static shared = [
+    static shared = shared([
         "changeEditingEl",
         "setImageBackground",
         "applyReplaceBackgroundImage",
         "removeBackgroundImage",
-    ];
+    ]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {

@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -7,7 +7,7 @@ import { childNodeIndex } from "@html_editor/utils/position";
 export class AddToCartOptionPlugin extends Plugin {
     static id = "addToCartOption";
     static dependencies = ["builderActions", "websiteBridge"];
-    static shared = ["addToCartValues"];
+    static shared = shared(["addToCartValues"]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         so_content_addition_selectors: [".s_add_to_cart"],

@@ -1,20 +1,13 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 import { isImageCorsProtected } from "@html_editor/utils/image";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
 
-/**
- * @typedef { Object } ImageHoverShared
- * @property { ImageHoverPlugin['setHoverEffect'] } setHoverEffect
- * @property { ImageHoverPlugin['getHoverEffectUpdate'] } getHoverEffectUpdate
- * @property { ImageHoverPlugin['removeHoverEffect'] } removeHoverEffect
- */
-
 export class ImageHoverPlugin extends Plugin {
     static id = "imageHover";
-    static shared = ["setHoverEffect", "getHoverEffectUpdate", "removeHoverEffect"];
+    static shared = shared(["setHoverEffect", "getHoverEffectUpdate", "removeHoverEffect"]);
     static dependencies = ["imagePostProcess", "imageShapeOption", "imageToolOption"];
 
     /** @type {import("plugins").WebsiteResources} */

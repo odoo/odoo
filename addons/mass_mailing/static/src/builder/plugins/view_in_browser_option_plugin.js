@@ -1,5 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 const LAYOUT_CLASS = "o_layout";
@@ -8,7 +8,11 @@ const VIEW_IN_BROWSWER_SNIPPET_NAME = "s_mail_block_header_view";
 
 export class ViewInBrowserOptionPlugin extends Plugin {
     static id = "viewInBrowserOptionPlugin";
-    static shared = ["getViewInBrowserLink", "insertViewInBrowserLink", "removeViewInBrowserLink"];
+    static shared = shared([
+        "getViewInBrowserLink",
+        "insertViewInBrowserLink",
+        "removeViewInBrowserLink",
+    ]);
     static dependencies = ["history", "color"];
 
     resources = {

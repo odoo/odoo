@@ -1,5 +1,5 @@
 import { proxy } from "@odoo/owl";
-import { Plugin } from "../../plugin";
+import { Plugin, shared } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
 import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
@@ -35,12 +35,6 @@ const IMAGE_ALIGNMENT = [
 ];
 
 /**
- * @typedef { Object } ImageShared
- * @property { ImagePlugin['getTargetedImage'] } getTargetedImage
- * @property { ImagePlugin['previewImage'] } previewImage
- */
-
-/**
  * @typedef {((img: HTMLImageElement) => void | true)[]} delete_image_overrides
  * @typedef {((img: HTMLImageElement) => boolean)[]} image_name_providers
  */
@@ -48,7 +42,7 @@ const IMAGE_ALIGNMENT = [
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "dom", "selection"];
-    static shared = ["getTargetedImage", "previewImage"];
+    static shared = shared(["getTargetedImage", "previewImage"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

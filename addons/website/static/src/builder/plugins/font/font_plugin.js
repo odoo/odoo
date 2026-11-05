@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { showAddFontDialog } from "./add_font_dialog";
 import { TextEffectPlugin } from "@html_builder/plugins/font/text_effect_plugin";
@@ -15,15 +15,9 @@ export const FONT_VARIABLES_TO_RESET = {
     "buttons-font": ["btn-font-weight", "btn-font-weight-bold"],
 };
 
-/**
- * @typedef { Object } WebsiteFontShared
- * @property { WebsiteFontPlugin['addFont'] } addFont
- * @property { WebsiteFontPlugin['deleteFont'] } deleteFont
- */
-
 export class WebsiteFontPlugin extends Plugin {
     static id = "websiteFont";
-    static shared = ["addFont", "deleteFont"];
+    static shared = shared(["addFont", "deleteFont"]);
     static dependencies = ["savePlugin", "builderFont", "customizeWebsite"];
 
     async addFont(variable) {

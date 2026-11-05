@@ -3,7 +3,7 @@ import {
     setBuilderCSSVariables,
     getBgImageURLFromEl,
 } from "@html_builder/utils/utils_css";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { parseHTML } from "@html_editor/utils/html";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -20,25 +20,6 @@ import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position
 import { loadImage } from "@html_editor/utils/image_processing";
 
 /**
- * @typedef { Object } CustomizeWebsiteShared
- * @property { CustomizeWebsitePlugin['customizeWebsiteColors'] } customizeWebsiteColors
- * @property { CustomizeWebsitePlugin['customizeWebsiteVariables'] } customizeWebsiteVariables
- * @property { CustomizeWebsitePlugin['loadTemplateKey'] } loadTemplateKey
- * @property { CustomizeWebsitePlugin['makeSCSSCusto'] } makeSCSSCusto
- * @property { CustomizeWebsitePlugin['toggleTemplate'] } toggleTemplate
- * @property { CustomizeWebsitePlugin['withCustomHistory'] } withCustomHistory
- * @property { CustomizeWebsitePlugin['populateCache'] } populateCache
- * @property { CustomizeWebsitePlugin['loadConfigKey'] } loadConfigKey
- * @property { CustomizeWebsitePlugin['getConfigKey'] } getConfigKey
- * @property { CustomizeWebsitePlugin['getWebsiteVariableValue'] } getWebsiteVariableValue
- * @property { CustomizeWebsitePlugin['getPendingThemeRequests'] } getPendingThemeRequests
- * @property { CustomizeWebsitePlugin['setPendingThemeRequests'] } setPendingThemeRequests
- * @property { CustomizeWebsitePlugin['isPluginDestroyed'] } isPluginDestroyed
- * @property { CustomizeWebsitePlugin['reloadBundles'] } reloadBundles
- * @property { CustomizeWebsitePlugin['setViewsOnSave'] } setViewsOnSave
- */
-
-/**
  * @typedef {((colors: string[]) => void)[]} on_website_color_updated_handlers
  */
 
@@ -53,7 +34,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "websiteBridge",
         "history",
     ];
-    static shared = [
+    static shared = shared([
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
         "loadTemplateKey",
@@ -69,7 +50,7 @@ export class CustomizeWebsitePlugin extends Plugin {
         "isPluginDestroyed",
         "reloadBundles",
         "setViewsOnSave",
-    ];
+    ]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

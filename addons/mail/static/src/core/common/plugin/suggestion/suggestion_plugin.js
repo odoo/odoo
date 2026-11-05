@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { getDeepestPosition, isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { rightPos } from "@html_editor/utils/position";
 
@@ -29,7 +29,7 @@ import { normalize } from "@web/core/l10n/utils";
 export class MailSuggestionPlugin extends Plugin {
     static id = "suggestion";
     static dependencies = ["dom", "history", "overlay", "selection"];
-    static shared = ["getSources", "hasSuggestions"];
+    static shared = shared(["getSources", "hasSuggestions"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_committed_to_history_handlers: () => {

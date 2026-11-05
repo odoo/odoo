@@ -1,18 +1,11 @@
 import { usePlugin } from "@odoo/owl";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { CarouselItemHeaderMiddleButtons } from "./carousel_item_header_buttons";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-
-/**
- * @typedef { Object } CarouselOptionShared
- * @property { CarouselOptionPlugin['addSlide'] } addSlide
- * @property { CarouselOptionPlugin['removeSlide'] } removeSlide
- * @property { CarouselOptionPlugin['slideCarousel'] } slideCarousel
- */
 
 const carouselWrapperSelector =
     ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper";
@@ -25,7 +18,7 @@ const carouselItemOptionSelector =
 export class CarouselOptionPlugin extends Plugin {
     static id = "carouselOption";
     static dependencies = ["clone", "builderOptions", "builderActions"];
-    static shared = ["addSlide", "removeSlide", "slideCarousel"];
+    static shared = shared(["addSlide", "removeSlide", "slideCarousel"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

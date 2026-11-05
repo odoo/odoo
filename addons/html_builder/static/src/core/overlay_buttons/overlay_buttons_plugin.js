@@ -1,18 +1,11 @@
 import { proxy } from "@odoo/owl";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
 import { OverlayButtons } from "./overlay_buttons";
 import { withSequence } from "@html_editor/utils/resource";
 
 /** @typedef {import("@html_builder/core/builder_options_plugin").BuilderButtonDescriptor} BuilderButtonDescriptor */
-/**
- * @typedef { Object } OverlayButtonsShared
- * @property { OverlayButtonsPlugin['hideOverlayButtons'] } hideOverlayButtons
- * @property { OverlayButtonsPlugin['showOverlayButtons'] } showOverlayButtons
- * @property { OverlayButtonsPlugin['hideOverlayButtonsUi'] } hideOverlayButtonsUi
- * @property { OverlayButtonsPlugin['showOverlayButtonsUi'] } showOverlayButtonsUi
- */
 /**
  * @typedef {{
  *      getButtons: (target: HTMLElement) => BuilderButtonDescriptor;
@@ -29,12 +22,12 @@ export class OverlayButtonsPlugin extends Plugin {
         "toolbar",
         "properties",
     ];
-    static shared = [
+    static shared = shared([
         "hideOverlayButtons",
         "showOverlayButtons",
         "hideOverlayButtonsUi",
         "showOverlayButtonsUi",
-    ];
+    ]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_selectionchange_handlers: this.shouldShowToolbar.bind(this),

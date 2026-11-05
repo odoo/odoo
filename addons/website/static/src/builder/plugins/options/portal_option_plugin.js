@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -6,7 +6,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 export class PortalOptionPlugin extends Plugin {
     static id = "portalOption";
     static dependencies = ["customizeWebsite", "history"];
-    static shared = ["getPortalCards", "loadPortalCards", "updatePortalCards"];
+    static shared = shared(["getPortalCards", "loadPortalCards", "updatePortalCards"]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {

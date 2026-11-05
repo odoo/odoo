@@ -1,13 +1,13 @@
 import { proxy } from "@odoo/owl";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export class ProductsRibbonOptionPlugin extends Plugin {
     static id = 'productsRibbonOptionPlugin';
-    static shared = [
+    static shared = shared([
         'getRibbonsObject',
         'setRibbonObject',
         'addRibbon',
@@ -20,7 +20,7 @@ export class ProductsRibbonOptionPlugin extends Plugin {
         'loadInfo',
         'getCount',
         'isVariantMode',
-    ];
+    ]);
     count = proxy({ value: 0 });
 
     resources = {

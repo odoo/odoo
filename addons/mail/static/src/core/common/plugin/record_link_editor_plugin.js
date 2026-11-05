@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
@@ -49,7 +49,7 @@ function unmarkRecordLink(linkEl) {
 export class RecordLinkEditorPlugin extends Plugin {
     static id = "recordLink";
     static dependencies = ["dom", "domObserver", "history", "selection"];
-    static shared = ["whenRecordLinksRendered"];
+    static shared = shared(["whenRecordLinksRendered"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         clean_for_save_processors: (root) => {

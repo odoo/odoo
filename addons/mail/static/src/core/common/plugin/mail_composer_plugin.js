@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { getDeepestPosition, isEmptyBlock } from "@html_editor/utils/dom_info";
@@ -45,7 +45,7 @@ export class MailComposerPlugin extends Plugin {
         "input",
         "selection",
     ];
-    static shared = ["cancelSelection", "insert", "setCursorEnd", "updateEditableState"];
+    static shared = shared(["cancelSelection", "insert", "setCursorEnd", "updateEditableState"]);
     resources = {
         on_will_paste_handlers: this.config.composerPluginDependencies.onBeforePaste.bind(this),
         paste_odoo_editor_html_overrides: (selection, sanitizedFragment) =>

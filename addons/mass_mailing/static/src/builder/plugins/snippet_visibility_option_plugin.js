@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { DataAttributeAction } from "@html_builder/core/core_builder_action_plugin";
 import { effect } from "@odoo/owl";
@@ -20,7 +20,7 @@ class DataAttributeChangeAction extends DataAttributeAction {
 
 export class SnippetVisibilityPlugin extends Plugin {
     static id = "mass_mailing.SnippetVisibility";
-    static shared = ["getModel"];
+    static shared = shared(["getModel"]);
 
     resources = {
         builder_actions: { DataAttributeChangeAction },

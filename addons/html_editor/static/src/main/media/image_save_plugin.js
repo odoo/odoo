@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import {
     backgroundImageCssToParts,
     backgroundImagePartsToCss,
@@ -9,11 +9,6 @@ import { rpc } from "@web/core/network/rpc";
 import { ATTACHMENT_PENDING_RECORD_ID } from "./media_plugin";
 
 /**
- * @typedef { Object } ImageSaveShared
- * @property { ImageSavePlugin['savePendingImages'] } savePendingImages
- */
-
-/**
  * @typedef {((el: HTMLElement) => HTMLElement)[]} closest_savable_providers
  *
  * @typedef {((args: {imageEl: HTMLElement}) => void | Promise<void>)[]} on_image_saved_handlers
@@ -21,7 +16,7 @@ import { ATTACHMENT_PENDING_RECORD_ID } from "./media_plugin";
 
 export class ImageSavePlugin extends Plugin {
     static id = "imageSave";
-    static shared = ["savePendingImages"];
+    static shared = shared(["savePendingImages"]);
     static dependencies = ["imagePostProcess"];
 
     /** @type {import("plugins").EditorResources} */

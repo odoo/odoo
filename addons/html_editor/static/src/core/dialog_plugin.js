@@ -1,19 +1,14 @@
-import { Plugin } from "../plugin";
+import { Plugin, shared } from "../plugin";
 
 /**
  * @typedef {typeof import("@odoo/owl").Component} Component
  * @typedef {import("@web/core/dialog/dialog_plugin").DialogOptionSchema} DialogOptionSchema
  */
 
-/**
- * @typedef {Object} DialogShared
- * @property {DialogPlugin['addDialog']} addDialog
- */
-
 export class DialogPlugin extends Plugin {
     static id = "dialog";
     static dependencies = ["selection"];
-    static shared = ["addDialog"];
+    static shared = shared(["addDialog"]);
 
     /**
      * @param {Component} DialogClass

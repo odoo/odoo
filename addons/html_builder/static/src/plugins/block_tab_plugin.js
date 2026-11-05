@@ -1,5 +1,5 @@
 import { scrollTo } from "@html_builder/utils/scrolling";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { closest } from "@web/core/utils/ui";
 
@@ -10,7 +10,11 @@ import { closest } from "@web/core/utils/ui";
 export class BlockTabPlugin extends Plugin {
     static id = "blockTab";
     static dependencies = ["operation", "history", "dropzone", "disableSnippets"];
-    static shared = ["insertSnippetGroup", "scrollToDroppedSnippet", "processDroppedSnippet"];
+    static shared = shared([
+        "insertSnippetGroup",
+        "scrollToDroppedSnippet",
+        "processDroppedSnippet",
+    ]);
 
     /**
      * Opens and manages the snippet dialog after clicking on a snippet group,

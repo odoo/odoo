@@ -1,14 +1,9 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
-
-/**
- * @typedef { Object } MediaTranslationShared
- * @property { MediaTranslationPlugin['translateMedia'] } translateMedia
- */
 
 export const translateImageOptionSelector = "img.o_savable_attribute";
 export const translateDocumentOptionSelector = ".o_file_box";
@@ -23,7 +18,7 @@ export class MediaTranslationPlugin extends Plugin {
         "media_website",
         "translation",
     ];
-    static shared = ["translateMedia"];
+    static shared = shared(["translateMedia"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

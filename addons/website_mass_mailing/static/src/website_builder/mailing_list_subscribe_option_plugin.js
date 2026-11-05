@@ -1,5 +1,5 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { _t } from "@web/core/l10n/translation";
@@ -10,7 +10,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 export class MailingListSubscribeOptionPlugin extends Plugin {
     static id = "mailingListSubscribeOption";
     static dependencies = ["savePlugin", "builderOptions"];
-    static shared = ["fetchMailingLists"];
+    static shared = shared(["fetchMailingLists"]);
     resources = {
         builder_actions: {
             ToggleThanksMessageAction,

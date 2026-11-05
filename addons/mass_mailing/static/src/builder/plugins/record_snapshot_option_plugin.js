@@ -1,5 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
@@ -7,7 +7,7 @@ import { renderToFragment } from "@web/core/utils/render";
 
 export class RecordSnapshotPlugin extends Plugin {
     static id = "recordSnapshot";
-    static shared = ["createFragment"];
+    static shared = shared(["createFragment"]);
 
     resources = {
         builder_actions: {

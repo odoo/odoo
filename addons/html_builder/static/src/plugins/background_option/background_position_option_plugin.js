@@ -1,5 +1,5 @@
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { ImagePositionOverlay } from "@html_builder/plugins/image/image_position_overlay";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -18,7 +18,7 @@ const getBgSizeValue = function ({ editingElement, params: { mainParam: styleNam
 export class BackgroundPositionOptionPlugin extends Plugin {
     static id = "backgroundPositionOption";
     static dependencies = ["overlay", "overlayButtons"];
-    static shared = ["getDelta"];
+    static shared = shared(["getDelta"]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {

@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { uniqueId } from "@web/core/utils/functions";
@@ -24,7 +24,7 @@ export const DEFAULT_HIDDEN_LINKS = ["social_github", "social_discord"];
 
 export class MassMailingSocialMediaOptionPlugin extends Plugin {
     static id = "massMailingSocialMediaOptionPlugin";
-    static shared = [
+    static shared = shared([
         "addMedia",
         "fetchRecordedSocialMedia",
         "getMedias",
@@ -33,7 +33,7 @@ export class MassMailingSocialMediaOptionPlugin extends Plugin {
         "renderSocialMediaLink",
         "renderTitleEl",
         "reorderSocialMediaLinks",
-    ];
+    ]);
     static dependencies = ["builderActions", "history", "overlayButtons"];
 
     resources = {

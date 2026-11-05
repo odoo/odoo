@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { nodeSize } from "@html_editor/utils/position";
 
@@ -49,7 +49,7 @@ function getNodeFromPath(root, path) {
 export class PersistSelectionPlugin extends Plugin {
     static id = "persistSelection";
     static dependencies = ["selection"];
-    static shared = ["restore"];
+    static shared = shared(["restore"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_selectionchange_handlers: ({ editableSelection, documentSelectionIsInEditable }) => {

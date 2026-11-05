@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
@@ -13,7 +13,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class BuilderFontPlugin extends Plugin {
     static id = "builderFont";
-    static shared = ["getFontsCache", "getFontsData"];
+    static shared = shared(["getFontsCache", "getFontsData"]);
     static dependencies = ["toolbar"];
     /** @type {import("plugins").BuilderResources} */
     resources = {

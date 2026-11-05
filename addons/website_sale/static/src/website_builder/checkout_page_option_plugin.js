@@ -1,12 +1,12 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { WebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 
 export class CheckoutPageOptionPlugin extends Plugin {
     static id = "checkoutPageOption";
-    static shared = ["loadSelectedCategories"];
+    static shared = shared(["loadSelectedCategories"]);
     resources = {
         builder_actions: {
             SetExtraStepAction,

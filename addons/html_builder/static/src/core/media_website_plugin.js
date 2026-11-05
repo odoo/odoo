@@ -1,21 +1,14 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { MEDIA_SELECTOR, isProtected } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 
-/**
- * @typedef { Object } MediaWebsiteShared
- * @property { MediaWebsitePlugin['onDblClickEditableMedia'] } onDblClickEditableMedia
- * @property { MediaWebsitePlugin['openImageTooltip'] } openImageTooltip
- * @property { MediaWebsitePlugin['replaceMedia'] } replaceMedia
- */
-
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
     static dependencies = ["media", "selection", "builderOptions", "operation"];
-    static shared = ["onDblClickEditableMedia", "openImageTooltip", "replaceMedia"];
+    static shared = shared(["onDblClickEditableMedia", "openImageTooltip", "replaceMedia"]);
 
     /** @type {import("plugins").BuilderResources} */
     resources = {

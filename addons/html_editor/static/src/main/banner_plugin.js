@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { fillShrunkPhrasingParent } from "@html_editor/utils/dom";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
@@ -8,16 +8,11 @@ import { _t } from "@web/core/l10n/translation";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock, isParagraphRelatedElement } from "../utils/dom_info";
 
-/**
- * @typedef { Object } BannerShared
- * @property { BannerPlugin['insertBanner'] } insertBanner
- */
-
 export class BannerPlugin extends Plugin {
     static id = "banner";
     // sanitize plugin is required to handle `contenteditable` attribute.
     static dependencies = ["baseContainer", "history", "dom", "emoji", "selection", "sanitize"];
-    static shared = ["insertBanner"];
+    static shared = shared(["insertBanner"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

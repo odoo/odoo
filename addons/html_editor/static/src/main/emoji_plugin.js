@@ -1,5 +1,5 @@
 import { SuggestionList } from "@html_editor/components/suggestion/suggestion_list";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { getSelection } from "@html_editor/utils/selection";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
@@ -9,15 +9,10 @@ import { fuzzyLookup } from "@web/core/utils/search";
 import { debounce } from "@web/core/utils/timing";
 import { proxy } from "@odoo/owl";
 
-/**
- * @typedef { Object } EmojiShared
- * @property { EmojiPlugin['showEmojiPicker'] } showEmojiPicker
- */
-
 export class EmojiPlugin extends Plugin {
     static id = "emoji";
     static dependencies = ["history", "overlay", "dom", "selection", "delete"];
-    static shared = ["showEmojiPicker"];
+    static shared = shared(["showEmojiPicker"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         delete_backward_overrides: this.handleDeleteBackward.bind(this),

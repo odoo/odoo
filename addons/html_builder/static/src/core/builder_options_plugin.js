@@ -1,5 +1,5 @@
 import { proxy } from "@odoo/owl";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { uniqueId } from "@web/core/utils/functions";
 import { isRemovable } from "./remove_plugin";
 import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/utils";
@@ -46,24 +46,6 @@ import { omit } from "@web/core/utils/objects";
  *      editableOnly?: boolean;
  *      exclude?: string;
  * }} BuilderOptionConfig
- */
-
-/**
- * @typedef { Object } BuilderOptionsShared
- * @property { BuilderOptionsPlugin['checkElement'] } checkElement
- * @property { BuilderOptionsPlugin['closestWithOption'] } closestWithOption
- * @property { BuilderOptionsPlugin['findOption'] } findOption
- * @property { BuilderOptionsPlugin['getContainers'] } getContainers
- * @property { BuilderOptionsPlugin['updateContainers'] } updateContainers
- * @property { BuilderOptionsPlugin['deactivateContainers'] } deactivateContainers
- * @property { BuilderOptionsPlugin['getTarget'] } getTarget
- * @property { BuilderOptionsPlugin['getPageContainers'] } getPageContainers
- * @property { BuilderOptionsPlugin['getRemoveDisabledReason'] } getRemoveDisabledReason
- * @property { BuilderOptionsPlugin['getCloneDisabledReason'] } getCloneDisabledReason
- * @property { BuilderOptionsPlugin['isClonable'] } isClonable
- * @property { BuilderOptionsPlugin['setNextTarget'] } setNextTarget
- * @property { BuilderOptionsPlugin['getBuilderOptionContext'] } getBuilderOptionContext
- * @property { BuilderOptionsPlugin['getBuilderOptions'] } getBuilderOptions
  */
 
 /**
@@ -129,7 +111,7 @@ import { omit } from "@web/core/utils/objects";
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builderOptions";
     static dependencies = ["operation", "domObserver", "history"];
-    static shared = [
+    static shared = shared([
         "checkElement",
         "closestWithOption",
         "findOption",
@@ -144,7 +126,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "getBuilderOptionContext",
         "getBuilderOptions",
         "isClonable",
-    ];
+    ]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         history_commit_data_properties: ["currentTarget", "nextTarget"],

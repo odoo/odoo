@@ -1,29 +1,19 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rgbaToHex } from "@web/core/utils/colors";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
-/**
- * @typedef { Object } WebsitePageConfigOptionShared
- * @property { WebsitePageConfigOptionPlugin['setDirty'] } setDirty
- * @property { WebsitePageConfigOptionPlugin['setFooterVisible'] } setFooterVisible
- * @property { WebsitePageConfigOptionPlugin['getVisibilityItem'] } getVisibilityItem
- * @property { WebsitePageConfigOptionPlugin['getFooterVisibility'] } getFooterVisibility
- * @property { WebsitePageConfigOptionPlugin['doesPageOptionExist'] } doesPageOptionExist
- * @property { WebsitePageConfigOptionPlugin['getTarget'] } getTarget
- */
-
 export class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
     static dependencies = ["history", "visibility", "builderActions"];
-    static shared = [
+    static shared = shared([
         "setDirty",
         "setFooterVisible",
         "getVisibilityItem",
         "getFooterVisibility",
         "doesPageOptionExist",
         "getTarget",
-    ];
+    ]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {

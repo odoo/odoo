@@ -9,16 +9,10 @@ import {
     loadImageDataURL,
     loadImageInfo,
 } from "@html_editor/utils/image_processing";
-import { Plugin } from "../../plugin";
+import { Plugin, shared } from "../../plugin";
 import { getAffineApproximation, getProjective } from "@html_editor/utils/perspective_utils";
 
 export const DEFAULT_IMAGE_QUALITY = "92";
-
-/**
- * @typedef { Object } ImagePostProcessShared
- * @property { ImagePostProcessPlugin['processImage'] } processImage
- * @property { ImagePostProcessPlugin['getProcessedImageSize'] } getProcessedImageSize
- */
 
 /**
  * @typedef {(
@@ -45,7 +39,7 @@ export const DEFAULT_IMAGE_QUALITY = "92";
 export class ImagePostProcessPlugin extends Plugin {
     static id = "imagePostProcess";
     static dependencies = ["style"];
-    static shared = ["processImage", "getProcessedImageSize"];
+    static shared = shared(["processImage", "getProcessedImageSize"]);
 
     /**
      * Applies data-attributes modifications to an img tag and returns a dataURL
