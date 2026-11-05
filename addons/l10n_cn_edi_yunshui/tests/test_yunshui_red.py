@@ -148,8 +148,9 @@ class TestYunshuiRed(L10nCnEdiYunshuiTestCommon):
         self.assertRecordValues(self._red_form(credit_note), [{'state': 'red_form_pending', 'red_form_uuid': 'a' * 32}])
         self.assertNotIn(RED_FORM_ISSUE, [request['interface_code'] for request in self.gateway.requests])
 
-    def test_inbound_red_forms_are_listed_page_by_page_for_both_sides(self):
-        rows = {'0': [{**self._form('03'), 'uuid': f'{index:032}', 'lzfphm': BLUE_NO} for index in range(51)], '1': []}
+    def test_inbound_red_forms_are_listed_page_by_page_for_both_sides_once(self):
+        rows = {'0': [{**self._form('03'), 'uuid': f'{index:032}', 'lzfphm': BLUE_NO} for index in range(51)]}
+        rows['1'] = rows['0'][-1:]
         self.gateway.handlers[RED_FORM_LIST] = lambda payload: {
             'total': len(rows[payload['gxfxz']]),
             'list': rows[payload['gxfxz']][(int(payload['cxym']) - 1) * 50:][:50],

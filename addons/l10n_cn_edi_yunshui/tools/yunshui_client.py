@@ -221,7 +221,8 @@ class YunshuiClient:
 
     def list_inbound_red_forms(self, date_from, date_to):
         """The red forms raised against us, as the seller of our invoices and the buyer of our bills (3.2.6)."""
-        return [form for side in ('0', '1') for form in self._red_forms(side, '1', date_from, date_to)]
+        # A form can come twice: on both sides when we bought from ourselves, or on two pages when a new one shifts the list.
+        return list({form['uuid']: form for side in ('0', '1') for form in self._red_forms(side, '1', date_from, date_to)}.values())
 
     def _red_forms(self, side, direction, date_from, date_to):
         """The red forms of ``side`` (0 seller, 1 buyer) we raised (``direction`` 0) or received (1), page by page."""
