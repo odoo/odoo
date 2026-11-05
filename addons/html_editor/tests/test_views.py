@@ -62,6 +62,30 @@ class TestViews(TransactionCase):
             base.inherit_children_ids.get_combined_arch(),
         )
 
+    def test_oe_structure_keeps_translations(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        view = self.env['ir.ui.view'].create({
+            'name': 'Test View translated oe_structure',
+            'type': 'qweb',
+            'arch': '<div><div class="oe_structure" id="oe_structure_test_translated"><p>Hello World</p></div></div>',
+            'key': 'html_editor.test_translated_oe_structure',
+        })
+        view.update_field_translations('arch_db', {'fr_FR': {'Hello World': 'Bonjour le monde'}})
+
+        # the first save of the oe_structure moves it into its own view
+        value = '''<div class="oe_structure" id="oe_structure_test_translated" data-oe-id="%s"
+                         data-oe-xpath="/div/div" data-oe-model="ir.ui.view" data-oe-field="arch">
+                        <p>Hello World</p>
+                        <p>New paragraph</p>
+                   </div>''' % view.id
+        view.save(value=value, xpath='/div/div')
+
+        oe_structure_view = view.inherit_children_ids
+        self.assertEqual(len(oe_structure_view), 1)
+        arch_fr = oe_structure_view.with_context(lang='fr_FR').arch_db
+        self.assertIn('<p>Bonjour le monde</p>', arch_fr)
+        self.assertIn('<p>New paragraph</p>', arch_fr)
+
     def test_find_available_name(self):
         View = self.env['ir.ui.view']
         used_names = ['Unrelated name']
