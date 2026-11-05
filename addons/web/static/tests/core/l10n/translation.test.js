@@ -421,6 +421,13 @@ test("arabic has the correct numbering system (Saudi Arabia)", async () => {
 });
 
 test.tags("headless");
+test("numbering system can be forced by the session (generic) (web.numbering_system)", async () => {
+    patchWithCleanup(session, { numbering_system: "latn" });
+    await mockLang("ar_001");
+    expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
+});
+
+test.tags("headless");
 test("arabic has the correct numbering system (Tunisia)", async () => {
     await mockLang("ar_TN");
     expect(DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss")).toBe("10/12/2021 12:00:00");
