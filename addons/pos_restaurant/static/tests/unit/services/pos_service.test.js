@@ -558,6 +558,28 @@ describe("restaurant pos_store.js", () => {
         });
     });
 
+    test("preparation receipt prints courses in their sequence order", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        store.config.use_course_allocation = true;
+        const order = store.addNewOrder({ table_id: models["restaurant.table"].get(2) });
+        // Product 6 belongs to "Default Course 2", product 5 to "Default Course 1":
+        // the second course is created first, so it gets the lowest course index.
+        for (const productId of [6, 5]) {
+            const product = models["product.template"].get(productId);
+            const allocation = store.autoCourseAllocation(product);
+            const line = await store.addLineToCurrentOrder({ product_tmpl_id: product });
+            store.cleanAutoCourseAllocation(line, allocation);
+        }
+        const courseNames = ["Default Course 1", "Default Course 2"];
+        expect(order.courses.map((course) => course.name)).toEqual(courseNames);
+
+        const categoryIds = new Set(models["pos.category"].getAll().map((c) => c.id));
+        const generator = store.ticketPrinter.getGenerator({ models, order });
+        const [receipt] = generator.generatePreparationData(categoryIds, {});
+        expect(receipt.changes.groupedData.map((group) => group.name)).toEqual(courseNames);
+    });
+
     test("preparation receipt order_label", async () => {
         const store = await setupPosEnv();
         const pos_categories = store.models["pos.category"].getAll().map((c) => c.id);
