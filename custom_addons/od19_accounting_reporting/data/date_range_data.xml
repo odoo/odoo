@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Preset periods for the "Date range" dropdown shared by the accounting
+        reports (Trial Balance, General Ledger, Aged Partner Balance, ...).
+
+        The OCA date_range module builds the concrete date.range records from
+        these types (daily cron "Auto-generate date ranges").
+
+        NOTE: the <function> below is deliberately kept OUTSIDE the
+        noupdate="1" block. Odoo skips <function> nodes that live inside a
+        noupdate block unless it is the very first install, so on a module
+        *upgrade* the ranges would never be generated. autogenerate_ranges()
+        is idempotent (it resumes from the last existing range), so running it
+        on every upgrade is safe.
+    -->
+
+    <data noupdate="1">
+
+        <!-- Yearly periods, e.g. "ปี 2026" -->
+        <record id="date_range_type_fiscal_year" model="date.range.type">
+            <field name="name">ปีบัญชี</field>
+            <field name="allow_overlap">False</field>
+            <field name="duration_count">1</field>
+            <field name="unit_of_time">0</field>
+            <field name="name_expr">'ปี %s' % date_start.strftime('%Y')</field>
+            <field name="autogeneration_date_start">2022-01-01</field>
+            <field name="autogeneration_count">6</field>
+            <field name="autogeneration_unit">0</field>
+        </record>
+
+        <!-- Monthly periods, e.g. "2026-11" -->
+        <record id="date_range_type_month" model="date.range.type">
+            <field name="name">เดือน</field>
+            <field name="allow_overlap">False</field>
+            <field name="duration_count">1</field>
+            <field name="unit_of_time">1</field>
+            <field name="name_expr">date_start.strftime('%Y-%m')</field>
+            <field name="autogeneration_date_start">2025-01-01</field>
+            <field name="autogeneration_count">1</field>
+            <field name="autogeneration_unit">0</field>
+        </record>
+
+    </data>
+
+    <!-- Generate the missing ranges right away (the cron would only do it later) -->
+    <function model="date.range.type" name="autogenerate_ranges"/>
+
+</odoo>

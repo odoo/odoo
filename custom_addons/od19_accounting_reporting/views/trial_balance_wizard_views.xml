@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Trial Balance (OCA account_financial_report) — date range UX fix.
+
+        The upstream wizard renders "Date From" with widget="daterange"
+        (options end_date_field="date_to") and hides "Date To", so both dates
+        collapse into one range picker where the accounting team could not
+        reach the year selector. It also exposes a bare "Date range" many2one
+        that had no seeded periods to pick from.
+
+        Replace the two date fields with plain Date fields: the standard
+        Odoo 19 calendar then opens with day/month/year navigation and the
+        year can be selected. The "Date range" preset is kept as a shortcut
+        (periods are seeded in data/date_range_data.xml).
+    -->
+    <record id="view_trial_balance_wizard_od19" model="ir.ui.view">
+        <field name="name">trial.balance.report.wizard.form.od19</field>
+        <field name="model">trial.balance.report.wizard</field>
+        <field name="inherit_id" ref="account_financial_report.trial_balance_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_from']" position="replace">
+                <field name="date_from" />
+            </xpath>
+            <xpath expr="//field[@name='date_to']" position="replace">
+                <field name="date_to" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

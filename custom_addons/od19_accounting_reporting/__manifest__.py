@@ -1,6 +1,6 @@
 {
     "name": "OD19 Accounting Reporting",
-    "version": "19.0.2.1.0",
+    "version": "19.0.2.3.0",
     "author": "TRAE",
     "depends": [
         "account",
@@ -10,6 +10,8 @@
         "od19_dashboard",
         "od19_accounting_cheque",
         "od19_accounting_petty_cash",
+        "account_financial_report",
+        "date_range",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -17,6 +19,8 @@
         "views/account_menu_overrides.xml",
         "views/report_accounting_operational_closure_views.xml",
         "data/finance_control_dashboard_data.xml",
+        "data/date_range_data.xml",
+        "views/trial_balance_wizard_views.xml",
     ],
     "installable": True,
     "license": "LGPL-3",
