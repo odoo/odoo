@@ -723,13 +723,22 @@
                                     <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="work" title="Job Position"/>
                                     <field name="job_id"/>
                                 </div>
-                                <div t-if="record.work_email.raw_value" class="text-truncate">
+                                <div t-if="record.work_email.raw_value" class="o_hr_employee_kanban_email d-flex align-items-baseline">
                                     <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="mail" title="Email"/>
-                                    <field name="work_email" />
+                                    <field name="work_email" class="flex-grow-1 text-truncate"/>
+                                    <a
+                                        t-att-href="'mailto:' + record.work_email.value"
+                                        class="o_hr_employee_kanban_email_action btn btn-light btn-sm d-inline-flex align-items-center py-0 ms-1"
+                                        role="button"
+                                        title="Send Email"
+                                        aria-label="Send Email"
+                                    >
+                                        <i class="oi oi-filled" data-icon="mail"/>
+                                    </a>
                                 </div>
                                 <div t-if="record.work_phone.raw_value" class="d-flex align-items-baseline">
                                     <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="phone" title="Phone"/>
-                                    <field name="work_phone" widget="phone"/>
+                                    <field name="work_phone" widget="hr_kanban_phone" class="flex-grow-1"/>
                                 </div>
                                 <div t-if="record.first_contract_date.raw_value" groups="hr.group_hr_user" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
                                     <i class="oi oi-fw oi-filled me-2 text-primary" data-icon="contract" title="Contract"/>
