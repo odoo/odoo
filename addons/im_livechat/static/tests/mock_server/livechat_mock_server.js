@@ -170,6 +170,42 @@ async function livechat_init(request) {
     };
 }
 
+registerRoute("/im_livechat/history", history_pages);
+registerRoute("/im_livechat/cors/history", history_pages);
+/** @type {RouteCallback} */
+async function history_pages(request) {
+    const { pid, channel_id, request_id, page_history } = await parseRequestParams(request);
+    const [channel] = this.env["discuss.channel"].browse(channel_id);
+    const agentIds = this.env["discuss.channel.member"].search([
+        ["channel_id", "=", channel_id],
+        ["partner_id", "=", pid],
+        ["livechat_member_type", "=", "agent"],
+    ]);
+    if (!channel || !agentIds.length) {
+        return;
+    }
+    const [partner] = this.env["res.partner"].browse(pid);
+    const pageHistory = Array.isArray(page_history)
+        ? page_history
+              .filter(
+                  (page) =>
+                      page &&
+                      typeof page === "object" &&
+                      ["title", "url", "visit_datetime"].every(
+                          (key) => typeof page[key] === "string"
+                      ) &&
+                      /^(https?:\/\/)/i.test(page.url) &&
+                      luxon.DateTime.fromISO(page.visit_datetime).isValid
+              )
+              .slice(0, 3)
+        : [];
+    this.env["bus.bus"]._sendone(partner, "im_livechat.history/response", {
+        channel_id: channel.id,
+        request_id,
+        page_history: pageHistory,
+    });
+}
+
 registerRoute("/im_livechat/email_livechat_transcript", email_livechat_transcript);
 /** @type {RouteCallback} */
 async function email_livechat_transcript(request) {

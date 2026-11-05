@@ -15,8 +15,10 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
-import { getService, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
+import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
+import { HistoryService } from "@im_livechat/embed/common/history_service";
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import { queryFirst, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
@@ -107,4 +109,44 @@ test("Seen message is saved on the server", async () => {
         [...getService("mail.store")["discuss.channel"].records.values()].at(-1).self_member_id
             .seen_message_id.id
     ).toBe(member.seen_message_id[0]);
+});
+
+test("Visitor sends browsing history when receiving a history request", async () => {
+    await startServer();
+    await loadDefaultEmbedConfig();
+    const operatorUserId = serverState.userId;
+    const operatorPartnerId = serverState.partnerId;
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
+    await click(".o-livechat-LivechatButton");
+    const subscribed = waitUntilSubscribe();
+    await postLivechatMessage("Hello World!");
+    await subscribed;
+    await waitFor(".o-mail-Message-body:text(Hello World!)");
+    const thread = [...getService("mail.store")["mail.thread"].records.values()].at(-1);
+    const pageHistory = [
+        {
+            title: "Contact us",
+            url: "https://example.com/contactus",
+            visit_datetime: "2026-06-07T06:07:00.000Z",
+        },
+    ];
+    expirableStorage.setItem(HistoryService.HISTORY_STORAGE_KEY, JSON.stringify(pageHistory));
+    onRpc("/im_livechat/history", async (request) => {
+        const { params } = await request.json();
+        expect(params).toEqual({
+            pid: operatorPartnerId,
+            channel_id: thread.id,
+            request_id: "history-request",
+            page_history: pageHistory,
+        });
+        expect.step("history sent");
+        return true;
+    });
+    await withUser(operatorUserId, () =>
+        getService("orm").call("discuss.channel", "request_browsing_history", [
+            [thread.id],
+            "history-request",
+        ])
+    );
+    await expect.waitForSteps(["history sent"]);
 });

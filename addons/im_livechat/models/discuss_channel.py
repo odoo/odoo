@@ -593,10 +593,24 @@ class DiscussChannel(models.Model):
         ])
         stale_sessions.livechat_end_dt = fields.Datetime.now()
 
-    def execute_command_history(self, **kwargs):
-        self._bus_send(
-            "im_livechat.history_command",
-            {"id": self.id, "partner_id": self.env.user.partner_id.id},
+    def request_browsing_history(self, request_id: str):
+        """Request browsing history for an ongoing livechat as the current agent.
+
+        :param request_id: Unique identifier used to match the response to this request.
+        """
+        self.ensure_one()
+        if (
+            self.channel_type != "livechat"
+            or self.livechat_end_dt
+            or self.self_member_id.livechat_member_type != "agent"
+        ):
+            return
+        visitor = self.channel_member_ids.filtered(
+            lambda member: member.livechat_member_type == "visitor",
+        )[:1]
+        visitor._bus_send(
+            "im_livechat.history/request",
+            {"id": self.id, "partner_id": self.env.user.partner_id.id, "request_id": request_id},
         )
 
     def _get_visitor_leave_message(self, correspondents=False, cancel=False):

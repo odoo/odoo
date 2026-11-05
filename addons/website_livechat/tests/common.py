@@ -72,17 +72,30 @@ class TestLivechatCommon(MailCommon):
             [
                 {
                     "page_id": self.page_1.id,
+                    "url": self.page_1.website_absolute_url,
                     "visitor_id": self.visitor.id,
                     "visit_datetime": self.base_datetime - datetime.timedelta(minutes=20),
                 },
                 {
                     "page_id": self.page_2.id,
+                    "url": self.page_2.website_absolute_url,
+                    "visitor_id": self.visitor.id,
+                    "visit_datetime": self.base_datetime - datetime.timedelta(minutes=15),
+                },
+                {
+                    "page_id": self.page_1.id,
+                    "url": self.page_1.website_absolute_url,
                     "visitor_id": self.visitor.id,
                     "visit_datetime": self.base_datetime - datetime.timedelta(minutes=10),
                 },
                 {
-                    "page_id": self.page_1.id,
                     "visitor_id": self.visitor.id,
+                    "url": "https://example.com/shop/customizable-desk-9",
+                    "visit_datetime": self.base_datetime - datetime.timedelta(minutes=5),
+                },
+                {
+                    "visitor_id": self.visitor.id,
+                    "page_id": self.page_2.id,
                     "visit_datetime": self.base_datetime,
                 },
             ],

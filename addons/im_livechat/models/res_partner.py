@@ -2,12 +2,13 @@
 
 import ast
 from collections import defaultdict
-from markupsafe import Markup
 
-from odoo import api, models, fields, _
-from odoo.addons.mail.tools.discuss import Store
-from odoo.tools.misc import OrderedSet
+from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.tools.misc import OrderedSet
+
+from odoo.addons.mail.tools.discuss import Store
+
 
 class ResPartner(models.Model):
     """Update of res.partner class to take into account the livechat username."""
@@ -85,18 +86,6 @@ class ResPartner(models.Model):
         """Return the fields to be stored for live chat username."""
         res.attr("name", predicate=lambda p: not p.user_livechat_username)
         res.attr("user_livechat_username")
-
-    def _bus_send_history_message(self, channel, page_history):
-        message_body = _("No history found")
-        if page_history:
-            message_body = Markup("<ul>%s</ul>") % (
-                Markup("").join(
-                    Markup('<li><a href="%(page)s" target="_blank">%(page)s</a></li>')
-                    % {"page": page}
-                    for page in page_history
-                )
-            )
-        self._bus_send_transient_message(channel, message_body)
 
     @api.depends_context("im_livechat_hide_partner_company")
     def _compute_display_name(self):

@@ -961,6 +961,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "hasGifPickerFeature": False,
                 "hasLinkPreviewFeature": True,
                 "has_access_livechat": True,
+                "has_multi_website": False,
                 "hasMessageTranslationFeature": False,
                 "has_access_create_lead": False,
                 "internalUserGroupId": self.env.ref("base.group_user").id,
