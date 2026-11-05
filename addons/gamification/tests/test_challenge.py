@@ -74,7 +74,7 @@ class test_challenge(TestGamificationCommon):
             {
                 'name': f'{kind} {age} login',
                 'login': f'{kind}_{age}',
-                'email': f'{kind}_{age}',
+                'email': f'{kind}_{age}@example.com',
                 'groups_id': [(6, 0, groups_id)],
             }
             for kind, groups_id in (
