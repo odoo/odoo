@@ -79,6 +79,24 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Send the message',
     run: "click",
 }, {
+    trigger: '.o-mail-Message-body:text(I create a new task for testing purpose.)',
+    content: 'Open the actions of the sent message',
+    run: "hover && click .o-mail-Message:has(.o-mail-Message-body:text(I create a new task for testing purpose.)) [title='Expand']",
+}, {
+    trigger: '.o-dropdown-item:text(Delete)',
+    content: 'Delete the sent message',
+    run: "click",
+}, {
+    trigger: '.modal-body p:text(Are you sure you want to permanently delete this message?)',
+    content: 'Check that the delete confirmation is displayed',
+}, {
+    trigger: '.modal .btn:text(Delete)',
+    content: 'Confirm the deletion',
+    run: "click",
+}, {
+    trigger: '.o-mail-Thread:not(:has(.o-mail-Message))',
+    content: 'Check that the deleted message is removed from the chatter',
+}, {
     trigger: 'ol.breadcrumb > li.o_back_button > a:contains(Project Sharing)',
     content: 'Go back to the kanban view',
     run: "click",

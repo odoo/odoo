@@ -3,6 +3,7 @@ import { providePlugins, t, usePlugin, useProps } from "@odoo/owl";
 import { ProjectSharingPlugin } from "@project/project_sharing/chatter/project_sharing_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+import { useSubEnv } from "@web/owl2/utils";
 
 patch(Chatter.prototype, {
     setup() {
@@ -19,6 +20,7 @@ patch(Chatter.prototype, {
         providePlugins([ProjectSharingPlugin]);
         this.projectSharingPlugin = usePlugin(ProjectSharingPlugin);
         this.projectSharingPlugin.projectSharingId.set(this.projectSharingProps.projectSharingId);
+        useSubEnv({ projectSharingId: this.projectSharingProps.projectSharingId });
     },
 
     get extraMessageFetchRouteParams() {
