@@ -4,6 +4,9 @@ import { getContent, setSelection } from "../_helpers/selection";
 import { unformat } from "../_helpers/format";
 import { FilePlugin } from "@html_editor/main/media/file_plugin";
 import { CORE_PLUGINS } from "@html_editor/plugin_sets";
+import { LinkPlugin } from "@html_editor/main/link/link_plugin";
+import { ColorPlugin } from "@html_editor/main/font/color_plugin";
+import { FeffPlugin } from "@html_editor/main/feff_plugin";
 
 function findAdjacentPosition(editor, direction) {
     const deletePlugin = editor.plugins.find((p) => p.constructor.id === "delete");
@@ -107,7 +110,7 @@ describe("findAdjacentPosition method", () => {
                 const { editor, el } = await setupEditor(content, {
                     config: {
                         basePlugins: CORE_PLUGINS,
-                        includePlugins: [FilePlugin],
+                        includePlugins: [ColorPlugin, FeffPlugin, LinkPlugin, FilePlugin],
                     },
                 });
                 const [node, offset] = findAdjacentPosition(editor, "backward");

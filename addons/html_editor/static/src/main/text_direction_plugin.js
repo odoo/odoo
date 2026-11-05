@@ -3,11 +3,10 @@ import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { closestElement } from "../utils/dom_traversal";
 import { isContentEditable, isDirectionSwitched } from "@html_editor/utils/dom_info";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class TextDirectionPlugin extends Plugin {
     static id = "textDirection";
-    static dependencies = ["selection", "history", "split"];
+    static dependencies = ["dom", "selection", "history", "split"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -17,7 +16,7 @@ export class TextDirectionPlugin extends Plugin {
                 description: _t("Switch the text's direction"),
                 icon: "swap_horiz",
                 run: this.switchDirection.bind(this),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
         ],
         powerbox_items: [

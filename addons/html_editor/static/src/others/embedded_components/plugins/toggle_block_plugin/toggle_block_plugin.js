@@ -1,6 +1,5 @@
 import { getEmbeddedProps } from "@html_editor/others/embedded_component_utils";
 import { Plugin } from "@html_editor/plugin";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock, isParagraphRelatedElement, isTextNode } from "@html_editor/utils/dom_info";
@@ -55,7 +54,7 @@ export class ToggleBlockPlugin extends Plugin {
                 description: _t("Hide Text under foldable toggles"),
                 icon: "chevron_forward",
                 isAvailable: (selection) =>
-                    isHtmlContentSupported(selection) &&
+                    this.dependencies.dom.supportsHtmlContent(selection) &&
                     !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`),
                 run: () => {
                     this.insertToggleBlock();

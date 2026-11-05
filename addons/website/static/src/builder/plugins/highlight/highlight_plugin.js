@@ -1,4 +1,3 @@
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { removeClass, removeStyle } from "@html_editor/utils/dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
@@ -16,7 +15,7 @@ import { StackingComponent, useStackingComponentState } from "./stacking_compone
 
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
-    static dependencies = ["history", "selection", "split", "format", "edit_interaction"];
+    static dependencies = ["dom", "history", "selection", "split", "format", "edit_interaction"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         format_specs: [
@@ -76,7 +75,7 @@ export class HighlightPlugin extends Plugin {
                     },
                     onClick: this.completeHighlightSelection.bind(this),
                 },
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
         ],
         properties: withSequence(20, {

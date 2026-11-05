@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { TableOfContentManager } from "@html_editor/others/embedded_components/core/table_of_content/table_of_content_manager";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { headingTags } from "@html_editor/utils/dom_info";
@@ -27,7 +26,7 @@ export class TableOfContentPlugin extends Plugin {
                 icon: "bookmark",
                 iconClass: "oi-filled",
                 run: this.insertTableOfContent.bind(this),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
         ],
         powerbox_items: [
