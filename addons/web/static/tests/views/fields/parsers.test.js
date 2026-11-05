@@ -200,6 +200,15 @@ test("parseFloat with digits without decimals", () => {
     expect(parseFloat("NT$\u00a02,000", { digits: [69, 0] })).toBe(2000);
     const operation = parseFloat("+=1,000+500", { allowOperation: true, digits: [69, 0] });
     expect(operation.operand).toBe(1500);
+    expect(parseFloat("1.500", { digits: [69, 0] })).toBe(1500);
+
+    // Two different separators: the last one is the decimal point, kept as is
+    // (rounding to the currency precision is done by the server)
+    expect(parseFloat("1,234.00", { digits: [69, 0] })).toBe(1234);
+    expect(parseFloat("123,456.78", { digits: [69, 0] })).toBe(123456.78);
+    expect(parseFloat("1.234,56", { digits: [69, 0] })).toBe(1234.56);
+    expect(parseFloat("-1,234.50", { digits: [69, 0] })).toBe(-1234.5);
+    expect(parseFloat("NT$\u00a01,234.50", { digits: [69, 0] })).toBe(1234.5);
 
     // Other digits keep the usual parsing
     expect(parseFloat("2,000", { digits: [69, 2] })).toBe(2);
