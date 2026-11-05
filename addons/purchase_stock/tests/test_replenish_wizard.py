@@ -573,3 +573,35 @@ class TestReplenishWizard(PurchaseTestCommon):
             ('location_dest_id.usage', '=', 'internal'),
         ]).route_id
         self.assertIn(replenish_wizard.route_id.id, buy_routes.ids)
+
+    def test_replenish_wizard_deadline_timezone(self):
+        """
+        Tests that the date_order on a PO is on the same day even with a timezone
+        that is different from UTC when ordering through the replenish wizard
+        """
+        self.env.company.tz = 'Australia/Sydney'
+        self.env['product.supplierinfo'].create([
+            {
+                'product_tmpl_id': self.product.product_tmpl_id.id,
+                'partner_id': self.vendor.id,
+                'date_end': '2026-11-03',
+                'delay': 1,
+            }, {
+                'product_tmpl_id': self.product.product_tmpl_id.id,
+                'partner_id': self.vendor.id,
+                'date_start': '2026-11-04',
+                'delay': 0,
+            }
+        ])
+
+        with freeze_time('2026-11-03 14:00:00'):
+            replenish_wizard = self.env['product.replenish'].create({
+                'product_id': self.product.id,
+                'product_tmpl_id': self.product.product_tmpl_id.id,
+                'product_uom_id': self.uom.id,
+                'quantity': 1,
+                'warehouse_id': self.warehouse.id,
+            })
+            replenish_wizard.launch_replenishment()
+            po = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)], order='id desc', limit=1)
+            self.assertEqual(po.date_order, fields.Datetime.from_string('2026-11-03 14:00:00'))
