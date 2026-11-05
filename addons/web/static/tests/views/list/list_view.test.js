@@ -565,6 +565,29 @@ test(`editable list with edit="0"`, async () => {
 });
 
 test.tags("desktop");
+test(`editable list: each new line gets the result of its own onchange`, async () => {
+    let onchangeCount = 0;
+    onRpc("onchange", ({ parent }) => {
+        const result = parent();
+        result.value.int_field = ++onchangeCount;
+        return result;
+    });
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="bottom"><field name="foo"/><field name="int_field"/></list>`,
+    });
+
+    await contains(`.o_list_button_add`).click();
+    expect(`.o_selected_row [name=int_field] input`).toHaveValue("1");
+    await contains(`.o_list_button_discard`).click();
+
+    await contains(`.o_list_button_add`).click();
+    expect(onchangeCount).toBe(2);
+    expect(`.o_selected_row [name=int_field] input`).toHaveValue("2");
+});
+
+test.tags("desktop");
 test(`[Offline] editable list (create)`, async () => {
     expect.errors(2); // 2x ConnectionLostError
     onRpc("web_save", () => expect.step(`web_save`));
