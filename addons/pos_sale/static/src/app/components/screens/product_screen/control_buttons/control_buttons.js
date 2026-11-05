@@ -1,6 +1,7 @@
 import { patch } from "@web/core/utils/patch";
 import { ControlButtons } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 patch(ControlButtons.prototype, {
     onClickQuotation() {
@@ -29,6 +30,7 @@ patch(ControlButtons.prototype, {
 
         this.dialog.add(SelectCreateDialog, {
             resModel: "sale.order",
+            title: _t("Quotation / Order"),
             noCreate: true,
             multiSelect: false,
             domain,
