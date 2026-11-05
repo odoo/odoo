@@ -2,8 +2,9 @@
 
 | รายการ | รายละเอียด |
 |---|---|
-| เวอร์ชันเอกสาร | R01 (รวมเอกสาร) |
+| เวอร์ชันเอกสาร | R02 (รวมเอกสาร) |
 | วันที่จัดทำ | 2026-11-01 |
+| อัปเดตล่าสุด | 2026-11-05 — ปรับสถานะ Wave 6 จาก "รออนุมัติ" → "เสร็จแล้ว"; เพิ่ม artefact จริงของ G-12 (`od19_project_timesheet_billing`) |
 | ประเภท | เอกสารรวม (consolidation) — เนื้อหาแต่ละส่วนคงจากต้นฉบับเดิม ไม่ดัดแปลง |
 | ขอบเขต | ฝั่งขาย / ฝั่งซื้อ / ฝั่งบริการ / บัญชีรับ-จ่าย / เบิกเงินล่วงหน้า / เบิกค่าใช้จ่าย / โครงการ-สัญญา |
 | ระบบอ้างอิง | Odoo 19 CE (`custom_addons/od19_*` + OCA `third_party/oca`) |
@@ -153,7 +154,7 @@
 | G-09 | ไม่พบแบบ ภ.พ.30 (ตรวจสอบ) | บัญชี | กลาง | ม.83 |
 | G-10 | ไม่รับ e-Tax Invoice ฝั่งซื้อ (XML) | ซื้อ/บัญชี | กลาง | ระเบียบ RD e-Tax |
 | G-11 | สัญญาซื้อระยะยาว / Blanket / ผู้รับเหมาช่วง | ซื้อ | กลาง | — |
-| G-12 | Timesheet → Invoice งานบริการ/โครงการ (ตรวจสอบ) | บริการ/โครงการ | กลาง | — |
+| G-12 | Timesheet → Invoice งานบริการ/โครงการ (ตรวจสอบ) — **ปิดแล้ว** `od19_project_timesheet_billing` | บริการ/โครงการ | กลาง | — |
 | G-13 | วงเงินเครดิตแบบ rolling + hold จาก aging | ขาย | ต่ำ-กลาง | internal control |
 | G-14 | TFRS 15 revenue schedule | บัญชี | กลาง | TFRS 15 |
 | G-15 | ต่ออายุสัญญา/แจ้งเตือนหมดอายุ | สัญญา | ต่ำ | — |
@@ -215,12 +216,12 @@
 
 | รายการ | รายละเอียด |
 |---|---|
-| เวอร์ชันเอกสาร | R00 |
+| เวอร์ชันเอกสาร | R01 |
 | วันที่จัดทำ | 2026-11-01 |
-| อ้างอิง | `TH_PROCESS_GAP_AND_WAVE6_PLAN_TH.md` (R00) |
+| อ้างอิง | `TH_PROCESS_GAP_AND_WAVE6_PLAN_TH.md` (R02) |
 | หลักการ | OCA-first, ไม่แก้ core, Lean/Stable/Secure, TDD, ตัวอักษรนำหน้า `od19_` |
-| สถานะ | **รออนุมัติก่อนเริ่มดำเนินการ** (ยังไม่เริ่มงาน WS-01…WS-15) |
-| ยืนยันล่าสุด | 2026-11-01 — ตรวจกับซอร์สโค้ด `custom_addons/`: ไม่พบ artefact ของงาน Wave 6 (ไม่มี `od19_advance_kind`, โมดูล `od19_hr_advance`/`od19_sales_retention`/`od19_service_contract`) และ commit ล่าสุดของหัวข้อนี้เป็น **เอกสารเท่านั้น** (`7c400893c65 docs(od19): add Thai business process gap analysis and Wave 6 closure plan`) |
+| สถานะ | **เสร็จแล้ว (implemented)** — WS-01…WS-15 มี artefact จริงในโค้ดครบทุกงาน (ดูตาราง sync §9) |
+| ยืนยันล่าสุด | 2026-11-05 — ตรวจกับซอร์สโค้ด `custom_addons/` แล้วพบ artefact ของทุกงาน: G-01 `od19_accounting_advance`, G-02 `od19_sales_retention`, G-03+G-14 `od19_sales_contract_core`, G-04+G-15 `od19_service_contract`, G-05 `od19_hr_advance`, G-06 `od19_hr_expense_enhanced`+`od19_accounting_petty_cash`, G-07 `od19_hr_expense_enhanced`, G-08 `od19_accounting_doubtful_debt`, G-09 `od19_thai_tax_reports`, G-10 `od19_etax_invoice`, G-11 `od19_sales_oca_bridge_workflow`, **G-12 `od19_project_timesheet_billing` (สร้างใหม่รอบนี้)**, G-13 `od19_sales_customer_risk_gate` |
 
 ---
 
@@ -354,7 +355,9 @@
 - ใช้ OCA `sale-blanket` / `purchase-workflow` + bridge `od19_*` ตามความจำเป็น
 
 #### WS-13 Timesheet → Invoice (G-12)
-- ยืนยัน/เปิดใช้ `sale_timesheet` หรือเทียบเท่า ให้เรียกเก็บจาก timesheet ได้
+- **สถานะ: เสร็จแล้ว** — สร้างโมดูล bridge ใหม่ `od19_project_timesheet_billing` (ไม่แก้ core) ต่อยอด core `sale_timesheet`
+- **ความสามารถ**: (1) ฟิลด์ searchable `od19_is_billable_unbilled` บน `account.analytic.line` ระบุ timesheet ที่เรียกเก็บได้แต่ยังไม่ออกใบแจ้งหนี้ (2) KPI นับ/ชั่วโมงบน `project.project` และ `sale.order` (3) ปุ่ม "เรียกเก็บจาก Timesheet" บน SO เรียก core `_create_invoices()` (4) wizard กรองช่วงวันที่ (`od19.timesheet.invoice.wizard`) อ้าง pattern `sale.advance.payment.inv`
+- **เทสต์**: `tests/test_timesheet_billing.py` (6 methods, `@tagged("post_install","-at_install")`)
 
 #### WS-14 Credit limit rolling + aging hold (G-13)
 - ขยาย `od19_sales_customer_risk_gate`: วงเงินหมุนเวียน + hold อัตโนมัติเมื่อเกิน/ค้างชำระเกินเกณฑ์
@@ -406,3 +409,29 @@ Wave 6.3 (P3)  WS-08 … WS-15 (ขนานได้ตามลำดับค
 | ซ้ำซ้อนกับโมดูลเดิม | กลาง | ตรวจ `STATUS_MODULES_MISSING` + ฐานข้อมูลก่อนเริ่ม |
 | สายอนุมัติไม่ตรงหน่วยงาน | กลาง | ยืนยันกับ HR/จัดซื้อ |
 | ข้อมูลยังไม่ยืนยัน (ตรวจสอบ) | กลาง | ทำ task ยืนยัน DB เป็นงานแรกของ Wave 6.1 |
+
+---
+
+## 9. ตาราง Sync — เอกสาร ↔ โค้ด (อัปเดต 2026-11-05)
+
+> ตรวจนับจากซอร์สโค้ดจริงใน `custom_addons/` (grep/glob/read) — คอลัมน์ "test methods" นับด้วย `def test_` ในแต่ละโมดูล
+
+| Gap | Wave/WS | โมดูลเป้าหมาย (เอกสาร) | โมดูล/ไฟล์โค้ดจริง | สถานะจริง | test methods |
+|---|---|---|---|---|---|
+| G-01 | 6.1 / WS-01 | `od19_accounting_advance` | `od19_accounting_advance` (`models/account_advance.py` — `od19_advance_kind`) | ✅ เสร็จ | 14 |
+| G-02 | 6.1 / WS-02 | `od19_sales_retention` | `od19_sales_retention` (`models/sales_retention.py`) | ✅ เสร็จ | 6 |
+| G-03 | 6.2 / WS-04 | `od19_sales_contract_core` + `od19_sales_billing_evidence` | `od19_sales_contract_core/models/contract_billing_line.py` + `tests/test_billing_schedule.py` | ✅ เสร็จ | 24 (core) / 11 (billing) |
+| G-04 | 6.2 / WS-05 | `od19_service_contract` | `od19_service_contract/models/contract.py` (`_inherit=contract.contract`) + `data/ir_cron.xml` | ✅ เสร็จ | 5 |
+| G-05 | 6.1 / WS-03 | `od19_hr_advance` | `od19_hr_advance/models/hr_advance.py` + `wizards/clear_advance.py` | ✅ เสร็จ | 15 |
+| G-06 | 6.3 / WS-08 | `od19_hr_expense_enhanced` / `od19_accounting_petty_cash` | `report/payment_certificate_report.xml` (ทั้งสองโมดูล) | ✅ เสร็จ | 17 / 13 |
+| G-07 | 6.3 / WS-09 | `od19_hr_expense_enhanced` | `tests/test_per_diem.py` + `models/res_company.py` | ✅ เสร็จ | 17 |
+| G-08 | 6.2 / WS-06 | `od19_accounting_doubtful_debt` | wizard + report + tests | ✅ เสร็จ | 8 |
+| G-09 | 6.3 / WS-10 | `od19_thai_tax_reports` | `report/pp30_register.xml` + `tests/test_pp30_register.py` | ✅ เสร็จ | 104 |
+| G-10 | 6.3 / WS-11 | `od19_etax_invoice` | `models/etax_import.py` + `wizards/` + `tests/test_etax_import.py` | ✅ เสร็จ | 44 |
+| G-11 | 6.3 / WS-12 | OCA `sale-blanket`/`purchase-workflow` | `od19_sales_oca_bridge_workflow` | ✅ เสร็จ | 20 |
+| G-12 | 6.3 / WS-13 | `od19_project_*` | **`od19_project_timesheet_billing` (สร้างใหม่)** | ✅ เสร็จ | 6 |
+| G-13 | 6.3 / WS-14 | `od19_sales_customer_risk_gate` | `models/res_partner.py` (`od19_credit_rolling_limit`) + `data/ir_cron.xml` + `tests/test_credit_aging_hold.py` | ✅ เสร็จ | 53 |
+| G-14 | 6.2 / WS-07 | `od19_sales_contract_core` | `models/account_move.py` (`od19_revenue_line_id`) + `tests/test_revenue_schedule.py` | ✅ เสร็จ | 24 (รวมใน core) |
+| G-15 | 6.3 / WS-15 | `od19_sales_contract_core` | `od19_service_contract` (`renewal_interval_months`, `cron_service_contract_renewal`) | ✅ เสร็จ | 5 |
+
+**สรุป**: ครบ 15/15 รายการ — ไม่มีหัวข้อที่ยังขาดอยู่ใน Gap Register ของ Wave 6
