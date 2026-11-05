@@ -96,7 +96,13 @@ class LoyaltyGenerateWizard(models.TransientModel):
         for wizard in self:
             customers = wizard._get_partners() or range(wizard.coupon_qty)
             coupon_create_vals.extend(wizard._get_coupon_values(partner) for partner in customers)
-        coupons = self.env["loyalty.card"].create(coupon_create_vals)
+        # The creation communication is sent once the points are granted, so that it shows them
+        coupons = (
+            self.env["loyalty.card"]
+            .with_context(loyalty_no_mail=True)
+            .create(coupon_create_vals)
+            .with_env(self.env)
+        )
         values = {"description": self.description or self.env._("Gift For Customer")}
         LoyaltyHistory = self.env["loyalty.history"]
         LoyaltyHistory.create([
@@ -106,4 +112,5 @@ class LoyaltyGenerateWizard(models.TransientModel):
                 coupon, values, self.points_granted
             )
         ])
+        coupons._send_creation_communication()
         return coupons
