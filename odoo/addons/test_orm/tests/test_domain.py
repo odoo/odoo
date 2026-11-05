@@ -674,6 +674,18 @@ class TestDomainOptimize(TransactionCase):
             self.assertEqual(Domain('date', '>', '+12H').optimize_full(model), Domain('date', '>', date(2024, 1, 6)))
             self.assertEqual(list(Domain('date', '=', 'today').optimize_full(model).value), [date(2024, 1, 5)])
 
+    @freeze_time("2026-07-15 12:00:00")
+    def test_condition_optimize_date_timezone(self):
+        model = self.env["test_orm.mixed"].with_context(tz="Europe/Brussels")
+        self.assertEqual(
+            Domain("date", ">=", "=1d").optimize_full(model),
+            Domain("date", ">=", date(2026, 7, 1)),
+        )
+        self.assertEqual(
+            Domain("date", ">=", "today +1H").optimize_full(model),
+            Domain("date", ">=", date(2026, 7, 15)),
+        )
+
     def test_condition_optimize_datetime(self):
         model = self.env['test_orm.mixed'].with_context(tz='UTC')
         self.assertEqual(
