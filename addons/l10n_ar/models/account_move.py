@@ -121,7 +121,7 @@ class AccountMove(models.Model):
         """ This method is used to check if the document type is in the list of document types that can be used as
         an invoice and refund and if the move type is 'in_refund' or 'out_refund'. """
         return self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref() \
-            and self.move_type in ['in_refund', 'out_refund']
+            and self.is_refund()
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
@@ -412,7 +412,7 @@ class AccountMove(models.Model):
         if self.l10n_latam_document_type_id.l10n_ar_letter == 'C':
             res['vat_taxable_amount'] = self.amount_untaxed
 
-        if self.move_type in ('out_refund', 'in_refund') and self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref():
+        if self.is_refund() and self.l10n_latam_document_type_id.code in self._get_l10n_ar_codes_used_for_inv_and_ref():
             for amount_key, amount_value in res.items():
                 res[amount_key] = amount_value * -1
 

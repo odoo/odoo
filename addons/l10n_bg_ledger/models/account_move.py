@@ -44,7 +44,7 @@ class AccountMove(models.Model):
                     move.l10n_bg_document_type = move.journal_id.l10n_bg_debit_notes
                 elif move.move_type in ('out_invoice', 'in_invoice'):
                     move.l10n_bg_document_type = move.journal_id.l10n_bg_customer_invoice
-                elif move.move_type in ('in_refund', 'out_refund'):
+                elif move.is_refund():
                     move.l10n_bg_document_type = move.journal_id.l10n_bg_credit_notes
 
     @api.depends('l10n_bg_document_type', 'move_type', 'state', 'ref', 'name')

@@ -13,5 +13,5 @@ class AccountMove(models.Model):
                 is_simplified = move.pos_order_ids[0].is_l10n_es_simplified_invoice
                 if move.move_type in ('out_invoice', 'in_invoice'):
                     move.l10n_es_invoice_type = 'F2' if is_simplified else 'F1'
-                elif move.move_type in ('out_refund', 'in_refund'):
+                elif move.is_refund():
                     move.l10n_es_invoice_type = 'R5' if is_simplified else 'R4'
