@@ -1,6 +1,7 @@
 import { BEGIN } from "@html_builder/utils/option_sequence";
 import { EmbedCodeOptionDialog } from "./embed_code_option_dialog";
 import { Plugin } from "@html_editor/plugin";
+import { descendants } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -27,6 +28,17 @@ class EmbedCodeOptionPlugin extends Plugin {
     };
 
     cleanForSave({ root }) {
+        // QWeb drops HTML comments when rendering, so they are saved as
+        // `<o-comment>` elements and restored when the code is edited.
+        for (const embedTemplateEl of root.querySelectorAll(".s_embed_code_saved")) {
+            for (const node of descendants(embedTemplateEl.content)) {
+                if (node.nodeType === Node.COMMENT_NODE) {
+                    const commentEl = document.createElement("o-comment");
+                    commentEl.dataset.comment = node.data;
+                    node.replaceWith(commentEl);
+                }
+            }
+        }
         // Saving Embed Code snippets with <script> in the database, as these
         // elements are removed in edit mode.
         for (const embedCodeEl of root.querySelectorAll(".s_embed_code")) {
@@ -46,7 +58,11 @@ class EmbedCodeOptionPlugin extends Plugin {
 export class EditCodeAction extends BuilderAction {
     static id = "editCode";
     async load({ editingElement }) {
-        let newContent = this.getTemplateEl(editingElement).innerHTML.trim();
+        const templateEl = this.getTemplateEl(editingElement);
+        for (const commentEl of templateEl.content.querySelectorAll("o-comment")) {
+            commentEl.replaceWith(document.createComment(commentEl.dataset.comment));
+        }
+        let newContent = templateEl.innerHTML.trim();
         await new Promise((resolve) => {
             this.services.dialog.add(
                 EmbedCodeOptionDialog,
