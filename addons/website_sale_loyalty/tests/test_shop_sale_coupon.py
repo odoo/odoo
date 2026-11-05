@@ -139,7 +139,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             "program_id": vip_program.id,
             "point_name": "Points",
         })
-        vip_card._adjust_points(371.03, "Initial balance")
+        vip_card._adjust_points({vip_card: 371.03}, "Initial balance")
 
         self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour(large_cabinet.website_url, "website_sale_loyalty.promotions", login="admin")
@@ -211,7 +211,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             "program_id": gift_card_program.id,
             "code": "GIFT_CARD",
         })
-        gift_card._adjust_points(50, "Initial balance")
+        gift_card._adjust_points({gift_card: 50}, "Initial balance")
 
         self.env.ref("website_sale.reduction_code").write({"active": True})
         self.start_tour("/shop", "website_sale_loyalty.gift_card", login="admin")
@@ -261,7 +261,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             for program_id in ewallet_programs.ids
         ])
         for card in cards:
-            card._adjust_points(1000, "Initial balance")
+            card._adjust_points({card: 1000}, "Initial balance")
         self.start_tour("/shop", "website_sale_loyalty.ewallet", login="admin")
 
 

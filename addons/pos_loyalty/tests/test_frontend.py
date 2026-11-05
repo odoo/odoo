@@ -181,8 +181,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         promo_coupon3.write({"code": "567890"})
         promo_coupon4.write({"code": "098765"})
 
-        self.coupon2._adjust_points(6 - self.coupon2.points, description="test setup")
-        self.coupon3._adjust_points(3 - self.coupon3.points, description="test setup")
+        self.coupon2._adjust_points({self.coupon2: 6 - self.coupon2.points}, description="test setup")
+        self.coupon3._adjust_points({self.coupon3: 3 - self.coupon3.points}, description="test setup")
 
         # use here the generated coupon
         self.start_pos_tour("PosLoyaltyTour2")
@@ -355,7 +355,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'partner_id': partner_ddd.id,
             'program_id': loyalty_program.id,
         })
-        ddd_loyalty_card._adjust_points(100, description="Initial balance")
+        ddd_loyalty_card._adjust_points({ddd_loyalty_card: 100}, description="Initial balance")
 
         self.start_tour(
             "/pos/ui/%d" % self.main_pos_config.id,
@@ -537,8 +537,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             {'program_id': gift_card_program.id, 'code': '044111111'},
             {'program_id': gift_card_program.id, 'code': '044222222'},
         ])
-        card_1._adjust_points(20, "Initial balance")
-        card_2._adjust_points(15, "Initial balance")
+        card_1._adjust_points({card_1: 20}, "Initial balance")
+        card_2._adjust_points({card_2: 15}, "Initial balance")
         self.main_pos_config.open_ui()
         self.start_pos_tour("GiftCardProgramTwoCardsTour")
 
@@ -888,7 +888,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'partner_id': partner_aaa.id,
             'program_id': self.loyalty_program.id,
         })
-        aaa_loyalty_card._adjust_points(30, description="Initial balance")
+        aaa_loyalty_card._adjust_points({aaa_loyalty_card: 30}, description="Initial balance")
 
         self.main_pos_config.open_ui()
 
@@ -1215,7 +1215,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'partner_id': partner_aaa.id,
             'program_id': self.loyalty_program.id,
         })
-        aaa_loyalty_card._adjust_points(100, description="Initial balance")
+        aaa_loyalty_card._adjust_points({aaa_loyalty_card: 100}, description="Initial balance")
 
         self.main_pos_config.open_ui()
         self.start_pos_tour("PosLoyaltyTour6")
@@ -1457,7 +1457,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'partner_id': partner.id,
             'program_id': self.loyalty_program.id,
         })
-        loyalty_card._adjust_points(500, description="Initial balance")
+        loyalty_card._adjust_points({loyalty_card: 500}, description="Initial balance")
 
         self.main_pos_config.open_ui()
 
@@ -1634,7 +1634,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'program_id': ewallet_program.id,
                 'expiration_date': date.today(),
             })
-            ewallet_card._adjust_points(50, description="Initial balance")
+            ewallet_card._adjust_points({ewallet_card: 50}, description="Initial balance")
         self.main_pos_config.open_ui()
         self.start_pos_tour("ExpiredEWalletProgramTour")
 
@@ -2197,7 +2197,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'program_id': ewallet_program.id,
             'partner_id': partner_aaa.id,
         })
-        ewallet_card._adjust_points(10, description="Initial balance")
+        ewallet_card._adjust_points({ewallet_card: 10}, description="Initial balance")
 
         self.main_pos_config.open_ui()
         self.start_tour(
@@ -2751,9 +2751,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.auto_promo_program_next.coupon_ids = [Command.create({
             'code': '563412',
         })]
-        self.auto_promo_program_next.coupon_ids.filtered(
-            lambda c: c.code == '563412'
-        )._adjust_points(10, description="Initial balance")
+        coupon = self.auto_promo_program_next.coupon_ids.filtered(lambda c: c.code == '563412')
+        coupon._adjust_points({coupon: 10}, description="Initial balance")
 
         fixed_tax = self.env['account.tax'].create({
             'name': 'Fixed Tax',
@@ -3059,7 +3058,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'partner_id': partner_refunding.id,
             'program_id': self.loyalty_program.id,
         })
-        card._adjust_points(100, description="Initial balance")
+        card._adjust_points({card: 100}, description="Initial balance")
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_refund_does_not_decrease_points', login="pos_user")
         self.assertEqual(card.points, 100)
@@ -3200,7 +3199,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'program_id': loyalty_program.id,
             'partner_id': test_partner.id,
         })
-        loyalty_card._adjust_points(100, description="Initial balance")
+        loyalty_card._adjust_points({loyalty_card: 100}, description="Initial balance")
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
@@ -3253,7 +3252,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'code': 'gift_card_expired',
                 'expiration_date': date.today(),
             })
-            gift_card_expired._adjust_points(60.0, description="Initial balance")
+            gift_card_expired._adjust_points({gift_card_expired: 60.0}, description="Initial balance")
         gift_card_sold = self.env['loyalty.card'].create({
             'program_id': gift_card_program.id,
             'source_pos_order_id': example_order_3.id,
@@ -3270,7 +3269,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'program_id': gift_card_program.id,
             'code': 'gift_card_generated_but_not_sold',
         })
-        gift_card_generated_but_not_sold._adjust_points(60.0, description="Initial balance")
+        gift_card_generated_but_not_sold._adjust_points({gift_card_generated_but_not_sold: 60.0}, description="Initial balance")
 
         self.start_pos_tour("test_physical_gift_card")
         self.assertEqual(gift_card_valid.points, 56.80)
@@ -3482,7 +3481,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'partner_id': self.test_partner.id,
             'code': '0444-e050-4548',
         })
-        loyalty_card._adjust_points(500, description="Initial balance")
+        loyalty_card._adjust_points({loyalty_card: 500}, description="Initial balance")
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
@@ -3516,7 +3515,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'program_id': program.id,
             'partner_id': aa_partner.id,
         })
-        loyalty_card._adjust_points(100, description="Initial balance")
+        loyalty_card._adjust_points({loyalty_card: 100}, description="Initial balance")
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(
@@ -3686,7 +3685,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'program_id': loyalty_program.id,
             'partner_id': partner.id,
         })
-        loyalty_card._adjust_points(50, description="Initial balance")
+        loyalty_card._adjust_points({loyalty_card: 50}, description="Initial balance")
         self.main_pos_config.trusted_config_ids += trusted_pos_config
         self.start_pos_tour("test_loyalty_is_not_processed_for_draft_order", login="pos_user")
 
