@@ -54,6 +54,7 @@ export class Activity extends Component {
         return JSON.stringify({
             activity: {
                 dateCreateFormatted: activity.dateCreateFormatted,
+                dateDeadlineFormatted: activity.dateDeadlineFormatted,
                 create_uid_name: activity.create_uid?.name,
             },
         });
