@@ -24,6 +24,7 @@ class EmbedCodeOptionPlugin extends Plugin {
             EditCodeAction,
         },
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
     cleanForSave({ root }) {
@@ -39,6 +40,28 @@ class EmbedCodeOptionPlugin extends Plugin {
             embedCodeEl
                 .querySelector(".s_embed_code_embedded")
                 .replaceChildren(cloneContentEls(embedTemplateEl.content, true));
+        }
+        // QWeb drops HTML comments when rendering, so they are saved as
+        // `<o-comment>` elements.
+        for (const embedTemplateEl of root.querySelectorAll(".s_embed_code_saved")) {
+            const iterator = document.createNodeIterator(
+                embedTemplateEl.content,
+                NodeFilter.SHOW_COMMENT
+            );
+            let commentNode;
+            while ((commentNode = iterator.nextNode())) {
+                const commentEl = document.createElement("o-comment");
+                commentEl.dataset.comment = commentNode.data;
+                commentNode.replaceWith(commentEl);
+            }
+        }
+    }
+
+    onSnippetDropped({ snippetEl }) {
+        for (const templateEl of snippetEl.querySelectorAll(".s_embed_code_saved")) {
+            for (const commentEl of templateEl.content.querySelectorAll("o-comment")) {
+                commentEl.replaceWith(document.createComment(commentEl.dataset.comment));
+            }
         }
     }
 }
