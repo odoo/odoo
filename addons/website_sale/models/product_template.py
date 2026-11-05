@@ -997,9 +997,9 @@ class ProductTemplate(models.Model):
             product=product_or_template, quantity=quantity, uom=uom, currency=currency
         )
 
-        pricelist_item = self.env["product.pricelist.item"].browse(pricelist_rule_id)
+        pricelist_item_sudo = self.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
         price_before_discount = self._get_price_before_discount(
-            pricelist_item, pricelist_price, product_or_template, quantity, uom, currency
+            pricelist_item_sudo, pricelist_price, product_or_template, quantity, uom, currency
         )
 
         has_discounted_price = currency.compare_amounts(price_before_discount, pricelist_price) == 1
@@ -1008,8 +1008,8 @@ class ProductTemplate(models.Model):
             "price": pricelist_price,
             "raw_pricelist_price": pricelist_price,
             "has_discounted_price": has_discounted_price,
-            "discount_start_date": pricelist_item.date_start,
-            "discount_end_date": pricelist_item.date_end,
+            "discount_start_date": pricelist_item_sudo.date_start,
+            "discount_end_date": pricelist_item_sudo.date_end,
         }
 
         if (
