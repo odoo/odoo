@@ -65,16 +65,6 @@ import {
 /** @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection */
 
 /**
- * @typedef {Object} DeleteShared
- * @property { DeletePlugin['delete'] } delete
- * @property { DeletePlugin['deleteRange'] } deleteRange
- * @property { DeletePlugin['deleteSelection'] } deleteSelection
- * @property { DeletePlugin['deleteBackward'] } deleteBackward
- * @property { DeletePlugin['deleteForward'] } deleteForward
- * @property { DeletePlugin['isUnremovable'] } isUnremovable
- */
-
-/**
  * @typedef {(() => void)[]} on_will_delete_handlers
  * @typedef {(() => void)[]} on_deleted_handlers
  *
@@ -103,14 +93,14 @@ export class DeletePlugin extends Plugin {
         "properties",
     ];
     static id = "delete";
-    static shared = [
+    static shared = /** @type {const} */ ([
         "deleteBackward",
         "deleteForward",
         "deleteRange",
         "deleteSelection",
         "delete",
         "isUnremovable",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

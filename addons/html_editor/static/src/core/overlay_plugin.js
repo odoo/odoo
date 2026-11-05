@@ -4,18 +4,13 @@ import { getSelection } from "../utils/selection";
 import { EditorOverlay } from "./overlay";
 
 /**
- * @typedef { Object } OverlayShared
- * @property { OverlayPlugin['createOverlay'] } createOverlay
- */
-
-/**
  * Provides the following feature:
  * - adding a component in overlay above the editor, with proper positioning
  */
 export class OverlayPlugin extends Plugin {
     static id = "overlay";
     static dependencies = ["domObserver", "selection"];
-    static shared = ["createOverlay"];
+    static shared = /** @type {const} */ (["createOverlay"]);
 
     overlays = [];
 

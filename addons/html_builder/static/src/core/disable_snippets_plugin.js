@@ -3,15 +3,10 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 
-/**
- * @typedef { Object } DisableSnippetsShared
- * @property { DisableSnippetsPlugin['disableUndroppableSnippets'] } disableUndroppableSnippets
- */
-
 export class DisableSnippetsPlugin extends Plugin {
     static id = "disableSnippets";
     static dependencies = ["setup_editor_plugin", "dropzone", "dropzone_selectors"];
-    static shared = ["disableUndroppableSnippets"];
+    static shared = /** @type {const} */ (["disableUndroppableSnippets"]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_removed_handlers: this.disableUndroppableSnippets.bind(this),

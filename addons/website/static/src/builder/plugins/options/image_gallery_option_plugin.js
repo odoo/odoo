@@ -9,15 +9,6 @@ import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { uuid } from "@web/core/utils/strings";
 
-/**
- * @typedef { Object } ImageGalleryOptionShared
- * @property { ImageGalleryOptionPlugin['getColumns'] } getColumns
- * @property { ImageGalleryOptionPlugin['getMode'] } getMode
- * @property { ImageGalleryOptionPlugin['processImage'] } processImage
- * @property { ImageGalleryOptionPlugin['restoreSelection'] } restoreSelection
- * @property { ImageGalleryOptionPlugin['setImages'] } setImages
- */
-
 export class ImageGalleryOptionPlugin extends Plugin {
     static id = "imageGalleryOption";
     static dependencies = [
@@ -30,7 +21,13 @@ export class ImageGalleryOptionPlugin extends Plugin {
         "imagePostProcess",
         "websiteBridge",
     ];
-    static shared = ["processImages", "getMode", "setImages", "restoreSelection", "getColumns"];
+    static shared = /** @type {const} */ ([
+        "processImages",
+        "getMode",
+        "setImages",
+        "restoreSelection",
+        "getColumns",
+    ]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {

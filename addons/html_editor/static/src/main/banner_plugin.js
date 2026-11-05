@@ -9,16 +9,11 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock, isParagraphRelatedElement } from "../utils/dom_info";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
-/**
- * @typedef { Object } BannerShared
- * @property { BannerPlugin['insertBanner'] } insertBanner
- */
-
 export class BannerPlugin extends Plugin {
     static id = "banner";
     // sanitize plugin is required to handle `contenteditable` attribute.
     static dependencies = ["baseContainer", "history", "dom", "emoji", "selection", "sanitize"];
-    static shared = ["insertBanner"];
+    static shared = /** @type {const} */ (["insertBanner"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

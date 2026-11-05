@@ -23,23 +23,10 @@ import { GoogleMapsApiKeyDialog } from "./google_maps_api_key_dialog";
  * @typedef {{ isValid: boolean, message?: string }} ApiKeyValidation
  */
 
-/**
- * @typedef { Object } GoogleMapsOptionShared
- * @property { GoogleMapsOptionPlugin['configureGMapsAPI'] } configureGMapsAPI
- * @property { GoogleMapsOptionPlugin['initializeGoogleMaps'] } initializeGoogleMaps
- * @property { GoogleMapsOptionPlugin['failedToInitializeGoogleMaps'] } failedToInitializeGoogleMaps
- * @property { GoogleMapsOptionPlugin['shouldRefetchApiKey'] } shouldRefetchApiKey
- * @property { GoogleMapsOptionPlugin['shouldNotRefetchApiKey'] } shouldNotRefetchApiKey
- * @property { GoogleMapsOptionPlugin['commitPlace'] } commitPlace
- * @property { GoogleMapsOptionPlugin['getPlace'] } getPlace
- * @property { GoogleMapsOptionPlugin['getMapsAPI'] } getMapsAPI
- * @property { GoogleMapsOptionPlugin['notifyGMapsError'] } notifyGMapsError
- */
-
 export class GoogleMapsOptionPlugin extends Plugin {
     static id = "googleMapsOption";
     static dependencies = ["history", "edit_interaction"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "configureGMapsAPI",
         "initializeGoogleMaps",
         "failedToInitializeGoogleMaps",
@@ -49,7 +36,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
         "getPlace",
         "getMapsAPI",
         "notifyGMapsError",
-    ];
+    ]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         so_content_addition_selectors: [".s_google_map"],

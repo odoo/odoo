@@ -5,14 +5,9 @@ import { MenuDialog, EditMenuDialog } from "@website/components/dialog/edit_menu
 import { withSequence } from "@html_editor/utils/resource";
 import { deduceURLfromText } from "@html_editor/main/link/utils";
 
-/**
- * @typedef { Object } MenuDataShared
- * @property { MenuDataPlugin['openEditMenu'] } openEditMenu
- */
-
 export class MenuDataPlugin extends Plugin {
     static id = "menuDataPlugin";
-    static shared = ["openEditMenu"];
+    static shared = /** @type {const} */ (["openEditMenu"]);
     static dependencies = ["savePlugin"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {

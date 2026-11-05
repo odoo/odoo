@@ -22,12 +22,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  */
 
 /**
- * @typedef {Object} TranslationShared
- * @property {TranslationPlugin["hasTranslatedAttribute"]} hasTranslatedAttribute
- * @property {TranslationPlugin["getDirtyAttributeTranslationsInfo"]} getDirtyAttributeTranslationsInfo
- */
-
-/**
  * @typedef {((editableEls: HTMLElement[]) => void)[]} on_nodes_marked_translatable_handlers
  */
 
@@ -78,7 +72,10 @@ function findOEditable(containerEl) {
 export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["builderActions"];
-    static shared = ["hasTranslatedAttribute", "getDirtyAttributeTranslationsInfo"];
+    static shared = /** @type {const} */ ([
+        "hasTranslatedAttribute",
+        "getDirtyAttributeTranslationsInfo",
+    ]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

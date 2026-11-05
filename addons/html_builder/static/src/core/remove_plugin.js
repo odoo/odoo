@@ -10,12 +10,6 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 
 /**
- * @typedef { Object } RemoveShared
- * @property { RemovePlugin['removeElement'] } removeElement
- * @property { RemovePlugin['isEmptyAndRemovable'] } isEmptyAndRemovable
- */
-
-/**
  * @typedef {((arg: {
  *      removedEl: HTMLElement,
  *      nextTargetEl: HTMLElement,
@@ -76,7 +70,7 @@ export class RemovePlugin extends Plugin {
             }
         },
     };
-    static shared = ["removeElement", "isEmptyAndRemovable"];
+    static shared = /** @type {const} */ (["removeElement", "isEmptyAndRemovable"]);
 
     setup() {
         this.bootstrap = usePlugin(BootstrapInstance);

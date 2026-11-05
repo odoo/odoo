@@ -6,11 +6,6 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { scrollTo } from "@html_builder/utils/scrolling";
 
 /**
- * @typedef { Object } CloneShared
- * @property { ClonePlugin['cloneElement'] } cloneElement
- */
-
-/**
  * @typedef {((arg: { cloneEl: HTMLElement, originalEl: HTMLElement }) => Promise<void>)[]} on_cloned_handlers
  * Called after an element was cloned and inserted in the DOM.
  *
@@ -21,7 +16,7 @@ import { scrollTo } from "@html_builder/utils/scrolling";
 export class ClonePlugin extends Plugin {
     static id = "clone";
     static dependencies = ["history", "builderOptions", "dom"];
-    static shared = ["cloneElement"];
+    static shared = /** @type {const} */ (["cloneElement"]);
 
     /** @type {import("plugins").BuilderResources} */
     resources = {

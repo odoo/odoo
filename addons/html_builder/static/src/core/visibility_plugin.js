@@ -2,14 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 
 /**
- * @typedef { Object } VisibilityShared
- * @property { VisibilityPlugin['getVisibleSibling'] } getVisibleSibling
- * @property { VisibilityPlugin['toggleTargetVisibility'] } toggleTargetVisibility
- * @property { VisibilityPlugin['onOptionVisibilityUpdate'] } onOptionVisibilityUpdate
- * @property { VisibilityPlugin['hideElement'] } hideElement
- */
-
-/**
  * @typedef {((targetEl: HTMLElement) => void)[]} on_target_hidden_handlers
  * @typedef {((targetEl: HTMLElement) => void)[]} on_target_shown_handlers
  */
@@ -21,12 +13,12 @@ const deviceInvisibleSelector = ".o_snippet_mobile_invisible, .o_snippet_desktop
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
     static dependencies = ["builderOptions", "disableSnippets", "history"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "getVisibleSibling",
         "toggleTargetVisibility",
         "onOptionVisibilityUpdate",
         "hideElement",
-    ];
+    ]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_mobile_view_switched_handlers: this.onMobileViewSwitched.bind(this),

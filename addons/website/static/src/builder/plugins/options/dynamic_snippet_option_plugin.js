@@ -22,24 +22,6 @@ import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
  */
 
 /**
- * @typedef { Object } DynamicSnippetOptionShared
- * @property { DynamicSnippetOptionPlugin['fetchDynamicFilters'] } fetchDynamicFilters
- * @property { DynamicSnippetOptionPlugin['fetchDynamicSnippetTemplates'] } fetchDynamicSnippetTemplates
- * @property { DynamicSnippetOptionPlugin['getDefaultSnippetFilterId'] } getDefaultSnippetFilterId
- * @property { DynamicSnippetOptionPlugin['getDefaultSnippetRecordId'] } getDefaultSnippetRecordId
- * @property { DynamicSnippetOptionPlugin['getDefaultSnippetTemplate'] } getDefaultSnippetTemplate
- * @property { DynamicSnippetOptionPlugin['getSnippetModelName'] } getSnippetModelName
- * @property { DynamicSnippetOptionPlugin['getSnippetTitleClasses'] } getSnippetTitleClasses
- * @property { DynamicSnippetOptionPlugin['getTemplateByKey'] } getTemplateByKey
- * @property { DynamicSnippetOptionPlugin['isModelSnippetTemplate'] } isModelSnippetTemplate
- * @property { DynamicSnippetOptionPlugin['isSingleModeSnippet'] } isSingleModeSnippet
- * @property { DynamicSnippetOptionPlugin['isSingleModeSnippetTemplate'] } isSingleModeSnippetTemplate
- * @property { DynamicSnippetOptionPlugin['setOptionsDefaultValues'] } setOptionsDefaultValues
- * @property { DynamicSnippetOptionPlugin['updateTemplate'] } updateTemplate
- * @property { DynamicSnippetOptionPlugin['getModelNameFilter'] } getModelNameFilter
- */
-
-/**
  * @typedef {((arg: {
  *      el: HTMLElement;
  *      template: Template;
@@ -51,7 +33,7 @@ const DYNAMIC_SNIPPET_UNMOVABLE_SELECTOR = ".s_dynamic_snippet_title, .s_dynamic
 
 export class DynamicSnippetOptionPlugin extends Plugin {
     static id = "dynamicSnippetOption";
-    static shared = [
+    static shared = /** @type {const} */ ([
         "fetchDynamicFilters",
         "fetchDynamicSnippetTemplates",
         "getDefaultSnippetFilterId",
@@ -66,7 +48,7 @@ export class DynamicSnippetOptionPlugin extends Plugin {
         "setOptionsDefaultValues",
         "updateTemplate",
         "getModelNameFilter",
-    ];
+    ]);
     modelNameFilter = "";
     fetchedDynamicFilters = [];
     fetchedDynamicFilterTemplates = [];

@@ -8,11 +8,6 @@ import { renderToElement } from "@web/core/utils/render";
 import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
 /**
- * @typedef { Object } EmbeddedComponentShared
- * @property { EmbeddedComponentPlugin['renderBlueprintToElement'] } renderBlueprintToElement
- */
-
-/**
  * @typedef { import("@html_editor/core/dom_observer_plugin").SerializedMutation<"attributes"> } SerializedAttributesMutation
  */
 
@@ -34,7 +29,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         "protectedNode",
         "selection",
     ];
-    static shared = ["renderBlueprintToElement"];
+    static shared = /** @type {const} */ (["renderBlueprintToElement"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */

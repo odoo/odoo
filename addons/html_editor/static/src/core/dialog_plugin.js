@@ -5,15 +5,10 @@ import { Plugin } from "../plugin";
  * @typedef {import("@web/core/dialog/dialog_plugin").DialogOptionSchema} DialogOptionSchema
  */
 
-/**
- * @typedef {Object} DialogShared
- * @property {DialogPlugin['addDialog']} addDialog
- */
-
 export class DialogPlugin extends Plugin {
     static id = "dialog";
     static dependencies = ["selection"];
-    static shared = ["addDialog"];
+    static shared = /** @type {const} */ (["addDialog"]);
 
     /**
      * @param {Component} DialogClass

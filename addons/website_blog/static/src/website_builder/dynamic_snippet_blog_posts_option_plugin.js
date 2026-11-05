@@ -1,15 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-/**
- * @typedef { Object } DynamicSnippetBlogPostsOptionShared
- * @property { DynamicSnippetBlogPostsOptionPlugin['getModelNameFilter'] } getModelNameFilter
- */
-
 export class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
     static id = "dynamicSnippetBlogPostsOption";
     static dependencies = ["dynamicSnippetCarouselOption", "dynamicSnippetOption"];
-    static shared = ["getModelNameFilter"];
+    static shared = /** @type {const} */ (["getModelNameFilter"]);
     modelNameFilter = "blog.post";
     /** @type {import("plugins").WebsiteResources} */
     resources = {

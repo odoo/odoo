@@ -42,14 +42,6 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
  * @property {string} shorthandLiteral Optional
  */
 
-/**
- * @typedef { Object } PowerboxShared
- * @property { PowerboxPlugin['closePowerbox'] } closePowerbox
- * @property { PowerboxPlugin['getAvailablePowerboxCommands'] } getAvailablePowerboxCommands
- * @property { PowerboxPlugin['openPowerbox'] } openPowerbox
- * @property { PowerboxPlugin['updatePowerbox'] } updatePowerbox
- */
-
 /** @typedef {PowerboxCategory[]} powerbox_categories */
 /**
  * @see UserCommand
@@ -91,12 +83,12 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 export class PowerboxPlugin extends Plugin {
     static id = "powerbox";
     static dependencies = ["overlay", "selection", "history", "userCommand"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "closePowerbox",
         "getAvailablePowerboxCommands",
         "openPowerbox",
         "updatePowerbox",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         powerbox_categories: [

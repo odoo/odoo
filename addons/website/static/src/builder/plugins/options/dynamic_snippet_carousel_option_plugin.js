@@ -9,20 +9,13 @@ import {
 import { SetContainerWidthAction } from "../content_width_option_plugin";
 import { updateDynamicCarouselNumberOfElements } from "@website/utils/dynamic_snippets";
 
-/**
- * @typedef { Object } DynamicSnippetCarouselOptionShared
- * @property { DynamicSnippetCarouselOptionPlugin['setOptionsDefaultValues'] } setOptionsDefaultValues
- * @property { DynamicSnippetCarouselOptionPlugin['updateTemplateSnippetCarousel'] } updateTemplateSnippetCarousel
- * @property { DynamicSnippetCarouselOptionPlugin['getModelNameFilter'] } getModelNameFilter
- */
-
 export class DynamicSnippetCarouselOptionPlugin extends Plugin {
     static id = "dynamicSnippetCarouselOption";
-    static shared = [
+    static shared = /** @type {const} */ ([
         "setOptionsDefaultValues",
         "updateTemplateSnippetCarousel",
         "getModelNameFilter",
-    ];
+    ]);
     static dependencies = ["dynamicSnippetOption"];
     modelNameFilter = "";
     /** @type {import("plugins").WebsiteResources} */

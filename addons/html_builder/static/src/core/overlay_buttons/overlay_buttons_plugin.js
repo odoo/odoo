@@ -7,13 +7,6 @@ import { withSequence } from "@html_editor/utils/resource";
 
 /** @typedef {import("@html_builder/core/builder_options_plugin").BuilderButtonDescriptor} BuilderButtonDescriptor */
 /**
- * @typedef { Object } OverlayButtonsShared
- * @property { OverlayButtonsPlugin['hideOverlayButtons'] } hideOverlayButtons
- * @property { OverlayButtonsPlugin['showOverlayButtons'] } showOverlayButtons
- * @property { OverlayButtonsPlugin['hideOverlayButtonsUi'] } hideOverlayButtonsUi
- * @property { OverlayButtonsPlugin['showOverlayButtonsUi'] } showOverlayButtonsUi
- */
-/**
  * @typedef {{
  *      getButtons: (target: HTMLElement) => BuilderButtonDescriptor;
  * }[]} get_overlay_buttons
@@ -29,12 +22,12 @@ export class OverlayButtonsPlugin extends Plugin {
         "toolbar",
         "properties",
     ];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "hideOverlayButtons",
         "showOverlayButtons",
         "hideOverlayButtonsUi",
         "showOverlayButtonsUi",
-    ];
+    ]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_selectionchange_handlers: this.shouldShowToolbar.bind(this),

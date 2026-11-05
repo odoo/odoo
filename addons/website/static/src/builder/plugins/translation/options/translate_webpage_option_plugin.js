@@ -8,11 +8,6 @@ import { uniqueId } from "@web/core/utils/functions";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
- * @typedef { Object } TranslateWebpageOptionShared
- * @property { TranslateWebpageOptionPlugin['getTranslationState'] } getTranslationState
- */
-
-/**
  * Action to translate the entire webpage using AI.
  */
 export class TranslateToAction extends BuilderAction {
@@ -291,7 +286,7 @@ export class TranslateToAction extends BuilderAction {
  */
 export class TranslateWebpageOptionPlugin extends Plugin {
     static id = "translateWebpageOption";
-    static shared = ["getTranslationState"];
+    static shared = /** @type {const} */ (["getTranslationState"]);
 
     translationState = proxy({
         isTranslating: false,

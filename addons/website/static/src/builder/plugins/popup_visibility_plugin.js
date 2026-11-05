@@ -5,16 +5,10 @@ import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
-/**
- * @typedef { Object } PopupVisibilityShared
- * @property { PopupVisibilityPlugin['onTargetHide'] } onTargetHide
- * @property { PopupVisibilityPlugin['onTargetShow'] } onTargetShow
- */
-
 export class PopupVisibilityPlugin extends Plugin {
     static id = "popupVisibilityPlugin";
     static dependencies = ["visibility", "domObserver", "domReferenceMap"];
-    static shared = ["onTargetShow", "onTargetHide"];
+    static shared = /** @type {const} */ (["onTargetShow", "onTargetHide"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

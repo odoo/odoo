@@ -1,14 +1,9 @@
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
 
-/**
- * @typedef { Object } SanitizeShared
- * @property { SanitizePlugin['sanitize'] } sanitize
- */
-
 export class SanitizePlugin extends Plugin {
     static id = "sanitize";
-    static shared = ["sanitize"];
+    static shared = /** @type {const} */ (["sanitize"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),

@@ -3,17 +3,13 @@ import { Plugin } from "@html_editor/plugin";
 /**
  * @typedef { import("./builder_action").BuilderAction } BuilderAction
  * @typedef {} BuilderActionConstructor
- *
- * @typedef { Object } BuilderActionsShared
- * @property { BuilderActionsPlugin['getAction'] } getAction
- * @property { BuilderActionsPlugin['applyAction'] } applyAction
  */
 
 /** @typedef {Record<string, BuilderAction>[]} builder_actions */
 
 export class BuilderActionsPlugin extends Plugin {
     static id = "builderActions";
-    static shared = ["getAction", "applyAction"];
+    static shared = /** @type {const} */ (["getAction", "applyAction"]);
     static dependencies = ["operation", "history"];
     setup() {
         /** @type { BuilderAction[] } */

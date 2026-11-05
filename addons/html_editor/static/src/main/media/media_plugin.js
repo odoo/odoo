@@ -32,12 +32,6 @@ export function extractUnmappedAttachmentsIds(content) {
 }
 
 /**
- * @typedef { Object } MediaShared
- * @property { MediaPlugin['openMediaDialog'] } openMediaDialog
- * @property { MediaPlugin['extractUnmappedAttachmentsIds'] } extractUnmappedAttachmentsIds
- */
-
-/**
  * @typedef {((mediaEl: HTMLElement) => void)[]} on_media_dialog_saved_handlers
  * @typedef {((arg: { newMediaEl: HTMLElement }) => void)[]} on_media_added_handlers
  * @typedef {((elements: HTMLElement[], params: { node: Node }) => Promise<void>)[]} on_will_save_media_dialog_handlers
@@ -58,7 +52,7 @@ function isMediaSupported(selection) {
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
-    static shared = ["openMediaDialog", "extractUnmappedAttachmentsIds"];
+    static shared = /** @type {const} */ (["openMediaDialog", "extractUnmappedAttachmentsIds"]);
     static defaultConfig = {
         allowImage: true,
         allowMediaDocuments: true,

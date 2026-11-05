@@ -102,16 +102,6 @@ export const EDITOR_MUTATION_TYPES = /** @type {const} */ ({
 /** @typedef { WeakMap<NativeMutation<"childList">, { added: Tree[], removed: Tree[] }> } ChildListToTreesMap */
 
 /**
- * @typedef { Object } DomObserverShared
- * @property { DomObserverPlugin['ignore'] } ignore
- * @property { DomObserverPlugin['hasStagedMutations'] } hasStagedMutations
- * @property { DomObserverPlugin['stageCustomMutation'] } stageCustomMutation
- * @property { DomObserverPlugin['applyCustomMutation'] } applyCustomMutation
- * @property { DomObserverPlugin['getMutationsCommonAncestor'] } getMutationsCommonAncestor
- * @property { DomObserverPlugin['getClassChanges'] } getClassChanges
- */
-
-/**
  * @typedef { ((root: HTMLElement) => void)[] } on_content_updated_handlers
  * @typedef { (() => void)[] } on_pending_mutations_normalized_handlers
  * @typedef { ((mutations: SerializedMutation[]) => void)[] } on_pending_mutations_staged_handlers
@@ -128,14 +118,14 @@ export const EDITOR_MUTATION_TYPES = /** @type {const} */ ({
 export class DomObserverPlugin extends Plugin {
     static id = "domObserver";
     static dependencies = ["dom", "domReferenceMap"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "ignore",
         "hasStagedMutations",
         "stageCustomMutation",
         "applyCustomMutation",
         "getMutationsCommonAncestor",
         "getClassChanges",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         history_commit_data_properties: ["mutations"],

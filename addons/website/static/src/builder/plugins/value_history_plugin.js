@@ -1,15 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-/**
- * @typedef { Object } ValueHistoryShared
- * @property { ValueHistoryPlugin['setValue'] } setValue
- */
-
 export class ValueHistoryPlugin extends Plugin {
     static id = "valueHistory";
     static dependencies = ["domObserver"];
-    static shared = ["setValue"];
+    static shared = /** @type {const} */ (["setValue"]);
 
     setValue(el, value) {
         const oldValue = el.value;

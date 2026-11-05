@@ -99,12 +99,6 @@ export const DISABLED_NAMESPACE = "disabled";
 /** Toolbar namespaces that allow expanding to the full toolbar */
 
 /**
- * @typedef { Object } ToolbarShared
- * @property { ToolbarPlugin['getToolbarInfo'] } getToolbarInfo
- * @property { ToolbarPlugin['getIsToolbarOpen'] } getIsToolbarOpen
- */
-
-/**
  * @typedef {ToolbarGroup[]} toolbar_groups
  */
 
@@ -161,7 +155,7 @@ export const DISABLED_NAMESPACE = "disabled";
 export class ToolbarPlugin extends Plugin {
     static id = "toolbar";
     static dependencies = ["overlay", "properties", "selection", "userCommand"];
-    static shared = ["getToolbarInfo", "getIsToolbarOpen"];
+    static shared = /** @type {const} */ (["getToolbarInfo", "getIsToolbarOpen"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),

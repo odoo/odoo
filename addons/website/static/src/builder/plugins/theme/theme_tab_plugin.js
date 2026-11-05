@@ -31,16 +31,6 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { ImageSize } from "@html_builder/plugins/image/image_size";
 
 /**
- * @typedef { Object } ThemeTabShared
- * @property { ThemeTabPlugin['buildGray'] } buildGray
- * @property { ThemeTabPlugin['getFontWeights'] } getFontWeights
- * @property { ThemeTabPlugin['getGrays'] } getGrays
- * @property { ThemeTabPlugin['getGrayParams'] } getGrayParams
- * @property { ThemeTabPlugin['setGrays'] } setGrays
- * @property { ThemeTabPlugin['setGrayParams'] } setGrayParams
- */
-
-/**
  * @typedef {import("@html_builder/core/builder_options_plugin").BuilderOptionContainer[]} theme_options
  */
 
@@ -100,14 +90,14 @@ function parseFontFaceWeight(weightDescriptor) {
 
 export class ThemeTabPlugin extends Plugin {
     static id = "themeTab";
-    static shared = [
+    static shared = /** @type {const} */ ([
         "getGrayParams",
         "getGrays",
         "setGrays",
         "setGrayParams",
         "buildGray",
         "getFontWeights",
-    ];
+    ]);
     grayParams = {};
     grays = proxy({});
 

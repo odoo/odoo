@@ -87,17 +87,6 @@ const isMarkerMutation = (mutation) =>
     mutation.type === NATIVE_MUTATION_TYPES.CHILD_LIST &&
     [...mutation.addedNodes, ...mutation.removedNodes].every((node) => node[IS_MARKER]);
 const isFragment = (node) => node && node.nodeType === Node.DOCUMENT_FRAGMENT_NODE;
-/**
- * @typedef {Object} DomShared
- * @property { DomPlugin['normalize'] } normalize
- * @property { DomPlugin['insert'] } insert
- * @property { DomPlugin['copyAttributes'] } copyAttributes
- * @property { DomPlugin['canSetBlock'] } canSetBlock
- * @property { DomPlugin['setBlock'] } setBlock
- * @property { DomPlugin['setTagName'] } setTagName
- * @property { DomPlugin['removeSystemProperties'] } removeSystemProperties
- * @property { DomPlugin['wrapInlinesInBlocks'] } wrapInlinesInBlocks
- */
 
 /**
  * @typedef {(() => void)[]} on_will_insert_handlers
@@ -127,7 +116,7 @@ export class DomPlugin extends Plugin {
         "lineBreak",
         "properties",
     ];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "normalize",
         "insert",
         "copyAttributes",
@@ -136,7 +125,7 @@ export class DomPlugin extends Plugin {
         "setTagName",
         "removeSystemProperties",
         "wrapInlinesInBlocks",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

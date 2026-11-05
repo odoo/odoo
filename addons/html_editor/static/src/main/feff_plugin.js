@@ -10,13 +10,6 @@ import { withSequence } from "../utils/resource";
 /** @typedef {import("../core/selection_plugin").Cursors} Cursors */
 
 /**
- * @typedef { Object } FeffShared
- * @property { FeffPlugin['addFeff'] } addFeff
- * @property { FeffPlugin['removeFeffs'] } removeFeffs
- * @property { FeffPlugin['surroundWithFeffs'] } surroundWithFeffs
- */
-
-/**
  * @typedef {((node: Node) => boolean | undefined)[]} is_feff_legit_predicates
  * @typedef {((root: EditorContext["editable"], cursors: Cursors) => Node[])[]} feff_providers
  * @typedef {(() => string)[]} selectors_for_feff_providers
@@ -32,7 +25,7 @@ import { withSequence } from "../utils/resource";
 export class FeffPlugin extends Plugin {
     static id = "feff";
     static dependencies = ["selection", "properties"];
-    static shared = ["addFeff", "removeFeffs", "surroundWithFeffs"];
+    static shared = /** @type {const} */ (["addFeff", "removeFeffs", "surroundWithFeffs"]);
 
     /** @type {import("plugins").EditorResources} */
     resources = {

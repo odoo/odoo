@@ -14,8 +14,6 @@ const TITLE_SELECTOR =
     "h1, h2, h3, h4, h5, h6, .h1-fs, .h2-fs, .h3-fs, .h4-fs, .h5-fs, .h6-fs, .display-1-fs, .display-2-fs, .display-3-fs, display-4-fs, .base-fs, .o_small-fs";
 
 /**
- * @typedef { Object } AnchorShared
- * @property { AnchorPlugin['createOrEditAnchorLink'] } createOrEditAnchorLink
  * @typedef {CSSSelector[]} anchor_allowed_selectors
  * CSS selectors matching elements eligible for anchor creation.
  * @typedef {CSSSelector[]} anchor_excluded_selectors
@@ -24,7 +22,7 @@ const TITLE_SELECTOR =
 export class AnchorPlugin extends Plugin {
     static id = "anchor";
     static dependencies = ["history"];
-    static shared = ["createOrEditAnchorLink"];
+    static shared = /** @type {const} */ (["createOrEditAnchorLink"]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_cloned_handlers: this.onCloned.bind(this),

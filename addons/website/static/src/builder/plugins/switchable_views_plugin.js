@@ -2,15 +2,10 @@ import { Plugin } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 
-/**
- * @typedef { Object } SwitchableViewsShared
- * @property { SwitchableViewsPlugin['getSwitchableRelatedViews'] } getSwitchableRelatedViews
- */
-
 export class SwitchableViewsPlugin extends Plugin {
     static id = "switchableViews";
     static dependencies = ["customizeWebsite"];
-    static shared = ["getSwitchableRelatedViews"];
+    static shared = /** @type {const} */ (["getSwitchableRelatedViews"]);
 
     /**
      * @returns {Promise<[]>}

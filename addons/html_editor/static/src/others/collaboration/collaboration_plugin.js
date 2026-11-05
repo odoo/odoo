@@ -13,16 +13,6 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
  */
 
 /**
- * @typedef { Object } CollaborationShared
- * @property { CollaborationPlugin['getBranchIds'] } getBranchIds
- * @property { CollaborationPlugin['getSnapshotCommits'] } getSnapshotCommits
- * @property { CollaborationPlugin['historyGetMissingCommits'] } historyGetMissingCommits
- * @property { CollaborationPlugin['insertRemoteHistoryCommits'] } insertRemoteHistoryCommits
- * @property { CollaborationPlugin['resetFromCommits'] } resetFromCommits
- * @property { CollaborationPlugin['setInitialBranchCommitId'] } setInitialBranchCommitId
- */
-
-/**
  * @typedef {(() => void)[]} on_remote_history_commits_applied_handlers
  */
 
@@ -48,14 +38,14 @@ export class CollaborationPlugin extends Plugin {
         },
         add_node_mutation_processors: this.sanitizeNode.bind(this),
     };
-    static shared = [
+    static shared = /** @type {const} */ ([
         "getBranchIds",
         "getSnapshotCommits",
         "historyGetMissingCommits",
         "insertRemoteHistoryCommits",
         "resetFromCommits",
         "setInitialBranchCommitId",
-    ];
+    ]);
 
     /** @type { CollaborationPluginConfig['peerId'] } */
     peerId = null;

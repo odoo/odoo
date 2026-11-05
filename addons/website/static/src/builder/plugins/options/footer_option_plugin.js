@@ -8,10 +8,6 @@ import { _t } from "@web/core/l10n/translation";
 /** @typedef {import("@odoo/owl").Component} Component */
 
 /**
- * @typedef { Object } FooterOptionShared
- * @property { FooterOptionPlugin['getFooterTemplates'] } getFooterTemplates
- */
-/**
  * @typedef {(() => Promise<{
  *     key: string,
  *     Component: Component,
@@ -22,7 +18,7 @@ import { _t } from "@web/core/l10n/translation";
 export class FooterOptionPlugin extends Plugin {
     static id = "footerOption";
     static dependencies = ["customizeWebsite", "builderActions"];
-    static shared = ["getFooterTemplates"];
+    static shared = /** @type {const} */ (["getFooterTemplates"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

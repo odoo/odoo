@@ -15,12 +15,6 @@ import { getAffineApproximation, getProjective } from "@html_editor/utils/perspe
 export const DEFAULT_IMAGE_QUALITY = "92";
 
 /**
- * @typedef { Object } ImagePostProcessShared
- * @property { ImagePostProcessPlugin['processImage'] } processImage
- * @property { ImagePostProcessPlugin['getProcessedImageSize'] } getProcessedImageSize
- */
-
-/**
  * @typedef {(
  *   (img: HTMLImageElement, newDataset: object) => Promise<{
  *     getHeight: (canvas: HTMLCanvasElement) => number,
@@ -45,7 +39,7 @@ export const DEFAULT_IMAGE_QUALITY = "92";
 export class ImagePostProcessPlugin extends Plugin {
     static id = "imagePostProcess";
     static dependencies = ["style"];
-    static shared = ["processImage", "getProcessedImageSize"];
+    static shared = /** @type {const} */ (["processImage", "getProcessedImageSize"]);
 
     /**
      * Applies data-attributes modifications to an img tag and returns a dataURL

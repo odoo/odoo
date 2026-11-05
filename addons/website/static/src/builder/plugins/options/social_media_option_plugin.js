@@ -6,16 +6,6 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 /**
- * @typedef { Object } SocialMediaOptionShared
- * @property { SocialMediaOptionPlugin['newLinkElement'] } newLinkElement
- * @property { SocialMediaOptionPlugin['getAssociatedSocialMedia'] } getAssociatedSocialMedia
- * @property { SocialMediaOptionPlugin['removeSocialMediaClasses'] } removeSocialMediaClasses
- * @property { SocialMediaOptionPlugin['removeIconClasses'] } removeIconClasses
- * @property { SocialMediaOptionPlugin['reorderSocialMediaLink'] } reorderSocialMediaLink
- * @property { SocialMediaOptionPlugin['prefillSocialMediaLinks'] } prefillSocialMediaLinks
- */
-
-/**
  * @typedef { Object } SocialMediaInfo
  * @property { boolean } [recorded] whether the social media is one from the orm
  * @property { string|Markup|LazyTranslatedString } label
@@ -118,14 +108,14 @@ const defaultAriaLabel = _t("Other social network");
 export class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
     static dependencies = ["animateOption"];
-    static shared = [
+    static shared = /** @type {const} */ ([
         "newLinkElement",
         "getAssociatedSocialMedia",
         "removeSocialMediaClasses",
         "removeIconClasses",
         "reorderSocialMediaLink",
         "prefillSocialMediaLinks",
-    ];
+    ]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         // Added to commits by the `SocialMediaLinks` `BaseOptionComponent`:

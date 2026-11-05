@@ -8,13 +8,6 @@ import { closestBlock, isBlock } from "../utils/blocks";
 import { nextLeaf } from "../utils/dom_info";
 
 /**
- * @typedef { Object } LineBreakShared
- * @property { LineBreakPlugin['insertLineBreak'] } insertLineBreak
- * @property { LineBreakPlugin['insertLineBreakElement'] } insertLineBreakElement
- * @property { LineBreakPlugin['insertLineBreakNode'] } insertLineBreakNode
- */
-
-/**
  * @typedef {(() => void)[]} on_will_break_line_handlers
  * @typedef {((params: { targetNode: Element, targetOffset: number }) => void | true)[]} insert_line_break_element_overrides
  */
@@ -22,7 +15,11 @@ import { nextLeaf } from "../utils/dom_info";
 export class LineBreakPlugin extends Plugin {
     static dependencies = ["selection", "history", "input", "delete"];
     static id = "lineBreak";
-    static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
+    static shared = /** @type {const} */ ([
+        "insertLineBreak",
+        "insertLineBreakNode",
+        "insertLineBreakElement",
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),

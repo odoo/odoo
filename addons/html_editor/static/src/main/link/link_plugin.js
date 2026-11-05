@@ -172,13 +172,6 @@ async function fetchAttachmentMetaData(url, ormService) {
 }
 
 /**
- * @typedef { Object } LinkShared
- * @property { LinkPlugin['createLink'] } createLink
- * @property { LinkPlugin['getPathAsUrlCommand'] } getPathAsUrlCommand
- * @property { LinkPlugin['insertLink'] } insertLink
- */
-
-/**
  * @typedef {(() => boolean | undefined)[]} is_link_allowed_on_selection_predicates
  * @typedef {{
  *      PopoverClass: Component;
@@ -217,7 +210,7 @@ export class LinkPlugin extends Plugin {
         allowStripDomain: true,
     };
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
-    static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
+    static shared = /** @type {const} */ (["createLink", "insertLink", "getPathAsUrlCommand"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

@@ -9,17 +9,10 @@ import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 import { convertCSSColorToRgba, getContrastingColor } from "@web/core/utils/colors";
 
-/**
- * @typedef { Object } NavTabsStyleOptionShared
- * @property { NavTabsStyleOptionPlugin['isNavItem'] } isNavItem
- * @property { NavTabsStyleOptionPlugin['getActiveOverlayButtons'] } getActiveOverlayButtons
- * @property { NavTabsStyleOptionPlugin['moveNavItem'] } moveNavItem
- */
-
 export class NavTabsStyleOptionPlugin extends Plugin {
     static id = "navTabsOptionStyle";
     static dependencies = ["color"];
-    static shared = ["isNavItem", "getActiveOverlayButtons", "moveNavItem"];
+    static shared = /** @type {const} */ (["isNavItem", "getActiveOverlayButtons", "moveNavItem"]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {

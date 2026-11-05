@@ -5,11 +5,6 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
-/**
- * @typedef { Object } MediaTranslationShared
- * @property { MediaTranslationPlugin['translateMedia'] } translateMedia
- */
-
 export const translateImageOptionSelector = "img.o_savable_attribute";
 export const translateDocumentOptionSelector = ".o_file_box";
 
@@ -23,7 +18,7 @@ export class MediaTranslationPlugin extends Plugin {
         "media_website",
         "translation",
     ];
-    static shared = ["translateMedia"];
+    static shared = /** @type {const} */ (["translateMedia"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
