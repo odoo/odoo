@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="3_product_get_1_free_program" model="fidelity.program">
+        <field name="name">Buy 3 products, get one for free</field>
+        <field name="type">order_promotion</field>
+        <field name="trigger">automatic</field>
+        <field name="point_unit">Credit(s)</field>
+        <field name="limit_usage">True</field>
+        <field name="limit_usage_maximum">100</field>
+    </record>
+
+    <record id="3_product_get_1_free_program_rule" model="fidelity.rule">
+        <field name="minimum_qty">3</field>
+        <field name="reward_point_mode">unit</field>
+        <field name="reward_point_amount">1</field>
+        <field name="product_ids" eval="[(4, ref('fidelity.fidelity_product_example_1'))]"/>
+        <field name="program_id" ref="fidelity.3_product_get_1_free_program"/>
+    </record>
+
+    <record id="3_product_get_1_free_program_reward" model="fidelity.reward">
+        <field name="type">free</field>
+        <field name="free_product_id" ref="fidelity.fidelity_product_example_1"/>
+        <field name="required_points">3</field>
+        <field name="program_id" ref="fidelity.3_product_get_1_free_program"/>
+    </record>
+
+    <!-- Grant some transactions to the fidelity card example -->
+    <record id="3_product_get_1_free_program_balance_example_1" model="fidelity.balance">
+        <field name="card_id" ref="fidelity.fidelity_card_example_1"/>
+        <field name="program_id" ref="fidelity.3_product_get_1_free_program"/>
+    </record>
+
+    <record id="fidelity_transaction_3_product_get_1_free_program_1" model="fidelity.transaction">
+        <field name="balance_id" ref="fidelity.3_product_get_1_free_program_balance_example_1"/>
+        <field name="program_id" ref="fidelity.3_product_get_1_free_program"/>
+        <field name="rule_id" ref="fidelity.3_product_get_1_free_program_rule"/>
+        <field name="issued">3</field>
+        <field name="state">done</field>
+    </record>
+
+    <record id="fidelity_transaction_3_product_get_1_free_program_2" model="fidelity.transaction">
+        <field name="balance_id" ref="fidelity.3_product_get_1_free_program_balance_example_1"/>
+        <field name="program_id" ref="fidelity.3_product_get_1_free_program"/>
+        <field name="reward_id" ref="fidelity.3_product_get_1_free_program_reward"/>
+        <field name="used">3</field>
+        <field name="state">done</field>
+    </record>
+</odoo>

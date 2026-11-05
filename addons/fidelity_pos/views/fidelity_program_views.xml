@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fidelity_program_view_form_pos" model="ir.ui.view">
+        <field name="name">fidelity.program.view.form</field>
+        <field name="model">fidelity.program</field>
+        <field name="inherit_id" ref="fidelity.fidelity_program_view_form"/>
+        <field name="arch" type="xml">
+            <p id="fidelity_program_availabilities_label" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </p>
+            <div id="fidelity_program_availabilities" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </div>
+            <div id="fidelity_program_availabilities" position="inside">
+                <span class="d-inline-flex text-break">
+                    <field name="available_in_pos"/>
+                    <label for="available_in_pos"/>
+                </span>
+            </div>
+            <div id="fidelity_program_availabilities" position="after">
+                <field name="pos_config_ids" widget="many2many_tags" invisible="not available_in_pos" create="False" placeholder="All PoS" />
+            </div>
+        </field>
+    </record>
+</odoo>
