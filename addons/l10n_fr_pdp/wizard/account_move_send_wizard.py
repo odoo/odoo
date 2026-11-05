@@ -75,4 +75,6 @@ class AccountMoveSendWizard(models.TransientModel):
                     'invoice_edi_format': 'ubl_21_fr',
                 })
 
+                partner.button_account_peppol_check_partner_endpoint()
+
         super()._compute_sending_method_checkboxes()
