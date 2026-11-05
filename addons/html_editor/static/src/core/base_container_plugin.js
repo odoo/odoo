@@ -8,7 +8,7 @@ import {
     isProtected,
     isProtecting,
 } from "@html_editor/utils/dom_info";
-import { Plugin } from "../plugin";
+import { Plugin, shared } from "../plugin";
 import { fillEmpty } from "@html_editor/utils/dom";
 import {
     BASE_CONTAINER_CLASS,
@@ -22,19 +22,16 @@ import { childNodeIndex } from "@html_editor/utils/position";
 import { callbacksForCursorUpdate, getSelection } from "@html_editor/utils/selection";
 
 /**
- * @typedef { Object } BaseContainerShared
- * @property { BaseContainerPlugin['createBaseContainer'] } createBaseContainer
- * @property { BaseContainerPlugin['getDefaultNodeName'] } getDefaultNodeName
- * @property { BaseContainerPlugin['isCandidateForBaseContainer'] } isCandidateForBaseContainer
- */
-
-/**
  * @typedef {((node: Node) => boolean | undefined)[]} is_valid_for_base_container_predicates
  */
 
 export class BaseContainerPlugin extends Plugin {
     static id = "baseContainer";
-    static shared = ["createBaseContainer", "getDefaultNodeName", "isCandidateForBaseContainer"];
+    static shared = shared([
+        "createBaseContainer",
+        "getDefaultNodeName",
+        "isCandidateForBaseContainer",
+    ]);
     static defaultConfig = {
         baseContainers: ["P", "DIV"],
     };

@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { DEFAULT_PALETTE } from "@html_editor/utils/color";
 import { getShapeURL } from "@html_builder/plugins/image/image_helpers";
 import {
@@ -68,7 +68,7 @@ const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m
 export class ImageShapeOptionPlugin extends Plugin {
     static id = "imageShapeOption";
     static dependencies = ["history", "userCommand", "imagePostProcess", "imageToolOption"];
-    static shared = [
+    static shared = shared([
         "getImageShapeGroups",
         "isTransformableShape",
         "isTechnicalShape",
@@ -78,7 +78,7 @@ export class ImageShapeOptionPlugin extends Plugin {
         "getShapeLabel",
         "loadShape",
         "getShapeCategory",
-    ];
+    ]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {

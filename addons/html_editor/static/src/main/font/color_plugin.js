@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import {
     BG_CLASSES_REGEX,
     COLOR_COMBINATION_CLASSES_REGEX,
@@ -36,17 +36,6 @@ export const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
 const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`).join(", ");
 
 /**
- * @typedef { Object } ColorShared
- * @property { ColorPlugin['colorElement'] } colorElement
- * @property { ColorPlugin['removeAllColor'] } removeAllColor
- * @property { ColorPlugin['getElementColors'] } getElementColors
- * @property { ColorPlugin['applyColor'] } applyColor
- * @property { ColorPlugin['getColorCombination'] } getColorCombination
- * @property { ColorPlugin['requestColor'] } requestColor
- * @property { ColorPlugin['getActiveColorInfo'] } getActiveColorInfo
- */
-
-/**
  * @typedef {((element: HTMLElement, cssProp: string, color: string, params: Object) => boolean)[]} apply_color_style_overrides
  * @typedef {((color: string, mode: "color" | "backgroundColor") => void)[]} apply_color_overrides
  * @typedef {((color: string, mode: "color" | "backgroundColor") => string)[]} apply_background_color_processors
@@ -68,7 +57,7 @@ export class ColorPlugin extends Plugin {
         "delete",
         "properties",
     ];
-    static shared = [
+    static shared = shared([
         "colorElement",
         "removeAllColor",
         "getElementColors",
@@ -76,7 +65,7 @@ export class ColorPlugin extends Plugin {
         "applyColor",
         "requestColor",
         "getActiveColorInfo",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

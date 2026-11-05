@@ -1,5 +1,5 @@
 import { proxy } from "@odoo/owl";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "./color_selector";
 import { isStylable, isTextNode } from "@html_editor/utils/dom_info";
@@ -11,15 +11,13 @@ const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
 
 /**
- * @typedef { Object } ColorUIShared
  * @typedef {(() => string)[]} selected_background_color_providers
- * @property { ColorUIPlugin['getPropsForColorSelector'] } getPropsForColorSelector
  */
 
 export class ColorUIPlugin extends Plugin {
     static id = "colorUi";
     static dependencies = ["color", "dom", "history", "selection"];
-    static shared = ["getPropsForColorSelector"];
+    static shared = shared(["getPropsForColorSelector"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         toolbar_items: [

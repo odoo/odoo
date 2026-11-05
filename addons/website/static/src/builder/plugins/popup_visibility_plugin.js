@@ -1,20 +1,14 @@
 import { usePlugin } from "@odoo/owl";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
-/**
- * @typedef { Object } PopupVisibilityShared
- * @property { PopupVisibilityPlugin['onTargetHide'] } onTargetHide
- * @property { PopupVisibilityPlugin['onTargetShow'] } onTargetShow
- */
-
 export class PopupVisibilityPlugin extends Plugin {
     static id = "popupVisibilityPlugin";
     static dependencies = ["visibility", "domObserver", "domReferenceMap"];
-    static shared = ["onTargetShow", "onTargetHide"];
+    static shared = shared(["onTargetShow", "onTargetHide"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

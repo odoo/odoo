@@ -1,4 +1,4 @@
-import { Plugin } from "../plugin";
+import { Plugin, shared } from "../plugin";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -15,17 +15,12 @@ import { Plugin } from "../plugin";
  */
 
 /**
- * @typedef { Object } UserCommandShared
- * @property { UserCommandPlugin['getCommand'] } getCommand
- */
-
-/**
  * @typedef {UserCommand[]} user_commands
  */
 
 export class UserCommandPlugin extends Plugin {
     static id = "userCommand";
-    static shared = ["getCommand"];
+    static shared = shared(["getCommand"]);
 
     setup() {
         this.commands = {};

@@ -1,6 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -27,7 +27,7 @@ import { registry } from "@web/core/registry";
 
 export class FloatingSnippetsPlugin extends Plugin {
     static id = "floatingSnippets";
-    static shared = ["getShowOnScopes"];
+    static shared = shared(["getShowOnScopes"]);
 
     resources = {
         builder_actions: {

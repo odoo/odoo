@@ -1,11 +1,11 @@
 import { isDarkColorPalette } from "@website/components/dialog/dark_palette_utils";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 export class DynamicSnippetEventsOptionPlugin extends Plugin {
     static id = "dynamicSnippetEventsOption";
     static dependencies = ["dynamicSnippetCarouselOption", "dynamicSnippetOption"];
-    static shared = ["getModelNameFilter"];
+    static shared = shared(["getModelNameFilter"]);
     modelNameFilter = "event.event";
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),

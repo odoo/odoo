@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { getScrollingElement, getScrollingTarget } from "@web/core/utils/scrolling";
 import { BuilderOverlay, sizingY, sizingX, sizingGrid } from "./builder_overlay";
@@ -10,17 +10,10 @@ function isResizable(el) {
     return isResizableY || isResizableX || isResizableGrid;
 }
 
-/**
- * @typedef { Object } BuilderOverlayShared
- * @property { BuilderOverlayPlugin['showOverlayPreview'] } showOverlayPreview
- * @property { BuilderOverlayPlugin['hideOverlayPreview'] } hideOverlayPreview
- * @property { BuilderOverlayPlugin['refreshOverlays'] } refreshOverlays
- */
-
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
     static dependencies = ["builderOptions", "localOverlay", "history", "operation"];
-    static shared = ["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"];
+    static shared = shared(["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"]);
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_committed_to_history_handlers: this.refreshOverlays.bind(this),

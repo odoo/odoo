@@ -2,7 +2,7 @@ import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { withSequence } from "@html_editor/utils/resource";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
-import { Plugin } from "../plugin";
+import { Plugin, shared } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { cleanTextNode, fillEmpty, splitTextNode, unwrapContents } from "../utils/dom";
 import {
@@ -38,15 +38,6 @@ import { FORMATTABLE_TAGS, removeStyle } from "../utils/formatting";
 import { boundariesIn, leftPos, rightPos } from "../utils/position";
 
 const NOT_A_NUMBER = /[^\d]/g;
-
-/**
- * @typedef {Object} FormatShared
- * @property { FormatPlugin['canFormatContent'] } canFormatContent
- * @property { FormatPlugin['getOrCreateZws'] } getOrCreateZws
- * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
- * @property { FormatPlugin['removeSelectionFormats'] } removeSelectionFormats
- * @property { FormatPlugin['requestFormat'] } requestFormat
- */
 
 /**
  * @typedef {Object} FormatSpec
@@ -88,7 +79,7 @@ export class FormatPlugin extends Plugin {
     static id = "format";
     static dependencies = ["dom", "selection", "history", "input", "split", "delete", "properties"];
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
-    static shared = [
+    static shared = shared([
         "areSimilarElements",
         "canFormatContent",
         "getOrCreateZws",
@@ -96,7 +87,7 @@ export class FormatPlugin extends Plugin {
         "removeSelectionFormats",
         "requestFormat",
         "getPendingIntents",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

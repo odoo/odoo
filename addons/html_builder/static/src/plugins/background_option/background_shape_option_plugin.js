@@ -1,6 +1,6 @@
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { normalizeColor } from "@html_builder/utils/utils_css";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { deepCopy, deepMerge, pick } from "@web/core/utils/objects";
 import { backgroundShapesDefinition } from "./background_shapes_definition";
@@ -28,22 +28,6 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
  * @typedef {((editingElement: HTMLElement) => HTMLElement)[]} background_shape_target_providers
  * @typedef {((el: HTMLElement) => boolean)[]} is_element_in_invisible_panel_predicates
  * @typedef {((el: HTMLElement) => boolean)[]} should_ignore_background_color_for_shapes_predicates
- */
-
-/**
- * @typedef { Object } BackgroundShapeOptionShared
- * @property { BackgroundShapeOptionPlugin['getShapeStyleUrl'] } getShapeStyleUrl
- * @property { BackgroundShapeOptionPlugin['getShapeData'] } getShapeData
- * @property { BackgroundShapeOptionPlugin['getBackgroundShapeGroups'] } getBackgroundShapeGroups
- * @property { BackgroundShapeOptionPlugin['getBackgroundShapes'] } getBackgroundShapes
- * @property { BackgroundShapeOptionPlugin['getImplicitColors'] } getImplicitColors
- * @property { BackgroundShapeOptionPlugin['applyShape'] } applyShape
- * @property { BackgroundShapeOptionPlugin['createShapeContainer'] } createShapeContainer
- * @property { BackgroundShapeOptionPlugin['getComputedConnectionsColors'] } getComputedConnectionsColors
- * @property { BackgroundShapeOptionPlugin['handleBgColorUpdated'] } handleBgColorUpdated
- * @property { BackgroundShapeOptionPlugin['isShapeEligibleForComputation'] } isShapeEligibleForComputation
- * @property { BackgroundShapeOptionPlugin['getShapeSrc'] } getShapeSrc
- * @property { BackgroundShapeOptionPlugin['getShapeStylePosition'] } getShapeStylePosition
  */
 
 export class BackgroundShapeOptionPlugin extends Plugin {
@@ -88,7 +72,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         on_cloned_handlers: ({ cloneEl }) => this.handleBgColorUpdated(cloneEl),
         on_website_color_updated_handlers: this.syncBackgroundShapeColorsWithTheme.bind(this),
     };
-    static shared = [
+    static shared = shared([
         "getShapeStyleUrl",
         "getShapeData",
         "getBackgroundShapeGroups",
@@ -101,7 +85,7 @@ export class BackgroundShapeOptionPlugin extends Plugin {
         "isShapeEligibleForComputation",
         "getShapeSrc",
         "getShapeStylePosition",
-    ];
+    ]);
     setup() {
         // TODO: update shapeStyles if a stylesheet value changes.
         this.shapeStyles = {};

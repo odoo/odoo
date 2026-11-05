@@ -1,5 +1,5 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import {
@@ -24,7 +24,7 @@ const ACTION_ID = "mass_mailing.CustomizeMailingVariable";
 export class CustomizeMailingPlugin extends Plugin {
     static id = PLUGIN_ID;
     static dependencies = ["history"];
-    static shared = ["getVariableValue", "setVariable"];
+    static shared = shared(["getVariableValue", "setVariable"]);
 
     resources = {
         builder_actions: {

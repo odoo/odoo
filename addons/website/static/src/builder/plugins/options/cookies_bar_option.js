@@ -1,15 +1,10 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-
-/**
- * @typedef { Object } CookiesBarOptionShared
- * @property { CookiesBarOptionPlugin['getSavedSelectors'] } getSavedSelectors
- */
 
 export class CookiesBarOptionPlugin extends Plugin {
     static id = "CookiesBarOptionPlugin";
-    static shared = ["getSavedSelectors"];
+    static shared = shared(["getSavedSelectors"]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {

@@ -1,16 +1,11 @@
 import { nodeToTree } from "@html_editor/core/dom_reference_map_plugin";
 import { useRootComponents } from "@html_editor/others/embedded_component_utils";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { memoize } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 import { NATIVE_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
-
-/**
- * @typedef { Object } EmbeddedComponentShared
- * @property { EmbeddedComponentPlugin['renderBlueprintToElement'] } renderBlueprintToElement
- */
 
 /**
  * @typedef { import("@html_editor/core/dom_observer_plugin").SerializedMutation<"attributes"> } SerializedAttributesMutation
@@ -34,7 +29,7 @@ export class EmbeddedComponentPlugin extends Plugin {
         "protectedNode",
         "selection",
     ];
-    static shared = ["renderBlueprintToElement"];
+    static shared = shared(["renderBlueprintToElement"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */

@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { unwrapContents } from "@html_editor/utils/dom";
 import {
@@ -35,7 +35,7 @@ const DELIMITER_TEXT_CONTENT = "-- ";
 export class UserSignaturePlugin extends Plugin {
     static id = "userSignature";
     static dependencies = ["baseContainer", "contentEditablePlugin", "dom", "history", "selection"];
-    static shared = ["cleanSignatures"];
+    static shared = shared(["cleanSignatures"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -9,20 +9,13 @@ import {
 import { SetContainerWidthAction } from "../content_width_option_plugin";
 import { updateDynamicCarouselNumberOfElements } from "@website/utils/dynamic_snippets";
 
-/**
- * @typedef { Object } DynamicSnippetCarouselOptionShared
- * @property { DynamicSnippetCarouselOptionPlugin['setOptionsDefaultValues'] } setOptionsDefaultValues
- * @property { DynamicSnippetCarouselOptionPlugin['updateTemplateSnippetCarousel'] } updateTemplateSnippetCarousel
- * @property { DynamicSnippetCarouselOptionPlugin['getModelNameFilter'] } getModelNameFilter
- */
-
 export class DynamicSnippetCarouselOptionPlugin extends Plugin {
     static id = "dynamicSnippetCarouselOption";
-    static shared = [
+    static shared = shared([
         "setOptionsDefaultValues",
         "updateTemplateSnippetCarousel",
         "getModelNameFilter",
-    ];
+    ]);
     static dependencies = ["dynamicSnippetOption"];
     modelNameFilter = "";
     /** @type {import("plugins").WebsiteResources} */

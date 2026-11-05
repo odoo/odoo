@@ -1,18 +1,13 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Plugin } from "../../plugin";
+import { Plugin, shared } from "../../plugin";
 import { ImageCrop } from "./image_crop";
 import { withSequence } from "@html_editor/utils/resource";
-
-/**
- * @typedef { Object } ImageCropShared
- * @property { ImageCropPlugin['openCropImage'] } openCropImage
- */
 
 export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
     static dependencies = ["selection", "history", "imagePostProcess"];
-    static shared = ["openCropImage"];
+    static shared = shared(["openCropImage"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

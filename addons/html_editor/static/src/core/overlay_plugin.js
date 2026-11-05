@@ -1,12 +1,7 @@
 import { markRaw, EventBus } from "@odoo/owl";
-import { Plugin } from "../plugin";
+import { Plugin, shared } from "../plugin";
 import { getSelection } from "../utils/selection";
 import { EditorOverlay } from "./overlay";
-
-/**
- * @typedef { Object } OverlayShared
- * @property { OverlayPlugin['createOverlay'] } createOverlay
- */
 
 /**
  * Provides the following feature:
@@ -15,7 +10,7 @@ import { EditorOverlay } from "./overlay";
 export class OverlayPlugin extends Plugin {
     static id = "overlay";
     static dependencies = ["domObserver", "selection", "history"];
-    static shared = ["createOverlay"];
+    static shared = shared(["createOverlay"]);
 
     overlays = [];
 

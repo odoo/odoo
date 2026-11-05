@@ -21,22 +21,18 @@ import { BuilderMany2Many } from "./building_blocks/builder_many2many";
 import { BuilderOptionsSection } from "./building_blocks/builder_options_section";
 import { BuilderMany2One } from "./building_blocks/builder_many2one";
 import { ModelMany2Many } from "./building_blocks/model_many2many";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { Image } from "./img";
 import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
 import { BuilderFontFamilyPicker } from "./building_blocks/builder_fontfamilypicker";
 
 /** @typedef {import("@odoo/owl").ComponentConstructor} ComponentConstructor */
-/**
- * @typedef { Object } BuilderComponentShared
- * @property { BuilderComponentPlugin['getComponents'] } getComponents
- */
 
 /** @typedef {ComponentConstructor[]} builder_components */
 
 export class BuilderComponentPlugin extends Plugin {
     static id = "builderComponents";
-    static shared = ["getComponents"];
+    static shared = shared(["getComponents"]);
 
     /** @type {import("plugins").BuilderResources} */
     resources = {

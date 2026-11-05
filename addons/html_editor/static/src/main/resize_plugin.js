@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { removeStyle } from "@html_editor/utils/dom";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { getElementHoveredEdge } from "@html_editor/utils/perspective_utils";
@@ -6,7 +6,7 @@ import { getElementHoveredEdge } from "@html_editor/utils/perspective_utils";
 export class ResizePlugin extends Plugin {
     static id = "resize";
     static dependencies = ["history"];
-    static shared = ["resetSize", "resetHeight", "resetWidth"];
+    static shared = shared(["resetSize", "resetHeight", "resetWidth"]);
 
     /** @type {import("plugins").EditorResources} */
     resources = {

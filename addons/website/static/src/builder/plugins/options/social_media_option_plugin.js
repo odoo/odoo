@@ -1,19 +1,9 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { ICON_SELECTOR } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
-
-/**
- * @typedef { Object } SocialMediaOptionShared
- * @property { SocialMediaOptionPlugin['newLinkElement'] } newLinkElement
- * @property { SocialMediaOptionPlugin['getAssociatedSocialMedia'] } getAssociatedSocialMedia
- * @property { SocialMediaOptionPlugin['removeSocialMediaClasses'] } removeSocialMediaClasses
- * @property { SocialMediaOptionPlugin['removeIconClasses'] } removeIconClasses
- * @property { SocialMediaOptionPlugin['reorderSocialMediaLink'] } reorderSocialMediaLink
- * @property { SocialMediaOptionPlugin['prefillSocialMediaLinks'] } prefillSocialMediaLinks
- */
 
 /**
  * @typedef { Object } SocialMediaInfo
@@ -118,14 +108,14 @@ const defaultAriaLabel = _t("Other social network");
 export class SocialMediaOptionPlugin extends Plugin {
     static id = "socialMediaOptionPlugin";
     static dependencies = ["animateOption"];
-    static shared = [
+    static shared = shared([
         "newLinkElement",
         "getAssociatedSocialMedia",
         "removeSocialMediaClasses",
         "removeIconClasses",
         "reorderSocialMediaLink",
         "prefillSocialMediaLinks",
-    ];
+    ]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         // Added to commits by the `SocialMediaLinks` `BaseOptionComponent`:

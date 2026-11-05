@@ -1,10 +1,4 @@
-import { Plugin } from "../plugin";
-
-/**
- * @typedef { Object } LocalOverlayShared
- * @property { LocalOverlayPlugin['makeLocalOverlay'] } makeLocalOverlay
- * @property { LocalOverlayPlugin['createElement'] } createElement
- */
+import { Plugin, shared } from "../plugin";
 
 /**
  * This plugins provides a way to create a "local" overlays so that their
@@ -12,7 +6,7 @@ import { Plugin } from "../plugin";
  */
 export class LocalOverlayPlugin extends Plugin {
     static id = "localOverlay";
-    static shared = ["makeLocalOverlay", "createElement"];
+    static shared = shared(["makeLocalOverlay", "createElement"]);
 
     setup() {
         this.localOverlayContainer = this.config.localOverlayContainers?.ref();

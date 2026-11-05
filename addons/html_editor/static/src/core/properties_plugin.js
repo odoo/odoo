@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 
 /**
  * A declaration associating properties with the nodes its predicate matches.
@@ -19,17 +19,12 @@ import { Plugin } from "@html_editor/plugin";
  */
 
 /**
- * @typedef {Object} PropertiesShared
- * @property { PropertiesPlugin['get'] } get
- */
-
-/**
  * Computes node properties that determine how features behave around a given
  * node, from the declarations matching it.
  */
 export class PropertiesPlugin extends Plugin {
     static id = "properties";
-    static shared = ["get"];
+    static shared = shared(["get"]);
 
     setup() {
         /** @type {Map<string, NodeProperties[]>} */

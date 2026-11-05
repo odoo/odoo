@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { isEditorTab, isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
 import {
@@ -25,7 +25,7 @@ import { debounce } from "@web/core/utils/timing";
 export class HintPlugin extends Plugin {
     static id = "hint";
     static dependencies = ["history", "selection", "properties"];
-    static shared = ["updateHints"];
+    static shared = shared(["updateHints"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */

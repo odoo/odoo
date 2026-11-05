@@ -1,5 +1,5 @@
 import { proxy } from "@odoo/owl";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { isEmptyTextNode, isVisible, isZWS } from "@html_editor/utils/dom_info";
 import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch, isMacOS, isIOS } from "@web/core/browser/feature_detection";
@@ -99,12 +99,6 @@ export const DISABLED_NAMESPACE = "disabled";
 /** Toolbar namespaces that allow expanding to the full toolbar */
 
 /**
- * @typedef { Object } ToolbarShared
- * @property { ToolbarPlugin['getToolbarInfo'] } getToolbarInfo
- * @property { ToolbarPlugin['getIsToolbarOpen'] } getIsToolbarOpen
- */
-
-/**
  * @typedef {ToolbarGroup[]} toolbar_groups
  */
 
@@ -161,7 +155,7 @@ export const DISABLED_NAMESPACE = "disabled";
 export class ToolbarPlugin extends Plugin {
     static id = "toolbar";
     static dependencies = ["overlay", "properties", "selection", "userCommand", "history"];
-    static shared = ["getToolbarInfo", "getIsToolbarOpen"];
+    static shared = shared(["getToolbarInfo", "getIsToolbarOpen"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_selectionchange_handlers: this.handleSelectionChange.bind(this),

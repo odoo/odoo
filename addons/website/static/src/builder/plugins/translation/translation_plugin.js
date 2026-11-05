@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
@@ -16,12 +16,6 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
  * @property {string} oeTranslationState
  * @property {string} oeTranslationSourceSha
  * @property {string} translation
- */
-
-/**
- * @typedef {Object} TranslationShared
- * @property {TranslationPlugin["hasTranslatedAttribute"]} hasTranslatedAttribute
- * @property {TranslationPlugin["getDirtyAttributeTranslationsInfo"]} getDirtyAttributeTranslationsInfo
  */
 
 /**
@@ -75,7 +69,7 @@ function findOEditable(containerEl) {
 export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["builderActions"];
-    static shared = ["hasTranslatedAttribute", "getDirtyAttributeTranslationsInfo"];
+    static shared = shared(["hasTranslatedAttribute", "getDirtyAttributeTranslationsInfo"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

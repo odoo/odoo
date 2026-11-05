@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { rpc } from "@web/core/network/rpc";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { FooterTemplateChoice } from "./footer_template_option";
@@ -7,10 +7,6 @@ import { _t } from "@web/core/l10n/translation";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 
-/**
- * @typedef { Object } FooterOptionShared
- * @property { FooterOptionPlugin['getFooterTemplates'] } getFooterTemplates
- */
 /**
  * @typedef {(() => Promise<{
  *     key: string,
@@ -22,7 +18,7 @@ import { _t } from "@web/core/l10n/translation";
 export class FooterOptionPlugin extends Plugin {
     static id = "footerOption";
     static dependencies = ["customizeWebsite", "builderActions"];
-    static shared = ["getFooterTemplates"];
+    static shared = shared(["getFooterTemplates"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

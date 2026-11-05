@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { HeaderTemplateChoice } from "./header_template_option";
@@ -7,10 +7,6 @@ import { WebsiteConfigAction } from "../../customize_website_plugin";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 
-/**
- * @typedef { Object } HeaderOptionShared
- * @property { HeaderOptionPlugin['getHeaderTemplates'] } getHeaderTemplates
- */
 /**
  * @typedef {(() => {
  *     key: string,
@@ -22,7 +18,7 @@ import { WebsiteConfigAction } from "../../customize_website_plugin";
 export class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
     static dependencies = ["customizeWebsite", "menuDataPlugin"];
-    static shared = ["getHeaderTemplates"];
+    static shared = shared(["getHeaderTemplates"]);
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {

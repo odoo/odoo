@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { PRODUCT_PAGE_OPTION_SELECTOR } from "./product_page_option";
 import { rpc } from "@web/core/network/rpc";
@@ -14,7 +14,7 @@ import { getDataURLFromFile } from "@web/core/utils/urls";
 export class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
     static dependencies = ["builderActions", "media", "customizeWebsite"];
-    static shared = ["forceCarouselRedraw"];
+    static shared = shared(["forceCarouselRedraw"]);
     resources = {
         builder_actions: {
             ProductPageContainerWidthAction,

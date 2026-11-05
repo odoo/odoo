@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { generatePartnerMentionElement } from "@mail/utils/common/format";
 
 export const MENTION_SELECTOR = "a.o_mail_redirect, a.o-discuss-mention";
@@ -24,7 +24,7 @@ function isRecordMention(mentionEl) {
 export class MentionPlugin extends Plugin {
     static id = "mention";
     static dependencies = ["history"];
-    static shared = ["syncPartnerMentions", "whenMentionsChecked"];
+    static shared = shared(["syncPartnerMentions", "whenMentionsChecked"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         fragment_to_insert_processors: (fragment) => {

@@ -1,18 +1,11 @@
 import { splitTextNode } from "@html_editor/utils/dom";
-import { Plugin } from "../plugin";
+import { Plugin, shared } from "../plugin";
 import { CTGROUPS, CTYPES } from "../utils/content_types";
 import { getState, isFakeLineBreak, prepareUpdate } from "../utils/dom_state";
 import { DIRECTIONS, leftPos, rightPos } from "../utils/position";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { closestBlock, isBlock } from "../utils/blocks";
 import { nextLeaf } from "../utils/dom_info";
-
-/**
- * @typedef { Object } LineBreakShared
- * @property { LineBreakPlugin['insertLineBreak'] } insertLineBreak
- * @property { LineBreakPlugin['insertLineBreakElement'] } insertLineBreakElement
- * @property { LineBreakPlugin['insertLineBreakNode'] } insertLineBreakNode
- */
 
 /**
  * @typedef {(() => void)[]} on_will_break_line_handlers
@@ -22,7 +15,7 @@ import { nextLeaf } from "../utils/dom_info";
 export class LineBreakPlugin extends Plugin {
     static dependencies = ["selection", "history", "input", "delete"];
     static id = "lineBreak";
-    static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
+    static shared = shared(["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),

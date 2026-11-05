@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { getScrollingElement } from "@web/core/utils/scrolling";
@@ -15,13 +15,6 @@ import { handleImagesIfDataset } from "@html_builder/utils/image";
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
 /**
- * @typedef { Object } AnimateOptionShared
- * @property { AnimateOptionPlugin['forceAnimation'] } forceAnimation
- * @property { AnimateOptionPlugin['getDirectionsItems'] } getDirectionsItems
- * @property { AnimateOptionPlugin['getEffectsItems'] } getEffectsItems
- */
-
-/**
  * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} on_hover_animation_mode_cleaned_handlers
  * @typedef {((editingElement: HTMLElement) => Promise<void>)[]} on_hover_animation_mode_applied_handlers
  */
@@ -34,14 +27,14 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["dom", "history", "selection", "split", "properties"];
-    static shared = [
+    static shared = shared([
         "forceAnimation",
         "getDirectionsItems",
         "getEffectsItems",
         "hasAnimationEffect",
         "canHaveHoverEffect",
         "canHaveScrollEffect",
-    ];
+    ]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         toolbar_items: [

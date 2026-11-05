@@ -1,5 +1,5 @@
 import { proxy } from "@odoo/owl";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { withSequence } from "@html_editor/utils/resource";
 import { ThemeAdvancedOption } from "./theme_advanced_option";
@@ -29,16 +29,6 @@ import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { ImageSize } from "@html_builder/plugins/image/image_size";
-
-/**
- * @typedef { Object } ThemeTabShared
- * @property { ThemeTabPlugin['buildGray'] } buildGray
- * @property { ThemeTabPlugin['getFontWeights'] } getFontWeights
- * @property { ThemeTabPlugin['getGrays'] } getGrays
- * @property { ThemeTabPlugin['getGrayParams'] } getGrayParams
- * @property { ThemeTabPlugin['setGrays'] } setGrays
- * @property { ThemeTabPlugin['setGrayParams'] } setGrayParams
- */
 
 /**
  * @typedef {import("@html_builder/core/builder_options_plugin").BuilderOptionContainer[]} theme_options
@@ -100,14 +90,14 @@ function parseFontFaceWeight(weightDescriptor) {
 
 export class ThemeTabPlugin extends Plugin {
     static id = "themeTab";
-    static shared = [
+    static shared = shared([
         "getGrayParams",
         "getGrays",
         "setGrays",
         "setGrayParams",
         "buildGray",
         "getFontWeights",
-    ];
+    ]);
     grayParams = {};
     grays = proxy({});
 

@@ -1,11 +1,15 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 export class VersionControlPlugin extends Plugin {
     static id = "versionControl";
     static dependencies = ["builderOptions"];
     accessPerOutdatedEl = new WeakMap();
-    static shared = ["hasAccessToOutdatedEl", "giveAccessToOutdatedEl", "replaceWithNewVersion"];
+    static shared = shared([
+        "hasAccessToOutdatedEl",
+        "giveAccessToOutdatedEl",
+        "replaceWithNewVersion",
+    ]);
 
     hasAccessToOutdatedEl(el) {
         if (!el.dataset.snippet) {

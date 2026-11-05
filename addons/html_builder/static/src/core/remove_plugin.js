@@ -1,5 +1,5 @@
 import { usePlugin } from "@odoo/owl";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isUnremovableQWebElement } from "@html_editor/others/qweb_plugin";
@@ -8,12 +8,6 @@ import { closestElement, selectElements } from "@html_editor/utils/dom_traversal
 import { BootstrapInstance } from "@web/core/utils/bootstrap_plugin";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
-
-/**
- * @typedef { Object } RemoveShared
- * @property { RemovePlugin['removeElement'] } removeElement
- * @property { RemovePlugin['isEmptyAndRemovable'] } isEmptyAndRemovable
- */
 
 /**
  * @typedef {((arg: {
@@ -76,7 +70,7 @@ export class RemovePlugin extends Plugin {
             }
         },
     };
-    static shared = ["removeElement", "isEmptyAndRemovable"];
+    static shared = shared(["removeElement", "isEmptyAndRemovable"]);
 
     setup() {
         this.bootstrap = usePlugin(BootstrapInstance);

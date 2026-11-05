@@ -1,5 +1,5 @@
 import { proxy } from "@odoo/owl";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rotate } from "@web/core/utils/arrays";
 import { Powerbox } from "./powerbox";
@@ -40,14 +40,6 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
  * @property {TranslatedString[]} [keywords]
  * @property { (selection: EditorSelection) => boolean } isAvailable
  * @property {string} shorthandLiteral Optional
- */
-
-/**
- * @typedef { Object } PowerboxShared
- * @property { PowerboxPlugin['closePowerbox'] } closePowerbox
- * @property { PowerboxPlugin['getAvailablePowerboxCommands'] } getAvailablePowerboxCommands
- * @property { PowerboxPlugin['openPowerbox'] } openPowerbox
- * @property { PowerboxPlugin['updatePowerbox'] } updatePowerbox
  */
 
 /** @typedef {PowerboxCategory[]} powerbox_categories */
@@ -91,12 +83,12 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 export class PowerboxPlugin extends Plugin {
     static id = "powerbox";
     static dependencies = ["overlay", "selection", "history", "userCommand"];
-    static shared = [
+    static shared = shared([
         "closePowerbox",
         "getAvailablePowerboxCommands",
         "openPowerbox",
         "updatePowerbox",
-    ];
+    ]);
     /** @type {import("plugins").EditorResources} */
     resources = {
         powerbox_categories: [

@@ -1,13 +1,13 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { setDatasetIfUndefined } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { getContextualFilterDomain } from "./dynamic_snippet_products_option";
 
 export class DynamicSnippetProductsOptionPlugin extends Plugin {
     static id = "dynamicSnippetProductsOption";
     static dependencies = ["dynamicSnippetCarouselOption", "dynamicSnippetOption"];
-    static shared = ["fetchCategories", "getModelNameFilter"];
+    static shared = shared(["fetchCategories", "getModelNameFilter"]);
     modelNameFilter = "product.product";
     resources = {
         on_dynamic_snippet_template_updated_handlers: this.onTemplateUpdated.bind(this),

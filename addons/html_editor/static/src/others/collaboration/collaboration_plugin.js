@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 
 // 60 seconds
 export const HISTORY_SNAPSHOT_INTERVAL = 1000 * 60;
@@ -10,16 +10,6 @@ const HISTORY_SNAPSHOT_BUFFER_TIME = 1000 * 10;
  * @property { string } peerId
  *
  * @typedef { import("@html_editor/core/history_plugin").HistoryCommit } HistoryCommit
- */
-
-/**
- * @typedef { Object } CollaborationShared
- * @property { CollaborationPlugin['getBranchIds'] } getBranchIds
- * @property { CollaborationPlugin['getSnapshotCommits'] } getSnapshotCommits
- * @property { CollaborationPlugin['historyGetMissingCommits'] } historyGetMissingCommits
- * @property { CollaborationPlugin['insertRemoteHistoryCommits'] } insertRemoteHistoryCommits
- * @property { CollaborationPlugin['resetFromCommits'] } resetFromCommits
- * @property { CollaborationPlugin['setInitialBranchCommitId'] } setInitialBranchCommitId
  */
 
 /**
@@ -48,14 +38,14 @@ export class CollaborationPlugin extends Plugin {
         },
         add_node_mutation_processors: this.sanitizeNode.bind(this),
     };
-    static shared = [
+    static shared = shared([
         "getBranchIds",
         "getSnapshotCommits",
         "historyGetMissingCommits",
         "insertRemoteHistoryCommits",
         "resetFromCommits",
         "setInitialBranchCommitId",
-    ];
+    ]);
 
     /** @type { CollaborationPluginConfig['peerId'] } */
     peerId = null;

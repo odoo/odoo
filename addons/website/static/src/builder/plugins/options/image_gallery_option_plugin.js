@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
 import { updateCarouselIndicators } from "../carousel_option_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -8,15 +8,6 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 import { forwardToThumbnail } from "@html_builder/utils/utils_css";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { uuid } from "@web/core/utils/strings";
-
-/**
- * @typedef { Object } ImageGalleryOptionShared
- * @property { ImageGalleryOptionPlugin['getColumns'] } getColumns
- * @property { ImageGalleryOptionPlugin['getMode'] } getMode
- * @property { ImageGalleryOptionPlugin['processImage'] } processImage
- * @property { ImageGalleryOptionPlugin['restoreSelection'] } restoreSelection
- * @property { ImageGalleryOptionPlugin['setImages'] } setImages
- */
 
 export class ImageGalleryOptionPlugin extends Plugin {
     static id = "imageGalleryOption";
@@ -30,7 +21,13 @@ export class ImageGalleryOptionPlugin extends Plugin {
         "imagePostProcess",
         "websiteBridge",
     ];
-    static shared = ["processImages", "getMode", "setImages", "restoreSelection", "getColumns"];
+    static shared = shared([
+        "processImages",
+        "getMode",
+        "setImages",
+        "restoreSelection",
+        "getColumns",
+    ]);
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {

@@ -1,11 +1,11 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class ProductsItemOptionPlugin extends Plugin {
     static id = "productsItemOptionPlugin";
-    static shared = ["setProductTemplateID", "getProductTemplateID", "loadInfo"];
+    static shared = shared(["setProductTemplateID", "getProductTemplateID", "loadInfo"]);
 
     resources = {
         builder_actions: {

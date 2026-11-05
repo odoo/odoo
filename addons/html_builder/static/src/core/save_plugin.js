@@ -1,4 +1,4 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { isZWS } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
@@ -20,12 +20,6 @@ export class EscapeTextNodesPlugin extends Plugin {
 }
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
-/**
- * @typedef { Object } SaveShared
- * @property { SavePlugin['save'] } save
- * @property { SavePlugin['ignoreDirty'] } ignoreDirty
- * @property { SavePlugin['setDirtyElement'] } setDirtyElement
- */
 
 /**
  * @typedef {((el?: HTMLElement) => void)[]} on_saved_handlers
@@ -55,7 +49,7 @@ export class EscapeTextNodesPlugin extends Plugin {
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save", "ignoreDirty", "setDirtyElement"];
+    static shared = shared(["save", "ignoreDirty", "setDirtyElement"]);
     static dependencies = ["history", "domReferenceMap"];
 
     /** @type {import("plugins").BuilderResources} */

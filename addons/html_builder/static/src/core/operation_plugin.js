@@ -1,19 +1,14 @@
-import { Plugin } from "@html_editor/plugin";
+import { Plugin, shared } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { useEnv } from "@web/owl2/utils";
 import { Operation } from "./operation";
 
 /** @typedef {import("./operation").OperationParams} OperationParams */
 
-/**
- * @typedef { Object } OperationShared
- * @property { OperationPlugin['next'] } next
- */
-
 export class OperationPlugin extends Plugin {
     static id = "operation";
     static dependencies = ["domObserver", "history"];
-    static shared = ["addLoadingElement", "next", "hasTimedOut"];
+    static shared = shared(["addLoadingElement", "next", "hasTimedOut"]);
 
     setup() {
         this._hasTimedOut = false;
