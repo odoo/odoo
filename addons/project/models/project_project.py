@@ -194,7 +194,6 @@ class ProjectProject(models.Model):
     date_last_stage_update = fields.Datetime(string='Last Stage Update', index=True, default=fields.Datetime.now)
 
     update_ids = fields.One2many('project.update', 'project_id', export_string_translation=False)
-    update_count = fields.Integer(compute='_compute_total_update_ids', export_string_translation=False)
     last_update_id = fields.Many2one('project.update', string='Last Update', copy=False, index='btree_not_null', export_string_translation=False)
     last_update_status = fields.Selection(selection=[
         ('on_track', 'On Track'),
@@ -461,18 +460,6 @@ class ProjectProject(models.Model):
                 project.access_instruction_message = self.env._("Add internal users as team members and invite portal users as collaborators to give them access to the project. They can also access tasks they follow.")
             else:
                 project.access_instruction_message = ''
-
-    @api.depends('update_ids')
-    def _compute_total_update_ids(self):
-        update_count_per_project = dict(
-            self.env['project.update']._read_group(
-                [('project_id', 'in', self.ids)],
-                ['project_id'],
-                ['id:count'],
-            )
-        )
-        for project in self:
-            project.update_count = update_count_per_project.get(project, 0)
 
     @api.depends('type_ids.rating_active')
     def _compute_show_ratings(self):
@@ -1048,13 +1035,6 @@ class ProjectProject(models.Model):
         action['context'] = local_context
         return action
 
-    def toggle_favorite(self):
-        favorite_projects, not_fav_projects = self.sudo().partitioned(lambda project: self.env.user in project.favorite_user_ids)
-
-        # Project User has no write access for project.
-        not_fav_projects.write({'favorite_user_ids': [(4, self.env.uid)]})
-        favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
-
     def action_view_tasks(self):
         action = self.env['ir.actions.act_window'].with_context(active_id=self.id)._for_xml_id('project.act_project_project_2_project_task_all')
         action['display_name'] = self.name
@@ -1116,18 +1096,6 @@ class ProjectProject(models.Model):
             'res_model': 'project.project',
             'view_mode': 'form',
             'res_id': self.id,
-        }
-
-    # ---------------------------------------------
-    #  PROJECT UPDATES
-    # ---------------------------------------------
-
-    def get_last_update_or_default(self):
-        self.ensure_one()
-        labels = dict(self._fields['last_update_status']._description_selection(self.env))
-        return {
-            'status': labels.get(self.last_update_status, _('Set Status')),
-            'color': self.last_update_color,
         }
 
     # ---------------------------------------------------
