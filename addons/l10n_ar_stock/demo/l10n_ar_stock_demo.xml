@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="base.company_ri" model="res.company">
+        <field name="l10n_ar_arba_cot_environment">demo</field>
+    </record>
+
+    <record id="product_product_cot" model="product.product">
+        <field name="name">COT Product</field>
+        <field name="default_code">pruebas</field>
+        <field name="type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="list_price">10000.0</field>
+        <field name="l10n_ar_arba_code">940330</field>
+        <field name="company_id" ref="base.company_ri"/>
+    </record>
+
+    <record id="demo_warehouse" model="stock.warehouse">
+        <field name="code">AR</field>
+        <field name="company_id" ref="base.company_ri"/>
+    </record>
+
+    <function model="stock.picking.type" name="write">
+        <value model="stock.picking.type" search="[('warehouse_id', '=', ref('demo_warehouse')), ('code', '=', 'outgoing')]"/>
+        <value eval="{
+            'l10n_ar_document_type_id': ref('l10n_ar.dc_r_r'),
+            'l10n_ar_delivery_sequence_prefix': '00001',
+            'l10n_ar_next_delivery_number': 1,
+        }"/>
+    </function>
+
+    <record id="stock_picking_cot" model="stock.picking">
+        <field name="company_id" ref="base.company_ri"/>
+        <field name="picking_type_id" model="stock.picking.type" search="[('warehouse_id', '=', ref('demo_warehouse')), ('code', '=', 'outgoing')]"/>
+        <field name="partner_id" ref="l10n_ar.res_partner_cmr"/>
+        <field name="l10n_ar_cot_carrier_id" ref="l10n_ar.res_partner_gritti_agrimensura"/>
+        <field name="l10n_ar_cot_license_plate">AAA123</field>
+        <field name="l10n_ar_cot_amount">10000.0</field>
+        <field name="move_ids" eval="[Command.create({
+            'company_id': ref('base.company_ri'),
+            'product_id': ref('product_product_cot'),
+            'product_uom_qty': 1.0,
+        })]"/>
+    </record>
+
+    <function model="stock.picking" name="button_validate">
+        <value eval="[ref('stock_picking_cot')]"/>
+    </function>
+
+</odoo>

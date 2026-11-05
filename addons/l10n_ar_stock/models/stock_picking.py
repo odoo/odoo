@@ -1,5 +1,25 @@
+import logging
+
+import requests
+from lxml import etree
+
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import LockError, UserError
+
+from odoo.addons.l10n_ar.tools.partner_identifiers import (
+    AR_CUIT_AFIP_CODE,
+    AR_STATE_TO_CI_AFIP_CODE,
+)
+
+_logger = logging.getLogger(__name__)
+
+COT_DOCUMENT_TYPES = {
+    '89': 'LE',
+    '90': 'LC',
+    '94': 'PAS',
+    '96': 'DNI',
+    **dict.fromkeys(AR_STATE_TO_CI_AFIP_CODE.values(), 'CI'),
+}
 
 
 class StockPicking(models.Model):
@@ -21,6 +41,45 @@ class StockPicking(models.Model):
         readonly=True,
         copy=False,
     )
+    l10n_ar_is_cot_enabled = fields.Boolean(
+        compute='_compute_l10n_ar_is_cot_enabled',
+    )
+    l10n_ar_cot_departure_date = fields.Datetime(
+        string="Transport Departure Date",
+        copy=False,
+    )
+    l10n_ar_cot_license_plate = fields.Char(
+        string="Vehicle License Plate",
+        copy=False,
+        help="Argentina: Enter 3 letters followed by 3 numbers, or 2 letters followed by 3 numbers and 2 letters.",
+    )
+    l10n_ar_cot_is_non_finished_product = fields.Boolean(
+        string="Is Non Finished Product",
+        copy=False,
+    )
+    l10n_ar_cot_amount = fields.Float(
+        string="Net Amount of the Goods",
+        default=0.0,
+        copy=False,
+        help="Argentina: Enter the declared net amount of the goods.",
+    )
+    l10n_ar_cot_number = fields.Char(
+        string="COT Number",
+        readonly=True,
+        copy=False,
+    )
+    l10n_ar_cot_error = fields.Text(
+        string="COT Error",
+        readonly=True,
+        copy=False,
+    )
+    l10n_ar_cot_carrier_id = fields.Many2one(
+        comodel_name='res.partner',
+        string="Transport Carrier",
+        copy=False,
+        check_company=True,
+        help="Argentina: Contact transporting the goods, its CUIT is reported in the COT.",
+    )
 
     # === COMPUTE METHODS === #
 
@@ -37,6 +96,11 @@ class StockPicking(models.Model):
                 picking.state == 'done' and has_doc_type and not picking.l10n_ar_delivery_guide_number
             )
             picking.l10n_ar_allow_send_delivery_guide = picking.l10n_ar_delivery_guide_number and picking.picking_type_id.code == 'outgoing'
+
+    @api.depends('company_id')
+    def _compute_l10n_ar_is_cot_enabled(self):
+        for picking in self:
+            picking.l10n_ar_is_cot_enabled = bool(picking.company_id.sudo()._l10n_ar_get_arba_cot_company().l10n_ar_arba_cot_environment)
 
     # === BUSINESS METHODS === #
 
@@ -188,6 +252,8 @@ class StockPicking(models.Model):
                 pdf_contents[picking.id] = pdf_content
             return pdf_contents
 
+    # === CRON METHODS === #
+
     def _l10n_ar_handle_cron_failures(self, errors):
         """ Dequeue failed records: log in chatter, notify users, clear cron field. """
         failed = errors['all_errors']
@@ -263,3 +329,186 @@ class StockPicking(models.Model):
 
         remaining = self.search_count(domain)
         self.env['ir.cron']._commit_progress(records_len, remaining=remaining)
+
+    # === ARBA/COT METHODS === #
+
+    def _l10n_ar_check_cot_data(self):
+        self.ensure_one()
+        origin = self.picking_type_id.warehouse_id.partner_id
+        products = self.move_ids.filtered('quantity').product_id
+        if self.country_code != 'AR' or self.picking_type_code != 'outgoing' or not self.l10n_ar_delivery_guide_number or self.l10n_ar_cot_number:
+            raise UserError(self.env._("A COT can only be generated once, for an outgoing transfer with a delivery guide."))
+        if not self.l10n_ar_is_cot_enabled:
+            raise UserError(self.env._("Select an ARBA COT Environment in the settings to generate a COT."))
+        errors = []
+        if not self.company_id.sudo()._l10n_ar_get_arba_cot_company().vat:
+            errors.append(self.env._("The company has no CUIT."))
+        if not self.l10n_ar_cot_license_plate:
+            errors.append(self.env._("The Vehicle License Plate is missing."))
+        if not self.l10n_ar_cot_carrier_id.vat:
+            errors.append(self.env._("The carrier or its CUIT is missing."))
+        if not self.l10n_ar_cot_is_non_finished_product and self.l10n_ar_cot_amount <= 0:
+            errors.append(self.env._("The Net Amount of the Goods must be greater than 0."))
+        for partner in (self.partner_id, origin):
+            if not (partner.street and partner.zip and partner.city and partner.state_id):
+                errors.append(self.env._(
+                    "The street, zip, city and state of the address %s are required.",
+                    partner.display_name or self.picking_type_id.warehouse_id.display_name,
+                ))
+        if no_reference := products.filtered(lambda product: not product.default_code):
+            errors.append(self.env._("Products without Reference: %s", ", ".join(no_reference.mapped('display_name'))))
+        if no_arba_code := products.filtered(lambda product: not product.l10n_ar_arba_code):
+            errors.append(self.env._("Products without ARBA Code: %s", ", ".join(no_arba_code.mapped('display_name'))))
+        if no_unit_code := products.uom_id.filtered(lambda uom: not uom.l10n_ar_arba_unit_code):
+            errors.append(self.env._("Units of measure without ARBA Unit of Measure Code: %s", ", ".join(no_unit_code.mapped('name'))))
+        if errors:
+            raise UserError(self.env._("The COT cannot be generated:\n%s", "\n".join(f"- {error}" for error in errors)))
+
+    def _l10n_ar_get_cot_unique_code(self):
+        self.ensure_one()
+        document_type = self.env['l10n_latam.document.type'].browse(self.l10n_ar_cai_data['document_type_id'])
+        return document_type.code.zfill(3) + self.l10n_ar_delivery_guide_number.replace('-', '')
+
+    def _l10n_ar_get_cot_txt(self, emission_date):
+        """ Specification: https://www.arba.gov.ar/archivos/Publicaciones/nuevodiseniodearchivotxt.pdf """
+        self.ensure_one()
+
+        def sanitize(value):
+            # '|' and '\n' separate the COT fields and records
+            return value.replace('|', '').replace('\n', '')
+
+        def get_address(partner):
+            # The street number stays in the street, 'S/N' as suffix lets ARBA accept an empty number
+            return [partner.street[:40], '', 'S/N', '', '', '', partner.zip, partner.city[:50], partner.state_id.code]
+
+        company = self.company_id.sudo()._l10n_ar_get_arba_cot_company()
+        recipient = self.partner_id.commercial_partner_id
+        has_cuit = recipient.l10n_ar_afip_code == AR_CUIT_AFIP_CODE
+        document_type = not has_cuit and COT_DOCUMENT_TYPES.get(recipient.l10n_ar_afip_code)
+        departure_date = fields.Datetime.context_timestamp(
+            self.with_context(tz='America/Argentina/Buenos_Aires'),
+            self.l10n_ar_cot_departure_date or self.scheduled_date,
+        )
+        remito = [
+            '02',  # TIPO_REGISTRO
+            f'{emission_date:%Y%m%d}',  # FECHA_EMISION
+            self._l10n_ar_get_cot_unique_code(),  # CODIGO_UNICO
+            f'{departure_date:%Y%m%d}',  # FECHA_SALIDA_TRANSPORTE
+            f'{departure_date:%H%M}',  # HORA_SALIDA_TRANSPORTE
+            'E',  # SUJETO_GENERADOR
+            '1' if recipient.l10n_ar_afip_responsibility_type_id.code == '5' else '0',  # DESTINATARIO_CONSUMIDOR_FINAL
+            document_type or '',  # DESTINATARIO_TIPO_DOCUMENTO
+            str(recipient._get_id_number_sanitize()) if document_type else '',  # DESTINATARIO_DOCUMENTO
+            recipient.vat if has_cuit else '',  # DESTINATARIO_CUIT
+            recipient.name[:50],  # DESTINATARIO_RAZON_SOCIAL
+            '0',  # DESTINATARIO_TENEDOR
+            *get_address(self.partner_id),  # DESTINO_DOMICILIO_CALLE to DESTINO_DOMICILIO_PROVINCIA
+            '',  # PROPIO_DESTINO_DOMICILIO_CODIGO
+            'SI',  # ENTREGA_DOMICILIO_ORIGEN
+            company.vat,  # ORIGEN_CUIT
+            company.name[:50],  # ORIGEN_RAZON_SOCIAL
+            '1',  # EMISOR_TENEDOR
+            *get_address(self.picking_type_id.warehouse_id.partner_id),  # ORIGEN_DOMICILIO_CALLE to ORIGEN_DOMICILIO_PROVINCIA
+            self.l10n_ar_cot_carrier_id.vat,  # TRANSPORTISTA_CUIT
+            '', '', '', '',  # TIPO_RECORRIDO, RECORRIDO_LOCALIDAD, RECORRIDO_CALLE, RECORRIDO_RUTA
+            self.l10n_ar_cot_license_plate,  # PATENTE_VEHICULO
+            '',  # PATENTE_ACOPLADO
+            '1' if self.l10n_ar_cot_is_non_finished_product else '0',  # PRODUCTO_NO_TERM_DEV
+            str(round(self.l10n_ar_cot_amount * 100)) if self.l10n_ar_cot_amount else '',  # IMPORTE
+        ]
+        products = []
+        for move in self.move_ids.filtered('quantity'):
+            product = move.product_id
+            quantity = str(round(move.quantity_product_uom * 100))
+            products.append([
+                '03',  # TIPO_REGISTRO
+                product.l10n_ar_arba_code,  # CODIGO_UNICO_PRODUCTO
+                product.uom_id.l10n_ar_arba_unit_code,  # RENTAS_CODIGO_UNIDAD_MEDIDA
+                quantity,  # CANTIDAD
+                product.default_code[:25],  # PROPIO_CODIGO_PRODUCTO
+                product.name[:40],  # PROPIO_DESCRIPCION_PRODUCTO
+                product.uom_id.name[:20],  # PROPIO_DESCRIPCION_UNIDAD_MEDIDA
+                quantity,  # CANTIDAD_AJUSTADA
+            ])
+        records = [['01', company.vat], remito, *products, ['04', '1']]
+        return ''.join('|'.join(map(sanitize, record)) + '\n' for record in records)
+
+    @api.model
+    def _l10n_ar_get_cot_url(self, cot_env):
+        """ Return the ARBA COT url based on the environment. """
+        return f"https://cot{'.test' if cot_env == 'testing' else ''}.arba.gov.ar/TransporteBienes/SeguridadCliente/presentarRemitos.do"
+
+    def _l10n_ar_send_cot_to_arba(self):
+        """ Generate the COT file and send it to ARBA, return a tuple (response_content, error) where error is None on success. """
+        self.ensure_one()
+        company = self.company_id.sudo()._l10n_ar_get_arba_cot_company()
+        emission_date = fields.Date.context_today(self.with_context(tz='America/Argentina/Buenos_Aires'))
+        file_name = f'TB_{company.vat}_000000_{emission_date:%Y%m%d}_{company._l10n_ar_get_arba_cot_file_sequence_num()}.txt'
+        txt_content = self._l10n_ar_get_cot_txt(emission_date).encode('ISO-8859-1', errors='replace')
+        cot_env = company.l10n_ar_arba_cot_environment
+        if cot_env == 'demo':
+            response_content = (
+                f'<TBCOMPROBANTE><cuitEmpresa>{company.vat}</cuitEmpresa><nombreArchivo>{file_name}</nombreArchivo>'
+                f'<validacionesRemitos><remito><numeroUnico>{self._l10n_ar_get_cot_unique_code()}</numeroUnico>'
+                f'<procesado>SI</procesado><cot>{self.id:014d}</cot></remito></validacionesRemitos></TBCOMPROBANTE>'
+            ).encode()
+        else:
+            try:
+                response = requests.post(
+                    self._l10n_ar_get_cot_url(cot_env),
+                    data={'user': company.vat, 'password': company.l10n_ar_arba_cit},
+                    files={'file': (file_name, txt_content, 'text/plain')},
+                    timeout=(10, 30),
+                )
+            except requests.exceptions.RequestException as error:
+                _logger.exception("ARBA COT request failed for %s", self.name)
+                return None, str(error)
+            # The status is not checked as ARBA describes its errors in the XML body, whatever the status
+            response_content = response.content
+
+        self.message_post(
+            body=self.env._("The COT file has been sent to ARBA."),
+            attachments=[(file_name, txt_content)],
+        )
+        return response_content, None
+
+    def _l10n_ar_process_cot_response(self, response_content):
+        self.ensure_one()
+        attachments = [(f'COT - {self.l10n_ar_delivery_guide_number}.xml', response_content)]
+        try:
+            root = etree.fromstring(response_content)
+        except etree.XMLSyntaxError:
+            self.l10n_ar_cot_error = self.env._("ARBA returned an invalid response.")
+            self.message_post(body=self.l10n_ar_cot_error, attachments=attachments)
+            return
+
+        cot_number = root.findtext('.//remito/cot')
+        if cot_number and root.findtext('.//remito/procesado') == 'SI':
+            self.write({'l10n_ar_cot_number': cot_number, 'l10n_ar_cot_error': False})
+            if self.company_id.sudo()._l10n_ar_get_arba_cot_company().l10n_ar_arba_cot_environment == 'demo':
+                body = self.env._("Demo COT %s generated, it was not sent to ARBA.", cot_number)
+            else:
+                body = self.env._("COT %s generated successfully.", cot_number)
+            self.message_post(body=body, attachments=attachments)
+            return
+
+        errors = [f"[{error.findtext('codigo')}] {error.findtext('descripcion')}" for error in root.iter('error')]
+        if root.tag == 'TBError':
+            errors.append(f"[{root.findtext('codigoError')}] {root.findtext('mensajeError')}")
+        self.l10n_ar_cot_error = "\n".join(errors) or self.env._("ARBA did not return a COT number.")
+        self.message_post(body=self.env._("The COT generation failed."), attachments=attachments)
+
+    def l10n_ar_action_generate_cot(self):
+        """ Send the COT file to ARBA and store the COT number, or the errors returned by ARBA. """
+        self.ensure_one()
+        self._l10n_ar_check_cot_data()
+
+        try:
+            self.lock_for_update(allow_referencing=True)
+        except LockError:
+            raise UserError(self.env._("This transfer is being processed by another operation, please try again later.")) from None
+        response_content, error = self._l10n_ar_send_cot_to_arba()
+        if error:
+            self.l10n_ar_cot_error = self.env._("The connection with ARBA failed, please try again later.\n%s", error)
+            return
+        self._l10n_ar_process_cot_response(response_content)
