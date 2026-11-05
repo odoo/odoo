@@ -44,6 +44,11 @@
                         class="btn-secondary"
                         groups="od19_sales_customer_risk_gate.group_od19_credit_reviewer"
                         invisible="od19_blacklist_status != 'blacklisted'"/>
+                <button name="action_od19_recheck_credit_aging"
+                        type="object"
+                        string="Re-check Aging"
+                        class="btn-secondary"
+                        groups="od19_sales_customer_risk_gate.group_od19_credit_reviewer,base.group_partner_manager"/>
             </xpath>
 
             <xpath expr="//page[@name='internal_notes']" position="before">
@@ -62,6 +67,14 @@
                             <field name="od19_credit_review_date"/>
                             <field name="od19_credit_review_note"
                                    groups="od19_sales_customer_risk_gate.group_od19_credit_reviewer"/>
+                        </group>
+                        <group string="Aging Hold">
+                            <field name="od19_credit_aging_hold_enabled"/>
+                            <field name="od19_credit_on_hold"/>
+                            <field name="od19_credit_hold_reason"/>
+                            <field name="od19_credit_overdue_amount" readonly="1"/>
+                            <field name="od19_credit_oldest_overdue_days" readonly="1"/>
+                            <field name="od19_credit_rolling_limit" readonly="1"/>
                         </group>
                         <group string="Blacklist">
                             <field name="od19_blacklist_status"

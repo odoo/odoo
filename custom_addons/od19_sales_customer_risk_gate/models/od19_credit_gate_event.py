@@ -28,7 +28,11 @@ class Od19CreditGateEvent(models.Model):
         index=True,
     )
     reason_code = fields.Selection(
-        selection=[("blacklist", "Blacklist"), ("credit", "Credit")],
+        selection=[
+            ("blacklist", "Blacklist"),
+            ("credit", "Credit"),
+            ("credit_hold", "Credit Aging Hold"),
+        ],
         string="Reason",
         required=True,
         index=True,

@@ -71,6 +71,14 @@ class SaleOrder(models.Model):
                 )
                 % commercial.display_name,
             )
+        if self.od19_is_credit_sale and commercial.od19_credit_on_hold:
+            return (
+                "credit_hold",
+                _(
+                    "credit_hold: customer %s is on credit hold (%s)."
+                )
+                % (commercial.display_name, commercial.od19_credit_hold_reason),
+            )
         if (
             self.od19_is_credit_sale
             and commercial.od19_credit_limit_amount
