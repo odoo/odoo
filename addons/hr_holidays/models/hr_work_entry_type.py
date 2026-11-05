@@ -476,6 +476,7 @@ class HrWorkEntryType(models.Model):
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
         )._get_consumed_leaves(self, target_date)
+        is_holiday_user = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for employee in employees:
             for work_entry_type in self:
@@ -502,6 +503,7 @@ class HrWorkEntryType(models.Model):
                         'max_allowed_negative': work_entry_type.max_allowed_negative,
                         'employee_company': employee.company_id.id,
                         'employee_country': employee.company_id.country_id.id,
+                        'can_request_allocation': work_entry_type.employee_requests or is_holiday_user,
                     },
                     work_entry_type.requires_allocation,
                     work_entry_type.id)
