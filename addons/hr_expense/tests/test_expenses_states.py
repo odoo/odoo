@@ -194,6 +194,18 @@ class TestExpensesStates(TestExpenseCommon, MailCase):
         self.expenses_all.sudo().manager_id = False
         self.expenses_all.action_submit()
         self.assertSequenceEqual(['approved', 'approved'], self.expenses_all.mapped('state'))
+        # When submitting an expense in auto-validation, the expense_manager becomes the
+        # current user, for tracking purpose
+        self.assertEqual(self.expenses_all.manager_id, self.user)
+        self.assertEqual(len(self.expenses_all.manager_id), 1)
+
+    def test_expense_state_autovalidation2(self):
+        """ Test an auto-validation employee that puts a manager in its own expense"""
+        self.expense_employee.sudo().expense_manager_id = False
+        self.expenses_all.manager_id = self.expense_user_manager
+        self.expenses_all.action_submit()
+        self.assertSequenceEqual(['submitted', 'submitted'], self.expenses_all.mapped('state'))
+        self.assertEqual(self.expenses_all.manager_id, self.expense_user_manager)
 
     def test_expense_next_activity(self):
         """ Test next activity is assigned to the right manager, no notification is sent, but validation email is sent"""
