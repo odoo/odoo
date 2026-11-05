@@ -6,10 +6,12 @@ import { DatePickerPopup } from "@pos_stock/app/components/popups/date_picker_po
 patch(PaymentScreen.prototype, {
     async toggleShippingDatePicker() {
         this.dialog.add(DatePickerPopup, {
-            title: _t("Select the shipping date"),
+            title: _t("Schedule for later"),
             defaultValue: this.currentOrder.shipping_date,
-            getPayload: (shippingDate) => {
+            defaultType: this.currentOrder.pickup_later ? "pickup" : "ship",
+            getPayload: (shippingDate, scheduleType) => {
                 this.currentOrder.shipping_date = shippingDate;
+                this.currentOrder.pickup_later = scheduleType === "pickup";
             },
         });
     },

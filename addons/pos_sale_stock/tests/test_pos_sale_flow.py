@@ -11,6 +11,31 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    def test_pos_initial_picking_date_ignores_cancelled_pickings(self):
+        product = self.env['product.product'].create({
+            'name': 'Scheduled Product',
+            'is_storable': True,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1,
+            })],
+        })
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        self.assertTrue(picking)
+
+        picking.scheduled_date = fields.Datetime.to_datetime('2025-07-03 10:00:00')
+        self.assertEqual(
+            sale_order.pos_initial_picking_date,
+            fields.Date.to_date(picking.scheduled_date),
+        )
+
+        picking.action_cancel()
+        self.assertFalse(sale_order.pos_initial_picking_date)
+
     def test_settle_order_with_kit(self):
         if not self.env["ir.module.module"].search([("name", "=", "mrp"), ("state", "=", "installed")]):
             self.skipTest("mrp module is required for this test")

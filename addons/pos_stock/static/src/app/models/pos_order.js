@@ -6,6 +6,7 @@ patch(PosOrder.prototype, {
     setup(vals) {
         super.setup(vals);
         this.shipping_date = vals.shipping_date;
+        this.pickup_later = vals.pickup_later;
     },
 
     get pickingType() {

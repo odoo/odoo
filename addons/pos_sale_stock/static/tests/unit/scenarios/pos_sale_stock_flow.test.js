@@ -9,6 +9,7 @@ import * as SaleUiUtils from "@pos_sale/../tests/unit/ui_utils";
 const Utils = { ...PosUiUtils, ...SaleUiUtils };
 
 definePosStockModels();
+const { DateTime } = luxon;
 
 function lotNamesOf(order) {
     return order.lines
@@ -85,8 +86,18 @@ test("PosShipLaterNoDefault: settling a sale order does not activate ship later"
     await waitFor(".payment-screen");
 
     expect(store.getOrder().shipping_date).toBeEmpty();
-    expect(`.button:contains("Ship Later")`).toHaveCount(1);
-    expect(`.button.highlight:contains("Ship Later")`).toHaveCount(0);
+    expect(`.button:contains("Schedule for later")`).toHaveCount(1);
+    expect(`.button.highlight:contains("Schedule for later")`).toHaveCount(0);
+});
+
+test("Settling a sale order defaults to its initial picking date", async () => {
+    const store = await setupAndMountPosApp({ ship_later: true });
+    const initialPickingDate = DateTime.now().plus({ days: 3 }).startOf("day");
+    store.models["sale.order"].get(1).pos_initial_picking_date = initialPickingDate;
+
+    await Utils.settleSaleOrder("S00001");
+
+    expect(store.getOrder().shipping_date.toISODate()).toBe(initialPickingDate.toISODate());
 });
 
 test("PosSettleOrder4 / PosSettleOrderShipLater: ship later sets the shipping date of the order", async () => {
@@ -96,11 +107,11 @@ test("PosSettleOrder4 / PosSettleOrderShipLater: ship later sets the shipping da
     await Utils.clickPayButton();
     await waitFor(".payment-screen");
 
-    await contains(`.button:contains("Ship Later")`).click();
+    await contains(`.button:contains("Schedule for later")`).click();
     await waitFor(".modal");
     await click(`.modal .btn:contains("Confirm")`);
     await animationFrame();
 
     expect(store.getOrder().shipping_date).not.toBeEmpty();
-    expect(`.button.highlight:contains("Ship Later")`).toHaveCount(1);
+    expect(`.button.highlight:contains("Schedule for later")`).toHaveCount(1);
 });
