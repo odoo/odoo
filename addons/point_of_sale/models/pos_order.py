@@ -1766,6 +1766,8 @@ class PosOrder(models.Model):
             # Already has a real customer invoice (account_move is not a session closing entry).
             move = self.account_move
         else:
+            if not self.partner_id:
+                raise UserError(_("A customer is required to generate an invoice."))
             # Session still open: standard path (also handles pos_stock picking creation).
             move = self._prepare_missing_invoice_moves()
 
