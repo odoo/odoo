@@ -372,8 +372,8 @@
                     <filter name="internal" invisible="1" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
                     <separator/>
                     <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
-                    <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
-                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
+                    <filter name="late" string="Late" help="Scheduled date exceeded"
+                        domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), ('scheduled_date', '&lt;', current_date)]"/>
                     <filter name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
                     <filter name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
                     <filter name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
