@@ -1,6 +1,6 @@
 import { patch } from "@web/core/utils/patch";
-import { SaleOrderLineProductField } from "@sale/js/sale_product_field/sale_product_field";
-import { SaleLabelTextField } from "@sale/js/sale_label_text/sale_label_text";
+import { SaleOrderLineProductField } from "@sale/views/fields/sale_product_field/sale_product_field";
+import { SaleLabelTextField } from "@sale/views/fields/sale_label_text/sale_label_text";
 import { useService } from "@web/core/utils/hooks";
 
 const eventSaleProductMixin = () => ({

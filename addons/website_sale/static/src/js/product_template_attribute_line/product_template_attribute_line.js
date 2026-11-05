@@ -1,7 +1,7 @@
 import { _t } from '@web/core/l10n/translation';
 import {
     ProductTemplateAttributeLine
-} from '@sale/js/product_template_attribute_line/product_template_attribute_line';
+} from '@sale/components/product_template_attribute_line/product_template_attribute_line';
 import { patch } from '@web/core/utils/patch';
 
 patch(ProductTemplateAttributeLine.prototype, {

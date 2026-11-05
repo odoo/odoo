@@ -3,7 +3,7 @@ import {
     AccountProductField,
 } from "@account/components/account_product_field/account_product_field";
 import { useEffect } from "@odoo/owl";
-import { saleProductMixin } from "@sale/js/sale_product_mixin";
+import { saleProductMixin } from "@sale/sale_product_mixin";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";

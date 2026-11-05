@@ -1,4 +1,4 @@
-import { SaleOrderFormStaticList } from "@sale/views/sale_order_form_view/sale_order_static_list";
+import { SaleOrderFormStaticList } from "@sale/views/form/sale_order_form_view/sale_order_static_list";
 import { patch } from "@web/core/utils/patch";
 
 patch(SaleOrderFormStaticList.prototype, {

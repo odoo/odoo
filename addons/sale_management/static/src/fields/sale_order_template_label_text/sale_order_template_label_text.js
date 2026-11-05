@@ -9,7 +9,7 @@ import { patch } from "@web/core/utils/patch";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { textField, ListTextField } from "@web/views/fields/text/text_field";
 import { serializeDateTime, today } from "@web/core/l10n/dates";
-import { saleProductMixin } from "@sale/js/sale_product_mixin";
+import { saleProductMixin } from "@sale/sale_product_mixin";
 
 export class SaleOrderTemplateLabelTextField extends AccountLabelTextField {
     static template = "sale.SaleLabelTextField";
