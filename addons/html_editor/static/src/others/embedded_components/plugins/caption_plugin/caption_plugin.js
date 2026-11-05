@@ -11,7 +11,6 @@ import {
 } from "@html_editor/utils/dom_info";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 
@@ -28,7 +27,6 @@ export class CaptionPlugin extends Plugin {
                 title: _t("Add/remove a caption"),
                 icon: "text_ad",
                 run: this.toggleImageCaption.bind(this),
-                isAvailable: isHtmlContentSupported,
             },
         ],
         toolbar_items: [
