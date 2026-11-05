@@ -11,6 +11,19 @@ class PosOrderReceipt(models.AbstractModel):
         self._set_pos_restaurant_receipt_common_data(data)
         return data
 
+    def _order_receipt_generate_line_data(self):
+        lines = super()._order_receipt_generate_line_data()
+        if not self.course_ids:
+            return lines
+        # Mirror the order summary: lines grouped by course, the service fee at the very
+        # bottom. The fee is moved to the last course once created, so its position in
+        # the creation order says nothing about where it is displayed.
+        course_rank = {course.id: rank for rank, course in enumerate(self.course_ids.sorted('index'))}
+        return sorted(lines, key=lambda line: (
+            line['is_service_fee_line'],
+            course_rank.get(line.get('course_id'), -1),
+        ))
+
     def _generate_preparation_receipt_data(self, order_change, is_split_per_product=False):
         data = super()._generate_preparation_receipt_data(order_change, is_split_per_product)
         if not self.config_id.module_pos_restaurant:
