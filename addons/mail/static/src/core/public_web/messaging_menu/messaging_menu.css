@@ -97,10 +97,6 @@
         }
     }
 
-    &:focus-visible {
-        outline: var(--border-width) solid var(--o-enterprise-action-color) !important;
-    }
-
     .o-mail-MessagingMenu-tabIcon {
         width: calc(var(--o-bs-spacer) * 3);
     }
@@ -115,5 +111,18 @@
 
     .o_bottom_sheet & {
         max-width: none !important;
+    }
+}
+
+.o-mail-MessagingMenu-filter,
+.o-mail-MessagingMenu-searchRow button,
+.o-mail-MessagingMenu-searchRow input,
+.o-mail-MessagingMenu-tab {
+    &:focus-visible {
+        box-shadow: none;
+    }
+
+    &.focus, .o-mail-Discuss &:focus-visible {
+        outline: var(--border-width) solid var(--o-enterprise-action-color) !important;
     }
 }
