@@ -92,3 +92,16 @@ class TestAccountCZ(AccountTestInvoicingCommon):
             {'amount_currency':   -60.0, 'balance':   -30.0},  # Product line
             {'amount_currency':    60.0, 'balance':    30.0},  # Receivable line
         ])
+
+    def test_cz_intra_community_fiscal_position_maps_sale_taxes(self):
+        fiscal_position = self.env['account.chart.template'].ref('fiscal_position_intra_community')
+        for domestic_tax, eu_tax in (
+            ('l10n_cz_21_domestic_supplies', 'l10n_cz_supply_goods_eu'),
+            ('l10n_cz_12_domestic_supplies', 'l10n_cz_supply_goods_eu'),
+            ('l10n_cz_21_domestic_services', 'l10n_cz_supply_service_eu'),
+            ('l10n_cz_12_domestic_service', 'l10n_cz_supply_service_eu'),
+        ):
+            self.assertEqual(
+                fiscal_position.map_tax(self.env['account.chart.template'].ref(domestic_tax)),
+                self.env['account.chart.template'].ref(eu_tax),
+            )
