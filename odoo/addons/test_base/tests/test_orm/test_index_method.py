@@ -51,13 +51,24 @@ class TestIndexMethodMigration(TransactionCase):
         field = self.registry['res.partner']._fields['ref']
         indexname = sql.make_index_name('res_partner', 'ref')
 
+        # simulate a index manually modified outside Odoo (in psql, no comment are usually added to indexes).
+        sql.drop_index(self.env.cr, indexname, 'res_partner')
+        sql.create_index(self.env.cr, indexname, 'res_partner', ['"ref"'], 'btree', where="false", comment=None)
+
+        self.registry.check_indexes(self.env.cr, ['res.partner'])
+
+        indexdef, comment = sql.index_definition(self.env.cr, indexname)
+        self.assertIn('false', indexdef)
+        self.assertFalse(comment)
+
         # Simulate a field backed by an existing full B-tree index while its
         # definition now requests a partial one.
         original_index = field.index
         field.index = 'btree_not_null'
         self.addCleanup(setattr, field, 'index', original_index)
+
         sql.drop_index(self.env.cr, indexname, 'res_partner')
-        sql.create_index(self.env.cr, indexname, 'res_partner', ['"ref"'], 'btree')
+        sql.create_index(self.env.cr, indexname, 'res_partner', ['"ref"'], 'btree', comment="(ref)")
 
         self.registry.check_indexes(self.env.cr, ['res.partner'])
 
