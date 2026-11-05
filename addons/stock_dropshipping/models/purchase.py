@@ -16,7 +16,7 @@ class PurchaseOrder(models.Model):
     def _compute_incoming_picking_count(self):
         super()._compute_incoming_picking_count()
         for order in self:
-            dropship_count = len(order.picking_ids.filtered(lambda p: p.is_dropship))
+            dropship_count = len(order.order_line.move_ids.picking_id.filtered(lambda p: p.is_dropship))
             order.incoming_picking_count -= dropship_count
             order.dropship_picking_count = dropship_count
 

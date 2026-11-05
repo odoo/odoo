@@ -199,7 +199,7 @@ class PurchaseOrderLine(models.Model):
 
                 # If the user increased quantity of existing line or created a new line
                 # Give priority to the pickings related to the line
-                moves_to_assign = line.order_id.picking_ids.move_ids.filtered(lambda m: not m.purchase_line_id and line.product_id == m.product_id)
+                moves_to_assign = line.order_id.order_line.move_ids.picking_id.move_ids.filtered(lambda m: not m.purchase_line_id and line.product_id == m.product_id)
                 moves_to_assign.purchase_line_id = line.id
                 previous_qty = self.env.context['previous_product_qty'][line.id] if 'previous_product_qty' in self.env.context else 0
                 diff_qty = line.product_qty - previous_qty
@@ -207,7 +207,7 @@ class PurchaseOrderLine(models.Model):
                 if line_pickings:
                     picking = line_pickings[0]
                 else:
-                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                    pickings = line.order_id.order_line.move_ids.picking_id.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
                     picking = pickings and pickings[0] or False
 
                 # if no picking was found we look for OUT picking in case of -ve qty update before creating a new picking
