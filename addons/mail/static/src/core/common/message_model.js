@@ -816,13 +816,10 @@ export class Message extends Record {
 
     /**
      * @param {Object} owner
-     * @param {import("@web/env").OdooEnv} owner.env
      * @param {Readonly<Record<string, any>>} [ancestors={}] named ancestors of the owner, @see useAncestors
      */
     onShowDeleteConfirm(owner, ancestors = {}) {
-        this.remove({
-            removeFromThread: this.shouldHideFromMessageListOnDelete(owner.env, ancestors),
-        });
+        this.remove({ removeFromThread: this.shouldHideFromMessageListOnDelete(ancestors) });
     }
 
     /**
@@ -930,10 +927,9 @@ export class Message extends Record {
     }
 
     /**
-     * @param {import("@web/env").OdooEnv} env
-     * @param {Readonly<Record<string, any>>} ancestors @see useAncestors
+     * @param {Readonly<Record<string, any>>} _ancestors @see useAncestors
      */
-    shouldHideFromMessageListOnDelete(env, ancestors) {
+    shouldHideFromMessageListOnDelete(_ancestors) {
         return false;
     }
 

@@ -1,6 +1,5 @@
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
-import { providePlugins, t, usePlugin, useProps } from "@odoo/owl";
-import { ProjectSharingPlugin } from "@project/project_sharing/chatter/project_sharing_plugin";
+import { t, usePlugin, useProps } from "@odoo/owl";
 import { ORM } from "@web/core/orm_plugin";
 import { patch } from "@web/core/utils/patch";
 
@@ -10,15 +9,11 @@ patch(Chatter.prototype, {
         this.projectSharingProps = useProps({
             displayFollowButton: t.boolean(),
             isFollower: t.boolean(),
-            projectSharingId: t.number().optional(),
         });
         Object.assign(this.state, {
             isFollower: this.projectSharingProps.isFollower,
         });
         this.orm = usePlugin(ORM);
-        providePlugins([ProjectSharingPlugin]);
-        this.projectSharingPlugin = usePlugin(ProjectSharingPlugin);
-        this.projectSharingPlugin.projectSharingId.set(this.projectSharingProps.projectSharingId);
     },
 
     async toggleIsFollower() {

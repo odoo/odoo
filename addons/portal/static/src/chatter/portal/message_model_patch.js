@@ -9,7 +9,7 @@ patch(Message.prototype, {
         }
         return result;
     },
-    shouldHideFromMessageListOnDelete(env, ancestors) {
+    shouldHideFromMessageListOnDelete(ancestors) {
         return (
             ancestors.inFrontendPortalChatter ||
             super.shouldHideFromMessageListOnDelete(...arguments)

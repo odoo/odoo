@@ -16,7 +16,6 @@ function compileChatter(node, params) {
     setAttributes(chatterContainerXml, {
         threadModel: params.resModel,
         threadId: params.resId,
-        projectSharingId: params.projectSharingId,
         isFollower: params.isFollower,
         displayFollowButton: params.displayFollowButton,
     });
@@ -33,7 +32,6 @@ registry.category("form_compilers").add("portal_chatter_compiler", {
         compileChatter(node, {
             resId: "__comp__.props.record.resId or undefined",
             resModel: "__comp__.props.record.resModel",
-            projectSharingId: "__comp__.props.record.context.active_id_chatter",
             isFollower: "__comp__.props.record.data.message_is_follower",
             displayFollowButton: "__comp__.props.record.data.display_follow_button",
         }),
