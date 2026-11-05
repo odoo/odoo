@@ -105,6 +105,33 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    @api.depends('move_id.pos_session_ids', 'move_id.reversed_entry_id', 'move_id.reversed_pos_order_id')
+    def _compute_tax_tag_invert(self):
+        super()._compute_tax_tag_invert()
+        for line in self.filtered(lambda line: (
+            line.move_id.move_type == 'entry'
+            and line.tax_tag_ids
+            and line.tax_ids[:1].type_tax_use == 'sale'
+            and not line.tax_repartition_line_id
+        )):
+            origin = line.move_id
+            while origin.reversed_entry_id:
+                origin = origin.reversed_entry_id
+            if not (origin.pos_session_ids or origin.reversed_pos_order_id):
+                continue
+            # Base grids on POS closing lines say whether the line is a sale or a refund,
+            # whatever its balance: loyalty rewards are sales lines with a debit balance.
+            invoice_tags = line.tax_ids.invoice_repartition_line_ids.filtered(
+                lambda repartition: repartition.repartition_type == 'base'
+            ).tag_ids
+            refund_tags = line.tax_ids.refund_repartition_line_ids.filtered(
+                lambda repartition: repartition.repartition_type == 'base'
+            ).tag_ids
+            invoice = bool(line.tax_tag_ids & (invoice_tags - refund_tags))
+            refund = bool(line.tax_tag_ids & (refund_tags - invoice_tags))
+            if invoice != refund:
+                line.tax_tag_invert = invoice
+
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
         if not self.product_id:
