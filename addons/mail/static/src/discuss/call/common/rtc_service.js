@@ -27,6 +27,8 @@ import { CallAction } from "@mail/discuss/call/common/call_actions";
 import { ACTION_TAGS } from "@mail/core/common/action";
 import { MailFullscreenPlugin } from "@mail/core/common/mail_fullscreen";
 import { PttExtensionPlugin } from "@mail/discuss/call/common/ptt_extension_plugin";
+import { PipPlugin } from "@mail/discuss/call/common/pip_plugin";
+import { CONNECTION_TYPES } from "@mail/discuss/call/common/connection_types";
 
 let sequence = 1;
 const getSequence = () => sequence++;
@@ -102,12 +104,6 @@ const SW_MESSAGE_TYPE = {
     POST_RTC_LOGS: "POST_RTC_LOGS",
 };
 
-export const CONNECTION_TYPES = {
-    /** @type {"p2p"} */
-    P2P: "p2p",
-    /** @type {"server"} */
-    SERVER: "server",
-};
 const SCREEN_CONFIG = {
     width: { max: 1920 },
     height: { max: 1080 },
@@ -565,8 +561,8 @@ export class Rtc extends Record {
         this.notification = undefined;
         /** @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer} */
         this.p2pService = undefined;
-        /** @type {Services["discuss.pip_service"]} */
-        this.pipService = undefined;
+        /** @type {PipPlugin} */
+        this.pip = undefined;
         /** @type {PttExtensionPlugin} */
         this.pttExtService = undefined;
         /** @type {import("@mail/core/common/sound_effects_plugin").SoundEffectsPlugin} */
@@ -843,7 +839,7 @@ export class Rtc extends Record {
                 // denied and leave us in the overlay anyway.
                 this.viewToRestore = VIEW_TO_RESTORE.FULLSCREEN;
             }
-            await this.pipService.openPip(options);
+            await this.pip.open(options);
             return;
         }
         this.notification.add(UNAVAILABLE_AS_REMOTE, {
@@ -853,7 +849,7 @@ export class Rtc extends Record {
 
     closePip() {
         if (this.isHost) {
-            this.pipService.closePip();
+            this.pip.close();
         } else {
             this._remoteAction({ pip: false });
         }
@@ -2291,7 +2287,7 @@ export class Rtc extends Record {
             serverInfo: undefined,
             updateAndBroadcastDebounce: undefined,
         });
-        this.pipService?.closePip();
+        this.pip?.close();
     }
 
     /**
@@ -2971,7 +2967,7 @@ export class Rtc extends Record {
 Rtc.register();
 
 export const rtcService = {
-    dependencies: ["discuss.pip_service", "mail.store"],
+    dependencies: ["mail.store"],
     /**
      * @param {import("@web/env").OdooEnv} env
      * @param {import("services").ServiceFactories} services
@@ -2980,9 +2976,9 @@ export const rtcService = {
         const store = services["mail.store"];
         const rtc = store.rtc;
         rtc.pttExtService = usePlugin(PttExtensionPlugin);
-        rtc.pipService = services["discuss.pip_service"];
+        rtc.pip = usePlugin(PipPlugin);
         rtc.onChange(
-            () => [rtc.pipService.state.active],
+            () => [rtc.pip.isActive()],
             function onChangePipMode(isPipMode) {
                 if (!isPipMode) {
                     if (rtc.viewToRestore !== VIEW_TO_RESTORE.NONE && rtc.channel) {
