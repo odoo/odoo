@@ -295,6 +295,9 @@ patch(PosStore.prototype, {
                 break;
             }
         }
+        if (sourceOrder.pricelist_id?.id !== destOrder.pricelist_id?.id) {
+            destOrder.setPricelist(destOrder.pricelist_id);
+        }
         if (destOrder.courses) {
             // Ensure unassigned lines in destOrder are linked to the last course
             const lastCourse = destOrder.courses?.at(-1);
