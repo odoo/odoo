@@ -347,16 +347,16 @@ class MailingList(models.Model):
           contact instead of generated update message. Give False to entirely
           skip the note step;
         """
-        email_normalized = tools.email_normalize(email)
-        if not self or not email_normalized:
-            return self.env['mailing.contact']
+        if not self:
+            return
+        if email_normalized := tools.email_normalize(email):
+            contacts = self.env['mailing.contact'].with_context(active_test=False).search(
+                [('email_normalized', '=', email_normalized),
+            ])
+            if contacts:
+                self._update_subscription_from_contacts(contacts, opt_out, force_message)
 
-        contacts = self.env['mailing.contact'].with_context(active_test=False).search(
-            [('email_normalized', '=', email_normalized)]
-        )
-        if not contacts:
-            return self.env['mailing.contact']
-
+    def _update_subscription_from_contacts(self, contacts, opt_out=True, force_message=None):
         # switch opted-in subscriptions
         if opt_out:
             current_opt_in = contacts.subscription_ids.filtered(
@@ -411,14 +411,6 @@ class MailingList(models.Model):
                 body=body,
                 subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             )
-        self._post_subscribe_hook(contacts_to_subscribe, contacts_to_unsubscribe)
-        return contacts
-
-    def _post_subscribe_hook(self, contacts_in, contacts_out):
-        """
-        Ease custom behavior post (un)subscription through inheritance
-        """
-        pass
 
     # ------------------------------------------------------
     # MAILING
