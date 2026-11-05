@@ -67,6 +67,13 @@ declare module "plugins" {
         static dependencies: keyof SharedMethods;
     };
 
+    /**
+     * Type of a plugin's shared methods, from `static shared = shared([...])`.
+     * Register it in `SharedMethods` as `pluginId: SharedOf<typeof MyPlugin>`.
+     */
+    export type SharedOf<P extends typeof Plugin & { shared: readonly (keyof InstanceType<P>)[] }> =
+        Pick<InstanceType<P>, P["shared"][number]>;
+
     export interface SharedMethods {}
     interface SharedMethods {
         // Core

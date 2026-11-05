@@ -4,6 +4,19 @@ export const isValidTargetForDomListener = (target) =>
     !isProtecting(target) && (!isProtected(target) || isUnprotecting(target));
 
 /**
+ * Declares the names of a plugin's shared methods, so that `SharedOf` can
+ * derive their types: `static shared = shared(["next"]);`
+ *
+ * It returns `names` unchanged. It only exists to keep the names as literal
+ * types (`"next"` instead of `string`)
+ *
+ * @template {readonly string[]} const T
+ * @param {T} names
+ * @returns {T}
+ */
+export const shared = (names) => names;
+
+/**
  * @typedef { import("./editor").Editor } Editor
  * @typedef { import("./editor").EditorContext } EditorContext
  */
@@ -11,6 +24,7 @@ export const isValidTargetForDomListener = (target) =>
 export class Plugin {
     static id = "";
     static dependencies = [];
+    /** @type {readonly string[]} */
     static shared = [];
     static defaultConfig = {};
 
