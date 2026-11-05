@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo.tests
+from odoo.addons.base.models import ir_asset
+from odoo.addons.base.models.assetsbundle import JavascriptAsset
 
 
 @odoo.tests.tagged('post_install', '-at_install', 'assets_bundle')
@@ -43,3 +45,25 @@ class BusWebTests(odoo.tests.HttpCase):
             self.assertEqual(channel, 'broadcast')
             self.assertEqual(len(message), 1)
             self.assertTrue(isinstance(message.get('server_version'), str))
+
+
+class TestBusWorkerVersion(odoo.tests.TransactionCase):
+    def test_worker_version_follows_worker_content(self):
+        version = self.env["ir.http"]._get_bus_worker_version()
+        glob_static_file = ir_asset._glob_static_file
+
+        def touched_glob_static_file(pattern):
+            return [(path, mtime + 1) for path, mtime in glob_static_file(pattern)]
+
+        self.patch(ir_asset, "_glob_static_file", touched_glob_static_file)
+        self.env.transaction.invalidate_ormcache("assets")
+        self.assertEqual(self.env["ir.http"]._get_bus_worker_version(), version)
+        fetch_content = JavascriptAsset._fetch_content
+
+        def edited_fetch_content(asset):
+            content = fetch_content(asset)
+            return content + "\n// edited" if asset.url.endswith("websocket_worker.js") else content
+
+        self.patch(JavascriptAsset, "_fetch_content", edited_fetch_content)
+        self.env.transaction.invalidate_ormcache("assets")
+        self.assertNotEqual(self.env["ir.http"]._get_bus_worker_version(), version)

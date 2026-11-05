@@ -16,7 +16,7 @@ class WebsocketController(Controller):
 
         :param version: The version of the WebSocket worker that tries to
             connect. Connections with an outdated version will result in the
-            websocket being closed. See :attr:`WebsocketConnectionHandler._VERSION`.
+            websocket being closed. See :meth:`ir.http._get_bus_worker_version`.
         """
         return WebsocketConnectionHandler.open_connection(request, version)
 

@@ -1,17 +1,26 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
-from ..websocket import WebsocketConnectionHandler
+from odoo import api, models, tools
 
 
 class IrHttp(models.AbstractModel):
     _inherit = "ir.http"
 
+    @tools.conditional(
+        "xml" not in tools.config["dev_mode"],
+        api.ormcache(cache="assets"),
+    )
+    def _get_bus_worker_version(self):
+        # Not the bundle version, its file mtimes differ between hosts.
+        bundle = self.env["ir.qweb"]._get_asset_bundle("bus.websocket_worker_assets")
+        content = "".join(f"{asset.url}\n{asset.content}\n" for asset in bundle.javascripts)
+        return self.env["ir.attachment"]._compute_checksum(content.encode())[:16]
+
     def _get_bus_session_info(self, *, with_last_id=True):
         return {
             # sudo - bus.bus: reading the last bus id isn't sensitive.
             "last_id": self.env["bus.bus"].sudo()._bus_last_id() if with_last_id else None,
-            "worker_version": WebsocketConnectionHandler._VERSION,
+            "worker_version": self._get_bus_worker_version(),
         }
 
     @api.model
