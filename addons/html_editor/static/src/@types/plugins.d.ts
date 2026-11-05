@@ -67,6 +67,16 @@ declare module "plugins" {
         static dependencies: keyof SharedMethods;
     };
 
+    /**
+     * Shared methods of a plugin, derived from its `static shared` array so that
+     * they are not listed again in a typedef. The array must be wrapped in a
+     * `@type {const}` JSDoc cast to keep the method names, and the plugin added
+     * to `SharedMethods` as `pluginId: SharedOf<typeof MyPlugin>`.
+     */
+    export type SharedOf<P extends typeof Plugin> = string extends P["shared"][number]
+        ? { "static shared needs a @type {const} cast": true }
+        : Pick<InstanceType<P>, P["shared"][number] & keyof InstanceType<P>>;
+
     export interface SharedMethods {}
     interface SharedMethods {
         // Core
