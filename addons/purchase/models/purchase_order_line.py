@@ -207,7 +207,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             line.price_unit_product_uom = not line.display_type and not line.is_downpayment and line.uom_id._compute_price(line.price_unit, line.product_id.uom_id)
 
-    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state')
+    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'qty_received', 'product_uom_qty', 'order_id.state', 'product_id.purchase_method')
     def _compute_qty_invoiced(self):
         invoiced_quantities = self._prepare_qty_invoiced()
         for line in self:
@@ -378,7 +378,7 @@ class PurchaseOrderLine(models.Model):
             domain &= Domain.OR([
                 [('qty_to_invoice', '!=', 0)],
                 [
-                    ('order_id.invoice_status', '=', 'invoiced'),
+                    ('order_id.invoice_status', 'in', ('to invoice', 'invoiced')),
                     ('order_id.receipt_status', 'in', ('pending', 'partial')),
                 ],
                 [('invoice_lines.move_id.date', '>', date)],

@@ -1628,7 +1628,7 @@ class SaleOrderLine(models.Model):
             domain &= Domain.OR([
                 [("qty_to_invoice", "!=", 0)],
                 [
-                    ("order_id.invoice_status", "=", "invoiced"),
+                    ("order_id.invoice_status", "in", ("to invoice", "invoiced")),
                     ("order_id.delivery_status", "in", ("pending", "started", "partial")),
                 ],
                 [("invoice_lines.move_id.date", ">", date)],

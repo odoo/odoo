@@ -12,7 +12,7 @@ from werkzeug.urls import url_encode
 from odoo import api, fields, models, _
 from odoo.fields import Command, Domain
 from odoo.tools import format_amount, format_date, formatLang, groupby, OrderedSet, SQL
-from odoo.tools.float_utils import float_is_zero, float_repr
+from odoo.tools.float_utils import float_compare, float_repr
 from odoo.exceptions import AccessDenied, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
@@ -55,13 +55,14 @@ class PurchaseOrder(models.Model):
                 continue
 
             if any(
-                not float_is_zero(line.qty_to_invoice, precision_digits=precision)
+                float_compare(line.qty_to_invoice, 0, precision_digits=precision) > 0
+                or (line.qty_received and float_compare(line.qty_to_invoice, 0, precision_digits=precision) < 0)
                 for line in order.order_line.filtered(lambda l: not l.display_type)
             ):
                 order.invoice_status = 'to invoice'
             elif (
                 all(
-                    float_is_zero(line.qty_to_invoice, precision_digits=precision)
+                    float_compare(line.qty_to_invoice, 0, precision_digits=precision) <= 0
                     for line in order.order_line.filtered(lambda l: not l.display_type)
                 )
                 and order.invoice_ids
@@ -229,7 +230,10 @@ class PurchaseOrder(models.Model):
     def _compute_bill_matched_ratio(self):
         def get_line_invoiced_ratio(line):
             base_quantity = line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received
-            return line.qty_invoiced / base_quantity if base_quantity else 0
+            if not base_quantity:
+                # Since have no expected qty to bill, we cannot determine a ratio. Therefore it's 1 if something was billed, 0 otherwise.
+                return 1 if line.uom_id and line.uom_id.compare(line.qty_invoiced, 0) > 0 else 0
+            return line.qty_invoiced / base_quantity
 
         for order in self:
             product_lines = order.order_line.filtered(lambda pol: not pol.display_type)
