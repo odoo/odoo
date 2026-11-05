@@ -110,16 +110,16 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
 
         # Change the purchased quantity to 2
         po.order_line.write({'product_qty': 2})
-        # Check that a single delivery with the two components for the subcontractor have been created
-        mo2 = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)]) - mo
-        picking_deliveries = mo2.picking_ids
+        self.assertEqual(self.env['mrp.production'].search([('bom_id', '=', self.bom.id)]), mo)
+        self.assertEqual(mo.product_qty, 2)
+        picking_deliveries = mo.picking_ids
         self.assertEqual(len(picking_deliveries), 1)
         self.assertEqual(picking_deliveries.picking_type_id, wh.subcontracting_resupply_type_id)
         self.assertEqual(picking_deliveries.partner_id, self.subcontractor_partner1.parent_id)
         self.assertTrue(picking_deliveries.state != 'cancel')
         move1 = picking_deliveries.move_ids[0]
         self.assertEqual(move1.product_id, self.comp1)
-        self.assertEqual(move1.product_uom_qty, 1)
+        self.assertEqual(move1.product_uom_qty, 2)
 
     def test_dropshipped_component_and_sub_location(self):
         """

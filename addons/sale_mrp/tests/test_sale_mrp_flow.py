@@ -2263,7 +2263,6 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'uom_id': self.component_a.uom_id.id,
             'product_uom_qty': 1,
-            'price_unit': p,
             'value_manual': p,
         } for p in [10, 50]])
         in_moves._action_confirm()
@@ -2913,7 +2912,6 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
                 'location_id': self.env.ref('stock.stock_location_suppliers').id,
                 'location_dest_id': stock_location.id,
                 'picking_type_id': warehouse.in_type_id.id,
-                'price_unit': value,
                 'value_manual': value,
             })
             move._action_confirm()

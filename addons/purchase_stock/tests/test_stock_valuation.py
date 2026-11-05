@@ -160,6 +160,7 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
 
         po.order_line.price_unit = 15
         self.assertEqual(move_in_1.value, 150)
+        self.assertEqual(move_in_1.price_unit, 15)
 
     def test_avco_after_po_discount_update(self):
         """Changing only the discount of a confirmed PO line must revalue the
