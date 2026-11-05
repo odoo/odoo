@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.fields import Command
 from odoo.tests.common import Form
 
 class TestReturnPicking(TestStockCommon):
@@ -209,3 +210,59 @@ class TestReturnPicking(TestStockCommon):
         stock_return_picking = stock_return_picking_form.save()
         self.assertEqual(stock_return_picking.product_return_moves.quantity, 10,
                         "The quantity to return should be 10 g (0.01 kg converted to the product's default UoM)")
+
+    def _return(self, picking):
+        return_wizard = Form(self.env['stock.return.picking'].with_context(
+            active_ids=picking.ids, active_id=picking.id, active_model='stock.picking')).save()
+        return_wizard.product_return_moves.quantity = 1
+        return self.PickingObj.browse(return_wizard.create_returns()['res_id'])
+
+    def _receive_in_two_steps(self):
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+        receipt = self.PickingObj.create({
+            'picking_type_id': warehouse.in_type_id.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'move_ids': [Command.create({
+                'name': self.UnitA.name,
+                'product_id': self.UnitA.id,
+                'product_uom_qty': 1,
+                'product_uom': self.uom_unit.id,
+                'location_id': self.supplier_location,
+                'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            })],
+        })
+        receipt.action_confirm()
+        receipt.move_ids.quantity = 1
+        receipt.button_validate()
+        return warehouse, receipt
+
+    def test_return_storage_from_sublocation(self):
+        """ Store a two steps reception in a sublocation of the stock, then return the storage.
+        The return lands in the input location: it must not be pushed back to the stock it was
+        just taken out of.
+        """
+        warehouse, receipt = self._receive_in_two_steps()
+        shelf = self.StockLocationObj.create({'name': 'Shelf', 'location_id': warehouse.lot_stock_id.id})
+        storage = receipt.move_ids.move_dest_ids.picking_id
+        storage.location_dest_id = shelf
+        storage.move_ids.quantity = 1
+        storage.button_validate()
+
+        return_move = self._return(storage).move_ids
+        self.assertEqual(return_move.location_dest_id, warehouse.wh_input_stock_loc_id)
+        self.assertFalse(return_move.move_dest_ids)
+
+    def test_return_of_receipt_return_is_stored(self):
+        """ Goods returned to the vendor come back: the return of that return reaches the input
+        location from outside the stock, so it must still be pushed to the stock.
+        """
+        warehouse, receipt = self._receive_in_two_steps()
+        vendor_return = self._return(receipt)
+        vendor_return.move_ids.quantity = 1
+        vendor_return.button_validate()
+
+        return_move = self._return(vendor_return).move_ids
+        self.assertEqual(return_move.location_dest_id, warehouse.wh_input_stock_loc_id)
+        self.assertIn(warehouse.lot_stock_id, return_move.move_dest_ids.location_dest_id)
