@@ -8,6 +8,9 @@
     &:not(.o-interest) {
         opacity: var(--mail-NotificationItem-notInterestOpacity, .875);
     }
+    &.focus, .o-mail-Discuss &:focus-visible {
+        outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, .5));
+    }
     &:hover, &.o-active, .o-mail-MessagingMenuItem[data-right-clicking] & {
 
         &:not(:has(.o-mail-MessagingMenu-actions button:hover)), &.o-active {

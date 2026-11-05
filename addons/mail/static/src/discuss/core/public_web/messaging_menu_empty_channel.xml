@@ -13,10 +13,10 @@
                     <span class="fw-semibold text-truncate w-100"><t t-out="channel.displayName"/></span>
                     <span class="text-muted smaller"><t t-out="channel.member_count"/> followers</span>
                 </div>
-                <button class="btn btn-outline-secondary btn-sm flex-shrink-0" t-on-click="() => this.onClickFollow(channel)">Follow</button>
+                <button class="o-navigable btn btn-outline-secondary btn-sm flex-shrink-0" t-on-click="() => this.onClickFollow(channel)">Follow</button>
             </div>
         </div>
-        <button t-if="this.env.services.action" type="button" class="btn btn-link btn-sm mt-4" t-on-click="() => this.onClickFindMoreChannels()">Find more channels</button>
+        <button t-if="this.env.services.action" type="button" class="o-navigable btn btn-link btn-sm mt-4" t-on-click="() => this.onClickFindMoreChannels()">Find more channels</button>
     </MessagingMenuEmpty>
 </t>
 
