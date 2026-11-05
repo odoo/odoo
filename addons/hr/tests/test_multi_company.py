@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import UTC, date, datetime
+
 from odoo.addons.hr.tests.common import TestHrCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import tagged
@@ -119,6 +121,25 @@ class TestMultiCompany(TestHrCommon):
             AccessError, msg="A manager cannot access their subordinates if they are not in a selected company",
         ):
             employee_other_company.with_user(manager_user).check_access('read')
+
+    def test_unavailable_intervals_employee_from_inactive_company(self):
+        """ The gantt views list the employees of all the companies of the user to users without
+        access to the employees (they are read through hr.employee.public): their unavailability
+        is computed whatever the active companies, without reading their resource as the user. """
+        self.employee_other_b.contract_date_start = date(2026, 1, 1)
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        start = datetime(2026, 11, 2, tzinfo=UTC)  # a Monday
+        stop = datetime(2026, 11, 9, tzinfo=UTC)
+        unavailabilities = self.env['hr.employee'].with_user(self.user_a).with_context(
+            allowed_company_ids=self.company_a.ids,
+        ).browse(self.employee_other_b.id)._get_employee_unavailable_intervals(start, stop)
+        self.assertEqual(
+            unavailabilities[self.employee_other_b.id],
+            [{'start': datetime(2026, 11, 7, tzinfo=UTC), 'stop': stop}],
+            "the working schedule of the employee is used: only the weekend is unavailable",
+        )
 
     def test_bank_account_multi_company_linked_same_company(self):
         """
