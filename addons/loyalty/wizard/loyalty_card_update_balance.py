@@ -11,7 +11,7 @@ class LoyaltyCardUpdateBalance(models.TransientModel):
     card_id = fields.Many2one(comodel_name="loyalty.card", required=True, readonly=True)
     old_balance = fields.Float(related="card_id.points")
     new_balance = fields.Float()
-    description = fields.Char(required=True)
+    description = fields.Char()
 
     def action_update_card_point(self):
         if self.old_balance == self.new_balance or self.new_balance < 0:
@@ -20,5 +20,5 @@ class LoyaltyCardUpdateBalance(models.TransientModel):
             )
         difference = self.new_balance - self.old_balance
         self.card_id._adjust_points(
-            {self.card_id: difference}, self.description or self.env._("Gift for customer")
+            {self.card_id: difference}, self.description or self.env._("Balance update")
         )

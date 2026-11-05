@@ -103,7 +103,7 @@ class LoyaltyGenerateWizard(models.TransientModel):
             .create(coupon_create_vals)
             .with_env(self.env)
         )
-        values = {"description": self.description or self.env._("Gift For Customer")}
+        values = {"description": self.description or self.env._("Initial balance")}
         LoyaltyHistory = self.env["loyalty.history"]
         LoyaltyHistory.create([
             line_values
