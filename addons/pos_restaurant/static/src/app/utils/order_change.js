@@ -6,6 +6,7 @@ patch(receiptLineGrouper, {
         if (!line.config?.module_pos_restaurant || !line.course_id) {
             return super.getGroup(line);
         }
-        return { index: line.course_id.index, name: line.course_id.name };
+        const index = line.order_id.courses.indexOf(line.course_id);
+        return { index, name: line.course_id.name };
     },
 });
