@@ -5,7 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { UIPlugin } from "@web/core/ui/ui_plugin";
 import { useService } from "@web/core/utils/hooks";
 
-import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
+import { CONNECTION_TYPES } from "@mail/discuss/call/common/connection_types";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
 
 const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TURN" };
