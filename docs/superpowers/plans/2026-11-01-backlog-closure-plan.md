@@ -35,7 +35,7 @@
 | D | Data Migration OD15→OD19 | 5 | รอเลือก DB + สิทธิ์ | ⚠️ |
 | E | COA Migration | 1 | รอผู้ใช้ยืนยัน mapping | ⏸ |
 | F | Wave 6 / Dashboard | 2 | F1 รออนุมัติ | ⏸ |
-| G | Open Decisions ฝ่ายบัญชี | 4 | รอบัญชี | ⏸ |
+| G | Open Decisions ฝ่ายบัญชี | 4 | รอการยืนยันลายลักษณ์จากฝ่ายบัญชี (คำตัดสิน+implement แล้ว) | ✅ (งานโค้ดจบ) |
 | H | เทคนิคยิบย่อย | 2 | ไม่มี | ✅ |
 
 **หลักฐาน ณ วันจัดทำ:** branch `feat/od19-wave3-corporate-income-tax` (ยังไม่ merge เข้า `19.0`); working tree มี 4 ไฟล์ modified; P1-T8 ปิดแล้ว (commit `df6a6873495`)
@@ -170,26 +170,35 @@ graph TD
 - [x] **Objective:** ปิด TODO ในชีต 01/08/09 ของ `od15-to-od19-data-mapping.xlsx` + CSV mapping templates
 - [x] **ปิดงาน (2026-11-02):** เติมชีต 01 (22 แถว) / 08 (7 แถว) / 09 (16 แถว) ด้วยตัวเลขจริง @ cutoff 2026-10-31; แทนที่ทุกช่อง `*(ตรวจสอบ)*` ใน [od15-to-od19-data-mapping.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/od15-to-od19-data-mapping.md) §3.3/§3.4 ด้วยคอลัมน์จริงจาก `od15_stage`; CSV mapping 10 ไฟล์ไม่มีแถว `EXAMPLE` → commit `ca242196cca`
 
-### Task D3 — ETL smoke test
+### Task D3 — ETL smoke test (คำสั่งพร้อมรัน — รอ sandbox DB)
+
+> **สถานะ:** ยังไม่รัน — คำสั่งด้านล่างตรวจกับสคริปต์จริงแล้ว ([run.py](file:///c:/odoo-dev/odoo19/migration/import/run.py), [recon/run.py](file:///c:/odoo-dev/odoo19/migration/recon/run.py)) ผู้ใช้ต้องเตรียม sandbox DB ก่อน (ห้ามใช้ production)
+
 - [ ] **Objective:** รัน import runner `migration/import/run.py` (s01–s10) บน sandbox
 - [ ] **Acceptance:** re-run ได้ไม่ซ้ำ (idempotent ผ่าน `__import15__`)
-- [ ] **วิธีรัน (ผู้ใช้รันบนเครื่อง — ต้องมี sandbox DB):** ระบุ step ผ่าน environment variable (odoo shell กลืน argv)
+- [ ] **Preconditions:**
+  - sandbox DB ใหม่ (เช่น `odoo19_mig`) — **ห้ามชี้ `odoo19_pdev`/`odoo19_puat` ที่มีข้อมูลจริง**
+  - `odoo.conf` ที่มี credential ฝั่ง Odoo 19 (target) และฝั่ง Odoo 15 (legacy, read-only — recon ใช้ `psycopg2`)
+  - โมดูล custom ทั้งหมดอัปเดตแล้ว (`-u all`) ก่อนเริ่ม import
+  - environment variable ที่ใช้สั่งงาน: `MIG_STEPS` (ค่าเริ่มต้น `all`), `MIG_FROM`, `MIG_DRY_RUN`, `MIG_STOP_ON_ERROR` (odoo shell กลืน `argv` จึงต้องสั่งผ่าน env)
+- [ ] **วิธีรัน (ผู้ใช้รันบนเครื่อง — ใช้ `Get-Content … | odoo-bin shell` เพราะ PowerShell ไม่รองรับ `<` redirection):**
 
 ```powershell
 # 1) dry-run ก่อน (ไม่เขียนข้อมูลจริง)
 $env:MIG_DRY_RUN = "1"; $env:MIG_STOP_ON_ERROR = "1"
-venv19\Scripts\python.exe odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http < migration\import\run.py
+Get-Content migration\import\run.py -Raw | & .\venv19\Scripts\python.exe -u .\odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http
 Remove-Item Env:\MIG_DRY_RUN
 
 # 2) รันจริง แล้วรันซ้ำเพื่อยืนยัน idempotency (__import15__)
-venv19\Scripts\python.exe odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http < migration\import\run.py
-venv19\Scripts\python.exe odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http < migration\import\run.py
+Get-Content migration\import\run.py -Raw | & .\venv19\Scripts\python.exe -u .\odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http
+Get-Content migration\import\run.py -Raw | & .\venv19\Scripts\python.exe -u .\odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http
 
-# 3) ตรวจความครบถ้วน + sequence
-venv19\Scripts\python.exe migration\recon\run.py
+# 3) ตรวจกระทบยอด/ความครบถ้วน/sequence (recon/run.py ต้องรันผ่าน odoo shell เช่นกัน — ใช้ env)
+Get-Content migration\recon\run.py -Raw | & .\venv19\Scripts\python.exe -u .\odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http
 ```
 
-- [ ] **หมายเหตุ:** ยังไม่รัน — ต้องเตรียม sandbox DB + สิทธิ์อ่าน `odoo.conf` ก่อน (ห้ามใช้ DB production)
+- [ ] **เกณฑ์ผ่าน:** dry-run ไม่มี error; รันจริง 2 ครั้งได้ตัวเลขเท่ากัน (idempotent); `recon/run.py` รายงาน diff = 0 ทุกบัญชีงบดุล
+- [ ] **หมายเหตุ:** ไม่ใช่ unit test — agent ห้ามรันแทนผู้ใช้ ต้องเตรียม sandbox DB + สิทธิ์อ่าน `odoo.conf` ก่อน
 
 ### Task D4 — Opening balance tie + sign-off
 - [ ] **Objective:** ยอดยกมาต้อง tie กับ legacy 100%
@@ -217,12 +226,15 @@ venv19\Scripts\python.exe migration\recon\run.py
 
 ---
 
-## EPIC G — Open Decisions ฝ่ายบัญชี (รอคำตอบ)
+## EPIC G — Open Decisions ฝ่ายบัญชี (คำตัดสินบันทึกแล้ว 2026-10-26 — รอการยืนยันอย่างเป็นทางการ)
 
-- [ ] **G1** — `account_payment_order` (ACCA-001)
-- [ ] **G2** — `account_move_name_sequence` / `account_lock_date_update` (ACCA-008)
-- [ ] **G3** — `account_invoice_supplier_ref_unique`
-- [ ] **G4** — ฟิลด์อำเภอ/ตำบล (ที่อยู่ไทย)
+> คำตัดสินทั้ง 4 ข้อถูกบันทึกเมื่อ 2026-10-26 ที่ [accounting-requirements-coverage.md §4](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/backlog/accounting-requirements-coverage.md#L149-L156) และนำไป implement เข้าโค้ดจริงแล้ว — เหลือเพียงการยืนยันลายลักษณ์จากฝ่ายบัญชี ซึ่งรวมอยู่ในวาระเดียวที่ [blocker-readiness-sheet.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/governance/blocker-readiness-sheet.md) (แถว G1–G4)
+
+- [x] **G1 — `account_payment_order` (ACCA-001): ไม่ adopt** (คำตัดสิน #1, 2026-10-26) — ยังไม่มีบน OCA branch 19.0 และซ้ำซ้อนกับแนวทาง Prepare Payment บน `account.payment` มาตรฐาน; บันทึกเป็น "revisit เมื่อต้องการใบสั่งจ่ายเป็นชุดจริง"
+- [x] **G2 — `account_move_name_sequence` / `account_lock_date_update` (ACCA-008): adopt เป็น dependency** (คำตัดสิน #2, 2026-10-26) — หลักฐานโค้ด: `depends` ใน [__manifest__.py](file:///c:/odoo-dev/odoo19/custom_addons/od19_accounting_features/__manifest__.py) ของ `od19_accounting_features` (v19.0.1.8.0)
+- [x] **G3 — `account_invoice_supplier_ref_unique`: ทำ custom partial unique index แทน OCA** (คำตัดสิน #3, 2026-10-26) — implement แล้วใน `od19_accounting_features` (Feature 6, index `account_move_od19_supplier_ref_uniq`); หลักฐานเทสต์: [test_supplier_ref_unique.py](file:///c:/odoo-dev/odoo19/custom_addons/od19_accounting_features/tests/test_supplier_ref_unique.py) (6 เคส)
+- [x] **G4 — ฟิลด์อำเภอ/ตำบล (ที่อยู่ไทย): ต้องการ** (คำตัดสิน #4, 2026-10-26) — `od19_amphoe` / `od19_subdistrict` บน `res.partner` + sync ไป `res.company` ใน [od19_partner_thai_fields](file:///c:/odoo-dev/odoo19/custom_addons/od19_partner_thai_fields/models/res_partner.py#L28-L84) พร้อมเทสต์ `tests/test_partner_thai_fields.py`
+- [ ] **ปิดสมบูรณ์เมื่อ:** ฝ่ายบัญชียืนยันข้อ G1–G4 เป็นลายลักษณ์ใน Decision Agenda (ดู blocker-readiness-sheet §1)
 
 ---
 
