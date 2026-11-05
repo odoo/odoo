@@ -110,7 +110,7 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
                 )
             ],
         })
-        self.program.coupon_ids._adjust_points(100, "Initial balance")
+        self.program.coupon_ids._adjust_points({self.program.coupon_ids: 100}, "Initial balance")
         coupon = self.program.coupon_ids
 
         with self.mock_request(sale_order_id=cart.id):

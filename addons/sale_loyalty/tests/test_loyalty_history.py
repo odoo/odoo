@@ -46,7 +46,7 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
             "program_id": cls.loyalty_program.id,
             "partner_id": cls.partner_a.id,
         })
-        cls.loyalty_card._adjust_points(2, "Initial balance")
+        cls.loyalty_card._adjust_points({cls.loyalty_card: 2}, "Initial balance")
 
     def test_add_loyalty_history_line_with_reward(self):
         order = self._create_so(
@@ -117,7 +117,8 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         """Verify that applying multiple rewards sums up the total points cost."""
         initial_points = 4
         self.loyalty_card._adjust_points(
-            initial_points - self.loyalty_card.points, description="Top up for test"
+            {self.loyalty_card: initial_points - self.loyalty_card.points},
+            description="Top up for test",
         )
         self.loyalty_program.with_context(active_test=False).reward_ids.active = True
         order = self._create_so(
@@ -175,7 +176,9 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         """write() on sale.order.line must update history.used by the delta
         when points_cost changes on a confirmed order.
         """
-        self.loyalty_card._adjust_points(10 - self.loyalty_card.points, description="test setup")
+        self.loyalty_card._adjust_points(
+            {self.loyalty_card: 10 - self.loyalty_card.points}, description="test setup"
+        )
         self.loyalty_program.with_context(active_test=False).reward_ids.active = True
         product_reward = self.loyalty_program.reward_ids.filtered(
             lambda r: r.reward_type == "product"

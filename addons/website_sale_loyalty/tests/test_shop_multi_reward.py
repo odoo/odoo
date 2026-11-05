@@ -85,7 +85,7 @@ class TestClaimReward(WebsiteSaleCommon):
             },
         ])
         cls.coupon = cls.coupon_program.coupon_ids
-        cls.coupon._adjust_points(1, "Initial balance")
+        cls.coupon._adjust_points({cls.coupon: 1}, "Initial balance")
 
         installed_modules = set(
             cls.env["ir.module.module"].search([("state", "=", "installed")]).mapped("name")

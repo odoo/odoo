@@ -19,4 +19,6 @@ class LoyaltyCardUpdateBalance(models.TransientModel):
                 self.env._("New Balance should be positive and different then old balance.")
             )
         difference = self.new_balance - self.old_balance
-        self.card_id._adjust_points(difference, self.description or self.env._("Gift for customer"))
+        self.card_id._adjust_points(
+            {self.card_id: difference}, self.description or self.env._("Gift for customer")
+        )
