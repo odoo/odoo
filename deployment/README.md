@@ -19,7 +19,7 @@
 
 ```bash
 OD19_REPO=https://github.com/nattanonvs/odoo19ce-autoinfo.git \
-OD19_TAG=v19.0.0 \
+OD19_TAG=v19.0.2 \
   bash deployment/install.sh /opt/odoo19
 
 sudo cp /opt/odoo19/deployment/systemd/odoo19.service /etc/systemd/system/
