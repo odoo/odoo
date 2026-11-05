@@ -41,7 +41,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'website_event_track/static/src/scss/event_track_location_display.scss',
+            'website_event_track/static/src/scss/event_track_location_display.css',
             'website_event_track/static/src/scss/event_track_templates.scss',
             'website_event_track/static/src/scss/event_track_templates_online.css',
             'website_event_track/static/src/scss/pwa_frontend.css',
