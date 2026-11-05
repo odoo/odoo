@@ -19,7 +19,7 @@
             <t t-set-slot="icon"/>
             <t t-set-slot="counterSideContent">
                 <div t-if="this.showActions" class="o-mail-MessagingMenu-actions h-100 w-100 z-1 position-absolute bottom-0 end-0 d-none">
-                    <Dropdown
+                    <IsolatedDropdown
                         position="'right-start'"
                         menuClass="'o-mail-MessagingMenu-dropdownMenu o-discuss-dropdownMenu my-0 mx-1 ' + this.store.discussDropdownMenuClass(this)"
                         state="this.actionsDropdownState"
@@ -35,7 +35,7 @@
                         <t t-set-slot="content">
                             <ActionList actions="this.actionsList" dropdown="true"/>
                         </t>
-                    </Dropdown>
+                    </IsolatedDropdown>
                 </div>
             </t>
             <t t-set-slot="footer"/>
