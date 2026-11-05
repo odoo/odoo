@@ -821,21 +821,43 @@ class HrAttendance(models.Model):
         ])
         return Intervals([(a.check_in, a.check_out, dummy) for a in existing], keep_distinct=True)
 
-    def _get_time_rule_output_vals(self, rule, df, dt, pp):
-        """Return the values of an output attendance, see
-        ``hr.time.rule._get_output_attendance_vals``.
+    def _get_time_rule_part_fields(self):
+        """Return the fields the parts of an attendance split by the time rules keep from it: where it was checked in
+        and out. Not the mode: a part is not a check-in or check-out of the employee.
+
+        :rtype: list[str]
+        """
+        return [
+            f'{prefix}_{name}'
+            for prefix in ('in', 'out')
+            for name in ('latitude', 'longitude', 'location', 'ip_address', 'browser')
+        ]
+
+    def _get_time_rule_part_vals(self):
+        """Return the values of :meth:`_get_time_rule_part_fields` of the attendance, to create its parts with.
 
         :rtype: dict
         """
-        return rule._get_output_attendance_vals(self.employee_id, df, dt, self, accumulated_pp=pp)
+        self.ensure_one()
+        return {fname: self[fname] for fname in self._get_time_rule_part_fields()}
+
+    def _get_time_rule_output_vals(self, rule, df, dt, pp):
+        """Return the values of an output attendance, see
+        ``hr.time.rule._get_output_attendance_vals``, with the check-in and check-out data of the source
+        (:meth:`_get_time_rule_part_vals`).
+
+        :rtype: dict
+        """
+        return self._get_time_rule_part_vals() | rule._get_output_attendance_vals(
+            self.employee_id, df, dt, self, accumulated_pp=pp)
 
     def _get_time_rule_remainder_vals(self, df, dt):
         """Return the values of a remainder attendance: ``employee_id``, ``check_in``,
-        ``check_out`` and ``source_attendance_id``.
+        ``check_out``, ``source_attendance_id``, ``state`` and :meth:`_get_time_rule_part_vals`.
 
         :rtype: dict
         """
-        return {
+        return self._get_time_rule_part_vals() | {
             'employee_id': self.employee_id.id,
             'check_in': df,
             'check_out': dt,
@@ -963,23 +985,34 @@ class HrAttendance(models.Model):
             if source not in created_sources and previous_values.get(source) == current:
                 continue
             summary = source._get_time_rule_split_summary()
-            if not summary:
+            if not summary or summary['pending']:
                 continue
             parts = self.browse([part['attendance_id'] for part in summary['parts']])
-            title = self.env._(
-                "%(summary)s by the time rules (%(rules)s)",
-                summary=summary['title'],
-                rules=', '.join(parts.time_rule_id.mapped('name')),
-            )
+            rule_names = ', '.join(parts.time_rule_id.mapped('name'))
             if len(parts) == 1:
-                body = Markup("<p>%s.</p>") % title
+                part_lines = Markup('')
             else:
-                lines = Markup().join(
+                part_lines = Markup("<ul>%s</ul>") % Markup().join(
                     Markup("<li>%s</li>") % self.browse(part['attendance_id'])._get_html_link(title=part['label'])
                     for part in summary['parts']
                 )
-                body = Markup("<p>%s:</p><ul>%s</ul>") % (title, lines)
-            source._message_log(body=body)
+            # archived source: "was archived and split ..."
+            source_title = self.env._(
+                "%(summary)s and archived by the time rules (%(rules)s)",
+                summary=summary['title'],
+                rules=rule_names,
+            )
+            source._message_log(body=Markup("<p>%s.</p>%s") % (source_title, part_lines))
+            # visible parts: "split from [source] ..."
+            source_link = source._get_html_link()
+            parts_title = self.env._(
+                "Split from %(origin)s by the time rules (%(rules)s)",
+                origin=source_link,
+                rules=rule_names,
+            )
+            parts_body = Markup("<p>%s.</p>%s") % (parts_title, part_lines)
+            for part in parts:
+                part._message_log(body=parts_body)
 
     def _get_time_rule_split_summary(self):
         """Return what the time rules made, or will make, of the attendance.
@@ -1002,17 +1035,24 @@ class HrAttendance(models.Model):
         :rtype: dict | bool
         """
         self.ensure_one()
-        source = (self.source_attendance_id or self).sudo()
+        Attendance = self.env['hr.attendance'].sudo()
+        # archive+create: source is archived, remainders and rule outputs are new children. A part
+        # changed afterwards (e.g. a remainder extended) is itself split again: it is the source then.
+        source = self.sudo()
+        children = Attendance.search([('source_attendance_id', '=', source.id)]) if source.id else Attendance
+        if not children and self.source_attendance_id:
+            source = self.source_attendance_id.sudo()
+            children = Attendance.search([('source_attendance_id', '=', source.id)])
         if source.state == 'refused':
             return False
-        outputs = source.overtime_attendance_ids.filtered(
+        visible_parts = children.filtered(
             lambda att: att.time_rule_id.threshold_operator != 'less_than'
         )
-        if outputs or source.time_rule_id:
+        if visible_parts:
             pending = False
             split = [
                 (part.work_entry_type_id, part.worked_hours, part.id)
-                for part in (source | outputs).sorted('check_in')
+                for part in visible_parts.sorted('check_in')
             ]
         else:
             pending = True
@@ -1205,3 +1245,6 @@ class HrAttendance(models.Model):
                         "endTime": "24:00" if seg_stop == day_end else seg_stop.strftime("%H:%M"),
                     })
         return business_hours
+
+    def action_reprocess_time_rules(self):
+        return self.env['hr.time.rule.regenerate.wizard'].action_open_from_records(self)

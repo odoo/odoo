@@ -50,7 +50,7 @@ class HrTimesheetAttendanceReport(models.Model):
                     hr_employee.company_id as company_id
                 FROM hr_attendance
                 LEFT JOIN hr_employee ON hr_employee.id = hr_attendance.employee_id
-                WHERE hr_attendance.check_in::date <= CURRENT_DATE
+                WHERE hr_attendance.check_in::date <= CURRENT_DATE AND hr_attendance.active
             UNION ALL
                 SELECT
                     ts.id AS id,

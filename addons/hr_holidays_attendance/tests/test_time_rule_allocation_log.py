@@ -446,8 +446,8 @@ class TestTimeRuleAllocationLog(TransactionCase):
         self.assertAlmostEqual(alloc.number_of_days, 0.75, places=5,
                                msg="(4h + 2h) excess / 8h = 0.75d, not 0.25d")
 
-    def test_reversal_blocked_when_would_go_negative(self):
-        """unlink of an output child is blocked when it would bring the balance negative."""
+    def test_reversal_pushes_negative_when_balance_consumed(self):
+        """unlink of an output child reverses the credit even when it pushes the balance negative."""
         self._make_rule()
         today = datetime.now().date()
         last_sat = today - timedelta(days=(today.weekday() + 2) % 7)
@@ -468,16 +468,15 @@ class TestTimeRuleAllocationLog(TransactionCase):
 
         child = att.overtime_attendance_ids
         self.assertEqual(len(child), 1, "Prerequisite: output child must exist")
-        with self.assertRaises(ValidationError):
-            child.unlink()
+        child.unlink()
 
         alloc.invalidate_recordset()
-        self.assertAlmostEqual(alloc.number_of_days, 1.0, places=5,
-                               msg="allocation unchanged after blocked reversal")
-        self.assertTrue(self._logs(), "log entry must still exist after blocked reversal")
+        self.assertAlmostEqual(alloc.number_of_days, 0.0, places=5,
+                               msg="1.0d credit reversed -> 0.0d")
+        self.assertFalse(self._logs(), "log entry removed after reversal")
 
-    def test_reversal_blocked_when_would_go_negative_hours(self):
-        """the balance of an hourly type is compared in hours with the reversed credit."""
+    def test_reversal_pushes_negative_hours(self):
+        """reversal of an hourly-type credit pushes the balance negative when consumed."""
         self.comp_type.write({'request_unit': 'hour', 'unit_of_measure': 'hour'})
         self._make_rule()
         today = datetime.now().date()
@@ -502,8 +501,11 @@ class TestTimeRuleAllocationLog(TransactionCase):
 
         child = att.overtime_attendance_ids
         self.assertEqual(len(child), 1, "Prerequisite: output child must exist")
-        with self.assertRaises(ValidationError):
-            child.unlink()
+        child.unlink()
+
+        alloc.invalidate_recordset()
+        self.assertAlmostEqual(alloc.number_of_days, 0.0, places=5,
+                               msg="1.0d credit reversed -> 0.0d")
 
     def _make_deficit_rule(self, undertime_type, **kw):
         defaults = {

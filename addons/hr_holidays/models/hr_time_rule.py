@@ -13,21 +13,25 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     def _on_sources_collected(self, sources):
         """Reverse prior allocation credits before the batch is re-evaluated.
 
-        - child outputs and sources are reversed so the pipeline can recompute from scratch.
-        - in-place outputs (time_rule_id set, no source pointer) keep their credit
-          because the evaluation will not reclassify them.
+        Only reverse raw sources (no time_rule_id) and output children whose
+        parent source is also in the collected set (meaning it is being
+        re-evaluated).  Bystander output children -- those whose parent is
+        archived and therefore absent from *sources* -- keep their credit
+        because the pipeline will not recreate them.
 
         :param sources: records of the source model
         """
         reversed_ids = self.env.context.get('time_rule_reversed_ids')
-        source_field = sources._time_rule_source_field
-        to_reverse = set(sources.filtered(lambda s: not s.time_rule_id or s[source_field]).ids)
+        sf = sources._time_rule_source_field
+        collected_ids = set(sources.ids)
+        to_reverse = set(sources.filtered(
+            lambda s: not s.time_rule_id or (s[sf] and s[sf].id in collected_ids)
+        ).ids)
         if reversed_ids is not None:
             to_reverse -= reversed_ids
             reversed_ids |= to_reverse
         if to_reverse:
-            self.env['hr.time.rule']._reverse_allocation_credits(self._name, to_reverse)
-
+            self.env['hr.time.rule']._reverse_allocation_credits(self._name, list(to_reverse))
 
 
 class HrTimeRule(models.Model):

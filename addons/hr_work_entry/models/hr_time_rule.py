@@ -658,19 +658,6 @@ class HrTimeRule(models.Model):
         self.ensure_one()
         return frozenset()
 
-    def _get_source_annotation_vals(self, accumulated_pp=frozenset()):
-        """Return extra values written on a source record reused as the first output.
-
-        When the output starts with the source, the source itself is reclassified (written)
-        instead of creating a new record. Override to write the fields the
-        ``_get_output_*_vals`` methods set on new output records (e.g.
-        ``l10n_be_premium_pay_rule_ids``).
-
-        :param frozenset accumulated_pp: premium pay ids of the output interval(s)
-        :rtype: dict
-        """
-        return {}
-
     def _resolve_output_intervals(self, intervals):
         """Return the excess intervals of a source in their final output form.
 
@@ -698,12 +685,9 @@ class HrTimeRule(models.Model):
         ``_apply_leave_output``). Writes use the source's ``_time_rule_write_ctx``, so they do not
         trigger the rules again.
 
-        - Excess: if the first output interval starts with the source, the source itself is
-          reclassified (type, ``time_rule_id``, end); otherwise the source is cut at the first
-          output start. Each other output interval becomes a new record
-          (``_get_time_rule_output_vals``) and the uncovered parts of the source a remainder
-          record keeping the source type (``_get_time_rule_remainder_vals``). Rules without
-          output type only annotate the source (:meth:`_get_source_annotation_vals`).
+        - Excess: the source is archived and each output interval becomes a new record
+          (``_get_time_rule_output_vals``); the uncovered parts of the source become remainder
+          records keeping the source type (``_get_time_rule_remainder_vals``).
         - Deficit: per period, only the lowest sequence rule is kept; the missing hours are
           placed as new output records in the free slots after the deficit start (not
           covered by other records of the model), minus what earlier runs already created.
@@ -1207,10 +1191,32 @@ class HrTimeRule(models.Model):
                         new_inside.append(iv._replace(start=cursor))
                 pipeline_by_emp[employee] = non_matching + outside + new_inside
 
-        # extract final excess: pipeline intervals where a rule has classified them.
+        # extract final excess: pipeline intervals where a rule has classified them. An output
+        # classified again by the rule that produced it is left as it is: it still counts in the
+        # thresholds, but its excess (and allocation credit) was already applied.
         for employee, emp_pipeline in pipeline_by_emp.items():
             for iv in emp_pipeline:
-                if iv.rule is not None and iv.end > iv.start:
-                    excess[employee][iv.source].append(iv)
+                if iv.rule is None or iv.end <= iv.start:
+                    continue
+                if iv.rule == iv.source.time_rule_id and not iv.acc:
+                    continue
+                excess[employee][iv.source].append(iv)
 
         return excess, deficit, active_iv
+
+    def action_reprocess_time_rules(self):
+        src_filter = self.env.context.get('time_rule_app', 'all')
+        rules = self or self.search([])
+        wizard = self.env['hr.time.rule.regenerate.wizard'].create({
+            'rule_ids': [(6, 0, rules.ids)],
+            'source_model_filter': src_filter,
+        })
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env['hr.time.rule.regenerate.wizard']._description,
+            'res_model': 'hr.time.rule.regenerate.wizard',
+            'res_id': wizard.id,
+            'view_mode': 'form',
+            'views': [[False, 'form']],
+            'target': 'new',
+        }

@@ -91,6 +91,7 @@ class HrLeaveReportCalendar(models.Model):
         WHERE
             hl.state IN ('confirm', 'validate', 'validate1', 'refuse')
             AND hl.time_rule_id IS NULL
+            AND hl.active
         );
         """)
 
