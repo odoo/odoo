@@ -198,7 +198,7 @@ class ResCompany(models.Model):
             'l10n_fr_pdp_send_to_ppf': True,
             'l10n_fr_pdp_annuaire_start_date': False,
         })
-        super()._reset_peppol_configuration()
+        super()._reset_peppol_configuration(soft=soft)
 
     def _peppol_supported_document_types(self):
         """Returns a flattened dictionary of all supported document types."""

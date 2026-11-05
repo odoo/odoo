@@ -240,3 +240,19 @@ class TestPdpUser(TestL10nFrPdpCommon):
             'edi_mode': 'test',
         }])
         self.assertTrue(other2_peppol_user)
+
+    def test_pdp_out_of_sync_disconnect_keeps_config(self):
+        company = self.env.company
+        company.write({
+            'account_peppol_proxy_state': 'receiver',
+            'account_peppol_contact_email': 'pdp@test.example.com',
+        })
+        self.proxy_user.is_token_out_of_sync = True
+
+        self.proxy_user._peppol_out_of_sync_disconnect_this_database()
+
+        self.assertFalse(self.proxy_user.exists())
+        self.assertRecordValues(company, [{
+            'account_peppol_proxy_state': 'not_registered',
+            'account_peppol_contact_email': 'pdp@test.example.com',
+        }])
