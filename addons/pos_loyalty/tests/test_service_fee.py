@@ -62,10 +62,11 @@ class TestPosLoyaltyServiceFee(TestPointOfSaleHttpCommon):
             self.env["loyalty.program"].create_from_template("gift_card")["res_id"]
         )
         program.pos_report_print_id = self.env.ref("loyalty.report_gift_card")
-        self.env["loyalty.card"].create({
+        gift_card = self.env["loyalty.card"].create({
             "program_id": program.id,
             "code": "GIFTCARD",
-        })._adjust_points(100, "Initial balance")
+        })
+        gift_card._adjust_points({gift_card: 100}, "Initial balance")
         self._start_tour(
             "ServiceFeeGiftCardSingleLineTour",
             self._create_preset("Percent 10 before discount", "percent", 0.1),
@@ -96,10 +97,11 @@ class TestPosLoyaltyServiceFee(TestPointOfSaleHttpCommon):
             "trigger_product_ids": ewallet_product,
         })
         partner = self.env["res.partner"].create({"name": "AAAAAAA"})
-        self.env["loyalty.card"].create({
+        ewallet = self.env["loyalty.card"].create({
             "program_id": program.id,
             "partner_id": partner.id,
-        })._adjust_points(100, "Initial balance")
+        })
+        ewallet._adjust_points({ewallet: 100}, "Initial balance")
         self._start_tour(
             "ServiceFeeEWalletCoversFeeTour",
             self._create_preset("Percent 10 before discount", "percent", 0.1),

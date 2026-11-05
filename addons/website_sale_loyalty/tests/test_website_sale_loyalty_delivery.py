@@ -85,7 +85,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
             "program_id": gift_card_program.id,
             "code": "123456",
         })
-        cls.gift_card._adjust_points(50000, "Initial balance")
+        cls.gift_card._adjust_points({cls.gift_card: 50000}, "Initial balance")
 
         # Create a 50% discount on order code
         cls.promo_discount_code = cls.env["loyalty.program"].create({
@@ -123,7 +123,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
             "program_id": ewallet_program.id,
             "partner_id": cls.partner_admin.id,
         })
-        cls.ewallet._adjust_points(1000000, "Initial balance")
+        cls.ewallet._adjust_points({cls.ewallet: 1000000}, "Initial balance")
 
         delivery_product1, delivery_product2 = cls.env["product.product"].create([
             {"name": "Delivery 1", "invoice_policy": "order", "type": "service"},

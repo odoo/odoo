@@ -174,7 +174,7 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
             'program_id': loyalty_program.id,
             'partner_id': partner_aaa.id,
         })
-        loyalty_card._adjust_points(5, description="Initial balance")
+        loyalty_card._adjust_points({loyalty_card: 5}, description="Initial balance")
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("test_loyalty_history_earn_and_spend")
 

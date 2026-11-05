@@ -117,7 +117,7 @@ class LoyaltyCard(models.Model):
             if not float_is_zero(difference, precision_digits=2):
                 points_per_card[card] = difference
         if points_per_card:
-            self._adjust_points_batch(points_per_card, self.env._("Manual Adjustment"))
+            self._adjust_points(points_per_card, self.env._("Manual Adjustment"))
 
     @api.depends("points", "point_name")
     def _compute_points_display(self):
@@ -281,21 +281,9 @@ class LoyaltyCard(models.Model):
         }
 
     def _adjust_points(self, diff, description, order_model=False, order_id=False):
-        """Create the loyalty history line(s) needed to change this card's balance by difference.
+        """Create the loyalty history lines needed to change the balance of the given cards.
 
-        :param float diff: amount to adjust the card's balance by.
-        :param str description: description stored on the created history line(s)
-        :param str order_model: model name of the record that triggered this adjustment, if any
-        :param int order_id: id of the record that triggered this adjustment, if any
-        """
-        self.ensure_one()
-        return self._adjust_points_batch({self: diff}, description, order_model, order_id)
-
-    def _adjust_points_batch(self, points_per_card, description, order_model=False, order_id=False):
-        """Create the loyalty history lines needed to change the balance of several cards. Used
-        when importing multiple cards at once.
-
-        :param dict points_per_card: amount to adjust the balance by, per card
+        :param dict diff: amount to adjust the balance by, per card (``{card: amount}``)
         :param str description: description stored on the created history lines
         :param str order_model: model name of the record that triggered this adjustment, if any
         :param int order_id: id of the record that triggered this adjustment, if any
@@ -304,6 +292,6 @@ class LoyaltyCard(models.Model):
         LoyaltyHistory = self.env["loyalty.history"]
         return LoyaltyHistory.create([
             line_values
-            for card, diff in points_per_card.items()
-            for line_values in LoyaltyHistory._get_history_lines_values(card, values, diff)
+            for card, amount in diff.items()
+            for line_values in LoyaltyHistory._get_history_lines_values(card, values, amount)
         ])
