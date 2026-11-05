@@ -294,7 +294,8 @@ class HrLeave(models.Model):
                     leave.request_date_from, leave.request_date_to)
 
     @api.depends('employee_id', 'leave_type_request_unit', 'request_date_from', 'request_date_to',
-            'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period', 'state')
+            'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period', 'state',
+            'number_of_hours')
     def _compute_dashboard_warning_message(self):
         check_warning_leaves = self.filtered_domain([
             ('state', 'not in', ('refuse', 'cancel')),
@@ -351,6 +352,35 @@ class HrLeave(models.Model):
                     'state': conflicting_holiday_data['state']
                 } for conflicting_holiday_data in conflicting_holidays_list
             )
+
+        # Duration based schedules: time off in hours can't exceed the hours left in the day
+        day_leaves = check_warning_leaves.filtered(lambda leave:
+            not leave.dashboard_warning_message
+            and leave.employee_id and leave.request_date_from
+            and leave.request_date_from == leave.request_date_to
+            and leave.resource_calendar_id.duration_based)
+        if not day_leaves:
+            return
+        leaves_by_day = (self.search([
+            ('employee_id', 'in', day_leaves.employee_id.ids),
+            ('holiday_status_id.allow_request_on_top', '=', False),
+            ('state', 'not in', ('refuse', 'cancel')),
+            ('id', 'not in', day_leaves._origin.ids),
+            ('request_date_from', 'in', day_leaves.mapped('request_date_from')),
+        ]).filtered(lambda leave: leave.request_date_from == leave.request_date_to) | day_leaves).grouped(
+            lambda leave: (leave.employee_id, leave.request_date_from))
+        for holiday in day_leaves:
+            other_leaves = leaves_by_day[holiday.employee_id, holiday.request_date_from] - holiday
+            if not other_leaves or not any((holiday | other_leaves).mapped('request_unit_hours')):
+                continue
+            day_hours = sum(holiday.resource_calendar_id._get_duration_based_day_attendances(holiday.request_date_from).mapped('duration_hours'))
+            remaining_hours = day_hours - sum(other_leaves.mapped('number_of_hours'))
+            if float_compare(holiday.number_of_hours, remaining_hours, precision_digits=2) > 0:
+                holiday.dashboard_warning_message = self.env._(
+                    "Only %(hours)s hours are left to take off on %(date)s, according to the working schedule.",
+                    hours=max(remaining_hours, 0),
+                    date=format_date(self.env, holiday.request_date_from),
+                )
 
     @api.depends_context('uid')
     def _compute_description(self):
@@ -665,6 +695,12 @@ Versions:
                     work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     days = len(work_time_per_day_list)
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
+                elif (
+                    leave.request_unit_half
+                    and leave.request_date_from != leave.request_date_to
+                    and calendar.duration_based
+                ):
+                    days, hours = leave._get_duration_based_half_day_duration(calendar)
                 else:
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.holiday_status_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
@@ -681,6 +717,89 @@ Versions:
                 days = float_round(days, precision_rounding=0.5)
             result[leave.id] = (days, hours)
         return result
+
+    def _get_duration_based_half_day_hours(self, date, calendar):
+        """ Hours of `calendar` taken on `date` by a half day leave spanning several days,
+        or None if `date` is not the first or last day of such a leave. """
+        self.ensure_one()
+        if not (
+            self.request_unit_half
+            and self.request_date_from != self.request_date_to
+            and date in (self.request_date_from, self.request_date_to)
+        ):
+            return None
+        attendances = calendar._get_duration_based_day_attendances(date)
+        if date == self.request_date_from and self.request_date_from_period == 'pm':
+            day_period = 'afternoon'
+        elif date == self.request_date_to and self.request_date_to_period == 'am':
+            day_period = 'morning'
+        else:
+            return sum(attendances.mapped('duration_hours'))
+        # A full day attendance is split equally between the morning and the afternoon
+        return sum(
+            attendance.duration_hours if attendance.day_period == day_period else attendance.duration_hours / 2
+            for attendance in attendances if attendance.day_period in (day_period, 'full_day')
+        )
+
+    def _get_duration_based_half_day_duration(self, calendar):
+        self.ensure_one()
+        total_days = 0.0
+        total_hours = 0.0
+        leave_intervals = Intervals([(self.date_from, self.date_to, self)])
+
+        if not self.holiday_status_id.include_public_holidays_in_duration:
+            public_holidays = self.env['resource.calendar.leaves'].search([
+                ('resource_id', '=', False),
+                ('date_from', '<', self.date_to),
+                ('date_to', '>', self.date_from),
+                ('calendar_id', 'in', [False, calendar.id]),
+                ('company_id', '=', self.company_id.id),
+            ])
+
+            public_holiday_intervals = Intervals([
+                (ph.date_from, ph.date_to + timedelta(seconds=1), ph)
+                for ph in public_holidays
+            ])
+            leave_intervals -= public_holiday_intervals
+
+        start_date = self.request_date_from
+        end_date = self.request_date_to
+        tz = pytz.timezone(calendar.tz)
+
+        # Start date
+        start_day_start = tz.localize(datetime.combine(start_date, time.min)).astimezone(pytz.utc).replace(tzinfo=None)
+        start_day_stop = tz.localize(datetime.combine(start_date + timedelta(days=1), time.min)).astimezone(pytz.utc).replace(tzinfo=None)
+        start_day_hours = self._get_duration_based_half_day_hours(start_date, calendar)
+        if start_day_hours and leave_intervals & Intervals([(start_day_start, start_day_stop, self)]):
+            total_hours += start_day_hours
+            total_days += 0.5 if self.request_date_from_period == 'pm' else 1.0
+
+        # Middle dates
+        middle_start_date = start_date + timedelta(days=1)
+        middle_end_date = end_date - timedelta(days=1)
+
+        if middle_start_date <= middle_end_date:
+            middle_start_datetime = tz.localize(datetime.combine(middle_start_date, time.min))
+            middle_end_datetime = tz.localize(datetime.combine(end_date, time.min))
+
+            duration_data = calendar.get_work_duration_data(
+                middle_start_datetime,
+                middle_end_datetime,
+                compute_leaves=not self.holiday_status_id.include_public_holidays_in_duration,
+            )
+
+            total_days += duration_data['days']
+            total_hours += duration_data['hours']
+
+        # End date
+        end_day_start = tz.localize(datetime.combine(end_date, time.min)).astimezone(pytz.utc).replace(tzinfo=None)
+        end_day_stop = tz.localize(datetime.combine(end_date + timedelta(days=1), time.min)).astimezone(pytz.utc).replace(tzinfo=None)
+        end_day_hours = self._get_duration_based_half_day_hours(end_date, calendar)
+        if end_day_hours and leave_intervals & Intervals([(end_day_start, end_day_stop, self)]):
+            total_hours += end_day_hours
+            total_days += 0.5 if self.request_date_to_period == 'am' else 1.0
+
+        return total_days, total_hours
 
     @api.depends('date_from', 'date_to', 'resource_calendar_id', 'holiday_status_id.request_unit')
     def _compute_duration(self):
