@@ -38,3 +38,15 @@ class HrAttendance(models.Model):
     def _reverse_credits_on_unlink(self):
         """Reverse the allocation credits logged on the deleted attendances."""
         self.env['hr.time.rule']._reverse_allocation_credits('hr.attendance', self.ids)
+
+    @api.ondelete(at_uninstall=False)
+    def _cleanup_orphaned_sources_on_unlink(self):
+        if self.env.context.get('skip_time_rules'):
+            return
+        orphaned = self._get_orphaned_sources_on_unlink()
+        if not orphaned:
+            return
+        # clear fk first, outputs still exist and would block source deletion
+        src_field = self._time_rule_source_field
+        self.with_context(active_test=False, skip_time_rules=True).write({src_field: False})
+        orphaned.with_context(active_test=False, skip_time_rules=True).sudo().unlink()
