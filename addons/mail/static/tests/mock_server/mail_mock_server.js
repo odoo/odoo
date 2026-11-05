@@ -3,12 +3,12 @@ import { storeHandlerRegistry } from "@mail/../tests/mock_server/store_handler";
 import { markup } from "@odoo/owl";
 import {
     authenticate,
-    logout,
     makeKwArgs,
     MockServer,
     MockServerError,
     onRpc,
     serverState,
+    withUser,
 } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 import { serializeDateTime } from "@web/core/l10n/dates";
@@ -49,21 +49,21 @@ export async function withGuest(guestId, fn) {
     const { env } = MockServer;
     /** @type {import("mock_models").MailGuest} */
     const MailGuest = env["mail.guest"];
-    const currentUser = env.user;
+    const currentGuestId = env.cookie.get("dgid");
     const [targetGuest] = MailGuest.browse(guestId);
-    authenticateGuest(targetGuest);
-    let result;
+    if (!targetGuest?.id) {
+        throw new MockServerError("Unauthorized");
+    }
+    env.cookie.set("dgid", targetGuest.id);
     try {
-        result = await fn();
+        return await withUser(serverState.publicUserId, fn);
     } finally {
-        if (currentUser) {
-            authenticate(currentUser.login, currentUser.password);
+        if (currentGuestId) {
+            env.cookie.set("dgid", currentGuestId);
         } else {
-            logout();
             env.cookie.delete("dgid");
         }
     }
-    return result;
 }
 
 /** @param {Request} request */
