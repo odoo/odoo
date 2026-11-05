@@ -19,13 +19,23 @@ class PagePropertiesBase(models.TransientModel):
     def _selection_target_model_id(self):
         return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
 
+    def _get_menu_domain(self, url=None):
+        self.ensure_one()
+        target = self.target_model_id
+        domain = [('website_id', '=', self.website_id.id)]
+        url_to_check = url or self.url
+        # For website pages, rely primarily on page_id as it stays stable
+        # across URL changes. Fall back to URL for non-page targets.
+        if target and target._name == 'website.page' and target.id:
+            domain += ['|', ('page_id', '=', target.id), ('url', '=', url_to_check)]
+        else:
+            domain += [('url', '=', url_to_check)]
+        return domain
+
     @api.depends('url', 'website_id')
     def _compute_menu_ids(self):
         for record in self:
-            record.menu_ids = self.env['website.menu'].search([
-                ('website_id', '=', record.website_id.id),
-                ('url', '=', record.url),
-            ])
+            record.menu_ids = self.env['website.menu'].search(record._get_menu_domain())
 
     @api.depends('menu_ids')
     def _compute_is_in_menu(self):
