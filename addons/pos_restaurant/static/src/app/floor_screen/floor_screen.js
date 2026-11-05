@@ -552,7 +552,7 @@ export class FloorScreen extends Component {
             : null;
     }
     get activeTables() {
-        return this.activeFloor?.table_ids;
+        return this.activeFloor?.table_ids?.filter((table) => table.active) || [];
     }
     get selectedTables() {
         return this.state.selectedTableIds.map((id) => this.pos.models["restaurant.table"].get(id));
