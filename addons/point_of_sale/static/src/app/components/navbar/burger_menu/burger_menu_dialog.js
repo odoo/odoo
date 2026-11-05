@@ -4,6 +4,8 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isDisplayStandalone } from "@web/core/browser/feature_detection";
 import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 
 export class BurgerMenuDialog extends Component {
     static template = "point_of_sale.BurgerMenuDialog";
@@ -20,6 +22,10 @@ export class BurgerMenuDialog extends Component {
         this.dialog = useService("dialog");
         this.isDisplayStandalone = isDisplayStandalone();
         this.isBarcodeScannerSupported = isBarcodeScannerSupported;
+    }
+
+    get isOffline() {
+        return this.pos.data.network.offline;
     }
 
     get appUrl() {
@@ -60,5 +66,15 @@ export class BurgerMenuDialog extends Component {
     closeAndRun(fn) {
         this.props.close();
         fn();
+    }
+
+    offlinePopup() {
+        this.dialog.add(AlertDialog, {
+            title: _t("Connection Lost"),
+            body: _t(
+                "Until the connection is reestablished, Odoo Point of Sale will operate with limited functionality."
+            ),
+            confirmLabel: _t("Continue with limited functionality"),
+        });
     }
 }

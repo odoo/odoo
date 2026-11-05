@@ -2,8 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.CashierName">
-        <button t-att-class="this.cssClass" class="cashier-name btn btn-light btn-lg lh-lg d-flex align-items-center gap-2 flex-shrink-0 h-100">
-            <img t-att-src="this.avatar" t-att-alt="this.username" class="avatar rounded-3"/>
+        <button t-att-class="this.cssClass"
+            class="cashier-name btn btn-sm ms-2 btn-light border-0"
+            t-attf-style="background-image: url('{{this.avatar}}');">
+            <i class="oi oi-fw" aria-hidden="true"/>
         </button>
     </t>
 

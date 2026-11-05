@@ -1,0 +1,111 @@
+.ns-edge-top {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  left: 0;
+  right: 0;
+  height: 5px;
+  z-index: 1100;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.25s ease, transform 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.ns-edge-top:not([data-state="online"]) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ns-edge-top[data-state="syncing"]::before,
+.ns-edge-top[data-state="syncing"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--primary);
+}
+
+.ns-edge-top[data-state="syncing"]::before {
+  animation: ns-edge-long 2s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+}
+
+.ns-edge-top[data-state="syncing"]::after {
+  animation: ns-edge-short 2s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
+}
+
+@keyframes ns-edge-long {
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+}
+
+@keyframes ns-edge-short {
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+}
+
+.ns-edge-top[data-state="offline"] {
+  background: var(--danger);
+  animation: ns-edge-arrive 1.2s ease-out 1;
+}
+
+@keyframes ns-edge-arrive {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes ns-edge-stripes {
+  to {
+    background-position: 17px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ns-edge-top {
+    transition: opacity 0.15s linear;
+    transform: none;
+  }
+  .ns-edge-top[data-state="syncing"]::before {
+    animation: none;
+    left: 0;
+    right: 0;
+    opacity: 0.6;
+  }
+  .ns-edge-top[data-state="syncing"]::after {
+    content: none;
+  }
+  .ns-edge-top[data-state="offline"] {
+    animation: none;
+  }
+}
