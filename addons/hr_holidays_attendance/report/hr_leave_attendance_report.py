@@ -340,7 +340,7 @@ class HrLeaveAttendanceReport(models.Model):
             SELECT row_number() OVER (ORDER BY ed.day DESC, ed.employee_id) AS id,
                    ed.day AS date,
                    ed.employee_id,
-                   rc.id AS schedule_id,
+                   ed.resource_calendar_id AS schedule_id,
                    ROUND(COALESCE(att.worked_hours, 0.0)::numeric, 2) AS worked_hours,
                    ROUND(COALESCE(%(expected_hours)s, 0.0)::numeric, 2) AS expected_hours,
                    ROUND(COALESCE(ld.leave_hours, 0.0)::numeric, 2) AS leave_hours,
@@ -354,8 +354,6 @@ class HrLeaveAttendanceReport(models.Model):
     def _from(self):
         return SQL("""
               FROM emp_day AS ed
-              JOIN resource_calendar AS rc
-                ON rc.id = ed.resource_calendar_id
          LEFT JOIN cal_workday AS cw
                 ON cw.calendar_id = ed.resource_calendar_id
                AND cw.dayofweek = EXTRACT(ISODOW FROM ed.day)::integer - 1
