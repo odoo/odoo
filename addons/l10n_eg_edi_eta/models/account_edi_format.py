@@ -8,7 +8,6 @@ import logging
 import requests
 from werkzeug.urls import url_quote
 from base64 import b64encode
-from json import JSONDecodeError
 from odoo.addons.account.tools import LegacyHTTPAdapter
 
 from odoo import api, models, _
@@ -58,7 +57,7 @@ class AccountEdiFormat(models.Model):
         if not request_response.ok:
             try:
                 response_data = request_response.json()
-            except (JSONDecodeError, json.JSONDecodeError) as ex:
+            except ValueError as ex:
                 return {
                     'error': str(ex),
                     'blocking_level': 'error'
@@ -71,7 +70,7 @@ class AccountEdiFormat(models.Model):
 
         try:
             response_data = request_response.json()
-        except JSONDecodeError:
+        except ValueError:
             response_data = {}
 
         return {
