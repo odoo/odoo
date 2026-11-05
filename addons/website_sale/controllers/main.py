@@ -1212,7 +1212,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 shippings = Partner.sudo().search([("id", "child_of", order.partner_id.commercial_partner_id.ids)])
                 if partner_id not in shippings.mapped('id') and partner_id != order.partner_id.id:
                     return Forbidden()
-                Partner.browse(partner_id).sudo().write(checkout)
+                partner_sudo = Partner.browse(partner_id).sudo()
+                write_values = checkout.copy()
+                if partner_sudo.parent_id:
+                    write_values.pop('company_name', None)  # Avoid hiding parent link in partner form UI.
+                partner_sudo.write(write_values)
         return partner_id
 
     def values_preprocess(self, values):

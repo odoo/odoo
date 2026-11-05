@@ -832,3 +832,34 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             so.website_id = False
             self.WebsiteSaleController.address(**self.default_address_values)
             self.assertFalse(so.payment_term_id, "The website default payment term should not be set on a sale order not coming from the website")
+
+    def test_12_shop_address_submit_conditionally_ignores_company_name(self):
+        """Ensure that updating an address does not set company_name when parent_id is set on the partner."""
+        user = self.user_portal
+        partner_user = user.partner_id
+        partner_company = self.env['res.partner'].create({
+            'name': 'My company',
+            'is_company': True,
+            'child_ids': [Command.link(partner_user.id)],
+        })
+
+        so = self._create_so(partner_id=partner_user.id)
+        env = api.Environment(self.env.cr, user.id, {})
+        mode = ('edit', 'billing')
+        checkout = {
+            **self.default_address_values,
+            'company_name': partner_company.name,
+        }
+        checkout.pop('submitted', None)
+        all_values = {'partner_id': partner_user.id}
+
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+            self.WebsiteSaleController._checkout_form_save(mode, checkout, all_values)
+        self.assertFalse(partner_user.company_name, "company_name should remain empty for partners with an existing parent_id.")
+
+        partner_user.parent_id = None
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+            self.WebsiteSaleController._checkout_form_save(mode, checkout, all_values)
+        self.assertEqual(partner_user.company_name, 'My company')
