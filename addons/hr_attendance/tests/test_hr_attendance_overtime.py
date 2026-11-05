@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime, timedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import Command
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import Form, HttpCase, new_test_user
 from odoo.tests.common import tagged
 from odoo.tools import float_compare
@@ -533,6 +534,65 @@ class TestHrAttendanceOvertime(HttpCase):
 
         # Employee with flexible working schedule should not be checked out
         self.assertEqual(attendance_flexible_pending.check_out, False)
+
+    @freeze_time("2024-02-01 23:00:00")
+    def test_auto_check_out_with_later_attendance(self):
+        """ An open attendance followed by a later closed attendance on the same day must be
+        checked out before the later one starts, instead of overlapping it."""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1
+        })
+        open_attendance, later_attendance = self.env['hr.attendance'].create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2024, 2, 1, 7, 0),
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2024, 2, 1, 13, 0),
+                'check_out': datetime(2024, 2, 1, 15, 0),
+            },
+        ])
+
+        self.env['hr.attendance']._cron_auto_check_out()
+
+        self.assertEqual(open_attendance.check_out, later_attendance.check_in)
+        self.assertEqual(open_attendance.out_mode, 'auto_check_out')
+        self.assertEqual(later_attendance.check_out, datetime(2024, 2, 1, 15, 0))
+
+    @freeze_time("2024-02-01 23:00:00")
+    def test_auto_check_out_skip_faulty_attendance(self):
+        """ An error on one attendance must not prevent the others from being checked out."""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1
+        })
+        faulty_attendance, other_attendance = self.env['hr.attendance'].create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2024, 2, 1, 8, 0),
+            },
+            {
+                'employee_id': self.other_employee.id,
+                'check_in': datetime(2024, 2, 1, 7, 0),
+            },
+        ])
+
+        HrEmployee = self.registry['hr.employee']
+        get_expected_attendances = HrEmployee._get_expected_attendances
+
+        def _get_expected_attendances(employee, *args, **kwargs):
+            if employee == self.employee:
+                raise ValidationError("Faulty attendance")
+            return get_expected_attendances(employee, *args, **kwargs)
+
+        with patch.object(HrEmployee, '_get_expected_attendances', _get_expected_attendances):
+            self.env['hr.attendance']._cron_auto_check_out()
+
+        self.assertFalse(faulty_attendance.check_out)
+        self.assertTrue(other_attendance.check_out)
+        self.assertEqual(other_attendance.out_mode, 'auto_check_out')
 
     @freeze_time("2024-02-1 23:00:00")
     def test_auto_check_out_more_one_day_delta(self):
