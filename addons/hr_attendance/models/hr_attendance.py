@@ -630,7 +630,7 @@ class HrAttendance(models.Model):
             })
 
         technical_attendances = self.env['hr.attendance'].create(technical_attendances_vals)
-        technical_attendances._trigger_time_rules()
+        technical_attendances._trigger_time_rules(include_deficit=True)
         to_unlink = technical_attendances.filtered(lambda a: not a.overtime_attendance_ids)
         body = _('This attendance was automatically created to cover an unjustified absence on that day.')
         for technical_attendance in technical_attendances:

@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, freeze_time
 
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline', 'time_rule_pipeline')
@@ -522,6 +522,10 @@ class TestTimeRuleAllocationLog(TransactionCase):
         })
         return alloc
 
+    def _run_deficit_day_cron(self, for_date):
+        """Simulate the day-undertime cron as if running the morning after for_date."""
+        with freeze_time(for_date + timedelta(days=1)):
+            self.env['hr.attendance']._cron_process_day_undertime_rules()
 
     def test_deficit_output_log_keyed_to_output_record(self):
         undertime_type = self.env['hr.work.entry.type'].create({
@@ -534,6 +538,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
         # Monday 08:00-14:00 (6h worked, 8h expected) -> 2h deficit
         # output attendance created for the missing 2h slot; allocation deducted 2/8 = 0.25d
         att = self._make_att(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+        self._run_deficit_day_cron(date(2022, 12, 12))
         att.invalidate_recordset()
 
         output = att.overtime_attendance_ids
@@ -560,6 +565,7 @@ class TestTimeRuleAllocationLog(TransactionCase):
 
         # Monday 08:00-14:00 (6h worked, 8h expected) -> 2h deficit -> 0.25d deducted
         att = self._make_att(datetime(2022, 12, 12, 8), datetime(2022, 12, 12, 14))
+        self._run_deficit_day_cron(date(2022, 12, 12))
         att.invalidate_recordset()
 
         output = att.overtime_attendance_ids

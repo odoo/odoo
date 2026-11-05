@@ -464,13 +464,8 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         merged_active_iv = self._merge_active_iv(day_active_iv, week_active_iv)
         self._apply_record_output(day_rules | week_rules, merged_excess, merged_deficit, merged_active_iv)
 
-    def _trigger_time_rules(self):
-        """Run the rules for the records of ``self`` that are valid sources.
-
-        Called on create and on write of a trigger field. Records without span or not matching
-        :meth:`_get_source_extra_fields_domain` are ignored. See
-        :meth:`_trigger_time_rules_for_affected` for which rules run.
-        """
+    def _trigger_time_rules(self, include_deficit=False):
+        """Apply the full day/week, past/current, exceed/undertime split for validated source record."""
         domain = [
             (self._time_rule_span_start_field, '!=', False),
             (self._time_rule_span_end_field, '!=', False),
@@ -488,22 +483,14 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             time_rule_trigger_model=self._name,
             time_rule_trigger_desc=', '.join(names),
         )._trigger_time_rules_for_affected(
-            [(r.employee_id, r[r._time_rule_span_start_field], r[r._time_rule_span_end_field]) for r in validated]
+            [(r.employee_id, r[r._time_rule_span_start_field], r[r._time_rule_span_end_field]) for r in validated],
+            include_deficit=include_deficit,
         )
 
-    def _trigger_time_rules_for_affected(self, affected):
-        """Run the rules that can already be decided for the given periods.
-
-        - periods ending before today: all daily rules;
-        - periods ending today or later: daily ``exceed`` rules only;
-        - periods ending before the current week (started on the earliest ``week_start`` of the
-          active weekly rules): weekly ``exceed`` rules.
-
-        Weekly undertime only runs from :meth:`_cron_process_week_time_rules`. The end of a
-        period is its date in the employee's timezone; today is the server's (UTC) date, as
-        for the crons.
-
-        :param list affected: ``(employee, date_from, date_to)`` tuples
+    def _trigger_time_rules_for_affected(self, affected, include_deficit=False):
+        """
+        include_deficit: when True also evaluates less_than (undertime) day rules, which are
+        normally cron-only.
         """
         if not affected:
             return
@@ -530,10 +517,10 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
         past_day = [(e, df, dt) for e, df, dt in affected if to_date(dt) < today]
         today_list = [(e, df, dt) for e, df, dt in affected if to_date(dt) >= today]
         past_week = [(e, df, dt) for e, df, dt in affected if to_date(dt) < latest_week_start]
-        self._process_time_rules_for(past_day, rule_period='day')
+        self._process_time_rules_for(past_day, rule_period='day', rule_operator='exceed')
+        if include_deficit:
+            self._process_time_rules_for(past_day, rule_period='day', rule_operator='less_than')
         self._process_time_rules_for(today_list, rule_period='day', rule_operator='exceed')
-        # weekly undertime is cron-only: triggering it on every record write would create
-        # spurious outputs while the user is still entering a past week's data.
         self._process_time_rules_for(past_week, rule_period='week', rule_operator='exceed')
 
     def write(self, vals):
