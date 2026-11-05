@@ -1,3 +1,5 @@
+/* global Sha1 */
+
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, waitFor } from "@odoo/hoot-dom";
 import { contains, MockServer, onRpc } from "@web/../tests/web_test_helpers";
@@ -32,7 +34,9 @@ test("PosRazorpayTour: an authorized terminal payment validates the order", asyn
     expect(payment.transaction_id).toBe("250102070624795E020088174");
     expect(payment.razorpay_p2p_request_id).toBe("250102070607078E010040377");
     expect(payment.payment_ref_no).toMatch(
-        `${store.config.id}/${order.uuid}/${payment.payment_method_id.id}/${store.config.currency_id.name}/${payment.amount}/1`
+        Sha1.hash(
+            `${store.config.id}/${order.uuid}/${payment.payment_method_id.id}/${store.config.currency_id.name}/${payment.amount}/1`
+        )
     );
     expect(order.finalized).toBe(true);
 });
