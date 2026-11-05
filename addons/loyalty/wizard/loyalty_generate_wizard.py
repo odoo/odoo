@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
@@ -85,6 +85,11 @@ class LoyaltyGenerateWizard(models.TransientModel):
             "program_id": self.program_id.id,
             "expiration_date": self.valid_until,
             "partner_id": partner.id if self.mode == "selected" else False,
+            "history_ids": [Command.create({
+                "description": self.description or self.env._("Gift For Customer"),
+                "issued": max(self.points_granted, 0),
+                "used": max(-self.points_granted, 0),
+            })],
         }
 
     def generate_coupons(self):
@@ -96,14 +101,4 @@ class LoyaltyGenerateWizard(models.TransientModel):
         for wizard in self:
             customers = wizard._get_partners() or range(wizard.coupon_qty)
             coupon_create_vals.extend(wizard._get_coupon_values(partner) for partner in customers)
-        coupons = self.env["loyalty.card"].create(coupon_create_vals)
-        values = {"description": self.description or self.env._("Gift For Customer")}
-        LoyaltyHistory = self.env["loyalty.history"]
-        LoyaltyHistory.create([
-            line_values
-            for coupon in coupons
-            for line_values in LoyaltyHistory._get_history_lines_values(
-                coupon, values, self.points_granted
-            )
-        ])
-        return coupons
+        return self.env["loyalty.card"].create(coupon_create_vals)
