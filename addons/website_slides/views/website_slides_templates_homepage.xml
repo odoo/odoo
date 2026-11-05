@@ -349,7 +349,7 @@
             <t t-elif="channel.is_member and not channel.completion">
                 <small t-if="channel.total_time" t-out="channel.total_time" t-options="{'widget': 'duration', 'unit': 'hour', 'round': 'minute', 'format': 'narrow'}"/>
                 <a t-attf-href="/slides/#{slug(channel)}">
-                    <button class="btn btn-sm btn-primary">Start Now</button>
+                    <button class="btn btn-sm btn-primary">Start now</button>
                 </a>
             </t>
             <span t-elif="channel.is_member and channel.completed" class="badge text-bg-success"><i class="fa fa-check" aria-hidden="true"/> Completed</span>
