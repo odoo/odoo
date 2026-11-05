@@ -229,6 +229,35 @@ class TestM2MGrouping(TransactionCaseWithUserDemo):
                 'same number of records as counted in the group',
             )
 
+    def test_duplicate_m2m_group(self):
+        tasks_duplicate_user_group = self.tasks.read_group(
+            domain=[],
+            fields=['name:array_agg'],
+            groupby=['user_ids', 'user_ids'],
+            lazy=False,
+        )
+
+        self.assertEqual(tasks_duplicate_user_group, [
+            {   # tasks of Mario
+                'user_ids': (self.users[0].id, "Mario"),
+                '__count': 2,
+                'name': unordered(["Super Mario Bros.", "Paper Mario"]),
+                '__domain': [('user_ids', '=', self.users[0].id)],
+            },
+            {   # tasks of Luigi
+                'user_ids': (self.users[1].id, "Luigi"),
+                '__count': 2,
+                'name': unordered(["Super Mario Bros.", "Luigi's Mansion"]),
+                '__domain': [('user_ids', '=', self.users[1].id)],
+            },
+            {   # tasks of nobody
+                'user_ids': False,
+                '__count': 1,
+                'name': unordered(["Donkey Kong"]),
+                '__domain': [('user_ids', 'not any', [(1, '=', 1)])],
+            },
+        ])
+
     def test_ordered_tasks(self):
         """
             Depending on the order of the group_by, you may obtain non-desired behavior.
