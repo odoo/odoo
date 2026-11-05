@@ -10,6 +10,7 @@ import common
 # คอลัมน์ที่ต้องการอ่านจาก legacy (จะถูกกรองเหลือเฉพาะคอลัมน์ที่มีจริง)
 _WANTED_COLUMNS = [
     'id', 'name', 'is_company', 'active',
+    'customer', 'supplier', 'ref',
     'customer_rank', 'supplier_rank', 'email', 'phone', 'mobile',
     'website', 'street', 'street2', 'city', 'zip', 'vat',
     'country_id', 'property_payment_term_id', 'property_supplier_payment_term_id',
@@ -87,8 +88,12 @@ def _legacy_columns(table):
     return {r['column_name'] for r in rows}
 
 
-def _fetch_partners():
-    """อ่านคู่ค้าจากระบบเดิม (ลูกค้า/ผู้ขายที่ยังใช้งาน ไม่รวมบริษัทภายใน)."""
+def _fetch_partners(ids=None):
+    """อ่านคู่ค้าจากระบบเดิม (ลูกค้า/ผู้ขายที่ยังใช้งาน ไม่รวมบริษัทภายใน)
+
+    ids: ถ้าระบุ จะอ่านเฉพาะ id เหล่านี้ (ใช้สำหรับนำเข้ากลุ่มที่ตกหล่น) และ
+         ไม่กรองเฉพาะ active=true เพื่อรักษาสถานะ archived ของระบบเดิมไว้
+    """
     import legacy
     cols = _legacy_columns('res_partner')
 
@@ -102,24 +107,41 @@ def _fetch_partners():
     pay_term = 'p.property_payment_term_id' if 'property_payment_term_id' in cols else 'NULL'
     supp_term = 'p.property_supplier_payment_term_id' if 'property_supplier_payment_term_id' in cols else 'NULL'
 
-    sql = (
+    select_sql = (
         "SELECT %(select)s, c.code AS country_code, "
         "       pt.name AS payment_term_name, ps.name AS supplier_term_name "
         "FROM res_partner p "
         "LEFT JOIN res_country c ON c.id = p.country_id "
         "LEFT JOIN account_payment_term pt ON pt.id = %(pay_term)s "
         "LEFT JOIN account_payment_term ps ON ps.id = %(supp_term)s "
+        % {'select': select, 'pay_term': pay_term, 'supp_term': supp_term}
+    )
+    not_company = "p.id NOT IN (SELECT partner_id FROM res_company WHERE partner_id IS NOT NULL)"
+
+    if ids is not None:
+        sql = select_sql + "WHERE p.id = ANY(%(ids)s) AND " + not_company
+        return legacy.fetch_all(sql, {'ids': list(ids)})
+
+    # เงื่อนไขเลือกคู่ค้า: ใช้ boolean customer/supplier ของระบบเดิมเป็นหลัก
+    # (rank ไม่น่าเชื่อถือ เพราะโมดูล dtr_partner_master รีเซ็ต rank=0 ทุกครั้งที่ write)
+    is_partner = ["COALESCE(p.customer_rank, 0) > 0 OR COALESCE(p.supplier_rank, 0) > 0"]
+    if 'customer' in cols:
+        is_partner.insert(0, "p.customer = true")
+    if 'supplier' in cols:
+        is_partner.insert(0, "p.supplier = true")
+    is_partner.append("p.id IN (SELECT partner_id FROM project_project WHERE partner_id IS NOT NULL)")
+    # คู่ค้าที่มียอดลูกหนี้/เจ้าหนี้ค้างใน GL ต้องนำเข้าด้วย มิฉะนั้นยอดยกมา AR/AP จะขาดคู่ค้า
+    is_partner.append("p.id IN (SELECT DISTINCT partner_id FROM account_move_line "
+                      "WHERE partner_id IS NOT NULL)")
+
+    sql = (
+        select_sql +
         "WHERE (p.active = true "
-        "  AND (COALESCE(p.customer_rank, 0) > 0 OR COALESCE(p.supplier_rank, 0) > 0 "
-        "       OR p.id IN (SELECT partner_id FROM project_project WHERE partner_id IS NOT NULL) "
-        # คู่ค้าที่มียอดลูกหนี้/เจ้าหนี้ค้างใน GL ต้องนำเข้าด้วย มิฉะนั้นยอดยกมา AR/AP จะขาดคู่ค้า
-        "       OR p.id IN (SELECT DISTINCT partner_id FROM account_move_line "
-        "                   WHERE partner_id IS NOT NULL)) "
+        "  AND (" + " OR ".join(is_partner) + ")) "
         # คู่ค้าที่ถูกอ้างถึงในทะเบียนย่อยภาษีหัก ณ ที่จ่าย (ระบบเดิมไม่ได้ตั้ง supplier_rank)
         # ต้องนำเข้าทุกสถานะ (รวม inactive) มิฉะนั้นใบรับรองหัก ณ ที่จ่ายจะขาดผู้รับเงิน
-        "  OR p.id IN (SELECT partner_id FROM dtr_wht WHERE partner_id IS NOT NULL)) "
-        "  AND p.id NOT IN (SELECT partner_id FROM res_company WHERE partner_id IS NOT NULL)"
-        % {'select': select, 'pay_term': pay_term, 'supp_term': supp_term}
+        "  OR p.id IN (SELECT partner_id FROM dtr_wht WHERE partner_id IS NOT NULL) "
+        "  AND " + not_company
     )
     return legacy.fetch_all(sql)
 
@@ -207,5 +229,24 @@ def _to_vals(row, country_ids, terms, partner_fields, has_thai_fields):
         vals['fax'] = row['fax']
     if 'name_en' in partner_fields and row.get('name_en'):
         vals['name_en'] = row['name_en']
+
+    # สถานะลูกค้า/ผู้ขาย: ใช้ boolean ของระบบเดิมเป็น source of truth (rank เชื่อถือไม่ได้)
+    # แล้วให้โมดูล od19_partner_document_sequence sync ค่าเข้า customer_rank/supplier_rank เอง
+    if 'customer' in partner_fields and 'supplier' in partner_fields:
+        is_cust = bool(row.get('customer'))
+        is_supp = bool(row.get('supplier'))
+        vals['customer'] = is_cust
+        vals['supplier'] = is_supp
+        vals['customer_rank'] = 1 if (is_cust or (row.get('customer_rank') or 0) > 0) else 0
+        vals['supplier_rank'] = 1 if (is_supp or (row.get('supplier_rank') or 0) > 0) else 0
+
+    # รหัสคู่ค้า (ref) ของระบบเดิม — ใส่ล่วงหน้าเพื่อไม่ให้โมดูลสร้างรหัสใหม่ทับของเดิม
+    ref = (row.get('ref') or '').strip()
+    if ref and 'ref' in partner_fields:
+        vals['ref'] = ref
+
+    # สถานะการใช้งาน — รักษาคู่ค้าที่ถูก archive ไว้ในระบบเดิมให้เป็น archived เช่นกัน
+    if 'active' in partner_fields and row.get('active') is not None:
+        vals['active'] = bool(row.get('active'))
 
     return vals

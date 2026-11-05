@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
-"""s01_reference — นำเข้าข้อมูลอ้างอิง: ผังบัญชีจากระบบเดิม (Odoo 15 -> Odoo 19)
+"""s01_reference — นำเข้าข้อมูลอ้างอิง: ผังบัญชี + โปรไฟล์บริษัท (Odoo 15 -> Odoo 19)
 
 งานหลักของขั้นตอนนี้คือสร้าง/ปรับ "ผังบัญชี" ตามนโยบายที่ยืนยันแล้ว
 (ใช้ผังบัญชีของ Odoo 15 แทนผังมาตรฐานของ Odoo 19) โดยอ่านจากไฟล์
 migration/mapping/od15_chart_to_od19.csv ซึ่งเป็นไฟล์ mapping มาตรฐาน
+
+นอกจากผังบัญชี ขั้นตอนนี้ยังนำเข้า **โปรไฟล์บริษัท** (ชื่อ/VAT/ที่อยู่/ผู้ติดต่อ)
+จากระบบเดิม เพื่อให้หัวใบกำกับภาษีและรายงานไทยแสดงข้อมูลนิติบุคคลที่ถูกต้อง
+ฟิลด์เหล่านี้ของ `res.company` ผูก related กับ partner ของบริษัท จึงเขียนที่
+`company.partner_id` โดยตรง (idempotent — เขียนเฉพาะฟิลด์ที่ค่าต่างจากเดิม)
 
 กติกาสำคัญของ Odoo 19 (บังคับ — ถ้าฝ่าฝืนจะได้ ValidationError ทันที):
     * รหัสบัญชีต้องเข้า ^[A-Za-z0-9.]+$ (ห้ามขีดกลาง '-')
@@ -29,9 +34,31 @@ migration/mapping/od15_chart_to_od19.csv ซึ่งเป็นไฟล์ ma
       Interest Income / Interest Expense / Taxes / Exceptional Income / Exceptional Expense)
 """
 import common
+import legacy
 
 # ไฟล์ mapping มาตรฐานของผังบัญชี (คอลัมน์แรก = od15_code)
 CHART_FILE = 'od15_chart_to_od19.csv'
+
+# ฟิลด์โปรไฟล์บริษัทที่นำเข้าจากระบบเดิม (src ใน OD15 -> dst ใน OD19)
+# ทุกฟิลด์ปลายทางผูก related กับ partner ของบริษัท จึงเขียนที่ partner_id
+
+# ที่อยู่: ยึดตามระบบเดิมแบบตรงไปตรงมา — ถ้าระบบเดิมว่างจะล้างค่าในระบบใหม่ด้วย
+# เพื่อไม่ให้ที่อยู่ของสองระบบปนกัน (ระบบเดิมเก็บที่อยู่เต็มไว้ใน street แล้ว)
+_COMPANY_ADDR_FIELDS = (
+    ('street', 'street'),
+    ('street2', 'street2'),
+    ('city', 'city'),
+    ('zip', 'zip'),
+)
+
+# ข้อมูลนิติบุคคล/ผู้ติดต่อ: เขียนเฉพาะเมื่อระบบเดิมมีค่า (ไม่ล้างของเดิมทิ้ง)
+_COMPANY_INFO_FIELDS = (
+    ('name', 'name'),
+    ('vat', 'vat'),
+    ('phone', 'phone'),
+    ('email', 'email'),
+    ('website', 'website'),
+)
 
 # 8 EBITDA Tag หลักที่ KPI ของรายงานอ้างถึงแบบ literal — ห้ามแปล/เปลี่ยนชื่อ
 # (ปกติโมดูล OCA account_ebitda_report เป็นผู้สร้าง; ที่นี่สร้างสำรองถ้ายังไม่มี)
@@ -49,12 +76,77 @@ CORE_TAGS = (
 
 def run(stats):
     env = common.odoo_env()
+    _sync_company(env, stats)
     _sync_chart(env, stats)
 
 
 def od19_code(od15_code):
     """แปลงรหัสบัญชีจากระบบเดิมให้ผ่านกติกาของ Odoo 19 ('-' -> '.')."""
     return (od15_code or '').strip().replace('-', '.')
+
+
+def _sync_company(env, stats):
+    """นำเข้าโปรไฟล์บริษัทจากระบบเดิม -> partner ของบริษัทใน Odoo 19
+
+    * ที่อยู่ (street/street2/city/zip) ยึดตามระบบเดิมตรงไปตรงมา — ว่างก็ล้าง
+    * ข้อมูลนิติบุคคล/ผู้ติดต่อ (ชื่อ/VAT/โทร/อีเมล/เว็บไซต์) เขียนเฉพาะเมื่อมีค่า
+    * `company_registry` ของระบบเดิมเก็บ 'THB' (รหัสสกุลเงิน) ไว้ผิดช่อง
+      จึงไม่นำเข้า และล้างค่าที่ค้างในระบบใหม่ออก
+
+    เขียนเฉพาะฟิลด์ที่ค่าต่างจากเดิม (idempotent) และใช้ `env.company` ของ
+    Odoo 19 คู่กับบริษัทแรกสุด (id ต่ำสุด) ของระบบเดิมตามข้อตกลงการย้ายข้อมูล
+    """
+    rows = legacy.fetch_all(
+        "SELECT c.id, p.name, p.vat, p.street, p.street2, p.city, p.zip, "
+        "       p.phone, p.email, p.website, c.company_registry, "
+        "       co.code AS country_code "
+        "FROM res_company c "
+        "JOIN res_partner p ON p.id = c.partner_id "
+        "LEFT JOIN res_country co ON co.id = p.country_id "
+        "ORDER BY c.id")
+    if not rows:
+        common.log("โปรไฟล์บริษัท: ไม่พบบริษัทในระบบเดิม — ข้าม")
+        stats.skipped += 1
+        return
+    if len(rows) > 1:
+        common.log("โปรไฟล์บริษัท: ระบบเดิมมี %d บริษัท — นำเข้าเฉพาะบริษัทแรก (id=%s)"
+                   % (len(rows), rows[0]['id']))
+    row = rows[0]
+
+    partner = env.company.partner_id
+    vals = {}
+
+    # ที่อยู่: ยึดตามระบบเดิม (ว่าง = ล้างค่าเดิมในระบบใหม่ออก)
+    for src, dst in _COMPANY_ADDR_FIELDS:
+        new = (row.get(src) or '').strip()
+        if (partner[dst] or '').strip() != new:
+            vals[dst] = new
+
+    # ข้อมูลนิติบุคคล/ผู้ติดต่อ: เขียนเฉพาะเมื่อระบบเดิมมีค่า
+    for src, dst in _COMPANY_INFO_FIELDS:
+        new = (row.get(src) or '').strip()
+        if new and (partner[dst] or '').strip() != new:
+            vals[dst] = new
+
+    cc = (row.get('country_code') or '').strip()
+    if cc:
+        country = env['res.country'].search([('code', '=', cc)], limit=1)
+        if country and partner.country_id.id != country.id:
+            vals['country_id'] = country.id
+
+    # ระบบเดิมเก็บ 'THB' (รหัสสกุลเงิน) ไว้ผิดช่องเลขทะเบียนบริษัท — ล้างค่าที่ค้างออก
+    if (partner.company_registry or '').strip().upper() == 'THB':
+        vals['company_registry'] = False
+
+    if not vals:
+        common.log("โปรไฟล์บริษัท: ข้อมูลตรงกับระบบเดิมแล้ว — ไม่ต้องแก้")
+        stats.skipped += 1
+        return
+
+    partner.write(vals)
+    stats.updated += 1
+    common.log("โปรไฟล์บริษัท: ปรับ %d ฟิลด์ (%s) -> '%s'"
+               % (len(vals), ', '.join(sorted(vals)), partner.name))
 
 
 def _ensure_tags(env):

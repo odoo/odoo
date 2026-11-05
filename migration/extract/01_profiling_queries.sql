@@ -489,15 +489,20 @@ ORDER BY metric;
 
 
 -- =====================================================================
--- ส่วนที่ 5 : OPTIONAL — ตารางที่ต้องยืนยันก่อนใช้
+-- ส่วนที่ 5 : หมวดยอดยกมาเพิ่มเติม + Sequence (ยืนยันตารางแล้ว 2026-11-02)
 -- ---------------------------------------------------------------------
--- คำเตือน: Query กลุ่มนี้บางตัวอ้างถึงตารางที่มาจากโมดูล enterprise/OCA/custom
---           ซึ่ง "ยังยืนยันไม่ได้" จาก source Odoo 15 CE ที่ตรวจสอบ
---           ให้รัน [5.0] เพื่อตรวจว่าตารางมีอยู่จริงก่อน
---           แล้วจึงเปิดใช้ Query ด้านล่างเฉพาะรายการที่ยืนยันแล้วเท่านั้น
+-- ตารางในกลุ่มนี้ยืนยันจาก information_schema ของ od15_stage แล้ว (ดู [5.0])
+-- ใช้ป้อนชีต "08-ยอดยกมา" และ "09-Sequence" ของ mapping workbook:
+--   account_asset_asset  → สินทรัพย์ + ค่าเสื่อมสะสมยกมา
+--   dtr_wht              → ภาษีหัก ณ ที่จ่าย (ภงด.)
+--   dtr_adv_* / dtr_pc_* → เงินทดรอง/เงินสดย่อย
+--   dtr_cheque_leaf      → เช็คค้างรับ/ค้างจ่าย
+--   ir_sequence(+_date_range) → เลขล่าสุดเพื่อตั้ง next number
+-- หมายเหตุ: ยอด "ค้างชำระ" ที่แท้จริงต้องยืนยันกับ GL (account_move_line)
+--           Query กลุ่มนี้ให้ตัวเลขจากตารางต้นทางโดยตรง (ใช้ตั้งต้น tie)
 -- =====================================================================
 
--- [5.0] ตรวจรายชื่อตารางที่เกี่ยวข้อง (asset / WHT / prepayment / cheque)
+-- [5.0] ตรวจรายชื่อตารางที่เกี่ยวข้อง (asset / WHT / prepayment / cheque / sequence)
 --       รันก่อนเพื่อรู้ว่าตารางใดมีอยู่จริงในฐานข้อมูล od15_stage
 SELECT table_name
 FROM information_schema.tables
@@ -506,32 +511,73 @@ WHERE table_schema = 'public'
        OR table_name LIKE '%wht%'
        OR table_name LIKE '%cheque%'
        OR table_name LIKE '%prepay%'
-       OR table_name LIKE 'dtr_%')
+       OR table_name LIKE 'ir_sequence%'
+       OR table_name LIKE 'dtr_adv%'
+       OR table_name LIKE 'dtr_pc%')
 ORDER BY table_name;
 
--- [5.1] (OPTIONAL) ทะเบียนสินทรัพย์ + ค่าเสื่อมราคาสะสม
---       ต้องยืนยันก่อนว่าโมดูล asset (account_asset) ถูกติดตั้ง (ดู [1.2])
---       ตาราง account_asset มาจากโมดูล enterprise/OCA — ยังไม่ยืนยันใน CE นี้
---       ชื่อคอลัมน์ (original_value / book_value / value_residual) ต้องตรวจกับ
---       โมดูลจริงก่อนเปิดใช้
--- SELECT id, name, original_value, book_value, value_residual, active
--- FROM account_asset
--- WHERE active = TRUE
--- ORDER BY name;
+-- [5.1] ทะเบียนสินทรัพย์ + ค่าเสื่อมราคาสะสมยกมา แยกตามสถานะ (ชีต 08)
+SELECT a.state,
+       COUNT(*)                                                              AS asset_count,
+       COALESCE(SUM(a.value), 0)                                             AS total_original_value,
+       COALESCE(SUM(a.accumulated_depreciation_bf), 0)                       AS total_accum_dep_bf,
+       COALESCE(SUM(a.value - COALESCE(a.accumulated_depreciation_bf, 0)), 0) AS total_book_value
+FROM account_asset_asset a
+WHERE a.active = TRUE
+GROUP BY a.state
+ORDER BY a.state;
 
--- [5.2] (OPTIONAL) ยอด WHT ค้าง (ภาษีหัก ณ ที่จ่าย)
---       ตารางเป็นของโมดูล custom (เช่น dtr_wht จากโมดูล dtr_account/autoinfo_account)
---       ต้องยืนยันชื่อตาราง/คอลัมน์จาก [5.0] และ ir_module_module ก่อน
--- SELECT COUNT(*) AS wht_rows
--- FROM dtr_wht;
+-- [5.2] ภาษีหัก ณ ที่จ่าย (ภงด.) แยกตามสถานะ (ชีต 08)
+SELECT w.state,
+       COUNT(*)                       AS wht_count,
+       COALESCE(SUM(w.wht_amount), 0) AS total_wht_amount,
+       COALESCE(SUM(w.pay_amount), 0) AS total_pay_amount
+FROM dtr_wht w
+GROUP BY w.state
+ORDER BY w.state;
 
--- [5.3] (OPTIONAL) ยอดเงินทดรองจ่ายค้าง (prepayment/advance)
---       ตารางเป็นของโมดูล custom (เช่น dtr_account_prepayment / dtr_account_billing)
---       ต้องยืนยันชื่อตาราง/คอลัมน์จาก [5.0] ก่อน
--- SELECT COUNT(*) AS prepayment_rows
--- FROM dtr_account_prepayment;
+-- [5.3] เงินทดรอง (advance) + เงินสดย่อย (petty cash) แยกตามสถานะ (ชีต 08)
+SELECT 'adv_request' AS kind, r.state, COUNT(*) AS record_count
+FROM dtr_adv_request r GROUP BY r.state
+UNION ALL
+SELECT 'adv_fund', f.state, COUNT(*)
+FROM dtr_adv_fund f GROUP BY f.state
+UNION ALL
+SELECT 'pc_fund', p.state, COUNT(*)
+FROM dtr_pc_fund p GROUP BY p.state
+ORDER BY kind, state;
 
--- [5.4] (OPTIONAL) เช็คค้างรับ/ค้างจ่าย
---       ตารางเป็นของโมดูล custom (cheque) — ต้องยืนยันจาก [5.0] ก่อน
--- SELECT COUNT(*) AS cheque_rows
--- FROM account_cheque;
+-- [5.4] เช็คค้างรับ/ค้างจ่าย แยกตามสถานะ (ชีต 08)
+SELECT c.state,
+       COUNT(*)                   AS cheque_count,
+       COALESCE(SUM(c.amount), 0) AS total_amount
+FROM dtr_cheque_leaf c
+GROUP BY c.state
+ORDER BY c.state;
+
+-- [5.5] ยอดคงเหลือสุทธิต่อประเภทบัญชี (internal_type) ณ วันตัดยอด (ชีต 01)
+SELECT aa.internal_type,
+       COUNT(DISTINCT aa.id)                    AS account_count,
+       COALESCE(SUM(aml.debit), 0)              AS total_debit,
+       COALESCE(SUM(aml.credit), 0)             AS total_credit,
+       COALESCE(SUM(aml.debit - aml.credit), 0) AS net_balance
+FROM account_move_line aml
+JOIN account_account aa ON aa.id = aml.account_id
+JOIN account_move am    ON am.id = aml.move_id
+WHERE am.state = 'posted'
+  AND aml.date <= DATE '2025-12-31'
+GROUP BY aa.internal_type
+ORDER BY aa.internal_type;
+
+-- [5.6] เลขล่าสุดของทุก sequence (ใช้ตั้ง next number ในชีต 09)
+SELECT s.id, s.name, s.code, s.prefix, s.suffix, s.padding,
+       s.number_next, s.number_increment, s.use_date_range, s.active
+FROM ir_sequence s
+WHERE s.active = TRUE
+ORDER BY s.code NULLS LAST, s.id;
+
+-- [5.7] ช่วงเลขรายปี (ir_sequence_date_range) สำหรับเอกสารที่ใช้ use_date_range
+SELECT s.code, r.date_from, r.date_to, r.number_next
+FROM ir_sequence_date_range r
+JOIN ir_sequence s ON s.id = r.sequence_id
+ORDER BY s.code, r.date_from;
