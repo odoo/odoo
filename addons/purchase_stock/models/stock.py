@@ -363,6 +363,17 @@ class StockWarehouseOrderpoint(models.Model):
             res[orderpoint.id] += product_uom_qty
         return res
 
+    def _order_field_to_sql(self, table, field_expr, direction, nulls):
+        # Override the order by logic for 'supplier_id' to sort by vendor name
+        if field_expr == 'supplier_id':
+            # get partner_id from supplierinfo
+            supplier_table = table._join('supplier_id')
+            # sort by vendor name using 'partner_id'
+            return self.env['product.supplierinfo']._order_field_to_sql(
+                supplier_table, 'partner_id', direction, nulls,
+            )
+        return super()._order_field_to_sql(table, field_expr, direction, nulls)
+
 
 class StockLot(models.Model):
     _inherit = 'stock.lot'
