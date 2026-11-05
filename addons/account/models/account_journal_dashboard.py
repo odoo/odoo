@@ -168,15 +168,17 @@ class AccountJournal(models.Model):
             months=12,
         )
         query = self.env['account.move.line']._search([
+            ('parent_state', '=', 'posted'),
             ('company_id', 'in', self.env.companies.ids),
             ('journal_id.type', 'in', ('bank', 'cash', 'credit')),
+            ('account_id.account_type', 'in', ('asset_cash', 'liability_credit_card')),
             ('date', '>=', date_from),
         ])
         table = query.table
 
         cash_in, cash_out = self.env.execute_query(query.select(
-            SQL("COALESCE(SUM(%(balance)s) FILTER (WHERE %(amount)s > 0 AND %(balance)s > 0), 0.0)", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
-            SQL("COALESCE(SUM(-%(balance)s) FILTER (WHERE %(amount)s < 0 AND %(balance)s < 0), 0.0)", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
+            SQL("COALESCE(SUM(%(balance)s) FILTER (WHERE %(balance)s > 0), 0.0)", balance=table.consolidation_balance),
+            SQL("COALESCE(SUM(-%(balance)s) FILTER (WHERE %(balance)s < 0), 0.0)", balance=table.consolidation_balance),
         ))[0]
         return cash_in - cash_out
 
@@ -210,6 +212,9 @@ class AccountJournal(models.Model):
             raise_if_not_found=False,
         )
         cashflow_analysis_action = self.env.ref(
+            'account.action_account_cashflow_analysis_move_line',
+            raise_if_not_found=False,
+        ) or self.env.ref(
             'account.action_account_cashflow_analysis',
             raise_if_not_found=False,
         )

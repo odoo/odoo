@@ -189,6 +189,63 @@
             </field>
         </record>
 
+        <!-- account.bank.statement.line only covers transactions reconciled against an imported/manual
+             bank statement line. Payments whose outstanding account is the journal's own bank account
+             never produce one, so they're invisible to the views above. The views/action below cover
+             those too by reading account.move.line directly, filtered to the liquidity-account leg of
+             each move. New ids are used on purpose: the views/action above are kept untouched so any
+             customization still referencing them (inherited views, Studio, automations) keeps working. -->
+        <record id="account_move_line_view_graph_cashflow" model="ir.ui.view">
+            <field name="name">account.move.line.graph.cashflow</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <graph string="Cashflow Analysis" type="line" cumulated="1" sample="1">
+                    <field name="date" interval="day"/>
+                    <field name="journal_id"/>
+                    <field name="amount_currency" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="account_move_line_view_pivot_cashflow" model="ir.ui.view">
+            <field name="name">account.move.line.pivot.cashflow</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Cashflow Analysis" sample="1">
+                    <field name="journal_id" type="row"/>
+                    <field name="currency_id" type="col"/>
+                    <field name="amount_currency" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="account_move_line_view_search_cashflow" model="ir.ui.view">
+            <field name="name">account.move.line.cashflow.search</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">999</field>
+            <field name="arch" type="xml">
+                <search string="Cashflow Analysis">
+                    <field name="journal_id"/>
+                    <filter string="Cash In" name="cash_in" domain="[('amount_currency', '&gt;', 0.0)]"/>
+                    <filter string="Cash Out" name="cash_out" domain="[('amount_currency', '&lt;', 0.0)]"/>
+                    <separator/>
+                    <filter string="Bank" name="bank" domain="[('journal_id.type', '=', 'bank')]"/>
+                    <filter string="Cash" name="cash" domain="[('journal_id.type', '=', 'cash')]"/>
+                    <filter string="Credit" name="credit" domain="[('journal_id.type', '=', 'credit')]"/>
+                    <separator/>
+                    <filter string="Date" name="date" date="date"/>
+                    <filter string="Last 12 Months" name="last_12_months"
+                        domain="[('date', '&gt;=', 'today -12m')]"/>
+                    <group>
+                        <filter string="Currency" name="group_by_currency_id" context="{'group_by': 'currency_id'}"/>
+                        <filter string="Company" name="group_by_company_id" context="{'group_by': 'company_id'}"/>
+                        <filter string="Journal" name="group_by_journal" context="{'group_by': 'journal_id'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group_by': 'date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_view_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Statements</field>
             <field name="type">ir.actions.act_window</field>
@@ -221,6 +278,24 @@
                 Command.clear(),
                 Command.create({'view_mode': 'graph', 'view_id': ref('account.account_bank_statement_line_view_graph_cashflow')}),
                 Command.create({'view_mode': 'pivot', 'view_id': ref('account.account_bank_statement_line_view_pivot_cashflow')})
+            ]"/>
+        </record>
+
+        <!-- Kept as a separate, new action (rather than mutating action_account_cashflow_analysis above)
+             so any customization still targeting the old action/model is unaffected. Core entry points
+             (dashboard KPI, menu item) are repointed to this one. -->
+        <record id="action_account_cashflow_analysis_move_line" model="ir.actions.act_window">
+            <field name="name">Cashflow Analysis</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="path">cashflow-analysis-entries</field>
+            <field name="domain">[('parent_state', '=', 'posted'), ('journal_id.type', 'in', ('bank', 'cash', 'credit')), ('account_id.account_type', 'in', ('asset_cash', 'liability_credit_card'))]</field>
+            <field name="context">{'search_default_last_12_months': 1, 'fill_temporal': False}</field>
+            <field name="search_view_id" ref="account_move_line_view_search_cashflow"/>
+            <field name="view_ids" eval="[
+                Command.clear(),
+                Command.create({'view_mode': 'graph', 'view_id': ref('account.account_move_line_view_graph_cashflow')}),
+                Command.create({'view_mode': 'pivot', 'view_id': ref('account.account_move_line_view_pivot_cashflow')})
             ]"/>
         </record>
 
