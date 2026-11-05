@@ -60,6 +60,11 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
     active = fields.Boolean(default=True)
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
 
+    @api.model
+    def _time_rule_wizard_extra_domain(self):
+        """Extra domain applied when searching this model in the reprocess wizard."""
+        return []
+
     def _apply_record_output(self, rules, excess, deficit, active_iv=None):
         """Write the pipeline result on the records; must be implemented.
 
@@ -123,7 +128,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             all_outputs |= children
             frontier = children - all_outputs  # avoid infinite loops on unexpected cycles
         all_outputs.with_context(skip_time_rules=True).unlink()
-        self.with_context(active_test=False).write({'active': True})
+        self.with_context(active_test=False).filtered(lambda r: not r.active).write({'active': True})
 
     def _get_orphaned_sources_on_unlink(self):
         """returns archived source records that have no other outputs than self"""
