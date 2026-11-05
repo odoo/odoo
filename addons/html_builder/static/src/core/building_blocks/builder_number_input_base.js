@@ -24,9 +24,9 @@ export class BuilderNumberInputBase extends BuilderInputBase {
             values.forEach((value, i) => {
                 values[i] = this.props.clampValue(value + (e.key === "ArrowUp" ? step : -step));
             });
-            this.state.value = values.join(" ");
-            e.target.value = this.state.value;
-            this.props.preview(e.target.value);
+            const value = values.join(" ");
+            e.target.value = value;
+            this.props.preview(value);
             this.props.onKeydownArrow?.(e);
         } else {
             super.onKeydown(...arguments);
