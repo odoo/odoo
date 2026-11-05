@@ -71,7 +71,6 @@ export class MediaPlugin extends Plugin {
                 description: _t("Replace media"),
                 icon: "image",
                 run: this.replaceImage.bind(this),
-                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "insertMedia",
