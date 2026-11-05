@@ -1445,3 +1445,50 @@ test("test_self_order_preset_btn: check preset button displays correct preset", 
     await Utils.isCartPageShown();
     await Utils.checkPreset("Delivery");
 });
+
+test("self_order_combo_single_configurable_choice", async () => {
+    const store = await setupSelfPosEnv(
+        "mobile",
+        "counter",
+        "each",
+        { use_presets: false, available_preset_ids: [] },
+        true
+    );
+    const deskOrganizerItem = store.models["product.combo.item"].get(213);
+    const singleChoice = store.models["product.combo"].create({
+        name: "Single Item Choice",
+        base_price: 0,
+        is_upsell: false,
+        qty_free: 1,
+        qty_max: 1,
+        sequence: 1,
+    });
+    store.models["product.combo.item"].create({
+        combo_id: singleChoice,
+        product_id: deskOrganizerItem.product_id,
+        extra_price: 0,
+    });
+    store.models["product.template"].get(231).combo_ids = [singleChoice];
+
+    await Utils.clickOrderNow();
+    await Utils.clickCategory("Test Category");
+    await Utils.clickProduct("Test Combo");
+    Utils.checkAttributeShown("Size");
+    Utils.checkAttributeShown("Fabric");
+    await Utils.setupAttribute([
+        { name: "Size", value: "M" },
+        { name: "Fabric", value: "Leather" },
+    ]);
+    await Utils.clickBtn("Next");
+    await Utils.clickBtn("Add to cart");
+    await Utils.clickBtn("Checkout");
+    await Utils.checkComboInCart("Test Combo", [
+        {
+            product: "Desk Organizer",
+            attributes: [
+                { name: "Size", value: "M" },
+                { name: "Fabric", value: "Leather" },
+            ],
+        },
+    ]);
+});
