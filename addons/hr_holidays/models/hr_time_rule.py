@@ -29,6 +29,7 @@ class HrTimeRuleSourceMixin(models.AbstractModel):
             self.env['hr.time.rule']._reverse_allocation_credits(self._name, to_reverse)
 
 
+
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
 
@@ -60,7 +61,7 @@ class HrTimeRule(models.Model):
             mk = iv.rule._get_output_leave_merge_key(accumulated_pp=iv.pp)
             if merged and merged[-1][0].end == iv.start and merged[-1][1] == mk:
                 prev, _ = merged[-1]
-                merged[-1] = (prev._replace(end=iv.end, pp=prev.pp | iv.pp), mk)
+                merged[-1] = (prev._replace(end=iv.end, pp=prev.pp | iv.pp, acc=prev.acc | iv.acc), mk)
             else:
                 merged.append((iv, mk))
         return [iv for iv, _mk in merged]
@@ -259,7 +260,10 @@ class HrTimeRule(models.Model):
         if all_source_ids:
             Leave = self.env['hr.leave'].sudo()
             sources = Leave.with_context(active_test=False).browse(list(all_source_ids))
-            (sources | new_records).with_context(**Leave._time_rule_write_ctx)._create_resource_leave()
+            # only archived (excess) sources lose their RCL; deficit sources stay active and keep theirs
+            sources.filtered(lambda l: not l.active)._remove_resource_leave()
+            if new_records:
+                new_records.with_context(**Leave._time_rule_write_ctx)._create_resource_leave()
 
     @api.model
     def _reverse_allocation_credits(self, source_model, source_ids):

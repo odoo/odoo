@@ -527,7 +527,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
         self.assertEqual(employee._get_attendance_tolerance_time(friday_start - timedelta(minutes=5), 'in'), friday_start - timedelta(minutes=5))
 
 
-@tagged('attendance_process')
+@tagged('attendance_process', 'post_install', '-at_install')
 class TestAbsenceDetectionCron(TransactionCase):
 
     @classmethod
@@ -582,7 +582,7 @@ class TestAbsenceDetectionCron(TransactionCase):
 
         self.env['hr.attendance']._cron_absence_detection()
 
-        tech_atts = self.env['hr.attendance'].search([
+        tech_atts = self.env['hr.attendance'].with_context(active_test=False).search([
             ('employee_id', '=', self.absent_employee.id),
             ('in_mode', '=', 'technical'),
         ])
