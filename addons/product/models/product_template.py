@@ -47,7 +47,14 @@ class ProductTemplate(models.Model):
         return categories.browse(category_ids)
 
     def _domain_pricelist_rule_ids(self):
-        return Domain('pricelist_id', '=', False) | Domain('pricelist_id.active', '=', True)
+        return (
+            (Domain('pricelist_id', '=', False) | Domain('pricelist_id.active', '=', True))
+            & (
+                Domain('product_tmpl_id.active', '=', False)
+                | Domain('product_id', '=', False)
+                | Domain('product_id.active', '=', True)
+            )
+        )
 
     @api.model
     def _domain_fixed_pricelist_rule_ids(self):
