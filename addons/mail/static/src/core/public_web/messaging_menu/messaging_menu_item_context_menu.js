@@ -1,16 +1,16 @@
 import { Action } from "@mail/core/common/action";
 import { ActionList } from "@mail/core/common/action_list";
+import { IsolatedDropdown } from "@mail/core/public_web/messaging_menu/isolated_dropdown";
 import { propSignal } from "@mail/utils/common/hooks";
 
 import { Component, t, useProps } from "@odoo/owl";
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenuItemContextMenu extends Component {
     static template = "mail.MessagingMenuItemContextMenu";
-    static components = { ActionList, Dropdown };
+    static components = { ActionList, IsolatedDropdown };
 
     setup() {
         super.setup();
