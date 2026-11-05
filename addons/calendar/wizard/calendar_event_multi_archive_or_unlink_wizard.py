@@ -21,30 +21,39 @@ class CalendarEventMultiArchiveOrUnlinkWizard(models.TransientModel):
         self.has_recurrent_events = bool(self.calendar_event_ids.recurrence_id)
 
     def action_archive(self):
+        # If the send_updates context flag is not present, the sync will treat it as true by default.
+        # We need to explicitly disable it in this case to prevent notifications from being sent
+        send_updates = self.env.context.get('send_updates', False)
         self.ensure_one()
-        self.calendar_event_ids.write({'active': False})
+        self.calendar_event_ids.with_context(send_updates=send_updates).write({'active': False})
         return self.env.context.get('next_action')
 
     def action_unlink(self):
+        # If the send_updates context flag is not present, the sync will treat it as true by default.
+        # We need to explicitly disable it in this case to prevent notifications from being sent
+        send_updates = self.env.context.get('send_updates', False)
         self.ensure_one()
-        self.calendar_event_ids._unlink_with_sync_and_recurrence_check()
+        self.calendar_event_ids.with_context(send_updates=send_updates)._unlink_with_sync_and_recurrence_check()
         return self.env.context.get('next_action')
 
     def action_send_mails_and_archive(self):
         self.ensure_one()
         self._send_mails()
-        return self.action_archive()
+        return self.with_context(send_updates=True).action_archive()
 
     def action_send_mails_and_unlink(self):
         self.ensure_one()
         self._send_mails()
-        return self.action_unlink()
+        return self.with_context(send_updates=True).action_unlink()
 
     def _send_mails(self):
         self.ensure_one()
         now = fields.Datetime.now()
         events_to_notify = self.calendar_event_ids.filtered(
-            lambda event: event.partner_ids != self.env.user.partner_id and event.start > now and not event.is_draft
+            lambda event: event.partner_ids != self.env.user.partner_id
+                          and event.start > now
+                          and not event.is_draft
+                          and not event.user_id._has_any_active_synchronization()
         )
         self._send_mails_from_template(events_to_notify)
 
