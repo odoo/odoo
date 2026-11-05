@@ -180,8 +180,8 @@
                         </tbody>
                     </table>
                     <div class="oe_structure"></div>
-                    <t t-set="backorders" t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))"/>
-                    <div t-if="not (o.backorder_ids and backorders)" class="oe_structure"></div>
+                    <t t-set="bo_lines" t-value="o._get_aggregated_backorder_lines()"/>
+                    <div t-if="not bo_lines" class="oe_structure"></div>
                     <div t-else="">
                         <p class="mt-5">
                             <span>Remaining quantities not yet delivered:</span>
@@ -195,17 +195,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr t-foreach="backorders.mapped('move_ids').filtered(lambda x: x.product_uom_qty)" t-as="bo_line">
+                                <tr t-foreach="bo_lines" t-as="bo_line">
                                     <td class="w-auto">
-                                        <span t-field="bo_line.product_id">Office Chair</span>
-                                        <p t-if="bo_line.description_picking and bo_line.description_picking != bo_line.product_id.name and bo_line._get_report_description_picking()">
-                                            <span t-out="bo_line._get_report_description_picking()" t-options="{'widget': 'text'}">Description on transfer</span>
+                                        <span t-out="bo_line['product_id'].display_name">Office Chair</span>
+                                        <p t-if="bo_line['description'] and bo_line['description'] != bo_line['product_id'].name">
+                                            <span t-out="bo_line['description']" t-options="{'widget': 'text'}">Description on transfer</span>
                                         </p>
                                     </td>
                                     <td/>
                                     <td class="text-end w-auto">
-                                        <span t-out="format_number(bo_line.product_uom_qty)">3.00</span>
-                                        <span t-field="bo_line.uom_id" groups="uom.group_uom">units</span>
+                                        <span t-out="format_number(bo_line['qty_ordered'])">3.00</span>
+                                        <span t-out="bo_line['uom_id'].name" groups="uom.group_uom">units</span>
                                     </td>
                                 </tr>
                             </tbody>
