@@ -162,8 +162,9 @@ graph TD
 - [ ] **Steps:** ตรวจสิทธิ์เชื่อมต่อ → รัน profiling → เก็บผลเป็น `profiling_result.txt` → กรอก checklist (C2)
 - [ ] **Acceptance:** ได้ตัวเลข module inventory / row counts / data quality
 
-### Task D2 — Mapping workbook
-- [ ] **Objective:** ปิด TODO ในชีต 01/08/09 ของ `od15-to-od19-data-mapping.xlsx` + CSV mapping templates
+### Task D2 — Mapping workbook (ปิดแล้ว 2026-11-02)
+- [x] **Objective:** ปิด TODO ในชีต 01/08/09 ของ `od15-to-od19-data-mapping.xlsx` + CSV mapping templates
+- [x] **ปิดงาน (2026-11-02):** เติมชีต 01 (22 แถว) / 08 (7 แถว) / 09 (16 แถว) ด้วยตัวเลขจริง @ cutoff 2026-10-31; แทนที่ทุกช่อง `*(ตรวจสอบ)*` ใน [od15-to-od19-data-mapping.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/od15-to-od19-data-mapping.md) §3.3/§3.4 ด้วยคอลัมน์จริงจาก `od15_stage`; CSV mapping 10 ไฟล์ไม่มีแถว `EXAMPLE` → commit `ca242196cca`
 
 ### Task D3 — ETL smoke test
 - [ ] **Objective:** รัน import runner `migration/import/run.py` (s01–s09) บน sandbox

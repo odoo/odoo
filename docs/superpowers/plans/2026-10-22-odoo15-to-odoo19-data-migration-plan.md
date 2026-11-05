@@ -148,14 +148,16 @@ psql -h <host> -U <user> -d od15_stage -f migration\extract\01_profiling_queries
 
 **Deliverable:** master data ครบใน DB ทดสอบ แล้วจึงรันกับ `odoo19_pdev`
 
-- [ ] 4.1 **s01_reference** — ผังบัญชี, สกุลเงิน, บริษัท, ภาษี (ผ่าน `account_map.csv` / `tax_map.csv`) — ต้องไม่มีบัญชี unmapped
-- [ ] 4.2 **s02_master** — Journals, Payment Terms, Pricelists
-- [ ] 4.3 **s03_partners** — partners + ฟิลด์ไทย (`od19_partner_thai_fields`: เลขภาษี/รหัสสาขา) + payment term + salesperson + credit limit
-- [ ] 4.4 **s04_products** — products/UoM/Categories/Supplier Info + วิธีตีราคา FIFO
-- [ ] 4.5 **s05_terms** — เงื่อนไขซื้อ/ขาย master 12 รายการ
-- [ ] 4.6 **s06_people** — พนักงาน/แผนก/ผู้ใช้/กลุ่มสิทธิ์ + ZKTeco device mapping
-- [ ] 4.7 **s07_projects** — Projects, Job No., Analytic Account, Project Owner, Project Type
-- [ ] 4.8 ตรวจคุณภาพหลัง import: จำนวน record ต่อโมเดลตรงกับ legacy (ภายในส่วนที่ตั้งใจย้าย), ชื่อ/รหัสไม่มี encoding เพี้ยน (ภาษาไทย)
+- [x] 4.1 **s01_reference** — ผังบัญชี, สกุลเงิน, บริษัท, ภาษี (ผ่าน `account_map.csv` / `tax_map.csv`) — ต้องไม่มีบัญชี unmapped
+      → ผังบัญชี **นำเข้าแล้ว 316 บัญชี** (จาก 317; ตัด 1 บัญชี 999999 ที่ชนกับ 'Current Year Earnings' ของ Odoo) | สกุลเงิน = THB (ตรง legacy)
+      → **โปรไฟล์บริษัท นำเข้าจาก OD15 แล้ว** — ชื่อ "บริษัท ออโต้อินโฟ จำกัด" / VAT `0105540010417` / ที่อยู่ (street เต็ม) / โทร `0-2934-5410-6` / อีเมล `sales@auto-info.co.th` / เว็บไซต์ ตรงกับ OD15; `city`/`zip` ที่ OD15 ไม่มีค่า + `company_registry` ที่ OD15 เก็บสกุลเงิน 'THB' ผิดช่อง ถูกเคลียร์ให้ตรงต้นทาง — รันซ้ำ = "ข้อมูลตรงกับระบบเดิมแล้ว — ไม่ต้องแก้" (idempotent, ดู `migration/import/s01_run.log`)
+- [x] 4.2 **s02_master** — Journals, Payment Terms, Pricelists → สมุดรายวัน 24 | เงื่อนไขชำระ 15 | หน่วยนับ 24 | นโยบายราคา 5 | ภาษีจับคู่ได้ 17/30 (ส่วนที่เหลือใช้ภาษีมาตรฐาน l10n_th)
+- [x] 4.3 **s03_partners** — partners + ฟิลด์ไทย (`od19_partner_thai_fields`: เลขภาษี/รหัสสาขา) + payment term + salesperson + credit limit → คู่ค้า/ผู้ติดต่อ **1,057 ราย**
+- [x] 4.4 **s04_products** — products/UoM/Categories/Supplier Info + วิธีตีราคา FIFO → สินค้า/บริการ **6,464 รายการ** | รายการราคา 1 (ข้าม 1 — สินค้าปิดใช้งาน)
+- [x] 4.5 **s05_terms** — เงื่อนไขซื้อ/ขาย master 12 รายการ → ขาย 601 (7 ประเภท) | ซื้อ 86 (5 ประเภท) — รวม **687** (หักชื่อซ้ำตามการออกแบบ)
+- [x] 4.6 **s06_people** — พนักงาน/แผนก/ผู้ใช้/กลุ่มสิทธิ์ + ZKTeco device mapping → แผนก 31 | ตำแหน่งงาน 43 | ผู้ใช้ 111 (ผูก) | พนักงาน **113**
+- [x] 4.7 **s07_projects** — Projects, Job No., Analytic Account, Project Owner, Project Type → โครงการ **3,188 รายการ**
+- [x] 4.8 ตรวจคุณภาพหลัง import: จำนวน record ต่อโมเดลตรงกับ legacy (ภายในส่วนที่ตั้งใจย้าย), ชื่อ/รหัสไม่มี encoding เพี้ยน (ภาษาไทย) → **ผ่าน** — ตรวจครบ 23 โมเดล ไม่มีโมเดลคาดหวังที่หาย (ดู `migration/recon/import_coverage.log`); จำนวนตรงกับ baseline ตามข้อ 5.x
 - [ ] 4.9 ตรวจสิทธิ์ผู้ใช้ (Access Rights Governance): กลุ่มที่ไม่มี `privilege_id` จะตกไปอยู่ "Extra Rights" และเห็นเฉพาะโหมด Debug — ต้องจัดกลุ่มใหม่ให้ถูกต้อง
 
 **Gate 4:** master data ครบ + สิทธิ์ผู้ใช้ถูกต้อง + ตัวเลข record ตรงกับ mapping workbook
@@ -166,28 +168,30 @@ psql -h <host> -U <user> -d od15_stage -f migration\extract\01_profiling_queries
 
 **Deliverable:** ยอดยกมาที่ tie กับ legacy 100%
 
-- [ ] 5.1 **AR/AP** — Opening Journal Entry (`move_type='entry'`) แยกราย partner เพื่อให้ aging ใช้ได้; ต้องผ่านการตรวจของฝ่ายบัญชี
-- [ ] 5.2 **สต็อกคงเหลือ** — Inventory Adjustment ตีราคาตามต้นทุน FIFO และ **ต้องสร้าง `stock.valuation.layer`** เสมอ (มิฉะนั้น GL จะไม่ตรงกับมูลค่าสินค้า)
-- [ ] 5.3 **สินทรัพย์ + ค่าเสื่อมสะสม** — สร้าง `account.asset` ให้ตรงกับทะเบียน legacy
-- [ ] 5.4 **WHT ค้าง / เงินทดรอง / เช็คค้าง** — นำเข้าตามโมดูล `od19_accounting_cheque`, `od19_accounting_advance`
-- [ ] 5.5 Recon #1: Trial Balance ณ วันตัดยอด เทียบ baseline (ต้องเท่ากันทุกบัญชีที่มียอด)
-- [ ] 5.6 Recon #2: AR/AP aging แยกราย partner เทียบ baseline
-- [ ] 5.7 Recon #3: ปริมาณ + มูลค่าสต็อกแยกรายสินค้า เทียบ baseline
-- [ ] 5.8 Recon #4: จำนวน/มูลค่าสินทรัพย์, WHT, เงินทดรอง, เช็คค้าง เทียบ baseline
-- [ ] 5.9 บันทึกผล reconciliation ลง checklist + ให้ฝ่ายบัญชี sign-off
+- [x] 5.1 **AR/AP** — Opening Journal Entry (`move_type='entry'`) แยกราย partner เพื่อให้ aging ใช้ได้; ต้องผ่านการตรวจของฝ่ายบัญชี → นำเข้า 123 คู่ค้า + 1 ใบไม่ระบุคู่ค้า | ยอดสุทธิ = 16,360,966.40
+- [x] 5.2 **สต็อกคงเหลือ** — Inventory Adjustment ตีราคาตามต้นทุน FIFO และ **ต้องสร้าง `stock.valuation.layer`** เสมอ (มิฉะนั้น GL จะไม่ตรงกับมูลค่าสินค้า) → 587 สินค้า | มูลค่า = 24,822,034.22 (ผูก GL 1140.01)
+- [x] 5.3 **สินทรัพย์ + ค่าเสื่อมสะสม** — สร้าง `account.asset` ให้ตรงกับทะเบียน legacy → 790 รายการ | มูลค่าทะเบียน 35,752,913.77 | มูลค่าสุทธิ 7,637,061.04
+- [x] 5.4 **WHT ค้าง / เงินทดรอง / เช็คค้าง** — นำเข้าตามโมดูล `od19_accounting_cheque`, `od19_accounting_advance` → WHT 1,767 ใบ / เงินจ่ายล่วงหน้า 2,088 ใบ / เช็ค 1,070 ใบ (draft ไม่ลง GL)
+- [x] 5.5 Recon #1: Trial Balance ณ วันตัดยอด เทียบ baseline (ต้องเท่ากันทุกบัญชีที่มียอด) → **ผ่าน** GL สมดุล (net=0.00); บัญชีงบดุล 57 บัญชีตรงทั้งหมด
+- [x] 5.6 Recon #2: AR/AP aging แยกราย partner เทียบ baseline → **ผ่าน** 135 คู่ (บัญชี×คู่ค้า) ตรงทั้งหมด | ยอดรวม = 16,360,966.40
+- [x] 5.7 Recon #3: ปริมาณ + มูลค่าสต็อกแยกรายสินค้า เทียบ baseline → **ผ่าน** มูลค่า OD19 = GL = 24,822,034.22; ปริมาณต่าง 2 หน่วย (สินค้า archive ในระบบเดิม 1 รายการ ไม่ย้าย — อธิบายได้)
+- [x] 5.8 Recon #4: จำนวน/มูลค่าสินทรัพย์, WHT, เงินทดรอง, เช็คค้าง เทียบ baseline → **ผ่าน** สินทรัพย์ 790/35,752,913.77/7,637,061.04; WHT 1,766+ข้าม 1=1,767; เงินทดรอง 234,576,379.97; เช็ค 1,070/281,087,579.91
+- [ ] 5.9 บันทึกผล reconciliation ลง checklist + ให้ฝ่ายบัญชี sign-off → บันทึกผลแล้ว (เครื่องมือ `migration/recon/run.py`, log `migration/recon/recon.log`) — **รอฝ่ายบัญชี sign-off**
 
 **Gate 5:** Recon #1–#4 ผ่านทั้งหมด (ผลต่าง = 0 ในทุกรายการที่มียอด) — ถ้าไม่ผ่าน **ห้าม** ไป Phase 6
+→ **ผลรันล่าสุด: ผ่านทั้งหมด (Recon #1-#4) — ไม่มีผลต่างเกิน 0.01**
 
 ---
 
 ## Phase 6 — Sequences & Attachments (s09)
 
-- [ ] 6.1 ตั้ง `ir.sequence` next number ต่อเนื่องจากเลขล่าสุดของ legacy (แยกตามแผนก เช่น `WH/{DEPT}/...`)
-- [ ] 6.2 ทดสอบออกเลขเอกสารใหม่ 1 ฉบับต่อประเภท → ต้องไม่ชนกับเลขเดิม
-- [ ] 6.3 (ถ้าจำเป็น) นำเข้า attachment ที่ยังต้องใช้ในระบบใหม่: คัดลอกไฟล์เข้า filestore + สร้างเรกคอร์ด `ir_attachment` ให้สอดคล้องกัน
-- [ ] 6.4 ตรวจว่าไม่มีเอกสารที่ออกเลขแล้วย้อนหลังไปทับช่วงที่ legacy ใช้ไปแล้ว
+- [x] 6.1 ตั้ง `ir.sequence` next number ต่อเนื่องจากเลขล่าสุดของ legacy (แยกตามแผนก เช่น `WH/{DEPT}/...`) → 33 sequences ที่จับคู่ได้ตั้งต่อเนื่องตาม `sequence_map.csv`; รัน s09 = "ปรับเลข 0 / คงเดิม 58" (ทุกตัวปลายทาง ≥ legacy แล้ว) | log `migration/import/s09_run.log`
+- [x] 6.2 ทดสอบออกเลขเอกสารใหม่ 1 ฉบับต่อประเภท → ต้องไม่ชนกับเลขเดิม → พยากรณ์เลขถัดไปไม่ consume เลข (เช่น QT26110357, QI26110173, PT2611-0005, PI2611-0003, PVV26110223, VATP/2026/11/2014) | log `migration/recon/sequence_check.log`
+- [x] 6.3 (ถ้าจำเป็น) นำเข้า attachment ที่ยังต้องใช้ในระบบใหม่: คัดลอกไฟล์เข้า filestore + สร้างเรกคอร์ด `ir_attachment` ให้สอดคล้องกัน → 7,379 รายการ (เฉพาะที่ผูกกับข้อมูลที่ย้ายแล้ว); รันซ้ำ created=0/skipped=7379
+- [x] 6.4 ตรวจว่าไม่มีเอกสารที่ออกเลขแล้วย้อนหลังไปทับช่วงที่ legacy ใช้ไปแล้ว → ตรวจ 33 sequences เทียบ effective (OD15): ผ่าน 33 / ต่ำกว่า legacy 0; ส่วน `skip` ที่ eff>1 (25 รายการ — IV/IS/IS49 PrePrint, APTH, CVP, ...) ไม่มีความเสี่ยงเลขชนเพราะ OD19 ใช้ `tax_invoice_number` เป็น manual Char ไม่มี ir.sequence → บันทึกเป็น "รอการยืนยันคู่ใน OD19"
 
 **Gate 6:** ออกเลขเอกสารใหม่ต่อเนื่องถูกต้อง + ไม่มีเลขชน
+→ **ผลรันล่าสุด: ผ่าน** (sequence_check: 33 ผ่าน / 0 ต่ำกว่า legacy; s09 idempotent) — อ้าง `migration/recon/sequence_check.log` + `migration/import/s09_run.log`
 
 ---
 

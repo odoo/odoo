@@ -376,12 +376,13 @@ cp deployment/odoo.conf.template odoo_local.conf   # แล้วแก้ค่
 - [ ] commit (รอ working tree สะอาด — commit รวมกับ Phase 4)
 
 ### Task 6.2: ตรวจ "ติดตั้งได้" จาก tag
-- [ ] ทดสอบว่า checkout tag + submodule + start ผ่าน (บนเครื่อง Linux หรือ WSL)
+- [x] ตรวจแบบ static (light verification, 2026-11-04): tag `v19.0.1` มี `deployment/` ครบ 4 ไฟล์, `install.sh`/`odoo.conf.template` ถูกต้อง, `.gitattributes` ไม่มี LFS filter, OCA gitlinks ครบ 22 ตัว
+- [ ] ทดสอบว่า checkout tag + submodule + start ผ่าน (บนเครื่อง Linux หรือ WSL) — ยังค้าง
 
 ```powershell
 git clone --recurse-submodules c:\odoo-dev\odoo19 c:\odoo-dev\_install_test
 Set-Location c:\odoo-dev\_install_test
-git checkout v19.0.0
+git checkout v19.0.1
 git submodule status    # ต้องมี SHA ครบทุกตัว
 ```
 
