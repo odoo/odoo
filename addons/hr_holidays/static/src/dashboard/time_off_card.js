@@ -20,6 +20,13 @@ export class TimeOffCardPopover extends Component {
         "close?",
         "allows_negative",
         "max_allowed_negative",
+<<<<<<< bb73ef0b40e870e1fbe1f10ef9fdeee721d7df99
+||||||| 20bae6a5a5679cbc61a418a5ec7169cbd3ede691
+        "onClickNewAllocationRequest?",
+=======
+        "onClickNewAllocationRequest?",
+        "can_request_allocation",
+>>>>>>> 39a05f9dcd431d9fb719c37538607bb05dc4a40e
         "errorLeaves",
         "accrualExcess",
         "timeOffType",
@@ -156,6 +163,13 @@ export class TimeOffCard extends Component {
             exceeding_duration: data.exceeding_duration,
             allows_negative: data.allows_negative,
             max_allowed_negative: data.max_allowed_negative,
+<<<<<<< bb73ef0b40e870e1fbe1f10ef9fdeee721d7df99
+||||||| 20bae6a5a5679cbc61a418a5ec7169cbd3ede691
+            onClickNewAllocationRequest: this.newAllocationRequestFrom.bind(this),
+=======
+            onClickNewAllocationRequest: this.newAllocationRequestFrom.bind(this),
+            can_request_allocation: data.can_request_allocation,
+>>>>>>> 39a05f9dcd431d9fb719c37538607bb05dc4a40e
             errorLeaves: this.errorLeaves,
             accrualExcess: this.getAccrualExcess(data),
             timeOffType: holidayStatusId,

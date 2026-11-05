@@ -55,8 +55,18 @@
 
     <t t-name="hr_holidays.TimeOffCardPopover">
         <ul class="list-unstyled p-3 mb-0">
+<<<<<<< bb73ef0b40e870e1fbe1f10ef9fdeee721d7df99
             <li class="d-flex justify-content-between btn-link p-0 cursor-pointer" t-on-click="this.allocatedLeaves">
                 Allocated: <span class="ps-1" t-out="this.props.allocated"/>
+||||||| 20bae6a5a5679cbc61a418a5ec7169cbd3ede691
+            <li class="d-flex justify-content-between">
+                <span><span class="btn-link p-0 cursor-pointer" t-on-click="allocatedLeaves">Allocated</span> (<span class="btn-link p-0 cursor-pointer" t-on-click="props.onClickNewAllocationRequest">new request</span>):</span>
+                <span class="ps-1" t-esc="props.allocated"/>
+=======
+            <li class="d-flex justify-content-between">
+                <span><span class="btn-link p-0 cursor-pointer" t-on-click="allocatedLeaves">Allocated</span> <t t-if="props.can_request_allocation">(<span class="btn-link p-0 cursor-pointer" t-on-click="props.onClickNewAllocationRequest">new request</span>)</t>:</span>
+                <span class="ps-1" t-esc="props.allocated"/>
+>>>>>>> 39a05f9dcd431d9fb719c37538607bb05dc4a40e
             </li>
             <li class="d-flex justify-content-between" t-if="this.props.accrual_bonus != 0">
                 Accrual (Future): <span class="ps-1" t-out="this.props.accrual_bonus"/>
