@@ -1,3 +1,4 @@
+import base64
 import logging
 import tempfile
 
@@ -19,7 +20,6 @@ HTTP_METHODS = [(method, method) for method in ('GET', 'POST', 'PUT', 'PATCH', '
 
 class BatchDownloadPart(models.Model):
     _name = 'l10n_pl_edi_batch.part'
-    _inherits = {'ir.attachment': 'attachment_id'}
     _description = 'KSeF Batch download part'
 
     _order = 'batch_name, part_number'
@@ -33,11 +33,7 @@ class BatchDownloadPart(models.Model):
     download_url = fields.Char(readonly=True, required=True)
 
     batch_id = fields.Many2one(comodel_name='l10n_pl_edi_batch.download', readonly=True, required=True)
-    attachment_id = fields.Many2one(comodel_name='ir.attachment', string="Related attachment", required=True, ondelete='cascade')
-
-    def unlink(self):
-        attachments = self.attachment_id
-        return super().unlink() and attachments.unlink()
+    decrypted_file = fields.Binary("Decrypted part", attachment=True, readonly=True, copy=False)
 
     @api.depends('download_url')
     def _compute_part_name(self):
@@ -72,18 +68,7 @@ class BatchDownloadPart(models.Model):
                 tmpf.flush()
                 tmpf.seek(0)
                 content = tmpf.read()
-            # Fill the attachment the part already has through _inherits, instead of creating a new one
-            record.attachment_id.sudo().write({
-                'name': record.part_name,
-                'description': record.batch_name,
-                'type': 'binary',
-                'mimetype': 'application/zip',
-                'company_id': record.batch_id.company_id.id,
-                'res_model': record._name,
-                'res_id': record.id,
-                'res_field': 'attachment_id',
-                'raw': content,
-            })
+            record.decrypted_file = base64.b64encode(content)
             _logger.info("KSeF Batch part %s downloaded succesfully", record.part_name)
             if commit and not modules.module.current_test:
                 self.env.cr.commit()

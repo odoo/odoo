@@ -7,22 +7,19 @@
         <field name="model">l10n_pl_edi_batch.download</field>
         <field name="arch" type="xml">
             <list string="KSeF Batch Downloads"
-                decoration-danger="error"
-                decoration-muted="is_expired"
-                decoration-success="status == '200'"
-                decoration-info="status == '100'"
+                decoration-danger="state == 'failed'"
+                decoration-success="state == 'done'"
+                decoration-info="state in ('requested', 'downloading', 'downloaded')"
             >
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="date_expiry"/>
-                <field name="status" widget="badge"
-                    readonly="1"
-                    decoration-success="status == '200'"
-                    decoration-info="status == '100'"
-                    decoration-danger="error"
-                    decoration-warning="status == '210'"
+                <field name="state" widget="badge"
+                    decoration-danger="state == 'failed'"
+                    decoration-success="state == 'done'"
+                    decoration-info="state in ('requested', 'downloading', 'downloaded')"
                 />
                 <field name="error" column_invisible="1"/>
                 <field name="is_expired" column_invisible="1"/>
@@ -36,10 +33,9 @@
         <field name="arch" type="xml">
             <form string="KSeF Batch Download">
                 <header>
-                    <button name="check_status" string="Check Status" type="object" class="oe_highlight" invisible="status not in ('100', False)"/>
-                    <button name="unzip" string="Unzip" type="object" invisible="not part_ids"/>
-                    <button name="import_attachments" string="Import Bills" type="object" class="oe_highlight" invisible="not attachment_ids"/>
-                    <field name="status" widget="statusbar" statusbar_visible="100,200,imported,failed" readonly="1"/>
+                    <button name="check_status" string="Check Status" type="object" class="oe_highlight" invisible="state != 'requested'"/>
+                    <button name="import_bills" string="Import Bills" type="object" class="oe_highlight" invisible="state != 'downloaded'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="requested,downloading,downloaded,done" readonly="1"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -57,11 +53,6 @@
                             <field name="date_expiry"/>
                             <field name="is_expired" invisible="1"/>
                         </group>
-                        <group string="Encryption Keys" groups="base.group_system">
-                            <field name="raw_symmetric_key_b64" widget="CopyClipboardChar"/>
-                            <field name="encrypted_symmetric_key_b64" widget="CopyClipboardChar"/>
-                            <field name="raw_iv_b64" widget="CopyClipboardChar"/>
-                        </group>
                     </group>
                     <notebook>
                         <page string="Batch Parts" name="parts">
@@ -71,17 +62,7 @@
                                     <field name="part_name" string="Part" width="400px"/>
                                     <field string="Method" name="download_method" width="90px"/>
                                     <field name="download_url" widget="url" width="550px"/>
-                                    <button name="download" string="Download" type="object" icon="fa-download"/>
-                                </list>
-                            </field>
-                        </page>
-                        <page string="Attachments" name="attachments">
-                            <field name="attachment_ids" readonly="1">
-                                <list string="Attachments">
-                                    <field name="name"/>
-                                    <field name="file_size" width="120px"/>
-                                    <field name="mimetype" width="150px"/>
-                                    <field name="create_date" width="160px"/>
+                                    <field name="decrypted_file" filename="part_name"/>
                                 </list>
                             </field>
                         </page>
@@ -101,13 +82,16 @@
             <search string="Search KSeF Batches">
                 <field name="name" string="Batch Reference"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <filter string="In Progress" name="filter_in_progress" domain="[('status', '=', '100')]"/>
-                <filter string="Successful" name="filter_successful" domain="[('status', '=', '200')]"/>
-                <filter string="Failed / Errors" name="filter_errors" domain="['|', ('status', '=', 'failed'), ('error', '!=', False)]"/>
+                <filter string="In Progress" name="filter_in_progress" domain="[('state', 'not in', ['done', 'failed'])]"/>
+                <separator/>
+                <filter string="Requested" name="filter_requested" domain="[('state', '=', 'requested')]"/>
+                <filter string="Downloading" name="filter_downloading" domain="[('state', '=', 'downloading')]"/>
+                <filter string="Downloaded" name="filter_downloaded" domain="[('state', '=', 'downloaded')]"/>
+                <filter string="Done" name="filter_done" domain="[('state', '=', 'done')]"/>
+                <filter string="Failed" name="filter_failed" domain="[('state', '=', 'failed')]"/>
                 <separator/>
                 <filter string="Expired" name="filter_expired" domain="[('is_expired', '=', True)]"/>
                 <group expand="0" string="Group By">
-                    <filter string="Status" name="group_status" domain="[]" context="{'group_by': 'status'}"/>
                     <filter string="Company" name="group_company" domain="[]" context="{'group_by': 'company_id'}"
                             groups="base.group_multi_company"/>
                 </group>
@@ -127,7 +111,7 @@
                 <field name="download_method" width="100px"/>
                 <field name="download_url" widget="url"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <button name="download" string="Download" type="object" icon="fa-download"/>
+                <field name="decrypted_file" filename="part_name"/>
             </list>
         </field>
     </record>
@@ -137,9 +121,6 @@
         <field name="model">l10n_pl_edi_batch.part</field>
         <field name="arch" type="xml">
             <form string="KSeF Batch Part">
-                <header>
-                    <button name="download" string="Download from KSeF" type="object" class="oe_highlight"/>
-                </header>
                 <sheet>
                     <group>
                         <group string="Part Details">
@@ -151,7 +132,7 @@
                         <group string="HTTP Download Settings">
                             <field name="download_method"/>
                             <field name="download_url" widget="url"/>
-                            <field name="attachment_id"/>
+                            <field name="decrypted_file" filename="part_name"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -164,6 +145,7 @@
     <record id="l10n_pl_edi_batch_download_action" model="ir.actions.act_window">
         <field name="name">KSeF Batch Downloads</field>
         <field name="res_model">l10n_pl_edi_batch.download</field>
+        <field name="context">{'search_default_filter_in_progress': 1}</field>
         <field name="view_mode">list,form</field>
         <field name="search_view_id" ref="l10n_pl_edi_batch_download_view_search"/>
     </record>

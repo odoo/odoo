@@ -2,15 +2,13 @@ import base64
 import json
 import logging
 import os
-from datetime import timezone
-from dateutil.parser import parse
 from pathlib import Path
 from urllib.parse import urlparse, unquote
 
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 
-from odoo import fields, Command
+from odoo import Command
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
 _logger = logging.getLogger(__name__)
@@ -66,21 +64,11 @@ class KsefApiServiceBatch(KsefApiService):
         json_response = response.json()
         _logger.debug("KSeF batch %s status response:\n%s", name, self.pretty_json(json_response))
 
-        date_expiry_str = json_response.get('packageExpirationDate') or False
-        if date_expiry_str:
-            date_expiry_str = fields.Datetime.to_string(
-                parse(date_expiry_str).astimezone(timezone.utc).replace(tzinfo=None)
-            )
-
         return {
             'name': name,
             'content': json_response,
-            'status': f"{json_response['status']['code']}" or False,
-            'error': '\n'.join(json_response['status'].get('details', []) or []) or False,
-            'date_expiry': date_expiry_str,
             'part_ids': [
                 Command.create({
-                    'name': self._url_to_name(part['url']),
                     'batch_name': name,
                     'part_number': part['ordinalNumber'],
                     'download_url': part['url'],
