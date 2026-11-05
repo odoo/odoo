@@ -518,11 +518,12 @@ class TestAbsenceDetectionCron(TransactionCase):
             'check_out': datetime(2024, 1, 1, 12, 0),
             'state': 'refused',
         })
-        self.env['hr.attendance'].create({
+        att = self.env['hr.attendance'].create({
             'employee_id': self.absent_employee.id,
             'check_in': datetime(2024, 1, 1, 13, 0),
             'check_out': datetime(2024, 1, 1, 14, 0),
         })
+        att._trigger_time_rules(include_deficit=True)
         outputs = self.env['hr.attendance'].search([
             ('employee_id', '=', self.absent_employee.id),
             ('time_rule_id', '=', rule.id),
