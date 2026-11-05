@@ -3224,3 +3224,27 @@ class TestMrpMobileTour(HttpCase):
         self.assertRecordValues(mo.move_raw_ids, [
             {'product_id': self.component.id, 'quantity': 1, 'state': 'done'},
         ])
+
+
+class TestBomCatalog(TestMrpCommon):
+
+    def test_bom_catalog_shows_component_cost(self):
+        """ The product catalog opened from a BoM must show the cost of the
+        components (as in the BoM structure/cost), not their sales price. """
+        component = self.env['product.product'].sudo().create({
+            'name': 'Catalog component',
+            'type': 'consu',
+            'standard_price': 10.0,
+            'list_price': 50.0,
+        })
+        bom = self.env['mrp.bom'].with_user(self.user_mrp_manager).create({
+            'product_tmpl_id': self.product_4.product_tmpl_id.id,
+            'product_qty': 1.0,
+        })
+
+        catalog_data = bom._get_product_catalog_order_data(component)
+        self.assertEqual(catalog_data[component.id].get('price'), 10.0)
+
+        updated_info = bom._update_order_line_info(component, 2.0, component.uom_id, 'bom_line_ids')
+        self.assertEqual(bom.bom_line_ids.product_id, component)
+        self.assertEqual(updated_info.get('price'), 10.0)
