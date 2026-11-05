@@ -11,8 +11,11 @@ import base64
 from odoo import tools
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.tests import HttpCase, tagged
+from odoo.tests import HttpCase, JsonRpcException, tagged
 from odoo.tools import mute_logger
+
+# 1x1 transparent PNG
+PIXEL_PNG_B64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
 
 
 class TestMailingControllersCommon(MassMailCommon, HttpCase):
@@ -70,6 +73,21 @@ class TestMailingControllers(TestMailingControllersCommon):
         super().setUpClass()
         cls.test_email = tools.formataddr(('Déboulonneur', '<fleurus@example.com>'))
         cls.test_email_normalized = 'fleurus@example.com'
+
+    @classmethod
+    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
+        mocked_urls = {
+            'https://www.example.com/image.png': ('image/png', base64.b64decode(PIXEL_PNG_B64)),
+            'https://www.example.com/fake.png': ('image/png', b'not an image'),
+            'https://www.example.com/text.txt': ('text/plain', b'hello'),
+        }
+        if r.url in mocked_urls:
+            response = Response()
+            response.status_code = 200
+            response.headers['Content-Type'], response._content = mocked_urls[r.url]
+            response._content_consumed = True  # let iter_content() read from _content
+            return response
+        return super()._request_handler(s, r, **kw)
 
     def test_assert_initial_values(self):
         """ Ensure test base data to ease test understanding. Globally test_email
@@ -716,6 +734,44 @@ class TestMailingControllers(TestMailingControllersCommon):
         # The controller returns an 'error' key if an AccessError is caught by the RPC layer.
         self.assertNotIn('error', response, 'Modify image failed: %s' % response.get('error', {}).get('message'))
         self.assertTrue(isinstance(response.get('result', {}).get('original'), str), "The response dict should contain the 'original' URL string.")
+
+    def test_add_url_image_data(self):
+        """ Image from a URL is downloaded server-side and stored as a binary attachment. """
+        self.authenticate(self.user_marketing.login, self.user_marketing.login)
+        mailing = self.test_mailing_on_lists
+        result = self.make_jsonrpc_request('/mailing/attachment/add_url_data', {
+            'url': 'https://www.example.com/image.png',
+            'res_model': 'mailing.mailing',
+            'res_id': mailing.id,
+        })
+        attachment = self.env['ir.attachment'].browse(result['id'])
+        self.assertEqual(attachment.name, 'image.png')
+        self.assertEqual(attachment.type, 'binary')
+        self.assertEqual(attachment.mimetype, 'image/png')
+        self.assertEqual((attachment.res_model, attachment.res_id), ('mailing.mailing', mailing.id))
+        self.assertTrue(attachment.raw)
+
+    @mute_logger('odoo.http')
+    def test_add_url_image_data_invalid(self):
+        """ Invalid schemes, non-image content and non-public hosts are rejected. """
+        self.authenticate(self.user_marketing.login, self.user_marketing.login)
+        for url in [
+            'ftp://www.example.com/image.png',  # unsupported scheme
+            'https://www.example.com/text.txt',  # non-image mimetype
+            'https://www.example.com/fake.png',  # image mimetype but invalid content
+            f'{self.base_url()}/web/image/1',  # non-public host (SSRF)
+        ]:
+            with self.subTest(url=url), self.assertRaisesRegex(JsonRpcException, 'Forbidden'):
+                self.make_jsonrpc_request('/mailing/attachment/add_url_data', {'url': url})
+
+    @mute_logger('odoo.http')
+    def test_add_url_image_data_access(self):
+        """ Only mass mailing users can use the endpoint. """
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        with self.assertRaisesRegex(JsonRpcException, 'Unauthorized'):
+            self.make_jsonrpc_request('/mailing/attachment/add_url_data', {
+                'url': 'https://www.example.com/image.png',
+            })
 
 
 @tagged('link_tracker', 'mailing_portal')
