@@ -124,7 +124,7 @@ class HrAttendance(models.Model):
     # time rule engine output fields
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
     source_attendance_id = fields.Many2one('hr.attendance', index=True)
-    overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id')
+    overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id', domain=[('time_rule_id', '!=', False)])
     # set to True on surviving output records when their source is modified or deleted
     source_stale = fields.Boolean(default=False, copy=False, export_string_translation=False)
     # dry run of the daily overtime rules, shown as a banner on the form
@@ -313,17 +313,21 @@ class HrAttendance(models.Model):
                 periods[-1][1] = max(periods[-1][1], stop)
             else:
                 periods.append([start, stop])
+        # outputs share their source's time window by design; exclude them from overlap checks
+        source_field = self._time_rule_source_field
+        own_ids = set(self.ids)
         candidates = self.env['hr.attendance'].search_fetch(
             Domain('employee_id', 'in', self.employee_id.ids) & (
                 Domain.OR(Domain('check_in', '<=', stop) & Domain('check_out', '>=', start) for start, stop in periods)
                 | Domain('check_out', '=', False)
             ),
-            ['employee_id', 'check_in', 'check_out'],
+            ['employee_id', 'check_in', 'check_out', source_field],
             order='check_in, id',
         )
+        candidates = candidates.filtered(lambda c: c[source_field].id not in own_ids)
         candidates_by_employee = candidates.grouped('employee_id')
         for employee, attendances in self.grouped('employee_id').items():
-            employee_candidates = list(candidates_by_employee[employee])
+            employee_candidates = list(candidates_by_employee.get(employee, []))
             check_ins = [candidate.check_in for candidate in employee_candidates]
             open_candidates = [candidate for candidate in employee_candidates if not candidate.check_out]
             for attendance in attendances:
@@ -373,7 +377,7 @@ class HrAttendance(models.Model):
         if stale_targets:
             stale_targets.exists().with_context(skip_time_rules=True).write({'source_stale': True})
         if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
-            self._update_tolerance_state()
+            self.exists()._update_tolerance_state()
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -692,6 +696,7 @@ class HrAttendance(models.Model):
             })
 
         technical_attendances = self.env['hr.attendance'].create(technical_attendances_vals)
+        technical_attendances._trigger_time_rules()
         to_unlink = technical_attendances.filtered(lambda a: not a.overtime_attendance_ids)
         body = _('This attendance was automatically created to cover an unjustified absence on that day.')
         for technical_attendance in technical_attendances:
@@ -835,6 +840,7 @@ class HrAttendance(models.Model):
             'check_in': df,
             'check_out': dt,
             'source_attendance_id': self.id,
+            'state': self.state,
         }
 
     def _get_source_extra_fields_domain(self):
