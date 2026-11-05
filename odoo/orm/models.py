@@ -2565,7 +2565,7 @@ class BaseModel(metaclass=MetaModel):
         adding the domain corresponding to its values, the groupbys in the
         context and by properly formatting the date/datetime values.
         """
-        for group in lazy_groupby:
+        for group in unique(lazy_groupby):
             field_name = group.split(':')[0].split('.')[0]
             field = self._fields[field_name]
 
