@@ -8,7 +8,7 @@
                 <div class="container o_self_container" t-att-class="{'o_self_product_page_attributes': product.showProductImageInSelf}">
                     <div class="d-flex flex-column z-0">
                         <div class="mt-3 mt-kiosk-p-4 mb-2" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
-                        <AttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" />
+                        <AttributeSelection t-if="product.attribute_line_ids.length or product.uom_ids.length" productTemplate="product" />
                     </div>
                 </div>
             </t>

@@ -178,6 +178,7 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
             "qty": 2,
             "attribute_value_ids": ptav_ids,
             "uuid": line.uuid,
+            "product_uom_id": self.premium_variant.uom_id.id,
         }]], {"id": order.id})
         self.assertEqual(line.attribute_value_ids, self.premium_ptav | extra_ptav,
                          "the archived value stays on the line it was ordered with")
