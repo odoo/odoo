@@ -650,6 +650,25 @@ class TestL10nCnEdiFlow(L10nCnEdiTestCommon):
         self.assertEqual(self.client.calls[-1][1][1:], ('reject',))
         self.assertRecordValues(doc, [{'state': 'cancelled', 'bureau_state': '06'}])
 
+    def test_red_fapiao_of_a_customer_raised_form_keeps_its_files(self):
+        invoice = self._create_posted_invoice(fapiao_no='24442000000071309399')
+        self.responses['list_inbound_red_forms'] = [
+            {'uuid': 'in-9', 'number': 'rf-9', 'bureau_state': '01', 'red_fapiao_no': '24442000000071309400',
+             'original_fapiao_no': '24442000000071309399'},
+        ]
+        self.responses['query_red_form'] = {
+            'bureau_state': '01', 'red_fapiao_no': '24442000000071309400', 'pdf_url': 'https://digi.51fapiao.cn/v/red', 'xml': b'<EInvoice/>',
+        }
+
+        self.env['l10n_cn_edi.document']._cron_check_red_form_status()
+
+        doc = invoice.l10n_cn_edi_document_ids
+        self.assertRecordValues(doc, [{'state': 'red_form_confirmed', 'pdf_url': 'https://digi.51fapiao.cn/v/red'}])
+        self.assertEqual(doc.xml_id.raw.content, b'<EInvoice/>')
+        # The XML is the red fapiao's: it goes with the credit note that carries it.
+        credit_note = self._reverse(invoice)
+        self.assertEqual(doc.xml_id.res_id, credit_note.id)
+
     def _create_user(self, group):
         company = self.company_data['company']
         return self.env['res.users'].create({
