@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import pytz
 
 from calendar import monthrange
@@ -19,6 +20,9 @@ from odoo.http import request
 from odoo.tools import convert, float_is_zero, format_duration, format_time, format_datetime
 from odoo.tools.date_utils import sum_intervals
 from odoo.tools.intervals import Intervals
+
+_logger = logging.getLogger(__name__)
+
 
 def get_google_maps_url(latitude, longitude):
     return "https://maps.google.com?q=%s,%s" % (latitude, longitude)
@@ -620,8 +624,10 @@ class HrAttendance(models.Model):
         ])
 
         mapped_previous_duration = defaultdict(lambda: defaultdict(float))
+        mapped_check_ins = defaultdict(list)
         for previous in previous_attendances:
             mapped_previous_duration[previous.employee_id][check_in_tz(previous).date()] += previous.worked_hours
+            mapped_check_ins[previous.employee_id].append(previous.check_in)
 
         all_companies = to_verify.employee_id.company_id
 
@@ -630,31 +636,47 @@ class HrAttendance(models.Model):
             to_verify_company = to_verify.filtered(lambda a: a.employee_id.company_id.id == company.id)
 
             for att in to_verify_company:
+                try:
+                    with self.env.cr.savepoint():
+                        employee_timezone = pytz.timezone(att.employee_id._get_version(att.date)._get_tz())
+                        check_in_datetime = check_in_tz(att)
+                        now_datetime = fields.Datetime.now().astimezone(employee_timezone)
+                        current_attendance_duration = (now_datetime - check_in_datetime).total_seconds() / 3600
+                        previous_attendances_duration = mapped_previous_duration[att.employee_id][check_in_datetime.date()]
 
-                employee_timezone = pytz.timezone(att.employee_id._get_version(att.date)._get_tz())
-                check_in_datetime = check_in_tz(att)
-                now_datetime = fields.Datetime.now().astimezone(employee_timezone)
-                current_attendance_duration = (now_datetime - check_in_datetime).total_seconds() / 3600
-                previous_attendances_duration = mapped_previous_duration[att.employee_id][check_in_datetime.date()]
+                        check_in_day_start = check_in_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
+                        expected_worked_hours = sum_intervals(
+                            att.employee_id._get_expected_attendances(
+                                check_in_day_start,
+                                check_in_day_start + timedelta(days=1),
+                            )
+                        )
 
-                check_in_day_start = check_in_datetime.replace(hour=0, minute=0, second=0, microsecond=0)
-                expected_worked_hours = sum_intervals(
-                    att.employee_id._get_expected_attendances(
-                        check_in_day_start,
-                        check_in_day_start + timedelta(days=1),
-                    )
-                )
-
-                # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
-                if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(utc).replace(tzinfo=None)
-                    excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
-                    att.write({
-                        "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
-                        "out_mode": "auto_check_out"
-                    })
-                    att.message_post(
-                        body=_('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
+                        # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
+                        if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
+                            day_end = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(utc).replace(tzinfo=None)
+                            # The employee may have a later attendance (e.g. encoded manually): never check out
+                            # after it starts, otherwise both attendances would overlap.
+                            next_check_in = min(
+                                (check_in for check_in in mapped_check_ins[att.employee_id] if check_in > att.check_in),
+                                default=None,
+                            )
+                            att.check_out = min(day_end, next_check_in) if next_check_in else day_end
+                            excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
+                            check_out = max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1))
+                            if next_check_in:
+                                check_out = min(check_out, next_check_in)
+                            att.write({
+                                "check_out": check_out,
+                                "out_mode": "auto_check_out"
+                            })
+                            att.message_post(
+                                body=_('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
+                            )
+                except exceptions.UserError as e:
+                    _logger.warning(
+                        "Automatic check-out skipped for attendance %s of employee %s: %s",
+                        att.id, att.employee_id.name, e,
                     )
 
     def _cron_absence_detection(self):
