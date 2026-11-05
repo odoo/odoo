@@ -13,7 +13,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
-    static dependencies = ["history", "selection", "color", "dialog"];
+    static dependencies = ["history", "selection", "color", "dialog", "dom"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [

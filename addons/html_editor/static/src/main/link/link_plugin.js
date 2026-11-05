@@ -22,7 +22,6 @@ import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBrowserFirefox, isBrowserSafari } from "@web/core/browser/feature_detection";
 import { session } from "@web/session";
 import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
@@ -60,10 +59,6 @@ function isLinkActive(selection) {
  */
 export function allowedToCreateLink(node) {
     return !closestElement(node, "label, button");
-}
-
-export function isLinkSupported(selection) {
-    return isHtmlContentSupported(selection) && allowedToCreateLink(selection.anchorNode);
 }
 
 /**
@@ -176,6 +171,7 @@ async function fetchAttachmentMetaData(url, ormService) {
  * @property { LinkPlugin['createLink'] } createLink
  * @property { LinkPlugin['getPathAsUrlCommand'] } getPathAsUrlCommand
  * @property { LinkPlugin['insertLink'] } insertLink
+ * @property { LinkPlugin['supportsLink'] } supportsLink
  */
 
 /**
@@ -217,7 +213,7 @@ export class LinkPlugin extends Plugin {
         allowStripDomain: true,
     };
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
-    static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
+    static shared = ["createLink", "insertLink", "getPathAsUrlCommand", "supportsLink"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -231,7 +227,7 @@ export class LinkPlugin extends Plugin {
                     const linkEl = findInSelection(selection, "a");
                     return linkEl
                         ? this.getResource("link_popovers").some((p) => p.isAvailable(linkEl))
-                        : isLinkSupported(selection);
+                        : this.supportsLink(selection);
                 },
             },
             {
@@ -240,7 +236,7 @@ export class LinkPlugin extends Plugin {
                 description: _t("Remove Link"),
                 icon: "link_off",
                 isAvailable: (selection) => {
-                    if (!isHtmlContentSupported(selection)) {
+                    if (!this.dependencies.dom.supportsHtmlContent(selection)) {
                         return false;
                     }
                     for (const node of this.dependencies.selection.getTargetedNodes()) {
@@ -507,7 +503,9 @@ export class LinkPlugin extends Plugin {
                     const selectionData = this.dependencies.selection.getSelectionData();
                     return (
                         selectionData.documentSelectionIsInEditable &&
-                        isHtmlContentSupported(selectionData.editableSelection) &&
+                        this.dependencies.dom.supportsHtmlContent(
+                            selectionData.editableSelection
+                        ) &&
                         this.isLinkAllowedOnSelection()
                     );
                 },
@@ -570,6 +568,13 @@ export class LinkPlugin extends Plugin {
         this.dependencies.selection.setSelection(
             { anchorNode: linkParent, anchorOffset: linkOffset + 1 },
             { normalize: false }
+        );
+    }
+
+    supportsLink(selection) {
+        return (
+            this.dependencies.dom.supportsHtmlContent(selection) &&
+            allowedToCreateLink(selection.anchorNode)
         );
     }
 
@@ -1366,7 +1371,7 @@ export class LinkPlugin extends Plugin {
     prepareConvertToLink() {
         let selection = this.dependencies.selection.getEditableSelection();
         if (
-            isHtmlContentSupported(selection) &&
+            this.dependencies.dom.supportsHtmlContent(selection) &&
             !closestElement(selection.anchorNode, "a") &&
             selection.anchorNode.nodeType === Node.TEXT_NODE
         ) {

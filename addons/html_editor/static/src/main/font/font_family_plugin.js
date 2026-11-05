@@ -5,7 +5,6 @@ import { FontFamilySelector } from "@html_editor/main/font/font_family_selector"
 import { closestElement } from "../../utils/dom_traversal";
 import { removeStyle } from "@html_editor/utils/formatting";
 import { READ, withSequence } from "@html_editor/utils/resource";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isStylable } from "@html_editor/utils/dom_info";
 
 export const defaultFontFamily = {
@@ -80,7 +79,8 @@ export class FontFamilyPlugin extends Plugin {
                 },
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
                 isAvailable: (selection) =>
-                    isHtmlContentSupported(selection) && (this.config.allowFontFamily ?? true),
+                    this.dependencies.dom.supportsHtmlContent(selection) &&
+                    (this.config.allowFontFamily ?? true),
             }),
         ],
         /** Handlers */

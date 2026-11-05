@@ -25,7 +25,6 @@ import {
     SUPPORTED_BASE_CONTAINER_NAMES,
 } from "@html_editor/utils/base_container";
 import { READ, withSequence } from "@html_editor/utils/resource";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { weakMemoize } from "@html_editor/utils/functions";
 
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
@@ -245,7 +244,9 @@ export class FontTypePlugin extends Plugin {
     setup() {
         this.fontType = proxy({ displayName: "" });
         this.blockFormatIsAvailableMemoized = weakMemoize(
-            (selection) => isHtmlContentSupported(selection) && this.dependencies.dom.canSetBlock()
+            (selection) =>
+                this.dependencies.dom.supportsHtmlContent(selection) &&
+                this.dependencies.dom.canSetBlock()
         );
         this.availableFontTypeItems = this.getResource("font_type_items").filter(
             ({ tagName }) =>

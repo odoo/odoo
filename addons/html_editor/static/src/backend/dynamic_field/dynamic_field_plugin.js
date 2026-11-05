@@ -1,4 +1,3 @@
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isContentEditable } from "@html_editor/utils/dom_info";
 import { closestElement, traverseNode } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
@@ -42,7 +41,7 @@ export class DynamicFieldPlugin extends Plugin {
                 description: _t("Insert a field"),
                 icon: "database",
                 run: this.insertField.bind(this),
-                isAvailable: (selection) => isHtmlContentSupported(selection),
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
             },
             {
                 id: "editDynamicField",

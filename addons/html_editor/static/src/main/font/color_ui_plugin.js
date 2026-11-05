@@ -1,5 +1,4 @@
 import { proxy } from "@odoo/owl";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { ColorSelector } from "./color_selector";
@@ -19,7 +18,7 @@ const HEX_OPACITY = "99";
 
 export class ColorUIPlugin extends Plugin {
     static id = "colorUi";
-    static dependencies = ["color", "history", "selection"];
+    static dependencies = ["color", "dom", "history", "selection"];
     static shared = ["getPropsForColorSelector"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -31,7 +30,7 @@ export class ColorUIPlugin extends Plugin {
                 description: _t("Apply Font Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("foreground"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             },
             {
@@ -40,7 +39,7 @@ export class ColorUIPlugin extends Plugin {
                 description: _t("Apply Background Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("background"),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: this.dependencies.dom.supportsHtmlContent,
                 isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             },
         ],

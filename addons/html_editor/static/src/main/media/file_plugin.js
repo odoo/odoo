@@ -12,11 +12,10 @@ import { DISABLED_NAMESPACE } from "../toolbar/toolbar_plugin";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FileModel } from "@web/core/file_viewer/file_model";
 import { downloadFile } from "@web/core/network/download";
-import { isLinkSupported } from "../link/link_plugin";
 
 export class FilePlugin extends Plugin {
     static id = "file";
-    static dependencies = ["dom", "history", "selection"];
+    static dependencies = ["dom", "history", "link", "selection"];
     static defaultConfig = {
         allowFile: true,
     };
@@ -29,7 +28,8 @@ export class FilePlugin extends Plugin {
             icon: "upload",
             run: this.uploadAndInsertFiles.bind(this),
             isAvailable: (selection) =>
-                this.isUploadCommandAvailable(selection) && isLinkSupported(selection),
+                this.isUploadCommandAvailable(selection) &&
+                this.dependencies.link.supportsLink(selection),
         },
         powerbox_items: {
             categoryId: "media",

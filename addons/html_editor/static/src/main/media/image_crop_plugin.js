@@ -11,7 +11,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
-    static dependencies = ["selection", "history", "imagePostProcess"];
+    static dependencies = ["dom", "selection", "history", "imagePostProcess"];
     static shared = ["openCropImage"];
     /** @type {import("plugins").EditorResources} */
     resources = {

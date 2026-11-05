@@ -17,7 +17,6 @@ import {
     getBaseContainerSelector,
 } from "@html_editor/utils/base_container";
 import { DIRECTIONS } from "../utils/position";
-import { isHtmlContentSupported } from "./selection_plugin";
 import { getRowIndex } from "@html_editor/utils/table";
 import { EMAIL_REGEX } from "@html_editor/main/link/utils";
 
@@ -234,7 +233,7 @@ export class ClipboardPlugin extends Plugin {
      * @param {DataTransfer} clipboardData
      */
     handlePasteUnsupportedHtml(selection, clipboardData) {
-        if (!isHtmlContentSupported(selection)) {
+        if (!this.dependencies.dom.supportsHtmlContent(selection)) {
             const text = this.processThrough(
                 "clipboard_paste_text_processors",
                 clipboardData.getData("text/plain"),
@@ -669,7 +668,7 @@ export class ClipboardPlugin extends Plugin {
     async onDrop(ev) {
         ev.preventDefault();
         const selection = this.dependencies.selection.getEditableSelection();
-        if (!isHtmlContentSupported(selection)) {
+        if (!this.dependencies.dom.supportsHtmlContent(selection)) {
             return;
         }
         const nodeToSplit =

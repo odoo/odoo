@@ -8,7 +8,6 @@ import {
     createDOMPathGenerator,
 } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
@@ -56,7 +55,10 @@ export class CodeBlockPlugin extends Plugin {
     };
 
     blockFormatIsAvailable(selection) {
-        return isHtmlContentSupported(selection) && this.dependencies.dom.canSetBlock();
+        return (
+            this.dependencies.dom.supportsHtmlContent(selection) &&
+            this.dependencies.dom.canSetBlock()
+        );
     }
 
     /**

@@ -5,7 +5,7 @@ import { ColorSelector } from "../font/color_selector";
 
 export class IconColorPlugin extends Plugin {
     static id = "iconColor";
-    static dependencies = ["icon", "colorUi"];
+    static dependencies = ["icon", "colorUi", "dom"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         toolbar_groups: withSequence(1, { id: "icon_color", namespaces: ["icon"] }),
