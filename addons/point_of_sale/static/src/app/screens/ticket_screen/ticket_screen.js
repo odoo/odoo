@@ -180,6 +180,7 @@ export class TicketScreen extends Component {
         }
     }
     onPresetSelected(preset) {
+        this.state.page = 1;
         if (this.state.selectedPreset === preset) {
             this.state.selectedPreset = null;
         } else {
@@ -202,9 +203,17 @@ export class TicketScreen extends Component {
         }
     }
     async onFilterSelected(selectedFilter) {
+        const currentFilter = this.state.filter || "ACTIVE_ORDERS";
+        const newFilter = selectedFilter || "ACTIVE_ORDERS";
+        const isFilterChanged = currentFilter !== newFilter;
+
         this.state.filter = selectedFilter;
-        this.pos.screenState.ticketScreen.totalCount = 0;
-        this.pos.screenState.ticketScreen.offsetByDomain = {};
+
+        if (isFilterChanged) {
+            this.state.page = 1;
+            this.pos.screenState.ticketScreen.totalCount = 0;
+            this.pos.screenState.ticketScreen.offsetByDomain = {};
+        }
 
         await this._updateSyncedOrders();
         this.updateOrderTimers();
@@ -227,6 +236,7 @@ export class TicketScreen extends Component {
             const order = orders[0];
             if (order) {
                 this.state.filter = "SYNCED";
+                this.state.page = 1;
                 this.setSelectedOrder(order);
                 this.pos.scanning = !this.pos.scanning;
             } else {
@@ -500,6 +510,9 @@ export class TicketScreen extends Component {
     async onDeleteOrder(order) {
         await this.pos.onDeleteOrder(order);
         this.setSelectedOrder(this.pos.getOrder());
+        if (this.state.page > this.getNbrPages()) {
+            this.state.page = Math.max(1, this.getNbrPages());
+        }
     }
 
     postRefund(destinationOrder) {}
@@ -714,13 +727,13 @@ export class TicketScreen extends Component {
         return Math.ceil(this.pos.screenState.ticketScreen.totalCount / this.state.nbrByPage);
     }
     getPageNumber() {
-        if (!this.pos.screenState.ticketScreen.totalCount) {
+        const totalCount = this.pos.screenState.ticketScreen.totalCount;
+        if (!totalCount) {
             return `0/0`;
         } else {
-            return `${(this.state.page - 1) * this.state.nbrByPage + 1}-${Math.min(
-                this.state.page * this.state.nbrByPage,
-                this.pos.screenState.ticketScreen.totalCount
-            )} / ${this.pos.screenState.ticketScreen.totalCount}`;
+            const from = Math.min((this.state.page - 1) * this.state.nbrByPage + 1, totalCount);
+            const to = Math.min(this.state.page * this.state.nbrByPage, totalCount);
+            return `${from}-${to} / ${totalCount}`;
         }
     }
     getHasItemsToRefund() {
@@ -993,6 +1006,9 @@ export class TicketScreen extends Component {
         const screenState = this.pos.screenState.ticketScreen;
         const domain = this._computeSyncedOrdersDomain();
         const offset = screenState.offsetByDomain[JSON.stringify(domain)] || 0;
+        if (screenState.totalCount && offset >= screenState.totalCount) {
+            return;
+        }
         const config_id = this.pos.config.id;
         const state_filter = this.state.filter === "CANCELLED" ? "cancelled" : "paid";
         const { ordersInfo, totalCount } = await this.pos.data.call(
