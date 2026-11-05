@@ -4,14 +4,14 @@
 #  ติดตั้งจาก tag ที่ปล่อยจริง เสมอ (ห้าม deploy จาก branch tip)
 #
 #  ใช้งาน:
-#     OD19_TAG=v19.0.0 OD19_REPO=https://github.com/nattanonvs/odoo19ce-autoinfo.git \
+#     OD19_TAG=v19.0.2 OD19_REPO=https://github.com/nattanonvs/odoo19ce-autoinfo.git \
 #       bash deployment/install.sh /opt/odoo19
 # ============================================================================
 set -euo pipefail
 
 TARGET="${1:-/opt/odoo19}"
 OD19_REPO="${OD19_REPO:?set OD19_REPO (repo url)}"
-OD19_TAG="${OD19_TAG:?set OD19_TAG (release tag, e.g. v19.0.0)}"
+OD19_TAG="${OD19_TAG:?set OD19_TAG (release tag, e.g. v19.0.2)}"
 
 echo "==> [1/6] clone ${OD19_REPO} @ ${OD19_TAG} -> ${TARGET}"
 if [ -d "${TARGET}/.git" ]; then
