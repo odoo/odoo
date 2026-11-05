@@ -185,7 +185,13 @@ class PaymentTransaction(models.Model):
                 for aml_values_list in early_payment_values.values():
                     if (aml_values_list):
                         aml_vl = aml_values_list[0]
+<<<<<<< 3aeb5c7f49f969c9feadfbcee9b9b8fd7ca6a3fb
                         aml_vl['partner_id'] = invoice.partner_id.id
+||||||| 0f8fff61ec9693fe35295a15ebb3c72f94fca094
+                        aml_vl['partner_id'] = self.partner_id.id
+=======
+                        aml_vl['partner_id'] = self.partner_id.commercial_partner_id.id
+>>>>>>> 17cb025cbad32aea1fc4884f1db17b0e8563711c
                         payment_values['write_off_line_vals'] += [aml_vl]
                 break
 
