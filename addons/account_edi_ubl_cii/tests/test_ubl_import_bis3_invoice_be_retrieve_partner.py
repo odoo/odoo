@@ -87,6 +87,33 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         self.assertRecordValues(invoice_mwst.partner_id, [{'id': partner.id}])
 
     @freeze_time('2020-01-01')
+    def test_import_partner_creation_b2c(self):
+        """
+        Ensure we can create a B2C partner when importing a ubl,
+        even if the partner doesn't have a VAT number.
+        """
+
+        # Test the partner has been created.
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_partner_creation_b2c',
+            journal=self.company_data['default_journal_sale'],
+        )
+        partner = invoice.partner_id
+        self.assertRecordValues(partner, [{
+            'name': "Jean-Claude",
+            'street': "Rue des Trucs 9",
+            'city': "Bidule",
+            'zip': "6713",
+        }])
+
+        # Test the partner has been retrieved.
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_partner_creation_b2c',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertRecordValues(invoice.partner_id, [{'id': partner.id}])
+
+    @freeze_time('2020-01-01')
     def test_import_partner_retrieval_no_contact(self):
         self.env['res.partner'].create({
             'parent_id': self.partner_be.id,
