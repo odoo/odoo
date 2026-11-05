@@ -96,3 +96,33 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
         },
     ],
 });
+
+registry.category("web_tour.tours").add("time_off_card_new_request", {
+    url: "/odoo",
+    steps: () => [
+        stepUtils.showAppsMenuItem(),
+        {
+            content: "Open Time Off app",
+            trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
+            run: "click",
+        },
+        {
+            content: "Open the details of the type refusing employee allocation requests",
+            trigger: '.o_timeoff_card:has(.o_timeoff_name:contains("Allocation Requests Forbidden")) .o_timeoff_details',
+            run: "click",
+        },
+        {
+            content: "The new request link is hidden",
+            trigger: '.o_popover:not(:has(.btn-link)) span:contains("Allocated:")',
+        },
+        {
+            content: "Open the details of the type allowing employee allocation requests",
+            trigger: '.o_timeoff_card:has(.o_timeoff_name:contains("Allocation Requests Allowed")) .o_timeoff_details',
+            run: "click",
+        },
+        {
+            content: "The new request link is shown",
+            trigger: '.o_popover .btn-link:contains("new request")',
+        },
+    ],
+});
