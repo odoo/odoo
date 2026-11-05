@@ -95,7 +95,7 @@ export function useInputField(params) {
     }
     function onKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
-        if (["enter", "tab", "shift+tab"].includes(hotkey)) {
+        if (["enter", "tab", "shift+tab"].includes(hotkey) && !ev.defaultPrevented) {
             commitChanges(false);
         }
         if (params.preventLineBreaks && ["enter", "shift+enter"].includes(hotkey)) {
@@ -130,6 +130,10 @@ export function useInputField(params) {
         // the corresponding value in the record. Otherwise, in some cases,
         // if the value in the record change the useEffect isn't triggered.
         const value = params.getValue();
+        if (inputRef.el && isDirty && inputRef.el.value === value) {
+            isDirty = false;
+            component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
+        }
         if (
             inputRef.el &&
             !isDirty &&
