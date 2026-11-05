@@ -1410,7 +1410,11 @@ class Website(models.CachedModel):
 
     def _get_font_urls(self):
         """Return the list of font URLs to emit as <link> tags in <head>."""
-        return re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+        def _add_checksum(url):
+            attachment = self.env['ir.attachment']._get_from_url(url)
+            return f"{url}?unique={attachment.checksum}" if attachment else url
+        urls = re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+        return [_add_checksum(url) for url in urls]
 
     def _get_font_faces(self, css_url):
         """Return the font-face declarations from a font stylesheet, either
@@ -1472,10 +1476,14 @@ class Website(models.CachedModel):
 
         The font stylesheets are read (Google may be requested) here, when the
         fonts change, so that rendering a page never waits for them."""
+        def _add_checksum(url):
+            attachment = self.env['ir.attachment']._get_from_url(url)
+            return f"{url}?unique={attachment.checksum}" if attachment else url
         faces_by_css_url = {}
         for website in self:
             exports = website.with_context(website_id=website.id)._get_scss_exports()
             entries = re.findall(r'--o-font-preload-\d+:\s*"([^"]*)"\s+(\d+)', exports)
+            entries = [entry for entry in entries if not entry[0].startswith('https://fonts.googleapis.com')]
             for css_url, _weight in entries:
                 if css_url not in faces_by_css_url:
                     faces_by_css_url[css_url] = self._get_font_faces(css_url)
@@ -1492,7 +1500,7 @@ class Website(models.CachedModel):
                         continue
                     url = files[min(files, key=functools.partial(self._font_weight_rank, int(weight)))]
                     if url not in preloads:
-                        preloads.append(url)
+                        preloads.append(_add_checksum(url))
             if website.font_preloads != font_preloads:
                 website.font_preloads = font_preloads
 
