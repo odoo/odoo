@@ -1,10 +1,11 @@
 /**
- * OD19 Web Navigation — systray buttons (Back / Forward)
+ * OD19 Web Navigation — Back / Forward buttons placed after the Home Menu.
  */
 
 import { Component, xml } from "@odoo/owl";
-import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
+import { NavBar } from "@web/webclient/navbar/navbar";
 
 export class Od19NavButtons extends Component {
     static template = xml`
@@ -36,8 +37,12 @@ export class Od19NavButtons extends Component {
     }
 }
 
-registry.category("systray").add(
-    "od19_web_navigation.nav_buttons",
-    { Component: Od19NavButtons },
-    { sequence: 20 }
-);
+// The buttons are injected right after the Home Menu through a `web.NavBar`
+// template extension (see static/src/xml/od19_nav_buttons.xml), so the NavBar
+// component must be aware of Od19NavButtons to be able to render it.
+patch(NavBar, {
+    components: {
+        ...NavBar.components,
+        Od19NavButtons,
+    },
+});

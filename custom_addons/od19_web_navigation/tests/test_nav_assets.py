@@ -21,6 +21,10 @@ class TestNavigationAssets(HttpCase):
             urls,
         )
         self.assertIn(
+            "/od19_web_navigation/static/src/xml/od19_nav_buttons.xml",
+            urls,
+        )
+        self.assertIn(
             "/od19_web_navigation/static/src/css/od19_nav_buttons.css",
             urls,
         )
