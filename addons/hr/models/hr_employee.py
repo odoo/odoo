@@ -2925,9 +2925,9 @@ class HrEmployee(models.Model):
             check_contract=True,
         )
 
-        work_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
-        attendance_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
-        leave_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
+        work_resources_per_calendar = defaultdict(self.env['resource.resource'].sudo)
+        attendance_resources_per_calendar = defaultdict(self.env['resource.resource'].sudo)
+        leave_resources_per_calendar = defaultdict(self.env['resource.resource'].sudo)
         for employee, calendar_periods in calendar_tz_periods_per_employee.items():
             for period_start, period_stop, (calendar, tz) in calendar_periods:
                 if calendar._is_flexible():
