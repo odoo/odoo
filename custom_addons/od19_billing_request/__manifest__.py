@@ -3,7 +3,7 @@
 
 {
     "name": "OD19 Billing Request (คำขอเปิดบิลกลาง)",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Accounting",
     "summary": "Unified AR/AP billing request from IN/OUT/SO/PO",
     "author": "TRAE",
@@ -22,6 +22,7 @@
         "security/ir.model.access.csv",
         "data/od19_billing_request_data.xml",
         "views/billing_request_views.xml",
+        "views/stock_picking_views.xml",
         "views/billing_request_menus.xml",
     ],
     "installable": True,
