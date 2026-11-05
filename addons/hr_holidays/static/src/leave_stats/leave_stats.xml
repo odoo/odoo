@@ -6,7 +6,9 @@
                 Summary <t t-out="this.thisYear"/>
             </h4>
             <div class="d-flex flex-column">
-                <div t-foreach="this.state.leaves" t-as="record_leave" t-key="record_leave.data.id" class="d-flex gap-2">
+                <div t-foreach="this.state.leaves" t-as="record_leave" t-key="record_leave.data.id" class="o_leave_stats_line d-flex gap-2"
+                     t-att-class="{ 'cursor-pointer': record_leave.data.leaveIds.length }"
+                     t-on-click="() => this.openLeaves(record_leave.data)">
                     <t t-set="leave" t-value="record_leave.data"/>
                     <div t-att-class="'rounded-circle border-0 flex-shrink-0 o_colorlist_toggler o_colorlist_item_color_' + leave.color"
                          style="width: 16px; height: 16px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);"></div>
