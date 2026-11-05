@@ -168,7 +168,12 @@ class IrUiView(models.Model):
                     # original tree. Indeed, the order of children 'id' fields
                     # must remain the same so that the inheritance is applied
                     # in the same order in the copied tree.
-                    child = inherit_child.copy({'inherit_id': website_specific_view.id, 'key': inherit_child.key})
+                    # keep the link to the theme template, or the next theme update drops the copy
+                    child = inherit_child.copy({
+                        'inherit_id': website_specific_view.id,
+                        'key': inherit_child.key,
+                        'theme_template_id': inherit_child.theme_template_id.id,
+                    })
                     inherit_child.inherit_children_ids.write({'inherit_id': child.id})
                     inherit_child.unlink()
                 else:
