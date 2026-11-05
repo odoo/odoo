@@ -353,82 +353,20 @@ class AutoInfoWebsite(http.Controller):
         if not opening.exists() or not opening.is_open:
             raise request.not_found()
 
-        errors = {}
-        values = {"job_id": opening.id}
-
         if request.httprequest.method == "POST":
-            file_storage = request.httprequest.files
-
-            name = (post.get("name") or "").strip()
-            email = (post.get("email") or "").strip()
-            phone = (post.get("phone") or "").strip()
-            consent = post.get("consent")
-
-            if not name:
-                errors["name"] = "Please enter your full name."
-            if not email or "@" not in email or "." not in email.split("@")[-1]:
-                errors["email"] = "Please enter a valid email address."
-            if not phone:
-                errors["phone"] = "Please enter a contact phone number."
-            if not consent:
-                errors["consent"] = "Please accept the privacy notice before submitting."
-
-            resume_file = file_storage.get("resume")
-            documents = [
-                doc for doc in file_storage.getlist("documents") if doc and doc.filename
-            ]
-
-            if not resume_file or not resume_file.filename:
-                errors["resume"] = "Please attach your resume / CV."
-            elif not resume_file.filename.lower().endswith(ALLOWED_DOC_EXT):
-                errors["resume"] = "Unsupported resume file type."
-            else:
-                resume_file.seek(0, 2)
-                if resume_file.tell() > MAX_RESUME_SIZE:
-                    errors["resume"] = "The resume must not exceed 10 MB."
-                resume_file.seek(0)
-
-            if len(documents) > MAX_DOCUMENTS:
-                errors["documents"] = "You can attach up to %s documents." % MAX_DOCUMENTS
-            for document in documents:
-                document.seek(0, 2)
-                if document.tell() > MAX_DOCUMENT_SIZE:
-                    errors["documents"] = (
-                        "Each supporting document must not exceed 10 MB."
-                    )
-                    break
-                document.seek(0)
-
+            errors, values = self._od19_validate_application(post, is_general=False)
+            values["job_id"] = opening.id
             if not errors:
-                try:
-                    application = request.env["od19.job.application"].sudo().create(
-                        {
-                            "job_id": opening.id,
-                            "name": name,
-                            "email": email,
-                            "phone": phone,
-                            "current_company": (post.get("current_company") or "").strip(),
-                            "current_position": (post.get("current_position") or "").strip(),
-                            "years_experience": self._od19_to_float(
-                                post.get("years_experience")
-                            ),
-                            "expected_salary": (post.get("expected_salary") or "").strip(),
-                            "available_date": post.get("available_date") or False,
-                            "source": (post.get("source") or "").strip(),
-                            "cover_letter": (post.get("cover_letter") or "").strip(),
-                        }
-                    )
-                    self._od19_attach_files(application, resume_file, documents)
-                except Exception:  # noqa: BLE001 - never expose a traceback to applicants
-                    _logger.exception("Failed to record job application.")
+                values["job_id"] = opening.id
+                values["application_type"] = "specific"
+                application = self._od19_store_application(values, post)
+                if application is None:
                     return request.redirect("/careers/%s/apply?error=1" % opening.id)
-
                 return request.redirect(
                     "/careers/thank-you?ref=%s" % (application.reference or "")
                 )
-
-            # Keep what the applicant typed so the form can be re-displayed.
-            values.update(post)
+        else:
+            errors, values = {}, {"application_type": "specific"}
 
         return request.render(
             "od19_website.od19_careers_apply",
@@ -440,6 +378,162 @@ class AutoInfoWebsite(http.Controller):
                 "max_documents": MAX_DOCUMENTS,
             },
         )
+
+    @http.route(
+        ["/careers/apply"],
+        type="http",
+        auth="public",
+        website=True,
+        methods=["GET", "POST"],
+        sitemap=False,
+    )
+    def career_general_apply(self, **post):
+        """General / speculative application: express interest without a vacancy.
+
+        The candidate picks the department they are interested in and
+        describes the role in their own words.
+        """
+        if request.httprequest.method == "POST":
+            errors, values = self._od19_validate_application(post, is_general=True)
+            if not errors:
+                values["application_type"] = "speculative"
+                application = self._od19_store_application(values, post)
+                if application is None:
+                    return request.redirect("/careers/apply?error=1")
+                return request.redirect(
+                    "/careers/thank-you?ref=%s" % (application.reference or "")
+                )
+        else:
+            errors, values = {}, {"application_type": "speculative"}
+
+        return request.render(
+            "od19_website.od19_careers_general_apply",
+            {
+                "opening": None,
+                "errors": errors,
+                "values": values,
+                "allowed_ext": ", ".join(ALLOWED_DOC_EXT),
+                "max_documents": MAX_DOCUMENTS,
+            },
+        )
+
+    def _od19_validate_application(self, post, is_general):
+        """Shared validation for both application forms.
+
+        Returns a ``(errors, values)`` tuple.  ``values`` holds the cleaned
+        input so the form can be re-displayed with what the applicant typed.
+        """
+        errors = {}
+        values = {}
+
+        name = (post.get("name") or "").strip()
+        email = (post.get("email") or "").strip()
+        phone = (post.get("phone") or "").strip()
+        consent = post.get("consent")
+        portfolio_url = (post.get("portfolio_url") or "").strip()
+
+        if not name:
+            errors["name"] = "Please enter your full name."
+        if not email or "@" not in email or "." not in email.split("@")[-1]:
+            errors["email"] = "Please enter a valid email address."
+        if not phone:
+            errors["phone"] = "Please enter a contact phone number."
+        if portfolio_url and not portfolio_url.startswith(("http://", "https://")):
+            errors["portfolio_url"] = "Please enter a full URL starting with http:// or https://."
+        if is_general and not (post.get("applied_position") or "").strip():
+            errors["applied_position"] = "Please tell us which position you are interested in."
+        if not consent:
+            errors["consent"] = "Please accept the privacy notice before submitting."
+
+        # Files ---------------------------------------------------------
+        file_storage = request.httprequest.files
+        resume_file = file_storage.get("resume")
+        documents = [
+            doc for doc in file_storage.getlist("documents") if doc and doc.filename
+        ]
+
+        if not resume_file or not resume_file.filename:
+            errors["resume"] = "Please attach your resume / CV."
+        elif not resume_file.filename.lower().endswith(ALLOWED_DOC_EXT):
+            errors["resume"] = "Unsupported resume file type."
+        else:
+            resume_file.seek(0, 2)
+            if resume_file.tell() > MAX_RESUME_SIZE:
+                errors["resume"] = "The resume must not exceed 10 MB."
+            resume_file.seek(0)
+
+        if len(documents) > MAX_DOCUMENTS:
+            errors["documents"] = "You can attach up to %s documents." % MAX_DOCUMENTS
+        else:
+            for document in documents:
+                document.seek(0, 2)
+                if document.tell() > MAX_DOCUMENT_SIZE:
+                    errors["documents"] = (
+                        "Each supporting document must not exceed 10 MB."
+                    )
+                    break
+                document.seek(0)
+
+        values.update(
+            {
+                "name": name,
+                "email": email,
+                "phone": phone,
+                "current_company": (post.get("current_company") or "").strip(),
+                "current_position": (post.get("current_position") or "").strip(),
+                "years_experience": self._od19_to_float(post.get("years_experience")),
+                "education_level": (post.get("education_level") or "").strip(),
+                "expected_salary": (post.get("expected_salary") or "").strip(),
+                "notice_period": (post.get("notice_period") or "").strip(),
+                "available_date": (post.get("available_date") or "").strip(),
+                "preferred_location": (post.get("preferred_location") or "").strip(),
+                "willing_to_travel": bool(post.get("willing_to_travel")),
+                "portfolio_url": portfolio_url,
+                "source": (post.get("source") or "").strip(),
+                "cover_letter": (post.get("cover_letter") or "").strip(),
+                "applied_position": (post.get("applied_position") or "").strip(),
+                "preferred_department": (post.get("preferred_department") or "").strip(),
+                "consent": consent,
+            }
+        )
+        return errors, values
+
+    def _od19_store_application(self, values, post):
+        """Create the application record and attach the uploaded files.
+
+        Returns the created record, or ``None`` when the record could not be
+        saved (the caller then shows the generic error page).
+        """
+        create_vals = {
+            key: value
+            for key, value in values.items()
+            if key not in ("consent", "education_level", "preferred_department")
+        }
+        create_vals.update(
+            {
+                "education_level": values.get("education_level") or False,
+                "preferred_department": values.get("preferred_department") or False,
+                "consent_privacy": bool(values.get("consent")),
+                "consent_date": fields.Datetime.now() if values.get("consent") else False,
+            }
+        )
+        create_vals = {k: v for k, v in create_vals.items() if v is not None}
+
+        file_storage = request.httprequest.files
+        resume_file = file_storage.get("resume")
+        documents = [
+            doc for doc in file_storage.getlist("documents") if doc and doc.filename
+        ]
+
+        try:
+            application = (
+                request.env["od19.job.application"].sudo().create(create_vals)
+            )
+            self._od19_attach_files(application, resume_file, documents)
+        except Exception:  # noqa: BLE001 - never expose a traceback to applicants
+            _logger.exception("Failed to record job application.")
+            return None
+        return application
 
     @http.route(
         ["/careers/thank-you"],

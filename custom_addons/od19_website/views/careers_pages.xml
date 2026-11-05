@@ -162,7 +162,7 @@
                                 We are not hiring for this department at the moment, but we are always happy
                                 to receive a speculative application from talented people.
                             </p>
-                            <a href="/contactus" class="btn btn-primary">Send us your CV</a>
+                            <a href="/careers/apply" class="btn btn-primary">Send us your CV</a>
                         </div>
                     </div>
                 </section>
@@ -175,7 +175,14 @@
                                 <h2>Cannot find your role?</h2>
                                 <p>Send us your resume and we will contact you when a matching position opens.</p>
                             </div>
-                            <a href="/contactus" class="btn btn-hero">Contact HR <i class="fa fa-arrow-right"/></a>
+                            <div class="od19-pc-cta-actions">
+                                <a href="/careers/apply" class="btn btn-hero">
+                                    Send a general application <i class="fa fa-arrow-right"/>
+                                </a>
+                                <a href="/contactus" class="btn btn-outline-light">
+                                    Contact HR
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -379,12 +386,6 @@
                                                        t-att-value="values.get('phone') or ''" required="required"/>
                                                 <div class="invalid-feedback" t-esc="errors.get('phone')"/>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label for="od19-available">Available from</label>
-                                                <input type="date" id="od19-available" name="available_date"
-                                                       class="form-control"
-                                                       t-att-value="values.get('available_date') or ''"/>
-                                            </div>
                                         </div>
                                     </fieldset>
 
@@ -411,10 +412,65 @@
                                                        t-att-value="values.get('years_experience') or ''"/>
                                             </div>
                                             <div class="col-md-6">
+                                                <label for="od19-education">Highest education</label>
+                                                <select id="od19-education" name="education_level" class="form-select">
+                                                    <option value="">— Select —</option>
+                                                    <option value="vocational"
+                                                            t-att-selected="'selected' if values.get('education_level') == 'vocational' else None">
+                                                        Vocational Certificate / Diploma
+                                                    </option>
+                                                    <option value="bachelor"
+                                                            t-att-selected="'selected' if values.get('education_level') == 'bachelor' else None">
+                                                        Bachelor's Degree
+                                                    </option>
+                                                    <option value="master"
+                                                            t-att-selected="'selected' if values.get('education_level') == 'master' else None">
+                                                        Master's Degree
+                                                    </option>
+                                                    <option value="doctorate"
+                                                            t-att-selected="'selected' if values.get('education_level') == 'doctorate' else None">
+                                                        Doctorate
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
                                                 <label for="od19-salary">Expected salary</label>
                                                 <input type="text" id="od19-salary" name="expected_salary"
                                                        class="form-control" placeholder="e.g. THB 45,000 / month"
                                                        t-att-value="values.get('expected_salary') or ''"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19-portfolio">LinkedIn / Portfolio URL</label>
+                                                <input type="url" id="od19-portfolio" name="portfolio_url"
+                                                       t-attf-class="form-control #{'is-invalid' if errors.get('portfolio_url') else ''}"
+                                                       placeholder="https://linkedin.com/in/..."
+                                                       t-att-value="values.get('portfolio_url') or ''"/>
+                                                <div class="invalid-feedback" t-esc="errors.get('portfolio_url')"/>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- 3. Availability & preferences -->
+                                    <fieldset class="od19-form-section">
+                                        <legend><span>3</span> Availability &amp; preferences</legend>
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label for="od19-available">Available from</label>
+                                                <input type="date" id="od19-available" name="available_date"
+                                                       class="form-control"
+                                                       t-att-value="values.get('available_date') or ''"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="od19-notice">Notice period</label>
+                                                <input type="text" id="od19-notice" name="notice_period"
+                                                       class="form-control" placeholder="e.g. 30 days"
+                                                       t-att-value="values.get('notice_period') or ''"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="od19-location">Preferred work location</label>
+                                                <input type="text" id="od19-location" name="preferred_location"
+                                                       class="form-control" placeholder="e.g. Bangkok / Rayong"
+                                                       t-att-value="values.get('preferred_location') or ''"/>
                                             </div>
                                             <div class="col-md-6">
                                                 <label for="od19-source">How did you hear about us?</label>
@@ -422,13 +478,23 @@
                                                        class="form-control" placeholder="JobThai, LinkedIn, referral..."
                                                        t-att-value="values.get('source') or ''"/>
                                             </div>
+                                            <div class="col-md-6 d-flex align-items-end">
+                                                <div class="form-check od19-check-inline">
+                                                    <input type="checkbox" id="od19-travel" name="willing_to_travel"
+                                                           value="1" class="form-check-input"
+                                                           t-att-checked="'checked' if values.get('willing_to_travel') else None"/>
+                                                    <label class="form-check-label" for="od19-travel">
+                                                        I am willing to travel or work on customer sites.
+                                                    </label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </fieldset>
 
-                                    <!-- 3. Documents -->
+                                    <!-- 4. Documents -->
                                     <fieldset class="od19-form-section">
-                                        <legend><span>3</span> Documents</legend>
-                                        <div class="od19-upload" t-attf-class="od19-upload #{'od19-upload-error' if errors.get('resume') else ''}">
+                                        <legend><span>4</span> Documents</legend>
+                                        <div t-attf-class="od19-upload #{'od19-upload-error' if errors.get('resume') else ''}">
                                             <label for="od19-resume">
                                                 <i class="fa fa-file-pdf-o"/>
                                                 Resume / CV <span class="text-danger">*</span>
@@ -459,9 +525,9 @@
                                         </div>
                                     </fieldset>
 
-                                    <!-- 4. Message -->
+                                    <!-- 5. Message -->
                                     <fieldset class="od19-form-section">
-                                        <legend><span>4</span> Message to our team</legend>
+                                        <legend><span>5</span> Message to our team</legend>
                                         <label for="od19-cover">Cover letter / message</label>
                                         <textarea id="od19-cover" name="cover_letter" rows="5"
                                                   class="form-control"
@@ -470,7 +536,7 @@
                                     </fieldset>
 
                                     <!-- Consent -->
-                                    <div class="od19-consent" t-attf-class="od19-consent #{'od19-consent-error' if errors.get('consent') else ''}">
+                                    <div t-attf-class="od19-consent #{'od19-consent-error' if errors.get('consent') else ''}">
                                         <div class="form-check">
                                             <input type="checkbox" id="od19-consent" name="consent" value="1"
                                                    class="form-check-input"
@@ -511,6 +577,319 @@
                                         <li>Application review<small>1 - 3 business days</small></li>
                                         <li>Interview with the hiring manager</li>
                                         <li>Technical assessment (role dependent)</li>
+                                        <li>Offer and onboarding</li>
+                                    </ol>
+                                    <p class="od19-sidebar-note">
+                                        <i class="fa fa-phone"/> Need help? Call
+                                        <a href="tel:+6629345410">+66 2 934 5410</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </t>
+    </template>
+
+    <!-- ============================================================ -->
+    <!-- Careers - general (speculative) application                   -->
+    <!-- ============================================================ -->
+    <template id="od19_careers_general_apply" name="Careers - General Application">
+        <t t-call="website.layout">
+            <div id="wrap" class="od19-careers">
+
+                <section class="od19-careers-detail-hero">
+                    <div class="container">
+                        <nav class="od19-breadcrumb">
+                            <a href="/">Home</a>
+                            <i class="fa fa-angle-right"/>
+                            <a href="/careers">Careers</a>
+                            <i class="fa fa-angle-right"/>
+                            <span>General Application</span>
+                        </nav>
+                        <h1>Express your interest</h1>
+                        <p class="od19-detail-sub">
+                            No matching vacancy today? Tell us what you do best and we will keep your
+                            profile for the next opportunity.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="od19-section">
+                    <div class="container">
+                        <div class="row g-5">
+                            <div class="col-lg-8">
+                                <div class="od19-alert od19-alert-error" role="alert"
+                                     t-if="request.httprequest.args.get('error')">
+                                    <i class="fa fa-times-circle"/>
+                                    <div>
+                                        Sorry, we could not submit your application. Please try again,
+                                        or email your documents to
+                                        <a href="mailto:hr@auto-info.co.th">hr@auto-info.co.th</a>.
+                                    </div>
+                                </div>
+                                <t t-if="not errors">
+                                    <div class="od19-alert od19-alert-warn">
+                                        <i class="fa fa-exclamation-triangle"/>
+                                        <div>
+                                            Fields marked with <span class="text-danger">*</span> are required.
+                                            Accepted file types: <t t-esc="allowed_ext"/>.
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="od19-alert od19-alert-error" role="alert">
+                                        <i class="fa fa-times-circle"/>
+                                        <div>Please review the highlighted fields and try again.</div>
+                                    </div>
+                                </t>
+
+                                <form class="od19-apply-form" method="post" enctype="multipart/form-data"
+                                      action="/careers/apply">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="application_type" value="speculative"/>
+
+                                    <!-- 1. Personal -->
+                                    <fieldset class="od19-form-section">
+                                        <legend><span>1</span> Personal information</legend>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="od19g-name">Full name <span class="text-danger">*</span></label>
+                                                <input type="text" id="od19g-name" name="name"
+                                                       t-attf-class="form-control #{'is-invalid' if errors.get('name') else ''}"
+                                                       t-att-value="values.get('name') or ''" required="required"/>
+                                                <div class="invalid-feedback" t-esc="errors.get('name')"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-email">Email <span class="text-danger">*</span></label>
+                                                <input type="email" id="od19g-email" name="email"
+                                                       t-attf-class="form-control #{'is-invalid' if errors.get('email') else ''}"
+                                                       t-att-value="values.get('email') or ''" required="required"/>
+                                                <div class="invalid-feedback" t-esc="errors.get('email')"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-phone">Phone <span class="text-danger">*</span></label>
+                                                <input type="text" id="od19g-phone" name="phone"
+                                                       t-attf-class="form-control #{'is-invalid' if errors.get('phone') else ''}"
+                                                       t-att-value="values.get('phone') or ''" required="required"/>
+                                                <div class="invalid-feedback" t-esc="errors.get('phone')"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-available">Available from</label>
+                                                <input type="date" id="od19g-available" name="available_date"
+                                                       class="form-control"
+                                                       t-att-value="values.get('available_date') or ''"/>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- 2. What are you looking for -->
+                                    <fieldset class="od19-form-section">
+                                        <legend><span>2</span> What are you looking for</legend>
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="od19g-position">
+                                                    Position you are interested in <span class="text-danger">*</span>
+                                                </label>
+                                                <input type="text" id="od19g-position" name="applied_position"
+                                                       t-attf-class="form-control #{'is-invalid' if errors.get('applied_position') else ''}"
+                                                       placeholder="e.g. Automation Engineer"
+                                                       t-att-value="values.get('applied_position') or ''" required="required"/>
+                                                <div class="invalid-feedback" t-esc="errors.get('applied_position')"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-department">Preferred department</label>
+                                                <select id="od19g-department" name="preferred_department" class="form-select">
+                                                    <option value="">— Any —</option>
+                                                    <option value="industrial"
+                                                            t-att-selected="'selected' if values.get('preferred_department') == 'industrial' else None">
+                                                        Industrial Automation
+                                                    </option>
+                                                    <option value="building"
+                                                            t-att-selected="'selected' if values.get('preferred_department') == 'building' else None">
+                                                        Building Automation
+                                                    </option>
+                                                    <option value="terminal"
+                                                            t-att-selected="'selected' if values.get('preferred_department') == 'terminal' else None">
+                                                        Terminal Automation
+                                                    </option>
+                                                    <option value="support"
+                                                            t-att-selected="'selected' if values.get('preferred_department') == 'support' else None">
+                                                        Sales &amp; Administration
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-company">Current company</label>
+                                                <input type="text" id="od19g-company" name="current_company"
+                                                       class="form-control"
+                                                       t-att-value="values.get('current_company') or ''"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-current-position">Current position</label>
+                                                <input type="text" id="od19g-current-position" name="current_position"
+                                                       class="form-control"
+                                                       t-att-value="values.get('current_position') or ''"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-years">Years of experience</label>
+                                                <input type="number" step="0.5" min="0" id="od19g-years"
+                                                       name="years_experience" class="form-control"
+                                                       t-att-value="values.get('years_experience') or ''"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-education">Highest education</label>
+                                                <select id="od19g-education" name="education_level" class="form-select">
+                                                    <option value="">— Select —</option>
+                                                    <option value="vocational"
+                                                            t-att-selected="'selected' if values.get('education_level') == 'vocational' else None">
+                                                        Vocational Certificate / Diploma
+                                                    </option>
+                                                    <option value="bachelor"
+                                                            t-att-selected="'selected' if values.get('education_level') == 'bachelor' else None">
+                                                        Bachelor's Degree
+                                                    </option>
+                                                    <option value="master"
+                                                            t-att-selected="'selected' if values.get('education_level') == 'master' else None">
+                                                        Master's Degree
+                                                    </option>
+                                                    <option value="doctorate"
+                                                            t-att-selected="'selected' if values.get('education_level') == 'doctorate' else None">
+                                                        Doctorate
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-salary">Expected salary</label>
+                                                <input type="text" id="od19g-salary" name="expected_salary"
+                                                       class="form-control" placeholder="e.g. THB 45,000 / month"
+                                                       t-att-value="values.get('expected_salary') or ''"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-portfolio">LinkedIn / Portfolio URL</label>
+                                                <input type="url" id="od19g-portfolio" name="portfolio_url"
+                                                       t-attf-class="form-control #{'is-invalid' if errors.get('portfolio_url') else ''}"
+                                                       placeholder="https://linkedin.com/in/..."
+                                                       t-att-value="values.get('portfolio_url') or ''"/>
+                                                <div class="invalid-feedback" t-esc="errors.get('portfolio_url')"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="od19g-notice">Notice period</label>
+                                                <input type="text" id="od19g-notice" name="notice_period"
+                                                       class="form-control" placeholder="e.g. 30 days"
+                                                       t-att-value="values.get('notice_period') or ''"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="od19g-location">Preferred work location</label>
+                                                <input type="text" id="od19g-location" name="preferred_location"
+                                                       class="form-control" placeholder="e.g. Bangkok / Rayong"
+                                                       t-att-value="values.get('preferred_location') or ''"/>
+                                            </div>
+                                            <div class="col-md-4 d-flex align-items-end">
+                                                <div class="form-check od19-check-inline">
+                                                    <input type="checkbox" id="od19g-travel" name="willing_to_travel"
+                                                           value="1" class="form-check-input"
+                                                           t-att-checked="'checked' if values.get('willing_to_travel') else None"/>
+                                                    <label class="form-check-label" for="od19g-travel">
+                                                        Willing to travel / work on site.
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="od19g-source">How did you hear about us?</label>
+                                                <input type="text" id="od19g-source" name="source"
+                                                       class="form-control" placeholder="JobThai, LinkedIn, referral..."
+                                                       t-att-value="values.get('source') or ''"/>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- 3. Documents -->
+                                    <fieldset class="od19-form-section">
+                                        <legend><span>3</span> Documents</legend>
+                                        <div t-attf-class="od19-upload #{'od19-upload-error' if errors.get('resume') else ''}">
+                                            <label for="od19g-resume">
+                                                <i class="fa fa-file-pdf-o"/>
+                                                Resume / CV <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="file" id="od19g-resume" name="resume"
+                                                   class="form-control"
+                                                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                                   required="required"/>
+                                            <small>PDF, Word or image, up to 10 MB.</small>
+                                            <div class="od19-field-error" t-if="errors.get('resume')"
+                                                 t-esc="errors.get('resume')"/>
+                                        </div>
+                                        <div class="od19-upload">
+                                            <label for="od19g-docs">
+                                                <i class="fa fa-paperclip"/>
+                                                Supporting documents
+                                            </label>
+                                            <input type="file" id="od19g-docs" name="documents"
+                                                   class="form-control" multiple="multiple"
+                                                   t-attf-accept="#{allowed_ext}"/>
+                                            <small>
+                                                Transcript, certificates, portfolio. Up to
+                                                <t t-esc="max_documents"/> files, 10 MB each.
+                                                Hold Ctrl (Cmd) to select multiple files.
+                                            </small>
+                                            <div class="od19-field-error" t-if="errors.get('documents')"
+                                                 t-esc="errors.get('documents')"/>
+                                        </div>
+                                    </fieldset>
+
+                                    <!-- 4. Message -->
+                                    <fieldset class="od19-form-section">
+                                        <legend><span>4</span> Message to our team</legend>
+                                        <label for="od19g-cover">Cover letter / message</label>
+                                        <textarea id="od19g-cover" name="cover_letter" rows="5"
+                                                  class="form-control"
+                                                  placeholder="Introduce yourself and tell us what kind of role you are looking for."
+                                                  t-esc="values.get('cover_letter') or ''"/>
+                                    </fieldset>
+
+                                    <!-- Consent -->
+                                    <div t-attf-class="od19-consent #{'od19-consent-error' if errors.get('consent') else ''}">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="od19g-consent" name="consent" value="1"
+                                                   class="form-check-input"
+                                                   t-att-checked="'checked' if values.get('consent') else None"/>
+                                            <label class="form-check-label" for="od19g-consent">
+                                                I consent to The Auto-Info Co., Ltd. collecting and using my
+                                                personal data for recruitment purposes.
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="od19-field-error" t-if="errors.get('consent')"
+                                                 t-esc="errors.get('consent')"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="od19-form-actions">
+                                        <a href="/careers" class="btn btn-outline-secondary">Cancel</a>
+                                        <button type="submit" class="btn btn-hero">
+                                            <i class="fa fa-paper-plane"/> Submit application
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Sidebar -->
+                            <div class="col-lg-4">
+                                <div class="od19-job-sidebar">
+                                    <h4>General application</h4>
+                                    <p class="od19-apply-job">Open to all departments</p>
+                                    <p class="od19-sidebar-note">
+                                        <i class="fa fa-lightbulb-o"/>
+                                        Even without a current opening, we review every speculative
+                                        application and keep strong profiles on file.
+                                    </p>
+                                    <h4 class="mt-4">Recruitment process</h4>
+                                    <ol class="od19-process-list">
+                                        <li>Application review<small>1 - 3 business days</small></li>
+                                        <li>HR screening call</li>
+                                        <li>Interview with the hiring manager</li>
                                         <li>Offer and onboarding</li>
                                     </ol>
                                     <p class="od19-sidebar-note">

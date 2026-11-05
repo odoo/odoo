@@ -101,3 +101,17 @@ class WebsiteMenu(models.Model):
             # exactly the records selected above are removed.
             defaults.write({"parent_id": False})
             defaults.unlink()
+
+        # 4) Remove Odoo's built-in "Home" menu.  It also points to "/" and,
+        #    like our own "Home", is a child of the website top menu, so the
+        #    header used to show two "Home" entries.  It is targeted through its
+        #    XML ID instead of DEFAULT_MENU_URLS: the "/" url normalises to an
+        #    empty string in the check above, which would then also match menus
+        #    that legitimately carry no url at all.
+        builtin_home = self.env.ref("website.menu_home", raise_if_not_found=False)
+        if builtin_home and builtin_home.id not in our_ids:
+            # Same cascade guard as above: detach it from the shared main menu
+            # first, otherwise its unlink() also removes our own "/" menu.
+            builtin_home.write({"parent_id": False})
+            builtin_home.unlink()
+            _logger.info("Removed the built-in Odoo \"Home\" menu item.")

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- News &amp; Events hub (/blog) — Auto-Info hero                  -->
+    <!--                                                              -->
+    <!-- Odoo renders the hub with its native "Record Cover" banner.   -->
+    <!-- This template lifts the page to the same hero design used by  -->
+    <!-- the other top-level menus (About / Products / Careers / …)    -->
+    <!-- so every menu shares one consistent, grand opening section.   -->
+    <!--                                                              -->
+    <!-- The native cover is hidden by CSS (see od19-blog-hero) so it  -->
+    <!-- does not double up with this hero; the editable blog intro    -->
+    <!-- below the cover is kept and appears under the hero.           -->
+    <!-- ============================================================ -->
+    <template id="od19_blog_hero" name="Auto-Info Blog Hero"
+              inherit_id="website_blog.blog_post_short" priority="30">
+        <xpath expr="//div[@id='o_wblog_blog_top']" position="before">
+            <section class="od19-page-hero od19-blog-hero od19-pc-reveal"
+                     t-attf-style="background-image:url('/od19_website/static/src/img/hero/industrial.jpg')">
+                <div class="od19-page-hero-overlay"/>
+                <div class="od19-blog-hero-inner">
+                    <span class="od19-eyebrow">News &amp; Events</span>
+                    <h1>News, insights &amp; events from Auto-Info</h1>
+                    <p class="od19-lead">
+                        Product launches, delivered projects, exhibitions and hands-on
+                        technical articles from our engineering teams across Industrial,
+                        Building and Terminal Automation.
+                    </p>
+                    <div class="od19-hero-actions">
+                        <a href="#o_wblog_index_content" class="btn btn-hero">
+                            Browse Articles <i class="fa fa-arrow-down"/>
+                        </a>
+                        <a href="/careers" class="btn btn-ghost-light">Join Our Team</a>
+                    </div>
+                    <ul class="od19-hero-facts">
+                        <li><i class="fa fa-newspaper-o"/> <t t-esc="search_count or 0"/> articles published</li>
+                        <li><i class="fa fa-tags"/> News, Events &amp; Articles</li>
+                        <li><i class="fa fa-refresh"/> Updated regularly</li>
+                    </ul>
+                </div>
+            </section>
+        </xpath>
+    </template>
+
+</odoo>

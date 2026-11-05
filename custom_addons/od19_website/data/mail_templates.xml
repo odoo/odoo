@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- ============================================================ -->
+    <!-- Recruitment e-mail templates                                  -->
+    <!-- Referenced (optionally) by od19.job.application's             -->
+    <!-- _od19_notify_new_application(); a missing template never       -->
+    <!-- blocks an application.                                        -->
+    <!-- ============================================================ -->
+
+    <record id="mail_template_job_application_hr" model="mail.template">
+        <field name="name">Job Application: Notify Recruitment Team</field>
+        <field name="model_id" ref="od19_website.model_od19_job_application"/>
+        <field name="subject">New job application - {{ object.name }} ({{ object.position_label() or 'General Application' }})</field>
+        <field name="email_to">hr@auto-info.co.th</field>
+        <field name="email_from">{{ (object.company_id.email or 'hr@auto-info.co.th') }}</field>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div style="margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;color:#333;">
+                <p>Dear Recruitment Team,</p>
+                <p>
+                    A new application has just been submitted through the careers page.
+                    The details are summarised below.
+                </p>
+                <table cellpadding="6" cellspacing="0" border="1"
+                       style="border-collapse:collapse;border-color:#ddd;font-size:13px;">
+                    <tr><td style="background:#f6f6f6;"><strong>Reference</strong></td>
+                        <td><t t-out="object.reference or '-'"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Application type</strong></td>
+                        <td><t t-out="object.application_type == 'speculative' and 'General / Speculative' or 'Specific Position'"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Position</strong></td>
+                        <td><t t-out="object.position_label() or '-'"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Department</strong></td>
+                        <td><t t-out="object.department_label() or '-'"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Candidate</strong></td>
+                        <td><t t-out="object.name"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Email</strong></td>
+                        <td><t t-out="object.email"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Phone</strong></td>
+                        <td><t t-out="object.phone or '-'"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Experience</strong></td>
+                        <td><t t-out="object.years_experience"/> year(s)</td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Education</strong></td>
+                        <td><t t-out="object.education_level or '-'"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Expected salary</strong></td>
+                        <td><t t-out="object.expected_salary or '-'"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Availability</strong></td>
+                        <td><t t-out="object.notice_period or '-'"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Portfolio</strong></td>
+                        <td><t t-out="object.portfolio_url or '-'"/></td></tr>
+                    <tr><td style="background:#f6f6f6;"><strong>Attachments</strong></td>
+                        <td><t t-out="object.document_count"/> supporting document(s) + resume</td></tr>
+                </table>
+                <p t-if="object.cover_letter">
+                    <strong>Message from the candidate:</strong><br/>
+                    <t t-out="object.cover_letter"/>
+                </p>
+                <p style="margin-top:18px;">
+                    <a t-att-href="'/odoo/action-od19_website.action_od19_job_application/%s' % object.id"
+                       style="display:inline-block;padding:10px 18px;background:#9E2424;color:#fff;text-decoration:none;border-radius:4px;">
+                        Open the application in Odoo
+                    </a>
+                </p>
+                <p style="color:#888;font-size:12px;">
+                    This message was generated automatically by the Auto-Info website.
+                </p>
+            </div>
+        </field>
+    </record>
+
+    <record id="mail_template_job_application_ack" model="mail.template">
+        <field name="name">Job Application: Acknowledge Applicant</field>
+        <field name="model_id" ref="od19_website.model_od19_job_application"/>
+        <field name="subject">We have received your application - The Auto-Info Co., Ltd.</field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="email_from">{{ (object.company_id.email or 'hr@auto-info.co.th') }}</field>
+        <field name="reply_to">hr@auto-info.co.th</field>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div style="margin:0;padding:0;font-family:'Sarabun',Arial,Helvetica,sans-serif;color:#333;">
+                <p>Dear <t t-out="object.name"/>,</p>
+                <p>
+                    Thank you for your interest in joining <strong>The Auto-Info Co., Ltd.</strong>
+                    We have successfully received your application<t t-if="object.position_label()">
+                        for the position of <strong><t t-out="object.position_label()"/></strong></t>.
+                </p>
+                <p>
+                    Our recruitment team will review your profile carefully. If your experience
+                    matches our requirements, we will contact you within <strong>5 business days</strong>
+                    to arrange the next step.
+                </p>
+                <p t-if="object.reference">
+                    Your reference number is
+                    <strong style="color:#9E2424;"><t t-out="object.reference"/></strong>.
+                    Please keep it for any follow-up.
+                </p>
+                <p>
+                    In the meantime, feel free to learn more about us at
+                    <a href="https://www.auto-info.co.th">www.auto-info.co.th</a>.
+                </p>
+                <p style="margin-top:20px;">
+                    Best regards,<br/>
+                    <strong>Recruitment Team</strong><br/>
+                    The Auto-Info Co., Ltd.<br/>
+                    Tel: +66 2 934 5410
+                </p>
+                <p style="color:#888;font-size:12px;">
+                    This is an automated acknowledgement; please do not reply directly to this message.
+                </p>
+            </div>
+        </field>
+    </record>
+
+</odoo>

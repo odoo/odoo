@@ -844,6 +844,23 @@ header .o_navlink_background .oi-search {
     padding: 14px 34px;
     font-weight: 700;
 }
+.od19-pc-cta-actions {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.od19-pc-cta-actions .btn { padding: 14px 30px; }
+.od19-pc-cta-actions .btn-outline-light {
+    color: #fff;
+    border: 1.5px solid rgba(255, 255, 255, 0.65);
+    background: transparent;
+}
+.od19-pc-cta-actions .btn-outline-light:hover {
+    background: #fff;
+    color: #7a1b1b;
+}
 
 /* ---------- Homepage featured products ---------- */
 .od19-pf-sub {
@@ -1600,6 +1617,27 @@ header .o_navlink_background .oi-search {
     margin-bottom: 24px;
 }
 .od19-consent-error { border-color: #e07a7a; background: #fdf0f0; }
+.od19-check-inline {
+    background: #fbf8f8;
+    border: 1px solid #ece2e2;
+    border-radius: 12px;
+    padding: 10px 14px 10px 38px;
+    width: 100%;
+}
+.od19-check-inline .form-check-label { font-size: 0.92rem; }
+.od19-apply-form .form-select {
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+.od19-apply-form .form-control,
+.od19-apply-form .form-select {
+    border: 1px solid #e3dada;
+}
+.od19-apply-form .form-control:focus,
+.od19-apply-form .form-select:focus {
+    border-color: var(--od19-primary);
+    box-shadow: 0 0 0 0.18rem rgba(158, 36, 36, 0.12);
+}
 .od19-form-actions {
     display: flex;
     justify-content: flex-end;
@@ -2338,6 +2376,28 @@ a.od19-room-tile:focus {
         linear-gradient(135deg, #2a1a1a 0%, #7A1B1B 58%, #9E2424 100%);
 }
 
+/* Homepage hero — a taller, grander treatment of the shared page hero */
+.od19-home-hero {
+    padding: 120px 0 110px;
+}
+.od19-home-hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    max-width: 940px;
+}
+.od19-home-hero .od19-lead {
+    font-size: 1.18rem;
+    max-width: 780px;
+}
+@media (max-width: 767.98px) {
+    .od19-home-hero {
+        padding: 84px 0 72px;
+    }
+    .od19-home-hero h1 {
+        font-size: 2.15rem;
+    }
+}
+
 /* Cards: soft glass edge + layered shadow for depth */
 .od19-cap-card,
 .od19-service-card,
@@ -2413,5 +2473,20 @@ a.od19-room-tile:focus {
 #o_wblog_index_content .o_wblog_post:hover .o_list_cover {
     transform: translateY(-3px);
     box-shadow: 0 16px 34px rgba(42, 26, 26, 0.16);
+}
+
+/* The hub's native "Record Cover" is replaced by the shared Auto-Info
+   hero (od19-blog-hero) so /blog matches every other menu. Keep the
+   editable blog intro below it. #o_wblog_blog_top only exists on the
+   hub index, never on the single-post pages. */
+#o_wblog_blog_top > .o_record_cover_container {
+    display: none !important;
+}
+.od19-blog-hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 15px;
 }
 

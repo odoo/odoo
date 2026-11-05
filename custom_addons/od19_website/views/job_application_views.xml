@@ -38,8 +38,11 @@
                   decoration-danger="state == 'refused'">
                 <field name="reference"/>
                 <field name="name" string="Candidate"/>
+                <field name="application_type" optional="show"/>
                 <field name="job_id"/>
+                <field name="applied_position" optional="hide"/>
                 <field name="department" optional="show"/>
+                <field name="preferred_department" optional="hide"/>
                 <field name="email" optional="show"/>
                 <field name="phone" optional="hide"/>
                 <field name="years_experience" optional="hide"/>
@@ -93,12 +96,22 @@
                     </div>
                     <group>
                         <group name="position" string="Applied Position">
-                            <field name="job_id" options="{'no_create': True}"/>
-                            <field name="department"/>
+                            <field name="application_type"/>
+                            <field name="job_id" options="{'no_create': True}"
+                                   invisible="application_type == 'speculative'"/>
+                            <field name="applied_position"
+                                   invisible="application_type == 'specific'"/>
+                            <field name="department"
+                                   invisible="application_type == 'speculative'"/>
+                            <field name="preferred_department"
+                                   invisible="application_type == 'specific'"/>
                         </group>
                         <group name="application" string="Application">
                             <field name="create_date" string="Applied On"/>
                             <field name="source"/>
+                            <field name="consent_privacy" readonly="1"/>
+                            <field name="consent_date" readonly="1"
+                                   invisible="not consent_privacy"/>
                         </group>
                     </group>
                     <group>
@@ -106,12 +119,17 @@
                             <field name="email" widget="email"/>
                             <field name="phone" widget="phone"/>
                             <field name="available_date"/>
+                            <field name="preferred_location"/>
                         </group>
                         <group name="profile" string="Professional Profile">
                             <field name="current_company"/>
                             <field name="current_position"/>
                             <field name="years_experience"/>
+                            <field name="education_level"/>
                             <field name="expected_salary"/>
+                            <field name="notice_period"/>
+                            <field name="willing_to_travel"/>
+                            <field name="portfolio_url" widget="url"/>
                         </group>
                     </group>
                     <notebook>
@@ -149,6 +167,12 @@
                 <field name="phone"/>
                 <field name="reference"/>
                 <field name="job_id"/>
+                <field name="applied_position"/>
+                <separator/>
+                <filter name="filter_specific" string="Specific Position"
+                        domain="[('application_type', '=', 'specific')]"/>
+                <filter name="filter_speculative" string="General Application"
+                        domain="[('application_type', '=', 'speculative')]"/>
                 <separator/>
                 <filter name="filter_new" string="New" domain="[('state', '=', 'new')]"/>
                 <filter name="filter_shortlisted" string="Shortlisted" domain="[('state', '=', 'shortlisted')]"/>
@@ -162,6 +186,7 @@
                 <filter name="filter_terminal" string="Terminal" domain="[('department', '=', 'terminal')]"/>
                 <group>
                     <filter name="group_state" string="Status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_type" string="Application Type" domain="[]" context="{'group_by': 'application_type'}"/>
                     <filter name="group_job" string="Job Position" domain="[]" context="{'group_by': 'job_id'}"/>
                     <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department'}"/>
                 </group>
