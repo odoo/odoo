@@ -44,7 +44,9 @@ class HrEmployeeDeparture(models.Model):
         help="Date at which the departure process starts. Differs from the actual departure date in case of a notice period.")
     departure_date = fields.Date(string="Departure Date", compute="_compute_departure_date",
         store=True, readonly=False, help="Date at which the departure actually takes place.")
-    action_date = fields.Date(string="Archive Employee On", help="Date at which the employee is archived after the departure.")
+    action_date = fields.Date(string="Archive Employee On", help="Date at which the employee (and their user, if they have no"
+        " other active employee) is archived, by default the day after the departure. If it is today or earlier, the"
+        " departure is applied on confirmation; otherwise it is scheduled for that date.")
     is_user_employee = fields.Boolean(
         compute='_compute_is_user_employee',
         export_string_translation=False,

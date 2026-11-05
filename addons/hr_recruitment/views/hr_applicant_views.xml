@@ -407,7 +407,7 @@
                 <filter invisible="context.get('default_talent_pool_ids', False)" string="In Progress" name="ongoing" domain="[('date_closed', '=', False), ('active', '=', True), ('refuse_reason_id', '=', False)]"/>
                 <filter invisible="context.get('default_talent_pool_ids', False)" string="Hired" name="hired" domain="[('date_closed', '!=', False)]"/>
                 <separator/>
-                <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
+                <filter string="Ready" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Waiting" name="waiting" domain="[('kanban_state', '=', 'waiting')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
                 <separator/>
