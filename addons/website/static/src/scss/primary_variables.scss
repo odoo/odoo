@@ -2329,6 +2329,9 @@ $o-lead-ratio: 1.125 !default;
 // <font-name>: (
 //     'family': <css font family list>,
 //     'url': <related part of google fonts URL>,
+//     'local-url' (instead of 'url'): <URL of a stylesheet shipped in a module
+//         static directory, e.g. '/website/static/fonts/Roboto/Roboto.css',
+//         declaring the @font-face of the font files shipped next to it>,
 //     'properties' (optional): (
 //         <font-alias>: (
 //             <website-value-key>: <value>,
@@ -2350,35 +2353,35 @@ $o-base-theme-font-configs: (
 $o-theme-font-configs: (
     'Roboto': (
         'family': ('Roboto', sans-serif),
-        'url': 'Roboto:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
+        'local-url': '/website/static/fonts/Roboto/Roboto.css',
     ),
     'Open Sans': (
         'family': ('Open Sans', sans-serif),
-        'url': 'Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i',
+        'local-url': '/website/static/fonts/Open_Sans/Open_Sans.css',
     ),
     'Source Sans Pro': (
         'family': ('Source Sans Pro', sans-serif),
-        'url': 'Source+Sans+Pro:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
+        'local-url': '/website/static/fonts/Source_Sans_Pro/Source_Sans_Pro.css',
     ),
     'Raleway': (
         'family': ('Raleway', sans-serif),
-        'url': 'Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
+        'local-url': '/website/static/fonts/Raleway/Raleway.css',
     ),
     'Noto Serif': (
         'family': ('Noto Serif', serif),
-        'url': 'Noto+Serif:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
+        'local-url': '/website/static/fonts/Noto_Serif/Noto_Serif.css',
     ),
     'Arvo': (
-        'family': ('Arvo', Times, serif),
-        'url': 'Arvo:400,400i,700,700i',
+        'family': ('Arvo', serif),
+        'local-url': '/website/static/fonts/Arvo/Arvo.css',
     ),
     'Inter Tight': (
         'family': ('Inter Tight', sans-serif),
-        'url': 'Inter+Tight:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
+        'local-url': '/website/static/fonts/Inter_Tight/Inter_Tight.css',
     ),
     'Inter': (
         'family': ('Inter', sans-serif),
-        'url': 'Inter:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i',
+        'local-url': '/website/static/fonts/Inter/Inter.css',
     ),
 ) !default;
 

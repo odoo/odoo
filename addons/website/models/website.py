@@ -17,7 +17,7 @@ from concurrent.futures import ThreadPoolExecutor
 from lxml import etree, html
 from markupsafe import Markup
 from requests import RequestException
-from urllib.parse import urlparse, urlsplit
+from urllib.parse import urljoin, urlparse, urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
@@ -1408,17 +1408,32 @@ class Website(models.CachedModel):
             logger.warning("Scss export bundle compilation failed: %s", e)
             raise
 
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        api.ormcache(
+            'self.id',
+            "tuple(sorted(self.env['ir.asset']._get_asset_params().items()))",
+            cache='assets',
+        ),
+    )
     def _get_font_urls(self):
-        """Return the list of font URLs to emit as <link> tags in <head>."""
-        def _add_checksum(url):
-            attachment = self.env['ir.attachment']._get_from_url(url)
+        """Return the list of font URLs to emit as <link> tags in <head>.
+
+        A stylesheet stored in an attachment (font served locally) gets its
+        checksum, so that browsers cache it without revalidating it."""
+        def with_checksum(url):
+            match = re.match(r'/web/content/(\d+)/', url)
+            attachment = match and self.env['ir.attachment'].sudo().browse(int(match[1])).exists()
             return f"{url}?unique={attachment.checksum}" if attachment else url
-        urls = re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
-        return [_add_checksum(url) for url in urls]
+        return [
+            with_checksum(url)
+            for url in re.findall(r'--o-font-url-\d+:\s*"([^"]*)"', self._get_scss_exports())
+        ]
 
     def _get_font_faces(self, css_url):
         """Return the font-face declarations from a font stylesheet, either
-        served by Google or stored in a public attachment, as
+        served by Google, stored in a public attachment or shipped in a module
+        static directory, as
         `{subset: {weight: font file url}}` (subset is empty for the faces not
         preceded by a subset comment, as in the uploaded fonts stylesheets).
 
@@ -1446,7 +1461,10 @@ class Website(models.CachedModel):
                 attachment = self.env['ir.attachment'].sudo().browse(int(match[1])).exists()
                 if attachment.public:
                     css = attachment.raw.decode()
-        except (RequestException, UnicodeDecodeError) as e:
+            elif re.fullmatch(r'/\w+/static/[\w/.-]+\.css', url.path) and '..' not in url.path:
+                with tools.file_open(url.path[1:], 'r', filter_ext=('.css',)) as f:
+                    css = f.read()
+        except (RequestException, UnicodeDecodeError, OSError, ValueError) as e:
             logger.info("Font stylesheet %s could not be read, its fonts are not preloaded: %s", css_url, e)
         faces = {}
         font_face_re = re.compile(r'(?:/\*\s*([^*]*?)\s*\*/\s*)?@font-face\s*\{([^}]*)\}')
@@ -1455,7 +1473,9 @@ class Website(models.CachedModel):
             weight = re.search(r'font-weight:\s*(\d+)', body)
             url = re.search(r'url\(\s*["\']?([^)"\']+)', body)
             if url and (not style or style[1] == 'normal'):
-                faces.setdefault(subset, {})[int(weight[1]) if weight else 400] = url[1]
+                # The font files of a stylesheet shipped in a module are
+                # usually referenced relatively to it.
+                faces.setdefault(subset, {})[int(weight[1]) if weight else 400] = urljoin(css_url, url[1])
         return faces
 
     @staticmethod
@@ -1476,14 +1496,10 @@ class Website(models.CachedModel):
 
         The font stylesheets are read (Google may be requested) here, when the
         fonts change, so that rendering a page never waits for them."""
-        def _add_checksum(url):
-            attachment = self.env['ir.attachment']._get_from_url(url)
-            return f"{url}?unique={attachment.checksum}" if attachment else url
         faces_by_css_url = {}
         for website in self:
             exports = website.with_context(website_id=website.id)._get_scss_exports()
             entries = re.findall(r'--o-font-preload-\d+:\s*"([^"]*)"\s+(\d+)', exports)
-            entries = [entry for entry in entries if not entry[0].startswith('https://fonts.googleapis.com')]
             for css_url, _weight in entries:
                 if css_url not in faces_by_css_url:
                     faces_by_css_url[css_url] = self._get_font_faces(css_url)
@@ -1500,7 +1516,7 @@ class Website(models.CachedModel):
                         continue
                     url = files[min(files, key=functools.partial(self._font_weight_rank, int(weight)))]
                     if url not in preloads:
-                        preloads.append(_add_checksum(url))
+                        preloads.append(url)
             if website.font_preloads != font_preloads:
                 website.font_preloads = font_preloads
 

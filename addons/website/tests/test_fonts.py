@@ -44,6 +44,14 @@ def _google_css(family, subsets=('latin',), weights=(400,), variable=True):
     return ''.join(blocks)
 
 
+# The latin files of the default fonts (Inter and Inter Tight, variable fonts
+# shipped in the module) for the body and the headings.
+DEFAULT_FONT_PRELOADS = [
+    ('/website/static/fonts/Inter/inter-latin-normal-100-900.woff2', 'font/woff2'),
+    ('/website/static/fonts/Inter_Tight/inter-tight-latin-normal-100-900.woff2', 'font/woff2'),
+]
+
+
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsiteFontUrls(odoo.tests.HttpCase):
     """
@@ -70,6 +78,15 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         self.env['website.assets'].with_context(website_id=website.id).make_scss_customization(
             '/website/static/src/scss/options/user_values.scss', values)
 
+    def _set_google_font(self, font, headings_font=None, website=None):
+        """Use a font served by Google (the theme fonts are shipped in the code,
+        a font added with the "add font" dialog is served by Google)."""
+        self._set_fonts({
+            'font': f"'{font}'",
+            'headings-font': f"'{headings_font or font}'",
+            'google-fonts': f"('{font}',)",
+        }, website)
+
     def _create_font_attachment(self, font_name):
         return self.env['ir.attachment'].create({
             'name': f'{font_name} (google-font)',
@@ -83,28 +100,24 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
     # Google fonts
     # ------------------------------------------------------------------
 
-    def test_default_google_fonts(self):
+    def test_default_fonts_are_served_locally(self):
         # The default website uses 'Inter' for the body and 'Inter Tight' for
-        # the headings. Each of them should be exported once, as a Google
-        # Fonts URL.
-        urls = self._get_font_urls()
-        self.assertEqual(len(urls), 2, urls)
-        self.assertTrue(
-            urls[0].startswith('https://fonts.googleapis.com/css?family=Inter:100,100i'),
-            urls[0],
-        )
-        self.assertTrue(
-            urls[1].startswith('https://fonts.googleapis.com/css?family=Inter+Tight:100,100i'),
-            urls[1],
-        )
-        for url in urls:
-            self.assertTrue(url.endswith('&display=swap&subset=latin,latin-ext,vietnamese'), url)
+        # the headings. Each of them should be exported once, as the URL of
+        # its stylesheet shipped in the module.
+        self.assertEqual(self._get_font_urls(), [
+            '/website/static/fonts/Inter/Inter.css',
+            '/website/static/fonts/Inter_Tight/Inter_Tight.css',
+        ])
 
     def test_same_google_font_for_several_aliases_is_deduplicated(self):
-        self._set_fonts({'font': "'Roboto'", 'headings-font': "'Roboto'"})
+        self._set_google_font('Lobster')
         urls = self._get_font_urls()
         self.assertEqual(len(urls), 1, urls)
-        self.assertIn('family=Roboto:100,100i', urls[0])
+        self.assertIn('family=Lobster:100,100i', urls[0])
+
+    def test_same_local_font_for_several_aliases_is_deduplicated(self):
+        self._set_fonts({'font': "'Roboto'", 'headings-font': "'Roboto'"})
+        self.assertEqual(self._get_font_urls(), ['/website/static/fonts/Roboto/Roboto.css'])
 
     def test_user_added_google_font(self):
         # Fonts added with the "add font" dialog are stored in the
@@ -117,6 +130,7 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         urls = self._get_font_urls()
         self.assertEqual(len(urls), 1, urls)
         self.assertIn('family=Lobster:100,100i', urls[0])
+        self.assertTrue(urls[0].endswith('&display=swap&subset=latin,latin-ext,vietnamese'), urls[0])
 
     # ------------------------------------------------------------------
     # Local fonts
@@ -129,9 +143,10 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
             'headings-font': "'SYSTEM_FONTS'",
             'google-local-fonts': f"('Roboto': {attachment.id})",
         })
+        # The checksum of the stylesheet busts the browser cache.
         self.assertEqual(
             self._get_font_urls(),
-            [f'/web/content/{attachment.id}/google-font-Roboto'],
+            [f'/web/content/{attachment.id}/google-font-Roboto?unique={attachment.checksum}'],
         )
 
     def test_google_font_made_local_stores_each_file_once(self):
@@ -177,10 +192,8 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         self._set_fonts({'font': "'Roboto'", 'headings-font': "'SYSTEM_FONTS'"})
         urls_1 = self._get_font_urls()
         urls_2 = self._get_font_urls(website_2)
-        self.assertEqual(len(urls_1), 1, urls_1)
-        self.assertIn('family=Roboto:100,100i', urls_1[0])
-        self.assertNotEqual(urls_1, urls_2)
-        self.assertTrue(any('family=Inter:' in url for url in urls_2), urls_2)
+        self.assertEqual(urls_1, ['/website/static/fonts/Roboto/Roboto.css'])
+        self.assertIn('/website/static/fonts/Inter/Inter.css', urls_2)
 
     @unittest.skipIf('xml' in config['dev_mode'], "The assets cache is disabled in dev mode")
     def test_font_urls_are_cached(self):
@@ -201,19 +214,17 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
 
     def test_font_urls_cache_invalidated_on_change(self):
         urls = self._get_font_urls()
-        self.assertTrue(any('family=Inter:' in url for url in urls), urls)
+        self.assertIn('/website/static/fonts/Inter/Inter.css', urls)
         # Customizing the fonts must invalidate the assets cache.
         self._set_fonts({'font': "'Roboto'", 'headings-font': "'SYSTEM_FONTS'"})
-        urls = self._get_font_urls()
-        self.assertEqual(len(urls), 1, urls)
-        self.assertIn('family=Roboto:100,100i', urls[0])
+        self.assertEqual(self._get_font_urls(), ['/website/static/fonts/Roboto/Roboto.css'])
 
     # ------------------------------------------------------------------
     # Rendered pages
     # ------------------------------------------------------------------
 
     def test_page_head_contains_font_links(self):
-        self._set_fonts({'font': "'Roboto'", 'headings-font': "'Roboto'"})
+        self._set_google_font('Lobster')
         self._get_font_urls()
         page = self.url_open('/').text
         self.assertIn('<link rel="preconnect" href="https://fonts.googleapis.com"/>', page)
@@ -223,10 +234,10 @@ class TestWebsiteFontUrls(odoo.tests.HttpCase):
         ]
         self.assertEqual(len(font_links), 1, "One <link> per distinct font is expected")
         self.assertIn('rel="stylesheet"', font_links[0])
-        self.assertIn('family=Roboto:100,100i', font_links[0])
+        self.assertIn('family=Lobster:100,100i', font_links[0])
 
     def test_page_head_with_google_served_fonts_contains_preconnect_links(self):
-        self._set_fonts({'font': "'Roboto'", 'headings-font': "'Roboto'"})
+        self._set_google_font('Lobster')
         self._get_font_urls()
         page = self.url_open('/').text
         self.assertIn('<link rel="preconnect" href="https://fonts.googleapis.com"/>', page)
@@ -435,29 +446,19 @@ class TestWebsiteFontPreload(odoo.tests.HttpCase):
         self.assertEqual(self._get_preloads(), [])
 
     def test_new_website_preloads_default_fonts(self):
-        css = {
-            'Inter': _google_css('Inter', weights=(400, 500), variable=True),
-            'Inter Tight': _google_css('Intertight', weights=(400, 500), variable=True),
-        }
-        with self._mock_google_fonts(css):
+        # The default fonts are shipped in the code: Google is not requested.
+        with self._mock_google_fonts({}) as mock:
             website = self.env['website'].create({'name': 'Font preload website'})
-        self.assertEqual(website.with_context(website_id=website.id)._get_font_preloads('en_US'), [
-            (_font_file_url('Inter', 'latin'), 'font/woff2'),
-            (_font_file_url('Intertight', 'latin'), 'font/woff2'),
-        ])
+            mock.assert_called(0)
+        self.assertEqual(website.with_context(website_id=website.id)._get_font_preloads('en_US'), DEFAULT_FONT_PRELOADS)
 
     def test_website_created_during_install_preloads_default_fonts(self):
         # A website created by the data of the module (e.g. the demo one) is
         # created before the assets of the module are loaded: its export bundle
         # is compiled (and cached) without them, so it has no font to preload.
-        css = {
-            'Inter': _google_css('Inter', weights=(400, 500), variable=True),
-            'Inter Tight': _google_css('Intertight', weights=(400, 500), variable=True),
-        }
         IrAsset = self.registry['ir.asset']
         installed_addons = IrAsset._get_installed_addons_list(self.env['ir.asset']) - {'website'}
-        with patch.object(IrAsset, '_get_installed_addons_list', return_value=installed_addons), \
-                self._mock_google_fonts(css):
+        with patch.object(IrAsset, '_get_installed_addons_list', return_value=installed_addons):
             website = self.env['website'].create({'name': 'Font preload website'})
         self.assertFalse(website.with_context(website_id=website.id)._get_font_preloads('en_US'))
 
@@ -465,12 +466,8 @@ class TestWebsiteFontPreload(odoo.tests.HttpCase):
         # computed from its assets.
         module = self.env['ir.module.module'].search([('name', '=', 'website')])
         module.state = 'to upgrade'
-        with self._mock_google_fonts(css):
-            module.write({'state': 'installed'})
-        self.assertEqual(website.with_context(website_id=website.id)._get_font_preloads('en_US'), [
-            (_font_file_url('Inter', 'latin'), 'font/woff2'),
-            (_font_file_url('Intertight', 'latin'), 'font/woff2'),
-        ])
+        module.write({'state': 'installed'})
+        self.assertEqual(website.with_context(website_id=website.id)._get_font_preloads('en_US'), DEFAULT_FONT_PRELOADS)
 
     # ------------------------------------------------------------------
     # Local fonts
@@ -543,6 +540,61 @@ class TestWebsiteFontPreload(odoo.tests.HttpCase):
             'google-local-fonts': f"('Preloadprivate': {attachment.id})",
         })
         self.assertEqual(self._get_preloads(), [])
+
+    # ------------------------------------------------------------------
+    # Default local fonts (shipped in the code)
+    # ------------------------------------------------------------------
+
+    def _add_default_local_font(self):
+        """Make the `Testlocal` font, whose stylesheet and files are in the
+        static directory of the module, available to the website."""
+        self.env['ir.asset'].create({
+            'name': 'Test default local font',
+            'bundle': 'web._assets_primary_variables',
+            'directive': 'after',
+            'target': 'website/static/src/scss/primary_variables.scss',
+            'path': 'website/static/tests/fonts/default_local_font.scss',
+        })
+        self.env.transaction.invalidate_ormcache('assets')
+
+    def test_default_local_font(self):
+        self._add_default_local_font()
+        # No request is needed to read the stylesheet of a font in the code.
+        with self._mock_google_fonts({}) as mock:
+            self._set_fonts({
+                'font': "'Testlocal'",
+                'headings-font': "'Testlocal'",
+                'headings-font-weight': '700',
+            })
+            mock.assert_called(0)
+        css_url = '/website/static/tests/fonts/Testlocal/Testlocal.css'
+        self.assertEqual(self.website.with_context(website_id=self.website.id)._get_font_urls(), [css_url])
+        # The font files are referenced relatively to the stylesheet.
+        self.assertEqual(self._get_preloads(), [
+            ('/website/static/tests/fonts/Testlocal/Testlocal-latin-normal-400.woff2', 'font/woff2'),
+            ('/website/static/tests/fonts/Testlocal/Testlocal-latin-normal-700.woff2', 'font/woff2'),
+        ])
+        self.assertEqual(self._get_preload_urls('ru_RU'), [
+            '/website/static/tests/fonts/Testlocal/Testlocal-cyrillic-normal-400.woff2',
+            '/website/static/tests/fonts/Testlocal/Testlocal-cyrillic-normal-700.woff2',
+        ])
+        page = self.url_open('/').text
+        self.assertIn(css_url, [link.get('href') for link in self._get_head_links(page) if link.get('rel') == 'stylesheet'])
+        self.assertEqual(self._get_page_preloads(page), [
+            ('/website/static/tests/fonts/Testlocal/Testlocal-latin-normal-400.woff2', 'font/woff2', ''),
+            ('/website/static/tests/fonts/Testlocal/Testlocal-latin-normal-700.woff2', 'font/woff2', ''),
+        ])
+
+    def test_stylesheet_outside_static_directories_is_not_read(self):
+        Website = self.env['website']
+        self.assertTrue(Website._get_font_faces('/website/static/tests/fonts/Testlocal/Testlocal.css'))
+        for css_url in (
+            '/website/static/tests/fonts/../../../models/website.css',
+            '/website/models/website.py',
+            '/website/static/tests/fonts/default_local_font.scss',
+            '/website/static/tests/fonts/Testlocal/missing.css',
+        ):
+            self.assertEqual(Website._get_font_faces(css_url), {}, css_url)
 
     # ------------------------------------------------------------------
     # Rendered pages

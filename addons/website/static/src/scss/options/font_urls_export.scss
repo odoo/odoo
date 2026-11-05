@@ -14,7 +14,7 @@
         $-name: o-get-font-info($alias, 'name');
         @return "/web/content/#{$-attachment}/google-font-#{unquote($-name)}";
     }
-    @return null;
+    @return o-get-font-info($alias, 'local-url');
 }
 
 .o-website-font-urls {

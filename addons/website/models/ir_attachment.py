@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-
-from odoo import api, fields, models
+from odoo import fields, models, api
 from odoo.fields import Domain
 
 
@@ -31,11 +29,3 @@ class IrAttachment(models.Model):
 
     def _get_mimetype_exempt_groups(self):
         return super()._get_mimetype_exempt_groups() + ['website.group_website_restricted_editor']
-
-    def _get_from_url(self, url):
-        ASSET_ID_RE = re.compile(r'/web/content/(\d+)/.*')
-        match = ASSET_ID_RE.search(url)
-        if not match:
-            return None
-        id = match.group(1)
-        return self.browse(int(id))
