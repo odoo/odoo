@@ -19,22 +19,12 @@ export class CustomContentKanbanLikeWidget extends Component {
             headers: {},
             lines: {},
             footers: {},
-            readonly: this.props.readonly,
         });
 
         // Initialize the state and update available documents when updating the quotation template.
         useLayoutEffect((saleOrderTemplate) => {
             this.updateState();
         }, () => [this.props.record.data.sale_order_template_id]);
-
-        // Make quotation tab readonly on confirmation
-        useLayoutEffect((saleOrderState) => {
-            if (saleOrderState === 'sale') {
-                this.state.readonly = true;
-                this.props.record.save(); // trigger refresh to update form
-            }
-        }, () => [this.props.record.data.state]);
-
     }
 
     async updateState() {
@@ -88,7 +78,7 @@ export class CustomContentKanbanLikeWidget extends Component {
     }
 
     async saveProductDocument(lineId, docId, isSelected) {
-        if (this.state.readonly) {
+        if (this.props.readonly) {
             return;
         }
         const sol = this.props.record.data.order_line.records.find(
@@ -107,7 +97,7 @@ export class CustomContentKanbanLikeWidget extends Component {
     };
 
     async saveQuotationDocument(docId, isSelected) {
-        if (this.state.readonly) {
+        if (this.props.readonly) {
             return;
         }
         if (isSelected) {
