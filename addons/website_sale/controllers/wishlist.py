@@ -32,7 +32,7 @@ class ProductWishlist(Controller):
         if not partner_id:
             request.session["wishlist_ids"] = request.session.get("wishlist_ids", []) + [wish.id]
 
-        return wish
+        return wish.id
 
     @route("/shop/wishlist", type="http", auth="public", website=True, replica=True, sitemap=False)
     def shop_wishlist(self, **_kw):
