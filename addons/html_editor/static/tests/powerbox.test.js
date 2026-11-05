@@ -536,7 +536,7 @@ test.todo("should close the powerbox if keyup event is called on other block", a
     // await dispatch(editor.editable, "keyup");
     await expectElementCount(".o-we-powerbox", 1);
     await animationFrame();
-    await expectElementCount(".o-we-powerbox", 0);
+    await expectElementCount(".o-we-powerbox", 0, { timeout: 200 });
 });
 
 test.tags("desktop");

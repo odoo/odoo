@@ -7,12 +7,13 @@ import { waitFor, waitForNone } from "@odoo/hoot-dom";
  *
  * @param {string} selector - CSS selector to query elements.
  * @param {number} count - Expected number of elements.
+ * @param {{ timeout?: number }} [options] - Options passed to the wait helper.
  */
-export async function expectElementCount(selector, count) {
+export async function expectElementCount(selector, count, options) {
     if (count === 0) {
-        await waitForNone(selector);
+        await waitForNone(selector, options);
     } else {
-        await waitFor(selector);
+        await waitFor(selector, options);
     }
     expect(selector).toHaveCount(count);
 }
