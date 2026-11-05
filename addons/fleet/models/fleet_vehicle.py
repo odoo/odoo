@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
 
@@ -264,6 +264,12 @@ class FleetVehicle(models.Model):
                 record.co2_emission_unit = 'g/km'
             else:
                 record.co2_emission_unit = 'g/mi'
+
+    @api.constrains('fuel_type', 'co2')
+    def _check_co2(self):
+        for car in self:
+            if car.co2 <= 0 and car.fuel_type and car.fuel_type not in ('electric', 'hydrogen'):
+                raise ValidationError(self.env._('The CO₂ Emissions must be positive unless the fuel type is electric or hydrogen.'))
 
     def _get_odometer(self):
         FleetVehicalOdometer = self.env['fleet.vehicle.odometer']

@@ -3,6 +3,7 @@
 from datetime import datetime
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
 
@@ -115,6 +116,12 @@ class FleetVehicleModel(models.Model):
                 record.co2_emission_unit = 'g/km'
             else:
                 record.co2_emission_unit = 'g/mi'
+
+    @api.constrains('default_fuel_type', 'default_co2')
+    def _check_default_co2(self):
+        for model in self:
+            if model.default_co2 <= 0 and model.default_fuel_type and model.default_fuel_type not in ('electric', 'hydrogen'):
+                raise ValidationError(self.env._('The CO₂ Emissions must be positive unless the fuel type is electric or hydrogen.'))
 
     @api.model
     def _search_vehicle_count(self, operator, value):
