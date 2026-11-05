@@ -23,16 +23,6 @@
                     btnText="guestBtnText"
                     btnClasses="'o_guests_button btn-secondary '"
                     onClick="this.clickTableGuests"/>
-                <!-- Split Button -->
-                <t t-call="point_of_sale.controlButton"
-                    t-if="this.pos.accessRight.canSplitOrder"
-                    name="o_split_button"
-                    icon="'content_copy'"
-                    btnText.translate="Split"
-                    btnClasses="'btn-secondary '"
-                    onClick="this.openSplitPage"
-                    disabled="this.pos.getOrder()?.getOrderlines()?.filter((line) => line.isGlobalDiscountApplicable()).reduce((sum, line) => sum + line.qty, 0) lt 2">
-                </t>
                 <!-- Transfer / Merge Button -->
                 <!-- No t-call controlButton because of t-on-click.stop -->
                 <button

@@ -147,6 +147,34 @@ export class ControlButtons extends Component {
         const selectedOrderline = this.currentOrder?.getSelectedOrderline();
         return this.pos.isSelectedLineCombo && this.pos.breakCombo(selectedOrderline.parentLine);
     }
+
+    canSplitCurrentOrder() {
+        return (
+            this.currentOrder?.lines.reduce(
+                (total, line) => total + (this.isSplitLineCountable(line) ? line.qty : 0),
+                0
+            ) >= 2
+        );
+    }
+
+    isSplitLineEligible(line) {
+        return (
+            line.product_id.id !== this.pos.config.discount_product_id?.id &&
+            line.product_id.id !== this.pos.config.tip_product_id?.id &&
+            !line.isServiceFeeLine()
+        );
+    }
+
+    isSplitLineCountable(line) {
+        return this.isSplitLineEligible(line) && line.isGlobalDiscountApplicable();
+    }
+
+    openSplitOrderScreen() {
+        this.dialog.closeAll();
+        this.pos.navigate("SplitBillScreen", {
+            orderUuid: this.currentOrder.uuid,
+        });
+    }
 }
 
 export class ControlButtonsPopup extends Component {
