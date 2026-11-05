@@ -264,6 +264,9 @@ patch(PosStore.prototype, {
                 break;
             }
         }
+        if (sourceOrder.pricelist_id?.id !== destOrder.pricelist_id?.id) {
+            destOrder.setPricelist(destOrder.pricelist_id);
+        }
         if (mergedCourses) {
             destOrder.uiState.unmergeCourses = {
                 ...destOrder.uiState.unmergeCourses,
