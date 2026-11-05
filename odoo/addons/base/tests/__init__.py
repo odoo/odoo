@@ -2,6 +2,7 @@
 
 from . import common
 from . import test_avatar_mixin
+from . import test_cached_model
 from . import test_calendar_view
 from . import test_cross_border_vat
 from . import test_ir_actions
