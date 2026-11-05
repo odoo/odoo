@@ -259,6 +259,13 @@ class HrLeaveAllocation(models.Model):
         employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from)[0]
         self._set_leaves_from_consumption_data(employee_days_per_allocation)
 
+    @api.model
+    def _invalidate_compute_leaves_fields(self):
+        """Invalidate the fields computed by ``_compute_leaves``, including the ones added by
+        extensions."""
+        computed_fields = self.pool.field_computed[self._fields['leaves_taken']]
+        self.invalidate_model([field.name for field in computed_fields])
+
     def _set_leaves_from_consumption_data(self, employee_days_per_allocation):
         """Set ``max_leaves``, ``leaves_taken`` and ``virtual_remaining_leaves``.
 
