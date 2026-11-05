@@ -8,7 +8,10 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     def set_values(self):
+        group_project_milestone_previous_state = self.default_get(['group_project_milestone']).get('group_project_milestone', False)
         super().set_values()
+        if self.group_project_milestone == group_project_milestone_previous_state:
+            return
         if self.group_project_milestone:
             # Search the milestones containing a SOL and change the qty_delivered_method field of the SOL and the
             # service_policy field set on the product to convert from manual to milestones.
