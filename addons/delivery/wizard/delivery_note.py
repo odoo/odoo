@@ -21,6 +21,7 @@ class DeliveryNoteWizard(models.TransientModel):
     so_reference = fields.Char(string="Order reference", related="so_id.name")
     company_id = fields.Many2one(related="so_id.company_id")
     partner_id = fields.Many2one(comodel_name="res.partner", related="so_id.partner_id")
+    partner_shipping_id = fields.Many2one(comodel_name="res.partner", related="so_id.partner_shipping_id")
 
     # === COMPUTE METHODS ===#
 
