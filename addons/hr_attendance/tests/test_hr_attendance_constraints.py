@@ -103,9 +103,12 @@ class TestHrAttendance(TransactionCase):
         self.assertEqual(employee.attendance_state, 'checked_out')
 
     def test_time_format_attendance(self):
+        # on a working day of the employee: a weekend day or a day before the first version
+        # (created today) would be counted as overtime by the default time rule
+        self.test_employee.version_id.date_version = '2024-01-01'
         attendance_id = self.attendance.create({
             'employee_id': self.test_employee.id,
-            'check_in': time.strftime('%Y-%m-28 08:00'),
-            'check_out': time.strftime('%Y-%m-28 09:00'),
+            'check_in': '2024-02-05 08:00',  # a Monday
+            'check_out': '2024-02-05 09:00',
         })
         self.assertEqual(attendance_id.display_name, "A - 1h")
