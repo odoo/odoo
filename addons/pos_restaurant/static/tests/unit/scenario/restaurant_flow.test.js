@@ -31,15 +31,29 @@ function getVisibleTableNumbers() {
     return queryAll(".o_fp_table .o_fp_table_number").map((el) => el.textContent.trim());
 }
 
+function addPreparationPrinterToConfig(store, fakePrint = true) {
+    store.config.preparation_printer_ids = store.models["pos.printer"].filter(
+        (printer) => printer.use_type === "preparation"
+    );
+    if (fakePrint) {
+        store.ticketPrinter.print = (_args) => ({
+            successful: true,
+            message: "Printed successfully",
+        });
+    }
+}
+
 test("OrderChangeTour: add product, send order, pay with cash change", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    addPreparationPrinterToConfig(store);
+
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickOrderButton();
     await animationFrame();
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
 
     const order = store.getOrder();
     expect(order.preparationChanges.quantity).toBe(0);
@@ -61,7 +75,7 @@ test("OrderChangeTour: add product, send order, pay with cash change", async () 
 test("SplitBillScreenTour: split items, verify both orders, split again", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
@@ -126,7 +140,7 @@ test("SplitBillScreenTour: split items, verify both orders, split again", async 
 test("RefundStayCurrentTableTour: refund from another table creates floating order", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST 2");
@@ -135,7 +149,7 @@ test("RefundStayCurrentTableTour: refund from another table creates floating ord
     await Utils.clickValidatePayment();
     await Utils.clickNextOrder();
 
-    await Utils.clickTable("4");
+    await Utils.clickTable("4", store);
     await Utils.clickOrders();
     await waitFor(".ticket-screen");
     await contains(".ticket-screen .filter").click();
@@ -165,7 +179,9 @@ test.timeout(10000);
 test("PreparationPrinterContent: guest, notes, preset, note update in preparation data", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    addPreparationPrinterToConfig(store);
+
+    await Utils.clickTable("1", store);
     await Utils.setGuestCount(5);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickControlButton("Customer Note");
@@ -185,7 +201,7 @@ test("PreparationPrinterContent: guest, notes, preset, note update in preparatio
     await Utils.clickOrderButton();
     await animationFrame();
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickOrderline("TEST");
     await Utils.clickControlButton("Customer Note");
     await waitFor(".modal textarea");
@@ -198,7 +214,7 @@ test("PreparationPrinterContent: guest, notes, preset, note update in preparatio
     expect(noteChanges.noteUpdate || noteChanges.addedQuantity).not.toBe(undefined);
 
     await Utils.clickPlanButton();
-    await Utils.clickTable("4");
+    await Utils.clickTable("4", store);
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickOrderline("TEST 2");
     await Utils.clickControlButton("Note");
@@ -213,7 +229,7 @@ test("PreparationPrinterContent: guest, notes, preset, note update in preparatio
     expect(changes2.quantity).toBe(1);
 
     await Utils.clickPlanButton();
-    await Utils.clickTableById(3);
+    await Utils.clickTableById(3, store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickControlButton("In");
 
@@ -260,7 +276,7 @@ test("test_preset_timing_restaurant: select takeaway preset, name popup, pick ti
     );
 
     await Utils.clickPlanButton();
-    await Utils.clickTable("4");
+    await Utils.clickTable("4", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickOrders();
     await waitFor(".ticket-screen");
@@ -275,7 +291,7 @@ test("test_preset_timing_restaurant: select takeaway preset, name popup, pick ti
     }
 
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickControlButton("In");
     await animationFrame();
@@ -338,7 +354,7 @@ test("test_show_default_with_register_screen: showDefault syncs selectedOrderUui
 test("Full flow: select table, add product, pay with cash", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
 
     const order = store.getOrder();
@@ -357,7 +373,7 @@ test("Full flow: select table, add product, pay with cash", async () => {
 });
 
 test("test_transfering_orders: create floating and table orders, verify 4 orders exist", async () => {
-    await setupAndMountPosApp({ set_tip_after_payment: false });
+    const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
     await contains(".floor-screen .new-order").click();
     await animationFrame();
@@ -385,13 +401,13 @@ test("test_transfering_orders: create floating and table orders, verify 4 orders
     await animationFrame();
     await Utils.clickPlanButton();
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickPlanButton();
 
-    await Utils.clickTable("4");
+    await Utils.clickTable("4", store);
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickDisplayedProduct("TEST 2");
@@ -409,7 +425,7 @@ test("test_guest_count_bank_payment: guest popup on open, add product, pay, go b
     const defaultPreset = store.models["pos.preset"].get(1);
     defaultPreset.use_guest = true;
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await waitFor(".modal .numpad");
     await contains('.modal .numpad button:contains("5")').click();
     await animationFrame();
@@ -432,7 +448,7 @@ test("test_guest_count_bank_payment: guest popup on open, add product, pay, go b
 test("test_customer_alone_saved: partner is preserved after leaving and reopening table", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickOrders();
     await Utils.clickRegister();
@@ -448,7 +464,7 @@ test.timeout(10000);
 test("ControlButtonsTour: transfer, notes, guest count, cancel, cross-floor transfer", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
@@ -456,14 +472,14 @@ test("ControlButtonsTour: transfer, notes, guest count, cancel, cross-floor tran
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickPlanButton();
 
-    await Utils.clickTable("4");
+    await Utils.clickTable("4", store);
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickTransferButton();
     await waitFor(".floor-screen");
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
 
     let order = store.getOrder();
     const testQty = order.lines
@@ -489,7 +505,7 @@ test("ControlButtonsTour: transfer, notes, guest count, cancel, cross-floor tran
     await animationFrame();
 
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     order = store.getOrder();
     const notedLine = order.lines.find((l) => l.product_id.display_name === "TEST" && l.note);
     expect(notedLine).not.toBe(undefined);
@@ -510,7 +526,7 @@ test("ControlButtonsTour: transfer, notes, guest count, cancel, cross-floor tran
     await Utils.confirmDialog();
     expect(store.router.currentScreen()).toBe("FloorScreen");
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
@@ -519,7 +535,7 @@ test("ControlButtonsTour: transfer, notes, guest count, cancel, cross-floor tran
     await Utils.clickTransferButton();
     await waitFor(".floor-screen");
     await Utils.clickFloor("Patio");
-    await Utils.clickTableById(14);
+    await Utils.clickTableById(14, store);
 
     order = store.getOrder();
     expect(order.table_id.floor_id.name).toBe("Patio");
@@ -532,7 +548,7 @@ test("ControlButtonsTour: transfer, notes, guest count, cancel, cross-floor tran
 test("SplitBillScreenTour3: split partial qty, pay split, pay remainder", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickControlButton("Split");
@@ -588,7 +604,7 @@ test("SplitBillScreenTourPay: split selected items, pay split, pay remainder", a
 test("SplitBillScreenTour5Actions: split+transfer, split+pay, pay remainder", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST 2");
@@ -598,7 +614,7 @@ test("SplitBillScreenTour5Actions: split+transfer, split+pay, pay remainder", as
     await Utils.clickSplitOrderline("TEST 2");
     await Utils.clickSplitAction("Transfer");
     await waitFor(".floor-screen");
-    await Utils.clickTable("4");
+    await Utils.clickTable("4", store);
 
     let order = store.getOrder();
     expect(order.lines.length).toBe(2);
@@ -610,7 +626,7 @@ test("SplitBillScreenTour5Actions: split+transfer, split+pay, pay remainder", as
     await Utils.clickValidatePayment();
     await Utils.clickNextOrder();
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     order = store.getOrder();
     expect(order.lines.find((l) => l.product_id.display_name === "TEST").qty).toBe(1);
 
@@ -637,6 +653,7 @@ test("SplitBillScreenTour5Actions: split+transfer, split+pay, pay remainder", as
 
 test("test_pos_restaurant_default_course: course allocation by category across orders", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
+    addPreparationPrinterToConfig(store);
     store.config.use_course_allocation = true;
     store.config.iface_available_categ_ids = [1, 2];
     const cat1 = store.models["pos.category"].get(1);
@@ -644,7 +661,7 @@ test("test_pos_restaurant_default_course: course allocation by category across o
     cat1.course_id = store.models["pos.course"].get(1);
     cat2.course_id = store.models["pos.course"].get(2);
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST 2");
 
@@ -665,7 +682,7 @@ test("test_pos_restaurant_default_course: course allocation by category across o
     await Utils.clickOrderButton();
     await animationFrame();
     await Utils.clickPlanButton();
-    await Utils.clickTable("4");
+    await Utils.clickTable("4", store);
     await Utils.clickDisplayedProduct("TEST");
 
     const order2 = store.getOrder();
@@ -678,8 +695,9 @@ test("test_pos_restaurant_default_course: course allocation by category across o
 
 test("test_course_restaurant_preparation_tour: 3 courses, fire sequentially, verify prep data", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
+    addPreparationPrinterToConfig(store);
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickCourseButton();
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickCourseButton();
@@ -699,7 +717,7 @@ test("test_course_restaurant_preparation_tour: 3 courses, fire sequentially, ver
 
     await Utils.clickOrderButton();
     await animationFrame();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     order = store.getOrder();
     expect(order.preparationChanges.quantity).toBe(0);
 
@@ -708,14 +726,14 @@ test("test_course_restaurant_preparation_tour: 3 courses, fire sequentially, ver
     expect(fireBtn.classList.contains("btn-primary")).toBe(true);
 
     await Utils.clickFireCourseButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
 
     const fireBtn2 = document.querySelector(".actionpad .fire-btn");
     expect(fireBtn2.textContent).toInclude("3");
     expect(fireBtn2.classList.contains("btn-primary")).toBe(true);
 
     await Utils.clickFireCourseButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
 
     const badges = document.querySelectorAll(".order-course-name .text-bg-info");
     const firedBadges = [...badges].filter((b) => b.textContent.includes("Fired"));
@@ -726,8 +744,8 @@ test("test_course_restaurant_preparation_tour: 3 courses, fire sequentially, ver
 
 test("CategLabelCheck: order button shows category counts", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
-
-    await Utils.clickTable("1");
+    addPreparationPrinterToConfig(store);
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST 2");
 
@@ -738,8 +756,9 @@ test("CategLabelCheck: order button shows category counts", async () => {
 
 test("test_combo_preparation_receipt: combo parent above children, category counts, order count", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
+    addPreparationPrinterToConfig(store);
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("Product combo");
     await waitFor(".modal label.combo-item");
     await contains(
@@ -773,7 +792,7 @@ test("test_combo_preparation_receipt: combo parent above children, category coun
     expect(totalCount).toBe(4);
 
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
 
     const changes = order.preparationChanges;
     const addedLines = changes.addedQuantity;
@@ -815,9 +834,7 @@ test("MultiPreparationPrinter: only printer with matching category prints, no em
         use_type: "preparation",
         product_categories_ids: [store.models["pos.category"].get(1)],
     });
-    store.config.preparation_printer_ids = store.models["pos.printer"].filter(
-        (p) => p.use_type === "preparation"
-    );
+    addPreparationPrinterToConfig(store, false);
 
     await store.ticketPrinter.initPrinters();
     store.ticketPrinter.generateIframe = async () => ({
@@ -828,7 +845,7 @@ test("MultiPreparationPrinter: only printer with matching category prints, no em
     store.ticketPrinter.setIframeSizeFromPrinter = () => {};
     store.ticketPrinter.generateImage = async () => "mock-image";
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickOrderButton();
     await animationFrame();
@@ -850,7 +867,7 @@ test("test_name_preset_skip_screen: partner set skips name popup, pay succeeds",
     store.config.default_preset_id = takeawayPreset;
     store.config.available_preset_ids = [takeawayPreset];
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.selectCustomer("Administrator");
     await Utils.clickPayButton();
@@ -881,7 +898,7 @@ test("test_preset_delivery_restaurant: cancel order with preset returns to floor
     partner.zip = "1000";
     partner.country_id = store.models["res.country"].get(1);
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.selectCustomer("Administrator");
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickControlButton("Cancel Order");
@@ -911,7 +928,7 @@ test("test_open_register_with_preset_takeaway: timing popup on table, cancel rem
     preset.attendance_ids = [...preset.attendance_ids, att];
     store.config.default_preset_id = preset;
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await waitFor(".modal .preset-slot-button");
 
     expect(document.querySelector(".modal .btn-primary").textContent).toInclude("Today");
@@ -947,7 +964,7 @@ test("test_open_register_with_preset_takeaway: timing popup on table, cancel rem
 test("RestaurantPresetEatInTour: eat-in table order, pay, receipt has no preset info", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("4");
+    await Utils.clickTable("4", store);
     await Utils.clickDisplayedProduct("TEST");
 
     expect(store.getOrder().preset_id.name).toBe("In");
@@ -969,11 +986,11 @@ test("RestaurantPresetEatInTour: eat-in table order, pay, receipt has no preset 
 test("test_combo_apply_after_preparation: apply combo groups standalone lines, persists after reload", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("Wood chair");
     await Utils.clickDisplayedProduct("Wood desk");
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.ensurePane("left");
     await contains('.combo-proposition button:contains("Apply")').click();
     await animationFrame();
@@ -990,7 +1007,7 @@ test("test_combo_apply_after_preparation: apply combo groups standalone lines, p
     expect(standaloneChair).toBe(undefined);
 
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
 
     const orderAfter = store.getOrder();
     const comboParentAfter = orderAfter.lines.find(
@@ -1020,9 +1037,7 @@ test("test_multiple_preparation_printer_different_categories: both printers trig
         use_type: "preparation",
         product_categories_ids: [store.models["pos.category"].get(1)],
     });
-    store.config.preparation_printer_ids = store.models["pos.printer"].filter(
-        (p) => p.use_type === "preparation"
-    );
+    addPreparationPrinterToConfig(store, false);
 
     await store.ticketPrinter.initPrinters();
     store.ticketPrinter.generateIframe = async () => ({
@@ -1033,7 +1048,7 @@ test("test_multiple_preparation_printer_different_categories: both printers trig
     store.ticketPrinter.setIframeSizeFromPrinter = () => {};
     store.ticketPrinter.generateImage = async () => "mock-image";
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickDisplayedProduct("TEST 2");
     await Utils.clickOrderButton();
@@ -1045,7 +1060,7 @@ test("test_multiple_preparation_printer_different_categories: both printers trig
     expect(errorBody.includes("Printer 2: The printer is not reachable")).toBe(true);
 
     await Utils.confirmDialog();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickPayButton();
     await waitFor(".payment-screen");
     await Utils.clickPaymentMethod("Card");
@@ -1057,7 +1072,7 @@ test("test_multiple_preparation_printer_different_categories: both printers trig
 test("test_combo_synchronisation: combo links persist after partner change, course transfer moves entire combo", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("Product combo");
     await waitFor(".modal label.combo-item");
     await contains(
@@ -1072,10 +1087,10 @@ test("test_combo_synchronisation: combo links persist after partner change, cour
     await animationFrame();
 
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.selectCustomer("Administrator");
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
 
     expect(document.querySelector(".orderline-combo")).not.toBe(null);
 
@@ -1100,8 +1115,9 @@ test("test_combo_synchronisation: combo links persist after partner change, cour
 
 test("test_combo_preparation_receipt_layout: combo parent above children in receipt", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
+    addPreparationPrinterToConfig(store);
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("Product combo");
     await waitFor(".modal label.combo-item");
     await contains(
@@ -1134,7 +1150,7 @@ test("test_combo_preparation_receipt_layout: combo parent above children in rece
 test("SplitBillScreenTour4ProductCombo: split combos as group, pay, verify remainder", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("Product combo");
     await waitFor(".modal label.combo-item");
     await contains(
@@ -1291,7 +1307,7 @@ test("test_add_new_table_number_with_multi_floor: table numbers increment per fl
 test("PosResTicketScreenTour: delete order and table becomes empty", async () => {
     const store = await setupAndMountPosApp({ set_tip_after_payment: false });
 
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
     await Utils.clickDisplayedProduct("TEST");
     await Utils.clickPlanButton();
     await Utils.clickOrders();
@@ -1305,7 +1321,7 @@ test("PosResTicketScreenTour: delete order and table becomes empty", async () =>
     await animationFrame();
     await Utils.confirmDialog();
     await Utils.clickPlanButton();
-    await Utils.clickTable("1");
+    await Utils.clickTable("1", store);
 
     expect(store.getOrder().lines.length).toBe(0);
 });
@@ -1338,7 +1354,7 @@ test("test_tip_after_payment: tip adjusts payment line based on remaining/change
     });
     store.config.payment_method_ids = [...store.config.payment_method_ids, bankPm];
 
-    await Utils.clickTable("2");
+    await Utils.clickTable("2", store);
     await Utils.clickDisplayedProduct("TEST");
 
     const order = store.getOrder();
