@@ -2,7 +2,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { UploadProgressToast } from "./upload_progress_toast";
 import { _t } from "@web/core/l10n/translation";
-import { checkFileSize } from "@web/core/utils/files";
+import { checkFileSize, getMaxUploadFileSize } from "@web/core/utils/files";
 import { humanNumber } from "@web/core/utils/numbers";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { sprintf } from "@web/core/utils/strings";
@@ -120,13 +120,15 @@ export const uploadService = {
                     currentXHR?.abort?.();
                 });
 
+                // Files are sent in base64, which is 4/3 of their size.
+                const maxUploadSize = getMaxUploadFileSize() * 0.75;
                 for (const file of sortedFiles) {
                     if (signal.aborted) {
                         return;
                     }
 
                     let fileSize = file.size;
-                    if (!checkFileSize(fileSize, notification)) {
+                    if (!checkFileSize(fileSize, notification, maxUploadSize)) {
                         return null;
                     }
                     if (!fileSize) {
