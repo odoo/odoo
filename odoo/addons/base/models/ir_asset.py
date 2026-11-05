@@ -351,7 +351,7 @@ class IrAsset(models.Model):
             full_path = os.path.normpath(os.path.join(addons_path, *path_parts))
             # forbid escape from the current addon
             # "/mymodule/../myothermodule" is forbidden
-            static_prefix = os.path.join(addon_manifest.path, 'static', '')
+            static_prefix = os.path.normpath(os.path.join(addon_manifest.path, 'static', ''))
             if full_path.startswith(static_prefix):
                 paths_with_timestamps = _glob_static_file(full_path)
                 paths = [
