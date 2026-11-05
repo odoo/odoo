@@ -216,16 +216,18 @@ class RepairOrder(models.Model):
         for ro in self:
             ro.picking_type_visible = repair_type_by_company.get(ro.company_id, 0) > 1
 
-    @api.depends('product_id', 'picking_id', 'lot_id')
+    @api.depends('product_id', 'picking_id', 'lot_id', 'uom_id')
     def _compute_product_qty(self):
         for repair in self:
             if repair.picking_id:
+                target_uom = repair.uom_id or repair.product_id.uom_id
                 if repair.tracking in ['serial', 'lot'] and repair.lot_id:
                     lot_move_lines = repair.picking_id.move_line_ids.filtered(lambda m: m.product_id == repair.product_id and m.lot_id == repair.lot_id)
-                    repair.product_qty = sum(lot_move_lines.mapped('quantity'))
+                    repair.product_qty = sum(ml.uom_id._compute_quantity(ml.quantity, target_uom) for ml in lot_move_lines)
                 else:
                     product_moves = repair.picking_id.move_ids.filtered(lambda m: m.product_id == repair.product_id)
-                    repair.product_qty = sum(product_moves.mapped('quantity'))
+                    repair.product_qty = sum(ml.uom_id._compute_quantity(ml.quantity, target_uom) for ml in product_moves)
+
             else:
                 repair.product_qty = 1.0
 
