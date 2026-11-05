@@ -243,7 +243,7 @@ class PosPaymentMethod(models.Model):
                 "payment_method_id": self.id,
             }
 
-            signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom", payload_hash, expiration_hours=6)
+            signed_hash_payload = hash_sign(self.sudo().env, "pos_safaricom_c2b", payload_hash)
 
             payload = {
                 'ShortCode': self._get_till_number(),

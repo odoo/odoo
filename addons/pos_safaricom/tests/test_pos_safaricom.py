@@ -1,12 +1,19 @@
+import base64
+import json
+from datetime import timedelta
 from unittest.mock import MagicMock, patch
+from urllib.parse import parse_qs, urlsplit
 
+from freezegun import freeze_time
+
+from odoo import fields
 from odoo.exceptions import UserError
-from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests import HttpCase, tagged
+from odoo.tools import mute_logger
 
 
 @tagged('post_install', '-at_install')
-class TestPosSafaricom(TransactionCase):
+class TestPosSafaricom(HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -43,6 +50,27 @@ class TestPosSafaricom(TransactionCase):
                 'business_short_code': '174379-174379',
                 'company_id': cls.company.id,
             })
+
+        cls.stk_callback_data = {
+            'Body': {
+                'stkCallback': {
+                    'MerchantRequestID': '12345-67890-1',
+                    'CheckoutRequestID': 'ws_CO_123456789',
+                    'ResultCode': 0,
+                    'ResultDesc': 'The service request is processed successfully.',
+                },
+            },
+        }
+        cls.c2b_confirmation_data = {
+            'TransactionType': 'Pay Bill',
+            'TransID': 'UJR030FNLB',
+            'TransTime': '20261027174227',
+            'TransAmount': '4.00',
+            'BusinessShortCode': '174379',
+            'BillRefNumber': 'POS Payment',
+            'MSISDN': 'bbff37cea44ac0b2d964ee0dfb8d2df8513dc7ba1b36129a929fc3fbd6dd4af4',
+            'FirstName': 'John',
+        }
 
     @patch('requests.get')
     def test_bearer_token_success(self, mock_get):
@@ -138,3 +166,67 @@ class TestPosSafaricom(TransactionCase):
         payload = call_args.kwargs['json']
         self.assertEqual(payload['Amount'], 150)
         self.assertEqual(payload['RefNo'], 'ORDER-001')
+
+    def _register_c2b_urls(self):
+        """Register the Lipa na M-PESA URLs against a mocked Daraja, return the registration request"""
+        with patch('requests.post') as mock_post, \
+             patch('odoo.addons.pos_safaricom.models.pos_payment_method.PosPaymentMethod._get_bearer_token', return_value='test_access_token'):
+            mock_post.return_value.json.return_value = {'ResponseCode': '00000000'}
+            self.lipa_na_mpesa.lipa_na_mpesa_register_urls()
+        return mock_post.call_args.kwargs['json']
+
+    def _send_stk_push(self):
+        """Send an STK push against a mocked Daraja, return the push request"""
+        with patch('requests.post') as mock_post, \
+             patch('odoo.addons.pos_safaricom.models.pos_payment_method.PosPaymentMethod._get_bearer_token', return_value='test_access_token'):
+            mock_post.return_value.json.return_value = {
+                'ResponseCode': '0',
+                'CheckoutRequestID': 'ws_CO_123456789',
+                'MerchantRequestID': '12345-67890-1',
+            }
+            self.mpesa_express.mpesa_express_send_payment_request({
+                'amount': 100,
+                'phone_number': '254712345678',
+                'account_reference': 'Order123',
+                'transaction_desc': 'Payment for Order123',
+            })
+        return mock_post.call_args.kwargs['json']
+
+    def test_c2b_confirmation_long_after_registration(self):
+        """Safaricom keeps calling the registered C2B URLs until they are deleted from the business portal"""
+        with freeze_time(fields.Datetime.now() - timedelta(days=365)):
+            confirmation_url = urlsplit(self._register_c2b_urls()['ConfirmationURL'])
+
+        response = self.url_open(f'{confirmation_url.path}?{confirmation_url.query}', json=self.c2b_confirmation_data)
+
+        self.assertTrue(self.env['transaction.lipa.na.mpesa'].search([('trans_id', '=', self.c2b_confirmation_data['TransID'])]))
+        self.assertEqual(response.json()['ResultCode'], '0')
+
+    def test_callback_tokens_are_scoped(self):
+        """The token of the C2B URLs is rejected on the STK push callback, and the other way around"""
+        c2b_query = urlsplit(self._register_c2b_urls()['ConfirmationURL']).query
+        stk_query = urlsplit(self._send_stk_push()['CallBackURL']).query
+
+        with mute_logger('odoo.addons.pos_safaricom.controllers.main'):
+            stk_response = self.url_open(f'/pos_safaricom/callback?{c2b_query}', json=self.stk_callback_data)
+            c2b_response = self.url_open(f'/c2b/confirmation/callback?{stk_query}', json=self.c2b_confirmation_data)
+
+        self.assertNotEqual(stk_response.json()['ResultCode'], '0')
+        self.assertFalse(self.env['transaction.lipa.na.mpesa'].search([('trans_id', '=', self.c2b_confirmation_data['TransID'])]))
+        self.assertNotEqual(c2b_response.json()['ResultCode'], '0')
+
+    def test_c2b_callbacks_reject_invalid_token(self):
+        """A C2B callback whose token was edited after signing is logged and rejected, not answered with an empty 200"""
+        payload = parse_qs(urlsplit(self._register_c2b_urls()['ConfirmationURL']).query)['payload'][0]
+        token = base64.urlsafe_b64decode(payload + '===')
+        # keep version, expiration and signature (41 bytes), retarget the signed message
+        tampered = token[:41] + json.dumps({'payment_method_id': self.mpesa_express.id}).encode()
+        tampered_payload = base64.urlsafe_b64encode(tampered).decode().rstrip('=')
+
+        for route in ('/c2b/validation/callback', '/c2b/confirmation/callback'):
+            with self.subTest(route=route):
+                with self.assertLogs('odoo.addons.pos_safaricom.controllers.main', 'WARNING'):
+                    response = self.url_open(f'{route}?payload={tampered_payload}', json=self.c2b_confirmation_data)
+                self.assertNotEqual(response.json()['ResultCode'], '0')
+
+        self.assertFalse(self.env['transaction.lipa.na.mpesa'].search([('trans_id', '=', self.c2b_confirmation_data['TransID'])]))
