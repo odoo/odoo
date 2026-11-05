@@ -1197,6 +1197,13 @@ class Website(models.Model):
 
     def has_ecommerce_access(self):
         """Return whether the current user is allowed to access eCommerce-related content."""
+        website = self or self.env.website
+        if (
+            'website_sale' in self.env['ir.http']._get_disabled_modules(website.id)
+            and not self.env.user.has_group('website.group_website_designer')
+        ):
+            # eCommerce is turned off for this website; designers bypass.
+            return False
         return not (self.env.user._is_public() and self.ecommerce_access == "logged_in")
 
     def _get_snippet_defaults(self, snippet):

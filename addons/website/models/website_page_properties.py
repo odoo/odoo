@@ -17,6 +17,14 @@ class WebsitePagePropertiesBase(models.TransientModel):
     is_published = fields.Boolean(compute='_compute_is_published', inverse='_inverse_is_published')
     published_date = fields.Datetime(compute='_compute_published_date', inverse='_inverse_published_date', readonly=False)
     publish_on = fields.Datetime(compute='_compute_publish_on', inverse='_inverse_publish_on', readonly=False)
+    module_id = fields.Many2one('ir.module.module', compute='_compute_module_id')
+    module_display_name = fields.Char(related='module_id.display_name')
+    is_module_enabled = fields.Boolean(
+        string="Feature enabled",
+        compute='_compute_is_module_enabled', inverse='_inverse_is_module_enabled',
+        help="Turn off to disable this feature on the current website. The module "
+             "stays installed and its data is preserved, available again if re-enabled.",
+    )
 
     def action_unschedule(self):
         for record in self:
@@ -74,6 +82,23 @@ class WebsitePagePropertiesBase(models.TransientModel):
                 target.publish_on = record.publish_on
                 if record.publish_on:
                     target.is_published = False
+
+    @api.depends('url')
+    def _compute_module_id(self):
+        for record in self:
+            record.module_id = self.env['ir.http']._get_module_for_url(record.url)
+
+    @api.depends('module_id', 'website_id.disabled_module_ids')
+    def _compute_is_module_enabled(self):
+        for record in self:
+            record.is_module_enabled = bool(record.module_id) and record.module_id not in record.website_id.disabled_module_ids
+
+    def _inverse_is_module_enabled(self):
+        for record in self:
+            if not record.module_id:
+                continue
+            command = fields.Command.unlink if record.is_module_enabled else fields.Command.link
+            record.website_id.disabled_module_ids = [command(record.module_id.id)]
 
     @api.depends('url', 'website_id')
     def _compute_menu_ids(self):

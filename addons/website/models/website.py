@@ -118,6 +118,12 @@ class Website(models.CachedModel):
     def website_domain(self):
         return Domain('website_id', 'in', [False, *self.ids])
 
+    def _get_disableable_modules_domain(self):
+        """Modules eligible to be disabled per-website: installed modules that
+        depend on `website` (i.e. website feature modules).
+        """
+        return [('state', '=', 'installed'), ('dependencies_id.name', '=like', 'website%')]
+
     def _active_languages(self):
         return self.env['res.lang'].search([]).ids
 
@@ -205,6 +211,17 @@ class Website(models.CachedModel):
 
     favicon = fields.Binary(string="Website Favicon", help="This field holds the image used to display a favicon on the website.", default=_default_favicon)
     theme_id = fields.Many2one('ir.module.module', help='Installed theme')
+    disabled_module_ids = fields.Many2many(
+        comodel_name='ir.module.module',
+        relation='website_disabled_module_rel',
+        column1='website_id',
+        column2='module_id',
+        string="Disabled Frontend Modules",
+        domain=_get_disableable_modules_domain,
+        groups='website.group_website_designer',
+        help="Installed modules whose public frontend (routes, menus, sitemap) is turned off "
+             "for this website. Module data is preserved and restored when re-enabled.",
+    )
 
     specific_user_account = fields.Boolean('Specific User Account', help='If True, new accounts will be associated to the current website')
     auth_signup_uninvited = fields.Selection([
@@ -371,6 +388,9 @@ class Website(models.CachedModel):
             # invalidate the caches from static node at compile time
             if any(self._ids):
                 self.env.transaction.invalidate_ormcache()
+
+        if 'disabled_module_ids' in values:
+            self.env.transaction.invalidate_ormcache('routing')
 
         # invalidate cache for `company.website_id` to be recomputed
         if 'sequence' in values or 'company_id' in values:
@@ -1825,7 +1845,18 @@ class Website(models.CachedModel):
                 return f.__func__
             return f
 
+        IrHttp = self.env['ir.http']
+        disabled_modules = IrHttp._get_disabled_modules(self.id)
+
         for rule in router.iter_rules():
+            if (
+                disabled_modules
+                and rule.endpoint.routing.get('website')
+                and IrHttp._get_route_module(rule) in disabled_modules
+            ):
+                # feature disabled on this website: keep it out of the sitemap
+                continue
+
             sitemap_func = rule.endpoint.routing.get('sitemap')
             if sitemap_func is False:
                 continue
