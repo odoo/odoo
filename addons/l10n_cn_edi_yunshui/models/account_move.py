@@ -341,6 +341,7 @@ class AccountMove(models.Model):
             'l10n_cn_edi_state': 'issued',
             'l10n_cn_edi_red_form_reason': doc.red_form_reason,
         })
+        doc.xml_id.res_id = self.id
 
     def _l10n_cn_edi_red_amount_mismatch(self):
         """Whether this credit note credits another amount than the red fapiao it carries or awaits."""

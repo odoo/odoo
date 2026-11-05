@@ -232,15 +232,21 @@ class L10nCnEdiDocument(models.Model):
 
     @api.model
     def _cron_check_red_form_status(self):
-        """Pull the red forms raised against our fapiao, and poll those still pending."""
+        """Pull the red forms raised against our fapiao, and poll those still pending, or whose red fapiao of ours lacks its files."""
         self._l10n_cn_edi_pull_inbound_red_forms()
-        pending_docs = self.search([
+        polled_docs = self.search([
             ('kind', '=', 'red_form'),
-            ('state', '=', 'red_form_pending'),
             ('red_form_uuid', '!=', False),
+            '|',
+            ('state', '=', 'red_form_pending'),
+            '&', '&', '&',
+            ('state', '=', 'red_form_confirmed'),
+            ('move_id.move_type', 'in', ('out_invoice', 'out_refund')),
+            ('create_date', '>=', fields.Datetime.now() - FILES_GRACE),
+            '|', ('pdf_url', '=', False), ('xml_id', '=', False),
         ])
-        self.env['ir.cron']._commit_progress(remaining=len(pending_docs))
-        for company, docs in pending_docs.grouped(lambda doc: doc.move_id.company_id).items():
+        self.env['ir.cron']._commit_progress(remaining=len(polled_docs))
+        for company, docs in polled_docs.grouped(lambda doc: doc.move_id.company_id).items():
             try:
                 if not company._l10n_cn_edi_is_ready():
                     continue
@@ -281,6 +287,7 @@ class L10nCnEdiDocument(models.Model):
             'fapiao_date': result.get('red_fapiao_date') or self.fapiao_date,
             'error_message': result.get('error') if state == 'cancelled' else False,
         })
+        attachments = self._l10n_cn_edi_record_fapiao_files(result) if state == 'red_form_confirmed' else self.env['ir.attachment']
         if state == was_state:
             return
         if state == 'red_form_confirmed' and move.move_type == 'out_refund':
@@ -291,7 +298,7 @@ class L10nCnEdiDocument(models.Model):
             })
             move.message_post(
                 body=self.env._("Red fapiao %(fapiao)s issued: the Credit Note can be posted.", fapiao=red_fapiao_no),
-                attachment_ids=self._l10n_cn_edi_record_fapiao_files(result).ids,
+                attachment_ids=attachments.ids,
             )
         elif state == 'red_form_confirmed':
             move.activity_schedule(
