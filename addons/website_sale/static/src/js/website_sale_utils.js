@@ -4,6 +4,7 @@ import { rpc } from "@web/core/network/rpc";
 import { createElementWithContent, setElementContent } from '@web/core/utils/html';
 import { redirect } from '@web/core/utils/urls';
 import { markup } from '@odoo/owl';
+import { getSelectedCustomPtav, serializeComboItem } from '@sale/js/sale_utils';
 
 /**
  * Updates both navbar cart
@@ -280,6 +281,79 @@ function dispatchTrackingEvent(eventName, detail) {
     document.querySelector(".oe_website_sale")?.dispatchEvent(
         new CustomEvent(eventName, { detail })
     );
+}
+
+/**
+ * Serialize a product into a format understandable by the server.
+ *
+ * @param {Object} product - The product to serialize.
+ *
+ * @returns {Object|Object[]} - The serialized product, or an array containing the serialized
+ *     product followed by its serialized combo items if the product is an optional combo.
+ */
+export function serializeCartProduct(product) {
+    let serializedProduct = {
+        product_id: product.id,
+        product_template_id: product.product_tmpl_id,
+        parent_product_template_id: product.parent_product_tmpl_id,
+        quantity: product.quantity,
+        uom_id: product.uom.id,
+    }
+
+    if (!product.attribute_lines) {
+        return serializedProduct;
+    }
+
+    // Custom attributes.
+    serializedProduct.product_custom_attribute_values = [];
+    for (const ptal of product.attribute_lines) {
+        const selectedCustomPtav = getSelectedCustomPtav(ptal);
+        if (selectedCustomPtav) {
+            serializedProduct.product_custom_attribute_values.push({
+                custom_product_template_attribute_value_id: selectedCustomPtav.id,
+                custom_value: ptal.customValue ?? '',
+            });
+        }
+    }
+
+    // No variant attributes.
+    serializedProduct.no_variant_attribute_value_ids = product.attribute_lines
+        .filter(ptal => ptal.create_variant === 'no_variant')
+        .flatMap(ptal => ptal.selected_attribute_value_ids);
+
+    // If this optional product is a combo, also serialize its selected combo items so
+    // the server can create the corresponding cart lines linked to this product's line.
+    if (product.selectedComboItems?.length) {
+        return [
+            serializedProduct,
+            ...product.selectedComboItems.map(
+                comboItem => serializeCartComboItem(
+                    comboItem, product.product_tmpl_id, product.quantity
+                )
+            ),
+        ];
+    }
+
+    return serializedProduct;
+}
+
+/**
+ * Serialize a combo item into a format understandable by the server.
+ *
+ * @param {ProductComboItem} comboItem - The combo item to serialize.
+ * @param {Number} parentProductTemplateId - The parent's product template id, as a
+ *      `product.template` id.
+ * @param {Number} quantity - The quantity to add to the cart.
+ *
+ * @returns {Object} - The serialized combo item.
+ */
+export function serializeCartComboItem(comboItem, parentProductTemplateId, quantity) {
+    return {
+        product_template_id: comboItem.product.product_tmpl_id,
+        parent_product_template_id: parentProductTemplateId,
+        quantity: quantity,
+        ...serializeComboItem(comboItem),
+    };
 }
 
 export default {
