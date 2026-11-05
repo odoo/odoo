@@ -506,6 +506,29 @@ describe("restaurant pos_store.js", () => {
         expect(store.getOrderChanges(destOrder).nbrOfChanges).toBe(0);
     });
 
+    test("mergeOrders reprices moved lines with the destination pricelist", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const product = models["product.template"].get(5);
+        const destOrder = store.addNewOrder({ table_id: models["restaurant.table"].get(2) });
+        destOrder.setPricelist(models["product.pricelist"].get(1)); // fixed price 3
+        const sourceOrder = store.addNewOrder({ table_id: models["restaurant.table"].get(3) });
+        sourceOrder.setPricelist(models["product.pricelist"].get(3)); // 90% discount
+        await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, sourceOrder);
+        const manualLine = await store.addLineToOrder(
+            { product_tmpl_id: models["product.template"].get(6), qty: 1 },
+            sourceOrder
+        );
+        manualLine.price_type = "manual";
+        manualLine.setUnitPrice(42);
+        expect(sourceOrder.lines[0].price_unit).toBe(10);
+
+        await store.mergeOrders(sourceOrder, destOrder);
+        const [line, mergedManualLine] = destOrder.lines;
+        expect(line.price_unit).toBe(3);
+        expect(mergedManualLine.price_unit).toBe(42);
+    });
+
     test("getCustomerCount", async () => {
         const store = await setupPosEnv();
         const table = store.models["restaurant.table"].get(2);
