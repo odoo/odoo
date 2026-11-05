@@ -3607,8 +3607,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             self.assertEqual(form.request_hour_to, 18, "08:00 + 10h ends at 18:00, on the same day")
         leave = form.record
 
-        overtime = self.env['hr.leave'].search([('source_leave_id', '=', leave.id)])
-        self.assertEqual((leave.date_from, leave.date_to, leave.number_of_hours),
+        children = self.env['hr.leave'].search([('source_leave_id', '=', leave.id)])
+        remainder = children.filtered(lambda l: l.work_entry_type_id == work)
+        overtime = children - remainder
+        self.assertFalse(leave.active, "source is archived")
+        self.assertEqual((remainder.date_from, remainder.date_to, remainder.number_of_hours),
                          (self._utc(self._wall(self.monday, 8)), self._utc(self._wall(self.monday, 16)), 8),
                          "the 8 scheduled hours stay Work")
         self.assertEqual((overtime.work_entry_type_id, overtime.date_from, overtime.date_to),

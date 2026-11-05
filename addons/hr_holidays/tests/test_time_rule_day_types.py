@@ -91,41 +91,32 @@ class TestTimeRuleDayTypes(TransactionCase):
         })
 
     def test_day_leave_reclassified_in_place(self):
-        """A day-unit leave spanning the lunch break is reclassified to the output WET.
+        """A day-unit leave spanning the lunch break is archived; two output children are created.
+
+        The pipeline clips to working intervals, so the morning block (8:00-12:00) and
+        afternoon block (13:00-16:00) each become a separate output record.  The lunch gap
+        is not a working interval and produces no remainder record.
         """
         # Jan 3 2022 = Monday; 8:00-16:00 spans the 12:00-13:00 lunch gap
         df = datetime(2022, 1, 3, 8, 0)
         dt = datetime(2022, 1, 3, 16, 0)
         source = self._make_day_leave(df, dt)
 
-        self.assertEqual(
-            source.work_entry_type_id, self.other_day_wet,
-            "Source leave must be reclassified to the rule's output WET",
-        )
-        self.assertEqual(
-            source.time_rule_id, self.time_rule,
-            "Source leave must reference the firing rule",
-        )
-        self.assertTrue(
-            source.time_rule_id,
-            "time_rule_id must be set after in-place reclassification",
-        )
-        self.assertEqual(source.date_from, df, "date_from must be unchanged")
-        self.assertEqual(
-            source.date_to, datetime(2022, 1, 3, 12, 0),
-            "source trimmed to end of morning block (lunch gap excluded)",
-        )
+        outputs = source.output_leave_ids
+        self.assertEqual(len(outputs), 2, "Two output records: morning and afternoon blocks")
+        outputs = outputs.sorted('date_from')
 
-        # afternoon block reclassified as a separate output record
-        afternoon_output = self.env['hr.leave'].search([
-            ('source_leave_id', '=', source.id),
-            ('work_entry_type_id', '=', self.other_day_wet.id),
-        ])
-        self.assertEqual(len(afternoon_output), 1, "One afternoon output record must exist")
-        self.assertEqual(afternoon_output.date_from, datetime(2022, 1, 3, 13, 0),
-                         "Afternoon output starts after lunch gap")
-        self.assertEqual(afternoon_output.date_to, dt,
-                         "Afternoon output ends at original leave end")
+        morning = outputs[0]
+        self.assertEqual(morning.work_entry_type_id, self.other_day_wet)
+        self.assertEqual(morning.time_rule_id, self.time_rule)
+        self.assertEqual(morning.date_from, df, "Morning output starts at 8:00")
+        self.assertEqual(morning.date_to, datetime(2022, 1, 3, 12, 0), "Morning output ends at 12:00")
+
+        afternoon = outputs[1]
+        self.assertEqual(afternoon.work_entry_type_id, self.other_day_wet)
+        self.assertEqual(afternoon.time_rule_id, self.time_rule)
+        self.assertEqual(afternoon.date_from, datetime(2022, 1, 3, 13, 0), "Afternoon starts after lunch gap")
+        self.assertEqual(afternoon.date_to, dt, "Afternoon output ends at original leave end")
 
     def test_day_leave_grants_allocation(self):
         """A day leave fires a rule that also grants a compensatory allocation.
@@ -157,7 +148,7 @@ class TestTimeRuleDayTypes(TransactionCase):
         )
 
     def test_half_day_leave_reclassified_in_full(self):
-        """A half-day leave is reclassified atomically — the full 4h span, not a slice.
+        """A half-day leave is reclassified atomically — source archived, one output child created.
 
         The pipeline must treat the half-day as an atomic unit and not attempt
         any sub-day splitting.
@@ -189,26 +180,26 @@ class TestTimeRuleDayTypes(TransactionCase):
         dt = datetime(2022, 1, 3, 12, 0)
         source = self._make_day_leave(df, dt, wet=half_day_wet)
 
-        self.assertEqual(
-            source.work_entry_type_id, out_wet,
-            "Half-day leave must be reclassified to the output WET",
-        )
-        self.assertTrue(source.time_rule_id)
+        output = source.output_leave_ids
+        self.assertEqual(len(output), 1, "One output child for the full half-day")
+        self.assertEqual(output.work_entry_type_id, out_wet,
+                         "Output WET must be the reclassified type")
+        self.assertTrue(output.time_rule_id, "Output must reference the firing rule")
         self.assertAlmostEqual(
-            (source.date_to - source.date_from).total_seconds() / 3600,
+            (output.date_to - output.date_from).total_seconds() / 3600,
             4.0, places=5,
             msg="Full 4h half-day span must be reclassified; no sub-day splitting",
         )
-        self.assertEqual(source.date_from, df, "date_from must be unchanged")
-        self.assertEqual(source.date_to, dt, "date_to must be unchanged")
+        self.assertEqual(output.date_from, df, "Output date_from must match original")
+        self.assertEqual(output.date_to, dt, "Output date_to must match original")
 
     def test_weekly_rule_multi_day_leave_no_duplicate_remainder(self):
-        """A week-long leave cut by a weekly rule is not duplicated by remainders.
+        """A week-long leave cut by a weekly rule produces no duplicate remainder.
 
-        Mon-Fri leave of 5 x 8h, the rule fires above 16h per week: the source keeps Monday and
-        Tuesday, Wednesday to Friday become outputs of 8h each. As absences are clipped to the
-        schedule, Monday and Tuesday are two segments, both kept by the source: no remainder
-        may be created for Tuesday.
+        Mon-Fri leave of 5 x 8h, the rule fires above 16h per week: Monday and Tuesday
+        become remainder children, Wednesday to Friday become outputs. Monday and Tuesday
+        are two segments (clipped to the schedule) both kept as remainder: no duplicate
+        remainder may be created for Tuesday.
         """
         calendar = self.env['resource.calendar'].create({
             'name': '40h/week UTC continuous',
@@ -236,16 +227,13 @@ class TestTimeRuleDayTypes(TransactionCase):
         })
         source.action_approve()
 
-        self.assertEqual(source.work_entry_type_id, self.day_wet)
-        self.assertEqual(source.date_from, datetime(2022, 1, 3, 8, 0))
-        self.assertEqual(source.date_to, datetime(2022, 1, 5, 8, 0))
-        self.assertAlmostEqual(source.number_of_hours, 16.0)
-        self.assertAlmostEqual(source.number_of_days, 2.0)
-        outputs = source.output_leave_ids.sorted('date_from')
-        self.assertFalse(
-            outputs.filtered(lambda leave: not leave.time_rule_id),
-            "Monday and Tuesday are covered by the source, no remainder expected",
-        )
+        self.assertFalse(source.active, "source is archived")
+        children = self.env['hr.leave'].search([('source_leave_id', '=', source.id)])
+        remainders = children.filtered(lambda l: not l.time_rule_id).sorted('date_from')
+        outputs = children.filtered(lambda l: l.time_rule_id).sorted('date_from')
+        self.assertEqual(len(remainders), 2, "Monday and Tuesday each get a remainder child")
+        self.assertEqual(remainders.work_entry_type_id, self.day_wet)
+        self.assertAlmostEqual(sum(remainders.mapped('number_of_hours')), 16.0)
         self.assertEqual(len(outputs), 3)
         self.assertEqual(outputs.work_entry_type_id, self.other_day_wet)
         self.assertEqual(outputs.mapped('date_from'), [
