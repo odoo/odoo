@@ -292,7 +292,11 @@ export class ColorPlugin extends Plugin {
                 .filter(Boolean)
         );
 
-        const nodesToColor = [...selectedNodes, ...targetedFieldNodes];
+        let nodesToColor = [...selectedNodes, ...targetedFieldNodes];
+
+        for (const processor of this.getResource("targeted_nodes_processors")) {
+            nodesToColor = processor(nodesToColor);
+        }
 
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
@@ -411,7 +415,8 @@ export class ColorPlugin extends Plugin {
                             (node.nodeName === "BR" && isEmptyBlock(node.parentNode)) ||
                             !this.dependencies.selection.isNodeEditable(node))) ||
                     (node.nodeType === Node.ELEMENT_NODE &&
-                        ["inline", "inline-block"].includes(getComputedStyle(node).display) &&
+                        (["inline", "inline-block"].includes(getComputedStyle(node).display) ||
+                            node?.matches("t[t-if], t[t-elif], t[t-else]")) &&
                         !isWhitespace(node.textContent) &&
                         !node.classList.contains("btn") &&
                         !node.querySelector("font") &&
@@ -436,12 +441,14 @@ export class ColorPlugin extends Plugin {
                     } else {
                         // No <font> found: insert a new one.
                         font = this.document.createElement("font");
+                        cursors.update(callbacksForCursorUpdate.after(node, font));
                         node.after(font);
                         if (isTextGradient && mode === "color") {
                             font.style.webkitTextFillColor = color;
                         }
                     }
                     if (node.textContent) {
+                        cursors.update(callbacksForCursorUpdate.append(font, node));
                         font.appendChild(node);
                     } else {
                         fillEmpty(font);

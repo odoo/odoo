@@ -463,3 +463,627 @@ test("should not apply font tag to t nodes (protects if else nodes separation)",
         ]`)
     );
 });
+describe("formatting QWeb conditional branches (t-if, t-elif, t-else)", () => {
+    describe("font size", () => {
+        test("formatting a lone `t-if` wraps only that node and not the sibling span", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="cond" t-out="val">Value</t>]<span>other</span></p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            const span = el.querySelector("span[style]");
+            expect(span).not.toBe(null);
+            expect(span.querySelector("t[t-if]")).not.toBe(null);
+            expect(span.querySelector("span:not([style])")).toBe(null);
+        });
+
+        test("formatting `t-if` also wraps its `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="cond" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper).not.toBe(null);
+            expect(wrapper.querySelector("t[t-if]")).not.toBe(null);
+            expect(wrapper.querySelector("t[t-else]")).not.toBe(null);
+            expect(wrapper.children.length).toBe(2);
+        });
+
+        test("formatting `t-if` also wraps its `t-elif` and `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-elif="b" t-out="b">B</t><t t-else="" t-out="c">C</t></p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper).not.toBe(null);
+            expect(wrapper.querySelector("t[t-if]")).not.toBe(null);
+            expect(wrapper.querySelector("t[t-elif]")).not.toBe(null);
+            expect(wrapper.querySelector("t[t-else]")).not.toBe(null);
+            expect(wrapper.children.length).toBe(3);
+        });
+
+        test("formatting `t-if` also wraps multiple `t-elif` and the `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-elif="b" t-out="b">B</t><t t-elif="c" t-out="c">C</t><t t-else="" t-out="d">D</t></p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper).not.toBe(null);
+            expect(wrapper.querySelector("t[t-if]")).not.toBe(null);
+            expect(wrapper.querySelectorAll("t[t-elif]").length).toBe(2);
+            expect(wrapper.querySelector("t[t-else]")).not.toBe(null);
+            expect(wrapper.children.length).toBe(4);
+        });
+
+        test("formatting `t-else` also wraps its preceding `t-if`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="cond" t-out="a">A</t>[<t t-else="" t-out="b">B</t>]</p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper).not.toBe(null);
+            expect(wrapper.querySelector("t[t-if]")).not.toBe(null);
+            expect(wrapper.querySelector("t[t-else]")).not.toBe(null);
+            expect(wrapper.children.length).toBe(2);
+        });
+
+        test("formatting `t-elif` wraps the whole group (`t-if`, `t-elif`, `t-else`)", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t></p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper).not.toBe(null);
+            expect(wrapper.querySelector("t[t-if]")).not.toBe(null);
+            expect(wrapper.querySelector("t[t-elif]")).not.toBe(null);
+            expect(wrapper.querySelector("t[t-else]")).not.toBe(null);
+            expect(wrapper.children.length).toBe(3);
+        });
+
+        test("formatting `t-else` after multiple `t-elif` wraps the whole group", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t><t t-elif="b" t-out="b">B</t><t t-elif="c" t-out="c">C</t>[<t t-else="" t-out="d">D</t>]</p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper).not.toBe(null);
+            expect(wrapper.querySelector("t[t-if]")).not.toBe(null);
+            expect(wrapper.querySelectorAll("t[t-elif]").length).toBe(2);
+            expect(wrapper.querySelector("t[t-else]")).not.toBe(null);
+            expect(wrapper.children.length).toBe(4);
+        });
+
+        test("formatting the first group leaves the second group outside the wrapper", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t></p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            const wrappers = el.querySelectorAll("span[style]");
+            expect(wrappers.length).toBe(1);
+            const wrapper = wrappers[0];
+            expect(wrapper.querySelector("t[t-if]")).not.toBe(null);
+            expect(wrapper.querySelector("t[t-else]")).not.toBe(null);
+            const allTIf = el.querySelectorAll("t[t-if]");
+            expect(allTIf.length).toBe(2);
+            expect(wrapper.contains(allTIf[1])).toBe(false);
+        });
+
+        test("removing it restores `t-if` and `t-else` without any wrapper", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="cond" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            setFontSize("")(editor);
+            expect(el.querySelector("span[style]")).toBe(null);
+            expect(el.querySelector("t[t-if]")).not.toBe(null);
+            expect(el.querySelector("t[t-else]")).not.toBe(null);
+        });
+
+        test("removing it restores `t-if`, `t-elif` and `t-else` without any wrapper", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-elif="b" t-out="b">B</t><t t-else="" t-out="c">C</t></p>`,
+                { config }
+            );
+            setFontSize("12px")(editor);
+            setFontSize("")(editor);
+            expect(el.querySelector("span[style]")).toBe(null);
+            expect(el.querySelector("t[t-if]")).not.toBe(null);
+            expect(el.querySelector("t[t-elif]")).not.toBe(null);
+            expect(el.querySelector("t[t-else]")).not.toBe(null);
+        });
+
+        test("formatting the first of two consecutive `t-if` wraps only that one", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-if="b" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']")];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting the second of two consecutive `t-if` wraps only that one", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t>[<t t-if="b" t-out="b">B</t>]</p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='b']")];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting the middle of three consecutive `t-if` wraps only that one", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t>[<t t-if="b" t-out="b">B</t>]<t t-if="c" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='b']")];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-else` does not wrap a following `t-if`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t>[<t t-else="" t-out="b">B</t>]<t t-if="c" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-if` does not wrap a `t-if` that follows the `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting the `t-if` of a second group wraps only the second group", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t>[<t t-if="c" t-out="c">C</t>]<t t-else="" t-out="d">D</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='c']"), el.querySelector("t[t-out='d']")];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting the `t-else` of a second group does not reach into the first group", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t>[<t t-else="" t-out="d">D</t>]</p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='c']"), el.querySelector("t[t-out='d']")];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-elif` does not wrap a following `t-if` group", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t><t t-if="d" t-out="d">D</t><t t-else="" t-out="e">E</t></p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+            ];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-elif` does not wrap a preceding group", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t>[<t t-elif="d" t-out="d">D</t>]<t t-else="" t-out="e">E</t></p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='c']"),
+                el.querySelector("t[t-out='d']"),
+                el.querySelector("t[t-out='e']"),
+            ];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("a selection spanning two groups wraps all nodes of both groups", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t>]</p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+                el.querySelector("t[t-out='d']"),
+            ];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("a `t-else` separated from its `t-if` by another element is not wrapped", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<b>x</b><t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']")];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting an orphan `t-else` wraps only that node", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><span>x</span>[<t t-else="" t-out="b">B</t>]</p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='b']")];
+            setFontSize("12px")(editor);
+            const wrapper = el.querySelector("span[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("removing it from a selection spanning two groups restores both groups intact", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t>]</p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+                el.querySelector("t[t-out='d']"),
+            ];
+            setFontSize("12px")(editor);
+            setFontSize("")(editor);
+            expect(el.querySelector("span[style]")).toBe(null);
+            const p = el.querySelector("p");
+            expect(p.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(p.children[i] === node).toBe(true));
+        });
+    });
+
+    describe("bold", () => {
+        test("formatting a lone `t-if` wraps only that node and not the sibling span", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<span>other</span></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']")];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-if` also wraps its `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="cond" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-if` also wraps its `t-elif` and `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-elif="b" t-out="b">B</t><t t-else="" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+            ];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-elif` wraps the whole group (`t-if`, `t-elif`, `t-else`)", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+            ];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-else` after multiple `t-elif` wraps the whole group", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t><t t-elif="b" t-out="b">B</t><t t-elif="c" t-out="c">C</t>[<t t-else="" t-out="d">D</t>]</p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+                el.querySelector("t[t-out='d']"),
+            ];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-if` does not wrap a `t-if` that follows the `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting the first of two consecutive `t-if` wraps only that one", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-if="b" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']")];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting the middle of three consecutive `t-if` wraps only that one", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t>[<t t-if="b" t-out="b">B</t>]<t t-if="c" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='b']")];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting the `t-else` of a second group does not reach into the first group", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t>[<t t-else="" t-out="d">D</t>]</p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='c']"), el.querySelector("t[t-out='d']")];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("a selection spanning two groups wraps all nodes of both groups", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t>]</p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+                el.querySelector("t[t-out='d']"),
+            ];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("a `t-else` separated from its `t-if` by another element is not wrapped", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<b>x</b><t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']")];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting an orphan `t-else` wraps only that node", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><span>x</span>[<t t-else="" t-out="b">B</t>]</p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='b']")];
+            bold(editor);
+            const wrapper = el.querySelector("strong");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("toggling it off restores `t-if` and `t-else` without any wrapper", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            bold(editor);
+            bold(editor);
+            expect(el.querySelector("strong")).toBe(null);
+            const p = el.querySelector("p");
+            expect(p.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(p.children[i] === node).toBe(true));
+        });
+
+        test("toggling it off on a selection spanning two groups restores both groups intact", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t><t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t><t t-else="" t-out="d">D</t>]</p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+                el.querySelector("t[t-out='d']"),
+            ];
+            bold(editor);
+            bold(editor);
+            expect(el.querySelector("strong")).toBe(null);
+            const p = el.querySelector("p");
+            expect(p.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(p.children[i] === node).toBe(true));
+        });
+    });
+
+    describe("color", () => {
+        test("formatting a lone `t-if` wraps only that node and not the sibling span", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<span>other</span></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']")];
+            setColor("red", "color")(editor);
+            const wrapper = el.querySelector("font[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-if` also wraps its `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            setColor("red", "color")(editor);
+            const wrapper = el.querySelector("font[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-elif` wraps the whole group (`t-if`, `t-elif`, `t-else`)", async () => {
+            const { editor, el } = await setupEditor(
+                `<p><t t-if="a" t-out="a">A</t>[<t t-elif="b" t-out="b">B</t>]<t t-else="" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+            ];
+            setColor("red", "color")(editor);
+            const wrapper = el.querySelector("font[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("formatting `t-if` does not wrap a `t-if` that follows the `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t><t t-if="c" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            setColor("red", "color")(editor);
+            const wrapper = el.querySelector("font[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+
+        test("removing it restores `t-if` and `t-else` without any wrapper", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            setColor("red", "color")(editor);
+            setColor("", "color")(editor);
+            expect(el.querySelector("font")).toBe(null);
+            const p = el.querySelector("p");
+            expect(p.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(p.children[i] === node).toBe(true));
+        });
+
+        test("removing it restores `t-if`, `t-elif` and `t-else` without any wrapper", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-elif="b" t-out="b">B</t><t t-else="" t-out="c">C</t></p>`,
+                { config }
+            );
+            const expected = [
+                el.querySelector("t[t-out='a']"),
+                el.querySelector("t[t-out='b']"),
+                el.querySelector("t[t-out='c']"),
+            ];
+            setColor("red", "color")(editor);
+            setColor("", "color")(editor);
+            expect(el.querySelector("font")).toBe(null);
+            const p = el.querySelector("p");
+            expect(p.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(p.children[i] === node).toBe(true));
+        });
+
+        test("removing it when none is applied leaves the structure untouched", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            setColor("", "color")(editor);
+            expect(el.querySelector("font")).toBe(null);
+            const p = el.querySelector("p");
+            expect(p.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(p.children[i] === node).toBe(true));
+        });
+    });
+
+    describe("background color", () => {
+        test("formatting `t-if` also wraps its `t-else`", async () => {
+            const { editor, el } = await setupEditor(
+                `<p>[<t t-if="a" t-out="a">A</t>]<t t-else="" t-out="b">B</t></p>`,
+                { config }
+            );
+            const expected = [el.querySelector("t[t-out='a']"), el.querySelector("t[t-out='b']")];
+            setColor("red", "backgroundColor")(editor);
+            const wrapper = el.querySelector("font[style]");
+            expect(wrapper.children.length).toBe(expected.length);
+            expected.forEach((node, i) => expect(wrapper.children[i] === node).toBe(true));
+        });
+    });
+});

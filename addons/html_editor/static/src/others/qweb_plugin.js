@@ -40,6 +40,7 @@ export class QWebPlugin extends Plugin {
         unremovable_node_predicates: (node) =>
             node.getAttribute?.("t-set") || node.getAttribute?.("t-call"),
         unsplittable_node_predicates: isUnsplittableQWebElement,
+        targeted_nodes_processors: this.expandQWebBranchGroups.bind(this),
     };
 
     setup() {
@@ -64,6 +65,46 @@ export class QWebPlugin extends Plugin {
             }
         }
         return true;
+    }
+
+    expandQWebBranchGroups(traversedNodes) {
+        const result = new Set();
+        const hasAny = (el, attrs) =>
+            el?.nodeName === "T" && attrs.some((att) => el.hasAttribute(att));
+
+        for (const node of traversedNodes) {
+            if (!hasAny(node, ["t-if", "t-elif", "t-else"])) {
+                result.add(node);
+                continue;
+            }
+            const group = [node];
+
+            // Walk back to the owning t-if (t-elif / t-else only).
+            if (!node.hasAttribute("t-if")) {
+                let prev = node.previousElementSibling;
+                while (hasAny(prev, ["t-elif"])) {
+                    group.unshift(prev);
+                    prev = prev.previousElementSibling;
+                }
+                if (hasAny(prev, ["t-if"])) {
+                    group.unshift(prev);
+                }
+            }
+
+            // Walk forward through t-elif / t-else; a t-else closes the group.
+            let current = node;
+            while (!current.hasAttribute("t-else")) {
+                const next = current.nextElementSibling;
+                if (!hasAny(next, ["t-elif", "t-else"])) {
+                    break;
+                }
+                group.push(next);
+                current = next;
+            }
+
+            group.forEach((n) => result.add(n));
+        }
+        return [...result];
     }
 
     isValidTargetForDomListener(ev) {
