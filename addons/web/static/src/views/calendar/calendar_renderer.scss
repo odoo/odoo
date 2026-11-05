@@ -48,15 +48,6 @@
         background-color: color-mix(in srgb, var(--o-calendar-primary) calc(var(--o-calendar-bg-opacity) * 100%), transparent);
     }
 
-    &.o_past_event::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        display: block;
-        z-index: 3;
-        background-color: color-mix(in srgb, var(--o-view-background-color) calc(var(--o-calendar-overlay-opacity) * 100%), transparent);
-    }
-
     &:not(.o_event_dot):not(.o_calendar_event_dragging) {
         &.o_calendar_custom_highlight, &.o_calendar_popover_open {
             box-shadow: 0px 8px 2px -7px rgba(0, 0, 0, 0.5);
