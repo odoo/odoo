@@ -23,9 +23,9 @@ class WebsiteUrl(http.Controller):
     @http.route('/website_links/add_code', type='jsonrpc', auth='user')
     def add_code(self, **post):
         link_id = request.env['link.tracker.code'].search([('code', '=', post['init_code'])], limit=1).link_id.id
-        new_code = request.env['link.tracker.code'].search_count([('code', '=', post['new_code']), ('link_id', '=', link_id)])
-        if new_code > 0:
-            return new_code.read()
+        existing_code = request.env['link.tracker.code'].search([('code', '=', post['new_code']), ('link_id', '=', link_id)], limit=1)
+        if existing_code:
+            return existing_code.read()
         else:
             return request.env['link.tracker.code'].create({'code': post['new_code'], 'link_id': link_id})[0].read()
 
