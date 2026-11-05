@@ -6,10 +6,12 @@ from . import report
 from . import wizard
 
 from odoo.fields import Domain
+from odoo.tools.sql import column_exists, create_column
 
 
 def _post_init_hook(env):
     _create_buy_rules(env)
+    _set_correct_picking_type(env)
     _create_pickings_for_open_purchase_orders(env)
 
 
@@ -59,3 +61,20 @@ def _create_pickings_for_open_purchase_orders(env):
         empty_lines._set_date_promised()
         empty_lines._create_or_update_picking()
     partial_orders.receipt_status = 'partial'   # because the delivery_status is recomputed based on pickings state
+
+
+def _set_correct_picking_type(env):
+    """ When installing purchase_stock on a multi-company setup, we need to set picking_type_id
+    based on the purchase order's company """
+    if not column_exists(env.cr, "purchase_order", "picking_type_id"):
+        create_column(env.cr, "purchase_order", "picking_type_id", "int4")
+    env.cr.execute("""
+        UPDATE purchase_order po
+            SET picking_type_id = (
+                SELECT spt.id
+                    FROM stock_picking_type spt
+                    WHERE spt.code = 'incoming'
+                    AND spt.company_id = po.company_id
+                    LIMIT 1
+                )
+    """)
