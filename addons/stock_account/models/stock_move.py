@@ -240,8 +240,10 @@ class StockMove(models.Model):
         if product:
             action['name'] = _('Adjust Valuation: %(product)s', product=product.display_name)
         action['target'] = 'new'
+        action['views'] = [(self.env.ref('stock_account.product_value_form_view').id, 'form')]
         action['context'] = {
             'default_move_id': self.id,
+            'form_view_ref': False,
         }
         return action
 
