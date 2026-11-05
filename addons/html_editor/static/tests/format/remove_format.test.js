@@ -802,6 +802,73 @@ test("should remove backgroundColor from selected cells using removeFormat (2)",
     });
 });
 
+test("should not remove the background color of a cell from a selection inside it", async () => {
+    // The background color of a cell applies to its whole content: it can only
+    // be removed through a table selection (@see applyTableColor).
+    const cell = '<td style="background-color: rgb(255, 0, 0);"><p>a[bc]d</p></td>';
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr>${cell}</tr>
+            </tbody></table>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr>${cell}</tr>
+            </tbody></table>
+        `),
+    });
+});
+
+test("should remove the text color applied by a cell on a selection inside it", async () => {
+    // Applying a background color on a cell also applies its computed text
+    // color on it (@see applyTableColor).
+    const cellStyle = "background-color: rgb(255, 0, 0); color: rgb(1, 10, 100);";
+    await testEditor({
+        contentBefore: unformat(`
+            <ul><li>
+                <table class="table table-bordered o_table"><tbody>
+                    <tr><td style="${cellStyle}"><p>a[bc]d</p></td></tr>
+                </tbody></table>
+            </li></ul>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: unformat(`
+            <ul><li>
+                <table class="table table-bordered o_table"><tbody>
+                    <tr><td style="${cellStyle}">
+                        <p>a<font class="o_default_color">[bc]</font>d</p>
+                    </td></tr>
+                </tbody></table>
+            </li></ul>
+        `),
+    });
+});
+
+test("should remove the color of a list item on a selection inside a table it contains", async () => {
+    const cellStyle = "background-color: rgb(0, 0, 255); color: rgb(255, 0, 0);";
+    await testEditor({
+        contentBefore: unformat(`
+            <ul><li style="color: rgb(255, 0, 0);">
+                <table class="table table-bordered o_table"><tbody>
+                    <tr><td style="${cellStyle}"><p>a[bc]d</p></td></tr>
+                </tbody></table>
+            </li></ul>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: unformat(`
+            <ul><li style="color: rgb(255, 0, 0);">
+                <table class="table table-bordered o_table"><tbody>
+                    <tr><td style="${cellStyle}">
+                        <p>a<font class="o_default_color">[bc]</font>d</p>
+                    </td></tr>
+                </tbody></table>
+            </li></ul>
+        `),
+    });
+});
+
 test("should remove color from entire heading when fully selected", async () => {
     await testEditor({
         contentBefore: '<div><h1 style="color: rgb(255, 0, 0);">[abcd]</h1></div>',
@@ -1271,5 +1338,14 @@ test("should not remove format around unsplittable if partially selected", async
         contentBefore: '<p>ab<u>c<a href="a.com">d[e</a>f</u>g]h</p>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: '<p>ab<u>c<a href="a.com">d[e</a></u>fg]h</p>',
+    });
+});
+
+test("should remove the color applied around a non-editable element", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="color: rgb(255, 0, 0);">[<span contenteditable="false">ab</span>]</font></p>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: '<p>[<span contenteditable="false">ab</span>]</p>',
     });
 });
