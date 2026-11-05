@@ -99,7 +99,7 @@ class SaleOrderLine(models.Model):
         super()._compute_qty_delivered()
 
         def update_qty_delivered_from_pickings(sale_line, pos_lines):
-            if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
+            if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids.filtered(lambda p: p.move_ids)):
                 sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines if sale_line.product_id.type != 'service'), 0)
 
         for sale_line in self:
@@ -117,6 +117,18 @@ class SaleOrderLine(models.Model):
             sale_line.qty_invoiced += sum(self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines)
             refund_lines = sale_line.pos_order_line_ids.refund_orderline_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
             sale_line.qty_invoiced += sum(self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in refund_lines)
+
+    def _get_qty_procurement(self, previous_product_uom_qty=False):
+        self.ensure_one()
+        qty = super()._get_qty_procurement(previous_product_uom_qty)
+        is_rental = 'is_rental' in self._fields and self['is_rental']
+        if self.env.context.get('pos_no_procurement_reduction') or is_rental:
+            return qty
+        pos_lines = self.sudo().pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+        qty += sum(self._convert_qty(self, pos_line.qty, 'p2s') for pos_line in pos_lines)
+        refund_lines = self.pos_order_line_ids.refund_orderline_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+        qty += sum(self._convert_qty(self, pos_line.qty, 'p2s') for pos_line in refund_lines)
+        return qty
 
     def _get_sale_order_fields(self):
         return ["product_id", "display_name", "price_unit", "product_uom_qty", "tax_id", "qty_delivered", "qty_invoiced", "discount", "qty_to_invoice", "price_total", "is_downpayment"]
