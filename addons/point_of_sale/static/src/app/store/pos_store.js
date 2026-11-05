@@ -1336,6 +1336,19 @@ export class PosStore extends Reactive {
                 newSession = newSession || data["pos.session"].length > 0;
             } catch (error) {
                 if (options.throw) {
+                    if (!(error instanceof ConnectionLostError)) {
+                        // The server refused the order, possibly because another device
+                        // changed it. Refresh it before the caller reports the error, so
+                        // the cashier retries on up to date data.
+                        try {
+                            await this.deviceSync.readDataFromServer();
+                        } catch (refreshError) {
+                            console.warn(
+                                "Unable to refresh the orders after a failed sync",
+                                refreshError
+                            );
+                        }
+                    }
                     throw error;
                 }
 
