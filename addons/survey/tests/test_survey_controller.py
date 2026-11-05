@@ -112,6 +112,39 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
 
                 user_input.invalidate_recordset() # TDE note: necessary as lots of sudo in controllers messing with cache
 
+    def test_submit_public_user_answer_of_partner_with_user(self):
+        """ A visitor opening an answer link of a partner having a user (e.g. a portal
+        user invited to the survey) is the public user: submitting a page must save the
+        answer and update the bus presence of that user without an access error. """
+        survey = self.env['survey.survey'].create({
+            'title': 'Public Survey',
+            'access_mode': 'public',
+            'questions_layout': 'page_per_question',
+            'question_and_page_ids': [Command.create({
+                'title': 'Your name',
+                'question_type': 'char_box',
+                'constr_mandatory': False,
+            })],
+        })
+        question = survey.question_ids
+        user_input = survey._create_answer(partner=self.user_portal.partner_id, check_attempts=False)
+        answer_token = user_input.access_token
+
+        response = self._access_page(survey, answer_token)
+        self.assertResponse(response, 200)
+        csrf_token = self._find_csrf_token(response.text)
+        response = self._access_begin(survey, answer_token)
+        self.assertResponse(response, 200)
+
+        post_data = {'csrf_token': csrf_token, 'token': answer_token, 'question_id': question.id, question.id: 'Patrick'}
+        response = self._access_submit(survey, answer_token, post_data)
+        self.assertResponse(response, 200)
+        self.assertNotIn('error', response.json())
+
+        user_input.invalidate_recordset()
+        self.assertEqual(user_input.user_input_line_ids.value_char_box, 'Patrick')
+        self.assertTrue(self.env['bus.presence'].search([('user_id', '=', self.user_portal.id)]))
+
     def test_live_session_without_question(self):
         """Test that the live session ('Thank You' page) does not crash when no question is present."""
         survey = self.env['survey.survey'].with_user(self.survey_manager).create({

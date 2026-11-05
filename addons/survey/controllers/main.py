@@ -588,7 +588,8 @@ class Survey(http.Controller):
 
         # presence is used to check gamification challenges
         if user := answer_sudo.partner_id.user_ids[:1]:
-            request.env['bus.presence']._update_presence(
+            # sudo: the participant may be the public user, who has no access to bus.presence
+            request.env['bus.presence'].sudo()._update_presence(
                 inactivity_period=0, identity_field='user_id', identity_value=user.id)
 
         return correct_answers, self._prepare_question_html(survey_sudo, answer_sudo)
