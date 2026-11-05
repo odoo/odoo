@@ -275,7 +275,12 @@ class ResGroups(models.Model):
         # Clear cached group memberships and permissions so later checks use the updated groups.
         # Do this after `write`, since checking permission to write can fill these caches.
         if any(self._ids):
-            self.env['ir.access']._clear_caches()
+            # A user may no longer be allowed to read field values already in cache.
+            self.env.invalidate_all()
+            # Group changes can invalidate earlier decisions to allow or deny access to a record.
+            self.env.transaction.invalidate_access_cache()
+            # Cached group checks and access filters may now allow or deny the wrong records.
+            self.env.transaction.invalidate_ormcache()
 
         if self.env.context.get('apply_regular_group') is not REGULAR_VALUE:
             self._apply_group_regular()
