@@ -64,15 +64,18 @@ test("reset zoom button is inert at default zoom and active once zoomed", async 
     });
     await waitFor(".o-FileViewer-toolbar");
     expect(RESET_ZOOM_BUTTON).toHaveClass(["pe-none", "text-muted"]);
+    expect(RESET_ZOOM_BUTTON).toHaveAttribute("aria-disabled", "true");
 
     await click(ZOOM_IN_BUTTON);
     await animationFrame();
     expect(RESET_ZOOM_BUTTON).not.toHaveClass("pe-none");
     expect(RESET_ZOOM_BUTTON).not.toHaveClass("text-muted");
+    expect(RESET_ZOOM_BUTTON).not.toHaveAttribute("aria-disabled");
 
     await click(RESET_ZOOM_BUTTON);
     await animationFrame();
     expect(RESET_ZOOM_BUTTON).toHaveClass(["pe-none", "text-muted"]);
+    expect(RESET_ZOOM_BUTTON).toHaveAttribute("aria-disabled", "true");
 });
 
 test("zoom out button is inert at minimum zoom", async () => {
@@ -81,13 +84,16 @@ test("zoom out button is inert at minimum zoom", async () => {
     });
     await waitFor(".o-FileViewer-toolbar");
     expect(ZOOM_OUT_BUTTON).not.toHaveClass("pe-none");
+    expect(ZOOM_OUT_BUTTON).not.toHaveAttribute("aria-disabled");
 
     // a single zoom out step (0.5) brings the scale down to the minimum (0.5)
     await click(ZOOM_OUT_BUTTON);
     await animationFrame();
     expect(ZOOM_OUT_BUTTON).toHaveClass(["pe-none", "text-muted"]);
+    expect(ZOOM_OUT_BUTTON).toHaveAttribute("aria-disabled", "true");
 
     await click(ZOOM_IN_BUTTON);
     await animationFrame();
     expect(ZOOM_OUT_BUTTON).not.toHaveClass("pe-none");
+    expect(ZOOM_OUT_BUTTON).not.toHaveAttribute("aria-disabled");
 });
