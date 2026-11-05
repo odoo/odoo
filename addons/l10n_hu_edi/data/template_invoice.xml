@@ -56,7 +56,7 @@
                             <smallBusinessIndicator t-out="format_bool(smallBusinessIndicator)"/>
                             <currencyCode t-out="invoice.currency_id.name"/>
                             <exchangeRate t-out="float_repr(exchangeRate, 6)"/>
-                            <paymentMethod t-if="invoice.l10n_hu_payment_mode" t-out="invoice.l10n_hu_payment_mode"/>
+                            <paymentMethod t-if="invoice._l10n_hu_edi_get_payment_mode()" t-out="invoice._l10n_hu_edi_get_payment_mode()"/>
                             <paymentDate t-if="invoice.invoice_date_due" t-out="invoice.invoice_date_due"/>
                             <cashAccountingIndicator t-out="format_bool(cashAccountingIndicator)"/>
                             <invoiceAppearance t-translation="off">PAPER</invoiceAppearance>

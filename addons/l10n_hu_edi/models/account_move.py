@@ -31,7 +31,8 @@ class AccountMove(models.Model):
             ("OTHER", "Other"),
         ],
         string="Payment mode",
-        help="NAV expected payment mode of the invoice.",
+        help="NAV expected payment mode of the invoice. When empty, the payment mode of the payment method of "
+             "the invoice is used: cash for a cash journal, transfer for a bank journal.",
     )
 
     # === EDI Fields === #
@@ -125,9 +126,42 @@ class AccountMove(models.Model):
 
     # === Computes === #
 
+    @api.depends('l10n_hu_payment_mode')
+    def _compute_invoice_cash_rounding_id(self):
+        # Invoices paid in cash only according to their NAV payment mode get the cash rounding of the cash journals.
+        super()._compute_invoice_cash_rounding_id()
+        cash_moves = self.filtered(lambda move: (
+            move.state == 'draft'
+            and move.is_sale_document(include_receipts=True)
+            and move.l10n_hu_payment_mode == 'CASH'
+            and not move.invoice_cash_rounding_id
+        ))
+        if not cash_moves:
+            return
+        CashRounding = self.env['account.cash.rounding']
+        cash_roundings = CashRounding.search([
+            *CashRounding._check_company_domain(cash_moves.company_id),
+            ('payment_method_line_ids.journal_id.type', '=', 'cash'),
+        ])
+        for move in cash_moves:
+            move.invoice_cash_rounding_id = next((
+                cash_rounding
+                for cash_rounding in cash_roundings
+                if (not cash_rounding.company_id or cash_rounding.company_id == move.company_id)
+                and (not cash_rounding.currency_ids or move.currency_id in cash_rounding.currency_ids)
+            ), False)
+
     @api.depends('delivery_date')
     def _compute_expected_currency_rate(self):
         super()._compute_expected_currency_rate()
+
+    def _l10n_hu_edi_get_payment_mode(self):
+        """ The NAV payment mode of the invoice: the one set on the invoice, otherwise the one of the journal of its
+        payment method for customer invoices (cash journal: cash, bank journal: transfer). """
+        self.ensure_one()
+        if self.l10n_hu_payment_mode or not self.is_sale_document():
+            return self.l10n_hu_payment_mode
+        return {'cash': 'CASH', 'bank': 'TRANSFER'}.get(self.preferred_payment_method_line_id.journal_id.type, False)
 
     def _get_invoice_currency_rate_date(self):
         self.ensure_one()
