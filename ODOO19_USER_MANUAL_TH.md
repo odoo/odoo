@@ -1527,7 +1527,7 @@
 
 **โมดูล:** `od19_helpdesk_extension`
 **จุดประสงค์:** ขยายระบบ Helpdesk เพื่อแยกประเภททีมเป็น "Internal IT Helpdesk" กับ "Customer Sales Services" พร้อมฟิลด์งานบริการสำหรับทีมบริการลูกค้า และความสามารถในการออกใบแจ้งหนี้จากตั๋ว
-**เมนูที่เกี่ยวข้อง:** `การขาย → Sales Services → My Tickets`, `การขาย → Sales Services → Service Tickets`, `Internal Helpdesk → My Tickets`, `Internal Helpdesk → Tickets`
+**เมนูที่เกี่ยวข้อง:** `การขาย → Sales Services → My Tickets`, `การขาย → Sales Services → Service Tickets`, `Helpdesk → Internal Helpdesk → My Internal Tickets`, `Helpdesk → Internal Helpdesk → Internal Tickets`
 
 #### ฟังก์ชัน: งานบริการลูกค้าและออกใบแจ้งหนี้จากตั๋ว
 
@@ -1547,14 +1547,14 @@
 
 #### ฟังก์ชัน: งานไอทีภายในองค์กร (Internal Helpdesk)
 
-**เข้าที่:** `Internal Helpdesk → Tickets` (หรือ My Tickets)
+**เข้าที่:** `Helpdesk → Internal Helpdesk → Internal Tickets` (หรือ My Internal Tickets)
 **ใช้ทำอะไร:** จัดการตั๋วงานไอทีภายใน โดยแยกจากงานบริการลูกค้าอย่างชัดเจน
 **ขั้นตอนใช้งาน:**
-1. เข้าเมนู `Internal Helpdesk → Tickets` แล้วสร้าง/เปิดตั๋ว
+1. เข้าเมนู `Helpdesk → Internal Helpdesk → Internal Tickets` แล้วสร้าง/เปิดตั๋ว
 2. มอบหมายทีมและผู้รับผิดชอบ พร้อมติดตามสถานะผ่านขั้นตอน (stage) ของทีม
 
 **หมายเหตุ/ข้อควรระวัง:**
-- เมนูชุดนี้เป็นระดับบนสุด (top-level) แยกจากแอปการขาย
+- เมนูชุดนี้เป็นส่วน (section) **Internal Helpdesk** ภายในแอป Helpdesk เดียว (ใช้โมเดล `helpdesk.ticket` และไอคอนเดียวกับ Helpdesk) ไม่ใช่แอประดับบนสุดแยกต่างหาก
 - มีการตั้งค่าทีมและขั้นตอนเริ่มต้น (Internal IT Helpdesk / Sales Services) ไว้ล่วงหน้าในข้อมูลระบบ
 
 ---
@@ -1786,7 +1786,7 @@
 - การประเมินมูลค่าสินค้าคงคลังแบบ FIFO และการปรับมูลค่ายกมา (BF)
 - การเบิกสินค้าภายในองค์กรผ่านระบบ Stock Request และ Goods Issue
 
-งานในกลุ่มนี้อยู่ภายใต้แอปหลัก **สั่งซื้อ** · **คำขอซื้อ** · **Stock Requests** · **คลังสินค้า** · **Internal Helpdesk**
+งานในกลุ่มนี้อยู่ภายใต้แอปหลัก **สั่งซื้อ** · **คำขอซื้อ** · **Stock Requests** · **คลังสินค้า** · **Helpdesk** (ส่วน Internal Helpdesk)
 
 > หมายเหตุการอ่านเอกสาร: ทุกเส้นทางเมนูในคู่มือนี้ตรวจสอบย้อนกลับได้จากเมนูจริงของระบบ (ไฟล์ dump เมนู) และจากการประกาศ `<menuitem>` ในโค้ดของแต่ละโมดูล
 
@@ -2394,12 +2394,12 @@
 **จุดประสงค์:** รองรับการแจ้งปัญหาภายในองค์กร (Internal Issue) บนพื้นฐานใบงาน Helpdesk พร้อมการมองเห็นตามแผนก ระดับความเร่งด่วน กระบวนการอนุมัติ (Tier Validation) และการติดตามการแก้ไข
 
 **เมนูที่เกี่ยวข้อง:**
-- Internal Helpdesk → My Tickets
-- Internal Helpdesk → Tickets
+- Helpdesk → Internal Helpdesk → My Internal Tickets
+- Helpdesk → Internal Helpdesk → Internal Tickets
 
 #### ฟังก์ชัน: การแจ้งและติดตามปัญหาภายใน
 
-**เข้าที่:** Internal Helpdesk → Tickets
+**เข้าที่:** Helpdesk → Internal Helpdesk → Internal Tickets
 
 **ใช้ทำอะไร:** ใช้แจ้งปัญหาภายในองค์กร ติดตามสถานะ และบันทึกผลการแก้ไข
 
@@ -3470,7 +3470,7 @@
 2. **Finance and analytics** – การบัญชี (`account.menu_finance`), Dashboards
 3. **Marketing and engagement** – Mass Mailing, SMS, Event, Survey, Live Chat, การตลาด, Link Tracker
 4. **Procurement and supply chain** – การจัดซื้อ, Purchase Request, Stock Request, สต็อก, MRP, Repair, Maintenance
-5. **Projects and services** – โครงการ, Timesheet, Helpdesk, Internal Helpdesk, Document Sign
+5. **Projects and services** – โครงการ, Timesheet, Helpdesk, Document Sign
 6. **Human resources** – HR, การลงเวลา, การสรรหา, ยานพาหนะ, การลา, ค่าใช้จ่าย, โรงอาหาร
 7. **Website and content** – เว็บไซต์, eLearning, Knowledge, ประกาศ, ISO Document Control
 8. **Internal tools** – To-do, Data Cleaning, User Guide
@@ -3902,7 +3902,7 @@
 1. เปิดลิงก์ `/` เพื่อดูหน้าแรก (ระบบลบหน้า homepage เดิมของ Odoo และใช้หน้าของบริษัทแทน)
 2. เลือกเมนู Services/Products/About เพื่อดูหน้าบริการและข้อมูลบริษัท
 3. เลือก News & Events เพื่อดูหน้าบล็อก (`/blog`)
-**หมายเหตุ/ข้อควรระวัง:** เมื่อติดตั้งโมดูล มี Hook ตั้งค่าฟังก์ชัน (`od19_configure_menus`) จัดเรียงเมนูนำทางใหม่และลบเมนูเริ่มต้นของ Odoo ที่ไม่ใช้ (ตามรายการ URL ที่กำหนด) รวมทั้งสร้างบล็อก "News & Events" พร้อมแท็ก (News/Events/Articles) และโพสต์ตัวอย่าง 5 รายการแบบสองภาษา (อังกฤษ/ไทย)
+**หมายเหตุ/ข้อควรระวัง:** เมื่อติดตั้งโมดูล มี Hook ตั้งค่าฟังก์ชัน (`od19_configure_menus`) จัดเรียงเมนูนำทางใหม่และลบเมนูเริ่มต้นของ Odoo ที่ไม่ใช้ (ตามรายการ URL ที่กำหนด) รวมทั้งลบเมนู **"Home" (หน้าแรก)** ที่ติดมากับ Odoo core (อ้างอิง XML ID `website.menu_home`) เพื่อไม่ให้มีเมนู "หน้าแรก" ซ้ำสองอันบนแถบนำทาง แล้วสร้างบล็อก "News & Events" พร้อมแท็ก (News/Events/Articles) และโพสต์ตัวอย่าง 5 รายการแบบสองภาษา (อังกฤษ/ไทย)
 
 #### ฟังก์ชัน: ระบบรับสมัครงาน (Careers)
 **เข้าที่:** เว็บไซต์ → เมนู Careers (`/careers`) หรือ เว็บไซต์ → การสรรหา → ตำแหน่งงาน (ฝั่ง Backend)
