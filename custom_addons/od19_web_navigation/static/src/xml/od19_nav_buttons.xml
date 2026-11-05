@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-inherit="web.NavBar" t-inherit-mode="extension">
-        <!-- Place the Back / Forward buttons right after the Home Menu button -->
-        <xpath expr="//t[@t-call='web.NavBar.AppsMenu']" position="after">
+        <!-- Place the Back / Forward buttons just before the Home Menu button -->
+        <xpath expr="//t[@t-call='web.NavBar.AppsMenu']" position="before">
             <Od19NavButtons/>
         </xpath>
     </t>

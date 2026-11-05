@@ -14,6 +14,7 @@
 
 import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 
 const MAX_ENTRIES = 60;
@@ -60,7 +61,23 @@ export const od19NavHistoryService = {
         let replaying = false;
 
         function snapshot() {
-            const current = router.current;
+            // `router.current` is only updated after a debounced timeout (see
+            // `makeDebouncedPush` in core/browser/router.js), so it still holds the
+            // *previous* page when the ACTION_MANAGER:UI-UPDATED event is fired.
+            // The action service writes the canonical state to sessionStorage
+            // synchronously in its own `pushState()`, so we read it from there.
+            let current = null;
+            const stored = browser.sessionStorage.getItem("current_state");
+            if (stored) {
+                try {
+                    current = JSON.parse(stored);
+                } catch {
+                    current = null;
+                }
+            }
+            if (!current || !current.actionStack?.length) {
+                current = router.current;
+            }
             if (!current || !current.actionStack?.length) {
                 return null;
             }
