@@ -187,11 +187,6 @@ export class Builder extends Component {
                     Component: InvisibleElementsPanel,
                     props: this.invisibleElementsPanelState,
                 }),
-                properties: {
-                    predicate: (/** @type {Node} */ node) =>
-                        Boolean(node.querySelector?.("[data-oe-translation-source-sha]")),
-                    splittable: false,
-                },
             },
             localOverlayContainers: {
                 key: this.props.localOverlayContainerKey,
