@@ -1,0 +1,60 @@
+/* ============================================================
+ * OD19 Web Navigation — Back / Forward buttons (Liquid Glass)
+ * ============================================================ */
+
+.od19-nav-glass {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin: 0 6px;
+    padding: 2px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        0 2px 8px rgba(0, 0, 0, 0.14);
+}
+
+.od19-nav-glass__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.od19-nav-glass__btn i {
+    font-size: 13px;
+    line-height: 1;
+}
+
+.od19-nav-glass__btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.30);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    transform: translateY(-1px);
+}
+
+.od19-nav-glass__btn:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.22);
+}
+
+.od19-nav-glass__btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.od19-nav-glass__btn:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.75);
+    outline-offset: 1px;
+}
