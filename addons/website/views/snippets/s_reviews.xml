@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="s_reviews" name="Reviews">
+        <section class="s_reviews o_colored_level o_cc o_cc2 pt48 pb48">
+            <div class="container">
+                <div class="row align-items-stretch s_col_no_bgcolor">
+                    <div class="col-12 col-lg-3 pt16 pb16" data-name="Column">
+                        <div class="o_cc o_cc1 o_animable position-relative d-flex flex-column justify-content-center gap-4 w-100 h-100 mx-auto p-4 rounded fst-normal" data-name="Global rating">
+                            <div>
+                                <p class="small mt16 mb-0" style="text-align: center;">They trust us!</p>
+                                <h3 class="mb-0" style="text-align: center;">
+                                    <span class="display-4-fs"><strong>4.8</strong></span><span class="o_default_font_size">/5</span>
+                                </h3>
+                                <div class="s_rating s_rating_no_title text-center mt-n1" data-snippet="s_rating" data-name="Rating" data-vcss="001" data-icon="fa-star" aria-label="4 out of 5 stars">
+                                    <strong class="s_rating_title">Rating</strong>
+                                    <div class="s_rating_icons o_not_editable">
+                                        <span class="s_rating_active_icons" style="color: #f3cc00;">
+                                            <i class="fa fa-star" role="presentation"/>
+                                            <i class="fa fa-star" role="presentation"/>
+                                            <i class="fa fa-star" role="presentation"/>
+                                            <i class="fa fa-star" role="presentation"/>
+                                        </span>
+                                        <span class="s_rating_inactive_icons" style="color: var(--border-color);">
+                                            <i class="fa fa-star" role="presentation"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <t t-snippet-call="website.s_avatars" avatars="['/web/image/website.s_company_team_image_1', '/web/image/website.s_company_team_image_2']" string="Avatars"/>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 pt16 pb16" data-name="Column">
+                        <blockquote class="s_blockquote s_blockquote_default o_cc o_cc1 o_animable position-relative d-flex flex-column gap-4 w-100 h-100 mx-auto p-4 rounded fst-normal" data-vcss="001" data-snippet="s_blockquote" data-name="Review" style="border-radius: 6.4px !important;">
+                            <div class="s_blockquote_line_elt position-absolute top-0 start-0 bottom-0 bg-o-color-1"/>
+                            <div class="s_blockquote_wrap_icon position-absolute top-0 start-50 translate-middle w-100">
+                                <i class="s_blockquote_icon fa fa-quote-right d-block mx-auto rounded bg-o-color-1" role="img"/>
+                            </div>
+                            <p class="s_blockquote_quote mb-auto">I'm not one to leave reviews often, but I felt compelled to share my experience with SwiftCommerce Inc.</p>
+                            <div class="s_blockquote_infos d-flex gap-2 flex-row align-items-start justify-content-start w-100 text-start">
+                                <img src="/web/image/website.s_company_team_image_1" class="s_blockquote_avatar img rounded-circle" alt=""/>
+                                <div class="s_blockquote_author">
+                                    <strong>Sullivan Mitchell</strong><br/>
+                                    <span class="text-muted">Software Developer</span>
+                                    <div class="s_rating s_rating_no_title" data-snippet="s_rating" data-name="Rating" data-vcss="001" data-icon="fa-star" aria-label="4 out of 5 stars">
+                                        <strong class="s_rating_title">Rating</strong>
+                                        <div class="s_rating_icons o_not_editable">
+                                            <span class="s_rating_active_icons" style="color: #f3cc00;">
+                                                <i class="fa fa-star" role="presentation"/>
+                                                <i class="fa fa-star" role="presentation"/>
+                                                <i class="fa fa-star" role="presentation"/>
+                                                <i class="fa fa-star" role="presentation"/>
+                                            </span>
+                                            <span class="s_rating_inactive_icons" style="color: var(--border-color);">
+                                                <i class="fa fa-star" role="presentation"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </blockquote>
+                    </div>
+                    <div class="col-12 col-lg-3 pt16 pb16" data-name="Column">
+                        <blockquote class="s_blockquote s_blockquote_default o_cc o_cc1 o_animable position-relative d-flex flex-column gap-4 w-100 h-100 mx-auto p-4 rounded fst-normal" data-vcss="001" data-snippet="s_blockquote" data-name="Review" style="border-radius: 6.4px !important;">
+                            <div class="s_blockquote_line_elt position-absolute top-0 start-0 bottom-0 bg-o-color-1"/>
+                            <div class="s_blockquote_wrap_icon position-absolute top-0 start-50 translate-middle w-100">
+                                <i class="s_blockquote_icon fa fa-quote-right d-block mx-auto rounded bg-o-color-1" role="img"/>
+                            </div>
+                            <p class="s_blockquote_quote mb-auto">Engaging with this team was effortless from start to end. Their proficiency and meticulous approach greatly enhanced our project</p>
+                            <div class="s_blockquote_infos d-flex gap-2 flex-row align-items-start justify-content-start w-100 text-start">
+                                <img src="/web/image/website.s_company_team_image_2" class="s_blockquote_avatar img rounded-circle" alt=""/>
+                                <div class="s_blockquote_author">
+                                    <strong>Sullivan Mitchell</strong><br/>
+                                    <span class="text-muted">Marketing Manager</span>
+                                    <div class="s_rating s_rating_no_title" data-snippet="s_rating" data-name="Rating" data-vcss="001" data-icon="fa-star" aria-label="4 out of 5 stars">
+                                        <strong class="s_rating_title">Rating</strong>
+                                        <div class="s_rating_icons o_not_editable">
+                                            <span class="s_rating_active_icons" style="color: #f3cc00;">
+                                                <i class="fa fa-star" role="presentation"/>
+                                                <i class="fa fa-star" role="presentation"/>
+                                                <i class="fa fa-star" role="presentation"/>
+                                                <i class="fa fa-star" role="presentation"/>
+                                            </span>
+                                            <span class="s_rating_inactive_icons" style="color: var(--border-color);">
+                                                <i class="fa fa-star" role="presentation"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </blockquote>
+                    </div>
+                    <div class="col-12 col-lg-3 pt16 pb16" data-name="Column">
+                        <blockquote class="s_blockquote s_blockquote_default o_cc o_cc1 o_animable position-relative d-flex flex-column gap-4 w-100 h-100 mx-auto p-4 rounded fst-normal" data-vcss="001" data-snippet="s_blockquote" data-name="Review" style="border-radius: 6.4px !important;">
+                            <div class="s_blockquote_line_elt position-absolute top-0 start-0 bottom-0 bg-o-color-1"/>
+                            <div class="s_blockquote_wrap_icon position-absolute top-0 start-50 translate-middle w-100">
+                                <i class="s_blockquote_icon fa fa-quote-right d-block mx-auto rounded bg-o-color-1" role="img"/>
+                            </div>
+                            <p class="s_blockquote_quote mb-auto">I'm not one to leave reviews often, but I felt compelled to share my experience with SwiftCommerce Inc.</p>
+                            <div class="s_blockquote_infos d-flex gap-2 flex-row align-items-start justify-content-start w-100 text-start">
+                                <img src="/web/image/website.s_company_team_image_3" class="s_blockquote_avatar img rounded-circle" alt=""/>
+                                <div class="s_blockquote_author">
+                                    <strong>Sarah Thompson</strong><br/>
+                                    <span class="text-muted">Operations Director</span>
+                                    <div class="s_rating s_rating_no_title" data-snippet="s_rating" data-name="Rating" data-vcss="001" data-icon="fa-star" aria-label="4 out of 5 stars">
+                                        <strong class="s_rating_title">Rating</strong>
+                                        <div class="s_rating_icons o_not_editable">
+                                            <span class="s_rating_active_icons" style="color: #f3cc00;">
+                                                <i class="fa fa-star" role="presentation"/>
+                                                <i class="fa fa-star" role="presentation"/>
+                                                <i class="fa fa-star" role="presentation"/>
+                                                <i class="fa fa-star" role="presentation"/>
+                                            </span>
+                                            <span class="s_rating_inactive_icons" style="color: var(--border-color);">
+                                                <i class="fa fa-star" role="presentation"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <asset id="website.s_reviews_000_scss" name="Reviews 000 SCSS" active="False">
+        <bundle>web.assets_frontend</bundle>
+        <path>website/static/src/snippets/s_reviews/000.scss</path>
+    </asset>
+
+</odoo>
