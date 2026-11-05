@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from odoo import Command, fields
-from odoo.tests import tagged, Form, TransactionCase, users
+from odoo.exceptions import ValidationError
+from odoo.tests import TransactionCase, users
 
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
@@ -49,19 +50,19 @@ class TestProjectRecurrence(TransactionCase):
 
     def test_recurrence_simple(self):
         with freeze_time(self.date_01_01):
-            form = Form(self.env['project.task'])
-            form.name = 'test recurring task'
-            form.project_id = self.project_recurring
-            form.recurring_task = True
-            form.repeat_interval = 5
-            form.repeat_unit = 'month'
-            form.repeat_type = 'forever'
-            task = form.save()
+            task = self.env['project.task'].create({
+                'name': 'test recurring task',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'interval': 5,
+                'rrule_type': 'monthly',
+                'end_type': 'forever',
+            })
 
             self.assertTrue(bool(task.recurrence_id), 'should create a recurrence')
 
-            task.write(dict(repeat_interval=2))
-            self.assertEqual(task.recurrence_id.repeat_interval, 2, 'recurrence should be updated')
+            task.write(dict(interval=2))
+            self.assertEqual(task.recurrence_id.interval, 2, 'recurrence should be updated')
 
             task.recurring_task = False
             self.assertFalse(bool(task.recurrence_id), 'the recurrence should be deleted')
@@ -72,21 +73,20 @@ class TestProjectRecurrence(TransactionCase):
         })
 
         with freeze_time(self.date_01_01):
-            form = Form(self.env['project.task'])
-            form.project_id = self.project_recurring
-            form.name = 'name'
-            form.description = 'description'
-            form.priority = '1'
-            form.stage_id = self.stage_b
-            form.tag_ids.add(self.env['project.tags'].search([], limit=1))
-            form.date_deadline = self.date_01_01 + relativedelta(weeks=1)
-            form.user_ids = self.user
-
-            form.recurring_task = True
-            form.repeat_interval = 2
-            form.repeat_unit = 'month'
-            form.repeat_type = 'forever'
-            task = form.save()
+            task = self.env['project.task'].create({
+                'project_id': self.project_recurring.id,
+                'name': 'name',
+                'description': 'description',
+                'priority': '1',
+                'stage_id': self.stage_b.id,
+                'tag_ids': [Command.link(self.env['project.tags'].search([], limit=1).id)],
+                'date_deadline': self.date_01_01 + relativedelta(weeks=1),
+                'user_ids': [Command.set(self.user.ids)],
+                'recurring_task': True,
+                'interval': 2,
+                'rrule_type': 'monthly',
+                'end_type': 'forever',
+            })
 
         with freeze_time(self.date_01_01 + relativedelta(months=1)):
             task.state = '1_done'
@@ -104,25 +104,93 @@ class TestProjectRecurrence(TransactionCase):
 
     def test_recurrence_until(self):
         with freeze_time(self.date_01_01):
-            form = Form(self.env['project.task'])
-            form.name = 'test recurring task'
-            form.project_id = self.project_recurring
-            form.recurring_task = True
-            form.repeat_interval = 1
-            form.repeat_unit = 'month'
-            form.repeat_type = 'until'
-            form.repeat_until = self.date_01_01 + relativedelta(months=1, days=1)
-            form.date_deadline = self.date_01_01
-            task = form.save()
+            task = self.env['project.task'].create({
+                'name': 'test recurring task',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'interval': 1,
+                'rrule_type': 'monthly',
+                'end_type': 'end_date',
+                'until': self.date_01_01 + relativedelta(months=1, days=1),
+                'date_deadline': self.date_01_01,
+            })
 
         with freeze_time(self.date_01_01 + relativedelta(days=30)):
             task.state = '1_done'
-        self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is before repeat_until, next occurrence should have been created")
+        self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is before the end date, next occurrence should have been created")
 
         last_recurring_task = task.recurrence_id.task_ids.filtered(lambda t: t != task)
         with freeze_time(self.date_01_01 + relativedelta(days=32)):
             last_recurring_task.state = '1_done'
-        self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is after repeat_until, next occurrence shouldn't have been created")
+        self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is after the end date, next occurrence shouldn't have been created")
+
+    def test_recurrence_default_values(self):
+        """ Without explicit days, the next deadline is the current one plus the interval,
+        for the task and its sub-tasks. """
+        weekly_task, monthly_task = self.env['project.task'].create([{
+            'name': 'weekly',
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+            'rrule_type': 'weekly',
+            'date_deadline': datetime(2023, 1, 4, 10, 0),  # Wednesday
+            'child_ids': [Command.create({
+                'name': 'weekly sub-task',
+                'project_id': self.project_recurring.id,
+                'date_deadline': datetime(2023, 1, 2, 10, 0),  # Monday
+            })],
+        }, {
+            'name': 'monthly',
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+            'rrule_type': 'monthly',
+            'date_deadline': datetime(2023, 1, 15, 10, 0),
+        }])
+        weekly_copy, monthly_copy = self.env['project.task.recurrence']._create_next_occurrences(weekly_task + monthly_task)
+        self.assertEqual(weekly_copy.date_deadline, datetime(2023, 1, 11, 10, 0))
+        self.assertEqual(weekly_copy.child_ids.date_deadline, datetime(2023, 1, 9, 10, 0))
+        self.assertEqual(monthly_copy.date_deadline, datetime(2023, 2, 15, 10, 0))
+
+    def test_recurrence_forever_is_kept(self):
+        task = self.env['project.task'].create({
+            'name': 'test recurring task',
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+            'rrule_type': 'daily',
+            'end_type': 'forever',
+        })
+        self.env.flush_all()
+        self.env.invalidate_all()
+        self.assertEqual(task.recurrence_id.end_type, 'forever')
+        self.assertEqual(task.end_type, 'forever')
+
+    def test_create_recurrence_rule_from_non_recurring_task(self):
+        """ A rule created from a task that is not recurring yet gets the default values. """
+        task = self.env['project.task'].create({
+            'name': 'not recurring yet',
+            'project_id': self.project_recurring.id,
+            'date_deadline': datetime(2023, 1, 4, 10, 0),  # Wednesday
+        })
+        recurrence = task._create_recurrence_rule(task_ids=[Command.set(task.ids)])
+        self.assertRecordValues(recurrence, [{
+            'rrule_type': 'weekly',
+            'interval': 1,
+            'end_type': 'forever',
+            'wed': True,
+            'mon': False,
+            'day': 4,
+        }])
+
+    def test_recurrence_constraints(self):
+        task = self.env['project.task'].create({
+            'name': 'test recurring task',
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+            'rrule_type': 'daily',
+        })
+        with self.assertRaises(ValidationError):
+            task.recurrence_id.interval = 0
+        with self.assertRaises(ValidationError):
+            task.recurrence_id.write({'end_type': 'end_date', 'until': fields.Date.today() - relativedelta(days=1)})
 
     def test_recurring_settings_change(self):
         test_task = self.env['project.task'].create({
@@ -140,14 +208,14 @@ class TestProjectRecurrence(TransactionCase):
         recurrences option on the tasks linked to that recurrence
         """
         with freeze_time(self.date_01_01):
-            form = Form(self.env['project.task'])
-            form.name = 'test recurring task'
-            form.project_id = self.project_recurring
-            form.recurring_task = True
-            form.repeat_interval = 5
-            form.repeat_unit = 'day'
-            form.repeat_type = 'forever'
-            task = form.save()
+            task = self.env['project.task'].create({
+                'name': 'test recurring task',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'interval': 5,
+                'rrule_type': 'daily',
+                'end_type': 'forever',
+            })
 
         with freeze_time(self.date_01_01 + relativedelta(day=1)):
             task.state = '1_done'
@@ -169,14 +237,14 @@ class TestProjectRecurrence(TransactionCase):
         option on the tasks remaining in that suite
         """
         with freeze_time(self.date_01_01):
-            form = Form(self.env['project.task'])
-            form.name = 'test recurring task'
-            form.project_id = self.project_recurring
-            form.recurring_task = True
-            form.repeat_interval = 5
-            form.repeat_unit = 'day'
-            form.repeat_type = 'forever'
-            task = form.save()
+            task = self.env['project.task'].create({
+                'name': 'test recurring task',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'interval': 5,
+                'rrule_type': 'daily',
+                'end_type': 'forever',
+            })
 
         with freeze_time(self.date_01_01 + relativedelta(day=1)):
             task.state = '1_done'
@@ -197,14 +265,14 @@ class TestProjectRecurrence(TransactionCase):
         """
         When an active user closes a recurring task, the next occurrence should be created
         """
-        form = Form(self.env['project.task'])
-        form.name = 'test recurring task'
-        form.project_id = self.project_recurring
-        form.recurring_task = True
-        form.repeat_interval = 1
-        form.repeat_unit = 'day'
-        form.repeat_type = 'forever'
-        task = form.save()
+        task = self.env['project.task'].create({
+            'name': 'test recurring task',
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+            'interval': 1,
+            'rrule_type': 'daily',
+            'end_type': 'forever',
+        })
 
         self.assertEqual(len(task.recurrence_id.task_ids), 1, "recurrence should have a single task")
         task.state = '1_done'
@@ -216,9 +284,9 @@ class TestProjectRecurrence(TransactionCase):
             'name': 'Recurring Parent Task',
             'project_id': self.project_recurring.id,
             'recurring_task': True,
-            'repeat_interval': 2,
-            'repeat_unit': 'month',
-            'repeat_type': 'forever',
+            'interval': 2,
+            'rrule_type': 'monthly',
+            'end_type': 'forever',
             'child_ids': [
                 Command.create({
                     'name': 'Node 1',
@@ -310,8 +378,8 @@ class TestProjectRecurrence(TransactionCase):
                 'name': 'Recurring Task 1',
                 'project_id': self.project_recurring.id,
                 'recurring_task': True,
-                'repeat_unit': 'week',
-                'repeat_type': 'forever',
+                'rrule_type': 'weekly',
+                'end_type': 'forever',
                 'date_deadline': "2023-01-01 00:00:00",
                 'child_ids': [
                     Command.create({
@@ -332,8 +400,8 @@ class TestProjectRecurrence(TransactionCase):
                 'name': 'Recurring Task 2',
                 'project_id': self.project_recurring.id,
                 'recurring_task': True,
-                'repeat_unit': 'week',
-                'repeat_type': 'forever',
+                'rrule_type': 'weekly',
+                'end_type': 'forever',
                 'date_deadline': "2023-01-04 00:00:00",
                 'child_ids': [
                     Command.create({
@@ -359,7 +427,7 @@ class TestProjectRecurrence(TransactionCase):
             'stage_id': self.stage_b.id,
             'user_ids': [Command.set([self.user.id, self.user_projectuser.id])],
             'recurring_task': True,
-            'repeat_type': 'forever',
+            'end_type': 'forever',
         })
         self.user_projectuser.action_archive()
         task.write({'state': '1_done'})
@@ -380,7 +448,7 @@ class TestProjectRecurrence(TransactionCase):
             'name': 'Task A',
             'stage_id': self.stage_b.id,
             'recurring_task': True,
-            'repeat_type': 'forever',
+            'end_type': 'forever',
             'child_ids': [Command.create({
                 'project_id': self.project_recurring.id,
                 'name': 'Sub task A',
@@ -419,7 +487,7 @@ class TestProjectRecurrence(TransactionCase):
             'project_id': private_project.id,
             'user_ids': [(4, employee.id)],
             'recurring_task': True,
-            'repeat_type': 'forever',
+            'end_type': 'forever',
             'state': '01_in_progress',
         })
 

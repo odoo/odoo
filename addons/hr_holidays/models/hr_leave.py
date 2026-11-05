@@ -2105,7 +2105,7 @@ class HrLeave(models.Model):
                 'stop': stop_value,
                 'allday': allday_value,
                 'privacy': 'confidential',
-                'event_tz': user.tz,
+                'recurrence_tz': user.tz,
                 'meeting_activity_ids': [(5, 0, 0)],
                 'res_id': holiday.id,
             }

@@ -1071,14 +1071,15 @@
 
         <!-- Project 1 Recurring tasks and subtasks -->
         <record id="project_task_recurrence_1" model="project.task.recurrence">
-            <field name="repeat_unit">month</field>
-            <field name="repeat_type">until</field>
-            <field name="repeat_until" eval="DateTime.now() + relativedelta(months=4)"/>
+            <field name="rrule_type">monthly</field>
+            <field name="end_type">end_date</field>
+            <field name="until" eval="DateTime.now() + relativedelta(months=4)"/>
             <field name="create_date" eval="DateTime.now() + relativedelta(weeks=-2)"/>
         </record>
         <record id="project_task_recurrence_2" model="project.task.recurrence">
-            <field name="repeat_unit">week</field>
-            <field name="repeat_type">forever</field>
+            <field name="rrule_type">weekly</field>
+            <field name="end_type">forever</field>
+            <field name="mon" eval="True"/>
         </record>
         <record id="project_1_task_10" model="project.task">
             <field name="sequence">20</field>

@@ -196,9 +196,9 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
         """
         self.template_task_without_project.write({
             "recurring_task": True,
-            "repeat_type": "forever",
-            "repeat_unit": "month",
-            "repeat_interval": 3,
+            "end_type": "forever",
+            "rrule_type": "monthly",
+            "interval": 3,
             "depend_on_ids": [Command.set(self.template_task.ids)],
         })
         self.project_with_templates.write({
@@ -222,9 +222,9 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
         self.assertEqual(task_2.project_id, self.project_with_templates, "The created task should be in the project that was set in the context.")
         self.assertTrue(task_2.recurring_task, "The created task should be recurring as the project has recurring tasks enabled.")
         self.assertTrue(task_2.recurrence_id, "The created task should have a recurrence as the project has recurring tasks enabled.")
-        self.assertEqual(task_2.repeat_type, "forever", "The created task should have the same repeat type as the template as the project has recurring tasks enabled.")
-        self.assertEqual(task_2.repeat_unit, "month", "The created task should have the same repeat unit as the template as the project has recurring tasks enabled.")
-        self.assertEqual(task_2.repeat_interval, 3, "The created task should have the same repeat interval as the template as the project has recurring tasks enabled.")
+        self.assertEqual(task_2.end_type, "forever", "The created task should have the same end type as the template as the project has recurring tasks enabled.")
+        self.assertEqual(task_2.rrule_type, "monthly", "The created task should have the same recurrence type as the template as the project has recurring tasks enabled.")
+        self.assertEqual(task_2.interval, 3, "The created task should have the same repeat interval as the template as the project has recurring tasks enabled.")
         self.assertEqual(task_2.depend_on_ids, self.template_task, "The created task should have the same dependencies as the template as the project has task dependencies enabled.")
 
     def test_subtask_count_ignores_template_child_on_normal_parent(self):
