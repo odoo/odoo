@@ -290,8 +290,18 @@ class PosOrder(models.Model):
         return invoice_lines
 
     def _get_pos_anglo_saxon_price_unit(self, product, partner_id, quantity):
+<<<<<<< 157874aad3aebef5bc9268de6e17530641107e31
         moves = self.mapped('picking_ids.move_ids')\
             .filtered(lambda m: m.is_valued and m.product_id.valuation == 'real_time' and m.product_id.id == product.id)\
+||||||| e5c6ca8d218c66ea36700b02b45e3fcede325d30
+        moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
+            .mapped('picking_ids.move_ids')\
+            ._filter_anglo_saxon_moves(product)\
+=======
+        moves = self.filtered(lambda o: o.partner_id.id == partner_id)\
+            ._get_stock_moves()\
+            ._filter_anglo_saxon_moves(product)\
+>>>>>>> e0d97d2c17200208d5f0054a33b836d0be0aa3aa
             .sorted(lambda x: x.date)
         if moves:
             return moves._get_price_unit()
@@ -774,6 +784,9 @@ class PosOrder(models.Model):
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.mapped('lines.refund_orderline_ids.order_id').ids)],
         }
+
+    def _get_stock_moves(self):
+        return self.picking_ids.move_ids
 
     def _is_pos_order_paid(self):
         amount_total = self.amount_total
