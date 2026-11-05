@@ -421,8 +421,9 @@ psql -h <host> -U <user> -d od15_stage -f 01_profiling_queries.sql > profiling_r
 - [x] **G2 — ตรวจเวอร์ชัน:** ยืนยันได้ว่าเป็น Odoo 15 (`base` `latest_version` = `15.0.1.3`
       เนื่องจาก `base_version` ไม่มีใน `ir_config_parameter`) และรันบนสำเนา `od15_stage`
       แบบ read-only (`transaction_read_only = on`) เท่านั้น
-- [ ] **G3 — Module inventory ครบ:** โมดูล custom ที่ติดตั้งจริง 167 ตัว ยังต้องทำ mapping
-      ไปยัง `od19_*` หรือบันทึกเหตุผล "ไม่ยก" ให้ครบ → **ค้าง Task D2**
+- [ ] **G3 — Module inventory ครบ:** โมดูล custom ที่ติดตั้งจริง 167 ตัว ต้องมี mapping
+      ไปยัง `od19_*` หรือบันทึกเหตุผล "ไม่ยก" ให้ครบทุกตัว → mapping workbook ปิดแล้วใน
+      Task **D2** (commit `ca242196cca`, 2026-11-02); เหลือยืนยันความครบถ้วน 167/167 ก่อนติ๊กผ่าน
 - [ ] **G4 — ไม่มี blocking data-quality issue:** ประเด็น blocking ใน Section 3 (3.1–3.3, 3.5, 3.7, 3.13)
       ยังต้องแก้ หรือมีแผนแก้ที่อนุมัติ ก่อนเริ่ม ETL/import
 - [ ] **G5 — Baseline ถูกบันทึกและ sign-off:** ตัวเลข baseline ใน Section 4 บันทึกครบแล้ว

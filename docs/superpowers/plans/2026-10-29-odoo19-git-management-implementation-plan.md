@@ -248,7 +248,7 @@ git push origin v19.0.0
 - [ ] บันทึกใน release note: upstream SHA ที่ trunk อ้างอยู่ + OCA SHAs
 
 ### Task 3.3: Release note template
-- [ ] สร้างโฟลเดอร์/ไฟล์ note ต่อ release (ภายหลังใน `deployment/releases/`)
+- [x] สร้างโฟลเดอร์/ไฟล์ note ต่อ release (อยู่ที่ `deployment/releases/`) — เริ่มใช้จริงที่ [deployment/releases/v19.0.2.md](file:///c:/odoo-dev/odoo19/deployment/releases/v19.0.2.md)
 
 ```text
 ## v19.0.<n> — <วันที่>
@@ -373,7 +373,7 @@ cp deployment/odoo.conf.template odoo_local.conf   # แล้วแก้ค่
 ```
 
 - [x] `deployment/README.md` — ขั้นตอนติดตั้ง + ค่า `addons_path` + วิธี checkout tag
-- [ ] commit (รอ working tree สะอาด — commit รวมกับ Phase 4)
+- [x] commit (รอ working tree สะอาด — commit รวมกับ Phase 4) → commit `e0e1238b253` (ตัวอย่าง tag ใน `install.sh` อัปเดตเป็น `v19.0.2`)
 
 ### Task 6.2: ตรวจ "ติดตั้งได้" จาก tag
 - [x] ตรวจแบบ static (light verification, 2026-11-04): tag `v19.0.1` มี `deployment/` ครบ 4 ไฟล์, `install.sh`/`odoo.conf.template` ถูกต้อง, `.gitattributes` ไม่มี LFS filter, OCA gitlinks ครบ 22 ตัว
@@ -395,10 +395,10 @@ git submodule status    # ต้องมี SHA ครบทุกตัว
 ### Task 7.1: สร้าง git-and-release-baseline
 - [x] สร้าง `docs/superpowers/programs/odoo19-enterprise/foundation/git-and-release-baseline.md` บันทึก: โมเดลสาขา, naming, version scheme, tag/release process, rollback, OCA pinning, ข้อห้าม
 
-### Task 7.2: อัปเดตเอกสารที่มีอยู่
-- [ ] อัปเดต [repository-and-addon-baseline.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/foundation/repository-and-addon-baseline.md) — เพิ่มพื้นที่ `deployment/` และ path ownership
-- [ ] อัปเดต [environment-and-delivery-baseline.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/foundation/environment-and-delivery-baseline.md) — ผูก promotion กับ tag/release
-- [ ] commit ด้วย `docs(governance): ...`
+### Task 7.2: อัปเดตเอกสารที่มีอยู่ (ปิดแล้ว 2026-11-04)
+- [x] อัปเดต [repository-and-addon-baseline.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/foundation/repository-and-addon-baseline.md) — เพิ่มพื้นที่ `deployment/`, `migration/` และ path ownership
+- [x] อัปเดต [environment-and-delivery-baseline.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/foundation/environment-and-delivery-baseline.md) — เพิ่มหัวข้อ Release Tag Control ผูก promotion กับ tag/release
+- [x] commit ด้วย `docs(governance): ...` → commit `d7539edca87`
 
 ---
 

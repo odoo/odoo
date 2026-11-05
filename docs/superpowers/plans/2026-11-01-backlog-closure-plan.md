@@ -44,6 +44,8 @@
 
 **อัปเดต 2026-11-02 — EPIC H + B3/B4/B5 + C1/D5:** ปิดครบ 7 งาน — H1 (ไม่มี defect ค้าง), H2 (`stock_request_purchase` = `installed`), B3 (ทุก feature branch merge เข้า `19.0` แล้ว), B4 (22 OCA submodules pin SHA ครบ), B5 (`.gitattributes` + Git LFS → commit `b80218bb4b4`), C1 (access-readiness ครบหลักฐาน → commit `3d47662b998`), D5 (precondition dump ใหม่ → commit `ee33dbf8602`); defect `276.0 != 138.0` ของ B1 ซ่อมแล้ว → commit `b120d0292ff`
 
+**อัปเดต 2026-11-05 — D1 + C2 + release v19.0.2:** ปิด D1 (Data Profiling รันจริงบน `od15_stage`) และ C2 (เติม profiling checklist ครบ Section 0–6); sync แผน git-management Task 6.1/7.2 (install.sh + governance docs → commits `e0e1238b253`, `d7539edca87`); ออก release note [deployment/releases/v19.0.2.md](file:///c:/odoo-dev/odoo19/deployment/releases/v19.0.2.md) ประกอบ tag `v19.0.2` (commit `e0e1238b253`); งาน B6 (Release แรก) เหลือเพียงการติ๊ก checklist ที่ต้องรันบนเครื่องทดสอบ
+
 ---
 
 ## Execution Sequence
@@ -141,9 +143,10 @@ graph TD
 - [x] **Evidence:** ทุกหัวข้อมีสถานะ Ready/Blocked + เจ้าของ + วันที่
 - [x] **ปิดงาน (2026-11-02):** เติมหลักฐานจริงทั้ง 5 ส่วน — Application = Ready; Infra/Data/Source/Security = Partial พร้อมหมายเหตุ (dev shell + `odoo.conf`, dump 2 ไฟล์ใน `migration/od15_export/`, 22 pinned OCA submodules, `base_user_role` + `od19_role_catalog`, ops scripts STEP-1..4 + `run-tests.ps1`, log ที่ `C:\odoo-dev\odoo19\odoo_server.log`) → commit `3d47662b998`
 
-### Task C2 — เติม [legacy-od15-data-profiling-checklist.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/legacy-od15-data-profiling-checklist.md)
-- [ ] **Depends on:** D1
-- [ ] **Objective:** กรอก Section 0–6 ด้วยผล profiling จริง
+### Task C2 — เติม [legacy-od15-data-profiling-checklist.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/legacy-od15-data-profiling-checklist.md) (ปิดแล้ว 2026-11-05)
+- [x] **Depends on:** D1
+- [x] **Objective:** กรอก Section 0–6 ด้วยผล profiling จริง
+- [x] **ปิดงาน (2026-11-05):** Section 0–4 กรอกผลจริงครบ (module inventory 432/167 custom, row counts, data quality 14 ข้อ, reconciliation baseline), Section 6 Result Log ครบ — เอกสาร head = "Profiled (กรอกผลแล้ว 2026-11-02)"; เกณฑ์ G4/G5 (blocking data-quality + sign-off ฝ่ายบัญชี) ยังเป็นงานภายนอกที่รอฝ่ายที่เกี่ยวข้อง
 
 ---
 
@@ -156,19 +159,37 @@ graph TD
 - [x] **Acceptance:** precondition สะท้อนว่ามี dump + ชื่อ staging DB จริง
 - [x] **ปิดงาน (2026-11-02):** แก้ precondition ให้ระบุว่ามี dump แล้ว 2 ชุด (`odoo_golive.dump` 158 MB / `od15_autoerp_prd.dump` 10 MB) + manifest `attach_files.txt` → commit `ee33dbf8602`
 
-### Task D1 — Data Profiling (มีจุดตัดสินใจ)
-- [ ] **Objective:** รัน `migration/extract/01_profiling_queries.sql` บน staging DB แบบ read-only
-- [ ] **Decision:** ใช้ DB `od15_prd` ที่ restore ไว้ หรือ restore `od15_stage` แยก (ตาม checklist เดิม)
-- [ ] **Steps:** ตรวจสิทธิ์เชื่อมต่อ → รัน profiling → เก็บผลเป็น `profiling_result.txt` → กรอก checklist (C2)
-- [ ] **Acceptance:** ได้ตัวเลข module inventory / row counts / data quality
+### Task D1 — Data Profiling (มีจุดตัดสินใจ) (ปิดแล้ว 2026-11-05)
+- [x] **Objective:** รัน `migration/extract/01_profiling_queries.sql` บน staging DB แบบ read-only
+- [x] **Decision:** ใช้ DB `od15_prd` ที่ restore ไว้ หรือ restore `od15_stage` แยก (ตาม checklist เดิม) → เลือก **restore read-only `od15_stage`**
+- [x] **Steps:** ตรวจสิทธิ์เชื่อมต่อ → รัน profiling → เก็บผลเป็น `profiling_result.txt` → กรอก checklist (C2)
+- [x] **Acceptance:** ได้ตัวเลข module inventory / row counts / data quality
+- [x] **ปิดงาน (2026-11-05):** รันครบ `[0.1]`–`[4.9]` บน `od15_stage` (read-only, `transaction_read_only = on`) → หลักฐาน `migration/od15_export/profiling_result.txt` (4.1 MB); module inventory = installed 432 (core 206 / OCA 59 / custom 167); row counts + data quality + reconciliation baseline ครบ (ดู C2); เกณฑ์ G3/G4/G5 ของ checklist ยังต้องปิดที่ฝ่ายที่เกี่ยวข้อง (ดู [profiling checklist](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/legacy-od15-data-profiling-checklist.md) §5)
 
 ### Task D2 — Mapping workbook (ปิดแล้ว 2026-11-02)
 - [x] **Objective:** ปิด TODO ในชีต 01/08/09 ของ `od15-to-od19-data-mapping.xlsx` + CSV mapping templates
 - [x] **ปิดงาน (2026-11-02):** เติมชีต 01 (22 แถว) / 08 (7 แถว) / 09 (16 แถว) ด้วยตัวเลขจริง @ cutoff 2026-10-31; แทนที่ทุกช่อง `*(ตรวจสอบ)*` ใน [od15-to-od19-data-mapping.md](file:///c:/odoo-dev/odoo19/docs/superpowers/programs/odoo19-enterprise/discovery/od15-to-od19-data-mapping.md) §3.3/§3.4 ด้วยคอลัมน์จริงจาก `od15_stage`; CSV mapping 10 ไฟล์ไม่มีแถว `EXAMPLE` → commit `ca242196cca`
 
 ### Task D3 — ETL smoke test
-- [ ] **Objective:** รัน import runner `migration/import/run.py` (s01–s09) บน sandbox
+- [ ] **Objective:** รัน import runner `migration/import/run.py` (s01–s10) บน sandbox
 - [ ] **Acceptance:** re-run ได้ไม่ซ้ำ (idempotent ผ่าน `__import15__`)
+- [ ] **วิธีรัน (ผู้ใช้รันบนเครื่อง — ต้องมี sandbox DB):** ระบุ step ผ่าน environment variable (odoo shell กลืน argv)
+
+```powershell
+# 1) dry-run ก่อน (ไม่เขียนข้อมูลจริง)
+$env:MIG_DRY_RUN = "1"; $env:MIG_STOP_ON_ERROR = "1"
+venv19\Scripts\python.exe odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http < migration\import\run.py
+Remove-Item Env:\MIG_DRY_RUN
+
+# 2) รันจริง แล้วรันซ้ำเพื่อยืนยัน idempotency (__import15__)
+venv19\Scripts\python.exe odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http < migration\import\run.py
+venv19\Scripts\python.exe odoo-bin shell -c odoo.conf -d <sandbox_db> --no-http < migration\import\run.py
+
+# 3) ตรวจความครบถ้วน + sequence
+venv19\Scripts\python.exe migration\recon\run.py
+```
+
+- [ ] **หมายเหตุ:** ยังไม่รัน — ต้องเตรียม sandbox DB + สิทธิ์อ่าน `odoo.conf` ก่อน (ห้ามใช้ DB production)
 
 ### Task D4 — Opening balance tie + sign-off
 - [ ] **Objective:** ยอดยกมาต้อง tie กับ legacy 100%
