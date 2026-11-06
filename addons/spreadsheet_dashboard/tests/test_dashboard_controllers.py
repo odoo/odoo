@@ -36,6 +36,22 @@ class TestDashboardController(DashboardTestCommon, HttpCase):
             self.env['res.currency'].get_company_currency_for_spreadsheet()
         )
 
+    def test_load_with_selected_company_currency(self):
+        usd, eur = self.env.ref('base.USD'), self.env.ref('base.EUR')
+        usd_company = self.env['res.company'].create({'name': 'USD company', 'currency_id': usd.id})
+        eur_company = self.env['res.company'].create({'name': 'EUR company', 'currency_id': eur.id})
+        self.user.company_ids |= usd_company + eur_company
+        self.user.company_id = usd_company
+        self.authenticate(self.user.login, self.user.password)
+        dashboard = self.create_dashboard().with_user(self.user)
+        # the EUR company is selected in the company switcher
+        self.opener.cookies.set('cids', f'{eur_company.id}-{usd_company.id}')
+        response = self.url_open(f'/spreadsheet/dashboard/data/{dashboard.id}')
+        self.assertEqual(
+            response.json()['default_currency'],
+            self.env['res.currency'].get_company_currency_for_spreadsheet(eur_company.id)
+        )
+
     def test_translation_namespace(self):
         dashboard = self.create_dashboard()
         self.env['ir.model.data'].create({
