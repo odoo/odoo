@@ -402,6 +402,7 @@ class WebsitePage(models.Model):
             self.env.context.get('website_id'),
             self.env.context.get('lang'),
             self.env.context.get('cookies_allowed'),
+            request.httprequest.host,
             request.httprequest.path,
             request.session.debug,
         )
