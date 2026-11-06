@@ -908,6 +908,42 @@ class TestBatchPicking02(TransactionCase):
         ])
         self.assertEqual(pickings.move_line_ids.result_package_id, package)
 
+    def test_estimated_shipping_volume_package_content(self):
+        """ The dimensions of a package give the volume of the package with its content: the volume of
+        the products in it is not added again, whether the package has a shipping weight or not. """
+        productC = self.env['product.product'].create({'name': 'Product C', 'is_storable': True})
+        products = self.productA | self.productB | productC
+        products.write({'weight': 1, 'volume': 0.01})
+        package, weighed_package = self.env['stock.package'].create([
+            {'name': 'Box', 'package_type_id': self.package_type.id},
+            {'name': 'Weighed box', 'package_type_id': self.package_type.id, 'shipping_weight': 50},
+        ])
+        loc1, loc2 = self.stock_location.child_ids
+        for product in products:
+            self.env['stock.quant']._update_available_quantity(product, loc1, 10)
+        picking = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'move_ids': [Command.create({
+                'location_id': loc1.id,
+                'location_dest_id': loc2.id,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 10,
+            }) for product in products],
+        })
+        picking.action_confirm()
+        picking.action_assign()
+        batch = self.env['stock.picking.batch'].create({'picking_ids': [Command.set(picking.ids)]})
+        picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).result_package_id = package
+        picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB).result_package_id = weighed_package
+
+        # Box: 10 kg tare + 10 kg content, weighed box: 50 kg, 10 kg without package
+        self.assertAlmostEqual(batch.estimated_shipping_weight, 10 + 10 + 50 + 10)
+        # Two boxes of 0.125 m³ and 10 x 0.01 m³ without package
+        self.assertAlmostEqual(batch.estimated_shipping_volume, 0.125 + 0.125 + 0.1)
+
     def test_batch_validation_without_backorder(self):
         loc1, loc2 = self.stock_location.child_ids
         self.env['stock.quant']._update_available_quantity(self.productA, loc1, 10)
