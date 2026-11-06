@@ -73,8 +73,16 @@ class MrpBom(models.Model):
     possible_product_template_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value',
         compute='_compute_possible_product_template_attribute_value_ids')
-    allow_operation_dependencies = fields.Boolean('Custom Operation Dependencies',
-        help="Select to customize operation dependencies. When checked, operations will be in parallel by default.",
+    allow_operation_dependencies = fields.Boolean('Custom Operation Dependencies', help="Work Orders are in sequence by default. This can be customised with the 'blocked by' field in the operation configuration")
+    operation_dependency_mode = fields.Selection(
+        selection=[
+            ('sequence', 'Operations are in sequence'),
+            ('parallel', 'Some operations are in parallel'),
+        ],
+        string='Work Orders',
+        default='sequence',
+        required=True,
+        help="Work Orders are in sequence by default. This can be customised with the 'blocked by' field in the operation configuration",
     )
     produce_delay = fields.Integer(
         'Manufacturing Lead Time', default=0,
@@ -90,6 +98,25 @@ class MrpBom(models.Model):
     continuous = fields.Boolean('Continuous Production', default=False,
         help="If active, registering production on a work order will automatically unblock the next work order if it is blocked."
     )
+    one_variant_set = fields.Boolean(compute="_compute_one_variant_set")
+    product_variant_count = fields.Integer(
+        related='product_tmpl_id.product_variant_count',
+        string="Variant Count",
+    )
+
+    @api.depends('allow_operation_dependencies')
+    def _compute_operation_dependency_mode(self):
+        for record in self:
+            record.operation_dependency_mode = 'parallel' if record.allow_operation_dependencies else 'sequence'
+
+    def _inverse_operation_dependency_mode(self):
+        for record in self:
+            record.allow_operation_dependencies = (record.operation_dependency_mode == 'parallel')
+
+    @api.depends('bom_line_ids.bom_product_template_attribute_value_ids')
+    def _compute_one_variant_set(self):
+        for bom in self:
+            bom.one_variant_set = any(len(line.bom_product_template_attribute_value_ids) > 0 for line in bom.bom_line_ids)
 
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',
