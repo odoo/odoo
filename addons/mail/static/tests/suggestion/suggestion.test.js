@@ -11,6 +11,7 @@ import {
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { deleteBackward } from "@html_editor/../tests/_helpers/user_actions";
 import {
@@ -361,6 +362,21 @@ test("Do not fetch if search more specific and fetch had no result", async () =>
     await expect.waitForSteps(["get_mention_suggestions"]);
     await insertTextInComposer(".o-mail-Composer", "x");
     await expect.waitForSteps([]);
+});
+
+test("mention typed after a canned response search without result is searched on the server", async () => {
+    await startServer();
+    listenStoreFetch("mail.canned.response");
+    onRpc("res.partner", "get_mention_suggestions", ({ kwargs }) => {
+        expect.step(`search "${kwargs.search}"`);
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button:text('Send message')");
+    await insertTextInComposer(".o-mail-Composer", "::");
+    await waitStoreFetch("mail.canned.response");
+    await insertTextInComposer(".o-mail-Composer", " @");
+    await expect.waitForSteps(['search ""']);
 });
 
 test("[text composer] show other channel member in @ mention", async () => {
