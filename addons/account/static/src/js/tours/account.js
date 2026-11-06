@@ -71,12 +71,10 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] input`,
         run: "edit Test Product",
     },
     {
-        isActive: ["auto"],
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] .o_m2o_dropdown_option_create a:contains(create)`,
         content: _t("Create the product."),
         run: "click",
@@ -88,7 +86,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "edit A very useful description.",
     },
     {
-        isActive: ["auto"],
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=name] textarea`,
         run: function () {
             // Since the t-on-change of the input is not triggered by the run: "edit" action,
@@ -105,7 +102,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["auto"],
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=price_unit] input`,
         content: _t("Set a price."),
         run: "edit 100",
@@ -123,13 +119,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        isActive: ["manual"],
-        trigger: "button[name=document_layout_save]",
-        content: _t("Continue with the default document layout."),
-        run: "click",
-    },
-    {
-        isActive: ["auto"],
         content: "Wait for animation frame",
         trigger: `body${accountTourSteps.postedInvoiceSelector} .o-mail-RecipientsInputTagsListPopover input`,
     },
