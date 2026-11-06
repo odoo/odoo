@@ -178,10 +178,19 @@ class ResPartner(models.Model):
         else:
             return f'peppol_{state}'
 
+    def _get_peppol_edi_format(self):
+        self.ensure_one()
+        if (
+            self._is_peppol_invoice_contact()
+            and self._get_pdp_receiver_identification_info()[0] != self.commercial_partner_id._get_pdp_receiver_identification_info()[0]
+        ):
+            return self._get_suggested_peppol_edi_format()
+        return super()._get_peppol_edi_format()
+
     def _get_suggested_peppol_edi_format(self):
         # EXTENDS 'account_edi_ubl_cidd`
         self.ensure_one()
-        if self.env.company._get_peppol_proxy_type() == 'pdp' and self.commercial_partner_id._get_pdp_receiver_identification_info()[0] == 'pdp':
+        if self.env.company._get_peppol_proxy_type() == 'pdp' and self._get_peppol_invoice_partner()._get_pdp_receiver_identification_info()[0] == 'pdp':
             return 'ubl_21_fr'
         return super()._get_suggested_peppol_edi_format()
 

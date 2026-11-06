@@ -70,10 +70,10 @@ class L10nFRAccountEdiCii(models.AbstractModel):
         if vals['company']._get_peppol_proxy_type() == 'pdp':
             constraints.update({
                 'buyer_peppol_eas': self._check_required_fields(
-                    vals['customer'].commercial_partner_id, 'peppol_eas'
+                    vals['customer']._get_peppol_invoice_partner(), 'peppol_eas'
                 ),
                 'buyer_peppol_endpoint': self._check_required_fields(
-                    vals['customer'].commercial_partner_id, 'peppol_endpoint'
+                    vals['customer']._get_peppol_invoice_partner(), 'peppol_endpoint'
                 ),
                 'seller_peppol_eas': self._check_required_fields(
                     vals['supplier'].commercial_partner_id, 'peppol_eas'

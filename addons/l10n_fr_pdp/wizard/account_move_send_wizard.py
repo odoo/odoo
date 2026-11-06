@@ -18,7 +18,7 @@ class AccountMoveSendWizard(models.TransientModel):
         self.ensure_one()
         if self.move_id.peppol_is_sent:
             return super()._get_peppol_checkbox_addendum_disable_reason()
-        pdp_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
+        pdp_partner = self.move_id.partner_id._get_peppol_invoice_partner().with_company(self.company_id)
         if pdp_partner._get_pdp_receiver_identification_info()[0] != 'pdp':
             if self.company_id._l10n_fr_pdp_uses_french_terminology() and pdp_partner.peppol_verification_state in ('not_valid', 'not_verified'):
                 return self.env._(" (Customer not available for French E-Invoicing)")
@@ -26,7 +26,7 @@ class AccountMoveSendWizard(models.TransientModel):
         partner_is_valid = pdp_partner.peppol_verification_state == 'valid'
         verification_display_state_map = dict(pdp_partner._fields['pdp_verification_display_state']._description_selection(self.env))
         reason = None
-        if pdp_partner._l10n_fr_pdp_is_b2c():
+        if pdp_partner.commercial_partner_id._l10n_fr_pdp_is_b2c():
             reason = self.env._("No Siren/Siret")
         if not partner_is_valid:
             reason = verification_display_state_map[pdp_partner.pdp_verification_display_state]
@@ -44,12 +44,12 @@ class AccountMoveSendWizard(models.TransientModel):
         # EXTENDS 'account'
         for wizard in self:
             move = wizard.move_id
-            partner = move.partner_id.commercial_partner_id
+            partner = move.partner_id._get_peppol_invoice_partner()
 
             if (
                 not move or move.company_id._get_peppol_proxy_type() != 'pdp'
-                or (partner.peppol_eas == '0225' and partner.peppol_endpoint)
-                or not (siren := partner._l10n_fr_pdp_get_siren())
+                or ((partner.peppol_eas == '0225' or partner._is_peppol_invoice_contact()) and partner.peppol_endpoint)
+                or not (siren := partner.commercial_partner_id._l10n_fr_pdp_get_siren())
             ):
                 continue
 

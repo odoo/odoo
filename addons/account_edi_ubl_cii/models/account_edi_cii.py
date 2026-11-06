@@ -580,6 +580,7 @@ class AccountEdiCii(models.AbstractModel):
     def _cii_get_buyer_trade_party_node(self, vals):
         customer = vals['customer']
         commercial_partner = customer.commercial_partner_id
+        invoice_partner = customer._get_peppol_invoice_partner()
         name = customer.display_name if customer.name else commercial_partner.display_name
         scheme_id = None
         siret = commercial_partner.company_registry
@@ -604,8 +605,8 @@ class AccountEdiCii(models.AbstractModel):
                 'city': customer.city,
                 'country_code': customer.country_id.code,
             },
-            'peppol_eas': customer.peppol_eas,
-            'peppol_endpoint': customer.peppol_endpoint,
+            'peppol_eas': invoice_partner.peppol_eas,
+            'peppol_endpoint': invoice_partner.peppol_endpoint,
             'partner_tax_registration': buyer_vat,
         })
 

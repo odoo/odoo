@@ -16,7 +16,7 @@ class AccountMoveSendWizard(models.TransientModel):
         self.ensure_one()
         if self.move_id.peppol_is_sent:
             return self.env._(" (Previously sent)")
-        peppol_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
+        peppol_partner = self.move_id.partner_id._get_peppol_invoice_partner().with_company(self.company_id)
         network_name = self.company_id._get_einvoicing_network_name()
         if peppol_partner.peppol_verification_state == 'not_valid':
             return self.env._(' (Customer not on %(network_name)s)', network_name=network_name)
@@ -37,7 +37,7 @@ class AccountMoveSendWizard(models.TransientModel):
         If Customer is not valid on Peppol, we disable the checkbox. Also add the proxy mode if not in prod.
         """
         for wizard in self:
-            peppol_partner = wizard.move_id.partner_id.commercial_partner_id.with_company(wizard.company_id)
+            peppol_partner = wizard.move_id.partner_id._get_peppol_invoice_partner().with_company(wizard.company_id)
             if not peppol_partner.peppol_eas or not peppol_partner.peppol_endpoint:
                 peppol_partner._compute_peppol_endpoint()  # Try to recompute the Peppol credentials.
             peppol_partner.button_account_peppol_check_partner_endpoint(company=wizard.company_id)
@@ -73,7 +73,7 @@ class AccountMoveSendWizard(models.TransientModel):
         self.ensure_one()
         if self.sending_methods and 'peppol' in self.sending_methods:
             move = self.move_id.with_company(self.move_id.company_id)
-            partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
+            partner = move.partner_id._get_peppol_invoice_partner().with_company(move.company_id)
             if partner.peppol_verification_state != 'valid':
                 raise UserError(_(
                     "Partner doesn't have a valid configuration for %(network_name)s.",

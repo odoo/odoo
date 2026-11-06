@@ -36,7 +36,7 @@ class AccountMoveSend(models.AbstractModel):
                     'action_text': _("Configure"),
                     'action': not_configured_company_partners._get_records_action(),
                 }
-            not_configured_partners = peppol_format_moves.partner_id.commercial_partner_id.filtered(
+            not_configured_partners = peppol_format_moves.partner_id.mapped(lambda partner: partner._get_peppol_invoice_partner()).filtered(
                 lambda partner: not (partner.peppol_eas and partner.peppol_endpoint)
             )
             if not_configured_partners:
