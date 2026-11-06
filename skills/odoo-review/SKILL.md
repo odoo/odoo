@@ -96,6 +96,21 @@ available and confirm they still hold.
 - Renamed or removed names: grep for them in Python, XML, and JavaScript. A
   stale reference in a view, a domain, an xpath, a `patch()`, or an import
   fails only at runtime, or only when that module is installed.
+- Names left without a user: when the diff removes the last call or reference
+  of a method, field, template, CSS class, or JavaScript export, grep for its
+  other users.
+  - In master, a name with no user left is removed in the same change, with
+    what only it used: a later cleanup rarely comes, and until then the dead
+    code is read, maintained, and even converted to new APIs.
+  - In a stable version, the name stays, to keep the diff minimal.
+  - Not users: an override, a `patch()` or a test of the name. They are
+    removed with the name, in the sibling repository too.
+  - Users the grep misses: a name built at runtime (`getattr` on a formatted
+    string, `t-call="{{ ... }}"`) is found by its prefix. A route, a method or
+    a field used from outside the repositories (the external API, a mobile
+    app), or a CSS class in HTML saved in the database (website pages, edited
+    mail templates), stays.
+  - Code that was already unused before the change is not part of the review.
 - Shared contracts: a template, a data dictionary, or a context key read in
   one place is produced in others. A new key or a changed requirement must be
   met by every producer, including the JavaScript twin of a Python one, or
