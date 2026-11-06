@@ -722,3 +722,11 @@ class StockMove(models.Model):
         else:
             res['raw_material_production_id'] = self.production_id.id
         return res
+
+    def _action_scrap(self):
+        self.ensure_one()
+        production = self.production_id
+        if production and production.state not in ('done', 'cancel') and self.product_id in production.move_finished_ids.product_id:
+            self.write(self._prepare_scrap_move_vals())
+            return self
+        return super()._action_scrap()
