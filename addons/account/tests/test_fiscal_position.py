@@ -215,6 +215,11 @@ class TestFiscalPosition(common.TransactionCase):
             'name': 'US NO VAT',
             'country_id': self.us.id,
         })
+        partner_nl_be_vat = self.env['res.partner'].create({
+            'name': 'NL BE VAT',
+            'vat': 'BE0477472701',
+            'country_id': self.nl.id,
+        })
 
         # Case : 1
         # Billing (VAT/country) : BE/BE
@@ -268,6 +273,14 @@ class TestFiscalPosition(common.TransactionCase):
         self.assertEqual(
             self.env['account.fiscal.position']._get_fiscal_position(partner_us_no_vat, partner_us_no_vat),
             fp_eu_extra
+        )
+
+        # Case : 7
+        # Billing (VAT/country): BE/NL
+        # Delivery (VAT/country): BE/NL
+        self.assertEqual(
+            self.env['account.fiscal.position']._get_fiscal_position(partner_nl_be_vat, partner_nl_be_vat),
+            fp_be_nat
         )
 
     def test_fiscal_position_constraint(self):
