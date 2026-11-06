@@ -598,6 +598,20 @@ class StockQuant(models.Model):
         else:
             self.user_id = self.env.user.id
 
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        if not self.env.context.get('sort_quant_by_location_package'):
+            return super().name_search(name=name, domain=domain, operator=operator, limit=limit)
+        domain = Domain(domain or Domain.TRUE)
+        if name:
+            domain &= Domain('display_name', operator, name)
+        quants = self.search(
+            domain,
+            order='location_id asc, package_id asc NULLS FIRST',
+            limit=limit,
+        )
+        return [(quant.id, quant.display_name) for quant in quants]
+
     @api.depends('location_id', 'lot_id', 'package_id', 'owner_id')
     def _compute_display_name(self):
         """name that will be displayed in the detailed operation"""
@@ -614,10 +628,10 @@ class StockQuant(models.Model):
                     record.display_name = ''
                     continue
                 name = [record.location_id.display_name]
-                if record.lot_id:
-                    name.append(record.lot_id.display_name)
                 if record.package_id:
                     name.append(record.package_id.display_name)
+                if record.lot_id:
+                    name.append(record.lot_id.display_name)
                 if record.owner_id:
                     name.append(record.owner_id.name)
                 record.display_name = ' - '.join(name)
