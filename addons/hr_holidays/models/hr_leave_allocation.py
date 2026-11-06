@@ -774,11 +774,18 @@ class HolidaysAllocation(models.Model):
 
         self.add_follower(employee_id)
 
-        if 'number_of_days_display' not in values and 'number_of_hours_display' not in values and 'state' not in values:
+        tracked_fields = {'number_of_days_display', 'number_of_hours_display', 'state', 'date_to'}
+        tracked_updates = tracked_fields.intersection(values)
+        if not tracked_updates:
             res = super().write(values)
             if 'allocation_type' in values:
                 self._add_lastcalls()
             return res
+
+        def total_excess(extra_data):
+            excess_days = extra_data.get('excess_days', {})
+            total = sum(leave_date['amount'] for leave_date in excess_days.values())
+            return total - min(extra_data.get('exceeding_duration', 0), 0)
 
         previous_consumed_leaves = self.employee_id._get_consumed_leaves(leave_types=self.holiday_status_id)
         result = super().write(values)
@@ -787,12 +794,12 @@ class HolidaysAllocation(models.Model):
         if 'allocation_type' in values:
             self._add_lastcalls()
         for allocation in self:
-            current_excess = dict(consumed_leaves[1]).get(allocation.employee_id, {}) \
-                .get(allocation.holiday_status_id, {}).get('excess_days', {})
-            previous_excess = dict(previous_consumed_leaves[1]).get(allocation.employee_id, {}) \
-                .get(allocation.holiday_status_id, {}).get('excess_days', {})
-            total_current_excess = sum(leave_date['amount'] for leave_date in current_excess.values() if not leave_date['is_virtual'])
-            total_previous_excess = sum(leave_date['amount'] for leave_date in previous_excess.values() if not leave_date['is_virtual'])
+            current_extra_data = dict(consumed_leaves[1]).get(allocation.employee_id, {}) \
+                .get(allocation.holiday_status_id, {})
+            previous_extra_data = dict(previous_consumed_leaves[1]).get(allocation.employee_id, {}) \
+                .get(allocation.holiday_status_id, {})
+            total_current_excess = total_excess(current_extra_data)
+            total_previous_excess = total_excess(previous_extra_data)
 
             if total_current_excess <= total_previous_excess:
                 continue
