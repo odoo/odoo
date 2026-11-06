@@ -111,7 +111,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
             'program_id': program.id,
             'partner_id': self.partner.id,
         })
-        card._adjust_points(50, "Initial balance")
+        card._adjust_points({card: 50}, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             reward.discount_line_product_id, 1, -10,
@@ -139,7 +139,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
             'program_id': program.id,
             'partner_id': self.partner.id,
         })
-        card._adjust_points(50, "Initial balance")
+        card._adjust_points({card: 50}, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             self.whiteboard_pen_product, 5, 0,
@@ -160,7 +160,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
             'program_id': program.id,
             'partner_id': self.partner.id,
         })
-        card._adjust_points(3, "Initial balance")
+        card._adjust_points({card: 3}, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             reward.discount_line_product_id, 1, -10,
@@ -257,7 +257,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
             'program_id': program.id,
             'partner_id': self.partner.id,
         })
-        card._adjust_points(200, "Initial balance")
+        card._adjust_points({card: 200}, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             reward.discount_line_product_id, 1, -10,
@@ -295,7 +295,7 @@ class TestPOSLoyaltyPoints(TestPointOfSaleHttpCommon):
             'program_id': program.id,
             'partner_id': self.partner.id,
         })
-        card._adjust_points(200, "Initial balance")
+        card._adjust_points({card: 200}, "Initial balance")
         reward = program.reward_ids[:1]
         reward_line = self._line(
             reward.discount_line_product_id, 1, -10,
