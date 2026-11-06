@@ -1608,18 +1608,33 @@ class MyInvoisDocument(models.Model):
 
     def _myinvois_create_received_bills(self, create_partners):
         """
-        Create a draft vendor bill for each received document of self that has none yet. The bill holds a single line
-        with the total of the document, to be split by the user as needed.
+        Give a bill to each received document of self that has none yet: the bill of the same supplier and reference
+        if the user entered it already, or else a new draft bill holding a single line with the total of the document,
+        to be split by the user as needed.
 
         :param create_partners: whether to create the suppliers that are not in Odoo yet, or to skip their documents.
-        :return: the new bills.
+        :return: the bills of the documents.
         """
         documents = self.filtered(lambda d: d.myinvois_state == 'received' and not d.invoice_ids)
         billed_documents = self.env['myinvois.document']
         bills_vals = []
         for company, company_documents in documents.grouped('company_id').items():
             partners_per_tin = company_documents._myinvois_get_received_documents_partners(company, create_partners)
-            for document in company_documents.filtered(lambda d: d.myinvois_supplier_tin in partners_per_tin):
+            known_documents = company_documents.filtered(lambda d: d.myinvois_supplier_tin in partners_per_tin)
+            # The user may have entered the bill already, from the document the supplier sent them.
+            existing_bills = self.env['account.move'].search([
+                ('company_id', '=', company.id),
+                ('move_type', 'in', ('in_invoice', 'in_refund')),
+                ('commercial_partner_id', 'in', [partner.id for partner in partners_per_tin.values()]),
+                ('ref', 'in', known_documents.mapped('name')),
+                ('state', '!=', 'cancel'),
+                ('l10n_my_edi_received_document_id', '=', False),
+            ])
+            bills_per_key = existing_bills.grouped(lambda b: (b.commercial_partner_id, b.ref, b.move_type))
+            for document in known_documents:
+                if bill := bills_per_key.pop((partners_per_tin[document.myinvois_supplier_tin], document.name, document.move_type), None):
+                    document.invoice_ids = [Command.link(bill[:1].id)]
+                    continue
                 billed_documents |= document
                 bills_vals.append({
                     'move_type': document.move_type,
@@ -1638,7 +1653,7 @@ class MyInvoisDocument(models.Model):
         bills = self.env['account.move'].create(bills_vals)
         for document, bill in zip(billed_documents, bills):
             document.invoice_ids = [Command.link(bill.id)]
-        return bills
+        return documents.invoice_ids
 
     def _myinvois_get_received_documents_partners(self, company, create_missing):
         """
