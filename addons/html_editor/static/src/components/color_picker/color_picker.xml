@@ -8,7 +8,7 @@
                 <Dropdown>
                     <button class="btn btn-light d-flex justify-content-between w-100 border border-dark">
                         <span class="px-1" t-out="this.state.activeTab"/>
-                        <i class="oi ms-2" data-icon="arrow_drop_down"/>
+                        <i class="oi ms-2" data-icon="arrow_drop_down" aria-hidden="true"/>
                     </button>
                     <t t-set-slot="content">
                         <t t-foreach="this.tabs" t-as="item" t-key="item.id">
@@ -33,6 +33,7 @@
             <button t-attf-class="btn btn-sm oi oi-filled o_color_picker_reset #{ this.isDarkTheme ? 'btn-secondary' : 'btn-light'}"
                     data-icon="delete"
                     title="Reset"
+                    aria-label="Reset"
                     t-on-click="this.onColorApply"
                     t-on-mouseover="this.onColorHover"
                     t-on-mouseout="this.onColorHoverOut"

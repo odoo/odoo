@@ -1,7 +1,7 @@
 import { Component, proxy, signal, t, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
     useDropdownAutoVisibility,
     useToolbarDropdownFocus,
@@ -30,6 +30,10 @@ export class ImageToolbarDropdown extends Component {
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.imageToolbarBtn);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
+    }
+
+    get ariaLabel() {
+        return getToolbarAriaLabel(this.props.title, this.state.displayName);
     }
 
     onSelected(item) {

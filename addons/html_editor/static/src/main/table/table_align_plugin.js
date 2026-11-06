@@ -8,14 +8,17 @@ import { TableAlignSelector } from "./table_align_selector";
 const verticalAlignmentItems = [
     {
         mode: "top",
+        title: _t("Top"),
         template: "html_editor.VerticalAlignTop",
     },
     {
         mode: "middle",
+        title: _t("Middle"),
         template: "html_editor.VerticalAlignMiddle",
     },
     {
         mode: "bottom",
+        title: _t("Bottom"),
         template: "html_editor.VerticalAlignBottom",
     },
 ];

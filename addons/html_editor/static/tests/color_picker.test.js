@@ -1,4 +1,4 @@
-import { test, expect } from "@odoo/hoot";
+import { test, expect, mockUserAgent } from "@odoo/hoot";
 import {
     press,
     click,
@@ -367,4 +367,39 @@ test("should mark default color as selected when it is selected", async () => {
         },
     });
     expect(".o_color_button[data-color='900']").toHaveClass("selected");
+});
+
+test("icon-only buttons specify aria-label and hide their icon", async () => {
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "",
+                defaultTab: "custom",
+            },
+            applyColor() {},
+        },
+    });
+    expect(".o_color_picker_reset").toHaveAttribute("aria-label", "Reset");
+    if (window.EyeDropper) {
+        const eyeDropperButton = "button[title='Pick a color from the screen']";
+        expect(eyeDropperButton).toHaveAttribute("aria-label", "Pick a color from the screen");
+        expect(`${eyeDropperButton} .oi`).toHaveAttribute("aria-hidden", "true");
+    }
+});
+
+test("mobile tab selector hides its icon", async () => {
+    mockUserAgent("android");
+    await mountWithCleanup(ColorPicker, {
+        props: {
+            state: {
+                selectedColor: "",
+                defaultTab: "",
+            },
+            applyColor() {},
+        },
+    });
+    expect(".o_font_color_selector .oi[data-icon='arrow_drop_down']").toHaveAttribute(
+        "aria-hidden",
+        "true"
+    );
 });
