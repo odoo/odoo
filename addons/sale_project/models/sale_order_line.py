@@ -245,8 +245,14 @@ class SaleOrderLine(models.Model):
         if self.product_id.service_type not in ['milestones', 'manual']:
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
-        title = sale_line_name_parts[0] or self.product_id.name
-        description = '<br/>'.join(sale_line_name_parts[1:])
+        if sale_line_name_parts and sale_line_name_parts[0] == self.product_id.with_context(lang=self.order_id._get_lang()).display_name:
+            sale_line_name_parts.pop(0)
+        if len(sale_line_name_parts) == 1 and sale_line_name_parts[0]:
+            title = sale_line_name_parts[0]
+            description = ''
+        else:
+            title = self.product_id.display_name
+            description = '<br/>'.join(sale_line_name_parts)
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
