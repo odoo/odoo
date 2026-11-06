@@ -82,11 +82,11 @@
 
 ## Task 0: Pre-flight (บังคับตาม AGENTS.md §2)
 
-- [ ] รัน `git log -1 --oneline` จดค่า HEAD
-- [ ] รัน `git status -sb` — ต้องไม่มีไฟล์ที่ agent อื่นกำลังแก้ (ยกเว้น `third_party/oca/reporting-engine` และ `migration/cleanup/remap_accounts_round3.py` ซึ่งเป็นของ process อื่น **ห้ามแตะ/ห้าม stage**)
-- [ ] ตรวจไม่มี `.git/index.lock`
-- [ ] ยืนยันอยู่ branch `feature/od19-hr-expense-ux`
-- [ ] ถ้าข้อใดไม่ผ่าน → หยุดและรายงานผู้ใช้
+- [x] รัน `git log -1 --oneline` จดค่า HEAD
+- [x] รัน `git status -sb` — ต้องไม่มีไฟล์ที่ agent อื่นกำลังแก้ (ยกเว้น `third_party/oca/reporting-engine` และ `migration/cleanup/remap_accounts_round3.py` ซึ่งเป็นของ process อื่น **ห้ามแตะ/ห้าม stage**)
+- [x] ตรวจไม่มี `.git/index.lock`
+- [x] ยืนยันอยู่ branch `feature/od19-hr-expense-ux`
+- [x] ถ้าข้อใดไม่ผ่าน → หยุดและรายงานผู้ใช้
 
 ---
 
@@ -98,7 +98,7 @@
 - Modify: `custom_addons/od19_hr_expense_enhanced/views/res_company_views.xml`
 - Modify: `custom_addons/od19_hr_expense_enhanced/views/hr_expense_views.xml`
 
-- [ ] **Step 1: เพิ่มอัตรา Mileage ที่บริษัท**
+- [x] **Step 1: เพิ่มอัตรา Mileage ที่บริษัท**
   ใน `models/res_company.py` เพิ่ม:
   ```python
   od19_mileage_rate = fields.Monetary(
@@ -109,7 +109,7 @@
   ```
   และใน `views/res_company_views.xml` เพิ่ม `<page string="ค่าเดินทาง / Mileage" name="od19_mileage">` พร้อม `<field name="od19_mileage_rate"/>` (วางต่อจากหน้า Per Diem)
 
-- [ ] **Step 2: เพิ่มฟิลด์ Mileage บน `hr.expense`**
+- [x] **Step 2: เพิ่มฟิลด์ Mileage บน `hr.expense`**
   ใน `models/hr_expense.py` เพิ่มกลุ่มฟิลด์:
   ```python
   od19_is_mileage = fields.Boolean(string='Mileage / ค่าเดินทางตามระยะทาง', tracking=True)
@@ -126,7 +126,7 @@
   ```
   > หมายเหตุ: `od19_mileage_vehicle_id` จะ compile ได้หลัง Task 2 สร้างโมเดล — ทำ Task 2 ก่อนหรือพร้อมกัน
 
-- [ ] **Step 3: ลอจิกคำนวณ + บังคับไม่มี VAT**
+- [x] **Step 3: ลอจิกคำนวณ + บังคับไม่มี VAT**
   ```python
   @api.depends('od19_is_mileage', 'company_id')
   def _compute_od19_mileage(self):
@@ -153,7 +153,7 @@
   ```
   และปรับ `_compute_tax_ids` ให้ `tax_ids = False` เมื่อ `od19_is_mileage` (เพิ่มเงื่อนไขคู่กับ payment certificate)
 
-- [ ] **Step 4: เพิ่มกลุ่มฟิลด์ในฟอร์มใบเบิก**
+- [x] **Step 4: เพิ่มกลุ่มฟิลด์ในฟอร์มใบเบิก**
   ใน `views/hr_expense_views.xml` ใต้ `<xpath expr="//sheet" position="inside">` เพิ่ม:
   ```xml
   <group string="ค่าเดินทาง / Mileage" col="4" invisible="not od19_is_mileage">
@@ -169,7 +169,7 @@
   ```
   และวาง `<field name="od19_is_mileage"/>` ไว้ในกลุ่มหลักของ sheet (ให้ติ๊กได้)
 
-- [ ] **Step 5: ตรวจสอบ static**
+- [x] **Step 5: ตรวจสอบ static**
   รัน: `python -m py_compile custom_addons/od19_hr_expense_enhanced/models/hr_expense.py custom_addons/od19_hr_expense_enhanced/models/res_company.py`
   Expected: exit 0
 
@@ -183,7 +183,7 @@
 - Create: `custom_addons/od19_hr_expense_enhanced/views/od19_employee_vehicle_views.xml`
 - Modify: `models/__init__.py`, `security/ir.model.access.csv`, `__manifest__.py`, `models/hr_expense.py`
 
-- [ ] **Step 1: สร้างโมเดล**
+- [x] **Step 1: สร้างโมเดล**
   ```python
   class Od19EmployeeVehicle(models.Model):
       _name = 'od19.employee.vehicle'
@@ -209,14 +209,14 @@
           return [(v.id, f"{v.od19_plate_number} ({dict(v._fields['od19_vehicle_type'].selection)[v.od19_vehicle_type]})") for v in self]
   ```
 
-- [ ] **Step 2: เพิ่ม import + security + views + manifest**
+- [x] **Step 2: เพิ่ม import + security + views + manifest**
   - `models/__init__.py`: เพิ่ม `from . import od19_employee_vehicle`
   - `security/ir.model.access.csv`: เพิ่ม ACL (`base.group_user` read/write/create/unlink) — ปลอดภัยขึ้นด้วย ir.rule
   - `security/hr_expense_security.xml` (ใหม่): ir.rule พนักงานเห็น/แก้เฉพาะรถที่ `employee_id` เป็นของตัวเอง (ใช้ `employee_id.user_id = user` หรือ `employee_id = user.employee_id`); ให้กลุ่ม HR/บัญชี (`hr_expense.group_hr_expense_manager`, `account.group_account_manager`) อ่านได้
   - `views/od19_employee_vehicle_views.xml` (ใหม่): list + form + `ir.actions.act_window` + `menuitem` "รถของฉัน"
   - `__manifest__.py`: เพิ่ม 2 ไฟล์เข้า `data` (security ก่อน views) และ bump version `19.0.1.2.0` → `19.0.1.3.0`
 
-- [ ] **Step 3: autofill รถล่าสุด + snapshot**
+- [x] **Step 3: autofill รถล่าสุด + snapshot**
   ใน `models/hr_expense.py`:
   ```python
   @api.onchange('od19_is_mileage', 'employee_id')
@@ -236,7 +236,7 @@
   ```
   และใน `create()` เพิ่ม: ถ้า `od19_is_mileage` และมี `od19_mileage_vehicle_id` → อัปเดต `od19_last_used_date = od19_mileage_date or today` ของรถคันนั้น
 
-- [ ] **Step 4: ตรวจสอบ static**
+- [x] **Step 4: ตรวจสอบ static**
   รัน: `python -m py_compile custom_addons/od19_hr_expense_enhanced/models/od19_employee_vehicle.py custom_addons/od19_hr_expense_enhanced/models/hr_expense.py`
   Expected: exit 0
   ตรวจ XML well-formed ของไฟล์ views/security ใหม่
@@ -251,7 +251,7 @@
 - Create: `models/product_template.py`, `views/product_template_views.xml`, `data/od19_expense_category_data.xml`
 - Modify: `models/__init__.py`, `__manifest__.py`
 
-- [ ] **Step 1: ธงบนสินค้า**
+- [x] **Step 1: ธงบนสินค้า**
   ```python
   class ProductTemplate(models.Model):
       _inherit = 'product.template'
@@ -262,10 +262,10 @@
       )
   ```
 
-- [ ] **Step 2: ช่องติ๊กในฟอร์มสินค้า**
+- [x] **Step 2: ช่องติ๊กในฟอร์มสินค้า**
   `views/product_template_views.xml` inherit `hr_expense.view_product_hr_expense_form` แล้ววาง `<field name="od19_is_mileage_category"/>` ต่อจาก `can_be_expensed` (ให้ติ๊กเฉพาะเมื่อ `can_be_expensed`)
 
-- [ ] **Step 3: สินค้าหมวด Mileage (ราคาทุน 0)**
+- [x] **Step 3: สินค้าหมวด Mileage (ราคาทุน 0)**
   `data/od19_expense_category_data.xml` (`noupdate="1"`) สร้าง `product.product`:
   ```xml
   <record id="od19_expense_product_mileage" model="product.product">
@@ -282,7 +282,7 @@
   </record>
   ```
 
-- [ ] **Step 4: bootstrap + static**
+- [x] **Step 4: bootstrap + static**
   - `models/__init__.py`: เพิ่ม `from . import product_template`
   - `__manifest__.py`: เพิ่ม `views/product_template_views.xml` (หลัง views อื่น) + `data/od19_expense_category_data.xml` (ท้ายสุด) และ bump version `19.0.1.3.0` → `19.0.1.4.0`
   - `python -m py_compile` + ตรวจ XML well-formed
@@ -297,11 +297,11 @@
 - Create: `custom_addons/od19_hr_expense_portal/views/hr_expense_quick_create_views.xml`
 - Create: `custom_addons/od19_hr_expense_portal/security/ir.model.access.csv`
 
-- [ ] **Step 1: manifest + bootstrap**
+- [x] **Step 1: manifest + bootstrap**
   `__manifest__.py`: `depends = ['hr_expense', 'od19_hr_expense_thai', 'mail']`, `version '19.0.1.0.0'`, `data` เรียง security → views; `application=False`
   `__init__.py`: `from . import models`; `models/__init__.py`: import wizard + hr_expense helper
 
-- [ ] **Step 2: wizard (TransientModel) 4 ขั้น**
+- [x] **Step 2: wizard (TransientModel) 4 ขั้น**
   ```python
   class Od19ExpenseQuickCreate(models.TransientModel):
       _name = 'od19.expense.quick.create'
@@ -334,14 +334,14 @@
   ```
   > ⚠️ ใช้ `compute` (ไม่ใช่ `related`) เพื่อกันไม่ให้ wizard เขียนค่ากลับไปที่สินค้า; การแมปค่าลง `hr.expense` ทำใน `action_create_expense()` โดยอ้างผลลัพธ์เดียวกับ Task 1 (อย่าซ้ำลอจิกคำนวณ — ตั้ง `quantity`/`total_amount` แล้วให้ core คำนวณ `price_unit` เอง)
 
-- [ ] **Step 3: views (ฟอร์ม wizard) + menu**
+- [x] **Step 3: views (ฟอร์ม wizard) + menu**
   ฟอร์ม 4 กลุ่ม: (1) หมวด/พนักงาน/วันที่ (2) จำนวนเงิน หรือ ระยะทาง+รถ (invisible ตาม `od19_is_mileage`) (3) ต้นทาง/ปลายทาง + รายละเอียด (4) `submit_now`
   เพิ่ม `ir.actions.act_window` (target=new) + `menuitem` "ยื่นใบเบิกค่าใช้จ่าย" ใต้เมนู HR Expense
 
-- [ ] **Step 4: security**
+- [x] **Step 4: security**
   `security/ir.model.access.csv`: ให้ `base.group_user` read/write/create/unlink บน `od19.expense.quick.create`
 
-- [ ] **Step 5: ตรวจสอบ static**
+- [x] **Step 5: ตรวจสอบ static**
   รัน: `python -m py_compile` ทุกไฟล์ `.py` ใหม่; ตรวจ XML well-formed
 
 ---
@@ -353,7 +353,7 @@
 - Create: `custom_addons/od19_hr_expense_portal/views/hr_expense_kanban_views.xml`
 - Modify: `__manifest__.py` (เพิ่มไฟล์)
 
-- [ ] **Step 1: helper ข้อความ "รอใคร" (guarded ตาม C1)**
+- [x] **Step 1: helper ข้อความ "รอใคร" (guarded ตาม C1)**
   ```python
   class HrExpense(models.Model):
       _inherit = 'hr.expense'
@@ -372,12 +372,12 @@
   ```
   > ป้ายนี้จะสมบูรณ์เมื่อ Phase 1 merge (ฟิลด์ `review_ids` ปรากฏ) — ก่อนหน้านั้น fallback ตาม `state`
 
-- [ ] **Step 2: Kanban view + action + menu**
+- [x] **Step 2: Kanban view + action + menu**
   Kanban จัดกลุ่มตาม `state`, การ์ดแสดง `name`, `total_amount`, `employee_id`, `od19_approval_hint`
   `ir.actions.act_window`: `domain="[('employee_id.user_id','=',uid)]"`, `view_mode="kanban,list,form"`, context `{'search_default_my_expenses': 1}`
   `menuitem` "ใบเบิกของฉัน"
 
-- [ ] **Step 3: ตรวจสอบ static**
+- [x] **Step 3: ตรวจสอบ static**
   `python -m py_compile` + ตรวจ XML
 
 ---
@@ -426,7 +426,7 @@
    ```
 2. Upgrade DB `odoo19_pdev`:
    ```powershell
-   .\start-odoo19.bat
+   .\STEP-3-Start-Odoo19.ps1
    # หรือ
    odoo-bin -u od19_hr_expense_enhanced,od19_hr_expense_portal --stop-after-init -c odoo.conf
    ```

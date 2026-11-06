@@ -64,7 +64,7 @@
 
 **Files:** ไม่มี (ตรวจสอบสภาพแวดล้อม)
 
-- [ ] **Step 1: ตรวจ branch และสถานะ**
+- [x] **Step 1: ตรวจ branch และสถานะ**
 
 Run:
 ```powershell
@@ -74,11 +74,11 @@ git branch --show-current
 ```
 Expected: อยู่ที่ branch งาน (`feature/od19-billing-request-from-inventory`) · working tree สะอาด หรือมีเฉพาะไฟล์ที่งานนี้จะแตะ · **ไม่มี** ไฟล์ `.git/index.lock`
 
-- [ ] **Step 2: บันทึก HEAD ไว้**
+- [x] **Step 2: บันทึก HEAD ไว้**
 
 จดค่า SHA จาก `git log -1 --oneline` ไว้รายงานตอนจบ
 
-- [ ] **Step 3: ยืนยัน HEAD ไม่เปลี่ยนใน 2 นาที**
+- [x] **Step 3: ยืนยัน HEAD ไม่เปลี่ยนใน 2 นาที**
 
 Run (รอ 120 วินาทีแล้วเทียบ):
 ```powershell
@@ -96,7 +96,7 @@ Expected: SHA เท่าเดิม → ผ่าน Single-writer · ถ้�
 - Create: `custom_addons/od19_hr_expense_thai/tests/test_hr_expense_tier.py`
 - Modify: `custom_addons/od19_hr_expense_thai/tests/__init__.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน (failing test)**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน (failing test)**
 
 สร้างไฟล์ `custom_addons/od19_hr_expense_thai/tests/test_hr_expense_tier.py`:
 
@@ -137,7 +137,7 @@ class TestHrExpenseTierValidation(TransactionCase):
         self.assertEqual(group.name, "Expense CEO Approver")
 ```
 
-- [ ] **Step 2: เพิ่ม import ไฟล์เทสต์ใหม่**
+- [x] **Step 2: เพิ่ม import ไฟล์เทสต์ใหม่**
 
 > ⚠️ **ห้ามเขียนทับไฟล์** — `tests/__init__.py` ปัจจุบันมี 2 บรรทัด (`test_hr_expense_thai`, `test_hr_expense_reimburse`) ให้ **เพิ่ม** บรรทัดใหม่ต่อท้ายเท่านั้น มิฉะนั้นเทสต์ reimburse 4 รายการจะหายไปจากชุดทดสอบ
 
@@ -150,7 +150,7 @@ from . import test_hr_expense_reimburse
 from . import test_hr_expense_tier
 ```
 
-- [ ] **Step 3: รันเทสต์เพื่อยืนยันว่า fail**
+- [x] **Step 3: รันเทสต์เพื่อยืนยันว่า fail**
 
 Run (ผู้ใช้รันเองบน terminal ของเครื่อง):
 ```powershell
@@ -159,7 +159,7 @@ cd c:\odoo-dev\odoo19
 ```
 Expected: FAIL — `ValueError: External ID not found ... group_od19_expense_ceo_approver`
 
-- [ ] **Step 4: สร้างไฟล์ security XML**
+- [x] **Step 4: สร้างไฟล์ security XML**
 
 สร้าง `custom_addons/od19_hr_expense_thai/security/hr_expense_security.xml`:
 
@@ -180,7 +180,7 @@ Expected: FAIL — `ValueError: External ID not found ... group_od19_expense_ceo
 </odoo>
 ```
 
-- [ ] **Step 5: ลงทะเบียนไฟล์ security + bump version ใน manifest**
+- [x] **Step 5: ลงทะเบียนไฟล์ security + bump version ใน manifest**
 
 แก้ `custom_addons/od19_hr_expense_thai/__manifest__.py`:
 - `version`: `'19.0.1.1.0'` → `'19.0.1.2.0'`
@@ -197,7 +197,7 @@ Expected: FAIL — `ValueError: External ID not found ... group_od19_expense_ceo
     ],
 ```
 
-- [ ] **Step 6: รันเทสต์เพื่อยืนยันว่าผ่าน**
+- [x] **Step 6: รันเทสต์เพื่อยืนยันว่าผ่าน**
 
 Run:
 ```powershell
@@ -205,7 +205,7 @@ Run:
 ```
 Expected: PASS — `test_ceo_group_exists`
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```powershell
 git add custom_addons/od19_hr_expense_thai/security/hr_expense_security.xml custom_addons/od19_hr_expense_thai/__manifest__.py custom_addons/od19_hr_expense_thai/tests/test_hr_expense_tier.py custom_addons/od19_hr_expense_thai/tests/__init__.py
@@ -221,7 +221,7 @@ git commit -m "feat(od19_hr_expense_thai): add CEO approver group for expense ti
 - Modify: `custom_addons/od19_hr_expense_thai/__manifest__.py`
 - Modify: `custom_addons/od19_hr_expense_thai/tests/test_hr_expense_tier.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 เพิ่ม method ต่อไปนี้ใน `TestHrExpenseTierValidation` (ไฟล์ `tests/test_hr_expense_tier.py`):
 
@@ -258,7 +258,7 @@ git commit -m "feat(od19_hr_expense_thai): add CEO approver group for expense ti
         self.assertTrue(all(defs.mapped("has_forward")))
 ```
 
-- [ ] **Step 2: รันเทสต์เพื่อยืนยันว่า fail**
+- [x] **Step 2: รันเทสต์เพื่อยืนยันว่า fail**
 
 Run:
 ```powershell
@@ -266,7 +266,7 @@ Run:
 ```
 Expected: FAIL — `test_three_tier_definitions_exist` ได้ 0 รายการ
 
-- [ ] **Step 3: สร้างไฟล์ข้อมูล tier.definition**
+- [x] **Step 3: สร้างไฟล์ข้อมูล tier.definition**
 
 สร้าง `custom_addons/od19_hr_expense_thai/data/tier_definition_data.xml`:
 
@@ -333,7 +333,7 @@ Expected: FAIL — `test_three_tier_definitions_exist` ได้ 0 รายก�
 </odoo>
 ```
 
-- [ ] **Step 4: เพิ่ม dependency + ลงทะเบียน data ใน manifest**
+- [x] **Step 4: เพิ่ม dependency + ลงทะเบียน data ใน manifest**
 
 แก้ `custom_addons/od19_hr_expense_thai/__manifest__.py`:
 - `depends`: เพิ่ม `'hr_expense_tier_validation'`, `'base_tier_validation'`, `'base_tier_validation_forward'`
@@ -358,7 +358,7 @@ Expected: FAIL — `test_three_tier_definitions_exist` ได้ 0 รายก�
     ],
 ```
 
-- [ ] **Step 5: รันเทสต์เพื่อยืนยันว่าผ่าน**
+- [x] **Step 5: รันเทสต์เพื่อยืนยันว่าผ่าน**
 
 Run:
 ```powershell
@@ -366,7 +366,7 @@ Run:
 ```
 Expected: PASS — `test_three_tier_definitions_exist`, `test_tier_definitions_reviewer_groups`, `test_tier_definition_order_and_forward`
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add custom_addons/od19_hr_expense_thai/data/tier_definition_data.xml custom_addons/od19_hr_expense_thai/__manifest__.py custom_addons/od19_hr_expense_thai/tests/test_hr_expense_tier.py
@@ -384,7 +384,7 @@ git commit -m "feat(od19_hr_expense_thai): add 3-tier approval definitions" -m "
 
 > **หมายเหตุ:** ห้ามลบฟิลด์ (`first_approval_date`, `second_approver_id`, `second_approval_date`, `second_approval_state`, `require_second_approval`) ออกจากโมเดล — คงไว้เพื่อความเข้ากันได้ของข้อมูล (spec §13 K1/K5) แค่ถอดการใช้งานออกจาก form view
 
-- [ ] **Step 1: ถอดปุ่มและฟิลด์อนุมัติเดิมออกจาก form view**
+- [x] **Step 1: ถอดปุ่มและฟิลด์อนุมัติเดิมออกจาก form view**
 
 แก้ `custom_addons/od19_hr_expense_thai/views/hr_expense_views.xml` ให้เหลือ:
 
@@ -420,13 +420,13 @@ git commit -m "feat(od19_hr_expense_thai): add 3-tier approval definitions" -m "
 </odoo>
 ```
 
-- [ ] **Step 2: ถอด method อนุมัติ 2 ชั้นเดิมออกจากโมเดล**
+- [x] **Step 2: ถอด method อนุมัติ 2 ชั้นเดิมออกจากโมเดล**
 
 แก้ `custom_addons/od19_hr_expense_thai/models/hr_expense.py` — ลบ 3 method นี้ทั้งหมด (`action_approve_first`, `action_approve_second`, `action_refuse_second`) **โดยคง** `action_mark_reimbursed` และ helper ที่ใช้จ่ายคืนทั้งหมดไว้
 
 หลังแก้ ส่วนหัวของคลาสต้องไม่มี 3 method นั้น (กระโดดจากฟิลด์ไปที่ `action_mark_reimbursed` โดยตรง)
 
-- [ ] **Step 3: ลบเทสต์ที่อ้าง method ที่ถอดออก**
+- [x] **Step 3: ลบเทสต์ที่อ้าง method ที่ถอดออก**
 
 แก้ `custom_addons/od19_hr_expense_thai/tests/test_hr_expense_thai.py` — **ลบ 3 method** ต่อไปนี้ออกทั้งบล็อก:
 - `test_first_approval_no_second_required`
@@ -435,7 +435,7 @@ git commit -m "feat(od19_hr_expense_thai): add 3-tier approval definitions" -m "
 
 **คง** `test_payment_method_default`, `test_thai_expense_type_default`, `test_require_second_approval_below_threshold`, `test_require_second_approval_above_threshold`, `test_mark_reimbursed_requires_posted_expense`, `test_mark_reimbursed_company_account_raises`
 
-- [ ] **Step 4: ตรวจไวยากรณ์แบบ static**
+- [x] **Step 4: ตรวจไวยากรณ์แบบ static**
 
 Run:
 ```powershell
@@ -443,7 +443,7 @@ python -m py_compile custom_addons/od19_hr_expense_thai/models/hr_expense.py cus
 ```
 Expected: ไม่มีข้อผิดพลาด (exit 0)
 
-- [ ] **Step 5: รันเทสต์**
+- [x] **Step 5: รันเทสต์**
 
 Run:
 ```powershell
@@ -451,7 +451,7 @@ Run:
 ```
 Expected: PASS ทั้งหมด (ไม่มีเทสต์ที่อ้าง `action_approve_first/second` เหลืออยู่)
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add custom_addons/od19_hr_expense_thai/views/hr_expense_views.xml custom_addons/od19_hr_expense_thai/models/hr_expense.py custom_addons/od19_hr_expense_thai/tests/test_hr_expense_thai.py
@@ -465,7 +465,7 @@ git commit -m "refactor(od19_hr_expense_thai): drop legacy 2-level approval UI a
 **Files:**
 - Modify: `custom_addons/od19_hr_expense_thai/tests/test_hr_expense_tier.py`
 
-- [ ] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
+- [x] **Step 1: เขียนเทสต์ที่ยังไม่ผ่าน**
 
 เพิ่ม helper และเทสต์ต่อไปนี้ใน `TestHrExpenseTierValidation`:
 
@@ -534,7 +534,7 @@ git commit -m "refactor(od19_hr_expense_thai): drop legacy 2-level approval UI a
             expense.write({"name": "Hacked"})
 ```
 
-- [ ] **Step 2: รันเทสต์เพื่อยืนยันว่า fail (ถ้ามี)**
+- [x] **Step 2: รันเทสต์เพื่อยืนยันว่า fail (ถ้ามี)**
 
 Run:
 ```powershell
@@ -542,13 +542,13 @@ Run:
 ```
 Expected: ถ้า Task 2 ยังไม่ครบ → FAIL ที่ `test_request_validation_creates_three_reviews` (ไม่มี review) · ถ้า Task 2 ครบแล้ว → ผ่านทั้งหมด
 
-- [ ] **Step 3: แก้ไขให้ผ่าน (ถ้าจำเป็น)**
+- [x] **Step 3: แก้ไขให้ผ่าน (ถ้าจำเป็น)**
 
 ถ้า `test_cannot_approve_out_of_order` fail ให้ตรวจว่า `base_tier_validation` มี logic "หยุดที่ review แรกที่ไม่ใช่ของผู้ใช้" ใน `_validate_tier` (บรรทัด ~565-573) ตามที่ยืนยันไว้ — ถ้าไม่ตรง ให้ **หยุดและรายงานผู้ใช้** ห้าม patch โมดูลใน `third_party/`
 
 > ⚠️ **ห้ามแก้ไฟล์ใน `third_party/oca/`** — หากพฤติกรรมไม่ตรงตามที่คาด ให้รายงานเป็น blocker
 
-- [ ] **Step 4: รันเทสต์เพื่อยืนยันว่าผ่าน**
+- [x] **Step 4: รันเทสต์เพื่อยืนยันว่าผ่าน**
 
 Run:
 ```powershell
@@ -556,7 +556,7 @@ Run:
 ```
 Expected: PASS ทั้งหมด
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add custom_addons/od19_hr_expense_thai/tests/test_hr_expense_tier.py
@@ -575,7 +575,7 @@ git commit -m "test(od19_hr_expense_thai): cover 3-tier approval order and write
 
 > เหตุผลที่ต้องมี migration: `post_init_hook` ข้ามรายการที่มี `model_id + name` อยู่แล้ว → ฐานข้อมูลที่เคย seed ไปแล้วจะไม่ถูกอัปเดต
 
-- [ ] **Step 1: เปลี่ยนเทสต์เดิมให้ตรงกับพฤติกรรมใหม่**
+- [x] **Step 1: เปลี่ยนเทสต์เดิมให้ตรงกับพฤติกรรมใหม่**
 
 แก้ `custom_addons/od19_approval_center/tests/test_approval_seed.py` — แทนที่ `test_expense_source_has_two_steps` ด้วย:
 
@@ -591,7 +591,7 @@ git commit -m "test(od19_hr_expense_thai): cover 3-tier approval order and write
         self.assertEqual(source.sla_days, 3)
 ```
 
-- [ ] **Step 2: รันเทสต์เพื่อยืนยันว่า fail**
+- [x] **Step 2: รันเทสต์เพื่อยืนยันว่า fail**
 
 Run:
 ```powershell
@@ -599,7 +599,7 @@ Run:
 ```
 Expected: FAIL — `strategy` ยังเป็น `field`
 
-- [ ] **Step 3: เปลี่ยน source spec**
+- [x] **Step 3: เปลี่ยน source spec**
 
 แก้ `custom_addons/od19_approval_center/data/approval_sources.py` — แทน dict ของ `hr.expense` (บรรทัด 9-30) เป็น:
 
@@ -621,7 +621,7 @@ Expected: FAIL — `strategy` ยังเป็น `field`
     },
 ```
 
-- [ ] **Step 4: เพิ่ม migration script สำหรับฐานข้อมูลที่ seed แล้ว**
+- [x] **Step 4: เพิ่ม migration script สำหรับฐานข้อมูลที่ seed แล้ว**
 
 แก้ `custom_addons/od19_approval_center/__manifest__.py` — `version`: `'19.0.1.0.0'` → `'19.0.1.1.0'`
 
@@ -665,7 +665,7 @@ def migrate(cr, version):
     )
 ```
 
-- [ ] **Step 5: รันเทสต์เพื่อยืนยันว่าผ่าน**
+- [x] **Step 5: รันเทสต์เพื่อยืนยันว่าผ่าน**
 
 Run:
 ```powershell
@@ -673,7 +673,7 @@ Run:
 ```
 Expected: PASS — `test_expense_source_is_tier_without_steps`
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add custom_addons/od19_approval_center/data/approval_sources.py custom_addons/od19_approval_center/migrations/19.0.1.1.0/post-migrate.py custom_addons/od19_approval_center/__manifest__.py custom_addons/od19_approval_center/tests/test_approval_seed.py
@@ -689,7 +689,7 @@ git commit -m "feat(od19_approval_center): switch hr.expense source to tier_vali
 - Modify: `custom_addons/od19_role_catalog/__manifest__.py`
 - Modify: `custom_addons/od19_role_catalog/tests/test_role_catalog.py`
 
-- [ ] **Step 1: อัปเดตเทสต์ (matrix + จำนวนบทบาท)**
+- [x] **Step 1: อัปเดตเทสต์ (matrix + จำนวนบทบาท)**
 
 แก้ `custom_addons/od19_role_catalog/tests/test_role_catalog.py`:
 - ใน `ROLE_MATRIX` ใต้ family G (ต่อจาก `role_meeting_room_manager`) เพิ่ม:
@@ -715,7 +715,7 @@ git commit -m "feat(od19_approval_center): switch hr.expense source to tier_vali
         self.assertEqual(len(ROLE_MATRIX), 44, "Role Matrix ต้องมี 44 บทบาท")
 ```
 
-- [ ] **Step 2: รันเทสต์เพื่อยืนยันว่า fail**
+- [x] **Step 2: รันเทสต์เพื่อยืนยันว่า fail**
 
 Run:
 ```powershell
@@ -723,7 +723,7 @@ Run:
 ```
 Expected: FAIL — `role_expense_ceo_approver` ไม่พบ
 
-- [ ] **Step 3: เพิ่มบทบาท CEO**
+- [x] **Step 3: เพิ่มบทบาท CEO**
 
 แก้ `custom_addons/od19_role_catalog/data/od19_roles_backoffice.xml` — เพิ่ม record ต่อจาก `role_meeting_room_manager` (ก่อนสิ้นสุดส่วน G):
 
@@ -742,7 +742,7 @@ Expected: FAIL — `role_expense_ceo_approver` ไม่พบ
 
 > หมายเหตุ: `hr_expense.group_hr_expense_user` ให้สิทธิ์อ่าน/ใช้งานโมดูลค่าใช้จ่ายเพื่อให้ CEO เห็นเอกสารที่ต้องอนุมัติ
 
-- [ ] **Step 4: เพิ่ม dependency + bump version**
+- [x] **Step 4: เพิ่ม dependency + bump version**
 
 แก้ `custom_addons/od19_role_catalog/__manifest__.py`:
 - `version`: `'19.0.1.0.0'` → `'19.0.1.1.0'`
@@ -754,7 +754,7 @@ Expected: FAIL — `role_expense_ceo_approver` ไม่พบ
         "od19_currency_rate_bot",
 ```
 
-- [ ] **Step 5: รันเทสต์เพื่อยืนยันว่าผ่าน**
+- [x] **Step 5: รันเทสต์เพื่อยืนยันว่าผ่าน**
 
 Run:
 ```powershell
@@ -762,7 +762,7 @@ Run:
 ```
 Expected: PASS ทั้งหมด (รวม `test_all_roles_are_loaded` = 44)
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add custom_addons/od19_role_catalog/data/od19_roles_backoffice.xml custom_addons/od19_role_catalog/__manifest__.py custom_addons/od19_role_catalog/tests/test_role_catalog.py
@@ -778,7 +778,7 @@ git commit -m "feat(od19_role_catalog): add CEO expense approver role" -m "บ�
 
 > Tour เป็นฝั่ง frontend และต้องสลับผู้ใช้จึงจะทดสอบได้ครบ · ปรับให้สอดคล้องปุ่มใหม่ (Submit → Request Validation → Validate → Reimburse) และใช้ `isActive` กันค้างเหมือนเดิม
 
-- [ ] **Step 1: ปรับบรรยายและขั้นตอน L1/L2 แทนด้วยขั้นตอน tier**
+- [x] **Step 1: ปรับบรรยายและขั้นตอน L1/L2 แทนด้วยขั้นตอน tier**
 
 แก้ `custom_addons/od19_user_guide_tours/static/src/tours/hr_expense_tour.js`:
 - เปลี่ยนข้อความเปิด: `2-level approval` → `3-level tier approval`
@@ -820,7 +820,7 @@ git commit -m "feat(od19_role_catalog): add CEO expense approver role" -m "บ�
             )),
 ```
 
-- [ ] **Step 2: ตรวจไวยากรณ์ JS**
+- [x] **Step 2: ตรวจไวยากรณ์ JS**
 
 Run:
 ```powershell
@@ -828,7 +828,7 @@ node --check custom_addons/od19_user_guide_tours/static/src/tours/hr_expense_tou
 ```
 Expected: exit 0 (ไม่มี syntax error)
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```powershell
 git add custom_addons/od19_user_guide_tours/static/src/tours/hr_expense_tour.js
@@ -842,7 +842,7 @@ git commit -m "docs(od19_user_guide_tours): align expense tour with tier approva
 **Files:**
 - Modify: `docs/superpowers/specs/2026-11-06-od19-hr-expense-reimbursement-design.md`
 
-- [ ] **Step 1: ค้นหาจุดที่ต้องแก้**
+- [x] **Step 1: ค้นหาจุดที่ต้องแก้**
 
 Run:
 ```powershell
@@ -850,11 +850,11 @@ Select-String -Path docs\superpowers\specs\2026-11-06-od19-hr-expense-reimbursem
 ```
 Expected: พบทุกจุดที่กล่าวถึง Delegations (คาดว่าอยู่ใน §2.1, §8, §11, §13, §15)
 
-- [ ] **Step 2: แก้ถ้อยคำ**
+- [x] **Step 2: แก้ถ้อยคำ**
 
 แทนที่ทุกคำว่า `Delegations` / `tier_validation_delegation` ด้วย `Forward` / `base_tier_validation_forward` และระบุว่าการมอบหมายต่อทำผ่านฟิลด์ `tier.definition.has_forward = True`
 
-- [ ] **Step 3: ยืนยันไม่มีคำเดิมเหลือ**
+- [x] **Step 3: ยืนยันไม่มีคำเดิมเหลือ**
 
 Run:
 ```powershell
@@ -862,7 +862,7 @@ Select-String -Path docs\superpowers\specs\2026-11-06-od19-hr-expense-reimbursem
 ```
 Expected: ไม่พบผลลัพธ์
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```powershell
 git add docs/superpowers/specs/2026-11-06-od19-hr-expense-reimbursement-design.md
@@ -887,7 +887,7 @@ Expected: PASS ทั้ง 3 โมดูล
 
 Run:
 ```powershell
-.\start-odoo19.bat
+.\STEP-3-Start-Odoo19.ps1
 ```
 (หรือรัน `odoo-bin -d odoo19_pdev -u od19_hr_expense_thai,od19_approval_center,od19_role_catalog --stop-after-init` ตามสคริปต์ของโปรเจกต์)
 Expected: ไม่มี error ตอนโหลด data/migration
