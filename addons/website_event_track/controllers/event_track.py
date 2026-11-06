@@ -235,14 +235,14 @@ class EventTrackController(http.Controller):
         time_slots_by_day = dict((day, dict(start=set(), end=set())) for day in days)
         tracks_by_rounded_times = dict((time_slot, dict((location, {}) for location in locations)) for time_slot in track_time_slots)
         for track, time_slots in time_slots_by_tracks.items():
-            start_date = fields.Datetime.from_string(track.date).replace(tzinfo=UTC).astimezone(local_tz)
+            start_date = fields.Datetime.from_string(track.date).replace(tzinfo=UTC)
             end_date = start_date + timedelta(hours=(track.duration or 0.25))
 
             for time_slot, duration in time_slots.items():
                 tracks_by_rounded_times[time_slot][track.location_id][track] = {
                     'rowspan': duration,  # rowspan
-                    'start_date': format_time(self.env, start_date, time_format='short', lang_code=lang.code),
-                    'end_date': format_time(self.env, end_date, time_format='short', lang_code=lang.code),
+                    'start_date': format_time(self.env, start_date, tz=local_tz, time_format='short', lang_code=lang.code),
+                    'end_date': format_time(self.env, end_date, tz=local_tz, time_format='short', lang_code=lang.code),
                     'occupied_cells': self._get_occupied_cells(track, duration, locations, local_tz)
                 }
 
