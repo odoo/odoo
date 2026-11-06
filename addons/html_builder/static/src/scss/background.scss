@@ -60,6 +60,13 @@ section, .oe_img_bg, [data-oe-shape-data] {
 
 .o_we_shape {
     @extend %o-we-background-layer;
+    /* This element covers its section and draws the shape as its background
+       image. With a fractional element width (e.g. when zoomed), Chrome can
+       compute a height for a "100% auto" image that leaves a visible line
+       between the image and the next section. Rounding the element width to
+       a whole number of pixels, keeping the element centered, avoids most of
+       those lines. */
+    inset-inline: calc((100% - round(nearest, 100%, 1px)) / 2);
 
     &.o_we_animated {
         will-change: transform;
