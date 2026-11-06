@@ -1,0 +1,175 @@
+/* Product Variants Custom Styling */
+.product-attribute-group {
+    margin-bottom: 1.5rem;
+}
+
+.attribute-name {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    color: #333;
+}
+
+.attribute-values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.attribute-value-btn {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 80px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.attribute-value-btn:hover {
+    border-color: #bbb;
+    background-color: #f9f9f9;
+}
+
+.attribute-value-btn.selected {
+    border: 2px solid #ff7300;
+    background-color: #fff;
+    font-weight: 500;
+    padding: 7px 15px; /* Compensate for thicker border */
+}
+
+/* Disabled variant styling */
+.attribute-value-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #eee;
+}
+
+/* Custom animation for selection */
+.attribute-value-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 115, 0, 0.3);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+.attribute-value-btn.selected::after {
+    animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0) translate(-50%, -50%);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(20, 20) translate(-50%, -50%);
+        opacity: 0;
+    }
+}
+
+/* Product Variants Styling */
+
+/* Attribute group container */
+.attribute-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Attribute name (e.g., "Мощность", "Длина") */
+.attribute-name {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #444;
+    background: #f8f8f8;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+/* Variant button styling */
+.variant-button {
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+    overflow: hidden;
+    position: relative;
+}
+
+.variant-button-content {
+    padding: 6px 12px;
+    min-width: 60px;
+    text-align: center;
+    font-size: 14px;
+    background: white;
+    color: #333;
+}
+
+/* When a variant is selected (input is checked) */
+.variant-button input:checked + span {
+    font-weight: 500;
+}
+
+.variant-button input:checked {
+    background-color: #ff7300;
+}
+
+.variant-button:has(input:checked) {
+    border: 2px solid #ff7300;
+}
+
+/* Hover effect for variant buttons */
+.variant-button:hover {
+    border-color: #aaa;
+    background-color: #f9f9f9;
+}
+
+/* Active/focus state for variant buttons */
+.variant-button:active,
+.variant-button:focus {
+    outline: none;
+    border-color: #ff7300;
+}
+
+/* Disabled variant styling */
+.variant-button.css_not_available {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: #eee;
+}
+
+/* Hide radio inputs while keeping them functional */
+.variant-button input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Make Odoo's attribute color system work with our custom styling */
+.css_attribute_color {
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}

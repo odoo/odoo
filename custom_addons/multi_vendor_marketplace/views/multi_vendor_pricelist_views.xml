@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree view for  'multi.vendor.pricelist' model  -->
+    <record id="multi_vendor_pricelis_view_tree" model="ir.ui.view">
+        <field name="name">multi.vendor.pricelist.view.tree</field>
+        <field name="model">multi.vendor.pricelist</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="price_list_id"/>
+                <field name="price_of_pricelist" string="Price"/>
+                <field name="min_qty"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
