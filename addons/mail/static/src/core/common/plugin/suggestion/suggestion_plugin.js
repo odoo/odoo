@@ -278,8 +278,9 @@ export class MailSuggestionPlugin extends Plugin {
         });
         this.deps.onInsertSuggestion?.(option);
         const inlineElement = source.toNode?.(option) ?? this.document.createTextNode(option.label);
-        this.dependencies.dom.insert(inlineElement);
-        const [anchorNode, anchorOffset] = rightPos(inlineElement);
+        // the inserted node is not the given one when the insertion replaced it
+        const insertedNodes = this.dependencies.dom.insert(inlineElement);
+        const [anchorNode, anchorOffset] = rightPos(insertedNodes.at(-1));
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         this.dependencies.dom.insert("\u00A0");
         this.dependencies.history.commit();
