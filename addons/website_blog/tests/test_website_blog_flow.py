@@ -188,7 +188,8 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             content, even when it is hosted on another website. """
         external_image = 'https://download.odoocdn.com/icons/website/static/description/icon.svg'
         self.test_blog_post.content = f'<p><img src="{external_image}"></p>'
-        self.assertEqual(self.test_blog_post._prepare_jsonld_vals()['image'], external_image)
+        with MockRequest(self.env):
+            self.assertEqual(self.test_blog_post._prepare_jsonld_vals()['image'], external_image)
 
 
 @tagged('-at_install', 'post_install')
