@@ -91,10 +91,67 @@ registry.category("web_tour.tours").add('main_flow_tour', {
 {
     trigger: ".o_form_saved",
 },
-stepUtils.autoExpandMoreButtons(),
+{
+    ...stepUtils.autoExpandMoreButtons(),
+    isActive: ["desktop"],
+},
 {
     trigger: '.o_form_saved',
 },
+{
+    trigger: '.o_form_button_create',
+    content: "Create component 1",
+    run: "click",
+}, {
+    trigger: '.o_field_widget[name=name] textarea',
+    run: "edit the_flow.component1",
+}, {
+    trigger: '.o_form_button_save',
+    run: "click",
+}, {
+    trigger: ".o_form_saved",
+},
+{
+    trigger: '.o_form_button_create',
+    content: "Create component 2",
+    run: "click",
+}, {
+    trigger: '.o_field_widget[name=name] textarea',
+    run: "edit the_flow.component2",
+}, {
+    // lots and serial numbers are on
+    isActive: [".o_field_widget[name=store_by]"],
+    trigger: ".o_field_widget[name=store_by] .dropdown-toggle",
+    content: "Open tracking menu",
+    run: "click",
+}, {
+    isActive: [".o_field_widget[name=store_by]"],
+    trigger: ".o_select_menu_item:contains('By Quantity')",
+    content: "Select By Quantity",
+    run: "click",
+}, {
+    // lots and serial numbers are off
+    isActive: [".o_field_widget[name=is_storable]"],
+    trigger: ".o_field_widget[name=is_storable] input",
+    content: "Enable inventory tracking",
+    run: "click",
+},
+{
+    isActive: ["desktop"],
+    trigger: ".breadcrumb-item:has(a:contains('Products')) a",
+    content: "Go back to Products kanban",
+    run: "click",
+},{
+    isActive: ["mobile"],
+    trigger: ".o_back_button",
+    content: "Go back to Products kanban",
+    run: "click",
+}, {
+    trigger: ".o_kanban_record:contains('the_flow.product')",
+    content: "Re-open the_flow.product",
+    run: "click",
+},
+stepUtils.autoExpandMoreButtons(),
 {
     trigger: ".oe_stat_button div[name=bom_count]",
     content: 'See Bill of material',
@@ -113,31 +170,31 @@ stepUtils.autoExpandMoreButtons(),
     trigger: ".o_field_x2many_list_row_add > button",
     content: "Click here to add some lines.",
     run: "click",
-}, {
+},
+{
+    isActive: ["mobile"],
+    trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
+    content: "Click the row to see the products.",
+    run: "click",
+},
+{
     isActive: ["desktop"],
     trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
-    content: "Select a product, or create a new one on the fly.",
+    content: "Click the row to see the products.",
     run: "edit the_flow.component1",
 }, {
     isActive: ["desktop"],
     trigger: ".ui-menu-item > a:contains('the_flow.component1')",
     run: "click",
-}, {
+},
+...stepUtils.mobileKanbanSearchMany2X('Product', 'the_flow.component1'),
+{
     isActive: ["mobile"],
-    trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
-    content: "Click here to open kanban search mobile.",
+    trigger: '.o_selected_row .o_external_button',
+    content: "Select a product",
     run: "click",
-}, {
-    isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-dialog .btn:contains('New')",
-    content: "Click here to add new line.",
-    run: "click",
-}, {
-    isActive: ["mobile"],
-    trigger: '.modal-body .o_form_editable .o_field_widget[name="name"] textarea',
-    content: "Select a product, or create a new one on the fly.",
-    run: "edit the_flow.component1",
-}, {
+}, 
+{
 // Edit first component
     isActive: ["desktop"],
     trigger: ".o_selected_row .o_external_button",
@@ -249,20 +306,9 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-title:contains(Component)",
-},
-{
-    isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(Save):enabled",
-    content: 'Save',
+    trigger: '.o_back_button',
+    content: 'Go back',
     run: "click",
-},
-{
-    trigger: "body:not(:has(.modal))",
-},
-{
-    isActive: ["mobile"],
-    trigger: ".o_form_editable",
 },
 {
     isActive: ["mobile"],
@@ -306,17 +352,13 @@ stepUtils.autoExpandMoreButtons(),
     content: "Click here to open kanban search mobile.",
     run: "click",
 },
+...stepUtils.mobileKanbanSearchMany2X('Product', 'the_flow.component2'),
 {
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-dialog .btn:contains(New)",
-    content: "Click here to add new line.",
+    trigger: '.o_selected_row .o_external_button',
+    content: "Select a product",
     run: "click",
-}, {
-    isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-body .o_form_editable .o_field_widget[name=name] textarea",
-    content: "Select a product, or create a new one on the fly.",
-    run: "edit the_flow.component2",
-},
+}, 
 {
     isActive: ["desktop"],
     trigger: '.o_field_widget[name=bom_line_ids] .o_data_row:nth-child(2).o_selected_row',
@@ -408,20 +450,9 @@ stepUtils.autoExpandMoreButtons(),
 },
 {
     isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-title:contains(create component)",
-},
-{
-    isActive: ["mobile"],
-    trigger: ".modal:not(.o_inactive_modal) .modal-footer .btn-primary:contains(Save):enabled",
-    content: 'Save',
+    trigger: '.o_back_button',
+    content: 'Go back',
     run: "click",
-},
-{
-    trigger: "body:not(:has(.modal))",
-},
-{
-    isActive: ["mobile"],
-    trigger: ".o_form_editable",
 },
 {
     isActive: ["mobile"],

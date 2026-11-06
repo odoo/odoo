@@ -567,6 +567,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             resupply_rules = self._get_resupply_rules(production, product, replenish_data)
             rules_delay = sum(rule.delay for rule in resupply_rules)
             resupply_data = self._get_resupply_data(resupply_rules, rules_delay, missing_quantity, move_raw.uom_id, product, production)
+            available_stock = product.with_context(warehouse=(production.warehouse_id or move_raw.location_id.warehouse_id).id).virtual_available
+            replenish_quantity = abs(available_stock) if available_stock < 0 else move_raw.uom_id._compute_quantity(missing_quantity, product.uom_id)
 
             to_order_line = {'summary': {
                 'level': level + 1,
@@ -576,7 +578,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'product_model': product._name,
                 'product_id': product.id,
                 'quantity': missing_quantity,
-                'replenish_quantity': move_raw.uom_id._compute_quantity(missing_quantity, product.uom_id),
+                'replenish_quantity': replenish_quantity,
                 'uom_name': move_raw.uom_id.display_name,
                 'uom_precision': self._get_uom_precision(),
                 'currency_id': currency.id,
