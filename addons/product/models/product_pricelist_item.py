@@ -85,7 +85,7 @@ class ProductPricelistItem(models.Model):
         help="Specify a product if this rule only applies to one product. Keep empty otherwise.")
     product_uom_name = fields.Char(related='product_tmpl_id.uom_name')
     product_variant_count = fields.Integer(related='product_tmpl_id.product_variant_count')
-    uom_id = fields.Many2one(string="Packaging", comodel_name='uom.uom')
+    uom_id = fields.Many2one(string="Packaging", comodel_name='uom.uom', index=True)
     allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
 
     # Price Related Fields
@@ -121,6 +121,12 @@ class ProductPricelistItem(models.Model):
     )
 
     fixed_price = fields.Float(string="Fixed Price", min_display_digits='Product Price')
+    packaging_price = fields.Float(
+        compute="_compute_packaging_price",
+        inverse="_inverse_packaging_price",
+        readonly=False,
+        store=True
+    )
 
     price_discount = fields.Float(
         string="Price Discount",
@@ -170,7 +176,35 @@ class ProductPricelistItem(models.Model):
         search='_search_is_plain_discount',
         help="Whether the rule lowers the price by exactly its discount percentage.")
 
+    relative_uom_name = fields.Char(
+        string="Relative uom name", related="uom_id.relative_uom_id.name"
+    )
+
     #=== COMPUTE METHODS ===#
+
+    @api.depends("fixed_price", "uom_id")
+    def _compute_packaging_price(self):
+        for item in self:
+            min_qty = item.min_quantity or 1
+            if item.relative_uom_name:
+                uom_id = item.uom_id or item.product_tmpl_id.uom_id
+                item.packaging_price = (
+                    item.fixed_price * uom_id.relative_factor * min_qty
+                )
+            else:
+                item.packaging_price = item.fixed_price * min_qty
+
+    def _inverse_packaging_price(self):
+        for item in self:
+            min_qty = item.min_quantity or 1
+            if item.relative_uom_name:
+                uom_id = item.uom_id or item.product_tmpl_id.uom_id
+                if uom_id.relative_factor:
+                    item.fixed_price = item.packaging_price / (
+                        min_qty * uom_id.relative_factor
+                    )
+            else:
+                item.fixed_price = item.packaging_price / min_qty
 
     def _compute_is_pricelist_required(self):
         self.is_pricelist_required = True
@@ -443,6 +477,7 @@ class ProductPricelistItem(models.Model):
             self.product_id = False
         if self.product_tmpl_id:
             self.categ_id = False
+            self.uom_id = self.product_tmpl_id.uom_id
 
     @api.onchange('categ_id')
     def _onchange_categ_id(self):
@@ -463,6 +498,14 @@ class ProductPricelistItem(models.Model):
     @api.onchange('date_start', 'date_end')
     def _onchange_validity_period(self):
         self._check_date_range()
+
+    @api.onchange("packaging_price")
+    def _onchnage_packaging_price(self):
+        self._inverse_packaging_price()
+
+    @api.onchange("min_quantity")
+    def _onchange_min_quantity(self):
+        self._inverse_packaging_price()
 
     #=== CRUD METHODS ===#
 
