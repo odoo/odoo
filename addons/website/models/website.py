@@ -1399,9 +1399,11 @@ class Website(models.Model):
         # there is one on request) or return a random one.
 
         # The format of `httprequest.host` is `domain:port`
+        thread_url = hasattr(threading.current_thread(), 'url') and threading.current_thread().url
+        thread_host = urlsplit(thread_url).netloc if thread_url else ''
         domain_name = (
             request and request.httprequest.host
-            or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
+            or thread_host
             or '')
         website_id = self.sudo()._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
@@ -1446,9 +1448,15 @@ class Website(models.Model):
                 domain_name = _remove_port(domain_name)
             return website_domain.lower() == (domain_name or '').lower()
 
+        if domain_name and ('://' in domain_name or '/' in domain_name):
+            domain_name = urlsplit(domain_name).netloc
+
         # We need to test two possibilities unicode or punycode (safety guard)
-        domain_name = domain_name.encode("idna").decode("ascii")
-        domain_name_idna = domain_name.encode("ascii").decode("idna")
+        try:
+            domain_name = domain_name.encode("idna").decode("ascii")
+            domain_name_idna = domain_name.encode("ascii").decode("idna")
+        except UnicodeError:
+            domain_name_idna = domain_name
 
         # TODO: in master, store the computed field domain_punycode to avoid
         #       the need to search on domain_name and domain_name_idna.
