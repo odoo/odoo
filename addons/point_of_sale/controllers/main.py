@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import json
 
 from odoo import http, _
@@ -10,8 +9,6 @@ from odoo.tools import format_amount, file_open
 from odoo.addons.account.controllers.portal import PortalAccount
 from odoo.exceptions import UserError
 from datetime import timedelta, datetime
-
-_logger = logging.getLogger(__name__)
 
 
 class PosController(PortalAccount):
@@ -27,10 +24,10 @@ class PosController(PortalAccount):
         if not pos_order.exists():
             return request.not_found()
 
-        image = pos_order.order_receipt_generate_image()
-        return request.make_response(image, [
-            ('Content-Type', 'image/png'),
-            ('Content-Length', len(image)),
+        pdf = pos_order.with_context(force_use_printer=True).order_receipt_generate_pdf()
+        return request.make_response(pdf, [
+            ('Content-Type', 'application/pdf'),
+            ('Content-Length', len(pdf)),
             ('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"),
         ])
 
