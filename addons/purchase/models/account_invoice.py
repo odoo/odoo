@@ -307,7 +307,7 @@ class AccountMove(models.Model):
                         # account.move.line model with the extra matching fields and extending the EDI extraction
                         # logic to fill these new fields.
                         purchase_line_candidates[purchase_line] = difflib.SequenceMatcher(
-                            None, invoice_line.name, purchase_line.name).ratio()
+                            None, invoice_line.name or "", purchase_line.name or "").ratio()
 
                 if len(purchase_line_candidates) > 0:
                     # We take the best match based on the name.

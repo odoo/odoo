@@ -1474,7 +1474,9 @@ class AccountEdiCommon(models.AbstractModel):
             'price_unit': price_unit,
             'tax_ids': tax_values.get('tax') if tax_values else None,
         }
-        base_line_kwargs['_create_values']['name'] = reason
+        base_line_kwargs['_create_values']['name'] = reason or (
+            self.env._('Charge') if charge_indicator_sign == 1 else self.env._('Discount')
+        )
         return base_line_kwargs
 
     def _import_invoice_line_get_product_base_line_kwargs(self, collected_values):
