@@ -49,11 +49,12 @@ class StockLot(models.Model):
 
     @api.depends('product_id')
     def _compute_expiration_date(self):
-        self.expiration_date = False
         for lot in self:
-            if lot.product_id.use_expiration_date and not lot.expiration_date:
+            if lot.product_id.use_expiration_date:
                 duration = lot.product_id.product_tmpl_id.expiration_time
                 lot.expiration_date = datetime.datetime.now() + datetime.timedelta(days=duration)
+            else:
+                lot.expiration_date = False
 
     @api.depends('product_id', 'expiration_date')
     def _compute_dates(self):
