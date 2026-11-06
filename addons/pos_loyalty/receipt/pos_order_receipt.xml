@@ -15,8 +15,16 @@
                     <tbody t-foreach="extra_data['new_coupons']" t-as="coupon">
                         <tr>
                             <td class="text-start text-top pt-3">
+<<<<<<< b9823b8a6ed7f33c4450ac6dbe2dabed3ca6a6e7
                                 <div class="pb-1" t-out="coupon['name']"/>
                                 <div class="pb-1"> Until: <t t-if="coupon['expiration_date']" t-out="coupon['expiration_date']"/><t t-else="">no expiration</t></div>
+||||||| ba2d10f169b8c26d04c5b9fdd491673dc0005768
+                                <div class="pb-1" t-out="coupon['name']"/>
+                                <div class="pb-1"> Until: <t t-if="coupon.get('expiration_date')" t-out="coupon['expiration_date']"/><t t-else="">no expiration</t></div>
+=======
+                                <div class="pb-1" t-out="coupon['program_name']"/>
+                                <div class="pb-1"> Until: <t t-if="coupon.get('expiration_date')" t-out="coupon['expiration_date']"/><t t-else="">no expiration</t></div>
+>>>>>>> 1d4b494756ee63a4a1d786ff0c78cb9c618aa0af
                             </td>
                             <td class="text-end pt-3">
                                 <div><img t-att-src="coupon['barcode_base64']" style="width:300px;height:70px"/></div>
