@@ -41,6 +41,7 @@
                     <group string="Information">
                         <field name="product_id" context="{'default_is_storable': True, 'default_tracking': 'lot'}" readonly="context.get('set_product_readonly', False)" force_save="1" help="Product this lot/serial number contains. You cannot change it anymore if it has already been moved."/>
                         <field name="ref" string="Reference"/>
+                        <field name="packaging_uom_id" groups="uom.group_uom"/>
                         <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         <t groups="stock.group_stock_manager">
                             <field name="partner_ids" string="Customers" groups="base.group_partner_manager"
