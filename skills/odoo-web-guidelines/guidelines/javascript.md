@@ -21,3 +21,14 @@ outside of Odoo. A patch makes the code hard to reason about, since reading a sn
 no longer tells you what will run, and harder to maintain, since the patch and the code
 it targets drift apart. Usually there is a better solution: design a proper extension
 point.
+
+# Use `window` members directly, not the `browser` object
+
+Write `setTimeout`, `clearTimeout`, `localStorage`, `navigator` or `addEventListener`
+without the `browser.` prefix. The one exception is `window.location`: import
+`location` from `@web/core/browser/browser`, since tests cannot patch it on `window`.
+
+The `browser` object was an indirection so that tests could patch timers and other
+`window` members. Hoot mocks them on `window` itself, so `browser` is now `window` and
+is deprecated. A lot of code still uses it: do not copy it from the code around, and
+leave the existing uses alone unless the change touches those lines.
