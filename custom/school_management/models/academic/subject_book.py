@@ -49,10 +49,14 @@ class UniversitySubjectBook(models.Model):
                 FROM product_product pp
                 WHERE usb.product_id = pp.id AND usb.product_tmpl_id IS NULL;
             """)
-        self.env.cr.execute("""
-            UPDATE product_template pt
-            SET is_textbook = TRUE
-            FROM university_subject_book usb
-            WHERE usb.product_tmpl_id = pt.id AND NOT COALESCE(pt.is_textbook, FALSE);
-        """)
+        if (
+            column_exists(self.env.cr, "university_subject_book", "product_tmpl_id")
+            and column_exists(self.env.cr, "product_template", "is_textbook")
+        ):
+            self.env.cr.execute("""
+                UPDATE product_template pt
+                SET is_textbook = TRUE
+                FROM university_subject_book usb
+                WHERE usb.product_tmpl_id = pt.id AND NOT COALESCE(pt.is_textbook, FALSE);
+            """)
         return True
