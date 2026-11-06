@@ -2329,6 +2329,27 @@ describe("toolbar open and close on user interaction", () => {
             await animationFrame();
             await expectElementCount(".o-we-toolbar", 0);
         });
+
+        test("toolbar should open with a non-collapsed selection around a formattable contenteditable=false", async () => {
+            class TestPlugin extends Plugin {
+                static id = "test";
+                resources = {
+                    is_formattable_node_predicates: (node) => {
+                        if (node.matches?.(".target")) {
+                            return true;
+                        }
+                    },
+                };
+            }
+            await setupEditor(
+                `<div>[<span contenteditable="false" class="target">test</span>]</div>`,
+                {
+                    config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+                }
+            );
+            await animationFrame();
+            await expectElementCount(".o-we-toolbar", 1);
+        });
     });
 });
 
