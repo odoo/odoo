@@ -1,13 +1,14 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, EventBus, onWillStart, proxy, useProps } from "@odoo/owl";
+import { Component, EventBus, onWillStart, proxy, useProps, usePlugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
-import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
+import { standardActionServiceProps, ActionPlugin } from "@web/webclient/actions/action_plugin";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 import { MoOverviewDisplayFilter } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
 import { MoOverviewComponentsBlock } from "../mo_overview_components_block/mrp_mo_overview_components_block";
 import { formatMonetary } from "@web/views/fields/formatters";
+import { ORM } from "@web/core/orm_plugin";
 
 export class MoOverview extends Component {
     static components = {
@@ -21,8 +22,8 @@ export class MoOverview extends Component {
     static template = "mrp.MoOverview";
 
     setup() {
-        this.actionService = useService("action");
-        this.ormService = useService("orm");
+        this.actionPlugin = usePlugin(ActionPlugin);
+        this.ormPlugin = usePlugin(ORM);
         this.unfoldedIds = new Set();
         this.context = {};
 
@@ -41,7 +42,7 @@ export class MoOverview extends Component {
     }
 
     async getManufacturingData() {
-        const reportValues = await this.ormService.call(
+        const reportValues = await this.ormPlugin.call(
             "report.mrp.report_mo_overview",
             "get_report_values",
             [this.activeId],
@@ -78,7 +79,7 @@ export class MoOverview extends Component {
     }
 
     async onPrint() {
-        return this.actionService.doAction({
+        return this.actionPlugin.doAction({
             type: "ir.actions.report",
             report_type: "qweb-pdf",
             report_name: this.reportName,

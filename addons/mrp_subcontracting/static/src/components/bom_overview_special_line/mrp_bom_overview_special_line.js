@@ -1,17 +1,18 @@
 import { patch } from "@web/core/utils/patch";
-import { useService } from "@web/core/utils/hooks";
 import { BomOverviewSpecialLine } from "@mrp/components/bom_overview_special_line/mrp_bom_overview_special_line";
+import { usePlugin } from "@odoo/owl";
+import { ActionPlugin } from "@web/webclient/actions/action_plugin";
 
 patch(BomOverviewSpecialLine.prototype, {
     setup() {
         super.setup();
-        this.actionService = useService("action");
+        this.actionPlugin = usePlugin(ActionPlugin);
     },
 
     //---- Handlers ----
 
     async goToSubcontractor() {
-        return this.actionService.doAction({
+        return this.actionPlugin.doAction({
             type: "ir.actions.act_window",
             res_model: "res.partner",
             res_id: this.subcontracting.partner_id,
