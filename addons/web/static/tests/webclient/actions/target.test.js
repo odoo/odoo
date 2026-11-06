@@ -105,6 +105,9 @@ describe("new", () => {
         expect(".o_technical_modal .modal-body").toHaveClass("o_act_window", {
             message: "dialog main element should have classname 'o_act_window'",
         });
+        expect(".o_technical_modal .modal-body > .o_action").toHaveCount(1, {
+            message: "the action component should have classname 'o_action', as in the action manager",
+        });
         expect(".o_technical_modal .o_form_view .o_form_editable").toHaveCount(1, {
             message: "form view should be in edit mode",
         });
