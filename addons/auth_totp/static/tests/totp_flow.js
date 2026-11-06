@@ -139,6 +139,17 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     },
     expectUnloadPage: true,
 },
+...loginIfNeeded(),
+{
+    isActive: ["body:has(input[name=totp_token])"],
+    trigger: "input[name=totp_token]",
+    async run({ edit, click }) {
+        const token = await rpc('/totphook', { offset: 3 });
+        await edit(token);
+        await click("button[type=submit]");
+    },
+    expectUnloadPage: true,
+},
 ...openUserPreferencesAtSecurityTab(),
 ...closePreferencesDialog({
     content: "Check that the button has changed",
