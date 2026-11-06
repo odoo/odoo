@@ -140,3 +140,19 @@ class TestPointOfSale(TransactionCase):
         # Cannot archive config while session is active
         with self.assertRaises(UserError):
             config.write({'active': False})
+
+    def test_pos_category_display_name_translated(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        parent = self.env['pos.category'].create({'name': 'Food'})
+        child = self.env['pos.category'].create({'name': 'Fries', 'parent_id': parent.id})
+        parent.update_field_translations('name', {'fr_FR': 'Nourriture'})
+        child.update_field_translations('name', {'fr_FR': 'Frites'})
+        # store complete_name in English
+        self.env.flush_all()
+
+        self.assertEqual(child.with_context(lang='en_US').display_name, 'Food / Fries')
+        self.assertEqual(child.with_context(lang='fr_FR').display_name, 'Nourriture / Frites')
+
+        PosCategory = self.env['pos.category'].with_context(lang='fr_FR')
+        self.assertEqual(PosCategory.name_search('Frites'), [(child.id, 'Nourriture / Frites')])
+        self.assertEqual(PosCategory.search([('display_name', 'ilike', 'Food / Fri')]), child)
