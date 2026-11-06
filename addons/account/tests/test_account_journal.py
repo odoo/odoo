@@ -450,14 +450,14 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         deferred_expense_account = self.company_data['default_account_deferred_expense']
 
         inbound_method_lines = bank_journal.inbound_payment_method_line_ids
-        inbound_method_lines_names = inbound_method_lines.mapped('name')
         inbound_method_lines[0].payment_account_id = outstanding_receipt_account
 
+        bank_journal.outbound_payment_method_line_ids = [Command.link(
+            bank_journal.outbound_payment_method_line_ids[0].copy({
+                'payment_account_id': deferred_expense_account.id
+            }).id)]
         outbound_method_lines = bank_journal.outbound_payment_method_line_ids
         outbound_method_lines[0].payment_account_id = outstanding_payment_account
-        new_outbound_payment_line = outbound_method_lines[0].copy({'payment_account_id': deferred_expense_account.id})
-        bank_journal.outbound_payment_method_line_ids = [Command.link(new_outbound_payment_line.id)]
-        outbound_method_lines_names = bank_journal.outbound_payment_method_line_ids.mapped('name')
 
         # Set currency_id to trigger the compute of {in,out}bound_payment_method_line_ids
         bank_journal.currency_id = self.company_data['currency']
@@ -465,19 +465,21 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         # Existing payment method lines should stay unchanged
         self.assertRecordValues(bank_journal.inbound_payment_method_line_ids, [
             {
-                'name': name,
+                'id': inbound_method_line.id,
+                'name': inbound_method_line.name,
                 'payment_account_id': outstanding_receipt_account.id if index == 0 else False,
-            } for index, name in enumerate(inbound_method_lines_names)
+            } for index, inbound_method_line in enumerate(inbound_method_lines)
         ])
         self.assertRecordValues(bank_journal.outbound_payment_method_line_ids, [
             {
-                'name': name,
+                'id': outbound_method_line.id,
+                'name': outbound_method_line.name,
                 'payment_account_id': (
                     outstanding_payment_account.id if index == 0 else (
-                        deferred_expense_account.id if index == len(outbound_method_lines_names) - 1 else False
+                        deferred_expense_account.id if index == len(outbound_method_lines) - 1 else False
                     )
                 ),
-            } for index, name in enumerate(outbound_method_lines_names)
+            } for index, outbound_method_line in enumerate(outbound_method_lines)
         ])
 
         # Remove all payment method lines
