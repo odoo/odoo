@@ -7,8 +7,12 @@
             <field name="inherit_id" ref="l10n_tw.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//block[@id='l10n_tw_edi']" position="inside">
-                    <setting string="Set up ECPay"
-                             help="Manage and submit e-invoices to the Ministry of Finance using ECPay integration"
+                    <setting string="ECPay e-GUI (e-invoice)"
+                             help="Configure the API credentials to issue and manage Taiwanese electronic invoices through ECPay"
+                             title="- Staging mode: Run transactions in the ECPay test environment.\n
+                                    - Credentials Used: Your ECPay e-Invoice API keys (Merchant ID, HashKey, and HashIV).\n\n
+                                    Refer to the documentation for test credentials and help finding the API Keys"
+                             documentation="/applications/finance/fiscal_localizations/taiwan.html#accounting"
                              company_dependent="1">
                         <div class="content-group">
                             <div class="row">
