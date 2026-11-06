@@ -25,8 +25,13 @@ export class ActivityMenu extends Component {
         this.state = proxy({
             checkedIn: false,
             isDisplayed: false,
+<<<<<<< d9b87ec529d431e49c1456584abc17b4be5d3080
             captureCheckInImage: false,
             streamAvailable: null,
+||||||| 0071866cab389733b9000f074bdeaa5f156fe39f
+=======
+            gettingPosition: false,
+>>>>>>> 51eceff213511be8f418323f4e8bb4d451df1a73
         });
         this.cameraCapture = null;
         this.dropdown = useDropdownState();
@@ -130,7 +135,7 @@ export class ActivityMenu extends Component {
                 throw error;
             }
         } finally {
-            this._attendanceInProgress = false;
+            this.state.gettingPosition = false;
         }
     }
 
@@ -154,10 +159,10 @@ export class ActivityMenu extends Component {
         if (this.closeSystrayOnCheckIn) {
             this.dropdown.close();
         }
-        if (this._attendanceInProgress) {
+        if (this.state.gettingPosition) {
             return;
         }
-        this._attendanceInProgress = true;
+        this.state.gettingPosition = true;
 
         const trackingEnabled = this.employee && this.employee.device_tracking_enabled;
         if (trackingEnabled && navigator.geolocation && navigator.onLine) {
