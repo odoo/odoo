@@ -33,6 +33,7 @@ touching instead of loading whole files.
 | [Order concurrent calls with the concurrency helpers](guidelines/javascript.md#order-concurrent-calls-with-the-concurrency-helpers) | sending a request each time the user acts on the same state, or chaining promises by hand |
 | [JavaScript formatting](guidelines/javascript.md#javascript-formatting) | formatting a JS file, or running a formatter on it |
 | [Freeze the time when a test meets a timer](guidelines/tests.md#freeze-the-time-when-a-test-meets-a-timer) | writing a Hoot test that types in a search, opens a delayed popover, or acts on code that debounces a call |
+| [Tests (odoo-guidelines)](../odoo-guidelines/guidelines/tests.md#tests) | running Hoot tests through `WebSuite` (`--test-tags /<module>:WebSuite`) |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
 | [Assets](guidelines/assets.md#assets) | adding an image, font, or library |
 
