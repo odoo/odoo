@@ -40,6 +40,57 @@ class TestMicrosoftEvent(TestCommon):
         self.assertEqual(len(mapped._events), 1)
         self.assertEqual(mapped._events[event_id]["_odoo_id"], self.simple_event.id)
 
+    @patch_api
+    def test_cancelled_recurrences_preserve_local_recurrence(self):
+        """Cancellations with and without a UID must preserve unrelated local recurrences."""
+        self.organizer_user.microsoft_calendar_token = 'fake_token'
+        self.attendee_user.microsoft_calendar_token = False
+        event_model = self.env['calendar.event'].with_user(self.organizer_user).with_context(dont_notify=True)
+        local_event = event_model.with_user(self.attendee_user).create({
+            **self.recurrent_event_values,
+            'count': 3,
+            'user_id': self.attendee_user.id,
+        })
+        local_recurrence = local_event.recurrence_id
+        local_events = local_recurrence.calendar_event_ids
+        self.assertEqual(len(local_events), 3)
+        self.assertFalse(local_recurrence.microsoft_id)
+        self.assertFalse(local_recurrence.ms_universal_event_id)
+        for event in local_events:
+            self.assertFalse(event.microsoft_id)
+            self.assertFalse(event.ms_universal_event_id)
+        outlook_events = self.recurrence.calendar_event_ids
+        uid_event = event_model.create({
+            **self.recurrent_event_values,
+            'count': 3,
+            'user_id': self.organizer_user.id,
+        })
+        uid_recurrence = uid_event.recurrence_id
+        uid_recurrence.write({
+            'microsoft_id': 'REC_UID_ID',
+            'ms_universal_event_id': 'REC_UID',
+        })
+        uid_events = uid_recurrence.calendar_event_ids
+
+        event_model.sudo()._sync_microsoft2odoo(MicrosoftEvent([{
+            'id': self.recurrence.microsoft_id,
+            '@removed': {'reason': 'deleted'},
+        }, {
+            # Use a different Microsoft ID to exercise UID-based matching only.
+            'id': 'REC_UID_OTHER_ID',
+            'iCalUId': uid_recurrence.ms_universal_event_id,
+            '@removed': {'reason': 'deleted'},
+        }]))
+
+        self.assertFalse(self.recurrence.exists())
+        self.assertFalse(outlook_events.exists())
+        self.assertFalse(uid_recurrence.exists())
+        self.assertFalse(uid_events.exists())
+        self.assertTrue(local_recurrence.exists())
+        self.assertEqual(local_events.exists(), local_events)
+        for event in local_events:
+            self.assertEqual(event.recurrence_id, local_recurrence)
+
     def test_forbid_edit_outlook_recurring_event(self):
         """
         Test that no user can edit a recurring event imported from Outlook
