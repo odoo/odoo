@@ -195,7 +195,7 @@ class MyInvoisDocument(models.Model):
         readonly=True,
     )
     is_received_document = fields.Boolean(
-        help="Set on documents issued by a supplier to this company, synced from MyInvois into a vendor bill.",
+        help="Set on documents issued by a supplier to this company, synced from MyInvois.",
         copy=False,
         readonly=True,
     )
@@ -215,6 +215,16 @@ class MyInvoisDocument(models.Model):
         string="Received Total",
         help="Total of the document on MyInvois. Only set on received documents.",
         currency_field='currency_id',
+        copy=False,
+        readonly=True,
+    )
+    myinvois_supplier_tin = fields.Char(
+        string="Supplier TIN",
+        copy=False,
+        readonly=True,
+    )
+    myinvois_supplier_name = fields.Char(
+        string="Supplier",
         copy=False,
         readonly=True,
     )
@@ -523,6 +533,10 @@ class MyInvoisDocument(models.Model):
             },
             'type': 'ir.actions.act_window',
         }
+
+    def action_create_received_bills(self):
+        """ Create the bills of the selected received documents, with their suppliers missing in Odoo. """
+        return self._myinvois_action_view_received_bills(self._myinvois_create_received_bills(create_partners=True))
 
     def action_show_myinvois_documents(self):
         """ Open the documents in self in the correct view based on the amount of records. """
@@ -1510,14 +1524,13 @@ class MyInvoisDocument(models.Model):
     @api.model
     def _myinvois_import_received_documents(self, documents_data, journal):
         """
-        Create a draft vendor bill, linked to its received document, for each valid document of documents_data that
-        is not in Odoo yet. The documents already synced are updated instead, as the supplier may have cancelled them.
-
-        The bill holds a single line with the total of the document, to be split by the user as needed.
+        Create a received document for each valid document of documents_data that is not in Odoo yet, with a draft
+        vendor bill when its supplier is already in Odoo. The documents already synced are updated instead, as the
+        supplier may have cancelled them.
 
         :param documents_data: the documents as returned by _myinvois_fetch_received_documents.
         :param journal: the purchase journal of the new bills.
-        :return: the new bills.
+        :return: the new documents.
         """
         company = journal.company_id
         # A document can come back on two pages if MyInvois receives new ones while we page through the results.
@@ -1552,53 +1565,32 @@ class MyInvoisDocument(models.Model):
             cancelled_documents.invoice_ids.filtered(lambda bill: bill.state == 'draft').button_cancel()
 
         if not new_documents_data:
-            return self.env['account.move']
+            return self.env['myinvois.document']
 
         currency = self.env.ref('base.MYR')  # MyInvois returns the amounts in MYR.
-        partners_per_tin = self._myinvois_get_received_documents_partners(new_documents_data, company)
         malaysia_timezone = ZoneInfo('Asia/Kuala_Lumpur')
-        bills_vals = []
-        documents_vals = []
-        for data in new_documents_data:
-            issuance_date = dateutil.parser.isoparse(data['issuance_datetime']).astimezone(malaysia_timezone).date()
-            validation_time = data['validation_datetime'] and dateutil.parser.isoparse(data['validation_datetime']).replace(tzinfo=None)
-            move_type = RECEIVED_DOCUMENT_MOVE_TYPES[data['document_type']]
-            bills_vals.append({
-                'move_type': move_type,
-                'journal_id': journal.id,
-                'partner_id': partners_per_tin[data['supplier_tin']].id,
-                'ref': data['internal_id'],
-                'invoice_date': issuance_date,
-                'currency_id': currency.id,
-                'invoice_line_ids': [Command.create({
-                    'name': data['internal_id'],
-                    'quantity': 1,
-                    'price_unit': data['total'],
-                    'tax_ids': [Command.clear()],  # The total already includes the taxes.
-                })],
-            })
-            documents_vals.append({
+        documents = self.create([
+            {
                 'name': data['internal_id'],
                 'company_id': company.id,
                 'currency_id': currency.id,
                 'journal_id': journal.id,
-                'move_type': move_type,
+                'move_type': RECEIVED_DOCUMENT_MOVE_TYPES[data['document_type']],
                 'is_debit_note': data['document_type'] == '03',
                 'is_received_document': True,
                 'myinvois_document_type': data['document_type'],
                 'myinvois_amount_total': data['total'],
+                'myinvois_supplier_tin': data['supplier_tin'],
+                'myinvois_supplier_name': data['supplier_name'],
                 'myinvois_state': 'received',
-                'myinvois_issuance_date': issuance_date,
+                'myinvois_issuance_date': dateutil.parser.isoparse(data['issuance_datetime']).astimezone(malaysia_timezone).date(),
                 'myinvois_external_uuid': data['uuid'],
                 'myinvois_submission_uid': data['submission_uid'],
                 'myinvois_document_long_id': data['long_id'],
-                'myinvois_validation_time': validation_time,
-            })
-
-        bills = self.env['account.move'].create(bills_vals)
-        for document_vals, bill in zip(documents_vals, bills):
-            document_vals['invoice_ids'] = [Command.link(bill.id)]
-        documents = self.create(documents_vals)
+                'myinvois_validation_time': data['validation_datetime'] and dateutil.parser.isoparse(data['validation_datetime']).replace(tzinfo=None),
+            }
+            for data in new_documents_data
+        ])
         documents._myinvois_log_message(bodies={
             document.id: self.env._(
                 "Received from MyInvois with UUID %(uuid)s and submission UID %(submission_uid)s. "
@@ -1606,20 +1598,56 @@ class MyInvoisDocument(models.Model):
                 uuid=document.myinvois_external_uuid,
                 submission_uid=document.myinvois_submission_uid,
                 reference=document.name,
-                total=formatLang(self.env, data['total'], currency_obj=currency),
+                total=formatLang(self.env, document.myinvois_amount_total, currency_obj=currency),
             )
-            for document, data in zip(documents, new_documents_data)
+            for document in documents
         })
+        # Anyone can issue a document to the TIN of the company: the ones of unknown suppliers wait for the user.
+        documents._myinvois_create_received_bills(create_partners=False)
+        return documents
+
+    def _myinvois_create_received_bills(self, create_partners):
+        """
+        Create a draft vendor bill for each received document of self that has none yet. The bill holds a single line
+        with the total of the document, to be split by the user as needed.
+
+        :param create_partners: whether to create the suppliers that are not in Odoo yet, or to skip their documents.
+        :return: the new bills.
+        """
+        documents = self.filtered(lambda d: d.myinvois_state == 'received' and not d.invoice_ids)
+        billed_documents = self.env['myinvois.document']
+        bills_vals = []
+        for company, company_documents in documents.grouped('company_id').items():
+            partners_per_tin = company_documents._myinvois_get_received_documents_partners(company, create_partners)
+            for document in company_documents.filtered(lambda d: d.myinvois_supplier_tin in partners_per_tin):
+                billed_documents |= document
+                bills_vals.append({
+                    'move_type': document.move_type,
+                    'journal_id': document.journal_id.id,
+                    'partner_id': partners_per_tin[document.myinvois_supplier_tin].id,
+                    'ref': document.name,
+                    'invoice_date': document.myinvois_issuance_date,
+                    'currency_id': document.currency_id.id,
+                    'invoice_line_ids': [Command.create({
+                        'name': document.name,
+                        'quantity': 1,
+                        'price_unit': document.myinvois_amount_total,
+                        'tax_ids': [Command.clear()],  # The total already includes the taxes.
+                    })],
+                })
+        bills = self.env['account.move'].create(bills_vals)
+        for document, bill in zip(billed_documents, bills):
+            document.invoice_ids = [Command.link(bill.id)]
         return bills
 
-    @api.model
-    def _myinvois_get_received_documents_partners(self, documents_data, company):
+    def _myinvois_get_received_documents_partners(self, company, create_missing):
         """
-        Find the supplier of each received document by its TIN, creating the ones that are not in Odoo yet.
+        Find the supplier of each received document of self by its TIN, creating the ones that are not in Odoo yet
+        if create_missing.
 
-        :return: a dict mapping each supplier TIN to its partner.
+        :return: a dict mapping each supplier TIN found or created to its partner.
         """
-        tins = list({data['supplier_tin'] for data in documents_data})
+        tins = list(set(self.mapped('myinvois_supplier_tin')))
         partners = self.env['res.partner'].search(
             Domain(self.env['res.partner']._check_company_domain(company))
             & (Domain('vat', 'in', tins) | Domain('l10n_my_edi_malaysian_tin', 'in', tins)),
@@ -1634,11 +1662,13 @@ class MyInvoisDocument(models.Model):
                     continue
                 if partner[tin_field] in tins:
                     partners_per_tin.setdefault(partner[tin_field], partner.commercial_partner_id)
+        if not create_missing:
+            return partners_per_tin
 
         names_per_missing_tin = {
-            data['supplier_tin']: data['supplier_name']
-            for data in documents_data
-            if data['supplier_tin'] not in partners_per_tin
+            document.myinvois_supplier_tin: document.myinvois_supplier_name
+            for document in self
+            if document.myinvois_supplier_tin not in partners_per_tin
         }
         new_partners = self.env['res.partner'].create([
             {
@@ -1651,6 +1681,15 @@ class MyInvoisDocument(models.Model):
         ])
         partners_per_tin.update(zip(names_per_missing_tin, new_partners))
         return partners_per_tin
+
+    @api.model
+    def _myinvois_action_view_received_bills(self, bills):
+        action = self.env['ir.actions.act_window']._for_xml_id('account.action_move_in_invoice_type')
+        action.update({
+            'name': self.env._("Received Bills"),
+            'domain': [('id', 'in', bills.ids)],
+        })
+        return action
 
     @api.model
     def _myinvois_get_consolidated_invoice_partner_domain(self):
