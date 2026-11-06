@@ -4,6 +4,7 @@ import {
     generatePartnerMentionElement,
     generateRoleMentionElement,
     generateSpecialMentionElement,
+    getPartnerMentionName,
 } from "@mail/utils/common/format";
 
 import { localeCompare, normalize } from "@web/core/l10n/utils";
@@ -102,7 +103,7 @@ export class PartnerSuggestionPlugin extends Plugin {
         const thread = this.deps.getThread();
         const suggestions = [];
         for (const partner of this.getPartners()) {
-            const name = thread?.getPersonaName(partner) ?? partner.displayName;
+            const name = getPartnerMentionName(partner, thread);
             if (
                 (name && normalize(name).includes(cleanedTerm)) ||
                 (partner.email && normalize(partner.email).includes(cleanedTerm))
@@ -181,12 +182,7 @@ export class PartnerSuggestionPlugin extends Plugin {
                 }
                 return {
                     group: 1,
-                    label: (
-                        thread?.getPersonaName(suggestion) ||
-                        suggestion.displayName ||
-                        suggestion.email ||
-                        ""
-                    ).trim(),
+                    label: getPartnerMentionName(suggestion, thread),
                     partner: suggestion,
                     thread,
                 };
