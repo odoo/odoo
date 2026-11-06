@@ -919,6 +919,11 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 'references': msg_dict.get('message_id'),
             }).send()
 
+    def _read(self, field_names):
+        if self._context.get("bypass_hr_expense_rules"):
+            self = self.sudo()
+        return super()._read(field_names)
+
 
 class HrExpenseSheet(models.Model):
     """
@@ -1436,10 +1441,14 @@ class HrExpenseSheet(models.Model):
         self._check_can_approve()
 
         self._validate_analytic_distribution()
-        duplicates = self.expense_line_ids.duplicate_expense_ids.filtered(lambda exp: exp.state in ['approved', 'done'])
+        duplicates = self.expense_line_ids.duplicate_expense_ids.sudo().filtered(lambda exp: exp.state in ['approved', 'done'])
         if duplicates:
             action = self.env["ir.actions.act_window"]._for_xml_id('hr_expense.hr_expense_approve_duplicate_action')
-            action['context'] = {'default_sheet_ids': self.ids, 'default_expense_ids': duplicates.ids}
+            action['context'] = {
+                'default_sheet_ids': self.ids,
+                'default_expense_ids': duplicates.ids,
+                'bypass_hr_expense_rules': True,
+            }
             return action
         self._do_approve()
 
