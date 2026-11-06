@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from dateutil.relativedelta import relativedelta
+from lxml import etree
 
 import odoo
 from odoo import Command, fields
@@ -560,6 +561,12 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         with self.assertRaisesRegex(UserError, "currently in use in a point of sale"):
             category1.unlink()
+
+    def test_pos_category_search_view_fields(self):
+        arch = self.env['pos.category'].get_views([(False, 'search')])['views']['search']['arch']
+        search_fields = etree.fromstring(arch).xpath('//field/@name')
+        for field_name in ('name', 'parent_id', 'pos_config_ids'):
+            self.assertIn(field_name, search_fields)
 
     def test_set_journal_on_bank_payment_method_with_open_session(self):
         bank_pm = self.env['pos.payment.method'].create({
