@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests import tagged, Form
 
 
@@ -46,7 +46,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         Product:
             - FIFO + Auto
             - Subcontracted
-        Purchase 2 from Subcontractor to a customer (dropship).
+        Purchase 2 from Subcontractor to a customer (dropship) and bill them.
         Then return 1 to subcontractor and one to stock
         It should generate the correct valuations AMLs
         """
@@ -103,6 +103,16 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             # Initial dropshipped value
             {'account_id': stock_valu_acc_id,   'product_id': self.product_a.id,    'debit': 0.0,   'credit': 200.0},
             {'account_id': stock_out_acc_id,    'product_id': self.product_a.id,    'debit': 200.0, 'credit': 0.0},
+        ])
+
+        po.action_create_invoice()
+        po.invoice_ids.invoice_date = fields.Date.today()
+        po.invoice_ids.action_post()
+        all_amls_ids += po.invoice_ids.line_ids.ids
+        stock_input_lines = (po.invoice_ids.line_ids | amls).filtered(lambda line: line.account_id.id == stock_in_acc_id)
+        self.assertRecordValues(stock_input_lines, [
+            {'balance': 200.0, 'reconciled': True},
+            {'balance': -200.0, 'reconciled': True},
         ])
 
         # return to subcontracting location
