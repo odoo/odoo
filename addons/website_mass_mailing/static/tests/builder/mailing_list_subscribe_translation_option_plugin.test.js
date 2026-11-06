@@ -15,7 +15,7 @@ test("'Display Thanks message' option should be visible in the translate mode", 
     });
 
     await contains(".modal .btn:contains(Ok, never show me this again)").click();
-    await contains(":iframe .s_newsletter_block").click();
+    await contains(":iframe .s_newsletter_subscribe_form").click();
 
     expect(".o_hb_row [data-action-id='toggleThanksMessage']").toHaveCount(1);
     // thanks message shouldn't be displayed
