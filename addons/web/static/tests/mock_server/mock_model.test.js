@@ -147,6 +147,17 @@ test("cannot create generic field without type", async () => {
     await expect(makeMockServer()).rejects.toThrow(/missing key/i);
 });
 
+test("create does not write the defaults into the given values", async () => {
+    Oui._fields.age = fields.Integer({ default: 42 });
+
+    const { env } = await makeMockServer();
+    const values = { name: "Jane Doe" };
+    const [record] = env["oui"].browse(env["oui"].create(values));
+
+    expect(record.age).toBe(42);
+    expect(values).toEqual({ name: "Jane Doe" });
+});
+
 describe("level 1", () => {
     Oui._fields.age = fields.Integer();
     Oui._records[0].age = 42;
