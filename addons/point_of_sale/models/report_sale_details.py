@@ -156,7 +156,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             payment['count'] = False
         payments_by_session = {
             session.id: account_payments
-            for session, account_payments in AccountPayment._read_group(
+            for session, account_payments in AccountPayment.sudo()._read_group(
                 [('pos_session_id', 'in', sessions.ids)],
                 ['pos_session_id'],
                 ['id:recordset'],
