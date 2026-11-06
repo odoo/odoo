@@ -24,16 +24,12 @@
 
             &::-webkit-slider-thumb { box-shadow: none; }
             &::-moz-range-thumb     { box-shadow: none; }
-            &::-ms-thumb            { box-shadow: none; }
         }
         &:focus-visible {
             &::-webkit-slider-thumb {
                 box-shadow: 0 0 0 1px var(--o-we-bg-dark), 0 0 0 3px var(--o-we-sidebar-content-field-progress-active-color);
             }
             &::-moz-range-thumb {
-                box-shadow: 0 0 0 1px var(--o-we-bg-dark), 0 0 0 3px var(--o-we-sidebar-content-field-progress-active-color);
-            }
-            &::-ms-thumb {
                 box-shadow: 0 0 0 1px var(--o-we-bg-dark), 0 0 0 3px var(--o-we-sidebar-content-field-progress-active-color);
             }
         }
@@ -93,39 +89,6 @@
             border-color: transparent;
             border-radius: 10rem;
         }
-        &::-ms-thumb {
-            width: var(--o-we-sidebar-content-field-progress-control-height);
-            height: var(--o-we-sidebar-content-field-progress-control-height);
-            margin-top: 0;
-            margin-right: 0;
-            margin-left: 0;
-            border: none;
-            border-radius: 10rem;
-            background-color: var(--o-hb-range-thumb-color, var(--o-we-fg-lighter));
-            box-shadow: none;
-            appearance: none;
-
-            &:active {
-                background-color: var(--o-we-sidebar-content-field-progress-active-color);
-            }
-        }
-        &::-ms-track {
-            width: 100%;
-            height: var(--o-we-sidebar-content-field-progress-height);
-            background-color: transparent;
-            border-color: transparent;
-            border-width: calc(var(--o-we-sidebar-content-field-progress-control-height) / 2);
-            box-shadow: none;
-        }
-        &::-ms-fill-lower {
-            background-color: var(--o-we-sidebar-content-field-progress-active-color);
-            border-radius: 10rem;
-            @include border-radius($form-range-track-border-radius);
-        }
-        &::-ms-fill-upper {
-            background-color: var(--o-we-sidebar-content-field-progress-color);
-            border-radius: 10rem;
-        }
 
         &.o_we_inverted_range {
             transform: rotate(180deg);
@@ -135,12 +98,6 @@
             }
             &::-moz-range-progress {
                 background-color: var(--o-we-sidebar-content-field-progress-color);
-            }
-            &::-ms-fill-lower {
-                background-color: var(--o-we-sidebar-content-field-progress-color);
-            }
-            &::-ms-fill-upper {
-                background-color: var(--o-we-sidebar-content-field-progress-active-color);
             }
         }
     }
