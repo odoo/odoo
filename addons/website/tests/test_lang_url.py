@@ -315,6 +315,12 @@ class TestTranslateUrl(TestLangUrl):
         self.assertEqual(r.status_code, 200)
         self.assertEqual(r.url, self.base + '/fr' + name_homepage_url_fr)
 
+    def test_update_field_translations_empty_url(self):
+        """ Test that clearing a translated page URL falls back to the source URL. """
+        self.page.update_field_translations('url', {'fr_FR': None})
+
+        self.assertEqual(self.page.with_context(lang='fr_FR').url, self.page.url)
+
     def test_translate_url_exists_in_other_language(self):
         # It should be possible to translate the url of a page with a url that
         # exists in another language.
