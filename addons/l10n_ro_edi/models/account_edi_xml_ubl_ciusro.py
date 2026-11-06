@@ -14,6 +14,15 @@ def _has_vat(vat):
     return bool(vat and len(vat) > 1)
 
 
+def _get_customer_vat(commercial_partner):
+    # SPV checks an identifier without country prefix as a Romanian CUI
+    vat = commercial_partner.vat or commercial_partner._get_additional_identifier('RO_VAT')
+    country_code = commercial_partner.country_code
+    if vat and country_code and country_code != 'RO' and not vat[:2].isalpha():
+        return ('EL' if country_code == 'GR' else country_code) + vat
+    return vat
+
+
 class AccountEdiXmlUbl_Ro(models.AbstractModel):
     _name = 'account.edi.xml.ubl_ro'
     _inherit = ["account.edi.xml.ubl_bis3"]
@@ -109,9 +118,8 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         super()._ubl_add_accounting_customer_party_tax_scheme_nodes(vals)
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
-        company_id = None
 
-        ro_vat = commercial_partner.vat or commercial_partner._get_additional_identifier('RO_VAT')
+        ro_vat = _get_customer_vat(commercial_partner)
         if not _has_vat(ro_vat):
             company_id = DEFAULT_VAT
         else:
@@ -130,7 +138,7 @@ class AccountEdiXmlUbl_Ro(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
-        ro_vat = commercial_partner.vat or commercial_partner._get_additional_identifier('RO_VAT')
+        ro_vat = _get_customer_vat(commercial_partner)
         if _has_vat(ro_vat):
             # RO legal registration id is the (RO-prefixed) VAT, not the bare CUI/RO_EN.
             vals['party_node']['cac:PartyLegalEntity'] = [{
