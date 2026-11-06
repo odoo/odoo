@@ -15,9 +15,11 @@ import ast
 import dis
 import functools
 import sys
+import threading
 import types
 import typing
 import zoneinfo
+from collections import OrderedDict
 from opcode import opmap, opname
 from types import CodeType
 
@@ -385,6 +387,92 @@ _BUBBLEUP_EXCEPTIONS = (
 )
 
 
+class _CodeLRUCache:
+    """ Decorator caching the code objects returned by the decorated function
+      in a thread-safe LRU, bounded both in number of entries and in memory.
+
+      :param max_size: maximum number of entries
+      :param max_bytes: maximum total memory of the entries, in bytes (per
+          process: with N workers, the total is N times this value)
+      """
+
+    def __init__(self, max_size: int, max_bytes: int):
+        self._lock = threading.Lock()
+        self._max_size = max_size
+        self._max_bytes = max_bytes
+        self._bytes = 0
+        self._entries: dict[tuple[str], tuple[CodeType, int]] = OrderedDict()
+
+    def __call__(self, func):
+
+        @functools.wraps(func)
+        def wrapper(*args):
+            if (code_obj := self._get(args)) is None:
+                code_obj = func(*args)
+                assert isinstance(code_obj, CodeType)
+                self._put(args, code_obj)
+            return code_obj
+
+        return wrapper
+
+    def _get(self, key) -> CodeType | None:
+        with self._lock:
+            entry = self._entries.get(key)
+            if entry is None:
+                return entry
+            self._entries.move_to_end(key)
+        return entry[0]
+
+    def _put(self, key, code_obj):
+        cost = self._code_cost(key, code_obj)
+        if cost > self._max_bytes:
+            return
+        with self._lock:
+            if key in self._entries:
+                return
+            while (
+                len(self._entries) >= self._max_size
+                or self._bytes + cost > self._max_bytes
+            ):
+                _key, (_code, evicted_cost) = self._entries.popitem(last=False)
+                self._bytes -= evicted_cost
+            self._entries[key] = (code_obj, cost)
+            self._bytes += cost
+
+    @staticmethod
+    def _code_cost(key, code_obj):
+        cost, seen, stack = 0, set(), [*key, code_obj]
+        while stack:
+            obj = stack.pop()
+            if id(obj) in seen:
+                continue
+            seen.add(id(obj))
+            cost += sys.getsizeof(obj)
+            if isinstance(obj, CodeType):
+                cost += 256  # Memory not reported by `getsizeof` (calibrated rounded value)
+                stack += (
+                    *obj.co_consts, *obj.co_names, *obj.co_varnames,
+                    obj.co_code, obj.co_linetable, obj.co_exceptiontable,
+                    # qualnames grow quadratically with nested lambdas/functions
+                    obj.co_qualname, obj.co_name, obj.co_filename,
+                )
+            elif isinstance(obj, (tuple, frozenset)):
+                stack += obj
+        return cost
+
+
+# A full cache cannot make workers restart.
+# A worker restarts after its request once its memory exceeds `limit_memory_soft`.
+# Default soft limit (2048 MiB): 32 / 2048 = 1.56 %
+# The cache can only tip a worker over the limit if it already uses more than
+# 98.44 % of it, where it is about to restart anyway.
+@_CodeLRUCache(max_size=1024, max_bytes=32 * 1024 * 1024)
+def _get_safe_eval_code_obj(expr, filename, mode) -> CodeType:
+    code_obj = compile_codeobj(expr, filename=filename, mode=mode)
+    assert_valid_codeobj(_SAFE_OPCODES, code_obj, expr)
+    return code_obj
+
+
 def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
     """System-restricted Python expression evaluation
 
@@ -424,8 +512,7 @@ def safe_eval(expr, /, context=None, *, mode="eval", filename=None):
         __builtins__=dict(_BUILTINS),
     )
 
-    c = compile_codeobj(expr, filename=filename, mode=mode)
-    assert_valid_codeobj(_SAFE_OPCODES, c, expr)
+    c = _get_safe_eval_code_obj(expr, filename, mode)
     try:
         # empty locals dict makes the eval behave like top-level code
         return unsafe_eval(c, globals_dict, None)
