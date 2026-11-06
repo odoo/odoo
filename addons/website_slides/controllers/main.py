@@ -977,7 +977,7 @@ class WebsiteSlides(WebsiteProfile):
             raise werkzeug.exceptions.NotFound()
         # redirection to channel's homepage for category slides
         if slide.is_category:
-            return request.redirect(slide.channel_id.website_absolute_url)
+            return request.redirect(request.env['ir.http']._url_for(slide.channel_id.website_url))
 
         if slide.can_self_mark_completed and not slide.user_has_completed \
            and slide.channel_id.channel_type == 'training' and slide.slide_category != 'video':
@@ -1024,8 +1024,8 @@ class WebsiteSlides(WebsiteProfile):
             raise werkzeug.exceptions.NotFound()
 
         if status == 'authorized':
-            return request.redirect(
-                '%s?%s' % (user_slide_authorization['slide'].website_absolute_url, werkzeug.urls.url_encode(kwargs)))
+            slide_url = request.env['ir.http']._url_for(user_slide_authorization['slide'].website_url)
+            return request.redirect('%s?%s' % (slide_url, werkzeug.urls.url_encode(kwargs)))
 
         channel_id = user_slide_authorization['channel_id']
         return request.redirect('/slides/%s?%s' % (channel_id, werkzeug.urls.url_encode({
