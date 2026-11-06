@@ -204,14 +204,24 @@ class AccountEdiCommon(models.AbstractModel):
     def _define_document_type(self, vals, document_type):
         vals['_document_type'] = {
             'name': document_type,
+            'subtype': None,
             'model': self,
         }
+
+    def _set_document_subtype(self, vals, document_subtype):
+        vals['_document_type']['subtype'] = document_subtype
+
+    def _get_document_subtype(self, vals):
+        return vals.get('_document_type', {}).get('subtype')
 
     def _get_document_type(self, vals):
         return vals.get('_document_type', {}).get('name')
 
     def _is_document(self, vals, *document_types):
         return self._get_document_type(vals) in document_types
+
+    def _is_document_subtype(self, vals, *document_subtypes):
+        return self._get_document_subtype(vals) in document_subtypes
 
     def module_installed(self, module_name):
         return self.env['ir.module.module']._get(module_name).state == 'installed'

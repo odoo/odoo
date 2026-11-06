@@ -13,22 +13,6 @@ class AccountEdiUBLPint(models.AbstractModel):
     # EXPORT: NODES
     # -------------------------------------------------------------------------
 
-    def _ubl_add_invoice_type_code_node(self, vals):
-        super()._ubl_add_invoice_type_code_node(vals)
-
-        if self._is_document(vals, 'invoice'):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 380
-        elif self._is_document(vals, 'self_invoice'):
-            vals['document_node']['cbc:InvoiceTypeCode']['_text'] = 389
-
-    def _ubl_add_credit_note_type_code_node(self, vals):
-        super()._ubl_add_credit_note_type_code_node(vals)
-
-        if self._is_document(vals, 'credit_note'):
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 381
-        elif self._is_document(vals, 'self_credit_note'):
-            vals['document_node']['cbc:CreditNoteTypeCode']['_text'] = 261
-
     def _ubl_add_notes_nodes_all_invoices(self, vals):
         invoice = vals['invoice']
         notes = []
