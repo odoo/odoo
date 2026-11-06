@@ -3,17 +3,112 @@
 import functools
 import logging
 import re
+import requests
 
 from odoo import _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.tools import remove_accents
 from odoo.tools.translate import adapt_translated_field_value
 
 from odoo.addons.web.icons import ICONS
+from odoo.addons.html_editor.models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
 logger = logging.getLogger(__name__)
 diverging_history_regex = 'data-last-history-commits="([0-9,]+)"'
+
+
+def get_existing_attachment(IrAttachment, vals):
+    """
+    Check if an attachment already exists for the same vals. Return it if
+    so, None otherwise.
+    """
+    fields = dict(vals)
+    # Falsy res_id defaults to 0 on attachment creation.
+    fields['res_id'] = fields.get('res_id') or 0
+    raw = fields.pop('raw', None)
+    domain = [(field, '=', value) for field, value in fields.items()]
+    if fields.get('type') == 'url':
+        if 'url' not in fields:
+            return None
+        domain.append(('checksum', '=', False))
+    else:
+        if not raw:
+            return None
+        domain.append(('checksum', '=', IrAttachment._compute_checksum(raw)))
+    return IrAttachment.search(domain, limit=1) or None
+
+
+def attachment_create(IrAttachment, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+    """Create and return a new attachment."""
+    if name.lower().endswith('.bmp'):
+        # Avoid mismatch between content type and mimetype, see original commit msg
+        name = name[:-4]
+
+    if not name and url:
+        name = url.split("/").pop()
+
+    if res_model != 'ir.ui.view' and res_id:
+        res_id = int(res_id)
+    else:
+        res_id = False
+
+    attachment_data = {
+        'name': name,
+        'public': res_model == 'ir.ui.view',
+        'res_id': res_id,
+        'res_model': res_model,
+    }
+
+    if data:
+        attachment_data['raw'] = data
+        if url:
+            attachment_data['url'] = url
+    elif url:
+        attachment_data.update({
+            'type': 'url',
+            'url': url,
+        })
+        # The code issues a HEAD request to retrieve headers from the URL.
+        # This approach is beneficial when the URL doesn't conclude with an
+        # image extension. By verifying the MIME type, the code ensures that
+        # only supported image types are incorporated into the data.
+        response = requests.head(url, timeout=10)
+        if response.status_code == 200:
+            mime_type = response.headers.get('content-type')
+            if mime_type in SUPPORTED_IMAGE_MIMETYPES:
+                attachment_data['mimetype'] = mime_type
+    else:
+        raise UserError(_("You need to specify either data or url to create an attachment."))
+
+    # Despite the user having no right to create an attachment, he can still
+    # create an image attachment through some flows
+    if (
+        not IrAttachment.env.is_admin()
+        and IrAttachment._can_bypass_rights_on_media_dialog(**attachment_data)
+    ):
+        attachment = IrAttachment.sudo().create(attachment_data)
+        # When portal users upload an attachment with the wysiwyg widget,
+        # the access token is needed to use the image in the editor. If
+        # the attachment is not public, the user won't be able to generate
+        # the token, so we need to generate it using sudo
+        if not attachment_data['public']:
+            attachment.sudo().generate_access_token()
+
+        if IrAttachment.env.user.share:
+            max_portal_file_size = int(IrAttachment.env["ir.config_parameter"].sudo().get_int(
+                "html_editor.max_portal_file_size",
+                100_000_000,
+            ))
+            if not (attachment.mimetype or '').startswith('image/'):
+                raise AccessError(IrAttachment.env._("Non-internal users can only upload image."))
+            if attachment.file_size >= max_portal_file_size:
+                raise AccessError(IrAttachment.env._("Non-internal users can't upload large files."))
+    else:
+        attachment = get_existing_attachment(IrAttachment, attachment_data) \
+            or IrAttachment.create(attachment_data)
+
+    return attachment
 
 
 # This method must be called in a context that has write access to the record as
