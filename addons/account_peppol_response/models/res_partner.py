@@ -21,7 +21,16 @@ class ResPartner(models.Model):
     def _peppol_fill_participant_supported_documents(self):
         for partner in self:
             edi_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}".lower()
-            participant_info = partner._peppol_lookup_participant(edi_identification)
+            formats = [
+                self.env['res.partner']._get_edi_builder(edi_format)._get_customization_id(process_type=process_type)
+                for edi_format in self.env['res.partner']._get_peppol_formats()
+                for process_type in ('billing', 'selfbilling')
+
+            ]
+            formats = [f for f in formats if f]
+            formats += ['urn:fdc:peppol.eu:poacc:trns:invoice_response:3']
+            format_str = ",".join(formats)
+            participant_info = partner._peppol_lookup_participant_formats_accepted(edi_identification, format_str)
             if not participant_info:
                 continue
             supported_documents = [service['document_id'] for service in participant_info.get('services', []) if service.get('document_id')]
