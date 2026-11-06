@@ -19,6 +19,8 @@
 | ตรวจสอบแบบ static (ไม่แตะ DB) | `py_compile`, ตรวจ XML well-formed, linter |
 | จัดการ staging / branch ท้องถิ่น | `git add <path>`, `git restore --staged`, สร้าง branch `feature/*`, `codex/*` |
 | เก็บงานชั่วคราวแบบไม่ลบ | `git stash push` |
+| **รัน Unit Test / Integration Test** | `run-tests.ps1` หรือ `odoo-bin --test-enable` บน DB ทดสอบ — รันเองได้ และต้องผ่านก่อน commit/push ทุกครั้ง |
+| **`git push` (branch งานตัวเอง)** | push เข้า `feature/*`, `codex/*` ของตัวเองขึ้น remote ได้เอง ไม่ต้องรออนุมัติ |
 | **`git commit` (local)** | commit บนเครื่อง หลังผ่าน Pre-flight (ข้อ 2) และทำตามข้อ 3 |
 
 > **`git commit` (local) ปลดการรออนุมัติ** เพราะย้อนกลับได้ง่ายด้วย `git reset` / `git revert` และมี Pre-flight (ข้อ 2) คอยกันการชนกันของหลาย agent
@@ -28,15 +30,14 @@
 
 | # | การกระทำที่ห้าม | เหตุผล |
 |---|---|---|
-| 1 | `git push` ทุกกรณี (รวม `--tags`) | ป้องกันประวัติบน remote เสียหาย |
-| 2 | `git push --force` / `--force-with-lease` | เขียนประวัติทับของจริง |
-| 3 | push เข้า `19.0` / `main` / `master` โดยตรง | branch หลักต้องผ่านการรีวิว |
-| 4 | `git commit --amend` / `rebase` / `squash` / `reset --hard` / history rewrite | เขียนประวัติใหม่ = SHA เปลี่ยนทั้งหมด |
-| 5 | `git config` แก้ค่าใด ๆ (รวม `core.hooksPath`) | เปลี่ยนสภาพแวดล้อมของเครื่อง |
-| 6 | `git stash drop` / `git clean -fdx` | ลบงานที่ยังไม่ได้ commit |
-| 7 | ติดตั้ง / แก้ไข / ลบ ไฟล์ใน `.git/hooks/` | กระทบทุก agent บนเครื่องนี้ |
+| 1 | `git push --force` / `--force-with-lease` | เขียนประวัติทับของจริง |
+| 2 | push เข้า `19.0` / `main` / `master` โดยตรง | branch หลักต้องผ่านการรีวิว |
+| 3 | `git commit --amend` / `rebase` / `squash` / `reset --hard` / history rewrite | เขียนประวัติใหม่ = SHA เปลี่ยนทั้งหมด |
+| 4 | `git config` แก้ค่าใด ๆ (รวม `core.hooksPath`) | เปลี่ยนสภาพแวดล้อมของเครื่อง |
+| 5 | `git stash drop` / `git clean -fdx` | ลบงานที่ยังไม่ได้ commit |
+| 6 | ติดตั้ง / แก้ไข / ลบ ไฟล์ใน `.git/hooks/` | กระทบทุก agent บนเครื่องนี้ |
 
-ข้อยกเว้นของข้อ 1–3: ผู้ใช้สั่งอนุมัติเป็นรายครั้ง แล้วตั้งค่า `OD19_PUSH_APPROVED=1` ก่อนสั่ง push
+ข้อยกเว้นของข้อ 1–2: ผู้ใช้สั่งอนุมัติเป็นรายครั้ง แล้วตั้งค่า `OD19_PUSH_APPROVED=1` ก่อนสั่ง push
 
 ## 2. Single-writer — ทำงานได้ทีละ agent เท่านั้น
 
@@ -51,6 +52,7 @@
 
 ## 3. กฎการ commit (ทำได้เองหลังผ่าน Pre-flight — ไม่ต้องรออนุมัติ)
 
+- **ต้องรัน Unit Test ให้ผ่านก่อน commit/push** (0 failed / 0 error) — ถ้าไม่ผ่าน ห้าม commit และห้าม push
 - รูปแบบ Conventional Commits: `<type>(<scope>): <description>`
   - type: `feat` `fix` `docs` `style` `refactor` `perf` `test` `build` `ci` `chore` `revert`
 - 1 commit = 1 โดเมนงาน ห้ามรวมหลายโดเมนใน commit เดียว
@@ -58,7 +60,7 @@
 - ระบุไฟล์เป็นรายชื่อชัดเจน (`git add <path>` หรือ `git commit -- <path>`) **ห้าม** `git add -A` หรือ `git add .`
 - ห้าม commit ไฟล์ที่ `.gitignore` ครอบไว้ — ตรวจก่อนด้วย `git check-ignore -v --no-index <path>`
 
-## 4. กฎการ push (ทำได้เมื่อได้รับอนุมัติแล้วเท่านั้น)
+## 4. กฎการ push (branch งานตัวเอง — ทำได้เอง ไม่ต้องรออนุมัติ)
 
 - push ได้เฉพาะ branch งานของตัวเอง (`feature/*`, `codex/*`)
 - ห้าม push ตรงเข้า `19.0` / `main` / `master`
@@ -80,7 +82,7 @@
 
 - ห้ามแก้ไฟล์ core ของ Odoo (`odoo/`, `addons/`) — แก้ได้เฉพาะ `custom_addons/` และ config ของโปรเจกต์
 - ห้ามฝัง credential ลงในคำสั่ง/สคริปต์ ให้อ่านค่าจาก `odoo.conf` ตอนรัน
-- ห้ามรัน Unit Test แทนผู้ใช้ ให้ผู้ใช้รันบน Terminal ของเครื่องเอง
+- รัน Unit Test ได้เองบน DB `odoo19_pdev` (เช่นผ่าน `run-tests.ps1` หรือ `odoo-bin --test-enable --test-tags`) — ต้องผ่านก่อน commit/push ทุกครั้ง
 - ใช้ฐานข้อมูล `odoo19_pdev` เท่านั้น
 
 ## 7. ก่อนรายงานผลทุกครั้ง
