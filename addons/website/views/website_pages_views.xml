@@ -55,6 +55,11 @@
                     <field name="publish_on" widget="datetime"/>
                     <button name="action_unschedule" type="object" invisible="not publish_on">Unschedule</button>
                 </div>
+                <label for="is_module_enabled" string="Website Feature" invisible="not module_id"/>
+                <div class="o_row" invisible="not module_id">
+                    <field name="is_module_enabled" widget="boolean_toggle"/>
+                    <field name="module_display_name" readonly="1" nolabel="1"/>
+                </div>
             </group>
         </form>
     </field>
