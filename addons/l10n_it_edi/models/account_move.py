@@ -319,14 +319,6 @@ class AccountMove(models.Model):
                     return xml_tree
         return res
 
-    def _check_l10n_it_edi_xml_content(self, file_data):
-        """ Checks if the XML root tag starts with 'FatturaElettronica'. Handles both standard XML and signed p7m files."""
-        xml_tree = self._parse_xml_with_recovery(file_data['raw'], file_data['name'])
-        if xml_tree is None:
-            return False
-        tag_name = etree.QName(xml_tree).localname
-        return tag_name.startswith('FatturaElettronica')
-
     def _is_l10n_it_edi_import_file(self, file_data):
         xml_tree = file_data.get('xml_tree')
         return (xml_tree is not None and etree.QName(file_data['xml_tree']).localname.startswith('FatturaElettronica'))
@@ -1756,6 +1748,20 @@ class AccountMove(models.Model):
                     self.partner_id.is_company = partner_info.get('is_company')
                     self.partner_id.l10n_it_codice_fiscale = partner_info.get('codice_fiscale', False)
                     message_to_log.extend(logs)
+
+            if (
+                partner_role == 'buyer'
+                and (customer := self.partner_id.commercial_partner_id)
+                and not self._l10n_it_edi_document_type_mapping().get(document_type, {}).get('self_invoice')
+            ):
+                if (
+                    not customer.l10n_it_pa_index
+                    and len(destination_code or '') in (6, 7)
+                    and destination_code.upper() not in ('0000000', 'XXXXXXX')
+                ):
+                    customer.l10n_it_pa_index = destination_code
+                if not customer.l10n_it_pec_email and (destination_pec := get_text(tree, '//PECDestinatario')):
+                    customer.l10n_it_pec_email = destination_pec
 
             # Document Number -----------------------------------
             if number := get_text(tree, './/DatiGeneraliDocumento//Numero'):
