@@ -157,8 +157,8 @@ class ProductProduct(models.Model):
         self.outgoing_qty = 0.0
         self.virtual_available = 0.0
         self.free_qty = 0.0
-        for product in products:
-            product.with_context(skip_qty_available_update=True).update({key: val for key, val in res[product.id].items() if val})
+        for product in products.with_context(skip_qty_available_update=True):
+            product.update({key: val for key, val in res[product.id].items() if val})
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
