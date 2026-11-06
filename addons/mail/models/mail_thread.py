@@ -4979,7 +4979,12 @@ class MailThread(models.AbstractModel):
                     last_div_element = (
                         children[-1] if children[-1].tag in ["div", "p"] else tree
                     )
-                    last_div_element.text = (last_div_element.text or '') + (' ' if last_div_element.text else '')
+                    if len(last_div_element):
+                        last_child = last_div_element[-1]
+                        if last_child.tail and not last_child.tail.endswith(" "):
+                            last_child.tail += " "
+                    elif last_div_element.text and not last_div_element.text.endswith(" "):
+                        last_div_element.text += " "
                     etree.SubElement(last_div_element, "span", attrib={"class": "o-mail-Message-edited"})
                     msg_values["body"] = (
                         # markup: it is considered safe, as coming from html.fragment_fromstring
