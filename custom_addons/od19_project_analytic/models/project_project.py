@@ -90,7 +90,13 @@ class ProjectProject(models.Model):
                 vals["account_id"] = self._create_analytic_account(vals).id
         return super().create(vals_list)
 
-    def _create_analytic_account(self, vals):
+    def _create_analytic_account(self, vals=None):
+        # Keep the core contract (no arguments): core modules (hr_timesheet,
+        # sale_project, ...) call this on a recordset to batch-create and
+        # assign account_id. Only use the custom single-project path when the
+        # caller passes explicit vals (see create() below).
+        if vals is None:
+            return super()._create_analytic_account()
         analytic_name = vals.get("job_no") or vals.get("name") or "Project"
         analytic = self.env["account.analytic.account"].create(
             {
