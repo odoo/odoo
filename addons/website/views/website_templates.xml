@@ -385,25 +385,7 @@
         <t t-set="breadcrumb_text_color_class" t-value="breadcrumb_text_color_is_class and breadcrumb_text_color or ''"/>
         <t t-set="breadcrumb_text_color_style" t-value="(not breadcrumb_text_color_is_class) and breadcrumb_text_color or ''"/>
 
-        <div groups="base.group_user" class="o_frontend_to_backend_nav position-fixed d-none">
-            <svg xmlns="http://www.w3.org/2000/svg" class="o_frontend_to_backend_icon position-absolute" width="24px" height="24px"
-                 viewBox="-7 -7 24 24" preserveAspectRatio="xMinYMin">
-                <path fill="#FFF" d="M8 8V1a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h7z"/>
-            </svg>
-            <div class="o_frontend_to_backend_buttons d-flex">
-                <a href="#" title="Go to your Odoo Apps" class="o_frontend_to_backend_apps_btn d-flex align-items-center justify-content-center text-decoration-none" data-bs-toggle="dropdown" data-bs-display="static" data-hotkey="h">
-                    <i class="oi oi-lg" data-icon="apps" role="img" aria-hidden="true"/>
-                </a>
-                <div class="dropdown-menu o_frontend_to_backend_apps_menu" role="menu">
-                    <a role="menuitem" class="dropdown-item" t-out="menu['name']"
-                       t-as="menu" t-foreach="env['ir.ui.menu'].with_context(force_action=True).load_menus_root()['children']"
-                       t-attf-href="/odoo/action-#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
-                </div>
-                <a groups="website.group_website_restricted_editor" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
-                    <img src="/website/static/description/icon.png" alt=""/>Editor
-                </a>
-            </div>
-        </div>
+        <t groups="base.group_user"><t t-call="website.frontend_to_backend" t-lang="env.user.lang"/></t>
     </xpath>
     <xpath expr="//div[@id='wrapwrap']" position="attributes">
         <attribute name="t-attf-class" add="#{'o_header_overlay' if 'header_overlay' in main_object and main_object.sudo().header_overlay else ''}" separator=" "/>
@@ -425,6 +407,28 @@
     <xpath expr="//main" position="attributes">
         <attribute name="t-attf-class" add="#{'o_breadcrumb_overlay' if 'breadcrumb_overlay' in main_object and main_object.sudo().breadcrumb_overlay else ''}" />
     </xpath>
+</template>
+
+<template id="frontend_to_backend" name="Frontend to backend">
+    <div class="o_frontend_to_backend_nav position-fixed d-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="o_frontend_to_backend_icon position-absolute" width="24px" height="24px"
+                viewBox="-7 -7 24 24" preserveAspectRatio="xMinYMin">
+            <path fill="#FFF" d="M8 8V1a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1H1a1 1 0 1 1 0-2h7z"/>
+        </svg>
+        <div class="o_frontend_to_backend_buttons d-flex">
+            <a href="#" title="Go to your Odoo Apps" class="o_frontend_to_backend_apps_btn d-flex align-items-center justify-content-center text-decoration-none" data-bs-toggle="dropdown" data-bs-display="static" data-hotkey="h">
+                <i class="oi oi-lg" data-icon="apps" role="img" aria-hidden="true"/>
+            </a>
+            <div class="dropdown-menu o_frontend_to_backend_apps_menu" role="menu">
+                <a role="menuitem" class="dropdown-item" t-out="menu['name']"
+                    t-as="menu" t-foreach="env['ir.ui.menu'].with_context(force_action=True, lang=env.user.lang).load_menus_root()['children']"
+                    t-attf-href="/odoo/action-#{menu['action'] and menu['action'].split(',')[1] or ''}"/>
+            </div>
+            <a groups="website.group_website_restricted_editor" href="#" title="Edit this content" class="o_frontend_to_backend_edit_btn px-3 d-flex align-items-center justify-content-center text-decoration-none">
+                <img src="/website/static/description/icon.png" alt=""/>Editor
+            </a>
+        </div>
+    </div>
 </template>
 
 <template id="font_links" name="Font Links">
