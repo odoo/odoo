@@ -346,3 +346,31 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
 .form-range:disabled::-webkit-slider-thumb {
     border-color: $input-disabled-border-color;
 }
+
+.form-floating {
+    .form-control,
+    .form-select,
+    .form-control-plaintext {
+        padding: $input-padding-y $input-padding-x !important;
+        height: unset;
+        min-height: unset;
+        line-height: $input-line-height;
+    }
+
+    label {
+        height: unset !important;
+        padding: .3rem !important;
+    }
+
+    > .form-control:focus,
+    > .form-control:not(:placeholder-shown),
+    > .form-control-plaintext,
+    > .form-select {
+        ~ label {
+            padding: 1px !important;
+            background-color: $input-bg;
+            transform: scale(.85) translateY(-1rem) translateX(.15rem) !important;
+            border-radius: 3px;
+        }
+    }
+}
