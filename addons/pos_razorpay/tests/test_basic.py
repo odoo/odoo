@@ -14,7 +14,10 @@ class TestRazorpayPosRequest(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.company.currency_id = cls.env.ref('base.INR')
+        company = cls.add_class_company('base.test_company_template', {
+            'currency_id': cls.env.ref('base.INR').id,
+        })
+        cls.env = cls.env(context={**cls.env.context, 'allowed_company_ids': company.ids})
         cls.payment_method = cls.env['pos.payment.method'].create({
             'name': 'RazorPay',
             'type': 'bank',

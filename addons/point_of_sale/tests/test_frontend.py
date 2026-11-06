@@ -1629,7 +1629,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'decimal_places': 0,
         })
 
-        self.env.user.company_id.currency_id = zero_decimal_currency
+        self.main_pos_config.journal_id.currency_id = zero_decimal_currency
+        self.main_pos_config.payment_method_ids.journal_id.currency_id = zero_decimal_currency
         self.main_pos_config.available_pricelist_ids.write({'currency_id': zero_decimal_currency.id})
 
         self.env['product.product'].create({

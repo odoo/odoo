@@ -1429,6 +1429,31 @@ class TestPosAccounting(AccountTestInvoicingCommon):
     def test_pos_config_with_other_currency_than_company(self):
         eur = self.env.ref('base.EUR')
         usd = self.env.ref('base.USD')
+        # Keep the EUR company and its accounting fixtures local to this test.
+        company_data = self.setup_other_company(
+            company_xmlid='base.test_company_template',
+            currency_id=eur.id,
+        )
+        self.env = self.env(context={**self.env.context, 'allowed_company_ids': company_data['company'].ids})
+        self.cash_pm = self.env['pos.payment.method'].create({
+            'name': 'Cash',
+            'type': 'cash',
+            'journal_id': company_data['default_journal_cash'].id,
+        })
+        self.pos_config = self.env['pos.config'].create({
+            'name': 'Foreign Currency POS',
+            'journal_id': company_data['default_journal_sale'].id,
+            'payment_method_ids': [Command.set(self.cash_pm.ids)],
+        })
+        self.product_6, self.product_12 = self.env['product.product'].create([{
+            'name': f'Product {amount}%',
+            'list_price': 10,
+            'taxes_id': [Command.create({
+                'name': f'Tax {amount}%',
+                'amount': amount,
+                'type_tax_use': 'sale',
+            })],
+        } for amount in (6, 12)])
         self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': '2010-01-01',
@@ -1436,7 +1461,6 @@ class TestPosAccounting(AccountTestInvoicingCommon):
             'currency_id': usd.id,
         })
 
-        self.pos_config.company_id.currency_id = eur
         self.pos_config.journal_id.currency_id = usd
         self.pos_config.currency_id = usd
         self.cash_pm.journal_id.currency_id = usd
