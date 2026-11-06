@@ -53,7 +53,6 @@
         "data/academic/academic_defaults.xml",
         "data/core/company_branding.xml",
         "data/admission/admission_stage_data.xml",
-        "data/core/mail_template.xml",
         "data/core/university_capability_data.xml",
         "data/people/fix_user_teacher_links.xml",
         "data/attendance/demo_attendance_links.xml",
@@ -111,6 +110,9 @@
         "reports/academic/curriculum_report.xml",
         "reports/attendance/attendance_reports.xml",
         "reports/grading/exam_marksheet_report.xml",
+
+        # Mail Templates (loads after payment report actions to resolve report attachments)
+        "data/core/mail_template.xml",
 
         # Business Views
         "views/enrollment/enrollment_views.xml",
