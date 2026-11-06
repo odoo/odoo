@@ -63,9 +63,13 @@
                             <div t-if="o.state == 'done'" t-field="o.date_done" t-options='{"widget": "date"}' class="m-0"/>
                             <div t-else="" t-field="o.scheduled_date" t-options='{"widget": "date"}' class="m-0"/>
                         </div>
-                        <div t-if="o.user_id" class="col-auto" name="div_operator">
+                        <div t-if="o.user_id" class="col col-3" name="div_operator">
                             <strong>Operator:</strong>
                                 <p t-field="o.user_id">Mitchel Admin</p>
+                        </div>
+                        <div t-if="o.picking_warning_text" class="col col-auto mb-2" name="div_instructions">
+                            <strong>Instructions:</strong>
+                            <div t-field="o.picking_warning_text" class="m-0"/>
                         </div>
                     </div>
                     <div class="oe_structure"></div>
