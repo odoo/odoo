@@ -229,8 +229,15 @@ class StockMove(models.Model):
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
             is_move_to_interco_transit = False
-            if location_dest:
-                is_move_to_interco_transit = location_dest._child_of(customer_loc) and move.location_final_id == inter_comp_location
+            if location_dest and move.location_final_id and inter_comp_location:
+                location_final = move.location_final_id
+                # The inter-company transit or a sublocation set up like it (transit, no company)
+                is_move_to_interco_transit = (
+                    location_dest._child_of(customer_loc)
+                    and location_final._child_of(inter_comp_location)
+                    and location_final.usage == 'transit'
+                    and not location_final.company_id
+                )
             if location_dest and move.location_final_id and (move.location_final_id._child_of(location_dest) or is_move_to_interco_transit):
                 # Force the location_final as dest in the following cases:
                 # - The location_final is a sublocation of destination -> Means we reached the end
