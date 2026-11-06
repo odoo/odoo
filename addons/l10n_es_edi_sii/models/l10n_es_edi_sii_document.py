@@ -206,7 +206,13 @@ class L10nEsEdiSiiDocument(models.Model):
                     doc.sudo().write({'attachment_id': attachment.id})
             else:
                 response_msg = response_data.get('response_message', self.env._('Unknown Error'))
-                doc.sudo().write({'response_message': response_msg})
+
+                new_state = 'cancelled' if response_data.get('is_soap_fault') else doc.state
+
+                doc.sudo().write({
+                    'state': new_state,
+                    'response_message': response_msg,
+                })
                 doc.move_id.message_post(
                     body=self.env._(
                         "The document was rejected by SII with the following error: %s",
@@ -267,6 +273,11 @@ class L10nEsEdiSiiDocument(models.Model):
 
             except requests.exceptions.SSLError:
                 return response_for_documents(False, {'response_message': self.env._("The SSL certificate could not be validated.")})
+            except zeep.exceptions.Fault as fault:
+                return response_for_documents(False, {
+                    'response_message': self.env._("Fault error:\n[%(code)s] %(message)s", code=fault.code, message=fault.message),
+                    'is_soap_fault': True
+                })
             except (zeep.exceptions.Error, requests.exceptions.ConnectionError) as error:
                 return response_for_documents(False, {'response_message': self.env._("Networking error:\n%s", error)})
             except Exception as error:  # noqa: BLE001
