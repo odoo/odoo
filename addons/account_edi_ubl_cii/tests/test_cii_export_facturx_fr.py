@@ -2,6 +2,7 @@ from odoo.addons.account_edi_ubl_cii.tests.common import TestCiiFacturXCommon, T
 from odoo.tests import tagged
 
 from freezegun import freeze_time
+from lxml import etree
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -89,6 +90,40 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
 
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_price_amount_rounding_precision')
+
+    def test_invoice_document_totals_match_the_line_net_amounts(self):
+        """ [BR-CO-10] BT-106 (sum of invoice line net amounts) = the sum of the line net
+        amounts (BT-131), and [BR-S-08] BT-116 (VAT category taxable amount) = the sum of the
+        line net amounts of that category. Deriving the document sums from the aggregated tax
+        base rounds differently from the per line net amounts, which breaks both rules.
+        """
+        invoice = self._create_invoice(
+            partner_id=self.partner_fr,
+            partner_bank_id=self.recipient_bank,
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=123.123, product_id=self.product, quantity=5, tax_ids=self.tax_20),
+                self._prepare_invoice_line(price_unit=10.125, product_id=self.product, quantity=1, tax_ids=self.tax_20),
+                self._prepare_invoice_line(price_unit=100.126, product_id=self.product, quantity=2, tax_ids=self.tax_20),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+
+        tree = etree.fromstring(invoice.ubl_cii_xml_id.raw)
+        line_net_amounts = sum(
+            float(line.findtext('.//{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount'))
+            for line in tree.iterfind('.//{*}IncludedSupplyChainTradeLineItem')
+        )
+        settlement = tree.find('.//{*}ApplicableHeaderTradeSettlement')
+        self.assertEqual(
+            float(settlement.findtext('./{*}SpecifiedTradeSettlementHeaderMonetarySummation/{*}LineTotalAmount')),
+            line_net_amounts,
+        )
+        self.assertEqual(
+            sum(float(tax.findtext('./{*}BasisAmount')) for tax in settlement.iterfind('./{*}ApplicableTradeTax')),
+            line_net_amounts,
+        )
 
     def test_invoice_price_amount_rounding_precision_with_price_included_taxes(self):
         self.tax_20.price_include_override = 'tax_included'
