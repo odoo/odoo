@@ -122,10 +122,14 @@ a question; a missing section is a review round trip.
 ### Trailers
 
 - Include applicable references, one per line, after the body: `task-123`
-  (task), `opw-123` (support ticket), `runbot-123` (runbot error), `Fixes #123`
-  (a GitHub issue this commit closes), `Co-authored-by: Name <email>`. Ask
-  the author for the task, ticket, or issue; link what exists and leave the
-  trailer out otherwise. Never invent a reference.
+  (task), `opw-123` (support ticket), `Fixes #123` (a GitHub issue this
+  commit closes), `Co-authored-by: Name <email>`. Ask the author for the
+  task, ticket, or issue; link what exists and leave the trailer out
+  otherwise. Never invent a reference.
+- A runbot error is referenced the same way, by the full URL of its page,
+  `https://runbot.odoo.com/odoo/error/123`, not `runbot-123`. The merge bot
+  links `task-` and `opw-` references, but nothing links `runbot-123`, and
+  its number does not say whether it is an error or a build.
 - Leave generated metadata to the bots: the merge bot adds PR linkage
   (`closes odoo/odoo#123` or `Part-of: odoo/odoo#123`), `Signed-off-by`, and
   `Related: odoo/enterprise#123`. Forward-port tooling adds provenance such as
