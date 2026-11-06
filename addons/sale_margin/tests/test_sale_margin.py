@@ -45,7 +45,6 @@ class TestSaleMargin(SaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls._enable_discounts()
 
         cls.product_50_margin = cls._create_product(
             list_price=100.0, standard_price=50.0, taxes_id=[Command.set([])]

@@ -16,6 +16,7 @@ by choosing product variants quantity through a Grid Entry.
     ],
     "demo": ["data/product_matrix_demo.xml"],
     "assets": {"web.assets_backend": ["sale_product_matrix/static/src/**/*"]},
+    "auto_install": ["sale"],
     "author": "Odoo S.A.",
     "license": "LGPL-3",
 }
