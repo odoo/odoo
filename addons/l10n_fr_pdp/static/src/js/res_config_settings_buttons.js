@@ -8,6 +8,17 @@ import { markup } from "@odoo/owl";
 const PeppolSettingsButtons = registry.category("view_widgets").get("peppol_settings_buttons").component;
 
 patch(PeppolSettingsButtons.prototype, {
+    async createReceiver() {
+        if (this.isPdpEdiIdentification && this.proxyState === "sender") {
+            this.notification.add(
+                _t("To receive invoices through Odoo, deregister this Sender Only connection, then activate electronic invoicing again and choose Migrate to Odoo."),
+                { title: _t("Migrate reception to Odoo"), type: "info", sticky: true }
+            );
+            return;
+        }
+        return super.createReceiver();
+    },
+
     get deregisterUserButtonLabel() {
         if (this.isPdpEdiIdentification && this.proxyState === "sender") {
             return _t("Deregister");

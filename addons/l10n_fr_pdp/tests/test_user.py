@@ -159,6 +159,15 @@ class TestPdpUser(TestL10nFrPdpCommon):
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
             self.assertEqual(self.env.company.account_peppol_proxy_state, 'receiver')
 
+    def test_sender_only_allow_reception_requires_new_registration(self):
+        self.env.company.account_peppol_proxy_state = 'sender'
+        settings = self.env['res.config.settings'].create({'company_id': self.env.company.id})
+
+        with self.assertRaisesRegex(UserError, 'deregister this Sender Only connection'):
+            settings.button_peppol_smp_registration()
+
+        self.assertEqual(self.env.company.account_peppol_proxy_state, 'sender')
+
     def test_pdp_create_reject_participant(self):
         # the account_peppol_proxy_state should change to rejected
         # if we reject the participant

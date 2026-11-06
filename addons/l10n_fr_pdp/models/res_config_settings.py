@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -46,6 +47,14 @@ class ResConfigSettings(models.TransientModel):
         if self.country_code != 'FR' and self.account_peppol_eas != '0225':
             return super().action_open_peppol_form()
         return self.action_open_pdp_form()
+
+    def button_peppol_smp_registration(self):
+        self.ensure_one()
+        if self.account_peppol_proxy_state == 'sender' and self.account_peppol_edi_user.proxy_type == 'pdp':
+            raise UserError(self.env._(
+                "To receive invoices through Odoo, deregister this Sender Only connection, then activate electronic invoicing again and choose Migrate to Odoo."
+            ))
+        return super().button_peppol_smp_registration()
 
     @api.depends('company_id.l10n_fr_pdp_pilot_phase')
     def _compute_l10n_fr_pdp_pilot_phase(self):
