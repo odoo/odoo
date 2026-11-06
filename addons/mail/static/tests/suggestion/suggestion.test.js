@@ -36,7 +36,7 @@ import { MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
-import { waitFor, waitForNone } from "@odoo/hoot-dom";
+import { press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { ConnectionAbortedError, rpc, rpcBus } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
 
@@ -510,6 +510,29 @@ test("select @ mention insert mention text in composer", async () => {
     await insertTextInComposer(".o-mail-Composer", "@");
     await contains(".o-mail-Composer-suggestion strong:text('TestPartner'):count(1)").click();
     await containsTextInComposer(".o-mail-Composer", "\uFEFF@TestPartner\uFEFF\u00a0");
+});
+
+test("partner without a name is mentioned by its email", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ email: "invoice@odoo.com", name: false });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    onRpcBefore("/mail/message/post", (args) =>
+        expect.step(`post to ${args.post_data.partner_ids}`)
+    );
+    await start();
+    await openDiscuss(channelId);
+    await insertTextInComposer(".o-mail-Composer", "@invoice");
+    await click(".o-mail-Composer-suggestion:contains('(invoice@odoo.com)')");
+    await containsTextInComposer(".o-mail-Composer", "\uFEFF@invoice@odoo.com\uFEFF\u00a0");
+    await press("Enter");
+    await waitFor(".o-mail-Message a.o_mail_redirect:text('@invoice@odoo.com'):count(1)");
+    await expect.waitForSteps([`post to ${partnerId}`]);
 });
 
 test("select @ mention from the suggestion list being filtered", async () => {
