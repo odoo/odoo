@@ -6,6 +6,7 @@ import { ProductTemplateAttributeLine } from "@point_of_sale/app/models/product_
 import { ProductTemplateAttributeValue } from "@point_of_sale/app/models/product_template_attribute_value";
 import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
+import { UomUom } from "@point_of_sale/app/models/uom_uom";
 
 export const BaseProductAttributeProps = {
     attribute: t.instanceOf(ProductTemplateAttributeLine),
@@ -88,6 +89,15 @@ export class MultiProductAttribute extends BaseProductAttribute {
     }
 }
 
+export class UomSelection extends Component {
+    static template = "point_of_sale.UomSelection";
+    props = useProps({
+        selectedUomId: t.number(),
+        availableUoMs: t.array(t.instanceOf(UomUom)),
+        setSelected: t.function(),
+    });
+}
+
 export class ProductConfiguratorPopup extends Component {
     static template = "point_of_sale.ProductConfiguratorPopup";
     static components = {
@@ -98,6 +108,7 @@ export class ProductConfiguratorPopup extends Component {
         ColorProductAttribute,
         ImageProductAttribute,
         MultiProductAttribute,
+        UomSelection,
         Dialog,
     };
     props = useProps({
@@ -108,6 +119,7 @@ export class ProductConfiguratorPopup extends Component {
         forceVariantValue: t.array().optional(),
         line: t.instanceOf(PosOrderline).optional(),
         comboItem: t.object().optional(),
+        hideUoMSelection: t.boolean().optional(false),
     });
 
     setup() {
@@ -122,6 +134,9 @@ export class ProductConfiguratorPopup extends Component {
                     };
                     return acc;
                 }, {}),
+            selectedUomId: this.props.productTemplate.uom_ids.length
+                ? this.props.line?.product_uom_id?.id || this.props.productTemplate.uom_id.id
+                : null,
         });
 
         if (!this.props.line?.selectedAttributes) {
@@ -244,6 +259,7 @@ export class ProductConfiguratorPopup extends Component {
                     return acc;
                 }, []),
             price_extra: this.priceExtra,
+            product_uom_id: this.state.selectedUomId,
         };
     }
 
@@ -283,7 +299,10 @@ export class ProductConfiguratorPopup extends Component {
 
         const product = this.product || this.props.productTemplate;
         const info = product.getTaxDetails({ overridedValues });
-        const total = this.pos.formatCurrency(info?.raw_total_included_currency || 0.0);
+        const uom = this.pos.models["uom.uom"].get(this.state.selectedUomId);
+        const total = this.pos.formatCurrency(
+            (info?.raw_total_included_currency || 0.0) * product.getUomPriceFactor(uom)
+        );
         return `${this.props.productTemplate.display_name} | ${total}`;
     }
     get defaultCode() {
@@ -337,5 +356,15 @@ export class ProductConfiguratorPopup extends Component {
         } else {
             return this.attributes;
         }
+    }
+
+    get availableUoMs() {
+        return this.props.productTemplate.uom_ids.length
+            ? [this.props.productTemplate.uom_id, ...this.props.productTemplate.uom_ids]
+            : [];
+    }
+
+    setSelectedUom(uom) {
+        this.state.selectedUomId = uom.id;
     }
 }

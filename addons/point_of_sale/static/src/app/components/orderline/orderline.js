@@ -95,7 +95,7 @@ export class Orderline extends Component {
             !line.combo_parent_id &&
             !line.isServiceFeeLine();
         const priceUnit = `${line.currencyDisplayPriceUnit} / ${
-            line.product_id?.uom_id?.name || ""
+            line.product_uom_id?.name || line.product_id?.uom_id?.name || ""
         }`;
         return {
             name: line.orderDisplayProductName.name,

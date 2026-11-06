@@ -39,15 +39,16 @@ patch(PosStore.prototype, {
         if (values.product_id.tracking === "lot") {
             const productTemplate = values.product_id.product_tmpl_id;
             const related_lines = [];
-            const price = productTemplate.getPrice(
-                order.pricelist_id,
-                values.qty,
-                values.price_extra,
-                false,
-                values.product_id,
-                selectedOrderline,
-                related_lines
-            );
+            const price =
+                productTemplate.getPrice(
+                    order.pricelist_id,
+                    values.qty,
+                    values.price_extra,
+                    false,
+                    values.product_id,
+                    selectedOrderline,
+                    related_lines
+                ) * productTemplate.getUomPriceFactor(selectedOrderline.product_uom_id);
             related_lines
                 .filter((line) => line.price_type === "original")
                 .forEach((line) => line.setUnitPrice(price));
