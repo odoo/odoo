@@ -11,7 +11,7 @@
             />
             <Dropdown t-if="this.ancestors.inChatter">
                 <button class="btn btn-secondary ms-2" aria-label="Filter Messages" title="Filter Messages">
-                    <i class="oi oi-filled" data-icon="filter_alt" role="img"/>
+                    <i class="oi oi-filled" data-icon="filter_alt" aria-hidden="true"/>
                 </button>
                 <t t-set-slot="content">
                     <t t-foreach="this.MESSAGE_SEARCH_FILTERS" t-as="searchFilter" t-key="searchFilter.id ?? 'all'">

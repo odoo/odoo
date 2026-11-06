@@ -161,7 +161,7 @@
     </div>
     <div t-elif="this.message.thread?.eq(this.props.thread) and (this.message.incoming_email_to?.length or this.message.incoming_email_cc?.length)" class="mx-1">
         <span class="o-mail-Message-notification cursor-pointer" t-att-class="this.message.failureNotifications.length > 0 ? 'text-danger align-middle' : this.text-600" role="button" tabindex="0" t-att-title="this.deliveryFailureText" t-on-click="this.onClickNotification">
-            <i class="oi oi-filled" t-att-data-icon="this.message.failureNotifications.length > 0 ? 'cancel' : 'mail'" role="img"/>
+            <i class="oi oi-filled" t-att-data-icon="this.message.failureNotifications.length > 0 ? 'cancel' : 'mail'" aria-hidden="true"/>
         </span>
     </div>
 </t>

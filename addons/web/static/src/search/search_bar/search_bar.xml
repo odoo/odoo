@@ -44,7 +44,7 @@
                 'o_facet_favorite': facet.type == 'favorite'
             }"
             >
-            <i t-if="facet.icon" class="oi oi-fw oi-filled" t-att-data-icon="facet.icon" role="image"/>
+            <i t-if="facet.icon" class="oi oi-fw oi-filled" t-att-data-icon="facet.icon" aria-hidden="true"/>
             <small t-else="" class="px-1 lh-1 fw-bold" t-out="facet.title"/>
 
             <!-- Editable facets' overlay -->
@@ -74,14 +74,14 @@
             aria-label="Previous period"
             t-on-click="() => this.onPrevDateFacetClick(facet)"
         >
-            <i class="oi oi-fw" data-icon="keyboard_arrow_left" role="img"/>
+            <i class="oi oi-fw" data-icon="keyboard_arrow_left" aria-hidden="true"/>
         </button>
         <button class="o_date_nav_btn btn btn-primary rounded-0 p-0 border-0"
             type="button"
             aria-label="Next period"
             t-on-click="() => this.onNextDateFacetClick(facet)"
         >
-            <i class="oi oi-fw" data-icon="keyboard_arrow_right" role="img"/>
+            <i class="oi oi-fw" data-icon="keyboard_arrow_right" aria-hidden="true"/>
         </button>
     </t>
 
@@ -137,7 +137,7 @@
                         t-on-click="this.onClickSearchIcon"
                     >
                         <i class="o_searchview_icon oi me-2" data-icon="search"
-                            role="img"
+                            aria-hidden="true"
                         />
                     </button>
                     <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 align-items-center mw-100" t-ref="this.facetContainerRef">
