@@ -39,15 +39,3 @@ class TestResUsersCalendars(TransactionCase):
         secondary = self.env["calendar.calendar"].with_user(self.user).create({"name": "Sec"})
         self.assertIn(self.user.primary_calendar_id, self.user.calendar_ids)
         self.assertIn(secondary, self.user.calendar_ids)
-
-    def test_writable_calendar_ids_excludes_read_only_shares(self):
-        """writable_calendar_ids must contain owner/writer calendars only."""
-        # A calendar shared with the user as read-only must NOT be writable.
-        foreign = self.env["calendar.calendar"].with_user(self.other).create({"name": "Foreign"})
-        self.env["calendar.user"].create({
-            "calendar_id": foreign.id,
-            "user_id": self.user.id,
-            "access_role": "reader",
-        })
-        self.assertIn(self.user.primary_calendar_id, self.user.writable_calendar_ids)
-        self.assertNotIn(foreign, self.user.writable_calendar_ids)
