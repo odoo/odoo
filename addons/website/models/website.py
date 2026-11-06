@@ -229,7 +229,7 @@ class Website(models.CachedModel):
 
     def _compute_menu(self):
         # prefetch all accessible menus at once
-        all_menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids + [False]))
+        all_menus = self.env['website.menu'].search_fetch(Domain('website_id', 'in', self.ids))
 
         # use field parent_id (1 query) to determine field child_id (2 queries by level)
         children = dict.fromkeys(all_menus, ())
@@ -242,6 +242,7 @@ class Website(models.CachedModel):
         for website in self:
             menus = all_menus.filtered(lambda m: m.website_id == website)
 
+<<<<<<< e37ee361ce744ea134e69c9a3a2e0fff5d8519c4
             # add the child menu without contained into menu with a website
             for menu in all_menus.filtered(lambda m: not m.website_id):
                 parent = menu.parent_id
@@ -251,6 +252,36 @@ class Website(models.CachedModel):
                         break
                     parent = parent.parent_id
 
+||||||| 4796f4622aa57c094c89ab10f1023838903baf66
+            # add the child menu without contained into menu with a website
+            for menu in all_menus.filtered(lambda m: not m.website_id):
+                parent = menu.parent_id
+                while parent:
+                    if parent.website_id == website:
+                        menus += menu
+                        break
+                    parent = parent.parent_id
+
+            # use field parent_id (1 query) to determine field child_id (2 queries by level)"
+            children = dict.fromkeys(menus, ())
+            for menu in menus:
+                # don't add child menu if parent is forbidden
+                if menu.parent_id and menu.parent_id in menus:
+                    children[menu.parent_id] += (menu.id,)
+            for menu, child_items in children.items():
+                menu._fields['child_id']._update_cache(menu, child_items)
+
+=======
+            # use field parent_id (1 query) to determine field child_id (2 queries by level)"
+            children = dict.fromkeys(menus, ())
+            for menu in menus:
+                # don't add child menu if parent is forbidden
+                if menu.parent_id and menu.parent_id in menus:
+                    children[menu.parent_id] += (menu.id,)
+            for menu, child_items in children.items():
+                menu._fields['child_id']._update_cache(menu, child_items)
+
+>>>>>>> 928db119939dde50fb911c427a4ef2cc08b6b953
             # prefetch every website.page and ir.ui.view at once
             menus.mapped('is_visible')
 
