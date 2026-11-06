@@ -310,10 +310,9 @@ class SaleOrder(models.Model):
         }
 
     def _add_users_to_program(self):
-        for program, orders in self.grouped(lambda o: o.code_enabled_rule_ids.program_id).items():
-            if program.once_per_user:
-                partners = orders.partner_id
-                program.sudo().write({"partner_ids": [Command.link(p.id) for p in partners]})
+        for order in self:
+            for program in order.code_enabled_rule_ids.program_id.filtered("once_per_user"):
+                program.sudo().write({"partner_ids": [Command.link(p.id) for p in order.partner_id]})
 
     def _send_reward_coupon_mail(self):
         coupons = self.env["loyalty.card"]
