@@ -406,11 +406,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
 
         # Check if we need to refresh the cached pricelist
+        # TODO: remove in master, the session key is no longer set since 19.0
         now = datetime.timestamp(datetime.now())
         if "website_sale_pricelist_time" in request.session:
             pricelist_save_time = request.session["website_sale_pricelist_time"]
             if pricelist_save_time < now - 60 * 60:
-                self.env.website.sudo().pricelist_id = False
+                self.env.website._set_current_pricelist(False)
                 # restart the counter
                 request.session["website_sale_pricelist_time"] = now
 
@@ -1165,7 +1166,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         :param 'product.pricelist'|None pricelist: The new pricelist. If None resets the pricelist.
         """
-        self.env.website.sudo().pricelist_id = pricelist
+        self.env.website._set_current_pricelist(pricelist)
 
         if not (order_sudo := request.cart):
             return
