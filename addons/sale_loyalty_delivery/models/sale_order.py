@@ -34,7 +34,7 @@ class SaleOrder(models.Model):
         max_discount = reward.discount_max_amount or float("inf")
         return [
             {
-                "name": self.env._("Free Shipping - %s", reward.description),
+                "name": reward.description,
                 "reward_id": reward.id,
                 "coupon_id": coupon.id,
                 "points_cost": reward.required_points

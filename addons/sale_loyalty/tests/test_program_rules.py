@@ -545,3 +545,25 @@ class TestProgramRules(TestSaleCouponCommon, PaymentCommon):
         reward_line = order.order_line.filtered("is_reward_line")
         self.assertTrue(reward_line)
         self.assertEqual(reward_line.product_uom_qty, 6)
+
+    def test_discount_reward_line_label_shows_only_the_description(self):
+        """The generic discount product does not appear in the label of a reward line."""
+        self.immediate_promotion_program.active = False
+        program = self.env["loyalty.program"].create({
+            "name": "10% on the order",
+            "program_type": "promotion",
+            "trigger": "auto",
+            "rule_ids": [Command.create({"minimum_amount": 1})],
+            "reward_ids": [
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
+            ],
+        })
+        order = self._create_so()
+        self._auto_rewards(order, program)
+        reward_line = order.order_line.filtered("is_reward_line")
+        self.assertEqual(reward_line.label, reward_line.name)

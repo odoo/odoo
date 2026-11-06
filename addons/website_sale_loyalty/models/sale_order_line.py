@@ -2,11 +2,28 @@
 
 from collections import defaultdict
 
-from odoo import models
+from odoo import api, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
+
+    # === COMPUTE METHODS === #
+
+    @api.depends("reward_id.description", "reward_id.reward_type")
+    def _compute_name_short(self):
+        """Override of `website_sale` to name a reward line after its reward.
+
+        A discount or shipping reward carries a generic product, shared by all such rewards
+        and named "Discount". `website_sale` names the line after its product, which would
+        show "Discount" in the cart for every reward. Read the reward instead, as `name` does.
+        """
+        rewards = self.filtered(
+            lambda line: line.reward_id and line.reward_id.reward_type != "product"
+        )
+        for line in rewards:
+            line.name_short = line.reward_id.description
+        super(SaleOrderLine, self - rewards)._compute_name_short()
 
     # === CRUD METHODS === #
 
@@ -26,6 +43,15 @@ class SaleOrderLine(models.Model):
         if self.is_reward_line:
             return self.name
         return super()._get_line_header()
+
+    def get_description_following_lines(self):
+        """Override of `website_sale` to not repeat the header of a reward line.
+
+        The header of a reward line is its `name`, thus the description must not show it again.
+        """
+        if self.is_reward_line:
+            return self.name.splitlines()[1:]
+        return super().get_description_following_lines()
 
     def _is_reorder_allowed(self):
         # Hide all types of rewards from reorder

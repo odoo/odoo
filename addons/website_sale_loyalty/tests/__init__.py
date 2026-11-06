@@ -5,6 +5,7 @@ from . import (
     test_concurrent_promo_code,
     test_ewallet,
     test_free_product_reward,
+    test_reward_line_description,
     test_sale_coupon_multiwebsite,
     test_shop_loyalty_payment,
     test_shop_multi_reward,

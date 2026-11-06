@@ -9,7 +9,8 @@ class ProductProduct(models.Model):
 
     def write(self, vals):
         if not vals.get("active", True) and any(product.active for product in self):
-            # Prevent archiving products used for giving rewards
+            # Do not archive a product that an active reward needs. The generic product that
+            # carries the reward lines is shared by all of them
             rewards = (
                 self
                 .env["loyalty.reward"]
@@ -36,6 +37,7 @@ class ProductProduct(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_loyalty_products(self):
         product_data = [
+            self.env.ref("loyalty.discount_product", False),
             self.env.ref("loyalty.gift_card_product_50", False),
             self.env.ref("loyalty.ewallet_product_50", False),
         ]
