@@ -11,7 +11,7 @@ class StockPackageHistory(models.Model):
     company_id = fields.Many2one('res.company', 'Company', required=True, default=lambda self: self.env.company)
     location_id = fields.Many2one('stock.location', 'Origin Location')
     location_dest_id = fields.Many2one('stock.location', 'Destination Location')
-    move_line_ids = fields.One2many('stock.move.line', 'package_history_id', string='Move Lines', required=True)
+    move_line_ids = fields.One2many('stock.move.line', 'package_history_id', string='Move Lines', ui_required=True)
     package_id = fields.Many2one('stock.package', 'Package', required=True, index=True, ondelete='cascade')
     package_name = fields.Char('Package Name', required=True)
     package_type_id = fields.Many2one('stock.package.type', related='package_id.package_type_id')

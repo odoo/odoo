@@ -5,8 +5,8 @@ class JobAddApplicants(models.TransientModel):
     _name = "job.add.applicants"
     _description = "Add applicants to a job"
 
-    applicant_ids = fields.Many2many("hr.applicant", string="Applications", required=True)
-    job_ids = fields.Many2many("hr.job", string="Job Positions", required=True)
+    applicant_ids = fields.Many2many("hr.applicant", string="Applications", ui_required=True)
+    job_ids = fields.Many2many("hr.job", string="Job Positions", ui_required=True)
 
     def _add_applicants_to_job(self):
         applicants = self.with_context(no_copy_in_partner_name=True).applicant_ids

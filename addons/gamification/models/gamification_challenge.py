@@ -108,7 +108,7 @@ class GamificationChallenge(models.Model):
     line_ids = fields.One2many('gamification.challenge.line', 'challenge_id',
                                   string="Lines",
                                   help="List of goals that will be set",
-                                  required=True, copy=True)
+                                  ui_required=True, copy=True)
 
     reward_id = fields.Many2one('gamification.badge', string="For Every Succeeding User", index='btree_not_null')
     reward_first_id = fields.Many2one('gamification.badge', string="For 1st user")

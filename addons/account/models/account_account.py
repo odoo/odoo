@@ -118,7 +118,7 @@ class AccountAccount(models.Model):
         check_company=True,
         context={'append_fields': ['type_tax_use', 'company_id']})
     note = fields.Text('Internal Notes', tracking=True)
-    company_ids = fields.Many2many('res.company', string='Companies', required=True, readonly=False,
+    company_ids = fields.Many2many('res.company', string='Companies', ui_required=True, readonly=False,
         default=lambda self: self.env.company)
     code_mapping_ids = fields.One2many(comodel_name='account.code.mapping', inverse_name='account_id')
     tag_ids = fields.Many2many(

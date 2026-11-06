@@ -7,7 +7,7 @@ class NemhandelRejectionWizard(models.TransientModel):
 
     move_ids = fields.Many2many(
         comodel_name='account.move',
-        required=True,
+        ui_required=True,
     )
     note = fields.Text('Additional note')
 

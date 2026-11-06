@@ -8,7 +8,7 @@ class FleetVehicleSendMail(models.TransientModel):
     _inherit = ['mail.composer.mixin']
     _description = 'Send mails to Drivers'
 
-    vehicle_ids = fields.Many2many('fleet.vehicle', string='Vehicles', required=True)
+    vehicle_ids = fields.Many2many('fleet.vehicle', string='Vehicles', ui_required=True)
     author_id = fields.Many2one('res.partner', 'Author', required=True, default=lambda self: self.env.user.partner_id.id)
     template_id = fields.Many2one(domain=lambda self: [('model_id', '=', self.env['ir.model']._get('fleet.vehicle').id)])
     attachment_ids = fields.Many2many(

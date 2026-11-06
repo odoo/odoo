@@ -179,7 +179,7 @@ class HrExportEmployee(models.TransientModel):
 
     export_id = fields.Many2one('hr.export.work.entries', required=True, index=True, ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade', check_company=True)
-    version_ids = fields.Many2many('hr.version', compute="_compute_version_ids", store=True, required=True, ondelete='cascade', readonly=False)
+    version_ids = fields.Many2many('hr.version', compute="_compute_version_ids", store=True, ui_required=True, ondelete='cascade', readonly=False)
 
     @api.depends('employee_id')
     def _compute_version_ids(self):
