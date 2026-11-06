@@ -16,6 +16,7 @@
     'data': [
         'data/ir_cron.xml',
         'security/ir.model.access.csv',
+        'security/l10n_fr_pdp_reports_security.xml',
         'views/account_journal_dashboard_views.xml',
         'views/account_move_views.xml',
         'views/account_peppol_response_views.xml',
