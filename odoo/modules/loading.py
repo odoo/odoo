@@ -297,7 +297,8 @@ def load_module_graph(
                 # tests may have reset the environment
                 module = env['ir.module.module'].browse(module_id)
 
-        extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
+        module_queries = env.cr.sql_log_count - module_cursor_query_count
+        extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries - module_queries
         extras = []
         if test_queries:
             extras.append(f'+{test_queries} test')
@@ -307,7 +308,7 @@ def load_module_graph(
             module_log_level, "Module %s loaded in %.2fs%s, %s queries%s",
             module_name, time.time() - module_t0,
             f' (incl. {test_time:.2f}s test)' if test_time else '',
-            env.cr.sql_log_count - module_cursor_query_count,
+            module_queries,
             f' ({", ".join(extras)})' if extras else ''
         )
         if test_results and not test_results.wasSuccessful():
@@ -317,11 +318,12 @@ def load_module_graph(
                 test_results.testsRun
             )
 
+    loading_queries = env.cr.sql_log_count - loading_cursor_query_count
     _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
                    len(graph),
                    time.time() - t0,
-                   env.cr.sql_log_count - loading_cursor_query_count,
-                   odoo.sql_db.sql_counter - loading_extra_query_count)  # extra queries: testes, notify, any other closed cursor
+                   loading_queries,
+                   odoo.sql_db.sql_counter - loading_extra_query_count - loading_queries)  # extra queries: tests, notify, any other closed cursor
 
 
 def _check_module_names(cr: BaseCursor, module_names: Iterable[str]) -> None:
