@@ -685,7 +685,7 @@ export class SearchState {
     /** @type {Function | undefined} */
     sequential;
     initialResults;
-    /** @type {((term: string) => Promise<boolean | void>) | null} */
+    /** @type {((term: string, options: { abortSignal: AbortSignal }) => Promise<boolean | void>) | null} */
     fetch = null;
     /** @type {((term: string) => any) | null} */
     filter = null;
@@ -696,8 +696,9 @@ export class SearchState {
 
     /**
      * @param {Object} [options]
-     * @param {(term: string) => Promise<boolean | void>} [options.fetch] Async
-     *  server call. Resolving to `false` signals "no results" for narrow-dedup.
+     * @param {(term: string, options: { abortSignal: AbortSignal }) => Promise<boolean | void>} [options.fetch]
+     *  Async server call, aborted by the next fetch, even for the same term.
+     *  Resolving to `false` signals "no results" for narrow-dedup.
      * @param {(term: string) => any} [options.filter] Sync local lookup that
      *  produces `results`. Runs on term/deps change (once per animation frame)
      *  and again after `fetch` resolves (to pick up server-loaded data).
@@ -809,14 +810,18 @@ export class SearchState {
             return;
         }
         if (this.fetch && !skipFetch) {
-            await this.sequential(async () => {
+            await this.sequential(async (abortSignal) => {
                 if (!this.isActive) {
                     return;
                 }
                 this.loading = true;
                 let result;
                 try {
-                    result = await this.fetch(term);
+                    result = await this.fetch(term, { abortSignal });
+                } catch (e) {
+                    if (!abortSignal.aborted) {
+                        throw e;
+                    }
                 } finally {
                     if (this.searchTerm === term) {
                         this.loading = false;
@@ -846,7 +851,13 @@ export function useSearch(options = {}) {
     return proxy(new SearchState(options));
 }
 
+/**
+ * Runs the calls one after the other, skipping the queued call a newer one replaces. The
+ * signal given to a call is aborted as soon as a newer call is made.
+ */
 export function useSequential() {
+    /** @type {AbortController|undefined} */
+    let abortController;
     let inProgress = false;
     let nextFunction;
     let nextResolve;
@@ -859,8 +870,9 @@ export function useSequential() {
         nextReject = undefined;
         nextFunction = undefined;
         inProgress = true;
+        abortController = new AbortController();
         try {
-            const data = await func();
+            const data = await func(abortController.signal);
             resolve(data);
         } catch (e) {
             reject(e);
@@ -870,7 +882,9 @@ export function useSequential() {
             call();
         }
     }
+    /** @param {(abortSignal: AbortSignal) => Promise<any>} func */
     return (func) => {
+        abortController?.abort();
         nextResolve?.();
         const prom = new Promise((resolve, reject) => {
             nextResolve = resolve;

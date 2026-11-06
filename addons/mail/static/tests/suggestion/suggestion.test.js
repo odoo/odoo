@@ -19,7 +19,7 @@ import {
     getEditorFromComposerEl,
     insertTextInComposer,
 } from "@mail/../tests/mail_test_helpers_composer";
-import { expect, describe, test } from "@odoo/hoot";
+import { after, expect, describe, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { onWillUpdateProps } from "@odoo/owl";
 import {
@@ -37,7 +37,7 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useAncestors } from "@mail/core/common/ancestor_plugin";
 import { waitFor, waitForNone } from "@odoo/hoot-dom";
-import { rpc } from "@web/core/network/rpc";
+import { ConnectionAbortedError, rpc, rpcBus } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
@@ -128,6 +128,32 @@ test("suggestion list closed by Escape stays closed when the mention search answ
     await insertTextInComposer(".o-mail-Composer", "T");
     await expect.waitForSteps(["get_mention_suggestions"]);
     await mailContains(".o-mail-Composer-suggestion:has(:text('TestPartner'))");
+});
+
+test("typing on aborts the ongoing mention search of the previous term", async () => {
+    await startServer();
+    const { promise: fetchHeld } = Promise.withResolvers();
+    onRpc("res.partner", "get_mention_suggestions", async ({ kwargs }) => {
+        expect.step(`search "${kwargs.search}"`);
+        await fetchHeld;
+    });
+    const onResponse = ({ detail: { data, error } }) => {
+        if (
+            error instanceof ConnectionAbortedError &&
+            data.params.method === "get_mention_suggestions"
+        ) {
+            expect.step(`abort "${data.params.kwargs.search}"`);
+        }
+    };
+    rpcBus.addEventListener("RPC:RESPONSE", onResponse);
+    after(() => rpcBus.removeEventListener("RPC:RESPONSE", onResponse));
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button:text('Send message')");
+    await insertTextInComposer(".o-mail-Composer", "@");
+    await expect.waitForSteps(['search ""']);
+    await insertTextInComposer(".o-mail-Composer", "a");
+    await expect.waitForSteps(['abort ""', 'search "a"']);
 });
 
 test("click away from the empty suggestion list keeps the fetched suggestions", async () => {
