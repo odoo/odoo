@@ -29,6 +29,7 @@ touching instead of loading whole files.
 | [Computes, onchange and constraints](guidelines/orm.md#computes-onchange-and-constraints) | computes, onchange, constraints, indexes, `create` overrides |
 | [End `_order` on a unique field](guidelines/orm.md#end-_order-on-a-unique-field) | setting a model's `_order`, or fixing records that come back in a random order |
 | [Methods and extension points](guidelines/orm.md#methods-and-extension-points) | adding a model method, or one another module will override |
+| [Set a state, never flip it](guidelines/orm.md#set-a-state-never-flip-it) | adding a method or a button that changes a state (archive, publish, favorite, follow) |
 | [Transactions and exceptions](guidelines/orm.md#transactions-and-exceptions) | cursors, commits, savepoints, `try`/`except` |
 | [Fields](guidelines/fields.md#fields) | declaring or modifying field definitions |
 | [Controllers](guidelines/controllers.md#controllers) | touching `controllers/` or `@route` |
