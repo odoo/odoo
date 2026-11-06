@@ -19,6 +19,10 @@ export class HtmlMailField extends HtmlField {
         // Insert the cloned element inside an DOM so we can get its computed style.
         editor.editable.after(el);
         el.classList.remove("odoo-editor-editable");
+        // Wait for the images to load so that their size can be inlined.
+        await Promise.all(
+            [...el.querySelectorAll("img")].map((img) => img.decode().catch(() => {}))
+        );
         await toInline(el, cssRules);
         el.remove();
     }
@@ -32,6 +36,7 @@ export class HtmlMailField extends HtmlField {
     getConfig() {
         const config = super.getConfig();
         config.dropImageAsAttachment = false;
+        config.convertWebp = true;
         config.Plugins = config.Plugins.filter((plugin) => plugin !== ColumnPlugin);
         return config;
     }

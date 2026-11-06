@@ -853,7 +853,6 @@ export async function toInline(element, cssRules) {
     attachmentThumbnailToLinkImg(element);
     fontToImg(element);
     await svgToPng(element);
-    await webpToPng(element);
 
     // Fix img-fluid for Outlook.
     for (const image of element.querySelectorAll("img.img-fluid")) {
@@ -1494,33 +1493,6 @@ async function svgToPng(editable) {
         const image = await convertToPng(svg);
         svg.before(image);
         svg.remove();
-    }
-}
-/**
- * Convert images of type webp to png.
- *
- * @param {HTMLElement} editable
- */
-async function webpToPng(editable) {
-    for (const webp of editable.querySelectorAll('img[src*=".webp"]')) {
-        const image = await convertToPng(webp);
-        webp.before(image);
-        webp.remove();
-    }
-
-    for (const webp of editable.querySelectorAll('[style*="background-image"][style*=".webp"]')) {
-        // Create an image element with the background image and replace the url
-        // with the png converted image url
-        const width = _getWidth(webp);
-        const height = _getHeight(webp);
-        const tempImage = document.createElement("img");
-        tempImage.setAttribute("src", webp.style.backgroundImage.slice(5, -2));
-        tempImage.setAttribute("width", width);
-        tempImage.setAttribute("height", height);
-        webp.before(tempImage);
-        const image = await convertToPng(tempImage);
-        webp.style.backgroundImage = `url(${image.getAttribute("src")})`;
-        tempImage.remove();
     }
 }
 

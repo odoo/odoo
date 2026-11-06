@@ -16,6 +16,7 @@ import { ChatGPTPromptDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_prom
 import { ChatGPTAlternativesDialog } from '@web_editor/js/wysiwyg/widgets/chatgpt_alternatives_dialog';
 import { ChatGPTTranslateDialog } from "@web_editor/js/wysiwyg/widgets/chatgpt_translate_dialog";
 import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
+import { loadImage, loadImageInfo } from '@web_editor/js/editor/image_processing';
 
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
 import weUtils from "@web_editor/js/common/utils";
@@ -1164,6 +1165,43 @@ export class Wysiwyg extends Component {
     savePendingImages($editable = this.$editable) {
         const defs = Array.from($editable).map(async (editableEl) => {
             const { resModel, resId } = this._getRecordInfo(editableEl);
+            if (this.options.convertWebp) {
+                for (const el of editableEl.querySelectorAll('img[src*=".webp"], [style*="background-image"][style*=".webp"]')) {
+                    const src = el.matches('img') ? el.getAttribute('src') : weUtils.getBgImageURL(el);
+                    // Keep the images from other sites, the browser cannot read them back.
+                    if (new URL(src, window.location.href).origin !== window.location.origin) {
+                        continue;
+                    }
+                    await loadImageInfo(el, src);
+                    const { originalId, mimetype, mimetypeBeforeConversion } = el.dataset;
+                    // Keep the format picked in the image options.
+                    const isOtherFormat = mimetype && mimetype !== 'image/webp' && mimetype !== mimetypeBeforeConversion;
+                    if (isOtherFormat) {
+                        continue;
+                    }
+                    if (!originalId) {
+                        // Save the local images that are not attachments as new ones.
+                        if (el.matches('img')) {
+                            const image = new Image();
+                            image.src = src;
+                            try {
+                                await image.decode();
+                                el.setAttribute('src', this._toPngDataURL(image));
+                                el.dataset.fileName = 'image.png';
+                                el.classList.add('o_b64_image_to_save');
+                            } catch {
+                                // Keep the images that the browser cannot load or read back.
+                            }
+                        }
+                        continue;
+                    }
+                    el.dataset.mimetype = 'image/webp';
+                    if (!el.matches('img')) {
+                        el.dataset.bgSrc = src;
+                    }
+                    el.classList.add('o_modified_image_to_save');
+                }
+            }
             // When saving a webp, o_b64_image_to_save is turned into
             // o_modified_image_to_save by _saveB64Image to request the saving
             // of the pre-converted webp resizes and all the equivalent jpgs.
@@ -3725,6 +3763,20 @@ export class Wysiwyg extends Component {
         }
     }
     /**
+     * Draws a loaded image on a canvas and returns it as a PNG data URL.
+     *
+     * @private
+     * @param {HTMLImageElement} image
+     * @returns {string}
+     */
+    _toPngDataURL(image) {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        canvas.getContext('2d').drawImage(image, 0, 0);
+        return canvas.toDataURL('image/png');
+    }
+    /**
      * Saves a modified image as an attachment.
      *
      * @private
@@ -3734,6 +3786,12 @@ export class Wysiwyg extends Component {
      */
     async _saveModifiedImage(el, resModel, resId) {
         const isBackground = !el.matches('img');
+        if (this.options.convertWebp && el.dataset.mimetype === 'image/webp') {
+            const image = await loadImage(isBackground ? el.dataset.bgSrc : el.getAttribute('src'));
+            el.setAttribute(isBackground ? 'data-bg-src' : 'src', this._toPngDataURL(image));
+            el.dataset.mimetype = 'image/png';
+            el.dataset.fileName = 'image.png';
+        }
         // Modifying an image always creates a copy of the original, even if
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.

@@ -8,6 +8,7 @@ import {
     isProtecting,
 } from "@html_editor/utils/dom_info";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
+import { loadImage, loadImageInfo } from "@html_editor/utils/image_processing";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { MediaDialog } from "./media_dialog/media_dialog";
@@ -181,6 +182,50 @@ export class MediaPlugin extends Plugin {
 
     async savePendingImages(editableEl) {
         const { resModel, resId } = this.recordInfo;
+        const webpSrcs = new Map();
+        if (this.config.convertWebp) {
+            for (const el of editableEl.querySelectorAll(
+                'img[src*=".webp"], [style*="background-image"][style*=".webp"]'
+            )) {
+                const src = el.matches("img")
+                    ? el.getAttribute("src")
+                    : backgroundImageCssToParts(el.style.backgroundImage).url?.slice(5, -2);
+                // Keep the images from other sites, the browser cannot read them back.
+                if (new URL(src, window.location.href).origin !== window.location.origin) {
+                    continue;
+                }
+                await loadImageInfo(el, src);
+                const { originalId, mimetype, mimetypeBeforeConversion } = el.dataset;
+                // Keep the format picked in the image options.
+                const isOtherFormat =
+                    mimetype && mimetype !== "image/webp" && mimetype !== mimetypeBeforeConversion;
+                if (isOtherFormat) {
+                    continue;
+                }
+                if (!originalId) {
+                    // Save the local images that are not attachments as new ones.
+                    if (el.matches("img")) {
+                        const image = new Image();
+                        image.src = src;
+                        try {
+                            await image.decode();
+                            el.setAttribute("src", this.toPngDataURL(image));
+                            el.dataset.fileName = "image.png";
+                            el.classList.add("o_b64_image_to_save");
+                            webpSrcs.set(el, src);
+                        } catch {
+                            // Keep the images that the browser cannot load or read back.
+                        }
+                    }
+                    continue;
+                }
+                el.dataset.mimetype = "image/webp";
+                if (!el.matches("img")) {
+                    el.dataset.bgSrc = src;
+                }
+                el.classList.add("o_modified_image_to_save");
+            }
+        }
         // When saving a webp, o_b64_image_to_save is turned into
         // o_modified_image_to_save by saveB64Image to request the saving
         // of the pre-converted webp resizes and all the equivalent jpgs.
@@ -194,7 +239,7 @@ export class MediaPlugin extends Plugin {
                     // the correct "resModel" and "resId" parameters.
                     return;
                 }
-                const oldSrc = el.getAttribute("src");
+                const oldSrc = webpSrcs.get(el) || el.getAttribute("src");
                 await this.saveB64Image(el, resModel, resId);
                 oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
             }
@@ -283,6 +328,20 @@ export class MediaPlugin extends Plugin {
     }
 
     /**
+     * Draws a loaded image on a canvas and returns it as a PNG data URL.
+     *
+     * @param {HTMLImageElement} image
+     * @returns {string}
+     */
+    toPngDataURL(image) {
+        const canvas = document.createElement("canvas");
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        return canvas.toDataURL("image/png");
+    }
+
+    /**
      * Saves a modified image as an attachment.
      *
      * @private
@@ -292,6 +351,12 @@ export class MediaPlugin extends Plugin {
      */
     async saveModifiedImage(el, resModel, resId) {
         const isBackground = !el.matches("img");
+        if (this.config.convertWebp && el.dataset.mimetype === "image/webp") {
+            const image = await loadImage(isBackground ? el.dataset.bgSrc : el.getAttribute("src"));
+            el.setAttribute(isBackground ? "data-bg-src" : "src", this.toPngDataURL(image));
+            el.dataset.mimetype = "image/png";
+            el.dataset.fileName = "image.png";
+        }
         // Modifying an image always creates a copy of the original, even if
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.

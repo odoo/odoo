@@ -94,6 +94,7 @@ export class MassMailingHtmlField extends HtmlField {
             },
             dropImageAsAttachment: false,
             useResponsiveFontSizes: false,
+            convertWebp: true,
             ...this.props.wysiwygOptions,
         };
     }
