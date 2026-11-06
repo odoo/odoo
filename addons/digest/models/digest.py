@@ -310,12 +310,12 @@ class DigestDigest(models.Model):
         module_by_digest_field.update(kpi_settings_module)
         icon_by_digest_field = {
             field_name: f"{ODOO_ICONS_CDN_URL}{OVERRIDDEN_ICON_BY_MODULE.get(module_name)
-                                               or modules.module.get_module_icon(module_name)}"
+                                               or (modules.module.get_module_icon(module_name) if module_name else '/base/static/description/icon.png')}"
             for field_name, module_name in module_by_digest_field.items()
         }
         # Sort by kpi sequence defined in _get_kpi_custom_settings (and then by module name if not defined)
         digest_fields = sorted(digest_fields, key=lambda field_name: (kpi_settings_sequence.get(field_name, 10000000),
-                                                                      module_by_digest_field.get(field_name)))
+                                                                      module_by_digest_field.get(field_name) or ''))
         invalid_fields = []
         kpis = [
             dict(kpi_name=field_name,
