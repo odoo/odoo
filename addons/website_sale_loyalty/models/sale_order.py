@@ -7,6 +7,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.tools import lazy
 
 
 class SaleOrder(models.Model):
@@ -227,27 +228,32 @@ class SaleOrder(models.Model):
             '|',
                 ('program_id.trigger', '=', 'with_code'),
                 '&', ('program_id.trigger', '=', 'auto'), ('program_id.applies_on', '=', 'future'),
+            '|', ('expiration_date', '=', False), ('expiration_date', '>=', fields.Date.today()),
+            # Future programs only count points already on the card
+            '|', ('program_id.applies_on', '!=', 'future'), ('points', '>', 0),
         ])
         total_is_zero = self.currency_id.is_zero(self.amount_total)
         global_discount_reward = self._get_applied_global_discount()
+        discountable = lazy(lambda: self._discountable_amount(global_discount_reward))
         for coupon in loyality_cards:
             points = self._get_real_points_for_coupon(coupon)
             for reward in coupon.program_id.reward_ids - self.order_line.reward_id:
+                if points < reward.required_points:
+                    continue
                 if (
                     reward.is_global_discount
                     and global_discount_reward
-                    and self._best_global_discount_already_applied(global_discount_reward, reward)
+                    and self._best_global_discount_already_applied(
+                        global_discount_reward, reward, discountable,
+                    )
                 ):
                     continue
                 if reward.reward_type == 'discount' and total_is_zero:
                     continue
-                if coupon.expiration_date and coupon.expiration_date < fields.Date.today():
-                    continue
-                if points >= reward.required_points:
-                    if coupon in res:
-                        res[coupon] |= reward
-                    else:
-                        res[coupon] = reward
+                if coupon in res:
+                    res[coupon] |= reward
+                else:
+                    res[coupon] = reward
         return res
 
     def _cart_find_product_line(self, *args, **kwargs):
