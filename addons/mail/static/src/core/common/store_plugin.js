@@ -893,13 +893,18 @@ export class Store extends BaseStore {
 
     /** @param {import("models").Thread} [thread] the thread from which the suggestions are triggered */
     sortPartnerSuggestionsContext(thread) {
+        const followerPartnerIds = new Set(
+            [...(thread?.followers ?? []), thread?.selfFollower]
+                .filter((follower) => follower?.partner_id)
+                .map((follower) => follower.partner_id.id)
+        );
         const latestMessageIdByAuthorId = new Map();
         for (const { author_id, id } of thread?.messages || []) {
             if (author_id && !latestMessageIdByAuthorId.has(author_id.id)) {
                 latestMessageIdByAuthorId.set(author_id.id, id);
             }
         }
-        return { latestMessageIdByAuthorId };
+        return { followerPartnerIds, latestMessageIdByAuthorId };
     }
 }
 Store.register();

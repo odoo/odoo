@@ -78,16 +78,9 @@ partnerCompareRegistry.add(
 
 partnerCompareRegistry.add(
     "mail.followers",
-    function followers(p1, p2, { thread }) {
-        if (!thread) {
-            return undefined;
-        }
-        const followerList = [...thread.followers];
-        if (thread.selfFollower) {
-            followerList.push(thread.selfFollower);
-        }
-        const isFollower1 = followerList.some((follower) => p1.eq(follower.partner_id));
-        const isFollower2 = followerList.some((follower) => p2.eq(follower.partner_id));
+    function followers(p1, p2, { context: { followerPartnerIds } }) {
+        const isFollower1 = followerPartnerIds.has(p1.id);
+        const isFollower2 = followerPartnerIds.has(p2.id);
         if (isFollower1 && !isFollower2) {
             return -1;
         }
