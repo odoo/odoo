@@ -82,7 +82,7 @@
                             <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                             <field name="address_id" context="{'show_address': 1}" placeholder="Online if not set"/>
-                            <field name="event_url" invisible="address_id" widget="url" placeholder='e.g. "https://www.odoo.com"'/>
+                            <field name="event_url" invisible="address_id" widget="url" placeholder='e.g. "https://www.youtube.com/watch?v=..."'/>
                             <label for="seats_limited" string="Limit Registrations"/>
                             <div>
                                 <field name="seats_limited"/>
