@@ -417,6 +417,18 @@ class TestMenu(common.TransactionCase):
         with self.assertRaises(UserError):
             top_menu.is_mega_menu = True
 
+    def test_09_main_menu_ignores_child_without_website(self):
+        website = self.env.ref('base.default_website')
+        menu = self.env['website.menu'].create({
+            'name': 'No website',
+            'url': '/no-website',
+            'parent_id': website.menu_id.id,
+            'website_id': False,
+        })
+        self.env.invalidate_all()
+
+        self.assertNotIn(menu, website.menu_id.child_id)
+
 
 class TestMenuHttp(common.HttpCase):
     def setUp(self):
