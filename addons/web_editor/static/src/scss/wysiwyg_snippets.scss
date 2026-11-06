@@ -2926,6 +2926,8 @@ we-select.o_grid we-toggler {
         height: 30%;
         background-color: unset;
         scrollbar-gutter: stable both-edges;
+        // Keep the scrollbar on the body: its overflow must not reach the viewport.
+        contain: paint;
     }
     .o_snippets_preview_row {
         position: absolute; // Needed for RTL
