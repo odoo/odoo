@@ -217,12 +217,15 @@ export class Store extends BaseStore {
                 tmpMessage.postFailMessage = err.data?.message
                     ? _t("Failed to post the message (%s). Click to retry", err.data?.message)
                     : _t("Failed to post the message. Click to retry");
-                tmpMessage.postFailRedo = () => {
+                tmpMessage.postFailRedo = async () => {
                     tmpMessage.postFailRedo = undefined;
                     tmpMessage.postFailMessage = undefined;
                     tmpMessage.thread.messages.delete(tmpMessage);
                     tmpMessage.thread.messages.add(tmpMessage);
-                    this.doMessagePost(params, tmpMessage);
+                    const data = await this.doMessagePost(params, tmpMessage);
+                    if (data) {
+                        tmpMessage.thread._insertPostedMessage(data, tmpMessage);
+                    }
                 };
             }
             return res;
