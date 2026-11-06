@@ -238,6 +238,8 @@ class ControlCommand(IntEnum):
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
 CTRL_OP = {Opcode.CLOSE, Opcode.PING, Opcode.PONG}
 HEARTBEAT_OP = {Opcode.PING, Opcode.PONG}
+# Application-level ping/pong payload (browsers don't expose websocket ping/pong).
+PING_PONG_MESSAGE = b'\x00'
 
 VALID_CLOSE_CODES = {
     code for code in CloseCode if code is not CloseCode.ABNORMAL_CLOSURE
@@ -1014,7 +1016,7 @@ class WebsocketConnectionHandler:
     # Latest version of the websocket worker. This version should be incremented
     # every time `websocket_worker.js` is modified to force the browser to fetch
     # the new worker bundle.
-    _VERSION = "saas-19.3-1"
+    _VERSION = "saas-19.3-2"
 
     @classmethod
     def websocket_allowed(cls, request):
@@ -1160,8 +1162,8 @@ class WebsocketConnectionHandler:
             # worker version.
             websocket.close(CloseCode.CLEAN, "OUTDATED_VERSION")
         for message in websocket.get_messages():
-            if message == b'\x00':
-                # Ignore internal sentinel message used to detect dead/idle connections.
+            if message == PING_PONG_MESSAGE:
+                websocket._enqueue_control_command(ControlCommand.SEND, PING_PONG_MESSAGE)
                 continue
             with WebsocketRequest(db, httprequest, websocket) as req:
                 try:
