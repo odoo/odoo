@@ -187,6 +187,25 @@ class TestSumupPaymentMethod(TestPointOfSaleHttpCommon):
         self.assertIn("/readers/rdr_test123/checkout/chk1", url)
         self.assertEqual(result, {"status": "successful"})
 
+    def test_sumup_test_creds_online(self):
+        with patch(
+            "odoo.addons.pos_sumup.models.pos_payment_method.requests.get",
+        ) as mock_get:
+            mock_get.return_value = _response(200, {"data": {"status": "ONLINE", "state": "IDLE"}})
+            action = self.sumup_pm.action_sumup_test_creds()
+
+        url = mock_get.call_args.args[0]
+        self.assertIn("/merchants/MTEST01/readers/rdr_test123/status", url)
+        self.assertEqual(action["params"]["type"], "success")
+
+    def test_sumup_test_creds_invalid_api_key(self):
+        with patch(
+            "odoo.addons.pos_sumup.models.pos_payment_method.requests.get",
+        ) as mock_get:
+            mock_get.return_value = _response(401, {"errors": {"detail": "Unauthorized"}})
+            with self.assertRaisesRegex(UserError, "Unauthorized"):
+                self.sumup_pm.action_sumup_test_creds()
+
     def test_webhook_notification_notifies_the_bus(self):
         token = hash_sign(
             self.env,
