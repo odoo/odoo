@@ -1089,12 +1089,43 @@ class TestAPI(ThreadRecipients):
         self.assertFalse((attachments + new_attachments).exists())
         self.assertEqual(message.body, Markup('<p>Another Body, void attachments <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 12:00:00"></span></p>'))
 
+<<<<<<< 07b9fe7764f6c1e8ab83a42001e3652abc98542b
         with freeze_time('2025-04-08 13:00:00'):
             ticket_record._message_update_content(
                 message,
                 body=Markup("line1<br>edit<br>line2<br>line3"),
             )
         self.assertEqual(message.body, Markup('<p>line1 <br>edit<br>line2<br>line3<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 13:00:00"></span></p>'))
+||||||| 66af69fda24a7b0dc7b036bf1678b8850862c247
+        ticket_record._message_update_content(
+            message,
+            body=Markup("line1<br>edit<br>line2<br>line3"),
+        )
+        self.assertEqual(message.body, Markup('<p>line1 <br>edit<br>line2<br>line3<span class="o-mail-Message-edited"></span></p>'))
+=======
+        ticket_record._message_update_content(
+            message,
+            body=Markup("line1<br>edit<br>line2<br>line3"),
+        )
+        self.assertEqual(
+            message.body,
+            Markup(
+                '<p>line1<br>edit<br>line2<br>line3 <span class="o-mail-Message-edited"></span></p>'
+            ),
+        )
+
+        ticket_record._message_update_content(message, body=Markup("<p>Hello<b>world</b></p>"))
+        self.assertEqual(
+            message.body,
+            Markup('<p>Hello<b>world</b><span class="o-mail-Message-edited"></span></p>'),
+        )
+
+        ticket_record._message_update_content(message, body=Markup("Hello <b>world</b>"))
+        self.assertEqual(
+            message.body,
+            Markup('<p>Hello <b>world</b><span class="o-mail-Message-edited"></span></p>'),
+        )
+>>>>>>> 07a816ab9b12a4725af65b5c27e2c682e9ae1545
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
