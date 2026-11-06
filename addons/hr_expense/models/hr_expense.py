@@ -267,7 +267,8 @@ class HrExpense(models.Model):
                 ):
                     expense._set_expense_currency_rate(date_today=date_today)
                 else:
-                    expense.currency_rate = expense.total_amount / expense.total_amount_currency if expense.total_amount_currency else 1.0
+                    origin = expense._origin
+                    expense.currency_rate = origin.total_amount / origin.total_amount_currency if origin.total_amount_currency else 1.0
             else:  # Mono-currency case computation shortcut, no need for the label if there is no conversion
                 expense.currency_rate = 1.0
                 expense.label_currency_rate = False
