@@ -1088,6 +1088,63 @@ test("failed message tooltip includes the server error", async () => {
     );
 });
 
+test("edit a message that failed to post before posting it again", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    let failPost = true;
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step(`message_post: ${args.post_data.body}`);
+        if (failPost) {
+            throw makeServerError();
+        }
+    });
+    onRpcBefore("/mail/message/update_content", () => expect.step("update_content"));
+    await start();
+    await openDiscuss(channelId);
+    await insertTextInComposer(".o-mail-Composer", "Hello");
+    await press("Enter");
+    await expect.waitForSteps(["message_post: <div>Hello</div>"]);
+    await waitFor(
+        ".o-mail-Message button[title='Failed to post the message. Click to retry']:count(1)"
+    );
+    failPost = false;
+    await hover(".o-mail-Message");
+    await waitFor(".o-mail-Message [title='Edit']:count(1)");
+    expect(".o-mail-Message [title='Add a Reaction']").toHaveCount(0);
+    await click(".o-mail-Message [title='Edit']");
+    await waitFor(".o-mail-Message .o-mail-Composer.o-focused:count(1)");
+    await insertTextInComposer(".o-mail-Message .o-mail-Composer", "Hello world", {
+        replace: true,
+    });
+    await click(".o-mail-Message button:text('save')");
+    await expect.waitForSteps(["message_post: <div>Hello world</div>"]);
+    await waitFor(
+        ".o-mail-Message:has(:text('Hello world')):not(:has(.o-mail-Message-content.opacity-50)):count(1)"
+    );
+    expect(".o-mail-Message").toHaveCount(1);
+});
+
+test("delete a message that failed to post", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    onRpcBefore("/mail/message/post", () => {
+        throw makeServerError();
+    });
+    onRpcBefore("/mail/message/update_content", () => expect.step("update_content"));
+    await start();
+    await openDiscuss(channelId);
+    await insertTextInComposer(".o-mail-Composer", "Hello");
+    await press("Enter");
+    await waitFor(
+        ".o-mail-Message button[title='Failed to post the message. Click to retry']:count(1)"
+    );
+    await hover(".o-mail-Message");
+    await click(".o-mail-Message [title='Delete']");
+    await click(".modal button:text('Delete')");
+    await waitForNone(".o-mail-Message");
+    expect.verifySteps([]);
+});
+
 test("bookmarked: unbookmark all", async () => {
     const pyEnv = await startServer();
     pyEnv["mail.message"].create([
