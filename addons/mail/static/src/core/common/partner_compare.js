@@ -1,4 +1,6 @@
-import { localeCompare, normalize } from "@web/core/l10n/utils";
+import { compareStartsWithTerm } from "@mail/utils/common/misc";
+
+import { localeCompare } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 
 /**
@@ -101,24 +103,18 @@ partnerCompareRegistry.add(
         if (!name1 && !name2) {
             return undefined;
         }
-        // 1. prioritize partners with a name over those without
+        // prioritize partners with a name over those without
         if (name1 && !name2) {
             return -1;
         }
         if (!name1 && name2) {
             return 1;
         }
-        const normalizedName1 = normalize(name1);
-        const normalizedName2 = normalize(name2);
-        // 2. partners whose name starts with the search terms
-        if (normalizedName1.startsWith(searchTerm) && !normalizedName2.startsWith(searchTerm)) {
-            return -1;
-        }
-        if (!normalizedName1.startsWith(searchTerm) && normalizedName2.startsWith(searchTerm)) {
-            return 1;
-        }
-        // 3. locale-sensitive alphabetical order
-        return localeCompare(name1, name2) || undefined;
+        return (
+            compareStartsWithTerm(name1, name2, searchTerm) ||
+            localeCompare(name1, name2) ||
+            undefined
+        );
     },
     { sequence: 50 }
 );
@@ -130,24 +126,18 @@ partnerCompareRegistry.add(
         if (!p1.email && !p2.email) {
             return undefined;
         }
-        // 1. prioritize partners with an email over those without
+        // prioritize partners with an email over those without
         if (p1.email && !p2.email) {
             return -1;
         }
         if (!p1.email && p2.email) {
             return 1;
         }
-        const normalizedEmail1 = normalize(p1.email);
-        const normalizedEmail2 = normalize(p2.email);
-        // 2. partners whose email starts with the search terms
-        if (normalizedEmail1.startsWith(searchTerm) && !normalizedEmail2.startsWith(searchTerm)) {
-            return -1;
-        }
-        if (!normalizedEmail1.startsWith(searchTerm) && normalizedEmail2.startsWith(searchTerm)) {
-            return 1;
-        }
-        // 3. locale-sensitive alphabetical order
-        return localeCompare(p1.email, p2.email) || undefined;
+        return (
+            compareStartsWithTerm(p1.email, p2.email, searchTerm) ||
+            localeCompare(p1.email, p2.email) ||
+            undefined
+        );
     },
     { sequence: 55 }
 );
