@@ -6,7 +6,7 @@
             <field name="name">Job</field>
             <field name="url">/jobs</field>
             <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">15</field>
+            <field name="sequence" type="int">10</field>
         </record>
 
         <record id="menu_about_us" model="website.menu">
@@ -16,25 +16,32 @@
             <field name="sequence" type="int">20</field>
         </record>
 
+        <record id="menu_contact" model="website.menu">
+            <field name="name">Contact</field>
+            <field name="url">/contactus</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">30</field>
+        </record>
+
         <record id="menu_events" model="website.menu">
             <field name="name">Events</field>
             <field name="url">/events</field>
             <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">30</field>
+            <field name="sequence" type="int">40</field>
         </record>
 
         <record id="menu_courses" model="website.menu">
             <field name="name">Courses</field>
             <field name="url">/courses</field>
             <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">40</field>
+            <field name="sequence" type="int">50</field>
         </record>
 
         <record id="menu_admissions" model="website.menu">
             <field name="name">Apply Online</field>
             <field name="url">/admission/apply</field>
             <field name="parent_id" ref="website.main_menu"/>
-            <field name="sequence" type="int">50</field>
+            <field name="sequence" type="int">60</field>
         </record>
     </data>
 </odoo>

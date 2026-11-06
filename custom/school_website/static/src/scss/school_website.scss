@@ -7,7 +7,120 @@
     --harvard-dark: #1E1E1E;
 }
 
-/* Hero Section matching User Mockup */
+/* ========================================================
+   NAVBAR ENHANCEMENTS (Matching User Mockup)
+   ======================================================== */
+
+/* Navbar Brand & Logo */
+.navbar-brand img,
+#o_main_nav .navbar-brand img,
+header .navbar-brand img {
+    height: 44px !important;
+    max-height: 48px !important;
+    width: auto !important;
+    object-fit: contain;
+    transition: transform 0.2s ease-in-out;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+/* Navbar Container */
+#o_main_nav {
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+    background-color: #ffffff;
+}
+
+/* Navigation Links */
+#top_menu .nav-item {
+    margin: 0 0.25rem;
+}
+
+#top_menu .nav-item .nav-link {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #2b2b2b;
+    padding: 0.5rem 0.85rem !important;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+#top_menu .nav-item .nav-link:hover {
+    color: var(--harvard-crimson) !important;
+    background-color: rgba(165, 28, 48, 0.05);
+}
+
+#top_menu .nav-item .nav-link.active {
+    color: var(--harvard-crimson) !important;
+    font-weight: 600;
+}
+
+#top_menu .nav-item .nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 15%;
+    right: 15%;
+    height: 2.5px;
+    background-color: var(--harvard-crimson);
+    border-radius: 2px;
+}
+
+/* Header Right Action CTA Button */
+header a.btn-primary,
+header a[href*="/contactus"].btn,
+header .s_header_cta a.btn {
+    background-color: var(--harvard-crimson) !important;
+    border-color: var(--harvard-crimson) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    border-radius: 4px !important;
+    padding: 0.55rem 1.35rem !important;
+    box-shadow: 0 2px 8px rgba(165, 28, 48, 0.25);
+    transition: all 0.25s ease-in-out;
+}
+
+header a.btn-primary:hover,
+header a[href*="/contactus"].btn:hover,
+header .s_header_cta a.btn:hover {
+    background-color: var(--harvard-crimson-dark) !important;
+    border-color: var(--harvard-crimson-dark) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(165, 28, 48, 0.35);
+}
+
+/* Search Box & Phone in Header */
+header .fa-phone, header .fa-search {
+    color: #555555;
+    transition: color 0.2s ease;
+}
+
+header a:hover .fa-phone,
+header a:hover .fa-search {
+    color: var(--harvard-crimson);
+}
+
+/* User Sign In button */
+header .o_nav_link_btn {
+    border-color: #d1d5db !important;
+    color: #374151 !important;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+header .o_nav_link_btn:hover {
+    border-color: var(--harvard-crimson) !important;
+    color: var(--harvard-crimson) !important;
+}
+
+/* ========================================================
+   HERO SECTION (Matching Mockup)
+   ======================================================== */
 .harvard-hero-section {
     position: relative;
     min-height: 85vh;
@@ -92,23 +205,7 @@
     transform: translateY(-2px);
 }
 
-/* Top CTA button in Navbar */
-.harvard-btn-crimson {
-    background-color: var(--harvard-crimson) !important;
-    border-color: var(--harvard-crimson) !important;
-    color: #ffffff !important;
-    font-weight: 600;
-    border-radius: 4px;
-    transition: all 0.2s ease-in-out;
-}
-
-.harvard-btn-crimson:hover {
-    background-color: var(--harvard-crimson-dark) !important;
-    border-color: var(--harvard-crimson-dark) !important;
-    color: #ffffff !important;
-}
-
-/* Card Styling for Programs & Notices */
+/* Cards & Badges */
 .harvard-card {
     border: 1px solid #e9ecef;
     border-radius: 8px;
