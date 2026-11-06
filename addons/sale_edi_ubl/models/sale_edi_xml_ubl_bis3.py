@@ -363,10 +363,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         order_vals['client_order_ref'] = tree.findtext('./{*}ID')
         order_vals['origin'] = tree.findtext('./{*}QuotationDocumentReference/{*}ID')
 
-        delivery_partner, delivery_logs = self._import_partner(
-            order.company_id,
-            **self._import_retrieve_partner_vals(tree, 'Delivery'),
-        )
+        delivery_partner, delivery_logs = self._import_order_delivery_partner(order, tree)
         if delivery_partner:
             order_vals['partner_shipping_id'] = delivery_partner.id
 
@@ -388,6 +385,15 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
         logs += partner_logs + delivery_logs + line_logs + allowance_charges_logs
 
         return order_vals, logs
+
+    def _import_order_delivery_partner(self, order, tree):
+        """ Retrieve the partner to deliver the order to.
+        :return: the delivery partner (possibly empty) and a list of logs.
+        """
+        return self._import_partner(
+            order.company_id,
+            **self._import_retrieve_partner_vals(tree, 'Delivery'),
+        )
 
     def _import_order_ubl(self, order, file_data, new):
         # Overriding the main method to recalculate the price unit and discount

@@ -330,6 +330,12 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             file_data['xml_tree'] = self.env['account.move']._get_xml_tree(file_data)
         return file_data['xml_tree'].findtext('.//{*}InvoiceTypeCode') or file_data['xml_tree'].findtext('.//{*}CreditNoteTypeCode')
 
+    def _peppol_import_document(self, attachment, peppol_state, uuid, journal=None):
+        """ Import PEPPOL document as account.move. Override this method to import other types of documents.
+        """
+        self.ensure_one()
+        return self._peppol_import_invoice(attachment, peppol_state, uuid, journal)
+
     def _peppol_import_invoice(self, attachment, peppol_state, uuid, journal=None):
         """Save new documents in an accounting journal, when one is specified on the company.
 
@@ -526,7 +532,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     "mimetype": mimetype,
                 })
                 try:
-                    if uuid_move := self._peppol_import_invoice(attachment, content['state'], uuid):
+                    if uuid_move := self._peppol_import_document(attachment, content['state'], uuid):
                         # Only acknowledge when we saved the document somewhere
                         processed_uuids.append(uuid)
                         moves += uuid_move.get('move', self.env['account.move'])
