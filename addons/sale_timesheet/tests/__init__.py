@@ -4,6 +4,7 @@
 from . import common
 from . import test_account_analytic_line
 from . import test_analytic_to_sale_timesheet
+from . import test_margin
 from . import test_sale_timesheet
 from . import test_sale_service
 from . import test_project

@@ -132,6 +132,7 @@ class SaleOrderLine(models.Model):
                 "tax_ids": [Command.set(self.tax_ids.ids)],
                 "discount": self.discount,
                 "price_unit": self.price_unit,
+                "purchase_price": self.purchase_price,
             })
 
         return vals

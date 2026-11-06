@@ -823,17 +823,31 @@
                                     width="80px"
                                     readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment or product_type != 'consu'"/>
                                 <!--
-                                    price_unit is wrapped in a column so inheriting modules (e.g.
-                                    sale_margin) can add fields to it via position="inside" instead
-                                    of replacing the price_unit field node. A replace would silently
-                                    discard changes made by lower-priority inherited views and
-                                    require duplicating this definition.
+                                    price_unit is wrapped in a column so inheriting modules can add
+                                    fields to it via position="inside" instead of replacing the
+                                    price_unit field node. A replace would silently discard changes
+                                    made by lower-priority inherited views and require duplicating
+                                    this definition.
                                 -->
                                 <column name="price_unit">
                                     <field
                                         name="price_unit"
                                         invisible="display_type"
                                         readonly="qty_invoiced &gt; 0"
+                                    />
+                                    <field
+                                        name="margin"
+                                        widget="labeled_float_field"
+                                        invisible="display_type"
+                                        readonly="qty_invoiced &gt; 0"
+                                        optional="hide"
+                                    />
+                                    <field
+                                        name="margin_percent"
+                                        widget="labeled_percentage_field"
+                                        readonly="purchase_price == 0 or qty_invoiced &gt; 0"
+                                        invisible="display_type or price_subtotal == 0"
+                                        optional="hide"
                                     />
                                 </column>
                                 <field
@@ -849,6 +863,7 @@
                                     groups="sale.group_discount_per_so_line"
                                     width="50px"
                                     optional="show"/>
+                                <field name="purchase_price" optional="hide"/>
                                 <column
                                     column_invisible="parent.document_tax_mode == 'tax_included'"
                                 >

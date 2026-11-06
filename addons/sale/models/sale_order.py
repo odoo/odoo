@@ -352,6 +352,16 @@ class SaleOrder(models.Model):
     amount_total = fields.Monetary(
         string="Total", store=True, compute="_compute_amounts", tracking=4
     )
+    margin = fields.Monetary(
+        string="Margin", compute="_compute_margin", store=True, groups="base.group_user"
+    )
+    margin_percent = fields.Float(
+        string="Margin (%)",
+        compute="_compute_margin",
+        store=True,
+        groups="base.group_user",
+        aggregator=None,
+    )
     amount_to_invoice = fields.Monetary(
         string="Un-invoiced Balance", compute="_compute_amount_to_invoice"
     )
@@ -1190,8 +1200,31 @@ class SaleOrder(models.Model):
                 company=order.company_id,
             )
 
+    @api.depends("order_line.margin", "amount_untaxed")
+    def _compute_margin(self):
+        if not all(self._ids):
+            for order in self:
+                order.margin = sum(order.order_line.mapped("margin"))
+                order.margin_percent = order.amount_untaxed and order.margin / order.amount_untaxed
+        else:
+            # On batch records recomputation (e.g. at install), compute the margins
+            # with a single read_group query for better performance.
+            # This isn't done in an onchange environment because (part of) the data
+            # may not be stored in database (new records or unsaved modifications).
+            grouped_order_lines_data = self.env["sale.order.line"]._read_group(
+                [("order_id", "in", self.ids)], ["order_id"], ["margin:sum"]
+            )
+            mapped_data = {order.id: margin for order, margin in grouped_order_lines_data}
+            for order in self:
+                order.margin = mapped_data.get(order.id, 0.0)
+                order.margin_percent = order.amount_untaxed and order.margin / order.amount_untaxed
+
     @api.depends(
-        "order_line", "order_line.discount", "order_line.price_unit", "order_line.product_uom_qty"
+        "margin",
+        "order_line",
+        "order_line.discount",
+        "order_line.price_unit",
+        "order_line.product_uom_qty",
     )
     def _compute_extra_total_fields(self):
         for order in self:
@@ -1201,6 +1234,13 @@ class SaleOrder(models.Model):
                 basic_group["lines"].append({
                     "label": self.env._("Total Advantage"),
                     "value": abs(incl),
+                })
+            if order.margin:
+                basic_group["lines"].append({
+                    "label": self.env._(
+                        "Margin (%(percent).0f%%)", percent=order.margin_percent * 100
+                    ),
+                    "value": order.margin,
                 })
 
             order.extra_total_fields = [basic_group]

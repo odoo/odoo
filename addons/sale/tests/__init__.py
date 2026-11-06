@@ -9,6 +9,7 @@ from . import (
     test_credit_limit,
     test_import_files,
     test_ir_config_parameter,
+    test_margin,
     test_onchange,
     test_payment_flow,
     test_product_attribute_value,
