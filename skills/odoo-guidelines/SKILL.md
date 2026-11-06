@@ -42,7 +42,7 @@ touching instead of loading whole files.
 | [Use search_fetch when the domain and the rules are simple](guidelines/performance.md#use-search_fetch-when-the-domain-and-the-rules-are-simple) | a `search` whose records are read afterwards |
 | [Do not read an x2many that grows without bound](guidelines/performance.md#do-not-read-an-x2many-that-grows-without-bound) | reading messages, followers, members, logs, or any x2many that can reach thousands of rows |
 | [Performance conventions](guidelines/performance.md#performance-conventions) | code that loops over records or filters query results |
-| [Tests](guidelines/tests.md#tests) | touching `tests/` |
+| [Tests](guidelines/tests.md#tests) | touching `tests/` or running tests |
 | [Freeze the cursor time with mock_datetime_and_now](guidelines/tests.md#freeze-the-cursor-time-with-mock_datetime_and_now) | a test that uses `freeze_time`, or checks `create_date`, `write_date` or a value taken from `cr.now()` |
 | [Check a JSON-RPC call by its result, never by its status](guidelines/tests.md#check-a-json-rpc-call-by-its-result-never-by-its-status) | a test that calls a route with `url_open` or `make_jsonrpc_request` |
 | [Run the postcommit hooks a test depends on](guidelines/tests.md#run-the-postcommit-hooks-a-test-depends-on) | a test of a webhook, a sync, or anything else queued on `cr.postcommit` |
