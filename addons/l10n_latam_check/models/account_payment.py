@@ -12,7 +12,7 @@ class AccountPayment(models.Model):
         relation='l10n_latam_check_account_payment_rel',
         column1="payment_id",
         column2="check_id",
-        required=True,
+        ui_required=True,
         copy=False,
         string="Checks Operations"
     )

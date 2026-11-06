@@ -81,7 +81,7 @@ class HrEmployee(models.Model):
         'employee_id',
         string='Employee Records',
         groups="hr.group_hr_user",
-        required=True
+        ui_required=True
     )
     versions_count = fields.Integer(string="Employee Records Count", compute='_compute_versions_count', groups="hr.group_hr_user")
     version_revision = fields.Char(compute="_compute_version_revision", groups="hr.group_hr_user")

@@ -22,7 +22,7 @@ class MailFollowersEdit(models.TransientModel):
         required=True,
         default="add",
     )
-    partner_ids = fields.Many2many("res.partner", required=True, string="Followers")
+    partner_ids = fields.Many2many("res.partner", ui_required=True, string="Followers")
     message = fields.Html("Message")
     notify = fields.Boolean("Notify Recipients", default=False)
 

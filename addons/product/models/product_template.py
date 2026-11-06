@@ -190,7 +190,7 @@ class ProductTemplate(models.Model):
         inverse='_inverse_import_attribute_values',
         store=False, copy=False)
 
-    product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', required=True)
+    product_variant_ids = fields.One2many('product.product', 'product_tmpl_id', 'Products', ui_required=True)
     # performance: product_variant_id provides prefetching on the first product variant only
     product_variant_id = fields.Many2one('product.product', 'Product', compute='_compute_product_variant_id')
 

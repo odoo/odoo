@@ -10,7 +10,7 @@ class CalendarEventMultiArchiveOrUnlinkWizard(models.TransientModel):
         'calendar.event',
         # A name must be specified for the pivot table as the default one is too long.
         'calendar_event_multi_archive_or_unlink_wizard_rel',
-        required=True)
+        ui_required=True)
     has_recurrent_events = fields.Boolean(compute='_compute_has_recurrent_events')
     requested_action = fields.Selection([
         ('archive', 'archive'),
