@@ -1,11 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
+import logging
 
 import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import hash_sign, verify_hash_signed
 from odoo.tools.urls import urljoin
+
+_logger = logging.getLogger(__name__)
 
 QRIS_TIMEOUT = 35  # They say that the time to get a response vary between 6 to 30s
 
@@ -28,8 +32,53 @@ def _l10n_id_make_qris_request(endpoint, params):
 class ResPartnerBank(models.Model):
     _inherit = "res.partner.bank"
 
-    l10n_id_qris_api_key = fields.Char("QRIS API Key", groups="base.group_system", help="The authentication token connecting merchant systems to process Indonesian QR payments.")
-    l10n_id_qris_mid = fields.Char("QRIS Merchant ID", groups="base.group_system", help="QRIS Merchant ID is the National Merchant ID obtained after successful QRIS registration.")
+    l10n_id_qris_api_key = fields.Char("QRIS API Key", groups="base.group_system", copy=False, help="The authentication token connecting merchant systems to process Indonesian QR payments.")
+    l10n_id_qris_mid = fields.Char("QRIS Merchant ID", groups="base.group_system", copy=False, help="QRIS Merchant ID is the National Merchant ID obtained after successful QRIS registration.")
+    l10n_id_qris_webhook_version = fields.Integer(
+        "QRIS Webhook Version",
+        groups="base.group_system",
+        copy=False,
+    )
+    l10n_id_qris_webhook_url = fields.Char(
+        "QRIS Webhook URL",
+        compute='_compute_l10n_id_qris_webhook_url',
+        compute_sudo=True,
+        groups="base.group_system",
+        help="Register this URL as the webhook in your QRIS merchant portal to register the payments as soon as they are made.",
+    )
+
+    @api.depends('l10n_id_qris_api_key', 'l10n_id_qris_webhook_version')
+    def _compute_l10n_id_qris_webhook_url(self):
+        for bank in self:
+            bank.l10n_id_qris_webhook_url = urljoin(
+                bank.get_base_url(),
+                f'/l10n_id/qris/webhook/{bank._l10n_id_get_qris_webhook_token()}',
+            ) if bank.id and bank.l10n_id_qris_api_key else False
+
+    def _l10n_id_get_qris_webhook_token(self):
+        """ Return the signed token of the webhook URL. Changing the version renews it. """
+        self.ensure_one()
+        return hash_sign(self.env(su=True), 'l10n_id_qris_webhook', [self.id, self.sudo().l10n_id_qris_webhook_version])
+
+    @api.model
+    def _l10n_id_get_bank_from_qris_webhook_token(self, token):
+        """ Return the bank account matching the webhook token, or an empty recordset if the token is invalid. """
+        try:
+            payload = verify_hash_signed(self.env(su=True), 'l10n_id_qris_webhook', token)
+        except ValueError:
+            payload = None
+        if not payload:
+            return self.browse()
+
+        bank_id, version = payload
+        bank = self.browse(bank_id).exists()
+        if not bank.l10n_id_qris_api_key or bank.l10n_id_qris_webhook_version != version:
+            return self.browse()
+        return bank
+
+    def action_l10n_id_qris_rotate_webhook_token(self):
+        for bank in self:
+            bank.l10n_id_qris_webhook_version += 1
 
     @api.model
     def _get_available_qr_methods(self):
@@ -77,7 +126,8 @@ class ResPartnerBank(models.Model):
             # Additionally, we want to check that it's requesting for the same amount as it's possible to change
             # amount in apps like PoS.
             max_reuse_seconds = self.env.context.get('qris_max_reuse_seconds', 1500)
-            if qris_trx and qris_trx.qris_amount == int(amount):
+            # A QR code that has already been paid is never reused, to avoid a second payment.
+            if qris_trx and not qris_trx.paid and qris_trx.qris_amount == int(amount):
                 now = fields.Datetime.now()
                 latest_qr_date = qris_trx.qris_creation_datetime
 
@@ -149,3 +199,26 @@ class ResPartnerBank(models.Model):
             'trxvalue': qr_data['qris_amount'],
             'trxdate': qr_data['qris_creation_datetime'],
         })
+
+    def _l10n_id_qris_process_webhook(self, data):
+        """ Mark the QRIS transaction notified by the webhook as paid and register the payment of its invoice.
+
+        :param dict data: the payload sent by QRIS, containing the QRIS invoice id and the payment status
+        """
+        self.ensure_one()
+        if data.get('qris_status') != 'success' or not data.get('invoice'):
+            return
+
+        transaction = self.env['l10n_id.qris.transaction'].search([
+            ('bank_id', '=', self.id),
+            ('qris_invoice_id', '=', data.get('invoice')),
+        ], limit=1)
+        if not transaction:
+            _logger.warning("QRIS webhook received for an unknown transaction: %s", data.get('invoice'))
+            return
+
+        transaction.paid = True
+        if transaction.model == 'account.move' and (invoice := transaction._get_record()):
+            invoice.with_company(invoice.company_id)._l10n_id_process_invoices({
+                invoice.id: {'paid': True, 'qr_statuses': [data], 'transaction': transaction},
+            })
