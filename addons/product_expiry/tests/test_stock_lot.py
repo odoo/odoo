@@ -27,6 +27,24 @@ class TestStockLot(TestStockCommon):
             'alert_time': 6,
         })
 
+    def test_stock_lot_date_compute(self):
+        lot = self.env["stock.lot"].create(
+            {
+                "product_id": self.apple_product.id,
+                "name": "apple lot",
+                "expiration_date": "2026-06-01 00:00:00",
+            }
+        )
+        self.assertEqual(str(lot.expiration_date), "2026-06-01 00:00:00")
+        self.assertEqual(str(lot.use_date), "2026-05-27 00:00:00")
+        self.assertEqual(str(lot.removal_date), "2026-05-30 00:00:00")
+        self.assertEqual(str(lot.alert_date), "2026-05-26 00:00:00")
+        lot.expiration_date = "2026-11-01 00:00:00"
+        self.assertEqual(str(lot.expiration_date), "2026-11-01 00:00:00")
+        self.assertEqual(str(lot.use_date), "2026-10-27 00:00:00")
+        self.assertEqual(str(lot.removal_date), "2026-10-30 00:00:00")
+        self.assertEqual(str(lot.alert_date), "2026-10-26 00:00:00")
+
     def test_00_stock_production_lot(self):
         """ Test Scheduled Task on lot with an alert_date in the past creates an activity """
 
