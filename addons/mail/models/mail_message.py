@@ -416,7 +416,7 @@ class Message(models.Model):
             - create: if
                 - no model, no res_id (private message) OR
                 - pid in message_follower_ids if model, res_id OR
-                - uid can read the parent OR
+                - pid is in the recipients of a parent from the same thread OR
                 - uid have write or create access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
@@ -560,16 +560,20 @@ class Message(models.Model):
                     parent_ids_msg_ids[message['parent_id']].append(mid)
             if parent_ids_msg_ids:
                 query = SQL(
-                    """ SELECT m.id
+                    """ SELECT m.id, m.model, m.res_id
                         FROM "mail_message" m
                         JOIN "mail_message_res_partner_rel" partner_rel
                             ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %s
-                        WHERE m.id = ANY(%s) """,
+                        WHERE m.id = ANY(%s)
+                          AND m.message_type != 'user_notification' """,
                     self.env.user.partner_id.id, list(parent_ids_msg_ids),
                 )
-                for [parent_id] in self.env.execute_query(query):
+                for parent_id, parent_model, parent_res_id in self.env.execute_query(query):
                     for mid in parent_ids_msg_ids[parent_id]:
-                        messages_to_check.pop(mid)
+                        # a reply belongs to the thread of its parent
+                        message = messages_to_check[mid]
+                        if message['model'] == parent_model and message['res_id'] == parent_res_id:
+                            messages_to_check.pop(mid)
 
             if not messages_to_check:
                 return forbidden
@@ -760,6 +764,8 @@ class Message(models.Model):
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed and not self.env.is_system():
             raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
+        if 'message_type' in vals and not self.env.is_system():
+            raise AccessError(_("Only administrators can modify the 'message_type' field."))
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
         res = super(Message, self).write(vals)
