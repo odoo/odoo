@@ -344,3 +344,16 @@ test("customer_display_shows_qr_popup: customer display QR code popup", async ()
         await waitFor(".modal img, .modal canvas, .modal svg");
     }
 });
+
+test("ScreenSaver: SaverScreen is displayed after idleTimeout", async () => {
+    const store = await setupAndMountPosApp();
+    const { timeout } = store.idleTimeout[0];
+
+    await waitFor(".product-screen");
+    await Utils.clickDisplayedProduct("TEST");
+
+    await advanceTime(timeout + 1000);
+    await animationFrame();
+
+    expect(store.router.currentScreen()).toBe("SaverScreen");
+});
