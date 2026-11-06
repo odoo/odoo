@@ -1,7 +1,7 @@
 import { localization } from "@web/core/l10n/localization";
 import { memoize } from "@web/core/utils/functions";
 
-const { DateTime } = luxon;
+const { DateTime, Info } = luxon;
 
 const NUMERAL_MAPS = [
     "٠١٢٣٤٥٦٧٨٩", // Arabic
@@ -311,9 +311,13 @@ export const durationUnitsRegex = memoize(() => {
  * @returns {{ isPm: boolean, isAm: boolean }}
  */
 function meridiemCheck(timeStr) {
-    const amPmMatch = typeof timeStr === "string" ? timeStr.toLowerCase().match(/(am|pm)/g) : false;
-    return {
-        isPm: amPmMatch && amPmMatch[0] === "pm",
-        isAm: amPmMatch && amPmMatch[0] === "am",
-    };
+    if (typeof timeStr !== "string") {
+        return { isPm: false, isAm: false };
+    }
+    const compact = (str) => str.toLowerCase().replace(/[\s.]/g, "");
+    const value = compact(timeStr);
+    const [am, pm] = Info.meridiems().map(compact);
+    const isPm = value.includes("pm") || value.includes(pm);
+    const isAm = !isPm && (value.includes("am") || value.includes(am));
+    return { isPm, isAm };
 }
