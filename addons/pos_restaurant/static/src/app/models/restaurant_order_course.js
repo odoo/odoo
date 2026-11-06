@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Base } from "@point_of_sale/app/models/related_models";
+import { formatDuration } from "@pos_restaurant/app/utils/time";
 
 export class RestaurantOrderCourse extends Base {
     static pythonModel = "restaurant.order.course";
@@ -15,6 +16,26 @@ export class RestaurantOrderCourse extends Base {
     }
     isReadyToFire() {
         return !this.fired && !this.isEmpty();
+    }
+
+    get isLive() {
+        return this.fired_date && this.id === this.order_id?.getFiredCourses?.at(-1)?.[0];
+    }
+
+    getDuration() {
+        if (!this.fired_date || !this.order_id) {
+            return false;
+        }
+
+        const firedCourses = this.order_id.getFiredCourses;
+        const index = firedCourses.findIndex(([id]) => id === this.id);
+        if (index === -1) {
+            return false;
+        }
+
+        const start = firedCourses[index][1];
+        const end = firedCourses[index + 1]?.[1];
+        return formatDuration(start, end);
     }
 }
 
