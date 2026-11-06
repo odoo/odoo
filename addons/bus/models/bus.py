@@ -8,6 +8,7 @@ from odoo import api, fields, models
 from odoo.tools import SQL, config
 from odoo.tools.misc import OrderedSet
 
+from ..bus_dispatcher import UPDATE_SUBSCRIPTIONS
 from ..tools.notifications import fetch_bus_notifications, json_dump
 
 _logger = logging.getLogger(__name__)
@@ -175,7 +176,13 @@ class BusBus(models.Model):
             self.env.cr, {last: list(channels)}, ignore_ids
         )
         return sorted(
-            (notif for notifs in notifications_by_channel.values() for notif in notifs),
+            (
+                notif
+                for notifs in notifications_by_channel.values()
+                for notif in notifs
+                # Applied by the dispatcher, never sent to the client.
+                if notif["message"]["type"] != UPDATE_SUBSCRIPTIONS
+            ),
             key=lambda notif: notif["id"],
         )
 

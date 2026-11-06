@@ -2,6 +2,9 @@
 
 from odoo import models
 
+from odoo.addons.bus.bus_dispatcher import UPDATE_SUBSCRIPTIONS
+from odoo.addons.bus.models.bus import channel_with_db
+
 
 class BusListenerMixin(models.AbstractModel):
     """Allow sending messages related to the current model via as a bus.bus channel.
@@ -23,3 +26,16 @@ class BusListenerMixin(models.AbstractModel):
 
     def _bus_channels(self):
         return self
+
+    def _bus_update_subscriptions(self, join=(), leave=()):
+        """Make the websockets listening to these records join the channels ``join`` and
+        leave the channels ``leave``.
+
+        :param join: channels, as records or ``(record, subchannel)``.
+        :param leave: same as ``join``.
+        """
+        dbname = self.env.cr.dbname
+        self._bus_send(UPDATE_SUBSCRIPTIONS, {
+            "join": [channel_with_db(dbname, channel) for channel in join],
+            "leave": [channel_with_db(dbname, channel) for channel in leave],
+        })

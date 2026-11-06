@@ -97,6 +97,9 @@ ERROR_RETRY_JITTER = 10
 # How long (in seconds) the listener blocks waiting for a NOTIFY or a worker blocks
 # waiting for the queue.
 POLL_TIMEOUT = 50
+# Type of the notifications making the websockets they are sent to join and leave channels,
+# see `bus.listener.mixin._bus_update_subscriptions`.
+UPDATE_SUBSCRIPTIONS = "__bus_update_subscriptions__"
 
 
 class DispatchState(Enum):
@@ -219,23 +222,35 @@ class ChannelTopic:
 
         :param list notifications: this channel's notifications, sorted by id, covering
             both the regular and the waiting room's range.
+        :return: the ``UPDATE_SUBSCRIPTIONS`` notifications, applied by the dispatcher
+            instead of being forwarded, each with the websockets it reached.
         """
+        to_apply = []
         if not notifications:
-            return
+            return to_apply
+        updates = [n for n in notifications if n["message"]["type"] == UPDATE_SUBSCRIPTIONS]
+        if updates:
+            notifications = [n for n in notifications if n["message"]["type"] != UPDATE_SUBSCRIPTIONS]
         # Websockets in the waiting room can have different starting points: catch each of
         # them up from its own last id.
         for websocket, last_id in self._waiting_room_snapshot.items():
             catchup_from_idx = bisect_right(notifications, last_id, key=itemgetter("id"))
-            if catchup_from_idx == len(notifications):
-                continue  # Already up to date, nothing to catch up.
             self._forward_notifications(notifications[catchup_from_idx:], (websocket,))
+            to_apply.extend((n, (websocket,)) for n in updates if n["id"] > last_id)
         new_from_idx = bisect_right(notifications, self._last_fetched_id, key=itemgetter("id"))
         new_notifications = notifications[new_from_idx:]
+        new_updates = [n for n in updates if n["id"] > self._last_fetched_id]
         if excluded_ids := self.excluded_ids:
             new_notifications = [n for n in new_notifications if n["id"] not in excluded_ids]
+            new_updates = [n for n in new_updates if n["id"] not in excluded_ids]
+        websockets = self._websockets
         if new_notifications:
-            self._forward_notifications(new_notifications, self._websockets)
+            self._forward_notifications(new_notifications, websockets)
             self._update_history(new_notifications)
+        if new_updates:
+            self._update_history(new_updates)
+            to_apply.extend((n, websockets) for n in new_updates)
+        return to_apply
 
 
 def get_reserved_cursor_ratio(default=0.3):
@@ -337,7 +352,9 @@ class BusDispatcher(threading.Thread):
                             hash(channel)  # used as a key of _topic_by_channel
                             channels_by_dbname[channel[0]].append(channel)
                     except (ValueError, LookupError, TypeError):
-                        _logger.warning("Bus._listener_loop ignored malformed imbus payload: %r", payload)
+                        _logger.warning(
+                            "Bus._listener_loop ignored malformed imbus payload: %r", payload
+                        )
                 for dbname, channels in channels_by_dbname.items():
                     with self._lock_for_db(dbname):
                         for channel in channels:
@@ -368,11 +385,12 @@ class BusDispatcher(threading.Thread):
                 # picked it up.
                 continue
             success = False
+            updates = []
             try:
                 with acquire_cursor(dbname) as cr:
                     self._kick_invalid_sessions(cr, topics)
                     notifications_by_channel = self._fetch(cr, topics)
-                self._dispatch(topics, notifications_by_channel)
+                updates = self._dispatch(topics, notifications_by_channel)
                 success = True
             except psycopg2.Error:
                 # Temporary database failure: retry quickly instead of falling back to the
@@ -385,6 +403,7 @@ class BusDispatcher(threading.Thread):
                     stop_event.wait(BATCH_RETRY_DELAY)
             finally:
                 self._release_claims(dbname, topics, rollback=not success)
+            self._update_subscriptions(dbname, updates)
 
     def _worker_run(self):
         self._run_with_retry(self._worker_loop, "Bus._worker_run")
@@ -406,39 +425,72 @@ class BusDispatcher(threading.Thread):
             current_topics = self._topics_by_websocket.get(websocket, set())
             next_topics = set()
             for channel in channels:
-                topic = self._topic_by_channel.get(channel)
-                if topic is None:
-                    topic = ChannelTopic(channel, last_fetched_id)
-                    self._topic_by_channel[channel] = topic
-                next_topics.add(topic)
-                if (
-                    websocket in topic._websockets
-                    or websocket in topic._waiting_room
-                    or websocket in topic._waiting_room_snapshot
-                ):
-                    continue
-                # Not yet a full subscriber nor in the waiting room: put in the waiting
-                # room for catch-up.
-                topic._waiting_room[websocket] = last_fetched_id
-                if topic._state is DispatchState.IDLE:
-                    self._queue_topic(topic)
-                elif topic._state is DispatchState.IN_FLIGHT:
-                    topic._state = DispatchState.DIRTY
-            for topic in current_topics:
-                if topic in next_topics:
-                    continue
-                topic._websockets = topic._websockets - {websocket}
-                topic._waiting_room.pop(websocket, None)
-                self._drop_topic_if_empty(topic)
+                next_topics.add(self._add_to_topic(websocket, channel, last_fetched_id))
+            for topic in current_topics - next_topics:
+                self._remove_from_topic(topic, {websocket})
             self._topics_by_websocket[websocket] = next_topics
         self._ensure_started()
 
     def unsubscribe(self, websocket: Websocket):
         with self._lock_for_db(websocket._db):
             for topic in self._topics_by_websocket.pop(websocket, set()):
-                topic._websockets = topic._websockets - {websocket}
-                topic._waiting_room.pop(websocket, None)
-                self._drop_topic_if_empty(topic)
+                self._remove_from_topic(topic, {websocket})
+
+    def _add_to_topic(self, websocket: Websocket, channel: tuple, last_fetched_id: LastFetchedId):
+        """Make the websocket listen to the channel from ``last_fetched_id`` on. Returns
+        the topic."""
+        # Must be called with the dbname's lock held.
+        topic = self._topic_by_channel.get(channel)
+        if topic is None:
+            topic = ChannelTopic(channel, last_fetched_id)
+            self._topic_by_channel[channel] = topic
+        if (
+            websocket in topic._websockets
+            or websocket in topic._waiting_room
+            or websocket in topic._waiting_room_snapshot
+        ):
+            return topic
+        # Not yet a full subscriber nor in the waiting room: put in the waiting room for
+        # catch-up.
+        topic._waiting_room[websocket] = last_fetched_id
+        if topic._state is DispatchState.IDLE:
+            self._queue_topic(topic)
+        elif topic._state is DispatchState.IN_FLIGHT:
+            topic._state = DispatchState.DIRTY
+        return topic
+
+    def _remove_from_topic(self, topic: ChannelTopic, websockets: set[Websocket]):
+        """Remove the websockets from the topic's listeners, and drop the topic if none is
+        left. Must be called with the dbname's lock held."""
+        topic._websockets = topic._websockets - websockets
+        for websocket in websockets:
+            topic._waiting_room.pop(websocket, None)
+        self._drop_topic_if_empty(topic)
+
+    def _update_subscriptions(self, dbname: str, updates: list[tuple[dict, Iterable[Websocket]]]):
+        """Apply the ``UPDATE_SUBSCRIPTIONS`` notifications in order, to the websockets
+        they were sent to."""
+        if not updates:
+            return
+        websockets_by_left_topic: defaultdict[ChannelTopic, set[Websocket]] = defaultdict(set)
+        with self._lock_for_db(dbname):
+            for notification, websockets in sorted(updates, key=lambda update: update[0]["id"]):
+                payload = notification["message"]["payload"]
+                for websocket in websockets:
+                    topics = self._topics_by_websocket.get(websocket)
+                    if topics is None:
+                        continue  # Unsubscribed in the meantime.
+                    for channel in payload["leave"]:
+                        topic = self._topic_by_channel.get(tuplify(channel))
+                        if topic in topics:
+                            topics.discard(topic)
+                            websockets_by_left_topic[topic].add(websocket)
+                    for channel in payload["join"]:
+                        topic = self._add_to_topic(websocket, tuplify(channel), notification["id"])
+                        topics.add(topic)
+                        websockets_by_left_topic[topic].discard(websocket)
+            for topic, websockets in websockets_by_left_topic.items():
+                self._remove_from_topic(topic, websockets)
 
     def _lock_for_db(self, dbname: str):
         with self._lock_by_dbname_guard:
@@ -545,10 +597,16 @@ class BusDispatcher(threading.Thread):
         topics: set[ChannelTopic] | frozenset[ChannelTopic],
         notifications_by_channel: dict[tuple, list],
     ):
+        """Dispatch the notifications to the websockets of the topics. Returns the
+        updates to apply, see ``ChannelTopic.dispatch_notifications``."""
+        updates = []
         if not notifications_by_channel:
-            return
+            return updates
         for topic in topics:
-            topic.dispatch_notifications(notifications_by_channel.get(topic._channel, []))
+            updates += topic.dispatch_notifications(
+                notifications_by_channel.get(topic._channel, []),
+            )
+        return updates
 
     def _kick_invalid_sessions(self, cr, topics: set[ChannelTopic] | frozenset[ChannelTopic]):
         """Validate every websocket's session and close those that fail."""
