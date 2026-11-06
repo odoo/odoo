@@ -12,7 +12,7 @@ import { advanceTime, tick, waitFor } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
 import { router, routerBus } from "@web/core/browser/router";
 import { range } from "@web/core/utils/numbers";
-import { contains, mountWebClient } from "@web/../tests/web_test_helpers";
+import { contains, getService, mountWebClient } from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 defineMailModels();
@@ -160,4 +160,31 @@ test("Chatter jumps when navigating to a specific message link", async () => {
     await mailContains(".o-mail-Message.o-highlighted .o-mail-Message-content", {
         text: "message 0",
     });
+});
+
+test("can highlight another message of an already open chat window", async () => {
+    disableAnimations();
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const messageIds = range(0, 100).map((i) =>
+        pyEnv["mail.message"].create({
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        })
+    );
+    await start();
+    const store = getService("mail.store");
+    store.insert({
+        "discuss.channel": [
+            { id: channelId, open_chat_window: true, highlightMessage: messageIds[50] },
+        ],
+    });
+    await mailContains(".o-mail-ChatWindow .o-mail-Message.o-highlighted:contains(message 50)");
+    store.insert({
+        "discuss.channel": [
+            { id: channelId, open_chat_window: true, highlightMessage: messageIds[10] },
+        ],
+    });
+    await mailContains(".o-mail-ChatWindow .o-mail-Message.o-highlighted:contains(message 10)");
 });

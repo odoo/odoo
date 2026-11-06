@@ -219,6 +219,10 @@ class MailMessage(models.Model):
         compute_sudo=True,
         depends_context=('uid',))
     record_name = fields.Char('Message Record Name', compute='_compute_record_name', store=False)
+    record_model_name = fields.Char('Related Document Type', compute='_compute_record_model_name')
+    # Char, not Reference: the web client can't group by reference fields
+    record_ref = fields.Char(
+        'Conversation', compute='_compute_record_ref', compute_sql='_compute_sql_record_ref', compute_sudo=False)
     record_alias_domain_id = fields.Many2one('mail.alias.domain', 'Alias Domain', ondelete='set null')
     record_company_id = fields.Many2one('res.company', 'Company', ondelete='set null')
     # characteristics
@@ -361,6 +365,19 @@ class MailMessage(models.Model):
             except MissingError:
                 message.record_name = False
 
+    @api.depends('model')
+    def _compute_record_model_name(self):
+        for message in self:
+            message.record_model_name = self.env['ir.model']._get(message.model).display_name
+
+    @api.depends('model', 'res_id')
+    def _compute_record_ref(self):
+        for message in self:
+            message.record_ref = message.model and message.res_id and f'{message.model},{message.res_id}'
+
+    def _compute_sql_record_ref(self, table):
+        return SQL("%s || ',' || %s", table.model, table.res_id)
+
     @api.depends('author_id', 'author_guest_id')
     @api.depends_context('guest', 'uid')
     def _compute_is_current_user_or_guest_author(self):
@@ -470,6 +487,41 @@ class MailMessage(models.Model):
                 break
             looping_offset += IN_MAX
         return self.browse(result[offset:limit])._as_query(ordered)
+
+    def _get_read_group_order(self, dict_order, groupby, aggregates):
+        order = super()._get_read_group_order(dict_order, groupby, aggregates)
+        if groupby == ['record_ref'] and 'record_ref' not in dict_order:
+            # most recently active conversations first
+            order = f"date:max {dict_order.get('date', 'DESC')}, {order}"
+        return order
+
+    def _web_read_group_groupby_formatter(self, groupby_spec, values):
+        """ Label conversation groups with their record name and type, and
+        restrict them on (model, res_id) to benefit from its index. """
+        if groupby_spec != 'record_ref':
+            return super()._web_read_group_groupby_formatter(groupby_spec, values)
+        res_ids_by_model = defaultdict(list)
+        for value in filter(None, values):
+            model, res_id = value.split(',')
+            res_ids_by_model[model].append(int(res_id))
+
+        labels = {}
+        for model, res_ids in res_ids_by_model.items():
+            if model not in self.env:
+                continue
+            # sudo: ir.model, and records named like a many2one: readable messages imply readable records
+            description = self.env['ir.model'].sudo()._get(model).display_name
+            records = self.env[model].sudo().with_context(formatted_display_name=False).browse(res_ids).exists()
+            for record in records:
+                labels[f'{model},{record.id}'] = f'{record.display_name} ({description})'
+
+        def formatter_record_ref(value):
+            if not value:
+                return False, Domain('model', '=', False) | Domain('res_id', '=', False)
+            model, res_id = value.split(',')
+            return labels.get(value, value), Domain('model', '=', model) & Domain('res_id', '=', int(res_id))
+
+        return formatter_record_ref
 
     def _compute_res_access(self, operation: str):
         assert self.env.su
@@ -921,15 +973,20 @@ class MailMessage(models.Model):
     # ----------------------------------------------------
 
     def action_open_document(self):
-        """ Opens the related record based on the model and ID """
+        """ Opens the related record based on the model and ID, highlighting
+        the message in its chatter (or in its chat window for channels). """
         self.ensure_one()
-        return {
-            'res_id': self.res_id,
-            'res_model': self.model,
-            'target': 'current',
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-        }
+        if self.model == 'discuss.channel':
+            channel = self.env['discuss.channel'].browse(self.res_id)
+            return (
+                Store()
+                .add(channel, "_store_open_chat_window_fields")
+                .add(channel, {"highlightMessage": self.id})
+                .get_client_action()
+            )
+        action = self.env[self.model].browse(self.res_id).get_record_default_action()
+        action['context'] = {**action.get('context', {}), 'highlight_message_id': self.id}
+        return action
 
     # ------------------------------------------------------
     # DISCUSS API
