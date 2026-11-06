@@ -61,7 +61,8 @@ patch(PosOrderline.prototype, {
             // Down payment lines carry their amount as a negative `qty_to_invoice`
             this.set_quantity(saleOrderLine.qty_to_invoice);
         } else if (!saleOrderLine.has_valued_move_ids) {
-            this.set_quantity(saleOrderLine.product_uom_qty);
+            // No move to rely on (service, repair, SO picking cancelled by a previous settle)
+            this.set_quantity(saleOrderLine.product_uom_qty - saleOrderLine.qty_invoiced);
         } else if (
             this.product_id.type === "service" &&
             !["sent", "draft"].includes(this.sale_order_origin_id.state)
