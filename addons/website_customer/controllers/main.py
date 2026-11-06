@@ -163,7 +163,7 @@ class WebsiteCustomer(GoogleMap):
 
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True, replica=True)
-    def customers_detail(self, partner_id, **post):
+    def customers_detail(self, partner_id, back_url=False, **post):
         current_slug = partner_id
         _, partner_id = request.env['ir.http']._unslug(partner_id)
         if partner_id:
@@ -173,5 +173,6 @@ class WebsiteCustomer(GoogleMap):
                     return request.redirect('/customers/%s' % request.env['ir.http']._slug(partner))
                 values = {}
                 values['main_object'] = values['partner'] = partner
+                values['back_url'] = request.httprequest.referrer if back_url else False
                 return request.render("website_customer.details", values)
         raise request.not_found()
