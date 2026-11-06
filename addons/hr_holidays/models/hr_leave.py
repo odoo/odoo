@@ -496,14 +496,22 @@ class HrLeave(models.Model):
         """
         return Domain('source_leave_id', '!=', False) | Domain('time_rule_id', '!=', False)
 
-    @api.depends('employee_id', 'state', 'request_date_from', 'request_date_to',
-            'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
+    def _get_dashboard_warning_domain(self):
+        return (
+            Domain('work_entry_type_id.allow_request_on_top', '=', False)
+            & Domain('state', 'not in', ('refuse', 'cancel'))
+        )
+
+    def _dashboard_warning_message_depends(self):
+        return ['employee_id', 'state', 'request_date_from', 'request_date_to',
+            'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period']
+
+    @api.depends(lambda self: self._dashboard_warning_message_depends())
     def _compute_dashboard_warning_message(self):
         not_generated = ~self._get_generated_leave_domain()
+        warning_domain = self._get_dashboard_warning_domain()
         check_warning_leaves = self.filtered_domain(
-            Domain('state', 'not in', ('refuse', 'cancel'))
-            & Domain('work_entry_type_id.allow_request_on_top', '=', False)
-            & not_generated
+            warning_domain & not_generated
         )
         (self - check_warning_leaves).dashboard_warning_message = False
         if not check_warning_leaves:
@@ -512,8 +520,7 @@ class HrLeave(models.Model):
             Domain('date_from', '<', max(check_warning_leaves.mapped('date_to')))
             & Domain('date_to', '>', min(check_warning_leaves.mapped('date_from')))
             & Domain('employee_id', 'in', check_warning_leaves.employee_id.ids)
-            & Domain('work_entry_type_id.allow_request_on_top', '=', False)
-            & Domain('state', 'not in', ['cancel', 'refuse'])
+            & warning_domain
         )
         for holiday in check_warning_leaves:
             conflicting_holidays = all_leaves.filtered_domain([
@@ -1086,7 +1093,10 @@ class HrLeave(models.Model):
             result[leave.id] = (days, hours)
         return result
 
-    @api.depends('date_from', 'date_to', 'resource_calendar_id')
+    def _duration_depends(self):
+        return ['date_from', 'date_to', 'resource_calendar_id']
+
+    @api.depends(lambda self: self._duration_depends())
     def _compute_duration(self):
         durations = self._get_durations()
         for leave in self:
@@ -1471,7 +1481,7 @@ class HrLeave(models.Model):
                     )
                 )
 
-    @api.constrains('date_from', 'date_to', 'employee_id', 'state')
+    @api.constrains(lambda self: self._check_date_contrains())
     def _check_date(self):
         if self.env.context.get('leave_skip_date_check', False):
             return
@@ -1480,6 +1490,9 @@ class HrLeave(models.Model):
                 continue
             if holiday.dashboard_warning_message:
                 raise ValidationError(holiday.dashboard_warning_message)
+
+    def _check_date_contrains(self):
+        return ['date_from', 'date_to', 'employee_id', 'state']
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
