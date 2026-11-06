@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'HR Expense Enhanced',
-    'version': '19.0.1.3.0',
+    'version': '19.0.1.4.0',
     'category': 'Human Resources/Expenses',
     'summary': (
         'Enhanced expense management: department head auto-approver, '
@@ -27,6 +27,8 @@
         'views/account_payment_views.xml',
         'views/expense_xlsx_export_views.xml',
         'views/od19_employee_vehicle_views.xml',
+        'views/product_template_views.xml',
+        'data/od19_expense_category_data.xml',
     ],
     'installable': True,
     'application': False,
