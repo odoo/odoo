@@ -283,11 +283,8 @@ export class HtmlField extends Component {
         }
 
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];
-        if (
-            !("disableVideo" in config) &&
-            (sanitize_tags || (sanitize_tags === undefined && sanitize))
-        ) {
-            config.disableVideo = true; // Tag-sanitized fields remove videos.
+        if (!("disableVideo" in config) && (sanitize_tags || sanitize)) {
+            config.disableVideo = true; // Sanitized fields remove videos.
         }
         if (this.props.codeview) {
             config.resources = {
