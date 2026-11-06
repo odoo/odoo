@@ -2441,6 +2441,7 @@ class AccountEdiUBL(models.AbstractModel):
                 'reason_code': reason_code,
             }
 
+<<<<<<< a1a5ebf6b1fc2ae7aae1310a23a32534a691ce9d
     def _import_ubl_invoice_line_get_base_quantity(self, collected_values):
         """ Return the quantity 'cbc:PriceAmount' is expressed for, or None when there is none.
 
@@ -2450,6 +2451,15 @@ class AccountEdiUBL(models.AbstractModel):
         base_quantity_str = collected_values['line_tree'].findtext('./{*}Price/{*}BaseQuantity')
         return float(base_quantity_str) if base_quantity_str else None
 
+||||||| e6822c0309cbe429d391f0518407c6d666a315c9
+=======
+    def _fix_price_unit_quantity_discount(self, quantity, discount, price_unit, line_extension_amount, currency):
+        """Used in l10n_fr_pdp to recompute the quantity, discount and price unit so they match the line extension amounts"""
+        # TO OVERRIDE
+        # TODO: Remove this when french enforces stricter rules
+        return quantity, discount, price_unit
+
+>>>>>>> 93c548602c7e11017ca71e7fe2bb3961fd384cd2
     def _import_ubl_invoice_line_add_price_unit_quantity_discount(self, collected_values):
         file_document_sign = collected_values['file_document_sign']
         line_tree = collected_values['line_tree']
@@ -2562,6 +2572,8 @@ class AccountEdiUBL(models.AbstractModel):
         # Turn discount_amount to a percentage
         gross_subtotal = price_unit * quantity
         discount = (discount_amount * 100 / gross_subtotal) if gross_subtotal else 0.0
+
+        quantity, discount, price_unit = self._fix_price_unit_quantity_discount(quantity, discount, price_unit, line_extension_amount, currency)
 
         to_write = collected_values['to_write']
         to_write['quantity'] = quantity
