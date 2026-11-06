@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_l10n_eg_edi_eta_activate" model="ir.actions.server">
+        <field name="name">Activate E-Invoicing</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = model._l10n_eg_action_activate_edi('l10n_eg_edi_eta', 'account.action_account_config')</field>
+    </record>
+
+    <record id="action_l10n_eg_edi_pos_activate" model="ir.actions.server">
+        <field name="name">Activate E-Receipts</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = model._l10n_eg_action_activate_edi('l10n_eg_edi_pos', 'point_of_sale.action_pos_configuration')</field>
+    </record>
+</odoo>
