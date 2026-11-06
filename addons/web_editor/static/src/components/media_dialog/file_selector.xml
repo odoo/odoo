@@ -54,7 +54,7 @@
             needle="state.needle"
             search="(needle) => this.handleSearch(needle)"
             useMediaLibrary="props.useMediaLibrary"
-            validateUrl="validateUrl"
+            validateUrlAsync="(url) => this.validateUrlAsync(url)"
             multiSelect="props.multiSelect"/>
         <t t-call="{{ constructor.attachmentsListTemplate }}"/>
         <div name="load_more_attachments"

@@ -1730,6 +1730,7 @@ export class Wysiwyg extends Component {
             ...this.options.mediaModalParams,
             ...params,
             noVideos: !this.options.allowCommandVideo || params.noVideos,
+            validateUrl: this.options.validateUrl,
         });
     }
     // todo: test me
