@@ -2,7 +2,7 @@
 
 import json
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
@@ -22,9 +22,12 @@ class WebsiteSaleForm(WebsiteForm):
     def website_form_saleorder(self, **kwargs):
         model_record = self.env.ref("sale.model_sale_order").sudo()
         try:
+            self._verify_website_form("shop.sale.order", kwargs)
             data = self.extract_data(model_record, kwargs)
         except ValidationError as e:
             return json.dumps({"error_fields": e.args[0]})
+        except UserError as e:
+            return json.dumps({"error": e.args[0]})
 
         if not (order_sudo := request.cart):
             return json.dumps({"error": "No order found; please add a product to your cart."})

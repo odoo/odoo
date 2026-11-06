@@ -1,8 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import contextlib
+import io
 import json
+import math
+import operator
+from collections import defaultdict
+from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
+from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from psycopg2 import IntegrityError
 import re
@@ -11,12 +19,19 @@ from werkzeug.exceptions import BadRequest
 from odoo import http, SUPERUSER_ID
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.http import request
-from odoo.tools import BinaryBytes, plaintext2html
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, BinaryBytes, plaintext2html
 from odoo.exceptions import AccessDenied, ValidationError, UserError
-from odoo.tools.misc import consteq
+from odoo.tools.misc import verify_hash_signed
 from odoo.tools.translate import _, LazyTranslate
 
 _lt = LazyTranslate(__name__)
+
+# The values the browsers accept in the inputs of these types, loosely
+INPUT_TYPE_RES = {
+    'email': re.compile(r'[^\s@,]+@[^\s@,]+(,[^\s@,]+@[^\s@,]+)*'),  # several with the `multiple` attribute
+    'url': re.compile(r'[a-zA-Z][a-zA-Z\d+.-]*:.*'),
+    'number': re.compile(r'[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?'),
+}
 
 
 class WebsiteForm(http.Controller):
@@ -38,9 +53,11 @@ class WebsiteForm(http.Controller):
             raise BadRequest('Session expired (invalid CSRF token)')
 
         try:
-            # request.params was modified, update kwargs to reflect the changes
+            # Verify the params in place, as some overrides read them, then
+            # update kwargs to reflect the changes.
+            request.params.pop('model_name')
+            self._verify_website_form(model_name, request.params)
             kwargs = dict(request.params)
-            kwargs.pop('model_name')
             res = self._handle_website_form(model_name, **kwargs)
             # try to save here
             self.env.cr.commit()
@@ -57,10 +74,6 @@ class WebsiteForm(http.Controller):
             return json.dumps({
                 'error': _("This form cannot be submitted. Please contact the website administrator."),
             })
-
-        expected_signature = self.env['website']._get_website_form_signature(model_record.model, kwargs)
-        if expected_signature is not None and not consteq(kwargs.get('website_form_signature', ''), expected_signature):
-            raise AccessDenied(self.env._('invalid website_form_signature'))
 
         try:
             data = self.extract_data(model_record, kwargs)
@@ -90,6 +103,235 @@ class WebsiteForm(http.Controller):
         request.session['form_builder_id'] = id_record
 
         return json.dumps({'id': id_record})
+
+    def _verify_website_form(self, model_name, values):
+        """ Check the submitted values against the form, signed when it was
+        rendered (see `sign_website_forms`), so that it cannot be forged: only
+        its inputs can be submitted, with values passing the checks of form.js
+        (options, required, length, type, requirement rule, files), the hidden
+        inputs keep their value, and the inputs of the fields hidden by their
+        visibility rule are not submitted, as form.js disables them.
+
+        :param str model_name: the model targeted by the submission
+        :param dict values: the submitted values, updated in place
+        """
+        try:
+            form = verify_hash_signed(request.env(su=True), 'website_form_signature', values.pop('website_form_signature', ''))
+        except (AttributeError, ValueError):  # malformed signature
+            form = None
+        if not form or form['model'] != model_name:
+            raise AccessDenied(_("This form has been modified. Please reload the page and try again."))
+
+        inputs = form['inputs']
+        keys = defaultdict(list)  # the submitted keys of each input
+        for key, value in values.items():
+            # Undo file upload field name indexing, e.g. `CV [PDF][0][1]` (see `send` in form.js)
+            is_file = hasattr(value, 'filename')
+            name = key.rsplit('[', 2)[0] if is_file else key
+            if name not in inputs or is_file != (inputs[name].get('type') == 'file'):
+                raise AccessDenied(_('The "%s" field has been modified. Please reload the page and try again.', name))
+            keys[name].append(key)
+        for name, rules in inputs.items():
+            if 'value' in rules:  # the visitor cannot change it
+                for key in keys.pop(name, []):
+                    del values[key]
+                value = self._format_website_form_date(rules) if 'date' in rules else rules['value']
+                if value:
+                    values[name] = value
+                    keys[name].append(name)
+
+        submitted = {
+            name: self._get_website_form_values(rules, [values[key] for key in keys[name]])
+            for name, rules in inputs.items()
+        }
+        for name, rules in inputs.items():
+            if not self._is_website_form_input_visible(inputs, submitted, name):
+                for key in keys[name]:
+                    del values[key]
+                continue
+            # The state select linked to the country is disabled when it has no
+            # state of the selected country (see `_get_website_form_structure`).
+            country_ids = submitted.get('country_id')
+            if 'data-country-id' in rules and country_ids and country_ids[0] not in rules['data-country-id']:
+                rules = dict(rules, required=False)
+            if 'value' not in rules and not self._check_website_form_values(rules, submitted[name]):
+                raise AccessDenied(_('The "%s" field has been modified. Please reload the page and try again.', name))
+
+    def _get_website_form_values(self, rules, values):
+        """ Return the values submitted for an input, like `FormData.getAll`,
+        or None if they are not options of the input. The options of a multiple
+        choice are submitted together, separated by commas (see `send` in
+        form.js), while they can contain commas too.
+        """
+        values = [value for value in values if value]  # form.js does not submit the empty values
+        options = rules.get('options')
+        if values and rules.get('multiple') and rules.get('type') != 'file':
+            options_by_length = sorted(options or [], key=len, reverse=True)
+            remaining, values = values[0], []
+            while remaining:
+                value = next(
+                    (option for option in options_by_length if f'{remaining},'.startswith(f'{option},')),
+                    remaining.split(',', 1)[0],
+                )
+                values.append(value)
+                remaining = remaining[len(value) + 1:]
+        return values if options is None or set(values) <= set(options) else None
+
+    def _check_website_form_values(self, rules, values):
+        """ Return whether the values submitted for an input (see
+        `_get_website_form_values`) pass the checks of form.js before
+        submitting them (see `checkErrorFields`).
+        """
+        if not values:
+            return values is not None and not rules.get('required')
+        if rules.get('type') == 'file':
+            # See `isFileInputValid` in form.js
+            accept = {mimetype.strip() for mimetype in rules.get('accept', '').split(',')} - {''}
+            for file in values:
+                size = file.stream.seek(0, io.SEEK_END)
+                file.stream.seek(0)
+                if size > rules.get('data-max-file-size', math.inf) * 1_000_000:
+                    return False
+                # The browsers submit the files of unknown type as `application/octet-stream`.
+                mimetypes = {file.mimetype, f"{file.mimetype.split('/')[0]}/*"}
+                if accept and file.mimetype not in ('', 'application/octet-stream') and not mimetypes & accept:
+                    return False
+            return len(values) <= rules.get('data-max-files-number', math.inf if rules.get('multiple') else 1)
+
+        value = ','.join(values)
+        # JS counts the UTF-16 code units, and the new lines of the textareas as
+        # one character, while the browsers submit them as CRLF.
+        length = len(value.replace('\r\n', '\n').encode('utf-16-le')) // 2
+        if not rules.get('minlength', 0) <= length <= rules.get('maxlength', math.inf):
+            return False
+        if rules.get('type') in INPUT_TYPE_RES and not INPUT_TYPE_RES[rules['type']].fullmatch(value):
+            return False
+        if rules.get('type') == 'number' and rules.get('step'):
+            steps = float(value) / rules['step']  # e.g. a whole number for the integer fields
+            if not math.isfinite(steps) or not math.isclose(steps, round(steps), abs_tol=1e-9):
+                return False
+        # See `requirementFunction` in form.js
+        comparator, condition, between = rules.get('requirement', [None, None, None])
+        if not condition or not value.strip() or (comparator in ('between', '!between') and not between):
+            return True
+        if rules.get('type') == 'email' and comparator in ('substring', '!substring'):
+            value = value.split('@')[0]
+        return self._compare_website_form_value(comparator, [value], condition, between, rules.get('server-format'))
+
+    def _is_website_form_input_visible(self, inputs, submitted, name):
+        # See `buildVisibilityFunction` in form.js
+        return not inputs.get(name, {}).get('visibility') or any(
+            self._is_website_form_input_visible(inputs, submitted, dependency)
+            and self._compare_website_form_value(
+                comparator, submitted.get(dependency) or [], condition, between, inputs.get(dependency, {}).get('server-format'),
+            )
+            for dependency, comparator, condition, between in inputs[name]['visibility']
+        )
+
+    def _compare_website_form_value(self, comparator, values, condition, between, server_format):
+        """ Compare the values submitted for an input (see
+        `_get_website_form_values`) like `compareTo` in form.js, to evaluate
+        the visibility and requirement rules of the fields. The unknown
+        comparisons pass.
+        """
+        value = values[0] if values else ''  # like `FormData.get`
+        match comparator.removeprefix('!'):
+            case 'contains':
+                try:
+                    parsed_condition = json.loads(condition)  # e.g. the options of a multiple choice
+                except ValueError:
+                    parsed_condition = condition
+                if isinstance(parsed_condition, list):
+                    result = any(item in values for item in parsed_condition)
+                else:
+                    result = (parsed_condition if isinstance(parsed_condition, str) else condition) in ','.join(values)
+            case 'substring' | 'domain':
+                words = [item['requirement_text'].strip().lower() for item in json.loads(condition)]
+                if not words:
+                    return True
+                if comparator == 'domain':
+                    result = any(value.lower().endswith(f'@{word}') for word in words)
+                else:
+                    result = any(word in value.strip().lower() for word in words)
+            case 'equal' | 'selected':
+                result = value == condition
+            case 'set' | 'fileSet':
+                result = bool(values)
+            case 'greater' | 'less' | 'greater or equal' | 'less or equal':
+                compare = {'greater': operator.gt, 'less': operator.lt, 'greater or equal': operator.ge, 'less or equal': operator.le}
+                result = compare[comparator](self._parse_website_form_number(value), self._parse_website_form_number(condition))
+            case 'dateEqual' | 'date!equal' | 'before' | 'after' | 'equal or before' | 'equal or after' | 'between' | 'lessyears':
+                return self._compare_website_form_dates(comparator, value, condition, between, server_format)
+            case _:
+                return True
+        return result != comparator.startswith('!')
+
+    def _get_website_form_date_format(self, is_datetime, server_format):
+        """ Return the format and the timezone of the dates submitted by form.js,
+        i.e. as displayed in the timezone of the visitor, except for the model
+        fields, in the server format, and in UTC for the datetimes (see `send`
+        and `web.frontend_layout`).
+        """
+        tz = UTC
+        with contextlib.suppress(KeyError, ValueError):
+            tz = ZoneInfo(request.cookies.get('tz', 'UTC'))
+        if server_format:
+            return (DEFAULT_SERVER_DATETIME_FORMAT, UTC) if is_datetime else (DEFAULT_SERVER_DATE_FORMAT, tz)
+        lang = request.lang
+        return (f'{lang.date_format} {lang.time_format}' if is_datetime else lang.date_format), tz
+
+    def _format_website_form_date(self, rules):
+        """ Return the default value of a hidden date input, a timestamp, as
+        submitted once displayed by its date picker (see `prepareDateFields` in
+        form.js).
+        """
+        timestamp = self._parse_website_form_number(rules['value'])
+        if math.isnan(timestamp):
+            return ''
+        date_format, tz = self._get_website_form_date_format(rules['date'] == 'datetime', rules.get('server-format'))
+        return datetime.fromtimestamp(int(timestamp), tz).strftime(date_format)
+
+    def _compare_website_form_dates(self, comparator, value, condition, between, server_format):
+        """ Compare a submitted date like `compareTo` in form.js, i.e. as a
+        timestamp in the timezone of the visitor.
+        """
+        is_datetime = ':' in value
+        date_format, tz = self._get_website_form_date_format(is_datetime, server_format)
+        try:
+            date = datetime.strptime(value, date_format).replace(tzinfo=tz)
+        except ValueError:  # e.g. a translated meridiem, while the date fields refuse the invalid dates
+            return True
+
+        now = datetime.now(tz)
+        today = now.replace(second=0, microsecond=0) if is_datetime else now.replace(hour=0, minute=0, second=0, microsecond=0)
+        if comparator == 'lessyears':
+            years = self._parse_website_form_number(condition)
+            return not math.isnan(years) and date > today - relativedelta(years=int(years))
+        timestamp = date.timestamp()
+        start = today.timestamp() if condition == 'today' else self._parse_website_form_number(condition)
+        end = self._parse_website_form_number(between)
+        match comparator:
+            case 'dateEqual':
+                return timestamp == start
+            case 'date!equal':
+                return timestamp != start
+            case 'before':
+                return timestamp < start
+            case 'after':
+                return timestamp > start
+            case 'equal or before':
+                return timestamp <= start
+            case 'equal or after':
+                return timestamp >= start
+            case 'between':
+                return start <= timestamp <= end
+            case '!between':
+                return not start <= timestamp <= end
+
+    def _parse_website_form_number(self, value):
+        # Like `parseFloat` in JS
+        match = re.match(r'\s*[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?', value or '')
+        return float(match[0]) if match else math.nan
 
     # Constants string to make metadata readable on a text field
 
