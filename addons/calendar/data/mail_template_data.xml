@@ -148,7 +148,7 @@
         <record id="calendar_template_meeting_changedate" model="mail.template">
             <field name="name">Calendar: Date Updated</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
-            <field name="subject">{{ object.event_id.name }}: Date updated</field>
+            <field name="subject">{{ object._get_meeting_changedate_subject() }}</field>
             <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
             <field name="email_to" eval="False"/>
             <field name="partner_to" eval="False"/>
