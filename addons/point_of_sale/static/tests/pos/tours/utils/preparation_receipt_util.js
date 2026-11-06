@@ -151,3 +151,46 @@ export function checkPreparationTicketData(
         },
     ];
 }
+
+const kitchenTickets = [];
+
+// Records the kitchen tickets rendered for the preparation printers
+export function captureKitchenTickets() {
+    return {
+        content: "capture kitchen tickets sent to the preparation printers",
+        trigger: "body",
+        run: () => {
+            const ticketPrinter = posmodel.ticketPrinter;
+            const generateIframe = ticketPrinter.generateIframe;
+            kitchenTickets.length = 0;
+            ticketPrinter.generateIframe = function (template, ticket) {
+                if (template === "point_of_sale.pos_order_change_receipt") {
+                    kitchenTickets.push(ticket);
+                }
+                return generateIframe.call(this, template, ticket);
+            };
+        },
+    };
+}
+
+export function checkKitchenTickets(expectedLines) {
+    return {
+        content: "check the kitchen tickets sent to the preparation printers",
+        trigger: "body",
+        run: () => {
+            const lines = kitchenTickets.flatMap((ticket) =>
+                (ticket.changes.data || []).map((line) => ({
+                    name: line.basic_name,
+                    qty: line.quantity,
+                }))
+            );
+            if (JSON.stringify(lines) !== JSON.stringify(expectedLines)) {
+                throw new Error(
+                    `Expected kitchen tickets ${JSON.stringify(
+                        expectedLines
+                    )}, got ${JSON.stringify(lines)}`
+                );
+            }
+        },
+    };
+}
