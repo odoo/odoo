@@ -1,4 +1,5 @@
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
+import { normalize } from "@web/core/l10n/utils";
 import { memoize } from "@web/core/utils/functions";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
@@ -93,6 +94,19 @@ export function compareDatetime(date1, date2) {
     }
     // an invalid date has no millis, and a NaN comparator makes the sort unstable
     return date1.valueOf() - date2.valueOf() || 0;
+}
+
+/**
+ * Sorts the names starting with the term first.
+ *
+ * @param {string} name1
+ * @param {string} name2
+ * @param {string} cleanedTerm
+ */
+export function compareStartsWithTerm(name1, name2, cleanedTerm) {
+    const startsWith1 = normalize(name1).startsWith(cleanedTerm);
+    const startsWith2 = normalize(name2).startsWith(cleanedTerm);
+    return startsWith1 === startsWith2 ? 0 : startsWith1 ? -1 : 1;
 }
 
 /**

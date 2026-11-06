@@ -630,7 +630,6 @@ export class DiscussChannel extends Record {
             .map(([name, command]) => ({
                 condition: command.condition,
                 help: command.help,
-                id: command.id,
                 name,
             }))
             .filter(
