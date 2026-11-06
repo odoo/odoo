@@ -836,6 +836,7 @@ class AccountMove(models.Model):
     _check_document_tax_mode_set = models.Constraint(
         "check(move_type NOT IN ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt') OR document_tax_mode IS NOT NULL)",
         "The document tax mode must be set.",
+        to_flush=['move_type', 'document_tax_mode'],
     )
 
     # -------------------------------------------------------------------------

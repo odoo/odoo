@@ -6020,8 +6020,21 @@ class BaseModel(metaclass=MetaModel):
             self._flush()
 
     def _flush(self) -> None:
-        # pop dirty fields and their corresponding record ids from cache
         dirty_fields = self.env._field_dirty
+        if self.env.transaction.tocompute:
+            # the database checks some fields together on a row: compute the
+            # pending ones on the rows where another one is about to be written
+            for table_object in self._table_objects.values():
+                if fnames := table_object.to_flush:
+                    ids = OrderedSet(
+                        id_
+                        for fname in fnames
+                        for id_ in dirty_fields.get(self._fields[fname], ())
+                    )
+                    if ids:
+                        self.browse(ids)._recompute_recordset(fnames)
+
+        # pop dirty fields and their corresponding record ids from cache
         dirty_field_ids = {
             field: ids
             for field in self._fields.values()

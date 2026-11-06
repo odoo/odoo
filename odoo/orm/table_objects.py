@@ -6,7 +6,7 @@ import warnings
 from odoo.tools import sql
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Collection
 
     import psycopg2.extensions
 
@@ -32,11 +32,20 @@ class TableObject:
     name: str
     message: ConstraintMessageType = ''
     _module: str = ''
+    to_flush: tuple[str, ...] = ()
 
-    def __init__(self):
-        """Abstract SQL object"""
+    def __init__(self, to_flush: Collection[str] = ()):
+        """Abstract SQL object
+
+        :param to_flush: names of fields that the database checks together on
+            a row; when one of them is written to the database, the stored
+            computed ones among them are computed beforehand on the same rows,
+            so that the row is not written with a stale computed value
+        """
         # to avoid confusion: name is unique inside the model, full_name is in the database
         self.name = ''
+        if to_flush:
+            self.to_flush = tuple(to_flush)
 
     def __set_name__(self, owner, name):
         # database objects should be private member fo the class:
@@ -95,6 +104,8 @@ class Constraint(TableObject):
         self,
         definition: str,
         message: ConstraintMessageType = '',
+        *,
+        to_flush: Collection[str] = (),
     ) -> None:
         """ SQL table containt.
 
@@ -106,8 +117,11 @@ class Constraint(TableObject):
         - CHECK (x > 0)
         - FOREIGN KEY (abc) REFERENCES some_table(id)
         - UNIQUE (user_id)
+
+        Use ``to_flush`` when the definition ties a field to a stored computed
+        field depending on it, see :class:`TableObject`.
         """
-        super().__init__()
+        super().__init__(to_flush=to_flush)
         self._definition = definition
         if message:
             self.message = message
@@ -154,7 +168,7 @@ class Index(TableObject):
     """
     unique: bool = False
 
-    def __init__(self, definition: IndexDefinitionType):
+    def __init__(self, definition: IndexDefinitionType, *, to_flush: Collection[str] = ()):
         """ Index in SQL.
 
         The name of the SQL object will be "{model._table}_{key}". The definition
@@ -164,7 +178,7 @@ class Index(TableObject):
         - (group_id, active) WHERE active IS TRUE
         - USING btree (group_id, user_id)
         """
-        super().__init__()
+        super().__init__(to_flush=to_flush)
         self._index_definition = definition
 
     def get_definition(self, registry: Registry):
@@ -225,7 +239,7 @@ class UniqueIndex(Index):
     """
     unique = True
 
-    def __init__(self, definition: IndexDefinitionType, message: ConstraintMessageType = ''):
+    def __init__(self, definition: IndexDefinitionType, message: ConstraintMessageType = '', *, to_flush: Collection[str] = ()):
         """ Unique index in SQL.
 
         The name of the SQL object will be "{model._table}_{key}". The definition
@@ -235,7 +249,10 @@ class UniqueIndex(Index):
         Example of definition:
         - (group_id, active) WHERE active IS TRUE
         - USING btree (group_id, user_id)
+
+        Use ``to_flush`` when the definition ties a field to a stored computed
+        field depending on it, see :class:`TableObject`.
         """
-        super().__init__(definition)
+        super().__init__(definition, to_flush=to_flush)
         if message:
             self.message = message
