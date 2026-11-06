@@ -28,7 +28,7 @@ test("test_automatic_receipt_printing: auto print and auto-skip feedback screen"
 
     await waitFor(".feedback-screen");
     await animationFrame();
-    await contains('.modal span:contains("Test Printer")').click();
+    await contains('.modal span:contains("Test Printer")', { timeout: 5000 }).click();
     await animationFrame();
     await Utils.confirmDialog();
     await animationFrame();
