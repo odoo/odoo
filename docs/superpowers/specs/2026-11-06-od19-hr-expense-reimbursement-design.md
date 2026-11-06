@@ -1,0 +1,276 @@
+# เอกสารออกแบบ: ระบบเบิกค่าใช้จ่ายพนักงาน (Employee Expense Reimbursement) — Odoo 19 CE
+
+- **วันที่:** 2026-11-06
+- **โมดูลที่แตะ:** สร้างใหม่ `od19_hr_expense_portal`; แก้ `od19_hr_expense_thai`, `od19_approval_center`, `od19_role_catalog` (ไม่แตะ Odoo core)
+- **สถานะ:** รอตรวจสอบ (Draft for review)
+- **ผู้เกี่ยวข้อง:** พนักงานผู้เบิก / หัวหน้าแผนก / ฝ่ายบัญชี / CEO / ฝ่ายไอที–แอดมิน
+- **แนวทางที่เลือก:** A — ต่อยอดบนเครื่องยนต์เดิม (`hr.expense` + `od19_hr_expense_enhanced` + `od19_hr_expense_thai`)
+
+---
+
+## 1. บทสรุป (Summary)
+
+โปรเจกต์นี้มี "เครื่องยนต์" สำหรับค่าใช้จ่ายพนักงานอยู่ครบแล้ว ได้แก่ โมดูล core `hr.expense` (CE), `od19_hr_expense_enhanced` (เอกสารไทย/VAT/เบี้ยเลี้ยง/เงินสด) และ `od19_hr_expense_thai` (จ่ายคืนพนักงานจริง + reconcile) แต่ยังขาดสองสิ่งตามความต้องการของผู้ใช้:
+
+1. **ความง่ายในการใช้งานของพนักงาน** — ปัจจุบัน `hr.expense` เป็นหน้าจอหลังบ้าน (backend) ล้วน ไม่มี portal และมีรายละเอียดภาษี/บัญชีที่พนักงานทั่วไปไม่จำเป็นต้องเข้าใจ
+2. **การอนุมัติ 3 ชั้น** — ปัจจุบันมีเพียง 2 ชั้น (กลไกฟิลด์ `first_approver_id` / `second_approval_state`)
+
+งานนี้จึง **ไม่สร้างโมเดลใหม่** แต่เพิ่ม "ชั้นประสบการณ์ใช้งานของพนักงาน" และ **ยกระดับการอนุมัติเป็น 3 ชั้น** (หัวหน้าแผนก → บัญชี → CEO) ด้วย OCA `base_tier_validation` ซึ่งมีฟีเจอร์มอบหมายผู้อนุมัติ (delegation) ในตัวอยู่แล้ว
+
+**เป้าหมายเชิงผลลัพธ์**
+
+- พนักงานยื่นใบเบิกได้จบใน ≤ 4 ขั้นตอน โดยไม่ต้องรู้เรื่องภาษี/บัญชี
+- ใบเบิกทุกใบผ่านการอนุมัติครบ 3 ชั้นตามลำดับ และมอบหมายแทนกันได้ผ่านเมนู Tier Validation
+- ใช้ได้ทั้งหลังบ้านและพอร์ทัล และใช้งานบนมือถือได้
+- ไม่ทิ้งงานบัญชี/ภาษีที่ทำเสร็จแล้ว และไม่แตะ Odoo core
+
+---
+
+## 2. สภาพปัจจุบันและช่องว่าง (Problem)
+
+### 2.1 สิ่งที่มีอยู่แล้ว
+
+| โมดูล | สถานะ | สิ่งที่ให้ |
+|---|---|---|
+| `addons/hr_expense` (core CE) | ติดตั้งได้ (depends `account`, `web_tour`, `hr`) | โมเดล `hr.expense`, สถานะ draft→submitted→approved→posted→in_payment→paid→refused, VAT ผ่าน `tax_ids`, สร้าง `account.move` |
+| `od19_hr_expense_enhanced` (19.0.1.2.0) | มีจริง | `first_approver_id` (หัวหน้าแผนกอัตโนมัติ), `od19_delegate_*`, `od19_cash_state`, `od19_document_type` (ใบรับรองแทนใบเสร็จ + บังคับ VAT=0), เบี้ยเลี้ยง ม.42(3) + วงเงิน, รายงาน XLSX, WHT |
+| `od19_hr_expense_thai` (19.0.1.1.0) | มีจริง | อนุมัติ 2 ชั้น, วิธีจ่ายคืน (เงินสด/โอน/เช็ค), สร้าง `account.payment` จ่ายคืนจริง + reconcile กับเจ้าหนี้พนักงาน |
+| `od19_hr_advance` (19.0.1.0.0) | มีจริง | เงินทดรองพนักงาน ใช้ OCA `base_tier_validation` 2 ชั้น (ต้นแบบที่นำกลไกมาใช้ซ้ำได้) |
+| `od19_approval_center` (19.0.1.0.0) | มีจริง | ศูนย์อนุมัติ view-only, source `hr.expense` ปัจจุบันเป็น `strategy: field` 2 ขั้น |
+| `third_party/oca/tier-validation/base_tier_validation` | พร้อมใช้ | tier definition/review + เมนู Delegations |
+
+### 2.2 ช่องว่างเทียบกับความต้องการ
+
+| # | ประเด็น | สภาพปัจจุบัน | ผลกระทบ |
+|---|---|---|---|
+| G1 | พนักงานยื่นเบิกยาก | `hr.expense` เป็น backend ล้วน + มีฟิลด์ภาษีจำนวนมาก | พนักงานงง ไม่กล้าใช้ |
+| G2 | ไม่มีช่องทางมือถือ/portal | ไม่มี template portal/website ใน `hr.expense` | พนักงานที่ไม่มีสิทธิ์หลังบ้านยื่นไม่ได้ |
+| G3 | อนุมัติแค่ 2 ชั้น | `od19_hr_expense_thai` ใช้ฟิลด์กำหนดเอง 2 ชั้น | ไม่ตอบนโยบาย 3 ชั้น (หัวหน้าแผนก → บัญชี → CEO) |
+| G4 | กลไกอนุมัติไม่เป็นมาตรฐานเดียว | `hr.expense` ใช้ฟิลด์, `od19_hr_advance` ใช้ tier validation | ดูแล/มอบหมาย/ตรวจสอบต่างวิธีกัน |
+| G5 | มอบหมายการอนุมัติไม่มีที่ตั้งค่ากลาง | ใช้ wizard `od19.expense.delegate` เฉพาะของ | ไม่ตรงกับเมนู Tier Validation ที่ผู้ใช้ต้องการ |
+
+---
+
+## 3. ความต้องการ (Requirements)
+
+- **R1** พนักงานยื่นใบเบิกได้จบใน ≤ 4 ขั้นตอน และไม่ต้องป้อนข้อมูลภาษี/บัญชีเอง
+- **R2** ใบเบิกทุกใบต้องผ่านการอนุมัติครบ **3 ชั้นตามลำดับ**: หัวหน้าแผนก → บัญชี → CEO
+- **R3** ผู้อนุมัติมอบหมายให้ผู้อื่นทำแทนได้ โดยตั้งค่าผ่านเมนู Tier Validation (ของ OCA ที่มีอยู่)
+- **R4** รองรับการใช้งานทั้ง backend และ portal (พอร์ทัลพนักงาน) และใช้งานบนมือถือได้
+- **R5** แนบรูป/ไฟล์ใบเสร็จหรือเอกสารประกอบได้
+- **R6** รองรับคุณสมบัติภาษีไทยครบ: VAT (ภาษีซื้อ), WHT, ใบรับรองแทนใบเสร็จรับเงิน, เบี้ยเลี้ยง ม.42(3)
+- **R7** จ่ายคืนพนักงานจริงผ่าน `account.payment` และ reconcile ปิดยอดเจ้าหนี้
+- **R8** ผู้ใช้พอร์ทัลเห็นเฉพาะใบเบิกของตัวเอง
+- **R9** ไม่แตะ Odoo core; ทุกอย่างเป็นแบบ additive
+
+---
+
+## 4. ขอบเขต (Scope)
+
+### 4.1 ในขอบเขต (In scope)
+
+| # | รายการ | พื้นผิว | เฟส |
+|---|---|---|---|
+| 1 | ยกระดับ `hr.expense` เป็นอนุมัติ 3 ชั้นด้วย `base_tier_validation` + นิยาม tier 3 รายการ | Backend | 1 |
+| 2 | อัปเดต source `hr.expense` ใน Approval Center เป็น `tier_validation` 3 ขั้น | Backend | 1 |
+| 3 | กลุ่มผู้อนุมัติ CEO (`Expense CEO Approver`) ใน `od19_role_catalog` | Backend | 1 |
+| 4 | wizard ยื่นเบิกแบบง่าย + ค่าเริ่มต้นภาษีอัตโนมัติ + Kanban สถานะ | Backend | 2 |
+| 5 | Route + QWeb template `/my/expenses` (รายการ/ฟอร์ม/รายละเอียด) | Employee Portal | 3 |
+| 6 | ปรับ UI ให้ responsive สำหรับมือถือ | Portal | 3 |
+| 7 | เทสต์ TDD ทุกชั้น | Tests | ทุกเฟส |
+
+### 4.2 นอกขอบเขต (Out of scope)
+
+- ไม่ทำ OCR/สแกนใบเสร็จอัตโนมัติ
+- ไม่ทำ PWA แบบ offline เต็มรูปแบบ (ทำเฉพาะ "กันเน็ตหลุด" ระดับเก็บร่างในเครื่อง ใน Phase 4 ถ้าจำเป็น)
+- ไม่ทำแอปมือถือ native
+- ไม่แก้ core `hr.expense` และไม่เปลี่ยนโครงสร้างข้อมูลของ core
+- ไม่ย้ายประวัติการอนุมัติเก่า (ดู §13)
+
+---
+
+## 5. สถาปัตยกรรมและที่ตั้งโมดูล (Design)
+
+```
+┌───────────────────────────────────────────────────────────┐
+│  ชั้น UX (ใหม่)   od19_hr_expense_portal   [Phase 2-3]     │
+│  - wizard ยื่นเบิกแบบง่าย (backend)                        │
+│  - Route /my/expenses + QWeb (portal, responsive)          │
+│  - Kanban ติดตามสถานะ "รอใคร"                              │
+└───────────────────────────┬───────────────────────────────┘
+                            │ ใช้
+┌───────────────────────────┴───────────────────────────────┐
+│  hr.expense (core CE)  +  OCA base_tier_validation         │
+│  อนุมัติ 3 ชั้น: หัวหน้าแผนก → บัญชี → CEO   [Phase 1]       │
+└───────────────────────────┬───────────────────────────────┘
+                            │ ต่อยอด
+┌───────────────────────────┴───────────────────────────────┐
+│  od19_hr_expense_enhanced  : เอกสารไทย/VAT/เบี้ยเลี้ยง/เงินสด│
+│  od19_hr_expense_thai      : จ่ายคืนพนักงาน (payment+recon)│
+│  od19_approval_center      : มุมมองผู้อนุมัติรวมศูนย์        │
+│  od19_role_catalog         : กลุ่มสิทธิ์ (รวม CEO)          │
+└───────────────────────────────────────────────────────────┘
+```
+
+| โมดูล | สถานะ | ความรับผิดชอบ / สิ่งที่แก้ |
+|---|---|---|
+| `od19_hr_expense_portal` | **ใหม่** v19.0.1.0.0 | UX พนักงานทั้งหมด (wizard backend, portal controller/templates, Kanban สถานะ), ir.rule ของ portal, เทสต์ |
+| `od19_hr_expense_thai` | แก้ | **แทน** กลไก first/second approver เดิม ด้วย tier validation 3 ชั้น + นิยาม `tier.definition` 3 รายการ; คง logic จ่ายคืนเดิม |
+| `od19_hr_expense_enhanced` | แทบไม่แก้ | คงประเภทเอกสาร/VAT/เบี้ยเลี้ยง/เงินสด; ปรับค่าเริ่มต้นอัตโนมัติเท่าที่จำเป็น |
+| `od19_approval_center` | แก้ข้อมูล | เปลี่ยน source `hr.expense` เป็น `strategy: tier_validation` และอัปเดตขั้น |
+| `od19_role_catalog` | แก้ | เพิ่มกลุ่ม `Expense CEO Approver` |
+
+**Dependency ของโมดูลใหม่ `od19_hr_expense_portal`:** `hr_expense`, `portal`, `od19_hr_expense_thai` (ดึง `od19_hr_expense_enhanced` มาด้วย), `base_tier_validation`
+
+**Dependency ที่ต้องเพิ่มในโมดูลที่แก้:** `od19_hr_expense_thai` ต้องเพิ่ม `base_tier_validation` ใน `depends` (เพราะเป็นที่ติดตั้ง mixin `tier.validation` และไฟล์ `tier.definition` data)
+
+---
+
+## 6. UX ฝั่งพนักงาน (หัวใจของ "ใช้งานง่าย")
+
+### 6.1 หลักการ
+
+- **พนักงานไม่ต้องรู้เรื่องภาษี/บัญชี** — ระบบตั้งค่าเริ่มต้น (VAT/WHT/ประเภทเอกสาร/บัญชี) ให้อัตโนมัติจาก "หมวดค่าใช้จ่าย" (product) ของใบเบิก
+- **ขั้นตอนน้อยที่สุด**: ประเภท → จำนวนเงิน + วันที่ → แนบรูป → ส่ง
+- **เห็นสถานะชัด**: บอกว่า "รอใคร" (หัวหน้าแผนก/บัญชี/ผู้บริหาร) ไม่ใช่แค่ "submitted"
+
+### 6.2 Backend (พนักงานที่มีบัญชี Odoo)
+
+- เมนูใหม่ **"ยื่นใบเบิกค่าใช้จ่าย"** เปิด wizard ฟอร์มย่อ 4 ขั้น (สร้าง `hr.expense` เป็น `draft` แล้วให้ผู้ใช้กดส่ง หรือส่งทันทีตามที่เลือก)
+- หน้า Kanban **"ใบเบิกของฉัน"** จัดกลุ่มตามสถานะ และแสดงป้ายผู้อนุมัติปัจจุบัน
+
+### 6.3 Portal (พนักงานที่ไม่มีสิทธิ์หลังบ้าน)
+
+- Route `/my/expenses` (รายการ) และ `/my/expenses/new` (ฟอร์ม) ใช้ `portal.portal_layout`
+- ฟอร์ม responsive: ถ่าย/แนบรูปจากมือถือได้
+- หน้ารายละเอียดแสดง timeline การอนุมัติ 3 ชั้น + เหตุผลกรณีถูกปฏิเสธ
+
+### 6.4 มือถือ / PWA
+
+- ออกแบบ responsive เป็นหลัก (breakpoint มือถือ) ใช้ธีมบริษัท Maroon `#9E2424` และฟอนต์ไทย (Sarabun/Noto Sans Thai)
+- สามารถเพิ่มเป็นไอคอนบนหน้าจอ (Add to Home Screen) ผ่าน manifest ของเว็บ
+- Phase 4 (ถ้าจำเป็น): เก็บร่างฟอร์มใน `localStorage` เพื่อกันเน็ตหลุด (offline-tolerant)
+
+---
+
+## 7. สถานะและเส้นทางเอกสาร
+
+| สถานะ (`hr.expense.state`) | ความหมายที่พนักงานเห็น | ใครทำต่อ |
+|---|---|---|
+| `draft` | ร่าง | พนักงานส่ง |
+| `submitted` (ยังไม่ครบ tier) | รออนุมัติ: หัวหน้าแผนก / บัญชี / ผู้บริหาร (CEO) | ผู้อนุมัติตามลำดับ |
+| `approved` | อนุมัติครบ 3 ชั้น | บัญชีบันทึกบัญชี |
+| `posted` | บันทึกบัญชีแล้ว | การเงินจ่ายคืน |
+| `in_payment` / `paid` | จ่ายคืนแล้ว | — |
+| `refused` | ไม่อนุมัติ (ระบุเหตุผล) | พนักงานแก้ไข/ส่งใหม่ |
+
+> หมายเหตุ: ใน Odoo 19 โมเดล `hr.expense.sheet` ถูกยกเลิกแล้ว การอนุมัติ/สร้างใบสำคัญบัญชีทำที่ระดับ `hr.expense` โดยตรง
+
+---
+
+## 8. การอนุมัติ 3 ชั้น (OCA `base_tier_validation`)
+
+- เพิ่ม mixin `tier.validation` เข้า `hr.expense` (ผ่าน `od19_hr_expense_thai`)
+- นิยาม `tier.definition` 3 รายการ เงื่อนไข `[(1,'=',1)]` (ทุกใบ) โดยเรียงตาม `sequence`:
+
+| ลำดับการอนุมัติ | ชั้น | กลุ่มผู้อนุมัติ | `sequence` (definition) |
+|---|---|---|---|
+| 1 (ก่อน) | หัวหน้าแผนก | `hr_expense.group_hr_expense_manager` | 30 |
+| 2 | ฝ่ายบัญชี | `account.group_account_manager` | 20 |
+| 3 (สุดท้าย) | CEO | กลุ่มใหม่ `Expense CEO Approver` | 10 |
+
+> **กลไกที่ต้องยืนยันตอน implement:** `base_tier_validation` เรียง `tier.definition` ด้วย `sequence` จากมากไปน้อยไปเป็น `tier.review.sequence` 1, 2, 3 (definition `sequence` สูงกว่า = อนุมัติก่อน) ตามที่โปรเจกต์ใช้ใน `od19_hr_advance` — ต้องตรวจเทียบกับโค้ด OCA จริงอีกครั้งก่อนตั้งค่า
+
+- **การมอบหมาย (delegation):** ใช้เมนู **Tier Validation → Delegations** ของ OCA (ผู้ใช้ตั้งว่าตนจะให้ใครอนุมัติแทน ช่วงวันที่ใด) — ไม่เขียนโค้ดใหม่
+- **ผลกระทบต่อกลไกเดิม:** เลิกใช้ฟิลด์ `first_approver_id` เป็นตัวตัดสินเส้นทาง และเลิกใช้ `second_approval_state` เป็นกลไกหลัก (คงฟิลด์ไว้เพื่อความเข้ากันได้ของข้อมูลเท่านั้น)
+- **สถานะรออนุมัติของ tier validation:** `tier.validation` เก็บสถานะที่ `review_ids` / `validation_status` (ไม่ใช่ `state`) จึงต้องแมป "รอใคร" จาก `review_ids` ปัจจุบัน
+
+---
+
+## 9. บัญชีและภาษี (ใช้ของเดิมทั้งหมด)
+
+| กรณี | กลไก | ที่มีอยู่ |
+|---|---|---|
+| พนักงานออกเงินเอง (`payment_mode = own_account`) | จ่ายคืนด้วย `account.payment` + reconcile กับเจ้าหนี้พนักงาน | `od19_hr_expense_thai` |
+| บริษัทออกเงิน (`company_account`) | ไม่ต้องจ่ายคืน | core |
+| VAT (ภาษีซื้อ) | `tax_ids` บน `hr.expense` | core + enhanced |
+| ใบรับรองแทนใบเสร็จรับเงิน | `od19_document_type = payment_certificate` → บังคับ VAT = 0 | `od19_hr_expense_enhanced` |
+| เบี้ยเลี้ยง ม.42(3) | `od19_is_per_diem` + วงเงิน + เหตุผลเมื่อเกินวงเงิน | `od19_hr_expense_enhanced` |
+| หัก ณ ที่จ่าย (WHT) | ตามที่ `od19_hr_expense_enhanced` จัดเตรียมไว้ | `od19_hr_expense_enhanced` |
+
+**ค่าเริ่มต้นอัตโนมัติ (งานใหม่ใน Phase 2):** เมื่อพนักงานเลือก "หมวดค่าใช้จ่าย" ให้ระบบเติม `product_id` → ดึง `tax_ids`, `od19_document_type`, บัญชีค่าใช้จ่าย ให้อัตโนมัติ โดยพนักงานเห็นเฉพาะช่องที่จำเป็น
+
+---
+
+## 10. สิทธิ์และความปลอดภัย
+
+- **กลุ่มพนักงาน:** ผู้ใช้ทั่วไปที่ผูก `hr.employee` ของตัวเอง (ใช้ `hr_expense.group_hr_expense_user`)
+- **กลุ่มผู้อนุมัติ 3 กลุ่ม:** หัวหน้าแผนก (`hr_expense.group_hr_expense_manager`), บัญชี (`account.group_account_manager`), CEO (`Expense CEO Approver` — เพิ่มใน `od19_role_catalog`)
+- **ir.rule สำหรับ portal:** ผู้ใช้พอร์ทัล (ไม่มีสิทธิ์หลังบ้าน) เห็นเฉพาะใบเบิกที่ `employee_id.user_id = user` หรือ `create_uid = user`
+- **BOM/บันทึกความปลอดภัย:** ไม่มี credential ฝังในโค้ด; ใช้ RBAC กลางตามโครงเดิม
+
+---
+
+## 11. แผนการส่งมอบ (Phases)
+
+| เฟส | เนื้อหา | ผลลัพธ์ที่ตรวจได้ |
+|---|---|---|
+| **Phase 1** | 3 ชั้นอนุมัติบน `hr.expense` ด้วย tier validation + กลุ่ม CEO + อัปเดต Approval Center | ยื่นใบเบิก 1 ใบ แล้วต้องผ่าน 3 ขั้นตามลำดับ; มอบหมายผ่านเมนู Delegations ได้ |
+| **Phase 2** | wizard ยื่นเบิกแบบง่าย (backend) + ค่าเริ่มต้นภาษีอัตโนมัติ + Kanban สถานะ | พนักงานยื่นเบิกจบใน ≤ 4 ขั้น |
+| **Phase 3** | Portal `/my/expenses` + responsive/มือถือ | พนักงานที่ไม่มีสิทธิ์หลังบ้านยื่นและติดตามได้จากมือถือ |
+| **Phase 4** | Polish: เก็บร่างกันเน็ตหลุด, รายงาน, คู่มือการใช้งาน | (ตามความจำเป็น) |
+
+การส่งมอบทำ **ตามเฟส** — แต่ละเฟสมีเทสต์ผ่านก่อนไปเฟสถัดไป
+
+---
+
+## 12. การทดสอบ (TDD)
+
+| # | กรณีทดสอบ | ระดับ |
+|---|---|---|
+| T1 | ยื่นใบเบิกแล้วต้องผ่าน 3 ขั้นตามลำดับ (หัวหน้าแผนก → บัญชี → CEO) และข้ามขั้นไม่ได้ | TransactionCase |
+| T2 | ถ้ายังอนุมัติไม่ครบ 3 ชั้น `state` ต้องไม่เป็น `approved` | TransactionCase |
+| T3 | มอบหมายผู้อนุมัติ (delegation) แล้วผู้อื่นอนุมัติแทนได้ | TransactionCase |
+| T4 | ผู้ใช้พอร์ทัลเห็นเฉพาะใบเบิกของตัวเอง | TransactionCase / HttpCase |
+| T5 | เบี้ยเลี้ยงเกินวงเงินโดยไม่มีเหตุผล → validation error | TransactionCase |
+| T6 | ใบรับรองแทนใบเสร็จรับเงิน ต้องไม่มี VAT | TransactionCase |
+| T7 | จ่ายคืนพนักงานแล้ว reconcile ปิดยอดเจ้าหนี้ | TransactionCase |
+| T8 | ยื่นใบเบิกผ่าน portal สำเร็จ (HttpCase) | HttpCase |
+
+---
+
+## 13. ความเสี่ยงและประเด็นต้องยืนยัน
+
+| # | ประเด็น | แนวทาง |
+|---|---|---|
+| K1 | **แทนกลไกอนุมัติเดิม** — `od19_hr_expense_thai` มีฟิลด์/การกระทำของ first/second approver | เก็บฟิลด์เดิมไว้ (ไม่ลบ) แต่เลิกใช้เป็นเส้นทาง; อาจต้อง data migration ถ้ามีข้อมูลจริง |
+| K2 | **ลำดับ sequence ของ tier** — ต้องตรงกับพฤติกรรม OCA จริง | ทดสอบด้วยเทสต์ T1 ก่อนสรุปค่า |
+| K3 | **เกณฑ์เลือก "หัวหน้าแผนก"** — ใช้ manager ของ `hr.department` (ตาม `od19_hr_expense_enhanced`) หรือกลุ่ม HR Expense Manager | ยืนยันกับ HR; เริ่มจาก manager ของแผนกเป็นค่าเริ่มต้น |
+| K4 | **พนักงานมี user Odoo หรือใช้ portal อย่างเดียว** | ต้องมี `hr.employee` ผูกกับ user/partner เพื่อให้ portal ทำงานได้ |
+| K5 | **การแมปสถานะ "รอใคร"** — tier validation เก็บที่ `review_ids` ไม่ใช่ `state` | อ่าน `review_ids` ปัจจุบันมาแสดง |
+| K6 | **ข้อมูลอนุมัติเดิมใน `odoo19_pdev` / `odoo19_puat`** | ตรวจก่อน ถ้าไม่มีข้อมูลจริงก็ไม่ต้องทำ migration |
+
+---
+
+## 14. เกณฑ์ยอมรับ (Acceptance Criteria)
+
+- [ ] พนักงานยื่นใบเบิกได้จบใน ≤ 4 ขั้นตอน โดยไม่ต้องป้อนข้อมูลภาษีเอง
+- [ ] ใบเบิกทุกใบผ่านการอนุมัติครบ 3 ชั้นตามลำดับ และข้ามขั้นไม่ได้
+- [ ] มอบหมายผู้อนุมัติทำแทนได้ผ่านเมนู Tier Validation
+- [ ] พนักงานที่ไม่มีสิทธิ์หลังบ้านยื่นและติดตามสถานะผ่าน portal บนมือถือได้
+- [ ] เบี้ยเลี้ยง/WHT/VAT/ใบรับรองแทนใบเสร็จ ทำงานครบและถูกต้องตามหลักบัญชีไทย
+- [ ] จ่ายคืนพนักงานแล้วเจ้าหนี้ถูก reconcile ปิดยอดจริง
+- [ ] เทสต์ T1–T8 ผ่านทั้งหมด
+- [ ] ไม่มีการแก้ไขไฟล์ใน Odoo core (`odoo/`, `addons/`)
+
+---
+
+## 15. ภาคผนวก: จุดอ้างอิงโค้ด
+
+- Core: `addons/hr_expense` — โมเดล `hr.expense`, สถานะและ flow การอนุมัติ
+- `custom_addons/od19_hr_expense_enhanced/models/hr_expense.py` — `first_approver_id`, `od19_document_type`, `od19_is_per_diem`
+- `custom_addons/od19_hr_expense_thai/models/hr_expense.py` — กลไกอนุมัติ 2 ชั้นเดิม + `_od19_create_reimbursement_payment`
+- `custom_addons/od19_hr_advance/data/tier_definition_data.xml` — ต้นแบบการตั้งค่า `tier.definition` (2 ชั้น)
+- `custom_addons/od19_approval_center/data/approval_sources.py` — source `hr.expense` (บรรทัดที่กำหนด `strategy` / `steps`)
+- `custom_addons/od19_role_catalog` — ที่ตั้งของกลุ่มสิทธิ์ธุรกิจ (ที่จะเพิ่มกลุ่ม CEO)
+- `third_party/oca/tier-validation/base_tier_validation` — กลไก tier validation + เมนู Delegations
