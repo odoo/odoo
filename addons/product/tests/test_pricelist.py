@@ -816,3 +816,107 @@ class TestPricelist(ProductVariantsCommon):
 
         self.assertEqual(pricelist._get_product_price(self.product_sofa_red, 1.0), 125)
         self.assertEqual(pricelist._get_product_price(self.product_sofa_blue, 1.0), 100)
+
+    def test_fixed_price_rule_conversion(self):
+        pricelist = self.env["product.pricelist"].create({
+            "name": "Fixed Price Pricelist",
+            "item_ids": [
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.product_template_sofa.id,
+                    "compute_price": "fixed",
+                    "fixed_price": 100,
+                })
+            ],
+        })
+        self.assertEqual(pricelist._get_product_price(self.product_sofa_blue, 1.0), 100)
+
+        rule = pricelist.item_ids
+        self.assertEqual(rule._compute_price(self.product_sofa_blue, 1.0, self.uom_unit), 100)
+
+        main_curr = pricelist.currency_id
+        other_curr = self._enable_currency("CHF")
+        other_curr.rate_ids = (
+            [Command.create({"rate": 10, "company_id": self.env.company.id})]
+        )
+        other_pricelist = self.env["product.pricelist"].create({
+            "name": "CHF PL",
+            "currency_id": other_curr.id,
+            "item_ids": [
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.product_template_sofa.id,
+                    "compute_price": "discount",
+                    # no discount
+                    "base": "pricelist",
+                    "base_pricelist_id": pricelist.id,
+                })
+            ],
+        })
+        expected_chf_price = main_curr._convert(
+            from_amount=100, to_currency=other_curr, round=False
+        )
+        self.assertNotEqual(expected_chf_price, 100, "if the rate is 0, the test is meaningless")
+
+        self.assertEqual(other_pricelist._get_product_price(self.product_sofa_blue, 1.0), expected_chf_price)
+
+        # Make sure that when called with a specific currency, `_compute_price` does convert the
+        # returned amount.
+        chf_price = rule._compute_price(
+            self.product_sofa_blue, 1.0, self.uom_unit, currency=other_curr
+        )
+        self.assertEqual(chf_price, expected_chf_price)
+
+    def test_discount_price_rule_conversion(self):
+        self.product_template_sofa.list_price = 100.0
+        pricelist = self.env["product.pricelist"].create({
+            "name": "Fixed Price Pricelist",
+            "item_ids": [
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.product_template_sofa.id,
+                    "compute_price": "discount",
+                    "price_discount": 5.5,
+                    "price_round": 1.0,
+                    "price_surcharge": 0.55,
+                })
+            ],
+        })
+        self.assertEqual(pricelist._get_product_price(self.product_sofa_blue, 1.0), 95.55)
+
+        rule = pricelist.item_ids
+        self.assertEqual(rule._compute_price(self.product_sofa_blue, 1.0, self.uom_unit), 95.55)
+
+        main_curr = pricelist.currency_id
+        other_curr = self._enable_currency("CHF")
+        other_curr.rate_ids = (
+            [Command.create({"rate": 10, "company_id": self.env.company.id})]
+        )
+
+        other_pricelist = self.env["product.pricelist"].create({
+            "name": "CHF PL",
+            "currency_id": other_curr.id,
+            "item_ids": [
+                Command.create({
+                    "applied_on": "1_product",
+                    "product_tmpl_id": self.product_template_sofa.id,
+                    "compute_price": "discount",
+                    # no discount
+                    "base": "pricelist",
+                    "base_pricelist_id": pricelist.id,
+                })
+            ],
+        })
+        expected_chf_price = main_curr._convert(
+            from_amount=95.55, to_currency=other_curr, round=False
+        )
+        self.assertNotEqual(expected_chf_price, 95.55, "if the rate is 0, the test is meaningless")
+
+        self.assertEqual(other_pricelist._get_product_price(self.product_sofa_blue, 1.0), expected_chf_price)
+
+        # Make sure that when called with a specific currency, `_compute_price` does convert the
+        # returned amount.
+        chf_price = rule._compute_price(
+            self.product_sofa_blue, 1.0, self.uom_unit, currency=other_curr
+        )
+        self.assertEqual(chf_price, expected_chf_price)
