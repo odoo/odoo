@@ -8,7 +8,6 @@ import { FetchRecordError } from "./errors";
 import {
     createPropertyActiveField,
     getBasicEvalContext,
-    getOfflineOnchangeSpec,
     getFieldContext,
     getFieldsSpec,
     getOfflineDisplayName,
@@ -110,6 +109,7 @@ export class Record extends DataPoint {
         }
         if (!keepChanges) {
             this._changes = markRaw({});
+            this._userChanges = markRaw(new Set());
             this._pendingOnchanges = markRaw(new Set());
         }
         this.dirty = false;
@@ -355,7 +355,7 @@ export class Record extends DataPoint {
             scheduledORM = Object.values(this.model.offline.scheduledORM).find(
                 (s) =>
                     s.value.extras?.actionId === this.model.env.config.actionId &&
-                    s.value.method === "web_save_offline" && // Only web_save changes are applied
+                    s.value.method === "web_save_offline" &&
                     s.value.extras.viewType === "form" && // Only changes made on a view form are applied
                     s.value.args[0]?.[0] === this.resId
             );
@@ -369,7 +369,11 @@ export class Record extends DataPoint {
             this._offlinePendingOnchanges = markRaw(
                 new Set(scheduledORM.value.kwargs.onchange_fields)
             );
-            return this.update(this._offlineChanges);
+            const changedFields = scheduledORM.value.kwargs.changed_fields;
+            return this.update(this._offlineChanges).then(() => {
+                this._offlineUserChanges = markRaw(new Set(changedFields));
+                this._userChanges = markRaw(new Set(changedFields));
+            });
         }
     }
 
@@ -424,6 +428,7 @@ export class Record extends DataPoint {
                 change = change.compute(this.data[fieldName]);
             }
             this._changes[fieldName] = change;
+            this._userChanges.add(fieldName);
             this.data[fieldName] = change;
             if (this.fields[fieldName].type === "html") {
                 this._textValues[fieldName] = change === false ? false : change.toString();
@@ -719,6 +724,7 @@ export class Record extends DataPoint {
         } else {
             this.dirty = false;
             this._changes = markRaw({});
+            this._userChanges = markRaw(new Set());
             this._textValues = markRaw({ ...this._initialTextValues });
         }
         this.data = { ...this._values, ...this._changes };
@@ -1381,12 +1387,16 @@ export class Record extends DataPoint {
             }
         }
         this._changes = markRaw({});
+        this._userChanges = markRaw(new Set());
         this.data = { ...this._values };
         this.dirty = false;
     }
 
     _offlineSave() {
         this._offlineChanges = markRaw({ ...(this._offlineChanges || {}), ...this._changes });
+        this._offlineUserChanges = markRaw(
+            new Set([...(this._offlineUserChanges || []), ...this._userChanges])
+        );
         const offlineChanges = this._getChanges(this._offlineChanges);
         delete offlineChanges.id; // id never changes, and should not be written
         this._offlinePendingOnchanges = markRaw(
@@ -1403,9 +1413,11 @@ export class Record extends DataPoint {
                 specification: {}, //Here for the kwargs we don't need the specification or the next_id
                 onchange_fields: [...this._offlinePendingOnchanges],
                 onchange_spec: this._offlinePendingOnchanges.size
-                    ? getOfflineOnchangeSpec(this.activeFields, this.fields, this.evalContext)
+                    ? getFieldsSpec(this.activeFields, this.fields, this.evalContext, {
+                          withInvisible: true,
+                      })
                     : {},
-                changed_fields: Object.keys(this._offlineChanges),
+                changed_fields: [...this._offlineUserChanges],
             },
             {
                 id: this._offlineId,
@@ -1531,7 +1543,7 @@ export class Record extends DataPoint {
         try {
             const values = await this._getOnchangeValues(pick(this._changes, ...fieldNames));
             if (values) {
-                this._applyChanges({}, omit(values, ...Object.keys(this._changes)));
+                this._applyChanges({}, omit(values, ...this._userChanges));
                 await this._onUpdate({});
                 await this.model.hooks.onRecordChanged(this, this._getChanges());
             }

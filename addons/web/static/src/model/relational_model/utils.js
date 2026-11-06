@@ -934,38 +934,3 @@ export function getOfflineDisplayName(record) {
         _t("Record")
     );
 }
-
-/**
- * Specification of the fields that the server can write after an onchange, for
- * `web_save_offline`: no readonly field, unless it has `force_save`, and no
- * sub-specification for the many2one, so that their values are written as is.
- */
-export function getOfflineOnchangeSpec(activeFields, fields, evalContext) {
-    const spec = {};
-    for (const [fieldName, activeField] of Object.entries(activeFields)) {
-        const field = fields[fieldName];
-        if (field.relatedPropertyField) {
-            continue;
-        }
-        if (!activeField.forceSave) {
-            let readonly = field.readonly;
-            try {
-                readonly ||= evaluateExpr(activeField.readonly, evalContext);
-            } catch {
-                // the expression depends on fields that are not in the evaluation context
-            }
-            if (readonly) {
-                continue;
-            }
-        }
-        spec[fieldName] = {};
-        if (activeField.related && ["one2many", "many2many"].includes(field.type)) {
-            spec[fieldName].fields = getOfflineOnchangeSpec(
-                activeField.related.activeFields,
-                activeField.related.fields,
-                {}
-            );
-        }
-    }
-    return spec;
-}
