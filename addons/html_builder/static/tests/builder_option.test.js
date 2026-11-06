@@ -427,7 +427,7 @@ test("Options can be disabled with a reason", async () => {
     }
     await setupHTMLBuilder(`<div class="test-options-target target1">Homepage</div>`);
     await contains(":iframe .target1").click();
-    expect(".o_hb_option_disabled").toHaveText(/^Not available/);
+    expect(".o_hb_option_disabled").toHaveAttribute("title", "Not available");
     expect("[inert] [data-class-action='disabled']").toHaveCount(1);
     expect("[inert] [data-class-action='enabled']").toHaveCount(0);
 });
