@@ -73,7 +73,7 @@ class SaleOrder(models.Model):
         for order in confirmed_so:
             if order.id not in loyalty_history_data_per_order:
                 continue
-            coupons = order.coupon_point_ids.coupon_id
+            coupons = order.sudo().coupon_point_ids.coupon_id
             coupon_point_name = (len(coupons) == 1 and coupons.point_name) or _("Points")
             order.loyalty_data = {
                 "point_name": coupon_point_name,
@@ -82,13 +82,35 @@ class SaleOrder(models.Model):
             }
 
     def _compute_gift_card_count(self):
+<<<<<<< 2a7996893b16b73e3ee2de0c0d228da23d0dee6b
         gift_card_data = dict(
             self.env["loyalty.card"]._read_group(
                 domain=[("order_id", "in", self.ids), ("program_type", "=", "gift_card")],
                 groupby=["order_id"],
                 aggregates=["__count"],
+||||||| 83debb50df6deb12d1eb5935842739447aa23323
+        gift_card_data = dict(
+            self.env['loyalty.card']._read_group(
+                domain=[
+                    ('order_id', 'in', self.ids),
+                    ('program_type', '=', 'gift_card'),
+                ],
+                groupby=['order_id'],
+                aggregates=['__count'],
+=======
+        gift_card_data = {}
+        if self.env['loyalty.card'].has_access('read'):
+            gift_card_data = dict(
+                self.env['loyalty.card']._read_group(
+                    domain=[
+                        ('order_id', 'in', self.ids),
+                        ('program_type', '=', 'gift_card'),
+                    ],
+                    groupby=['order_id'],
+                    aggregates=['__count'],
+                )
+>>>>>>> 53657c1e015748fcec9999264ea74cfca2ae3b4d
             )
-        )
         for order in self:
             order.gift_card_count = gift_card_data.get(order, 0)
 
