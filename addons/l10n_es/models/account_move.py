@@ -49,7 +49,7 @@ class AccountMove(models.Model):
                 move.l10n_es_invoice_type_available = ','.join(INVOICE_TYPES_BY_USE['sale'])
             elif move.move_type == 'in_invoice':
                 move.l10n_es_invoice_type_available = ','.join(INVOICE_TYPES_BY_USE['purchase'])
-            elif move.move_type in ('out_refund', 'in_refund'):
+            elif move.is_refund():
                 move.l10n_es_invoice_type_available = ','.join(INVOICE_TYPES_BY_USE['credit_note'])
             else:
                 move.l10n_es_invoice_type_available = ''
@@ -111,7 +111,7 @@ class AccountMove(models.Model):
                         move.l10n_es_invoice_type = 'F6'
                     elif move._l10n_es_is_dua():
                         move.l10n_es_invoice_type = 'F5'
-            elif move.move_type in ('out_refund', 'in_refund'):
+            elif move.is_refund():
                 if explicit_simplified:
                     move.l10n_es_invoice_type = 'R5'
                 elif explicit_regular and move.l10n_es_invoice_type in (False, 'R5'):
