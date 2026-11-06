@@ -199,6 +199,16 @@ class HrVersion(models.Model):
         'The wage must be a positive value.',
     )
 
+    _check_children_number_positive = models.Constraint(
+        'CHECK(children >= 0)',
+        'The number of Dependent Children must be non negative.',
+    )
+
+    _check_distance_home_work_positive = models.Constraint(
+        'CHECK(distance_home_work >= 0)',
+        'The distance between Home and Work must be non negative.',
+    )
+
     @api.depends('employee_id.company_id')
     def _compute_company_id(self):
         for version in self:
