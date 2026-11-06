@@ -335,5 +335,5 @@ class TestMrpMulticompany(common.TransactionCase):
 
         self.assertFalse(bom_overview["lines"]["availability_delay"])
         self.assertFalse(bom_report["docs"][0]["availability_delay"])
-        self.assertEqual("unavailable", bom_overview["lines"]["availability_state"])
-        self.assertEqual("unavailable", bom_report["docs"][0]["availability_state"])
+        self.assertEqual("estimated", bom_overview["lines"]["availability_state"])
+        self.assertEqual("estimated", bom_report["docs"][0]["availability_state"])
