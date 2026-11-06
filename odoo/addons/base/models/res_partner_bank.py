@@ -3,6 +3,7 @@ import re
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import clean_context
+from odoo.tools.bank_account_number import format_account_number
 
 
 def sanitize_account_number(account_number):
@@ -27,12 +28,14 @@ class ResPartnerBank(models.Model):
         help="Bank account type: Normal, IBAN, CLABE, or other from localization. Inferred from the bank account number.",
         compute='_compute_account_type',
     )
-    account_number = fields.Char('Account Number', required=True, search='_search_account_number')
-    sanitized_account_number = fields.Char(
-        string="Sanitized Account Number",
-        compute='_compute_sanitized_account_number',
-        readonly=True, store=True,
+    account_number = fields.Char(
+        string="Account Number",
+        compute='_compute_account_number',
+        inverse='_inverse_account_number',
+        required=True,
+        search='_search_sanitized_account_number'
     )
+    sanitized_account_number = fields.Char(string='Sanitized Account Number', search='_search_sanitized_account_number', readonly=True)
     holder_name = fields.Char(
         string="Holder Name",
         help="Account holder name in case it is different than the name of the partner.",
@@ -114,6 +117,26 @@ class ResPartnerBank(models.Model):
         self.ensure_one()
         return self.clearing_label_id.country_code == country_code and self.clearing_number
 
+    def _inverse_account_number(self):
+        for account in self.with_context(skip_account_number_sanitization=True):
+            account.sanitized_account_number = sanitize_account_number(account.account_number)
+
+    @api.depends('sanitized_account_number')
+    def _compute_account_number(self):
+        for account in self:
+            account.account_number = format_account_number(self.env, account.sanitized_account_number)
+
+    @api.onchange('account_number')
+    def _onchange_account_number(self):
+        self.account_number = format_account_number(self.env, self.account_number)
+
+    def _search_sanitized_account_number(self, operator, value):
+        if operator in ('in', 'not in'):
+            value = [sanitize_account_number(i) for i in value]
+        else:
+            value = sanitize_account_number(value)
+        return [('sanitized_account_number', operator, value)]
+
     @api.depends('country_id')
     def _compute_clearing_label_id(self):
         country_to_clearing_label = dict(self.env['clearing.label']._read_group(
@@ -133,11 +156,6 @@ class ResPartnerBank(models.Model):
         for account in self:
             account.show_clearing_number = account.country_id not in excluded_countries
 
-    @api.depends('account_number')
-    def _compute_sanitized_account_number(self):
-        for account in self:
-            account.sanitized_account_number = sanitize_account_number(account.account_number)
-
     @api.depends('partner_id.country_id', 'company_id.country_id')
     def _compute_country_id(self):
         for account in self:
@@ -146,13 +164,6 @@ class ResPartnerBank(models.Model):
 
     def open_linked_partner_id(self):
         return self.partner_id._get_records_action()
-
-    def _search_account_number(self, operator, value):
-        if operator in ('in', 'not in'):
-            value = [sanitize_account_number(i) for i in value]
-        else:
-            value = sanitize_account_number(value)
-        return [('sanitized_account_number', operator, value)]
 
     @api.model
     def retrieve_account_type(self, account_number):
@@ -182,10 +193,8 @@ class ResPartnerBank(models.Model):
             account.color = 10 if account.allow_out_payment else 1
 
     def _sanitize_vals(self, vals):
-        if 'sanitized_account_number' in vals:  # do not allow to write on sanitized directly
-            vals['account_number'] = vals.pop('sanitized_account_number')
-        if 'account_number' in vals:
-            vals['sanitized_account_number'] = sanitize_account_number(vals['account_number'])
+        if vals.get('account_number') and not self.env.context.get('skip_account_number_sanitization'):
+            vals['account_number'] = sanitize_account_number(vals['account_number'])
         if vals.get('bank_bic'):
             vals['bank_bic'] = vals['bank_bic'].upper()
 
