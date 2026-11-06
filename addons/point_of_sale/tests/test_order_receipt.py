@@ -54,6 +54,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         self.example_partner = self.env['res.partner'].create({
             'name': 'Example Partner',
             'street': '123 Example St',
+            'street2': 'Apt 4B',
             'city': 'Example City',
             'zip': '12345',
             'country_id': self.env.ref('base.us').id,
@@ -560,7 +561,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
         self.assertEqual(customer, {
             'email': self.example_partner.email,
             'phone': order.mobile,
-            'address': '123 Example St, Example City 12345, United States',
+            'address': '123 Example St, Apt 4B, Example City 12345, United States',
         })
 
     def test_change_receipt_no_customer_info_without_preset(self):
@@ -667,3 +668,22 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
 
         lines = {line['id']: line for line in refund._order_receipt_generate_line_data()}
         self.assertEqual(lines[refund_parent_line.id]['price_subtotal_incl'], refund._order_receipt_format_currency(10.0))
+
+    def test_receipt_partner_address_with_preset(self):
+        preset = self.env['pos.preset'].create({
+            'name': 'Delivery',
+            'identification': 'address',
+        })
+        order, _ = self.create_backend_pos_order({
+            'pos_config': self.main_pos_config,
+            'order_data': {
+                'partner_id': self.example_partner.id,
+                'preset_id': preset.id,
+            },
+            'line_data': [
+                {'product_id': self.example_simple_product.product_variant_id.id, 'qty': 1},
+            ],
+        })
+        receipt_html = order.order_receipt_generate_html()
+        self.assertIn('123 Example St', receipt_html)
+        self.assertIn('Apt 4B', receipt_html)
