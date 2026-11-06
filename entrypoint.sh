@@ -4,6 +4,11 @@ set -e
 # Render provides the port in the $PORT environment variable (defaults to 8069 if unset)
 HTTP_PORT="${PORT:-8069}"
 
+# Detect application root directory (works in Docker /app or Render Native /opt/render/project/src)
+APP_DIR="${APP_DIR:-$(pwd)}"
+DATA_DIR="${APP_DIR}/data"
+mkdir -p "${DATA_DIR}"
+
 # If DATABASE_URL is provided (e.g., from Render PostgreSQL), parse components
 if [ -n "$DATABASE_URL" ]; then
     # postgresql://user:password@host:port/dbname
@@ -34,8 +39,8 @@ ARGS=(
     "--http-interface=0.0.0.0"
     "--http-port=${HTTP_PORT}"
     "--proxy-mode"
-    "--addons-path=/app/addons,/app/odoo/addons,/app/custom"
-    "--data-dir=/app/data"
+    "--addons-path=${APP_DIR}/addons,${APP_DIR}/odoo/addons,${APP_DIR}/custom"
+    "--data-dir=${DATA_DIR}"
 )
 
 # Append database configurations if provided
@@ -49,8 +54,9 @@ ARGS=(
 
 echo "=========================================================="
 echo " Starting Odoo 19 on port: ${HTTP_PORT}"
-echo " Addons path: /app/addons,/app/odoo/addons,/app/custom"
+echo " Addons path: ${APP_DIR}/addons,${APP_DIR}/odoo/addons,${APP_DIR}/custom"
 echo " Proxy Mode: Enabled"
+echo " Data dir: ${DATA_DIR}"
 echo "=========================================================="
 
-exec python3 odoo-bin "${ARGS[@]}" "$@"
+exec python3 "${APP_DIR}/odoo-bin" "${ARGS[@]}" "$@"
