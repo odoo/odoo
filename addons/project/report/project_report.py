@@ -51,6 +51,7 @@ class ReportProjectTaskUser(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
+    stage_name = fields.Char(related='stage_id.name')
     task_id = fields.Many2one('project.task', string='Task', readonly=True)
     tag_ids = fields.Many2many('project.tags', relation='project_tags_project_task_rel',
         column1='project_task_id', column2='project_tags_id',
@@ -88,6 +89,7 @@ class ReportProjectTaskUser(models.Model):
                 t.partner_id,
                 t.parent_id,
                 t.stage_id,
+                s.name as stage_name,
                 t.state,
                 t.milestone_id,
                 CASE WHEN t.state IN ('1_done', '1_canceled') THEN True ELSE False END AS is_closed,
@@ -120,7 +122,7 @@ class ReportProjectTaskUser(models.Model):
                 t.company_id,
                 t.partner_id,
                 t.parent_id,
-                t.stage_id,
+                s.name,
                 t.state,
                 t.rating_last_value,
                 t.working_days_close,
@@ -145,6 +147,7 @@ class ReportProjectTaskUser(models.Model):
                           AND pm.deadline <= CAST(now() AS DATE)
                     LEFT JOIN task_dependencies_rel td ON td.depends_on_id = t.id
                     LEFT JOIN project_project p ON p.id = t.project_id
+                    LEFT JOIN project_task_type s ON s.id = t.stage_id
         """, RATING_LIMIT_MIN)
 
     def _where(self):
