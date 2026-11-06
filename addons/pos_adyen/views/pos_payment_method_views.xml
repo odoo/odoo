@@ -9,11 +9,18 @@
                 <notebook invisible="payment_provider != 'adyen'">
                     <page name="settings" string="Adyen">
                         <group>
-                            <field name="adyen_api_key" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'" password="True"/>
-                            <field name="adyen_terminal_identifier" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
-                            <field name="adyen_merchant_account" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
-                            <field name="adyen_event_url" invisible="payment_provider != 'adyen'" widget="CopyClipboardChar"/>
-                            <field name="adyen_test_mode" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
+                            <group>
+                                <field name="adyen_api_key" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'" password="True"/>
+                                <field name="adyen_terminal_identifier" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
+                                <field name="adyen_merchant_account" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
+                                <field name="adyen_event_url" invisible="payment_provider != 'adyen'" widget="CopyClipboardChar"/>
+                                <field name="adyen_test_mode" invisible="payment_provider != 'adyen'" required="payment_provider == 'adyen'"/>
+                            </group>
+                            <group>
+                                <div class="d-flex justify-content-end" colspan="2">
+                                    <button name="action_adyen_test_display" type="object" string="Test" class="btn-primary text-nowrap" groups="point_of_sale.group_pos_manager"/>
+                                </div>
+                            </group>
                         </group>
                     </page>
                 </notebook>
