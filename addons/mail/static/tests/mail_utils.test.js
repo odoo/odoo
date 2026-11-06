@@ -242,6 +242,18 @@ test("isSequential doesn't execute intermediate call.", async () => {
     expect.verifySteps(["1", "5"]);
 });
 
+test("useSequential aborts the signal of the ongoing call once a newer call is made", async () => {
+    const sequential = useSequential();
+    const signals = [];
+    const call = () =>
+        sequential(async (signal) => {
+            signals.push(signal);
+            await new Promise((r) => setTimeout(r, 1));
+        });
+    await Promise.all([call(), call()]);
+    expect(signals.map((signal) => signal.aborted)).toEqual([true, false]);
+});
+
 function inlineHtml(content) {
     return getInnerHtml(inlineElement(createElementFromContent(content)));
 }
