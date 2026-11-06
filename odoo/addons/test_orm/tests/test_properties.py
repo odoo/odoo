@@ -1695,7 +1695,7 @@ class PropertiesCase(TestPropertiesMixin):
         action.update_path = 'attributes.discussion_color_code'
         action.value = 'green'
         self.assertEqual(email['attributes']['discussion_color_code'], 'red')
-        action.with_context(active_id=email.id).run()
+        action.with_context(active_model='test_orm.emailmessage', active_id=email.id).run()
         self.assertEqual(email['attributes']['discussion_color_code'], 'green')
 
     def test_getitem_property(self):
