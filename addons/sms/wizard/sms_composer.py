@@ -85,7 +85,7 @@ class SmsComposer(models.TransientModel):
     numbers = fields.Char('Recipients (Numbers)')
     sanitized_numbers = fields.Char('Sanitized Number', compute='_compute_sanitized_numbers', compute_sudo=False)
     # content
-    template_id = fields.Many2one('sms.template', string='Use Template', domain="[('model', '=', res_model)]")
+    template_id = fields.Many2one('sms.template', string='Use Template', ui_domain="[('model', '=', res_model)]")
     body = fields.Text(
         'Message', compute='_compute_body',
         precompute=True, readonly=False, store=True, required=True)

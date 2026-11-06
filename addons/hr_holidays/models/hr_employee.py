@@ -22,7 +22,7 @@ class HrEmployee(models.Model):
     leave_manager_id = fields.Many2one(
         'res.users', string='Time Off Approver',
         compute='_compute_leave_manager', store=True, readonly=False,
-        domain=_get_leave_manager_domain,
+        ui_domain=_get_leave_manager_domain,
         help='Select the user responsible for approving "Time Off" of this employee.\n'
              'If empty, the approval is done by an Administrator or Approver (determined in settings/users).')
     current_work_entry_type_id = fields.Many2one('hr.work.entry.type', compute='_compute_current_work_entry_type_id', string="Current Time Type",
@@ -49,7 +49,7 @@ class HrEmployee(models.Model):
         ('presence_holiday_absent', 'On leave'),
         ('presence_holiday_present', 'Present but on leave')])
     member_of_department = fields.Boolean('Member of Department', compute='_compute_member_of_department', search='_search_part_of_department')
-    hr_responsible_id = fields.Many2one(domain=lambda self: self.env['hr.version']._get_hr_responsible_domain())
+    hr_responsible_id = fields.Many2one(ui_domain=lambda self: self.env['hr.version']._get_hr_responsible_domain())
     leave_ids = fields.One2many('hr.leave', 'employee_id', groups="hr.group_hr_user")
 
     def _compute_current_work_entry_type_id(self):

@@ -12,7 +12,7 @@ class PosConfig(models.Model):
         string='POS Symbol',
         groups='base.group_system,point_of_sale.group_pos_manager',
         help='This is the symbol that will be used on invoices issued from this POS.',
-        domain="[('company_id', '=', company_id), ('usage', '=', 'invoice')]",
+        ui_domain="[('company_id', '=', company_id), ('usage', '=', 'invoice')]",
         compute="_compute_l10n_vn_pos_symbol",
         store=True,
         readonly=False

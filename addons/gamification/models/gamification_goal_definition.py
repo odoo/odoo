@@ -37,11 +37,11 @@ class GamificationGoalDefinition(models.Model):
     model_inherited_ids = fields.Many2many('ir.model', related='model_id.inherited_model_ids')
     field_id = fields.Many2one(
         'ir.model.fields', string='Field to Sum',
-        domain=DOMAIN_TEMPLATE % ", ('ttype', 'in', ('integer', 'float', 'monetary'))"
+        ui_domain=DOMAIN_TEMPLATE % ", ('ttype', 'in', ('integer', 'float', 'monetary'))"
     )
     field_date_id = fields.Many2one(
         'ir.model.fields', string='Date Field', help='The date to use for the time period evaluated',
-        domain=DOMAIN_TEMPLATE % ", ('ttype', 'in', ('date', 'datetime'))"
+        ui_domain=DOMAIN_TEMPLATE % ", ('ttype', 'in', ('date', 'datetime'))"
     )
     domain = fields.Char(
         "Filter Domain", required=True, default="[]",

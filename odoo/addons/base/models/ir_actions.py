@@ -467,7 +467,7 @@ class ServerActionHistoryWizard(models.TransientModel):
     code_diff = fields.Html(compute='_compute_code_diff', sanitize_tags=False)
     current_code = fields.Text(related='action_id.code', readonly=True)
     revision = fields.Many2one("ir.actions.server.history",
-        domain="[('action_id', '=', action_id), ('code', '!=', current_code)]",
+        ui_domain="[('action_id', '=', action_id), ('code', '!=', current_code)]",
         default=_default_revision,
         required=True,
     )
@@ -635,7 +635,7 @@ class IrActionsServer(models.Model):
     show_code_history = fields.Boolean(compute='_compute_show_code_history')
     # Multi
     parent_id = fields.Many2one('ir.actions.server', string='Parent Action', index=True, ondelete='cascade')
-    child_ids = fields.One2many('ir.actions.server', 'parent_id', copy=True, domain=lambda self: str(self._get_children_domain()),
+    child_ids = fields.One2many('ir.actions.server', 'parent_id', copy=True, ui_domain=lambda self: str(self._get_children_domain()),
                                  string='Child Actions', help='Child server actions that will be executed. Note that the last return returned action value will be used as global return value.')
     # Create
     crud_model_id = fields.Many2one(
@@ -680,7 +680,7 @@ class IrActionsServer(models.Model):
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
     selection_value = fields.Many2one('ir.model.fields.selection', string="Custom Value", ondelete='cascade',
-                                      domain='[("field_id", "=", update_field_id)]', inverse='_set_selection_value')
+                                      ui_domain='[("field_id", "=", update_field_id)]', inverse='_set_selection_value')
     property_selection = fields.Char()
 
     value_field_to_show = fields.Selection([

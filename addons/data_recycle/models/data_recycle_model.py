@@ -43,7 +43,7 @@ class Data_RecycleModel(models.Model):
     domain = fields.Char(string="Filter", compute='_compute_domain', readonly=False, store=True)
     time_field_id = fields.Many2one(
         'ir.model.fields', string='Time Field',
-        domain="[('model_id', '=', res_model_id), ('ttype', 'in', ('date', 'datetime')), ('store', '=', True)]",
+        ui_domain="[('model_id', '=', res_model_id), ('ttype', 'in', ('date', 'datetime')), ('store', '=', True)]",
         ondelete='cascade')
     time_field_delta = fields.Integer(string='Delta', default=1)
     time_field_delta_unit = fields.Selection([
@@ -59,7 +59,7 @@ class Data_RecycleModel(models.Model):
     # User Notifications for Manual clean
     notify_user_ids = fields.Many2many(
         'res.users', string='Notify Users',
-        domain=lambda self: [('all_group_ids', 'in', self.env.ref('base.group_system').id)],
+        ui_domain=lambda self: [('all_group_ids', 'in', self.env.ref('base.group_system').id)],
         default=lambda self: self.env.user,
         help='List of users to notify when there are new records to recycle')
     notify_frequency = fields.Integer(string='Notify', default=1)

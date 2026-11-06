@@ -19,7 +19,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
     send_mail = fields.Boolean("Send Email", compute='_compute_send_mail', precompute=True, store=True, readonly=False)
     template_id = fields.Many2one('mail.template', string='Email Template',
         compute='_compute_template_id', precompute=True, store=True, readonly=False,
-        domain="[('model', '=', 'hr.applicant')]")
+        ui_domain="[('model', '=', 'hr.applicant')]")
     applicant_without_email = fields.Text(compute='_compute_applicant_without_email',
         string='Applicant(s) not having email')
     duplicates = fields.Boolean(string='Refuse Duplicate Applications')

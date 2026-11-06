@@ -20,7 +20,7 @@ class EfakturDocument(models.Model):
     invoice_ids = fields.One2many(
         comodel_name="account.move",
         inverse_name="l10n_id_coretax_document",
-        domain="[('move_type', 'in', ['out_invoice', 'out_refund']), ('company_id', '=', company_id), ('l10n_id_coretax_document', '=', False), ('state', '=', 'posted')]",
+        ui_domain="[('move_type', 'in', ['out_invoice', 'out_refund']), ('company_id', '=', company_id), ('l10n_id_coretax_document', '=', False), ('state', '=', 'posted')]",
     )
     attachment_id = fields.Many2one(comodel_name="ir.attachment", readonly=True)
 

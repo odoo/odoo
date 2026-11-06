@@ -35,7 +35,7 @@ class AccountPaymentRegister(models.TransientModel):
         comodel_name='account.journal',
         compute='_compute_journal_id', store=True, readonly=False, precompute=True,
         check_company=True,
-        domain="[('id', 'in', available_journal_ids)]")
+        ui_domain="[('id', 'in', available_journal_ids)]")
     available_journal_ids = fields.Many2many(
         comodel_name='account.journal',
         compute='_compute_available_journal_ids'
@@ -50,7 +50,7 @@ class AccountPaymentRegister(models.TransientModel):
         readonly=False,
         store=True,
         compute='_compute_partner_bank_id',
-        domain="[('id', 'in', available_partner_bank_ids)]",
+        ui_domain="[('id', 'in', available_partner_bank_ids)]",
     )
     allow_out_payment = fields.Boolean(related='partner_bank_id.allow_out_payment')
     company_currency_id = fields.Many2one('res.currency', string="Company Currency",
@@ -128,7 +128,7 @@ class AccountPaymentRegister(models.TransientModel):
     payment_method_line_id = fields.Many2one('account.payment.method.line', string='Payment Method',
         readonly=False, store=True,
         compute='_compute_payment_method_line_id',
-        domain="[('id', 'in', available_payment_method_line_ids)]",
+        ui_domain="[('id', 'in', available_payment_method_line_ids)]",
         help="Manual: Pay or Get paid by any method outside of Odoo.\n"
         "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Check: Pay bills by check and print it from Odoo.\n"
