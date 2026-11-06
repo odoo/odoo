@@ -177,12 +177,13 @@ class TestSelfOrderSiblingPtav(SelfOrderCommonTest):
 
         extra_ptav.ptav_active = False
 
-        self._post_commands_json(order_uuid, [[1, line.id, {
+        response = self._post_commands_json(order_uuid, [[1, line.id, {
             "product_id": self.premium_variant.id,
             "qty": 2,
             "attribute_value_ids": ptav_ids,
             "uuid": line.uuid,
-        }]], {"id": order.id})
+        }]], {"id": order.id, "access_token": order.access_token})
+        self.assertNotIn("error", response, response.get("error"))
         self.assertEqual(line.attribute_value_ids, self.premium_ptav | extra_ptav,
                          "the archived value stays on the line it was ordered with")
         self.assertEqual(order.amount_total, 2100.0)
