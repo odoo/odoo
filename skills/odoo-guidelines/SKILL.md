@@ -49,6 +49,7 @@ touching instead of loading whole files.
 | [Clear the cache before acting as a restricted user](guidelines/tests.md#clear-the-cache-before-acting-as-a-restricted-user) | a test that calls code with `with_user`, `with_company` or `@users` |
 | [Plain ASCII punctuation in comments and messages](guidelines/comments.md#plain-ascii-punctuation-in-comments-and-messages) | writing a comment, a docstring, a user-facing string, or a commit message |
 | [Comment a deviation the requirements force](guidelines/comments.md#comment-a-deviation-the-requirements-force) | a requirement (spec, ticket, caller) makes the code break one of these guidelines |
+| [No comment unless the code cannot show why](guidelines/comments.md#no-comment-unless-the-code-cannot-show-why) | adding or editing a comment in code |
 
 A change to a released version (17.0, saas-19.4, ...) also follows the
 `odoo-stable-policy` skill, which says how to tell a released version from
