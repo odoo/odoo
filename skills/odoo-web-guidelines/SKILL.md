@@ -29,6 +29,7 @@ touching instead of loading whole files.
 | [Avoid patching JavaScript code](guidelines/javascript.md#avoid-patching-javascript-code) | extending or overriding behaviour that already exists |
 | [Use `window` members directly](guidelines/javascript.md#use-window-members-directly-not-the-browser-object) | writing `browser.`, or importing from `@web/core/browser/browser` |
 | [Pair every absence check with a positive one](guidelines/tests.md#pair-every-absence-check-with-a-positive-one) | asserting in a Hoot test or a tour that an element is absent |
+| [Use the Owl 3 hooks](guidelines/javascript.md#use-the-owl-3-hooks-not-the-owl-2-compatibility-ones) | adding or converting an Owl hook: an effect, a sub-env, a forced render |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
 | [Assets](guidelines/assets.md#assets) | adding an image, font, or library |
 
