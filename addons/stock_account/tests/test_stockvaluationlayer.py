@@ -785,7 +785,8 @@ class TestStockValuationFIFO(TestStockValuationCommon):
         self.assertEqual(returned.value, 0)
 
     def test_return_delivery_3(self):
-        self.product.standard_price = 1
+        with freeze_time(fields.Datetime.now() - timedelta(seconds=1)):
+            self.product.standard_price = 1
         move1 = self._make_out_move(self.product, 10, create_picking=True, force_assign=True)
         self._make_in_move(self.product, 10, unit_cost=2)
         self._make_return(move1, 10)
