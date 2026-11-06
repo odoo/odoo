@@ -5,28 +5,32 @@ import json
 import logging
 import os
 import re
-import requests
 import subprocess
 import tempfile
 import typing
 import unittest
 from ast import literal_eval
 from collections import OrderedDict
-from contextlib import closing, ExitStack
+from contextlib import ExitStack, closing
 from itertools import islice
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
 
 import lxml.html
-from PIL import Image, ImageFile
+import requests
 from lxml import etree
 from markupsafe import Markup
+from PIL import Image, ImageFile
 
-from odoo import api, fields, models, modules, tools, _
-from odoo.exceptions import UserError, AccessError, RedirectWarning, ValidationError
+from odoo import _, api, fields, models, modules, tools
+from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.http import request, root
+from odoo.http import root
 from odoo.tools import config, is_html_empty, parse_version, split_every
-from odoo.tools.barcode import check_barcode_encoding, createBarcodeDrawing, get_barcode_font
+from odoo.tools.barcode import (
+    check_barcode_encoding,
+    createBarcodeDrawing,
+    get_barcode_font,
+)
 from odoo.tools.lru import LRU
 from odoo.tools.misc import find_in_path, frozendict
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
@@ -547,26 +551,25 @@ class IrActionsReport(models.Model):
         with ExitStack() as stack:
 
             # Passing the cookie to wkhtmltopdf in order to resolve internal links.
-            if request and request.db:
-                # Create a temporary session which will not create device logs
-                temp_session = root.session_store.new()
-                temp_session.update({
-                    **request.session,
-                    'debug': '',
-                    '_trace_disable': True,
-                })
-                if temp_session.uid:
-                    temp_session._update_session_token(self.env)
-                root.session_store.save(temp_session)
-                stack.callback(root.session_store.delete, temp_session)
+            temp_session = root.session_store.new()
+            temp_session.update({
+                'db': self.env.registry.db_name,
+                'debug': '',
+                '_trace_disable': True,
+            })
+            if not self.env.user._is_public():
+                temp_session.uid = self.env.uid
+                temp_session._update_session_token(self.env)
+            root.session_store.save(temp_session)
+            stack.callback(root.session_store.delete, temp_session)
 
-                base_url = self._get_report_url()
-                domain = urlparse(base_url).hostname
-                cookie = f'session_id={temp_session.sid}; HttpOnly; domain={domain}; path=/;'
-                cookie_jar_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.txt', prefix='report.cookie_jar.tmp.', delete_on_close=False))
-                with closing(cookie_jar_file):
-                    cookie_jar_file.write(cookie.encode())
-                command_args.extend(['--cookie-jar', cookie_jar_file.name])
+            base_url = self._get_report_url()
+            domain = urlsplit(base_url).hostname
+            cookie = f'session_id={temp_session.sid}; HttpOnly; domain={domain}; path=/;'
+            cookie_jar_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.txt', prefix='report.cookie_jar.tmp.', delete_on_close=False))
+            with closing(cookie_jar_file):
+                cookie_jar_file.write(cookie.encode())
+            command_args.extend(['--cookie-jar', cookie_jar_file.name])
 
             if header:
                 head_file = stack.enter_context(tempfile.NamedTemporaryFile(suffix='.html', prefix='report.header.tmp.', delete_on_close=False))
