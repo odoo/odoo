@@ -37,10 +37,10 @@ class UniversityCoursesController(http.Controller):
         if not program.exists():
             return request.not_found()
 
-        # Find curriculum / subjects for this program if available
-        curricula = request.env['university.curriculum'].sudo().search([
+        # Find curriculum lines for this program
+        curricula = request.env['university.curriculum.line'].sudo().search([
             ('program_id', '=', program.id),
-        ], order='semester_id')
+        ], order='year_level, semester_number, sequence, id')
 
         values = {
             'program': program,
