@@ -764,9 +764,15 @@ class SaleOrder(models.Model):
         # existing invoices. This is necessary since such a refund is not
         # directly linked to the SO.
         for order in self:
+<<<<<<< 2a7996893b16b73e3ee2de0c0d228da23d0dee6b
             invoices = order.order_line.invoice_lines.move_id.filtered(
                 lambda r: r.move_type in ("out_invoice", "out_refund")
             )
+||||||| b865fb3e4fce8f0432e3a8fee8e6b812c1f68940
+            invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund'))
+=======
+            invoices = order.order_line.invoice_lines.move_id.filtered(lambda r: r.move_type in ('out_invoice', 'out_refund', 'out_receipt'))
+>>>>>>> 6e649eadb09deb281e5a121a82ae846cacb60f70
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
 
@@ -785,6 +791,7 @@ class SaleOrder(models.Model):
                 #
                 # A solution is using the 'not any' operators with inverted search first
                 # ("orders with invoiced lines").
+<<<<<<< 2a7996893b16b73e3ee2de0c0d228da23d0dee6b
                 falsy_domain = [
                     (
                         "order_line",
@@ -792,6 +799,15 @@ class SaleOrder(models.Model):
                         [("invoice_lines.move_id.move_type", "in", ("out_invoice", "out_refund"))],
                     )
                 ]
+||||||| b865fb3e4fce8f0432e3a8fee8e6b812c1f68940
+                falsy_domain = [('order_line', 'not any', [
+                    ('invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund'))
+                ])]
+=======
+                falsy_domain = [('order_line', 'not any', [
+                    ('invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))
+                ])]
+>>>>>>> 6e649eadb09deb281e5a121a82ae846cacb60f70
                 if len(value) == 1:
                     return falsy_domain
             self.env.cr.execute(
@@ -803,12 +819,13 @@ class SaleOrder(models.Model):
                     JOIN account_move_line aml ON aml.id = soli_rel.invoice_line_id
                     JOIN account_move am ON am.id = aml.move_id
                 WHERE
-                    am.move_type in ('out_invoice', 'out_refund') AND
+                    am.move_type in ('out_invoice', 'out_refund', 'out_receipt') AND
                     am.id = ANY(%s)
             """,
                 (list(value),),
             )
             so_ids = self.env.cr.fetchone()[0] or []
+<<<<<<< 2a7996893b16b73e3ee2de0c0d228da23d0dee6b
             return [("id", "in", so_ids)] + falsy_domain
         return [
             (
@@ -820,6 +837,19 @@ class SaleOrder(models.Model):
                 ],
             )
         ]
+||||||| b865fb3e4fce8f0432e3a8fee8e6b812c1f68940
+            return [('id', 'in', so_ids)] + falsy_domain
+        return [('order_line.invoice_lines', 'any', [
+            ('move_id.move_type', 'in', ('out_invoice', 'out_refund')),
+            ('move_id', operator, value),
+        ])]
+=======
+            return [('id', 'in', so_ids)] + falsy_domain
+        return [('order_line.invoice_lines', 'any', [
+            ('move_id.move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt')),
+            ('move_id', operator, value),
+        ])]
+>>>>>>> 6e649eadb09deb281e5a121a82ae846cacb60f70
 
     @api.depends("state", "order_line.invoice_status", "invoicing_closed")
     def _compute_invoice_status(self):
