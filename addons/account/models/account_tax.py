@@ -5264,12 +5264,34 @@ class AccountTax(models.Model):
 
         static_domain = Domain(self._check_company_domain(company))
         for tax_values in tax_values_list:
+<<<<<<< 66af69fda24a7b0dc7b036bf1678b8850862c247
             tax_domain = (
                Domain('amount_type', '=', tax_values['amount_type']) &
                Domain('type_tax_use', '=', tax_values['type_tax_use']) &
                Domain('amount', '=', tax_values['amount']) &
                Domain([*([('country_id', '=', tax_values['invoice_predictive']['invoice'].tax_country_id.id)] if 'invoice_predictive' in tax_values else [])])
             )
+||||||| 75d6abe5979ac9e8d85d097dad0e7b559ef07326
+            tax_domain = [
+               ('amount_type', '=', tax_values['amount_type']),
+               ('type_tax_use', '=', tax_values['type_tax_use']),
+               ('amount', '=', tax_values['amount']),
+               *([('country_id', '=', tax_values['invoice_predictive']['invoice'].tax_country_id.id)] if 'invoice_predictive' in tax_values else []),
+            ]
+=======
+            tax_domain = [
+                  ('amount_type', '=', tax_values['amount_type']),
+                  ('type_tax_use', '=', tax_values['type_tax_use']),
+                  ('amount', '=', tax_values['amount']),
+            ]
+            if invoice_predictive := tax_values.get('invoice_predictive'):
+                fiscal_position = tax_values.get('fiscal_position')
+                if fiscal_position and fiscal_position.foreign_vat:
+                    country = fiscal_position.country_id
+                else:
+                    country = invoice_predictive['invoice'].tax_country_id
+                tax_domain.append(('country_id', '=', country.id))
+>>>>>>> 412a60dc52072734363352b754a22ec07f5325ab
             orders = ['sequence', 'id']
             if name := tax_values.get('name'):
                 tax_domain &= Domain('name', '=', name)
