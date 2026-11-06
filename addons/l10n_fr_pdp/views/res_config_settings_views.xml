@@ -102,15 +102,20 @@
                             <br/>
                             <div id="l10n_fr_pdp_" class="col-12 o_setting_box"
                                  invisible="account_peppol_eas != '0225' or account_peppol_proxy_state not in ('sender', 'receiver')">
-                                <field name="l10n_fr_pdp_send_to_ppf"/>
-                                <span class="text-muted">
-                                    Enable e-reporting &amp; sending of invoices to the PPF
-                                </span>
-                                <br/>
-                                <label string="E-Reporting Periodicity"
-                                        for="l10n_fr_pdp_periodicity"
-                                        class="col-lg-3 o_light_label"/>
-                                <field name="l10n_fr_pdp_periodicity"/>
+                                <div invisible="account_peppol_proxy_state == 'sender'">
+                                    <field name="l10n_fr_pdp_send_to_ppf"/>
+                                    <span class="text-muted">
+                                        Enable e-reporting &amp; sending of invoices to the PPF
+                                    </span>
+                                    <br/>
+                                    <label string="E-Reporting Periodicity"
+                                           for="l10n_fr_pdp_periodicity"
+                                           class="col-lg-3 o_light_label"/>
+                                    <field name="l10n_fr_pdp_periodicity"/>
+                                </div>
+                                <div class="text-muted" invisible="account_peppol_proxy_state != 'sender'">
+                                    To configure e-reporting, first migrate your existing reception platform to Odoo.
+                                </div>
                             </div>
                         </div>
                     </div>
