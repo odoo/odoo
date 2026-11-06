@@ -504,7 +504,7 @@ class SaleOrder(models.Model):
             # we need to recompute the prices to match the new pricelist if it changed
             self._recompute_prices()
 
-            self.env.website.sudo().pricelist_id = self.pricelist_id
+            self.env.website._set_current_pricelist(self.pricelist_id)
 
         if self.carrier_id and "partner_shipping_id" in fnames and self._has_deliverable_products():
             # Update the delivery method on shipping address change.
