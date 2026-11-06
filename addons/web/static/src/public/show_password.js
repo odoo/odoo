@@ -7,6 +7,7 @@ export class ShowPassword extends Interaction {
     dynamicContent = {
         ".o_show_password": {
             "t-on-click": () => (this.showPassword = !this.showPassword),
+            "t-att-aria-pressed": () => (this.showPassword ? "true" : "false"),
         },
         "input[type='text'], input[type='password']": {
             "t-att-type": () => (this.showPassword ? "text" : "password"),
