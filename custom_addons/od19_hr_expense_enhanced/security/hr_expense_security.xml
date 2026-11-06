@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Employee sees and edits only their own vehicles -->
+    <record id="od19_employee_vehicle_rule_own" model="ir.rule">
+        <field name="name">Employee Vehicle: own records only</field>
+        <field name="model_id" ref="model_od19_employee_vehicle"/>
+        <field name="domain_force">[
+            ('employee_id.user_id', '=', user.id)
+        ]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- HR expense managers and accountants see every vehicle book -->
+    <record id="od19_employee_vehicle_rule_manager" model="ir.rule">
+        <field name="name">Employee Vehicle: HR/accounting managers see all</field>
+        <field name="model_id" ref="model_od19_employee_vehicle"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[
+            (4, ref('hr_expense.group_hr_expense_manager')),
+            (4, ref('account.group_account_manager')),
+        ]"/>
+    </record>
+
+</odoo>

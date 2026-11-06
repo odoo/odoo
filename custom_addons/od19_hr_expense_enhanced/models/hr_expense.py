@@ -74,7 +74,14 @@ class HrExpense(models.Model):
                     approver = self._get_department_head_approver(employee_id)
                     if approver:
                         vals['first_approver_id'] = approver.id
-        return super().create(vals_list)
+        expenses = super().create(vals_list)
+        for expense in expenses:
+            if expense.od19_is_mileage and expense.od19_mileage_vehicle_id:
+                expense.od19_mileage_vehicle_id.od19_last_used_date = (
+                    expense.od19_mileage_date
+                    or fields.Date.context_today(expense)
+                )
+        return expenses
 
     def write(self, vals):
         if 'employee_id' in vals and 'first_approver_id' not in vals:
@@ -263,18 +270,21 @@ class HrExpense(models.Model):
                 expense.od19_document_type != 'payment_certificate'
             )
 
-    @api.depends('product_id', 'company_id', 'od19_document_type')
+    @api.depends('product_id', 'company_id', 'od19_document_type',
+                 'od19_is_mileage')
     def _compute_tax_ids(self):
         """Default taxes come from the product.
 
         A payment certificate in lieu of receipt
         (ใบรับรองแทนใบเสร็จรับเงิน) never carries VAT, so no input tax is
-        applied even when the product has default purchase taxes.
+        applied even when the product has default purchase taxes. A mileage
+        reimbursement likewise never carries VAT.
         """
         for expense in self:
             if not expense.company_id:
                 continue
-            if expense.od19_document_type == 'payment_certificate':
+            if (expense.od19_document_type == 'payment_certificate'
+                    or expense.od19_is_mileage):
                 expense.tax_ids = False
             else:
                 expense.tax_ids = (
@@ -377,4 +387,98 @@ class HrExpense(models.Model):
                 raise ValidationError(_(
                     'The per-diem allowance exceeds the standard limit. '
                     'Please provide a reason for the approver.'
+                ))
+
+    # ------------------------------------------------------------------
+    # Mileage reimbursement - own-vehicle travel (ค่าเดินทางตามระยะทาง)
+    # ------------------------------------------------------------------
+    # The expense is claimed per kilometre: the unit of measure is the
+    # kilometre (``quantity`` holds the distance) and the amount is the
+    # distance times the company rate per km. ``price_unit`` is readonly in
+    # core, so the amount is written through ``total_amount`` and core derives
+    # the unit price for no-cost products.
+    od19_is_mileage = fields.Boolean(
+        string='Mileage / ค่าเดินทางตามระยะทาง',
+        tracking=True,
+        help='Tick when this expense is a mileage reimbursement for '
+             'own-vehicle travel.',
+    )
+    od19_mileage_distance_km = fields.Float(
+        string='Distance (km) / ระยะทาง (กม.)',
+        tracking=True,
+    )
+    od19_mileage_vehicle_id = fields.Many2one(
+        'od19.employee.vehicle',
+        string='Vehicle / รถของฉัน',
+    )
+    od19_mileage_vehicle_type = fields.Char(
+        string='Vehicle Type (snapshot) / ประเภทยานพาหนะ',
+    )
+    od19_mileage_plate = fields.Char(
+        string='Plate (snapshot) / ป้ายทะเบียน',
+    )
+    od19_mileage_origin = fields.Char(
+        string='Origin / ต้นทาง',
+    )
+    od19_mileage_destination = fields.Char(
+        string='Destination / ปลายทาง',
+    )
+    od19_mileage_date = fields.Date(
+        string='Travel Date / วันที่เดินทาง',
+    )
+    od19_mileage_rate = fields.Monetary(
+        string='Rate / km / อัตราต่อ กม.',
+        compute='_compute_od19_mileage', store=True,
+        currency_field='currency_id',
+        help='Reimbursement rate per kilometre taken from the company policy.',
+    )
+
+    @api.depends('od19_is_mileage', 'company_id')
+    def _compute_od19_mileage(self):
+        for expense in self:
+            expense.od19_mileage_rate = (
+                expense.company_id.od19_mileage_rate
+                if expense.od19_is_mileage else 0.0
+            )
+
+    @api.onchange('od19_is_mileage', 'od19_mileage_distance_km',
+                  'od19_mileage_rate')
+    def _onchange_od19_mileage_amount(self):
+        if self.od19_is_mileage:
+            distance = self.od19_mileage_distance_km or 0.0
+            rate = self.od19_mileage_rate or 0.0
+            self.quantity = distance
+            # price_unit is readonly+computed in core -> set total_amount
+            # instead; core derives price_unit = total_amount / quantity.
+            self.total_amount = distance * rate
+
+    @api.onchange('od19_is_mileage', 'employee_id')
+    def _onchange_od19_mileage_vehicle(self):
+        for expense in self:
+            if (expense.od19_is_mileage
+                    and not expense.od19_mileage_vehicle_id
+                    and expense.employee_id):
+                last = self.env['od19.employee.vehicle'].search(
+                    [('employee_id', '=', expense.employee_id.id)], limit=1)
+                expense.od19_mileage_vehicle_id = last
+
+    @api.onchange('od19_mileage_vehicle_id')
+    def _onchange_od19_mileage_vehicle_snapshot(self):
+        for expense in self:
+            vehicle = expense.od19_mileage_vehicle_id
+            expense.od19_mileage_vehicle_type = (
+                dict(vehicle._fields['od19_vehicle_type'].selection).get(
+                    vehicle.od19_vehicle_type) if vehicle else False
+            )
+            expense.od19_mileage_plate = (
+                vehicle.od19_plate_number if vehicle else False
+            )
+
+    @api.constrains('od19_is_mileage', 'tax_ids')
+    def _check_od19_mileage_has_no_tax(self):
+        for expense in self:
+            if expense.od19_is_mileage and expense.tax_ids:
+                raise ValidationError(_(
+                    'Mileage reimbursement cannot carry VAT. '
+                    'Please remove the taxes.'
                 ))

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- My vehicles: list -->
+    <record id="od19_employee_vehicle_view_list" model="ir.ui.view">
+        <field name="name">od19.employee.vehicle.list</field>
+        <field name="model">od19.employee.vehicle</field>
+        <field name="arch" type="xml">
+            <list string="My Vehicles">
+                <field name="od19_plate_number"/>
+                <field name="od19_vehicle_type"/>
+                <field name="od19_last_used_date"/>
+                <field name="employee_id" optional="hide"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- My vehicles: form -->
+    <record id="od19_employee_vehicle_view_form" model="ir.ui.view">
+        <field name="name">od19.employee.vehicle.form</field>
+        <field name="model">od19.employee.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="My Vehicle">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="od19_vehicle_type"/>
+                        <field name="od19_plate_number"/>
+                        <field name="od19_last_used_date"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- My vehicles: action -->
+    <record id="od19_employee_vehicle_action" model="ir.actions.act_window">
+        <field name="name">My Vehicles</field>
+        <field name="res_model">od19.employee.vehicle</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- "รถของฉัน" under the HR Expense menu -->
+    <menuitem id="od19_employee_vehicle_menu"
+              name="รถของฉัน"
+              parent="hr_expense.menu_hr_expense_root"
+              action="od19_employee_vehicle_action"
+              sequence="6"
+              groups="base.group_user"/>
+
+</odoo>

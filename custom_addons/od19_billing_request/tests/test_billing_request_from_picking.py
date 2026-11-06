@@ -98,6 +98,13 @@ class TestBillingRequestFromPicking(TransactionCase):
         self.assertEqual(len(request.line_ids), 1)
         self.assertEqual(request.line_ids.stock_move_id, picking.move_ids)
         self.assertAlmostEqual(request.line_ids.quantity, 2.0)
+        # The request number mirrors the transfer reference
+        # (WH/BPT/OUT/00007 -> BRI/AR/WBO/00007): the direction, the first
+        # letter of every picking segment, then the picking's own number.
+        self.assertEqual(
+            request.name,
+            "BRI/AR/WBO/%s" % picking.name.rsplit("/", 1)[-1],
+        )
 
     def test_incoming_picking_creates_ap_request(self):
         picking = self._make_picking(self.in_type, qty=5.0)
@@ -108,6 +115,11 @@ class TestBillingRequestFromPicking(TransactionCase):
         self.assertEqual(request.partner_id, self.partner)
         self.assertEqual(len(request.line_ids), 1)
         self.assertAlmostEqual(request.line_ids.quantity, 5.0)
+        # Incoming receipt WH/BPT/IN/00008 -> BRI/AP/WBI/00008.
+        self.assertEqual(
+            request.name,
+            "BRI/AP/WBI/%s" % picking.name.rsplit("/", 1)[-1],
+        )
 
     def test_non_transfer_picking_is_rejected(self):
         picking = self._make_picking(self.internal_type)
@@ -129,6 +141,17 @@ class TestBillingRequestFromPicking(TransactionCase):
 
         _action, second = self._request_from(picking)
         self.assertFalse(second.line_ids)
+
+    def test_reopened_transfer_keeps_a_distinct_number(self):
+        picking = self._make_picking(self.out_type, qty=4.0)
+
+        _action, first = self._request_from(picking)
+        _action, second = self._request_from(picking)
+
+        # Both requests mirror the same transfer, so the base number matches;
+        # the second one must still be distinguishable.
+        self.assertTrue(first.name.startswith("BRI/AR/WBO/"))
+        self.assertEqual(second.name, "%s-2" % first.name)
 
     def test_picking_form_button_view_exists(self):
         self.assertTrue(

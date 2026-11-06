@@ -281,6 +281,18 @@
 
 การส่งมอบทำ **ตามเฟส** — แต่ละเฟสมีเทสต์ผ่านก่อนไปเฟสถัดไป
 
+### 11.1 บันทึก as-built (Phase 2) — การเบี่ยงจากร่างแรก
+
+Phase 2 implement จริงบน branch `feature/od19-hr-expense-ux` (worktree แยก) มีรายละเอียดที่ต้องบันทึกเพื่อความแม่นยำ:
+
+1. **กลไก Mileage (C6):** ใช้ `quantity` = ระยะทาง (กม.) และ `total_amount` = ระยะทาง × อัตรา เป็นแหล่งความจริง เนื่องจาก `price_unit` ของ core เป็น readonly+computed — core จะคำนวณ `price_unit` (= อัตรา/กม.) ให้เองจาก `total_amount / quantity` (สำหรับสินค้าที่ไม่มีต้นทุน) จึง **ไม่เขียน `price_unit` ตรง ๆ**
+2. **หมวดค่าใช้จ่าย Mileage (C7):** ระบุด้วยธง `od19_is_mileage_category` บน `product.template`; wizard ใช้ `compute` อ่านธงนี้เพื่อสลับโหมดกรอก (จำนวนเงิน vs ระยะทาง)
+3. **สินค้าหมวด Mileage (C8):** seed product "ค่าเดินทางตามระยะทาง / Mileage" (`default_code = MIL-KM`, `standard_price = 0`, UoM = กม., `can_be_expensed`, `od19_is_mileage_category`) ใน `od19_hr_expense_enhanced/data/od19_expense_category_data.xml` — ต้อง `standard_price = 0` เพื่อให้ core ไม่ทับ `total_amount`
+4. **Wizard ยื่นเบิก:** โมเดล `od19.expense.quick.create` ในโมดูลใหม่ `od19_hr_expense_portal` (v `19.0.1.0.0`) พร้อมเมนู "ยื่นใบเบิกค่าใช้จ่าย"
+5. **Kanban "ใบเบิกของฉัน":** domain `[('employee_id.user_id','=',uid)]`, `default_group_by="state"`, ใช้ `<t t-name="card">` (Odoo 19) และเพิ่มฟิลด์ `od19_approval_hint` (compute) บน `hr.expense` ใน `od19_hr_expense_portal`
+6. **ความเข้ากันได้ Odoo 19:** `_sql_constraints` → `models.Constraint`; `name_get()` → `_compute_display_name`; `res.users.groups_id` → `group_ids`
+7. **ฟิลด์ Mileage บน `hr.expense` (ชื่อจริง):** `od19_is_mileage`, `od19_mileage_distance_km`, `od19_mileage_vehicle_id`, `od19_mileage_vehicle_type`, `od19_mileage_plate`, `od19_mileage_origin`, `od19_mileage_destination`, `od19_mileage_date`, `od19_mileage_rate` (compute+store)
+
 ---
 
 ## 12. การทดสอบ (TDD)
@@ -338,7 +350,7 @@
 - `custom_addons/od19_hr_expense_enhanced/models/hr_expense.py` — `first_approver_id`, `od19_document_type`, `od19_is_per_diem` (แบบอย่างที่จะเพิ่มฟิลด์ Mileage ต่อจากนี้)
 - `custom_addons/od19_hr_expense_enhanced/models/res_company.py` — `od19_per_diem_rate_domestic/overseas` + `_od19_per_diem_rate()` (แบบอย่างที่จะเพิ่ม `od19_mileage_rate`)
 - โมเดลใหม่ **`od19.employee.vehicle`** (สมุดรถพนักงาน: `employee_id`, ประเภท, ป้ายทะเบียน, วันใช้งานล่าสุด) — เพิ่มใน `od19_hr_expense_enhanced/models/` ควบคู่กับ `hr.expense`
-- Core `addons/hr_expense/models/hr_expense.py` — `product_uom_id`, `quantity`, `price_unit`, `total_amount` (กลไกที่ Mileage ใช้: UoM = กม., quantity = ระยะทาง, price_unit = อัตรา/กม.)
+- Core `addons/hr_expense/models/hr_expense.py` — `product_uom_id`, `quantity`, `price_unit`, `total_amount` (กลไกที่ Mileage ใช้: UoM = กม., `quantity` = ระยะทาง, `total_amount` = ระยะทาง × อัตรา; core คำนวณ `price_unit` = อัตรา/กม. ให้เองสำหรับสินค้าที่ไม่มีต้นทุน — ดู §11.1 ข้อ 1)
 - `custom_addons/od19_hr_expense_thai/models/hr_expense.py` — กลไกอนุมัติ 2 ชั้นเดิม + `_od19_create_reimbursement_payment`
 - `custom_addons/od19_hr_advance/data/tier_definition_data.xml` — ต้นแบบการตั้งค่า `tier.definition` (2 ชั้น)
 - `custom_addons/od19_approval_center/data/approval_sources.py` — source `hr.expense` (บรรทัดที่กำหนด `strategy` / `steps`)

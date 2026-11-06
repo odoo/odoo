@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_expense_kanban_od19_my" model="ir.ui.view">
+        <field name="name">hr.expense.kanban.od19.my</field>
+        <field name="model">hr.expense</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1" quick_create="false"
+                    default_group_by="state">
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-baseline">
+                            <field class="fw-bold fs-5 me-2" name="name"/>
+                            <field class="fw-bold ms-auto flex-shrink-0" name="total_amount" widget="monetary"/>
+                        </div>
+                        <div class="d-flex mt8 text-muted">
+                            <field name="employee_id" widget="many2one_avatar_employee"
+                                   options="{'display_avatar_name': True}"
+                                   readonly="True"/>
+                            <field class="ms-auto" name="od19_approval_hint"/>
+                        </div>
+                        <field class="mt8 text-muted" name="date"/>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_od19_my_expenses" model="ir.actions.act_window">
+        <field name="name">ใบเบิกของฉัน</field>
+        <field name="res_model">hr.expense</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        <field name="context">{'search_default_my_expenses': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">ยังไม่มีใบเบิกค่าใช้จ่าย</p>
+            <p>เริ่มต้นด้วยการยื่นใบเบิกค่าใช้จ่ายใบแรกของคุณ</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_od19_my_expenses"
+              name="ใบเบิกของฉัน"
+              parent="hr_expense.menu_hr_expense_root"
+              action="action_od19_my_expenses"
+              sequence="2"
+              groups="base.group_user"/>
+
+</odoo>

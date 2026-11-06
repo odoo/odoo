@@ -21,6 +21,16 @@ class ResCompany(models.Model):
              'used as the limit when validating a per-diem allowance.',
     )
 
+    # ------------------------------------------------------------------
+    # Mileage policy - reimbursement rate per kilometre
+    # (ค่าเดินทางตามระยะทาง)
+    # ------------------------------------------------------------------
+    od19_mileage_rate = fields.Monetary(
+        string='Mileage Rate / km / อัตราค่าเดินทางต่อ กม.',
+        currency_field='currency_id',
+        help='Standard reimbursement rate per kilometre for own-vehicle travel.',
+    )
+
     def _od19_per_diem_rate(self, region):
         """Return the standard per-diem rate per day for the given region."""
         self.ensure_one()

@@ -91,6 +91,25 @@
                     <field name="od19_per_diem_reason"
                            invisible="not od19_is_per_diem"/>
                 </group>
+                <group string="ค่าเดินทาง / Mileage" col="4">
+                    <field name="od19_is_mileage"/>
+                    <field name="od19_mileage_distance_km"
+                           invisible="not od19_is_mileage"/>
+                    <field name="od19_mileage_rate"
+                           invisible="not od19_is_mileage"/>
+                    <field name="od19_mileage_vehicle_id"
+                           invisible="not od19_is_mileage"/>
+                    <field name="od19_mileage_origin"
+                           invisible="not od19_is_mileage"/>
+                    <field name="od19_mileage_destination"
+                           invisible="not od19_is_mileage"/>
+                    <field name="od19_mileage_date"
+                           invisible="not od19_is_mileage"/>
+                    <field name="od19_mileage_vehicle_type" readonly="1"
+                           invisible="not od19_is_mileage"/>
+                    <field name="od19_mileage_plate" readonly="1"
+                           invisible="not od19_is_mileage"/>
+                </group>
             </xpath>
         </field>
     </record>
