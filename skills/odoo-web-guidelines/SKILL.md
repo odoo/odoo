@@ -22,6 +22,9 @@ touching instead of loading whole files.
 | Guideline | Read it when |
 | --- | --- |
 | [Organize files by feature](guidelines/javascript.md#organize-files-by-feature-not-by-type) | creating a file, or deciding where new code lives |
+| [End a sort comparator on a unique key](guidelines/javascript.md#end-a-sort-comparator-on-a-unique-key) | writing a comparator for `sort()` or `toSorted()` |
+| [Batch RPCs](guidelines/javascript.md#batch-rpcs) | calling the server from a loop, or more than once for one user action |
+| [Give every icon a role and a label or aria-hidden](guidelines/templates.md#give-every-icon-roleimg-and-a-label-or-aria-hidden) | adding or changing an icon in a template |
 | [Avoid getters](guidelines/javascript.md#avoid-getters) | adding a computed value to a class or a component |
 | [Avoid patching JavaScript code](guidelines/javascript.md#avoid-patching-javascript-code) | extending or overriding behaviour that already exists |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
