@@ -53,6 +53,23 @@ describe("history back", () => {
         expect(":iframe #wrap").not.toHaveClass("o_dirty");
         expect(":iframe #wrap").not.toHaveClass("o_editable");
     });
+    test("reload action keeps the history entry of the editor", async () => {
+        const { getEditor } = await setupWebsiteBuilder(exampleContent);
+        const firstBuilder = builder;
+        let backCalls = 0;
+        patchWithCleanup(history, {
+            back() {
+                backCalls++;
+                super.back();
+            },
+        });
+        expect(history.state.skipRouteChange).toBe(true);
+        await getEditor().config.reloadEditor();
+        await animationFrame();
+        expect(builder).not.toBe(firstBuilder);
+        expect(backCalls).toBe(0);
+        expect(history.state.skipRouteChange).toBe(true);
+    });
 });
 
 test("Set and update the 'contenteditable' attribute on the editable elements", async () => {

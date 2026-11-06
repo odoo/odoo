@@ -549,9 +549,13 @@ export class WebsiteBuilderClientAction extends Component {
         this.initialTab = null;
         this.target = null;
         const isEditing = false;
+        // The builder pops its history entry when it is unmounted. On Firefox,
+        // doing that while the iframe is reloading corrupts the session
+        // history: the next history.back() brings the iframe back to the
+        // previous page. So reload first, then leave edit mode.
+        await this.reloadIframe(isEditing);
         this.state.isEditing = isEditing;
         this.addSystrayItems();
-        await this.reloadIframe(isEditing);
     }
 
     async reloadIframe(isEditing = true, url) {
