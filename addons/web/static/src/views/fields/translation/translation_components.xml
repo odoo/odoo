@@ -114,7 +114,7 @@
 <t t-name="web.translate.LangMenuItems" >
     <t t-set="menuItems" t-value="this.model.getLangMenuItems(lang)" />
     <Dropdown t-if="menuItems.length" items="menuItems">
-        <button class="btn btn-light py-0 px-1 rounded-0" ><i class="oi" data-icon="more_vert"/></button>
+        <button class="btn btn-light py-0 px-1 rounded-0" aria-label="More options"><i class="oi" data-icon="more_vert"/></button>
     </Dropdown>
 </t>
 

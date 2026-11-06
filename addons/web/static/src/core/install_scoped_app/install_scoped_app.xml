@@ -14,7 +14,7 @@
                         <div class="d-flex align-items-center">
                             <h1 class="mb-0" t-out="this.state.manifest.name"></h1>
                             <Dropdown t-if="this.pwa.isAvailable" menuClass="'p-2'">
-                                <button class="btn btn-link oi oi-filled" data-icon="edit" />
+                                <button class="btn btn-link oi oi-filled" data-icon="edit" aria-label="Edit application name"/>
                                 <t t-set-slot="content">
                                     <label class="mb-1">Application name</label>
                                     <input class="form-control" t-att-value="this.state.manifest.name" t-on-change="this.onChangeName"/>
