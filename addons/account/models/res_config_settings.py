@@ -309,3 +309,21 @@ class ResConfigSettings(models.TransientModel):
             if l10n_eu_oss_module.state != 'installed':
                 l10n_eu_oss_module.button_immediate_install()
             self.env.companies._map_eu_taxes()
+            notification_params = {
+                'message': self.env._("The OSS tax mapping is activated and up to date"),
+                'type': 'success',
+            }
+        else:
+            notification_params = {
+                'message': self.env._("The EU OSS module was not found, Please contact your administrator."),
+                'type': 'warning',
+            }
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                **notification_params,
+                'sticky': False,
+            },
+        }
