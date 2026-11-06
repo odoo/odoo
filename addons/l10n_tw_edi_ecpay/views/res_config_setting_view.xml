@@ -8,7 +8,13 @@
             <field name="arch" type="xml">
                 <xpath expr="//app[@name='account']" position="inside">
                     <block title="Taiwan Electronic Invoicing" id="taiwan_edi" invisible="country_code != 'TW'">
-                        <setting string="Ecpay Setting" company_dependent="1">
+                        <setting string="ECPay e-GUI (e-invoice)"
+                                 help="Configure the API credentials to issue and manage Taiwanese electronic invoices through ECPay"
+                                 title="- Staging mode: Run transactions in the ECPay test environment.\n
+                                        - Credentials Used: Your ECPay e-Invoice API keys (Merchant ID, HashKey, and HashIV).\n\n
+                                        Refer to the documentation for test credentials and help finding the API Keys"
+                                 documentation="/applications/finance/fiscal_localizations/taiwan.html#accounting"
+                                 company_dependent="1">
                             <div class="content-group">
                                 <div class="row">
                                     <label for="l10n_tw_edi_ecpay_staging_mode" class="col-lg-4 o_light_label"/>
