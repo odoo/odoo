@@ -49,6 +49,7 @@ class PosOrderReceipt(models.AbstractModel):
             'subtotal_amount': self._order_receipt_format_currency(sign * tax_totals['base_amount_currency']),
             'taxes': [{
                 'name': tax['group_name'],
+                'label': tax['group_label'],
                 'amount': self._order_receipt_format_currency(sign * tax['tax_amount']),
                 'amount_base': self._order_receipt_format_currency(sign * tax['base_amount_currency']),
             } for tax in tax_totals['subtotals'][0]['tax_groups']] if len(tax_totals['subtotals']) > 0 else [],
@@ -87,6 +88,9 @@ class PosOrderReceipt(models.AbstractModel):
                 data['lot_names'] = ["%s %s" % (lot_label, lot.lot_name) for lot in line.pack_lot_ids]
 
             data['product_uom_name'] = line.product_id.uom_id.name
+            data['tax_group_labels'] = ' '.join(dict.fromkeys(
+                label for label in line.tax_ids_after_fiscal_position.tax_group_id.mapped('pos_receipt_label') if label
+            ))
             display_price = data['price_subtotal_incl'] if display_price_incl else data['price_subtotal']
             data['price_subtotal_incl'] = self._order_receipt_format_currency(display_price)
             data['no_discount_price'] = self._order_receipt_format_currency(line._get_price_no_discount(self.config_id))

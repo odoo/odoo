@@ -168,6 +168,7 @@ export class GeneratePrinterData {
             subtotal_amount: this.formatCurrency(data.taxDetails.base_amount_currency),
             taxes: data.taxDetails.subtotals[0]?.tax_groups?.map((tax) => ({
                 name: tax.group_name,
+                label: tax.group_label,
                 amount: this.formatCurrency(tax.tax_amount),
                 amount_base: this.formatCurrency(tax.base_amount_currency),
             })),
@@ -190,6 +191,7 @@ export class GeneratePrinterData {
                 ...line.raw,
                 product_data: productData,
                 product_uom_name: line.product_id.uom_id?.name || "",
+                tax_group_labels: line.taxGroupLabels,
                 unit_price: line.currencyDisplayPriceUnit,
                 product_unit_price: line.product_id.displayPriceUnit,
                 price_subtotal_incl: line.currencyDisplayPrice,
