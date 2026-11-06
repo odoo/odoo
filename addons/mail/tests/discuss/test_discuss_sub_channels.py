@@ -2,17 +2,18 @@
 
 from odoo import Command
 
-import json
 from datetime import datetime, timedelta
 from freezegun import freeze_time
-from unittest.mock import ANY, patch
+from unittest.mock import patch
 
 from odoo.tests.common import HttpCase, new_test_user
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.bus.tests.common import BusCase, BusResult
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tools.discuss import Store
 
 
-class TestDiscussSubChannels(HttpCase):
+class TestDiscussSubChannels(BusCase, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -280,28 +281,41 @@ class TestDiscussSubChannels(HttpCase):
         self.assertFalse(vals_by_message_id[other_message.id]["linkedSubChannel"])
 
     def test_15_sub_channel_sent_to_parent_channel_on_create(self):
-        self.env["bus.bus"].sudo().search([]).unlink()
-        sub_channel = self.general._create_sub_channel(from_message_id=self.general_message.id)
-        self.env.cr.precommit.run()
-        notifications = [
-            (json.loads(notif.channel), json.loads(notif.message))
-            for notif in self.env["bus.bus"].sudo().search([])
-        ]
-        self.assertIn(
-            (
-                [self.env.cr.dbname, "discuss.channel", self.general.id],
-                {
-                    "type": "mail.record/insert",
-                    "payload": {
+        def notifications():
+            return [
+                BusResult(
+                    self.env.user,
+                    "mail.record/insert",
+                    Store()
+                    .add(self.general, ["member_count"])
+                    .add(self.general.self_member_id, "_store_member_fields"),
+                ),
+                BusResult(
+                    self.env.user,
+                    "mail.record/insert",
+                    Store().add(sub_channel, "_store_channel_fields"),
+                ),
+                BusResult(
+                    self.env.user,
+                    "mail.record/insert",
+                    Store()
+                    .add(sub_channel, ["member_count"])
+                    .add(sub_channel.self_member_id, "_store_member_fields"),
+                ),
+                BusResult(
+                    self.general,
+                    "mail.record/insert",
+                    {
                         "mail.message": [
                             {
                                 "id": self.general_message.id,
                                 "linkedSubChannel": sub_channel.id,
                             },
                         ],
-                        "__store_version__": ANY,
                     },
-                },
-            ),
-            notifications,
-        )
+                ),
+                BusResult(self.general, "discuss.channel/new_message"),
+            ]
+
+        with self.assertBus(notifications):
+            sub_channel = self.general._create_sub_channel(from_message_id=self.general_message.id)

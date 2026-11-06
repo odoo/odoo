@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 from io import BytesIO
@@ -10,7 +9,6 @@ from psycopg2 import errors
 
 from odoo import Command, fields
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
-from odoo.addons.bus.models.bus import channel_with_db, json_dump
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models.discuss.discuss_channel import group_avatar
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
@@ -814,25 +812,32 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     def test_channel_subscribe_auto_sends_member_create_date(self):
         group = self.env["res.groups"].create({"name": "Group", "user_ids": self.test_user.ids})
-        self._reset_bus()
-        self.test_channel.group_ids = group
-        member = self.test_channel.channel_member_ids.filtered(
-            lambda m: m.partner_id == self.test_partner,
-        )
-        self.assertTrue(member)
-        self.env.cr.precommit.run()
-        notification = self.env["bus.bus"].sudo().search(
-            [("channel", "=", json_dump((self.cr.dbname, "res.users", self.test_user.id)))],
-        )
-        self.assertEqual(len(notification), 1)
-        message = json.loads(notification.message)
-        self.assertEqual(message["type"], "mail.record/insert")
-        member_data = message["payload"]["discuss.channel.member"]
-        self.assertEqual([data["id"] for data in member_data], member.ids)
-        self.assertEqual(
-            member_data[0]["create_date"],
-            fields.Datetime.to_string(member.create_date),
-        )
+
+        def notifications():
+            member = self.test_channel.channel_member_ids.filtered(
+                lambda m: m.partner_id == self.test_partner,
+            )
+            self.assertTrue(member)
+            return [
+                BusResult(
+                    self.test_channel,
+                    "mail.record/insert",
+                    {"discuss.channel": [{"group_ids": group.ids, "id": self.test_channel.id}]},
+                ),
+                BusResult(
+                    self.test_user,
+                    "mail.record/insert",
+                    Store(bus_channel=self.test_user)
+                    .add(self.test_channel, "_store_channel_fields")
+                    .add(member, "_store_member_fields")
+                    .add(member, ["unpin_dt"])
+                    .add(member, {"create_date": fields.Datetime.to_string(member.create_date)})
+                    ._build_result(),
+                ),
+            ]
+
+        with self.assertBus(notifications):
+            self.test_channel.group_ids = group
 
     @users('employee')
     @mute_logger('odoo.models.unlink')
@@ -1377,9 +1382,46 @@ class TestChannelInternals(MailCommon, HttpCase):
         group = self.env["discuss.channel"].create({"name": "", "channel_type": "group"})
         channel = self.env["discuss.channel"].create({"name": "General"})
 
+        def name_update(channel, users):
+            members = channel.channel_member_ids.filtered(
+                lambda m: m.partner_id.main_user_id in users,
+            )
+            return (
+                Store(bus_channel=channel)
+                .add(members, "_store_member_fields")
+                .add(channel, {"channel_name_member_ids": members.ids})
+            )
+
+        def join(channel, user):
+            member = channel.channel_member_ids.filtered(lambda m: m.partner_id == user.partner_id)
+            return (
+                Store(bus_channel=channel)
+                .add(channel, ["member_count"])
+                .add(member, "_store_member_fields")
+            )
+
+        def leave(channel, member):
+            return Store(bus_channel=channel).add(channel, ["member_count"]).delete(member)
+
+        def close_window(user, channel):
+            return BusResult(
+                user,
+                "mail.record/insert",
+                Store().add(channel, {"close_chat_window": True, "isLocallyPinned": False}),
+            )
+
+        def store_notifications(channel, store):
+            notifications = [BusResult(channel, "mail.record/insert", store._build_result())]
+            if internal_data := store._internal_store._build_result():
+                notifications.append(
+                    BusResult((channel, "internal_users"), "mail.record/insert", internal_data),
+                )
+            return notifications
+
         # Each test case represents a flow of member changes on a given channel.
         # The format is: (channel, flow) where `flow` is a list of tuples
-        # (user, operation, expected_users).
+        # (user, operation, notifications), `notifications` being given the
+        # member of the user before the operation.
         #
         # Those cases ensure that we only send `channel_name_member_ids` updates
         # for channels listed in `_member_based_naming_channel_types`, and only
@@ -1388,22 +1430,93 @@ class TestChannelInternals(MailCommon, HttpCase):
             # Channel does not use member-based naming (not in `_member_based_naming_channel_types`).
             (
                 channel,
-                [(john, "add", False), (john, "remove", False)],
+                [
+                    (
+                        john,
+                        "add",
+                        lambda member: [
+                            BusResult(john, "discuss.channel/joined"),
+                            *store_notifications(channel, join(channel, john)),
+                        ],
+                    ),
+                    (
+                        john,
+                        "remove",
+                        lambda member: [
+                            close_window(john, channel),
+                            *store_notifications(channel, leave(channel, member)),
+                        ],
+                    ),
+                ],
             ),
             # Group uses member-based naming (in `_member_based_naming_channel_types`).
             # Name is computed from the first 3 members. Updates are only sent when those change.
             (
                 group,
                 [
-                    (john, "add", [self.env.user, john]),
-                    (bob, "add", [self.env.user, john, bob]),
+                    (
+                        john,
+                        "add",
+                        lambda member: [
+                            *store_notifications(group, name_update(group, [self.env.user, john])),
+                            BusResult(john, "discuss.channel/joined"),
+                            *store_notifications(group, join(group, john)),
+                        ],
+                    ),
+                    (
+                        bob,
+                        "add",
+                        lambda member: [
+                            *store_notifications(
+                                group,
+                                name_update(group, [self.env.user, john, bob]),
+                            ),
+                            BusResult(bob, "discuss.channel/joined"),
+                            *store_notifications(group, join(group, bob)),
+                        ],
+                    ),
                     # Alice is added: we already have 3 members to compute the name, no update.
-                    (alice, "add", False),
-                    (eve, "add", False),
+                    (
+                        alice,
+                        "add",
+                        lambda member: [
+                            BusResult(alice, "discuss.channel/joined"),
+                            *store_notifications(group, join(group, alice)),
+                        ],
+                    ),
+                    (
+                        eve,
+                        "add",
+                        lambda member: [
+                            BusResult(eve, "discuss.channel/joined"),
+                            *store_notifications(group, join(group, eve)),
+                        ],
+                    ),
                     # Eve is removed: not taken into account for name computation, no update.
-                    (eve, "remove", False),
+                    (
+                        eve,
+                        "remove",
+                        lambda member: [
+                            close_window(eve, group),
+                            BusResult(group, "discuss.channel/new_message"),
+                            *store_notifications(group, leave(group, member)),
+                        ],
+                    ),
                     # John is removed: was used in naming, update.
-                    (john, "remove", [self.env.user, bob, alice]),
+                    (
+                        john,
+                        "remove",
+                        lambda member: [
+                            close_window(john, group),
+                            BusResult(group, "discuss.channel/new_message"),
+                            *store_notifications(
+                                group,
+                                name_update(group, [self.env.user, bob, alice])
+                                .add(group, ["member_count"])
+                                .delete(member),
+                            ),
+                        ],
+                    ),
                 ],
             ),
         ]
@@ -1412,49 +1525,15 @@ class TestChannelInternals(MailCommon, HttpCase):
             with self.subTest(
                 f"Test member-based channel name: channel_type={channel.channel_type}, channel_name={channel.name}"
             ):
-                for user, operation, expected_users in flow:
-                    self._reset_bus()
-                    if operation == "add":
-                        channel._add_members(users=user, post_joined_message=False)
-                    else:
-                        channel.with_user(user).action_unfollow()
-                    self.cr.precommit.run()
-                    matching_data = None
-                    for notification in self.env["bus.bus"].search(
-                        [("channel", "=", json_dump(channel_with_db(self.cr.dbname, channel)))],
-                    ):
-                        message = json.loads(notification.message)
-                        if message["type"] != "mail.record/insert":
-                            continue
-                        if "discuss.channel" not in message["payload"]:
-                            continue
-                        matching_data = next(
-                            (
-                                data
-                                for data in message["payload"]["discuss.channel"]
-                                if data["id"] == channel.id and "channel_name_member_ids" in data
-                            ),
-                            None,
-                        )
-                        if matching_data:
-                            break
-
-                    if expected_users is False:
-                        self.assertIsNone(
-                            matching_data, "Unexpected channel_name_member_ids update"
-                        )
-                    else:
-                        self.assertIsNotNone(
-                            matching_data, "Missing channel_name_member_ids update"
-                        )
-                        expected_member_ids = [
-                            member.id
-                            for member in channel.channel_member_ids
-                            if member.partner_id.main_user_id in expected_users
-                        ]
-                        self.assertEqual(
-                            matching_data["channel_name_member_ids"], expected_member_ids
-                        )
+                for user, operation, notifications in flow:
+                    member = channel.channel_member_ids.filtered(
+                        lambda m: m.partner_id == user.partner_id,
+                    )
+                    with self.assertBus(lambda: notifications(member)):
+                        if operation == "add":
+                            channel._add_members(users=user, post_joined_message=False)
+                        else:
+                            channel.with_user(user).action_unfollow()
 
     def test_create_channel_with_partners_and_guests(self):
         channel = self.env['discuss.channel'].create({
