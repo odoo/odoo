@@ -1583,7 +1583,7 @@ class TestCompute(common.TransactionCase):
         automation = create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
             "state": "object_write",
             "update_path": "active",
-            "update_boolean_value": "false"
+            "update_boolean_value": False
         })
 
         ext_partner = self.env["res.partner"].create({"name": "ext", "email": "email@server.com"})
@@ -1640,7 +1640,7 @@ class TestCompute(common.TransactionCase):
         create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
             "state": "object_write",
             "update_path": "active",
-            "update_boolean_value": "false"
+            "update_boolean_value": False
         })
         create_automation(self, trigger="on_message_sent", model_id=lead_thread_model.id, _actions={
             "state": "object_write",
@@ -1839,7 +1839,7 @@ class TestHttp(common.HttpCase):
         automation = create_automation(self, trigger="on_webhook", model_id=model.id, record_getter=record_getter, _actions={
             "state": "object_write",
             "update_path": "another_field",
-            "value": "written"
+            "update_char_value": "written"
         })
 
         obj = self.env[model.model].create({"name": "some name"})

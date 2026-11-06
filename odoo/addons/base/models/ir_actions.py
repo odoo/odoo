@@ -4,7 +4,6 @@ from zoneinfo import ZoneInfo
 
 import babel
 import base64
-import contextlib
 import json
 import logging
 import re
@@ -21,6 +20,7 @@ from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import get_diff, unquote
 from odoo.tools.safe_eval import expr_eval, safe_eval, test_python_expr
 from odoo.tools.json import stringify_keys
+from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -662,7 +662,14 @@ class IrActionsServer(models.Model):
         ('set', 'Setting it to'),
         ('clear', 'Clearing it')
     ], string='Many2many Operations', default='add')
-    update_boolean_value = fields.Selection([('true', 'Yes (True)'), ('false', "No (False)")], string='Boolean Value', default='true')
+
+    update_boolean_value = fields.Boolean(string='Boolean Value', default=True)
+    update_date_value = fields.Date(string='Date Value')
+    update_datetime_value = fields.Datetime(string='Datetime Value')
+    update_integer_value = fields.Integer(string='Integer Value')
+    update_float_value = fields.Float(string='Float Value')
+    update_char_value = fields.Char(string='Char Value', translate=True)
+    update_text_value = fields.Text(string='Text Value', translate=True)
 
     value = fields.Text(help="For Python expressions, this field may hold a Python expression "
                              "that can use the same values as for the code field on the server action,"
@@ -675,7 +682,7 @@ class IrActionsServer(models.Model):
         ('sequence', 'Sequence'),
         ('equation', 'Compute')
     ], 'Value Type', default='value', change_default=True)
-    html_value = fields.Html()
+    html_value = fields.Html(translate=html_translate)
     sequence_id = fields.Many2one('ir.sequence', string='Sequence to use')
     resource_ref = fields.Reference(
         string='Record', selection='_selection_target_model', inverse='_set_resource_ref')
@@ -683,12 +690,19 @@ class IrActionsServer(models.Model):
                                       domain='[("field_id", "=", update_field_id)]', inverse='_set_selection_value')
     property_selection = fields.Char()
 
+    # HERE: Add more types here ?
     value_field_to_show = fields.Selection([
         ('value', 'value'),
         ('html_value', 'html_value'),
         ('sequence_id', 'sequence_id'),
         ('resource_ref', 'reference'),
         ('update_boolean_value', 'update_boolean_value'),
+        ('update_date_value', 'update_date_value'),
+        ('update_datetime_value', 'update_datetime_value'),
+        ('update_integer_value', 'update_integer_value'),
+        ('update_float_value', 'update_float_value'),
+        ('update_char_value', 'update_char_value'),
+        ('update_text_value', 'update_text_value'),
         ('selection_value', 'selection_value'),
         ('property_selection', 'property_selection'),
         ('x2many', 'x2many'),
@@ -1063,7 +1077,26 @@ class IrActionsServer(models.Model):
                 res[self.update_field_id.name] = {**property_value, self.update_property: value}
                 starting_record.write(res)
             else:
+                res[self.update_field_id.name] = self._get_translated_update_value(vals[self.id])
                 target_records.write(res)
+
+    def _get_translated_update_value(self, value):
+        """ Return ``value`` as ``{lang: value}`` with the translations of the
+        action's value when the updated field is translatable. """
+        self.ensure_one()
+        if (
+            not value
+            or self.evaluation_type != 'value'
+            or self.value_field_to_show not in ('update_char_value', 'update_text_value', 'html_value')
+            or not self.update_field_id.translate
+        ):
+            return value
+        fname = self.value_field_to_show
+        return {
+            lang: lang_value
+            for lang, _name in self.env['res.lang'].get_installed()
+            if (lang_value := self.with_context(lang=lang)[fname])
+        }
 
     def _run_action_webhook(self, eval_context=None):
         """Send a post request with a read of the selected field on active_id."""
@@ -1280,6 +1313,18 @@ class IrActionsServer(models.Model):
                 return 'selection_value'
             elif field_type == 'boolean':
                 return 'update_boolean_value'
+            elif field_type == 'date':
+                return 'update_date_value'
+            elif field_type == 'datetime':
+                return 'update_datetime_value'
+            elif field_type == 'integer':
+                return 'update_integer_value'
+            elif field_type in ('float', 'monetary'):
+                return 'update_float_value'
+            elif field_type == 'char':
+                return 'update_char_value'
+            elif field_type == 'text':
+                return 'update_text_value'
             elif field_type == 'html':
                 return 'html_value'
             else:
@@ -1356,17 +1401,30 @@ class IrActionsServer(models.Model):
                 elif operation == 'clear':
                     expr = [Command.clear()]
             elif field_type == 'boolean':
-                expr = action.update_boolean_value == 'true'
-            elif field_type in ['many2one', 'integer']:
+                expr = action.update_boolean_value
+            elif field_type == 'date':
+                expr = action.update_date_value
+                if action.update_field_id.ttype == "properties":
+                    expr = fields.Date.to_string(expr)
+            elif field_type == 'datetime':
+                expr = action.update_datetime_value
+                if action.update_field_id.ttype == "properties":
+                    expr = fields.Datetime.to_string(expr)
+            elif field_type == 'integer':
+                expr = action.update_integer_value
+            elif field_type == 'many2one':
                 try:
                     expr = int(action.value)
-                    if expr == 0 and field_type == 'many2one':
+                    if expr == 0:
                         expr = False
                 except Exception:
                     pass
-            elif field_type == 'float':
-                with contextlib.suppress(Exception):
-                    expr = float(action.value)
+            elif field_type in ('float', 'monetary'):
+                expr = action.update_float_value
+            elif field_type == 'char':
+                expr = action.update_char_value
+            elif field_type == 'text':
+                expr = action.update_text_value
             elif field_type == 'html':
                 expr = action.html_value
             result[action.id] = expr

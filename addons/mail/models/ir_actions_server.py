@@ -17,6 +17,13 @@ class IrActionsServer(models.Model):
     link_field_id = fields.Many2one(tracking=True)
     update_path = fields.Char(tracking=True)
     value = fields.Text(tracking=True)
+    update_boolean_value = fields.Boolean(tracking=True)
+    update_date_value = fields.Date(tracking=True)
+    update_datetime_value = fields.Datetime(tracking=True)
+    update_integer_value = fields.Integer(tracking=True)
+    update_float_value = fields.Float(tracking=True)
+    update_char_value = fields.Char(tracking=True)
+    update_text_value = fields.Text(tracking=True)
     evaluation_type = fields.Selection(tracking=True)
     webhook_url = fields.Char(tracking=True)
 

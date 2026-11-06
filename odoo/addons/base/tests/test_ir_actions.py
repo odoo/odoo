@@ -260,7 +260,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.write({
             'state': 'object_write',
             'update_path': 'name',
-            'value': 'TestNew',
+            'update_char_value': 'TestNew',
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
@@ -380,7 +380,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.write({
             'state': 'object_write',
             'update_path': 'country_id.name',
-            'value': 'TestUpdatedCountry',
+            'update_char_value': 'TestUpdatedCountry',
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
@@ -391,7 +391,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.write({
             'state': 'object_write',
             'update_path': 'country_id.image_url',
-            'value': "/base/static/img/country_flags/be.png",
+            'update_char_value': "/base/static/img/country_flags/be.png",
         })
         self.assertEqual(self.test_partner.country_id.image_url, "/base/static/img/country_flags/ty.png", 'ir_actions_server: country flag has this value before the update')
         run_res = self.action.with_context(self.context).run()
@@ -415,7 +415,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.write({
             'state': 'object_write',
             'update_path': 'active',
-            'update_boolean_value': 'false',
+            'update_boolean_value': False,
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
@@ -424,12 +424,46 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.action.write({
             'state': 'object_write',
             'update_path': 'active',
-            'update_boolean_value': 'true',
+            'update_boolean_value': True,
         })
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: update record action correctly finished should return False')
         # Test: partner updated
         self.assertTrue(self.test_partner.active, 'ir_actions_server: partner should have been reactivated')
+
+    def test_39_1_typed_value_update(self):
+        """ Test that each field type is updated from the value field matching its type """
+        self.action.write({'state': 'object_write', 'evaluation_type': 'value'})
+        for update_path, value_field, value in [
+            ('color', 'update_integer_value', 7),
+            ('partner_latitude', 'update_float_value', 50.5),
+            ('ref', 'update_char_value', 'REF-42'),
+            ('comment', 'html_value', Markup('<p>Hello</p>')),
+        ]:
+            with self.subTest(update_path=update_path):
+                self.action.write({'update_path': update_path, value_field: value})
+                self.assertEqual(self.action.value_field_to_show, value_field)
+                self.action.with_context(self.context).run()
+                self.assertEqual(self.test_partner[update_path], value)
+
+    def test_39_2_translated_value_update(self):
+        """ Test that all the translations of the value are written on a translatable field """
+        self.env['res.lang']._activate_lang('fr_FR')
+        action = self.env['ir.actions.server'].create({
+            'name': 'TestAction',
+            'model_id': self.res_partner_category_model.id,
+            'state': 'object_write',
+            'evaluation_type': 'value',
+            'update_path': 'name',
+            'update_char_value': 'Red',
+        })
+        action.with_context(lang='fr_FR').update_char_value = 'Rouge'
+        category = self.env['res.partner.category'].create({'name': 'Blue'})
+        category.with_context(lang='fr_FR').name = 'Bleu'
+
+        action.with_context(active_model='res.partner.category', active_id=category.id).run()
+        self.assertEqual(category.with_context(lang='en_US').name, 'Red')
+        self.assertEqual(category.with_context(lang='fr_FR').name, 'Rouge')
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
@@ -662,11 +696,11 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertIn('move_id', action.webhook_sample_payload)
 
     def test_90_convert_to_float(self):
-        # make sure eval_value convert the value into float for float-type fields
+        # make sure eval_value returns a float for float-type fields
         self.action.write({
             'state': 'object_write',
             'update_path': 'partner_latitude',
-            'value': '20.99',
+            'update_float_value': 20.99,
         })
         self.assertEqual(self.action._eval_value()[self.action.id], 20.99)
 
