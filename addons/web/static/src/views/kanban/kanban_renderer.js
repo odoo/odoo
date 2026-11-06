@@ -355,6 +355,13 @@ export class KanbanRenderer extends Component {
         );
     }
 
+    get addButtonPosition() {
+        if (this.props.list.isGrouped || !this.props.addLabel) {
+            return false;
+        }
+        return this.props.archInfo.editable === "top" ? "top" : "bottom";
+    }
+
     getResequenceOrderIndex() {
         return 0;
     }
