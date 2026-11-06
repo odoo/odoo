@@ -1,4 +1,3 @@
-import base64
 import logging
 import tempfile
 
@@ -8,7 +7,8 @@ from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.exceptions import InvalidKey, InvalidSignature, UnsupportedAlgorithm
 
-from odoo import api, fields, models, modules
+from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.addons.l10n_pl_edi_batch.tools.ksef_api_service import KsefApiServiceBatch as Service
 
 _logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class BatchDownloadPart(models.Model):
     _name = 'l10n_pl_edi_batch.part'
     _description = 'KSeF Batch download part'
 
-    _order = 'batch_name, part_number'
+    _order = 'batch_id, part_number'
 
     company_id = fields.Many2one(related='batch_id.company_id')
     batch_name = fields.Char("KSeF batch name", related='batch_id.name')
@@ -51,7 +51,25 @@ class BatchDownloadPart(models.Model):
             yield unpadder.update(decrypted_chunk)
         yield unpadder.update(decryptor.finalize()) + unpadder.finalize()
 
-    def download(self, commit=True):
+    def _store_decrypted_file(self, content):
+        """ Store the decrypted slice of the ZIP as the attachment of `decrypted_file`, named after the part
+            without its .aes: with a .zip name, Odoo doesn't guess its mimetype from the first bytes, which fails
+            on a slice that isn't a whole ZIP and logs a warning. """
+        self.ensure_one()
+        self.env['ir.attachment'].create({
+            'name': self.part_name.removesuffix('.aes'),
+            'res_model': self._name,
+            'res_field': 'decrypted_file',
+            'res_id': self.id,
+            'raw': content,
+        })
+        # Not written through the field: drop its cached values (bin_size reads included), and have the
+        # fields that depend on it, like the batch's state, recomputed
+        self.invalidate_recordset(['decrypted_file'])
+        self.modified(['decrypted_file'])
+
+    def download(self):
+        """ Download and decrypt the parts. A failure raises a UserError with the reason. """
         for record in self:
             with tempfile.NamedTemporaryFile(mode='w+b') as tmpf:
                 try:
@@ -63,12 +81,9 @@ class BatchDownloadPart(models.Model):
                     requests.RequestException, ValueError, TypeError,
                     InvalidKey, InvalidSignature, UnsupportedAlgorithm,
                 ) as e:
-                    _logger.warning("Couldn't download KSeF batch %s: %s", record.part_name, e)
-                    continue
+                    raise UserError(self.env._("Couldn't download KSeF batch part %(part)s: %(error)s", part=record.part_name, error=e)) from e
                 tmpf.flush()
                 tmpf.seek(0)
                 content = tmpf.read()
-            record.decrypted_file = base64.b64encode(content)
+            record._store_decrypted_file(content)
             _logger.info("KSeF Batch part %s downloaded succesfully", record.part_name)
-            if commit and not modules.module.current_test:
-                self.env.cr.commit()

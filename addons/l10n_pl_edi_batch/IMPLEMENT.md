@@ -1,13 +1,13 @@
 # KSeF Batch Download: implementation plan
 
 What we're going to change in the code, step by step, to reach the design in
-`DESIGN.md`. Each step is one commit, tested by hand from the Odoo shell
-before the next one starts.
+`DESIGN.md`. Each step is one or a few commits, the docs in their own, tested
+with `ocli odoo test /l10n_pl_edi_batch` before the next one starts.
 
 Questions still to decide are marked "Open:".
 
 
-## Where the code is today
+## Where the code was before step 1
 
 - `models/batch_download.py`: the batch model. Stored `active`, `status` (a
   selection of the 7 known KSeF codes), `error`, `content`, `date_expiry`.
@@ -92,6 +92,9 @@ Then, after reviewing the result:
    (ce30f32).
 9. The `*_b64` key fields and the comments on the model fields dropped
    (ea57642).
+10. `_get_ksef_status_code` inlined (only `state` needs the 100 default), the
+    unique constraint and index on `name` dropped (nothing searches by it),
+    parts ordered by `batch_id` and no longer created with `batch_name`.
 
 Step 1 is done.
 
@@ -210,13 +213,17 @@ Tests: none here; the historic cron's tests in step 5 cover it.
 
 ## Step 2: request
 
-- `tools/ksef_api_service.py`, `download_batch_request`: `dateType`
-  `PermanentStorage` instead of `Invoicing`.
-- `models/account_move.py`: `KSEF_WINDOW` = 7.
-- `_request` stops writing `status` and `active`.
+- `tools/ksef_api_service.py`: the export filters by `PermanentStorage`
+  instead of `Invoicing`. The single-invoice query of `l10n_pl_edi` keeps
+  `Invoicing`.
+- `KSEF_WINDOW` = 7 days; it and `KSEF_FIRST_DAY` move to
+  `models/batch_download.py`, where the historic cron will use them.
+- `_request` reads `referenceNumber` strictly: a missing one fails right away.
 
-Test from the shell: request a small window, check the batch is created and
-reaches 200.
+Tests: both requests are well formed, the batch one with `PermanentStorage`,
+the `l10n_pl_edi` one with `Invoicing`.
+
+Step 2 is done.
 
 
 ## Step 3: import
@@ -252,88 +259,234 @@ already has a bill. `import_bills` creates one bill with its KSeF number,
 skips the other, deletes the parts, and the batch is done. A second call
 does nothing. A corrupt ZIP sets the 999 error and fails the batch.
 
+Superseded in step 6c: no retries for the import, since the standard import
+catches the errors of each XML; and a corrupt ZIP downloads the parts again
+before failing the batch.
+
+Step 3 is done.
+
 
 ## Step 4: cleanup
 
 `_gc_batch_downloads`: delete the batches whose `state` is done or failed and
 whose `write_date` is more than 30 days old. Nothing else.
 
-Test from the shell: backdate a done batch with SQL, run the method, check
-it's gone and a recent one isn't.
+Tests: `write_date` backdated with SQL; done and failed batches 31 days old
+are deleted with their parts, a done one 29 days old and a requested one 31
+days old are kept.
+
+Step 4 is done.
 
 
 ## Step 5: today and historic crons
 
-The request logic moves to the batch model, so that the crons live there:
+Two commits: 5a the today cron, 5b the historic cron.
+
+The request logic moves to the batch model, so that the crons live there.
+
+Decided: the status cron only comes in step 6, so the trigger at the end of
+both request crons comes with it. Until then, `check_status()` is run by
+hand.
+
+Decided: the historic date moves back when the next window is requested, not
+when the previous batch is done or failed: no lookup of the latest batch, and
+the same result (at most one historic batch in progress, a failed window
+skipped).
+
+Decided: on a KSeF error other than the rate limit, the request crons log it,
+roll back the company and go on with the next one.
+
+### 5a: today cron
 
 - `_is_enabled()`: the `l10n_pl_edi_batch.enabled` check, moved from
   `account.move`.
-- `_cron_request_today()`: per company, the window from `DESIGN.md`, skip if
-  a today batch is still requested, `_request`, commit. At the end, trigger
-  the status cron.
-- `_cron_request_historic()`: per company, the historic date rules from
-  `DESIGN.md`. At the end, trigger the status cron.
+- `_cron_request_today()`: for each company with a KSeF access token, skip it
+  if a today batch is still requested; otherwise `_request` the window from
+  `max(yesterday 00:00 UTC, date_to of the latest today batch not failed) -
+  1h` to now, and commit (`_can_commit()`).
 - On `KSeFRateLimitError`: stop, and trigger the same cron after
-  `retry_after` seconds.
+  `retry_after` seconds (60 when KSeF doesn't say).
+- `models/account_move.py`: the override of `_cron_l10n_pl_edi_download_bills`
+  calls `_cron_request_today()` when enabled, `super()` otherwise. The
+  commented-out block, `_l10n_pl_edi_trigger` and the unused imports go away.
 
-`models/account_move.py`: the override of `_cron_l10n_pl_edi_download_bills`
-calls `_cron_request_today()` when enabled, `super()` otherwise. The
-commented-out block and `_l10n_pl_edi_trigger` go away.
+Tests, KSeF mocked and time frozen: the first window from yesterday; the next
+one chained on the previous `date_to` - 1h; a failed batch not chained on; the
+skip while a batch is requested; the retrigger on 429; a KSeF error on one
+company not blocking the next; `super()` when disabled.
 
-`data/ir_cron_data.xml` (and the manifest): the historic cron, daily.
+5a is done.
 
-Test from the shell: run each method, check the windows and the batches
-created; run them again, check they skip.
+### 5b: historic cron
+
+- `_cron_request_historic()`: for each company with a KSeF access token, the
+  historic date (empty: yesterday 00:00 UTC); nothing to do once it reaches
+  `KSEF_FIRST_DAY`; skip while a historic batch is requested, downloading or
+  downloaded; otherwise `_request` `[max(date - KSEF_WINDOW, KSEF_FIRST_DAY),
+  date)`, move the date to its start, commit. Same rate limit and error
+  handling as the today cron.
+- `data/ir_cron_data.xml` (added to the manifest): the historic cron, daily,
+  on the batch model.
+- The trigger when a historic batch is done or failed comes with the import
+  cron (step 6).
+
+Tests, KSeF mocked and time frozen: the first window from yesterday; the date
+moving back; the last window cut at `KSEF_FIRST_DAY`; nothing requested past
+it; the skip while a batch is in progress; a failed batch not blocking the
+next window; a failed request not moving the date.
+
+5b is done.
 
 
-## Step 6: status, download and unzip+import crons
+## Step 6: status, download and import crons
 
-On the batch model, three methods, one per cron, all starting with
-`_is_enabled()`:
+Four commits: 6a the status cron, 6b the download cron, 6c the import cron,
+6d the views. Each cron is a method of the batch model, decorated with
+`ksef_cron` (the enabled check and the rate limit), and has its own record
+in `data/ir_cron_data.xml`, run daily as a safety net in case a trigger is
+lost.
 
-- `_cron_check_status()`: due requested batches (`write_date + 10 * 2 **
-  retry_count` past), today first. Lock, `check_status`, commit. Still 100:
-  `retry_count += 1`, trigger itself at the next due time. 200: reset
-  `retry_count`, trigger the download cron.
-- `_cron_download()`: one missing part of one due downloading batch, today
-  first. Lock, download, commit, `_notify_progress`. On failure:
-  `retry_count += 1`, trigger itself at the next due time. All parts in:
-  trigger the unzip+import cron.
-- `_cron_unzip_import()`: one downloaded batch, today first. Lock, `unzip`,
-  `import_attachments`, `_notify_progress`. Historic batch done: trigger the
-  historic cron.
+All three take today batches before historic ones, and only the batches that
+are due: `write_date + 10 * 2 ** retry_count` is past. A batch is locked with
+`res.company._with_locked_records(batch, allow_raising=False)` while a cron
+works on it, and skipped if it's already locked. Commits go through
+`_can_commit()`.
 
-Locking: `res.company._with_locked_records(batch, allow_raising=False)`;
-skip the batch if it's locked. The point is that nobody modifies a batch while
-a cron works on it: the user's change waits until the cron commits.
+### 6a: status cron
 
-`part.download()`: on failure, bump `retry_count`; after the 9th retry,
-write status 999 with the details in `content`. Today it just logs and
-continues.
+- `_cron_check_status()`: for each due requested batch, `check_status` and
+  commit. Still 100: `retry_count += 1`, and trigger itself when the batch is
+  due again. 200: reset `retry_count`, and trigger the download cron. Any
+  other code: the batch is failed by itself.
+- `_request` schedules the status cron for when the new batch is due (10 s
+  later), so both request crons get it (left out of step 5).
+- A KSeF error on the status counts a retry too; the rate limit stops the run
+  and triggers the cron again after KSeF's delay.
+- The trigger of the download cron at 200 comes with that cron (6b).
 
-`data/ir_cron_data.xml`: the three crons.
+Tests: a new batch schedules its first check; a batch not due yet is left
+alone; still 100 counts a retry and schedules the next check; 200 creates the
+parts and resets the count; the 10th retry fails the batch and schedules
+nothing more.
 
-Decided: besides being triggered, the status, download and unzip+import crons
-run at least once a day, as a safety net in case a trigger is lost.
+6a is done.
 
-Decided: the list view of batches gets buttons that trigger the crons (e.g.
-"Check status", "Download", "Import"), instead of doing the work right away.
+### 6b: download cron
 
-Decided: the buttons that do the work directly are removed: Download on the
-parts, and Check Status, Unzip, Import Bills on the batch form. The work only
-happens in the crons; the list buttons just trigger them.
+- `_cron_download()`: one missing part of one due downloading batch per run,
+  then commit and `_notify_progress` with the parts left. All parts in:
+  trigger the import cron.
+- `part.download()` raises its error instead of logging and going on, and
+  loses its `commit` argument: the cron commits.
+- On a failed download: `retry_count += 1`, and trigger itself when the
+  batch is due again. After the 9th retry, the last download error is
+  written as our 999 error, so the batch shows why it failed.
 
-Test from the shell: request a batch, then run the three methods by hand in
-order, and check the state after each.
+Decided: the 999 error after the last retry, though the state is already
+failed by `retry_count`: otherwise the error stays empty.
+
+- The status cron triggers the download cron once a batch reaches 200. The
+  trigger of the import cron, once all parts are in, comes with that cron
+  (6c).
+- After writing a part, `download()` invalidates its file: the reads with
+  `bin_size` (is the part downloaded?) have their own cache, which the write
+  doesn't refresh, so the state stayed downloading in the same transaction.
+
+Tests: the status cron triggers the download cron; one part per run; a
+failed download counts a retry and schedules the next try; the 10th failure
+writes the 999 error.
+
+6b is done.
+
+### 6c: import cron
+
+- `_cron_import()`: one downloaded batch per run, `import_bills`, then
+  `_notify_progress` with the batches left. A historic batch done or failed:
+  trigger the historic cron.
+- The download cron triggers the import cron once all the parts are in.
+
+Decided: no retries for the import. It's deterministic, and the standard
+import already catches every error of an XML: `_decode_edi_xml` for an XML
+that can't be read, `_extend_with_attachments` for a decoder error, posted in
+the bill's chatter. The bill stays empty with its XML, and the next XML is
+imported (see `DESIGN.md`).
+
+Tests: the download cron triggers the import cron; one batch per run, today
+first; a historic batch done triggers the historic cron, a today one
+doesn't; an unreadable XML and a failing decoder each leave an empty bill
+with its XML, and the next XML is still imported.
+
+Decided after 6c: a corrupt ZIP downloads the parts again instead of failing
+the batch: `import_bills` empties their files and counts a retry, with
+`_count_retry`, shared with a failed download. Tests: the parts are emptied
+and the download cron scheduled; after the last retry, the batch fails.
+
+6c is done.
+
+### 6d: views
+
+Decided: the buttons that do the work directly go away (Check Status and
+Import Bills on the batch form). The list view gets buttons that only trigger
+the crons (Check Status, Download, Import).
+
+- `action_trigger_check_status`, `action_trigger_download` and
+  `action_trigger_import`: trigger their cron through `sudo`, since plain
+  users can't access the crons. In the list header, always shown.
+
+Tests: a plain internal user's click on each button triggers its cron.
+
+6d is done. Step 6 is done.
+
+### After step 6: truncated historic batches
+
+Decided: KSeF stops a package at 10,000 invoices, and the rest of the window
+was lost. For a historic batch only, the status cron moves `date_to` to
+`lastPermanentStorageDate` and requests the rest of the window right away
+(`_request_rest_if_truncated`). Today batches span hours: not handled.
+
+Tests: a truncated historic batch ends at `lastPermanentStorageDate`, and a
+new requested historic batch covers the rest of its window.
 
 
 ## Step 7: tests
 
-`tests/test_l10n_pl_edi_batch.py`, with the KSeF service mocked and time
-frozen:
+Most of the tests came with steps 1 to 6, KSeF mocked and time frozen: the
+computed fields and their searches, both request payloads, the today and
+historic windows and their skip rules, the status, download and import
+crons with their retries and failures (still 100, failed download, corrupt
+ZIP), the import skipping known bills and bad XMLs, the cleanup, and the
+list buttons.
 
-- the computed fields and their searches;
-- the today and historic windows, and the skip rules;
-- retries and failures (still 100, failed download, corrupt ZIP, expiry);
-- the import skipping bills already imported;
-- the cleanup.
+Then one run of all the crons in a row: a today batch is requested, checked,
+downloaded and imported, each cron triggering the next one, up to the bill.
+
+Step 7 is done.
+
+### After step 7: switching a database over
+
+Decided: on a database that used the single-invoice download, the historic
+walk ends at the first window that holds a `fetched` bill
+(`_holds_fetched_bill`, the day of a bill read from its KSeF number with
+`_get_ksef_number_date`). It's checked when the window is requested, before
+any batch bill is imported into it; the last window is requested, then the
+historic date goes to `KSEF_FIRST_DAY`. Nothing stored, and the half-fetched
+bills aren't looked at. Tests: the walk ends at the first window holding a
+fetched bill.
+
+Decided: the first today batch of the day starts at yesterday 00:00, where
+the historic windows end; the next ones of the day chain on the latest today
+batch of the day that didn't fail, minus 1 hour, never before yesterday
+00:00. Tests: the first window of the day, the chained ones, a failed batch
+not chained on, and the first window of the next day.
+
+Decided: the import keeps skipping a half-fetched bill (its KSeF number
+exists). With batches enabled, the "Import from KSeF" action only fills the
+half-fetched bills, with `l10n_pl_edi`'s `_fetch_bills_data`, by KSeF
+number; disabled, it's unchanged. The batch import marks its bills
+`fetched`. Tests: the action fills `fetch_ready` and `fetch_failed` bills
+without a metadata query, and runs the single-invoice download when
+disabled; an imported bill is `fetched`.
+
+Decided: a "KSeF batch download" checkbox in the Accounting settings, under
+the KSeF registration, sets `l10n_pl_edi_batch.enabled`. Test: the setting
+turns the parameter on and off.

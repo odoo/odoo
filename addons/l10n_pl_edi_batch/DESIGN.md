@@ -9,9 +9,11 @@ company asks KSeF for a batch: one ZIP with all the invoices of a timeframe,
 from `date_from` to `date_to`.
 
 It's opt-in. The module is auto-installed with `l10n_pl_edi`, but nothing
-changes until the system parameter `l10n_pl_edi_batch.enabled` is set. Until
+changes until the system parameter `l10n_pl_edi_batch.enabled` is set, with
+the "KSeF batch download" checkbox in the Accounting settings. Until
 then, `l10n_pl_edi` (unchanged from 18.0) keeps downloading bills one by one,
-as before. How to switch existing databases over is still to be discussed.
+as before. On a database switched over, the history only starts where the
+single-invoice download stopped (see Historic cron).
 
 A batch is harder to handle than a single invoice:
 
@@ -36,15 +38,14 @@ steps move independently: a long import never blocks polling or downloads.
 - historic (daily): requests a batch of an older week, back to KSeF's start.
 - status: checks each waiting batch (100); once ready (200), starts download.
 - download: downloads one batch part, decrypting it on the fly, then retriggers.
-- unzip + import: merges the parts, unzips, turns each XML into a vendor bill.
+- import: merges the parts, unzips, turns each XML into a vendor bill.
 
 It recovers on its own: waits and downloads are retried, the today cron
 covers again the timeframe of a failed batch, bills already imported are
 skipped, and old batches are cleaned up. Each batch is a record you can open,
 inspect and fix by hand.
 
-The sections below explain each part, and why it works this way. Anything
-marked (planned) is designed, but not coded yet.
+The sections below explain each part, and why it works this way.
 
 ## KSeF facts we rely on
 
@@ -79,7 +80,8 @@ The spec recommends using the `PermanentStorage` date for incremental downloads.
 An invoice accepted at 10:00 may not be stored yet at 10:05: filtering by
 the storage date means a window only holds invoices that are really there.
 
-Decision: the batch export filters by `PermanentStorage` (planned).
+Decision: the batch export filters by `PermanentStorage`. The single-invoice
+download of `l10n_pl_edi` keeps `Invoicing`.
 
 
 ## The batch export API, step by step
@@ -111,7 +113,7 @@ One record per export request.
 Stored fields:
 
 ```
-name                      KSeF reference number of the export (unique)
+name                      KSeF reference number of the export
 company_id                Company the export belongs to
 content                   Last full status answer from KSeF (JSON)
 date_from                 Start of the export window (UTC)
@@ -138,16 +140,16 @@ kind                      historic when date_to <= create_date - 24h,
 ```
 
 `content` is a `fields.Json`, so in Python it's already a dict. The KSeF
-status code is `content['status']['code']`, read by `_get_ksef_status_code`:
-100 while no answer is saved yet. `date_expiry` is the ISO date in
-`content['packageExpirationDate']`, converted to UTC.
+status code is `content['status']['code']`; `state` reads it as 100 while no
+answer is saved yet, `error` only reads it when it's there. `date_expiry` is
+the ISO date in `content['packageExpirationDate']`, converted to UTC.
 
 There's no `status` field: `state` already says what the code means (100
 requested, 200 ready, anything else failed), and the error text starts with
 the code, e.g. "415: <KSeF's description>". The codes are module constants:
 `KSEF_IN_PROGRESS` (100), `KSEF_READY` (200) and `ODOO_ERROR` (999).
 
-Our own errors (a part download still failing after 9 retries, a corrupt ZIP)
+Our own errors (a part download or a corrupt ZIP still failing after 9 retries)
 go in the same place: `_set_odoo_error` writes `content['status']` with our
 code 999 "Odoo Error" and the details, like KSeF does for its errors. No
 separate error field is needed.
@@ -178,8 +180,9 @@ inactive batches had.
 
 The model has debug-mode views, so a batch can be inspected and fixed by hand
 if something goes wrong. The work itself only happens in the crons: the list
-view has buttons that trigger them (planned), and no button does the work
-directly.
+view has buttons that trigger them (Check Status, Download, Import), and no
+button does the work directly. The buttons trigger the crons through `sudo`,
+since plain users can't access the crons.
 
 ### `l10n_pl_edi_batch.part`
 
@@ -197,7 +200,7 @@ decrypted_file     The decrypted slice of the ZIP; empty until downloaded
 part and protected by the part's access rights, like the other EDI binaries.
 No attachment exists until the download.
 
-The parts are deleted once all their invoices are imported (planned): they
+The parts are deleted once all their invoices are imported: they
 can be up to 50 MB each. Until then, they're the only copy we need: the XMLs
 are never kept on the batch.
 
@@ -225,7 +228,7 @@ The cleanup never calls KSeF.
 
 ### Common rules
 
-- Progress: the status, download and unzip+import crons use the cron progress
+- Progress: the download and import crons use the cron progress
   API, `ir.cron._notify_progress(done=..., remaining=...)`, like the invoice
   sending cron in `account` and `l10n_my_edi`. When a cron reports work left,
   Odoo runs it again right away (up to 10 times in a row, then reschedules it
@@ -239,27 +242,33 @@ The cleanup never calls KSeF.
   that time, with `ir.cron._trigger(at=...)`, so every waiting batch has its
   own trigger. The cron only handles the batches that are due.
 - Commits: crons that loop over companies commit after each company, the
-  status and download crons after each batch or part, the unzip+import cron
-  after each bill. A failure then only loses the current unit of work. Commits
-  go through `_can_commit()`, so they're skipped in tests.
+  status and download crons after each batch or part, the import cron
+  after each bill. A failure then only loses the current unit of work: `_try`
+  runs one unit, and on a KSeF error rolls it back and hands the error to the
+  cron. Commits and rollbacks go through `_can_commit()`, so they're skipped
+  in tests.
 - Locking: the batch being processed is locked with
   `res.company._with_locked_records` (`SELECT ... FOR UPDATE SKIP LOCKED`), so
   nobody modifies it while a cron works on it: a change waits until the cron
   commits. A manual trigger of a cron that's already running just waits for
   the next run, since Odoo never runs the same cron twice at once.
 - Rate limit: on HTTP 429, the cron stops and triggers itself again after the
-  `Retry-After` delay. The limit applies to the whole company anyway.
-- Retries: a batch still at 100, or a part download that failed, is retried
-  after `10 * 2 ** retry_count` seconds, at most 9 times (10 s, 20 s, ...
-  2560 s, about 85 minutes in total, well within the 3 hours of the today
-  cron). `retry_count` is reset to 0 when the status reaches 200.
-- Priority: the status, download and unzip+import crons handle today batches
+  `Retry-After` delay. The limit applies to the whole company anyway. The
+  `ksef_cron` decorator does it for every cron, along with the
+  `l10n_pl_edi_batch.enabled` check.
+- Retries: a batch still at 100, a part download that failed, or a corrupt
+  ZIP, is retried after `10 * 2 ** retry_count` seconds, at most 9 times
+  (10 s, 20 s, ... 2560 s, about 85 minutes in total, well within the 3 hours
+  of the today cron). `retry_count` is reset to 0 when the status reaches 200.
+- Priority: the status, download and import crons handle today batches
   before historic ones, so the history never delays current invoices.
-- Small batches: we don't handle truncated packages, and we don't pre-check
-  the size with the metadata API. Instead, the windows stay small: about 2 days
-  for the today cron, 7 days for the historic cron. The today cron must always
-  keep working. The historic cron can fail: it's old data, it can be requested
-  again, and batches can be fixed by hand.
+- Small batches: the windows stay small, about 2 days for the today cron, 7
+  days for the historic cron, and we don't pre-check the size with the
+  metadata API (it has no count, only pages of 250). A truncated historic
+  batch is followed up (see Status cron); a today batch would need more than
+  10,000 invoices in a day and a few hours, so its truncation isn't handled.
+  The historic cron can fail: it's old data, it can be requested again, and
+  batches can be fixed by hand.
 
 ### Failures
 
@@ -269,7 +278,7 @@ timeframe isn't requested again automatically. A batch fails when:
 - KSeF answers a status other than 100 or 200;
 - it's still at 100 after 9 retries;
 - a part download still fails after 9 retries;
-- the ZIP is corrupt;
+- the ZIP is still corrupt after 9 retries;
 - the package expired before it was downloaded.
 
 For the today cron this costs nothing: its next run starts from the latest
@@ -289,23 +298,28 @@ The existing cron, every 3 hours:
 its method: when batches are disabled, it calls the original single-invoice
 download.
 
-For each company:
+For each company with a KSeF access token:
 
 - Skip the company if one of its today batches is still requested, to save
   KSeF requests.
-- Otherwise request a batch for the window from
+- Otherwise request a batch up to now. The first batch of the day starts at
+  yesterday 00:00 UTC, where the historic windows end. The next ones of the
+  day start at
 
   ```
   max(yesterday 00:00 UTC,
-      date_to of the company's latest today batch not failed) - 1 hour
+      date_to of the latest today batch of the day not failed - 1 hour)
   ```
 
-  to now. The 1-hour overlap covers the delay before KSeF stores an invoice;
-  invoices downloaded twice are skipped at import.
+  so they stay a few hours long. The 1-hour overlap covers the delay before
+  KSeF stores an invoice; invoices downloaded twice are skipped at import.
 - Save the batch with empty content (so code 100, requested), and commit.
+- On any other KSeF error, log it, roll back the company and go on with the
+  next one: one company's problem doesn't block the others. The single-invoice
+  cron of `l10n_pl_edi` raises instead.
 
-At the end, trigger the status cron if a batch was requested. The first
-status check is the status cron's job.
+Every new batch schedules its own first status check, 10 seconds later
+(`_request` triggers the status cron): the check is the status cron's job.
 
 ### 2. Historic cron: past invoices
 
@@ -313,22 +327,37 @@ A new cron, scheduled daily, and also triggered when a historic batch is done
 or failed. It walks backwards in time, from yesterday to the day KSeF 2.0
 went live (`KSEF_FIRST_DAY`, 2026-01-31), one 7-day window at a time.
 
-For each company:
+On a database that used the single-invoice download of `l10n_pl_edi`, it
+stops earlier. That download walks forward from `KSEF_FIRST_DAY`, so the
+history before its last week is already there. The first window holding a
+bill that download fetched (`fetched`) is the last one: it's requested, then
+the historic date goes to `KSEF_FIRST_DAY`. Its half-fetched bills
+(`fetch_ready`, `fetch_failed`) aren't looked at: the "Import from KSeF"
+action of the vendor bills fills them (see Import cron).
+
+The check is done when the window is requested, before the batch imports any
+bill into it: the `fetched` bills in it can only come from the single-invoice
+download. The day of a bill comes from its KSeF number, `NIP-YYYYMMDD-...`,
+the day KSeF numbered it, on the same axis as the storage date of the
+windows.
+
+For each company with a KSeF access token:
 
 - `res.company.l10n_pl_edi_batch_historic_date` holds the end of the next
   window. It starts at yesterday 00:00 UTC.
 - The window is `[max(historic date - 7 days, KSEF_FIRST_DAY), historic
   date)`, with `KSEF_WINDOW` = 7 days, a constant.
-- Skip the company if its latest historic batch isn't done or failed yet.
-- Latest historic batch done: move the historic date back to its `date_from`,
-  and request the next window.
-- Latest historic batch failed: log it, move the historic date back to its
-  `date_from` anyway, and request the next window.
-- When the historic date reaches `KSEF_FIRST_DAY`, there's nothing left to do.
-  The cron does nothing, but stays active. To download the history again, set
-  the historic date to a later date.
+- Skip the company while one of its historic batches is in progress
+  (requested, downloading or downloaded).
+- Otherwise request the window, and move the historic date back to its
+  `date_from` once the request succeeds, in the same transaction as the new
+  batch. Whether the previous batch ended done or failed doesn't matter: a
+  failed window is skipped, as for every failure (see Failures).
+- When the historic date reaches `KSEF_FIRST_DAY`, there's nothing left to
+  do. The cron does nothing, but stays active. To download the history again,
+  set the historic date to a later date.
 - Like the today cron: save the batch as requested, commit per company, and
-  trigger the status cron.
+  log and skip a company on a KSeF error.
 
 With 278 days of history (on 2026-11-05) and 7-day windows, that's 40 windows
 per company. Since the next window is requested as soon as the previous one is
@@ -347,20 +376,29 @@ The state follows by itself (it's computed):
 - 200 with invoices: reset `retry_count`, create the parts (the batch is now
   downloading), and trigger the download cron.
 - 200 with 0 invoices: nothing to download, the batch is done.
+- 200, truncated, for a historic batch: KSeF stopped the package at 10,000
+  invoices, in storage order. The batch's `date_to` moves to
+  `lastPermanentStorageDate`, where its package really ends, and the rest of
+  the window is requested right away, as a new historic batch. It can't wait
+  for the historic cron: the historic date already moved back, and asking for
+  the same window again would be truncated the same way. If the rest is
+  truncated too, it gets its own follow-up. If KSeF rejects the follow-up, the
+  whole status check is rolled back and retried.
 - Any other code: the batch is failed.
 
 ### 4. Download cron
 
 Each run downloads one missing part of a downloading batch (today batches
-first), decrypting it on the fly into the part's own attachment, commits, and
+first), decrypting it on the fly into the part's `decrypted_file`, commits, and
 reports the parts left with `_notify_progress`, so Odoo runs it again.
 
 When all the parts of a batch are in, the batch is downloaded, and the
-unzip+import cron is triggered. A failed download is retried after
+import cron is triggered. A failed download is retried after
 `10 * 2 ** retry_count` seconds, at most 9 times per batch; after that, the
-batch failed (see Failures).
+batch failed (see Failures), and the last download error is written as our
+999 error, so the batch shows why.
 
-### 5. Unzip+import cron
+### 5. Import cron
 
 Each run takes one downloaded batch (today batches first), and:
 
@@ -369,66 +407,80 @@ Each run takes one downloaded batch (today batches first), and:
 2. For each XML, skips it if its KSeF number already has a vendor bill in the
    company (the `UNIQUE(l10n_pl_edi_number, company_id, move_type)` constraint
    forbids a second one anyway). Otherwise creates the bill with the XML
-   attached to it, imports it, sets its KSeF number, and commits: one commit
-   per bill, so an interrupted run never leaves a bill without its KSeF
-   number.
+   attached to it, imports it, sets its KSeF number and the `fetched` status,
+   as the single-invoice download does, and commits: one commit per bill, so
+   an interrupted run never leaves a bill without its KSeF number.
 3. Once every XML is handled, deletes the parts: the batch is done. For a
-   historic batch with older history left (`date_from > KSEF_FIRST_DAY`),
-   triggers the historic cron.
+   historic batch, done or failed, triggers the historic cron, which requests
+   the next window if there's history left.
 4. Reports the batches left with `_notify_progress`.
 
 If a run is interrupted (time limit, crash), the parts are still there and
 the batch stays downloaded: the next run joins and opens the ZIP again, and
 skips the bills already created. Both are fast.
 
-If an error happens before the standard import can catch it (e.g. an XML that
-can't even be read), every run would stop at the same XML. So such an error
-bumps `retry_count`, and after 9 retries the batch gets our 999 error and
-fails.
+An XML that can't be imported doesn't fail the batch: the bill stays empty,
+with its XML attached, and the import goes on with the next XML. The
+standard import catches every error of the XML itself:
 
-An XML that can't be imported doesn't fail the batch. The standard import
-(`account.move._extend_with_attachments`) catches the decoder error, posts it
-in the bill's chatter, and moves on to the next file. A corrupt ZIP does fail
-it (see Failures).
+- an XML that can't be read: `ir.attachment._decode_edi_xml` logs the parse
+  error and gives the decoders nothing to work on;
+- an XML the decoder chokes on (a wrong tag, a bad amount):
+  `account.move._extend_with_attachments` runs the decoder in a savepoint,
+  catches any exception but `RedirectWarning`, and posts the error in the
+  bill's chatter.
+
+So the import has no retries: it's deterministic, a retry would only hit the
+same error again. What's left outside those catches is a bug in our code,
+which a retry doesn't fix either: the cron run fails, as for any Odoo cron,
+and the batch stays downloaded for the next run.
+
+A bill the single-invoice download left half-fetched (`fetch_ready`,
+`fetch_failed`) has its KSeF number, so the import skips it too. With batches
+enabled, the "Import from KSeF" action of the vendor bills fills those: it no
+longer runs the single-invoice download, whose metadata query would create
+bills alongside the crons, but only downloads the half-fetched bills one by
+one by KSeF number.
+
+A corrupt ZIP is checked by us, before the standard import, and should never
+happen: KSeF builds the ZIP, and the parts are decrypted and checked one by
+one. If it does, the parts are downloaded again: their files are emptied, a
+retry is counted, and the download cron gets them again from the same URLs,
+since KSeF keeps the package until it expires. After the last retry, or once
+the package expired, the batch fails with the ZIP error (see Failures).
 
 
 ## Cleanup
 
-Done by the daily autovacuum, `_gc_batch_downloads` (planned: today it still
-deletes all done and failed batches right away). It never calls KSeF.
+Done by the daily autovacuum, `_gc_batch_downloads`. It never calls KSeF.
 
-- Batches done or failed more than 30 days ago are deleted, with their
-  parts. They're kept for a while because the today cron starts from the
-  latest today batch, and because they're useful for debugging.
+- Batches done or failed more than 30 days ago are deleted,
+  with their parts. Their `write_date` stands for the time they finished:
+  close enough, since a batch failed by expiry or done by the import was last
+  written a few hours or days before. They're kept for a while because the
+  today cron starts from the latest today batch, and because they're useful
+  for debugging.
 - Batches whose package expired before they were downloaded need nothing:
   their computed state is already failed (see Failures).
 
 
 ## Where we are
 
-Done:
+Done, each step tested with `ocli odoo test /l10n_pl_edi_batch` (see
+`IMPLEMENT.md`):
 
-- the models and views;
-- the request, status, download, unzip and import methods, tested by hand from
-  the Odoo shell against the KSeF test environment;
-- the `l10n_pl_edi_batch.enabled` parameter;
-- the cleanup of the old attachment-based code.
-
-Next up, in this order. Each step is one commit, tested by hand from the Odoo
-shell before the next one:
-
-1. Fields (done): `error`, `date_expiry`, `kind` and `state` computed,
-   `retry_count` added, `status` and `active` dropped, parts holding a
-   `decrypted_file`, the historic date on `res.company`; the views follow.
+1. Fields: `error`, `date_expiry`, `kind` and `state` computed, `retry_count`
+   added, `status` and `active` dropped, parts holding a `decrypted_file`,
+   the historic date on `res.company`; the views follow.
 2. Request: the `PermanentStorage` date type, and `KSEF_WINDOW` = 7 days.
-3. Import: one method that joins the parts, reads the XMLs from the ZIP,
-   skips the bills already imported, creates and imports the others with one
-   commit per bill (through `_can_commit()`), and deletes the parts at the
-   end. No XMLs kept on the batch.
-4. Cleanup: delete only the batches done or failed more than 30 days ago.
+3. Import: the bills are read straight from the ZIP, one commit per bill, and
+   the parts deleted at the end. No XMLs kept on the batch.
+4. Cleanup: only the batches done or failed more than 30 days ago.
 5. The today and historic crons.
-6. The status, download and unzip+import crons.
-7. Tests, with frozen time so that they don't depend on how fast they run.
+6. The status, download and import crons, and the list buttons that trigger
+   them.
+
+7. Tests: with each step, plus one run of all the crons in a row.
 
 Questions, ideas, a better name for the historic cron?
 Ping us, we'd love to hear from you.

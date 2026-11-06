@@ -11,6 +11,11 @@
                 decoration-success="state == 'done'"
                 decoration-info="state in ('requested', 'downloading', 'downloaded')"
             >
+                <header>
+                    <button name="action_trigger_check_status" string="Check Status" type="object" display="always"/>
+                    <button name="action_trigger_download" string="Download" type="object" display="always"/>
+                    <button name="action_trigger_import" string="Import" type="object" display="always"/>
+                </header>
                 <field name="name"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="date_from"/>
@@ -33,8 +38,6 @@
         <field name="arch" type="xml">
             <form string="KSeF Batch Download">
                 <header>
-                    <button name="check_status" string="Check Status" type="object" class="oe_highlight" invisible="state != 'requested'"/>
-                    <button name="import_bills" string="Import Bills" type="object" class="oe_highlight" invisible="state != 'downloaded'"/>
                     <field name="state" widget="statusbar" statusbar_visible="requested,downloading,downloaded,done" readonly="1"/>
                 </header>
                 <sheet>

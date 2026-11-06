@@ -3,7 +3,7 @@ import json
 import logging
 import os
 from pathlib import Path
-from urllib.parse import urlparse, unquote
+from urllib.parse import unquote, urlsplit
 
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -44,7 +44,7 @@ class KsefApiServiceBatch(KsefApiService):
 
     @staticmethod
     def _url_to_name(url):
-        return Path(unquote(urlparse(url).path)).name
+        return Path(unquote(urlsplit(url).path)).name
 
     def _create_encryption_data(self):
         raw_symmetric_key = os.urandom(32)
@@ -69,7 +69,6 @@ class KsefApiServiceBatch(KsefApiService):
             'content': json_response,
             'part_ids': [
                 Command.create({
-                    'batch_name': name,
                     'part_number': part['ordinalNumber'],
                     'download_url': part['url'],
                     'download_method': (part['method'] or '').upper(),
@@ -89,7 +88,7 @@ class KsefApiServiceBatch(KsefApiService):
                 },
                 'filters': {
                     'dateRange': {
-                        'dateType': 'Invoicing',
+                        'dateType': 'PermanentStorage',
                         'from': date_from.strftime('%Y-%m-%dT%H:%M:%S.000Z'),
                         'to': date_to.strftime('%Y-%m-%dT%H:%M:%S.000Z'),
                     },

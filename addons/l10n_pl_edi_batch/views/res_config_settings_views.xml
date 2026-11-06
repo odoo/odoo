@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_l10n_pl_edi_batch" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.pl.edi.batch</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="l10n_pl_edi.res_config_settings_view_form_l10n_pl_edi"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='l10n_pl_edi_register']" position="after">
+                <setting
+                    id="l10n_pl_edi_batch_enabled"
+                    help="Download the vendor bills from KSeF in batches, a whole timeframe at once, instead of one by one."
+                    invisible="not l10n_pl_edi_register">
+                    <field name="l10n_pl_edi_batch_enabled"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
