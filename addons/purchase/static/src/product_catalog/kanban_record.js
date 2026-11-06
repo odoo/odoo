@@ -33,9 +33,10 @@ patch(ProductCatalogKanbanRecord.prototype, {
 
     async updatePackagingQuantity(packaging) {
         const productPackagingQty =
-            Math.floor(parseFloat(formatFloat(this.productCatalogData.quantity / packaging.qty))) + 1;
+            Math.floor(parseFloat(formatFloat(this.productCatalogData.quantity / packaging.qty))) +
+            1;
         this.productCatalogData.quantity = productPackagingQty * packaging.qty;
-        this._pendingUpdate = this._pendingUpdate.then(() =>
+        const update = this._pendingUpdate.then(() =>
             rpc("/product/catalog/update_order_line_info", {
                 order_id: this.env.orderId,
                 product_id: this.env.productId,
@@ -44,7 +45,8 @@ patch(ProductCatalogKanbanRecord.prototype, {
                 res_model: this.env.orderResModel,
             })
         );
-        const price = await this._pendingUpdate;
+        this._pendingUpdate = update.catch(() => {});
+        const price = await update;
         this.productCatalogData.price = parseFloat(price);
     },
 });
