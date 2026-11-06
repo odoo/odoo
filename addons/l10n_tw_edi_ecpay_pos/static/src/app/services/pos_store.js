@@ -15,7 +15,7 @@ patch(PosStore.prototype, {
         );
 
         if (uniform_invoice) {
-            if (uniform_invoice.ecpay_error && order.is_invoiced) {
+            if (uniform_invoice.ecpay_error && order.is_singly_invoiced) {
                 order.ecpay_error = uniform_invoice.ecpay_error;
                 if (options.throw) {
                     await this.dialog.add(AlertDialog, {
