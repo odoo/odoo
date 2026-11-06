@@ -595,3 +595,59 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(registration.sale_status, 'to_pay', "Price of $0.01 should be paid")
         registration.sale_order_id.action_confirm()
         self.assertEqual(registration.sale_status, 'sold')
+
+
+@tagged('event_flow')
+class TestEventSaleAttendeeCountAccess(TestEventSaleCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        ticket = cls.env['event.event.ticket'].create({
+            'name': 'Access Ticket',
+            'event_id': cls.event_0.id,
+            'product_id': cls.event_product.id,
+        })
+        cls.user_invoicing_only = mail_new_test_user(
+            cls.env, login='user_invoicing_only', groups='account.group_account_invoice')
+        mail_new_test_user(
+            cls.env, login='user_accountant_readonly', groups='account.group_account_readonly')
+        mail_new_test_user(
+            cls.env, login='user_event_manager_accountant',
+            groups='event.group_event_manager,account.group_account_readonly')
+
+        cls.event_sale_order = cls.env['sale.order'].create({
+            'partner_id': cls.event_customer.id,
+            'user_id': False,
+            'order_line': [(0, 0, {
+                'product_id': cls.event_product.id,
+                'event_id': cls.event_0.id,
+                'event_ticket_id': ticket.id,
+                'product_uom_qty': 3,
+            })],
+        })
+        cls.event_sale_order.action_confirm()
+        cls.event_sale_order.order_line.registration_ids[0].action_cancel()
+
+    def _read_event_sale_order_as_form(self):
+        order = self.event_sale_order.with_user(self.env.user)
+        return order.web_read({
+            'attendee_count': {},
+            'order_line': {'fields': {'event_id': {}, 'event_ticket_id': {}}},
+        })[0]
+
+    @users('user_invoicing_only', 'user_accountant_readonly')
+    def test_attendee_count_is_zero_without_registration_access(self):
+        values = self._read_event_sale_order_as_form()
+        self.assertEqual(values['attendee_count'], 0)
+
+    @users('user_sales_salesman', 'user_event_manager_accountant')
+    def test_attendee_count_is_real_with_registration_access(self):
+        values = self._read_event_sale_order_as_form()
+        self.assertEqual(values['attendee_count'], 2)
+
+    def test_attendee_count_is_not_shared_between_users_in_one_transaction(self):
+        self.env.invalidate_all()
+        order = self.event_sale_order
+        self.assertEqual(order.with_user(self.user_sales_salesman).attendee_count, 2)
+        self.assertEqual(order.with_user(self.user_invoicing_only).attendee_count, 0)
