@@ -30,6 +30,8 @@ class ResPartner(models.Model):
 
     def _l10n_fr_get_siren(self):
         self.ensure_one()
+        if not self.l10n_fr_is_french:
+            return False
         siret_or_siren = self._l10n_fr_get_siret_or_siren()
         if len(siret_or_siren) >= 9:
             return siret_or_siren[:9]
@@ -37,5 +39,7 @@ class ResPartner(models.Model):
 
     def _l10n_fr_get_siret(self):
         self.ensure_one()
+        if not self.l10n_fr_is_french:
+            return False
         siret_or_siren = self._l10n_fr_get_siret_or_siren()
         return len(siret_or_siren) == 14 and siret_or_siren
