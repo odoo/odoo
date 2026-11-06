@@ -20,21 +20,21 @@ class SaleOrder(models.Model):
     od19_billing_request_available = fields.Boolean(
         string="Billing Request Available",
         compute="_compute_od19_billing_request_available",
-        help="แสดงปุ่มเปิดคำขอเปิดบิลเฉพาะเมื่อมีงานบริการที่ยังเปิดบิลได้ "
-        "(ไม่ต้องส่งของ) อย่างน้อย 1 บรรทัด; ใบที่เป็นสินค้าล้วนจะไม่แสดง "
-        "เพื่อให้ไปเปิดบิลจากใบส่งของแทน",
+        help="แสดงปุ่มเปิดคำขอเปิดบิลเฉพาะเมื่อมีบรรทัดที่ตั้ง Invoice Policy "
+        "เป็น 'Ordered quantities' และยังเปิดบิลได้ (qty_to_invoice > 0) "
+        "อย่างน้อย 1 บรรทัด; บรรทัดที่ตั้ง 'Delivered quantities' "
+        "จะไม่แสดง เพื่อให้ไปเปิดบิลจากใบส่งของแทน",
     )
 
     @api.depends(
         "state",
         "order_line.product_id",
-        "order_line.product_id.type",
         "order_line.qty_to_invoice",
     )
     def _compute_od19_billing_request_available(self):
         for order in self:
             order.od19_billing_request_available = order.state == "sale" and any(
-                line.product_id.type == "service" and line.qty_to_invoice > 0
+                line.product_id.invoice_policy == "order" and line.qty_to_invoice > 0
                 for line in order.order_line
             )
 

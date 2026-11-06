@@ -10,15 +10,15 @@ class PurchaseOrder(models.Model):
     od19_billing_request_available = fields.Boolean(
         string="Billing Request Available",
         compute="_compute_od19_billing_request_available",
-        help="แสดงปุ่มเปิดคำขอเปิดบิลเฉพาะเมื่อมีงานบริการที่ยังเปิดบิลได้ "
-        "(ไม่ต้องรับของ) อย่างน้อย 1 บรรทัด; ใบที่เป็นสินค้าล้วนจะไม่แสดง "
-        "เพื่อให้ไปเปิดบิลจากใบรับของแทน",
+        help="แสดงปุ่มเปิดคำขอเปิดบิลเฉพาะเมื่อมีบรรทัดที่ตั้ง Control Policy "
+        "เป็น 'On ordered quantities' และยังเปิดบิลได้ (qty_to_invoice > 0) "
+        "อย่างน้อย 1 บรรทัด; บรรทัดที่ตั้ง 'On received quantities' "
+        "จะไม่แสดง เพื่อให้ไปเปิดบิลจากใบรับของแทน",
     )
 
     @api.depends(
         "state",
         "order_line.product_id",
-        "order_line.product_id.type",
         "order_line.qty_to_invoice",
     )
     def _compute_od19_billing_request_available(self):
@@ -27,7 +27,8 @@ class PurchaseOrder(models.Model):
                 "purchase",
                 "done",
             ) and any(
-                line.product_id.type == "service" and line.qty_to_invoice > 0
+                line.product_id.purchase_method == "purchase"
+                and line.qty_to_invoice > 0
                 for line in order.order_line
             )
 

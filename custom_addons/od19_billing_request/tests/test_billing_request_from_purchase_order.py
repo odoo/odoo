@@ -2,10 +2,11 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 """Create an AP billing request from a confirmed purchase order.
 
-The form button only shows when the order carries at least one billable
-*service* line (no receipt needed); a goods-only order never shows it - the
-goods are billed from the receipt transfer instead. A source line already
-referenced by an active request is never pulled twice.
+The form button only shows when the order carries at least one line that is
+billable straight from the order (product ``purchase_method == 'purchase'``
+and ``qty_to_invoice > 0``); a line whose ``purchase_method == 'receive'``
+never shows it - that line is billed from the receipt transfer instead. A
+source line already referenced by an active request is never pulled twice.
 """
 
 from odoo.exceptions import UserError
@@ -25,12 +26,15 @@ class TestBillingRequestFromPurchaseOrder(AccountTestInvoicingCommon):
         # (purchase method), otherwise ``qty_to_invoice`` stays at zero.
         cls.service_product.type = "service"
         cls.service_product.purchase_method = "purchase"
+        # Goods product billed on *received* quantities: the button stays
+        # hidden on such an order because the line must be billed from the
+        # receipt transfer (``purchase_method != 'purchase'``).
         cls.goods_product = cls.env["product.product"].create(
             {
                 "name": "PO Goods Product",
                 "type": "consu",
                 "is_storable": False,
-                "purchase_method": "purchase",
+                "purchase_method": "receive",
                 "standard_price": 40.0,
             }
         )
@@ -102,12 +106,31 @@ class TestBillingRequestFromPurchaseOrder(AccountTestInvoicingCommon):
 
         self.assertTrue(po.od19_billing_request_available)
 
-    def test_goods_only_order_hides_button(self):
-        """งานสินค้าล้วน: แม้ยังไม่เปิดบิลก็ต้องไม่แสดงปุ่ม (ไปใช้ปุ่มบนใบรับของ)."""
+    def test_received_policy_line_hides_button(self):
+        """Control Policy = 'On received quantities': ยังไม่รับของจึงยังเปิดบิล
+        จากใบสั่งซื้อไม่ได้ (ต้องไปเปิดจากใบรับของแทน)."""
         po = self._confirmed_po([("Goods", 3.0, 40.0)], product=self.goods_product)
 
-        self.assertGreater(po.order_line.qty_to_invoice, 0.0)
+        self.assertEqual(po.order_line.product_id.purchase_method, "receive")
+        self.assertEqual(po.order_line.qty_to_invoice, 0.0)
         self.assertFalse(po.od19_billing_request_available)
+
+    def test_ordered_policy_goods_shows_button(self):
+        """Control Policy = 'On ordered quantities': เปิดบิลจากใบสั่งซื้อได้ทันที
+        แม้เป็นสินค้า (ไม่ผูกกับ product type อีกต่อไป)."""
+        product = self.env["product.product"].create(
+            {
+                "name": "PO Goods Ordered Policy",
+                "type": "consu",
+                "is_storable": False,
+                "purchase_method": "purchase",
+                "standard_price": 40.0,
+            }
+        )
+        po = self._confirmed_po([("Goods", 3.0, 40.0)], product=product)
+
+        self.assertGreater(po.order_line.qty_to_invoice, 0.0)
+        self.assertTrue(po.od19_billing_request_available)
 
     def test_line_already_requested_is_not_pulled_twice(self):
         po = self._confirmed_po([("Service", 3.0, 40.0)])
