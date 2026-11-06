@@ -9,7 +9,7 @@ export class ResourceCalendarPlugin extends Plugin {
     async reload() {
         if (this.record && this.newAttendances()) {
             this.newAttendances.set(false);
-            await this.record.load();
+            await this.record.safeLoad();
         }
     }
 
