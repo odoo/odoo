@@ -290,6 +290,27 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
         self.assertFalse(self.env['account.move'].search([('journal_id', '=', branch_journal.id)]))
 
     @freeze_time('2024-08-15 10:00:00')
+    def test_sync_links_bill_entered_by_user(self):
+        """ A bill the user entered already, for the same supplier and reference, gets the document instead of a new one. """
+        bill_vals = {
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'ref': 'IV-DOC1',
+            'invoice_date': '2024-07-10',
+            'invoice_line_ids': [Command.create({'name': 'Chairs', 'quantity': 1, 'price_unit': 1000.0, 'tax_ids': []})],
+        }
+        entered_bill, other_supplier_bill = self.env['account.move'].create([bill_vals, {**bill_vals, 'partner_id': self.partner_b.id}])
+
+        action, _calls = self._sync([[self._document_data('DOC1')]])
+
+        self.assertEqual(self._get_received_bills(['DOC1']), entered_bill)
+        self.assertEqual(self.env['account.move'].search(action['domain']), entered_bill)
+        self.assertRecordValues(entered_bill + other_supplier_bill, [
+            {'l10n_my_edi_state': 'received', 'invoice_line_ids': entered_bill.invoice_line_ids.ids},
+            {'l10n_my_edi_state': False, 'invoice_line_ids': other_supplier_bill.invoice_line_ids.ids},
+        ])
+
+    @freeze_time('2024-08-15 10:00:00')
     def test_sync_supplier_malaysian_tin_first(self):
         """ The Malaysian TIN of a partner is the one used on MyInvois; its Tax ID only when it has none. """
         self.partner_b.l10n_my_edi_malaysian_tin = self.partner_a.vat

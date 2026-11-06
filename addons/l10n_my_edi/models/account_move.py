@@ -47,7 +47,7 @@ class AccountMove(models.Model):
     l10n_my_edi_received_document_id = fields.Many2one(
         comodel_name='myinvois.document',
         string="Received MyInvois Document",
-        help="The document issued by the supplier on MyInvois, from which this bill was created.",
+        help="The document issued by the supplier on MyInvois for this bill.",
         compute='_compute_l10n_my_edi_received_document_id',
         store=True,
         index='btree_not_null',
