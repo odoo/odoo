@@ -18,16 +18,13 @@ class TestCasInvoiceReport(TestPhCommon):
         cls.tax_withholding = chart_template.ref('l10n_ph_tax_sale_10_wi011')
         cls.tax_percentage = chart_template.ref('l10n_ph_tax_sale_3_pt010')
 
-    def _render(self, invoice, report='account.report_invoice'):
-        html, _ = self.env['ir.actions.report']._render_qweb_html(report, invoice.ids)
-        return html.decode()
-
     def test_commercial_invoice_uses_the_standard_document(self):
         invoice = self._create_invoice(
             partner_id=self.partner_a,
             invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, tax_ids=self.tax_vatable)],
         )
         html = self._render(invoice, report='l10n_ph.report_commercial_invoice')
+        self.assertNotIn('Sold To:', html)
         self.assertNotIn('Total Amount Due', html)
         self.assertNotIn('VATable Sales', html)
 
@@ -51,6 +48,7 @@ class TestCasInvoiceReport(TestPhCommon):
             invoice_line_ids=[self._prepare_invoice_line(product_id=self.product_a, tax_ids=self.tax_vatable)],
         )
         html = self._render(invoice)
+        self.assertIn('Sold To:', html)
         self.assertIn('VAT REG TIN', html)
         self.assertNotIn('NON VAT REG TIN', html)
 
