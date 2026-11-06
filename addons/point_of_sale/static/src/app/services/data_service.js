@@ -178,20 +178,17 @@ export class PosData {
 
         for (const [model, params] of modelsParams) {
             if (!params.getRecordsBasedOnLines) {
-                const data = this.models[model].getAll();
-                const recordsToPut = data.filter((record) => !params.condition(record));
+                const records = this.models[model].getAll();
+                const recordsToPut = records.filter((record) => !params.condition(record));
 
                 if (model === "pos.order.line") {
                     orderlinesToKeep = recordsToPut;
                 }
 
-                data[model] = recordsToPut;
+                data[model] = recordsToPut.map((r) => r.serializeForIndexedDB());
 
                 if (recordsToPut.length) {
-                    await this.indexedDB.create(
-                        model,
-                        recordsToPut.map((r) => r.serializeForIndexedDB())
-                    );
+                    await this.indexedDB.create(model, data[model]);
                     dataToKeep[model] = recordsToPut.map((r) => r[params.key]);
                 }
             }
@@ -206,12 +203,9 @@ export class PosData {
                         ...new Map(recordsToPut.map((r) => [r[params.key], r])).values(),
                     ];
 
-                    data[model] = uniqueRecords;
+                    data[model] = uniqueRecords.map((r) => r.serializeForIndexedDB());
 
-                    await this.indexedDB.create(
-                        model,
-                        uniqueRecords.map((r) => r.serializeForIndexedDB())
-                    );
+                    await this.indexedDB.create(model, data[model]);
                     dataToKeep[model] = uniqueRecords.map((r) => r[params.key]);
                 }
             }
