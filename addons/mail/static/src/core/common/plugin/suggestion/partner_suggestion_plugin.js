@@ -5,6 +5,7 @@ import {
     generateRoleMentionElement,
     generateSpecialMentionElement,
 } from "@mail/utils/common/format";
+import { compareStartsWithTerm } from "@mail/utils/common/misc";
 
 import { localeCompare, normalize } from "@web/core/l10n/utils";
 
@@ -128,18 +129,12 @@ export class PartnerSuggestionPlugin extends Plugin {
         const roles = [...this.store["res.role"].records.values()].filter((role) =>
             normalize(role.name).includes(cleanedTerm)
         );
-        const sortFunc = (r1, r2) => {
-            const cleanedName1 = normalize(r1.name);
-            const cleanedName2 = normalize(r2.name);
-            if (cleanedName1.startsWith(cleanedTerm) && !cleanedName2.startsWith(cleanedTerm)) {
-                return -1;
-            }
-            if (!cleanedName1.startsWith(cleanedTerm) && cleanedName2.startsWith(cleanedTerm)) {
-                return 1;
-            }
-            return localeCompare(r1.name, r2.name) || r1.id - r2.id;
-        };
-        return roles.sort(sortFunc);
+        return roles.sort(
+            (r1, r2) =>
+                compareStartsWithTerm(r1.name, r2.name, cleanedTerm) ||
+                localeCompare(r1.name, r2.name) ||
+                r1.id - r2.id
+        );
     }
 
     /** @param {import("@mail/core/common/navigable_list").Option} option */
