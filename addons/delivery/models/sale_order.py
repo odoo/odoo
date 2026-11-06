@@ -89,8 +89,8 @@ class SaleOrder(models.Model):
             raise UserError(
                 self.env._(
                     "You can not update the shipping costs on an order where it was already"
-                    " invoiced!\n\nThe following delivery lines (product, invoiced quantity and"
-                    " price) have already been processed:\n\n%s",
+                    " invoiced!\n\nThe following delivery lines (invoiced quantity and price) have"
+                    " already been processed:\n\n%s",
                     delivery_lines_text,
                 )
             )
@@ -159,21 +159,19 @@ class SaleOrder(models.Model):
             carrier = carrier.with_context(lang=self.partner_id.lang)
 
         # Apply fiscal position
-        taxes = carrier.tax_ids._filter_taxes_by_company(self.company_id)
+        taxes = carrier.tax_ids
         taxes_ids = taxes.ids
         if self.partner_id and self.fiscal_position_id:
             taxes_ids = self.fiscal_position_id.map_tax(taxes).ids
 
         # Create the sales order line
 
-        so_description = carrier.name
         values = {
             "order_id": self.id,
-            "name": so_description,
+            "name": carrier.name,
             "price_unit": price_unit,
             "product_uom_qty": 1,
-            "product_uom_id": self.env["product.template"]._default_uom_id().id,
-            "tax_ids": [(6, 0, taxes_ids)],
+            "tax_ids": [Command.set(taxes_ids)],
             "is_delivery": True,
         }
         if carrier.free_over and self.currency_id.is_zero(price_unit):

@@ -206,7 +206,7 @@ class TestDeliveryCost(DeliveryCommon):
         choose_delivery_carrier = delivery_wizard.save()
         choose_delivery_carrier.button_confirm()
 
-        line = sale_order.order_line.filtered_domain([("is_delivery", "=", True)])
+        line = sale_order.order_line.filtered("is_delivery")
 
         self.assertRecordValues(line, [{"price_subtotal": 9.09, "price_total": 10.45}])
 
@@ -466,10 +466,9 @@ class TestDeliveryCost(DeliveryCommon):
         # Create a company that uses a different currency
         currency_bells = self.env["res.currency"].sudo().create({"name": "Bell", "symbol": "C"})
 
-        nook_inc = self.add_company('base.test_company_template', {
-            "name": "Nook inc.",
-            "currency_id": currency_bells.id,
-        })
+        nook_inc = self.add_company(
+            "base.test_company_template", {"name": "Nook inc.", "currency_id": currency_bells.id}
+        )
 
         with freeze_time("2000-01-01"):  # Make sure the rate is in the past
             self.env["res.currency.rate"].sudo().with_company(nook_inc).create({

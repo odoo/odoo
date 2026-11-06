@@ -65,11 +65,7 @@ class DeliveryCarrier(models.Model):
                 vals.update(self._get_in_store_default_vals())
 
                 # Set the default warehouses and publish if one is found.
-                if "company_id" in vals:
-                    company_id = vals.get("company_id")
-                else:
-                    company_id = self.env.company.id
-
+                company_id = vals.get("company_id", self.env.company.id)
                 warehouses = self.env["stock.warehouse"].search([("company_id", "in", company_id)])
                 vals.update({
                     "warehouse_ids": [Command.set(warehouses.ids)],

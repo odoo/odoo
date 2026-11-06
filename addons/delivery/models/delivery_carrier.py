@@ -65,7 +65,7 @@ class DeliveryCarrier(models.Model):
     debug_logging = fields.Boolean(
         string="Debug logging", help="Log requests in order to ease debugging"
     )
-    company_id = fields.Many2one(comodel_name="res.company", string="Company")
+    company_id = fields.Many2one(string="Company", comodel_name="res.company")
     tax_ids = fields.Many2many(
         string="Sales Tax",
         comodel_name="account.tax",
@@ -88,6 +88,7 @@ class DeliveryCarrier(models.Model):
         compute_sql="_compute_sql_currency_id",
         compute_sudo=True,
     )
+    fixed_price = fields.Float(string="Fixed Price", min_display_digits="Product Price")
 
     invoice_policy = fields.Selection(
         string="Invoicing Policy",
@@ -319,11 +320,11 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         return (
             self._match_address(partner)
+            and self._match_pricelist(source)
             and self._match_must_have_tags(source)
             and self._match_excluded_tags(source)
             and self._match_weight(source)
             and self._match_volume(source)
-            and self._match_pricelist(source)
         )
 
     def _match_address(self, partner):
@@ -450,19 +451,6 @@ class DeliveryCarrier(models.Model):
         )
         return float(price) * (1.0 + self.margin) + fixed_margin_in_sale_currency
 
-    def _adapt_price_unit_to_mapped_taxes(self, price_unit, order):
-        self.ensure_one()
-        taxes = self.tax_ids._filter_taxes_by_company(order.company_id)
-        if not taxes or not order.fiscal_position_id:
-            return price_unit
-        return taxes._adapt_price_unit_to_another_taxes(
-            price_unit,
-            product=False,
-            original_taxes=taxes,
-            new_taxes=order.fiscal_position_id.map_tax(taxes),
-            document_tax_mode=order.document_tax_mode,
-        )
-
     # -------------------------- #
     # API for external providers #
     # -------------------------- #
@@ -545,8 +533,6 @@ class DeliveryCarrier(models.Model):
     # ------------------------------------------------ #
     # Fixed price shipping, aka a very simple provider #
     # ------------------------------------------------ #
-
-    fixed_price = fields.Float(string="Fixed Price", min_display_digits="Product Price")
 
     def fixed_rate_shipment(self, order):
         carrier = self._match_address(order.partner_shipping_id)
@@ -671,6 +657,19 @@ class DeliveryCarrier(models.Model):
             raise UserError(self.env._("Not available for current order"))
 
         return price
+
+    def _adapt_price_unit_to_mapped_taxes(self, price_unit, order):
+        self.ensure_one()
+        taxes = self.tax_ids._filter_taxes_by_company(order.company_id)
+        if not taxes or not order.fiscal_position_id:
+            return price_unit
+        return taxes._adapt_price_unit_to_another_taxes(
+            price_unit,
+            product=False,
+            original_taxes=taxes,
+            new_taxes=order.fiscal_position_id.map_tax(taxes),
+            document_tax_mode=order.document_tax_mode,
+        )
 
     @api.depends_context("wizard_currency_id")
     def _compute_delivery_currency_id(self):
