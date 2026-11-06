@@ -38,6 +38,15 @@ class ResPartner(models.Model):
     def _get_all_additional_identifiers_metadata(self):
         return {**super()._get_all_additional_identifiers_metadata(), **PE_ADDITIONAL_IDENTIFIERS_METADATA}
 
+    @api.model
+    def _get_portal_additional_identifiers_whitelist(self, company=None, country=None):
+        whitelist = super()._get_portal_additional_identifiers_whitelist(company=company, country=country)
+        if company and company.account_fiscal_country_id.code == 'PE':
+            whitelist.add('PASSPORT')
+            if country and country.code == 'PE':
+                whitelist.add('PE_DNI')
+        return whitelist
+
     @api.depends('vat', 'additional_identifiers', 'commercial_partner_id.country_id',
                  'commercial_partner_id.vat', 'commercial_partner_id.additional_identifiers')
     def _compute_l10n_pe_sunat_identification(self):

@@ -16,6 +16,13 @@ class ResPartner(models.Model):
     def _get_all_additional_identifiers_metadata(self):
         return {**super()._get_all_additional_identifiers_metadata(), **BR_ADDITIONAL_IDENTIFIERS_METADATA}
 
+    @api.model
+    def _get_portal_additional_identifiers_whitelist(self, company=None, country=None):
+        whitelist = super()._get_portal_additional_identifiers_whitelist(company=company, country=country)
+        if company and company.account_fiscal_country_id.code == 'BR' and country and country.code == 'BR':
+            whitelist.add('BR_CN')
+        return whitelist
+
     def _get_frontend_writable_fields(self):
         frontend_writable_fields = super()._get_frontend_writable_fields()
         frontend_writable_fields.update({'street_number', 'street_name', 'street_number2'})

@@ -52,3 +52,12 @@ class ResPartner(models.Model):
     @api.model
     def _get_all_additional_identifiers_metadata(self):
         return {**super()._get_all_additional_identifiers_metadata(), **CO_ADDITIONAL_IDENTIFIERS_METADATA}
+
+    @api.model
+    def _get_portal_additional_identifiers_whitelist(self, company=None, country=None):
+        whitelist = super()._get_portal_additional_identifiers_whitelist(company=company, country=country)
+        if company and company.account_fiscal_country_id.code == 'CO':
+            whitelist.add('PASSPORT')
+            if country and country.code == 'CO':
+                whitelist.update({'CO_CC', 'CO_CE'})
+        return whitelist

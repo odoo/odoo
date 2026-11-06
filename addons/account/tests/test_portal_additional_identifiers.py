@@ -19,7 +19,7 @@ class TestPortalAdditionalIdentifiers(BaseCommon, HttpCase):
         cls.classPatch(
             cls.env.registry['res.partner'],
             '_get_portal_additional_identifiers_whitelist',
-            lambda self, company=None, country=None: {'FR_CN'},
+            lambda self, company=None, country=None: {'FR_CN'} if country and country.code == 'FR' else set(),
         )
         cls.portal_user = cls._create_new_portal_user()
         cls.partner = cls.portal_user.partner_id
