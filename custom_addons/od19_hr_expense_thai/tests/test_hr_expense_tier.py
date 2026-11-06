@@ -61,5 +61,9 @@ class TestHrExpenseTierValidation(TransactionCase):
         self.assertEqual(defs.mapped("sequence"), [30, 20, 10])
         self.assertEqual(defs[0].reviewer_group_id,
                          self.env.ref("hr_expense.group_hr_expense_manager"))
+        self.assertEqual(defs[1].reviewer_group_id,
+                         self.env.ref("account.group_account_manager"))
+        self.assertEqual(defs[2].reviewer_group_id,
+                         self.env.ref("od19_hr_expense_thai.group_od19_expense_ceo_approver"))
         self.assertTrue(all(defs.mapped("approve_sequence")))
         self.assertTrue(all(defs.mapped("has_forward")))
