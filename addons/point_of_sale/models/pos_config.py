@@ -961,6 +961,7 @@ class PosConfig(models.Model):
             WHERE (
                 partner.company_id=%s OR partner.company_id IS NULL
             )
+            AND partner.active
             ORDER BY  COALESCE(pm.order_count, 0) DESC,
                       NAME limit %s offset %s;
         """, self.company_id.id, self._get_limited_partner_count(), offset))
