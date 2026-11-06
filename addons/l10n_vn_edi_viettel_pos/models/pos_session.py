@@ -12,6 +12,6 @@ class PosSession(models.Model):
         if self.company_id.country_id.code != 'VN':
             return data
 
-        walk_in_customer_id = self.env.ref('l10n_vn_edi_viettel_pos.partner_walk_in_customer', raise_if_not_found=False).id
+        walk_in_customer_id = self.env.ref('l10n_vn_edi_viettel_pos.partner_walk_in_customer').id
         data['data'][0]['_default_customer_id'] = walk_in_customer_id
         return data
