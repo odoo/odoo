@@ -2,141 +2,142 @@
 <odoo>
     <!-- Replace Homepage Content with Harvard University Landing Page -->
     <template id="harvard_homepage_inherit" inherit_id="website.homepage" name="Harvard University Homepage">
-        <xpath expr="//div[@id='wrap']" position="inside">
-            <!-- Hero Section matching user screenshot -->
-            <section class="harvard-hero-section" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
-                <div class="harvard-hero-overlay"></div>
-                <div class="harvard-hero-content">
-                    <h1 class="harvard-hero-title">Your journey starts here</h1>
-                    <p class="harvard-hero-subtitle">
-                        Explore world-class academic degree programs, groundbreaking research opportunities, and vibrant campus life at Harvard University. Discover where your passion can lead.
-                    </p>
-                    <div class="d-flex justify-content-center gap-3 flex-wrap">
-                        <a href="/courses" class="harvard-btn-discover">Discover more</a>
-                        <a href="/contactus" class="harvard-btn-contact">Contact us</a>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Unveil Our Programs Section -->
-            <section class="py-5 bg-light" id="programs-showcase">
-                <div class="container py-4">
-                    <div class="row align-items-end mb-5">
-                        <div class="col-lg-8">
-                            <span class="text-uppercase fw-bold text-danger small">Academic Excellence</span>
-                            <h2 class="display-6 fw-bold mt-1 text-dark">Unveil Our Academic Programs</h2>
-                            <p class="text-muted lead">Rigorous undergraduate, master, and doctoral degree programs designed for tomorrow's leaders.</p>
-                        </div>
-                        <div class="col-lg-4 text-lg-end">
-                            <a href="/courses" class="btn btn-outline-danger px-4 py-2">View All Programs <i class="fa fa-arrow-right ms-1"/></a>
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- Hero Section matching user screenshot -->
+                <section class="harvard-hero-section" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
+                    <div class="harvard-hero-overlay"></div>
+                    <div class="harvard-hero-content">
+                        <h1 class="harvard-hero-title">Your journey starts here</h1>
+                        <p class="harvard-hero-subtitle">
+                            Explore world-class academic degree programs, groundbreaking research opportunities, and vibrant campus life at Harvard University. Discover where your passion can lead.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="/courses" class="harvard-btn-discover">Discover more</a>
+                            <a href="/contactus" class="harvard-btn-contact">Contact us</a>
                         </div>
                     </div>
+                </section>
 
-                    <t t-set="programs" t-value="website.get_featured_programs(limit=6)"/>
-                    <div class="row g-4" t-if="programs">
-                        <t t-foreach="programs" t-as="prog">
-                            <div class="col-md-6 col-lg-4">
-                                <div class="harvard-card h-100 p-4 d-flex flex-column justify-content-between shadow-sm">
-                                    <div>
-                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                            <span class="harvard-badge-degree" t-esc="dict(prog._fields['degree_type'].selection).get(prog.degree_type, prog.degree_type)"/>
-                                            <span class="text-muted small fw-bold" t-esc="prog.code"/>
+                <!-- Unveil Our Programs Section -->
+                <section class="py-5 bg-light" id="programs-showcase">
+                    <div class="container py-4">
+                        <div class="row align-items-end mb-5">
+                            <div class="col-lg-8">
+                                <span class="text-uppercase fw-bold text-danger small">Academic Excellence</span>
+                                <h2 class="display-6 fw-bold mt-1 text-dark">Unveil Our Academic Programs</h2>
+                                <p class="text-muted lead">Rigorous undergraduate, master, and doctoral degree programs designed for tomorrow's leaders.</p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end">
+                                <a href="/courses" class="btn btn-outline-danger px-4 py-2">View All Programs <i class="fa fa-arrow-right ms-1"/></a>
+                            </div>
+                        </div>
+
+                        <t t-set="programs" t-value="website.get_featured_programs(limit=6)"/>
+                        <div class="row g-4" t-if="programs">
+                            <t t-foreach="programs" t-as="prog">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="harvard-card h-100 p-4 d-flex flex-column justify-content-between shadow-sm">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                <span class="harvard-badge-degree" t-esc="dict(prog._fields['degree_type'].selection).get(prog.degree_type, prog.degree_type)"/>
+                                                <span class="text-muted small fw-bold" t-esc="prog.code"/>
+                                            </div>
+                                            <h4 class="h5 fw-bold text-dark mb-2">
+                                                <a t-attf-href="/courses/#{prog.id}" class="text-decoration-none text-dark hover-danger" t-esc="prog.name"/>
+                                            </h4>
+                                            <p class="text-muted small mb-3" t-if="prog.department_id">
+                                                <i class="fa fa-building-o me-1 text-secondary"/> <span t-esc="prog.department_id.name"/>
+                                            </p>
                                         </div>
-                                        <h4 class="h5 fw-bold text-dark mb-2">
-                                            <a t-attf-href="/courses/#{prog.id}" class="text-decoration-none text-dark hover-danger" t-esc="prog.name"/>
-                                        </h4>
-                                        <p class="text-muted small mb-3" t-if="prog.department_id">
-                                            <i class="fa fa-building-o me-1 text-secondary"/> <span t-esc="prog.department_id.name"/>
-                                        </p>
-                                    </div>
-                                    <div class="pt-3 border-top d-flex justify-content-between align-items-center">
-                                        <span class="small text-muted">
-                                            <i class="fa fa-clock-o me-1"/> <t t-esc="prog.duration_years"/> Years (<t t-esc="prog.total_credits"/> Credits)
-                                        </span>
-                                        <a t-attf-href="/courses/#{prog.id}" class="btn btn-sm btn-link text-danger p-0 fw-bold">Explore <i class="fa fa-chevron-right small"/></a>
+                                        <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                                            <span class="small text-muted">
+                                                <i class="fa fa-clock-o me-1"/> <t t-esc="prog.duration_years"/> Years (<t t-esc="prog.total_credits"/> Credits)
+                                            </span>
+                                            <a t-attf-href="/courses/#{prog.id}" class="btn btn-sm btn-link text-danger p-0 fw-bold">Explore <i class="fa fa-chevron-right small"/></a>
+                                        </div>
                                     </div>
                                 </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- University Impact & Numbers -->
+                <section class="py-5 text-white" style="background-color: #101c30;">
+                    <div class="container py-4">
+                        <t t-set="stats" t-value="website.get_university_stats()"/>
+                        <div class="row text-center g-4">
+                            <div class="col-6 col-md-3">
+                                <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['programs_count'] or 24"/>+</h2>
+                                <p class="text-white-50 mb-0">Degree Programs</p>
                             </div>
-                        </t>
-                    </div>
-                </div>
-            </section>
-
-            <!-- University Impact & Numbers -->
-            <section class="py-5 text-white" style="background-color: #101c30;">
-                <div class="container py-4">
-                    <t t-set="stats" t-value="website.get_university_stats()"/>
-                    <div class="row text-center g-4">
-                        <div class="col-6 col-md-3">
-                            <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['programs_count'] or 24"/>+</h2>
-                            <p class="text-white-50 mb-0">Degree Programs</p>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['departments_count'] or 8"/></h2>
-                            <p class="text-white-50 mb-0">Academic Departments</p>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['teachers_count'] or 50"/>+</h2>
-                            <p class="text-white-50 mb-0">Distinguished Faculty</p>
-                        </div>
-                        <div class="col-6 col-md-3">
-                            <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['students_count'] or 1200"/>+</h2>
-                            <p class="text-white-50 mb-0">Enrolled Students</p>
+                            <div class="col-6 col-md-3">
+                                <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['departments_count'] or 8"/></h2>
+                                <p class="text-white-50 mb-0">Academic Departments</p>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['teachers_count'] or 50"/>+</h2>
+                                <p class="text-white-50 mb-0">Distinguished Faculty</p>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <h2 class="display-5 fw-bold text-white mb-1"><t t-esc="stats['students_count'] or 1200"/>+</h2>
+                                <p class="text-white-50 mb-0">Enrolled Students</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Campus Events & Announcements -->
-            <section class="py-5 bg-white">
-                <div class="container py-4">
-                    <div class="row align-items-end mb-4">
-                        <div class="col-lg-8">
-                            <span class="text-uppercase fw-bold text-danger small">Happenings</span>
-                            <h2 class="display-6 fw-bold mt-1 text-dark">Events &amp; Campus Notices</h2>
-                            <p class="text-muted lead">Stay informed with the latest seminars, academic calendars, and conferences.</p>
+                <!-- Campus Events & Announcements -->
+                <section class="py-5 bg-white">
+                    <div class="container py-4">
+                        <div class="row align-items-end mb-4">
+                            <div class="col-lg-8">
+                                <span class="text-uppercase fw-bold text-danger small">Happenings</span>
+                                <h2 class="display-6 fw-bold mt-1 text-dark">Events &amp; Campus Notices</h2>
+                                <p class="text-muted lead">Stay informed with the latest seminars, academic calendars, and conferences.</p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end">
+                                <a href="/events" class="btn btn-outline-dark px-4 py-2">All Events <i class="fa fa-calendar ms-1"/></a>
+                            </div>
                         </div>
-                        <div class="col-lg-4 text-lg-end">
-                            <a href="/events" class="btn btn-outline-dark px-4 py-2">All Events <i class="fa fa-calendar ms-1"/></a>
-                        </div>
-                    </div>
 
-                    <t t-set="events" t-value="website.get_upcoming_campus_events(limit=4)"/>
-                    <div class="row g-4" t-if="events">
-                        <t t-foreach="events" t-as="evt">
-                            <div class="col-md-6">
-                                <div class="p-4 rounded border h-100 d-flex flex-column justify-content-between hover-shadow">
-                                    <div>
-                                        <div class="d-flex align-items-center gap-2 mb-2">
-                                            <span class="badge bg-danger" t-if="evt.pinned">Pinned</span>
-                                            <span class="badge bg-secondary" t-esc="dict(evt._fields['notice_type'].selection).get(evt.notice_type, evt.notice_type)"/>
-                                            <span class="text-muted small ms-auto"><i class="fa fa-calendar-o me-1"/> <t t-esc="evt.date"/></span>
+                        <t t-set="events" t-value="website.get_upcoming_campus_events(limit=4)"/>
+                        <div class="row g-4" t-if="events">
+                            <t t-foreach="events" t-as="evt">
+                                <div class="col-md-6">
+                                    <div class="p-4 rounded border h-100 d-flex flex-column justify-content-between hover-shadow">
+                                        <div>
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <span class="badge bg-danger" t-if="evt.pinned">Pinned</span>
+                                                <span class="badge bg-secondary" t-esc="dict(evt._fields['notice_type'].selection).get(evt.notice_type, evt.notice_type)"/>
+                                                <span class="text-muted small ms-auto"><i class="fa fa-calendar-o me-1"/> <t t-esc="evt.date"/></span>
+                                            </div>
+                                            <h4 class="h5 fw-bold text-dark mt-2" t-esc="evt.name"/>
+                                            <p class="text-muted small" t-if="evt.content" t-esc="evt.content[:160] + '...' if len(evt.content) > 160 else evt.content"/>
                                         </div>
-                                        <h4 class="h5 fw-bold text-dark mt-2" t-esc="evt.name"/>
-                                        <p class="text-muted small" t-if="evt.content" t-esc="evt.content[:160] + '...' if len(evt.content) > 160 else evt.content"/>
-                                    </div>
-                                    <div class="mt-3">
-                                        <a href="/events" class="text-danger fw-bold small text-decoration-none">Read Announcement <i class="fa fa-arrow-right ms-1"/></a>
+                                        <div class="mt-3">
+                                            <a href="/events" class="text-danger fw-bold small text-decoration-none">Read Announcement <i class="fa fa-arrow-right ms-1"/></a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </t>
+                            </t>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Call to Action Banner -->
-            <section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #A51C30 0%, #801424 100%);">
-                <div class="container py-4">
-                    <h2 class="display-6 fw-bold mb-3">Begin Your Harvard Journey Today</h2>
-                    <p class="lead mb-4 mx-auto" style="max-width: 650px;">Applications for the upcoming academic year are now open. Start your application online in just a few minutes.</p>
-                    <div class="d-flex justify-content-center gap-3">
-                        <a href="/admission/apply" class="btn btn-light btn-lg px-4 fw-bold text-danger">Apply for Admission</a>
-                        <a href="/my/student/dashboard" class="btn btn-outline-light btn-lg px-4 fw-bold">Student Portal</a>
+                <!-- Call to Action Banner -->
+                <section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #A51C30 0%, #801424 100%);">
+                    <div class="container py-4">
+                        <h2 class="display-6 fw-bold mb-3">Begin Your Harvard Journey Today</h2>
+                        <p class="lead mb-4 mx-auto" style="max-width: 650px;">Applications for the upcoming academic year are now open. Start your application online in just a few minutes.</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="/admission/apply" class="btn btn-light btn-lg px-4 fw-bold text-danger">Apply for Admission</a>
+                            <a href="/my/student/dashboard" class="btn btn-outline-light btn-lg px-4 fw-bold">Student Portal</a>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
         </xpath>
     </template>
 </odoo>
-
