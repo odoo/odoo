@@ -1,5 +1,5 @@
 import { test, expect } from "@odoo/hoot";
-import { animationFrame, click } from "@odoo/hoot-dom";
+import { animationFrame, click, queryAll } from "@odoo/hoot-dom";
 import { ColorPicker } from "@html_editor/components/color_picker/color_picker";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -49,4 +49,13 @@ test("gradient type and size buttons specify aria-pressed", async () => {
     await animationFrame();
     expect("button[title='Extend to the farthest corner']").toHaveAttribute("aria-pressed", "true");
     expect(".o_radial_size_row button[aria-pressed='true']").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("radial size buttons specify aria-label", async () => {
+    await openCustomGradient("Radial");
+    for (const button of queryAll(".o_radial_size_row button")) {
+        expect(button).toHaveAttribute("aria-label", button.title);
+    }
+    expect(".o_radial_size_row button").toHaveCount(4);
 });

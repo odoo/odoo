@@ -876,13 +876,13 @@ test("toolbar works: show the correct text alignment", async () => {
     await expandToolbar();
     expect("button[name='text_align']").toHaveCount(1);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_left"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_left"> </i>`
     );
     await click("button[name='text_align']");
     await contains(".o-we-toolbar-dropdown .btn[data-icon='format_align_right']").click();
     expect(getContent(el)).toBe(`<p style="text-align: end;">[test</p><p>]<br></p>`);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_right"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_right"> </i>`
     );
 });
 
@@ -891,25 +891,25 @@ test("toolbar works: show the correct text alignment after undo/redo", async () 
     await expandToolbar();
     expect("button[name='text_align']").toHaveCount(1);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_left"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_left"> </i>`
     );
     await click("button[name='text_align']");
     await contains(".o-we-toolbar-dropdown .btn[data-icon='format_align_center']").click();
     expect(getContent(el)).toBe(`<p style="text-align: center;">[test]</p>`);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_center"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_center"> </i>`
     );
     await press(["ctrl", "z"]);
     await animationFrame();
     expect(getContent(el)).toBe(`<p>[test]</p>`);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_left"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_left"> </i>`
     );
     await press(["ctrl", "y"]);
     await animationFrame();
     expect(getContent(el)).toBe(`<p style="text-align: center;">[test]</p>`);
     expect("button[name='text_align'] span").toHaveInnerHTML(
-        `<i class="oi" data-icon="format_align_center"> </i>`
+        `<i class="oi" aria-hidden="true" data-icon="format_align_center"> </i>`
     );
 });
 
@@ -1989,9 +1989,10 @@ test("toolbar buttons should have title attribute with translated text", async (
 
     await waitFor(".o-we-toolbar");
 
-    // Check that every button has a title attribute with the translated description
+    // Check that every button has a title attribute with the translated description,
+    // possibly followed by its current value (e.g. "Translated: Paragraph")
     for (const button of queryAll(".o-we-toolbar button")) {
-        expect(button).toHaveAttribute("title", "Translated");
+        expect(button).toHaveAttribute("title", /^Translated(: .+)?$/);
     }
 });
 
@@ -2799,28 +2800,64 @@ function expectConsistentAriaStates(editor) {
     }
 }
 
+/**
+ * Checks that every button currently displayed in the toolbar has an
+ * `aria-label`:
+ * - it is the same as the button's `title`, which possibly includes its
+ *   current value (e.g. "Select text style: Paragraph"), so that screen
+ *   readers do not read it twice (as the name, then as the description),
+ * - it contains the button's visible text, if any,
+ * - the button's icons are hidden from screen readers.
+ */
+function expectAccessibleLabels() {
+    const buttons = queryAll(".o-we-toolbar .btn");
+    expect(buttons.length).toBeGreaterThan(0, { message: "toolbar should have buttons" });
+    for (const el of buttons) {
+        const label = el.getAttribute("name") || el.className;
+        const ariaLabel = el.getAttribute("aria-label");
+        expect(!!ariaLabel).toBe(true, { message: `"${label}" should have an aria-label` });
+        expect(el).toHaveAttribute("title", ariaLabel, {
+            message: `"${label}" title should be the same as its aria-label "${ariaLabel}"`,
+        });
+        const text = el.textContent.trim();
+        expect(ariaLabel.includes(text)).toBe(true, {
+            message: `"${label}" aria-label "${ariaLabel}" should contain its text "${text}"`,
+        });
+        for (const icon of el.querySelectorAll(".oi, svg")) {
+            expect(icon).toHaveAttribute("aria-hidden", "true", {
+                message: `"${label}" icon should be hidden from screen readers`,
+            });
+        }
+    }
+}
+
 test("text toolbar items should have consistent aria states", async () => {
     const { editor } = await setupEditor("<p>[test]</p>");
     await waitFor(".o-we-toolbar");
     expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
 
     await expandToolbar();
     expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
 
     // Toggling a button should update aria-pressed
     await click(".o-we-toolbar .btn[name='bold']");
     await waitFor(".btn[name='bold'][aria-pressed='true'].active");
     expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
 
     // Opening a dropdown should update aria-expanded
     await click(".o-we-toolbar .btn[name='list_selector']");
     await waitFor(".btn[name='list_selector'][aria-expanded='true'].show");
     expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
 
     // Opening a color selector should update aria-expanded
     await click(".o-we-toolbar .o-select-color-foreground");
     await waitFor(".o-select-color-foreground[aria-expanded='true'].active");
     expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
 });
 
 test("table toolbar items should have consistent aria states", async () => {
@@ -2835,9 +2872,11 @@ test("table toolbar items should have consistent aria states", async () => {
     const { editor } = await setupEditor(table);
     await waitFor(".o-we-toolbar");
     expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
 
     await expandToolbar();
     expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
 });
 
 test("image toolbar items should have consistent aria states", async () => {
@@ -2855,11 +2894,14 @@ test("image toolbar items should have consistent aria states", async () => {
     const { editor } = await setupEditor(`<p>[<img src="${base64Image}">]</p>`);
     await waitFor(".o-we-toolbar");
     expectConsistentAriaStates(editor);
+    expectAccessibleLabels();
 
     // Be ready if an expanded image toolbar appears
     if (queryAll(".o-we-toolbar .btn[name='expand_toolbar']").length) {
         await expandToolbar();
         expectConsistentAriaStates(editor);
+        expectAccessibleLabels();
+        expectAccessibleLabels();
     }
 });
 
@@ -2869,4 +2911,50 @@ test("non toggle toolbar buttons should not have aria-pressed", async () => {
     await expandToolbar();
     expect(".o-we-toolbar .btn[name='remove_format']").toHaveCount(1);
     expect(".o-we-toolbar .btn[name='remove_format']").not.toHaveAttribute("aria-pressed");
+});
+
+test("toolbar selectors aria-label should include their current value", async () => {
+    await setupEditor("<h1>[test]</h1>");
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    expect(".o-we-toolbar .btn[name='font_type']").toHaveAttribute(
+        "aria-label",
+        "Select text style: Header 1"
+    );
+    expect(".o-we-toolbar .btn[name='text_align']").toHaveAttribute(
+        "aria-label",
+        "Align text: Left align"
+    );
+
+    await contains(".o-we-toolbar [name='font_type'].dropdown-toggle").click();
+    await contains(".o_font_type_selector_menu .dropdown-item:contains('Paragraph')").click();
+    await waitFor(
+        ".o-we-toolbar .btn[name='font_type'][aria-label='Select text style: Paragraph']"
+    );
+
+    await contains(".o-we-toolbar [name='text_align'].dropdown-toggle").click();
+    await contains(".o-we-toolbar-dropdown .btn[aria-label='Center align']").click();
+    await waitFor(".o-we-toolbar .btn[name='text_align'][aria-label='Align text: Center align']");
+});
+
+test("table border selectors aria-label should include their current value", async () => {
+    await setupEditor(
+        unformat(`
+            <table class="table table-bordered o_table">
+                <tbody>
+                    <tr>
+                        <td><p>[a<br></p></td><td><p>b]<br></p></td>
+                    </tr>
+                </tbody>
+            </table>`)
+    );
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar .btn[name='table_border_width']").toHaveAttribute(
+        "aria-label",
+        /^Table border width: \d+px$/
+    );
+    expect(".o-we-toolbar .btn[name='table_border_style']").toHaveAttribute(
+        "aria-label",
+        /^Table border style: \S+/
+    );
 });

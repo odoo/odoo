@@ -105,7 +105,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         ...clickToolbarButton(
             `text block first paragraph [${fontSizeClass}]`,
             ".s_text_block p",
-            "Select font size"
+            "font_size"
         ),
         {
             content: `Select ${fontSizeClass} in the dropdown`,
