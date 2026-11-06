@@ -371,7 +371,7 @@ class TestMenu(common.TransactionCase):
         with self.assertRaises(UserError):
             top_menu.is_mega_menu = True
 
-    def test_default_multilevel_menu_for_new_website(self):
+    def test_09_default_multilevel_menu_for_new_website(self):
         Website = self.env['website']
         Menu = self.env['website.menu']
         default_menu = self.env.ref('website.main_menu')
@@ -426,6 +426,18 @@ class TestMenu(common.TransactionCase):
             Menu.search([('website_id', '=', False)]).parent_id.website_id,
             "a template menu must not be a child of a website-specific menu",
         )
+
+    def test_10_main_menu_ignores_child_without_website(self):
+        website = self.env.ref('base.default_website')
+        menu = self.env['website.menu'].create({
+            'name': 'No website',
+            'url': '/no-website',
+            'parent_id': website.menu_id.id,
+            'website_id': False,
+        })
+        self.env.invalidate_all()
+
+        self.assertNotIn(menu, website.menu_id.child_id)
 
 
 class TestMenuHttp(common.HttpCase):

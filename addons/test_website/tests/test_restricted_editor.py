@@ -26,6 +26,7 @@ class TestRestrictedEditor(HttpCaseWithWebsiteUser):
             'name': 'Model item',
             'url': f'/test_website/model_item/{item_id}',
             'parent_id': website.menu_id.id,
+            'website_id': website.id,
             'sequence': 100,
         })
 
