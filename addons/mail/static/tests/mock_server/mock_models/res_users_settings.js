@@ -1,6 +1,6 @@
 import { Store } from "@mail/../tests/mock_server/store";
 
-import { getKwArgs, webModels } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, webModels } from "@web/../tests/web_test_helpers";
 import { ensureArray } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
 
@@ -10,6 +10,10 @@ import { patch } from "@web/core/utils/patch";
  */
 
 export class ResUsersSettings extends webModels.ResUsersSettings {
+    channel_push = fields.Boolean({ default: true });
+    chat_push = fields.Boolean({ default: true });
+    inbox_push = fields.Boolean({ default: true });
+
     /**
      * @param {number} guest_id
      * @param {number} partner_id
@@ -66,7 +70,7 @@ export class ResUsersSettings extends webModels.ResUsersSettings {
     }
 
     _store_settings_fields(res) {
-        res.extend(["channel_notifications"]);
+        res.extend(["channel_notifications", "chat_push", "channel_push", "inbox_push"]);
         res.many("volume_settings_ids", "_store_volume_fields");
     }
 }

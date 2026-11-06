@@ -1512,6 +1512,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
              'lang': partner.lang,
              'name': partner.name,
              'notif': partner.user_ids.notification_type or 'email',
+             'push_allowed': partner.main_user_id and partner.main_user_id._is_internal(),
              'share': partner.partner_share,
              'type': 'user' if partner.main_user_id and partner.main_user_id._is_internal() else 'customer',
              'uid': partner.main_user_id.id,

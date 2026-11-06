@@ -188,6 +188,17 @@ export class Settings extends Record {
     }
 
     /**
+     * @param {string} channel_type
+     * @param {boolean} is_allowed
+     */
+    setPushNotifications(channel_type, is_allowed) {
+        return rpc("/discuss/settings/push_notifications", {
+            channel_type,
+            is_allowed,
+        });
+    }
+
+    /**
      * @param {string} value
      */
     setDelayValue(value) {

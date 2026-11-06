@@ -116,6 +116,7 @@ class MailTemplatePreview(models.TransientModel):
                                 'lang': preview.env.lang,
                                 'groups': [],
                                 'notif': 'email',
+                                'push_allowed': False,
                                 'share': True,
                                 'type': 'customer',
                                 'uid': None,

@@ -8,6 +8,7 @@ from odoo.addons.mail.tools.discuss import Store
 class ResUsersSettings(models.Model):
     _inherit = 'res.users.settings'
 
+    livechat_push = fields.Boolean(default=True)
     livechat_username = fields.Char("Livechat Username", help="This username will be used as your name in the livechat channels.")
     livechat_lang_ids = fields.Many2many(comodel_name='res.lang', string='Livechat languages',
                             help="These languages, in addition to your main language, will be used to assign you to Live Chat sessions.")
@@ -19,4 +20,11 @@ class ResUsersSettings(models.Model):
 
     def _store_settings_fields(self, res: Store.FieldList):
         super()._store_settings_fields(res)
-        res.extend(["livechat_username", "livechat_lang_ids", "livechat_expertise_ids"])
+        res.extend(
+            [
+                "livechat_push",
+                "livechat_username",
+                "livechat_lang_ids",
+                "livechat_expertise_ids",
+            ]
+        )
