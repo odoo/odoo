@@ -65,9 +65,12 @@ MAP = {
 }
 
 # บัญชีปลายทางที่ต้องสร้างใหม่ใน OD19 (ยังไม่มีในผังปัจจุบัน)
+# หมายเหตุ: ชื่อไทยใช้ unicode escape เพื่อกันชื่อเสียหายเป็น '?' เมื่อรันผ่าน pipe/stdin
 NEW_ACCOUNTS = {
-    "1153.04": {"name": "ภาษีเงินได้ถูกหัก ณ ที่จ่าย", "account_type": "asset_current"},
-    "1153.05": {"name": "ภาษีหัก ณ ที่จ่ายรอเครดิต/ขอคืน", "account_type": "asset_current"},
+    "1153.04": {"name": "\u0e20\u0e32\u0e29\u0e35\u0e40\u0e07\u0e34\u0e19\u0e44\u0e14\u0e49\u0e16\u0e39\u0e01\u0e2b\u0e31\u0e01\u0020\u0e13\u0020\u0e17\u0e35\u0e48\u0e08\u0e48\u0e32\u0e22",
+                "account_type": "asset_current"},   # "ภาษีเงินได้ถูกหัก ณ ที่จ่าย"
+    "1153.05": {"name": "\u0e20\u0e32\u0e29\u0e35\u0e2b\u0e31\u0e01\u0020\u0e13\u0020\u0e17\u0e35\u0e48\u0e08\u0e48\u0e32\u0e22\u0e23\u0e2d\u0e40\u0e04\u0e23\u0e14\u0e34\u0e15\u002f\u0e02\u0e2d\u0e04\u0e37\u0e19",
+                "account_type": "asset_current"},   # "ภาษีหัก ณ ที่จ่ายรอเครดิต/ขอคืน"
 }
 
 # บัญชีเดิมที่คงสถานะ Archive ไว้ (ไม่ remap) — อ้างอิงตาม Excel ชีต "Keep Archived"
