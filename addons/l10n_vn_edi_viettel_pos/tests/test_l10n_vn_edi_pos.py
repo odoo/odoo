@@ -191,3 +191,7 @@ class TestVNEDIPOS(TestVNEDI, TestPointOfSaleCommon):
         self.assertNotEqual(invoice.l10n_vn_edi_invoice_state, 'sent')
         with self.assertRaises(UserError):
             invoice.l10n_vn_edi_fetch_invoice_files()
+
+    def test_walk_in_customer_cannot_be_deleted(self):
+        with self.assertRaises(UserError):
+            self.walk_in_customer.unlink()
