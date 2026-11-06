@@ -18,10 +18,14 @@
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",
     "assets": {
+        "web.assets_backend": [
+            "payment_stripe/static/src/views/**/*",
+        ],
         "web.assets_frontend": [
             "payment_stripe/static/src/interactions/**/*",
             "payment_stripe/static/src/**/*",
-        ]
+            ("remove", "payment_stripe/static/src/views/**/*"),
+        ],
     },
     "author": "Odoo S.A.",
     "license": "LGPL-3",

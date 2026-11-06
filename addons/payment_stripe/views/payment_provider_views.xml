@@ -6,6 +6,9 @@
         <field name="model">payment.provider</field>
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="js_class">stripe_form</attribute>
+            </form>
             <header position="inside">
                 <div
                     invisible="context.get('stripe_onboarding', False) or (code != 'stripe' or stripe_secret_key or stripe_publishable_key)"
