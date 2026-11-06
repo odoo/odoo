@@ -1631,6 +1631,11 @@ export class PosStore extends WithLazyGetterTrap {
                 order.serializeForORM();
                 const missingRecords = await this.data.missingRecursive(data);
                 const newData = this.models.loadConnectedData(missingRecords);
+                for (const line of order.lines) {
+                    if (!line.order_id) {
+                        line.update({ order_id: order });
+                    }
+                }
 
                 logPosMessage(
                     "Store",
