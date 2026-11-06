@@ -2,16 +2,40 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import io
+import requests
 import urllib.parse
 
+from PIL import Image, UnidentifiedImageError
 from datetime import timedelta
 from markupsafe import Markup, escape
 from lxml import etree
 from werkzeug.exceptions import BadRequest, NotFound, Unauthorized
 
 from odoo import _, fields, http, tools
+from odoo.exceptions import UserError
 from odoo.http import request, Response
 from odoo.tools import consteq
+
+from odoo.addons.html_editor.models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
+from odoo.addons.html_editor.tools import create_attachment_from_external_image_url, public_requests_session
+
+_MAX_IMAGE_REDIRECTS = 3
+
+
+def check_valid_url_image_mimetype(url, session):
+    """Check the mimetype of the image of the provided URL using a HEAD method.
+
+    Note: some servers don't support HEAD methods. In that case, the this method raises.
+    """
+    try:
+        response = session.head(url, timeout=10, allow_redirects=True)
+        response.raise_for_status()
+    except (requests.RequestException, ValueError) as exc:
+        # ValueError: raised by _PublicConnectionPoolMixin for non-public hosts
+        raise UserError(_("The image could not be downloaded from this URL.")) from exc
+    if response.headers.get('content-type', '').split(';')[0].strip().lower() not in SUPPORTED_IMAGE_MIMETYPES:
+        raise UserError(_("The URL does not point at a valid image."))
 
 
 class MassMailController(http.Controller):
@@ -562,3 +586,27 @@ class MassMailController(http.Controller):
     @http.route('/mailing/mobile/preview', methods=['GET'], type='http', auth='user', website=True)
     def mass_mailing_preview_mobile_content(self):
         return request.render("mass_mailing.preview_content_mobile", {})
+
+    # ------------------------------------------------------------
+    # HTML BUILDER
+    # ------------------------------------------------------------
+    @http.route('/mailing/attachment/add_url_data', methods=['POST'], type='jsonrpc', auth='user', website=True)
+    def add_url_image_data(self, url, res_model='mailing.mailing', res_id=False):
+        if not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+            raise Unauthorized()
+
+        with public_requests_session() as session:
+            check_valid_url_image_mimetype(url, session)
+            try:
+                attachment = create_attachment_from_external_image_url(
+                    request.env['ir.attachment'],
+                    url=url,
+                    session=session,
+                    res_id=res_id,
+                    res_model=res_model
+                )
+                return attachment._get_media_info()
+            except UnidentifiedImageError as exc:
+                raise UserError(_("The URL does not point to a valid image.")) from exc
+            except Exception as exc:  # noqa: BLE001 — wrapped as ImportValidationError by _get_image_by_url
+                raise UserError(_("The image could not be downloaded from this URL.")) from exc
