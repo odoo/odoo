@@ -91,17 +91,34 @@ class Base(models.AbstractModel):
         added to ``vals``, except for the fields that the user changed.
 
         :param onchange_fields: names of the fields to trigger the onchange of
-        :param onchange_spec: specification of the fields to take from the
-            result of the onchange, without any sub-specification for the
-            many2one, so that their values can be written as is
+        :param onchange_spec: specification of the fields in the view, as for
+            :meth:`onchange`
         :param changed_fields: names of the fields changed by the user
         """
         if onchange_fields:
             result = self.onchange(dict(vals), onchange_fields, onchange_spec)
-            for fname, value in result['value'].items():
-                if fname not in changed_fields:
-                    vals[fname] = value
+            values = self._web_read_to_write_values(result['value'])
+            vals.update({fname: value for fname, value in values.items() if fname not in changed_fields})
         return self.web_save(vals, specification, next_id)
+
+    def _web_read_to_write_values(self, values: dict) -> dict:
+        """ Convert values in the format of :meth:`web_read` (as returned by
+        :meth:`onchange`) to values that can be written. """
+        result = {}
+        for fname, value in values.items():
+            field = self._fields[fname]
+            if field.type == 'many2one':
+                value = value and value['id']
+            elif field.type in ('one2many', 'many2many'):
+                comodel = self.env[field.comodel_name]
+                value = [
+                    (command[0], command[1], comodel._web_read_to_write_values(command[2]))
+                    if command[0] in (Command.CREATE, Command.UPDATE)
+                    else command
+                    for command in value
+                ]
+            result[fname] = value
+        return result
 
     def web_save_multi(self, vals_list: list[dict], specification: dict[str, dict]) -> list[dict]:
         if len(self) != len(vals_list):

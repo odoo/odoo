@@ -3069,7 +3069,10 @@ export class Model extends Array {
             );
             for (const [fieldName, fieldValue] of Object.entries(value)) {
                 if (!kwargs.changed_fields?.includes(fieldName)) {
-                    values[fieldName] = fieldValue;
+                    values[fieldName] =
+                        this._fields[fieldName].type === "many2one" && fieldValue
+                            ? fieldValue.id
+                            : fieldValue;
                 }
             }
         }

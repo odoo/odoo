@@ -8,7 +8,6 @@ import { FetchRecordError } from "./errors";
 import {
     createPropertyActiveField,
     getBasicEvalContext,
-    getOfflineOnchangeSpec,
     getFieldContext,
     getFieldsSpec,
     getOfflineDisplayName,
@@ -1403,7 +1402,9 @@ export class Record extends DataPoint {
                 specification: {}, //Here for the kwargs we don't need the specification or the next_id
                 onchange_fields: [...this._offlinePendingOnchanges],
                 onchange_spec: this._offlinePendingOnchanges.size
-                    ? getOfflineOnchangeSpec(this.activeFields, this.fields, this.evalContext)
+                    ? getFieldsSpec(this.activeFields, this.fields, this.evalContext, {
+                          withInvisible: true,
+                      })
                     : {},
                 changed_fields: Object.keys(this._offlineChanges),
             },

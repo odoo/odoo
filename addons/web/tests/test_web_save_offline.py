@@ -16,7 +16,7 @@ class TestWebSaveOffline(TransactionCase):
             'city': 'Brussels',
             'country_id': cls.country.id,
         })
-        cls.spec = {'street': {}, 'city': {}, 'country_id': {}}
+        cls.spec = {'street': {}, 'city': {}, 'country_id': {'fields': {'display_name': {}}}}
 
     def _web_save_offline(self, vals, onchange_spec=None, changed_fields=None):
         [result] = self.env['res.partner'].web_save_offline(
@@ -80,3 +80,34 @@ class TestWebSaveOffline(TransactionCase):
         with patch.object(type(Partner), 'onchange') as onchange:
             Partner.web_save_offline({'name': 'Child'}, {'id': {}}, [], {}, [])
         onchange.assert_not_called()
+
+    def test_many2one_values_are_written_as_ids(self):
+        Partner = self.env['res.partner']
+        country = {'id': self.country.id, 'display_name': self.country.display_name}
+        with patch.object(type(Partner), 'onchange', return_value={'value': {'country_id': country}}):
+            [saved] = Partner.web_save_offline(
+                {'name': 'Child'}, {'country_id': {}}, ['name'], self.spec, [],
+            )
+        self.assertEqual(saved['country_id'], self.country.id)
+
+    def test_x2many_lines_are_written_with_ids(self):
+        Partner = self.env['res.partner']
+        country = {'id': self.country.id, 'display_name': self.country.display_name}
+        lines = [(0, 'virtual_1', {'name': 'Line', 'country_id': country})]
+        with patch.object(type(Partner), 'onchange', return_value={'value': {'child_ids': lines}}):
+            [saved] = Partner.web_save_offline(
+                {'name': 'Parent'}, {'id': {}}, ['name'], {'child_ids': {'fields': {'name': {}}}}, [],
+            )
+        [child] = Partner.browse(saved['id']).child_ids
+        self.assertEqual(child.name, 'Line')
+        self.assertEqual(child.country_id, self.country)
+
+    def test_changed_fields_are_not_taken_from_the_onchange(self):
+        Partner = self.env['res.partner']
+        result = {'value': {'street': 'From onchange', 'city': 'From onchange'}}
+        with patch.object(type(Partner), 'onchange', return_value=result):
+            [saved] = Partner.web_save_offline(
+                {'name': 'Child', 'city': 'Mine'}, {'street': {}, 'city': {}}, ['name'], self.spec, ['city'],
+            )
+        self.assertEqual(saved['street'], 'From onchange')
+        self.assertEqual(saved['city'], 'Mine')
