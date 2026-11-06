@@ -45,7 +45,6 @@ import {
     asyncStep,
     Command,
     mockService,
-    onRpc,
     patchWithCleanup,
     serverState,
     waitForSteps,
@@ -993,7 +992,6 @@ test("shows warning on infinite mirror effect (screen-sharing then fullscreen)",
 
 test("single 'join' (without camera) button when last call was audio-only", async () => {
     const pyEnv = await startServer();
-    onRpc("/mail/rtc/session/notify_call_members", () => true);
     const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
@@ -1019,7 +1017,6 @@ test("single 'join' (without camera) button when last call was audio-only", asyn
 
 test("single 'join' (with camera) button when last call had camera on", async () => {
     const pyEnv = await startServer();
-    onRpc("/mail/rtc/session/notify_call_members", () => true);
     const alfredPartnerId = pyEnv["res.partner"].create({ name: "Alfred" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
