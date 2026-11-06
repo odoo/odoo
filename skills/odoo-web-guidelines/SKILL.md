@@ -30,6 +30,9 @@ touching instead of loading whole files.
 | [Use `window` members directly](guidelines/javascript.md#use-window-members-directly-not-the-browser-object) | writing `browser.`, or importing from `@web/core/browser/browser` |
 | [Pair every absence check with a positive one](guidelines/tests.md#pair-every-absence-check-with-a-positive-one) | asserting in a Hoot test or a tour that an element is absent |
 | [Use the Owl 3 hooks](guidelines/javascript.md#use-the-owl-3-hooks-not-the-owl-2-compatibility-ones) | adding or converting an Owl hook: an effect, a sub-env, a forced render |
+| [Order concurrent calls with the concurrency helpers](guidelines/javascript.md#order-concurrent-calls-with-the-concurrency-helpers) | sending a request each time the user acts on the same state, or chaining promises by hand |
+| [JavaScript formatting](guidelines/javascript.md#javascript-formatting) | formatting a JS file, or running a formatter on it |
+| [Freeze the time when a test meets a timer](guidelines/tests.md#freeze-the-time-when-a-test-meets-a-timer) | writing a Hoot test that types in a search, opens a delayed popover, or acts on code that debounces a call |
 | [SCSS and CSS](guidelines/scss.md#scss-and-css) | touching `*.scss` |
 | [Assets](guidelines/assets.md#assets) | adding an image, font, or library |
 
