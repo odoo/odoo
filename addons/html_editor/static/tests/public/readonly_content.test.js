@@ -44,6 +44,16 @@ describe("links", () => {
     });
 });
 
+describe("tables", () => {
+    test("wraps the tables in a scroll container, except the nested ones", async () => {
+        await startInteractions(
+            `<div class="o_readonly"><table class="o_table"><tbody><tr><td><table class="o_table"><tbody><tr><td>a</td></tr></tbody></table></td></tr></tbody></table></div>`
+        );
+        expect(".o_readonly > .o_table_wrapper > table").toHaveCount(1);
+        expect("td .o_table_wrapper").toHaveCount(0);
+    });
+});
+
 describe("copy", () => {
     test("copies the selection with the editor's clipboard format", async () => {
         await startInteractions(

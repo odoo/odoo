@@ -158,6 +158,21 @@ export function wrapTableInScrollContainer(table) {
 }
 
 /**
+ * Put the tables of the given readonly content in scroll containers, as they
+ * are not saved with it.
+ *
+ * @param {HTMLElement} container
+ */
+export function wrapReadonlyTables(container) {
+    for (const table of container.querySelectorAll(".o_table")) {
+        // Checked as we go, so a table nested in one just wrapped is skipped.
+        if (!table.closest(TABLE_WRAPPER_SELECTOR)) {
+            wrapTableInScrollContainer(table);
+        }
+    }
+}
+
+/**
  * Get the element standing for the given table in the block flow, its wrapper
  * if it has one, the table itself otherwise. Use it over the table to reach
  * its siblings, or to insert/remove content around it.
