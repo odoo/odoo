@@ -1,10 +1,10 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Replace Homepage Content with Harvard University Landing Page -->
     <template id="harvard_homepage_inherit" inherit_id="website.homepage" name="Harvard University Homepage">
         <xpath expr="//div[@id='wrap']" position="replace">
             <div id="wrap" class="oe_structure oe_empty">
-                <!-- Hero Section matching user screenshot -->
+                <!-- Hero Section matching user mockup -->
                 <section class="harvard-hero-section" style="background-image: url('/school_website/static/src/img/harvard_campus_hero.jpg');">
                     <div class="harvard-hero-overlay"></div>
                     <div class="harvard-hero-content">
@@ -126,17 +126,163 @@
                     </div>
                 </section>
 
-                <!-- Call to Action Banner -->
-                <section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #A51C30 0%, #801424 100%);">
-                    <div class="container py-4">
-                        <h2 class="display-6 fw-bold mb-3">Begin Your Harvard Journey Today</h2>
-                        <p class="lead mb-4 mx-auto" style="max-width: 650px;">Applications for the upcoming academic year are now open. Start your application online in just a few minutes.</p>
-                        <div class="d-flex justify-content-center gap-3">
-                            <a href="/admission/apply" class="btn btn-light btn-lg px-4 fw-bold text-danger">Apply for Admission</a>
-                            <a href="/my/student/dashboard" class="btn btn-outline-light btn-lg px-4 fw-bold">Student Portal</a>
+                <!-- Upgraded Call to Action (CTA) Banner -->
+                <section class="harvard-cta-section py-5 text-center text-white position-relative overflow-hidden">
+                    <div class="harvard-cta-pattern position-absolute top-0 start-0 end-0 bottom-0"></div>
+                    <div class="container py-4 position-relative" style="z-index: 2;">
+                        <span class="badge bg-white text-danger px-3 py-2 rounded-pill fw-bold text-uppercase mb-3 shadow-sm">
+                            <i class="fa fa-graduation-cap me-1"/> Admissions Open for Academic Year 2026–2027
+                        </span>
+                        <h2 class="display-5 fw-bold mb-3 text-white">Begin Your Harvard Journey Today</h2>
+                        <p class="lead mb-4 mx-auto text-white-50" style="max-width: 680px;">
+                            Join a world-renowned community of scholars, researchers, and innovators. Applications for undergraduate, graduate, and doctoral programs are now open worldwide.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap mb-4">
+                            <a href="/admission/apply" class="btn btn-light btn-lg px-4 py-3 fw-bold text-danger shadow-sm harvard-btn-cta-primary">
+                                <i class="fa fa-pencil-square-o me-2"/> Apply for Admission
+                            </a>
+                            <a href="/my/student/dashboard" class="btn btn-outline-light btn-lg px-4 py-3 fw-bold harvard-btn-cta-secondary">
+                                <i class="fa fa-user-circle me-2"/> Student Portal
+                            </a>
+                            <a href="/courses" class="btn btn-outline-light btn-lg px-4 py-3 fw-bold harvard-btn-cta-secondary">
+                                <i class="fa fa-compass me-2"/> Explore Programs
+                            </a>
+                        </div>
+                        <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap text-white-50 small">
+                            <span><i class="fa fa-check-circle text-warning me-1"/> 100% Online Application</span>
+                            <span><i class="fa fa-check-circle text-warning me-1"/> Need-Blind Financial Aid</span>
+                            <span><i class="fa fa-check-circle text-warning me-1"/> Global Degree Recognition</span>
                         </div>
                     </div>
                 </section>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Custom Harvard University Footer -->
+    <template id="harvard_footer_custom_inherit" inherit_id="website.footer_custom" name="Harvard University Footer">
+        <xpath expr="//div[@id='footer']" position="replace">
+            <div id="footer" class="oe_structure oe_structure_solo text-break harvard-footer" t-ignore="true" t-if="not no_footer">
+                <div class="harvard-footer-top-accent"></div>
+                <section class="py-5 text-white" style="background-color: #0d1726;">
+                    <div class="container py-3">
+                        <div class="row g-4 g-lg-5">
+                            <!-- Col 1: Brand & Mission -->
+                            <div class="col-lg-4">
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <span class="p-2 bg-white rounded-3 shadow-sm d-inline-flex align-items-center justify-content-center">
+                                        <i class="fa fa-graduation-cap fa-2x text-danger"/>
+                                    </span>
+                                    <div>
+                                        <h5 class="fw-bold text-white mb-0" style="letter-spacing: 1px;">HARVARD UNIVERSITY</h5>
+                                        <span class="small text-danger fw-bold" style="letter-spacing: 2px;">VERITAS</span>
+                                    </div>
+                                </div>
+                                <p class="text-white-50 small mb-4" style="line-height: 1.7;">
+                                    Harvard University is devoted to excellence in teaching, learning, and research, and to developing leaders in many disciplines who make a positive difference in the world.
+                                </p>
+                                <div class="d-flex flex-column gap-2 small text-white-50 mb-4">
+                                    <div><i class="fa fa-map-marker text-danger me-2 fa-fw"/> Massachusetts Hall, Cambridge, MA 02138 USA</div>
+                                    <div><i class="fa fa-phone text-danger me-2 fa-fw"/> Switchboard: <a href="tel:+16174951000" class="text-white text-decoration-none">+1 (617) 495-1000</a></div>
+                                    <div><i class="fa fa-envelope text-danger me-2 fa-fw"/> Admissions: <a href="mailto:admissions@harvard.edu" class="text-white text-decoration-none">admissions@harvard.edu</a></div>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a href="https://facebook.com/harvard" target="_blank" class="harvard-social-icon" aria-label="Facebook"><i class="fa fa-facebook"/></a>
+                                    <a href="https://twitter.com/harvard" target="_blank" class="harvard-social-icon" aria-label="Twitter"><i class="fa fa-twitter"/></a>
+                                    <a href="https://linkedin.com/school/harvard-university" target="_blank" class="harvard-social-icon" aria-label="LinkedIn"><i class="fa fa-linkedin"/></a>
+                                    <a href="https://instagram.com/harvard" target="_blank" class="harvard-social-icon" aria-label="Instagram"><i class="fa fa-instagram"/></a>
+                                    <a href="https://youtube.com/harvard" target="_blank" class="harvard-social-icon" aria-label="YouTube"><i class="fa fa-youtube-play"/></a>
+                                </div>
+                            </div>
+
+                            <!-- Col 2: Academics & Admissions -->
+                            <div class="col-6 col-lg-3">
+                                <h5 class="fw-bold text-white mb-3 text-uppercase small" style="letter-spacing: 1px;">
+                                    <span class="text-danger">|</span> Academics &amp; Admissions
+                                </h5>
+                                <ul class="list-unstyled small d-flex flex-column gap-2 text-white-50 mb-0">
+                                    <li><a href="/courses" class="harvard-footer-link">Degree Programs &amp; Courses</a></li>
+                                    <li><a href="/courses" class="harvard-footer-link">Undergraduate Studies</a></li>
+                                    <li><a href="/courses" class="harvard-footer-link">Graduate &amp; Master's Degrees</a></li>
+                                    <li><a href="/courses" class="harvard-footer-link">Doctoral &amp; PhD Studies</a></li>
+                                    <li><a href="/admission/apply" class="harvard-footer-link">Apply Online for Admission</a></li>
+                                    <li><a href="/my/student/dashboard" class="harvard-footer-link">Student Portal Dashboard</a></li>
+                                    <li><a href="/events" class="harvard-footer-link">Campus Events &amp; Calendar</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Col 3: Campus & Resources -->
+                            <div class="col-6 col-lg-2">
+                                <h5 class="fw-bold text-white mb-3 text-uppercase small" style="letter-spacing: 1px;">
+                                    <span class="text-danger">|</span> Campus Life
+                                </h5>
+                                <ul class="list-unstyled small d-flex flex-column gap-2 text-white-50 mb-0">
+                                    <li><a href="/aboutus" class="harvard-footer-link">About Harvard</a></li>
+                                    <li><a href="/jobs" class="harvard-footer-link">Faculty &amp; Staff Careers</a></li>
+                                    <li><a href="/contactus" class="harvard-footer-link">Campus Directory</a></li>
+                                    <li><a href="/contactus" class="harvard-footer-link">Visitor Center &amp; Tours</a></li>
+                                    <li><a href="/contactus" class="harvard-footer-link">Financial Aid Support</a></li>
+                                    <li><a href="/aboutus" class="harvard-footer-link">Research &amp; Labs</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- Col 4: Quick Contact & Emergency Hotline -->
+                            <div class="col-lg-3">
+                                <h5 class="fw-bold text-white mb-3 text-uppercase small" style="letter-spacing: 1px;">
+                                    <span class="text-danger">|</span> Inquiries &amp; Hotlines
+                                </h5>
+                                <div class="p-3 rounded-3 mb-3 border border-secondary border-opacity-25" style="background-color: rgba(255,255,255,0.04);">
+                                    <span class="text-muted small text-uppercase d-block fw-bold">Admissions Hotline</span>
+                                    <a href="tel:+16174951551" class="text-white fw-bold d-block text-decoration-none mt-1">+1 (617) 495-1551</a>
+                                    <span class="text-white-50 small">Mon – Fri: 9:00 AM – 5:00 PM EST</span>
+                                </div>
+
+                                <div class="p-3 rounded-3 border border-danger border-opacity-50 mb-3" style="background-color: rgba(165, 28, 48, 0.15);">
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <i class="fa fa-shield text-danger"/>
+                                        <span class="text-danger fw-bold small text-uppercase">Campus Police (HUPD)</span>
+                                    </div>
+                                    <a href="tel:+16174951212" class="text-white fw-bold d-block text-decoration-none">+1 (617) 495-1212</a>
+                                    <span class="text-white-50 small">24/7 Dispatch &amp; Safety Hotline</span>
+                                </div>
+
+                                <div>
+                                    <a href="/contactus" class="btn btn-danger btn-sm w-100 fw-bold py-2 harvard-btn-crimson">
+                                        <i class="fa fa-envelope me-1"/> Contact University
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Custom Harvard University Copyright Bar -->
+    <template id="harvard_footer_copyright_inherit" inherit_id="website.layout" name="Harvard University Copyright Bar">
+        <xpath expr="//div[hasclass('o_footer_copyright')]" position="replace">
+            <div class="harvard-footer-bottom py-3" style="background-color: #080f1a; border-top: 1px solid rgba(255,255,255,0.08);">
+                <div class="container">
+                    <div class="row align-items-center gy-2">
+                        <div class="col-md-6 text-center text-md-start">
+                            <p class="mb-0 text-white-50 small">
+                                Copyright &amp;copy; 2026 Harvard University. All Rights Reserved. • Cambridge, Massachusetts
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-center text-md-end">
+                            <ul class="list-inline mb-0 small text-white-50">
+                                <li class="list-inline-item"><a href="/aboutus" class="text-white-50 text-decoration-none hover-white">Privacy Policy</a></li>
+                                <li class="list-inline-item">•</li>
+                                <li class="list-inline-item"><a href="/aboutus" class="text-white-50 text-decoration-none hover-white">Terms of Use</a></li>
+                                <li class="list-inline-item">•</li>
+                                <li class="list-inline-item"><a href="/aboutus" class="text-white-50 text-decoration-none hover-white">Accessibility</a></li>
+                                <li class="list-inline-item">•</li>
+                                <li class="list-inline-item"><a href="/aboutus" class="text-white-50 text-decoration-none hover-white">Non-Discrimination</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </xpath>
     </template>

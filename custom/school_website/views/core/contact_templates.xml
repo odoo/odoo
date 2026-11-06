@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Custom Harvard University Contact Us Page Template (/contactus) -->
+    <template id="harvard_contactus_inherit" inherit_id="website.contactus" name="Harvard University Contact Us Page">
+        <xpath expr="//div[@id='wrap']" position="replace">
+            <div id="wrap" class="oe_structure oe_empty harvard-contact-wrapper bg-light">
+                <!-- Hero Header Banner -->
+                <section class="py-5 text-white position-relative" style="background: linear-gradient(135deg, #101c30 0%, #1e293b 55%, #A51C30 100%);">
+                    <div class="container py-4">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <nav aria-label="breadcrumb">
+                                    <ol class="breadcrumb mb-2 small">
+                                        <li class="breadcrumb-item"><a href="/" class="text-white-50 text-decoration-none">Home</a></li>
+                                        <li class="breadcrumb-item active text-white" aria-current="page">Contact Us</li>
+                                    </ol>
+                                </nav>
+                                <span class="badge bg-danger text-uppercase px-3 py-2 fw-semibold mb-2">Connect With Harvard</span>
+                                <h1 class="display-4 fw-bold mb-3 text-white">Contact Us &amp; Directory</h1>
+                                <p class="lead text-white-50 mb-0" style="max-width: 680px;">
+                                    Have questions about academic degrees, admissions, campus visits, or student records? Reach out to our dedicated university staff and faculty.
+                                </p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                                <div class="d-inline-flex flex-column gap-2 text-start bg-white bg-opacity-10 p-3 rounded-3 border border-white border-opacity-25">
+                                    <span class="text-uppercase fw-bold text-danger-subtle small"><i class="fa fa-clock-o me-1"/> Admissions Hours</span>
+                                    <span class="text-white fw-bold">Mon – Fri: 9:00 AM – 5:00 PM EST</span>
+                                    <span class="text-white-50 small">Harvard Yard • Cambridge, Massachusetts</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quick Contact Highlight Cards (4 Columns) -->
+                <section class="py-4 bg-white border-bottom shadow-sm">
+                    <div class="container">
+                        <div class="row g-3">
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="harvard-quick-contact-card p-3 rounded-3 border h-100 d-flex align-items-center gap-3">
+                                    <div class="harvard-quick-icon bg-danger-subtle text-danger rounded-circle p-3">
+                                        <i class="fa fa-map-marker fa-2x"/>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted small text-uppercase fw-bold d-block">Campus Location</span>
+                                        <span class="fw-bold text-dark d-block">Cambridge, MA</span>
+                                        <span class="text-muted small">Historic Harvard Yard</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="harvard-quick-contact-card p-3 rounded-3 border h-100 d-flex align-items-center gap-3">
+                                    <div class="harvard-quick-icon bg-danger-subtle text-danger rounded-circle p-3">
+                                        <i class="fa fa-phone fa-2x"/>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted small text-uppercase fw-bold d-block">Admissions Hotline</span>
+                                        <a href="tel:+16174951551" class="fw-bold text-dark text-decoration-none d-block">+1 (617) 495-1551</a>
+                                        <span class="text-muted small">Mon – Fri (9am - 5pm)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="harvard-quick-contact-card p-3 rounded-3 border h-100 d-flex align-items-center gap-3">
+                                    <div class="harvard-quick-icon bg-danger-subtle text-danger rounded-circle p-3">
+                                        <i class="fa fa-envelope-o fa-2x"/>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted small text-uppercase fw-bold d-block">Official Email</span>
+                                        <a href="mailto:admissions@harvard.edu" class="fw-bold text-dark text-decoration-none d-block">admissions@harvard.edu</a>
+                                        <span class="text-muted small">Replies in 24h</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="harvard-quick-contact-card p-3 rounded-3 border h-100 d-flex align-items-center gap-3">
+                                    <div class="harvard-quick-icon bg-danger-subtle text-danger rounded-circle p-3">
+                                        <i class="fa fa-university fa-2x"/>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted small text-uppercase fw-bold d-block">Campus Tours</span>
+                                        <span class="fw-bold text-dark d-block">Visitor Center</span>
+                                        <span class="text-muted small">Smith Campus Center</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Main Form & Information Section (2 Columns) -->
+                <section class="py-5">
+                    <div class="container py-2">
+                        <div class="row g-4 g-lg-5">
+                            <!-- Left: Contact Form Card (7 Cols) -->
+                            <div class="col-lg-7">
+                                <div class="harvard-contact-form-card bg-white p-4 p-md-5 rounded-4 shadow-sm border position-relative overflow-hidden">
+                                    <div class="harvard-card-header-bar position-absolute top-0 start-0 end-0"></div>
+
+                                    <div class="d-flex align-items-center gap-3 mb-4">
+                                        <div class="p-3 bg-danger text-white rounded-3 shadow-sm">
+                                            <i class="fa fa-paper-plane fa-lg"/>
+                                        </div>
+                                        <div>
+                                            <span class="text-uppercase fw-bold text-danger small">Direct Inquiry</span>
+                                            <h2 class="h3 fw-bold text-dark mb-1">Send Us a Message</h2>
+                                            <p class="text-muted small mb-0">Fill in the fields below and our admissions or administrative team will follow up promptly.</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Standard Odoo Form Integration -->
+                                    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                                        <form id="contactus_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you" data-pre-fill="true">
+                                            <div class="s_website_form_rows row g-3">
+                                                <!-- Full Name -->
+                                                <div class="col-md-6 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
+                                                    <label class="form-label fw-bold text-dark s_website_form_label mb-1" for="contact1">
+                                                        <span class="s_website_form_label_content">Full Name</span>
+                                                        <span class="s_website_form_mark text-danger"> *</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa fa-user-o"/></span>
+                                                        <input id="contact1" type="text" class="form-control form-control-lg border-start-0 s_website_form_input" name="name" required="" data-fill-with="name" placeholder="e.g. John Harvard"/>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Phone Number -->
+                                                <div class="col-md-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                    <label class="form-label fw-bold text-dark s_website_form_label mb-1" for="contact2">
+                                                        <span class="s_website_form_label_content">Phone Number</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa fa-phone"/></span>
+                                                        <input id="contact2" type="tel" class="form-control form-control-lg border-start-0 s_website_form_input" name="phone" data-fill-with="phone" placeholder="e.g. +1 (617) 000-0000"/>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Email Address -->
+                                                <div class="col-md-6 s_website_form_field s_website_form_required s_website_form_model_required" data-type="email" data-name="Field">
+                                                    <label class="form-label fw-bold text-dark s_website_form_label mb-1" for="contact3">
+                                                        <span class="s_website_form_label_content">Email Address</span>
+                                                        <span class="s_website_form_mark text-danger"> *</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa fa-envelope-o"/></span>
+                                                        <input id="contact3" type="email" class="form-control form-control-lg border-start-0 s_website_form_input" name="email_from" required="" data-fill-with="email" placeholder="e.g. name@example.com"/>
+                                                    </div>
+                                                </div>
+
+                                                <!-- School / Organization -->
+                                                <div class="col-md-6 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                                    <label class="form-label fw-bold text-dark s_website_form_label mb-1" for="contact4">
+                                                        <span class="s_website_form_label_content">School or Organization</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa fa-building-o"/></span>
+                                                        <input id="contact4" type="text" class="form-control form-control-lg border-start-0 s_website_form_input" name="company" data-fill-with="commercial_company_name" placeholder="e.g. High School or College"/>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Subject -->
+                                                <div class="col-12 s_website_form_field s_website_form_required s_website_form_model_required" data-type="char" data-name="Field">
+                                                    <label class="form-label fw-bold text-dark s_website_form_label mb-1" for="contact5">
+                                                        <span class="s_website_form_label_content">Inquiry Subject</span>
+                                                        <span class="s_website_form_mark text-danger"> *</span>
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-light text-muted border-end-0"><i class="fa fa-tag"/></span>
+                                                        <input id="contact5" type="text" class="form-control form-control-lg border-start-0 s_website_form_input" name="subject" required="" placeholder="e.g. Undergraduate Admissions, Campus Visit, Transcript Question"/>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Message / Question -->
+                                                <div class="col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text" data-name="Field">
+                                                    <label class="form-label fw-bold text-dark s_website_form_label mb-1" for="contact6">
+                                                        <span class="s_website_form_label_content">Detailed Message / Question</span>
+                                                        <span class="s_website_form_mark text-danger"> *</span>
+                                                    </label>
+                                                    <textarea id="contact6" class="form-control form-control-lg s_website_form_input" name="description" required="" rows="6" placeholder="Please write your detailed message, program of interest, or question here..."></textarea>
+                                                </div>
+
+                                                <!-- Hidden email_to field required by Odoo form pipeline -->
+                                                <div class="col-12 s_website_form_field s_website_form_dnone d-none">
+                                                    <input id="contact7" type="hidden" class="form-control s_website_form_input" name="email_to"/>
+                                                </div>
+
+                                                <!-- Submit Action Button -->
+                                                <div class="col-12 s_website_form_submit s_website_form_no_submit_label pt-2" data-name="Submit Button">
+                                                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                                        <a href="#" role="button" class="btn btn-danger btn-lg px-5 py-3 fw-bold s_website_form_send harvard-btn-crimson shadow-sm">
+                                                            <i class="fa fa-paper-plane me-2"/> Submit Inquiry
+                                                        </a>
+                                                        <span id="s_website_form_result" class="text-muted small"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </section>
+
+                                    <!-- Privacy Assurance Footer -->
+                                    <div class="mt-4 pt-3 border-top d-flex align-items-center gap-2 text-muted small">
+                                        <i class="fa fa-shield text-success fa-lg"/>
+                                        <span>Harvard University values your privacy. Your information is protected and never shared or sold.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right: University Information & Directory (5 Cols) -->
+                            <div class="col-lg-5">
+                                <div class="d-flex flex-column gap-4">
+                                    <!-- Main Campus Card -->
+                                    <div class="bg-white p-4 rounded-4 shadow-sm border position-relative overflow-hidden">
+                                        <div class="d-flex align-items-center gap-3 mb-3">
+                                            <div class="p-3 bg-danger-subtle text-danger rounded-3">
+                                                <i class="fa fa-university fa-lg"/>
+                                            </div>
+                                            <div>
+                                                <span class="text-uppercase fw-bold text-danger small">Campus Headquarters</span>
+                                                <h4 class="h5 fw-bold text-dark mb-0">Harvard University</h4>
+                                            </div>
+                                        </div>
+                                        <ul class="list-unstyled mb-3 ps-1 text-muted">
+                                            <li class="mb-2 d-flex align-items-start gap-2">
+                                                <i class="fa fa-map-marker text-danger mt-1 fa-fw"/>
+                                                <div>
+                                                    <strong class="text-dark">Office of Admissions &amp; Visitor Center</strong><br/>
+                                                    Massachusetts Hall, Cambridge, MA 02138
+                                                </div>
+                                            </li>
+                                            <li class="mb-2 d-flex align-items-center gap-2">
+                                                <i class="fa fa-phone text-danger fa-fw"/>
+                                                <span>Main Switchboard: <strong>+1 (617) 495-1000</strong></span>
+                                            </li>
+                                            <li class="mb-2 d-flex align-items-center gap-2">
+                                                <i class="fa fa-envelope text-danger fa-fw"/>
+                                                <span>General Info: <strong>info@harvard.edu</strong></span>
+                                            </li>
+                                        </ul>
+                                        <a href="https://maps.google.com/?q=Harvard+University+Cambridge+MA" target="_blank" rel="noopener noreferrer" class="btn btn-outline-dark btn-sm w-100 fw-bold">
+                                            <i class="fa fa-external-link me-1"/> View on Google Maps
+                                        </a>
+                                    </div>
+
+                                    <!-- Department Directory Card -->
+                                    <div class="bg-white p-4 rounded-4 shadow-sm border">
+                                        <h4 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-3">
+                                            <i class="fa fa-address-book-o text-danger me-2"/> Department Hotlines
+                                        </h4>
+                                        <div class="d-flex flex-column gap-3 small">
+                                            <div class="p-3 bg-light rounded-3 border">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <strong class="text-dark">Undergraduate Admissions</strong>
+                                                    <a href="tel:+16174951551" class="text-danger fw-bold text-decoration-none">(617) 495-1551</a>
+                                                </div>
+                                                <span class="text-muted d-block mt-1">admissions@fas.harvard.edu</span>
+                                            </div>
+
+                                            <div class="p-3 bg-light rounded-3 border">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <strong class="text-dark">Office of the Registrar</strong>
+                                                    <a href="tel:+16174951543" class="text-danger fw-bold text-decoration-none">(617) 495-1543</a>
+                                                </div>
+                                                <span class="text-muted d-block mt-1">registrar@fas.harvard.edu</span>
+                                            </div>
+
+                                            <div class="p-3 bg-light rounded-3 border">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <strong class="text-dark">Financial Aid &amp; Scholarships</strong>
+                                                    <a href="tel:+16174951581" class="text-danger fw-bold text-decoration-none">(617) 495-1581</a>
+                                                </div>
+                                                <span class="text-muted d-block mt-1">financialaid@harvard.edu</span>
+                                            </div>
+
+                                            <div class="p-3 bg-light rounded-3 border">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <strong class="text-dark">Graduate School (GSAS)</strong>
+                                                    <a href="tel:+16174955315" class="text-danger fw-bold text-decoration-none">(617) 495-5315</a>
+                                                </div>
+                                                <span class="text-muted d-block mt-1">gsas@fas.harvard.edu</span>
+                                            </div>
+
+                                            <div class="p-3 bg-danger bg-opacity-10 rounded-3 border border-danger border-opacity-25">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="fw-bold text-danger"><i class="fa fa-shield me-1"/> Campus Police &amp; Emergency</span>
+                                                    <a href="tel:+16174951212" class="text-danger fw-bold text-decoration-none">(617) 495-1212</a>
+                                                </div>
+                                                <span class="text-muted small d-block mt-1">24/7 Dispatch &amp; Safety Hotline</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Visiting Hours & Campus Access Card -->
+                                    <div class="bg-white p-4 rounded-4 shadow-sm border">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h4 class="h6 fw-bold text-dark text-uppercase tracking-wider mb-0">
+                                                <i class="fa fa-clock-o text-danger me-2"/> Hours of Operation
+                                            </h4>
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">
+                                                <i class="fa fa-circle text-success me-1 small"/> Open Today
+                                            </span>
+                                        </div>
+                                        <ul class="list-unstyled mb-0 small text-muted">
+                                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                                <span>Monday – Friday</span>
+                                                <strong class="text-dark">9:00 AM – 5:00 PM EST</strong>
+                                            </li>
+                                            <li class="d-flex justify-content-between py-2 border-bottom">
+                                                <span>Saturday (Tours &amp; Visitors)</span>
+                                                <strong class="text-dark">9:00 AM – 1:00 PM EST</strong>
+                                            </li>
+                                            <li class="d-flex justify-content-between py-2">
+                                                <span>Sunday &amp; Academic Holidays</span>
+                                                <span class="text-danger fw-bold">Closed</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Academic Departments Spotlight -->
+                <t t-set="departments" t-value="request.env['university.department'].sudo().search([('active', '=', True)], limit=6)"/>
+                <section class="py-5 bg-white border-top border-bottom" t-if="departments">
+                    <div class="container py-2">
+                        <div class="row align-items-end mb-4">
+                            <div class="col-lg-8">
+                                <span class="text-uppercase fw-bold text-danger small">Academic Network</span>
+                                <h3 class="h4 fw-bold text-dark mt-1">Direct Department Inquiries</h3>
+                                <p class="text-muted mb-0">Looking for a specific department or faculty member? Connect with our academic coordinators directly.</p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                                <a href="/courses" class="btn btn-outline-danger btn-sm px-3 py-2 fw-bold">View All Academic Programs <i class="fa fa-arrow-right ms-1"/></a>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <t t-foreach="departments" t-as="dept">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="p-3 rounded-3 border bg-light h-100 d-flex flex-column justify-content-between hover-shadow">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="badge bg-white text-dark border small fw-bold" t-esc="dept.code"/>
+                                                <span class="text-muted small"><t t-esc="dept.program_count or 0"/> Programs</span>
+                                            </div>
+                                            <h5 class="h6 fw-bold text-dark mb-1" t-esc="dept.name"/>
+                                            <p class="text-muted small mb-2" t-if="dept.faculty_id">
+                                                <i class="fa fa-university me-1"/> <t t-esc="dept.faculty_id.name"/>
+                                            </p>
+                                        </div>
+                                        <div class="pt-2 border-top">
+                                            <a t-attf-href="/contactus?subject=Inquiry for Department of #{dept.name}" class="text-danger small fw-bold text-decoration-none">
+                                                Contact Department <i class="fa fa-chevron-right small ms-1"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Frequently Asked Questions (FAQ) Accordion -->
+                <section class="py-5 bg-light">
+                    <div class="container py-2">
+                        <div class="text-center mb-5">
+                            <span class="text-uppercase fw-bold text-danger small">Common Questions</span>
+                            <h3 class="display-6 fw-bold text-dark mt-1">Frequently Asked Questions</h3>
+                            <p class="text-muted lead mx-auto" style="max-width: 650px;">Find quick answers to common questions about admissions, tours, applications, and student services.</p>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="accordion" id="contactFaqAccordion">
+                                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-sm">
+                                        <h2 class="accordion-header" id="faqHeadingOne">
+                                            <button class="accordion-button fw-bold text-dark bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseOne" aria-expanded="true" aria-controls="faqCollapseOne">
+                                                <i class="fa fa-graduation-cap text-danger me-2"/> How do I apply for undergraduate or graduate admission?
+                                            </button>
+                                        </h2>
+                                        <div id="faqCollapseOne" class="accordion-collapse collapse show" aria-labelledby="faqHeadingOne" data-bs-parent="#contactFaqAccordion">
+                                            <div class="accordion-body text-muted">
+                                                Prospective students can submit an online application through our admissions portal. Visit our <a href="/admission/apply" class="text-danger fw-bold">Apply Online</a> page to review degree requirements, required supporting documents, application deadlines, and submit your application package online.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-sm">
+                                        <h2 class="accordion-header" id="faqHeadingTwo">
+                                            <button class="accordion-button collapsed fw-bold text-dark bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseTwo" aria-expanded="false" aria-controls="faqCollapseTwo">
+                                                <i class="fa fa-map-signs text-danger me-2"/> Can I visit Harvard and take an official campus tour?
+                                            </button>
+                                        </h2>
+                                        <div id="faqCollapseTwo" class="accordion-collapse collapse" aria-labelledby="faqHeadingTwo" data-bs-parent="#contactFaqAccordion">
+                                            <div class="accordion-body text-muted">
+                                                Yes! Student-led walking tours and admissions information sessions depart regularly from the Smith Campus Center in Harvard Square. We recommend checking tour schedules in advance or contacting the Visitor Center at +1 (617) 495-1573.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-sm">
+                                        <h2 class="accordion-header" id="faqHeadingThree">
+                                            <button class="accordion-button collapsed fw-bold text-dark bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseThree" aria-expanded="false" aria-controls="faqCollapseThree">
+                                                <i class="fa fa-file-text-o text-danger me-2"/> Where should I mail official transcripts and documents?
+                                            </button>
+                                        </h2>
+                                        <div id="faqCollapseThree" class="accordion-collapse collapse" aria-labelledby="faqHeadingThree" data-bs-parent="#contactFaqAccordion">
+                                            <div class="accordion-body text-muted">
+                                                Official electronic transcripts should be sent directly from your institution to <strong class="text-dark">admissions@harvard.edu</strong>. Physical sealed credentials should be mailed to: Harvard University Admissions, Massachusetts Hall, Cambridge, MA 02138 USA.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-sm">
+                                        <h2 class="accordion-header" id="faqHeadingFour">
+                                            <button class="accordion-button collapsed fw-bold text-dark bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapseFour" aria-expanded="false" aria-controls="faqCollapseFour">
+                                                <i class="fa fa-money text-danger me-2"/> How can I apply for scholarships or need-based financial aid?
+                                            </button>
+                                        </h2>
+                                        <div id="faqCollapseFour" class="accordion-collapse collapse" aria-labelledby="faqHeadingFour" data-bs-parent="#contactFaqAccordion">
+                                            <div class="accordion-body text-muted">
+                                                Harvard is committed to meeting 100% of demonstrated financial need for all admitted students, regardless of nationality. You can contact Student Financial Services at (617) 495-1581 or email financialaid@harvard.edu for individual guidance.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Call to Action Banner -->
+                <section class="py-5 text-center text-white" style="background: linear-gradient(135deg, #A51C30 0%, #801424 100%);">
+                    <div class="container py-3">
+                        <h2 class="display-6 fw-bold mb-3">Begin Your Harvard Journey Today</h2>
+                        <p class="lead mb-4 mx-auto" style="max-width: 650px;">Applications for the upcoming academic year are open. Discover degree programs and submit your application online.</p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="/admission/apply" class="btn btn-light btn-lg px-4 fw-bold text-danger shadow-sm">Apply for Admission</a>
+                            <a href="/courses" class="btn btn-outline-light btn-lg px-4 fw-bold">Explore Degree Programs</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+</odoo>

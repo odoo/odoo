@@ -19,3 +19,7 @@ class UniversityMainController(http.Controller):
             'departments': departments,
         }
         return request.render('school_website.about_page_template', values)
+
+    @http.route(['/contact'], type='http', auth='public', website=True, sitemap=True)
+    def university_contact_redirect(self, **kw):
+        return request.redirect('/contactus')

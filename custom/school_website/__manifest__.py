@@ -17,6 +17,7 @@
         "views/dashboard/events_templates.xml",
         "views/core/jobs_templates.xml",
         "views/core/about_templates.xml",
+        "views/core/contact_templates.xml",
     ],
     "assets": {
         "web.assets_frontend": [
