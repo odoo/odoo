@@ -561,3 +561,41 @@ class TestReInvoice(TestExpenseCommon, TestSaleCommon):
             # Expense line:
             {'qty_delivered': 1.0, 'product_uom_qty': 1.0, 'price_unit': 1045.7, 'price_total': 1176.4, 'price_subtotal': 1045.7, 'is_expense': True},
         ])
+
+    def test_expense_reinvoice_match_bill_sol(self):
+        """
+        Tests that an expense matched to a bill will create a SOL like it does when not matched
+        """
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2016-01-01',
+            'invoice_line_ids': [Command.create({
+                'name': 'Unrelated bill line',
+                'product_id': self.company_data['product_order_sales_price'].id,
+                'quantity': 2,
+                'price_unit': 999.0,
+            })],
+        })
+        bill.action_post()
+
+        expense = self.create_expenses({
+            'name': 'matched to bill',
+            'date': '2016-01-03',
+            'product_id': self.company_data['service_order_cost_price'].id,
+            'quantity': 5,
+            'employee_id': self.expense_employee.id,
+            'sale_order_id': self.expense_sale_order.id,
+            'payment_mode': 'company_account',
+            'has_existing_bill': True,
+            'existing_bill_id': bill.id,
+        })
+        expense.action_submit()
+        expense._do_approve()
+        expense.action_post()
+
+        self.assertRecordValues(self.expense_sale_order.order_line, [
+            {'product_uom_qty': 3.0, 'price_unit': 235.0, 'price_total': 705.0, 'price_subtotal': 705.0, 'is_expense': False},
+            {'product_uom_qty': 1.0, 'price_unit': 1045.7, 'price_total': 1176.4, 'price_subtotal': 1045.7, 'is_expense': True},
+        ])
+        self.assertEqual(expense.sale_order_line_id, self.expense_sale_order.order_line[-1])
