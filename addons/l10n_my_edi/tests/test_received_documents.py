@@ -123,6 +123,7 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
     def test_supplier_vat_does_not_override_malaysian_tin(self):
         self.partner_a.l10n_my_edi_malaysian_tin = 'C9999999999'
         self._sync([[self._document_data('DOC1')]])
+        self.env['myinvois.document'].search([('myinvois_external_uuid', '=', 'DOC1')]).action_create_received_bills()
         supplier = self._get_received_bills(['DOC1']).partner_id
         self.assertNotEqual(supplier, self.partner_a)
         self.assertEqual(supplier._l10n_my_edi_get_tin_for_myinvois(), 'C2584563201')
@@ -150,7 +151,9 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
 
     @freeze_time('2024-08-15 10:00:00')
     def test_sync_creates_draft_bills(self):
-        """ Each new valid document becomes a draft bill with a single line holding its total. """
+        """ Each new valid document of a known supplier becomes a draft bill with a single line holding its total.
+        Anyone can issue a document to the company: the ones of unknown suppliers wait for the user to create their bill.
+        """
         action, calls = self._sync([[
             self._document_data('DOC1'),
             # Issued on 2024-07-11 in Malaysia, which is still the 10th in UTC.
@@ -164,11 +167,17 @@ class L10nMyEDITestReceivedDocuments(AccountTestInvoicingCommon):
             'date_to': '2024-07-31T23:59:59+08:00',
             'page': 1,
         }])
-        bills = self._get_received_bills(['DOC1', 'DOC2', 'DOC3'])
-        self.assertEqual(len(bills), 2)
-        self.assertEqual(self.env['account.move'].search(action['domain']), bills)
-        invoice = bills.filtered(lambda b: b.ref == 'IV-DOC1')
-        credit_note = bills.filtered(lambda b: b.ref == 'IV-DOC2')
+        documents = self.env['myinvois.document'].search([('myinvois_external_uuid', 'in', ['DOC1', 'DOC2', 'DOC3'])])
+        self.assertEqual(len(documents), 2)
+        invoice = documents.invoice_ids
+        self.assertEqual(self.env['account.move'].search(action['params']['next']['domain']), invoice)
+        unknown_supplier_document = documents - invoice.l10n_my_edi_received_document_id
+        self.assertRecordValues(unknown_supplier_document, [{'name': 'IV-DOC2', 'myinvois_supplier_tin': 'C9999999999', 'myinvois_supplier_name': 'New Supplier'}])
+        self.assertFalse(self.env['res.partner'].search([('vat', '=', 'C9999999999')]))
+
+        action = unknown_supplier_document.action_create_received_bills()
+        credit_note = unknown_supplier_document.invoice_ids
+        self.assertEqual(self.env['account.move'].search(action['domain']), credit_note)
         new_supplier = self.env['res.partner'].search([('vat', '=', 'C9999999999')])
         self.assertRecordValues(new_supplier, [{'name': 'New Supplier', 'is_company': True}])
         self.assertRecordValues(invoice + credit_note, [

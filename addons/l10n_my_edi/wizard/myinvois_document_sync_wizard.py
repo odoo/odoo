@@ -62,7 +62,7 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
     # --------------
 
     def button_sync(self):
-        """ Create a draft bill for each new document issued between the selected dates. """
+        """ Sync the documents issued between the selected dates, creating the bills of the known suppliers. """
         self.ensure_one()
         # The journal can be set through RPC: it must be one the user has access to.
         self.journal_id.check_access('read')
@@ -82,21 +82,23 @@ class MyInvoisDocumentSyncWizard(models.TransientModel):
         )
         documents = self.env['myinvois.document']
         documents_data = documents._myinvois_fetch_received_documents(proxy_user, date_from, date_to)
-        bills = documents._myinvois_import_received_documents(documents_data, self.journal_id)
-        if not bills:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'display_notification',
-                'params': {
-                    'type': 'info',
-                    'message': self.env._("No new document was received on MyInvois for the selected dates."),
-                    'next': {'type': 'ir.actions.act_window_close'},
-                },
-            }
-
-        action = self.env['ir.actions.act_window']._for_xml_id('account.action_move_in_invoice_type')
-        action.update({
-            'name': self.env._("Received Bills"),
-            'domain': [('id', 'in', bills.ids)],
-        })
-        return action
+        new_documents = documents._myinvois_import_received_documents(documents_data, self.journal_id)
+        bills = new_documents.invoice_ids
+        bills_action = documents._myinvois_action_view_received_bills(bills) if bills else {'type': 'ir.actions.act_window_close'}
+        unknown_supplier_documents = new_documents.filtered(lambda d: not d.invoice_ids)
+        if bills and not unknown_supplier_documents:
+            return bills_action
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'warning' if unknown_supplier_documents else 'info',
+                'sticky': bool(unknown_supplier_documents),
+                'message': self.env._(
+                    "%(count)s new documents come from suppliers that are not in your contacts. Review them in the "
+                    "MyInvois documents, and create the bills of the ones you expect.",
+                    count=len(unknown_supplier_documents),
+                ) if unknown_supplier_documents else self.env._("No new document was received on MyInvois for the selected dates."),
+                'next': bills_action,
+            },
+        }
