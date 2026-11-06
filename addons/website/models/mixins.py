@@ -27,6 +27,8 @@ class WebsiteSeoMetadata(models.AbstractModel):
     website_meta_description = fields.Text("Website meta description", translate=True, prefetch="website_meta")
     website_meta_keywords = fields.Char("Website meta keywords", translate=True, prefetch="website_meta")
     website_meta_og_img = fields.Char("Website opengraph image")
+    website_lcp_image_desktop = fields.Char("Website desktop LCP image", translate=True)
+    website_lcp_image_mobile = fields.Char("Website mobile LCP image", translate=True)
     seo_name = fields.Char("Seo name", translate=True, prefetch=True)
 
     @api.depends("website_meta_title", "website_meta_description", "website_meta_keywords")
