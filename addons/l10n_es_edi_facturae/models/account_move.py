@@ -304,6 +304,7 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         invoice_ref = self.ref and self.ref[:20]
+        delivery_note = self.ref and self.ref[:30]
         line = base_line['record']
         tax_details = base_line['tax_details']
 
@@ -324,6 +325,7 @@ class AccountMove(models.Model):
             'DiscountsAndRebates': [],
             'Charges': [],
             'GrossAmount': float_round(tax_details['raw_total_excluded_currency'], precision_digits=8),
+            'DeliveryNote': delivery_note,
         }
 
         if line.discount == 100.0:
