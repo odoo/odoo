@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="rule_student_own_assessment_results" model="ir.rule">
+        <field name="name">Student: own assessment results</field>
+        <field name="model_id" ref="model_university_assessment_result" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_student_own_report_cards" model="ir.rule">
+        <field name="name">Student: own report cards</field>
+        <field name="model_id" ref="model_university_report_card" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_report_cards" model="ir.rule">
+        <field name="name">Admin: all report cards</field>
+        <field name="model_id" ref="model_university_report_card" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_registrar_all_report_cards" model="ir.rule">
+        <field name="name">Registrar: all report cards</field>
+        <field name="model_id" ref="model_university_report_card" />
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_student_own_report_card_lines" model="ir.rule">
+        <field name="name">Student: own report card lines</field>
+        <field name="model_id" ref="model_university_report_card_line" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_report_card_lines" model="ir.rule">
+        <field name="name">Admin: all report card lines</field>
+        <field name="model_id" ref="model_university_report_card_line" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_registrar_all_report_card_lines" model="ir.rule">
+        <field name="name">Registrar: all report card lines</field>
+        <field name="model_id" ref="model_university_report_card_line" />
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_student_own_transcripts" model="ir.rule">
+        <field name="name">Student: own transcripts</field>
+        <field name="model_id" ref="model_university_transcript" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_transcripts" model="ir.rule">
+        <field name="name">Admin: all transcripts</field>
+        <field name="model_id" ref="model_university_transcript" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_registrar_all_transcripts" model="ir.rule">
+        <field name="name">Registrar: all transcripts</field>
+        <field name="model_id" ref="model_university_transcript" />
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_student_own_transcript_lines" model="ir.rule">
+        <field name="name">Student: own transcript lines</field>
+        <field name="model_id" ref="model_university_transcript_line" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('transcript_id.student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_transcript_lines" model="ir.rule">
+        <field name="name">Admin: all transcript lines</field>
+        <field name="model_id" ref="model_university_transcript_line" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_registrar_all_transcript_lines" model="ir.rule">
+        <field name="name">Registrar: all transcript lines</field>
+        <field name="model_id" ref="model_university_transcript_line" />
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_teacher_own_assessment_results" model="ir.rule">
+        <field name="name">Teacher: own assessment results</field>
+        <field name="model_id" ref="model_university_assessment_result" />
+        <field name="groups" eval="[(4, ref('group_university_teacher'))]" />
+        <field name="domain_force">[('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_assessment_results" model="ir.rule">
+        <field name="name">Admin: all assessment results</field>
+        <field name="model_id" ref="model_university_assessment_result" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_student_published_exams" model="ir.rule">
+        <field name="name">Student: published exams</field>
+        <field name="model_id" ref="model_university_exam" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('state', '=', 'published')]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_student_own_exam_scores" model="ir.rule">
+        <field name="name">Student: own published exam scores</field>
+        <field name="model_id" ref="model_university_exam_score" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id), ('exam_id.state', '=', 'published')]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_teacher_own_exams" model="ir.rule">
+        <field name="name">Teacher: own section exams</field>
+        <field name="model_id" ref="model_university_exam" />
+        <field name="groups" eval="[(4, ref('group_university_teacher'))]" />
+        <field name="domain_force">['|', ('teacher_id.user_id', '=', user.id), ('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_teacher_own_exam_scores" model="ir.rule">
+        <field name="name">Teacher: own section exam scores</field>
+        <field name="model_id" ref="model_university_exam_score" />
+        <field name="groups" eval="[(4, ref('group_university_teacher'))]" />
+        <field name="domain_force">['|', ('exam_id.teacher_id.user_id', '=', user.id), ('exam_id.section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_hod_department_exams" model="ir.rule">
+        <field name="name">Head of Department: department exams</field>
+        <field name="model_id" ref="model_university_exam" />
+        <field name="groups" eval="[(4, ref('group_school_hod'))]" />
+        <field name="domain_force">[('subject_id.department_id.head_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_hod_department_exam_scores" model="ir.rule">
+        <field name="name">Head of Department: department exam scores</field>
+        <field name="model_id" ref="model_university_exam_score" />
+        <field name="groups" eval="[(4, ref('group_school_hod'))]" />
+        <field name="domain_force">[('exam_id.subject_id.department_id.head_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_dean_faculty_exams" model="ir.rule">
+        <field name="name">Dean: faculty exams</field>
+        <field name="model_id" ref="model_university_exam" />
+        <field name="groups" eval="[(4, ref('group_school_dean'))]" />
+        <field name="domain_force">[('subject_id.department_id.faculty_id.dean_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_dean_faculty_exam_scores" model="ir.rule">
+        <field name="name">Dean: faculty exam scores</field>
+        <field name="model_id" ref="model_university_exam_score" />
+        <field name="groups" eval="[(4, ref('group_school_dean'))]" />
+        <field name="domain_force">[('exam_id.subject_id.department_id.faculty_id.dean_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_admin_all_exams" model="ir.rule">
+        <field name="name">Admin: all exams</field>
+        <field name="model_id" ref="model_university_exam" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_admin_all_exam_scores" model="ir.rule">
+        <field name="name">Admin: all exam scores</field>
+        <field name="model_id" ref="model_university_exam_score" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_transcript_request_student" model="ir.rule">
+        <field name="name">Student: own transcript requests</field>
+        <field name="model_id" ref="model_university_transcript_request" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_transcript_request_registrar" model="ir.rule">
+        <field name="name">Registrar: all transcript requests</field>
+        <field name="model_id" ref="model_university_transcript_request" />
+        <field name="groups" eval="[(4, ref('group_school_registrar')), (4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+</odoo>

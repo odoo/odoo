@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Product Template Form View Inherit for Textbooks -->
+    <record id="view_product_template_form_textbook" model="ir.ui.view">
+        <field name="name">product.template.form.textbook</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <button name="action_open_documents" position="before">
+                <button class="oe_stat_button" type="object" name="action_view_subjects" icon="fa-graduation-cap" invisible="not is_textbook">
+                    <field name="subject_count" widget="statinfo" string="Subjects"/>
+                </button>
+            </button>
+
+            <xpath expr="//div[@name='options']" position="inside">
+                <span name="textbook_option" class="d-inline-flex ms-3">
+                    <field name="is_textbook"/>
+                    <label for="is_textbook"/>
+                </span>
+            </xpath>
+
+            <xpath expr="//page[@name='general_information']" position="inside">
+                <group name="textbook_info" string="Textbook Details" invisible="not is_textbook">
+                    <group>
+                        <field name="isbn"/>
+                        <field name="author"/>
+                    </group>
+                    <group>
+                        <field name="publisher"/>
+                        <field name="edition"/>
+                    </group>
+                </group>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Subjects" name="subjects_tab" invisible="not is_textbook">
+                    <field name="subject_link_ids">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="subject_id"/>
+                            <field name="book_type"/>
+                            <field name="note"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action Books -->
+    <record id="action_university_book" model="ir.actions.act_window">
+        <field name="name">Books</field>
+        <field name="res_model">product.template</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_textbook', '=', True)]</field>
+        <field name="context">{'default_is_textbook': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Register a new course textbook!
+            </p>
+            <p>
+                Manage textbooks and link them as required or recommended reading for university subjects.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="rule_student_own_enrollments" model="ir.rule">
+        <field name="name">Student: own enrollments</field>
+        <field name="model_id" ref="model_university_enrollment" />
+        <field name="groups" eval="[(4, ref('group_school_student'))]" />
+        <field name="domain_force">[('student_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_teacher_own_section_enrollments" model="ir.rule">
+        <field name="name">Teacher: enrollments in own sections</field>
+        <field name="model_id" ref="model_university_enrollment" />
+        <field name="groups" eval="[(4, ref('group_university_teacher'))]" />
+        <field name="domain_force">[('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_hod_enrollments" model="ir.rule">
+        <field name="name">HOD: department enrollments</field>
+        <field name="model_id" ref="model_university_enrollment" />
+        <field name="groups" eval="[(4, ref('group_school_hod'))]" />
+        <field name="domain_force">['|', '|', ('program_id.department_id.head_id.user_id', '=', user.id), ('section_id.subject_id.department_id.head_id.user_id', '=', user.id), ('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_dean_enrollments" model="ir.rule">
+        <field name="name">Head of Faculty: faculty enrollments</field>
+        <field name="model_id" ref="model_university_enrollment" />
+        <field name="groups" eval="[(4, ref('group_school_dean'))]" />
+        <field name="domain_force">['|', '|', ('program_id.department_id.faculty_id.dean_id.user_id', '=', user.id), ('section_id.subject_id.department_id.faculty_id.dean_id.user_id', '=', user.id), ('section_id.teacher_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <record id="rule_registrar_all_enrollments" model="ir.rule">
+        <field name="name">Registrar: all enrollments</field>
+        <field name="model_id" ref="model_university_enrollment" />
+        <field name="groups" eval="[(4, ref('group_school_registrar'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <record id="rule_admin_all_enrollments" model="ir.rule">
+        <field name="name">Admin: all enrollments</field>
+        <field name="model_id" ref="model_university_enrollment" />
+        <field name="groups" eval="[(4, ref('group_school_admin'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+</odoo>

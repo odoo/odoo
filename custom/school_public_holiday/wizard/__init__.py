@@ -1,2 +1,2 @@
-from . import holiday_import_wizard
-from . import session_reschedule_wizard
+from . import academic
+from . import holiday

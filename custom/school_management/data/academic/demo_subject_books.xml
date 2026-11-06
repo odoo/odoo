@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Bind XML IDs to subjects so they can be referenced without integer ID reliance -->
+    <function model="university.subject" name="_ensure_subject_xml_ids"/>
+    <function model="university.subject.book" name="_migrate_legacy_subject_books"/>
+
+    <!-- ==================== CS101: Introduction to Programming (Python) ==================== -->
+    <record id="book_cs101_tmpl" model="product.template">
+        <field name="name">Python Crash Course: A Hands-On, Project-Based Introduction to Programming</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-1593279288</field>
+        <field name="author">Eric Matthes</field>
+        <field name="publisher">No Starch Press</field>
+        <field name="edition">3rd Edition</field>
+        <field name="list_price">39.95</field>
+    </record>
+
+    <record id="book_cs101_rec_tmpl" model="product.template">
+        <field name="name">Automate the Boring Stuff with Python: Practical Programming for Total Beginners</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-1593279929</field>
+        <field name="author">Al Sweigart</field>
+        <field name="publisher">No Starch Press</field>
+        <field name="edition">2nd Edition</field>
+        <field name="list_price">34.99</field>
+    </record>
+
+    <record id="book_cs101_fluent_tmpl" model="product.template">
+        <field name="name">Fluent Python: Clear, Concise, and Effective Programming</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-1492056355</field>
+        <field name="author">Luciano Ramalho</field>
+        <field name="publisher">O'Reilly Media</field>
+        <field name="edition">2nd Edition</field>
+        <field name="list_price">59.99</field>
+    </record>
+
+    <!-- ==================== CS102: Digital Logic Design & Circuits ==================== -->
+    <record id="book_cs102_tmpl" model="product.template">
+        <field name="name">Digital Design and Computer Architecture</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0123944245</field>
+        <field name="author">David Harris, Sarah Harris</field>
+        <field name="publisher">Morgan Kaufmann</field>
+        <field name="edition">2nd Edition</field>
+        <field name="list_price">85.00</field>
+    </record>
+
+    <record id="book_cs102_hwang_tmpl" model="product.template">
+        <field name="name">Digital Logic and Microprocessor Design with Interfacing</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-1285860275</field>
+        <field name="author">Enoch O. Hwang</field>
+        <field name="publisher">Cengage Learning</field>
+        <field name="edition">2nd Edition</field>
+        <field name="list_price">115.00</field>
+    </record>
+
+    <!-- ==================== CS103: Object-Oriented Programming (Java) ==================== -->
+    <record id="book_cs103_tmpl" model="product.template">
+        <field name="name">Core Java Volume I – Fundamentals</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0135166307</field>
+        <field name="author">Cay S. Horstmann</field>
+        <field name="publisher">Prentice Hall</field>
+        <field name="edition">12th Edition</field>
+        <field name="list_price">59.99</field>
+    </record>
+
+    <record id="book_cs103_eff_tmpl" model="product.template">
+        <field name="name">Effective Java</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0134685991</field>
+        <field name="author">Joshua Bloch</field>
+        <field name="publisher">Addison-Wesley Professional</field>
+        <field name="edition">3rd Edition</field>
+        <field name="list_price">49.99</field>
+    </record>
+
+    <!-- ==================== CS201: Data Structures & Algorithms ==================== -->
+    <record id="book_cs201_tmpl" model="product.template">
+        <field name="name">Introduction to Algorithms (CLRS)</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0262046305</field>
+        <field name="author">Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein</field>
+        <field name="publisher">MIT Press</field>
+        <field name="edition">4th Edition</field>
+        <field name="list_price">99.00</field>
+    </record>
+
+    <record id="book_cs201_grok_tmpl" model="product.template">
+        <field name="name">Grokking Algorithms: An Illustrated Guide for Programmers and Other Curious People</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-1617292231</field>
+        <field name="author">Aditya Y. Bhargava</field>
+        <field name="publisher">Manning Publications</field>
+        <field name="edition">1st Edition</field>
+        <field name="list_price">44.99</field>
+    </record>
+
+    <record id="book_cs201_sedg_tmpl" model="product.template">
+        <field name="name">Algorithms</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0321573513</field>
+        <field name="author">Robert Sedgewick, Kevin Wayne</field>
+        <field name="publisher">Addison-Wesley</field>
+        <field name="edition">4th Edition</field>
+        <field name="list_price">89.95</field>
+    </record>
+
+    <!-- ==================== CS202: Relational Database Systems & SQL ==================== -->
+    <record id="book_cs202_tmpl" model="product.template">
+        <field name="name">Database System Concepts</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0078022159</field>
+        <field name="author">Abraham Silberschatz, Henry F. Korth, S. Sudarshan</field>
+        <field name="publisher">McGraw-Hill</field>
+        <field name="edition">7th Edition</field>
+        <field name="list_price">110.00</field>
+    </record>
+
+    <record id="book_cs202_ddia_tmpl" model="product.template">
+        <field name="name">Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-1449373320</field>
+        <field name="author">Martin Kleppmann</field>
+        <field name="publisher">O'Reilly Media</field>
+        <field name="edition">1st Edition</field>
+        <field name="list_price">49.99</field>
+    </record>
+
+    <record id="book_cs202_anti_tmpl" model="product.template">
+        <field name="name">SQL Antipatterns: Avoiding the Pitfalls of Database Programming</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-1934356555</field>
+        <field name="author">Bill Karwin</field>
+        <field name="publisher">Pragmatic Bookshelf</field>
+        <field name="edition">1st Edition</field>
+        <field name="list_price">38.95</field>
+    </record>
+
+    <!-- ==================== CS204: Operating Systems & Concurrency ==================== -->
+    <record id="book_cs204_tmpl" model="product.template">
+        <field name="name">Modern Operating Systems</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0133591620</field>
+        <field name="author">Andrew S. Tanenbaum, Herbert Bos</field>
+        <field name="publisher">Pearson</field>
+        <field name="edition">4th Edition</field>
+        <field name="list_price">125.00</field>
+    </record>
+
+    <record id="book_cs204_silb_tmpl" model="product.template">
+        <field name="name">Operating System Concepts</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-1119800361</field>
+        <field name="author">Abraham Silberschatz, Peter B. Galvin, Greg Gagne</field>
+        <field name="publisher">Wiley</field>
+        <field name="edition">10th Edition</field>
+        <field name="list_price">119.95</field>
+    </record>
+
+    <!-- ==================== MATH101: Calculus & Analytical Geometry ==================== -->
+    <record id="book_math101_tmpl" model="product.template">
+        <field name="name">Calculus: Early Transcendentals</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-1337613927</field>
+        <field name="author">James Stewart</field>
+        <field name="publisher">Cengage Learning</field>
+        <field name="edition">9th Edition</field>
+        <field name="list_price">140.00</field>
+    </record>
+
+    <record id="book_math101_thomas_tmpl" model="product.template">
+        <field name="name">Thomas' Calculus: Early Transcendentals</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0134439020</field>
+        <field name="author">Joel R. Hass, Christopher E. Heil, Maurice D. Weir</field>
+        <field name="publisher">Pearson</field>
+        <field name="edition">14th Edition</field>
+        <field name="list_price">135.00</field>
+    </record>
+
+    <!-- ==================== ENG101: Academic English & Composition ==================== -->
+    <record id="book_eng101_tmpl" model="product.template">
+        <field name="name">The Elements of Style</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0205309023</field>
+        <field name="author">William Strunk Jr., E.B. White</field>
+        <field name="publisher">Pearson</field>
+        <field name="edition">4th Edition</field>
+        <field name="list_price">12.99</field>
+    </record>
+
+    <record id="book_eng101_theysay_tmpl" model="product.template">
+        <field name="name">They Say / I Say: The Moves That Matter in Academic Writing</field>
+        <field name="is_textbook" eval="True"/>
+        <field name="isbn">978-0393538700</field>
+        <field name="author">Gerald Graff, Cathy Birkenstein</field>
+        <field name="publisher">W. W. Norton &amp; Company</field>
+        <field name="edition">5th Edition</field>
+        <field name="list_price">28.50</field>
+    </record>
+
+    <!-- ==================== SUBJECT BOOK LINKS (OVER 1 BOOK PER SUBJECT) ==================== -->
+    <!-- CS101 Links -->
+    <record id="link_book_cs101" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs101"/>
+        <field name="product_tmpl_id" ref="book_cs101_tmpl"/>
+        <field name="book_type">required</field>
+        <field name="sequence">10</field>
+        <field name="note">Primary textbook for Python programming sessions.</field>
+    </record>
+    <record id="link_book_cs101_rec" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs101"/>
+        <field name="product_tmpl_id" ref="book_cs101_rec_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">20</field>
+        <field name="note">Recommended practical exercises and script automation tasks.</field>
+    </record>
+    <record id="link_book_cs101_fluent" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs101"/>
+        <field name="product_tmpl_id" ref="book_cs101_fluent_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">30</field>
+        <field name="note">Supplementary reference for idiomatic Python and data structures.</field>
+    </record>
+
+    <!-- CS102 Links -->
+    <record id="link_book_cs102" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs102"/>
+        <field name="product_tmpl_id" ref="book_cs102_tmpl"/>
+        <field name="book_type">required</field>
+        <field name="sequence">10</field>
+        <field name="note">Primary textbook for digital logic labs and CPU design.</field>
+    </record>
+    <record id="link_book_cs102_hwang" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs102"/>
+        <field name="product_tmpl_id" ref="book_cs102_hwang_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">20</field>
+        <field name="note">Hardware interfacing and microprocessor laboratory manual.</field>
+    </record>
+
+    <!-- CS103 Links -->
+    <record id="link_book_cs103" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs103"/>
+        <field name="product_tmpl_id" ref="book_cs103_tmpl"/>
+        <field name="book_type">required</field>
+        <field name="sequence">10</field>
+        <field name="note">Required for OOP projects and Java syntax exercises.</field>
+    </record>
+    <record id="link_book_cs103_eff" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs103"/>
+        <field name="product_tmpl_id" ref="book_cs103_eff_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">20</field>
+        <field name="note">Recommended best practices for object-oriented software engineering.</field>
+    </record>
+
+    <!-- CS201 Links -->
+    <record id="link_book_cs201" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs201"/>
+        <field name="product_tmpl_id" ref="book_cs201_tmpl"/>
+        <field name="book_type">required</field>
+        <field name="sequence">10</field>
+        <field name="note">Essential text for asymptotic analysis and graph algorithms.</field>
+    </record>
+    <record id="link_book_cs201_grok" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs201"/>
+        <field name="product_tmpl_id" ref="book_cs201_grok_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">20</field>
+        <field name="note">Visual intuition guide for algorithms and problem solving.</field>
+    </record>
+    <record id="link_book_cs201_sedg" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs201"/>
+        <field name="product_tmpl_id" ref="book_cs201_sedg_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">30</field>
+        <field name="note">Comprehensive reference with Java implementations.</field>
+    </record>
+
+    <!-- CS202 Links -->
+    <record id="link_book_cs202" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs202"/>
+        <field name="product_tmpl_id" ref="book_cs202_tmpl"/>
+        <field name="book_type">required</field>
+        <field name="sequence">10</field>
+        <field name="note">Comprehensive guide to relational algebra and query optimization.</field>
+    </record>
+    <record id="link_book_cs202_ddia" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs202"/>
+        <field name="product_tmpl_id" ref="book_cs202_ddia_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">20</field>
+        <field name="note">Distributed storage, replication, and transaction isolation.</field>
+    </record>
+    <record id="link_book_cs202_anti" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs202"/>
+        <field name="product_tmpl_id" ref="book_cs202_anti_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">30</field>
+        <field name="note">Database design anti-patterns and production remediation.</field>
+    </record>
+
+    <!-- CS204 Links -->
+    <record id="link_book_cs204" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs204"/>
+        <field name="product_tmpl_id" ref="book_cs204_tmpl"/>
+        <field name="book_type">required</field>
+        <field name="sequence">10</field>
+        <field name="note">Required primary text for virtual memory, processes, and synchronization.</field>
+    </record>
+    <record id="link_book_cs204_silb" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_cs204"/>
+        <field name="product_tmpl_id" ref="book_cs204_silb_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">20</field>
+        <field name="note">Recommended reference for storage hierarchy and kernel architecture.</field>
+    </record>
+
+    <!-- MATH101 Links -->
+    <record id="link_book_math101" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_math101"/>
+        <field name="product_tmpl_id" ref="book_math101_tmpl"/>
+        <field name="book_type">required</field>
+        <field name="sequence">10</field>
+        <field name="note">Required problem sets and differentiation/integration exercises.</field>
+    </record>
+    <record id="link_book_math101_thomas" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_math101"/>
+        <field name="product_tmpl_id" ref="book_math101_thomas_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">20</field>
+        <field name="note">Alternative analytical derivations and series expansion reference.</field>
+    </record>
+
+    <!-- ENG101 Links -->
+    <record id="link_book_eng101" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_eng101"/>
+        <field name="product_tmpl_id" ref="book_eng101_tmpl"/>
+        <field name="book_type">required</field>
+        <field name="sequence">10</field>
+        <field name="note">Primary style manual and grammar reference for essays.</field>
+    </record>
+    <record id="link_book_eng101_theysay" model="university.subject.book">
+        <field name="subject_id" ref="school_management.subject_eng101"/>
+        <field name="product_tmpl_id" ref="book_eng101_theysay_tmpl"/>
+        <field name="book_type">recommended</field>
+        <field name="sequence">20</field>
+        <field name="note">Academic argument templates and thesis drafting guidebook.</field>
+    </record>
+</odoo>

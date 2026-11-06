@@ -1,1 +1,1 @@
-from . import academic_report
+from . import academic
