@@ -1065,6 +1065,26 @@ describe("restaurant pos_store.js", () => {
         expect(order.uiState.guestSetted).toBe(true);
     });
 
+    test("ensureGuestCustomerCount removes split order guests from original order", async () => {
+        const store = await setupPosEnv();
+        const original = store.createNewOrder();
+        original.setCustomerCount(3);
+        const preset = store.models["pos.preset"].get(1);
+        preset.use_guest = true;
+        const splitOrder = store.createNewOrder({ preset_id: preset });
+        splitOrder.uiState.splittedOrderUuid = original.uuid;
+
+        store.setCustomerCount = async (targetOrder) => {
+            targetOrder.setCustomerCount(2);
+            return true;
+        };
+
+        await store.ensureGuestCustomerCount(splitOrder);
+
+        expect(splitOrder.getCustomerCount()).toBe(2);
+        expect(original.getCustomerCount()).toBe(2);
+    });
+
     test("table order validates with default preset", async () => {
         const store = await setupPosEnv();
         const table = store.models["restaurant.table"].get(4);

@@ -132,9 +132,16 @@ patch(PosStore.prototype, {
             currentPreset?.use_guest &&
             !order.uiState.guestSetted
         ) {
+            const previousCount = order.getCustomerCount();
             await this.setCustomerCount(order, removeEmptyOrder);
             if (order.getCustomerCount() === 0 && order.table_id) {
                 order.setCustomerCount(order.table_id.seats);
+            }
+            const delta = order.getCustomerCount() - previousCount;
+            const originalOrder = order.originalSplittedOrder;
+            if (delta && originalOrder && !originalOrder.finalized) {
+                originalOrder.setCustomerCount(originalOrder.getCustomerCount() - delta);
+                this.addPendingOrder([originalOrder.id]);
             }
             order.uiState.guestSetted = true;
         }
