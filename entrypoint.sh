@@ -23,19 +23,19 @@ MAX_CRON_THREADS="${MAX_CRON_THREADS:-${max_cron_threads}}"
 UPDATE="${UPDATE:-${update}}"
 INIT="${INIT:-${init}}"
 
-# If individual DB settings are not provided, try parsing DATABASE_URL using python
-if [ -z "$DB_HOST" ] && [ -n "$DATABASE_URL" ]; then
+# If DATABASE_URL is provided, extract any database parameters that have not been set
+if [ -n "$DATABASE_URL" ]; then
     eval "$(python3 -c "
 import os
 from urllib.parse import urlparse
 u = urlparse(os.environ.get('DATABASE_URL', ''))
 if u.scheme:
-    if u.username: print(f'DB_USER=\"{u.username}\"')
-    if u.password: print(f'DB_PASSWORD=\"{u.password}\"')
-    if u.hostname: print(f'DB_HOST=\"{u.hostname}\"')
-    if u.port: print(f'DB_PORT=\"{u.port}\"')
+    if not os.environ.get('DB_USER') and u.username: print(f'DB_USER=\"{u.username}\"')
+    if not os.environ.get('DB_PASSWORD') and u.password: print(f'DB_PASSWORD=\"{u.password}\"')
+    if not os.environ.get('DB_HOST') and u.hostname: print(f'DB_HOST=\"{u.hostname}\"')
+    if not os.environ.get('DB_PORT') and u.port: print(f'DB_PORT=\"{u.port}\"')
     db = u.path.lstrip('/')
-    if db: print(f'DB_NAME=\"{db}\"')
+    if not os.environ.get('DB_NAME') and db: print(f'DB_NAME=\"{db}\"')
 ")"
 fi
 
@@ -43,9 +43,48 @@ fi
 DB_PORT="${DB_PORT:-5432}"
 DB_NAME="${DB_NAME:-postgres}"
 DB_SSLMODE="${DB_SSLMODE:-require}"
-# Default connection pool bounds to prevent exhausting Supabase pooler (free tier max 15-20)
+# Default connection pool bounds to prevent exhausting database poolers
 DB_MAXCONN="${DB_MAXCONN:-16}"
 MAX_CRON_THREADS="${MAX_CRON_THREADS:-1}"
+
+# Export variables for child python processes
+export DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME DB_SSLMODE
+
+# Check if target database has core tables initialized (e.g. ir_act_window)
+AUTO_INIT=""
+if [ -n "$DB_HOST" ] && [ -n "$DB_USER" ]; then
+    AUTO_INIT=$(python3 -c "
+import os, sys, psycopg2
+
+try:
+    conn = psycopg2.connect(
+        host=os.environ.get('DB_HOST'),
+        port=os.environ.get('DB_PORT', '5432'),
+        user=os.environ.get('DB_USER'),
+        password=os.environ.get('DB_PASSWORD', ''),
+        dbname=os.environ.get('DB_NAME', 'postgres'),
+        sslmode=os.environ.get('DB_SSLMODE', 'require'),
+        connect_timeout=10,
+    )
+    with conn.cursor() as cur:
+        cur.execute(\"SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='ir_act_window';\")
+        has_act_window = bool(cur.fetchone())
+    conn.close()
+
+    if not has_act_window:
+        print('1')
+except Exception as e:
+    sys.stderr.write(f'Database inspection warning: {e}\n')
+" 2>/dev/null || true)
+fi
+
+if [ "$AUTO_INIT" = "1" ]; then
+    echo "=========================================================="
+    echo " Notice: Core table 'ir_act_window' does not exist in database '${DB_NAME}'."
+    echo " Auto-initializing foundational modules: base,school_management,school_website"
+    echo "=========================================================="
+    INIT="${INIT:-base,school_management,school_website}"
+fi
 
 # Build arguments array for Odoo execution
 ARGS=(
