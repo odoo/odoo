@@ -133,10 +133,19 @@ patch(ExpressCheckout.prototype, {
                 addresses,
             )));
             // Call the transaction route to create the transaction and retrieve the client secret.
-            const { client_secret } = await this.waitFor(rpc(
-                this.paymentContext['transactionRoute'],
-                this._prepareTransactionRouteParams(providerData.providerId),
-            ));
+            // A changed full-address tax must not be charged. Close the wallet and let the
+            // customer approve the new total in the normal checkout.
+            let client_secret;
+            try {
+                ({client_secret} = await this.waitFor(rpc(
+                    this.paymentContext['transactionRoute'],
+                    this._prepareTransactionRouteParams(providerData.providerId),
+                )));
+            } catch {
+                ev.complete('fail');
+                redirect('/shop/checkout');
+                return;
+            }
             // Confirm the PaymentIntent without handling eventual next actions (e.g. 3DS).
             const { paymentIntent, error: confirmError } = await this.waitFor(
                 stripeJS.confirmCardPayment(
