@@ -17,6 +17,6 @@
     <record id="ir_default_purchase_order_order_type" model="ir.default">
         <field name="field_id" ref="purchase_order_type.field_purchase_order__order_type"/>
         <field name="company_id" ref="base.main_company"/>
-        <field name="json_value" eval="str(env.ref('purchase_order_type.po_type_regular').id)"/>
+        <field name="json_value" eval="str(ref('purchase_order_type.po_type_regular'))"/>
     </record>
 </odoo>
