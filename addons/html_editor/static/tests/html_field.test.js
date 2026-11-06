@@ -1518,7 +1518,7 @@ test("Image should not be inserted in a formatted empty node", async () => {
             id: 1,
             txt: `<div class="o-paragraph"><strong>test</strong></div>
                     <div class="o-paragraph">
-                        <strong data-oe-zws-empty-inline="">\u200b</strong><br />
+                        <strong data-oe-zws-empty-inline=""></strong><br />
                     </div>`,
         },
     ];
