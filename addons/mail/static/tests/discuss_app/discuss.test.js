@@ -2557,6 +2557,34 @@ test("short description keeps the width of its text", async () => {
     expect(description.scrollWidth).toBe(description.clientWidth);
 });
 
+test("parent channel chevron does not cover the sub-channel name in a narrow header", async () => {
+    const pyEnv = await startServer();
+    const parentId = pyEnv["discuss.channel"].create({ name: "General" });
+    const subChannelId = pyEnv["discuss.channel"].create({
+        name: "Troubleshooting of the warehouse scanners",
+        parent_channel_id: parentId,
+    });
+    await start();
+    await openDiscuss(subChannelId);
+    await waitFor(`${actionPanel("Members")}:count(1)`); // wait for auto-open of this panel
+    await patchUiSize({ width: 900 });
+    await animationFrame();
+    const getVisibleWidth = (selector) =>
+        new Promise((resolve) => {
+            const observer = new IntersectionObserver(([entry]) => {
+                observer.disconnect();
+                resolve(entry.intersectionRect.width);
+            });
+            observer.observe(queryOne(selector));
+        });
+    expect(
+        await getVisibleWidth(".o-mail-AutoresizeInput-box:has(.o-mail-DiscussContent-threadName)")
+    ).toBeGreaterThan(0);
+    expect(
+        await getVisibleWidth(".o-mail-DiscussContent-header [data-icon='chevron_forward']")
+    ).toBe(0);
+});
+
 test("Notification settings: basic rendering", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
