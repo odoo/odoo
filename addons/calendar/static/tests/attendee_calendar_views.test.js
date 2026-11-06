@@ -8,6 +8,7 @@ import {
     MockServer,
     mountView,
     onRpc,
+    patchTranslations,
     preloadBundle,
     serverState,
 } from "@web/../tests/web_test_helpers";
@@ -310,6 +311,29 @@ test("Activity events rendering and popover", async () => {
 });
 
 test.tags("desktop");
+test("The placeholder to add a calendar is translated", async () => {
+    patchTranslations({ calendar: { "+ Add a calendar": "+ Ajouter un calendrier" } });
+    onRpc("res.users", "has_group", () => true);
+    onRpc("res.partner", "get_attendee_detail", () => []);
+    onRpc("res.users", "get_calendar_model_data", () => ({
+        credential_status: {},
+        sync_status: {},
+        sync_email: false,
+        default_duration: 1,
+    }));
+    onRpc("res.users", "read", ({ args }) => {
+        if (args[0][0] === user.userId && args[1].includes("calendar_ids")) {
+            return [{ id: user.userId, calendar_ids: serverData.calendarIds }];
+        }
+    });
+
+    await mountView({ type: "calendar", resModel: "calendar.event", arch });
+    expect(".o_calendar_filter[data-name=calendar_id] .o-autocomplete input").toHaveAttribute(
+        "placeholder",
+        "+ Ajouter un calendrier"
+    );
+});
+
 test("Filter events by primary/secondary calendar", async () => {
     onRpc("res.users", "has_group", () => true);
     onRpc("res.partner", "get_attendee_detail", () => []);
