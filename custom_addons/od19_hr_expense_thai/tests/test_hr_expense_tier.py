@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import Command
+from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase, tagged
 
 
@@ -88,10 +89,13 @@ class TestHrExpenseTierValidation(TransactionCase):
         self.assertEqual(
             expense.review_ids.sorted("sequence").mapped("sequence"), [1, 2, 3]
         )
-        # หลัง request_validation() engine จะเลื่อน review ลำดับต่ำสุดเป็น
-        # ``pending`` ทันที (tier_review._update_review_status) จึงยอมรับทั้ง
-        # pending/waiting เพื่อไม่ผูกกับรายละเอียดภายในของ OCA
-        self.assertIn(expense.validation_status, ("pending", "waiting"))
+        # engine เลื่อน review ลำดับต่ำสุด (ชั้น 1) เป็น ``pending`` ทันที
+        # (tier_review._update_review_status) ส่วนชั้นถัดไปยังเป็น ``waiting``
+        self.assertEqual(
+            expense.review_ids.sorted("sequence").mapped("status"),
+            ["pending", "waiting", "waiting"],
+        )
+        self.assertEqual(expense.validation_status, "pending")
 
     def test_cannot_approve_out_of_order(self):
         """CEO อนุมัติก่อนลำดับไม่ได้: ต้องหยุดที่ review แรกที่ไม่ใช่ของตน"""
@@ -119,6 +123,8 @@ class TestHrExpenseTierValidation(TransactionCase):
         expense = self._submitted_expense()
         expense.request_validation()
 
+        # ระหว่างทางชั้นถัดไปยังเป็น ``waiting`` จนกว่าผู้ตรวจชั้นนั้นจะอนุมัติ
+        # จึงยอมรับทั้ง pending/waiting (ไม่ผูกกับ ``pending`` ตายตัว)
         expense.with_user(manager).validate_tier()
         self.assertIn(expense.validation_status, ("pending", "waiting"))
 
@@ -132,5 +138,5 @@ class TestHrExpenseTierValidation(TransactionCase):
         """ห้ามแก้ไขเอกสารระหว่างอยู่ภายใต้การอนุมัติ"""
         expense = self._submitted_expense()
         expense.request_validation()
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValidationError):
             expense.write({"name": "Hacked"})
