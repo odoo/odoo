@@ -1531,6 +1531,10 @@ class Picking(models.Model):
         """Whether the different transfers should be displayed on the pre action done wizards."""
         return len(self) > 1
 
+    def _filter_pickings_for_new_moves(self):
+        """ Return the pickings of self to which new moves can be added. """
+        return self
+
     def _should_ignore_backorders(self):
         """ Checks if the `create_backorder` setting from the picking type should be ignored.
         """

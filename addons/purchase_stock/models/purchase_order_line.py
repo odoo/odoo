@@ -187,6 +187,7 @@ class PurchaseOrderLine(models.Model):
                     picking = line_pickings[0]
                 else:
                     pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                    pickings = pickings._filter_pickings_for_new_moves()
                     picking = pickings and pickings[0] or False
                 if not picking:
                     if not line.product_qty > line.qty_received:
