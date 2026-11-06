@@ -355,7 +355,7 @@ class Message(models.Model):
             - create: if
                 - no model, no res_id (private message) OR
                 - pid in message_follower_ids if model, res_id OR
-                - uid can read the parent OR
+                - pid is in the recipients of a parent from the same thread OR
                 - uid have write or create access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
@@ -521,13 +521,14 @@ class Message(models.Model):
             # TDE: probably clean me
             parent_ids = [message.get('parent_id') for message in message_values.values()
                           if message.get('parent_id')]
-            self._cr.execute("""SELECT DISTINCT m.id, partner_rel.res_partner_id FROM "%s" m
+            self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, partner_rel.res_partner_id FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
                 ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
-                WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, parent_ids,))
-            not_parent_ids = [mid[0] for mid in self._cr.fetchall() if mid[1]]
+                WHERE m.id = ANY (%%s) AND m.message_type != 'user_notification'""" % self._table, (self.env.user.partner_id.id, parent_ids))
+            # a reply belongs to the thread of its parent
+            parent_threads = {mid: (model, res_id) for mid, model, res_id, partner_id in self._cr.fetchall() if partner_id}
             notified_ids += [mid for mid, message in message_values.items()
-                             if message.get('parent_id') in not_parent_ids]
+                             if parent_threads.get(message.get('parent_id')) == (message.get('model'), message.get('res_id'))]
 
         messages_to_check = messages_to_check.difference(set(notified_ids))
         if not messages_to_check:
@@ -672,6 +673,10 @@ class Message(models.Model):
             vals.pop('author_id', None)
             vals.pop('email_from', None)
         record_changed = 'model' in vals or 'res_id' in vals
+        if record_changed and not self.env.is_system():
+            raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
+        if 'message_type' in vals and not self.env.is_system():
+            raise AccessError(_("Only administrators can modify the 'message_type' field."))
         if record_changed or 'message_type' in vals:
             self._invalidate_documents()
         res = super(Message, self).write(vals)
