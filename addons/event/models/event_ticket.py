@@ -177,7 +177,13 @@ class EventEventTicket(models.Model):
         if self:
             slots_seats_available = self.event_id._get_seats_availability([[event_slot, ticket] for ticket in self])
         else:
-            return {False: event_slot.seats_available if event_slot else (event.seats_available if event.seats_limited else event.EVENT_MAX_TICKETS)}
+            # The free generic registration is bounded only by the event seat cap.
+            # A non-seats-limited event has no cap, but a slot/event with seats_max =
+            # 0 report 0 available seats, which would block every order; use the
+            # generic cap instead so unlimited events stay orderable.
+            if event.seats_limited:
+                return {False: event_slot.seats_available if event_slot else event.seats_available}
+            return {False: event.EVENT_MAX_TICKETS}
         availabilities = {}
         for ticket, seats_available in zip(self, slots_seats_available):
             if seats_available is None:  # "No limit"
