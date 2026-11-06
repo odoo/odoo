@@ -346,6 +346,18 @@ class MassMailController(http.Controller):
             return 'unauthorized'
 
         contacts = self._fetch_contacts(email_found)
+        if not contacts:
+            if not lists_optin_ids or request.env.user.is_public:
+                return 0
+            partner = request.env.user.partner_id
+            contacts = request.env['mailing.contact'].sudo().create({
+                'email': email_found,
+                'company_name': partner.parent_id.name,
+                'country_id': partner.country_id.id or partner.parent_id.country_id.id,
+                'name': partner.name,
+                'tag_ids': partner.category_id,
+            })
+
         lists_optin = request.env['mailing.list'].sudo().browse(lists_optin_ids or []).exists()
         # opt-out all not chosen lists
         lists_to_optout = contacts.subscription_ids.filtered(
