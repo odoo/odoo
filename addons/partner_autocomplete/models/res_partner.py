@@ -197,6 +197,12 @@ class ResPartner(models.Model):
             ):
             country = self.env['res.country'].browse(enriched_company['country_id']['id']).exists()
             autocomplete_response['vat'] = self._run_vat_checks(country, vat_number, validation='setnull')[0]
+        if identifiers := autocomplete_response.get('additional_identifiers'):
+            autocomplete_response['additional_identifiers'] = {
+                key: valid_value
+                for key, value in identifiers.items()
+                if (valid_value := self._validate_identifier(key, value, validation='setnull')['value'])
+            }
         return autocomplete_response
 
     @api.model
