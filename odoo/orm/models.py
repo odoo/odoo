@@ -6102,7 +6102,7 @@ class BaseModel(metaclass=MetaModel):
 
             # set inverse fields on new records in the comodel
             if field.relational:
-                inv_recs = self[field.name].filtered(lambda r: not r.id)
+                inv_recs = field.convert_to_record(value, self).filtered(lambda r: not r.id)
                 if not inv_recs:
                     continue
                 # we need to adapt the value of the inverse fields to integrate self into it:
