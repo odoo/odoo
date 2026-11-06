@@ -776,7 +776,12 @@ class Partner(models.Model):
             for partner in self:
                 for bank in partner.bank_ids:
                     if bank.acc_holder_name == partner.name:
-                        bank.acc_holder_name = vals['name']
+                        # Keeping the holder name in sync is a side effect of
+                        # renaming the partner, not an operation performed by the
+                        # user on the bank account: do not require write access
+                        # on res.partner.bank (e.g. a salesperson renaming a
+                        # customer with read-only access to bank accounts).
+                        bank.sudo().acc_holder_name = vals['name']
         if 'company_id' in vals:
             company_id = vals['company_id']
             for partner in self:
