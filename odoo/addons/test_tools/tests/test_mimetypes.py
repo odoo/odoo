@@ -2,7 +2,7 @@ import typing
 import unittest
 
 from odoo.tests import tagged, BaseCase
-from odoo.tools import file_path
+from odoo.tools import BinaryBytes, file_path
 from odoo.tools.mimetypes import _odoo_guess_mimetype, _odoo_guess_file_mimetype, fix_filename_extension, get_extension, guess_mimetype, guess_file_mimetype
 from pathlib import Path
 
@@ -155,6 +155,12 @@ class MimeGuessingCases:
     def test_bytearray(self):
         self.assertEqual(
             self.guess_mimetype(bytearray((TEST_FOLDER / 'file.png').read_bytes())),
+            'image/png',
+        )
+
+    def test_binary_value(self):
+        self.assertEqual(
+            self.guess_mimetype(BinaryBytes((TEST_FOLDER / 'file.png').read_bytes())),
             'image/png',
         )
 
