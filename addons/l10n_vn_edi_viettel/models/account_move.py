@@ -191,6 +191,102 @@ class AccountMove(models.Model):
         fields_list.extend(['l10n_vn_edi_sinvoice_file', 'l10n_vn_edi_sinvoice_xml_file', 'l10n_vn_edi_sinvoice_pdf_file'])
         return fields_list
 
+<<<<<<< 92e89937e1cb9e3ac5be96eb02d34ad2906b5fe5
+||||||| 2982b5f44af03fae6a9888f20632c1cc19f623ba
+    def _l10n_vn_edi_fetch_invoice_file_data(self, file_format):
+        """ Helper to try fetching a few time in case the files are not yet ready. """
+        self.ensure_one()
+        files_data, error_message = self._l10n_vn_edi_try_fetch_invoice_file_data(file_format)
+
+        if error_message:
+            return '', error_message
+
+        # Sometimes the documents are not available right away. This is quite rare, but I saw it happen a few times.
+        # To handle that we will try up to three time to fetch the document => The impact should be negligible.
+        threshold = 1
+        while not files_data['fileToBytes'] and threshold < 3:
+            time.sleep(0.125 * threshold)
+            files_data, error_message = self._l10n_vn_edi_try_fetch_invoice_file_data(file_format)
+            threshold += 1
+        return files_data, error_message
+
+    def _l10n_vn_edi_try_fetch_invoice_file_data(self, file_format):
+        """
+        Query sinvoice in order to fetch the data representation of the invoice, either zip or pdf.
+        """
+        self.ensure_one()
+        if not self._l10n_vn_edi_is_sent():
+            return {}, _("In order to download the invoice's PDF file, you must first send it to SInvoice")
+
+        # == Lock ==
+        self.env['res.company']._with_locked_records(self)
+
+        access_token, error = self._l10n_vn_edi_get_access_token()
+        if error:
+            return {}, error
+
+        return _l10n_vn_edi_send_request(
+            method='POST',
+            url=f'{SINVOICE_API_URL}InvoiceAPI/InvoiceUtilsWS/getInvoiceRepresentationFile',
+            json_data={
+                'supplierTaxCode': self.company_id.vat,
+                'templateCode': self.l10n_vn_edi_invoice_symbol.invoice_template_id.name,
+                'invoiceNo': self.l10n_vn_edi_invoice_number,
+                'fileType': file_format,
+            },
+            cookies={'access_token': access_token},
+        )
+
+=======
+    def _l10n_vn_edi_fetch_invoice_file_data(self, file_format):
+        """ Helper to try fetching a few time in case the files are not yet ready. """
+        self.ensure_one()
+        files_data, error_message = self._l10n_vn_edi_try_fetch_invoice_file_data(file_format)
+
+        if error_message:
+            return '', error_message
+
+        # Sometimes the documents are not available right away. This is quite rare, but I saw it happen a few times.
+        # To handle that we will try up to three time to fetch the document => The impact should be negligible.
+        threshold = 1
+        while not files_data.get('fileToBytes') and threshold < 3:
+            time.sleep(0.125 * threshold)
+            files_data, error_message = self._l10n_vn_edi_try_fetch_invoice_file_data(file_format)
+            threshold += 1
+        if not error_message and not files_data.get('fileToBytes'):
+            return {}, _(
+                "SInvoice returned an empty file for this invoice. Please try again later."
+            )
+        return files_data, error_message
+
+    def _l10n_vn_edi_try_fetch_invoice_file_data(self, file_format):
+        """
+        Query sinvoice in order to fetch the data representation of the invoice, either zip or pdf.
+        """
+        self.ensure_one()
+        if not self._l10n_vn_edi_is_sent():
+            return {}, _("In order to download the invoice's PDF file, you must first send it to SInvoice")
+
+        # == Lock ==
+        self.env['res.company']._with_locked_records(self)
+
+        access_token, error = self._l10n_vn_edi_get_access_token()
+        if error:
+            return {}, error
+
+        return _l10n_vn_edi_send_request(
+            method='POST',
+            url=f'{SINVOICE_API_URL}InvoiceAPI/InvoiceUtilsWS/getInvoiceRepresentationFile',
+            json_data={
+                'supplierTaxCode': self.company_id.vat,
+                'templateCode': self.l10n_vn_edi_invoice_symbol.invoice_template_id.name,
+                'invoiceNo': self.l10n_vn_edi_invoice_number,
+                'fileType': file_format,
+            },
+            cookies={'access_token': access_token},
+        )
+
+>>>>>>> 8695e397d330b666a80c99130b934d6c38704a6e
     def _l10n_vn_edi_fetch_invoice_xml_file_data(self):
         """
         Query sinvoice in order to fetch the xsl and xml data representation of the invoice.
@@ -205,6 +301,7 @@ class AccountMove(models.Model):
         if error:
             return {}, error
 
+<<<<<<< 92e89937e1cb9e3ac5be96eb02d34ad2906b5fe5
         with SInvoiceService(access_token=access_token, vat=self.company_id.vat, env=self.env) as sinvoice:
             zip_data, error = sinvoice.get_invoice_file(
                 self.l10n_vn_edi_invoice_symbol.invoice_template_code,
@@ -219,6 +316,43 @@ class AccountMove(models.Model):
             if xml_data:
                 xml_data['res_field'] = 'l10n_vn_edi_sinvoice_xml_file'
             return xml_data, error
+||||||| 2982b5f44af03fae6a9888f20632c1cc19f623ba
+        with zipfile.ZipFile(io.BytesIO(file_bytes)) as outer_zip:
+            result = _zip_to_xml_file_data(outer_zip)
+            if not result:
+                for entry in outer_zip.infolist():
+                    if entry.filename.endswith('.zip'):
+                        with outer_zip.open(entry) as inner_bytes:
+                            with zipfile.ZipFile(inner_bytes) as inner_zip:
+                                result = _zip_to_xml_file_data(inner_zip)
+                                if result:
+                                    break
+
+        if not result:
+            return {}, _("No XML file found in the zip archive.")
+        return result, ""
+=======
+        if not zipfile.is_zipfile(io.BytesIO(file_bytes)):
+            return {}, _(
+                "The file received from SInvoice is not a valid ZIP archive. "
+                "Please try again later."
+            )
+
+        with zipfile.ZipFile(io.BytesIO(file_bytes)) as outer_zip:
+            result = _zip_to_xml_file_data(outer_zip)
+            if not result:
+                for entry in outer_zip.infolist():
+                    if entry.filename.endswith('.zip'):
+                        with outer_zip.open(entry) as inner_bytes:
+                            with zipfile.ZipFile(inner_bytes) as inner_zip:
+                                result = _zip_to_xml_file_data(inner_zip)
+                                if result:
+                                    break
+
+        if not result:
+            return {}, _("No XML file found in the zip archive.")
+        return result, ""
+>>>>>>> 8695e397d330b666a80c99130b934d6c38704a6e
 
     def _l10n_vn_edi_fetch_invoice_pdf_file_data(self):
         """
@@ -258,8 +392,13 @@ class AccountMove(models.Model):
         if self.l10n_vn_edi_invoice_state != 'sent':
             raise UserError(_("Please send the invoice to SInvoice before fetching the tax invoice files."))
 
-        xml_data, xml_error_message = self._l10n_vn_edi_fetch_invoice_xml_file_data()
-        pdf_data, pdf_error_message = self._l10n_vn_edi_fetch_invoice_pdf_file_data()
+        # A stored SInvoice file never changes; fetching it again would only attach a duplicate.
+        xml_data, xml_error_message = {}, ''
+        if not self.l10n_vn_edi_sinvoice_xml_file:
+            xml_data, xml_error_message = self._l10n_vn_edi_fetch_invoice_xml_file_data()
+        pdf_data, pdf_error_message = {}, ''
+        if not self.l10n_vn_edi_sinvoice_pdf_file:
+            pdf_data, pdf_error_message = self._l10n_vn_edi_fetch_invoice_pdf_file_data()
 
         # Not using _link_invoice_documents for these because it depends on _need_invoice_document and I can't get it to work
         # well while allowing users to download the files before sending.
