@@ -2,6 +2,7 @@ import odoo
 
 from odoo.addons.pos_mrp.tests.common import CommonPosMrpTest
 from odoo import Command, fields
+from odoo.tests import new_test_user
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -638,3 +639,54 @@ class TestPosMrp(CommonPosMrpTest):
         # Close the PoS session - this should not raise a singleton error
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed')
+
+    def test_kit_order_pos_user_without_inventory_access(self):
+        """
+        A PoS user without any Inventory access sells a kit. Exploding the kit
+        move copies it, which must not raise an AccessError on stock.move fields
+        restricted to inventory users.
+        """
+        pos_user = new_test_user(self.env, login='pos_user_no_stock', groups='base.group_user,point_of_sale.group_pos_user')
+        self.pos_config_usd.open_ui()
+        current_session = self.pos_config_usd.current_session_id
+        pos_order_data = {
+            'amount_paid': 20,
+            'amount_return': 0,
+            'amount_tax': 0,
+            'amount_total': 20,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'fiscal_position_id': False,
+            'lines': [
+                Command.create({
+                    'discount': 0,
+                    'pack_lot_ids': [],
+                    'price_unit': 20.0,
+                    'product_id': self.product_product_kit_two.id,
+                    'price_subtotal': 20.0,
+                    'price_subtotal_incl': 20.0,
+                    'qty': 1,
+                    'tax_ids': [],
+                }),
+            ],
+            'name': 'Order 12345-123-1235',
+            'partner_id': False,
+            'session_id': current_session.id,
+            'sequence_number': 2,
+            'payment_ids': [
+                Command.create({
+                    'amount': 20,
+                    'name': fields.Datetime.now(),
+                    'payment_method_id': self.cash_payment_method.id
+                })
+            ],
+            'uuid': '12345-123-1235',
+            'last_order_preparation_change': '{}',
+            'user_id': pos_user.id,
+        }
+        order_id = self.env['pos.order'].with_user(pos_user).sync_from_ui([pos_order_data])['pos.order'][0]['id']
+        order = self.env['pos.order'].browse(order_id)
+        self.assertEqual(order.state, 'paid')
+        self.assertRecordValues(order.picking_ids.move_ids, [
+            {'product_id': self.product_product_comp_one.id, 'quantity': 1.0},
+            {'product_id': self.product_product_comp_two.id, 'quantity': 1.0},
+        ])
