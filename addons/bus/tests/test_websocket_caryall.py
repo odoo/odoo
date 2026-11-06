@@ -25,7 +25,13 @@ from odoo.addons.bus.models.ir_websocket import IrWebsocket
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.bus.websocket import (
     CloseCode,
+<<<<<<< af7628f5486990f47f0dc38befb215fac8254782
     PollablePriorityQueue,
+||||||| 9aaa64cf60b6dd94d009ec5643543a5f46d8466c
+=======
+    Opcode,
+    PING_PONG_MESSAGE,
+>>>>>>> f6b6e7b4c2fd2be9fcf3c2256a9facb201d82423
     Websocket,
     WebsocketConnectionHandler,
     acquire_cursor,
@@ -228,6 +234,7 @@ class TestWebsocketCaryall(WebsocketCase):
             self.wait_remaining_websocket_connections()
             self.assertTrue(mock.called)
 
+<<<<<<< af7628f5486990f47f0dc38befb215fac8254782
     def test_close_on_saturated_outgoing_queue(self):
         channel = new_test_user(self.env, "Jane")
         client_ws = self.websocket_connect()
@@ -272,6 +279,16 @@ class TestWebsocketCaryall(WebsocketCase):
         self.assertGreater(peak, 1, "closes should overlap")
         self.assertLessEqual(peak, 2)
 
+||||||| 9aaa64cf60b6dd94d009ec5643543a5f46d8466c
+=======
+    def test_connection_check_is_answered(self):
+        websocket = self.websocket_connect()
+        websocket.send_binary(PING_PONG_MESSAGE)
+        opcode, frame = websocket.recv_data_frame()
+        self.assertEqual(opcode, Opcode.BINARY)
+        self.assertEqual(frame.data, PING_PONG_MESSAGE)
+
+>>>>>>> f6b6e7b4c2fd2be9fcf3c2256a9facb201d82423
     def test_disconnect_when_version_outdated(self):
         # Outdated version, connection should be closed immediately
         with patch.object(WebsocketConnectionHandler, "_VERSION", "17.0-1"), patch.object(
