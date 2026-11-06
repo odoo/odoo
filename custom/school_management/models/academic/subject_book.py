@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.tools.sql import column_exists
 
 
 class UniversitySubjectBook(models.Model):
@@ -40,13 +41,14 @@ class UniversitySubjectBook(models.Model):
 
     @api.model
     def _migrate_legacy_subject_books(self):
-        """Migrate any legacy rows having product_id to product_tmpl_id."""
-        self.env.cr.execute("""
-            UPDATE university_subject_book usb
-            SET product_tmpl_id = pp.product_tmpl_id
-            FROM product_product pp
-            WHERE usb.product_id = pp.id AND usb.product_tmpl_id IS NULL;
-        """)
+        """Migrate any legacy rows having product_id to product_tmpl_id if legacy column exists."""
+        if column_exists(self.env.cr, "university_subject_book", "product_id"):
+            self.env.cr.execute("""
+                UPDATE university_subject_book usb
+                SET product_tmpl_id = pp.product_tmpl_id
+                FROM product_product pp
+                WHERE usb.product_id = pp.id AND usb.product_tmpl_id IS NULL;
+            """)
         self.env.cr.execute("""
             UPDATE product_template pt
             SET is_textbook = TRUE
