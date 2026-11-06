@@ -1,4 +1,4 @@
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
+import { getToolbarAriaLabel, toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import {
     useDropdownAutoVisibility,
     useToolbarDropdownFocus,
@@ -27,6 +27,11 @@ export class ImageAlignSelector extends Component {
         this.dropdown = useDropdownState();
         useToolbarDropdownFocus(this.dropdown, this.imageAlignSelector);
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
+    }
+
+    get ariaLabel() {
+        const currentItem = this.props.items.find((item) => item.icon === this.state.displayIcon);
+        return getToolbarAriaLabel(this.props.title, currentItem?.title);
     }
 
     onSelected(item) {

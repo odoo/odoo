@@ -2,6 +2,7 @@ import { Component, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { _t } from "@web/core/l10n/translation";
 
 const componentButtonSchema = {
     Component: t.component(),
@@ -108,6 +109,22 @@ export const toolbarButtonProps = {
     getSelection: t.function(),
     isDisabled: t.boolean(),
 };
+
+/**
+ * Builds the `aria-label` of a toolbar button, including its current value
+ * when relevant (e.g. "Select text style: Paragraph"), so that screen readers
+ * announce it while the visible text remains part of the accessible name.
+ *
+ * @param {string} title
+ * @param {string|number} [value]
+ * @returns {string}
+ */
+export function getToolbarAriaLabel(title, value) {
+    if (value === undefined || value === null || value === "") {
+        return title;
+    }
+    return _t("%(label)s: %(value)s", { label: title, value });
+}
 
 /** @typedef {import("@html_editor/core/user_command_plugin").UserCommand} UserCommand */
 /** @typedef {import("./toolbar_plugin").ToolbarCommandItem} ToolbarCommandItem */

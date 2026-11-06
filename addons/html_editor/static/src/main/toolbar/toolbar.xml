@@ -23,12 +23,13 @@
                                 t-att-aria-pressed="button.isActive === undefined ? undefined : (button.isActive ? 'true' : 'false')"
                                 t-att-disabled="button.isDisabled"
                                 t-att-title="button.description"
+                                t-att-aria-label="button.description"
                                 t-att-name="button.id"
                                 t-on-click="() => this.onButtonClick(button)"
                             >
                                 <t t-if="button.icon">
                                     <t t-if="button.icon.includes('.')" t-call="{{ button.icon }}"/>
-                                    <span t-else="" t-attf-class="oi oi-fw {{button.iconClass || ''}}" t-att-data-icon="button.icon"/>
+                                    <span t-else="" t-attf-class="oi oi-fw {{button.iconClass || ''}}" t-att-data-icon="button.icon" aria-hidden="true"/>
                                 </t>
                                 <span t-if="button.text" t-out="button.text"/>
                             </button>
