@@ -29,7 +29,7 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         if 'channel_id' in cls.env['website']:
             cls.env['website'].search([]).channel_id = False
 
-    def _get_url_hot_query(self, url, query_list=False, nocache=False):
+    def _get_url_hot_query(self, url, query_list=False):
         """ This method returns the number of SQL Queries used inside a request.
         The returned query number will be the same as a "real" (outside of test
         mode) case: the method takes care of removing the extra queries related
@@ -51,8 +51,6 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         :rtype: int|tuple(int, list)
         """
         url += ('?' not in url and '?' or '')
-        if nocache:
-            url += '&nocache'
 
         # ensure worker is in hot state
         self.url_open(url)
@@ -75,8 +73,8 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             return sql_count
         return sql_count, sql_queries
 
-    def _check_url_hot_query(self, url, expected_query_count, select_tables_perf=None, insert_tables_perf=None, nocache=False):
-        query_count, sql_queries = self._get_url_hot_query(url, query_list=True, nocache=nocache)
+    def _check_url_hot_query(self, url, expected_query_count, select_tables_perf=None, insert_tables_perf=None):
+        query_count, sql_queries = self._get_url_hot_query(url, query_list=True)
 
         sql_from_tables = collections.defaultdict(int)
         sql_into_tables = collections.defaultdict(int)
@@ -210,14 +208,25 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 select_tables_perf = {
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
+                    'website_page': 2,
+                    # 1. `_serve_page` search page matching URL..
+                    # 2. ..then reads it (`is_visible`)
+                    # menu and layout
+                    'website_menu': 1,
+                    'ir_ui_view': 1,
                 }
-                expected_query_count = 1
+                expected_query_count = 5
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
                 self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
                 self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
                 self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
+    def test_15_perf_sql_queries_page(self):
+        # standard tracked website.page
+        for readonly_enabled in (True, False):
+            self.set_registry_readonly_mode(readonly_enabled)
+            with self.subTest(readonly_enabled=readonly_enabled), closing(self.env.cr.savepoint()):
                 select_tables_perf = {
                     'ir_attachment': 1,
                     # `_get_serve_attachment` dispatcher fallback
@@ -229,46 +238,18 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                     'ir_ui_view': 1,
                 }
                 expected_query_count = 5
-                self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
-                self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
-
-    def test_15_perf_sql_queries_page(self):
-        # standard tracked website.page
-        for readonly_enabled, cache in ((True, True), (False, True), (True, False), (False, False)):
-            self.set_registry_readonly_mode(readonly_enabled)
-            with self.subTest(readonly_enabled=readonly_enabled), closing(self.env.cr.savepoint()):
-                select_tables_perf = {
-                    'ir_attachment': 1,
-                    # `_get_serve_attachment` dispatcher fallback
-                } if cache else {
-                    'ir_attachment': 1,
-                    # `_get_serve_attachment` dispatcher fallback
-                    'website_page': 2,
-                    # 1. `_serve_page` search page matching URL..
-                    # 2. ..then reads it (`is_visible`)
-                    # menu and layout
-                    'website_menu': 1,
-                    'ir_ui_view': 1,
-                }
-                expected_query_count = 1 if cache else 5
                 insert_tables_perf = {}
                 self.page.track = True
 
                 self.menu.unlink()  # page being or not in menu shouldn't add queries
-                self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, insert_tables_perf, nocache=not cache)
-                self.assertEqual(self._get_url_hot_query(self.page.url, nocache=not cache), expected_query_count)
+                self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, insert_tables_perf)
+                self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
         for readonly_enabled in (True, False):
             self.set_registry_readonly_mode(readonly_enabled)
             with self.subTest(readonly_enabled=readonly_enabled), closing(self.env.cr.savepoint()):
-                select_tables_perf = {}
-                expected_query_count = 0
-                insert_tables_perf = {}
-                self._check_url_hot_query('/', expected_query_count, select_tables_perf, insert_tables_perf)
-                self.assertEqual(self._get_url_hot_query('/'), expected_query_count)
-
                 select_tables_perf = {
                     'website_menu': 1,
                     # homepage controller is prefetching all menus for perf in one go
@@ -280,20 +261,12 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
                 }
                 expected_query_count = 4
                 insert_tables_perf = {}
-                self._check_url_hot_query('/', expected_query_count, select_tables_perf, insert_tables_perf, nocache=True)
-                self.assertEqual(self._get_url_hot_query('/', nocache=True), expected_query_count)
+                self._check_url_hot_query('/', expected_query_count, select_tables_perf, insert_tables_perf)
+                self.assertEqual(self._get_url_hot_query('/'), expected_query_count)
 
     def test_30_perf_sql_queries_page_no_layout(self):
         # untrack website.page with no call to layout templates
         self.page.arch = '<div>I am a blank page</div>'
-
-        select_tables_perf = {
-            'ir_attachment': 1,
-            # `_get_serve_attachment` dispatcher fallback
-        }
-        expected_query_count = 1
-        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
         select_tables_perf = {
             'ir_attachment': 1,
@@ -305,8 +278,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             # Check if `view.track` to track visitor or not
         }
         expected_query_count = 3
-        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
-        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
     def test_40_perf_sql_queries_page_multi_level_menu(self):
         # menu structure should not impact SQL requests
@@ -321,14 +294,6 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
         select_tables_perf = {
             'ir_attachment': 1,
             # `_get_serve_attachment` dispatcher fallback
-        }
-        expected_query_count = 1
-        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
-
-        select_tables_perf = {
-            'ir_attachment': 1,
-            # `_get_serve_attachment` dispatcher fallback
             'website_page': 2,
             # 1. `_serve_page` search page matching URL..
             # 2. ..then reads it (`is_visible`)
@@ -336,8 +301,8 @@ class TestWebsitePerformance(TestWebsitePerformanceCommon):
             'ir_ui_view': 1,
         }
         expected_query_count = 5
-        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf, nocache=True)
-        self.assertEqual(self._get_url_hot_query(self.page.url, nocache=True), expected_query_count)
+        self._check_url_hot_query(self.page.url, expected_query_count, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(self.page.url), expected_query_count)
 
 
 @tagged('-at_install', 'post_install')
