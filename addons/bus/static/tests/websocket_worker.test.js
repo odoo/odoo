@@ -116,6 +116,61 @@ test("last_id_reset with zero payload resets to 0, not undefined", async () => {
     expect(worker.lastNotificationId).toBe(0);
 });
 
+test("subscribe_again subscribes from the lowest last id", async () => {
+    const worker = await startWebSocketWorker();
+    await runAllTimers();
+    patchWithCleanup(Math, { random: () => 0 });
+    patchWithCleanup(worker, {
+        _sendToServer(message) {
+            if (message.event_name === "subscribe") {
+                expect.step(`subscribe last ${message.data.last}`);
+            }
+            return super._sendToServer(message);
+        },
+    });
+    worker.lastNotificationId = 50;
+    for (const payloads of [[60], [60, 10]]) {
+        for (const payload of payloads) {
+            const internalMsg = [
+                {
+                    type: "bus/subscribe_again",
+                    internal: true,
+                    payload: { count: 1, last: payload },
+                },
+            ];
+            for (const serverWs of MockServer.current._websockets) {
+                serverWs.send(JSON.stringify(internalMsg));
+            }
+        }
+        await runAllTimers();
+    }
+    await expect.waitForSteps(["subscribe last 60", "subscribe last 10"]);
+});
+
+test("subscribe_again spreads the subscribes of many websockets", async () => {
+    const worker = await startWebSocketWorker();
+    await runAllTimers();
+    patchWithCleanup(Math, { random: () => 1 });
+    patchWithCleanup(worker, {
+        _sendToServer(message) {
+            if (message.event_name === "subscribe") {
+                expect.step(`subscribe last ${message.data.last}`);
+            }
+            return super._sendToServer(message);
+        },
+    });
+    const internalMsg = [
+        { type: "bus/subscribe_again", internal: true, payload: { count: 7000, last: 10 } },
+    ];
+    for (const serverWs of MockServer.current._websockets) {
+        serverWs.send(JSON.stringify(internalMsg));
+    }
+    await advanceTime(29_000);
+    expect.verifySteps([]);
+    await advanceTime(1000 + WebsocketWorker.OUTGOING_BATCH_DELAY);
+    await expect.waitForSteps(["subscribe last 10"]);
+});
+
 test("disconnect event is sent when stopping the worker", async () => {
     const worker = await startWebSocketWorker((type) => {
         if (type !== "BUS:WORKER_STATE_UPDATED") {
@@ -175,6 +230,7 @@ test("check connection health during inactivity", async () => {
 
 test("debounced updates respect force and batching", async () => {
     patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 120_000 });
+    patchWithCleanup(Math, { random: () => 0 });
     patchWithCleanup(WebsocketWorker.prototype, {
         _sendToServer(message) {
             if (message.event_name === "subscribe") {
@@ -199,11 +255,12 @@ test("debounced updates respect force and batching", async () => {
     await expect.waitForSteps(['subscribe - ["C1"]']);
     // 1 add channel => force => only one forced subscribe
     worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
-    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
+    worker._onServerMessage({ type: "bus/subscribe_again", payload: { count: 1, last: 0 } });
     await advanceTime(120_000);
     await expect.waitForSteps(['subscribe - ["C1"]']);
     // 2 force => add channel => only one forced subscribe
-    worker._onClientMessage(client, { action: "BUS:FORCE_UPDATE_CHANNELS" });
+    worker._onServerMessage({ type: "bus/subscribe_again", payload: { count: 1, last: 0 } });
+    await advanceTime(0);
     worker._onClientMessage(client, { action: "BUS:ADD_CHANNEL", data: "C1" });
     await advanceTime(120_000);
     await expect.waitForSteps(['subscribe - ["C1"]']);

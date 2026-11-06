@@ -9,7 +9,7 @@ import { BoundedSet, debounce, Logger } from "@bus/workers/bus_worker_utils";
 /**
  * Type of action that can be sent from the client to the worker.
  *
- * @typedef {'BUS:ADD_CHANNEL' | 'BUS:DELETE_CHANNEL' | 'BUS:FORCE_UPDATE_CHANNELS' | 'BUS:INITIALIZE_CONNECTION' | 'BUS:REQUEST_LOGS' | 'BUS:SEND' | 'BUS:SET_LOGGING_ENABLED' | 'BUS:LEAVE' | 'BUS:STOP' | 'BUS:START'} WorkerAction
+ * @typedef {'BUS:ADD_CHANNEL' | 'BUS:DELETE_CHANNEL' | 'BUS:INITIALIZE_CONNECTION' | 'BUS:REQUEST_LOGS' | 'BUS:SEND' | 'BUS:SET_LOGGING_ENABLED' | 'BUS:LEAVE' | 'BUS:STOP' | 'BUS:START'} WorkerAction
  */
 
 export const WEBSOCKET_CLOSE_CODES = Object.freeze({
@@ -59,6 +59,8 @@ export class WebsocketWorker {
     static OUTGOING_BATCH_DELAY = 500;
     INITIAL_RECONNECT_DELAY = 1000;
     RECONNECT_JITTER = 30000;
+    SUBSCRIBE_AGAIN_MAX_SPREAD = 30_000;
+    SUBSCRIBE_AGAIN_SPREAD_PER_WEBSOCKET = 5;
     CONNECTION_CHECK_DELAY = 60_000;
 
     /**
@@ -195,8 +197,6 @@ export class WebsocketWorker {
                 return this._addChannel(client, data);
             case "BUS:DELETE_CHANNEL":
                 return this._deleteChannel(client, data);
-            case "BUS:FORCE_UPDATE_CHANNELS":
-                return this._scheduleUpdateChannels({ force: true });
             case "BUS:SET_LOGGING_ENABLED":
                 this.loggingEnabled = data;
                 break;
@@ -242,6 +242,19 @@ export class WebsocketWorker {
                     10_000,
                     [...this.seenNotificationIds].filter((id) => id <= newLastSeenId)
                 );
+                return;
+            }
+            case "bus/subscribe_again": {
+                const { count, last } = payload;
+                const spread = Math.min(
+                    count * this.SUBSCRIBE_AGAIN_SPREAD_PER_WEBSOCKET,
+                    this.SUBSCRIBE_AGAIN_MAX_SPREAD
+                );
+                setTimeout(() => {
+                    const pendingMinId = this.nextSubscribeData?.minId;
+                    this._scheduleUpdateChannels({ force: true });
+                    this.nextSubscribeData.minId = Math.min(pendingMinId ?? last, last);
+                }, Math.random() * spread);
                 return;
             }
         }
