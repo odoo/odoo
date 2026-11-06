@@ -411,7 +411,7 @@ class Website(models.Model):
 
     def _get_configurator_preview_urls(self):
         return super()._get_configurator_preview_urls() | {
-            style['preview_url']
+            style["preview_url"]
             for mapping in (const.SHOP_PAGE_STYLE_MAPPING, const.PRODUCT_PAGE_STYLE_MAPPING)
             for style in mapping.values()
         }
@@ -890,8 +890,7 @@ class Website(models.Model):
                 and not sale_order_sudo._is_partially_paid()
                 and (
                     sale_order_sudo.state != "draft"
-                    or sale_order_sudo.get_portal_last_transaction().state
-                    in {"pending", "authorized", "done"}
+                    or sale_order_sudo._is_payment_started()
                     or sale_order_sudo.website_id != self
                 )
             ):
@@ -930,11 +929,7 @@ class Website(models.Model):
                 # Do not resurrect an abandoned cart if a payment transaction is currently in
                 # progress or paid. Canceled/errored transactions are excluded so the user
                 # can still recover the cart after a failed attempt.
-                if abandoned_cart_sudo.get_portal_last_transaction().state in {
-                    "pending",
-                    "authorized",
-                    "done",
-                }:
+                if abandoned_cart_sudo._is_payment_started():
                     abandoned_cart_sudo = SaleOrderSudo
                 elif not self.env.cr.readonly:
                     # The checks below end up reading `request.cart`, which is only filled in

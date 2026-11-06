@@ -38,7 +38,7 @@ class PaymentStatus(http.Controller):
         :return: The rendered status page
         :rtype: str
         """
-        monitored_tx = self._get_monitored_transaction()
+        monitored_tx = self._get_monitored_transaction(self.env)
         values = self._get_payment_status_values(monitored_tx)
         template = self.get_payment_status_template_xmlid(monitored_tx)
         return request.render(template, values)
@@ -56,9 +56,7 @@ class PaymentStatus(http.Controller):
         if not tx:
             return {"payment_not_found": True}
         notification_access_token = payment_utils.generate_access_token(tx.id)
-        notification_channel = (
-            f"payment_transaction_channel:{tx.id},{notification_access_token}"
-        )
+        notification_channel = f"payment_transaction_channel:{tx.id},{notification_access_token}"
         return {
             "tx": tx,
             "notification_channel": notification_channel,
@@ -74,7 +72,7 @@ class PaymentStatus(http.Controller):
 
         :rtype: None
         """
-        monitored_tx_sudo = self._get_monitored_transaction()
+        monitored_tx_sudo = self._get_monitored_transaction(self.env)
         if not monitored_tx_sudo.payment_data_ids:  # The transaction has already been processed
             return
 
@@ -89,16 +87,20 @@ class PaymentStatus(http.Controller):
         """
         request.session[cls.MONITORED_TX_ID_KEY] = transaction.id
 
-    def _get_monitored_transaction(self):
+    @classmethod
+    def _get_monitored_transaction(cls, env):
         """Retrieve the user's last transaction from the session (the transaction being monitored).
 
+        This is the transaction the user has just gone through, and the only one that direct
+        payment feedback should ever be based on. Documents that want to display such feedback
+        call this method rather than looking up their own transactions, which cannot tell apart
+        the payment that was just made from the ones made before.
+
+        Outside of a request there is no session, hence no payment to give feedback on.
+
+        :param api.Environment env: The environment to browse the transaction with.
         :return: the user's last transaction
         :rtype: payment.transaction
         """
-        return (
-            self
-            .env["payment.transaction"]
-            .sudo()
-            .browse(request.session.get(self.MONITORED_TX_ID_KEY))
-            .exists()
-        )
+        tx_id = request.session.get(cls.MONITORED_TX_ID_KEY) if request else None
+        return env["payment.transaction"].sudo().browse(tx_id).exists()
