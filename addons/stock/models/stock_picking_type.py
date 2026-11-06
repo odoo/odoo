@@ -16,9 +16,9 @@ PRODUCT_LABEL_BARCODE_FORMATS = [
 
 PRODUCT_LABEL_SHEET_FORMATS = [
     ('dymo', 'Dymo'),
-    ('2x7', '2 x 7'),
-    ('4x7', '4 x 7'),
-    ('4x12', '4 x 12'),
+    ('2x7', '2 x 7 per page'),
+    ('4x7', '4 x 7 per page'),
+    ('4x12', '4 x 12 per page'),
 ]
 
 PRODUCT_LABEL_ZPL_TEMPLATES = [
@@ -35,8 +35,8 @@ PRODUCT_LABEL_FORMAT_VARIANTS = [
 ]
 
 LOT_LABEL_FORMATS = [
-    ('4x12_lots', '4 x 12 - One per lot/SN'),
-    ('4x12_units', '4 x 12 - One per unit'),
+    ('4x12_lots', '4 x 12 per page - One per lot/SN'),
+    ('4x12_units', '4 x 12 per page - One per unit'),
     ('zpl_lots', 'ZPL Labels - One per lot/SN'),
     ('zpl_units', 'ZPL Labels - One per unit'),
 ]
