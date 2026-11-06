@@ -168,4 +168,12 @@ a question; a missing section is a review round trip.
   of odoo-guidelines; a PR description explains why, as the commit message
   does, and links the relevant task, ticket, or issue when one exists.
 - A bug fix comes with a test that reproduces it when one is possible.
+- The description of a pull request of one commit is not hard-wrapped:
+  each paragraph is a single line, also when the description reuses the
+  commit body; line breaks only separate paragraphs, list items and code
+  blocks. GitHub shows each line break of a description as a line break,
+  so on a screen narrower than 72 characters a wrapped description
+  alternates long and short lines. The commit keeps its wrapping: by
+  default, the merge bot keeps the commit message of such a pull
+  request, not its description.
 - An external contributor signs the CLA in the PR, once.
