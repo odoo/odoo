@@ -11,7 +11,7 @@ from PIL import Image
 from odoo import Command, fields, models
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tests import TransactionCase, tagged, users
+from odoo.tests import TransactionCase, new_test_user, tagged, users
 from odoo.tools import BinaryBytes, SQL, float_repr, mute_logger
 from odoo.tools.image import binary_to_image, image_data_uri
 
@@ -5465,6 +5465,17 @@ class TestPrecompute(TransactionCase):
         # check the number of queries: 1 SELECT + 1 INSERT
         with self.assertQueryCount(2):
             model.create([{'partner_id': pid} for pid in partners.ids])
+
+    def test_precompute_new_inaccessible_relational_value(self):
+        """ Precomputing fields builds a new record from the create values,
+        including the magic fields, so new() must not check the access to
+        relational values the user cannot read. """
+        user = new_test_user(self.env, login='precompute_user', groups='base.group_user')
+        partner = self.env['res.partner'].create({'name': 'Foo'})
+        model = self.env['test_orm.precompute'].with_user(user)
+        with patch.object(model._fields['partner_id'], 'groups', 'base.group_system'):
+            record = model.new({'name': 'Foo', 'partner_id': partner.id})
+            self.assertEqual(record.sudo().partner_id, partner)
 
     def test_precompute_monetary(self):
         """Make sure the rounding of monetaries correctly prefetches currency fields"""
