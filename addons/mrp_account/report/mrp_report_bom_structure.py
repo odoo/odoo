@@ -4,8 +4,8 @@ from odoo import models
 class ReportMrpReport_Bom_Structure(models.AbstractModel):
     _inherit = 'report.mrp.report_bom_structure'
 
-    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
-        res = super()._get_bom_data(bom, warehouse, product, line_qty, bom_line, level, parent_bom, parent_product, index, product_info, ignore_stock, simulated_leaves_per_workcenter)
+    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, demand_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
+        res = super()._get_bom_data(bom, warehouse, product, line_qty, demand_qty, bom_line, level, parent_bom, parent_product, index, product_info, ignore_stock, simulated_leaves_per_workcenter)
         res['bom_type'] = bom.type
         res['bom_extra_cost'] = bom.extra_cost
         res['price_precision'] = self.env['decimal.precision'].precision_get('Product Price')

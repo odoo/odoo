@@ -38,8 +38,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             qty += quantities_info.get('subcontract_free_qty', 0)
         return qty
 
-    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
-        res = super()._get_bom_data(bom, warehouse, product, line_qty, bom_line, level, parent_bom, parent_product, index, product_info, ignore_stock, simulated_leaves_per_workcenter)
+    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, demand_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
+        res = super()._get_bom_data(bom, warehouse, product, line_qty, demand_qty, bom_line, level, parent_bom, parent_product, index, product_info, ignore_stock, simulated_leaves_per_workcenter)
         if (bom.type == 'subcontract' or (parent_bom and parent_bom.type == 'subcontract')) and not self.env.context.get('minimized', False):
             seller_info = {}
             if not res['product']:
@@ -68,8 +68,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         return res
 
     @api.model
-    def _get_component_data(self, parent_bom, parent_product, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock=False):
-        res = super()._get_component_data(parent_bom, parent_product, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock)
+    def _get_component_data(self, parent_bom, parent_product, bom_line, line_quantity, demand_qty, level, index, product_info, ignore_stock=False):
+        res = super()._get_component_data(parent_bom, parent_product, bom_line, line_quantity, demand_qty, level, index, product_info, ignore_stock)
         if parent_bom and parent_bom.type == 'subcontract' and not ignore_stock and (product_info.get(parent_product.id, {}).get(parent_bom.id, {}).get('route_type') == 'subcontract'):
             quantities_info = self._get_quantities_info(bom_line.product_id, bom_line.uom_id, product_info, parent_bom=parent_bom, parent_product=parent_product)
             if quantities_info.get('subcontracting_loc'):

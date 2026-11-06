@@ -1058,7 +1058,6 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_moved, searchVariant=False)
         self.assertEqual(report_values['lines']['components'][0]['subcontract_free_qty'], moved_quantity_to_subcontractor)
         self.assertEqual(report_values['lines']['components'][0]['subcontract_qty_on_hand'], moved_quantity_to_subcontractor)
-        self.assertEqual(report_values['lines']['quantity_available'], 0)
         self.assertEqual(report_values['lines']['quantity_on_hand'], 0)
         self.assertEqual(report_values['lines']['producible_qty'], component.qty_available + moved_quantity_to_subcontractor)
         self.assertEqual(report_values['lines']['stock_avail_state'], 'unavailable')

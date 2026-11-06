@@ -176,7 +176,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         return closest_forecasted
 
     @api.model
-    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
+    def _get_bom_data(self, bom, warehouse, product=False, line_qty=False, demand_qty=False, bom_line=False, level=0, parent_bom=False, parent_product=False, index=0, product_info=False, ignore_stock=False, simulated_leaves_per_workcenter=False):
         """ Gets recursively the BoM and all its subassemblies and computes availibility estimations for each component and their disponibility in stock.
             Accepts specific keys in context that will affect the data computed :
             - 'minimized': Will cut all data not required to compute availability estimations.
@@ -187,6 +187,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             product = bom.product_id or bom.product_tmpl_id.product_variant_id
         if line_qty is False:
             line_qty = bom.product_qty
+        if demand_qty is False:
+            demand_qty = line_qty
         if not product_info:
             product_info = {}
         if simulated_leaves_per_workcenter is False:
@@ -196,6 +198,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         current_quantity = line_qty
         if bom_line:
             current_quantity = bom_line.uom_id._compute_quantity(line_qty, bom.uom_id) or 0
+            demand_qty = bom_line.uom_id._compute_quantity(demand_qty, bom.uom_id) or 0
 
         has_attachments = False
         if not is_minimized:
@@ -218,6 +221,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             # Useless to compute quantities_info if it's not going to be used later on
             quantities_info = self._get_quantities_info(product, bom.uom_id, product_info, bom, parent_bom, parent_product)
 
+        qty_to_replenish = demand_qty if bom.type == 'phantom' else max(demand_qty - (quantities_info.get('forecasted_qty') or 0), 0)
         bom_report_line = {
             'index': index,
             'bom': bom,
@@ -226,7 +230,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'type': 'bom',
             'is_storable': product.is_storable,
             'quantity': current_quantity,
-            'quantity_available': quantities_info.get('free_qty') or 0,
             'quantity_on_hand': quantities_info.get('on_hand_qty') or 0,
             'quantity_forecasted': quantities_info.get('forecasted_qty') or 0,
             'free_to_manufacture_qty': quantities_info.get('free_to_manufacture_qty') or 0,
@@ -256,30 +259,32 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         components = []
         no_bom_lines = self.env['mrp.bom.line']
         line_quantities = {}
+        demand_quantities = {}
         for line in bom.bom_line_ids:
             if product and line._skip_bom_line(product):
                 continue
             line_quantity = (current_quantity / (bom.product_qty or 1.0)) * line.product_qty
             line_quantities[line.id] = line_quantity
+            demand_quantities[line.id] = qty_to_replenish / (bom.product_qty or 1.0) * line.product_qty
             if not line.child_bom_id:
                 no_bom_lines |= line
                 # Update product_info for all the components before computing closest forecasted.
                 qty_product_uom = line.uom_id._compute_quantity(line_quantity, line.product_id.uom_id)
                 self._update_product_info(line.product_id, bom.id, product_info, warehouse, qty_product_uom, bom=False, parent_bom=bom, parent_product=product)
-        components_closest_forecasted = self._get_components_closest_forecasted(no_bom_lines, line_quantities, bom, product_info, product, ignore_stock)
+        components_closest_forecasted = self._get_components_closest_forecasted(no_bom_lines, demand_quantities, bom, product_info, product, ignore_stock)
         for component_index, line in enumerate(bom.bom_line_ids):
             new_index = f"{index}{component_index}"
             if product and line._skip_bom_line(product):
                 continue
             line_quantity = line_quantities.get(line.id, 0.0)
             if line.child_bom_id:
-                component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, bom_line=line, level=level + 1, parent_bom=bom,
+                component = self._get_bom_data(line.child_bom_id, warehouse, line.product_id, line_quantity, demand_quantities[line.id], bom_line=line, level=level + 1, parent_bom=bom,
                                                parent_product=product, index=new_index, product_info=product_info, ignore_stock=ignore_stock,
                                                simulated_leaves_per_workcenter=simulated_leaves_per_workcenter)
             else:
                 component = self.with_context(
                     components_closest_forecasted=components_closest_forecasted,
-                )._get_component_data(bom, product, warehouse, line, line_quantity, level + 1, new_index, product_info, ignore_stock)
+                )._get_component_data(bom, product, line, line_quantity, demand_quantities[line.id], level + 1, new_index, product_info, ignore_stock)
             for component_bom in components:
                 if component['product_id'] == component_bom['product_id'] and component['uom'].id == component_bom['uom'].id:
                     self._merge_components(component_bom, component)
@@ -290,7 +295,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         bom_report_line['components'] = components
         bom_report_line['producible_qty'] = self._compute_current_production_capacity(bom_report_line)
 
-        availabilities = self._get_availabilities(product, current_quantity, product_info, bom_key, quantities_info, level, ignore_stock, components, report_line=bom_report_line)
+        availabilities = self._get_availabilities(product, demand_qty, product_info, bom_key, quantities_info, level, ignore_stock, components, report_line=bom_report_line)
         # in case of subcontracting, lead_time will be calculated with components availability delay
         bom_report_line['lead_time'] = route_info.get('lead_time', False)
         bom_report_line['manufacture_delay'] = route_info.get('manufacture_delay', False)
@@ -331,7 +336,9 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 unavail_component_has_route &= bool(component['route_name'])
             available_components &= component['availability_state'] == 'available'
             expected_components |= component['availability_state'] == 'expected'
-        if level == 0:
+        if bom_report_line['is_storable'] and not bom_report_line['phantom_bom'] and bom_report_line['availability_state'] in ('available', 'expected'):
+            self._hide_components_status(bom_report_line)
+        elif level == 0:
             # Gives a unique key for the first line that indicates if product is ready for production right now.
             bom_report_line['components_available'] = available_components  # Needed for `action_compute_bom_days`
             if bom_report_line['producible_qty'] > 0 and available_components:
@@ -340,15 +347,15 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             elif bom_report_line['phantom_bom']:
                 bom_report_line['availability_state'] = "unavailable" if not unavail_component_has_route else "estimated"
                 bom_report_line['status'] = self._format_date_display(bom_report_line['availability_state'], bom_report_line['availability_delay'])
-        elif (missing_qty := max(bom_report_line['quantity'] - bom_report_line['quantity_forecasted'], 0)) and bom_report_line['route_name'] and not available_components:
+        elif qty_to_replenish and bom_report_line['route_name'] and not available_components:
             if bom_report_line['phantom_bom'] and (not expected_components or unavail_component_has_route) or not bom_report_line['phantom_bom']:
                 bom_report_line['availability_state'] = "unavailable"
-                bom_report_line['status'] = self.env._("%(qty)s To %(route)s", qty=self._format_number_display(missing_qty), route=bom_report_line['route_name'])
+                bom_report_line['status'] = self.env._("%(qty)s To %(route)s", qty=self._format_number_display(qty_to_replenish), route=bom_report_line['route_name'])
 
         return bom_report_line
 
     @api.model
-    def _get_component_data(self, parent_bom, parent_product, warehouse, bom_line, line_quantity, level, index, product_info, ignore_stock=False):
+    def _get_component_data(self, parent_bom, parent_product, bom_line, line_quantity, demand_qty, level, index, product_info, ignore_stock=False):
         company = parent_bom.company_id or self.env.company
         price = bom_line.product_id.uom_id._compute_price(bom_line.product_id.with_company(company).standard_price, bom_line.uom_id) * line_quantity
         rounded_price = company.currency_id.round(price)
@@ -361,7 +368,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         if not ignore_stock:
             # Useless to compute quantities_info if it's not going to be used later on
             quantities_info = self._get_quantities_info(bom_line.product_id, bom_line.uom_id, product_info, parent_bom=parent_bom, parent_product=parent_product)
-        availabilities = self._get_availabilities(bom_line.product_id, line_quantity, product_info, bom_key, quantities_info, level, ignore_stock, bom_line=bom_line)
+        availabilities = self._get_availabilities(bom_line.product_id, demand_qty, product_info, bom_key, quantities_info, level, ignore_stock, bom_line=bom_line)
 
         has_attachments = False
         if not self.env.context.get('minimized', False):
@@ -382,7 +389,6 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'currency_id': company.currency_id.id,
             'is_storable': bom_line.product_id.is_storable,
             'quantity': line_quantity,
-            'quantity_available': quantities_info.get('free_qty', 0),
             'quantity_on_hand': quantities_info.get('on_hand_qty', 0),
             'quantity_forecasted': quantities_info.get('forecasted_qty', 0),
             'free_to_manufacture_qty': quantities_info.get('free_to_manufacture_qty', 0),
@@ -405,7 +411,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'level': level or 0,
             'has_attachments': has_attachments,
         }
-        if component['is_storable'] and (missing_qty := max(component['quantity'] - component['quantity_forecasted'], 0)) and component['route_name']:
+        if component['is_storable'] and (missing_qty := max(demand_qty - component['quantity_forecasted'], 0)) and component['route_name']:
             component['status'] = self.env._("%(qty)s To %(route)s", qty=self._format_number_display(missing_qty), route=component['route_name'])
             component['availability_state'] = "unavailable"
         return component
@@ -421,6 +427,13 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         }
         quantities_info['free_to_manufacture_qty'] = quantities_info['free_qty']
         return quantities_info
+
+    @api.model
+    def _hide_components_status(self, bom_report_line):
+        for line in bom_report_line['components'] + bom_report_line.get('operations', []):
+            line['status'] = ''
+            if line.get('components'):
+                self._hide_components_status(line)
 
     @api.model
     def _update_product_info(self, product, bom_key, product_info, warehouse, quantity, bom, parent_bom, parent_product):
@@ -559,8 +572,8 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                 'type': bom_line['type'],
                 'is_storable': bom_line['is_storable'],
                 'quantity': bom_line['quantity'],
-                'quantity_available': bom_line['quantity_available'],
                 'quantity_on_hand': bom_line['quantity_on_hand'],
+                'quantity_forecasted': bom_line['quantity_forecasted'],
                 'producible_qty': bom_line.get('producible_qty', False),
                 'uom': bom_line['uom_name'],
                 'bom_cost': bom_line['bom_cost'],
@@ -691,7 +704,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             'resupply_avail_delay': resupply_delay,
             'stock_avail_state': stock_state,
         }
-        if level != 0 and stock_state != 'unavailable':
+        if stock_state != 'unavailable':
             return {**base, **{
                 'status': self._format_date_display(stock_state, stock_delay),
                 'availability_state': stock_state,
