@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Default System Capabilities & Roadmap.
+
+        These drive the dashboard "System Capabilities & Roadmap" panel. Update
+        status/phase/version here or via Settings -> System -> Capabilities &
+        Roadmap (admin only, all school staff read-only).
+    -->
+
+    <!-- ==================== PHASE 1 — LIVE ==================== -->
+    <record id="capability_academic_structure" model="university.capability">
+        <field name="name">Academic Structure (Faculties, Departments, Programs)</field>
+        <field name="category">structure</field>
+        <field name="status">active</field>
+        <field name="phase">1</field>
+        <field name="release_version">19.0.1.0</field>
+        <field name="icon">fa-university</field>
+        <field name="description">Faculties, departments, programs/majors and their hierarchies.</field>
+        <field name="sort_order">10</field>
+    </record>
+
+    <record id="capability_academic_calendar" model="university.capability">
+        <field name="name">Academic Calendar, Subjects &amp; Class Delivery</field>
+        <field name="category">academic</field>
+        <field name="status">active</field>
+        <field name="phase">1</field>
+        <field name="release_version">19.0.1.0</field>
+        <field name="icon">fa-calendar-check-o</field>
+        <field name="description">Academic years, semesters, subjects, class sections and classrooms.</field>
+        <field name="sort_order">20</field>
+    </record>
+
+    <record id="capability_student_portal" model="university.capability">
+        <field name="name">Student Records &amp; Self-Service Portal</field>
+        <field name="category">students</field>
+        <field name="status">active</field>
+        <field name="phase">1</field>
+        <field name="release_version">19.0.1.1</field>
+        <field name="icon">fa-graduation-cap</field>
+        <field name="description">Student profiles with a role-scoped portal and automatic sign-up.</field>
+        <field name="sort_order">30</field>
+    </record>
+
+    <record id="capability_academic_staff" model="university.capability">
+        <field name="name">Role-based Academic Staff (Dean / HOD / Teacher)</field>
+        <field name="category">staff</field>
+        <field name="status">active</field>
+        <field name="phase">1</field>
+        <field name="release_version">19.0.1.0</field>
+        <field name="icon">fa-user</field>
+        <field name="description">Teacher records with dean/HOD appointments and scoped data access.</field>
+        <field name="sort_order">40</field>
+    </record>
+
+    <record id="capability_enrollment" model="university.capability">
+        <field name="name">Student Enrollment &amp; Bulk Enrollment</field>
+        <field name="category">students</field>
+        <field name="status">active</field>
+        <field name="phase">1</field>
+        <field name="release_version">19.0.1.2</field>
+        <field name="icon">fa-clipboard</field>
+        <field name="description">Section enrollments with capacity checks and bulk enrollment wizard.</field>
+        <field name="sort_order">50</field>
+    </record>
+
+    <record id="capability_finance" model="university.capability">
+        <field name="name">Fee Invoices &amp; Receipt Voucher System</field>
+        <field name="category">finance</field>
+        <field name="status">active</field>
+        <field name="phase">1</field>
+        <field name="release_version">19.0.1.1</field>
+        <field name="icon">fa-money</field>
+        <field name="description">Fee invoices, scholarship deductions, payment receipts and reporting.</field>
+        <field name="sort_order">60</field>
+    </record>
+
+    <record id="capability_document_signature" model="university.capability">
+        <field name="name">Document Signature Tracking</field>
+        <field name="category">finance</field>
+        <field name="status">active</field>
+        <field name="phase">1</field>
+        <field name="release_version">19.0.1.2</field>
+        <field name="icon">fa-pencil-square-o</field>
+        <field name="description">Monitor signed documents tied to fee payments.</field>
+        <field name="sort_order">70</field>
+    </record>
+
+    <record id="capability_dashboard" model="university.capability">
+        <field name="name">Executive &amp; Student Dashboards</field>
+        <field name="category">system</field>
+        <field name="status">active</field>
+        <field name="phase">1</field>
+        <field name="release_version">19.0.1.2</field>
+        <field name="icon">fa-dashboard</field>
+        <field name="description">Staff executive overview with KPIs, charts and finance health; student portal.</field>
+        <field name="sort_order">80</field>
+    </record>
+
+    <!-- ==================== PHASE 2 — LIVE ==================== -->
+    <record id="capability_timetable" model="university.capability">
+        <field name="name">Timetable &amp; Room Scheduling</field>
+        <field name="category">academic</field>
+        <field name="status">active</field>
+        <field name="phase">2</field>
+        <field name="release_version">19.0.1.3</field>
+        <field name="icon">fa-calendar</field>
+        <field name="description">Timetable generation and classroom/section scheduling.</field>
+        <field name="sort_order">90</field>
+    </record>
+
+    <record id="capability_attendance" model="university.capability">
+        <field name="name">Attendance Tracking</field>
+        <field name="category">academic</field>
+        <field name="status">active</field>
+        <field name="phase">2</field>
+        <field name="release_version">19.0.1.3</field>
+        <field name="icon">fa-clock-o</field>
+        <field name="description">Daily attendance capture per class section, sheet UI and reporting.</field>
+        <field name="sort_order">100</field>
+    </record>
+
+    <record id="capability_examination" model="university.capability">
+        <field name="name">Examination &amp; Grading</field>
+        <field name="category">academic</field>
+        <field name="status">active</field>
+        <field name="phase">2</field>
+        <field name="release_version">19.0.1.4</field>
+        <field name="icon">fa-pencil</field>
+        <field name="description">Exams, mark sheets, 5-component grading rollup, GPA calculation and transcripts.</field>
+        <field name="sort_order">110</field>
+    </record>
+
+    <!-- ==================== PHASE 3 — PLANNED ==================== -->
+    <record id="capability_analytics" model="university.capability">
+        <field name="name">Student Analytics &amp; Advisor Dashboard</field>
+        <field name="category">system</field>
+        <field name="status">planned</field>
+        <field name="phase">3</field>
+        <field name="release_version">19.0.2.0</field>
+        <field name="icon">fa-line-chart</field>
+        <field name="description">Academic progress analytics, advisor views and retention insight.</field>
+        <field name="sort_order">120</field>
+    </record>
+
+    <record id="capability_multicampus" model="university.capability">
+        <field name="name">Multi-campus &amp; Branch Support</field>
+        <field name="category">structure</field>
+        <field name="status">planned</field>
+        <field name="phase">3</field>
+        <field name="release_version">19.0.2.0</field>
+        <field name="icon">fa-building</field>
+        <field name="description">Campus/branch scoping for structure, users and finance.</field>
+        <field name="sort_order">130</field>
+    </record>
+
+</odoo>

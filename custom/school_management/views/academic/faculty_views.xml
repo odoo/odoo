@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Faculty Views
+
+    Upgraded Faculty list, kanban, and detail form exposing Head of Faculty, Departments,
+    Teachers, Programs, and Students through tabs and statistics.
+-->
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="view_university_faculty_list" model="ir.ui.view">
+        <field name="name">university.faculty.list</field>
+        <field name="model">university.faculty</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Faculties" sample="1">
+                <field name="code" decoration-bf="1"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'active'" decoration-warning="state == 'closed'" optional="show"/>
+                <field name="dean_id"/>
+                <field name="department_ids" widget="many2many_tags" optional="hide"/>
+                <field name="department_count" optional="show"/>
+                <field name="teacher_count" optional="hide"/>
+                <field name="student_count" optional="hide"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW -->
+    <record id="view_university_faculty_kanban" model="ir.ui.view">
+        <field name="name">university.faculty.kanban</field>
+        <field name="model">university.faculty</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" class="o_university_faculty_kanban" highlight_color="color" records_draggable="0">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="dean_id"/>
+                <field name="department_count"/>
+                <field name="program_count"/>
+                <field name="teacher_count"/>
+                <field name="student_count"/>
+                <field name="state"/>
+                <field name="color"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="card" class="o_faculty_kanban_card p-3 d-flex flex-column justify-content-between h-100">
+                        <main class="d-flex flex-column gap-2">
+                            <!-- Top row: Faculty Icon + Name & Code + Stage Badge + Actions Dropdown -->
+                            <div class="d-flex align-items-start justify-content-between gap-2">
+                                <div class="d-flex align-items-center gap-2 min-w-0">
+                                    <span class="badge rounded-3 bg-primary-subtle text-primary p-2 flex-shrink-0" title="Faculty">
+                                        <i class="fa fa-university fa-fw fa-lg" title="Faculty"/>
+                                    </span>
+                                    <div class="min-w-0">
+                                        <div class="d-flex align-items-center gap-1">
+                                            <strong class="fs-5 o_kanban_record_title text-truncate text-dark d-block" t-att-title="record.name.value">
+                                                <field name="name"/>
+                                            </strong>
+                                            <span class="badge text-bg-light border text-secondary small flex-shrink-0">
+                                                <field name="code"/>
+                                            </span>
+                                        </div>
+                                        <div class="text-muted small mt-1">
+                                            <span>Higher Education Academic Faculty</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-1 flex-shrink-0">
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-success="state == 'active'"
+                                           decoration-warning="state == 'closed'"/>
+                                    <div class="o_dropdown_kanban dropdown">
+                                        <a class="dropdown-toggle btn p-0 text-muted" role="button" data-bs-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                            <i class="fa fa-ellipsis-v" title="Options"/>
+                                        </a>
+                                        <div class="dropdown-menu" role="menu">
+                                            <a role="menuitem" type="open" class="dropdown-item">View Details</a>
+                                            <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                            <div role="separator" class="dropdown-divider"/>
+                                            <a role="menuitem" type="object" name="action_set_active" invisible="state == 'active'" class="dropdown-item text-success">
+                                                <i class="fa fa-check-circle me-1" title="Activate"/>Activate
+                                            </a>
+                                            <a role="menuitem" type="object" name="action_set_closed" invisible="state == 'closed'" class="dropdown-item text-warning">
+                                                <i class="fa fa-lock me-1" title="Close"/>Close
+                                            </a>
+                                            <a role="menuitem" type="object" name="action_set_draft" invisible="state == 'draft'" class="dropdown-item text-secondary">
+                                                <i class="fa fa-pencil me-1" title="Reset to Draft"/>Reset to Draft
+                                            </a>
+                                            <div role="separator" class="dropdown-divider"/>
+                                            <field name="color" widget="kanban_color_picker"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Head of Faculty (Dean) Info Box -->
+                            <div class="p-2 rounded-2 bg-light border mt-1">
+                                <t t-if="record.dean_id.value">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fa fa-user-circle text-primary fs-5 flex-shrink-0" title="Dean / Head of Faculty"/>
+                                        <div class="min-w-0">
+                                            <div class="text-muted text-uppercase fw-semibold" style="font-size: 0.7rem;">Head of Faculty (Dean)</div>
+                                            <div class="fw-semibold text-dark text-truncate">
+                                                <field name="dean_id"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="d-flex align-items-center gap-2 text-muted small">
+                                        <i class="fa fa-user-o text-muted fs-5 flex-shrink-0"/>
+                                        <span class="fst-italic">Dean / Head of Faculty not appointed</span>
+                                    </div>
+                                </t>
+                            </div>
+
+                            <!-- 4 Key Academic Stat Tiles -->
+                            <div class="row g-2 mt-1">
+                                <div class="col-6">
+                                    <div class="p-2 border rounded bg-white text-center shadow-sm h-100">
+                                        <div class="text-muted small d-flex align-items-center justify-content-center gap-1">
+                                            <i class="fa fa-building text-info" aria-hidden="true"/>
+                                            <span>Departments</span>
+                                        </div>
+                                        <div class="fw-bold fs-5 text-dark mt-1">
+                                            <field name="department_count"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 border rounded bg-white text-center shadow-sm h-100">
+                                        <div class="text-muted small d-flex align-items-center justify-content-center gap-1">
+                                            <i class="fa fa-certificate text-warning" aria-hidden="true"/>
+                                            <span>Programs</span>
+                                        </div>
+                                        <div class="fw-bold fs-5 text-dark mt-1">
+                                            <field name="program_count"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 border rounded bg-white text-center shadow-sm h-100">
+                                        <div class="text-muted small d-flex align-items-center justify-content-center gap-1">
+                                            <i class="fa fa-id-badge text-primary" aria-hidden="true"/>
+                                            <span>Teachers</span>
+                                        </div>
+                                        <div class="fw-bold fs-5 text-dark mt-1">
+                                            <field name="teacher_count"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 border rounded bg-white text-center shadow-sm h-100">
+                                        <div class="text-muted small d-flex align-items-center justify-content-center gap-1">
+                                            <i class="fa fa-graduation-cap text-success" aria-hidden="true"/>
+                                            <span>Students</span>
+                                        </div>
+                                        <div class="fw-bold fs-5 text-dark mt-1">
+                                            <field name="student_count"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+
+                        <!-- Footer Actions -->
+                        <footer class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
+                            <button name="action_view_departments"
+                                    type="object"
+                                    class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1 py-1 px-2"
+                                    title="View Departments">
+                                <i class="fa fa-building me-1" aria-hidden="true"/>
+                                <span><field name="department_count"/> Departments</span>
+                            </button>
+                            <div class="d-flex align-items-center gap-1">
+                                <t t-if="record.state.raw_value == 'active'">
+                                    <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle py-1 px-2">
+                                        <i class="fa fa-check-circle me-1" aria-hidden="true"/>Active
+                                    </span>
+                                </t>
+                                <t t-elif="record.state.raw_value == 'closed'">
+                                    <span class="badge rounded-pill bg-warning-subtle text-warning border border-warning-subtle py-1 px-2">
+                                        <i class="fa fa-lock me-1" aria-hidden="true"/>Closed
+                                    </span>
+                                </t>
+                                <t t-else="">
+                                    <span class="badge rounded-pill bg-secondary-subtle text-secondary border border-secondary-subtle py-1 px-2">
+                                        <i class="fa fa-pencil me-1" aria-hidden="true"/>Draft
+                                    </span>
+                                </t>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_faculty_form" model="ir.ui.view">
+        <field name="name">university.faculty.form</field>
+        <field name="model">university.faculty</field>
+        <field name="arch" type="xml">
+            <form string="Faculty">
+                <header>
+                    <button name="action_set_active" string="Activate" type="object" invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_set_closed" string="Close" type="object" invisible="state != 'active'"/>
+                    <button name="action_set_draft" string="Reset to Draft" type="object" invisible="state == 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,closed"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <!-- Stat buttons -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_departments"
+                                type="object" class="oe_stat_button" icon="fa-building">
+                            <field name="department_count" widget="statinfo" string="Departments"/>
+                        </button>
+                        <button name="%(school_management.action_university_teacher)d"
+                                type="action" class="oe_stat_button" icon="fa-id-badge"
+                                context="{'search_default_faculty_id': id}">
+                            <field name="teacher_count" widget="statinfo" string="Teachers"/>
+                        </button>
+                        <button name="%(school_management.action_university_student)d"
+                                type="action" class="oe_stat_button" icon="fa-graduation-cap"
+                                context="{'search_default_faculty_id': id}">
+                            <field name="student_count" widget="statinfo" string="Students"/>
+                        </button>
+                        <button name="%(school_management.action_university_program)d"
+                                type="action" class="oe_stat_button" icon="fa-certificate">
+                            <field name="program_count" widget="statinfo" string="Programs"/>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" string="Faculty Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Faculty of Engineering" required="1"/>
+                        </h1>
+                        <div class="text-muted">
+                            <field name="code" placeholder="e.g. FE" required="1"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group string="Overview">
+                            <field name="dean_id" readonly="1"/>
+                            <button name="%(school_management.action_university_academic_assignment)d"
+                                    type="action"
+                                    string="Manage Head of Faculty Appointment"
+                                    context="{'search_default_faculty_id': id, 'search_default_filter_dean': 1}"
+                                    class="btn-link"
+                                    icon="fa-tasks"/>
+                            <field name="code" string="Faculty Code"/>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                        <group string="Description">
+                            <field name="description"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Departments" name="departments_tab">
+                            <field name="department_ids">
+                                <list limit="10">
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="head_id" string="HOD"/>
+                                    <field name="teacher_count"/>
+                                    <field name="student_count"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Teachers" name="teachers_tab">
+                            <field name="teacher_ids">
+                                <list limit="10">
+                                    <field name="teacher_id"/>
+                                    <field name="name"/>
+                                    <field name="position"/>
+                                    <field name="department_id"/>
+                                    <field name="specialization"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Programs" name="programs_tab">
+                            <field name="program_ids">
+                                <list limit="10">
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="department_id"/>
+                                    <field name="degree_type" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Students" name="students_tab">
+                            <field name="student_ids">
+                                <list limit="10">
+                                    <field name="student_id"/>
+                                    <field name="name"/>
+                                    <field name="program_id"/>
+                                    <field name="status" widget="badge"
+                                           decoration-success="status == 'active'"
+                                           decoration-warning="status == 'suspended'"
+                                           decoration-info="status == 'graduated'"
+                                           decoration-danger="status == 'dropped'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Reports" name="reports_tab">
+                            <div class="alert alert-info" role="status">
+                                <i class="fa fa-info-circle me-1" aria-hidden="true"/>
+                                Faculty-level reporting (e.g. headcount, enrolment summaries, financial) will be
+                                made available here. Use the Departments/Teachers/Students tabs for current data.
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_faculty_search" model="ir.ui.view">
+        <field name="name">university.faculty.search</field>
+        <field name="model">university.faculty</field>
+        <field name="arch" type="xml">
+            <search string="Search Faculties">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="dean_id"/>
+                <separator/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Active Stage" name="filter_stage_active" domain="[('state', '=', 'active')]"/>
+                <filter string="Closed" name="filter_closed" domain="[('state', '=', 'closed')]"/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <searchpanel>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                    <field name="dean_id" string="Head of Faculty" icon="fa-user" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- WINDOW ACTION -->
+    <record id="action_university_faculty" model="ir.actions.act_window">
+        <field name="name">Faculties</field>
+        <field name="res_model">university.faculty</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_faculty_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first faculty</p>
+            <p>Define faculties to organize departments and academic programs.</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_wizard_import_public_holiday_form" model="ir.ui.view">
+        <field name="name">wizard.import.public.holiday.form</field>
+        <field name="model">wizard.import.public.holiday</field>
+        <field name="arch" type="xml">
+            <form string="Import Public Holidays" class="o_holiday_wizard_form">
+                <field name="state" invisible="1"/>
+                <field name="error_rows" invisible="1"/>
+                <field name="file_name" invisible="1"/>
+
+                <!-- ======================================================== -->
+                <!-- TOP STEPPER PROGRESS BAR (DYNAMIC PER STATE)             -->
+                <!-- ======================================================== -->
+                <!-- State: upload -->
+                <div class="o_holiday_stepper mb-4" invisible="state != 'upload'">
+                    <div class="o_step o_step_active">
+                        <div class="o_step_badge"><i class="fa fa-cloud-upload" title="Upload Step"/></div>
+                        <div class="o_step_content">
+                            <span class="o_step_title">1. Upload &amp; Options</span>
+                            <span class="o_step_desc">Select file or template</span>
+                        </div>
+                    </div>
+                    <div class="o_step_divider"/>
+                    <div class="o_step o_step_pending">
+                        <div class="o_step_badge">2</div>
+                        <div class="o_step_content">
+                            <span class="o_step_title">2. Preview &amp; Validate</span>
+                            <span class="o_step_desc">Verify parsed rows</span>
+                        </div>
+                    </div>
+                    <div class="o_step_divider"/>
+                    <div class="o_step o_step_pending">
+                        <div class="o_step_badge">3</div>
+                        <div class="o_step_content">
+                            <span class="o_step_title">3. Finish &amp; Audit</span>
+                            <span class="o_step_desc">Confirm &amp; log</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- State: preview -->
+                <div class="o_holiday_stepper mb-4" invisible="state != 'preview'">
+                    <div class="o_step o_step_completed">
+                        <div class="o_step_badge"><i class="fa fa-check" title="Upload Completed"/></div>
+                        <div class="o_step_content">
+                            <span class="o_step_title">1. Upload &amp; Options</span>
+                            <span class="o_step_desc">File processed</span>
+                        </div>
+                    </div>
+                    <div class="o_step_divider o_divider_active"/>
+                    <div class="o_step o_step_active">
+                        <div class="o_step_badge"><i class="fa fa-eye" title="Preview Step"/></div>
+                        <div class="o_step_content">
+                            <span class="o_step_title">2. Preview &amp; Validate</span>
+                            <span class="o_step_desc">Verify parsed rows</span>
+                        </div>
+                    </div>
+                    <div class="o_step_divider"/>
+                    <div class="o_step o_step_pending">
+                        <div class="o_step_badge">3</div>
+                        <div class="o_step_content">
+                            <span class="o_step_title">3. Finish &amp; Audit</span>
+                            <span class="o_step_desc">Confirm &amp; log</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- State: done -->
+                <div class="o_holiday_stepper mb-4" invisible="state != 'done'">
+                    <div class="o_step o_step_completed">
+                        <div class="o_step_badge"><i class="fa fa-check" title="Upload Completed"/></div>
+                        <div class="o_step_content">
+                            <span class="o_step_title">1. Upload &amp; Options</span>
+                            <span class="o_step_desc">Completed</span>
+                        </div>
+                    </div>
+                    <div class="o_step_divider o_divider_active"/>
+                    <div class="o_step o_step_completed">
+                        <div class="o_step_badge"><i class="fa fa-check" title="Validation Completed"/></div>
+                        <div class="o_step_content">
+                            <span class="o_step_title">2. Preview &amp; Validate</span>
+                            <span class="o_step_desc">Validated</span>
+                        </div>
+                    </div>
+                    <div class="o_step_divider o_divider_active"/>
+                    <div class="o_step o_step_completed">
+                        <div class="o_step_badge"><i class="fa fa-check-circle" title="Import Complete"/></div>
+                        <div class="o_step_content">
+                            <span class="o_step_title">3. Finish &amp; Audit</span>
+                            <span class="o_step_desc">Holidays imported</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================================================== -->
+                <!-- STEP 1: UPLOAD & GENERATION STATE                        -->
+                <!-- ======================================================== -->
+                <div invisible="state != 'upload'" class="o_holiday_upload_container">
+                    <div class="row g-3">
+                        <!-- Left Card: Spreadsheet File Import -->
+                        <div class="col-12 col-md-7">
+                            <div class="card h-100 border shadow-sm o_holiday_card">
+                                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="o_icon_avatar bg-primary-subtle text-primary rounded-circle p-2">
+                                            <i class="fa fa-cloud-upload fs-5" title="Cloud Upload"/>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold">Upload Holiday File</h6>
+                                            <small class="text-muted">Import from spreadsheet (.csv, .xlsx)</small>
+                                        </div>
+                                    </div>
+                                    <button name="action_download_template" type="object" string="Sample Template" class="btn btn-outline-secondary btn-sm" icon="fa-download" title="Download sample CSV template"/>
+                                </div>
+                                <div class="card-body p-3">
+                                    <div class="o_holiday_dropzone mb-3 text-center p-3 border rounded-3 bg-light">
+                                        <i class="fa fa-file-excel-o fa-2x text-muted mb-2 d-block" title="Spreadsheet File"/>
+                                        <field name="file_data" filename="file_name" class="w-100"/>
+                                        <div class="small text-muted mt-2">
+                                            Accepted formats: <strong>.csv</strong>, <strong>.xlsx</strong>. Headers: Name, Date From, Date To, Type.
+                                        </div>
+                                    </div>
+
+                                    <div class="o_policy_box p-3 border rounded-3 bg-white">
+                                        <span class="o_form_label fw-bold small text-uppercase text-muted d-block mb-2">
+                                            <i class="fa fa-clone me-1" title="Policy"/> Duplicate Handling Policy
+                                        </span>
+                                        <field name="duplicate_policy" widget="radio" class="mb-1"/>
+                                        <div class="small text-muted fst-italic">
+                                            "Skip" ignores rows matching existing names &amp; dates. "Update" refreshes titles and dates.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Card: Cambodia Fixed Holidays Generator -->
+                        <div class="col-12 col-md-5">
+                            <div class="card h-100 border shadow-sm o_holiday_card">
+                                <div class="card-header bg-white py-3 border-bottom d-flex align-items-center gap-2">
+                                    <div class="o_icon_avatar bg-danger-subtle text-danger rounded-circle p-2">
+                                        <i class="fa fa-flag fs-5" title="Cambodia Flag"/>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">Cambodia National Holidays</h6>
+                                        <small class="text-muted">Auto-populate standard gazetted holidays</small>
+                                    </div>
+                                </div>
+                                <div class="card-body p-3 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <p class="small text-muted mb-3">
+                                            Instantly populate all standard national public holidays (Khmer New Year, Pchum Ben, King's Birthday, Independence Day, etc.) for your target academic calendar.
+                                        </p>
+                                        <div class="mb-3 p-3 bg-light rounded-3 border">
+                                            <span class="o_form_label fw-bold small text-muted text-uppercase mb-1 d-block">Target Academic Year</span>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <field name="target_year" class="form-control form-control-sm text-center fw-bold fs-6 w-auto" placeholder="YYYY"/>
+                                                <button name="action_generate_fixed_holidays" type="object" string="Auto-Generate" class="btn btn-outline-danger btn-sm flex-grow-1" icon="fa-magic"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-2 rounded bg-light border-start border-4 border-info">
+                                        <div class="d-flex align-items-start gap-2">
+                                            <i class="fa fa-info-circle text-info mt-1" title="Info Note"/>
+                                            <small class="text-muted">
+                                                Existing records will not be duplicated. Timetable slots falling on generated dates will automatically display conflict alerts.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================================================== -->
+                <!-- STEP 2: PREVIEW & VALIDATION STATE                       -->
+                <!-- ======================================================== -->
+                <div invisible="state != 'preview'" class="o_holiday_preview_container">
+                    <!-- 4 KPI Summary Cards -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6 col-md-3">
+                            <div class="card border shadow-sm p-3 o_kpi_card o_kpi_total">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="o_kpi_label text-muted small fw-bold text-uppercase">Total Rows</div>
+                                        <div class="o_kpi_value fs-4 fw-bold text-primary"><field name="total_rows"/></div>
+                                    </div>
+                                    <div class="o_kpi_icon bg-primary-subtle text-primary rounded-3 p-2">
+                                        <i class="fa fa-list-ol fs-4" title="Total Rows"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card border shadow-sm p-3 o_kpi_card o_kpi_valid">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="o_kpi_label text-muted small fw-bold text-uppercase">Valid &amp; Ready</div>
+                                        <div class="o_kpi_value fs-4 fw-bold text-success"><field name="valid_rows"/></div>
+                                    </div>
+                                    <div class="o_kpi_icon bg-success-subtle text-success rounded-3 p-2">
+                                        <i class="fa fa-check-circle fs-4" title="Valid Rows"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card border shadow-sm p-3 o_kpi_card o_kpi_duplicate">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="o_kpi_label text-muted small fw-bold text-uppercase">Duplicates</div>
+                                        <div class="o_kpi_value fs-4 fw-bold text-warning"><field name="duplicate_rows"/></div>
+                                    </div>
+                                    <div class="o_kpi_icon bg-warning-subtle text-warning rounded-3 p-2">
+                                        <i class="fa fa-clone fs-4" title="Duplicate Rows"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card border shadow-sm p-3 o_kpi_card o_kpi_error">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <div class="o_kpi_label text-muted small fw-bold text-uppercase">Errors</div>
+                                        <div class="o_kpi_value fs-4 fw-bold text-danger"><field name="error_rows"/></div>
+                                    </div>
+                                    <div class="o_kpi_icon bg-danger-subtle text-danger rounded-3 p-2">
+                                        <i class="fa fa-exclamation-triangle fs-4" title="Error Rows"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Guidance Banners -->
+                    <div class="alert alert-info py-2 px-3 mb-3 d-flex align-items-center gap-2" role="alert" invisible="error_rows != 0">
+                        <i class="fa fa-info-circle fs-5 text-info" title="Info Banner"/>
+                        <div>
+                            <strong>Ready for Import:</strong> All records have valid formats and dates. Review the preview below and click <strong>Confirm Import</strong>.
+                        </div>
+                    </div>
+                    <div class="alert alert-warning py-2 px-3 mb-3 d-flex align-items-center gap-2" role="alert" invisible="error_rows == 0">
+                        <i class="fa fa-exclamation-circle fs-5 text-warning" title="Warning Banner"/>
+                        <div>
+                            <strong>Formatting Alert:</strong> Some rows contain formatting issues or missing names. Rows with fatal errors cannot be imported until resolved.
+                        </div>
+                    </div>
+
+                    <!-- Preview List Table Card -->
+                    <div class="card border shadow-sm o_preview_table_card mb-2">
+                        <div class="card-header bg-white py-2 px-3 border-bottom d-flex align-items-center justify-content-between">
+                            <span class="fw-bold small text-muted text-uppercase">
+                                <i class="fa fa-table me-1" title="Preview Table"/> Parsed Holiday Preview
+                            </span>
+                            <small class="text-muted">Showing all parsed lines with validation status</small>
+                        </div>
+                        <div class="card-body p-0 o_preview_table_container">
+                            <field name="preview_line_ids" readonly="1">
+                                <list limit="10" decoration-success="status == 'ok'" decoration-warning="status == 'duplicate'" decoration-danger="status in ('invalid_date', 'missing_name')">
+                                    <field name="line_number" string="#"/>
+                                    <field name="name" string="Holiday Name"/>
+                                    <field name="name_km" string="Khmer Name" optional="show"/>
+                                    <field name="date_from" string="Start Date"/>
+                                    <field name="date_to" string="End Date"/>
+                                    <field name="holiday_type" string="Type"/>
+                                    <field name="work_pay_multiplier" string="Multiplier"/>
+                                    <field name="status" widget="badge" decoration-success="status == 'ok'" decoration-warning="status == 'duplicate'" decoration-danger="status in ('invalid_date', 'missing_name')"/>
+                                    <field name="status_message" string="Validation Message"/>
+                                </list>
+                            </field>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================================================== -->
+                <!-- STEP 3: DONE & AUDIT STATE                               -->
+                <!-- ======================================================== -->
+                <div invisible="state != 'done'" class="o_holiday_done_container py-3">
+                    <div class="card border shadow-sm mx-auto text-center p-4 o_done_card" style="max-width: 640px;">
+                        <div class="o_done_icon_wrapper mx-auto mb-3">
+                            <div class="o_done_circle bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center mx-auto" style="width: 72px; height: 72px;">
+                                <i class="fa fa-check fs-1" title="Success Icon"/>
+                            </div>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-1">Import Completed Successfully!</h4>
+                        <p class="text-muted small mb-4">
+                            The public holidays have been recorded in the academic calendar and timetable conflict engines.
+                        </p>
+
+                        <!-- Summary Statistics Grid -->
+                        <div class="row g-2 mb-4 justify-content-center">
+                            <div class="col-3">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Created</div>
+                                    <div class="fs-4 fw-bold text-success"><field name="created_count"/></div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Updated</div>
+                                    <div class="fs-4 fw-bold text-primary"><field name="updated_count"/></div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Skipped</div>
+                                    <div class="fs-4 fw-bold text-warning"><field name="skipped_count"/></div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="p-2 border rounded bg-light">
+                                    <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Failed</div>
+                                    <div class="fs-4 fw-bold text-danger"><field name="failed_count"/></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-3 bg-light rounded-3 border text-start mb-2">
+                            <div class="fw-bold small text-muted text-uppercase mb-1">
+                                <i class="fa fa-file-text-o me-1" title="Summary Log"/> Process Log Summary
+                            </div>
+                            <field name="summary_msg" readonly="1" class="text-secondary small"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ======================================================== -->
+                <!-- MODAL FOOTER BUTTONS                                     -->
+                <!-- ======================================================== -->
+                <footer>
+                    <!-- Step 1 Upload Buttons -->
+                    <button name="action_parse_and_preview" type="object" string="Preview &amp; Validate" class="btn btn-primary" icon="fa-arrow-right" invisible="state != 'upload'"/>
+
+                    <!-- Step 2 Preview Buttons -->
+                    <button name="action_back_to_upload" type="object" string="Back to Upload" class="btn btn-outline-secondary" icon="fa-arrow-left" invisible="state != 'preview'"/>
+                    <button name="action_confirm_import" type="object" string="Confirm Import" class="btn btn-primary" icon="fa-check" invisible="state != 'preview'"/>
+
+                    <!-- Step 3 Done Buttons -->
+                    <button name="action_check_class_conflicts" type="object" string="Check Class Conflicts" class="btn btn-warning" icon="fa-exclamation-triangle" invisible="state != 'done'"/>
+                    <button name="action_view_imported_holidays" type="object" string="View Imported Holidays" class="btn btn-primary" icon="fa-calendar" invisible="state != 'done'"/>
+
+                    <!-- Standard Dismissal Buttons -->
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" invisible="state == 'done'"/>
+                    <button string="Close" class="btn btn-secondary" special="cancel" invisible="state != 'done'"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Import Wizard -->
+    <record id="action_wizard_import_public_holiday" model="ir.actions.act_window">
+        <field name="name">Import Public Holidays</field>
+        <field name="res_model">wizard.import.public.holiday</field>
+        <field name="view_mode">form</field>
+        <field name="limit">10</field>
+        <field name="view_id" ref="view_wizard_import_public_holiday_form"/>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'large'}</field>
+    </record>
+
+    <!-- Legacy compatibility alias for previous xml id if referenced in database -->
+    <record id="action_public_holiday_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Public Holidays</field>
+        <field name="res_model">wizard.import.public.holiday</field>
+        <field name="view_mode">form</field>
+        <field name="limit">10</field>
+        <field name="view_id" ref="view_wizard_import_public_holiday_form"/>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'large'}</field>
+    </record>
+</odoo>

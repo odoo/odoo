@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- LIST VIEW -->
+    <record id="view_university_notice_board_list" model="ir.ui.view">
+        <field name="name">university.notice.board.list</field>
+        <field name="model">university.notice.board</field>
+        <field name="arch" type="xml">
+            <list limit="80" string="Campus Notices" sample="1" decoration-bf="pinned" decoration-muted="not active">
+                <field name="pinned" widget="boolean_favorite" string="Pin" optional="show"/>
+                <field name="date" string="Date" widget="date"/>
+                <field name="name" string="Notice Title" class="fw-bold fs-6"/>
+                <field name="notice_type" widget="badge"
+                       decoration-info="notice_type == 'academic'"
+                       decoration-danger="notice_type == 'exam'"
+                       decoration-success="notice_type == 'event'"
+                       decoration-warning="notice_type == 'holiday'"
+                       decoration-primary="notice_type == 'administrative'"/>
+                <field name="priority" widget="badge"
+                       decoration-danger="priority == 'high'"
+                       decoration-warning="priority == 'medium'"
+                       decoration-muted="priority == 'low'"/>
+                <field name="target_audience" widget="badge" optional="show"/>
+                <field name="department_id" optional="show"/>
+                <field name="author_name" optional="hide"/>
+                <field name="active" widget="boolean_toggle" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW (DEPRECATED / INACTIVE) -->
+    <record id="view_university_notice_board_kanban" model="ir.ui.view">
+        <field name="name">university.notice.board.kanban</field>
+        <field name="model">university.notice.board</field>
+        <field name="active" eval="False"/>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" default_group_by="notice_type" quick_create="false">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="notice_type"/>
+                <field name="priority"/>
+                <field name="target_audience"/>
+                <field name="department_id"/>
+                <field name="author_name"/>
+                <field name="pinned"/>
+                <field name="image_1920"/>
+                <field name="color"/>
+                <field name="active"/>
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-class="card border-0 shadow-sm rounded-3 overflow-hidden #{record.pinned.raw_value ? 'border-start border-4 border-primary' : ''}">
+                            <!-- Header Banner Image (if present) -->
+                            <div t-if="record.image_1920.raw_value" class="o_kanban_image_top position-relative" style="height: 120px; overflow: hidden; background-color: #0f172a;">
+                                <img t-attf-src="/web/image/university.notice.board/#{record.id.raw_value}/image_1920"
+                                     alt="Cover"
+                                     class="w-100 h-100 object-fit-cover opacity-90"/>
+                                <span t-if="record.pinned.raw_value" class="position-absolute top-0 end-0 m-2 badge bg-danger shadow-sm">
+                                    <i class="fa fa-thumb-tack me-1" title="Pinned"/>Pinned
+                                </span>
+                            </div>
+
+                            <main class="p-3">
+                                <!-- Top Badges -->
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span t-if="!record.image_1920.raw_value and record.pinned.raw_value" class="badge bg-danger shadow-sm">
+                                        <i class="fa fa-thumb-tack me-1" title="Pinned"/>Pinned
+                                    </span>
+                                    <span class="badge" t-attf-class="#{record.priority.raw_value == 'high' ? 'text-bg-danger' : (record.priority.raw_value == 'medium' ? 'text-bg-warning' : 'text-bg-secondary')}">
+                                        <i t-if="record.priority.raw_value == 'high'" class="fa fa-bolt me-1" title="Urgent"/>
+                                        <field name="priority"/>
+                                    </span>
+                                    <span class="text-muted small fw-semibold">
+                                        <i class="fa fa-calendar-o me-1" title="Date"/><field name="date"/>
+                                    </span>
+                                </div>
+
+                                <!-- Title -->
+                                <h5 class="card-title fw-bold text-dark mb-2 text-truncate-2" style="min-height: 2.4rem;">
+                                    <field name="name"/>
+                                </h5>
+
+                                <!-- Category & Target Tags -->
+                                <div class="d-flex flex-wrap gap-1 mb-2">
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="fa fa-tag me-1 text-primary" title="Category"/><field name="notice_type"/>
+                                    </span>
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle" t-if="record.target_audience.value">
+                                        <i class="fa fa-users me-1" title="Audience"/><field name="target_audience"/>
+                                    </span>
+                                </div>
+
+                                <!-- Footer Dept & Author -->
+                                <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2 text-muted small">
+                                    <span class="text-truncate" style="max-width: 65%;">
+                                        <i class="fa fa-university me-1" title="Department"/><t t-esc="record.department_id.value or 'General Notice'"/>
+                                    </span>
+                                    <span class="text-truncate text-end text-muted fst-italic" style="max-width: 35%;">
+                                        <field name="author_name"/>
+                                    </span>
+                                </div>
+                            </main>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- CALENDAR VIEW -->
+    <record id="view_university_notice_board_calendar" model="ir.ui.view">
+        <field name="name">university.notice.board.calendar</field>
+        <field name="model">university.notice.board</field>
+        <field name="arch" type="xml">
+            <calendar string="Campus Notices" date_start="date" color="color" mode="month">
+                <field name="name"/>
+                <field name="priority"/>
+                <field name="target_audience"/>
+                <field name="department_id"/>
+                <field name="pinned"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_notice_board_form" model="ir.ui.view">
+        <field name="name">university.notice.board.form</field>
+        <field name="model">university.notice.board</field>
+        <field name="arch" type="xml">
+            <form string="Campus Notice">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    
+                    <div class="alert alert-danger d-flex align-items-center mb-3" role="alert" invisible="priority != 'high'">
+                        <i class="fa fa-exclamation-triangle fa-2x me-3" title="Alert"/>
+                        <div>
+                            <strong>High Priority Announcement:</strong> This notice is marked as urgent and broadcast to all students and faculty.
+                        </div>
+                    </div>
+
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_1920', 'size': [120, 120]}"/>
+
+                    <div class="oe_title">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <field name="pinned" widget="boolean_favorite" class="fs-4"/>
+                            <label for="pinned" string="Pin to Top" class="fw-semibold text-muted small"/>
+                        </div>
+                        <label for="name" class="oe_edit_only" string="Notice Title"/>
+                        <h1 class="text-break">
+                            <field name="name" placeholder="e.g., Midterm Examination Timetable &amp; Room Allocations Released"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Classification &amp; Schedule">
+                            <field name="date"/>
+                            <field name="notice_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="priority" widget="radio" options="{'horizontal': true}"/>
+                            <field name="target_audience"/>
+                        </group>
+                        <group string="Issuing Authority &amp; Scope">
+                            <field name="department_id" placeholder="Select department if department-specific..."/>
+                            <field name="author_name" placeholder="e.g., Office of Academic Affairs"/>
+                            <field name="academic_year_id" options="{'no_create': True}"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Official Announcement Content" name="content">
+                            <field name="content" options="{'collaborative': false}" placeholder="Draft detailed announcement, schedules, regulations, or contact details here..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_notice_board_search" model="ir.ui.view">
+        <field name="name">university.notice.board.search</field>
+        <field name="model">university.notice.board</field>
+        <field name="arch" type="xml">
+            <search string="Search Notices">
+                <field name="name" string="Notice Title"/>
+                <field name="author_name" string="Issued By"/>
+                <field name="department_id" string="Department"/>
+                <field name="notice_type"/>
+                <field name="priority"/>
+                <field name="date"/>
+                <separator/>
+                <filter string="Pinned to Top" name="pinned" domain="[('pinned', '=', True)]"/>
+                <filter string="Urgent / High Priority" name="high_priority" domain="[('priority', '=', 'high')]"/>
+                <separator/>
+                <filter string="Academic" name="cat_academic" domain="[('notice_type', '=', 'academic')]"/>
+                <filter string="Exams &amp; Timetables" name="cat_exam" domain="[('notice_type', '=', 'exam')]"/>
+                <filter string="Events &amp; Summits" name="cat_event" domain="[('notice_type', '=', 'event')]"/>
+                <filter string="Holidays" name="cat_holiday" domain="[('notice_type', '=', 'holiday')]"/>
+                <separator/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Category" name="group_by_type" context="{'group_by': 'notice_type'}"/>
+                    <filter string="Priority" name="group_by_priority" context="{'group_by': 'priority'}"/>
+                    <filter string="Target Audience" name="group_by_audience" context="{'group_by': 'target_audience'}"/>
+                    <filter string="Department" name="group_by_dept" context="{'group_by': 'department_id'}"/>
+                    <filter string="Announcement Date" name="group_by_date" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION WINDOW -->
+    <record id="action_university_notice_board" model="ir.actions.act_window">
+        <field name="name">Campus Notice Board</field>
+        <field name="res_model">university.notice.board</field>
+        <field name="view_mode">list,calendar,form</field>
+        <field name="limit">80</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="search_view_id" ref="view_university_notice_board_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Broadcast campus announcements &amp; academic alerts!</p>
+            <p>Publish examination schedules, department symposiums, holiday notices, and administrative memos for students and faculty.</p>
+        </field>
+    </record>
+
+    <record id="action_university_notice_board_view_list" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_university_notice_board_list"/>
+        <field name="act_window_id" ref="action_university_notice_board"/>
+    </record>
+
+    <record id="action_university_notice_board_view_calendar" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_university_notice_board_calendar"/>
+        <field name="act_window_id" ref="action_university_notice_board"/>
+    </record>
+
+    <record id="action_university_notice_board_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_university_notice_board_form"/>
+        <field name="act_window_id" ref="action_university_notice_board"/>
+    </record>
+</odoo>

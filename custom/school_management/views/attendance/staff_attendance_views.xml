@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- OWL client action: attendance dashboard (monthly matrix & daily sheet) for admin -->
+    <record id="action_university_staff_attendance_sheet" model="ir.actions.client">
+        <field name="name">Attendance Dashboard</field>
+        <field name="tag">university_staff_attendance_sheet</field>
+        <field name="target">current</field>
+        <field name="context">{'default_view_mode': 'table'}</field>
+    </record>
+
+    <record id="view_university_staff_attendance_kanban" model="ir.ui.view">
+        <field name="name">university.staff.attendance.kanban</field>
+        <field name="model">university.staff.attendance</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" default_group_by="status" sample="1" quick_create="false">
+                <header>
+                    <button name="action_approve" type="object" string="Approve" class="btn-success text-white" icon="fa-check"
+                            groups="school_management.group_school_admin,base.group_system"/>
+                    <button name="action_reject" type="object" string="Reject" class="btn-outline-danger" icon="fa-times"
+                            groups="school_management.group_school_admin,base.group_system"/>
+                </header>
+                <field name="id"/>
+                <field name="date"/>
+                <field name="staff_id"/>
+                <field name="department_id"/>
+                <field name="faculty_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="worked_hours"/>
+                <field name="status"/>
+                <field name="state"/>
+                <field name="remark"/>
+                <field name="is_holiday"/>
+                <field name="holiday_name"/>
+                <templates>
+                    <t t-name="card" class="d-flex flex-column justify-content-between p-3">
+                        <main class="d-flex gap-3 align-items-start min-w-0">
+                            <div class="flex-shrink-0" style="width: 48px; height: 48px;">
+                                <img t-att-src="'/web/image/university.teacher/' + record.staff_id.raw_value + '/avatar_128'"
+                                     class="rounded-circle object-fit-cover w-100 h-100 border shadow-sm"
+                                     alt="Staff Avatar"
+                                     onerror="this.src='/web/static/img/placeholder.png'"/>
+                            </div>
+                            <div class="flex-grow-1 min-w-0">
+                                <div class="d-flex align-items-center justify-content-between gap-1 mb-1">
+                                    <strong class="text-truncate fs-6 text-dark" t-att-title="record.staff_id.value">
+                                        <field name="staff_id"/>
+                                    </strong>
+                                    <field name="status" widget="badge"
+                                           decoration-success="status == 'present'"
+                                           decoration-danger="status == 'absent'"
+                                           decoration-warning="status == 'late'"
+                                           decoration-info="status in ('leave', 'official_duty')"
+                                           decoration-primary="status == 'half_day'"/>
+                                </div>
+                                <div class="text-muted small text-truncate mb-1" t-if="record.department_id.value">
+                                    <i class="fa fa-building-o me-1 text-primary" title="Department" aria-label="Department"/>
+                                    <field name="department_id" options="{'no_open': True}"/>
+                                </div>
+                                <div class="d-flex align-items-center gap-3 small text-muted mb-1" t-if="record.check_in.value or record.check_out.value">
+                                    <span t-if="record.check_in.value" class="d-inline-flex align-items-center" title="Check-in">
+                                        <i class="fa fa-sign-in me-1 text-success" title="Check-in" aria-label="Check-in"/>
+                                        <field name="check_in"/>
+                                    </span>
+                                    <span t-if="record.check_out.value" class="d-inline-flex align-items-center" title="Check-out">
+                                        <i class="fa fa-sign-out me-1 text-danger" title="Check-out" aria-label="Check-out"/>
+                                        <field name="check_out"/>
+                                    </span>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between gap-1 mt-1">
+                                    <span class="badge text-bg-light border text-muted small" t-if="record.worked_hours.raw_value" title="Worked Hours">
+                                        <i class="fa fa-clock-o me-1 text-info" title="Worked Hours" aria-label="Worked Hours"/>
+                                        <field name="worked_hours" widget="float_time"/>
+                                    </span>
+                                    <field name="state" widget="badge"
+                                           decoration-muted="state == 'draft'"
+                                           decoration-info="state == 'submitted'"
+                                           decoration-success="state == 'approved'"
+                                           decoration-danger="state == 'rejected'"/>
+                                </div>
+                            </div>
+                        </main>
+                        <footer class="d-flex align-items-center justify-content-between pt-2 mt-2 border-top">
+                            <span class="badge text-bg-light border text-muted small" title="Date">
+                                <i class="fa fa-calendar me-1" title="Date" aria-label="Date"/>
+                                <field name="date"/>
+                            </span>
+                            <div class="d-flex align-items-center gap-1">
+                                <button name="action_approve" type="object" string="Approve" icon="fa-check"
+                                        title="Approve" aria-label="Approve" class="btn btn-sm btn-link text-success p-0"
+                                        invisible="state != 'submitted'"
+                                        groups="school_management.group_school_admin,base.group_system"/>
+                                <button name="action_reject" type="object" string="Reject" icon="fa-times"
+                                        title="Reject" aria-label="Reject" class="btn btn-sm btn-link text-danger p-0 ms-2"
+                                        invisible="state != 'submitted'"
+                                        groups="school_management.group_school_admin,base.group_system"/>
+                                <span class="text-muted small text-truncate ms-2" t-if="record.remark.value" t-att-title="record.remark.value">
+                                    <i class="fa fa-comment-o me-1" title="Remark" aria-label="Remark"/>
+                                    <field name="remark"/>
+                                </span>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_university_staff_attendance_generate_today" model="ir.actions.server">
+        <field name="name">Generate today's sheet</field>
+        <field name="model_id" ref="model_university_staff_attendance"/>
+        <field name="binding_model_id" ref="model_university_staff_attendance"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">model.action_generate_today_sheet()</field>
+    </record>
+
+    <record id="action_university_staff_attendance_mark_present" model="ir.actions.server">
+        <field name="name">Mark all present</field>
+        <field name="model_id" ref="model_university_staff_attendance"/>
+        <field name="binding_model_id" ref="model_university_staff_attendance"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_mark_all_present()</field>
+    </record>
+
+    <record id="view_university_staff_attendance_list" model="ir.ui.view">
+        <field name="name">university.staff.attendance.list</field>
+        <field name="model">university.staff.attendance</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Take Attendance and OT" editable="bottom" multi_edit="1" default_order="employee_id" sample="1">
+                <header>
+                    <button name="%(action_university_staff_attendance_generate_today)d" type="action" string="Generate today's sheet" class="btn-primary" icon="fa-calendar-plus-o"/>
+                    <button name="%(action_university_staff_attendance_mark_present)d" type="action" string="Mark all present" class="btn-secondary" icon="fa-check"/>
+                </header>
+                <field name="employee_avatar_128" widget="image" string="Avatar" options="{'size': [32, 32]}"/>
+                <field name="employee_code" string="Code"/>
+                <field name="staff_id" string="Name" decoration-bf="1"/>
+                <field name="department_id" optional="hide"/>
+                <field name="status"
+                       widget="badge"
+                       decoration-success="status == 'present'"
+                       decoration-danger="status == 'absent'"
+                       decoration-warning="status == 'leave'"
+                       decoration-info="status == 'late'"/>
+                <field name="check_in" widget="datetime"/>
+                <field name="check_out" widget="datetime"/>
+                <field name="worked_hours" widget="float_time" string="Hours" readonly="1" class="text-end"/>
+                <field name="ot_hours" widget="float_time" string="OT (h)" sum="Total OT"
+                       class="text-end" invisible="status in ('absent', 'leave')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_university_staff_attendance_form" model="ir.ui.view">
+        <field name="name">university.staff.attendance.form</field>
+        <field name="model">university.staff.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Staff Attendance">
+                <header>
+                    <button name="action_submit" string="Submit" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Approve" type="object" class="btn-success" invisible="state != 'submitted'" groups="school_management.group_school_admin"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger" invisible="state != 'submitted'" groups="school_management.group_school_admin"/>
+                    <button name="action_reset_draft" string="Reset to Draft" type="object" class="btn-secondary" invisible="state not in ('approved', 'rejected')" groups="school_management.group_school_admin"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,rejected" readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <div class="alert alert-warning d-flex align-items-center gap-2 mb-3" role="status" invisible="not is_holiday">
+                        <i class="fa fa-calendar-check-o fa-lg" aria-hidden="true"/>
+                        <span>Notice: This date is a university holiday: <strong invisible="not holiday_name"><field name="holiday_name" readonly="1" class="d-inline"/></strong></span>
+                    </div>
+                    <group>
+                        <group string="Staff / Date">
+                            <field name="staff_id" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="department_id" readonly="1"/>
+                            <field name="faculty_id" readonly="1"/>
+                            <field name="is_holiday" invisible="1"/>
+                        </group>
+                        <group string="Attendance Details">
+                            <field name="check_in" readonly="state == 'approved'"/>
+                            <field name="check_out" readonly="state == 'approved'"/>
+                            <field name="worked_hours" widget="float_time" readonly="1"/>
+                            <field name="status" widget="badge" readonly="state == 'approved'"/>
+                            <field name="remark" readonly="state == 'approved'"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_university_staff_attendance_search" model="ir.ui.view">
+        <field name="name">university.staff.attendance.search</field>
+        <field name="model">university.staff.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Search Staff Attendance">
+                <field name="staff_id"/>
+                <field name="department_id"/>
+                <field name="date"/>
+                <separator/>
+                <filter string="Present" name="filter_present" domain="[('status', '=', 'present')]"/>
+                <filter string="Absent" name="filter_absent" domain="[('status', '=', 'absent')]"/>
+                <filter string="Late" name="filter_late" domain="[('status', '=', 'late')]"/>
+                <filter string="On Leave" name="filter_leave" domain="[('status', '=', 'leave')]"/>
+                <filter string="Official Duty" name="filter_official_duty" domain="[('status', '=', 'official_duty')]"/>
+                <filter string="Half Day" name="filter_half_day" domain="[('status', '=', 'half_day')]"/>
+                <separator/>
+                <filter string="Today" name="filter_today" domain="[('date', '=', context_today())]"/>
+                <filter string="Missing Check-out" name="filter_missing_checkout" domain="[('check_in', '!=', False), ('check_out', '=', False)]"/>
+                <separator/>
+                <group>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="department_id" icon="fa-building" enable_counters="1"/>
+                    <field name="status" icon="fa-filter" enable_counters="1" select="one"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_university_staff_attendance_pivot" model="ir.ui.view">
+        <field name="name">university.staff.attendance.pivot</field>
+        <field name="model">university.staff.attendance</field>
+        <field name="arch" type="xml">
+            <pivot string="Staff Attendance Summary">
+                <field name="staff_id" type="row"/>
+                <field name="status" type="col"/>
+                <field name="date" type="col" interval="month"/>
+                <field name="worked_hours" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_university_staff_attendance_calendar" model="ir.ui.view">
+        <field name="name">university.staff.attendance.calendar</field>
+        <field name="model">university.staff.attendance</field>
+        <field name="arch" type="xml">
+            <calendar string="Staff Attendance Schedule"
+                      date_start="calendar_start"
+                      date_stop="calendar_stop"
+                      color="status"
+                      mode="week"
+                      quick_create="0">
+                <field name="staff_id" avatar_field="avatar_128"/>
+                <field name="status"/>
+                <field name="worked_hours" widget="float_time"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_university_staff_attendance_graph" model="ir.ui.view">
+        <field name="name">university.staff.attendance.graph</field>
+        <field name="model">university.staff.attendance</field>
+        <field name="arch" type="xml">
+            <graph string="Staff Attendance Analysis" type="bar" sample="1">
+                <field name="department_id"/>
+                <field name="status"/>
+                <field name="worked_hours" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="action_university_staff_attendance" model="ir.actions.act_window">
+        <field name="name">Take Attendance and OT</field>
+        <field name="res_model">university.staff.attendance</field>
+        <field name="view_mode">list,kanban</field>
+        <field name="search_view_id" ref="view_university_staff_attendance_search"/>
+        <field name="domain">[('date', '=', context_today())]</field>
+        <field name="context">{'default_date': context_today()}</field>
+        <field name="limit">10</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No staff attendance records found.</p>
+            <p>Analyze and report staff attendance across departments, or switch to Attendance Dashboard for monthly matrix and daily check-in.</p>
+        </field>
+    </record>
+</odoo>

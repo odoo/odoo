@@ -1,0 +1,942 @@
+// University Management System - Shared Backend Views Polish
+// Scoped to the custom school shell so these rules do not affect native Odoo
+// pages such as Apps, Settings, Contacts, Sales, or other installed modules.
+
+.o_school_shell {
+    // -----------------------------------------------------------------------
+    // Status badge consistency
+    // -----------------------------------------------------------------------
+    .o_list_view .o_data_row .badge,
+    .o_kanban_card .badge {
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        line-height: 1.25;
+
+        &.text-bg-success {
+            background-color: #e8f5f0 !important;
+            color: #1f7a5c !important;
+            border: 1px solid #a7f3d0 !important;
+        }
+
+        &.text-bg-warning {
+            background-color: #fef3c7 !important;
+            color: #b45309 !important;
+            border: 1px solid #fde68a !important;
+        }
+
+        &.text-bg-danger {
+            background-color: #fef2f2 !important;
+            color: #dc2626 !important;
+            border: 1px solid #fecaca !important;
+        }
+
+        &.text-bg-info {
+            background-color: #eff6ff !important;
+            color: #2563eb !important;
+            border: 1px solid #bfdbfe !important;
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Numeric / financial column alignment in lists
+    // -----------------------------------------------------------------------
+    .o_list_view .o_list_number,
+    .o_list_view .o_data_cell.o_td_alignment_right {
+        font-variant-numeric: tabular-nums;
+    }
+
+    // -----------------------------------------------------------------------
+    // List header buttons: give the primary bulk action clear emphasis
+    // -----------------------------------------------------------------------
+    .o_list_view > header .btn-primary {
+        font-weight: 600;
+    }
+
+    // -----------------------------------------------------------------------
+    // Empty states in list views
+    // -----------------------------------------------------------------------
+    .o_view_nocontent_smiling_face {
+        font-size: 0.95rem;
+    }
+
+    // -----------------------------------------------------------------------
+    // Form sheets: consistent grouped section spacing & heading hierarchy
+    // -----------------------------------------------------------------------
+    .o_form_view .o_form_sheet_bg > .o_form_sheet {
+        max-width: 1140px;
+    }
+
+    .o_form_view .o_group .o_td_label {
+        padding: 0.375rem 0.5rem;
+    }
+
+    // -----------------------------------------------------------------------
+    // Student kanban card (design-system rewrite)
+    // -----------------------------------------------------------------------
+    .o_kanban_renderer.o_university_student_kanban {
+        .o_kanban_record {
+            margin-bottom: 0.25rem;
+        }
+
+        .o_kanban_card.o_university_kanban_card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-resting);
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+            &:hover,
+            &:focus-within {
+                border-color: #cbd5e1;
+                box-shadow: var(--shadow-elevated);
+
+                .o_kcard_open {
+                    opacity: 1;
+                }
+            }
+
+            .o_kcard_head {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .o_kcard_avatar_wrap {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                flex: 0 0 40px;
+            }
+
+            .o_kcard_avatar,
+            .o_kcard_avatar img {
+                width: 40px;
+                height: 40px;
+                min-width: 40px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .o_kcard_avatar {
+                overflow: hidden;
+                border: 1px solid var(--border-color);
+                background-color: var(--brand-primary-soft);
+            }
+
+            .o_kcard_avatar .o_field_image,
+            .o_kcard_avatar .o_field_widget,
+            .o_kcard_avatar .o_field_image img {
+                width: 100%;
+                height: 100%;
+            }
+
+            .o_kcard_avatar_placeholder {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #ffffff;
+                background-color: var(--brand-primary);
+                background-image: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-hover) 100%);
+                border: none;
+                font-size: 1rem;
+            }
+
+            .o_kcard_title {
+                min-width: 0;
+                flex-grow: 1;
+            }
+
+            .o_kcard_name {
+                display: block;
+                font-size: 0.95rem;
+                font-weight: 600;
+                color: var(--text-heading);
+            }
+
+            .o_kcard_id {
+                display: flex;
+                align-items: center;
+                font-size: 0.75rem;
+                color: var(--text-muted);
+
+                .fa {
+                    width: 14px;
+                    text-align: center;
+                    color: var(--text-light);
+                }
+            }
+
+            .o_kcard_meta {
+                display: flex;
+                align-items: center;
+                gap: 0.4rem;
+                font-size: 0.8rem;
+                color: var(--text-muted);
+                margin-top: 0.35rem;
+
+                .fa {
+                    width: 14px;
+                    text-align: center;
+                    color: var(--text-light);
+                }
+            }
+
+            .o_kcard_status {
+                margin-top: 0.6rem;
+            }
+
+            .o_kstatus {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.35rem;
+                font-size: 0.7rem;
+                font-weight: 600;
+                padding: 0.2rem 0.55rem;
+                border-radius: 9999px;
+                border: 1px solid transparent;
+
+                .o_kstatus_dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background-color: currentColor;
+                }
+            }
+
+            .o_kstatus_active {
+                color: var(--status-success);
+                background-color: var(--status-success-bg);
+                border-color: var(--status-success);
+            }
+
+            .o_kstatus_suspended {
+                color: var(--status-warning);
+                background-color: var(--status-warning-bg);
+                border-color: var(--status-warning);
+            }
+
+            .o_kstatus_graduated {
+                color: var(--status-info);
+                background-color: var(--status-info-bg);
+                border-color: var(--status-info);
+            }
+
+            .o_kstatus_dropped {
+                color: var(--status-danger);
+                background-color: var(--status-danger-bg);
+                border-color: var(--status-danger);
+            }
+
+            .o_kstatus_none {
+                color: var(--status-neutral);
+                background-color: var(--status-neutral-bg);
+                border-color: var(--border-color);
+            }
+
+            .o_kcard_footer {
+                padding: 0.5rem 0.9rem;
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                background-color: var(--bg-page);
+                border-top: 1px solid var(--border-subtle);
+            }
+
+            .o_kcard_open {
+                color: var(--brand-primary);
+                font-weight: 600;
+                white-space: nowrap;
+                opacity: 0;
+                transition: opacity 0.15s ease;
+            }
+
+            @media (hover: none) {
+                .o_kcard_open {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Left Filter Sidebar (SearchPanel) — University Light Theme
+// Harmonizes seamlessly with the top navigation bar (#714B67 / #71639e),
+// clean white kanban cards, and light page background.
+// Strictly scoped to body.o_school_management_active and school views.
+// ---------------------------------------------------------------------------
+body.o_school_management_active,
+.o_school_shell,
+.o_university_exam_searchpanel,
+.o_university_academic_year_searchpanel,
+body:has(.o_university_exam_list),
+body:has(.o_university_exam_searchpanel),
+body:has(.o_university_student_kanban),
+body:has(.o_university_subject_kanban),
+body:has(.o_university_academic_year_kanban),
+body:has(.o_university_academic_year_list),
+body:has(.o_university_academic_year_searchpanel) {
+    .o_search_panel {
+        --SearchPanel-width: 290px;
+        width: 290px !important;
+        min-width: 275px !important;
+        max-width: 400px !important;
+        padding: 12px 14px 24px 14px !important;
+        box-sizing: border-box !important;
+        background-color: #f8f9fa !important;
+        border-right: 1px solid #e2e8f0 !important;
+        color: #334155 !important;
+        --bs-list-group-bg: transparent !important;
+        --bs-list-group-border-color: transparent !important;
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            background: #cbd5e1;
+        }
+
+        .list-group {
+            background-color: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        .list-group-item {
+            background-color: transparent !important;
+            border-color: transparent !important;
+        }
+
+        // Section containers & dividers
+        .o_search_panel_section {
+            margin-bottom: 0 !important;
+
+            + .o_search_panel_section {
+                border-top: 1px solid #edf0f5 !important;
+                margin-top: 14px !important;
+                padding-top: 12px !important;
+            }
+        }
+
+        // Section header (e.g. SUBJECT, EXAM TYPE, STATUS)
+        .o_search_panel_section_header {
+            color: #475569 !important;
+            font-size: 0.73rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.06em !important;
+            text-transform: uppercase !important;
+            padding: 0 0 6px 0 !important;
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+
+            i, .fa, .o_search_panel_section_icon {
+                color: #714b67 !important;
+                font-size: 0.88rem !important;
+                margin-right: 7px !important;
+                width: 16px !important;
+                text-align: center !important;
+                flex-shrink: 0 !important;
+            }
+
+            b {
+                font-weight: 700 !important;
+                color: #1e293b !important;
+            }
+        }
+
+        // Category items (single select: Subject, Faculty, Department, etc.)
+        .o_search_panel_category_value {
+            border: none !important;
+            border-radius: 6px !important;
+            margin: 2px 0 !important;
+            padding: 0 !important;
+            background-color: transparent !important;
+
+            > header,
+            header.list-group-item {
+                border-radius: 6px !important;
+                padding: 6px 10px 6px 8px !important;
+                background-color: transparent !important;
+                border: 1px solid transparent !important;
+                border-left: 3px solid transparent !important;
+                color: #334155 !important;
+                display: flex !important;
+                align-items: center !important;
+                min-height: 32px !important;
+                transition: all 0.15s ease !important;
+
+                &:hover {
+                    background-color: #f3f0f9 !important;
+                    border-color: #e8e0f2 !important;
+                    border-left-color: #714b67 !important;
+                    color: #514474 !important;
+
+                    .o_search_panel_label_title {
+                        color: #514474 !important;
+                    }
+
+                    .o_search_panel_counter {
+                        background-color: #ded5ec !important;
+                        color: #714b67 !important;
+                    }
+                }
+
+                // Active / Selected filter row with university soft purple tint + left purple accent bar
+                &.active {
+                    background-color: #ede7f6 !important;
+                    border-color: #ded5ec !important;
+                    border-left: 3px solid #714b67 !important;
+                    border-radius: 0 6px 6px 0 !important;
+                    color: #514474 !important;
+                    font-weight: 600 !important;
+                    box-shadow: 0 1px 3px rgba(113, 75, 103, 0.06) !important;
+
+                    .o_search_panel_label_title {
+                        color: #514474 !important;
+                        font-weight: 600 !important;
+                    }
+
+                    .o_search_panel_counter {
+                        color: #ffffff !important;
+                        background-color: #714b67 !important;
+                        font-weight: 700 !important;
+                    }
+                }
+            }
+
+            .o_search_panel_label {
+                display: flex !important;
+                align-items: center !important;
+                min-width: 0 !important;
+                flex: 1 1 auto !important;
+                margin: 0 !important;
+            }
+
+            .o_search_panel_label_title {
+                color: inherit !important;
+                font-size: 0.85rem !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                white-space: nowrap !important;
+            }
+
+            .o_search_panel_counter {
+                margin-left: 8px !important;
+            }
+
+            .o_toggle_fold {
+                color: #94a3b8 !important;
+                background: transparent !important;
+                border: none !important;
+
+                &:hover {
+                    color: #714b67 !important;
+                }
+            }
+        }
+
+        // Filter items (multi-select / checkboxes: Exam Type, Status, etc.)
+        .o_search_panel_filter_group,
+        .o_search_panel_filter {
+            color: #475569 !important;
+
+            .o_search_panel_group_header {
+                color: #475569 !important;
+                font-weight: 600 !important;
+                font-size: 0.82rem !important;
+            }
+        }
+
+        // Filter values (e.g. Exam Type & Status rows with checkboxes)
+        .o_search_panel_filter_value {
+            border: 1px solid transparent !important;
+            border-radius: 6px !important;
+            background-color: transparent !important;
+            color: #334155 !important;
+            padding: 5px 10px 5px 8px !important;
+            margin: 2px 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            min-height: 32px !important;
+            transition: all 0.15s ease !important;
+            cursor: pointer !important;
+
+            &:hover {
+                background-color: #f3f0f9 !important;
+                border-color: #e8e0f2 !important;
+
+                .o_search_panel_label_title {
+                    color: #514474 !important;
+                }
+
+                .o_search_panel_counter {
+                    background-color: #ded5ec !important;
+                    color: #714b67 !important;
+                }
+            }
+
+            &.active,
+            &:has(input:checked) {
+                background-color: #ede7f6 !important;
+                border-color: #ded5ec !important;
+
+                .o_search_panel_label_title {
+                    color: #514474 !important;
+                    font-weight: 600 !important;
+                }
+
+                .o_search_panel_counter {
+                    color: #ffffff !important;
+                    background-color: #714b67 !important;
+                    font-weight: 700 !important;
+                }
+            }
+
+            .form-check {
+                background-color: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                width: 100% !important;
+            }
+
+            input[type="checkbox"] {
+                width: 15px !important;
+                height: 15px !important;
+                min-width: 15px !important;
+                margin: 0 8px 0 0 !important;
+                border: 1.5px solid #cbd5e1 !important;
+                border-radius: 4px !important;
+                accent-color: #714b67 !important;
+                cursor: pointer !important;
+
+                &:checked {
+                    background-color: #714b67 !important;
+                    border-color: #714b67 !important;
+                }
+            }
+
+            .o_search_panel_label,
+            .o_search_panel_label_title {
+                color: inherit !important;
+                font-size: 0.85rem !important;
+                font-weight: 500 !important;
+                cursor: pointer !important;
+            }
+
+            .o_search_panel_label {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                margin: 0 !important;
+            }
+
+            .o_search_panel_label_title {
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                white-space: nowrap !important;
+            }
+
+            .o_search_panel_counter {
+                margin-left: 8px !important;
+            }
+        }
+
+        // Universal Counter Badges
+        .o_search_panel_counter,
+        small.o_search_panel_counter,
+        .text-muted.o_search_panel_counter {
+            font-size: 0.72rem !important;
+            font-weight: 600 !important;
+            background-color: #ede9f5 !important;
+            color: #5f4b7a !important;
+            border-radius: 999px !important;
+            padding: 2px 7px !important;
+            min-width: 20px !important;
+            text-align: center !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            line-height: 1.2 !important;
+            margin-left: auto !important;
+            flex-shrink: 0 !important;
+            transition: all 0.15s ease !important;
+        }
+
+        // Toggle / fold / collapse sidebar button
+        button.btn-light {
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #64748b !important;
+            border-radius: 6px !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+            padding: 3px 7px !important;
+            transition: all 0.15s ease !important;
+
+            &:hover {
+                background-color: #f1ecf6 !important;
+                border-color: #d9d1ed !important;
+                color: #714b67 !important;
+            }
+        }
+
+        // Empty state / "All" button
+        .o_search_panel_empty_state .btn {
+            background-color: #ede7f6 !important;
+            color: #514474 !important;
+            border: 1px solid #d9d1ed !important;
+            border-radius: 6px !important;
+            font-size: 0.84rem !important;
+            font-weight: 600 !important;
+            padding: 5px 10px !important;
+            transition: background-color 0.15s ease !important;
+
+            &:hover {
+                background-color: #e2dbef !important;
+                color: #3c2e5b !important;
+            }
+        }
+
+        // Folded sidebar state
+        &.o_search_panel_sidebar,
+        + .o_search_panel_sidebar {
+            background-color: #f8f9fa !important;
+            border-right: 1px solid #e2e8f0 !important;
+            color: #64748b !important;
+
+            .o_search_panel_section_icon {
+                color: #714b67 !important;
+            }
+
+            button.btn-light {
+                background-color: #ffffff !important;
+                border: 1px solid #e2e8f0 !important;
+                color: #64748b !important;
+
+                &:hover {
+                    background-color: #f1ecf6 !important;
+                    border-color: #d9d1ed !important;
+                    color: #714b67 !important;
+                }
+            }
+        }
+    }
+
+    // Folded sidebar container
+    .o_search_panel_sidebar {
+        background-color: #f8f9fa !important;
+        border-right: 1px solid #e2e8f0 !important;
+        color: #64748b !important;
+
+        .o_search_panel_section_icon {
+            color: #714b67 !important;
+        }
+
+        button.btn-light {
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            color: #64748b !important;
+
+            &:hover {
+                background-color: #f1ecf6 !important;
+                border-color: #d9d1ed !important;
+                color: #714b67 !important;
+            }
+        }
+    }
+
+    // KPI Summary Metric Cards (Exams & Quizzes, Program, Report Cards)
+    .o_form_view {
+        .card.bg-light.border {
+            background-color: var(--surface-card, #ffffff) !important;
+            border-color: var(--border-color, #e2e8f0) !important;
+            border-radius: var(--radius-md, 8px) !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+            &:hover {
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+            }
+
+            .text-dark {
+                color: var(--text-heading, #0f172a) !important;
+            }
+
+            .text-muted {
+                color: var(--text-muted, #64748b) !important;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Academic Year Kanban Card & University Styling
+// ---------------------------------------------------------------------------
+.o_university_academic_year_kanban {
+    .o_kanban_record {
+        padding: 0 !important;
+        margin-bottom: 0.5rem;
+    }
+
+    .o_academic_year_kanban_card {
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        background-color: #ffffff;
+        color: #1f2937;
+        box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
+        transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+        overflow: hidden;
+
+        &:hover,
+        &:focus-within {
+            box-shadow: 0 8px 20px rgba(113, 75, 103, 0.08);
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
+
+            .o_academic_year_open {
+                color: #514474;
+                opacity: 1;
+            }
+        }
+    }
+
+    .o_academic_year_icon_wrap {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border-radius: 8px;
+        background: #ede7f6;
+        color: #714b67;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.15rem;
+    }
+
+    .o_kanban_record_title {
+        color: #1e293b;
+        font-weight: 700;
+    }
+
+    .o_badge_current {
+        background-color: #dcfce7 !important;
+        color: #15803d !important;
+        border: 1px solid #bbf7d0 !important;
+        font-size: 0.72rem !important;
+        font-weight: 600 !important;
+        border-radius: 999px !important;
+        padding: 0.15rem 0.5rem !important;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .o_academic_year_date_line {
+        display: flex;
+        align-items: center;
+        color: #64748b;
+        font-size: 0.82rem;
+
+        .fa-calendar {
+            color: #94a3b8;
+            font-size: 0.88rem;
+        }
+    }
+
+    .o_academic_year_pill {
+        display: inline-flex;
+        align-items: center;
+        background-color: #ede9f5;
+        color: #514474;
+        border: 1px solid #d9d1ed;
+        border-radius: 4px;
+        padding: 0.2rem 0.55rem;
+        font-size: 0.76rem;
+        font-weight: 600;
+
+        .fa {
+            color: #714b67;
+        }
+    }
+
+    .o_academic_year_open {
+        color: #714b67;
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-decoration: none;
+        opacity: 0.85;
+        transition: opacity 0.15s ease, color 0.15s ease;
+        cursor: pointer;
+
+        &:hover {
+            color: #514474;
+            opacity: 1;
+        }
+    }
+}
+
+// Native Odoo FullCalendar styles preserved without custom overrides
+// ---------------------------------------------------------------------------
+// Badge Utilities & Kanban Helpers
+// ---------------------------------------------------------------------------
+.text-purple {
+    color: #6f42c1 !important;
+}
+.bg-purple-subtle {
+    background-color: #f3e8ff !important;
+}
+.border-purple-subtle {
+    border-color: #e9d5ff !important;
+}
+.very-small {
+    font-size: 0.72rem !important;
+}
+
+.badge.bg-purple-subtle {
+    background-color: #f3e8ff !important;
+    color: #6f42c1 !important;
+    border-color: #e9d5ff !important;
+}
+
+.badge.bg-info-subtle {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+    border-color: #bae6fd !important;
+}
+
+.badge.bg-success-subtle {
+    background-color: #e8f5f0 !important;
+    color: #1f7a5c !important;
+    border-color: #a7f3d0 !important;
+}
+
+.badge.bg-warning-subtle {
+    background-color: #fef3c7 !important;
+    color: #b45309 !important;
+    border-color: #fde68a !important;
+}
+
+.badge.bg-danger-subtle {
+    background-color: #fef2f2 !important;
+    color: #dc2626 !important;
+    border-color: #fecaca !important;
+}
+
+.border-success-subtle {
+    border-color: #a7f3d0 !important;
+}
+
+.border-warning-subtle {
+    border-color: #fde68a !important;
+}
+
+.border-danger-subtle {
+    border-color: #fecaca !important;
+}
+
+.border-info-subtle {
+    border-color: #bae6fd !important;
+}
+
+
+// ---------------------------------------------------------------------------
+// Assessment Categories Kanban Styling & Card Layout
+// ---------------------------------------------------------------------------
+.o_university_assessment_category_kanban {
+    --KanbanRecord-width: 360px;
+
+    .o_kanban_renderer.o_kanban_ungrouped {
+        padding: 16px !important;
+        gap: 16px !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+
+        .o_kanban_record {
+            flex: 1 1 350px !important;
+            max-width: 520px !important;
+            min-width: 320px !important;
+            margin: 0 !important;
+            height: auto !important;
+            align-self: stretch !important;
+            display: flex !important;
+            padding: 0 !important;
+            border: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+    }
+
+    .o_assessment_cat_card {
+        width: 100%;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        background-color: #ffffff !important;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+
+        &:hover,
+        &:focus-within {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 10px 25px -5px rgba(27, 42, 74, 0.08), 0 8px 10px -6px rgba(27, 42, 74, 0.04) !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        // Icon tiles
+        .o_category_icon_tile {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.15rem;
+
+            &.o_category_exam {
+                background: linear-gradient(135deg, #ef4444, #b91c1c);
+            }
+            &.o_category_quiz {
+                background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            }
+            &.o_category_attendance {
+                background: linear-gradient(135deg, #10b981, #047857);
+            }
+            &.o_category_practical {
+                background: linear-gradient(135deg, #06b6d4, #0e7490);
+            }
+            &.o_category_coursework {
+                background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            }
+        }
+
+        // Mini metrics grid
+        .o_metric_box {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+            transition: background-color 0.15s ease, border-color 0.15s ease !important;
+
+            &:hover {
+                background-color: #f1f5f9 !important;
+                border-color: #cbd5e1 !important;
+            }
+        }
+
+        .o_metric_icon {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            flex-shrink: 0;
+        }
+    }
+}

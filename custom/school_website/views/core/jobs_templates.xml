@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- University Jobs / Careers (/jobs) -->
+    <template id="jobs_page_template" name="Careers &amp; Opportunities">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="py-5 text-white" style="background: linear-gradient(135deg, #101c30 0%, #A51C30 100%);">
+                    <div class="container py-3">
+                        <span class="text-uppercase fw-bold text-danger small">Join Our Faculty &amp; Staff</span>
+                        <h1 class="display-5 fw-bold mb-2">Careers at Harvard University</h1>
+                        <p class="lead text-white-50 mb-0">Discover teaching, research, and administrative opportunities across our academic departments.</p>
+                    </div>
+                </section>
+
+                <section class="py-5 bg-light">
+                    <div class="container">
+                        <div class="row g-4">
+                            <div class="col-lg-8">
+                                <h3 class="h4 fw-bold mb-4">Open Academic &amp; Research Positions</h3>
+                                <t t-if="departments">
+                                    <t t-foreach="departments" t-as="dept">
+                                        <div class="bg-white p-4 rounded shadow-sm border mb-3">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <span class="badge bg-danger mb-2">Faculty Position</span>
+                                                    <h4 class="h5 fw-bold mb-1">Lecturer / Associate Professor</h4>
+                                                    <p class="text-muted small mb-0"><i class="fa fa-building-o me-1"/> Department of <t t-esc="dept.name"/></p>
+                                                </div>
+                                                <a href="/contactus?subject=Faculty Application" class="btn btn-outline-danger btn-sm">Apply Now</a>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+                                <t t-if="not departments">
+                                    <p class="text-muted">There are currently no active listings. Please check back soon or contact human resources.</p>
+                                </t>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="bg-white p-4 rounded shadow-sm border">
+                                    <h4 class="h5 fw-bold mb-3">Working at Harvard</h4>
+                                    <p class="small text-muted mb-3">We offer competitive compensation, comprehensive benefits, and an environment dedicated to intellectual growth and diversity.</p>
+                                    <a href="/contactus" class="btn btn-dark w-100">Contact HR Department</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

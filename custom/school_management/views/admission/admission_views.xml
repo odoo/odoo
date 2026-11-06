@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_university_admission_application_list" model="ir.ui.view">
+        <field name="name">university.admission.application.list</field>
+        <field name="model">university.admission.application</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="Admission Applications" class="o_admission_application_list">
+                <field name="name"/>
+                <field name="applicant_name"/>
+                <field name="program_id"/>
+                <field name="academic_year_id" optional="show"/>
+                <field name="semester_id" optional="show"/>
+                <field name="section_id" optional="hide"/>
+                <field name="email" optional="hide"/>
+                <field name="phone" optional="hide"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="fee_amount" widget="monetary" optional="show"/>
+                <field name="application_date" optional="show"/>
+                <field name="state" widget="badge" decoration-info="state in ('draft', 'submitted')" decoration-success="state == 'confirmed'" decoration-warning="state == 'approved'" decoration-danger="state in ('rejected', 'cancelled')"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_university_admission_application_kanban" model="ir.ui.view">
+        <field name="name">university.admission.application.kanban</field>
+        <field name="model">university.admission.application</field>
+        <field name="arch" type="xml">
+            <kanban limit="10" sample="1" default_group_by="state" quick_create="false" class="o_university_admission_kanban">
+                <field name="name"/>
+                <field name="applicant_name"/>
+                <field name="program_id"/>
+                <field name="academic_year_id"/>
+                <field name="semester_id"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="gender"/>
+                <field name="fee_amount"/>
+                <field name="currency_id"/>
+                <field name="application_date"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <main class="ms-2 p-3">
+                            <div class="o_kanban_record_top mb-2">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="fs-6 o_kanban_record_title text-primary"><field name="applicant_name"/></strong>
+                                    <span class="text-muted small ms-2"><field name="name"/></span>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <span class="badge text-bg-light border text-dark fw-semibold">
+                                    <i class="fa fa-graduation-cap me-1 text-primary" title="Program"/>
+                                    <field name="program_id"/>
+                                </span>
+                            </div>
+                            <div class="text-muted small mt-1" t-if="record.email.raw_value">
+                                <i class="fa fa-envelope me-1" title="Email"/>
+                                <field name="email"/>
+                            </div>
+                            <div class="text-muted small mt-1" t-if="record.phone.raw_value">
+                                <i class="fa fa-phone me-1" title="Phone"/>
+                                <field name="phone"/>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                                <span class="small text-muted">
+                                    <i class="fa fa-calendar me-1" title="Application Date"/>
+                                    <field name="application_date"/>
+                                </span>
+                                <span class="badge text-bg-success-subtle text-success border border-success-subtle px-2 py-1" t-if="record.fee_amount.raw_value">
+                                    <field name="fee_amount" widget="monetary"/>
+                                </span>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_university_admission_application_form" model="ir.ui.view">
+        <field name="name">university.admission.application.form</field>
+        <field name="model">university.admission.application</field>
+        <field name="arch" type="xml">
+            <form string="Admission Application" class="o_admission_application_form">
+                <header>
+                    <button name="action_submit" type="object" string="Submit application" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_approve" type="object" string="Approve" class="oe_highlight" invisible="state != 'submitted'"/>
+                    <button name="action_reject" type="object" string="Reject" invisible="state not in ('submitted', 'approved')"/>
+                    <button name="action_confirm" type="object" string="Confirm admission" class="oe_highlight" invisible="state != 'approved'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state in ('confirmed', 'cancelled')"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset to draft" invisible="state not in ('rejected', 'cancelled')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_fees" type="object" class="oe_stat_button" icon="fa-money">
+                            <field name="fee_count" widget="statinfo" string="Fees"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <span class="o_admission_eyebrow">Admission application</span>
+                        <h1><field name="applicant_name" placeholder="Applicant name"/></h1>
+                        <h2><field name="name" readonly="1"/></h2>
+                    </div>
+                    <group class="o_admission_form_grid">
+                        <group string="Applicant details">
+                            <field name="email" widget="email" placeholder="name@example.com"/>
+                            <field name="phone" widget="phone" placeholder="+855 ..."/>
+                            <field name="gender"/>
+                            <field name="date_of_birth"/>
+                        </group>
+                        <group string="Academic target">
+                            <field name="program_id"/>
+                            <field name="department_id"/>
+                            <field name="faculty_id"/>
+                            <field name="academic_year_id"/>
+                            <field name="semester_id"/>
+                            <field name="section_id"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="fee_structure_id"/>
+                            <field name="fee_amount" widget="monetary" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Address" name="address">
+                            <field name="address" nolabel="1" placeholder="Street, city, province, country"/>
+                        </page>
+                        <page string="Confirmation" name="confirmation">
+                            <group>
+                                <group string="Created records">
+                                    <field name="student_id"/>
+                                    <field name="enrollment_id"/>
+                                </group>
+                                <group string="Decision">
+                                    <field name="decision_note" nolabel="1" placeholder="Decision notes for this application..."/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_university_admission_application_search" model="ir.ui.view">
+        <field name="name">university.admission.application.search</field>
+        <field name="model">university.admission.application</field>
+        <field name="arch" type="xml">
+            <search string="Search Admission Applications">
+                <field name="name"/>
+                <field name="applicant_name"/>
+                <field name="email"/>
+                <field name="program_id"/>
+                <field name="academic_year_id"/>
+                <field name="semester_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Submitted" name="submitted" domain="[('state', '=', 'submitted')]"/>
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Rejected / cancelled" name="closed_unsuccessful" domain="[('state', 'in', ('rejected', 'cancelled'))]"/>
+                <group>
+                    <filter string="Program" name="group_program" context="{'group_by': 'program_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Academic Year" name="group_year" context="{'group_by': 'academic_year_id'}"/>
+                </group>
+                <searchpanel>
+                    <field name="faculty_id" icon="fa-university" enable_counters="1"/>
+                    <field name="program_id" icon="fa-graduation-cap" enable_counters="1"/>
+                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_university_admission_application" model="ir.actions.act_window">
+        <field name="name">Admission Applications</field>
+        <field name="res_model">university.admission.application</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_admission_application_search"/>
+    </record>
+</odoo>

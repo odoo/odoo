@@ -1,0 +1,484 @@
+/* Harvard University Custom Website Theme */
+:root {
+    --harvard-crimson: #A51C30;
+    --harvard-crimson-dark: #801424;
+    --harvard-crimson-light: #C4263D;
+    --harvard-gold: #C49A45;
+    --harvard-dark: #1E1E1E;
+}
+
+/* ========================================================
+   NAVBAR ENHANCEMENTS (Matching User Mockup)
+   ======================================================== */
+
+/* Navbar Brand & Logo */
+.navbar-brand img,
+#o_main_nav .navbar-brand img,
+header .navbar-brand img {
+    height: 44px !important;
+    max-height: 48px !important;
+    width: auto !important;
+    object-fit: contain;
+    transition: transform 0.2s ease-in-out;
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+/* Navbar Container */
+#o_main_nav {
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+    background-color: #ffffff;
+}
+
+/* Prevent menu from being hidden during dynamic loading calculations */
+#top_menu.o_menu_loading {
+    opacity: 1 !important;
+}
+
+/* Navigation Links */
+#top_menu .nav-item {
+    margin: 0 0.25rem;
+}
+
+#top_menu .nav-item .nav-link {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #2b2b2b;
+    padding: 0.5rem 0.85rem !important;
+    border-radius: 4px;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+#top_menu .nav-item .nav-link:hover {
+    color: var(--harvard-crimson) !important;
+    background-color: rgba(165, 28, 48, 0.05);
+}
+
+#top_menu .nav-item .nav-link.active {
+    color: var(--harvard-crimson) !important;
+    font-weight: 600;
+}
+
+#top_menu .nav-item .nav-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 15%;
+    right: 15%;
+    height: 2.5px;
+    background-color: var(--harvard-crimson);
+    border-radius: 2px;
+}
+
+/* Header Right Action CTA Button */
+header a.btn-primary,
+header a[href*="/contactus"].btn,
+header .s_header_cta a.btn {
+    background-color: var(--harvard-crimson) !important;
+    border-color: var(--harvard-crimson) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    font-size: 0.9rem !important;
+    border-radius: 4px !important;
+    padding: 0.55rem 1.35rem !important;
+    box-shadow: 0 2px 8px rgba(165, 28, 48, 0.25);
+    transition: all 0.25s ease-in-out;
+}
+
+header a.btn-primary:hover,
+header a[href*="/contactus"].btn:hover,
+header .s_header_cta a.btn:hover {
+    background-color: var(--harvard-crimson-dark) !important;
+    border-color: var(--harvard-crimson-dark) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(165, 28, 48, 0.35);
+}
+
+/* Search Box & Phone in Header */
+header .fa-phone, header .fa-search {
+    color: #555555;
+    transition: color 0.2s ease;
+}
+
+header a:hover .fa-phone,
+header a:hover .fa-search {
+    color: var(--harvard-crimson);
+}
+
+/* User Sign In button */
+header .o_nav_link_btn {
+    border-color: #d1d5db !important;
+    color: #374151 !important;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+header .o_nav_link_btn:hover {
+    border-color: var(--harvard-crimson) !important;
+    color: var(--harvard-crimson) !important;
+}
+
+/* ========================================================
+   HERO SECTION (Matching Mockup)
+   ======================================================== */
+.harvard-hero-section {
+    position: relative;
+    min-height: 85vh;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    text-align: center;
+}
+
+.harvard-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(16, 28, 48, 0.45) 0%, rgba(16, 28, 48, 0.75) 100%);
+    z-index: 1;
+}
+
+.harvard-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 850px;
+    padding: 3rem 1.5rem;
+}
+
+.harvard-hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.harvard-hero-subtitle {
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.harvard-btn-discover {
+    background-color: #ffffff;
+    color: var(--harvard-dark);
+    font-weight: 600;
+    padding: 0.85rem 2.2rem;
+    border-radius: 4px;
+    border: none;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.harvard-btn-discover:hover {
+    background-color: #f1f1f1;
+    color: var(--harvard-crimson);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.harvard-btn-contact {
+    background-color: transparent;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    font-weight: 600;
+    padding: 0.85rem 2.2rem;
+    border-radius: 4px;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.harvard-btn-contact:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Cards & Badges */
+.harvard-card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.harvard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    border-color: var(--harvard-crimson-light);
+}
+
+.harvard-card-header-bar {
+    height: 4px;
+    background-color: var(--harvard-crimson);
+}
+
+.harvard-badge-degree {
+    background-color: rgba(165, 28, 48, 0.1);
+    color: var(--harvard-crimson);
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 50px;
+}
+
+
+/* ========================================================
+   CONTACT US PAGE ENHANCEMENTS
+   ======================================================== */
+.harvard-quick-contact-card {
+    background-color: #ffffff;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.harvard-quick-contact-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+    border-color: rgba(165, 28, 48, 0.3) !important;
+}
+
+.harvard-quick-icon {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+}
+
+.harvard-quick-contact-card:hover .harvard-quick-icon {
+    transform: scale(1.1);
+}
+
+.harvard-contact-form-card {
+    border: 1px solid #e9ecef;
+}
+
+.harvard-contact-form-card .input-group-text {
+    border-color: #dee2e6;
+    color: #6c757d;
+}
+
+.harvard-contact-form-card .form-control:focus {
+    border-color: var(--harvard-crimson);
+    box-shadow: 0 0 0 0.2rem rgba(165, 28, 48, 0.15);
+}
+
+.harvard-contact-form-card .input-group:focus-within .input-group-text {
+    border-color: var(--harvard-crimson);
+    color: var(--harvard-crimson);
+}
+
+.harvard-btn-crimson {
+    background-color: var(--harvard-crimson) !important;
+    border-color: var(--harvard-crimson) !important;
+    color: #ffffff !important;
+    letter-spacing: 0.3px;
+    transition: all 0.25s ease-in-out;
+}
+
+.harvard-btn-crimson:hover {
+    background-color: var(--harvard-crimson-dark) !important;
+    border-color: var(--harvard-crimson-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(165, 28, 48, 0.35) !important;
+}
+
+.accordion-button:not(.collapsed) {
+    color: var(--harvard-crimson);
+    background-color: rgba(165, 28, 48, 0.05);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.125);
+}
+
+.accordion-button:focus {
+    border-color: var(--harvard-crimson);
+    box-shadow: 0 0 0 0.2rem rgba(165, 28, 48, 0.15);
+}
+
+.hover-shadow {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hover-shadow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08) !important;
+}
+
+
+/* ========================================================
+   CALL TO ACTION (CTA) SECTION
+   ======================================================== */
+.harvard-cta-section {
+    background: linear-gradient(135deg, #101c30 0%, #1e293b 35%, #801424 75%, #A51C30 100%);
+    position: relative;
+    padding: 5rem 1rem;
+}
+
+.harvard-cta-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.harvard-btn-cta-primary {
+    transition: all 0.25s ease-in-out;
+}
+
+.harvard-btn-cta-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+}
+
+.harvard-btn-cta-secondary {
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    color: #ffffff !important;
+    transition: all 0.25s ease-in-out;
+}
+
+.harvard-btn-cta-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+    transform: translateY(-3px);
+}
+
+/* ========================================================
+   HARVARD UNIVERSITY FOOTER
+   ======================================================== */
+.harvard-footer-top-accent {
+    height: 4px;
+    background: linear-gradient(90deg, #A51C30 0%, #C49A45 50%, #A51C30 100%);
+}
+
+.harvard-footer-link {
+    color: rgba(255, 255, 255, 0.65) !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease-in-out;
+    display: inline-block;
+}
+
+.harvard-footer-link:hover {
+    color: #ffffff !important;
+    transform: translateX(4px);
+    text-decoration: none !important;
+}
+
+.harvard-social-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    transition: all 0.25s ease-in-out;
+}
+
+.harvard-social-icon:hover {
+    background-color: var(--harvard-crimson);
+    color: #ffffff !important;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(165, 28, 48, 0.4);
+}
+
+.hover-white:hover {
+    color: #ffffff !important;
+}
+
+
+/* ========================================================
+   ABOUT US PAGE ENHANCEMENTS
+   ======================================================== */
+.harvard-about-hero {
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    padding: 6rem 1rem 5rem;
+    color: #ffffff;
+}
+
+.harvard-about-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(16, 28, 48, 0.92) 0%, rgba(30, 41, 59, 0.88) 50%, rgba(165, 28, 48, 0.85) 100%);
+    z-index: 1;
+}
+
+.harvard-about-hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.harvard-pillar-card {
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 2rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    height: 100%;
+}
+
+.harvard-pillar-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+    border-color: rgba(165, 28, 48, 0.3);
+}
+
+.harvard-pillar-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    font-size: 1.5rem;
+    background: rgba(165, 28, 48, 0.08);
+    color: var(--harvard-crimson);
+    transition: transform 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+}
+
+.harvard-pillar-card:hover .harvard-pillar-icon {
+    transform: scale(1.1);
+    background-color: var(--harvard-crimson);
+    color: #ffffff;
+}
+
+.harvard-feature-item {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.harvard-feature-item:hover {
+    transform: translateX(6px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.harvard-veritas-card {
+    border-left: 4px solid var(--harvard-crimson);
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+}

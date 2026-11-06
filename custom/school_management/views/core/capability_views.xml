@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="view_university_capability_list" model="ir.ui.view">
+        <field name="name">university.capability.list</field>
+        <field name="model">university.capability</field>
+        <field name="arch" type="xml">
+            <list limit="10" string="System Capabilities &amp; Roadmap" sample="2">
+                <field name="sort_order" optional="hide"/>
+                <field name="icon" string="Icon" optional="hide"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="category" widget="badge"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'active'"
+                       decoration-info="status == 'beta'"
+                       decoration-warning="status == 'development'"
+                       decoration-muted="status == 'planned'"/>
+                <field name="phase"/>
+                <field name="release_version" optional="show" string="Version"/>
+                <field name="released_on" optional="hide"/>
+                <field name="active" widget="boolean_toggle" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_university_capability_form" model="ir.ui.view">
+        <field name="name">university.capability.form</field>
+        <field name="model">university.capability</field>
+        <field name="arch" type="xml">
+            <form string="System Capability">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <field name="active" invisible="1"/>
+
+                    <div class="oe_title">
+                        <div class="d-flex align-items-center gap-2">
+                            <label for="name" string="Capability"/>
+                        </div>
+                        <h1>
+                            <field name="name" placeholder="e.g. Attendance Tracking" required="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Classification">
+                            <field name="icon"/>
+                            <field name="category"/>
+                            <field name="status"/>
+                            <field name="phase"/>
+                            <field name="sort_order"/>
+                        </group>
+                        <group string="Release">
+                            <field name="release_version" placeholder="e.g. 19.0.1.3.0"/>
+                            <field name="released_on"/>
+                        </group>
+                    </group>
+
+                    <group string="Description">
+                        <field name="description" placeholder="What the capability covers and its current status."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_university_capability_search" model="ir.ui.view">
+        <field name="name">university.capability.search</field>
+        <field name="model">university.capability</field>
+        <field name="arch" type="xml">
+            <search string="Search Capabilities">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="status"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <filter string="Live" name="filter_live" domain="[('status', 'in', ['active', 'beta'])]"/>
+                <filter string="Planned" name="filter_planned" domain="[('status', '=', 'planned')]"/>
+                <group>
+                    <filter string="Category" name="group_by_category" context="{'group_by': 'category'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                    <filter string="Phase" name="group_by_phase" context="{'group_by': 'phase'}"/>
+                </group>
+                <searchpanel>
+                    <field name="category" icon="fa-th-large" enable_counters="1" select="multi"/>
+                    <field name="status" icon="fa-filter" enable_counters="1" select="multi"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- WINDOW ACTION -->
+    <record id="action_university_capability" model="ir.actions.act_window">
+        <field name="name">Capabilities &amp; Roadmap</field>
+        <field name="res_model">university.capability</field>
+        <field name="view_mode">list,form</field>
+        <field name="limit">10</field>
+        <field name="search_view_id" ref="view_university_capability_search"/>
+        <field name="context">{'default_sort_order': 10}</field>
+    </record>
+
+</odoo>

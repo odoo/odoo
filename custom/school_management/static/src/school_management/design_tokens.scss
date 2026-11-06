@@ -1,0 +1,70 @@
+// University Management System - Design Tokens
+// Single source of truth for brand palette, semantic status colors,
+// type hierarchy scale, shape, and elevation.
+//
+// Declared at :root so the Admin / Teacher / Student dashboard shells and the
+// backend kanban cards all resolve the same values. These are custom property
+// definitions only; nothing here restyles Odoo natively.
+
+:root {
+    // ---------------------------------------------------------------------
+    // Brand palette (tied to the university identity)
+    // ---------------------------------------------------------------------
+    --brand-primary: #1b2a4a;          // Academic navy - primary actions, headings
+    --brand-primary-hover: #29385c;
+    --brand-primary-soft: #edf2f9;
+
+    --brand-emerald: #1f7a5c;          // Academic wellness - positive accents
+    --brand-emerald-hover: #19624a;
+    --brand-emerald-soft: #eaf6f1;
+
+    --brand-amber: #b8863f;            // University gold - heritage / achievement
+    --brand-amber-hover: #986d30;
+    --brand-amber-soft: #fcf4e8;
+
+    --brand-sapphire: #3a6ea5;         // Academic slate blue - secondary accents / neutral charts
+    --brand-sapphire-hover: #2b537f;
+    --brand-sapphire-soft: #edf4fb;
+
+    // ---------------------------------------------------------------------
+    // Semantic status colors (same meaning across dashboards, badges, kanban)
+    // ---------------------------------------------------------------------
+    --status-success: #1f7a5c;
+    --status-success-bg: #e8f5f0;
+    --status-warning: #d97706;
+    --status-warning-bg: #fef3c7;
+    --status-danger: #dc2626;
+    --status-danger-bg: #fef2f2;
+    --status-info: #2563eb;
+    --status-info-bg: #eff6ff;
+    --status-neutral: #64748b;
+    --status-neutral-bg: #f1f5f9;
+
+    // ---------------------------------------------------------------------
+    // Surfaces, text & borders
+    // ---------------------------------------------------------------------
+    --bg-page: #f8f9fc;
+    --surface-card: #ffffff;
+    --border-color: #e2e8f0;
+    --border-subtle: #f1f5f9;
+
+    --text-heading: #0f172a;
+    --text-body: #334155;
+    --text-muted: #64748b;
+    --text-light: #94a3b8;
+
+    // ---------------------------------------------------------------------
+    // Shape
+    // ---------------------------------------------------------------------
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    // ---------------------------------------------------------------------
+    // Elevation
+    // ---------------------------------------------------------------------
+    --shadow-resting: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+    --shadow-elevated: 0 8px 24px rgba(27, 42, 74, 0.08), 0 2px 6px rgba(27, 42, 74, 0.04);
+    --shadow-focus: 0 0 0 3px rgba(27, 42, 74, 0.18);
+}

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Events & Campus Notices (/events) -->
+    <template id="events_list_template" name="Events &amp; Campus Notices">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- Header Banner -->
+                <section class="py-5 text-white" style="background: linear-gradient(135deg, #101c30 0%, #A51C30 100%);">
+                    <div class="container py-3">
+                        <span class="text-uppercase fw-bold text-danger small">Campus Community</span>
+                        <h1 class="display-5 fw-bold mb-2">Events &amp; Announcements</h1>
+                        <p class="lead text-white-50 mb-0">Upcoming seminars, conferences, and notices from Harvard University.</p>
+                    </div>
+                </section>
+
+                <!-- Filter Bar -->
+                <section class="py-4 bg-white border-bottom shadow-sm">
+                    <div class="container">
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-7">
+                                <ul class="nav nav-pills gap-2">
+                                    <li class="nav-item">
+                                        <a t-attf-class="nav-link #{'active bg-danger text-white' if not current_category else 'text-dark'}" href="/events">All Notices</a>
+                                    </li>
+                                    <t t-foreach="categories" t-as="cat">
+                                        <li class="nav-item">
+                                            <a t-attf-class="nav-link #{'active bg-danger text-white' if current_category == cat[0] else 'text-dark'}" t-attf-href="/events/category/#{cat[0]}" t-esc="cat[1]"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                            <div class="col-md-5">
+                                <form method="get" action="/events" class="d-flex">
+                                    <input type="text" name="search" class="form-control me-2" placeholder="Search notices..." t-att-value="search_term"/>
+                                    <button class="btn btn-danger" type="submit"><i class="fa fa-search"/></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Events List -->
+                <section class="py-5 bg-light">
+                    <div class="container">
+                        <div class="row g-4" t-if="notices">
+                            <t t-foreach="notices" t-as="evt">
+                                <div class="col-lg-6">
+                                    <div class="bg-white p-4 rounded shadow-sm border h-100 d-flex flex-column justify-content-between">
+                                        <div>
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <span class="badge bg-danger" t-if="evt.pinned"><i class="fa fa-thumb-tack me-1"/> Pinned</span>
+                                                <span class="badge bg-secondary" t-esc="dict(evt._fields['notice_type'].selection).get(evt.notice_type, evt.notice_type)"/>
+                                                <span class="badge bg-info text-dark" t-if="evt.priority == 'high'">Urgent</span>
+                                                <span class="text-muted small ms-auto"><i class="fa fa-calendar-o me-1"/> <t t-esc="evt.date"/></span>
+                                            </div>
+                                            <h3 class="h5 fw-bold text-dark mt-2 mb-3" t-esc="evt.name"/>
+                                            <p class="text-secondary small" t-if="evt.content" t-esc="evt.content"/>
+                                        </div>
+                                        <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                                            <span class="small text-muted">
+                                                <i class="fa fa-users me-1"/> Audience: <t t-esc="dict(evt._fields['target_audience'].selection).get(evt.target_audience, evt.target_audience)"/>
+                                            </span>
+                                            <span class="text-muted small" t-if="evt.department_id">
+                                                <i class="fa fa-building-o me-1"/> <t t-esc="evt.department_id.name"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div t-if="not notices" class="text-center py-5">
+                            <i class="fa fa-calendar-times-o fa-3x text-muted mb-3"/>
+                            <h3 class="h4 text-muted">No notices found in this category</h3>
+                            <a href="/events" class="btn btn-outline-secondary mt-3">Reset Filters</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--
+        Realigns the demo logins with the attendance role model on every
+        upgrade (a <function> without an id runs each time the file is loaded):
+
+          * res.users.teacher_id <-> university.teacher.user_id reciprocal links
+          * gives the "hod" login the Teacher group expected by the attendance UI
+          * creates the active role assignments that feed department.head_id /
+            faculty.dean_id used by the HOD and Dean record rules
+          * hands the B202 demo section to Dr. Gregory Hous (the "teacher" login)
+
+        Idempotent and a no-op when the demo records are absent. See
+        res.users._fix_demo_attendance_links().
+    -->
+    <data noupdate="1">
+        <function
+            model="res.users"
+            name="_fix_demo_attendance_links"
+        />
+        <function
+            model="university.attendance"
+            name="_seed_attendance_demo"
+        />
+    </data>
+</odoo>

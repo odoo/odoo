@@ -312,6 +312,7 @@ class Field(typing.Generic[T]):
     _by_type__: dict[str, Field] = {}
 
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
+        self.selection = None
         kwargs['string'] = string
         self._sequence = next(_global_seq)
         self._args__ = ReadonlyDict({key: val for key, val in kwargs.items() if val is not SENTINEL})

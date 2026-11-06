@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <!-- ========================================================= -->
+  <!-- UNIVERSITY DASHBOARD - MINIMAL / NEUTRAL REDESIGN         -->
+  <!-- Palette: white, light gray, one dark ink color.           -->
+  <!-- Same t-name, refs and handlers as the original template.  -->
+  <!-- ========================================================= -->
+  <t t-name="school_management.DashboardShell" owl="1">
+    <div class="o_exec_portal_root d-flex h-100 w-100 overflow-hidden bg-light">
+      <div class="o_executive_dashboard_container flex-grow-1 h-100 overflow-y-auto" aria-label="University Management System Dashboard">
+        <div class="o_dashboard_canvas p-3 p-md-4 d-flex flex-column gap-3 gap-md-4">
+
+          <!-- 1. HEADER -->
+          <header class="o_exec_header_card p-3 p-md-4 bg-white border rounded-3" aria-label="Dashboard Header">
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+
+              <div class="o_exec_header_left min-w-0">
+                <h1 class="o_exec_title h4 fw-semibold text-dark text-truncate mb-1" t-esc="this.userGreeting"/>
+                <p class="o_exec_subtitle text-muted small mb-0">University Management System · Overview</p>
+              </div>
+
+              <div class="o_exec_filters d-flex align-items-center gap-2 flex-wrap">
+                <select class="form-select form-select-sm w-auto"
+                        t-att-value="state.filters.yearId || ''"
+                        t-on-change="(ev) => this.changeFilter('yearId', ev.target.value)">
+                  <t t-foreach="state.filterOptions.academicYears" t-as="year" t-key="year.id">
+                    <option t-att-value="year.id" t-esc="year.name"/>
+                  </t>
+                  <option t-if="!state.filterOptions.academicYears.length" value="" selected="1">No academic years</option>
+                </select>
+
+                <select class="form-select form-select-sm w-auto"
+                        t-att-value="state.filters.semesterId || ''"
+                        t-on-change="(ev) => this.changeFilter('semesterId', ev.target.value)">
+                  <t t-foreach="state.filterOptions.semesters" t-as="sem" t-key="sem.id">
+                    <option t-att-value="sem.id" t-esc="sem.name"/>
+                  </t>
+                  <option t-if="!state.filterOptions.semesters.length" value="" selected="1">No semesters</option>
+                </select>
+
+                <button class="btn btn-sm btn-outline-secondary o_btn_refresh"
+                        type="button"
+                        t-att-class="{ 'is-refreshing': state.isRefreshing }"
+                        t-on-click="() => this.reload()"
+                        title="Refresh">
+                  <i class="fa fa-refresh" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <!-- LOADING SKELETON -->
+          <div t-if="state.isLoading or !state.dashboard" class="d-flex flex-column gap-3" aria-busy="true">
+            <div class="row g-3">
+              <t t-foreach="[1,2,3,4,5]" t-as="i" t-key="i">
+                <div class="col"><div class="o_skeleton_box" style="height: 110px; border-radius: 12px;"></div></div>
+              </t>
+            </div>
+            <div class="row g-3">
+              <div class="col-12 col-xl-8"><div class="o_skeleton_box" style="height: 320px; border-radius: 12px;"></div></div>
+              <div class="col-12 col-xl-4"><div class="o_skeleton_box" style="height: 320px; border-radius: 12px;"></div></div>
+            </div>
+          </div>
+
+          <!-- MAIN CONTENT -->
+          <div t-else="" class="d-flex flex-column gap-3 gap-md-4">
+
+            <!-- A. EXECUTIVE LAYOUT -->
+            <t t-if="this.isExecutiveLayout">
+
+              <!-- KPI ROW -->
+              <section class="o_kpi_five_section" aria-label="Key Performance Indicators">
+                <div class="o_kpi_five_row">
+                  <t t-foreach="this.kpiFive" t-as="card" t-key="card.id">
+                    <div class="o_kpi_metric_card bg-white border rounded-3 d-flex flex-column justify-content-between p-3"
+                         t-on-click="() => this.handleActionClick(card.action)"
+                         role="button" tabindex="0">
+                      <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="o_kpi_metric_label small text-muted" t-esc="card.category"/>
+                        <i t-attf-class="fa #{card.icon} text-secondary" aria-hidden="true"></i>
+                      </div>
+                      <div class="o_kpi_metric_value fw-semibold text-dark mb-1" t-esc="card.value"/>
+                      <div class="small text-muted">
+                        <i t-if="card.growth_type == 'up'" class="fa fa-arrow-up me-1" aria-hidden="true"></i>
+                        <t t-esc="card.growth"/>
+                      </div>
+                    </div>
+                  </t>
+                </div>
+              </section>
+
+              <!-- TREND + STATUS -->
+              <section class="o_analytics_grid_section" aria-label="Enrollment Trend and Student Status">
+                <div class="row g-3 g-md-4">
+
+                  <div class="col-12 col-xl-8">
+                    <div class="o_chart_card o_trend_chart_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                      <div class="d-flex align-items-start justify-content-between mb-3 gap-2">
+                        <div>
+                          <h3 class="o_card_title h6 fw-semibold text-dark mb-1" t-esc="this.trendTitle"/>
+                          <p class="o_card_subtitle small text-muted mb-0" t-esc="this.trendSubtitle"/>
+                        </div>
+                        <span class="small text-muted" t-esc="this.enrollmentActiveBadge"/>
+                      </div>
+                      <div class="o_chart_canvas_wrap flex-grow-1" style="min-height: 270px; height: 270px;">
+                        <canvas t-ref="chart_enrollment"></canvas>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-xl-4">
+                    <div class="o_chart_card o_status_chart_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                      <div class="mb-2">
+                        <h3 class="o_card_title h6 fw-semibold text-dark mb-1">Student Status</h3>
+                        <p class="o_card_subtitle small text-muted mb-0">Current academic status</p>
+                      </div>
+                      <div class="o_chart_canvas_wrap my-auto" style="height: 190px;">
+                        <canvas t-ref="chart_status"></canvas>
+                      </div>
+                      <ul class="o_status_legend_list list-unstyled mt-3 pt-3 mb-0 border-top">
+                        <t t-foreach="this.studentStatusBreakdown" t-as="item" t-key="item.name">
+                          <li class="d-flex align-items-center justify-content-between py-1 small">
+                            <span class="d-flex align-items-center gap-2 text-secondary min-w-0">
+                              <span class="o_status_dot flex-shrink-0" t-attf-style="background-color: #{item.color};"></span>
+                              <span class="text-truncate" t-esc="item.name"/>
+                            </span>
+                            <span class="text-dark">
+                              <span class="fw-semibold" t-esc="item.count"/>
+                              <span class="text-muted ms-1"><t t-esc="item.percentage"/>%</span>
+                            </span>
+                          </li>
+                        </t>
+                      </ul>
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+
+              <!-- BOTTOM 3 COLUMNS -->
+              <section class="o_bottom_grid_section" aria-label="Detailed Breakdowns">
+                <div class="row g-3 g-md-4">
+
+                  <!-- Recent Enrollments -->
+                  <div class="col-12 col-lg-4">
+                    <div class="o_detail_card o_recent_enrollments_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                      <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h3 class="o_card_title h6 fw-semibold text-dark mb-0">Recent Enrollments</h3>
+                        <button type="button" class="btn btn-link btn-sm p-0 text-secondary text-decoration-none" t-on-click="() => this.openEnrollments()">
+                          View all
+                        </button>
+                      </div>
+
+                      <div class="table-responsive flex-grow-1">
+                        <table class="table table-sm table-hover align-middle mb-0 o_enrollment_table">
+                          <thead>
+                            <tr class="text-muted small">
+                              <th class="fw-normal">ID</th>
+                              <th class="fw-normal">Student</th>
+                              <th class="fw-normal">Dept.</th>
+                              <th class="fw-normal">Status</th>
+                              <th class="fw-normal text-end">Date</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <t t-foreach="this.recentEnrollments" t-as="row" t-key="row.enrollment_id">
+                              <tr role="button" t-on-click="() => this.openStudentDetails(row.id)">
+                                <td class="small text-muted" t-esc="row.student_id"/>
+                                <td class="small text-dark text-truncate" style="max-width: 90px;" t-esc="row.name"/>
+                                <td class="small text-muted text-truncate" style="max-width: 80px;" t-esc="row.department"/>
+                                <td><span t-att-class="'badge ' + this.getStatusBadgeClass(row.status, row.status_class)" t-esc="row.status"/></td>
+                                <td class="small text-muted text-end text-nowrap" t-esc="row.date"/>
+                              </tr>
+                            </t>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Departments + Low GPA -->
+                  <div class="col-12 col-lg-4">
+                    <div class="o_detail_card o_top_departments_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                      <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h3 class="o_card_title h6 fw-semibold text-dark mb-0">Top Departments</h3>
+                        <button type="button" class="btn btn-link btn-sm p-0 text-secondary text-decoration-none" t-on-click="() => this.openDepartments()">
+                          View all
+                        </button>
+                      </div>
+
+                      <div class="d-flex flex-column gap-3 mb-4">
+                        <t t-foreach="this.topDepartments" t-as="dept" t-key="dept.name">
+                          <div class="o_dept_progress_item">
+                            <div class="d-flex justify-content-between small mb-1">
+                              <span class="text-secondary text-truncate" style="max-width: 220px;" t-esc="dept.name"/>
+                              <span class="text-dark fw-semibold" t-esc="dept.count"/>
+                            </div>
+                            <div class="progress" style="height: 4px; background-color: #e9ecef;">
+                              <div class="progress-bar bg-dark" t-attf-style="width: #{dept.percentage}%;"></div>
+                            </div>
+                          </div>
+                        </t>
+                      </div>
+
+                      <div class="o_low_gpa_banner mt-auto p-3 rounded-3 border bg-light d-flex align-items-center justify-content-between gap-3">
+                        <div class="min-w-0">
+                          <div class="small fw-semibold text-dark">
+                            <t t-esc="this.lowGpaAlert.title">Low GPA Students</t>
+                            <span class="text-muted fw-normal">· <t t-esc="this.lowGpaAlert.count"/></span>
+                          </div>
+                          <p class="small text-muted mb-0 text-truncate" t-esc="this.lowGpaAlert.description"/>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-dark text-nowrap" t-on-click="() => this.openStudents()">
+                          Review
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Events + Reports -->
+                  <div class="col-12 col-lg-4">
+                    <div class="o_detail_card o_events_card p-4 bg-white border rounded-3 h-100 d-flex flex-column">
+                      <h3 class="o_card_title h6 fw-semibold text-dark mb-3">Upcoming Events &amp; Deadlines</h3>
+
+                      <ul class="list-unstyled d-flex flex-column mb-4">
+                        <t t-foreach="this.upcomingEvents" t-as="evt" t-key="evt.title">
+                          <li class="o_event_item d-flex align-items-center justify-content-between py-2 border-bottom">
+                            <div class="min-w-0">
+                              <div class="small fw-semibold text-dark text-truncate" style="max-width: 170px;" t-esc="evt.title"/>
+                              <div class="small text-muted text-truncate" style="max-width: 170px;" t-esc="evt.scope"/>
+                            </div>
+                            <span class="small text-muted text-nowrap ms-2" t-esc="evt.date"/>
+                          </li>
+                        </t>
+                        <li t-if="!this.upcomingEvents.length" class="small text-muted py-3">
+                          No upcoming exams scheduled for this academic period.
+                          <button type="button" class="btn btn-link btn-sm p-0 ms-1" t-on-click="() => this.openExams()">
+                            View exams
+                          </button>
+                        </li>
+                      </ul>
+
+                      <div class="o_pending_reports_banner mt-auto p-3 rounded-3 border bg-light d-flex align-items-center justify-content-between gap-3">
+                        <div class="min-w-0">
+                          <div class="small fw-semibold text-dark">
+                            <t t-esc="this.pendingReports.title">Pending Reports</t>
+                            <span class="text-muted fw-normal">· <t t-esc="this.pendingReports.count"/></span>
+                          </div>
+                          <p class="small text-muted mb-0 text-truncate" t-esc="this.pendingReports.description"/>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-dark text-nowrap" t-on-click="() => this.openReports()">
+                          Review
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+
+            </t>
+
+            <!-- B. ROLE-SPECIFIC FALLBACK (Dean, HOD, Teacher) -->
+            <t t-else="">
+              <section class="o_kpi_summary_section" aria-label="Key Performance Metrics">
+                <div t-if="this.state.dashboard?.user_role === 'teacher'" class="d-flex flex-wrap align-items-center justify-content-between p-3 mb-3 bg-white border rounded-3 shadow-2xs">
+                  <div>
+                    <h4 class="h6 mb-1 text-dark fw-bold">
+                      <i class="fa fa-graduation-cap me-2 text-primary"/>Faculty &amp; Teaching Workspace
+                    </h4>
+                    <p class="text-muted small mb-0">
+                      Manage course schedules, student advisees, grade exam submissions, and track official marksheet analytics.
+                    </p>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-success btn-sm" t-on-click="() => this.openSpreadsheetAnalytics()">
+                      <i class="fa fa-table me-1"/>Academic &amp; Student Analytics
+                    </button>
+                  </div>
+                </div>
+                <div class="row g-3">
+                  <t t-foreach="this.kpiCards" t-as="card" t-key="card.key">
+                    <div class="col-12 col-md-6 col-xl-3">
+                      <div class="o_kpi_block_card h-100 p-3 bg-white border rounded-3"
+                           t-on-click="() => this.handleActionClick(card.action)" role="button" tabindex="0">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                          <span class="o_kpi_category_tag small text-muted" t-esc="card.category"/>
+                          <i t-attf-class="fa #{card.icon} text-secondary" aria-hidden="true"></i>
+                        </div>
+
+                        <!-- Metric 1 -->
+                        <div class="mb-3">
+                          <div class="d-flex align-items-baseline justify-content-between">
+                            <span class="small text-muted" t-esc="card.metric1.label"/>
+                            <span t-if="card.metric1.growthText" class="small text-secondary" t-esc="card.metric1.growthText"/>
+                          </div>
+                          <div class="d-flex align-items-baseline gap-2">
+                            <span class="o_kpi_value_large text-dark fw-semibold" t-esc="card.metric1.value"/>
+                            <span t-if="card.metric1.targetText" class="small text-muted" t-esc="card.metric1.targetText"/>
+                          </div>
+                          <div class="o_mini_track mt-1">
+                            <div class="o_mini_fill bg-dark" t-attf-style="width: #{card.metric1.progress}%;"></div>
+                          </div>
+                        </div>
+
+                        <!-- Metric 2 -->
+                        <div class="pt-2 border-top">
+                          <div class="d-flex align-items-baseline justify-content-between">
+                            <span class="small text-muted" t-esc="card.metric2.label"/>
+                            <span t-if="card.metric2.statusText" class="small text-secondary" t-esc="card.metric2.statusText"/>
+                          </div>
+                          <div class="d-flex align-items-baseline gap-2">
+                            <span class="fs-5 fw-semibold text-dark" t-esc="card.metric2.value"/>
+                            <span t-if="card.metric2.targetText" class="small text-muted" t-esc="card.metric2.targetText"/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </t>
+                </div>
+              </section>
+
+              <section class="o_analytics_grid_section" aria-label="Visual Analytics">
+                <div class="row g-3 g-md-4">
+                  <div class="col-12 col-lg-8">
+                    <div class="o_chart_card h-100 p-4 bg-white border rounded-3 d-flex flex-column">
+                      <h3 class="o_card_title h6 fw-semibold text-dark mb-1" t-esc="this.trendTitle">Enrollment Overview</h3>
+                      <p class="o_card_subtitle small text-muted mb-3" t-esc="this.trendSubtitle"/>
+                      <div class="o_chart_canvas_wrap flex-grow-1" style="height: 280px;">
+                        <canvas t-ref="chart_enrollment"></canvas>
+                      </div>
+                        </div>
+                      </div>
+
+                  <div class="col-12 col-lg-4">
+                    <div class="o_chart_card h-100 p-4 bg-white border rounded-3 d-flex flex-column">
+                      <h3 class="o_card_title h6 fw-semibold text-dark mb-1" t-esc="this.distributionTitle">Student Distribution</h3>
+                      <p class="o_card_subtitle small text-muted mb-2" t-esc="this.distributionSubtitle"/>
+                      <div class="o_chart_canvas_wrap my-2" style="height: 180px;">
+                        <canvas t-ref="chart_program"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </t>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </t>
+
+</templates>

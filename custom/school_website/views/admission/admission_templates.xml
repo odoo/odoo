@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Admission Application Form (/admission/apply) -->
+    <template id="admission_apply_template" name="Apply for Admission">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- Banner -->
+                <section class="py-5 text-white" style="background: linear-gradient(135deg, #A51C30 0%, #101c30 100%);">
+                    <div class="container py-3">
+                        <span class="text-uppercase fw-bold text-white-50 small">Admissions Office</span>
+                        <h1 class="display-5 fw-bold mb-2">Undergraduate &amp; Graduate Application</h1>
+                        <p class="lead text-white-50 mb-0">Join our academic community. Fill out the application form below.</p>
+                    </div>
+                </section>
+
+                <section class="py-5 bg-light">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <div class="bg-white p-4 p-md-5 rounded shadow-sm border">
+                                    <div t-if="error_msg" class="alert alert-danger" role="alert" t-esc="error_msg"/>
+
+                                    <form method="post" action="/admission/apply">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                        <h4 class="h5 fw-bold text-dark border-bottom pb-2 mb-4">1. Personal Details</h4>
+                                        <div class="row g-3 mb-4">
+                                            <div class="col-md-12">
+                                                <label class="form-label fw-bold">Full Legal Name <span class="text-danger">*</span></label>
+                                                <input type="text" name="applicant_name" class="form-control" placeholder="e.g. Eleanor Vance" required="1" t-att-value="post.get('applicant_name') if post else ''"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold">Email Address <span class="text-danger">*</span></label>
+                                                <input type="email" name="email" class="form-control" placeholder="applicant@example.com" required="1" t-att-value="post.get('email') if post else ''"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold">Phone Number</label>
+                                                <input type="tel" name="phone" class="form-control" placeholder="+1 (555) 000-0000" t-att-value="post.get('phone') if post else ''"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold">Date of Birth</label>
+                                                <input type="date" name="date_of_birth" class="form-control" t-att-value="post.get('date_of_birth') if post else ''"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-bold">Gender</label>
+                                                <select name="gender" class="form-select">
+                                                    <option value="">Select Gender</option>
+                                                    <option value="male">Male</option>
+                                                    <option value="female">Female</option>
+                                                    <option value="other">Other</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label fw-bold">Mailing Address</label>
+                                                <textarea name="address" class="form-control" rows="2" placeholder="Street, City, Postal Code"><t t-esc="post.get('address') if post else ''"/></textarea>
+                                            </div>
+                                        </div>
+
+                                        <h4 class="h5 fw-bold text-dark border-bottom pb-2 mb-4">2. Program of Choice</h4>
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold">Select Desired Degree Program <span class="text-danger">*</span></label>
+                                            <select name="program_id" class="form-select" required="1">
+                                                <option value="">-- Choose a Degree Program --</option>
+                                                <t t-foreach="programs" t-as="p">
+                                                    <option t-att-value="p.id" t-att-selected="request.params.get('program_id') == str(p.id)">
+                                                        <t t-esc="p.name"/> (<t t-esc="dict(p._fields['degree_type'].selection).get(p.degree_type)"/> - <t t-esc="p.duration_years"/> Yrs)
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <div class="d-grid mt-4">
+                                            <button type="submit" class="btn btn-danger btn-lg fw-bold py-3">Submit Application</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Application Confirmation (/admission/thank-you) -->
+    <template id="admission_thank_you_template" name="Application Received">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="py-5 bg-light">
+                    <div class="container py-5">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6 text-center">
+                                <div class="bg-white p-5 rounded shadow-sm border">
+                                    <div class="mb-4 text-success">
+                                        <i class="fa fa-check-circle fa-5x"/>
+                                    </div>
+                                    <h2 class="fw-bold mb-3">Application Received!</h2>
+                                    <p class="lead text-muted mb-4">
+                                        Thank you for applying to Harvard University. Your admission dossier has been created with reference:
+                                    </p>
+                                    <div class="p-3 bg-light rounded mb-4">
+                                        <span class="fs-4 fw-bold text-danger" t-esc="application_ref"/>
+                                    </div>
+                                    <p class="small text-muted mb-4">
+                                        Our admissions committee will review your submission and contact you via email regarding the next steps.
+                                    </p>
+                                    <div class="d-flex justify-content-center gap-3">
+                                        <a href="/" class="btn btn-outline-dark">Return to Homepage</a>
+                                        <a href="/courses" class="btn btn-danger">Browse Programs</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

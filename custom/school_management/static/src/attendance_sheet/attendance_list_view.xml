@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="school_management.AttendanceListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-component='props.Renderer']" position="replace">
+            <div class="d-flex flex-column flex-grow-1 min-w-0 h-100 overflow-hidden o_renderer_with_searchpanel">
+                <t t-if="attendanceState.isStudent and attendanceState.stats">
+                    <div class="o_attendance_kpi_banner w-100 p-3 bg-light border-bottom flex-shrink-0">
+                        <div class="row g-3">
+                            <!-- Overall Attendance Card (Exact match to Image 2) -->
+                            <div class="col-12 col-sm-6 col-md-5 col-xl-4">
+                                <div class="card h-100 p-3 border rounded-3 bg-white shadow-xs">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="text-muted fw-semibold small">Overall Attendance</span>
+                                        <i class="fa fa-check-circle text-success fs-6"/>
+                                    </div>
+                                    <div class="fs-2 fw-bold text-dark my-1">
+                                        <t t-esc="attendanceState.stats.rate"/>%
+                                    </div>
+                                    <div class="progress mb-2" style="height: 6px; background-color: #e5e7eb; border-radius: 9999px;">
+                                        <div class="progress-bar rounded-pill" role="progressbar"
+                                             t-att-class="attendanceState.stats.isLow ? 'bg-danger' : 'bg-success'"
+                                             t-att-style="'width: ' + attendanceState.stats.rate + '%; height: 6px;'"/>
+                                    </div>
+                                    <div class="d-flex justify-content-between small text-muted">
+                                        <span>Present: <strong class="text-dark"><t t-esc="attendanceState.stats.present"/></strong></span>
+                                        <span>Absent: <strong class="text-dark"><t t-esc="attendanceState.stats.absent"/></strong></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Total Sessions Card -->
+                            <div class="col-6 col-sm-3 col-md-3 col-xl-2">
+                                <div class="card h-100 p-3 border rounded-3 bg-white shadow-xs">
+                                    <div class="text-muted small fw-semibold">Total Sessions</div>
+                                    <div class="fs-2 fw-bold text-dark my-1"><t t-esc="attendanceState.stats.total"/></div>
+                                    <div class="small text-muted">Class Meetings</div>
+                                </div>
+                            </div>
+
+                            <!-- Present Sessions Card -->
+                            <div class="col-6 col-sm-3 col-md-4 col-xl-3">
+                                <div class="card h-100 p-3 border rounded-3 bg-white shadow-xs">
+                                    <div class="text-muted small fw-semibold">Present</div>
+                                    <div class="fs-2 fw-bold text-success my-1"><t t-esc="attendanceState.stats.present"/></div>
+                                    <div class="small text-muted">Attended On-Time</div>
+                                </div>
+                            </div>
+
+                            <!-- Absences & Late Card -->
+                            <div class="col-12 col-sm-6 col-md-12 col-xl-3">
+                                <div class="card h-100 p-3 border rounded-3 bg-white shadow-xs">
+                                    <div class="text-muted small fw-semibold">Absences &amp; Late</div>
+                                    <div class="fs-2 fw-bold my-1">
+                                        <span class="text-danger"><t t-esc="attendanceState.stats.absent"/></span>
+                                        <span class="text-muted mx-1">/</span>
+                                        <span class="text-warning"><t t-esc="attendanceState.stats.late"/></span>
+                                        <span class="text-muted mx-1">/</span>
+                                        <span class="text-info"><t t-esc="attendanceState.stats.excused"/></span>
+                                    </div>
+                                    <div class="small text-muted">Absent / Late / Excused</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <div class="flex-grow-1 min-h-0 overflow-auto">
+                    <t t-component="props.Renderer" t-if="model.isReady"
+                        list="model.root"
+                        activeActions="activeActions"
+                        archInfo="archInfo"
+                        allowSelectors="props.allowSelectors"
+                        editable="editable"
+                        onOpenFormView="onOpenFormView"
+                        hasOpenFormViewButton="hasOpenFormViewButton"
+                        openRecord.bind="openRecord"
+                        noContentHelp="props.info.noContentHelp"
+                        onAdd.bind="createRecord"
+                        optionalActiveFields="optionalActiveFields"
+                        readonly="props.readonly"
+                    />
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="school_management.AttendanceKanbanView" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-component='props.Renderer']" position="replace">
+            <div class="d-flex flex-column flex-grow-1 min-w-0 h-100 overflow-hidden o_renderer_with_searchpanel">
+                <t t-if="attendanceState.isStudent and attendanceState.stats">
+                    <div class="o_attendance_kpi_banner w-100 p-3 bg-light border-bottom flex-shrink-0">
+                        <div class="row g-3">
+                            <!-- Overall Attendance Card (Exact match to Image 2) -->
+                            <div class="col-12 col-sm-6 col-md-5 col-xl-4">
+                                <div class="card h-100 p-3 border rounded-3 bg-white shadow-xs">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <span class="text-muted fw-semibold small">Overall Attendance</span>
+                                        <i class="fa fa-check-circle text-success fs-6"/>
+                                    </div>
+                                    <div class="fs-2 fw-bold text-dark my-1">
+                                        <t t-esc="attendanceState.stats.rate"/>%
+                                    </div>
+                                    <div class="progress mb-2" style="height: 6px; background-color: #e5e7eb; border-radius: 9999px;">
+                                        <div class="progress-bar rounded-pill" role="progressbar"
+                                             t-att-class="attendanceState.stats.isLow ? 'bg-danger' : 'bg-success'"
+                                             t-att-style="'width: ' + attendanceState.stats.rate + '%; height: 6px;'"/>
+                                    </div>
+                                    <div class="d-flex justify-content-between small text-muted">
+                                        <span>Present: <strong class="text-dark"><t t-esc="attendanceState.stats.present"/></strong></span>
+                                        <span>Absent: <strong class="text-dark"><t t-esc="attendanceState.stats.absent"/></strong></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Total Sessions Card -->
+                            <div class="col-6 col-sm-3 col-md-3 col-xl-2">
+                                <div class="card h-100 p-3 border rounded-3 bg-white shadow-xs">
+                                    <div class="text-muted small fw-semibold">Total Sessions</div>
+                                    <div class="fs-2 fw-bold text-dark my-1"><t t-esc="attendanceState.stats.total"/></div>
+                                    <div class="small text-muted">Class Meetings</div>
+                                </div>
+                            </div>
+
+                            <!-- Present Sessions Card -->
+                            <div class="col-6 col-sm-3 col-md-4 col-xl-3">
+                                <div class="card h-100 p-3 border rounded-3 bg-white shadow-xs">
+                                    <div class="text-muted small fw-semibold">Present</div>
+                                    <div class="fs-2 fw-bold text-success my-1"><t t-esc="attendanceState.stats.present"/></div>
+                                    <div class="small text-muted">Attended On-Time</div>
+                                </div>
+                            </div>
+
+                            <!-- Absences & Late Card -->
+                            <div class="col-12 col-sm-6 col-md-12 col-xl-3">
+                                <div class="card h-100 p-3 border rounded-3 bg-white shadow-xs">
+                                    <div class="text-muted small fw-semibold">Absences &amp; Late</div>
+                                    <div class="fs-2 fw-bold my-1">
+                                        <span class="text-danger"><t t-esc="attendanceState.stats.absent"/></span>
+                                        <span class="text-muted mx-1">/</span>
+                                        <span class="text-warning"><t t-esc="attendanceState.stats.late"/></span>
+                                        <span class="text-muted mx-1">/</span>
+                                        <span class="text-info"><t t-esc="attendanceState.stats.excused"/></span>
+                                    </div>
+                                    <div class="small text-muted">Absent / Late / Excused</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <div class="flex-grow-1 min-h-0 overflow-auto">
+                    <t t-component="props.Renderer" t-if="model.isReady"
+                        list="model.root"
+                        archInfo="props.archInfo"
+                        Compiler="props.Compiler"
+                        readonly="props.readonly"
+                        forceGlobalClick="props.forceGlobalClick"
+                        deleteRecord.bind="deleteRecord"
+                        openRecord.bind="openRecord"
+                        noContentHelp="props.info.noContentHelp"
+                        scrollTop.bind="scrollTop"
+                        canQuickCreate="canQuickCreate"
+                        quickCreateState="quickCreateState"
+                        progressBarState="progressBarState"
+                    />
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

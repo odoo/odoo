@@ -1,0 +1,175 @@
+// Timeslot Weekday Kanban View Stylesheet
+
+.o_timeslot_kanban {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.625rem;
+    padding: 0.75rem;
+    background-color: #f8fafc;
+    min-height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+
+    .o_timeslot_column {
+        flex: 1 1 0;
+        min-width: 175px;
+        max-width: calc(100% / 6);
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.625rem;
+        padding: 0.625rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        height: auto !important;
+        align-self: flex-start !important;
+
+        .o_timeslot_column_header {
+            padding: 0.25rem 0.25rem 0.5rem 0.25rem;
+            border-bottom: 2px solid #f1f5f9;
+
+            .o_timeslot_column_title {
+                font-size: 1.05rem;
+                font-weight: 700;
+                color: #0f172a;
+                line-height: 1.25;
+            }
+
+            .o_timeslot_column_subtitle {
+                font-size: 0.78rem;
+                font-weight: 500;
+                color: #64748b;
+                line-height: 1.25;
+                margin-top: 0.15rem;
+            }
+        }
+
+        .o_timeslot_column_cards {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .o_timeslot_period_label {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748b;
+            padding: 0.25rem 0.25rem 0.15rem 0.25rem;
+            border-bottom: 1px dashed #e2e8f0;
+            margin-bottom: 0.15rem;
+        }
+
+        .o_timeslot_card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.625rem 0.75rem;
+            cursor: pointer;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+            outline: none;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+
+            &:hover {
+                border-color: #cbd5e1;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+                transform: translateY(-1px);
+            }
+
+            &:focus,
+            &:focus-visible {
+                border-color: #6366f1;
+                box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.35);
+            }
+
+            &.o_timeslot_inactive {
+                opacity: 0.55;
+                background-color: #f8fafc;
+            }
+
+            &.o_timeslot_overlap {
+                border-left: 3px solid #d97706;
+            }
+
+            .o_timeslot_time_title {
+                font-size: 0.875rem;
+                color: #0f172a;
+                font-weight: 700;
+                line-height: 1.3;
+            }
+
+            .o_timeslot_badge {
+                font-size: 0.6875rem;
+                font-weight: 600;
+                padding: 0.15rem 0.45rem;
+                border-radius: 0.25rem;
+                line-height: 1.2;
+
+                &.o_badge_overlap {
+                    background-color: #fef3c7;
+                    color: #92400e;
+                    border: 1px solid #fde68a;
+                }
+
+                &.o_badge_inactive {
+                    background-color: #f1f5f9;
+                    color: #475569;
+                    border: 1px solid #e2e8f0;
+                }
+            }
+
+            .o_timeslot_custom_title {
+                font-size: 0.78rem;
+                font-weight: 500;
+                color: #475569;
+                margin-top: 0.1rem;
+                margin-bottom: 0.25rem;
+            }
+
+            .o_timeslot_load_row {
+                margin-top: 0.45rem;
+
+                .o_timeslot_session_num {
+                    font-size: 1.125rem;
+                    color: #0f172a;
+                    font-weight: 800;
+                    line-height: 1;
+                }
+
+                .o_timeslot_session_label {
+                    font-size: 0.75rem;
+                    color: #64748b;
+                    font-weight: 500;
+                }
+
+                .o_timeslot_progress_track {
+                    height: 6px;
+                    background-color: #e2e8f0;
+                    border-radius: 3px;
+                    overflow: hidden;
+                    margin-top: 0.35rem;
+                    width: 100%;
+                }
+
+                .o_timeslot_progress_bar {
+                    height: 100%;
+                    border-radius: 3px;
+                    transition: width 0.3s ease;
+                }
+            }
+        }
+    }
+}
+
+// Spacing for ControlPanel New button to prevent collision with Breadcrumb
+.o_control_panel:has(.o_timeslot_kanban) {
+    .o_control_panel_main_buttons {
+        margin-right: 1.25rem !important;
+    }
+}

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+                <odoo>
+                    <record id="view_university_lesson_plan_tree" model="ir.ui.view">
+                        <field name="name">university.lesson.plan.tree</field>
+                        <field name="model">university.lesson.plan</field>
+                        <field name="arch" type="xml">
+                            <list limit="10" string="Lesson Plans" sample="1">
+                                <field name="name" class="fw-bold"/>
+                                <field name="subject_id"/>
+                                <field name="section_id"/>
+                                <field name="teacher_id" widget="many2one_avatar"/>
+                                <field name="assignment_count" string="Assignments" optional="show"/>
+                                <field name="state" widget="badge" decoration-success="state == 'approved'" decoration-info="state == 'draft'"/>
+                                <button name="action_view_assignments" type="object" string="Assignments" icon="fa-tasks"/>
+                            </list>
+                        </field>
+                    </record>
+
+                    <record id="view_university_lesson_plan_kanban" model="ir.ui.view">
+                        <field name="name">university.lesson.plan.kanban</field>
+                        <field name="model">university.lesson.plan</field>
+                        <field name="arch" type="xml">
+                            <kanban limit="10" default_group_by="state" sample="1" quick_create="false">
+                                <field name="id"/>
+                                <field name="name"/>
+                                <field name="subject_id"/>
+                                <field name="section_id"/>
+                                <field name="teacher_id"/>
+                                <field name="assignment_count"/>
+                                <field name="state"/>
+                                <templates>
+                                    <t t-name="card">
+                                        <div class="d-flex flex-column h-100 p-2">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <strong class="text-primary fs-6"><field name="name"/></strong>
+                                                <field name="state" widget="badge"
+                                                       decoration-success="state == 'approved'"
+                                                       decoration-info="state == 'draft'"/>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2 mb-2">
+                                                <field name="teacher_id" widget="many2one_avatar"/>
+                                            </div>
+                                            <div class="text-muted small mb-2">
+                                                <span class="badge bg-light text-dark border me-1"><field name="subject_id"/></span>
+                                                <span class="badge bg-light text-muted border"><field name="section_id"/></span>
+                                            </div>
+                                            <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+                                                <span class="badge rounded-pill bg-light text-dark border">
+                                                    <i class="fa fa-tasks me-1 text-primary" title="Assignments"/>
+                                                    <field name="assignment_count"/> Assignments
+                                                </span>
+                                                <button name="action_view_assignments" type="object" class="btn btn-sm btn-outline-primary" title="View Assignments">
+                                                    <i class="fa fa-arrow-right"/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                    </record>
+
+                    <record id="view_university_lesson_plan_form" model="ir.ui.view">
+                        <field name="name">university.lesson.plan.form</field>
+                        <field name="model">university.lesson.plan</field>
+                        <field name="arch" type="xml">
+                            <form string="Lesson Plan">
+                                <header>
+                                    <button name="action_approve" type="object" string="Approve" class="oe_highlight" invisible="state == 'approved'"/>
+                                    <button name="action_draft" type="object" string="Reset to Draft" invisible="state == 'draft'"/>
+                                    <button name="action_view_assignments" type="object" string="View Assignments" class="btn-secondary" icon="fa-tasks"/>
+                                    <field name="state" widget="statusbar" statusbar_visible="draft,approved"/>
+                                </header>
+                                <sheet>
+                                    <div class="oe_button_box" name="button_box">
+                                        <button name="action_view_assignments" type="object" class="oe_stat_button" icon="fa-tasks">
+                                            <field name="assignment_count" widget="statinfo" string="Assignments"/>
+                                        </button>
+                                    </div>
+                                    <div class="oe_title">
+                                        <label for="name" class="oe_edit_only"/>
+                                        <h1>
+                                            <field name="name" placeholder="e.g. Week 4: Transformer Self-Attention &amp; Scaled Dot-Product"/>
+                                        </h1>
+                                    </div>
+                                   <group string="Academic Information">
+                    <field name="plan_allowed_subject_ids" invisible="1"/>
+                    <field name="section_id" string="Grade / Section"
+                           domain="[('teacher_id.user_id', '=', uid)]"
+                           options="{'no_create': True}"/>
+                    <field name="subject_id"
+                           domain="[('id', 'in', plan_allowed_subject_ids)]"
+                           readonly="not section_id"
+                           options="{'no_create': True}"/>
+                    <field name="share_to" widget="radio"/>
+                </group>
+                                    <notebook>
+                                        <page string="Lesson Content &amp; Curriculum" name="description">
+                                            <field name="description" placeholder="Specify learning objectives, required materials, lecture plan, and student evaluations..."/>
+                                        </page>
+                                    </notebook>
+                                </sheet>
+                                <chatter/>
+                            </form>
+                        </field>
+                    </record>
+
+                    <record id="view_university_lesson_plan_search" model="ir.ui.view">
+                        <field name="name">university.lesson.plan.search</field>
+                        <field name="model">university.lesson.plan</field>
+                        <field name="arch" type="xml">
+                            <search string="Search Lesson Plans">
+                                <field name="name"/>
+                                <field name="subject_id"/>
+                                <field name="section_id"/>
+                                <field name="teacher_id"/>
+                                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]"/>
+                                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                                <group>
+                                    <filter string="Status" name="group_by_state" context="{'group_by': 'state'}"/>
+                                    <filter string="Subject" name="group_by_subject" context="{'group_by': 'subject_id'}"/>
+                                    <filter string="Teacher" name="group_by_teacher" context="{'group_by': 'teacher_id'}"/>
+                                    <filter string="Section" name="group_by_section" context="{'group_by': 'section_id'}"/>
+                                </group>
+                                <searchpanel>
+                                    <field name="subject_id" icon="fa-book" enable_counters="1"/>
+                                    <field name="state" icon="fa-filter" enable_counters="1" select="multi"/>
+                                </searchpanel>
+                            </search>
+                        </field>
+                    </record>
+
+                    <record id="action_university_lesson_plan" model="ir.actions.act_window">
+                        <field name="name">Lesson Plans</field>
+                        <field name="res_model">university.lesson.plan</field>
+                        <field name="view_mode">kanban,list,form</field>
+        <field name="limit">10</field>
+                        <field name="search_view_id" ref="view_university_lesson_plan_search"/>
+                    </record>
+                </odoo>
