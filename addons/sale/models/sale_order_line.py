@@ -409,7 +409,7 @@ class SaleOrderLine(models.Model):
         readonly=True,
     )
     company_price_include = fields.Selection(related="company_id.account_price_include")
-    sale_line_warn_msg = fields.Text(compute="_compute_sale_line_warn_msg")
+    sale_line_warn_msg = fields.Text(related="product_id.sale_line_warn_msg")
 
     # Section-related fields
     parent_id = fields.Many2one(
@@ -697,14 +697,6 @@ class SaleOrderLine(models.Model):
             else:
                 line.product_uom_id = line.product_id.uom_id
 
-    @api.depends("product_id.sale_line_warn_msg")
-    def _compute_sale_line_warn_msg(self):
-        has_warning_group = self.env.user.has_group("sale.group_warning_sale")
-        for line in self:
-            line.sale_line_warn_msg = (
-                line.product_id.sale_line_warn_msg if has_warning_group else ""
-            )
-
     @api.depends("product_id")
     def _compute_allowed_uom_ids(self):
         for line in self:
@@ -877,7 +869,7 @@ class SaleOrderLine(models.Model):
 
         pricelist_price = self._get_pricelist_price()
 
-        if not self.pricelist_item_id._show_discount():
+        if not self.pricelist_item_id.is_plain_discount:
             # No pricelist rule found => no discount from pricelist
             return pricelist_price
 
@@ -1010,12 +1002,11 @@ class SaleOrderLine(models.Model):
 
     @api.depends("product_id", "product_uom_id", "product_uom_qty")
     def _compute_discount(self):
-        discount_enabled = self.env["product.pricelist.item"]._is_discount_feature_enabled()
         for line in self:
             if not line.product_id or line.display_type:
                 line.discount = 0.0
 
-            if not (line.order_id.pricelist_id and discount_enabled and line.product_uom_id):
+            if not (line.order_id.pricelist_id and line.product_uom_id):
                 continue
 
             if line.combo_item_id:
@@ -1024,7 +1015,7 @@ class SaleOrderLine(models.Model):
 
             line.discount = 0.0
 
-            if not line.pricelist_item_id._show_discount():
+            if not line.pricelist_item_id.is_plain_discount:
                 # No pricelist rule was found for the product
                 # therefore, the pricelist didn't apply any discount/change
                 # to the existing sales price.

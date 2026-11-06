@@ -32,7 +32,6 @@ class TestSalePrices(SaleCommon):
 
         cls.pricelist = cls._enable_pricelists()
         cls.sale_order.pricelist_id = cls.pricelist
-        cls._enable_discounts()
         cls.discount = 10  # %
 
         # Needed when run without demo data
