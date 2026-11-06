@@ -426,7 +426,7 @@ export class Composer extends Component {
     }
 
     /**
-     * Adds the mentioned records of the content, which are not all inserted from the suggestions.
+     * Adds the mentioned records of the content.
      *
      * @param {Object} param0
      * @param {import("models").ResPartner[]} param0.partners
@@ -443,11 +443,7 @@ export class Composer extends Component {
 
     /** @param {import("@mail/core/common/navigable_list").Option} option */
     addSuggestion(option) {
-        if (option.partner) {
-            this.props.composer.mentionedPartners.add({ id: option.partner.id });
-        } else if (option.role) {
-            this.props.composer.mentionedRoles.add(option.role);
-        } else if (option.cannedResponse) {
+        if (option.cannedResponse) {
             this.props.composer.cannedResponses.push(option.cannedResponse);
         }
     }
