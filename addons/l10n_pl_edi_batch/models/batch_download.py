@@ -1,9 +1,8 @@
 import base64
-import functools
 import logging
 import tempfile
 import zipfile
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta, timezone
 
 from dateutil.parser import parse
 
@@ -34,51 +33,43 @@ STATES = [
 MAX_RETRIES = 9
 
 
-def ksef_cron(cron_xmlid):
-    """ A cron of the batch download does nothing unless batches are enabled. On KSeF's rate limit, it rolls back
-        the current unit of work, stops, and runs again after the delay KSeF asks for. """
-    def decorator(method):
-        @functools.wraps(method)
-        def wrapper(self):
-            if not self._is_enabled():
-                return
-            try:
-                method(self)
-            except KSeFRateLimitError as e:
-                self._rollback()
-                retry_at = fields.Datetime.now() + timedelta(seconds=e.retry_after or 60)
-                _logger.info("KSeF rate limit reached, running %s again at %s", cron_xmlid, retry_at)
-                self.env.ref(cron_xmlid)._trigger(at=retry_at)
-        return wrapper
-    return decorator
-
-
 class BatchDownload(models.Model):
     _name = 'l10n_pl_edi_batch.download'
     _description = "KSeF Batch Download"
 
     company_id = fields.Many2one(comodel_name='res.company', readonly=True, required=True)
     name = fields.Char("KSeF batch reference number", readonly=True, required=True)
-    error = fields.Char("KSeF batch download error", compute='_compute_error')
-    content = fields.Json(readonly=True)
+
+    date_from = fields.Datetime(readonly=True, required=True)
+    date_to = fields.Datetime(readonly=True, required=True)
     kind = fields.Selection(
         selection=[('today', 'Today'), ('historic', 'Historic')],
         compute='_compute_kind',
         search='_search_kind',
     )
+
+    content = fields.Json(readonly=True)
     retry_count = fields.Integer(default=0, readonly=True, copy=False)
-    state = fields.Selection(selection=STATES, compute='_compute_state', search='_search_state')
 
-    date_from = fields.Datetime(readonly=True, required=True)
-    date_to = fields.Datetime(readonly=True, required=True)
-    date_expiry = fields.Datetime(compute='_compute_date_expiry')
-    is_expired = fields.Boolean(compute='_compute_is_expired', search='_search_expired')
-
-    part_ids = fields.One2many(comodel_name='l10n_pl_edi_batch.part', string='KSeF Batch parts', readonly=True, copy=False, inverse_name='batch_id')
-
+    # Symmetric encryption data, to keep invoices private between our request and KSeF's response
     raw_symmetric_key = fields.Binary("Batch symmetric key", readonly=True, groups='base.group_system')
     encrypted_symmetric_key = fields.Binary("Batch encrypted symmetric key", readonly=True, groups='base.group_system')
     raw_iv = fields.Binary("Batch iv", readonly=True, groups='base.group_system')
+
+    # Parts of the ZIP to be downloaded
+    part_ids = fields.One2many(
+        comodel_name='l10n_pl_edi_batch.part',
+        string='KSeF Batch parts',
+        readonly=True,
+        copy=False,
+        inverse_name='batch_id',
+    )
+
+    # Computed fields
+    state = fields.Selection(selection=STATES, compute='_compute_state', search='_search_state')
+    date_expiry = fields.Datetime(compute='_compute_date_expiry')
+    is_expired = fields.Boolean(compute='_compute_is_expired', search='_search_expired')
+    error = fields.Char("KSeF batch download error", compute='_compute_error')
 
     @api.depends('content')
     def _compute_error(self):
@@ -91,14 +82,6 @@ class BatchDownload(models.Model):
             description = ksef_status.get('description')
             lines = [f"{code}: {description}" if description else str(code)] + (ksef_status.get('details') or [])
             record.error = '\n'.join(lines)
-
-    def _set_odoo_error(self, message):
-        """ Our own errors go where KSeF puts its own: in the saved answer's status, with code 999. """
-        for record in self:
-            record.content = {
-                **(record.content or {}),
-                'status': {'code': ODOO_ERROR, 'description': "Odoo Error", 'details': [message]},
-            }
 
     @api.model
     def _get_kind(self, date_to, create_date):
@@ -121,29 +104,22 @@ class BatchDownload(models.Model):
             return [('id', 'in', batches.ids)]
         return [('id', 'not in', batches.ids)]
 
+    def _compute_state_by_code(self, code):
+        self.ensure_one()
+        if self.is_expired or code not in (KSEF_IN_PROGRESS, KSEF_READY):
+            return 'failed'
+        elif code == KSEF_IN_PROGRESS:
+            return 'requested'
+        elif code == KSEF_READY and self.parts_ids:
+            parts_missing = self.parts_ids.filtered(lambda part: not part.with_context(bin_size=True).decrypted_file)
+            return 'downloading' if parts_missing else 'downloaded'
+        return 'done'
+
     @api.depends('content', 'retry_count', 'part_ids.decrypted_file')
     def _compute_state(self):
-        """ Without a saved KSeF answer, the batch was just requested: its code counts as 100. """
-        for record in self:
-            code = (record.content or {}).get('status', {}).get('code') or KSEF_IN_PROGRESS
-            # bin_size: only check the parts have a file, without loading it
-            parts_missing = not all(record.part_ids.with_context(bin_size=True).mapped('decrypted_file'))
-            if (
-                code not in (KSEF_IN_PROGRESS, KSEF_READY)
-                or record.retry_count > MAX_RETRIES
-                # Once all the parts are downloaded, we don't need KSeF any more: expiry doesn't matter
-                or (record.is_expired and parts_missing)
-            ):
-                record.state = 'failed'
-            elif code == KSEF_IN_PROGRESS:
-                record.state = 'requested'
-            elif parts_missing:
-                record.state = 'downloading'
-            elif record.part_ids:
-                record.state = 'downloaded'
-            else:
-                # The parts are deleted once imported; a batch with 0 invoices has none
-                record.state = 'done'
+        for batch in self:
+            code = (batch.content or {}).get('status', {}).get('code') or KSEF_IN_PROGRESS
+            batch.state = batch._compute_state_by_code(code)
 
     def _search_state(self, operator, value):
         if operator not in ('=', '!=', 'in', 'not in'):
@@ -169,11 +145,14 @@ class BatchDownload(models.Model):
         batches = self.search([]).filtered(lambda batch: batch.is_expired == target_value)
         return [('id', 'in', batches.ids)]
 
-    @api.depends('date_expiry')
+    @api.depends('date_expiry', 'retry_count')
     def _compute_is_expired(self):
         now = fields.Datetime.now()
         for record in self:
-            record.is_expired = (record.date_expiry and record.date_expiry < now)
+            record.is_expired = (
+                (record.date_expiry and record.date_expiry < now)
+                or record.retry_count > MAX_RETRIES
+            )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_parts(self):
@@ -204,116 +183,134 @@ class BatchDownload(models.Model):
         if self.env['account.move']._can_commit():
             self.env.cr.rollback()
 
-    def _try(self, work):
-        """ Run `work()`. On a UserError, roll back and return it; KSeF's rate limit goes through, to the cron. """
-        try:
-            work()
-        except KSeFRateLimitError:
-            raise
-        except UserError as e:
-            self._rollback()
-            return e
-
     @api.model
-    @ksef_cron('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
-    def _cron_request_today(self):
-        """ Request the fresh invoices of each company with a KSeF access token (see `_request_today`), and commit
-            after each one. A KSeF error skips its company only. """
-        for company in self.env['res.company'].sudo().search([('l10n_pl_edi_access_token', '!=', False)]):
-            if error := self._try(functools.partial(self._request_today, company)):
-                _logger.error("KSeF batch request failed for company %s: %s", company.name, error)
-            self._commit()
-
-    @api.model
-    def _request_today(self, company):
-        """ Request up to now: the first batch of the day from yesterday 00:00, the next ones from the end of the
-            latest today batch of the day that didn't fail, with a 1-hour overlap for the invoices KSeF stores
-            late, but never before yesterday 00:00. Nothing while a today batch is requested. """
-        company_batches = self.search([('company_id', '=', company.id)], order='date_to desc')
-        today_batches = company_batches.filtered(lambda batch: batch.kind == 'today')
-        if any(batch.state == 'requested' for batch in today_batches):
-            return
-        now = fields.Datetime.now()
-        today = fields.Datetime.start_of(now, 'day')
-        yesterday = today - timedelta(days=1)
-        date_from = yesterday
-        latest_batch = today_batches.filtered(lambda batch: batch.state != 'failed' and batch.create_date >= today)[:1]
-        if latest_batch:
-            date_from = max(latest_batch.date_to - timedelta(hours=1), yesterday)
-        self._request(company, date_from, now)
-
-    @api.model
-    @ksef_cron('l10n_pl_edi_batch.ir_cron_request_historic')
-    def _cron_request_historic(self):
-        """ Request the past invoices of each company with a KSeF access token, one window at a time
-            (see `_request_historic`), and commit after each one. A KSeF error skips its company only. """
-        for company in self.env['res.company'].sudo().search([('l10n_pl_edi_access_token', '!=', False)]):
-            if error := self._try(functools.partial(self._request_historic, company)):
-                _logger.error("KSeF batch request failed for company %s: %s", company.name, error)
-            self._commit()
-
-    @api.model
-    def _request_historic(self, company):
-        """ Request the KSEF_WINDOW days before the company's historic date (yesterday at first), not before
-            KSEF_FIRST_DAY, then move the date back to the start of that window.
-            Nothing while a historic batch is in progress, nor once the date reaches KSEF_FIRST_DAY. The window
-            that holds a bill of the single-invoice download is the last one (see `_holds_fetched_bill`): the date
-            then goes to KSEF_FIRST_DAY. """
-        first_day = fields.Datetime.to_datetime(KSEF_FIRST_DAY)
-        yesterday = fields.Datetime.start_of(fields.Datetime.now(), 'day') - timedelta(days=1)
-        date_to = company.l10n_pl_edi_batch_historic_date or yesterday
-        if date_to <= first_day:
-            return
-        company_batches = self.search([('company_id', '=', company.id)])
-        historic_batches = company_batches.filtered(lambda batch: batch.kind == 'historic')
-        if any(batch.state in ('requested', 'downloading', 'downloaded') for batch in historic_batches):
-            return
-        date_from = max(date_to - timedelta(days=KSEF_WINDOW), first_day)
-        self._request(company, date_from, date_to)
-        if self._holds_fetched_bill(company, date_from, date_to):
-            company.l10n_pl_edi_batch_historic_date = first_day
-        else:
-            company.l10n_pl_edi_batch_historic_date = date_from
-
-    @api.model
-    def _holds_fetched_bill(self, company, date_from, date_to):
-        """ Whether the window holds a bill the single-invoice download fetched: that download walks forward from
-            KSEF_FIRST_DAY, so the history before is already there. Checked when the window is requested, before
-            the batch imports any bill into it: the fetched bills in the window can only come from the
-            single-invoice download. The day of a bill comes from its KSeF number. """
-        fetched_bills = self.env['account.move'].search([
-            ('company_id', '=', company.id),
-            ('move_type', '=', 'in_invoice'),
-            ('l10n_pl_edi_number', '!=', False),
-            ('l10n_pl_edi_status', '=', 'fetched'),
-        ])
-        days = [self._get_ksef_number_date(number) for number in fetched_bills.mapped('l10n_pl_edi_number')]
-        return any(date_from <= day < date_to for day in days)
-
-    @api.model
-    def _get_ksef_number_date(self, ksef_number):
-        """ The day KSeF numbered the invoice, from its KSeF number: NIP-YYYYMMDD-... """
-        return datetime.strptime(ksef_number.split('-')[1], '%Y%m%d')
-
-    @api.model
-    def _request(self, company, date_from, date_to):
-        """ Ask KSeF for an export of the company's bills between the two dates, save the batch as requested, and
-            have the status cron check it once it's due. """
+    def _create_batch_download(self, company, date_from, date_to):
+        """ Ask KSeF for an export of the company's bills between the two dates
+            Save the batch as requested, and have the status cron check it.
+        """
         service = Service(company)
         encryption_data = service._create_encryption_data()
         batch_data = service.download_batch_request(date_from, date_to, encryption_data)
         batch = self.sudo().create({
             'company_id': company.id,
             'name': batch_data['referenceNumber'],
-            'date_from': fields.Datetime.to_string(date_from),
-            'date_to': fields.Datetime.to_string(date_to),
-            # Binary fields are written base64-encoded, which is what encryption_data already holds
+            'date_from': date_from,
+            'date_to': date_to,
             'raw_symmetric_key': encryption_data['raw_symmetric_key'],
             'encrypted_symmetric_key': encryption_data['encrypted_symmetric_key'],
             'raw_iv': encryption_data['raw_iv'],
         }).with_env(self.env)
         batch._trigger_cron_when_due('l10n_pl_edi_batch.ir_cron_check_status')
         return batch
+
+    def _run_for_all_companies(self, method, cron_xmlid, company_domain=None):
+        """ Every KSeF cron must:
+            - only run if the batched download parameter is up
+            - run per each company that has an access_token available
+            - on rate limit hit, rollback and be retriggered after ``retry_after`` seconds
+            - commit per company
+        """
+        if not self._is_enabled():
+            return
+        retry_at = False
+        CompanySudo = self.env['res.company'].sudo()
+        companies = CompanySudo.search([('l10n_pl_edi_access_token', '!=', False), *(company_domain or [])])
+
+        for company in companies:
+            try:
+                method(self, company)
+                self._commit()
+            except KSeFRateLimitError as e:
+                self._rollback()
+                current_retry_at = fields.Datetime.now() + timedelta(seconds=e.retry_after)
+                retry_at = min(retry_at, current_retry_at) if retry_at else current_retry_at
+
+        if retry_at:
+            _logger.info(
+                "KSeF rate limit reached for company %s, running %s again at %s",
+                company.display_name, cron_xmlid, retry_at,
+            )
+            self.env.ref(cron_xmlid)._trigger(at=retry_at)
+
+    @api.model
+    def _cron_request_today(self):
+        """ Request yesterday and today's invoices """
+        now = fields.Datetime.now()
+        yesterday = fields.Datetime.start_of(now, 'day') - timedelta(days=1)
+
+        def request_today(company):
+            self._create_batch_download(company, date_from=yesterday, date_to=now)
+
+        self._run_for_all_companies(request_today, 'l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
+
+    @api.model
+    def _cron_request_historic(self):
+        """ Request the past invoices """
+        first_day = fields.Datetime.to_datetime(KSEF_FIRST_DAY)
+
+        pending_companies_ids = self.sudo().search([
+            ('kind', '=', 'historic'),
+            ('state', 'in', ('requested', 'downloading', 'downloaded')),
+        ]).mapped("company_id.id")
+
+        def request_historic(company):
+            date_to = company.l10n_pl_edi_batch_historic_date
+            date_from = max(date_to - timedelta(days=KSEF_WINDOW), first_day)
+
+            # Find out if the period ALREADY has fetched invoices.
+            period_has_fetched_invoices = self.env['account.move'].search([
+                ('company_id', '=', company.id),
+                ('move_type', '=', 'in_invoice'),
+                ('date', '>=', date_from),
+                ('date', '<', date_to),
+                ('l10n_pl_edi_number', '!=', False),
+                ('l10n_pl_edi_status', '=', 'fetched'),
+            ])
+
+            # Download invoices for this period
+            self._create_batch_download(company, date_from, date_to)
+
+            # In that case, it's the last we download, as the rest is already done by non-batched download
+            if period_has_fetched_invoices:
+                company.l10n_pl_edi_batch_historic_date = first_day
+
+        self._run_for_all_companies(
+            request_historic,
+            'l10n_pl_edi_batch.ir_cron_request_historic',
+            company_domain=[
+                ('id', 'not in', pending_companies_ids),
+                ('l10n_pl_edi_batch_historic_date', '>', first_day),
+            ])
+
+    @api.model
+    def _cron_check_status(self):
+        """ Ask KSeF for the status of each due requested batch, and commit after each one.
+            Still 100, or a KSeF error: count a retry, and check again once the batch is due;
+            after the last retry, the batch fails.
+        """
+
+        def check_status(company):
+            if batch := self.search([('company_id', '=', company.id), ('state', '=', 'requested')], order='date_to desc', limit=1):
+                service = Service(company)
+                data = service.download_batch_status(batch.name)
+                code = data['content'].get('status', {}).get('code') or KSEF_IN_PROGRESS
+
+                state = batch._compute_state_by_code(code)
+                if state == 'downloading':
+                    self.env.ref('l10n_pl_edi_batch.ir_cron_download')._trigger()
+                    # In case it's truncated, we create another batch to get the rest
+                    if batch.kind == 'historic':
+                        package = (data.get('content') or {}).get('package', {})
+                        if package.get('isTruncated'):
+                            last_date = parse(package['lastInvoicingDate']).astimezone(timezone.utc).replace(tzinfo=None)
+                            old_date_to = self.date_to
+                            data['date_to'] = last_date
+                            self._create_batch_download(batch.company_id, last_date, old_date_to)
+                elif state == 'requested':
+                    batch.retry_count += 1
+                    batch._trigger_cron_when_due('l10n_pl_edi_batch.ir_cron_check_status')
+
+                batch.update(data)
 
     def _get_wait(self):
         """ A batch waits `10 * 2 ** retry_count` seconds after its last write before its next try. """
@@ -330,7 +327,10 @@ class BatchDownload(models.Model):
         self.ensure_one()
         self.retry_count += 1
         if self.state == 'failed':
-            self._set_odoo_error(error)
+            self.content = {
+                **(self.content or {}),
+                'status': {'code': ODOO_ERROR, 'description': "Odoo Error", 'details': [error]},
+            }
         else:
             self._trigger_cron_when_due(cron_ref)
 
@@ -340,39 +340,7 @@ class BatchDownload(models.Model):
         if self.kind == 'historic' and self.state in ('done', 'failed'):
             self.env.ref('l10n_pl_edi_batch.ir_cron_request_historic')._trigger()
 
-    @api.model
-    def _get_due_batches(self, state):
-        """ The batches in `state` whose wait is over, today batches first. """
-        now = fields.Datetime.now()
-        batches = self.search([('state', '=', state)], order='id')
-        due_batches = batches.filtered(lambda batch: batch.write_date + batch._get_wait() <= now)
-        return due_batches.sorted(lambda batch: batch.kind != 'today')
 
-    @api.model
-    @ksef_cron('l10n_pl_edi_batch.ir_cron_check_status')
-    def _cron_check_status(self):
-        """ Ask KSeF for the status of each due requested batch, and commit after each one.
-            Still 100, or a KSeF error: count a retry, and check again once the batch is due; after the last retry,
-            the batch fails. """
-        ResCompany = self.env['res.company']
-        for batch in self._get_due_batches('requested'):
-            if not ResCompany._with_locked_records(batch, allow_raising=False):
-                continue
-            if error := self._try(batch.check_status):
-                _logger.warning("KSeF batch %s status check failed: %s", batch.name, error)
-            elif batch.kind == 'historic' and (error := self._try(batch._request_rest_if_truncated)):
-                _logger.warning("KSeF batch %s: the rest of its truncated window couldn't be requested: %s", batch.name, error)
-            if batch.state == 'requested':
-                batch.retry_count += 1
-            elif batch.state != 'failed':
-                batch.retry_count = 0
-            if batch.state == 'downloading':
-                self.env.ref('l10n_pl_edi_batch.ir_cron_download')._trigger()
-            # Still requested after counting the retry: the retries aren't used up yet
-            if batch.state == 'requested':
-                batch._trigger_cron_when_due('l10n_pl_edi_batch.ir_cron_check_status')
-            batch._trigger_next_window()
-            self._commit()
 
     @api.model
     @ksef_cron('l10n_pl_edi_batch.ir_cron_download')
@@ -433,18 +401,6 @@ class BatchDownload(models.Model):
         """ Run the import cron now; it imports the bills of the downloaded batches. """
         self.env.ref('l10n_pl_edi_batch.ir_cron_import').sudo()._trigger()
 
-    def _request_rest_if_truncated(self):
-        """ KSeF stops a package at 10,000 invoices, in the order it received them. A truncated batch then ends where its
-            package does, and the rest of its window is requested right away: the historic date already moved
-            back, so the historic cron would only ask for the same window again, truncated the same way. """
-        self.ensure_one()
-        package = (self.content or {}).get('package', {})
-        if not package.get('isTruncated'):
-            return
-        last_date = parse(package['lastInvoicingDate']).astimezone(timezone.utc).replace(tzinfo=None)
-        date_to = self.date_to
-        self.date_to = last_date
-        self._request(self.company_id, last_date, date_to)
 
     def check_status(self):
         companies = self.mapped('company_id')
