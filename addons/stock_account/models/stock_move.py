@@ -191,6 +191,10 @@ class StockMove(models.Model):
         res = super().write(vals)
         if recompute_date:
             impacted_moves._set_value(recompute_date=recompute_date)
+            for move in impacted_moves:
+                next_pv = move.product_value_ids.filtered(lambda v: v.date > recompute_date).sorted('date')[:1]
+                if next_pv and move.remaining_qty != next_pv.quantity:
+                    next_pv.quantity = move.remaining_qty
         if vals.get('value'):
             self.cogs_aml_ids._set_cogs()
         return res
@@ -366,7 +370,46 @@ class StockMove(models.Model):
         :return: the outgoing moves whose value changed during a valuation replay.
         """
         changed_moves = self.env['stock.move']
-        moves_already_sold = self.filtered(lambda m: m.is_in and m.remaining_qty != m._get_valued_qty())
+        # !- master-stock-account-product-value-part2-ajf-arm
+        moves_already_sold_ids = set()
+        avco_in_moves = self.env['stock.move']
+        for move in self:
+            if not move.is_in or skip_check:
+                continue
+            if move.remaining_qty != move._get_valued_qty():
+                moves_already_sold_ids.add(move.id)
+            # elif move.product_id.cost_method == 'average':
+            #     avco_in_moves |= move
+            # ! backdate stock.move !
+            elif move.product_id.cost_method in ['average', 'fifo']:
+                avco_in_moves |= move
+
+        if avco_in_moves:
+            # A single query for every avco in-move at once: in average costing any later
+            # out-move is affected by an earlier in-move's value, regardless of whether it
+            # was the one "consuming" it per the (FIFO-order) remaining_qty bookkeeping.
+            out_moves = self.env['stock.move'].search_fetch(Domain([
+                ('product_id', 'in', avco_in_moves.product_id.ids),
+                ('company_id', 'in', avco_in_moves.company_id.ids),
+                ('is_out', '=', True),
+                ('date', '>', min(avco_in_moves.mapped('date'))),
+            ]), ['product_id', 'date', 'move_line_ids'])
+            out_dates_by_product = defaultdict(list)
+            out_dates_by_lot = defaultdict(list)
+            for out_move in out_moves:
+                out_dates_by_product[out_move.product_id.id].append(out_move.date)
+                for lot in out_move.move_line_ids.lot_id:
+                    out_dates_by_lot[lot.id].append(out_move.date)
+            for move in avco_in_moves:
+                if move.product_id.lot_valuated:
+                    out_dates = [d for lot in move.move_line_ids.lot_id for d in out_dates_by_lot[lot.id]]
+                else:
+                    out_dates = out_dates_by_product[move.product_id.id]
+                if any(d > move.date for d in out_dates):
+                    moves_already_sold_ids.add(move.id)
+
+        moves_already_sold = self.browse(moves_already_sold_ids)
+        # -!
         if not recompute_date and not skip_check and moves_already_sold:
             recompute_date = min(self.mapped('date'))
             for move in moves_already_sold:
@@ -380,7 +423,9 @@ class StockMove(models.Model):
             self._set_value(recompute_date=recompute_date)
             return changed_moves
 
-        if recompute_date and any(m.remaining_qty != m._get_valued_qty() or m.is_out for m in self):
+        # !- master-stock-account-product-value-part2-ajf-arm
+        if recompute_date and (moves_already_sold or any(m.is_out for m in self)):
+            # -!
             self.filtered(lambda m: m.is_in)._set_value(skip_check=True)
             return self.product_id._correct_inventory_valuation(recompute_date)
 
