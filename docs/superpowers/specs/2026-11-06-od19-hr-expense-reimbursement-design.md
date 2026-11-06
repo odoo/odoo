@@ -15,7 +15,7 @@
 1. **ความง่ายในการใช้งานของพนักงาน** — ปัจจุบัน `hr.expense` เป็นหน้าจอหลังบ้าน (backend) ล้วน ไม่มี portal และมีรายละเอียดภาษี/บัญชีที่พนักงานทั่วไปไม่จำเป็นต้องเข้าใจ
 2. **การอนุมัติ 3 ชั้น** — ปัจจุบันมีเพียง 2 ชั้น (กลไกฟิลด์ `first_approver_id` / `second_approval_state`)
 
-งานนี้จึง **ไม่สร้างโมเดลใหม่** แต่เพิ่ม "ชั้นประสบการณ์ใช้งานของพนักงาน" และ **ยกระดับการอนุมัติเป็น 3 ชั้น** (หัวหน้าแผนก → บัญชี → CEO) ด้วย OCA `base_tier_validation` ซึ่งมีฟีเจอร์มอบหมายผู้อนุมัติ (delegation) ในตัวอยู่แล้ว
+งานนี้จึง **ไม่สร้างโมเดลใหม่** แต่เพิ่ม "ชั้นประสบการณ์ใช้งานของพนักงาน" และ **ยกระดับการอนุมัติเป็น 3 ชั้น** (หัวหน้าแผนก → บัญชี → CEO) ด้วย OCA `base_tier_validation` ซึ่งมีฟีเจอร์ส่งต่อการอนุมัติ (Forward) ให้ผู้อื่นในกลุ่มทำแทนได้ ผ่านโมดูล `base_tier_validation_forward`
 
 **เป้าหมายเชิงผลลัพธ์**
 
@@ -39,7 +39,7 @@
 | `od19_hr_expense_thai` (19.0.1.1.0) | มีจริง | อนุมัติ 2 ชั้น, วิธีจ่ายคืน (เงินสด/โอน/เช็ค), สร้าง `account.payment` จ่ายคืนจริง + reconcile กับเจ้าหนี้พนักงาน |
 | `od19_hr_advance` (19.0.1.0.0) | มีจริง | เงินทดรองพนักงาน ใช้ OCA `base_tier_validation` 2 ชั้น (ต้นแบบที่นำกลไกมาใช้ซ้ำได้) |
 | `od19_approval_center` (19.0.1.0.0) | มีจริง | ศูนย์อนุมัติ view-only, source `hr.expense` ปัจจุบันเป็น `strategy: field` 2 ขั้น |
-| `third_party/oca/tier-validation/base_tier_validation` | พร้อมใช้ | tier definition/review + เมนู Delegations |
+| `third_party/oca/tier-validation/base_tier_validation` | พร้อมใช้ | tier definition/review + ฟีเจอร์ Forward (`base_tier_validation_forward`) |
 
 ### 2.2 ช่องว่างเทียบกับความต้องการ
 
@@ -228,7 +228,7 @@
 
 > **กลไกที่ต้องยืนยันตอน implement:** `base_tier_validation` เรียง `tier.definition` ด้วย `sequence` จากมากไปน้อยไปเป็น `tier.review.sequence` 1, 2, 3 (definition `sequence` สูงกว่า = อนุมัติก่อน) ตามที่โปรเจกต์ใช้ใน `od19_hr_advance` — ต้องตรวจเทียบกับโค้ด OCA จริงอีกครั้งก่อนตั้งค่า
 
-- **การมอบหมาย (delegation):** ใช้เมนู **Tier Validation → Delegations** ของ OCA (ผู้ใช้ตั้งว่าตนจะให้ใครอนุมัติแทน ช่วงวันที่ใด) — ไม่เขียนโค้ดใหม่
+- **การส่งต่อการอนุมัติ (Forward):** เปิดใช้ด้วยฟิลด์ `tier.definition.has_forward = True` (โมดูล `base_tier_validation_forward`) เมื่อเปิดแล้วผู้อนุมัติที่ถูกคาดหวังจะเห็นปุ่ม **Forward** และกดส่งต่อการอนุมัติให้ผู้ใช้อื่นที่อยู่ในกลุ่มผู้อนุมัติแทนได้ — ไม่เขียนโค้ดใหม่
 - **ผลกระทบต่อกลไกเดิม:** เลิกใช้ฟิลด์ `first_approver_id` เป็นตัวตัดสินเส้นทาง และเลิกใช้ `second_approval_state` เป็นกลไกหลัก (คงฟิลด์ไว้เพื่อความเข้ากันได้ของข้อมูลเท่านั้น)
 - **สถานะรออนุมัติของ tier validation:** `tier.validation` เก็บสถานะที่ `review_ids` / `validation_status` (ไม่ใช่ `state`) จึงต้องแมป "รอใคร" จาก `review_ids` ปัจจุบัน
 
@@ -274,7 +274,7 @@
 
 | เฟส | เนื้อหา | ผลลัพธ์ที่ตรวจได้ |
 |---|---|---|
-| **Phase 1** | 3 ชั้นอนุมัติบน `hr.expense` ด้วย tier validation + กลุ่ม CEO + อัปเดต Approval Center | ยื่นใบเบิก 1 ใบ แล้วต้องผ่าน 3 ขั้นตามลำดับ; มอบหมายผ่านเมนู Delegations ได้ |
+| **Phase 1** | 3 ชั้นอนุมัติบน `hr.expense` ด้วย tier validation + กลุ่ม CEO + อัปเดต Approval Center | ยื่นใบเบิก 1 ใบ แล้วต้องผ่าน 3 ขั้นตามลำดับ; ส่งต่อ (Forward) ให้ผู้อื่นในกลุ่มได้ |
 | **Phase 2** | wizard ยื่นเบิกแบบง่าย (backend) + ค่าเริ่มต้นภาษีอัตโนมัติ + Kanban สถานะ + **Mileage ฝั่ง backend** (ฟิลด์/คำนวณยอด/ตั้งค่าอัตราที่บริษัท) + **สมุดรถพนักงาน** (จดจำ/เติมอัตโนมัติ/แก้-เพิ่ม-ลบ) | พนักงานยื่นเบิกจบใน ≤ 4 ขั้น; ยื่น Mileage แล้วยอด = กม. × อัตรา ถูกต้อง และรถถูกเติมอัตโนมัติในครั้งถัดไป |
 | **Phase 3** | Portal `/my/expenses` + responsive/มือถือ (รวมฟอร์ม Mileage) | พนักงานที่ไม่มีสิทธิ์หลังบ้านยื่นและติดตามได้จากมือถือ |
 | **Phase 4** | Polish: ปุ่มคำนวณระยะทางจากแผนที่ (optional), เก็บร่างกันเน็ตหลุด, รายงาน, คู่มือการใช้งาน | (ตามความจำเป็น) |
@@ -289,7 +289,7 @@
 |---|---|---|
 | T1 | ยื่นใบเบิกแล้วต้องผ่าน 3 ขั้นตามลำดับ (หัวหน้าแผนก → บัญชี → CEO) และข้ามขั้นไม่ได้ | TransactionCase |
 | T2 | ถ้ายังอนุมัติไม่ครบ 3 ชั้น `state` ต้องไม่เป็น `approved` | TransactionCase |
-| T3 | มอบหมายผู้อนุมัติ (delegation) แล้วผู้อื่นอนุมัติแทนได้ | TransactionCase |
+| T3 | ส่งต่อการอนุมัติ (Forward) แล้วผู้อื่นในกลุ่มอนุมัติแทนได้ | TransactionCase |
 | T4 | ผู้ใช้พอร์ทัลเห็นเฉพาะใบเบิกของตัวเอง | TransactionCase / HttpCase |
 | T5 | เบี้ยเลี้ยงเกินวงเงินโดยไม่มีเหตุผล → validation error | TransactionCase |
 | T6 | ใบรับรองแทนใบเสร็จรับเงิน ต้องไม่มี VAT | TransactionCase |
@@ -343,4 +343,4 @@
 - `custom_addons/od19_hr_advance/data/tier_definition_data.xml` — ต้นแบบการตั้งค่า `tier.definition` (2 ชั้น)
 - `custom_addons/od19_approval_center/data/approval_sources.py` — source `hr.expense` (บรรทัดที่กำหนด `strategy` / `steps`)
 - `custom_addons/od19_role_catalog` — ที่ตั้งของกลุ่มสิทธิ์ธุรกิจ (ที่จะเพิ่มกลุ่ม CEO)
-- `third_party/oca/tier-validation/base_tier_validation` — กลไก tier validation + เมนู Delegations
+- `third_party/oca/tier-validation/base_tier_validation` — กลไก tier validation + ฟีเจอร์ Forward (`base_tier_validation_forward`)
