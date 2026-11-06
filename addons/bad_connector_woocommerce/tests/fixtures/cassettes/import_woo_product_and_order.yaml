@@ -1,0 +1,1259 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/products/50
+    response:
+      body:
+        {
+          string:
+            '{
+              "id": 50,
+              "name": "Shirt",
+              "slug": "Shirt",
+              "type": "simple",
+              "status": "publish",
+              "featured": false,
+              "catalog_visibility": "visible",
+              "description": "<p>shirt.</p>\n",
+              "short_description": "<p>shirt.</p>\n",
+              "sku": "shirt-sku",
+              "price": 500,
+              "regular_price": "599",
+              "sale_price": "",
+              "on_sale": false,
+              "purchasable": false,
+              "total_sales": 0,
+              "virtual": false,
+              "downloadable": false,
+              "downloads": [],
+              "download_limit": -1,
+              "download_expiry": -1,
+              "external_url": "",
+              "button_text": "",
+              "tax_status": "taxable",
+              "tax_class": "",
+              "manage_stock": true,
+              "stock_quantity": 2000,
+              "backorders": "no",
+              "backorders_allowed": false,
+              "backordered": false,
+              "sold_individually": false,
+              "weight": "",
+              "dimensions": {
+                  "length": "",
+                  "width": "",
+                  "height": ""
+              },
+              "shipping_required": true,
+              "shipping_taxable": true,
+              "shipping_class": "",
+              "shipping_class_id": 0,
+              "reviews_allowed": true,
+              "average_rating": "0.00",
+              "rating_count": 0,
+              "categories": [
+                   {
+                      "id": 1374,
+                      "name": "Men",
+                      "slug": "men"
+                  }
+              ],
+              "tags": [
+                  {
+                      "id": 35,
+                      "name": "Latest",
+                      "slug": "latest"
+                  }
+              ],
+              "images": [],
+              "attributes": [
+                  {
+                    "id": 0,
+                    "name": "Design",
+                    "position": 1,
+                    "visible": true,
+                    "variation": false,
+                    "options": [
+                        "Simple",
+                        "Hard"
+                    ]
+                }
+              ],
+              "price_html": "",
+              "stock_status": "instock",
+              "has_options": false,
+              "bundled_by": [],
+              "bundle_stock_status": "instock",
+              "bundle_virtual": false,
+              "bundle_layout": "",
+              "bundle_add_to_cart_form_location": "",
+              "bundle_editable_in_cart": false,
+              "jetpack_publicize_connections": [],
+              "jetpack_sharing_enabled": true,
+              "jetpack_likes_enabled": true,
+              "brands": [],
+              "_links": {
+                  "self": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products/50"
+                      }
+                  ],
+                  "collection": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products"
+                      }
+                  ]
+              }
+            }',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/products/tags/35
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": 35,
+                "name": "Latest",
+                "slug": "latest",
+                "description": "latest tag for product.",
+                "count": 1,
+                "_links": {
+                    "self": [
+                        {
+                            "href": "http://localhost:8080/wp-json/wc/v3/products/tags/35"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "http://localhost:8080/wp-json/wc/v3/products/tags"
+                        }
+                    ]
+                }
+            }
+            ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/products/attributes/1
+    response:
+      body:
+        {
+          string:
+            '{
+              "id": 1,
+              "name": "colour",
+              "slug": "pa_colour",
+              "type": "select",
+              "order_by": "menu_order",
+              "has_archives": false,
+              "_links": {
+                  "self": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products/attributes/1"
+                      }
+                  ],
+                  "collection": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products/attributes"
+                      }
+                  ]
+              }
+            }',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/products/categories/1374
+    response:
+      body:
+        {
+          string:
+            '{
+              "id": 1374,
+              "name": "Men",
+              "slug": "men",
+              "parent": 0,
+              "description": "Men-category",
+              "display": "default",
+              "image": null,
+              "menu_order": 0,
+              "count": 4,
+              "_links": {
+                  "self": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products/categories/1374"
+                      }
+                  ],
+                  "collection": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products/categories"
+                      }
+                  ]
+              }
+            }',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/orders/71
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": 71,
+                "parent_id": 0,
+                "status": "processing",
+                "currency": "USD",
+                "version": "7.9.0",
+                "prices_include_tax": false,
+                "date_created": "2023-07-27T13:39:35",
+                "date_modified": "2023-07-27T13:39:36",
+                "discount_total": "-40.00",
+                "discount_tax": "1.00",
+                "shipping_total": "10.00",
+                "shipping_tax": "1.00",
+                "cart_tax": "0.00",
+                "total": "50.00",
+                "total_tax": "0.00",
+                "customer_id": 237660088,
+                "order_key": "wc_order_qzJgPfO1CWI8B",
+                "billing": {
+                    "first_name": "john",
+                    "last_name": "Doe",
+                    "company": "",
+                    "address_1": "969 Market",
+                    "address_2": "",
+                    "city": "San Francisco",
+                    "state": "CA",
+                    "postcode": "94103",
+                    "country": "US",
+                    "email": "john.doe@gmail.com",
+                    "phone": "(555) 555-5555"
+                },
+                "shipping": {
+                    "first_name": "john",
+                    "last_name": "Doe",
+                    "company": "",
+                    "address_1": "969 Market",
+                    "address_2": "",
+                    "city": "San Francisco",
+                    "state": "CA",
+                    "postcode": "94103",
+                    "country": "US",
+                    "phone": ""
+                },
+                "payment_method": "bacs",
+                "payment_method_title": "Direct Bank Transfer",
+                "transaction_id": "",
+                "customer_ip_address": "",
+                "customer_user_agent": "",
+                "created_via": "rest-api",
+                "customer_note": "",
+                "date_completed": null,
+                "date_paid": "2023-07-27T13:39:36",
+                "cart_hash": "",
+                "number": "71",
+                "meta_data": [],
+                "line_items": [
+                  {
+                      "id": 10,
+                      "name": "Shirt",
+                      "product_id": 50,
+                      "variation_id": 0,
+                      "quantity": 3,
+                      "tax_class": "",
+                      "subtotal": "2997.00",
+                      "subtotal_tax": "569.43",
+                      "total": "2997.00",
+                      "total_tax": "569.43",
+                      "taxes": [
+                          {
+                              "id": 1,
+                              "total": "569.43",
+                              "subtotal": "569.43"
+                          }
+                      ],
+                      "meta_data": [],
+                      "sku": "cloth-sku",
+                      "price": 999,
+                      "image": {
+                          "id": "51",
+                          "src": "http://localhost:8080/wp-content/uploads/2023/09/vnech-tee-blue-1.jpg"
+                      },
+                      "parent_name": null
+                    }
+                ],
+                "tax_lines": [{
+                    "id": 318,
+                    "rate_code": "US-CA-STATE TAX",
+                    "rate_id": 1,
+                    "label": "State Tax",
+                    "compound": false,
+                    "tax_total": "1.35",
+                    "shipping_tax_total": "0.00",
+                    "meta_data": []
+                  }],
+                "shipping_lines": [
+                            {
+                                "id": 43,
+                                "method_title": "Flat Rate",
+                                "method_id": "flat_rate",
+                                "instance_id": "",
+                                "total": "10.00",
+                                "total_tax": "0.00",
+                                "taxes": [],
+                                "meta_data": []
+                            }
+                        ],
+                "fee_lines": [],
+                "coupon_lines": [
+                    {
+                        "id": 20,
+                        "code": "flat50",
+                        "discount": "50",
+                        "discount_tax": "9.5",
+                        "meta_data": [
+                            {
+                                "id": 135,
+                                "key": "coupon_data",
+                                "value": {
+                                    "id": 76,
+                                    "code": "flat50",
+                                    "amount": "50",
+                                    "status": "publish",
+                                    "date_created": {
+                                        "date": "2023-10-09 11:01:17.000000",
+                                        "timezone_type": 1,
+                                        "timezone": "+00:00"
+                                    },
+                                    "date_modified": {
+                                        "date": "2023-10-09 11:01:17.000000",
+                                        "timezone_type": 1,
+                                        "timezone": "+00:00"
+                                    },
+                                    "date_expires": null,
+                                    "discount_type": "fixed_cart",
+                                    "description": "",
+                                    "usage_count": 1,
+                                    "individual_use": false,
+                                    "product_ids": [],
+                                    "excluded_product_ids": [],
+                                    "usage_limit": 0,
+                                    "usage_limit_per_user": 0,
+                                    "limit_usage_to_x_items": null,
+                                    "free_shipping": false,
+                                    "product_categories": [],
+                                    "excluded_product_categories": [],
+                                    "exclude_sale_items": false,
+                                    "minimum_amount": "",
+                                    "maximum_amount": "",
+                                    "email_restrictions": [],
+                                    "virtual": false,
+                                    "meta_data": []
+                                },
+                                "display_key": "coupon_data",
+                                "display_value": {
+                                    "id": 76,
+                                    "code": "flat50",
+                                    "amount": "50",
+                                    "status": "publish",
+                                    "date_created": {
+                                        "date": "2023-10-09 11:01:17.000000",
+                                        "timezone_type": 1,
+                                        "timezone": "+00:00"
+                                    },
+                                    "date_modified": {
+                                        "date": "2023-10-09 11:01:17.000000",
+                                        "timezone_type": 1,
+                                        "timezone": "+00:00"
+                                    },
+                                    "date_expires": null,
+                                    "discount_type": "fixed_cart",
+                                    "description": "",
+                                    "usage_count": 1,
+                                    "individual_use": false,
+                                    "product_ids": [],
+                                    "excluded_product_ids": [],
+                                    "usage_limit": 0,
+                                    "usage_limit_per_user": 0,
+                                    "limit_usage_to_x_items": null,
+                                    "free_shipping": false,
+                                    "product_categories": [],
+                                    "excluded_product_categories": [],
+                                    "exclude_sale_items": false,
+                                    "minimum_amount": "",
+                                    "maximum_amount": "",
+                                    "email_restrictions": [],
+                                    "virtual": false,
+                                    "meta_data": []
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "refunds": [],
+                "payment_url": "https://localhost/checkout/order-pay/71/?pay_for_order=true&key=wc_order_qzJgPfO1CWI8B",
+                "is_editable": false,
+                "needs_payment": false,
+                "needs_processing": true,
+                "date_created_gmt": "2023-07-27T08:09:35",
+                "date_modified_gmt": "2023-07-27T08:09:36",
+                "date_completed_gmt": null,
+                "date_paid_gmt": "2023-07-27T08:09:36",
+                "gift_cards": [],
+                "currency_symbol": "$",
+                "_links": {
+                    "self": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/orders/71"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/orders"
+                        }
+                    ],
+                    "customer": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/customers/237660088"
+                        }
+                    ]
+              }
+            }
+          ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/taxes/1
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                  "id": 1,
+                  "country": "",
+                  "state": "",
+                  "postcode": "",
+                  "city": "",
+                  "rate": "19.0000",
+                  "name": "Tax",
+                  "priority": 1,
+                  "compound": false,
+                  "shipping": true,
+                  "order": 0,
+                  "class": "standard",
+                  "postcodes": [],
+                  "cities": [],
+                  "_links": {
+                      "self": [
+                          {
+                              "href": "http://localhost:8080/wp-json/wc/v3/taxes/1"
+                          }
+                      ],
+                      "collection": [
+                          {
+                              "href": "http://localhost:8080/wp-json/wc/v3/taxes"
+                          }
+                      ]
+                  }
+              }
+          ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/customers/237660088
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": 237660088,
+                "email": "john.doe@example.com",
+                "first_name": "John",
+                "last_name": "Doe",
+                "role": "customer",
+                "username": "John Doe",
+                "billing": {
+                    "first_name": "john",
+                    "last_name": "doe",
+                    "company": "abc",
+                    "address_1": "house 1",
+                    "address_2": "california",
+                    "postcode": "555555",
+                    "city":"california city",
+                    "email": "john@example.com",
+                    "phone": "999555999"
+                },
+                "shipping": {
+                    "first_name": "john",
+                    "last_name": "doe",
+                    "company": "abc",
+                    "address_1": "house 2",
+                    "address_2": "california",
+                    "city": "california city",
+                    "postcode": "565656",
+                    "country": "USA",
+                    "state": "CA",
+                    "phone": "999555999"
+                },
+                "is_paying_customer": false,
+                "avatar_url": "https://secure.gravatar.com/avatar/9efb2045a29a88d95f966b9451425c03?s=96&d=identicon&r=g",
+                "meta_data": [
+                    {
+                        "id": 51,
+                        "key": "_aw_user_registered",
+                        "value": "1"
+                    }
+                ],
+                "_links": {
+                    "self": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/customers/237660088"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "https://localhost/wp-json/wc/v3/customers"
+                        }
+                    ]
+                }
+              }
+            ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/shipping_methods/flat_rate
+    response:
+      body:
+        {
+          string:
+            '
+              {
+                "id": "flat_rate",
+                "title": "Flat rate",
+                "description": "Lets you charge a fixed rate for shipping.",
+                "_links": {
+                    "self": [
+                        {
+                            "href": "http://localhost:8080/wp-json/wc/v3/shipping_methods/flat_rate"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "http://localhost:8080/wp-json/wc/v3/shipping_methods"
+                        }
+                    ]
+                }
+            }
+          ',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/products/168
+    response:
+      body:
+        {
+          string:
+            '{
+              "id": 168,
+              "name": "Clothing set",
+              "slug": "clothing-set",
+              "permalink": "https://localhost/product/clothing-set/",
+              "date_created": "2023-11-02T11:52:51",
+              "date_created_gmt": "2023-11-02T11:52:51",
+              "date_modified": "2023-11-06T07:20:25",
+              "date_modified_gmt": "2023-11-06T07:20:25",
+              "type": "grouped",
+              "status": "publish",
+              "featured": false,
+              "catalog_visibility": "visible",
+              "description": "",
+              "short_description": "",
+              "sku": "woo-clothing",
+              "price": "450",
+              "regular_price": "",
+              "sale_price": "",
+              "date_on_sale_from": null,
+              "date_on_sale_from_gmt": null,
+              "date_on_sale_to": null,
+              "date_on_sale_to_gmt": null,
+              "on_sale": true,
+              "purchasable": false,
+              "total_sales": 0,
+              "virtual": false,
+              "downloadable": false,
+              "downloads": [],
+              "download_limit": -1,
+              "download_expiry": -1,
+              "external_url": "",
+              "button_text": "",
+              "tax_status": "taxable",
+              "tax_class": "",
+              "manage_stock": true,
+              "stock_quantity": null,
+              "backorders": "no",
+              "backorders_allowed": false,
+              "backordered": false,
+              "low_stock_amount": null,
+              "sold_individually": false,
+              "weight": "",
+              "dimensions": {
+                  "length": "",
+                  "width": "",
+                  "height": ""
+              },
+              "shipping_required": true,
+              "shipping_taxable": true,
+              "shipping_class": "",
+              "shipping_class_id": 0,
+              "reviews_allowed": true,
+              "average_rating": "0.00",
+              "rating_count": 0,
+              "upsell_ids": [],
+              "cross_sell_ids": [],
+              "parent_id": 0,
+              "purchase_note": "",
+              "categories": [],
+              "tags": [],
+              "images": [],
+              "attributes": [],
+              "default_attributes": [],
+              "variations": [],
+              "grouped_products": [
+                  50
+              ],
+              "menu_order": 0,
+              "price_html": "<span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#8377;</span>450.00</bdi></span> &ndash; <span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#8377;</span>999.00</bdi></span>",
+              "related_ids": [
+                  170,
+                  115
+              ],
+              "meta_data": [],
+              "stock_status": "instock",
+              "has_options": false,
+              "post_password": "",
+              "_links": {
+                  "self": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products/168"
+                      }
+                  ],
+                  "collection": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products"
+                      }
+                  ]
+              }
+          }',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/products/130
+    response:
+      body:
+        {
+          string:
+            '{
+              "id": 130,
+              "name": "V-Neck T-Shirt",
+              "slug": "v-neck-t-shirt",
+              "permalink": "https://localhost/product/v-neck-t-shirt/",
+              "date_created": "2023-10-30T13:17:14",
+              "date_created_gmt": "2023-10-30T13:17:14",
+              "date_modified": "2023-11-02T08:48:01",
+              "date_modified_gmt": "2023-11-02T08:48:01",
+              "type": "variable",
+              "status": "publish",
+              "featured": true,
+              "catalog_visibility": "visible",
+              "description": "<p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>\n",
+              "short_description": "<p>This is a variable product.</p>\n",
+              "sku": "woo-base-t-shirt",
+              "price": "15",
+              "regular_price": "",
+              "sale_price": "",
+              "date_on_sale_from": null,
+              "date_on_sale_from_gmt": null,
+              "date_on_sale_to": null,
+              "date_on_sale_to_gmt": null,
+              "on_sale": false,
+              "purchasable": true,
+              "total_sales": 0,
+              "virtual": false,
+              "downloadable": false,
+              "downloads": [],
+              "download_limit": 0,
+              "download_expiry": 0,
+              "external_url": "",
+              "button_text": "",
+              "tax_status": "taxable",
+              "tax_class": "",
+              "manage_stock": true,
+              "stock_quantity": null,
+              "backorders": "no",
+              "backorders_allowed": false,
+              "backordered": false,
+              "low_stock_amount": null,
+              "sold_individually": false,
+              "weight": "",
+              "dimensions": {
+                  "length": "",
+                  "width": "",
+                  "height": ""
+              },
+              "shipping_required": true,
+              "shipping_taxable": true,
+              "shipping_class": "",
+              "shipping_class_id": 0,
+              "reviews_allowed": true,
+              "average_rating": "0.00",
+              "rating_count": 0,
+              "upsell_ids": [],
+              "cross_sell_ids": [],
+              "parent_id": 0,
+              "purchase_note": "",
+              "categories": [],
+              "tags": [],
+              "images": [
+                  {
+                      "id": 49,
+                      "date_created": "2023-09-25T12:57:09",
+                      "date_created_gmt": "2023-09-25T12:57:09",
+                      "date_modified": "2023-09-25T12:57:09",
+                      "date_modified_gmt": "2023-09-25T12:57:09",
+                      "src": "https://localhost/wp-content/uploads/2023/09/vneck-tee-2.jpg",
+                      "name": "vneck-tee-2.jpg",
+                      "alt": ""
+                  },
+                  {
+                      "id": 50,
+                      "date_created": "2023-09-25T12:57:33",
+                      "date_created_gmt": "2023-09-25T12:57:33",
+                      "date_modified": "2023-09-25T12:57:33",
+                      "date_modified_gmt": "2023-09-25T12:57:33",
+                      "src": "https://localhost/wp-content/uploads/2023/09/vnech-tee-green-1.jpg",
+                      "name": "vnech-tee-green-1.jpg",
+                      "alt": ""
+                  },
+                  {
+                      "id": 51,
+                      "date_created": "2023-09-25T12:57:35",
+                      "date_created_gmt": "2023-09-25T12:57:35",
+                      "date_modified": "2023-10-10T13:28:26",
+                      "date_modified_gmt": "2023-10-10T13:28:26",
+                      "src": "https://localhost/wp-content/uploads/2023/09/vnech-tee-blue-1.jpg",
+                      "name": "cloth.jpg",
+                      "alt": ""
+                  }
+              ],
+              "attributes": [
+                  {
+                    "id": 0,
+                    "name": "Color",
+                    "position": 1,
+                    "visible": true,
+                    "variation": true,
+                    "options": [
+                        "Gray"
+                    ]
+                }],
+              "default_attributes": [],
+              "variations": [
+                  162
+              ],
+              "grouped_products": [],
+              "menu_order": 0,
+              "price_html": "<span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#8377;</span>15.00</bdi></span> &ndash; <span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#8377;</span>20.00</bdi></span>",
+              "related_ids": [],
+              "meta_data": [
+                  {
+                      "id": 2703,
+                      "key": "_wpcom_is_markdown",
+                      "value": "1"
+                  }
+              ],
+              "stock_status": "instock",
+              "has_options": true,
+              "post_password": "",
+              "_links": {
+                  "self": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products/130"
+                      }
+                  ],
+                  "collection": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products"
+                      }
+                  ]
+              }
+          }',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/products/162
+    response:
+      body:
+        {
+          string:
+            '{
+                "id": 162,
+                "name": "V-Neck T-Shirt - Gray",
+                "slug": "v-neck-t-shirt-gray",
+                "permalink": "http://localhost:8080/product/v-neck-t-shirt/?attribute_pa_color=gray",
+                "date_created": "2023-11-01T06:11:54",
+                "date_created_gmt": "2023-11-01T06:11:54",
+                "date_modified": "2023-11-02T08:47:59",
+                "date_modified_gmt": "2023-11-02T08:47:59",
+                "type": "variation",
+                "status": "publish",
+                "featured": false,
+                "catalog_visibility": "visible",
+                "description": "",
+                "short_description": "",
+                "sku": "woo-vneck-tee-gray",
+                "price": "20",
+                "regular_price": "20",
+                "sale_price": "",
+                "date_on_sale_from": null,
+                "date_on_sale_from_gmt": null,
+                "date_on_sale_to": null,
+                "date_on_sale_to_gmt": null,
+                "on_sale": false,
+                "purchasable": true,
+                "total_sales": "0",
+                "virtual": false,
+                "downloadable": false,
+                "downloads": [],
+                "download_limit": -1,
+                "download_expiry": -1,
+                "external_url": "",
+                "button_text": "",
+                "tax_status": "taxable",
+                "tax_class": "zero-rate",
+                "manage_stock": true,
+                "stock_quantity": null,
+                "backorders": "no",
+                "backorders_allowed": false,
+                "backordered": false,
+                "low_stock_amount": null,
+                "sold_individually": false,
+                "weight": "",
+                "dimensions": {
+                    "length": "",
+                    "width": "",
+                    "height": ""
+                },
+                "shipping_required": true,
+                "shipping_taxable": true,
+                "shipping_class": "",
+                "shipping_class_id": 0,
+                "reviews_allowed": false,
+                "average_rating": "0.00",
+                "rating_count": 0,
+                "upsell_ids": [],
+                "cross_sell_ids": [],
+                "parent_id": 130,
+                "purchase_note": "",
+                "categories": [],
+                "tags": [],
+                "images": [],
+                "attributes": [
+                    {
+                        "id": 0,
+                        "name": "Color",
+                        "option": "Gray"
+                    }
+                ],
+                "default_attributes": [],
+                "variations": [],
+                "grouped_products": [],
+                "menu_order": 1,
+                "price_html": "<span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\">&#8377;</span>20.00</bdi></span>",
+                "related_ids": [],
+                "meta_data": [],
+                "stock_status": "instock",
+                "has_options": false,
+                "post_password": "",
+                "_links": {
+                    "self": [
+                        {
+                            "href": "http://localhost:8080/wp-json/wc/v3/products/162"
+                        }
+                    ],
+                    "collection": [
+                        {
+                            "href": "http://localhost:8080/wp-json/wc/v3/products"
+                        }
+                    ],
+                    "up": [
+                        {
+                            "href": "http://localhost:8080/wp-json/wc/v3/products/130"
+                        }
+                    ]
+                }
+            }',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/products/90
+    response:
+      body:
+        {
+          string:
+            '{
+              "id": 90,
+              "name": "Shirt",
+              "slug": "Shirt",
+              "type": "simple",
+              "status": "publish",
+              "featured": false,
+              "catalog_visibility": "visible",
+              "description": "<p>shirt.</p>\n",
+              "short_description": "<p>shirt.</p>\n",
+              "sku": "shirt-sku",
+              "price": 500,
+              "regular_price": "599",
+              "sale_price": "",
+              "on_sale": false,
+              "purchasable": false,
+              "total_sales": 0,
+              "virtual": false,
+              "downloadable": true,
+              "downloads": [
+                  {
+                      "id": "5eaf17cb-793e-4c92-a1c5-62f7f22ea84e",
+                      "name": "album",
+                      "file": "http://localhost:8080/wp-content/uploads/2023/09/album-1.jpg"
+                  },
+                  {
+                      "id": "82449af2-fc01-4ad2-ae24-3e7d897b6020",
+                      "name": "zzz",
+                      "file": "http://localhost:8080/wp-content/uploads/2023/09/hoodie-with-pocket-2.jpg"
+                  }
+              ],
+              "download_limit": -1,
+              "download_expiry": -1,
+              "external_url": "",
+              "button_text": "",
+              "tax_status": "taxable",
+              "tax_class": "",
+              "manage_stock": true,
+              "stock_quantity": 2000,
+              "backorders": "no",
+              "backorders_allowed": false,
+              "backordered": false,
+              "sold_individually": false,
+              "weight": "",
+              "dimensions": {
+                  "length": "",
+                  "width": "",
+                  "height": ""
+              },
+              "shipping_required": true,
+              "shipping_taxable": true,
+              "shipping_class": "",
+              "shipping_class_id": 0,
+              "reviews_allowed": true,
+              "average_rating": "0.00",
+              "rating_count": 0,
+              "categories": [
+                   {
+                      "id": 1374,
+                      "name": "Men",
+                      "slug": "men"
+                  }
+              ],
+              "tags": [
+                  {
+                      "id": 35,
+                      "name": "Latest",
+                      "slug": "latest"
+                  }
+              ],
+              "images": [],
+              "attributes": [
+                  {
+                    "id": 0,
+                    "name": "Design",
+                    "position": 1,
+                    "visible": true,
+                    "variation": false,
+                    "options": [
+                        "Simple",
+                        "Hard"
+                    ]
+                }
+              ],
+              "price_html": "",
+              "stock_status": "instock",
+              "has_options": false,
+              "bundled_by": [],
+              "bundle_stock_status": "instock",
+              "bundle_virtual": false,
+              "bundle_layout": "",
+              "bundle_add_to_cart_form_location": "",
+              "bundle_editable_in_cart": false,
+              "jetpack_publicize_connections": [],
+              "jetpack_sharing_enabled": true,
+              "jetpack_likes_enabled": true,
+              "brands": [],
+              "_links": {
+                  "self": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products/90"
+                      }
+                  ],
+                  "collection": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/products"
+                      }
+                  ]
+              }
+            }',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}

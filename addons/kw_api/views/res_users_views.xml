@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="kw_api_res_users_form" model="ir.ui.view">
+        <field name="name">res.users.form (kw_api)</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="API Token" groups="kw_api.group_kw_api_manager">
+                    <field name="kw_api_token_ids"
+                           context="{'default_user_id': id}">
+                        <tree editable="top">
+                            <field name="user_id" invisible="1"/>
+                            <field name="name"/>
+                            <field name="is_expired"/>
+                            <field name="expire_date"/>
+                            <field name="refresh_token" optional="hide"/>
+                            <field name="is_refresh_token_expired" optional="hide"/>
+                            <field name="refresh_token_expire_date" optional="hide"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

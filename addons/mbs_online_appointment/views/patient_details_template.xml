@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="patient_appointment_form">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure">
+                    <br/>
+                    <nav>
+                        <ul class="pagination pagination-lg justify-content-end">
+                            <li class="page-item">
+                                <a class="page-link" href="/patient_registration">Appointment</a>
+                            </li>
+                            <li class="page-item active" aria-current="page">
+                                <span class="page-link">Details</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link">Confirmation</a>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link">Done</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <br/>
+                <div class="d-flex bg-o-color-4 px-3 mt-3">
+                    <div class="oe_structure container mb16">
+                        <h1>
+                            Your Appointment with Dr.
+                            <span t-esc="patient_values.get('doctor_name', '')"/>
+                        </h1>
+                        <br/>
+                        <h2 class="o_page_header mt32 mb24">
+                            Patient Information
+                        </h2>
+                        <div class="oe_structure"/>
+                        <div class="oe_structure mb32 py-3">
+                            <div class="d-flex row justify-content-between">
+                                <form action="/patient_appointment" class=" col-lg-7 col-md-12">
+                                    <div class="mb-3">
+                                        <label class="pb-2" for="name">Patient Name*</label>
+                                        <div>
+                                            <input type="text" class="form-control" name="name"
+                                                   t-att-value="patient_values.get('name')" id="name" required="true"
+                                                   placeholder="Enter Patient Name"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-1">
+                                        <label class="pb-2" for="date_of_birth">Date Of Birth</label>
+                                        <div>
+                                            <input type="date" class="form-control" name="date_of_birth"
+                                                   id="date_of_birth"
+                                                   required="true"
+                                                   t-att-value="patient_values.get('date_of_birth')"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-1">
+                                        <label class="pb-2" for="gender">Gender</label>
+                                        <div>
+                                            <select class="form-control" name="gender">
+                                                <option value="select_gender" disabled="True" selected="True">Select
+                                                    Gender
+                                                </option>
+                                                <option t-att-selected="patient_values.get('gender') == 'male'"
+                                                        value="male">
+                                                    Male
+                                                </option>
+                                                <option t-att-selected="patient_values.get('gender') == 'female'"
+                                                        value="female">Female
+                                                </option>
+                                                <option t-att-selected="patient_values.get('gender') == 'other'"
+                                                        value="other">Other
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-1">
+                                        <label class="pb-2" for="mobile">Mobile Number*</label>
+                                        <div>
+                                            <input type="tel" class="form-control"
+                                                   name="mobile" id="mobile" required="true"
+                                                   placeholder="Enter Mobile Number"
+                                                   t-att-value="patient_values.get('mobile')"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-1">
+                                        <label class="pb-2" for="email">Email</label>
+                                        <div>
+                                            <input type="text" class="form-control" name="email"
+                                                   t-att-value="patient_values.get('email')" id="email"
+                                                   placeholder="xyz@mail.com"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-1">
+                                        <label for="country_id">Country</label>
+
+                                        <div>
+                                            <select class="form-control" style="color:#898687;" name="country_id">
+                                                <t t-if="patient_values.get('country_id')">
+                                                    <option t-att-value="patient_values.get('country_id')">
+                                                        <t t-esc="request.env['res.country'].sudo().search([('id', '=', patient_values.get('country_id'))],limit=1).name"/>
+                                                    </option>
+                                                </t>
+                                                <t t-foreach="request.env['res.country'].sudo().search([])"
+                                                   t-as="country_id">
+                                                    <option t-att-value="country_id.id">
+                                                        <t t-esc="country_id.name"/>
+                                                    </option>
+
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 mt-1">
+                                        <label for="state_id">State</label>
+
+                                        <div>
+                                            <select class="form-control" style="color:#898687;" name="state_id">
+                                                <t t-if="patient_values.get('state_id')">
+                                                    <option t-att-value="patient_values.get('state_id')">
+                                                        <t t-esc="request.env['res.country.state'].sudo().search([('id', '=', patient_values.get('state_id'))],limit=1).name"/>
+                                                    </option>
+                                                </t>
+                                                <t t-foreach="request.env['res.country.state'].sudo().search([])"
+                                                   t-as="state_id">
+                                                    <option t-att-value="state_id.id">
+                                                        <t t-esc="state_id.name"/>
+                                                    </option>
+
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-1">
+                                        <label class="pb-2" for="city">City</label>
+                                        <div>
+                                            <input type="text" class="form-control" name="city"
+                                                   t-att-value="patient_values.get('city')" id="city"/>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-1">
+                                        <label class="pb-2" for="blood_id">Blood Group</label>
+                                        <div>
+                                            <select class="form-control" name="blood_id">
+                                                <option value="select_blood" disabled="True" selected="True">Select
+                                                    Blood Group
+                                                </option>
+                                                <t t-if="patient_values.get('blood.group')">
+                                                    <option t-att-value="patient_values.get('blood_id')">
+                                                        <t t-esc="request.env['blood.group'].sudo().search([('id', '=', patient_values.get('name'))],limit=1).name"/>
+                                                    </option>
+                                                </t>
+                                                <t t-foreach="request.env['blood.group'].sudo().search([])"
+                                                   t-as="blood_id">
+                                                    <option t-att-value="blood_id.id">
+                                                        <t t-esc="blood_id.name"/>
+                                                    </option>
+
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-1">
+                                        <label class="pb-2" for="dieases">Symptoms</label>
+                                        <div>
+                                            <select class="form-control" name="dieases">
+                                                <option value="select_symptoms" disabled="True" selected="True">Select
+                                                    Symptoms
+                                                </option>
+                                                <t t-if="patient_values.get('dieases.dieases')">
+                                                    <option t-att-value="patient_values.get('dieases')">
+                                                        <t t-esc="request.env['dieases.dieases'].sudo().search([('id', '=', patient_values.get('name'))],limit=1).name"/>
+                                                    </option>
+                                                </t>
+                                                <t t-foreach="request.env['dieases.dieases'].sudo().search([])"
+                                                   t-as="dieases">
+                                                    <option t-att-value="dieases.id">
+                                                        <t t-esc="dieases.name"/>
+                                                    </option>
+
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 pt-4">
+                                        <div class="o_not_editable" style="float:left;">
+                                            <a role="button" href="/patient_registration" class="btn btn-primary">
+                                                Previous
+                                            </a>
+                                        </div>
+                                        <div class="o_not_editable" style="float:right;">
+                                            <button type="submit" class="btn btn-primary">Confirm Appointment</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="col-lg-4 col-md-12 mb-5 mb-lg-0 pt-3 pt-lg-0">
+                                    <div>
+                                        <img src="/mbs_online_appointment/static/description/hospital.jpeg"
+                                             alt="Hospital Template"
+                                             class="w-100 h-100 rounded-top o_object_fit_cover o_appointment_avatar_background"/>
+
+                                    </div>
+                                    <div class="mb-3 mt-1" id="appointment_date">
+                                        <div style="float:left;">
+                                            <strong>On Date :</strong>
+                                        </div>
+                                        <div style="float:right;">
+                                            <i class="fa fa-calendar"></i>
+                                            <t t-set="date_obj"
+                                               t-value="datetime.datetime.strptime(patient_values.get('appointment_date', ''), '%Y-%m-%d')"/>
+                                            <t t-esc="date_obj.strftime('%d/%m/%Y')"/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="mb-3 mt-1" id="appointment_time">
+                                        <div style="float:left;">
+                                            <strong>at Time :</strong>
+                                        </div>
+                                        <div style="float:right;">
+                                            <i class="fa fa-clock-o"></i>
+                                            <t t-esc="patient_values.get('appointment_time', '')"/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="mb-3 pt-3 mt-1" id="hospital_address">
+                                        <div style="float:left;">
+                                            <strong>Hospital Address:</strong>
+                                        </div>
+                                        <div style="float:right;">
+                                            <i class="fa fa-map-marker"></i>
+                                            <span t-esc="patient_values.get('hospital_address', '')"/>
+                                            <br/>
+                                            <span style="margin-left: 15px;"
+                                                  t-esc="patient_values.get('hospital_state', '')"/>,
+                                            <span t-esc="patient_values.get('hospital_country', '')"/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <div class="mb-3 mt-1" id="hospital_phone">
+                                        <div style="float:left;">
+                                            <strong>Call:</strong>
+                                        </div>
+                                        <div style="float:right;">
+                                            <i class="fa fa-phone"></i>
+                                            <span t-esc="patient_values.get('hospital_phone', '')"/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="mb-3 mt-1" id="hospital_email">
+                                        <div style="float:left;">
+                                            <strong>Email:</strong>
+                                        </div>
+                                        <div style="float:right;">
+                                            <i class="fa fa-envelope"></i>
+                                            <span t-esc="patient_values.get('hospital_email', '')"/>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

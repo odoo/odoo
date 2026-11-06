@@ -1,0 +1,63 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_product_product_tree_view">
+        <field name="name">eg.product.product.tree.view</field>
+        <field name="model">eg.product.product</field>
+        <field name="arch" type="xml">
+            <tree create="0" decoration-danger="update_required==True">
+                <field name="odoo_product_id" required="1"/>
+                <field name="instance_id"/>
+                <field name="inst_product_id"/>
+                <field name="update_required"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_product_product_form_view">
+        <field name="name">eg.product.product.form.view</field>
+        <field name="model">eg.product.product</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <field name="product_image" class="oe_avatar" widget="image"/>
+                    <field name="eg_value_ids" widget="many2many_tags"/>
+                    <group>
+                        <group>
+                            <field name="odoo_product_id"/>
+                            <field name="odoo_product_tmpl_id"/>
+                            <field name="update_required"/>
+                            <field name="eg_category_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+                            <field name="inst_product_id"/>
+                            <field name="eg_tmpl_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Extra Information">
+                            <group>
+                                <field name="inst_inventory_item_id" invisible="1"/>
+                                <field name="inst_product_image_id" invisible="1"/>
+                                <field name="name"/>
+                                <field name="price"/>
+                                <field name="product_price"/>
+                                <field name="default_code"/>
+                                <field name="weight"/>
+                                <field name="barcode"/>
+                                <field name="qty_available"/>
+                                <field name="eg_category_id" invisible="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_product_product_action">
+        <field name="name">Product Variants</field>
+        <field name="res_model">eg.product.product</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Product Variants" id="eg_product_product_menu" action="eg_product_product_action"
+              parent="product_mapping_id" sequence="2"/>
+</odoo>

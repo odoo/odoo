@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (C) 2016-Today: GRAP (http://www.grap.coop)
+Copyright (C) 2016-Today La Louve (http://www.lalouve.net)
+@author Sylvain LE GAL (https://twitter.com/legalsylvain)
+License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
+-->
+<odoo>
+    <record id="view_product_template_form" model="ir.ui.view">
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <field name="barcode" position="before">
+                <field
+                    name="barcode_rule_id"
+                    options="{'no_create': True}"
+                    domain="[('generate_model', '=', 'product.product')]"
+                    groups="barcodes_generator_abstract.generate_barcode"
+                    attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"
+                    colspan="2"
+                    widget="selection"
+                />
+                <field name="generate_type" invisible="1" />
+                <label
+                    for="barcode_base"
+                    attrs="{'invisible': ['|', ('barcode_rule_id', '=', False), ('product_variant_count', '&gt;', 1)]}"
+                    groups="barcodes_generator_abstract.generate_barcode"
+                />
+                <div
+                    name="div_barcode_base"
+                    class="o_row"
+                    attrs="{'invisible': ['|', ('barcode_rule_id', '=', False), ('product_variant_count', '&gt;', 1)]}"
+                    groups="barcodes_generator_abstract.generate_barcode"
+                >
+                    <field
+                        name="barcode_base"
+                        attrs="{'readonly': [('generate_type', '!=', 'manual')]}"
+                        groups="barcodes_generator_abstract.generate_barcode"
+                        class="oe_inline"
+                    />
+                    <button
+                        name="generate_base"
+                        type="object"
+                        string="Generate Base"
+                        help="Generate Base (Using Sequence)"
+                        attrs="{'invisible': ['|',
+                        ('generate_type', '!=', 'sequence'),
+                        ('barcode_base', '!=', 0),
+                        ]}"
+                        groups="barcodes_generator_abstract.generate_barcode"
+                        class="oe_inline"
+                    />
+                </div>
+            </field>
+
+            <field name="barcode" position="replace">
+                <label
+                    for="barcode"
+                    attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"
+                />
+                <div
+                    name="div_barcode"
+                    class="o_row"
+                    attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"
+                >
+                    <field
+                        name="barcode"
+                        class="oe_inline"
+                        attrs="{'readonly': [('generate_type', '=', 'sequence')]}"
+                    />
+                    <button
+                        name="generate_barcode"
+                        type="object"
+                        string="Generate Barcode"
+                        help="Generate Barcode (Using Barcode Rule)"
+                        attrs="{'invisible': ['|',
+                            ('barcode_rule_id', '=', False),
+                            ('barcode_base', '=', 0),
+                            ]}"
+                        groups="barcodes_generator_abstract.generate_barcode"
+                        class="oe_inline"
+                    />
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>

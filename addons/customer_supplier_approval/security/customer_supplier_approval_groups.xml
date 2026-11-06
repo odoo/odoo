@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Add new user group-->
+<odoo>
+    <record model="ir.module.category" id="module_approval_validate">
+        <field name="name">Partner Approval and Validation</field>
+        <field name="description">User access level for validating and
+            approving
+        </field>
+        <field name="sequence">10</field>
+    </record>
+    <!--    Validation group-->
+    <record id="customer_supplier_approval_group_validation" model="res.groups">
+        <field name="name">Allow Validate Partner</field>
+        <field name="category_id" ref="module_approval_validate"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+      <!--    Approval group-->
+    <record id="customer_supplier_approval_group_approval" model="res.groups">
+        <field name="name">Allow Approve Partner</field>
+        <field name="category_id" ref="module_approval_validate"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+      <!--    Admin group-->
+    <record id="customer_supplier_approval_group_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="module_approval_validate"/>
+        <field name="implied_ids"
+               eval="[(4, ref('customer_supplier_approval.customer_supplier_approval_group_validation')),
+               (4, ref('customer_supplier_approval.customer_supplier_approval_group_approval'))]"/>
+        <field name="users"
+               eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+</odoo>

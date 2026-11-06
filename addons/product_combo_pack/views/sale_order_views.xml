@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherit Form View to Modify it -->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form.view.inherit.product.combo.pack
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="sale_order_template_id" position="before">
+                <field name="product_pack_id" options="{'no_create': True}" widget="many2many_tags"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

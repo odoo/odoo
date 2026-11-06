@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="customer_statements_form_view" model="ir.ui.view">
+            <field name="name">customer.statements.followup</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="report" create="false" edit="false">
+                    <header>
+                        <field name="followup_status" widget="statusbar"/>
+                    </header>
+                    <div class="alert alert-info" role="alert"
+                         style="font-size: 15px;display: inline-block; margin-top:10px;margin-left: 201px;">
+                        <span>Wonder how to Send Followup mails and Print Followup Reports ? Download our
+                            <a target="_blank"
+                               href="https://apps.odoo.com/apps/modules/16.0/customer_followup_community">
+                                <b>Customer Followup</b>
+                            </a>
+                            Module !
+                        </span>
+                    </div>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <br/>
+
+                        <div class="alert alert-warning o_account_reports_followup-no-action"
+                             attrs="{'invisible': [('invoice_list', '!=', [])]}"
+                             id='no-action' role="alert">
+                            <p>
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                                has no due amount.
+                            </p>
+                        </div>
+
+                        <div attrs="{'invisible': [('invoice_list', '=', [])]}">
+                            <group>
+                                <field name="next_reminder_date"/>
+                            </group>
+                            <notebook colspan="4">
+                                <page string="Invoice Details">
+                                    <field name="invoice_list"/>
+                                </page>
+
+                            </notebook>
+                        </div>
+                        <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                            <field name="total_due" class="oe_subtotal_footer_separator" widget="monetary"
+                                   />
+<!--                             <field name="total_due" class="oe_subtotal_footer_separator" widget="monetary"-->
+<!--                                   options="{'currency_field': 'currency_id'}"/>-->
+                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                <label for="total_overdue"/>
+                            </div>
+                            <field name="total_overdue" nolabel="1" class="oe_subtotal_footer_separator"
+                                   widget="monetary"/>
+<!--                              <field name="total_overdue" nolabel="1" class="oe_subtotal_footer_separator"-->
+<!--                                   widget="monetary" options="{'currency_field': 'currency_id'}"/>-->
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="customer_statements_tree_view" model="ir.ui.view">
+            <field name="name">customer.statements.tree</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Follow-up Reports Tree View" create="false" import="false" delete="false">
+                    <field name="currency_id" invisible="1"/>
+                    <field name="name"/>
+                    <field name="total_due" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Total"/>
+                    <field name="total_overdue" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           sum="Total"/>
+                    <field name="followup_status"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="customer_statements_search_view" model="ir.ui.view">
+            <field name="name">customer.statements.search</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <filter name="supplier" position="after">
+                    <separator/>
+                    <filter string="Overdue Invoices"
+                            name="filter_with_overdue_invoices"
+                            domain="[('followup_status', '=', 'with_overdue_invoices')]"/>
+                    <filter string="In need of action"
+                            name="filter_in_need_of_action"
+                            domain="[('followup_status', '=', 'in_need_of_action')]"/>
+                    <filter string="No action needed"
+                            name="filter_no_action_needed"
+                            domain="[('followup_status', '=', 'no_action_needed')]"/>
+                    <separator/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="action_view_list_customer_statements" model="ir.actions.act_window">
+            <field name="name">Follow-up Reports</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('customer_statements_tree_view')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('customer_statements_form_view')})]"/>
+            <field name="context">{'search_default_filter_in_need_of_action':1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No follow-up to send!
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="customer_statements_menu" name="Follow-up Reports"
+                  parent="account.menu_finance_receivables"
+                  action="action_view_list_customer_statements" sequence="20"
+                  groups="account.group_account_user"/>
+
+    </data>
+</odoo>

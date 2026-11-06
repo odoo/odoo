@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2019 Ecosoft Co., Ltd.
+  License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).-->
+<odoo>
+    <record id="report_xlsx_wizard" model="ir.ui.view">
+        <field name="name">report.xlsx.wizard</field>
+        <field name="model">report.xlsx.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="res_model" invisible="1" />
+                    <field
+                        name="domain"
+                        widget="domain"
+                        options="{'model': 'res_model', 'in_dialog': True}"
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="action_report"
+                        type="object"
+                        string="Execute"
+                        class="oe_highlight"
+                    />
+                    <button special='cancel' string='Cancel' />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

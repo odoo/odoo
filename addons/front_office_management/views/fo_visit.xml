@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="fo_visit_form_view">
+            <field name="name">Visits</field>
+            <field name="model">fo.visit</field>
+            <field name="arch" type="xml">
+                <form string="Visits">
+                    <header>
+                        <button name="action_check_in"
+                                string="Check In"
+                                type="object"
+                                states="draft"
+                                class="oe_highlight"
+                        />
+
+                        <button name="action_check_out"
+                                string="Check Out"
+                                type="object"
+                                states="check_in"
+                                class="oe_highlight"
+                        />
+                        <button name="action_cancel"
+                                string="Cancel"
+                                type="object"
+                                states="draft"
+                                attrs="{'invisible': [('state', 'in', ('check_in','check_out'))]}"/>
+
+                        <field name="state"
+                               widget="statusbar"
+                               statusbar_visible="draft,check_in,check_out,cancel"
+                        />
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="visitor"/>
+                                <field name="phone"/>
+                                <field name="email"/>
+                            </group>
+                            <group string="Check In/Out Details">
+                                <field name="check_in_date"/>
+                                <field name="check_out_date"/>
+                            </group>
+                        </group>
+                        <group string="Purpose Of Visit">
+                            <group>
+                                <field name="visiting_person"/>
+                                <field name="department"/>
+                                <field name="reason" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Personal Belongings">
+                                <field name="visitor_belongings"
+                                       widget="one2many_list" nolabel="1">
+                                    <tree decoration-success="permission == '0' or permission == '2'"
+                                          decoration-danger="permission == '1'"
+                                          string="Items" editable="bottom">
+                                        <field name="number"/>
+                                        <field name="property_name"/>
+                                        <field name="property_count"/>
+                                        <field name="permission"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"
+                               widget="mail_followers"
+                               groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="fo_visit_tree_view">
+            <field name="name">Visits</field>
+            <field name="model">fo.visit</field>
+            <field name="arch" type="xml">
+                <tree string="Visits" decoration-success="state == 'check_in'"
+                      decoration-muted="state == 'check_out'">
+                    <field name="visitor"/>
+                    <field name="reason"/>
+                    <field name="visiting_person"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="fo_visit_action">
+            <field name="name">Visits</field>
+            <field name="res_model">fo.visit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Create Visits.
+                </p>
+                <p>
+                    The check in time will be automatically filled when the
+                    visitor check in to the office.
+                </p>
+                <p>
+                    The check out time automatically filled when the visitor
+                    check out from office.
+                </p>
+            </field>
+        </record>
+
+        <record id="fo_today_visit_action" model="ir.actions.act_window">
+            <field name="name">Today's Visits</field>
+            <field name="res_model">fo.visit</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('check_in_date', '&gt;=',((context_today()-datetime.timedelta(days=0)).strftime('%Y-%m-%d 00:00:00'))),
+                ('check_in_date', '&lt;=',((context_today()-datetime.timedelta(days=0)).strftime('%Y-%m-%d 23:59:59')))]
+            </field>
+        </record>
+
+        <record model="ir.sequence" id="seq_lab_visit">
+            <field name="name">Visits</field>
+            <field name="code">fo.visit</field>
+            <field name="prefix">VID</field>
+            <field name="padding">3</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record model="ir.ui.view" id="fo_belongings_form_view">
+            <field name="name">Belongings</field>
+            <field name="model">fo.belongings</field>
+            <field name="arch" type="xml">
+                <form string="Belongings">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="property_name"/>
+                            </group>
+                            <group>
+                                <field name="property_count"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!--Proof Form view-->
+        <record model="ir.ui.view" id="fo_id_proof_form_view">
+            <field name="name">ID Proof</field>
+            <field name="model">id.proof</field>
+            <field name="arch" type="xml">
+                <form string="ID Proof">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="id_proof"/>
+                            </group>
+                            <group>
+                                <field name="code"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--visiting purpose view-->
+
+        <record model="ir.ui.view" id="fo_visiting_purpose_form_view">
+            <field name="name">Visiting Purpose</field>
+            <field name="model">fo.purpose</field>
+            <field name="arch" type="xml">
+                <form string="Visiting Purpose">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

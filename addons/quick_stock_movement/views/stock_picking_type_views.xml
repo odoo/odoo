@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Views for stock picking type-->
+    <record id="stock_picking_view_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.view.kanban.inherited.quick.stock.movement</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_kanban_manage_new')]"
+                   position="inside">
+                <div role="menuitemstock_picking_type_kanban"
+                     attrs="{'invisible': [('code', '!=', 'internal')]}">
+                    <a name="action_transfer_stock" type="object">Transfer
+                        Stock
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

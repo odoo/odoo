@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ?? 2015-2016 Akretion (http://www.akretion.com/)
+  @author Alexis de Lattre <alexis.delattre@akretion.com>
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+<odoo>
+    <record id="view_template_property_form" model="ir.ui.view">
+        <field name="name">stock_no_negative.product.template.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.view_template_property_form" />
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field
+                    name="allow_negative_stock"
+                    attrs="{'invisible': [('type', '!=', 'product')]}"
+                />
+            </field>
+        </field>
+    </record>
+    <record id="product_category_form_view_inherit" model="ir.ui.view">
+        <field name="name">stock_no_negative.product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="stock.product_category_form_view_inherit" />
+        <field name="arch" type="xml">
+            <field name="removal_strategy_id" position="after">
+                <field name="allow_negative_stock" />
+            </field>
+        </field>
+    </record>
+</odoo>

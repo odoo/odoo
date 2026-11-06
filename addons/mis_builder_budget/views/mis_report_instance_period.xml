@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2017 ACSONE SA/NV
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="mis_report_instance_period_form_view">
+        <field name="name">
+            mis.report.instance.period.form (in mis_builder_budget)
+        </field>
+        <field name="model">mis.report.instance.period</field>
+        <field
+            name="inherit_id"
+            ref="mis_builder.mis_report_instance_period_view_form"
+        />
+        <field name="arch" type="xml">
+            <group name="source_data" position="inside">
+                <field
+                    name="source_mis_budget_id"
+                    attrs="{'invisible': [('source', '!=', 'mis_budget')], 'required': [('source', '=', 'mis_budget')]}"
+                    domain="[('report_id', '=', report_id)]"
+                />
+                <field
+                    name="source_mis_budget_by_account_id"
+                    attrs="{'invisible': [('source', '!=', 'mis_budget_by_account')], 'required': [('source', '=', 'mis_budget_by_account')]}"
+                />
+            </group>
+        </field>
+    </record>
+</odoo>

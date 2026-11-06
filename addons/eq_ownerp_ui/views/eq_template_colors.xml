@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="eq_template_colors_form" model="ir.ui.view">
+            <field name="name">eq.template.colors.form</field>
+            <field name="model">eq.template.colors</field>
+            <field name="arch" type="xml">
+                <form string="Color Picker" class="oe_form_configuration">
+                        <header>
+                            <button string="Apply" type="object" name="execute" class="oe_highlight" />
+                            <button string="Reset All Colors" type="object" name="reset_default" class="oe_highlight" />
+                            <button string="Discard" type="object" name="cancel" special="cancel" />
+                        </header>
+                        <sheet>
+                        <group>
+                            <group>
+                                <field name="eq_color_template_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <separator string="Basic Colors"/>
+                                <field name="eq_basic_text_color" widget="eq_color"/>
+                                <field name="eq_basic_secondary_color" widget="eq_color"/>
+                                <field name="eq_link_color" widget="eq_color"/>
+                            </group>
+                            <group name="eq_es_group_config">
+                                <separator string="Navigation"/>
+                                <field name="eq_apps_color" widget="eq_color"/>
+                                <field name="eq_navi_background" widget="eq_color"/>
+                                <field name="eq_navi_fontcolor" widget="eq_color"/>
+                                <field name="eq_navi_hover" widget="eq_color"/>
+                                <field name="eq_navi_hover_fontcolor" widget="eq_color"/>
+                            </group>
+                            <group>
+                                <separator string="Buttons"/>
+                                <field name="eq_btn_primary_background" widget="eq_color"/>
+                                <field name="eq_btn_primary_fontcolor" widget="eq_color"/>
+                                <field name="eq_btn_secondary_background" widget="eq_color"/>
+                                <field name="eq_btn_secondary_fontcolor" widget="eq_color"/>
+                            </group>
+                            <group>
+                                <separator string="Background"/>
+                                <field name="eq_company_id" invisible="1"/>
+                                <field name="eq_background_image_name" invisible="1"/>
+                                <field name="eq_background_image"  filename="eq_background_image_name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="eq_template_colors_action" model="ir.actions.act_window">
+                <field name="name">Template Colors</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">eq.template.colors</field>
+                <field name="view_mode">form</field>
+                <field name="target">inline</field>
+        </record>
+
+        <menuitem id="eq_template_colors_menu" name="Template Colors" parent="base.menu_administration" sequence="2"/>
+        <menuitem id="eq_colors_menu" action="eq_template_colors_action" name="Colors" parent="eq_ownerp_ui.eq_template_colors_menu" sequence="1"/>
+        
+    </data>
+</odoo>

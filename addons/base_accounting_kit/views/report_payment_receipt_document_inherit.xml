@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="report_payment_receipt_document_inherit"
+              inherit_id="account.report_payment_receipt_document">
+        <xpath expr="//div[hasclass('row')]" position="after">
+            <div class="col-6" t-if="o.bank_reference">
+                Bank Reference:
+                <span t-field="o.bank_reference"/>
+            </div>
+            <div class="col-6" t-if="o.cheque_reference">
+                Cheque Reference:
+                <span t-field="o.cheque_reference"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

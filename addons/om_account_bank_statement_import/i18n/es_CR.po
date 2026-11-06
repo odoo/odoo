@@ -1,0 +1,1080 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* om_account_bank_statement_import
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0-20230613\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-08 20:47+0000\n"
+"PO-Revision-Date: 2023-07-08 14:48-0600\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es_CR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, fuzzy, python-format
+msgid "%d transactions had already been imported and were ignored."
+msgstr "%d transacciones ya habían sido importadas y fueron ignoradas."
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, fuzzy, python-format
+msgid "1 transaction had already been imported and was ignored."
+msgstr "1 transacción ya había sido importada y fue ignorada."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.constraint,message:om_account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
+msgid "A bank account transactions can be imported only once !"
+msgstr "Las transacciones de una cuenta bancaria solo se pueden importar una vez!"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.actions.act_window,help:om_account_bank_statement_import.action_bank_statement_line
+#, fuzzy
+msgid "A bank statement line is a financial transaction on a bank account"
+msgstr "Una línea de extracto bancario es una transacción financiera de una cuenta bancaria"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_partner_id
+msgid "Account Holder"
+msgstr "Titular de la cuenta"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_acc_number
+msgid "Account Number"
+msgstr "Número de cuenta"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+#, fuzzy
+msgid "Action Needed"
+msgstr "Acción necesaria"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
+msgid "Active"
+msgstr "Activo"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_ids
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
+#, fuzzy
+msgid "Activity Exception Decoration"
+msgstr "Decoración de excepción de actividad"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
+#, fuzzy
+msgid "Activity State"
+msgstr "Estado de Actividad"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__sale_activity_note
+#, fuzzy
+msgid "Activity Summary"
+msgstr "Resumen Actividad"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_type_icon
+#, fuzzy
+msgid "Activity Type Icon"
+msgstr "Icono de tipo de actividad"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__sale_activity_user_id
+#, fuzzy
+msgid "Activity User"
+msgstr "Actividad Usuario"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__sale_activity_type_id
+#, fuzzy
+msgid "Activity will be automatically scheduled on payment due date, improving collection process."
+msgstr "La actividad se programará automáticamente en la fecha de vencimiento del pago, mejorando el proceso de cobro."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
+#, fuzzy
+msgid "Alias Name"
+msgstr "Seudónimo"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_domain
+#, fuzzy
+msgid "Alias domain"
+msgstr "Dominio del seudónimo"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__account_control_ids
+msgid "Allowed accounts"
+msgstr "Cuentas permitidas"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "Already imported items"
+msgstr "El elemento ya está importado"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_attachment_count
+msgid "Attachment Count"
+msgstr "Cantidad de adjuntos"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__available_payment_method_ids
+msgid "Available Payment Method"
+msgstr "Métodos de pagos disponible"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_id
+#, python-format
+msgid "Bank"
+msgstr "Banco"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_account_id
+msgid "Bank Account"
+msgstr "Cuenta de banco"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
+#, fuzzy
+msgid "Bank Feeds"
+msgstr "Conexiones Bancarias"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_journal_creation_view
+msgid "Bank Journal Name"
+msgstr "Nombre del diario"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model,name:om_account_bank_statement_import.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Línea de extracto bancario"
+
+#. module: om_account_bank_statement_import
+#: model:ir.actions.act_window,name:om_account_bank_statement_import.action_bank_statement_line
+#, fuzzy
+msgid "Bank Statement Lines"
+msgstr "Líneas de extracto bancario"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model,name:om_account_bank_statement_import.model_account_setup_bank_manual_config
+msgid "Bank setup manual config"
+msgstr "Configuración manual de datos bancarios"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__suspense_account_id
+msgid ""
+"Bank statements transactions will be posted on the suspense account until the final reconciliation allowing finding the "
+"right account."
+msgstr ""
+"Las transacciones de los extractos bancarios se contabilizarán en la cuenta transitoria hasta la conciliación final que "
+"permita encontrar la cuenta correcta."
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_journal_creation_view
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_view
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "Cannot find in which journal import this statement. Please manually select a journal."
+msgstr "No se puede encontrar en qué diario está el extracto a importar. Seleccione manualmente el diario."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
+msgid "Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal"
+msgstr ""
+"Marque esta casilla si no desea compartir la misma secuencia para facturas y notas de crédito realizadas a partir de este "
+"diario"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__payment_sequence
+#, fuzzy
+msgid "Check this box if you don't want to share the same sequence on payments and bank transactions posted on this journal"
+msgstr ""
+"Marque esta casilla si no desea compartir la misma secuencia en los pagos y transacciones bancarias publicadas en este "
+"diario"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
+#, fuzzy
+msgid "Color Index"
+msgstr "Índice de Colores"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
+#, fuzzy
+msgid "Communication Standard"
+msgstr "Estándar de Comunicación"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
+#, fuzzy
+msgid "Communication Type"
+msgstr "Tipo de comunicación"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
+#, fuzzy
+msgid "Company"
+msgstr "Compañía"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
+#, fuzzy
+msgid "Company related to this journal"
+msgstr "Empresa relacionada con este diario"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__compatible_edi_ids
+#, fuzzy
+msgid "Compatible Edi"
+msgstr "Compatible Edi"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, fuzzy, python-format
+msgid ""
+"Could not make sense of the given file.\n"
+"Did you install the module to support this type of file ?"
+msgstr ""
+"No se pudo dar sentido al archivo dado.\n"
+"¿Instaló el módulo para admitir este tipo de archivo?"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__country_code
+#, fuzzy
+msgid "Country Code"
+msgstr "Código de país"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import__create_uid
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__create_uid
+#, fuzzy
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import__create_date
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__create_date
+#, fuzzy
+msgid "Created on"
+msgstr "Creado en"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
+#, fuzzy
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__current_statement_balance
+#, fuzzy
+msgid "Current Statement Balance"
+msgstr "Saldo del estado de cuenta actual"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence
+#, fuzzy
+msgid "Dedicated Credit Note Sequence"
+msgstr "Secuencia de notas de crédito dedicada"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__payment_sequence
+#, fuzzy
+msgid "Dedicated Payment Sequence"
+msgstr "Secuencia de pago dedicada"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_account_id
+msgid "Default Account"
+msgstr "Cuenta por defecto"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_account_type
+msgid "Default Account Type"
+msgstr "Tipo de cuenta por defecto"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_statements_source
+msgid "Defines how the bank statements will be registered"
+msgstr "Define cómo se registrarán los extractos bancarios"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import__display_name
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__compatible_edi_ids
+#, fuzzy
+msgid "EDI format that support moves in this journal"
+msgstr "Formato EDI que soporta movimientos en esta revista"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__edi_format_ids
+#, fuzzy
+msgid "Electronic invoicing"
+msgstr "Facturación electrónica"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_id
+#, fuzzy
+msgid "Email Alias"
+msgstr "Seudónimo de correo electrónico"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__entries_count
+#, fuzzy
+msgid "Entries Count"
+msgstr "Número de asientos"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import__attachment_ids
+#, fuzzy
+msgid "Files"
+msgstr "Archivos"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_follower_ids
+#, fuzzy
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_partner_ids
+#, fuzzy
+msgid "Followers (Partners)"
+msgstr "Seguidores (Socios)"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_type_icon
+#, fuzzy
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icono de Fotn awesome, por ejemplo fa-tasks"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import__attachment_ids
+msgid "Get you bank statements in electronic format from your bank and select them here."
+msgstr "Obtén tus extractos bancarios en formato electrónico de tu banco y selecciónalos aquí."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__has_message
+#, fuzzy
+msgid "Has Message"
+msgstr "Tiene mensaje"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__has_sequence_holes
+#, fuzzy
+msgid "Has Sequence Holes"
+msgstr "Tiene orificios de secuencia"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__has_statement_lines
+#, fuzzy
+msgid "Has Statement Lines"
+msgstr "Tiene líneas de instrucción"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import__id
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__id
+#, fuzzy
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_icon
+#, fuzzy
+msgid "Icon"
+msgstr "Icono"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_icon
+#, fuzzy
+msgid "Icon to indicate an exception activity."
+msgstr "Icono para indicar una actividad de excepción."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+#, fuzzy
+msgid "If checked, new messages require your attention."
+msgstr "Si está marcado, los nuevos mensajes requieren su atención."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
+#, fuzzy
+msgid "If checked, some messages have a delivery error."
+msgstr "Si está marcada, algunos mensajes tienen un error de entrega."
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, fuzzy, python-format
+msgid "If it contains transactions for more than one account, it must be imported on each of them."
+msgstr "Si contiene transacciones para más de una cuenta, debe importarse en cada una de ellas."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+#, fuzzy
+msgid "If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore."
+msgstr ""
+"Si se marca, el asiento contable o la factura recibe un hash tan pronto como se contabiliza y ya no se puede modificar."
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_journal.py:0
+#, python-format
+msgid "Import"
+msgstr "Importar"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model,name:om_account_bank_statement_import.model_account_bank_statement_import
+msgid "Import Bank Statement"
+msgstr "Importar extracto bancario"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_line__unique_import_id
+#, fuzzy
+msgid "Import ID"
+msgstr "ID de importación"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.journal_dashboard_view_inherit
+msgid "Import Statement"
+msgstr "Importar extracto"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_line_ids
+#, fuzzy
+msgid "Inbound Payment Methods"
+msgstr "Métodos de pago entrante"
+
+#. module: om_account_bank_statement_import
+#: model:ir.actions.act_window,name:om_account_bank_statement_import.install_more_import_formats_action
+#, fuzzy
+msgid "Install Import Format"
+msgstr "Instalar formato de importación"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "Invalid file!"
+msgstr "Archivo incorrecto!"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_is_follower
+#, fuzzy
+msgid "Is Follower"
+msgstr "Es seguidor"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
+#, fuzzy
+msgid "It creates draft invoices and bills by sending an email."
+msgstr "Crea borradores de facturas enviando un correo electrónico."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model,name:om_account_bank_statement_import.model_account_journal
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__journal_id
+msgid "Journal"
+msgstr "Diario"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_journal_creation_view
+#, fuzzy, python-format
+msgid "Journal Creation"
+msgstr "Creación de revistas"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model,name:om_account_bank_statement_import.model_account_bank_statement_import_journal_creation
+msgid "Journal Creation on Bank Statement Import"
+msgstr "Creación de diario en la importación de extractos bancarios"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__journal_group_ids
+#, fuzzy
+msgid "Journal Groups"
+msgstr "Grupos de Diarios"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__name
+msgid "Journal Name"
+msgstr "Nombre del diario"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__json_activity_data
+#, fuzzy
+msgid "Json Activity Data"
+msgstr "Datos de actividad de Json"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_journal_creation_view
+#, fuzzy
+msgid ""
+"Just click OK to create the account/journal and finish the upload. If this was a mistake, hit cancel to abort the upload."
+msgstr ""
+"Simplemente haga clic en Aceptar para crear la cuenta / diario y finalizar la carga. Si esto fue un error, presione "
+"cancelar para abortar la carga."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard
+#, fuzzy
+msgid "Kanban Dashboard"
+msgstr "Tablero Kanban"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard_graph
+#, fuzzy
+msgid "Kanban Dashboard Graph"
+msgstr "Gráfico de Tablero Kanban"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import____last_update
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation____last_update
+#, fuzzy
+msgid "Last Modified on"
+msgstr "Última modificación el"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import__write_uid
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__write_uid
+#, fuzzy
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import__write_date
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__write_date
+#, fuzzy
+msgid "Last Updated on"
+msgstr "Ultima actualización en"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__sale_activity_user_id
+#, fuzzy
+msgid "Leave empty to assign the Salesperson of the invoice."
+msgstr "Deje vacío para asignar al comercial de la factura."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+#, fuzzy
+msgid "Lock Posted Entries with Hash"
+msgstr "Bloquear asientos validados con hash"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
+#, fuzzy
+msgid "Loss Account"
+msgstr "Cuenta de pérdidas"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_main_attachment_id
+#, fuzzy
+msgid "Main Attachment"
+msgstr "Archivo adjunto principal"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_line_ids
+#, fuzzy
+msgid ""
+"Manual: Get paid by any method outside of Odoo.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a "
+"payment token saved by the partner when buying or subscribing online.\n"
+"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module "
+"account_batch_payment is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module "
+"account_sepa is necessary.\n"
+msgstr ""
+"Manual: Recibe pagos por cualquier método fuera de Odoo.\n"
+"Proveedores de pago: Cada proveedor de pago tiene su propio método de pago. Solicite una transacción en / hacia una "
+"tarjeta gracias a un token de pago guardado por el socio al comprar o suscribirse en línea.\n"
+"Depósito por lotes: Cobra varios cheques de clientes a la vez generando y enviando un depósito por lotes a tu banco. El "
+"módulo account_batch_payment es necesario.\n"
+"Adeudo directo SEPA: Recibe pagos en la zona SEPA gracias a un mandato que tu pareja te habrá otorgado. El módulo "
+"account_sepa es necesario.\n"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_line_ids
+#, fuzzy
+msgid ""
+"Manual: Pay by any method outside of Odoo.\n"
+"Check: Pay bills by check and print it from Odoo.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is "
+"necessary.\n"
+msgstr ""
+"Manual: obtenga su pago con cualquier método fuera de Odoo.\n"
+"Cheque: pague facturas con cheques e imprímalos desde Odoo.\n"
+"Transferencia de crédito SEPA: envíe un archiva de transferencia de crédito SEPA a su banco y así pague en la zona SEPA. "
+"Se necesita el módulo account_sepa.\n"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+#, fuzzy
+msgid "Message Delivery error"
+msgstr "Error de entrega de mensajes"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_ids
+#, fuzzy
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__my_activity_date_deadline
+#, fuzzy
+msgid "My Activity Deadline"
+msgstr "Fecha límite de mi actividad"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_date_deadline
+#, fuzzy
+msgid "Next Activity Deadline"
+msgstr "Fecha límite de la próxima actividad"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_summary
+#, fuzzy
+msgid "Next Activity Summary"
+msgstr "Resumen de la siguiente actividad"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_type_id
+#, fuzzy
+msgid "Next Activity Type"
+msgstr "Siguiente tipo de actividad"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "No currency found matching '%s'."
+msgstr "No se encontró ninguna moneda que coincida '%s'."
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.view_bank_statement_line_form
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.view_bank_statement_line_search
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.view_bank_statement_line_tree
+#, fuzzy
+msgid "Notes"
+msgstr "Notas"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+#, fuzzy
+msgid "Number of Actions"
+msgstr "Número de acciones"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+#, fuzzy
+msgid "Number of errors"
+msgstr "Número de errores"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+#, fuzzy
+msgid "Number of messages which requires an action"
+msgstr "Número de mensajes que requieren una acción"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+#, fuzzy
+msgid "Number of messages with delivery error"
+msgstr "Número de mensajes con error de entrega"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_journal_creation_view
+#, fuzzy
+msgid "OK"
+msgstr "Vale"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.actions.act_window,help:om_account_bank_statement_import.action_bank_statement_line
+#, fuzzy
+msgid ""
+"Odoo allows you to reconcile a statement line directly with\n"
+"                the related sale or purchase invoice(s)."
+msgstr ""
+"Odoo te permite conciliar una línea del extracto directamente con\n"
+"                la(s) factura(s) de compra o venta relacionada(s)."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__outbound_payment_method_line_ids
+#, fuzzy
+msgid "Outbound Payment Methods"
+msgstr "Métodos de pago salientes"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, fuzzy, python-format
+msgid ""
+"Please upload in specified format ! \n"
+"date, payment reference, reference, partner, amount, currency !"
+msgstr ""
+"¡Por favor, cargue en el formato especificado! \n"
+"fecha, referencia de pago, referencia, socio, importe, divisa !"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
+#, fuzzy
+msgid "Profit Account"
+msgstr "Cuenta de ganancias"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_user_id
+#, fuzzy
+msgid "Responsible User"
+msgstr "Usuario responsable"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
+#, fuzzy
+msgid "SMS Delivery error"
+msgstr "Error de entrega de SMS"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__sale_activity_type_id
+#, fuzzy
+msgid "Schedule Activity"
+msgstr "Planificar actividad"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.view_bank_statement_line_search
+#, fuzzy
+msgid "Search Bank Statements Line"
+msgstr "Buscar líneas de extractos bancarios"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+#, fuzzy
+msgid "Secure Sequence"
+msgstr "Secuencia de seguridad"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
+#, fuzzy
+msgid ""
+"Select 'Sale' for customer invoices journals.\n"
+"Select 'Purchase' for vendor bills journals.\n"
+"Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
+"Select 'General' for miscellaneous operations journals."
+msgstr ""
+"Selecciona 'Ventas' para diarios de facturas de cliente.\n"
+"Selecciona 'Compras' para diarios de facturas de proveedor.\n"
+"Selecciona 'Caja' o 'Banco' para diarios que se usan para pagos de clientes y proveedores. \n"
+"Selecciona 'General' para diarios que contienen operaciones varias."
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_view
+msgid "Select Files"
+msgstr "Seleccione un archivo"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__selected_payment_method_codes
+#, fuzzy
+msgid "Selected Payment Method Codes"
+msgstr "Códigos de métodos de pago seleccionados"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__edi_format_ids
+#, fuzzy
+msgid "Send XML/EDI invoices"
+msgstr "Enviar facturas XML/EDI"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_id
+#, fuzzy
+msgid ""
+"Send one separate email for each invoice.\n"
+"\n"
+"Any file extension will be accepted.\n"
+"\n"
+"Only PDF and XML files will be interpreted by Odoo"
+msgstr ""
+"Envía un correo electrónico por separado para cada factura.\n"
+"\n"
+"Se aceptará cualquier extensión de archivo.\n"
+"\n"
+"Odoo solo interpretará archivos PDF y XML"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_override_regex
+#, fuzzy
+msgid "Sequence Override Regex"
+msgstr "Regex de anulación de secuencia"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+#, fuzzy
+msgid "Sequence to use to ensure the securisation of data"
+msgstr "La secuencia se utiliza para garantizar la titulización de los datos"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
+#, fuzzy
+msgid "Set active to false to hide the Journal without removing it."
+msgstr "Establece activo a falso para ocultar el diario sin eliminarlo."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
+#, fuzzy
+msgid "Short Code"
+msgstr "Código corto"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__code
+#, fuzzy
+msgid "Shorter name used for display. The journal entries of this journal will also be named using this prefix by default."
+msgstr ""
+"Nombre más corto utilizado para mostrar. Los asientos de este diario también se nombrarán con este prefijo de forma "
+"predeterminada."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
+#, fuzzy
+msgid "Show journal on dashboard"
+msgstr "Mostrar diario en el tablero"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.view_bank_statement_line_search
+#, fuzzy
+msgid "Statement"
+msgstr "Extracto"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.view_bank_statement_line_form
+#, fuzzy
+msgid "Statement Line"
+msgstr "Línea de extracto"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.view_bank_statement_line_tree
+#, fuzzy
+msgid "Statement lines"
+msgstr "Líneas de extracto"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_journal.py:0
+#, fuzzy, python-format
+msgid "Statements"
+msgstr "Extractos"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
+#, fuzzy
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Estado basado en actividades\n"
+"Atrasado: la fecha de vencimiento ya pasó\n"
+"Hoy: la fecha de la actividad es hoy\n"
+"Planificado: Actividades futuras."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__suspense_account_id
+#, fuzzy
+msgid "Suspense Account"
+msgstr "Cuenta transitoria"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_override_regex
+#, fuzzy
+msgid ""
+"Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"
+"This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
+"The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+msgstr ""
+"Campo técnico utilizado para imponer una composición de secuencia compleja que el sistema normalmente malinterpretaría.\n"
+"Esta es una expresión regular que puede incluir todos los siguientes grupos de captura: prefijo1, año, prefijo2, mes, "
+"prefijo3, seq, sufijo.\n"
+"Los grupos de prefijo * son los separadores entre el año, el mes y el número de secuencia creciente real (seq).\n"
+"por ejemplo: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?P<prefix3>\\D+?)(?P<seq>\\d+)(?"
+"P<suffix>\\D*?)$"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__country_code
+#, fuzzy
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"EL código ISO del país en dos caracteres.\n"
+"Puedes utilizar este campo para una búsqueda rápida."
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_journal_creation_view
+#, fuzzy
+msgid ""
+"The account of the statement you are uploading is not yet recorded in Odoo. In order to proceed with the upload, you need "
+"to create a bank journal for this account."
+msgstr ""
+"La cuenta del estado de cuenta que está cargando aún no está registrada en Odoo. Para continuar con la carga, debe crear "
+"un diario bancario para esta cuenta."
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "The account of this statement (%s) is not the same as the journal (%s)."
+msgstr "La cuenta del extracto (%s) no es la misma que la del diario (%s)."
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "The currency of the bank statement (%s) is not the same as the currency of the journal (%s)."
+msgstr "La moneda del extracto bancario (%s) no es la misma que la moneda del diario (%s)."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
+msgid "The currency used to enter statement"
+msgstr "La moneda utilizada para ingresar el extracto bancario"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "This file doesn't contain any statement for account %s."
+msgstr "Este archivo %s no contiene ningún extracto de cuenta."
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "This file doesn't contain any transaction for account %s."
+msgstr "Este archivo %s no contiene ninguna operación de cuenta."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
+msgid "Type"
+msgstr "Tipo"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
+#, fuzzy
+msgid "Type of the exception activity on record."
+msgstr "Tipo de actividad de excepción registrada."
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "Unsupported File Type"
+msgstr "Tipo de archivo no soportado"
+
+#. module: om_account_bank_statement_import
+#: model:ir.actions.act_window,name:om_account_bank_statement_import.action_om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_view
+msgid "Upload"
+msgstr "Subir"
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_view
+#, fuzzy
+msgid "Upload Your Statements"
+msgstr "Sube tus estados de cuenta"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
+#, fuzzy
+msgid "Used to order Journals in the dashboard view"
+msgstr "Utilizado para ordenar los diarios en la vista de tablero"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
+#, fuzzy
+msgid "Used to register a loss when the ending balance of a cash register differs from what the system computes"
+msgstr ""
+"Utilizado para registrar una pérdida cuando el saldo final de un registro de caja difiere de lo que el sistema calcula"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
+#, fuzzy
+msgid "Used to register a profit when the ending balance of a cash register differs from what the system computes"
+msgstr ""
+"Utilizado para registrar una ganancia cuando el saldo final de un registro de caja difiere de lo que el sistema calcula"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,field_description:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+#, fuzzy
+msgid "Website Messages"
+msgstr "Mensajes del sitio web"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+#, fuzzy
+msgid "Website communication history"
+msgstr "Historial de comunicación del sitio web"
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
+#, fuzzy
+msgid "Whether this journal should be displayed on the dashboard or not"
+msgstr "Si este diario debe mostrarse en el tablero o no"
+
+#. module: om_account_bank_statement_import
+#. odoo-python
+#: code:addons/om_account_bank_statement_import/models/account_bank_statement_import.py:0
+#, python-format
+msgid "You already have imported that file."
+msgstr "Ya has importado ese archivo."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
+msgid "You can choose different models for each type of reference. The default one is the Odoo reference."
+msgstr "Puede elegir diferentes modelos para cada tipo de referencia. Por defecto es la referencia de Odoo."
+
+#. module: om_account_bank_statement_import
+#: model:ir.model.fields,help:om_account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
+#, fuzzy
+msgid ""
+"You can set here the default communication that will appear on customer invoices, once validated, to help the customer to "
+"refer to that particular invoice when making the payment."
+msgstr ""
+"Puedes establecer aquí la comunicación predeterminada que aparecerá en las facturas del cliente, una vez validada, para "
+"ayudar al cliente a consultar esa factura en particular al realizar el pago."
+
+#. module: om_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:om_account_bank_statement_import.om_account_bank_statement_import_view
+#, fuzzy
+msgid "You can upload your statement using:"
+msgstr "Puede cargar su estado de cuenta usando:"

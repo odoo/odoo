@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <record id="es_config_settings_view_form_base_accounting_kit" model="ir.ui.view">
+            <field name="name">res.config.view.inherited.base.accounting.kit</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="30"/>
+            <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@id='invoicing_settings']" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="customer_credit_limit" on_change="1"/>
+                        </div>
+                        <div class="o_setting_right_pane" id="snailmail_settings">
+                            <label for="customer_credit_limit"/>
+                            <div class="text-muted">
+                                Enable credit limit for customers
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+
+                <!-- Remove the enterprise budget option -->
+
+                <xpath expr="//div[@id='account_budget']" position="replace"/>
+                <xpath expr="//div[@id='bank_cash']" position="inside">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="use_anglo_saxon_accounting"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="use_anglo_saxon_accounting"/>
+                            <div class="text-muted">
+                                It will record the cost of good sold.
+                            </div>
+                        </div>
+                    </div>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

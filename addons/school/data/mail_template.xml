@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="admission_confirm_email" model="mail.template">
+        <field name="name">Admission Confirmation</field>
+        <field name="model_id" ref="model_student_student" />
+        <field name="subject" />
+        <field name="email_from" />
+        <field name="email_to" />
+        <field name="use_default_to" eval="True" />
+        <field name="body_html" type="html">
+            <div>${object.body_html}</div>
+        </field>
+        <field name="auto_delete" eval="True" />
+    </record>
+</odoo>

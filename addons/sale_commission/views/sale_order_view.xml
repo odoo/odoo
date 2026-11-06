@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_order_agent_form_inherit" model="ir.ui.view">
+        <field name="name">sale.agent.order.inherit.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='order_line']/tree//field[@name='price_subtotal']"
+                position="after"
+            >
+                <field name="commission_free" invisible="1" />
+                <field name="invoice_lines" invisible="1" />
+                <button
+                    name="button_edit_agents"
+                    title="Edit agents"
+                    icon="fa-users"
+                    attrs="{'invisible': ['|', ('commission_free', '=', True), ('invoice_lines', '!=', [])]}"
+                    type="object"
+                />
+                <field name="commission_status" optional="show" />
+            </xpath>
+            <field name="tax_totals" position="after">
+                <field
+                    name="commission_total"
+                    widget="monetary"
+                    options="{'currency_field': 'currency_id'}"
+                />
+            </field>
+            <xpath expr="//field[@name='note']" position="after">
+                <group name="group_recompute_commission">
+                    <button
+                        name="recompute_lines_agents"
+                        type="object"
+                        string="Regenerate agents"
+                        states="draft,sent"
+                    />
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_sales_order_filter_agent" model="ir.ui.view">
+        <field name="name">view_sales_order_filter_agent</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="partner_agent_ids" />
+            </field>
+        </field>
+    </record>
+    <!-- This view is needed for proper visualization of the popup / embedded one2many -->
+    <record model="ir.ui.view" id="view_sale_order_line_tree">
+        <field name="name">sale.order.line.agent.tree</field>
+        <field name="model">sale.order.line.agent</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field
+                    name="agent_id"
+                    context="{'default_agent': True, 'default_customer': False, 'default_supplier': True}"
+                />
+                <field
+                    name="commission_id"
+                    domain="['|', ('settlement_type', '=', 'sale_invoice'), ('settlement_type', '=', False)]"
+                />
+                <field name="amount" />
+            </tree>
+        </field>
+    </record>
+</odoo>

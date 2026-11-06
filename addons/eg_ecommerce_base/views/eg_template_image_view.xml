@@ -1,0 +1,36 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_template_image_tree_view">
+        <field name="name">eg.template.image.tree.view</field>
+        <field name="model">eg.template.image</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="name"/>
+                <field name="eg_template_id"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_template_image_form_view">
+        <field name="name">eg.template.image.form.view</field>
+        <field name="model">eg.template.image</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <field name="template_image" class="oe_avatar" widget="image"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="eg_template_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_template_image_action">
+        <field name="name">Template Images</field>
+        <field name="res_model">eg.template.image</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Template Images" id="eg_template_image_menu" action="eg_template_image_action"
+              parent="product_mapping_id" sequence="7" groups="base.group_no_one"/>
+</odoo>

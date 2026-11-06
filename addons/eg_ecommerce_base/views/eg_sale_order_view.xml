@@ -1,0 +1,45 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_sale_order_tree_view">
+        <field name="name">eg.sale.order.tree.view</field>
+        <field name="model">eg.sale.order</field>
+        <field name="arch" type="xml">
+            <tree create="0" decoration-danger="update_required==True">
+                <field name="odoo_order_id"/>
+                <field name="instance_id"/>
+                <field name="inst_order_id"/>
+                <field name="update_required"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_sale_order_form_view">
+        <field name="name">eg.sale.order.form.view</field>
+        <field name="model">eg.sale.order</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="odoo_order_id"/>
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+
+                        </group>
+                        <group>
+                            <field name="eg_account_journal_id"/>
+                            <field name="inst_order_id"/>
+                            <field name="update_required"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_sale_order_action">
+        <field name="name">Sale Orders</field>
+        <field name="res_model">eg.sale.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Sale Orders" id="eg_sale_order_menu" action="eg_sale_order_action"
+              parent="sale_order_mapping_id" sequence="1"/>
+</odoo>

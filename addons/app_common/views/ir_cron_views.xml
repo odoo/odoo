@@ -1,0 +1,12 @@
+<odoo>
+    <record id="app_ir_cron_view_tree" model="ir.ui.view">
+        <field name="name">app.ir.cron.tree</field>
+        <field name="model">ir.cron</field>
+        <field name="inherit_id" ref="base.ir_cron_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="before">
+                <field name='trigger_user_id' optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

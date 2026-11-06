@@ -1,0 +1,18 @@
+<odoo>
+
+     <record id="action_contacts_own" model="ir.actions.act_window">
+        <field name="name">Own Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('user_id','=',uid)]</field>
+    </record>
+    <menuitem id="res_partner_menu_contacts_own"
+        name="Own Contacts"
+        action="action_contacts_own"
+        parent="contacts.menu_contacts"
+        groups="sales_team.group_sale_salesman"
+        sequence="3"/>
+
+
+</odoo>

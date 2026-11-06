@@ -1,0 +1,109 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<odoo>
+
+    <!-- Hide Add To Cart Button and quantity selector for public users -->
+    <template id="product_hide" inherit_id="website_sale.product">
+        <xpath expr="//a[@id='add_to_cart']" position="before">
+            <div class="alert alert-info" t-if="user_id._is_public()">
+                <i class="fa fa-info-circle" />
+                <span>Please Log in to see price and buy options.</span>
+            </div>
+        </xpath>
+        <xpath expr="//a[@id='add_to_cart']" position="attributes">
+            <attribute name="t-if">
+                not user_id._is_public()
+            </attribute>
+        </xpath>
+    </template>
+
+    <!--  Hide Add To Cart button for guest users  -->
+    <template id="product" inherit_id="website_sale.product">
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="attributes">
+            <attribute name="t-if">login_user == True</attribute>
+        </xpath>
+    </template>
+
+    <!--    Hide Product price in price_widget    -->
+    <template id="product_price_hide" inherit_id="website_sale.product_price">
+        <xpath expr="//div[@itemprop='offers']" position="attributes">
+            <attribute name="t-if">not user_id._is_public()</attribute>
+        </xpath>
+    </template>
+
+    <!--    Cart_hide   -->
+    <template id="header_cart_link_hide" inherit_id="website_sale.header_cart_link">
+        <xpath expr="//t[@t-set='show_cart']" position="replace">
+            <t t-if="not user_id._is_public()">
+                <t t-set="show_cart" t-value="true"/>
+            </t>
+            <t t-else="">
+                <t t-set="show_cart" t-value="false"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!--    Hide details section in search bar for hide price -->
+    <template id="search_hide" inherit_id="website_sale.search">
+        <xpath expr="//t[@t-set='display_detail']" position="replace">
+            <t t-if="not user_id._is_public()">
+                <t t-set="display_detail" t-valuef="true"/>
+            </t>
+            <t t-else="">
+                <t t-set="display_detail" t-valuef="false"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!--    Hide price Filter   -->
+    <template id="filter_products_price_hide" inherit_id="website_sale.filter_products_price">
+        <xpath expr="//div[@id='o_wsale_price_range_option']" position="attributes">
+           <attribute name="t-if">
+                not user_id._is_public()
+            </attribute>
+        </xpath>
+    </template>
+
+    <!--    Product Info Page hiding price related attributes  -->
+    <template id="products_item_hide" inherit_id="website_sale.products_item" priority="99">
+        <xpath expr="//div[@itemprop='offers']" position="attributes">
+            <attribute name="t-if">
+                product.product_variant_ids and not user_id._is_public()
+            </attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_wsale_product_btn')]" position="attributes">
+            <attribute name="t-if">
+                product.product_variant_ids and not user_id._is_public()
+            </attribute>
+        </xpath>
+    </template>
+
+    <!--    Hide Quantity selection     -->
+    <template id="product_quantity_hide" inherit_id="website_sale.product_quantity">
+        <xpath expr="//div[contains(@t-attf-class, 'css_quantity')]" position="attributes">
+            <attribute name="t-if">
+                not user_id._is_public()
+            </attribute>
+        </xpath>
+    </template>
+
+    <!--    Hide Price in Search box content  -->
+    <template id="website_search_box_hide" inherit_id="website.website_search_box">
+        <xpath expr="//input[@name='search']" position="attributes">
+            <attribute name="t-att-data-display-price">website and not user_id._is_public()</attribute>
+        </xpath>
+    </template>
+
+    <!--    Hide price in Dynamic Product Filter   -->
+    <template id="price_dynamic_filter_template_product_product" inherit_id="website_sale.price_dynamic_filter_template_product_product">
+        <xpath expr="//span[hasclass('fw-bold')]" position="attributes">
+            <attribute name="t-if">not user_id._is_public() and not data['website_hide_price']</attribute>
+        </xpath>
+    </template>
+
+    <!--    Hide extra badge related to price in price tag   -->
+    <template id="badge_extra_price_hide" inherit_id="sale.badge_extra_price">
+        <xpath expr="//t[@t-name='sale.badge_extra_price']" position="attributes">
+            <attribute name="t-if">not user_id._is_public()</attribute>
+        </xpath>
+    </template>
+</odoo>

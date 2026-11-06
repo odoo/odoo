@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="kw_api_kw_api_token_search" model="ir.ui.view">
+        <field name="name">kw.api.token.search (kw_api)</field>
+        <field name="model">kw.api.token</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="user_id"/>
+                <field name="expire_date"/>
+                <field name="refresh_token_expire_date"/>
+                <field name="name"/>
+                <field name="refresh_token"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="kw_api_kw_api_token_form" model="ir.ui.view">
+        <field name="name">kw.api.token.form (kw_api)</field>
+        <field name="model">kw.api.token</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" widget="CopyClipboardChar"/>
+                    <field name="is_expired"/>
+                    <field name="expire_date"/>
+                    <field name="user_id"/>
+                    <field name="refresh_token" widget="CopyClipboardChar"/>
+                    <field name="is_refresh_token_expired"/>
+                    <field name="refresh_token_expire_date"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="kw_api_kw_api_token_tree" model="ir.ui.view">
+        <field name="name">kw.api.token.tree (kw_api)</field>
+        <field name="model">kw.api.token</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="is_expired"/>
+                <field name="expire_date"/>
+                <field name="user_id"/>
+                <field name="refresh_token"/>
+                <field name="is_refresh_token_expired"/>
+                <field name="refresh_token_expire_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kw_api_kw_api_token_act_window" model="ir.actions.act_window">
+        <field name="name">API token</field>
+        <field name="res_model">kw.api.token</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="kw_api_kw_api_token_menu"
+              action="kw_api_kw_api_token_act_window"
+              parent="kw_api_main_menu"
+              name="API token" sequence="500"/>
+</odoo>

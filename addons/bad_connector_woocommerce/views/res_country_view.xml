@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <!-- Inherited res.country to set binding -->
+        <record id="res_country_view_form" model="ir.ui.view">
+            <field name="name">res.country.form</field>
+            <field name="model">res.country</field>
+            <field name="priority" eval="10" />
+            <field name="inherit_id" ref="base.view_country_form" />
+            <field name="arch" type="xml">
+                <xpath
+                    expr="//sheet/group[@name='advanced_address_formatting']"
+                    position="after"
+                >
+                    <notebook>
+                        <page
+                            string="WooCommerce Connector"
+                            name="woo_connector"
+                            attrs="{'invisible': [('woo_bind_ids', '=', [])]}"
+                            groups="connector.group_connector_manager"
+                        >
+                            <field name="woo_bind_ids" nolabel="1" readonly="1">
+                                <tree
+                                    string="WooCommerce Res Country"
+                                    delete="false"
+                                    edit="false"
+                                    create="false"
+                                >
+                                    <field name="backend_id" widget="selection" />
+                                    <field name="external_id" />
+                                </tree>
+                                <form
+                                    string="WooCommerce Res Country"
+                                    delete="false"
+                                    edit="false"
+                                    create="false"
+                                >
+                                    <group>
+                                        <group>
+                                            <field
+                                                name="backend_id"
+                                                widget="selection"
+                                            />
+                                            <field name="external_id" />
+                                        </group>
+                                        <group>
+                                            <field name="woo_data" />
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

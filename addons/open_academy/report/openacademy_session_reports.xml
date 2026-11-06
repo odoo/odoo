@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    This record defines the "Session Report" action for the Open Academy module.
+        When triggered, it generates a PDF report based on the "openacademy.session" model and
+        the "open_academy.report_session_view" report template.-->
+    <record id="action_openacademy_session" model="ir.actions.report">
+        <field name="name">Session Report</field>
+        <field name="model">openacademy.session</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">open_academy.report_session_view</field>
+        <field name="report_file">open_academy.report_session</field>
+        <field name="binding_model_id" ref="model_openacademy_session"/>
+        <field name="binding_type">report</field>
+    </record>
+
+
+<!--    This is a QWeb template used for rendering the session report in the Open Academy module.
+        The template iterates over the "docs" object to generate a report for each session.
+        The template displays the name, start date, and end date of the session, as well as a list of attendees.-->
+    <template id="open_academy_view_form_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 t-field="doc.name"/>
+                        <p>From
+                            <span t-field="doc.start_date"/>
+                            to
+                            <span t-field="doc.end_date"/>
+                        </p>
+                        <h3>Attendees:</h3>
+                        <ul>
+                            <t t-foreach="doc.attendee_ids" t-as="attendee">
+                                <li>
+                                    <span t-field="attendee.name"/>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

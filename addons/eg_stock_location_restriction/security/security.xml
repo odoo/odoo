@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_stock_location_restrict_manager" model="res.groups">
+        <field name="name">Stock Location Restriction</field>
+    </record>
+
+    <record id="stock_location_restriction_for_users" model="ir.rule">
+        <field name="name">Restrict Stock Location</field>
+        <field ref="model_stock_location" name="model_id"/>
+        <field name="domain_force">[('user_ids','!=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('eg_stock_location_restriction.group_stock_location_restrict_manager'))]"/>
+    </record>
+
+</odoo>

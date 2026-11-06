@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="favicon_icon" inherit_id="web.layout" name="Web layout">
+            <!-- change the title with reliance partner -->
+            <xpath expr="//head//title" position="before">
+                <title t-esc="'Custom'"/>
+            </xpath>
+            <!-- change the default favicon icon with   -->
+            <xpath expr="//head//link[@rel='shortcut icon']" position="after">
+                <link type="image/x-icon" rel="shortcut icon" href="/bdtask_custom_title_and_favicon/static/src/img/favicon.ico"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

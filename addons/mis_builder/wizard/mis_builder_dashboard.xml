@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="mis_report_instance_add_to_dashboard_form_view">
+        <field name="name">add.mis.report.instance.dashboard.wizard.view</field>
+        <field name="model">add.mis.report.instance.dashboard.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add to dashboard">
+                <group>
+                    <field name="name" />
+                    <field name="dashboard_id" />
+                </group>
+                <footer>
+                    <button
+                        name="action_add_to_dashboard"
+                        string="Add to dashboard"
+                        type="object"
+                        default_focus="1"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record
+        model="ir.actions.act_window"
+        id="mis_report_instance_add_to_dashboard_action"
+    >
+        <field name="name">Add to dashboard</field>
+        <field name="res_model">add.mis.report.instance.dashboard.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mis_report_instance_add_to_dashboard_form_view" />
+        <field name="target">new</field>
+    </record>
+</odoo>

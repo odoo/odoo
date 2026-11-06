@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Form view for gym exercise-->
+    <record id="gym_exercise_view_form" model="ir.ui.view">
+        <field name="name">gym.exercise.view.form</field>
+        <field name="model">gym.exercise</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="exercise_for_ids" widget="many2many_tags"/>
+                            <field name="equipment_ids"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Benefits" name="benefits">
+                            <field name="note_benefit"/>
+                        </page>
+                        <page string="Steps" name="steps">
+                            <field name="note_step"/>
+                        </page>
+
+                        <page string="Images" name="images">
+                            <div style="margin-left: 2.5em;padding: 0 7em 2em 0;">
+                                <field name="image" widget="image" style="width:150;height:150;margin-right: 3.5em"/>
+                                <field name="image12" widget="image"  style="width:150;height:150;margin-right: 3.5em"/>
+                                <field name="image123" widget="image"  style="width:150;height:150;margin-right: 3.5em"/>
+                                <field name="image124" widget="image"  style="width:150;height:150;margin-right: 3.5em"/>
+                            </div>
+                        </page>
+
+                        <page string="Videos" name="videos">
+                            <div class="row o_website_sale_image_modal">
+                                <div class="col-md-6 col-xl-5">
+                                    <label for="name" string="Image Name"/>
+                                    <h2>
+                                        <field name="name" />
+                                    </h2>
+                                    <label for="video_url" string="Video URL"/>
+                                    <br/>
+                                    <field name="video_url"/>
+                                    <br/>
+                                </div>
+                                <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
+                                    <div class="row">
+                                        <div class="col" attrs="{'invisible': [('video_url', 'in', ['', False])]}">
+                                            <div>
+                                                <div>
+                                                    <span>Video Preview</span>
+                                                    <field name="embed_code" class="mt-2" widget="video_preview"/>
+                                                    <h4 class="o_invalid_warning text-muted text-center"
+                                                        attrs="{'invisible': [('embed_code', '!=', False)]}">
+                                                        Please enter a valid Video URL.
+                                                    </h4>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+<!--  Action for gym exercise  -->
+    <record id="gym_exercise_action" model="ir.actions.act_window">
+        <field name="name">Gym Exercise</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gym.exercise</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Exercise!
+            </p>
+        </field>
+    </record>
+<!--Sub Menu-->
+    <menuitem id="gym_exercise_menu_action"
+              name="Exercises"
+              parent="equipment_menu_configuration_root"
+              action="gym_exercise_action"
+              sequence="20"/>
+</odoo>

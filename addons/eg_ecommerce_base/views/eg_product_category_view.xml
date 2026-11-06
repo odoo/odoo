@@ -1,0 +1,46 @@
+<odoo>
+    <record model="ir.ui.view" id="eg_product_category_tree_view">
+        <field name="name">eg.product.category.tree.view</field>
+        <field name="model">eg.product.category</field>
+        <field name="arch" type="xml">
+            <tree create="0" decoration-danger="update_required==True">
+                <field name="name"/>
+                <field name="odoo_category_id"/>
+                <field name="instance_id"/>
+                <field name="update_required"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="eg_product_category_form_view">
+        <field name="name">eg.product.category.form.view</field>
+        <field name="model">eg.product.category</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <field name="category_image" class="oe_avatar" widget="image"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="odoo_category_id"/>
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+                            <field name="update_required"/>
+                        </group>
+                        <group>
+                            <field name="parent_id"/>
+                            <field name="real_parent_id"/>
+                            <field name="instance_product_category_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="eg_product_category_action">
+        <field name="name">Product Categories</field>
+        <field name="res_model">eg.product.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem name="Product Categories" id="eg_product_category_menu" action="eg_product_category_action"
+              parent="product_mapping_id" sequence="5"/>
+</odoo>

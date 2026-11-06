@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Product import form view-->
+    <record id="product_import_view_form" model="ir.ui.view">
+        <field name="name">product.import.view.form</field>
+        <field name="model">product.import</field>
+        <field name="arch" type="xml">
+            <form string="Product Options">
+                <group col="4">
+                    <field name="file"/>
+                    <field name="option" widget="radio"/>
+                </group>
+                <footer>
+                    <button name="import_file" string="Import" type="object" default_focus="1" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+<!--    Product import action to open a wizard-->
+    <record id="product_import_action" model="ir.actions.act_window">
+        <field name="name">Import Product</field>
+        <field name="res_model">product.import</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="product_import_view_form"/>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+<!--    Menu-item to import product through csv or xlsx-->
+    <menuitem id="menu_product_import"
+        name="Import Product"
+        action="product_import_action"
+        parent="sale.product_menu_catalog"/>
+</odoo>

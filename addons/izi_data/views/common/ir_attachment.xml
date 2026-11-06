@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_attachment" model="ir.actions.act_window">
+            <field name="name">Attachments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.attachment</field>
+            <field name="context">{'default_analytic': True}</field>
+            <field name="domain">[('analytic', '=', True)]</field>
+            <field name="view_id" eval="False"/>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="base.view_attachment_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new document
+                </p>
+                <p>
+                    Also you will find here all the related documents and download it by clicking on any individual document.
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

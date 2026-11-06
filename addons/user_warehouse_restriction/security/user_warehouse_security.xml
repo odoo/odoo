@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Users should only see operation types that belong to the warehouse they belong to -->
+    <record id="operation_type_rule_users" model="ir.rule">
+        <field name="name">Operation Type Restrict on Users</field>
+        <field name="model_id" ref="stock.model_stock_picking_type"/>
+        <field name="domain_force">[('warehouse_id.user_ids','in', user.id)]</field>
+        <field name="groups" eval="[(4, ref('user_warehouse_restriction.user_warehouse_restriction_group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+    <!-- Users should only see Stock Location that they are not restricted to-->
+    <record id="stock_location_rule_users" model="ir.rule">
+        <field name="name">Stock Location Restrict on Users</field>
+        <field name="model_id" ref="stock.model_stock_location"/>
+        <field name="domain_force">[('id', 'not in', user.location_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('user_warehouse_restriction.user_warehouse_restriction_group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+    <!-- Users should only see the allowed warehouse-->
+    <record id="stock_warehouse_rule_users" model="ir.rule">
+        <field name="name">Warehouse Restrict on Users</field>
+        <field name="model_id" ref="stock.model_stock_warehouse"/>
+        <field name="domain_force">[('user_ids','in', user.id)]</field>
+        <field name="groups" eval="[(4, ref('user_warehouse_restriction.user_warehouse_restriction_group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="active"
+               eval="True"/>
+    </record>
+    <!-- Users should only see transfers of allowed warehouse-->
+    <record id="stock_picking_rule_users" model="ir.rule">
+        <field name="name">Warehouse Transfers Restrict on Users</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="domain_force">[('picking_type_id.warehouse_id.user_ids','in', user.id)]</field>
+        <field name="groups" eval="[(4, ref('user_warehouse_restriction.user_warehouse_restriction_group_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

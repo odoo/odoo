@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="developer_mode_module_view_kanban">
+            <field name="name">Modules Kanban</field>
+            <field name="inherit_id" ref="base.module_view_kanban"/>
+            <field name="model">ir.module.module</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('oe_module_action')]/div" position="replace">
+                </xpath>
+                <xpath expr="//button[@name='button_immediate_install']" position="after">
+                    <button type="object" class="btn btn-primary pull-right btn-sm" name="button_immediate_upgrade" states="installed"
+                            groups="developer_mode.odoo_developer_group">Upgrade</button>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+

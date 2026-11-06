@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="thank_you_template_id" name="Thank you">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <br/>
+                <nav>
+                    <ul class="pagination pagination-lg justify-content-end">
+                        <li class="page-item">
+                            <a class="page-link" href="/patient_registration">Appointment</a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Details</a>
+                        </li>
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#">Confirmation</a>
+                        </li>
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link">Done</span>
+                        </li>
+                    </ul>
+                </nav>
+                <br/>
+                <form action="/patient_registration">
+                    <section class="s_text_block pt40 pb40 o_colored_level " data-snippet="s_text_block">
+                        <div class="container s_allow_columns">
+                            <div class="row">
+                                <div class="col-lg-7 col-xl-6 mr-lg-auto">
+                                    <span class="d-block fa fa-4x fa-thumbs-up mx-auto rounded-circle bg-primary"/>
+                                    <br/>
+                                    <input type="hidden" name="is_submitted" value="is_submitted"/>
+                                    <h1 class="text-center">Thank You!</h1>
+                                    <div class="pb16 pt16 s_hr" data-snippet="s_hr" data-name="Separator">
+                                        <hr class="mx-auto border-top w-50 border-dark text-center"/>
+                                    </div>
+                                    <h5 class="text-center">
+                                        <span class="fa fa-check-circle"/>
+                                        <span>Your Appointment is Booked
+                                            <b>successfully</b>
+                                        </span>
+                                    </h5>
+                                    <p class="text-center">We will get back to you shortly.</p>
+                                    <div>
+                                        <button type="submit" class="btn btn-primary text-left"
+                                                style="margin-top:20px;padding-left:20px;">Back to Home
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

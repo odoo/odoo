@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!-- Import Partners -->
+        <record id="ir_cron_woocommerce_import_partners" model="ir.cron">
+            <field name="name">Woocommerce: Import Partners</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_import_partners()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Import Products -->
+        <record id="ir_cron_woocommerce_import_products" model="ir.cron">
+            <field name="name">Woocommerce: Import Products</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_import_products()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Import Product Attributes -->
+        <record id="ir_cron_woocommerce_import_product_attribute" model="ir.cron">
+            <field name="name">Woocommerce: Import Product Attributes</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_import_product_attributes()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Import Product Categories -->
+        <record id="ir_cron_woocommerce_import_product_category" model="ir.cron">
+            <field name="name">Woocommerce: Import Product Categories</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_import_product_categories()</field>
+            <field name="interval_number">15</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Import Product Tags -->
+        <record id="ir_cron_woocommerce_import_product_tag" model="ir.cron">
+            <field name="name">Woocommerce: Import Product Tags</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_import_product_tags()</field>
+            <field name="interval_number">15</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Import Account Taxes -->
+        <record id="ir_cron_woocommerce_import_tax" model="ir.cron">
+            <field name="name">Woocommerce: Import Account Taxes</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_import_account_tax()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Import Sale Orders -->
+        <record id="ir_cron_woocommerce_import_sale_order" model="ir.cron">
+            <field name="name">Woocommerce: Import Sale Orders</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_import_sale_orders()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Export Sale Order status -->
+        <record id="ir_cron_woo_sale_order_export" model="ir.cron">
+            <field name="name">Woocommerce: Export Sale Order status</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_export_sale_order_status()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!--  Import Country and there States-->
+        <record id="ir_cron_woocommerce_import_country_state" model="ir.cron">
+            <field name="name">Woocommerce: Import Metadata</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_import_metadata()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Export Stock Inventory  -->
+        <record id="ir_cron_woo_product_product_export" model="ir.cron">
+            <field name="name">Woocommerce: Export Stock Inventory</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_update_stock_qty()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Import Product Templates -->
+        <record id="ir_cron_woocommerce_import_product_templates" model="ir.cron">
+            <field name="name">Woocommerce: Import Product Templates</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_import_product_templates()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <!-- Export Refund -->
+        <record id="ir_cron_woo_stock_picking_refund_export" model="ir.cron">
+            <field name="name">Woocommerce: Export Refunds</field>
+            <field name="model_id" ref="model_woo_backend" />
+            <field name="state">code</field>
+            <field name="code">model.cron_export_refunds()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+</odoo>

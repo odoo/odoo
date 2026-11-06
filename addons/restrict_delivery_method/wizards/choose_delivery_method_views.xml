@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Inherited form view of choose delivery carrier to show the delivery
+    methods excluding that delivery method for which it is restricted-->
+    <record id="choose_delivery_carrier_view_form" model="ir.ui.view">
+        <field name="name">
+            choose.delivery.carrier.view.form.inherit.restrict.delivery.method
+        </field>
+        <field name="model">choose.delivery.carrier</field>
+        <field name="inherit_id"
+               ref="delivery.choose_delivery_carrier_view_form"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <field name="delivery_method_ids" widget="many2many_tags"
+                       invisible="1"/>
+                <field name="carrier_id"
+                       domain="[('id', 'in', available_carrier_ids),('id', 'not in', delivery_method_ids)]"
+                       invisible="1"/>
+            </form>
+        </field>
+    </record>
+</odoo>
