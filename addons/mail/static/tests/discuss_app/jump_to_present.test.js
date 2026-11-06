@@ -8,7 +8,14 @@ import {
     waitFor,
     waitForNone,
 } from "@odoo/hoot-dom";
-import { Command, contains, serverState, withUser } from "@web/../tests/web_test_helpers";
+import {
+    Command,
+    contains,
+    getService,
+    makeServerError,
+    serverState,
+    withUser,
+} from "@web/../tests/web_test_helpers";
 import { patch } from "@web/core/utils/patch";
 
 import {
@@ -19,6 +26,7 @@ import {
     defineMailModels,
     isInViewportOf,
     listenStoreFetch,
+    onRpcBefore,
     openDiscuss,
     openFormView,
     patchUiSize,
@@ -29,6 +37,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { PRESENT_VIEWPORT_THRESHOLD, SMOOTH_SCROLLING_CHECK_DELAY } from "@mail/core/common/thread";
+import { Thread } from "@mail/core/common/thread_model";
 import { rpc } from "@web/core/network/rpc";
 
 describe.current.tags("desktop");
@@ -476,6 +485,201 @@ test("Post message when seeing old message should jump to present", async () => 
     await mailContains(".o-mail-Message-content:has(:text('Newly posted'))", {
         after: [".o-mail-Message-content:has(:text('Most Recent!'))"], // should load around present
     });
+});
+
+test("Jump to present keeps the message that failed to post", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const oldestMessageId = pyEnv["mail.message"].create({
+        body: "<p>Hello world!</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    for (let i = 0; i < 100; i++) {
+        pyEnv["mail.message"].create({
+            body: "<p>Non Empty Body</p>".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    pyEnv["mail.message"].create({
+        body: "Most Recent!",
+        model: "discuss.channel",
+        res_id: channelId,
+        parent_id: oldestMessageId,
+    });
+    onRpcBefore("/mail/message/post", () => {
+        throw makeServerError();
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Message:count(30)");
+    await insertTextInComposer(".o-mail-Composer", "Not posted");
+    await press("Enter");
+    await waitFor(
+        ".o-mail-Message:has(:text('Not posted')) button[title='Failed to post the message. Click to retry']:count(1)"
+    );
+    await contains(".o-mail-MessageInReply .cursor-pointer:count(1)").click();
+    await waitFor(".o-mail-Message:eq(0):has(:text('Hello world!')):count(1)");
+    await waitForNone(".o-mail-Message:has(:text('Not posted'))");
+    await contains("[title='Jump to Present']:count(1)").click();
+    await waitFor(
+        ".o-mail-Message:has(:text('Not posted')) button[title='Failed to post the message. Click to retry']:count(1)"
+    );
+    await waitFor(
+        ".o-mail-Message:has(:text('Most Recent!')) ~ .o-mail-Message:has(:text('Not posted')):count(1)"
+    );
+});
+
+test("Jump to present shows a retried message once", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const oldestMessageId = pyEnv["mail.message"].create({
+        body: "<p>Hello world!</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    for (let i = 0; i < 100; i++) {
+        pyEnv["mail.message"].create({
+            body: "<p>Non Empty Body</p>".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    pyEnv["mail.message"].create({
+        body: "Most Recent!",
+        model: "discuss.channel",
+        res_id: channelId,
+        parent_id: oldestMessageId,
+    });
+    let failPost = true;
+    onRpcBefore("/mail/message/post", () => {
+        if (failPost) {
+            throw makeServerError();
+        }
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Message:count(30)");
+    await insertTextInComposer(".o-mail-Composer", "Retried");
+    await press("Enter");
+    await waitFor(
+        ".o-mail-Message:has(:text('Retried')) button[title='Failed to post the message. Click to retry']:count(1)"
+    );
+    failPost = false;
+    await click(".o-mail-Message button[title='Failed to post the message. Click to retry']");
+    await waitFor(
+        ".o-mail-Message:has(:text('Retried')):not(:has(.o-mail-Message-content.opacity-50)):count(1)"
+    );
+    await contains(".o-mail-MessageInReply .cursor-pointer:count(1)").click();
+    await waitFor(".o-mail-Message:eq(0):has(:text('Hello world!')):count(1)");
+    await waitForNone(".o-mail-Message:has(:text('Retried'))");
+    await contains("[title='Jump to Present']:count(1)").click();
+    await waitFor(
+        ".o-mail-Message:has(:text('Most Recent!')) ~ .o-mail-Message:has(:text('Retried')):count(1)"
+    );
+    expect(".o-mail-Message:has(:text('Retried'))").toHaveCount(1);
+});
+
+test("Loading newer messages up to the present keeps the message that failed to post", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const oldestMessageId = pyEnv["mail.message"].create({
+        body: "<p>Hello world!</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    for (let i = 0; i < 40; i++) {
+        pyEnv["mail.message"].create({
+            body: "<p>Non Empty Body</p>".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    pyEnv["mail.message"].create({
+        body: "Most Recent!",
+        model: "discuss.channel",
+        res_id: channelId,
+        parent_id: oldestMessageId,
+    });
+    onRpcBefore("/mail/message/post", () => {
+        throw makeServerError();
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Message:count(30)");
+    await insertTextInComposer(".o-mail-Composer", "Not posted");
+    await press("Enter");
+    await waitFor(
+        ".o-mail-Message:has(:text('Not posted')) button[title='Failed to post the message. Click to retry']:count(1)"
+    );
+    await contains(".o-mail-MessageInReply .cursor-pointer:count(1)").click();
+    await waitFor(".o-mail-Message:eq(0):has(:text('Hello world!')):count(1)");
+    await waitForNone(".o-mail-Message:has(:text('Not posted'))");
+    const { thread } = getService("mail.store")["discuss.channel"].get(channelId);
+    expect(thread.loadNewer).toBe(true);
+    await thread.fetchMoreMessages({ epoch: "newer" });
+    expect(thread.loadNewer).toBe(false);
+    await waitFor(
+        ".o-mail-Message:has(:text('Not posted')) button[title='Failed to post the message. Click to retry']:count(1)"
+    );
+    await waitFor(
+        ".o-mail-Message:has(:text('Most Recent!')) ~ .o-mail-Message:has(:text('Not posted')):count(1)"
+    );
+});
+
+test("Message posted while seeing old messages is not shown after them", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const oldestMessageId = pyEnv["mail.message"].create({
+        body: "<p>Hello world!</p>",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    for (let i = 0; i < 100; i++) {
+        pyEnv["mail.message"].create({
+            body: "<p>Non Empty Body</p>".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    pyEnv["mail.message"].create({
+        body: "Most Recent!",
+        model: "discuss.channel",
+        res_id: channelId,
+        parent_id: oldestMessageId,
+    });
+    const { promise: postPromise, resolve: resolvePost } = Promise.withResolvers();
+    onRpcBefore("/mail/message/post", () => postPromise);
+    patch(Thread.prototype, {
+        async post() {
+            const message = await super.post(...arguments);
+            expect.step("posted");
+            return message;
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Message:count(30)");
+    await insertTextInComposer(".o-mail-Composer", "Newly posted");
+    await press("Enter");
+    await waitFor(".o-mail-Message:has(:text('Newly posted')):count(1)");
+    await contains(".o-mail-MessageInReply .cursor-pointer:count(1)").click();
+    await waitFor(".o-mail-Message:eq(0):has(:text('Hello world!')):count(1)");
+    await waitForNone(".o-mail-Message:has(:text('Newly posted'))");
+    resolvePost();
+    await expect.waitForSteps(["posted"]);
+    await animationFrame();
+    expect(".o-mail-Message:eq(0):has(:text('Hello world!'))").toHaveCount(1);
+    expect(".o-mail-Message:has(:text('Newly posted'))").toHaveCount(0);
+    await contains("[title='Jump to Present']:count(1)").click();
+    await waitFor(
+        ".o-mail-Message:has(:text('Most Recent!')) ~ .o-mail-Message:has(:text('Newly posted')):count(1)"
+    );
 });
 
 test("when triggering jump to present, keeps showing old messages until recent ones are loaded", async () => {

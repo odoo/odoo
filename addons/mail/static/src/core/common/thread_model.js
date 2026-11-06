@@ -524,10 +524,23 @@ export class Thread extends Record {
                     this.messages.push(...missingMessages);
                     this.messages.sort((m1, m2) => m1.id - m2.id);
                 }
+                this._enrichMessagesWithPending();
             }
         }
         this._enrichMessagesWithTransient();
         this.pendingNewMessages = [];
+    }
+
+    /**
+     * Put back the pending messages of this thread after its newest messages,
+     * which have just been loaded: they are not fetched from the server.
+     */
+    _enrichMessagesWithPending() {
+        const pendingMessages = this.allMessages.filter(
+            (message) => message.isPending && message.notIn(this.messages)
+        );
+        pendingMessages.sort((m1, m2) => m1.id - m2.id);
+        this.messages.push(...pendingMessages);
     }
 
     selvesBySequence = this.computedShallowEqual(() =>
@@ -699,10 +712,11 @@ export class Thread extends Record {
         }
         this._enrichMessagesWithTransient();
         if (!this.loadNewer) {
-            const missingMessages = receivedMessages.filter((message) =>
-                message.notIn(this.messages)
+            const missingMessages = receivedMessages.filter(
+                (message) => !message.isPending && message.notIn(this.messages)
             );
             this.messages.push(...missingMessages);
+            this._enrichMessagesWithPending();
         }
     }
 
@@ -811,6 +825,10 @@ export class Thread extends Record {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
+        if (this.loadNewer && this.isLoaded) {
+            // ignored: it will be fetched with the newer messages
+            return;
+        }
         this.messages.add(message);
     }
 
@@ -859,6 +877,17 @@ export class Thread extends Record {
         if (!data) {
             return;
         }
+        return this._insertPostedMessage(data, tmpMsg);
+    }
+
+    /**
+     * Show the posted message in this thread, in place of its pending message.
+     *
+     * @param {Object} data the result of the post
+     * @param {import("models").Message} [tmpMsg]
+     * @returns {import("models").Message}
+     */
+    _insertPostedMessage(data, tmpMsg) {
         this.store.insert(data.store_data);
         /** @type {import("models").Message} */
         const message = this.store["mail.message"].get(data.message_id);
