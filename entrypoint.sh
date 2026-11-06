@@ -20,6 +20,8 @@ ADMIN_PASSWD="${ADMIN_PASSWD:-${admin_passwd}}"
 DB_FILTER="${DBFILTER:-${dbfilter}}"
 DB_MAXCONN="${DB_MAXCONN:-${db_maxconn}}"
 MAX_CRON_THREADS="${MAX_CRON_THREADS:-${max_cron_threads}}"
+UPDATE="${UPDATE:-${update}}"
+INIT="${INIT:-${init}}"
 
 # If individual DB settings are not provided, try parsing DATABASE_URL using python
 if [ -z "$DB_HOST" ] && [ -n "$DATABASE_URL" ]; then
@@ -41,6 +43,9 @@ fi
 DB_PORT="${DB_PORT:-5432}"
 DB_NAME="${DB_NAME:-postgres}"
 DB_SSLMODE="${DB_SSLMODE:-require}"
+# Default connection pool bounds to prevent exhausting Supabase pooler (free tier max 15-20)
+DB_MAXCONN="${DB_MAXCONN:-16}"
+MAX_CRON_THREADS="${MAX_CRON_THREADS:-1}"
 
 # Build arguments array for Odoo execution
 ARGS=(
@@ -63,12 +68,20 @@ ARGS=(
 [ -n "$DB_MAXCONN" ] && ARGS+=("--db_maxconn=${DB_MAXCONN}")
 [ -n "$MAX_CRON_THREADS" ] && ARGS+=("--max-cron-threads=${MAX_CRON_THREADS}")
 
+# Module lifecycle flags (e.g., UPDATE=school_management or INIT=school_website)
+[ -n "$UPDATE" ] && ARGS+=("-u" "${UPDATE}")
+[ -n "$INIT" ] && ARGS+=("-i" "${INIT}")
+
 echo "=========================================================="
 echo " Starting Odoo 19 on port: ${HTTP_PORT}"
 echo " Database Host: ${DB_HOST:-[not set]}:${DB_PORT}"
 echo " Database User: ${DB_USER:-[not set]}"
 echo " Database Name: ${DB_NAME}"
 echo " Database SSL:  ${DB_SSLMODE}"
+echo " Max Conn:      ${DB_MAXCONN}"
+echo " Max Cron:      ${MAX_CRON_THREADS}"
+[ -n "$UPDATE" ] && echo " Update Module: ${UPDATE}"
+[ -n "$INIT" ] && echo " Init Module:   ${INIT}"
 echo " Addons path:   ${APP_DIR}/addons,${APP_DIR}/odoo/addons,${APP_DIR}/custom"
 echo " Proxy Mode:    Enabled"
 echo " Data dir:      ${DATA_DIR}"
