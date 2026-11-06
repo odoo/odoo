@@ -295,7 +295,7 @@ class ResPartner(models.Model):
         # protection for `default_type` values leaking from menu action context (e.g. for crm's email)
         if 'type' in fields and values.get('type'):
             if values['type'] not in self._fields['type'].get_values(self.env):
-                values['type'] = None
+                values['type'] = 'contact'
         return values
 
     name = fields.Char(index=True, default_export_compatible=True)
@@ -351,6 +351,7 @@ class ResPartner(models.Model):
          ('delivery', 'Delivery'),
          ('other', 'Other'),
         ], string='Address Type',
+        required=True,
         default='contact')
     type_address_label = fields.Char('Address Type Description', compute='_compute_type_address_label')
     # address fields
