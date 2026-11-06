@@ -408,6 +408,10 @@ class HrEmployee(models.Model):
         'unique (user_id, company_id)',
         'A user cannot be linked to multiple employees in the same company.',
     )
+    _check_hourly_cost_positive = models.Constraint(
+        'CHECK(hourly_cost >= 0)',
+        'The Hourly Cost must be non negative.',
+    )
 
     @api.model
     def _get_current_day_location_field(self):
