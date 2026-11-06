@@ -9,17 +9,16 @@ import { markup } from "@odoo/owl";
  * Walks the user through:
  *  1. Creating an expense line
  *  2. Submitting the expense sheet
- *  3. First-level approval (L1)
- *  4. Second-level approval (L2)
- *  5. Marking as reimbursed
- *  6. Thai expense types and payment methods
+ *  3. Request Validation (tier validation: Dept Manager -> Accounting -> CEO)
+ *  4. Marking as reimbursed
+ *  5. Thai expense types and payment methods
  */
 registry.category("web_tour.tours").add("od19_hr_expense_tour", {
     url: "/odoo",
     steps: () => [
         ...stepUtils.goToAppSteps(
             "hr_expense.menu_hr_expense_root",
-            markup(_t("Let's learn the <b>HR Expense</b> workflow with 2-level approval."))
+            markup(_t("Let's learn the <b>HR Expense</b> workflow with 3-level tier approval."))
         ),
 
         // --- Create Expense ---
@@ -100,30 +99,25 @@ registry.category("web_tour.tours").add("od19_hr_expense_tour", {
             ".o_form_view"
         ),
 
-        // --- L1 Approval ---
-        // An expense with no manager (or whose manager is the employee
-        // themselves) is auto-validated on submit (`_can_be_autovalidated`),
-        // so the L1/L2 buttons never show. Guard the steps instead of letting
-        // the tour hang on a button that cannot appear.
+        // --- Tier Validation ---
+        // เอกสารที่ต้องขออนุมัติจะแสดงปุ่ม "Request Validation"
+        // (need_validation = True) หลัง Submit
         {
-            isActive: ["button[name='action_approve_first']"],
-            trigger: "button[name='action_approve_first']",
+            isActive: ["button[name='request_validation']"],
+            trigger: "button[name='request_validation']",
             content: markup(_t(
-                "The first approver clicks <b>Approve (L1)</b>."
+                "Click <b>Request Validation</b> to start the 3-level approval: " +
+                "Department Manager → Accounting → CEO."
             )),
             tooltipPosition: "left",
             run: "click",
         },
-
-        // --- L2 Approval ---
-        // Only required above the configured threshold (second_approval_state
-        // becomes 'pending' after L1); otherwise the expense is approved
-        // straight away and this step is skipped.
         {
-            isActive: ["button[name='action_approve_second']"],
-            trigger: "button[name='action_approve_second']",
+            isActive: ["button[name='validate_tier']"],
+            trigger: "button[name='validate_tier']",
             content: markup(_t(
-                "The second approver clicks <b>Approve (L2)</b>. Two-level approval ensures proper control."
+                "Each approver clicks <b>Validate</b> in their turn. " +
+                "Approval follows the sequence and cannot be skipped."
             )),
             tooltipPosition: "left",
             run: "click",
@@ -154,8 +148,9 @@ registry.category("web_tour.tours").add("od19_hr_expense_tour", {
         {
             trigger: ".o_list_renderer",
             content: markup(_t(
-                "HR Expense workflow complete! The process is: <b>Create → Submit → L1 Approve → " +
-                "L2 Approve → Reimbursed</b>. Thai expense types and payment methods support local compliance."
+                "HR Expense workflow complete! The process is: <b>Create → Submit → " +
+                "Request Validation → Validate ×3 → Approve → Reimbursed</b>. " +
+                "Thai expense types and payment methods support local compliance."
             )),
             run: "click",
         },
