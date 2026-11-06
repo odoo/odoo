@@ -579,7 +579,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             ]
         )
 
-        errors = invoice._l10n_it_edi_export_taxes_check()
+        errors = invoice._l10n_it_edi_export_data_check()
         self.assertEqual(len(errors), 0)
 
     ####################################################

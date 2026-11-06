@@ -1,5 +1,3 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from stdnum.it import codicefiscale, iva
 
 from odoo import api, fields, models, _
@@ -164,61 +162,6 @@ class ResPartner(models.Model):
             if record.l10n_it_codice_fiscale and (not codicefiscale.is_valid(record.l10n_it_codice_fiscale) and not iva.is_valid(record.l10n_it_codice_fiscale)):
                 raise UserError(_("Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical person and '12345670546' for businesses.", record.l10n_it_codice_fiscale))
 
-    def _l10n_it_edi_export_check(self, checks=None):
-        checks = checks or ['partner_vat_codice_fiscale_missing', 'partner_address_missing']
-        single_views = [(False, 'form')]
-        list_view = self.env.ref('l10n_it_edi.res_partner_tree_l10n_it', raise_if_not_found=False)
-        multi_views = [(list_view.id if list_view else False, 'list'), (False, 'form')]
-
-        def build_error(errors, key, message, invalid_records):
-            views = single_views if len(invalid_records) == 1 else multi_views
-            errors[f"l10n_it_edi_{key}"] = {
-                'message': message,
-                'action_text': self.env._("View Partner(s)"),
-                'action': invalid_records._get_records_action(name=self.env._("Check Partner(s)"), views=views),
-            }
-
-        fields_to_check = {
-            'partner_vat_missing': {
-                'fields': [('vat',)],
-                'message': self.env._("Partner(s) should have a VAT number."),
-            },
-            'partner_vat_codice_fiscale_missing': {
-                'fields': [('vat', 'l10n_it_codice_fiscale')],
-                'message': self.env._("Partner(s) should have a VAT number or Codice Fiscale."),
-            },
-            'partner_country_missing': {
-                'fields': [('country_id',)],
-                'message': self.env._("Partner(s) should have a Country when used for simplified invoices."),
-            },
-            'partner_address_missing': {
-                'fields': [('street', 'street2'), ('zip',), ('city',), ('country_id',)],
-                'message': self.env._("Partner(s) should have a complete address, verify their Street, City, Zipcode and Country."),
-            },
-            'partner_simplified': {
-                'checks': [
-                    lambda partner: partner._l10n_it_edi_is_italian(),
-                    lambda partner: not partner._l10n_it_edi_is_public_administration(),
-                ],
-                'message': self.env._(
-                    "Simplified Invoices (TD07, TD08, TD09) can only be used with domestic partners"
-                    " that do not belong to the Public Administration."
-                    " Please issue an ordinary invoice instead."
-                ),
-            },
-        }
-        selected_checks = {k: v for k, v in fields_to_check.items() if k in checks}
-
-        errors = {}
-        for key, check in selected_checks.items():
-            for fields_tuple in check.get('fields', []):
-                if invalid_records := self.filtered(lambda record: not any(record[field] for field in fields_tuple)):
-                    build_error(errors, key, check['message'], invalid_records)
-            for check_func in check.get('checks', []):
-                if invalid_records := self.filtered(lambda record: not check_func(record)):
-                    build_error(errors, key, check['message'], invalid_records)
-        return errors
-
     @api.depends('l10n_it_codice_fiscale')
     def _compute_is_company(self):
         l10n_it_partners = self.filtered(lambda p: p.vat and p.country_code == 'IT')
@@ -260,3 +203,7 @@ class ResPartner(models.Model):
             or self.l10n_it_codice_fiscale
             or (self.vat and self.vat.upper().startswith('IT') and iva.is_valid(self.vat))
         )
+
+    def _l10n_it_edi_has_incomplete_address(self):
+        self.ensure_one()
+        return (not self.street and not self.street2) or not self.zip or not self.city or not self.country_id
