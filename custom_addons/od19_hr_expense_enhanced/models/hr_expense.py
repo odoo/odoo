@@ -74,6 +74,13 @@ class HrExpense(models.Model):
                     approver = self._get_department_head_approver(employee_id)
                     if approver:
                         vals['first_approver_id'] = approver.id
+            if (vals.get('od19_is_mileage')
+                    and vals.get('od19_mileage_vehicle_id')):
+                vehicle = self.env['od19.employee.vehicle'].browse(
+                    vals['od19_mileage_vehicle_id'])
+                for fname, value in self._od19_mileage_snapshot_vals(
+                        vehicle).items():
+                    vals.setdefault(fname, value)
         expenses = super().create(vals_list)
         for expense in expenses:
             if expense.od19_is_mileage and expense.od19_mileage_vehicle_id:
@@ -89,6 +96,11 @@ class HrExpense(models.Model):
             approver = self._get_department_head_approver(employee_id)
             if approver:
                 vals['first_approver_id'] = approver.id
+        if ('od19_mileage_vehicle_id' in vals
+                and 'od19_mileage_plate' not in vals):
+            vehicle = self.env['od19.employee.vehicle'].browse(
+                vals['od19_mileage_vehicle_id'])
+            vals.update(self._od19_mileage_snapshot_vals(vehicle))
         return super().write(vals)
 
     @api.onchange('employee_id')
@@ -100,8 +112,15 @@ class HrExpense(models.Model):
 
     @api.model
     def _get_department_head_approver(self, employee_id):
-        """Return the department manager (hr.employee) of the given employee."""
-        employee = self.env['hr.employee'].browse(employee_id)
+        """Return the department manager (hr.employee) of the given employee.
+
+        The employee is read with ``sudo()``: ``hr.employee.department_id``
+        is inherited through ``version_id``, a field restricted to
+        ``hr.group_hr_user``. Resolving the approver is an internal routing
+        concern, so a regular employee submitting their own expense must not
+        need HR rights for it.
+        """
+        employee = self.env['hr.employee'].sudo().browse(employee_id)
         if not employee:
             return self.env['hr.employee']
         manager = employee.department_id.manager_id if employee.department_id else False
@@ -462,17 +481,31 @@ class HrExpense(models.Model):
                     [('employee_id', '=', expense.employee_id.id)], limit=1)
                 expense.od19_mileage_vehicle_id = last
 
+    def _od19_mileage_snapshot_vals(self, vehicle):
+        """Snapshot (vehicle type label, plate) copied from ``vehicle``.
+
+        The snapshot fields are readonly in the form view, so the values are
+        filled server-side on create/write; the onchange only mirrors them in
+        the UI.
+        """
+        if not vehicle:
+            return {
+                'od19_mileage_vehicle_type': False,
+                'od19_mileage_plate': False,
+            }
+        return {
+            'od19_mileage_vehicle_type': dict(
+                vehicle._fields['od19_vehicle_type'].selection
+            ).get(vehicle.od19_vehicle_type),
+            'od19_mileage_plate': vehicle.od19_plate_number,
+        }
+
     @api.onchange('od19_mileage_vehicle_id')
     def _onchange_od19_mileage_vehicle_snapshot(self):
         for expense in self:
-            vehicle = expense.od19_mileage_vehicle_id
-            expense.od19_mileage_vehicle_type = (
-                dict(vehicle._fields['od19_vehicle_type'].selection).get(
-                    vehicle.od19_vehicle_type) if vehicle else False
-            )
-            expense.od19_mileage_plate = (
-                vehicle.od19_plate_number if vehicle else False
-            )
+            for fname, value in expense._od19_mileage_snapshot_vals(
+                    expense.od19_mileage_vehicle_id).items():
+                expense[fname] = value
 
     @api.constrains('od19_is_mileage', 'tax_ids')
     def _check_od19_mileage_has_no_tax(self):
