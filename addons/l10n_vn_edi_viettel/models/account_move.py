@@ -667,12 +667,15 @@ class AccountMove(models.Model):
         # When invoicing in a foreign currency, we need to provide the rate, or it will default to 1.
         if self.currency_id.name != 'VND':
             # Sinvoice only allow upto 2 decimal place for exchange rate
-            exchange_rate = self.env['res.currency']._get_conversion_rate(
-                from_currency=self.currency_id,
-                to_currency=self.env.ref('base.VND'),
-                company=self.company_id,
-                date=self.invoice_date or self.date,
-            )
+            if self.company_currency_id.name == 'VND':
+                exchange_rate = 1 / self.invoice_currency_rate
+            else:
+                exchange_rate = self.env['res.currency']._get_conversion_rate(
+                    from_currency=self.currency_id,
+                    to_currency=self.env.ref('base.VND'),
+                    company=self.company_id,
+                    date=self.invoice_date or self.date,
+                )
             invoice_data['exchangeRate'] = float_repr(float_round(exchange_rate, 2), 2)
 
         adjustment_origin_invoice = None
