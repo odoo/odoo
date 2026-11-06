@@ -79,7 +79,10 @@ class HrExpense(models.Model):
         # we create an account and set the distribution to it.
         for expense in self:
             if expense.sale_order_id and not expense.analytic_distribution:
-                analytic_account = self.env['account.analytic.account'].create(expense.sale_order_id._prepare_analytic_account_data())
+                # sudo: approvers need neither sales nor analytic accounting rights
+                analytic_account = self.env['account.analytic.account'].sudo().create(
+                    expense.sale_order_id.sudo()._prepare_analytic_account_data(),
+                )
                 expense.analytic_distribution = {analytic_account.id: 100}
         return super()._do_approve()
 
