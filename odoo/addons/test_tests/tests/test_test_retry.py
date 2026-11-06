@@ -109,7 +109,24 @@ class TestRetryCommitedCursorError(TestRetryCommon, TransactionCase):
 
 
 @tagged('test_retry', 'test_retry_success')
+<<<<<<< ddcf8f8996649f3ad2b8c5ea59f7e226a21fbc6e:odoo/addons/test_tests/tests/test_test_retry.py
 @tagged('at_install', '-post_install')
+||||||| 4b87c011b060089f73fe0a8806ec29648b42e721:odoo/addons/base/tests/test_test_retry.py
+@tagged('at_install', '-post_install')  # LEGACY at_install
+=======
+class TestRetryTracebackExcInfo(TestRetryCommon):
+
+    def test_retry_traceback_exc_info_success(self):
+        if self.is_soft_fail():
+            try:
+                raise Exception("Some exception")  # ruff: ignore[raise-vanilla-class, raise-within-try, raw-string-in-exception]
+            except Exception:
+                _logger.warning("Error during browser shutdown", exc_info=True)
+
+
+@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('-standard', 'test_retry', 'test_retry_success')
+>>>>>>> 0bfbad7123bb82cde785825fa32b9e0eeb7fb09c:odoo/addons/base/tests/test_test_retry.py
 class TestRetrySubtest(TestRetryCommon):
 
     def test_retry_subtest_success_one(self):
