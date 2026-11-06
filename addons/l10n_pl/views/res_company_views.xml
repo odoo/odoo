@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.l10n_pl</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <field name="state_id" position="after">
+                <field name="l10n_pl_county" placeholder="County (powiat)" class="o_address_street"
+                       invisible="country_code != 'PL'"/>
+                <field name="l10n_pl_municipality" placeholder="Municipality (gmina)" class="o_address_street"
+                       invisible="country_code != 'PL'"/>
+            </field>
+            <div name="identifiers" position="after">
+                <field name="l10n_pl_legal_form" invisible="country_code != 'PL'"/>
+                <field name="l10n_pl_legal_form_other"
+                       invisible="country_code != 'PL' or l10n_pl_legal_form != 'other'"
+                       required="l10n_pl_legal_form == 'other'"/>
+            </div>
+        </field>
+    </record>
+</odoo>
