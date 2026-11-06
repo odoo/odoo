@@ -2,6 +2,7 @@ import { Plugin, shared } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { splitTextNode } from "@html_editor/utils/dom";
 import {
+    isContentEditable,
     isEditorTab,
     isParagraphRelatedElement,
     isTextNode,
@@ -80,6 +81,9 @@ export class TabulationPlugin extends Plugin {
 
         const selection = this.dependencies.selection.getEditableSelection();
         if (selection.isCollapsed) {
+            if (!isContentEditable(selection.anchorNode)) {
+                return;
+            }
             this.insertTab();
         } else {
             this.dependencies.split.splitBlockSegments();

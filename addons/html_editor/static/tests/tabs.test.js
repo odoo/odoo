@@ -1018,6 +1018,14 @@ describe("insert tabulation", () => {
             contentAfter: `<p>a<br>${oeTab(TAB_WIDTH)}[]b</p>`,
         });
     });
+
+    test("should not insert a tab character in a non-editable element", async () => {
+        await testTabulation({
+            contentBefore: `<div contenteditable="false"><div>[]<textarea></textarea></div></div>`,
+            stepFunction: keydownTab,
+            contentAfter: `<div contenteditable="false"><div>[]<textarea></textarea></div></div>`,
+        });
+    });
 });
 
 describe("delete backward tabulation", () => {
