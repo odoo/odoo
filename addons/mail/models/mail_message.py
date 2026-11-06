@@ -906,10 +906,22 @@ class MailMessage(models.Model):
         if not (self.env.su or self.env.user.has_group('base.group_user')):
             vals.pop('author_id', None)
             vals.pop('email_from', None)
+<<<<<<< 1e27b92e374c3013fbd60761832bf76e707a70c7
         record_changed = 'model' in vals or 'res_id' in vals
         if record_changed and not (self.env.su or self.env.user._is_system()):
             raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
         if record_changed or 'message_type' in vals:
+||||||| 70a68bfb9da627acc97eda90813cda34de4a8e7e
+        record_changed = 'model' in vals or 'res_id' in vals
+        if record_changed and not self.env.is_system():
+            raise AccessError(_("Only administrators can modify 'model' and 'res_id' fields."))
+        if record_changed or 'message_type' in vals:
+=======
+        record_changed = {'message_type', 'model', 'res_id'} & vals.keys()
+        if record_changed and not self.env.is_system():
+            raise AccessError(_("Only administrators can modify 'model', 'res_id' and 'message_type' fields."))
+        if record_changed:
+>>>>>>> a3e234597ea12e80bd863191d0d54f818184202e
             self._invalidate_documents()
         res = super().write(vals)
         if vals.get('attachment_ids'):
