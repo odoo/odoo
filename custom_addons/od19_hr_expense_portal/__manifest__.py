@@ -18,6 +18,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/hr_expense_quick_create_views.xml',
+        'views/hr_expense_kanban_views.xml',
     ],
     'installable': True,
     'application': False,
