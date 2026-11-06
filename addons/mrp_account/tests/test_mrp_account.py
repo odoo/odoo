@@ -622,10 +622,10 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         self.assertEqual(wip_entries1[0].wip_production_count, 1, "WIP MOs should be linked to entry")
         self.assertEqual(len(wip_entries1.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
         self.assertRecordValues(wip_entries1.line_ids, [
-            {'account_id': self.default_sv_account_id,                                     'debit': self.product_B.standard_price,          'credit': 0.0},
+            {'account_id': self.stock_valuation_account.id,                               'debit': self.product_B.standard_price,          'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 100.0,                                  'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                                    'credit': 100.0 + self.product_B.standard_price},
-            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                                    'credit': self.product_B.standard_price},
+            {'account_id': self.stock_valuation_account.id,                               'debit': 0.0,                                    'credit': self.product_B.standard_price},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                                    'credit': 100.0},
             {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 100.0 + self.product_B.standard_price,  'credit': 0.0},
         ])
@@ -649,10 +649,10 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         self.assertEqual(len(wip_entries2.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
         total_component_price = self.product_B.standard_price * sum(mo.move_raw_ids.mapped('quantity'))
         self.assertRecordValues(wip_entries2.line_ids, [
-            {'account_id': self.default_sv_account_id,                                     'debit': total_component_price,         'credit': 0.0},
+            {'account_id': self.stock_valuation_account.id,                               'debit': total_component_price,         'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 100.0,                         'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                           'credit': 100.0 + total_component_price},
-            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                           'credit': total_component_price},
+            {'account_id': self.stock_valuation_account.id,                               'debit': 0.0,                           'credit': total_component_price},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                           'credit': 100.0},
             {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 100.0 + total_component_price, 'credit': 0.0},
         ])
@@ -672,10 +672,10 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         self.assertEqual(len(wip_entries3.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
         total_component_price = self.product_B.standard_price * sum(mos.move_raw_ids.mapped('quantity'))
         self.assertRecordValues(wip_entries3.line_ids, [
-            {'account_id': self.default_sv_account_id,                                     'debit': total_component_price,         'credit': 0.0},
+            {'account_id': self.stock_valuation_account.id,                               'debit': total_component_price,         'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 100.0,                         'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                           'credit': 100.0 + total_component_price},
-            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                           'credit': total_component_price},
+            {'account_id': self.stock_valuation_account.id,                               'debit': 0.0,                           'credit': total_component_price},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                           'credit': 100.0},
             {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 100.0 + total_component_price, 'credit': 0.0},
         ])
@@ -692,10 +692,10 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         self.assertEqual(len(wip_entries4.line_ids), 6, "Should be 3 lines per journal entry: 1 for 'Component Value', 1 for '(WO) overhead', 1 for WIP")
         total_component_price = self.product_B.standard_price * sum(mo.move_raw_ids.mapped('quantity'))
         self.assertRecordValues(wip_entries4.line_ids, [
-            {'account_id': self.default_sv_account_id,                                     'debit': total_component_price,         'credit': 0.0},
+            {'account_id': self.stock_valuation_account.id,                               'debit': total_component_price,         'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 100.0,                         'credit': 0.0},
             {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 0.0,                           'credit': 100.0 + total_component_price},
-            {'account_id': self.default_sv_account_id,                                     'debit': 0.0,                           'credit': total_component_price},
+            {'account_id': self.stock_valuation_account.id,                               'debit': 0.0,                           'credit': total_component_price},
             {'account_id': self.env.company.account_production_wip_overhead_account_id.id, 'debit': 0.0,                           'credit': 100.0},
             {'account_id': self.env.company.account_production_wip_account_id.id,          'debit': 100.0 + total_component_price, 'credit': 0.0},
         ])
