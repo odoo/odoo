@@ -124,7 +124,7 @@ class AccountMove(models.Model):
     # TODO: remove in master
     @api.model
     def fields_get(self, allfields=None, attributes=None):
-        self.env['res.config.settings']._pdp_ensure_selection_value('account.move', 'peppol_move_state', 'completed')
+        self.env['res.config.settings']._pdp_ensure_selection_value('account.move', 'peppol_move_state', 'contested')
         return super().fields_get(allfields, attributes)
 
     @api.depends(
