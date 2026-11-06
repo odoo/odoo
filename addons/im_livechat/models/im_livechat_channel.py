@@ -377,7 +377,7 @@ class Im_LivechatChannel(models.Model):
             'livechat_channel_id': self.id,
             "livechat_failure": "no_answer" if is_agent else "no_failure",
             "livechat_status": "in_progress",
-            'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id if is_chatbot_script else False,
+            'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1:].id if is_chatbot_script else False,
             'channel_type': 'livechat',
             'name': channel_name,
         }
@@ -701,7 +701,7 @@ class Im_LivechatChannelRule(models.Model):
                 if not re.search(rule.regex_url or "", url or ""):
                     continue
                 if rule.chatbot_script_id and (
-                    not rule.chatbot_script_id.active or not rule.chatbot_script_id.script_step_ids
+                    not rule.chatbot_script_id.active or not rule.chatbot_script_id._get_welcome_steps()
                 ):
                     continue
                 if (
