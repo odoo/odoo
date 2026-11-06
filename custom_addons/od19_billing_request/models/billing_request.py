@@ -69,10 +69,14 @@ class Od19BillingRequest(models.Model):
     )
 
     # --- ต้นทาง/ปลายทาง ---
+    # NOTE: ``fields.Reference`` must NOT be tracked. Odoo's mail tracking
+    # cannot render a Reference value (it calls ``convert_to_read`` on the
+    # target record), which raised ``NotImplementedError`` when a request was
+    # created from a Purchase Order.  The origin is still shown in the form and
+    # in the chatter through ``origin_model``/``partner_id`` instead.
     origin_ref = fields.Reference(
         selection="_selection_origin_ref",
         string="Origin / เอกสารต้นทาง",
-        tracking=True,
     )
     origin_model = fields.Char(
         string="Origin Model",
