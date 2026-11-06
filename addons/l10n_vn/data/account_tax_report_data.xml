@@ -75,10 +75,15 @@
                         <field name="formula">most_recent</field>
                         <field name="date_scope">previous_return_period</field>
                     </record>
+                    <record id="form_01_gtgt_report_B_amount_ob" model="account.report.expression">
+                        <field name="label">amount_ob</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">VAT_22OB</field>
+                    </record>
                     <record id="form_01_gtgt_report_B_balance" model="account.report.expression">
                         <field name="label">balance</field>
                         <field name="engine">aggregation</field>
-                        <field name="formula">22._applied_carryover_balance</field>
+                        <field name="formula">22._applied_carryover_balance + 22.amount_ob</field>
                     </record>
                 </field>
             </record>
@@ -180,8 +185,8 @@
                                 </field>
                                 <field name="children_ids">
                                     <record id="form_01_gtgt_report_C_I_a" model="account.report.line">
-                                        <field name="name">Including: imported Goods and Services</field>
-                                        <field name="name@vi_VN">Trong đó: hàng hóa, dịch vụ nhập khẩu</field>
+                                        <field name="name">Including: imported Goods</field>
+                                        <field name="name@vi_VN">Trong đó: hàng hóa nhập khẩu</field>
                                         <field name="code">23a24a</field>
                                         <field name="hierarchy_level">5</field>
                                         <field name="expression_ids">
@@ -309,8 +314,8 @@
                                 </field>
                             </record>
                             <record id="form_01_gtgt_report_C_II_2" model="account.report.line">
-                                <field name="name">2. Sold Goods and Services subjected to VAT ([27]=[29]+[30]+[32]+[32a]; [28]=[31]+[33])</field>
-                                <field name="name@vi_VN">2. Hàng hóa, dịch vụ bán ra chịu thuế giá trị gia tăng ([27]=[29]+[30]+[32]+[32a]; [28]=[31]+[33])</field>
+                                <field name="name">2. Sold Goods and Services subjected to VAT ([27]=[29]+[30]+[32]+[32a]-[32b]; [28]=[31]+[33])</field>
+                                <field name="name@vi_VN">2. Hàng hóa, dịch vụ bán ra chịu thuế giá trị gia tăng ([27]=[29]+[30]+[32]+[32a]-[32b]; [28]=[31]+[33])</field>
                                 <field name="code">2728</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
@@ -322,7 +327,7 @@
                                     <record id="form_01_gtgt_report_C_II_2_amount_untaxed" model="account.report.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">29.amount_untaxed + 3031.amount_untaxed + 3233.amount_untaxed + 32a.amount_untaxed</field>
+                                        <field name="formula">29.amount_untaxed + 3031.amount_untaxed + 3233.amount_untaxed + 32a.amount_untaxed - 32b.amount_untaxed</field>
                                     </record>
                                     <record id="form_01_gtgt_report_C_II_2_code_2" model="account.report.expression">
                                         <field name="label">code_2</field>
@@ -431,8 +436,8 @@
                                         </field>
                                     </record>
                                     <record id="form_01_gtgt_report_C_II_d" model="account.report.line">
-                                        <field name="name">d. Sold Goods and Services not required to declaird and pay VAT</field>
-                                        <field name="name@vi_VN">d. Hàng hóa, dịch vụ bán ra không tính thuế</field>
+                                        <field name="name">d. Sold Goods and Services not required to declare to pay VAT</field>
+                                        <field name="name@vi_VN">d. Hàng hóa, dịch vụ bán ra không kê khai tính nộp thuế</field>
                                         <field name="code">32a</field>
                                         <field name="hierarchy_level">5</field>
                                         <field name="expression_ids">
@@ -448,11 +453,47 @@
                                             </record>
                                         </field>
                                     </record>
+                                    <record id="form_01_gtgt_report_C_II_e" model="account.report.line">
+                                        <field name="name">e. Sold Goods and services not included in the value-added tax calculation</field>
+                                        <field name="name@vi_VN">e. Hàng hóa, dịch vụ bán ra không tính vào giá tính thuế giá trị gia tăng</field>
+                                        <field name="code">32b</field>
+                                        <field name="hierarchy_level">5</field>
+                                        <field name="expression_ids">
+                                            <record id="form_01_gtgt_report_C_II_e_code_1" model="account.report.expression">
+                                                <field name="label">code_1</field>
+                                                <field name="engine">text</field>
+                                                <field name="formula">[32b]</field>
+                                            </record>
+                                            <record id="form_01_gtgt_report_C_II_e_amount_untaxed" model="account.report.expression">
+                                                <field name="label">amount_untaxed</field>
+                                                <field name="engine">tax_tags</field>
+                                                <field name="formula">-Untaxed sales of Goods and Services not included in the value-added tax calculation</field>
+                                            </record>
+                                        </field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="form_01_gtgt_report_C_II_3a" model="account.report.line">
+                                <field name="name">3. Sold Goods and Services not subject to value-added tax adjustment regulations</field>
+                                <field name="name@vi_VN">3. Hàng hóa, dịch vụ bán ra không thuộc phạm vi điều chỉnh của pháp luật thuế giá trị gia tăng</field>
+                                <field name="code">34a</field>
+                                <field name="hierarchy_level">3</field>
+                                <field name="expression_ids">
+                                    <record id="form_01_gtgt_report_C_II_3a_code_1" model="account.report.expression">
+                                        <field name="label">code_1</field>
+                                        <field name="engine">text</field>
+                                        <field name="formula">[34a]</field>
+                                    </record>
+                                    <record id="form_01_gtgt_report_C_II_3a_amount_untaxed" model="account.report.expression">
+                                        <field name="label">amount_untaxed</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-Untaxed sales of Goods and Services not subject to value-added tax adjustment regulations</field>
+                                    </record>
                                 </field>
                             </record>
                             <record id="form_01_gtgt_report_C_3" model="account.report.line">
-                                <field name="name">3. Total revenue and VAT amount on sold Goods and Services ([34]=[26]+[27]; [35]=[28])</field>
-                                <field name="name@vi_VN">3. Tổng doanh thu và thuế giá trị gia tăng của hàng hóa, dịch vụ bán ra ([34]=[26]+[27]; [35]=[28])</field>
+                                <field name="name">4. Total revenue and VAT amount on sold Goods and Services ([34]=[26]+[27]+[34a]; [35]=[28])</field>
+                                <field name="name@vi_VN">4. Tổng doanh thu và thuế giá trị gia tăng của hàng hóa, dịch vụ bán ra ([34]=[26]+[27]+[34a]; [35]=[28])</field>
                                 <field name="code">3435</field>
                                 <field name="hierarchy_level">3</field>
                                 <field name="expression_ids">
@@ -464,7 +505,7 @@
                                     <record id="form_01_gtgt_report_C_3_amount_untaxed" model="account.report.expression">
                                         <field name="label">amount_untaxed</field>
                                         <field name="engine">aggregation</field>
-                                        <field name="formula">26.amount_untaxed + 2728.amount_untaxed</field>
+                                        <field name="formula">26.amount_untaxed + 2728.amount_untaxed + 34a.amount_untaxed</field>
                                     </record>
                                     <record id="form_01_gtgt_report_C_3_code_2" model="account.report.expression">
                                         <field name="label">code_2</field>
