@@ -321,7 +321,8 @@ class TestWebsiteSalePerformanceCategoriesSidebar(TestWebsiteSalePerformanceNoPr
         # Published category with an unpublished child (inaccessible to public/portal users)
         parent_categ = cls.env["product.public.category"].create({"name": "Published"})
         cls.env["product.public.category"].create({
-            "name": "Unpublished", "parent_id": parent_categ.id
+            "name": "Unpublished",
+            "parent_id": parent_categ.id,
         })
         cls.heavy_product.public_categ_ids = parent_categ
 
@@ -407,6 +408,98 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
         )
 
 
-# TODO test when heavy product is set as rental/recurring
-# TODO test with enable uoms (& multiple uoms on products)
-# TODO test with prevent zero price sale
+# PREVENT SALE
+
+
+class TestWebsiteSalePerformancePreventZeroPriceSale(TestWebsiteSalePerformanceWithPricelist):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website.write({"prevent_sale": True, "prevent_sale_for": "zero_price"})
+
+    def _get_shop_page_queries(self):
+        res = super()._get_shop_page_queries()
+        # The pricelist rules are applied again to check whether each product has a zero price
+        res["product_pricelist_item"] += 3
+        return res
+
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+    def test_product_page_generation(self):
+        select_queries = self._get_product_page_queries()
+        self._check_url_hot_query(
+            self.heavy_product.website_url,
+            sum(select_queries.values()),
+            select_tables_perf=select_queries,
+        )
+
+
+# UOM
+
+
+class TestWebsiteSalePerformanceWithUom(TestWebsiteSalePerformanceNoPricelist):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls._enable_uom()
+
+    def _get_shop_page_queries(self):
+        res = super()._get_shop_page_queries()
+        res["uom_uom"] += 2
+        return res
+
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+    def _get_product_page_queries(self):
+        res = super()._get_product_page_queries()
+        res["uom_uom"] += 3
+        return res
+
+    def test_product_page_generation(self):
+        select_queries = self._get_product_page_queries()
+        self._check_url_hot_query(
+            self.heavy_product.website_url,
+            sum(select_queries.values()),
+            select_tables_perf=select_queries,
+        )
+
+
+class TestWebsiteSalePerformanceWithMultipleUoms(TestWebsiteSalePerformanceWithUom):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.heavy_product.uom_ids = [Command.set([cls.uom_dozen.id, cls.uom_pack_6.id])]
+
+    def _get_shop_page_queries(self):
+        res = super()._get_shop_page_queries()
+        res["uom_uom"] += 1
+        return res
+
+    def test_shop_page_generation(self):
+        select_queries = self._get_shop_page_queries()
+        self._check_url_hot_query(
+            "/shop", sum(select_queries.values()), select_tables_perf=select_queries
+        )
+
+    def _get_product_page_queries(self):
+        res = super()._get_product_page_queries()
+        res["uom_uom"] += 2
+        return res
+
+    def test_product_page_generation(self):
+        select_queries = self._get_product_page_queries()
+        self._check_url_hot_query(
+            self.heavy_product.website_url,
+            sum(select_queries.values()),
+            select_tables_perf=select_queries,
+        )
