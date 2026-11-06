@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Courses Catalog Page (/courses) -->
+    <template id="courses_catalog_template" name="Academic Programs &amp; Courses">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- Header Banner -->
+                <section class="py-5 text-white" style="background: linear-gradient(135deg, #101c30 0%, #1c3050 100%);">
+                    <div class="container py-3">
+                        <span class="text-uppercase fw-bold text-danger small">Academic Curriculum</span>
+                        <h1 class="display-5 fw-bold mb-2">Degree Programs &amp; Courses</h1>
+                        <p class="lead text-white-50 mb-0">Browse Harvard University undergraduate, graduate, and doctoral offerings.</p>
+                    </div>
+                </section>
+
+                <!-- Search and Degree Filter Bar -->
+                <section class="py-4 bg-white border-bottom shadow-sm">
+                    <div class="container">
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-7">
+                                <ul class="nav nav-pills gap-2">
+                                    <li class="nav-item">
+                                        <a t-attf-class="nav-link #{'active bg-danger text-white' if not current_degree else 'text-dark'}" href="/courses">All Programs</a>
+                                    </li>
+                                    <t t-foreach="degree_types" t-as="dt">
+                                        <li class="nav-item">
+                                            <a t-attf-class="nav-link #{'active bg-danger text-white' if current_degree == dt[0] else 'text-dark'}" t-attf-href="/courses/degree/#{dt[0]}" t-esc="dt[1]"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                            <div class="col-md-5">
+                                <form method="get" action="/courses" class="d-flex">
+                                    <input type="text" name="search" class="form-control me-2" placeholder="Search by program name..." t-att-value="search_term"/>
+                                    <button class="btn btn-danger" type="submit"><i class="fa fa-search"/></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Programs Grid -->
+                <section class="py-5 bg-light">
+                    <div class="container">
+                        <div class="row g-4" t-if="programs">
+                            <t t-foreach="programs" t-as="prog">
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="harvard-card h-100 p-4 d-flex flex-column justify-content-between shadow-sm">
+                                        <div>
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="harvard-badge-degree" t-esc="dict(prog._fields['degree_type'].selection).get(prog.degree_type, prog.degree_type)"/>
+                                                <span class="badge bg-light text-dark border" t-esc="prog.code"/>
+                                            </div>
+                                            <h4 class="h5 fw-bold mb-2">
+                                                <a t-attf-href="/courses/#{prog.id}" class="text-decoration-none text-dark" t-esc="prog.name"/>
+                                            </h4>
+                                            <p class="text-muted small mb-2" t-if="prog.department_id">
+                                                <i class="fa fa-building-o me-1"/> <span t-esc="prog.department_id.name"/>
+                                            </p>
+                                        </div>
+                                        <div class="pt-3 border-top d-flex justify-content-between align-items-center">
+                                            <span class="small text-muted">
+                                                <i class="fa fa-graduation-cap me-1"/> <t t-esc="prog.total_credits"/> Credits (<t t-esc="prog.duration_years"/> Yrs)
+                                            </span>
+                                            <a t-attf-href="/courses/#{prog.id}" class="btn btn-sm btn-outline-danger">Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div t-if="not programs" class="text-center py-5">
+                            <i class="fa fa-book fa-3x text-muted mb-3"/>
+                            <h3 class="h4 text-muted">No programs match your selection</h3>
+                            <a href="/courses" class="btn btn-outline-secondary mt-3">Reset Filters</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Program Detail View (/courses/<id>) -->
+    <template id="course_detail_template" name="Program Details">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="py-5 text-white" style="background: linear-gradient(135deg, #A51C30 0%, #101c30 100%);">
+                    <div class="container py-2">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-2">
+                                <li class="breadcrumb-item"><a href="/" class="text-white-50">Home</a></li>
+                                <li class="breadcrumb-item"><a href="/courses" class="text-white-50">Courses</a></li>
+                                <li class="breadcrumb-item active text-white" aria-current="page" t-esc="program.name"/>
+                            </ol>
+                        </nav>
+                        <span class="badge bg-white text-danger fw-bold mb-2" t-esc="dict(program._fields['degree_type'].selection).get(program.degree_type, program.degree_type)"/>
+                        <h1 class="display-5 fw-bold mb-3" t-esc="program.name"/>
+                        <p class="lead text-white-50 mb-0" t-if="program.department_id">
+                            Offered by the Department of <strong class="text-white" t-esc="program.department_id.name"/>
+                        </p>
+                    </div>
+                </section>
+
+                <section class="py-5 bg-light">
+                    <div class="container">
+                        <div class="row g-4">
+                            <!-- Program Overview -->
+                            <div class="col-lg-8">
+                                <div class="bg-white p-4 rounded shadow-sm mb-4">
+                                    <h3 class="h4 fw-bold text-dark border-bottom pb-3 mb-3">Curriculum Overview</h3>
+                                    <div class="row g-3 mb-4">
+                                        <div class="col-sm-4">
+                                            <div class="p-3 bg-light rounded text-center">
+                                                <small class="text-muted text-uppercase d-block fw-bold">Duration</small>
+                                                <span class="fs-4 fw-bold text-danger"><t t-esc="program.duration_years"/> Years</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="p-3 bg-light rounded text-center">
+                                                <small class="text-muted text-uppercase d-block fw-bold">Required Credits</small>
+                                                <span class="fs-4 fw-bold text-danger"><t t-esc="program.total_credits"/></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="p-3 bg-light rounded text-center">
+                                                <small class="text-muted text-uppercase d-block fw-bold">Program Code</small>
+                                                <span class="fs-4 fw-bold text-dark"><t t-esc="program.code"/></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Subjects List -->
+                                    <h4 class="h5 fw-bold mb-3">Core Subjects &amp; Syllabus</h4>
+                                    <div t-if="curricula" class="table-responsive">
+                                        <table class="table table-hover align-middle border">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Code</th>
+                                                    <th>Subject Name</th>
+                                                    <th>Semester</th>
+                                                    <th>Credits</th>
+                                                    <th>Type</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <t t-foreach="curricula" t-as="cur">
+                                                    <tr>
+                                                        <td class="fw-bold" t-esc="cur.subject_id.code if cur.subject_id else '-'"/>
+                                                        <td t-esc="cur.subject_id.name if cur.subject_id else '-'"/>
+                                                        <td><span class="badge bg-secondary" t-esc="cur.semester_id.name if cur.semester_id else '-'"/></td>
+                                                        <td t-esc="cur.subject_id.credits if cur.subject_id else '-'"/>
+                                                        <td><span class="badge bg-light text-dark border" t-esc="cur.subject_type or 'Core'"/></td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <p t-if="not curricula" class="text-muted">Curriculum details are being finalized for this academic year.</p>
+                                </div>
+                            </div>
+
+                            <!-- Sidebar Action -->
+                            <div class="col-lg-4">
+                                <div class="bg-white p-4 rounded shadow-sm border mb-4">
+                                    <h4 class="h5 fw-bold mb-3 text-dark">Admissions Status</h4>
+                                    <p class="small text-muted mb-4">Ready to start your studies in this program? Applications are currently open for new students.</p>
+                                    <a t-attf-href="/admission/apply?program_id=#{program.id}" class="btn btn-danger w-100 py-2 fw-bold mb-3">Apply for this Program</a>
+                                    <a href="/contactus" class="btn btn-outline-dark w-100 py-2">Contact Admissions Office</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>
